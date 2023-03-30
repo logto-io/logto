@@ -23,6 +23,7 @@
     "test:ci": "pnpm test:only --coverage --silent"
   },
   "dependencies": {
+    "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
@@ -32,7 +33,6 @@
     "@withtyped/postgres": "^0.8.1",
     "@withtyped/server": "^0.8.1",
     "accepts": "^1.3.8",
-    "applicationinsights": "^2.5.0",
     "chalk": "^5.0.0",
     "decamelize": "^6.0.0",
     "dotenv": "^16.0.0",

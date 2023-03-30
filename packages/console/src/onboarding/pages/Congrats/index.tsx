@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import classNames from 'classnames';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Reservation from '@/onboarding/components/Reservation';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 
@@ -59,4 +59,4 @@ function Congrats() {
   );
 }
 
-export default withAppInsights(Congrats);
+export default appInsightsReact.withAppInsights(Congrats);

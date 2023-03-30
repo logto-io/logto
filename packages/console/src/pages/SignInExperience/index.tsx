@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
@@ -22,7 +23,6 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
-import { withAppInsights } from '@/utils/app-insights';
 
 import Preview from './components/Preview';
 import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
@@ -252,4 +252,4 @@ function SignInExperience() {
   );
 }
 
-export default withAppInsights(SignInExperience);
+export default appInsightsReact.withAppInsights(SignInExperience);

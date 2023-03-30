@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
-import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 
 import ApplicationsPlaceholder from './components/ApplicationsPlaceholder';
@@ -147,4 +147,4 @@ function Applications() {
   );
 }
 
-export default withAppInsights(Applications);
+export default appInsightsReact.withAppInsights(Applications);

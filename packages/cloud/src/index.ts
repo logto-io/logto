@@ -6,8 +6,11 @@ import { findUp } from 'find-up';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
-const { appInsights } = await import('@logto/shared/app-insights');
-appInsights.setup('logto-cloud');
+const { appInsights } = await import('@logto/app-insights/node.js');
+
+if (appInsights.setup('logto-cloud')) {
+  console.debug('Initialized ApplicationInsights');
+}
 
 const { default: withAuth } = await import('./middleware/with-auth.js');
 const { default: withHttpProxy } = await import('./middleware/with-http-proxy.js');

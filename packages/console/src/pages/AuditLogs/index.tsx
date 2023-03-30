@@ -1,8 +1,9 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
+
 import AuditLogTable from '@/components/AuditLogTable';
 import CardTitle from '@/components/CardTitle';
 import PageMeta from '@/components/PageMeta';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 function AuditLogs() {
   return (
@@ -16,4 +17,4 @@ function AuditLogs() {
   );
 }
 
-export default withAppInsights(AuditLogs);
+export default appInsightsReact.withAppInsights(AuditLogs);

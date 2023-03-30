@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';
@@ -18,7 +19,6 @@ import Card from '@/components/Card';
 import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
-import { withAppInsights } from '@/utils/app-insights';
 
 import Block from './components/Block';
 import ChartTooltip from './components/ChartTooltip';
@@ -153,4 +153,4 @@ function Dashboard() {
   );
 }
 
-export default withAppInsights(Dashboard);
+export default appInsightsReact.withAppInsights(Dashboard);

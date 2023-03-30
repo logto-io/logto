@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -25,7 +26,6 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-import { withAppInsights } from '@/utils/app-insights';
 
 import CreateForm from '../Connectors/components/CreateForm';
 
@@ -235,4 +235,4 @@ function ConnectorDetails() {
   );
 }
 
-export default withAppInsights(ConnectorDetails);
+export default appInsightsReact.withAppInsights(ConnectorDetails);

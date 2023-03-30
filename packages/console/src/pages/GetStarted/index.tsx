@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +10,6 @@ import ConfirmModal from '@/components/ConfirmModal';
 import PageMeta from '@/components/PageMeta';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { withAppInsights } from '@/utils/app-insights';
 
 import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
@@ -99,4 +99,4 @@ function GetStarted() {
   );
 }
 
-export default withAppInsights(GetStarted);
+export default appInsightsReact.withAppInsights(GetStarted);

@@ -25,6 +25,41 @@ importers:
       pg: 8.8.0
       typescript: 5.0.2
 
+  packages/app-insights:
+    specifiers:
+      '@microsoft/applicationinsights-react-js': ^3.4.1
+      '@microsoft/applicationinsights-web': ^2.8.11
+      '@silverhand/eslint-config': 3.0.0
+      '@silverhand/essentials': ^2.5.0
+      '@silverhand/ts-config': 3.0.0
+      '@types/node': ^18.11.18
+      '@types/react': ^18.0.31
+      applicationinsights: ^2.5.0
+      eslint: ^8.34.0
+      history: ^5.3.0
+      lint-staged: ^13.0.0
+      prettier: ^2.8.2
+      react: ^18.0.0
+      tslib: ^2.4.1
+      typescript: ^5.0.0
+    dependencies:
+      '@microsoft/applicationinsights-react-js': 3.4.1_ru3n4sc2jwbij7oomq3xpksl5a
+      '@microsoft/applicationinsights-web': 2.8.11_tslib@2.4.1
+      '@silverhand/essentials': 2.5.0
+      applicationinsights: 2.5.0
+    devDependencies:
+      '@silverhand/eslint-config': 3.0.0_f5srfdki6doc7lvdu3rizy6f2q
+      '@silverhand/ts-config': 3.0.0_typescript@5.0.2
+      '@types/node': 18.11.18
+      '@types/react': 18.0.31
+      eslint: 8.34.0
+      history: 5.3.0
+      lint-staged: 13.0.0
+      prettier: 2.8.4
+      react: 18.2.0
+      tslib: 2.4.1
+      typescript: 5.0.2
+
   packages/cli:
     specifiers:
       '@logto/connector-kit': workspace:^
@@ -116,6 +151,7 @@ importers:
 
   packages/cloud:
     specifiers:
+      '@logto/app-insights': workspace:^
       '@logto/cli': workspace:^
       '@logto/connector-kit': workspace:^
       '@logto/core-kit': workspace:^
@@ -133,7 +169,6 @@ importers:
       '@withtyped/postgres': ^0.8.1
       '@withtyped/server': ^0.8.1
       accepts: ^1.3.8
-      applicationinsights: ^2.5.0
       chalk: ^5.0.0
       decamelize: ^6.0.0
       dotenv: ^16.0.0
@@ -150,6 +185,7 @@ importers:
       typescript: ^5.0.0
       zod: ^3.20.2
     dependencies:
+      '@logto/app-insights': link:../app-insights
       '@logto/cli': link:../cli
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
@@ -159,7 +195,6 @@ importers:
       '@withtyped/postgres': 0.8.1_@withtyped+server@0.8.1
       '@withtyped/server': 0.8.1
       accepts: 1.3.8
-      applicationinsights: 2.5.0
       chalk: 5.1.2
       decamelize: 6.0.0
       dotenv: 16.0.0
@@ -188,6 +223,7 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
+      '@logto/app-insights': workspace:^
       '@logto/connector-kit': workspace:^
       '@logto/core-kit': workspace:^
       '@logto/language-kit': workspace:^
@@ -196,8 +232,6 @@ importers:
       '@logto/react': 1.1.0
       '@logto/schemas': workspace:^
       '@mdx-js/react': ^1.6.22
-      '@microsoft/applicationinsights-react-js': ^3.4.1
-      '@microsoft/applicationinsights-web': ^2.8.11
       '@parcel/compressor-brotli': 2.8.3
       '@parcel/compressor-gzip': 2.8.3
       '@parcel/core': 2.8.3
@@ -213,7 +247,7 @@ importers:
       '@types/color': ^3.0.3
       '@types/mdx': ^2.0.1
       '@types/mdx-js__react': ^1.5.5
-      '@types/react': ^18.0.0
+      '@types/react': ^18.0.31
       '@types/react-dom': ^18.0.0
       '@types/react-helmet': ^6.1.6
       '@types/react-modal': ^3.13.1
@@ -270,6 +304,7 @@ importers:
       zod: ^3.20.2
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
+      '@logto/app-insights': link:../app-insights
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
       '@logto/language-kit': link:../toolkit/language-kit
@@ -278,8 +313,6 @@ importers:
       '@logto/react': 1.1.0_react@18.2.0
       '@logto/schemas': link:../schemas
       '@mdx-js/react': 1.6.22_react@18.2.0
-      '@microsoft/applicationinsights-react-js': 3.4.1_ru3n4sc2jwbij7oomq3xpksl5a
-      '@microsoft/applicationinsights-web': 2.8.11_tslib@2.4.1
       '@parcel/compressor-brotli': 2.8.3_@parcel+core@2.8.3
       '@parcel/compressor-gzip': 2.8.3_@parcel+core@2.8.3
       '@parcel/core': 2.8.3
@@ -295,7 +328,7 @@ importers:
       '@types/color': 3.0.3
       '@types/mdx': 2.0.1
       '@types/mdx-js__react': 1.5.5
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
       '@types/react-dom': 18.0.6
       '@types/react-helmet': 6.1.6
       '@types/react-modal': 3.13.1
@@ -328,7 +361,7 @@ importers:
       prop-types: 15.8.1
       react: 18.2.0
       react-animate-height: 3.0.4_biqbaboplfbrettd7655fr4n2y
-      react-dnd: 16.0.0_3hx2ussxxho4jajbwrd6gq34qe
+      react-dnd: 16.0.0_o2wclmlv6kymw75psj4clbbe6a
       react-dnd-html5-backend: 16.0.0
       react-dom: 18.2.0_react@18.2.0
       react-dropzone: 14.2.3_react@18.2.0
@@ -336,7 +369,7 @@ importers:
       react-hook-form: 7.34.0_react@18.2.0
       react-hot-toast: 2.2.0_npw22p3c4ehm7n7vxn2gqac44u
       react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
-      react-markdown: 8.0.0_3hx2ussxxho4jajbwrd6gq34qe
+      react-markdown: 8.0.0_o2wclmlv6kymw75psj4clbbe6a
       react-modal: 3.15.1_biqbaboplfbrettd7655fr4n2y
       react-paginate: 8.1.3_react@18.2.0
       react-router-dom: 6.3.0_biqbaboplfbrettd7655fr4n2y
@@ -355,6 +388,7 @@ importers:
     specifiers:
       '@azure/storage-blob': ^12.13.0
       '@koa/cors': ^4.0.0
+      '@logto/app-insights': workspace:^
       '@logto/cli': workspace:^
       '@logto/connector-kit': workspace:^
       '@logto/core-kit': workspace:^
@@ -383,7 +417,6 @@ importers:
       '@types/semver': ^7.3.12
       '@types/sinon': ^10.0.13
       '@types/supertest': ^2.0.11
-      applicationinsights: ^2.5.0
       aws-sdk: ^2.1329.0
       chalk: ^5.0.0
       clean-deep: ^3.4.0
@@ -438,6 +471,7 @@ importers:
     dependencies:
       '@azure/storage-blob': 12.13.0
       '@koa/cors': 4.0.0
+      '@logto/app-insights': link:../app-insights
       '@logto/cli': link:../cli
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@logto/core-kit': link:../toolkit/core-kit
@@ -447,7 +481,6 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 2.5.0
-      applicationinsights: 2.5.0
       aws-sdk: 2.1329.0
       chalk: 5.1.2
       clean-deep: 3.4.0
@@ -539,7 +572,7 @@ importers:
       '@silverhand/eslint-config-react': 3.0.0
       '@silverhand/ts-config': 3.0.0
       '@silverhand/ts-config-react': 3.0.0
-      '@types/react': ^18.0.0
+      '@types/react': ^18.0.31
       '@types/react-dom': ^18.0.0
       buffer: ^5.7.1
       cross-env: ^7.0.3
@@ -568,7 +601,7 @@ importers:
       '@silverhand/eslint-config-react': 3.0.0_xy6uwdposyujrlafdregyrl22m
       '@silverhand/ts-config': 3.0.0_typescript@5.0.2
       '@silverhand/ts-config-react': 3.0.0_typescript@5.0.2
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
       '@types/react-dom': 18.0.6
       buffer: 5.7.1
       cross-env: 7.0.3
@@ -756,7 +789,6 @@ importers:
       '@silverhand/ts-config': 3.0.0
       '@types/jest': ^29.4.0
       '@types/node': ^18.11.18
-      applicationinsights: ^2.5.0
       chalk: ^5.0.0
       eslint: ^8.34.0
       find-up: ^6.3.0
@@ -774,8 +806,6 @@ importers:
       find-up: 6.3.0
       nanoid: 4.0.0
       slonik: 30.1.2
-    optionalDependencies:
-      applicationinsights: 2.5.0
     devDependencies:
       '@logto/connector-kit': link:../toolkit/connector-kit
       '@silverhand/eslint-config': 3.0.0_f5srfdki6doc7lvdu3rizy6f2q
@@ -827,7 +857,7 @@ importers:
       '@types/color': ^3.0.3
       '@types/jest': ^29.4.0
       '@types/node': ^18.11.18
-      '@types/react': ^18.0.20
+      '@types/react': ^18.0.31
       color: ^4.2.3
       eslint: ^8.34.0
       jest: ^29.5.0
@@ -854,7 +884,7 @@ importers:
       '@types/color': 3.0.3
       '@types/jest': 29.4.0
       '@types/node': 18.11.18
-      '@types/react': 18.0.26
+      '@types/react': 18.0.31
       eslint: 8.34.0
       jest: 29.5.0_@types+node@18.11.18
       lint-staged: 13.0.0
@@ -918,7 +948,7 @@ importers:
       '@testing-library/react': ^14.0.0
       '@types/color': ^3.0.3
       '@types/jest': ^29.4.0
-      '@types/react': ^18.0.0
+      '@types/react': ^18.0.31
       '@types/react-dom': ^18.0.0
       '@types/react-modal': ^3.13.1
       '@types/react-router-dom': ^5.3.2
@@ -983,7 +1013,7 @@ importers:
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/color': 3.0.3
       '@types/jest': 29.4.0
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
       '@types/react-dom': 18.0.6
       '@types/react-modal': 3.13.1
       '@types/react-router-dom': 5.3.2
@@ -2609,7 +2639,7 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-channel-js/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-DGDNzT4DMlSvUzWjA4y3tDg47+QYOPV+W07vlfdPwGgLwrl4n6Q4crrW8Y/IOpthHAKDU8rolSAUvP3NqxPi4Q==}
@@ -2621,7 +2651,7 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-common/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-Cxu4gRajkYv9buEtrcLGHK97AqGK62feN9jH9/JSjUSiSFhbnWtYvEg1EMqMI/P4pneu53yLJloITB+TKwmK7A==}
@@ -2632,7 +2662,7 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-core-js/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-6ScXplyb9Zb0K6TQRfqStm20j5lIe/Dslf65ozows6ibDcKkWl2ZdqzFhymVJZz1WRNpSyD4aA8qnqmslIER6g==}
@@ -2642,7 +2672,7 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-dependencies-js/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-eCjNouBvvnu+E3jLdfQgSIx3AUvmBDd14ZJNOjkvsaURhgRyWkBX3enT+RjrVrqyNQ74ZpHZpIJEqj90l28SsA==}
@@ -2654,7 +2684,7 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-properties-js/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-cuX8jwycBYX81SXmGTNK7JSJod3l8l3FIH0HPgPayCQy7CdHYlfKPTKE9q3I9qD1GO/3ER9yozuKpE+12Wk/2w==}
@@ -2666,10 +2696,11 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-react-js/3.4.1_ru3n4sc2jwbij7oomq3xpksl5a:
     resolution: {integrity: sha512-oosMkymmkkulUdFcUbqKc64Li0KpItmV/pClOr4DCLAxbitCjHDkKdxodvpUzMHVs1ko9cHP360oc1QVXprhXQ==}
+    requiresBuild: true
     peerDependencies:
       history: '>= 4.10.1'
       react: '>= 17.0.1 || ^18.0.0'
@@ -2682,11 +2713,11 @@ packages:
       history: 5.3.0
       react: 18.2.0
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-shims/2.0.2:
     resolution: {integrity: sha512-PoHEgsnmcqruLNHZ/amACqdJ6YYQpED0KSRe6J7gIJTtpZC1FfFU9b1fmDKDKtFoUSrPzEh1qzO3kmRZP0betg==}
-    dev: true
+    dev: false
 
   /@microsoft/applicationinsights-web-snippet/1.0.1:
     resolution: {integrity: sha512-2IHAOaLauc8qaAitvWS+U931T+ze+7MNWrDHY47IENP5y2UA0vqJDu67kWZDdpCN1fFC77sfgfB+HV7SrKshnQ==}
@@ -2694,6 +2725,7 @@ packages:
 
   /@microsoft/applicationinsights-web/2.8.11_tslib@2.4.1:
     resolution: {integrity: sha512-cLJl3MLQtvbwXU0hvFLl6S2/rIdoZKpZL8cvdaT0cXqd5XIiMbeUOxWHLf2hxT8IlIeVlu5nnFILeRYOFZowvw==}
+    requiresBuild: true
     peerDependencies:
       tslib: '*'
     dependencies:
@@ -2706,11 +2738,11 @@ packages:
       '@microsoft/applicationinsights-shims': 2.0.2
       '@microsoft/dynamicproto-js': 1.1.8
       tslib: 2.4.1
-    dev: true
+    dev: false
 
   /@microsoft/dynamicproto-js/1.1.8:
     resolution: {integrity: sha512-j4ZgOZRtX0LTUgKq+4tRQotgwH03HH/mLkYbcgFBBJ9XKTDc4NIGzZeam2UQMzwz+5IVN0SXexNbbsz5B0b/og==}
-    dev: true
+    dev: false
 
   /@mischnic/json-sourcemap/0.1.0:
     resolution: {integrity: sha512-dQb3QnfNqmQNYA4nFSN/uLaByIic58gOXq4Y4XqLOWmOrw73KmJPt/HLyG0wvn1bnR6mBKs/Uwvkh+Hns1T0XA==}
@@ -3647,7 +3679,7 @@ packages:
       '@peculiar/asn1-schema': 2.1.0
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.2.2
-      tslib: 2.3.1
+      tslib: 2.4.1
       webcrypto-core: 1.7.3
     dev: true
 
@@ -4459,7 +4491,7 @@ packages:
   /@types/mdx-js__react/1.5.5:
     resolution: {integrity: sha512-k8pnaP6JXVlQh18HgL5X6sYFNC/qZnzO7R2+HsmwrwUd+JnnsU0d9lyyT0RQrHg1anxDU36S98TI/fsGtmYqqg==}
     dependencies:
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
     dev: true
 
   /@types/mdx/2.0.1:
@@ -4549,26 +4581,26 @@ packages:
   /@types/react-dom/18.0.6:
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
     dev: true
 
   /@types/react-helmet/6.1.6:
     resolution: {integrity: sha512-ZKcoOdW/Tg+kiUbkFCBtvDw0k3nD4HJ/h/B9yWxN4uDO8OkRksWTO+EL+z/Qu3aHTeTll3Ro0Cc/8UhwBCMG5A==}
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.0.31
     dev: true
 
   /@types/react-modal/3.13.1:
     resolution: {integrity: sha512-iY/gPvTDIy6Z+37l+ibmrY+GTV4KQTHcCyR5FIytm182RQS69G5ps4PH2FxtC7bAQ2QRHXMevsBgck7IQruHNg==}
     dependencies:
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
     dev: true
 
   /@types/react-router-dom/5.3.2:
     resolution: {integrity: sha512-ELEYRUie2czuJzaZ5+ziIp9Hhw+juEw8b7C11YNA4QdLCVbQ3qLi2l4aq8XnlqM7V31LZX8dxUuFUCrzHm6sqQ==}
     dependencies:
       '@types/history': 4.7.9
-      '@types/react': 18.0.26
+      '@types/react': 18.0.31
       '@types/react-router': 5.1.17
     dev: true
 
@@ -4576,25 +4608,17 @@ packages:
     resolution: {integrity: sha512-RNSXOyb3VyRs/EOGmjBhhGKTbnN6fHWvy5FNLzWfOWOGjgVUKqJZXfpKzLmgoU8h6Hj8mpALj/mbXQASOb92wQ==}
     dependencies:
       '@types/history': 4.7.11
-      '@types/react': 18.0.26
+      '@types/react': 18.0.31
     dev: true
 
   /@types/react-syntax-highlighter/15.5.1:
     resolution: {integrity: sha512-+yD6D8y21JqLf89cRFEyRfptVMqo2ROHyAlysRvFwT28gT5gDo3KOiXHwGilHcq9y/OKTjlWK0f/hZUicrBFPQ==}
     dependencies:
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
     dev: true
 
-  /@types/react/18.0.15:
-    resolution: {integrity: sha512-iz3BtLuIYH1uWdsv6wXYdhozhqj20oD4/Hk2DNXIn1kFsmp9x8d9QB6FnPhfkbhd2PgEONt9Q1x/ebkwjfFLow==}
-    dependencies:
-      '@types/prop-types': 15.7.4
-      '@types/scheduler': 0.16.2
-      csstype: 3.0.11
-    dev: true
-
-  /@types/react/18.0.26:
-    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
+  /@types/react/18.0.31:
+    resolution: {integrity: sha512-EEG67of7DsvRDU6BLLI0p+k1GojDLz9+lZsnCpCRTa/lOokvyPBvp8S5x+A24hME3yyQuIipcP70KJ6H7Qupww==}
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
@@ -8072,7 +8096,6 @@ packages:
     resolution: {integrity: sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==}
     dependencies:
       '@babel/runtime': 7.19.4
-    dev: true
 
   /hoist-non-react-statics/3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -10287,7 +10310,6 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: true
 
   /lower-case/2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
@@ -12384,7 +12406,7 @@ packages:
       dnd-core: 16.0.0
     dev: true
 
-  /react-dnd/16.0.0_3hx2ussxxho4jajbwrd6gq34qe:
+  /react-dnd/16.0.0_o2wclmlv6kymw75psj4clbbe6a:
     resolution: {integrity: sha512-RCoeWRWhuwSoqdLaJV8N/weARLyXqsf43OC3QiBWPORIIGGovF/EqI8ckf14ca3bl6oZNI/igtxX49+IDmNDeQ==}
     peerDependencies:
       '@types/hoist-non-react-statics': '>= 3.3.1'
@@ -12401,7 +12423,7 @@ packages:
     dependencies:
       '@react-dnd/invariant': 4.0.0
       '@react-dnd/shallowequal': 4.0.0
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
       dnd-core: 16.0.0
       fast-deep-equal: 3.1.3
       hoist-non-react-statics: 3.3.2
@@ -12509,14 +12531,14 @@ packages:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
 
-  /react-markdown/8.0.0_3hx2ussxxho4jajbwrd6gq34qe:
+  /react-markdown/8.0.0_o2wclmlv6kymw75psj4clbbe6a:
     resolution: {integrity: sha512-qbrWpLny6Ef2xHqnYqtot948LXP+4FtC+MWIuaN1kvSnowM+r1qEeEHpSaU0TDBOisQuj+Qe6eFY15cNL3gLAw==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16 || ^18.0.0'
     dependencies:
       '@types/hast': 2.3.4
-      '@types/react': 18.0.15
+      '@types/react': 18.0.31
       '@types/unist': 2.0.6
       comma-separated-tokens: 2.0.2
       hast-util-whitespace: 2.0.0
@@ -12695,7 +12717,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: true
 
   /read-pkg-up/7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
@@ -13473,7 +13494,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /snakecase-keys/5.4.4:
@@ -14323,14 +14344,6 @@ packages:
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
-
-  /tslib/2.3.1:
-    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
-    dev: true
-
-  /tslib/2.4.0:
-    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
-    dev: false
 
   /tslib/2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}

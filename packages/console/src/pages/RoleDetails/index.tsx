@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { Role } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -17,7 +18,6 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import { withAppInsights } from '@/utils/app-insights';
 
 import * as styles from './index.module.scss';
 import { type RoleDetailsOutletContext } from './types';
@@ -135,4 +135,4 @@ function RoleDetails() {
   );
 }
 
-export default withAppInsights(RoleDetails);
+export default appInsightsReact.withAppInsights(RoleDetails);

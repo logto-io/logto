@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { Resource } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
@@ -24,7 +25,6 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 import { buildUrl } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -151,4 +151,4 @@ function ApiResources() {
   );
 }
 
-export default withAppInsights(ApiResources);
+export default appInsightsReact.withAppInsights(ApiResources);

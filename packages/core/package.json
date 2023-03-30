@@ -27,6 +27,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.13.0",
     "@koa/cors": "^4.0.0",
+    "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
@@ -36,7 +37,6 @@
     "@logto/schemas": "workspace:^",
     "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.5.0",
-    "applicationinsights": "^2.5.0",
     "aws-sdk": "^2.1329.0",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",

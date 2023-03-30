@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -23,7 +24,6 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import { withAppInsights } from '@/utils/app-insights';
 
 import ConnectorDeleteButton from './components/ConnectorDeleteButton';
 import ConnectorName from './components/ConnectorName';
@@ -225,4 +225,4 @@ function Connectors() {
   );
 }
 
-export default withAppInsights(Connectors);
+export default appInsightsReact.withAppInsights(Connectors);
