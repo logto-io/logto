@@ -114,6 +114,7 @@ const baseConfigFormItem = {
     .optional(),
   description: z.string().optional(),
   tooltip: z.string().optional(),
+  isConfidential: z.boolean().optional(), // For `Text` type only.
 };
 
 const connectorConfigFormItemGuard = z.discriminatedUnion('type', [

@@ -60,7 +60,13 @@ function ConfigForm({ formItems }: Props) {
     });
 
     if (item.type === ConnectorConfigFormItemType.Text) {
-      return <TextInput {...buildCommonProperties()} />;
+      return (
+        <TextInput
+          {...buildCommonProperties()}
+          // TODO: update connectors form config and remove RegExp check
+          isConfidential={item.isConfidential ?? /(Key|Secret)$/.test(item.key)}
+        />
+      );
     }
 
     if (item.type === ConnectorConfigFormItemType.MultilineText) {
