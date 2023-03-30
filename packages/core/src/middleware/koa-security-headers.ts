@@ -1,7 +1,8 @@
+import { defaultTenantId } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import helmet from 'koa-helmet';
 
-import { EnvSet, AdminApps } from '#src/env-set/index.js';
+import { EnvSet, AdminApps, getTenantEndpoint } from '#src/env-set/index.js';
 
 /**
  * Apply security headers to the response using koa-helmet
@@ -11,17 +12,21 @@ import { EnvSet, AdminApps } from '#src/env-set/index.js';
  */
 
 export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
-  mountedApps: string[]
+  mountedApps: string[],
+  tenantId: string
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
   type HelmetOptions = Parameters<typeof helmet>[0];
 
-  const { isProduction, isCloud, adminUrlSet, cloudUrlSet, urlSet } = EnvSet.values;
+  const { isProduction, isCloud, isMultiTenancy, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
-  const adminOrigins = adminUrlSet.deduplicated().map((location) => location.origin);
-  const cloudOrigins = isCloud ? cloudUrlSet.deduplicated().map((location) => location.origin) : [];
-  const urlOrigins = urlSet.deduplicated().map((location) => location.origin);
+  const adminOrigins = adminUrlSet.origins;
+  const cloudOrigins = isCloud ? cloudUrlSet.origins : [];
+  const tenantEndpointOrigin = getTenantEndpoint(
+    isMultiTenancy ? tenantId : defaultTenantId,
+    EnvSet.values
+  ).origin;
   const developmentOrigins = isProduction ? [] : ['ws:'];
 
   /**
@@ -52,7 +57,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     ...basicSecurityHeaderSettings,
     // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
     frameguard: false,
-    // Alow loaded by ac preview iframe
+    // Alow loaded by console preview iframe
     crossOriginResourcePolicy: {
       policy: 'cross-origin',
     },
@@ -64,9 +69,8 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         imgSrc: ["'self'", 'data:', 'https:'],
         connectSrc: ["'self'", ...adminOrigins, ...cloudOrigins, ...developmentOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
-        // Terms of use iframe
         frameSrc: ["'self'", 'https:'],
-        // Alow loaded by ac preview iframe
+        // Alow loaded by console preview iframe
         frameAncestors: ["'self'", ...adminOrigins, ...cloudOrigins],
       },
     },
@@ -84,13 +88,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         imgSrc: ["'self'", 'data:', 'https:'],
         connectSrc: [
           "'self'",
-          ...urlOrigins,
+          tenantEndpointOrigin,
           ...adminOrigins,
           ...cloudOrigins,
           ...developmentOrigins,
         ],
         // Allow Main Flow origin loaded in preview iframe
-        frameSrc: ["'self'", ...urlOrigins],
+        frameSrc: ["'self'", tenantEndpointOrigin],
       },
     },
   };
