@@ -13,7 +13,7 @@ const useCustomStyle = () => {
   useEffect(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     customCssRef.current.textContent = experienceSettings?.customCss ?? null;
-  }, [experienceSettings]);
+  }, [experienceSettings?.customCss]);
 };
 
 export default useCustomStyle;
