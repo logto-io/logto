@@ -19,7 +19,7 @@ const action = {
   switch_to: 'Trocar para {{method}}',
   sign_in_via_passcode: 'Fazer login com código de verificação',
   sign_in_via_password: 'Fazer login com senha',
-  change: 'Alterar {{change}}',
+  change: 'Alterar {{method}}',
   link_another_email: 'Vincular outro e-mail',
   link_another_phone: 'Vincular outro telefone',
   link_another_email_or_phone: 'Vincular outro e-mail ou telefone',
