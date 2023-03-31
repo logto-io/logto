@@ -56,6 +56,8 @@ const description = {
   create_your_account: 'Hesabını oluştur',
   sign_in_to_your_account: 'Hesabına giriş yap',
   no_region_code_found: 'Bölge kodu bulunamadı',
+  verify_email: 'E-postanızın doğrulanması',
+  verify_phone: 'Telefon numaranızın doğrulanması',
 };
 
 export default description;

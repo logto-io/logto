@@ -8,6 +8,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import EmptyStateDark from '@/assets/icons/empty-state-dark.svg';
 import EmptyState from '@/assets/icons/empty-state.svg';
 import NavBar from '@/components/NavBar';
+import PageMeta from '@/components/PageMeta';
 
 import * as styles from './index.module.scss';
 
@@ -26,6 +27,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
 
   return (
     <StaticPageLayout>
+      <PageMeta titleKey={title} />
       {history.length > 1 && <NavBar />}
       <div className={styles.container}>
         {theme === Theme.Light ? <EmptyState /> : <EmptyStateDark />}

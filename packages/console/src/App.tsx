@@ -29,6 +29,7 @@ import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 if (appInsightsReact.setup()) {
   console.debug('Initialized ApplicationInsights');
 }
+
 void initI18n();
 
 function Content() {

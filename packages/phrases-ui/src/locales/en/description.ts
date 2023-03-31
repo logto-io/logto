@@ -57,6 +57,8 @@ const description = {
   create_your_account: 'Create your account',
   sign_in_to_your_account: 'Sign in to your account',
   no_region_code_found: 'No region code found',
+  verify_email: 'Verify your email',
+  verify_phone: 'Verify your phone number',
 };
 
 export default description;

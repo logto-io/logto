@@ -58,6 +58,8 @@ const description = {
   create_your_account: 'アカウントを作成する',
   sign_in_to_your_account: 'アカウントにサインインする',
   no_region_code_found: '地域コードが見つかりません',
+  verify_email: 'Eメールを確認する',
+  verify_phone: '電話番号を確認する',
 };
 
 export default description;

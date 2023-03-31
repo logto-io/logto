@@ -49,6 +49,8 @@ const description = {
   create_your_account: '注册你的账号',
   sign_in_to_your_account: '登录你的账号',
   no_region_code_found: '没有找到区域码',
+  verify_email: 'Verify your email',
+  verify_phone: 'Verify your phone number',
 };
 
 export default description;

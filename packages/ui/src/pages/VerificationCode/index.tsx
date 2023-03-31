@@ -41,9 +41,10 @@ const VerificationCode = () => {
 
   return (
     <SecondaryPageLayout
-      title="action.enter_passcode"
+      title={`description.verify_${identifier}`}
       description="description.enter_passcode"
       descriptionProps={{
+        // TODO: @simeng consider align the phrase key to 'phone'
         address: t(`description.${identifier === 'email' ? 'email' : 'phone_number'}`),
         target: identifier === 'phone' ? formatPhoneNumberWithCountryCallingCode(value) : value,
       }}

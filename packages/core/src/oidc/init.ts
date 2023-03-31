@@ -4,7 +4,13 @@ import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
-import { CustomClientMetadataKey, demoAppApplicationId } from '@logto/schemas';
+import {
+  CustomClientMetadataKey,
+  demoAppApplicationId,
+  logtoCookieKey,
+  type LogtoUiCookie,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import Provider, { errors, type ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
@@ -145,15 +151,23 @@ export default function initOidc(
       },
     },
     interactions: {
-      url: (ctx, interaction) => {
-        const isDemoApp = interaction.params.client_id === demoAppApplicationId;
+      url: (ctx, { params: { client_id: appId }, prompt }) => {
+        const isDemoApp = appId === demoAppApplicationId;
+
+        ctx.cookies.set(
+          logtoCookieKey,
+          JSON.stringify({
+            appId: conditional(Boolean(appId) && String(appId)),
+          } satisfies LogtoUiCookie),
+          { sameSite: 'lax', overwrite: true, httpOnly: false }
+        );
 
         const appendParameters = (path: string) => {
           // `notification` is for showing a text banner on the homepage
           return isDemoApp ? path + `?notification=demo_app.notification&no_cache` : path;
         };
 
-        switch (interaction.prompt.name) {
+        switch (prompt.name) {
           case 'login': {
             const isSignUp =
               ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
@@ -166,7 +180,7 @@ export default function initOidc(
           }
 
           default: {
-            throw new Error(`Prompt not supported: ${interaction.prompt.name}`);
+            throw new Error(`Prompt not supported: ${prompt.name}`);
           }
         }
       },
