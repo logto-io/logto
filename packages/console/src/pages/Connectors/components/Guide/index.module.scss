@@ -32,17 +32,15 @@
   .content {
     flex: 1;
     display: flex;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: auto;
     justify-content: center;
     min-width: min-content;
-    padding: _.unit(2) _.unit(6);
+    padding: _.unit(2) _.unit(6) _.unit(6);
 
     > * {
       flex: 1;
       max-width: 800px;
       min-width: 400px;
-      overflow-y: auto;
     }
 
     .readme {
@@ -51,8 +49,10 @@
       background-color: var(--color-layer-1);
       border: 1.5px solid var(--color-focused-variant);
       border-radius: 16px;
-      margin: 0 _.unit(6) _.unit(6) 0;
+      margin: 0 _.unit(6) 0 0;
       overflow-y: auto;
+      position: sticky;
+      top: 0;
 
       .readmeTitle {
         font: var(--font-title-2);
@@ -73,7 +73,7 @@
         background-color: var(--color-layer-1);
         border-radius: 16px;
         padding: 0 _.unit(6) _.unit(6);
-        margin-bottom: _.unit(6);
+        margin-bottom: _.unit(4);
 
         .blockTitle {
           font: var(--font-title-2);
@@ -96,7 +96,7 @@
       }
 
       .footer {
-        margin-top: _.unit(6);
+        padding-bottom: _.unit(10);
         display: flex;
         justify-content: right;
       }
