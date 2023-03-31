@@ -49,8 +49,8 @@ const description = {
   create_your_account: '註冊你的帳號',
   sign_in_to_your_account: '登錄你的帳號',
   no_region_code_found: '沒有找到區域碼',
-  verify_email: 'Verify your email',
-  verify_phone: 'Verify your phone number',
+  verify_email: '驗證你的郵箱',
+  verify_phone: '驗證你的手機號',
 };
 
 export default description;
