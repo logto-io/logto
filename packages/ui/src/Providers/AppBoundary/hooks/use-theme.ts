@@ -1,20 +1,19 @@
 import { Theme } from '@logto/schemas';
 import { useEffect, useContext } from 'react';
 
-import { PageContext } from './use-page-context';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
-export default function useTheme(): Theme {
-  const { isPreview, experienceSettings, theme, setTheme } = useContext(PageContext);
+export default function useTheme() {
+  const { isPreview, experienceSettings, setTheme } = useContext(PageContext);
 
   useEffect(() => {
     /**
      * Note:
      * In preview mode, the theme of the page is controlled by the preview options and does not follow system changes.
-     * The `usePreview` hook changes the theme of the page by calling the `setTheme` API of the `PageContext`.
      */
     if (isPreview) {
       return;
@@ -36,6 +35,4 @@ export default function useTheme(): Theme {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
   }, [experienceSettings, isPreview, setTheme]);
-
-  return theme;
 }

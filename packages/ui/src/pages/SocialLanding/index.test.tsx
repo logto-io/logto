@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -31,12 +31,11 @@ describe(`SocialLanding Page`, () => {
 
     renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/social/landing/github']}>
-          <Routes>
-            <Route path="/social/landing/:connectorId" element={<SocialLanding />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/social/landing/:connectorId" element={<SocialLanding />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/social/landing/github'] }
     );
 
     await waitFor(() => {

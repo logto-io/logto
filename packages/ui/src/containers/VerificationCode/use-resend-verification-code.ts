@@ -1,12 +1,12 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { t } from 'i18next';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTimer } from 'react-timer-hook';
 
 import { sendVerificationCodeApi } from '@/apis/utils';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { PageContext } from '@/hooks/use-page-context';
+import useToast from '@/hooks/use-toast';
 import type { UserFlow } from '@/types';
 
 export const timeRange = 59;
@@ -23,7 +23,7 @@ const useResendVerificationCode = (
   method: SignInIdentifier.Email | SignInIdentifier.Phone,
   target: string
 ) => {
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,

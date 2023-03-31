@@ -2,7 +2,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -35,9 +34,7 @@ describe('UsernamePasswordSignInForm', () => {
   ) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
-        <MemoryRouter>
-          <PasswordSignInForm signInMethods={signInMethods} />
-        </MemoryRouter>
+        <PasswordSignInForm signInMethods={signInMethods} />
       </SettingsProvider>
     );
 

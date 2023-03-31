@@ -1,10 +1,10 @@
 import { conditional } from '@silverhand/essentials';
 import { useContext, useCallback, useMemo } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import TermsAndPrivacyConfirmModalContent from '@/containers/TermsAndPrivacy/TermsAndPrivacyConfirmModalContent';
 
 import { useConfirmModal } from './use-confirm-modal';
-import { PageContext } from './use-page-context';
 
 const useTerms = () => {
   const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);

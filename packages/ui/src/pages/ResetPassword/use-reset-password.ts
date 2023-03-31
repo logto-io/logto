@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,12 +7,12 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useErrorHandler from '@/hooks/use-error-handler';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
-import { PageContext } from '@/hooks/use-page-context';
+import useToast from '@/hooks/use-toast';
 
 const useResetPassword = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
   const { show } = useConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();
 

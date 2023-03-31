@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useSearchParams } from 'react-router-dom';
+import { Route, Routes, useSearchParams } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -38,12 +38,11 @@ describe('SocialCallbackPage with code', () => {
 
     renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/sign-in/social/github']}>
-          <Routes>
-            <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/sign-in/social/:connectorId" element={<SocialCallback />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/sign-in/social/github'] }
     );
 
     await waitFor(() => {

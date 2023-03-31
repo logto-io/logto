@@ -2,7 +2,6 @@ import type { SignIn } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { mockSignInMethodSettingsTestCases } from '@/__mocks__/logto';
@@ -34,11 +33,7 @@ const email = 'foo@email.com';
 const phone = '8573333333';
 
 const renderForm = (signInMethods: SignIn['methods']) =>
-  renderWithPageContext(
-    <MemoryRouter>
-      <IdentifierSignInForm signInMethods={signInMethods} />
-    </MemoryRouter>
-  );
+  renderWithPageContext(<IdentifierSignInForm signInMethods={signInMethods} />);
 
 describe('IdentifierSignInForm', () => {
   afterEach(() => {

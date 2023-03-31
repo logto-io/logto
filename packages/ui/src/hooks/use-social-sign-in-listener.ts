@@ -1,6 +1,6 @@
 import type { RequestErrorBody } from '@logto/schemas';
 import { SignInMode } from '@logto/schemas';
-import { useEffect, useCallback, useContext, useMemo, useState } from 'react';
+import { useEffect, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -13,14 +13,14 @@ import { stateValidation } from '@/utils/social-connectors';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import type { ErrorHandlers } from './use-error-handler';
-import { PageContext } from './use-page-context';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 import { useSieMethods } from './use-sie';
 import useSocialRegister from './use-social-register';
 import useTerms from './use-terms';
+import useToast from './use-toast';
 
 const useSocialSignInListener = (connectorId?: string) => {
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
   const { signInMode } = useSieMethods();
   const { t } = useTranslation();
   const { termsValidation } = useTerms();

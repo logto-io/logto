@@ -1,11 +1,11 @@
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useContext, useState } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { consent } from '@/apis/consent';
 import { LoadingIcon } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { PageContext } from '@/hooks/use-page-context';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';

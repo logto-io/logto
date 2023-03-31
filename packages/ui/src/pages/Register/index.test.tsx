@@ -1,6 +1,6 @@
 import type { SignUp } from '@logto/schemas';
 import { SignInMode, SignInIdentifier } from '@logto/schemas';
-import { MemoryRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -17,9 +17,7 @@ describe('<Register />', () => {
   const renderRegisterPage = (settings?: Partial<SignInExperienceResponse>) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
-        <MemoryRouter>
-          <Register />
-        </MemoryRouter>
+        <Register />
       </SettingsProvider>
     );
 
@@ -59,8 +57,20 @@ describe('<Register />', () => {
     expect(queryByText('action.create_account')).toBeNull();
   });
 
-  test('render with sign-in only mode should return ErrorPage', () => {
-    const { queryByText } = renderRegisterPage({ signInMode: SignInMode.SignIn });
-    expect(queryByText('description.not_found')).not.toBeNull();
+  test('render with sign-in only mode should should redirect to the SignIn page', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{ ...mockSignInExperienceSettings, signInMode: SignInMode.SignIn }}
+      >
+        <Routes>
+          <Route path="sign-in" element={<div>sign-in</div>} />
+          <Route path="register" element={<Register />} />
+        </Routes>
+      </SettingsProvider>,
+      {
+        initialEntries: ['/register'],
+      }
+    );
+    expect(queryByText('sign-in')).not.toBeNull();
   });
 });

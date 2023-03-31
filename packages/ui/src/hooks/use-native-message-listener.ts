@@ -1,11 +1,11 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 
 import { isNativeWebview } from '@/utils/native-sdk';
 
-import { PageContext } from './use-page-context';
+import useToast from './use-toast';
 
 const useNativeMessageListener = () => {
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
 
   // Monitor Native Error Message
   useEffect(() => {

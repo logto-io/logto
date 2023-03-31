@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { PageContext } from './use-page-context';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 const usePlatform = () => {
   const { platform } = useContext(PageContext);

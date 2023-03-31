@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { useCallback, useContext } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import Toast from '@/components/Toast';
-import { PageContext } from '@/hooks/use-page-context';
 
 type Props = {
   children: ReactNode;

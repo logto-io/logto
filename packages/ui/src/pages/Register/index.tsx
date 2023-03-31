@@ -1,5 +1,6 @@
 import { SignInMode } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
@@ -17,8 +18,12 @@ const Register = () => {
   const { signUpMethods, socialConnectors, signInMode, signInMethods } = useSieMethods();
   const { t } = useTranslation();
 
-  if (!signInMode || signInMode === SignInMode.SignIn) {
+  if (!signInMode) {
     return <ErrorPage />;
+  }
+
+  if (signInMode === SignInMode.SignIn) {
+    return <Navigate to="/sign-in" />;
   }
 
   return (
