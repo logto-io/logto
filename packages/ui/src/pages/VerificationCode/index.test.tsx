@@ -23,7 +23,7 @@ describe('VerificationCode Page', () => {
       { initialEntries: ['/sign-in/verification-code'] }
     );
 
-    expect(queryByText('action.enter_passcode')).not.toBeNull();
+    expect(queryByText('description.verify_email')).not.toBeNull();
     expect(queryByText('description.enter_passcode')).not.toBeNull();
   });
 

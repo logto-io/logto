@@ -58,7 +58,7 @@
     "jest-environment-jsdom": "^29.0.0",
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
-    "js-base64": "^3.7.2",
+    "js-base64": "^3.7.5",
     "ky": "^0.33.0",
     "libphonenumber-js": "^1.9.49",
     "lint-staged": "^13.0.0",

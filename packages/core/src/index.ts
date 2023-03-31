@@ -8,7 +8,7 @@ import SystemContext from './tenants/SystemContext.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
-const { appInsights } = await import('@logto/app-insights/node.js');
+const { appInsights } = await import('@logto/app-insights/node');
 
 if (appInsights.setup('logto')) {
   console.debug('Initialized ApplicationInsights');

@@ -8,8 +8,6 @@ import { generateState, storeState } from '@/utils/social-connectors';
 
 import SocialCallback from '.';
 
-const origin = 'http://localhost:3000';
-
 jest.mock('i18next', () => ({
   ...jest.requireActual('i18next'),
   language: 'en',
