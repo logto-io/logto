@@ -7,6 +7,7 @@ import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import es from './locales/es/index.js';
 import fr from './locales/fr/index.js';
+import it from './locales/it/index.js';
 import ja from './locales/ja/index.js';
 import ko from './locales/ko/index.js';
 import ptBR from './locales/pt-br/index.js';
@@ -27,6 +28,7 @@ export const builtInLanguages = [
   'en',
   'es',
   'fr',
+  'it',
   'ja',
   'ko',
   'pt-BR',
@@ -66,6 +68,7 @@ const resource: Resource = {
   en,
   es,
   fr,
+  it,
   ja,
   ko,
   'pt-BR': ptBR,
