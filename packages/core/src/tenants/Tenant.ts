@@ -70,7 +70,7 @@ export default class Tenant implements TenantContext {
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());
     app.use(koaCompress());
-    app.use(koaSecurityHeaders());
+    app.use(koaSecurityHeaders(mountedApps, id));
 
     // Mount OIDC
     const provider = initOidc(id, envSet, queries, libraries);
@@ -84,6 +84,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
     };
+
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));
 
@@ -128,6 +129,7 @@ export default class Tenant implements TenantContext {
     this.provider = provider;
 
     const { isPathBasedMultiTenancy, adminUrlSet } = EnvSet.values;
+
     this.run =
       isPathBasedMultiTenancy &&
       // If admin URL Set is specified, consider that URL first

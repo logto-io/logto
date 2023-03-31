@@ -39,6 +39,10 @@ export default class UrlSet {
     ).map((value) => new URL(value));
   }
 
+  public get origins(): string[] {
+    return this.deduplicated().map((url) => url.origin);
+  }
+
   public get port(): number {
     if (this.isLocalhostDisabled) {
       throw new Error('Localhost has been disabled in this URL Set.');
