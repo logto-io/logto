@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-smtp",
+  "version": "1.0.0",
+  "description": "SMTP connector implementation.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "dependencies": {
+    "nodemailer": "^6.9.1"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.7"
+  }
+}

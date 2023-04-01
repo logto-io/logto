@@ -1,0 +1,9 @@
+# generated files
+/*/package.json
+/*/types
+/*/tsconfig.*
+/*/jest.config.*
+/*/rollup.config.*
+
+# keep templates
+!/templates/**

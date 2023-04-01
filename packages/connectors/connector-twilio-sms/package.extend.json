@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-twilio-sms",
+  "version": "1.0.0",
+  "description": "Twilio SMS connector implementation.",
+  "author": "Silverhand Inc. <contact@silverhand.io>"
+}

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-logto-email",
+  "version": "1.0.0",
+  "description": "Logto email connector.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "dependencies": {}
+}

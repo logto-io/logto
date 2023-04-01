@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-kakao",
+  "version": "1.0.0",
+  "description": "Kakao connector implementation.",
+  "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>"
+}

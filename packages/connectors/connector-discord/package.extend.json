@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-discord",
+  "version": "1.0.0",
+  "description": "Discord connector implementation.",
+  "author": "ZR3SYSTEMS. <https://github.com/FlurryNight>"
+}

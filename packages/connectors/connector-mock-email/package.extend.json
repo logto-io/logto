@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "name": "@logto/connector-mock-email",
+  "version": "1.0.0",
+  "description": "Mock Email Service connector implementation for integration tests only.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "scripts": {
+    "test": "echo No test available; exit 0;"
+  }
+}
