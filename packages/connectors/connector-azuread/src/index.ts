@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import type { AuthorizationCodeRequest, AuthorizationUrlRequest } from '@azure/msal-node';
 import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';

@@ -88,7 +88,6 @@ export const getAccessToken = async (
 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
-  // eslint-disable-next-line complexity
   async (data) => {
     const { code, redirectUri } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);

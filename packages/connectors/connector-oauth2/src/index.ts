@@ -1,16 +1,14 @@
-import type {
-  GetAuthorizationUri,
-  GetUserInfo,
-  SocialConnector,
-  CreateConnector,
-  GetConnectorConfig,
-} from '@logto/connector-kit';
 import {
+  type GetAuthorizationUri,
+  type GetUserInfo,
+  type SocialConnector,
+  type CreateConnector,
+  type GetConnectorConfig,
+  parseJsonObject,
   ConnectorError,
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
-  parseJson,
 } from '@logto/connector-kit';
 import { assert, pick } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
@@ -74,7 +72,7 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      return userProfileMapping(parseJson(httpResponse.body), parsedConfig.profileMap);
+      return userProfileMapping(parseJsonObject(httpResponse.body), parsedConfig.profileMap);
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));

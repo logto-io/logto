@@ -65,15 +65,18 @@ const sendMessage =
 
 const parseContents = (contents: string, contentType: ContextType) => {
   switch (contentType) {
-    case ContextType.Text:
+    case ContextType.Text: {
       return { text: contents };
-    case ContextType.Html:
+    }
+    case ContextType.Html: {
       return { html: contents };
-    default:
+    }
+    default: {
       throw new ConnectorError(
         ConnectorErrorCodes.InvalidConfig,
         '`contentType` should be ContextType.'
       );
+    }
   }
 };
 

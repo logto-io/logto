@@ -1,5 +1,5 @@
-import type { BinaryToTextEncoding } from 'crypto';
-import crypto from 'crypto';
+import type { BinaryToTextEncoding } from 'node:crypto';
+import crypto from 'node:crypto';
 
 import { got } from 'got';
 
@@ -38,7 +38,7 @@ export function isSmsErrorResponse(response: unknown): response is TencentErrorR
   return result.success;
 }
 
-export function sendSmsRequest(
+export async function sendSmsRequest(
   templateId: string,
   templateParameters: string[],
   phoneNumber: string,

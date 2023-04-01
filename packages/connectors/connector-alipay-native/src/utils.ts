@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { parseJson } from '@logto/connector-kit';
+import { parseJsonObject } from '@logto/connector-kit';
 import iconv from 'iconv-lite';
 import snakeCaseKeys from 'snakecase-keys';
 
@@ -16,11 +16,12 @@ export const signingParameters: SigningParameters = (
   parameters: AlipayNativeConfig & Record<string, string | undefined>
 ): Record<string, string> => {
   const { biz_content, privateKey, ...rest } = parameters;
+
   const signParameters = snakeCaseKeys(
     biz_content
       ? {
           ...rest,
-          bizContent: JSON.stringify(snakeCaseKeys(parseJson(biz_content))),
+          bizContent: JSON.stringify(snakeCaseKeys(parseJsonObject(biz_content))),
         }
       : rest
   );

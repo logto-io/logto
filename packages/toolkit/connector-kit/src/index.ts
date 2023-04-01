@@ -16,13 +16,22 @@ export const parseJson = (
   jsonString: string,
   errorCode: ConnectorErrorCodes = ConnectorErrorCodes.InvalidResponse,
   errorPayload?: unknown
-) => {
+): unknown => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(jsonString);
   } catch {
     throw new ConnectorError(errorCode, errorPayload ?? jsonString);
   }
+};
+
+export const parseJsonObject = (...args: Parameters<typeof parseJson>) => {
+  const parsed = parseJson(...args);
+
+  if (!(parsed !== null && typeof parsed === 'object')) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsed);
+  }
+
+  return parsed;
 };
 
 export const mockSmsVerificationCodeFileName = 'logto_mock_verification_code_record.txt';

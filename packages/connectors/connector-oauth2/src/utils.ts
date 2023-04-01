@@ -59,7 +59,8 @@ const accessTokenResponseHandler = async (
 };
 
 export const userProfileMapping = (
-  originUserProfile: Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  originUserProfile: object,
   keyMapping: ProfileMap
 ) => {
   const keyMap = new Map(

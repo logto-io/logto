@@ -59,7 +59,6 @@ const getAuthorizationUri =
 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
-  // eslint-disable-next-line complexity
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig<OidcConfig>(config, oidcConfigGuard);
