@@ -1,17 +1,14 @@
-import { fallback } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { alipaySigningAlgorithms, charsetEnum, fallbackCharset } from './constant.js';
 
 const charsetGuard = z.enum(charsetEnum);
 
-type Charset = z.infer<typeof charsetGuard>;
-
 export const alipayConfigGuard = z.object({
   appId: z.string(),
   privateKey: z.string(),
   signType: z.enum(alipaySigningAlgorithms),
-  charset: charsetGuard.or(fallback<Charset>(fallbackCharset)),
+  charset: charsetGuard.default(fallbackCharset),
 });
 
 export type AlipayConfig = z.infer<typeof alipayConfigGuard>;

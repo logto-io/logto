@@ -1,7 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/package",
-  "name": "@logto/connector-tencent-sms",
-  "version": "1.0.0",
-  "description": "Tencent SMS connector implementation.",
-  "author": "StringKe"
-}

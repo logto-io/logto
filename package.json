@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "connectors:sync": "cd packages/connectors && node templates/sync-to-current.js",
-    "connectors:update": "cd packages/connectors && node templates/sync-from-current.js",
-    "pnpm:devPreinstall": "pnpm connectors:sync",
+    "pnpm:devPreinstall": "cd packages/connectors && node templates/sync-preset.js",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "pnpm -r prepack",
     "dev": "pnpm -r prepack && pnpm start:dev",
