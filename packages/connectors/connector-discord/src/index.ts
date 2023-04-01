@@ -3,6 +3,9 @@
  * https://discord.com/developers/docs/topics/oauth2
  */
 
+import { assert, conditional } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   GetConnectorConfig,
   GetAuthorizationUri,
@@ -18,8 +21,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   defaultMetadata,

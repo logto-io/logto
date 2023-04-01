@@ -1,3 +1,5 @@
+import { assert } from '@silverhand/essentials';
+
 import type { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import { SESv2ServiceException } from '@aws-sdk/client-sesv2';
 import type {
@@ -12,7 +14,6 @@ import {
   ConnectorType,
   validateConfig,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
 
 import { defaultMetadata } from './constant.js';
 import type { AwsSesConfig } from './types.js';

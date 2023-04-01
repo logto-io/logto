@@ -38,7 +38,16 @@
     "node": "^18.12.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "settings": {
+      "import/core-modules": [
+        "@silverhand/essentials",
+        "got",
+        "nock",
+        "snakecase-keys",
+        "zod"
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "publishConfig": {

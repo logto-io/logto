@@ -3,6 +3,9 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
+import { assert } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -17,8 +20,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   authorizationEndpoint,

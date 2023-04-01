@@ -1,3 +1,6 @@
+import { assert } from '@silverhand/essentials';
+import { HTTPError } from 'got';
+
 import type {
   GetConnectorConfig,
   SendMessageFunction,
@@ -11,8 +14,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant.js';
 import { sendSms } from './single-send-text.js';

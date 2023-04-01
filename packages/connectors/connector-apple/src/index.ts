@@ -1,3 +1,5 @@
+import { assert } from '@silverhand/essentials';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -12,7 +14,6 @@ import {
   ConnectorType,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/core-kit';
-import { assert } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';

@@ -7,6 +7,10 @@
  * https://opendocs.alipay.com/open/204/105296/
  */
 
+import { assert } from '@silverhand/essentials';
+import { got } from 'got';
+import { z } from 'zod';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -21,10 +25,7 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { got } from 'got';
-import { z } from 'zod';
 
 import {
   alipayEndpoint,

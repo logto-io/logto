@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { z } from 'zod';
 
 import type {
   GetAuthorizationUri,
@@ -7,7 +8,6 @@ import type {
   SocialConnector,
 } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
-import { z } from 'zod';
 
 import { defaultMetadata } from './constant.js';
 import { mockSocialConfigGuard } from './types.js';

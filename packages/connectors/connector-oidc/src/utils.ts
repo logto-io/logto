@@ -1,8 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
 import { assert, pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
+
+import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
 
 import { defaultTimeout } from './constant.js';
 import type { AccessTokenResponse, OidcConfig } from './types.js';

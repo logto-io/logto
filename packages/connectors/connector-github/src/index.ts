@@ -1,3 +1,6 @@
+import { assert, conditional } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -12,8 +15,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 import qs from 'query-string';
 
 import {

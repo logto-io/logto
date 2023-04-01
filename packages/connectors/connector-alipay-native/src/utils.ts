@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
+import snakeCaseKeys from 'snakecase-keys';
 
 import { parseJsonObject } from '@logto/connector-kit';
 import iconv from 'iconv-lite';
-import snakeCaseKeys from 'snakecase-keys';
 
 import { alipaySigningAlgorithmMapping } from './constant.js';
 import type { AlipayNativeConfig } from './types.js';

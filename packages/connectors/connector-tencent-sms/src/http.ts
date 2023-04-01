@@ -1,7 +1,6 @@
+import { got } from 'got';
 import type { BinaryToTextEncoding } from 'node:crypto';
 import crypto from 'node:crypto';
-
-import { got } from 'got';
 
 import { tencentErrorResponse } from './schema.js';
 import type { TencentErrorResponse, TencentSuccessResponse } from './schema.js';

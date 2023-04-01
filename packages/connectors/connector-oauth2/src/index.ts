@@ -1,3 +1,7 @@
+import { assert, pick } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+import snakecaseKeys from 'snakecase-keys';
+
 import {
   type GetAuthorizationUri,
   type GetUserInfo,
@@ -10,9 +14,6 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { assert, pick } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
-import snakecaseKeys from 'snakecase-keys';
 
 import { defaultMetadata, defaultTimeout } from './constant.js';
 import type { OauthConfig } from './types.js';

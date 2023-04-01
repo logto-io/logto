@@ -1,3 +1,6 @@
+import { assert } from '@silverhand/essentials';
+import { z } from 'zod';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -12,9 +15,7 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
 import * as saml from 'samlify';
-import { z } from 'zod';
 
 import { defaultMetadata } from './constant.js';
 import { samlConfigGuard } from './types.js';

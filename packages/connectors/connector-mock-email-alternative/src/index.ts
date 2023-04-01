@@ -1,3 +1,4 @@
+import { assert } from '@silverhand/essentials';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -13,7 +14,6 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
 
 import { defaultMetadata } from './constant.js';
 import type { MockMailConfig } from './types.js';

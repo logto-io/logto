@@ -1,5 +1,6 @@
-import { VerificationCodeType } from '@logto/connector-kit';
 import nock from 'nock';
+
+import { VerificationCodeType } from '@logto/connector-kit';
 
 import { smsEndpoint } from './constant.js';
 import { mockedAccessTokenResponse, mockedConfig } from './mock.js';

@@ -1,3 +1,6 @@
+import { assert, conditional } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   CreateConnector,
   GetAuthorizationUri,
@@ -12,8 +15,6 @@ import {
   ConnectorType,
   validateConfig,
 } from '@logto/connector-kit';
-import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,

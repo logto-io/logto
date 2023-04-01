@@ -2,6 +2,9 @@
  * The Implementation of OpenID Connect of Google Identity Platform.
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
+import { conditional, assert } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -16,8 +19,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { conditional, assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,

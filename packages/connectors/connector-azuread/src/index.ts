@@ -1,3 +1,5 @@
+import { assert, conditional } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
 import path from 'node:path';
 
 import type { AuthorizationCodeRequest, AuthorizationUrlRequest } from '@azure/msal-node';
@@ -16,8 +18,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import { scopes, defaultMetadata, defaultTimeout, graphAPIEndpoint } from './constant.js';
 import type { AzureADConfig } from './types.js';

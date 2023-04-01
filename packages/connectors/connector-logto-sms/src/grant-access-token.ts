@@ -1,5 +1,6 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { got } from 'got';
+
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
 import { defaultTimeout, scope } from './constant.js';
 import { accessTokenResponseGuard } from './types.js';

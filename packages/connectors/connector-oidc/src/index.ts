@@ -1,3 +1,7 @@
+import { assert, conditional, pick } from '@silverhand/essentials';
+import { HTTPError } from 'got';
+import snakecaseKeys from 'snakecase-keys';
+
 import type {
   GetAuthorizationUri,
   GetUserInfo,
@@ -12,10 +16,7 @@ import {
   ConnectorType,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/core-kit';
-import { assert, conditional, pick } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import snakecaseKeys from 'snakecase-keys';
 
 import { defaultMetadata } from './constant.js';
 import type { OidcConfig } from './types.js';

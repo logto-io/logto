@@ -1,9 +1,10 @@
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
 import { assert, pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
-import * as qs from 'query-string';
 import snakecaseKeys from 'snakecase-keys';
+
+import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import * as qs from 'query-string';
 
 import { defaultTimeout } from './constant.js';
 import type {

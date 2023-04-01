@@ -1,3 +1,6 @@
+import { assert } from '@silverhand/essentials';
+import { HTTPError } from 'got';
+
 import type {
   CreateConnector,
   GetConnectorConfig,
@@ -10,8 +13,6 @@ import {
   ConnectorType,
   validateConfig,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant.js';
 import { isSmsErrorResponse, sendSmsRequest } from './http.js';

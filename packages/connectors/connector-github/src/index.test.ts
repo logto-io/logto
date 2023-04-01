@@ -1,5 +1,6 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import nock from 'nock';
+
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import qs from 'query-string';
 
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant.js';

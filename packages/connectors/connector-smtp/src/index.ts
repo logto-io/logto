@@ -1,3 +1,5 @@
+import { assert } from '@silverhand/essentials';
+
 import type {
   GetConnectorConfig,
   CreateConnector,
@@ -10,7 +12,6 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 

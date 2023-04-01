@@ -1,3 +1,5 @@
+import { HTTPError, got } from 'got';
+
 import type {
   CreateConnector,
   EmailConnector,
@@ -5,7 +7,6 @@ import type {
   SendMessageFunction,
 } from '@logto/connector-kit';
 import { ConnectorType, validateConfig } from '@logto/connector-kit';
-import { HTTPError, got } from 'got';
 
 import { defaultMetadata, defaultTimeout, emailEndpoint } from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';

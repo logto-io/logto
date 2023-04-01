@@ -2,6 +2,9 @@
  * The Implementation of OpenID Connect of Kakao.
  * https://developers.kakao.com/docs/latest/en/kakaologin/rest-api
  */
+import { assert, conditional } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   CreateConnector,
   GetAuthorizationUri,
@@ -16,8 +19,6 @@ import {
   validateConfig,
   parseJson,
 } from '@logto/connector-kit';
-import { assert, conditional } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,

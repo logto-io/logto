@@ -1,3 +1,6 @@
+import { assert } from '@silverhand/essentials';
+import { HTTPError } from 'got';
+
 import type {
   CreateConnector,
   EmailConnector,
@@ -11,8 +14,6 @@ import {
   validateConfig,
   parseJson,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant.js';
 import { singleSendMail } from './single-send-mail.js';

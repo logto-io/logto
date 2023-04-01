@@ -1,3 +1,6 @@
+import { assert } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   GetConnectorConfig,
   SendMessageFunction,
@@ -10,8 +13,6 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant.js';
 import type { TwilioSmsConfig, PublicParameters } from './types.js';

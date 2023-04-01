@@ -3,6 +3,9 @@
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
 
+import { assert } from '@silverhand/essentials';
+import { got, HTTPError } from 'got';
+
 import type {
   CreateConnector,
   SocialConnector,
@@ -17,8 +20,6 @@ import {
   ConnectorType,
   parseJson,
 } from '@logto/connector-kit';
-import { assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,

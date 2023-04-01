@@ -1,6 +1,5 @@
-import { createHmac } from 'node:crypto';
-
 import { got } from 'got';
+import { createHmac } from 'node:crypto';
 
 import type { PublicParameters } from './types.js';
 
