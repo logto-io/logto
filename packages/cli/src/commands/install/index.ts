@@ -87,7 +87,7 @@ const install: CommandModule<
       },
       du: {
         alias: 'download-url',
-        describe: 'URL for downloading Logto, can be a local path to tar',
+        describe: 'URL for downloading Logto, can be a local path to tar.',
         type: 'string',
         hidden: true,
       },

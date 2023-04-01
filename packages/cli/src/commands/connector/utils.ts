@@ -97,7 +97,7 @@ export const normalizePackageName = (name: string) =>
     )
     .join('/');
 
-const getConnectorDirectory = (instancePath: string) =>
+export const getConnectorDirectory = (instancePath: string) =>
   path.join(instancePath, coreDirectory, connectorDirectory);
 
 export const isOfficialConnector = (packageName: string) =>
@@ -108,10 +108,24 @@ export const getConnectorPackagesFrom = async (instancePath?: string) => {
   const packages = await trySafe(getConnectorPackagesFromDirectory(directory));
 
   if (!packages || packages.length === 0) {
-    throw new Error('No connector found');
+    throw new Error('No connector found in ' + directory);
   }
 
   return packages;
+};
+
+export const getLocalConnectorPackages = async (instancePath: string) => {
+  const directory = path.join(instancePath, 'packages', connectorDirectory);
+  const files = await fs.readdir(directory, { withFileTypes: true });
+  const packages = files.filter(
+    (entity) => entity.isDirectory() && entity.name.startsWith('connector-')
+  );
+
+  if (packages.length === 0) {
+    throw new Error('No connector found in ' + directory);
+  }
+
+  return packages.map(({ name }) => [name, path.join(directory, name)] as const);
 };
 
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {

@@ -60,7 +60,7 @@ const setConfig: CommandModule<unknown, { key: string; value: string }> = {
         demandOption: true,
       })
       .positional('value', {
-        describe: 'The value to set, should be a valid JSON string',
+        describe: 'The value to set, should be a valid JSON string.',
         type: 'string',
         demandOption: true,
       }),
