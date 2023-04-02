@@ -10,7 +10,8 @@ import { type CreateFullTranslation, baseLanguage, createFullTranslation } from 
 
 const sync: CommandModule<{ path?: string }, { path?: string }> = {
   command: ['sync'],
-  describe: 'Translate all untranslated phrases.',
+  describe:
+    'Translate all untranslated phrases using ChatGPT. Note the environment variable `OPENAI_API_KEY` is required to work.',
   handler: async ({ path: inputPath }) => {
     const queue = new PQueue({ concurrency: 5 });
     const instancePath = await inquireInstancePath(inputPath);
