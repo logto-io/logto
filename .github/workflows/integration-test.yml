@@ -107,7 +107,7 @@ jobs:
         working-directory: tests
         run: |
           npm run cli connector list -- -p ../logto | grep OFFICIAL
-          npm run cli connector add @logto/connector-mock-sms @logto/connector-mock-email @logto/connector-mock-standard-email @logto/connector-mock-social -- -p ../logto
+          npm run cli connector link -- --mock -p ../logto
 
       - name: Run Logto
         working-directory: logto/

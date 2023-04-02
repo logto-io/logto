@@ -101,7 +101,9 @@ If you are developing something with database alterations, see [packages/schemas
 
 ### Add connectors (optional)
 
-Run `pnpm cli connector add --official -p .` to add all Logto official connectors. See [Manage connectors](https://docs.logto.io/docs/tutorials/using-cli/manage-connectors) for details about managing connectors via CLI.
+Run `logto connector link -p .` to link all local connectors. You can also use `logto connector add <name> -p .` to install connector from NPM.
+
+See [Manage connectors](https://docs.logto.io/docs/tutorials/using-cli/manage-connectors) for details about managing connectors via CLI.
 
 ## Start dev
 

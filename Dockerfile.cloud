@@ -24,10 +24,10 @@ ENV IS_CLOUD=1
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 RUN pnpm prepack
-RUN pnpm -r --filter @logto/console --filter @logto/cloud build
+RUN pnpm connectors:build && pnpm -r --filter @logto/console --filter @logto/cloud build
 
 ### Add official connectors ###
-RUN pnpm cli connector add --official -p .
+RUN pnpm cli connector link -p .
 
 ### Prune dependencies for production ###
 RUN rm -rf node_modules packages/**/node_modules

@@ -3,7 +3,7 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
-  "updateContentCommand": "npm i -g pnpm && pnpm i && pnpm prepack && pnpm cli connector add --official -p .",
+  "updateContentCommand": "npm i -g pnpm && pnpm i && pnpm prepack && pnpm connectors:build && pnpm cli connector link -p .",
   "postStartCommand": "docker run -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s postgres:14-alpine",
   "postAttachCommand": "pnpm cli db seed && [[ ! -z $CODESPACES  ]] && export ENDPOINT=https://$CODESPACE_NAME-3001.preview.app.github.dev",
   "containerEnv": {
