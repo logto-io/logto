@@ -9,10 +9,7 @@
     "@logto/cli",
     "@logto/create"
   ]],
-  "linked": [[
-    "@logto/phrases",
-    "@logto/phrases-ui"
-  ]],
+  "linked": [],
   "//": "END OF CAUTION",
   "access": "restricted",
   "baseBranch": "master",

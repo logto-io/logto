@@ -1,5 +1,6 @@
 // See https://pnpm.io/pnpmfile
 const fs = require('node:fs/promises');
+const path = require('node:path');
 
 // Types are inspected and edited from https://github.com/pnpm/pnpm/blob/ef6c22e129dc3d76998cee33647b70a66d1f36bf/hooks/pnpmfile/src/requireHooks.ts
 /**
@@ -27,7 +28,10 @@ const hooks = { readPackage: async (pkg) => {
   }
 
   // Apply connector's `package.json` to the template
-  const result = JSON.parse(await fs.readFile('packages/connectors/templates/package.json', 'utf8'));
+  const result = JSON.parse(
+    // Use `__dirname` since the `pnpm i` command may be executed in nested workspace directories
+    await fs.readFile(path.join(__dirname, 'packages/connectors/templates/package.json'), 'utf8')
+  );
   for (const [key, value] of Object.entries(pkg)) {
     if (key === '$schema') {
       continue;
