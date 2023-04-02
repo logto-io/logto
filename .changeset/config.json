@@ -5,14 +5,11 @@
   "//": "CAUTION: When updating the fields below, you should also update README accordingly.",
   "fixed": [[
     "@logto/core",
-    "@logto/console",
-    "@logto/integration-tests",
-    "@logto/ui",
+    "@logto/schemas",
     "@logto/cli",
     "@logto/create"
   ]],
   "linked": [[
-    "@logto/schemas",
     "@logto/phrases",
     "@logto/phrases-ui"
   ]],
