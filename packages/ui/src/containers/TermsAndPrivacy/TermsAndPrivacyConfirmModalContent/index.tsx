@@ -2,9 +2,9 @@ import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import TermsLinks from '@/components/TermsLinks';
 import type { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
-import { PageContext } from '@/hooks/use-page-context';
 
 const TermsAndPrivacyConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
   const { experienceSettings } = useContext(PageContext);

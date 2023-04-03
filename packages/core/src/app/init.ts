@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import http2 from 'node:http2';
 
-import { appInsights } from '@logto/app-insights/node.js';
+import { appInsights } from '@logto/app-insights/node';
 import { toTitle, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type Koa from 'koa';

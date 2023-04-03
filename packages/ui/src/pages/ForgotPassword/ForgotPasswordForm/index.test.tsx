@@ -1,7 +1,6 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { putInteraction, sendVerificationCode } from '@/apis/interaction';
@@ -33,13 +32,11 @@ describe('ForgotPasswordForm', () => {
 
   const renderForm = (defaultType: VerificationCodeIdentifier, defaultValue?: string) =>
     renderWithPageContext(
-      <MemoryRouter>
-        <ForgotPasswordForm
-          enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
-          defaultType={defaultType}
-          defaultValue={defaultValue}
-        />
-      </MemoryRouter>
+      <ForgotPasswordForm
+        enabledTypes={[SignInIdentifier.Email, SignInIdentifier.Phone]}
+        defaultType={defaultType}
+        defaultValue={defaultValue}
+      />
     );
 
   describe.each([

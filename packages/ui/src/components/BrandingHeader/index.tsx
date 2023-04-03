@@ -16,7 +16,7 @@ const BrandingHeader = ({ logo, headline, className }: Props) => {
 
   return (
     <div className={classNames(styles.container, className)}>
-      {logo && <img className={styles.logo} alt="app logo" src={logo} />}
+      {logo && <img className={styles.logo} alt="app logo" src={logo} crossOrigin="anonymous" />}
       {headline && <div className={styles.headline}>{t(headline)}</div>}
     </div>
   );

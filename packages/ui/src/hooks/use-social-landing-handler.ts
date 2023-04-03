@@ -1,15 +1,15 @@
-import { useContext, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 import { storeCallbackLink } from '@/utils/social-connectors';
 
-import { PageContext } from './use-page-context';
+import useToast from './use-toast';
 
 const useSocialLandingHandler = () => {
   const [loading, setLoading] = useState(true);
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
   const { t } = useTranslation();
   const { search } = window.location;
 

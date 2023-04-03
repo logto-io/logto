@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { useContext, useEffect } from 'react';
 
-import { PageContext } from '@/hooks/use-page-context';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import type { SignInExperienceResponse } from '@/types';
 
 import { mockSignInExperienceSettings } from '../logto';

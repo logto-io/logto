@@ -53,6 +53,8 @@ const description = {
   create_your_account: '계정 생성하기',
   sign_in_to_your_account: '계정에 로그인하세요',
   no_region_code_found: '지역 코드를 찾을 수 없습니다.',
+  verify_email: '이메일 인증',
+  verify_phone: '휴대전화번호 인증',
 };
 
 export default description;

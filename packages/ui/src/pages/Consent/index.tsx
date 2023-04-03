@@ -1,11 +1,11 @@
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useContext, useState } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { consent } from '@/apis/consent';
 import { LoadingIcon } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
-import { PageContext } from '@/hooks/use-page-context';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
@@ -43,7 +43,9 @@ const Consent = () => {
   return (
     <div className={styles.viewBox}>
       <div className={styles.container}>
-        {brandingLogo && <img alt="logo" className={styles.img} src={brandingLogo} />}
+        {brandingLogo && (
+          <img alt="logo" className={styles.img} src={brandingLogo} crossOrigin="anonymous" />
+        )}
         <div className={styles.loadingWrapper}>{loading && <LoadingIcon />}</div>
       </div>
     </div>

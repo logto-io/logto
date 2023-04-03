@@ -59,6 +59,8 @@ const description = {
   create_your_account: 'Создайте свой аккаунт',
   sign_in_to_your_account: 'Войди в свой аккаунт',
   no_region_code_found: 'Не удалось определить код региона',
+  verify_email: 'Подтвердите Ваш электронный адрес',
+  verify_phone: 'Подтвердите свой номер телефона',
 };
 
 export default description;

@@ -1,10 +1,10 @@
 import type { LogtoErrorCode } from '@logto/phrases';
 import type { RequestErrorBody } from '@logto/schemas';
 import { HTTPError, TimeoutError } from 'ky';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PageContext } from '@/hooks/use-page-context';
+import useToast from './use-toast';
 
 export type ErrorHandlers = {
   [key in LogtoErrorCode]?: (error: RequestErrorBody) => void | Promise<void>;
@@ -15,7 +15,7 @@ export type ErrorHandlers = {
 
 const useErrorHandler = () => {
   const { t } = useTranslation();
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
 
   const handleError = useCallback(
     async (error: unknown, errorHandlers?: ErrorHandlers) => {

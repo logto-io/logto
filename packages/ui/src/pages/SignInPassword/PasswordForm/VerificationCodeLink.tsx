@@ -1,9 +1,9 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import SwitchIcon from '@/assets/icons/switch-icon.svg';
 import TextLink from '@/components/TextLink';
-import { PageContext } from '@/hooks/use-page-context';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import useToast from '@/hooks/use-toast';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const VerificationCodeLink = ({ className, identifier, value }: Props) => {
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
     UserFlow.signIn,

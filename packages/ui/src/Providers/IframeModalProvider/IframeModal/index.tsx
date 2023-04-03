@@ -52,8 +52,7 @@ const IframeModal = ({ className, title = '', href = '', onClose }: ModalProps) 
           <iframe
             title={title}
             src={href}
-            // Applies all restrictions
-            sandbox=""
+            sandbox="allow-same-origin"
             className={conditional(isLoaded && styles.loaded)}
             onLoad={() => {
               setIsLoaded(true);

@@ -1,5 +1,5 @@
 import { SignInIdentifier, SignInMode } from '@logto/schemas';
-import { MemoryRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -11,13 +11,16 @@ jest.mock('i18next', () => ({
   language: 'en',
 }));
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
+
 describe('<SignIn />', () => {
   const renderSignIn = (settings?: Partial<typeof mockSignInExperienceSettings>) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
+        <SignIn />
       </SettingsProvider>
     );
 
@@ -76,9 +79,7 @@ describe('<SignIn />', () => {
   test('renders with social as primary', async () => {
     const { container, queryByText } = renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, signIn: { methods: [] } }}>
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
+        <SignIn />
       </SettingsProvider>
     );
 
@@ -90,17 +91,21 @@ describe('<SignIn />', () => {
     expect(queryByText('description.privacy_policy')).not.toBeNull();
   });
 
-  test('render with register only mode should return ErrorPage', () => {
+  test('render with register only mode should redirect to the Register page', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider
         settings={{ ...mockSignInExperienceSettings, signInMode: SignInMode.Register }}
       >
-        <MemoryRouter>
-          <SignIn />
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="sign-in" element={<SignIn />} />
+          <Route path="register" element={<div>Register</div>} />
+        </Routes>
+      </SettingsProvider>,
+      {
+        initialEntries: ['/sign-in'],
+      }
     );
 
-    expect(queryByText('description.not_found')).not.toBeNull();
+    expect(queryByText('Register')).not.toBeNull();
   });
 });

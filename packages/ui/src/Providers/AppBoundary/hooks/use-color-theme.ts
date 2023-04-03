@@ -3,7 +3,7 @@ import { Theme } from '@logto/schemas';
 import color from 'color';
 import { useEffect, useContext } from 'react';
 
-import { PageContext } from '@/hooks/use-page-context';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 const generateLightColorLibrary = (primaryColor: color) => ({
   [`--color-brand-default`]: primaryColor.hex(),

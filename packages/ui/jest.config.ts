@@ -9,6 +9,9 @@ const config: Config.InitialOptions = {
       '\\.(svg)$': 'jest-transformer-svg',
       '\\.(png)$': 'jest-transform-stub',
     },
+    moduleNameMapper: {
+      '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/$1',
+    },
   }),
   // Will update common config soon
   transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|@silverhand))/)'],

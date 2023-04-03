@@ -1,4 +1,4 @@
-import { appInsights } from '@logto/app-insights/node.js';
+import { appInsights } from '@logto/app-insights/node';
 import type { RequestErrorBody } from '@logto/schemas';
 import type { Middleware } from 'koa';
 import { HttpError } from 'koa';

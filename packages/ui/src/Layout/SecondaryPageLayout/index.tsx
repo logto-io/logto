@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import type { TFuncKey } from 'react-i18next';
 
 import NavBar from '@/components/NavBar';
+import PageMeta from '@/components/PageMeta';
 import usePlatform from '@/hooks/use-platform';
 
 import { InlineNotification } from '../../components/Notification';
@@ -9,7 +10,7 @@ import { InlineNotification } from '../../components/Notification';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: TFuncKey;
+  title: TFuncKey;
   description?: TFuncKey;
   titleProps?: Record<string, unknown>;
   descriptionProps?: Record<string, unknown>;
@@ -30,13 +31,14 @@ const SecondaryPageLayout = ({
 
   return (
     <div className={styles.wrapper}>
+      <PageMeta titleKey={title} />
       <NavBar />
       {isMobile && notification && (
         <InlineNotification message={notification} className={styles.notification} />
       )}
       <div className={styles.container}>
         <div className={styles.header}>
-          {title && <div className={styles.title}>{t(title, titleProps)}</div>}
+          <div className={styles.title}>{t(title, titleProps)}</div>
           {description && (
             <div className={styles.description}>{t(description, descriptionProps)}</div>
           )}

@@ -60,6 +60,8 @@ const description = {
   create_your_account: 'Créer votre compte',
   sign_in_to_your_account: 'Connecte-toi à ton compte',
   no_region_code_found: 'Aucun code de région trouvé',
+  verify_email: 'Vérifiez votre e-mail',
+  verify_phone: 'Vérifiez votre numéro de téléphone',
 };
 
 export default description;

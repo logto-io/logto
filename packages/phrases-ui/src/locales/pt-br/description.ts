@@ -55,6 +55,8 @@ const description = {
   create_your_account: 'Crie sua conta',
   sign_in_to_your_account: 'Faça login na sua conta',
   no_region_code_found: 'Não foi possível encontrar o código de região do seu telefone.',
+  verify_email: 'Verificar e-mail',
+  verify_phone: 'Verificar número de telefone',
 };
 
 export default description;

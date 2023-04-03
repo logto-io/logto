@@ -1,4 +1,4 @@
-import { appInsights } from '@logto/app-insights/node.js';
+import { appInsights } from '@logto/app-insights/node';
 import { tryThat } from '@silverhand/essentials';
 import type { BaseContext, NextFunction } from '@withtyped/server';
 

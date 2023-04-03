@@ -2,8 +2,8 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { LoadingIcon } from '@/components/LoadingLayer';
-import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
 
@@ -24,6 +24,7 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
           <img
             src={theme === Theme.Dark ? connector.logoDark ?? connector.logo : connector.logo}
             alt="logo"
+            crossOrigin="anonymous"
           />
         ) : (
           connectorId

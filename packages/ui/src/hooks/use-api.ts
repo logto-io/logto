@@ -1,7 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import { useCallback, useContext } from 'react';
 
-import { PageContext } from '@/hooks/use-page-context';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 const useApi = <Args extends unknown[], Response>(api: (...args: Args) => Promise<Response>) => {
   const { setLoading } = useContext(PageContext);

@@ -1,4 +1,4 @@
-import { Routes, Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -15,26 +15,24 @@ jest.mock('react-router-dom', () => ({
 describe('VerificationCode Page', () => {
   it('render properly', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/verification-code']}>
-        <SettingsProvider>
-          <Routes>
-            <Route path="/:flow/verification-code" element={<VerificationCode />} />
-          </Routes>
-        </SettingsProvider>
-      </MemoryRouter>
+      <SettingsProvider>
+        <Routes>
+          <Route path="/:flow/verification-code" element={<VerificationCode />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/sign-in/verification-code'] }
     );
 
-    expect(queryByText('action.enter_passcode')).not.toBeNull();
+    expect(queryByText('description.verify_email')).not.toBeNull();
     expect(queryByText('description.enter_passcode')).not.toBeNull();
   });
 
   it('render with invalid flow', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/social/verification-code']}>
-        <Routes>
-          <Route path="/:flow/verification-code" element={<VerificationCode />} />
-        </Routes>
-      </MemoryRouter>
+      <Routes>
+        <Route path="/:flow/verification-code" element={<VerificationCode />} />
+      </Routes>,
+      { initialEntries: ['/social/verification-code'] }
     );
 
     expect(queryByText('action.enter_passcode')).toBeNull();
