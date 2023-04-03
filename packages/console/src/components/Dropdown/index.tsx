@@ -79,7 +79,14 @@ function Dropdown({
       }}
       className={classNames(styles.content, positionState.verticalAlign === 'top' && styles.onTop)}
       overlayClassName={styles.overlay}
-      onRequestClose={onClose}
+      onRequestClose={(event) => {
+        /**
+         * Note:
+         * we should stop propagation to prevent the event from bubbling up when we click on the overlay to close the dropdown.
+         */
+        event.stopPropagation();
+        onClose?.();
+      }}
       onAfterOpen={mutate}
     >
       <div ref={overlayRef} className={styles.dropdownContainer}>
