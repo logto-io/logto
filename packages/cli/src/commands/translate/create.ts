@@ -10,7 +10,8 @@ import { createFullTranslation } from './utils.js';
 
 const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': string }> = {
   command: ['create <language-tag>', 'c'],
-  describe: 'Create a new language translation',
+  describe:
+    'Create a new language translation using ChatGPT. Note the environment variable `OPENAI_API_KEY` is required to work.',
   builder: (yargs) =>
     yargs.positional('language-tag', {
       describe: 'The language tag to create, e.g. `af-ZA`.',
