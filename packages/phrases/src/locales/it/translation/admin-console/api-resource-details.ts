@@ -1,0 +1,32 @@
+const api_resource_details = {
+  page_title: 'Dettagli delle risorse API',
+  back_to_api_resources: 'Torna alle risorse API',
+  settings_tab: 'Impostazioni',
+  permissions_tab: 'Autorizzazioni',
+  settings: 'Impostazioni',
+  settings_description:
+    "Le risorse API, anche note come Indicatori di Risorse, indicano i servizi o le risorse di destinazione da richiedere, di solito una variabile di formato URI che rappresenta l'identità della risorsa.",
+  token_expiration_time_in_seconds: 'Tempo di scadenza del token (in secondi)',
+  token_expiration_time_in_seconds_placeholder: 'Inserisci il tempo di scadenza del tuo token',
+  delete_description:
+    'Questa azione non può essere annullata. Eliminerà definitivamente la risorsa API. Per favore, inserisci il nome della risorsa api <span>{{name}}</span> per confermare.',
+  enter_your_api_resource_name: 'Inserisci il nome della tua risorsa API',
+  api_resource_deleted: 'La risorsa API {{name}} è stata eliminata con successo',
+  permission: {
+    create_button: 'Crea autorizzazione',
+    create_title: 'crea autorizzazione',
+    create_subtitle: 'Definire le autorizzazioni (ambiti) necessarie per questa API.',
+    confirm_create: 'Crea autorizzazione',
+    name: 'Nome autorizzazione',
+    name_placeholder: 'lettura:risorsa',
+    forbidden_space_in_name: "Il nome dell'autorizzazione non deve contenere spazi.",
+    description: 'Descrizione',
+    description_placeholder: 'In grado di leggere le risorse',
+    permission_created: "L'autorizzazione {{name}} è stata creata con successo",
+    delete_description:
+      "Se questa autorizzazione viene eliminata, l'utente che aveva questa autorizzazione perderà l'accesso concessogli tramite di essa.",
+    deleted: 'L\'autorizzazione "{{name}}" è stata eliminata con successo!',
+  },
+};
+
+export default api_resource_details;
