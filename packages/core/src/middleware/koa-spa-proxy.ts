@@ -16,7 +16,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const distributionPath = path.join('..', packagePath, 'dist');
+  const distributionPath = path.join('node_modules/@logto', packagePath, 'dist');
 
   const spaProxy: Middleware = EnvSet.values.isProduction
     ? serveStatic(distributionPath)

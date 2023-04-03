@@ -3017,9 +3017,15 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
+      '@logto/console':
+        specifier: workspace:*
+        version: link:../console
       '@logto/core-kit':
         specifier: workspace:^
         version: link:../toolkit/core-kit
+      '@logto/demo-app':
+        specifier: workspace:*
+        version: link:../demo-app
       '@logto/language-kit':
         specifier: workspace:^
         version: link:../toolkit/language-kit
@@ -3035,6 +3041,9 @@ importers:
       '@logto/shared':
         specifier: workspace:^
         version: link:../shared
+      '@logto/ui':
+        specifier: workspace:*
+        version: link:../ui
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
