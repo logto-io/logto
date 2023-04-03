@@ -1,3 +1,4 @@
+import { appInsightsReact } from '@logto/app-insights/lib/react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -20,9 +21,14 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
+import { shouldTrack } from './utils/cookies';
 import { handleSearchParametersData } from './utils/search-parameters';
 
 import './scss/normalized.scss';
+
+if (shouldTrack && appInsightsReact.setup()) {
+  console.debug('Initialized ApplicationInsights');
+}
 
 handleSearchParametersData();
 

@@ -9,11 +9,9 @@
     "lib"
   ],
   "exports": {
-    ".": {
-      "import": "./lib/index.js"
-    },
     "./*": {
-      "import": "./lib/*"
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
     }
   },
   "publishConfig": {
