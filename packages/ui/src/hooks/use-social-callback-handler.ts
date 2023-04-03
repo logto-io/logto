@@ -8,16 +8,14 @@ const useSocialCallbackHandler = () => {
 
   const socialCallbackHandler = useCallback(
     (connectorId: string) => {
-      // Get search string to evaluate
-      const searchString = window.location.search;
+      // Get search parameter to evaluate
+      const searchParams = new URLSearchParams(window.location.search);
+      // Get hash parameter to evaluate
+      const hashParams = new URLSearchParams(window.location.hash.slice(1));
 
-      // Get hash string to evaluate
-      const hashString = window.location.hash;
-
-      // Define evaluated search string
-      const search = `${searchString || '?'}${
-        searchString && hashString ? '&' : ''
-      }${hashString.slice(1)}`;
+      // Join search and hash parameters
+      const joinedSearchParams = new URLSearchParams([...searchParams, ...hashParams]);
+      const search = joinedSearchParams.toString() ? `?${joinedSearchParams.toString()}` : '';
 
       // Get native callback link from storage
       const callbackLink = getCallbackLinkFromStorage(connectorId);
