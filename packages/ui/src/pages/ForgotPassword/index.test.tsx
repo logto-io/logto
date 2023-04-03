@@ -1,7 +1,7 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -24,19 +24,17 @@ jest.mock('react-router-dom', () => ({
 describe('ForgotPassword', () => {
   const renderPage = (settings?: SignInExperienceResponse['forgotPassword']) =>
     renderWithPageContext(
-      <MemoryRouter>
-        <SettingsProvider
-          settings={{
-            ...mockSignInExperienceSettings,
-            forgotPassword: {
-              ...mockSignInExperienceSettings.forgotPassword,
-              ...settings,
-            },
-          }}
-        >
-          <ForgotPassword />
-        </SettingsProvider>
-      </MemoryRouter>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            ...mockSignInExperienceSettings.forgotPassword,
+            ...settings,
+          },
+        }}
+      >
+        <ForgotPassword />
+      </SettingsProvider>
     );
 
   beforeAll(() => {

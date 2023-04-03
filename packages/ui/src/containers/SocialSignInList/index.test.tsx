@@ -1,5 +1,3 @@
-import { MemoryRouter } from 'react-router-dom';
-
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { socialConnectors } from '@/__mocks__/logto';
@@ -10,9 +8,7 @@ describe('SocialSignInList', () => {
   it('Display connectors', () => {
     const { container } = renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter>
-          <SocialSignInList socialConnectors={socialConnectors} />
-        </MemoryRouter>
+        <SocialSignInList socialConnectors={socialConnectors} />
       </SettingsProvider>
     );
     expect(container.querySelectorAll('button')).toHaveLength(socialConnectors.length);

@@ -1,5 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -18,12 +18,11 @@ describe('SocialRegister', () => {
   it('render', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/social/link/github']}>
-          <Routes>
-            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/social/link/github'] }
     );
     expect(queryByText('description.bind_account_title')).not.toBeNull();
     expect(queryByText('description.social_create_account')).not.toBeNull();
@@ -41,12 +40,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <MemoryRouter initialEntries={['/social/link/github']}>
-          <Routes>
-            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/social/link/github'] }
     );
     expect(queryByText('description.link_email')).not.toBeNull();
     expect(queryByText('description.social_link_email')).not.toBeNull();
@@ -64,12 +62,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <MemoryRouter initialEntries={['/social/link/github']}>
-          <Routes>
-            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/social/link/github'] }
     );
     expect(queryByText('description.link_phone')).not.toBeNull();
     expect(queryByText('description.social_link_phone')).not.toBeNull();
@@ -87,12 +84,11 @@ describe('SocialRegister', () => {
           },
         }}
       >
-        <MemoryRouter initialEntries={['/social/link/github']}>
-          <Routes>
-            <Route path="/social/link/:connectorId" element={<SocialRegister />} />
-          </Routes>
-        </MemoryRouter>
-      </SettingsProvider>
+        <Routes>
+          <Route path="/social/link/:connectorId" element={<SocialRegister />} />
+        </Routes>
+      </SettingsProvider>,
+      { initialEntries: ['/social/link/github'] }
     );
     expect(queryByText('description.link_email_or_phone')).not.toBeNull();
     expect(queryByText('description.social_link_email_or_phone')).not.toBeNull();

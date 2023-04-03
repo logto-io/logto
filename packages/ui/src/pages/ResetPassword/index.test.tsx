@@ -1,5 +1,5 @@
 import { act, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { setUserPassword } from '@/apis/interaction';
@@ -20,11 +20,10 @@ jest.mock('@/apis/interaction', () => ({
 describe('ForgotPassword', () => {
   it('render forgot-password page properly', () => {
     const { queryByText, container } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/forgot-password']}>
-        <Routes>
-          <Route path="/forgot-password" element={<ResetPassword />} />
-        </Routes>
-      </MemoryRouter>
+      <Routes>
+        <Route path="/forgot-password" element={<ResetPassword />} />
+      </Routes>,
+      { initialEntries: ['/forgot-password'] }
     );
 
     expect(container.querySelector('input[name="newPassword"]')).not.toBeNull();

@@ -1,13 +1,10 @@
-import { SignInMode } from '@logto/schemas';
-import { useEffect, useRef } from 'react';
-import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
 import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
-import usePageContext from './hooks/use-page-context';
-import usePreview from './hooks/use-preview';
-import initI18n from './i18n/init';
+import PageContextProvider from './Providers/PageContextProvider';
+import SettingsProvider from './Providers/SettingsProvider';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -24,117 +21,68 @@ import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
 import { handleSearchParametersData } from './utils/search-parameters';
-import { getSignInExperienceSettings, setFavIcon } from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
 handleSearchParametersData();
 
 const App = () => {
-  const { context, Provider } = usePageContext();
-  const { experienceSettings, setLoading, setExperienceSettings } = context;
-  const customCssRef = useRef(document.createElement('style'));
-  const [isPreview, previewConfig] = usePreview(context);
-
-  useEffect(() => {
-    document.head.append(customCssRef.current);
-  }, []);
-
-  useEffect(() => {
-    if (isPreview) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      customCssRef.current.textContent = previewConfig?.signInExperience.customCss ?? null;
-
-      return;
-    }
-
-    (async () => {
-      const settings = await getSignInExperienceSettings();
-
-      const {
-        customCss,
-        branding: { favicon },
-      } = settings;
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      customCssRef.current.textContent = customCss;
-      setFavIcon(favicon);
-
-      // Note: i18n must be initialized ahead of page render
-      await initI18n();
-
-      // Init the page settings and render
-      setExperienceSettings(settings);
-    })();
-  }, [isPreview, previewConfig, setExperienceSettings, setLoading]);
-
-  if (!experienceSettings) {
-    return null;
-  }
-
-  const isRegisterOnly = experienceSettings.signInMode === SignInMode.Register;
-  const isSignInOnly = experienceSettings.signInMode === SignInMode.SignIn;
-
   return (
     <BrowserRouter>
-      <Provider value={context}>
-        <AppBoundary>
-          <Routes>
-            <Route path="sign-in/consent" element={<Consent />} />
-            <Route element={<AppLayout />}>
-              <Route
-                path="unknown-session"
-                element={<ErrorPage message="error.invalid_session" />}
-              />
-              <Route path="springboard" element={<Springboard />} />
+      <PageContextProvider>
+        <SettingsProvider>
+          <AppBoundary>
+            <Routes>
+              <Route path="sign-in/consent" element={<Consent />} />
+              <Route element={<AppLayout />}>
+                <Route
+                  path="unknown-session"
+                  element={<ErrorPage message="error.invalid_session" />}
+                />
+                <Route path="springboard" element={<Springboard />} />
 
-              <Route element={<LoadingLayerProvider />}>
-                {/* Sign-in */}
-                <Route path="sign-in">
-                  <Route
-                    index
-                    element={isRegisterOnly ? <Navigate replace to="/register" /> : <SignIn />}
-                  />
-                  <Route path="password" element={<SignInPassword />} />
-                  <Route path="social/:connectorId" element={<SocialSignIn />} />
+                <Route element={<LoadingLayerProvider />}>
+                  {/* Sign-in */}
+                  <Route path="sign-in">
+                    <Route index element={<SignIn />} />
+                    <Route path="password" element={<SignInPassword />} />
+                    <Route path="social/:connectorId" element={<SocialSignIn />} />
+                  </Route>
+
+                  {/* Register */}
+                  <Route path="register">
+                    <Route index element={<Register />} />
+                    <Route path="password" element={<RegisterPassword />} />
+                  </Route>
+
+                  {/* Forgot password */}
+                  <Route path="forgot-password">
+                    <Route index element={<ForgotPassword />} />
+                    <Route path="reset" element={<ResetPassword />} />
+                  </Route>
+
+                  {/* Passwordless verification code */}
+                  <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                  {/* Continue set up missing profile */}
+                  <Route path="continue">
+                    <Route path=":method" element={<Continue />} />
+                  </Route>
+
+                  {/* Social sign-in pages */}
+                  <Route path="social">
+                    <Route path="link/:connectorId" element={<SocialLinkAccount />} />
+                    <Route path="landing/:connectorId" element={<SocialLanding />} />
+                  </Route>
+                  <Route path="callback/:connectorId" element={<Callback />} />
                 </Route>
 
-                {/* Register */}
-                <Route path="register">
-                  <Route
-                    index
-                    element={isSignInOnly ? <Navigate replace to="/sign-in" /> : <Register />}
-                  />
-                  <Route path="password" element={<RegisterPassword />} />
-                </Route>
-
-                {/* Forgot password */}
-                <Route path="forgot-password">
-                  <Route index element={<ForgotPassword />} />
-                  <Route path="reset" element={<ResetPassword />} />
-                </Route>
-
-                {/* Passwordless verification code */}
-                <Route path=":flow/verification-code" element={<VerificationCode />} />
-
-                {/* Continue set up missing profile */}
-                <Route path="continue">
-                  <Route path=":method" element={<Continue />} />
-                </Route>
-
-                {/* Social sign-in pages */}
-                <Route path="social">
-                  <Route path="link/:connectorId" element={<SocialLinkAccount />} />
-                  <Route path="landing/:connectorId" element={<SocialLanding />} />
-                </Route>
-                <Route path="callback/:connectorId" element={<Callback />} />
+                <Route path="*" element={<ErrorPage />} />
               </Route>
-
-              <Route path="*" element={<ErrorPage />} />
-            </Route>
-          </Routes>
-        </AppBoundary>
-      </Provider>
+            </Routes>
+          </AppBoundary>
+        </SettingsProvider>
+      </PageContextProvider>
     </BrowserRouter>
   );
 };

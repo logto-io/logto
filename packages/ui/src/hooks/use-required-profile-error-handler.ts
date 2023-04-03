@@ -1,5 +1,5 @@
 import { MissingProfile } from '@logto/schemas';
-import { useMemo, useContext } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
@@ -8,7 +8,7 @@ import { missingProfileErrorDataGuard } from '@/types/guard';
 import { queryStringify } from '@/utils';
 
 import type { ErrorHandlers } from './use-error-handler';
-import { PageContext } from './use-page-context';
+import useToast from './use-toast';
 
 type Options = {
   replace?: boolean;
@@ -17,7 +17,7 @@ type Options = {
 
 const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) => {
   const navigate = useNavigate();
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
 
   const requiredProfileErrorHandler = useMemo<ErrorHandlers>(
     () => ({

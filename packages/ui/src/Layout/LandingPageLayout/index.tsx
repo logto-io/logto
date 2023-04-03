@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import { useContext } from 'react';
 import type { TFuncKey } from 'react-i18next';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import BrandingHeader from '@/components/BrandingHeader';
-import { PageContext } from '@/hooks/use-page-context';
 import { layoutClassNames } from '@/utils/consts';
 import { getBrandingLogoUrl } from '@/utils/logo';
 

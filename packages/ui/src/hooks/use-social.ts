@@ -1,13 +1,13 @@
 import type { ConnectorMetadata } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getSocialAuthorizationUrl } from '@/apis/interaction';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
-import { PageContext } from './use-page-context';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);

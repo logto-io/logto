@@ -1,5 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -20,16 +20,14 @@ describe('SignInPassword', () => {
 
   const renderPasswordSignInPage = (settings?: Partial<typeof mockSignInExperienceSettings>) =>
     renderWithPageContext(
-      <MemoryRouter>
-        <SettingsProvider
-          settings={{
-            ...mockSignInExperienceSettings,
-            ...settings,
-          }}
-        >
-          <SignInPassword />
-        </SettingsProvider>
-      </MemoryRouter>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          ...settings,
+        }}
+      >
+        <SignInPassword />
+      </SettingsProvider>
     );
 
   beforeEach(() => {
