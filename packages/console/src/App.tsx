@@ -26,10 +26,13 @@ import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 
-if (appInsightsReact.setup()) {
-  console.debug('Initialized ApplicationInsights');
-}
-
+// Use `.then()` for better compatibility, update to top-level await some day
+// eslint-disable-next-line unicorn/prefer-top-level-await
+void appInsightsReact.setup().then((success) => {
+  if (success) {
+    console.debug('Initialized ApplicationInsights');
+  }
+});
 void initI18n();
 
 function Content() {

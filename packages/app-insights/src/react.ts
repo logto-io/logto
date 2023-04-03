@@ -1,10 +1,11 @@
-import { ReactPlugin, withAITracking } from '@microsoft/applicationinsights-react-js';
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import type { ReactPlugin, withAITracking } from '@microsoft/applicationinsights-react-js';
+import type { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { type Optional } from '@silverhand/essentials';
 import { type ComponentType } from 'react';
 
 class AppInsightsReact {
   protected reactPlugin?: ReactPlugin;
+  protected withAITracking?: typeof withAITracking;
   protected appInsights?: ApplicationInsights;
 
   get instance(): Optional<ApplicationInsights> {
@@ -15,7 +16,7 @@ class AppInsightsReact {
     return this.appInsights?.trackPageView.bind(this.appInsights);
   }
 
-  setup(): boolean {
+  async setup(): Promise<boolean> {
     // The string needs to be normalized since it may contain '"'
     const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.replace(
       /^"?(.*)"?$/g,
@@ -31,7 +32,12 @@ class AppInsightsReact {
     }
 
     try {
+      const { ReactPlugin, withAITracking } = await import(
+        '@microsoft/applicationinsights-react-js'
+      );
+      const { ApplicationInsights } = await import('@microsoft/applicationinsights-web');
       // https://github.com/microsoft/applicationinsights-react-js#readme
+      this.withAITracking = withAITracking;
       this.reactPlugin = new ReactPlugin();
       this.appInsights = new ApplicationInsights({
         config: {
@@ -53,11 +59,11 @@ class AppInsightsReact {
   }
 
   withAppInsights<P>(Component: ComponentType<P>): ComponentType<P> {
-    if (!this.reactPlugin) {
+    if (!this.reactPlugin || !this.withAITracking) {
       return Component;
     }
 
-    return withAITracking(this.reactPlugin, Component, undefined, 'appInsightsWrapper');
+    return this.withAITracking(this.reactPlugin, Component, undefined, 'appInsightsWrapper');
   }
 }
 
