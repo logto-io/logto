@@ -1,17 +1,9 @@
 name: Changesets
 
 on:
-  workflow_dispatch:
-    inputs:
-      releaseGroup:
-        description: 'The release group to bump version and create pull request'
-        required: true
-        type: choice
-        # This should be synced with `/.scripts/version.js`
-        options:
-          - core
-          - toolkit
-
+  push:
+    branches:
+      - master
   pull_request:
 
 concurrency:
@@ -19,16 +11,6 @@ concurrency:
 
 jobs:
   changesets:
-    strategy:
-      matrix:
-        # Multiline expression https://stackoverflow.com/a/67532120/12514940
-        group: |-
-          ${{
-            github.event_name == 'pull_request' &&
-            fromJSON('["core", "toolkit"]') ||
-            fromJSON(format('["{0}"]', inputs.releaseGroup))
-          }}
-
     runs-on: ubuntu-latest
 
     steps:
@@ -55,19 +37,18 @@ jobs:
 
       - name: Version packages
         run: |
-          node .scripts/version.js ${{ matrix.group }}
+          node .scripts/version.js
           pnpm i --no-frozen-lockfile
           git status
 
       - name: Create pull request
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'push'
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.BOT_PAT }}
-          commit-message: 'release: version ${{ matrix.group }} packages'
+          commit-message: 'release: version packages'
           committer: silverhand-bot <bot@silverhand.io>
           author: silverhand-bot <bot@silverhand.io>
           base: master
-          branch: release/version-${{ matrix.group }}-packages
-          title: 'release: version ${{ matrix.group }} packages'
-          body: 'This is an automatic pull request from the result of `node .scripts/version.js ${{ matrix.group }}` command. Merge it will trigger the publish flow for versioned packages.'
+          branch: release/version-packages
+          title: 'release: version packages'
