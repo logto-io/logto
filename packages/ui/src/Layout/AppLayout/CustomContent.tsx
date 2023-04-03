@@ -1,13 +1,13 @@
 import { useLocation } from 'react-router-dom';
 
-import { useSieMethods } from '@/hooks/use-sie';
+import { useCustomSie } from '@/hooks/use-sie';
 
 type Props = {
   className?: string;
 };
 
 const CustomContent = ({ className }: Props) => {
-  const { customContent } = useSieMethods();
+  const { customContent } = useCustomSie();
   const { pathname } = useLocation();
 
   const customHtml = customContent?.[pathname];

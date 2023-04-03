@@ -11,14 +11,6 @@ export default function useTheme() {
   const { isPreview, experienceSettings, setTheme } = useContext(PageContext);
 
   useEffect(() => {
-    /**
-     * Note:
-     * In preview mode, the theme of the page is controlled by the preview options and does not follow system changes.
-     */
-    if (isPreview) {
-      return;
-    }
-
     if (!experienceSettings?.color.isDarkModeEnabled) {
       return;
     }

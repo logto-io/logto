@@ -19,7 +19,16 @@ export const useSieMethods = () => {
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
-    customContent: experienceSettings?.customContent,
+  };
+};
+
+export const useCustomSie = () => {
+  const { experienceSettings } = useContext(PageContext);
+  const { customContent, customCss } = experienceSettings ?? {};
+
+  return {
+    customContent,
+    customCss,
   };
 };
 

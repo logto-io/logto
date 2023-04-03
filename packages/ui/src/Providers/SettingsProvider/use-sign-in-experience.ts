@@ -4,8 +4,12 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { getSignInExperienceSettings } from '@/utils/sign-in-experience';
 
-const SignInExperienceProvider = () => {
+import useTheme from './use-theme';
+
+const useSignInExperience = () => {
   const { isPreview, setExperienceSettings } = useContext(PageContext);
+
+  useTheme();
 
   useEffect(() => {
     (async () => {
@@ -15,8 +19,6 @@ const SignInExperienceProvider = () => {
       setExperienceSettings(settings);
     })();
   }, [isPreview, setExperienceSettings]);
-
-  return null;
 };
 
-export default SignInExperienceProvider;
+export default useSignInExperience;
