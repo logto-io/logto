@@ -14,7 +14,7 @@ const checkConnectorKitVersion = (dependencies: unknown, ignoreVersionMismatch: 
     const value = dependencies[connectorKit];
 
     if (typeof value === 'string') {
-      if (satisfies(currentVersion, value)) {
+      if (value.startsWith('workspace:') || satisfies(currentVersion, value)) {
         return;
       }
 
