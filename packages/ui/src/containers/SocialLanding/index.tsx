@@ -24,6 +24,7 @@ const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => 
           <img
             src={theme === Theme.Dark ? connector.logoDark ?? connector.logo : connector.logo}
             alt="logo"
+            crossOrigin="anonymous"
           />
         ) : (
           connectorId
