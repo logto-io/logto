@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "pnpm:devPreinstall": "cd packages/connectors && node templates/sync-preset.js",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "pnpm -r prepack",
     "dev": "pnpm -r prepack && pnpm start:dev",
@@ -18,9 +19,9 @@
     "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
     "ci:version": "changeset version && pnpm -r version",
     "ci:build": "pnpm -r build",
-    "ci:lint": "pnpm -r --parallel lint",
-    "ci:stylelint": "pnpm -r --parallel stylelint",
-    "ci:test": "pnpm -r --parallel test:ci"
+    "ci:lint": "pnpm -r --parallel --workspace-concurrency=0 lint",
+    "ci:stylelint": "pnpm -r --parallel --workspace-concurrency=0 stylelint",
+    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci"
   },
   "devDependencies": {
     "@changesets/cli": "^2.25.0",

@@ -1,0 +1,51 @@
+{
+  "name": "@logto/connector-facebook",
+  "version": "1.0.0",
+  "description": "Facebook web connector implementation.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "dependencies": {
+    "@logto/connector-kit": "workspace:^"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "license": "MPL-2.0",
+  "type": "module",
+  "files": [
+    "lib",
+    "docs",
+    "logo.svg",
+    "logo-dark.svg"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "build:test": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json --noEmit && rollup -c",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "pnpm build:test && pnpm test:only",
+    "test:ci": "pnpm test:only --silent --coverage",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": "^18.12.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "settings": {
+      "import/core-modules": [
+        "@silverhand/essentials",
+        "got",
+        "nock",
+        "snakecase-keys",
+        "zod"
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
+}
