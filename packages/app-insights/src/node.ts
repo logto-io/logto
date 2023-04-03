@@ -1,6 +1,5 @@
 import { trySafe } from '@silverhand/essentials';
 import type { TelemetryClient } from 'applicationinsights';
-import applicationinsights from 'applicationinsights';
 
 export const normalizeError = (error: unknown) => {
   const normalized = error instanceof Error ? error : new Error(String(error));
@@ -16,11 +15,16 @@ export const normalizeError = (error: unknown) => {
 class AppInsights {
   client?: TelemetryClient;
 
-  setup(cloudRole: string): boolean {
+  async setup(cloudRole: string): Promise<boolean> {
     if (this.client) {
       return true;
     }
 
+    if (!process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+      return false;
+    }
+
+    const { default: applicationinsights } = await import('applicationinsights');
     const ok = trySafe(() => applicationinsights.setup());
 
     if (!ok) {

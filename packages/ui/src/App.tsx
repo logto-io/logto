@@ -26,8 +26,14 @@ import { handleSearchParametersData } from './utils/search-parameters';
 
 import './scss/normalized.scss';
 
-if (shouldTrack && appInsightsReact.setup()) {
-  console.debug('Initialized ApplicationInsights');
+if (shouldTrack) {
+  // Use `.then()` for better compatibility, update to top-level await some day
+  // eslint-disable-next-line unicorn/prefer-top-level-await, promise/prefer-await-to-then
+  void appInsightsReact.setup().then((success) => {
+    if (success) {
+      console.debug('Initialized ApplicationInsights');
+    }
+  });
 }
 
 handleSearchParametersData();
