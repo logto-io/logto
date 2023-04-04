@@ -2,7 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import type { VerificationCodeIdentifier } from '@/types';
+import { type VerificationCodeIdentifier } from '@/types';
 
 export const useSieMethods = () => {
   const { experienceSettings } = useContext(PageContext);
@@ -19,8 +19,13 @@ export const useSieMethods = () => {
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
-    customContent: experienceSettings?.customContent,
   };
+};
+
+export const useSignInExperience = () => {
+  const { experienceSettings } = useContext(PageContext);
+
+  return experienceSettings;
 };
 
 export const useForgotPasswordSettings = () => {

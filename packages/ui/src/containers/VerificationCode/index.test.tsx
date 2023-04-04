@@ -244,8 +244,6 @@ describe('<VerificationCode />', () => {
           verificationCode: '111111',
         });
       });
-
-      // TODO: @simeng test exception flow to fulfill the password
     });
 
     it('fire phone forgot-password validate verification code event', async () => {
@@ -275,8 +273,6 @@ describe('<VerificationCode />', () => {
           verificationCode: '111111',
         });
       });
-
-      // TODO: @simeng test exception flow to fulfill the password
     });
   });
 

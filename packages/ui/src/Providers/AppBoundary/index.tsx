@@ -1,14 +1,12 @@
 import type { ReactElement } from 'react';
 
-import useColorTheme from '@/Providers/AppBoundary/hooks/use-color-theme';
+import useColorTheme from '@/Providers/AppBoundary/use-color-theme';
 
 import ConfirmModalProvider from '../ConfirmModalProvider';
 import IframeModalProvider from '../IframeModalProvider';
 import ToastProvider from '../ToastProvider';
 
-import useCustomStyle from './hooks/use-custom-style';
-import useMetaData from './hooks/use-meta-data';
-import useTheme from './hooks/use-theme';
+import AppMeta from './AppMeta';
 
 type Props = {
   children: ReactElement;
@@ -16,17 +14,16 @@ type Props = {
 
 const AppBoundary = ({ children }: Props) => {
   useColorTheme();
-  useCustomStyle();
-  useTheme();
-
-  useMetaData();
 
   return (
-    <IframeModalProvider>
-      <ConfirmModalProvider>
-        <ToastProvider>{children}</ToastProvider>
-      </ConfirmModalProvider>
-    </IframeModalProvider>
+    <>
+      <AppMeta />
+      <IframeModalProvider>
+        <ConfirmModalProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </ConfirmModalProvider>
+      </IframeModalProvider>
+    </>
   );
 };
 

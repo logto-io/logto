@@ -7,8 +7,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
 
 import { getSignInExperience } from '@/apis/settings';
-import defaultAppleTouchLogo from '@/assets/apple-touch-icon.png';
-import defaultFavicon from '@/assets/favicon.png';
 import type { SignInExperienceResponse } from '@/types';
 import { filterSocialConnectors } from '@/utils/social-connectors';
 
@@ -54,34 +52,4 @@ export const parseHtmlTitle = (path: string) => {
   }
 
   return 'Logto';
-};
-
-export const setFavIcon = (icon?: string) => {
-  const iconLink = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-  const appleTouchIconLink = document.querySelector<HTMLLinkElement>(
-    'link[rel="apple-touch-icon"]'
-  );
-
-  /* eslint-disable @silverhand/fp/no-mutation */
-
-  if (iconLink) {
-    iconLink.href = icon ?? defaultFavicon;
-  } else {
-    const favIconLink = document.createElement('link');
-    favIconLink.rel = 'shortcut icon';
-    favIconLink.href = icon ?? defaultFavicon;
-    document.querySelectorAll('head')[0]?.append(favIconLink);
-  }
-
-  if (appleTouchIconLink) {
-    appleTouchIconLink.href = icon ?? defaultAppleTouchLogo;
-  } else {
-    const appleTouchIconLink = document.createElement('link');
-    appleTouchIconLink.rel = 'apple-touch-icon';
-    appleTouchIconLink.href = icon ?? defaultAppleTouchLogo;
-    appleTouchIconLink.setAttribute('sizes', '180x180');
-    document.querySelectorAll('head')[0]?.append(appleTouchIconLink);
-  }
-
-  /* eslint-enable @silverhand/fp/no-mutation */
 };

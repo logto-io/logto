@@ -9,7 +9,7 @@ import { changeLanguage } from '@/i18n/utils';
 import type { PreviewConfig, SignInExperienceResponse } from '@/types';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
-const PreviewProvider = () => {
+const usePreview = () => {
   const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();
   const { setTheme, setPlatform, setExperienceSettings } = useContext(PageContext);
 
@@ -84,8 +84,6 @@ const PreviewProvider = () => {
       })();
     }
   }, [previewConfig?.language]);
-
-  return null;
 };
 
-export default PreviewProvider;
+export default usePreview;

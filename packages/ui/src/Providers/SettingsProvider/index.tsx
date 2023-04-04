@@ -1,9 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 
-import PreviewProvider from '../PreviewProvider';
-import SignInExperienceProvider from '../SignInExperienceProvider';
+import usePreview from './use-preview';
+import useSignInExperience from './use-sign-in-experience';
 
 type Props = {
   children: React.ReactElement;
@@ -12,12 +12,11 @@ type Props = {
 const SettingsProvider = ({ children }: Props) => {
   const { isPreview, experienceSettings } = useContext(PageContext);
 
-  return (
-    <>
-      {isPreview ? <PreviewProvider /> : <SignInExperienceProvider />}
-      {experienceSettings ? children : null}
-    </>
-  );
+  const usePageLoad = useMemo(() => (isPreview ? usePreview : useSignInExperience), [isPreview]);
+
+  usePageLoad();
+
+  return experienceSettings ? children : null;
 };
 
 export default SettingsProvider;
