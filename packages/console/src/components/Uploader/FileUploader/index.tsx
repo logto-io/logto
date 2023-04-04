@@ -43,7 +43,7 @@ function FileUploader({
   const api = useApi();
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[], fileRejection: FileRejection[]) => {
+    async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
       setUploadError(undefined);
 
       const rejectedFile = fileRejection[0]?.file;
