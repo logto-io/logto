@@ -71,9 +71,7 @@ function MultiTextInput({
         >
           <div className={styles.deletableInput}>
             <TextInput
-              hasError={Boolean(
-                error?.inputs?.[fieldIndex] ?? (fieldIndex === 0 && error?.required)
-              )}
+              error={Boolean(error?.inputs?.[fieldIndex] ?? (fieldIndex === 0 && error?.required))}
               value={fieldValue}
               placeholder={placeholder}
               onChange={({ currentTarget: { value } }) => {

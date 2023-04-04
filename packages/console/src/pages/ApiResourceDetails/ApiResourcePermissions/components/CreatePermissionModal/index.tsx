@@ -79,15 +79,14 @@ function CreatePermissionModal({ resourceId, onClose }: Props) {
                   message: t('api_resource_details.permission.forbidden_space_in_name'),
                 },
               })}
-              hasError={Boolean(errors.name)}
-              errorMessage={errors.name?.message}
+              error={errors.name?.message}
             />
           </FormField>
           <FormField isRequired title="api_resource_details.permission.description">
             <TextInput
               placeholder={t('api_resource_details.permission.description_placeholder')}
               {...register('description', { required: true })}
-              hasError={Boolean(errors.description)}
+              error={Boolean(errors.description)}
             />
           </FormField>
         </form>

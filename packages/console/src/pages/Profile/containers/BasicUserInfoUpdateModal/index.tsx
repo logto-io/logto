@@ -144,7 +144,7 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             placeholder={getInputPlaceholder()}
-            errorMessage={errors[field]?.message}
+            error={errors[field]?.message}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
                 void onSubmit();

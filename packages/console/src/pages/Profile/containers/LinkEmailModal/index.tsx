@@ -63,7 +63,7 @@ function LinkEmailModal() {
         })}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
-        errorMessage={errors.email?.message}
+        error={errors.email?.message}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             onSubmit();

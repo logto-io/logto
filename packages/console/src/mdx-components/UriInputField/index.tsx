@@ -99,7 +99,7 @@ function UriInputField({ appId, name, title, isSingle = false }: Props) {
                     <TextInput
                       className={styles.field}
                       value={value[0]}
-                      errorMessage={errorObject?.required ?? errorObject?.inputs?.[0]}
+                      error={errorObject?.required ?? errorObject?.inputs?.[0]}
                       onChange={({ currentTarget: { value } }) => {
                         onChange([value]);
                       }}

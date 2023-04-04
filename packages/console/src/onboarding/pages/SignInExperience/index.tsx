@@ -137,8 +137,7 @@ function SignInExperience() {
                     validate: (value) =>
                       !value || uriValidator(value) || t('errors.invalid_uri_format'),
                   })}
-                  hasError={Boolean(errors.logo)}
-                  errorMessage={errors.logo?.message}
+                  error={errors.logo?.message}
                 />
               )}
             </FormField>

@@ -83,14 +83,14 @@ function CreateRoleForm({ onClose }: Props) {
                   : true,
             })}
             placeholder={t('roles.role_name_placeholder')}
-            errorMessage={errors.name?.message}
+            error={errors.name?.message}
           />
         </FormField>
         <FormField isRequired title="roles.role_description">
           <TextInput
             {...register('description', { required: true })}
             placeholder={t('roles.role_description_placeholder')}
-            hasError={Boolean(errors.description)}
+            error={Boolean(errors.description)}
           />
         </FormField>
         <FormField title="roles.assign_permissions">

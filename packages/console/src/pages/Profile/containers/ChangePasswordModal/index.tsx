@@ -106,7 +106,7 @@ function ChangePasswordModal() {
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
         type={showPassword ? 'text' : 'password'}
-        errorMessage={errors.newPassword?.message}
+        error={errors.newPassword?.message}
         suffix={
           <IconButton
             onMouseDown={(event) => {
@@ -125,7 +125,7 @@ function ChangePasswordModal() {
           validate: (value) => value === watch('newPassword') || t('profile.password.do_not_match'),
         })}
         type={showPassword ? 'text' : 'password'}
-        errorMessage={errors.confirmPassword?.message}
+        error={errors.confirmPassword?.message}
         suffix={
           <IconButton
             onMouseDown={(event) => {

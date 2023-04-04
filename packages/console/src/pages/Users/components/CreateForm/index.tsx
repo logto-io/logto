@@ -109,16 +109,11 @@ function CreateForm({ onClose, onCreate }: Props) {
                   message: t('errors.username_pattern_error'),
                 },
               })}
-              hasError={Boolean(errors.username)}
-              errorMessage={errors.username?.message}
+              error={errors.username?.message}
             />
           </FormField>
           <FormField title="users.create_form_name">
-            <TextInput
-              {...register('name')}
-              hasError={Boolean(errors.name)}
-              errorMessage={errors.name?.message}
-            />
+            <TextInput {...register('name')} error={errors.name?.message} />
           </FormField>
         </form>
       </ModalLayout>
