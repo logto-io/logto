@@ -15,7 +15,7 @@ import * as styles from './index.module.scss';
  * @see https://github.com/nfl/react-helmet
  *
  * - lang: set html lang attribute
- * - data-color-mode: set html data-color-mode attribute
+ * - data-theme: set html data-theme attribute
  * - favicon: set favicon
  * - apple-touch-icon: set apple touch icon
  * - body class: set platform body class
@@ -28,7 +28,7 @@ const AppMeta = () => {
 
   return (
     <Helmet>
-      <html lang={i18next.language} data-color-mode={theme} />
+      <html lang={i18next.language} data-theme={theme} />
       <link rel="shortcut icon" href={experienceSettings?.branding.favicon ?? defaultFavicon} />
       <link
         rel="apple-touch-icon"

@@ -1,16 +1,16 @@
 import { useLocation } from 'react-router-dom';
 
-import { useCustomSie } from '@/hooks/use-sie';
+import { useSignInExperience } from '@/hooks/use-sie';
 
 type Props = {
   className?: string;
 };
 
 const CustomContent = ({ className }: Props) => {
-  const { customContent } = useCustomSie();
+  const signInExperience = useSignInExperience();
   const { pathname } = useLocation();
 
-  const customHtml = customContent?.[pathname];
+  const customHtml = signInExperience?.customContent[pathname];
 
   if (!customHtml) {
     return null;
