@@ -1,6 +1,29 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
+import { promisify } from 'node:util';
+
 import type { NextFunction, HttpContext, RequestContext } from '@withtyped/server';
+import helmet, { type HelmetOptions } from 'helmet';
 
 import { EnvSet } from '#src/env-set/index.js';
+
+/**
+ * Apply security headers to the response using helmet
+ * @see https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html for recommended headers
+ * @see https://helmetjs.github.io/ for more details
+ * @returns middleware
+ */
+
+const helmetPromise = async (
+  settings: HelmetOptions,
+  request: IncomingMessage,
+  response: ServerResponse
+) =>
+  promisify((callback) => {
+    helmet(settings)(request, response, (error) => {
+      // Make TS happy
+      callback(error, null);
+    });
+  })();
 
 export default function withSecurityHeaders<InputContext extends RequestContext>() {
   const {
@@ -16,69 +39,70 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
   return async (
     context: InputContext,
     next: NextFunction<InputContext>,
-    { response }: HttpContext
+    { response, request }: HttpContext
   ) => {
     const requestPath = context.request.url.pathname;
 
-    // CrossOriginOpenerPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-opener-policy-coop
-    response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-    // CrossOriginResourcePolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-resource-policy-corp
-    response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    /**
+     * Default Applied rules:
+     * - crossOriginOpenerPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-opener-policy-coop
+     * - crossOriginResourcePolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-resource-policy-corp
+     * - crossOriginEmbedderPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-embedder-policy-coep
+     * - hidePoweredBy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-powered-by
+     * - hsts: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#strict-transport-security-hsts
+     * - ieNoOpen: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-download-options
+     * - noSniff: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-content-type-options
+     * - permittedCrossDomainPolicies: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-permitted-cross-domain-policies
+     * - referrerPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
+     * - xssFilter: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
+     * - originAgentCluster: https://whatpr.org/html/6214/origin.html#origin-keyed-agent-clusters
+     * - frameguard: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-frame-options
+     */
 
-    // CrossOriginEmbedderPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cross-origin-embedder-policy-coep
-    response.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-
-    // Hsts: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#strict-transport-security-hsts
-    response.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-
-    // NoSniff: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-content-type-options
-    response.setHeader('X-Content-Type-Options', 'nosniff');
-
-    // IeNoOpen: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-download-options
-    response.setHeader('X-Download-Options', 'noopen');
-
-    // PermittedCrossDomainPolicies: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-permitted-cross-domain-policies
-    response.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
-
-    // ReferrerPolicy: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#referrer-policy
-    response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-    // XssFilter: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-xss-protection
-    response.setHeader('X-XSS-Protection', '0');
-
-    // OriginAgentCluster: https://whatpr.org/html/6214/origin.html#origin-keyed-agent-clusters
-    response.setHeader('Origin-Agent-Cluster', '?1');
+    const basicSecurityHeaderSettings: HelmetOptions = {
+      contentSecurityPolicy: false, // Exclusively set for console app only
+      expectCt: false, // Not recommended, will be deprecated by modern browsers
+      dnsPrefetchControl: false,
+      referrerPolicy: {
+        policy: 'strict-origin-when-cross-origin',
+      },
+    };
 
     if (requestPath.startsWith('/api')) {
       // FrameOptions: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#x-frame-options
-      response.setHeader('X-Frame-Options', 'DENY');
+
+      await helmetPromise(basicSecurityHeaderSettings, request, response);
 
       return next(context);
     }
 
     // For cloud console
     // ContentSecurityPolicy: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
-    response.setHeader(
-      'Content-Security-Policy-Report-Only',
-      [
-        "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-        "script-src-attr 'none'",
-        "style-src 'self' 'unsafe-inline' https:",
-        "img-src 'self' data: https:",
-        "font-src 'self' data:",
-        `connect-src 'self' ${adminOrigins.join(' ')} ${cloudOrigins.join(
-          ' '
-        )} ${urlSetOrigins.join(' ')} ${developmentOrigins.join(' ')}`,
-        `frame-src 'self' ${urlSetOrigins.join(' ')}`,
-        "worker-src 'self'",
-        "child-src 'self'",
-        "object-src 'none'",
-        "form-action 'self'",
-        "manifest-src 'self'",
-        "frame-ancestors 'self'",
-        'block-all-mixed-content',
-      ].join(';')
+    await helmetPromise(
+      {
+        ...basicSecurityHeaderSettings,
+        frameguard: false,
+        contentSecurityPolicy: {
+          useDefaults: true,
+          // Temporary set to report only to avoid breaking the app
+          reportOnly: true,
+          directives: {
+            'upgrade-insecure-requests': null,
+            imgSrc: ["'self'", 'data:', 'https:'],
+            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
+            connectSrc: [
+              "'self'",
+              ...adminOrigins,
+              ...cloudOrigins,
+              ...urlSetOrigins,
+              ...developmentOrigins,
+            ],
+            frameSrc: ["'self'", ...urlSetOrigins],
+          },
+        },
+      },
+      request,
+      response
     );
 
     return next(context);

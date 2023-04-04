@@ -1,6 +1,9 @@
+import { type IncomingMessage, type ServerResponse } from 'node:http';
+import { promisify } from 'node:util';
+
 import { defaultTenantId } from '@logto/schemas';
+import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
-import helmet from 'koa-helmet';
 
 import { EnvSet, AdminApps, getTenantEndpoint } from '#src/env-set/index.js';
 
@@ -11,14 +14,22 @@ import { EnvSet, AdminApps, getTenantEndpoint } from '#src/env-set/index.js';
  * @returns koa middleware
  */
 
+const helmetPromise = async (
+  settings: HelmetOptions,
+  request: IncomingMessage,
+  response: ServerResponse
+) =>
+  promisify((callback) => {
+    helmet(settings)(request, response, (error) => {
+      // Make TS happy
+      callback(error, null);
+    });
+  })();
+
 export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   mountedApps: string[],
   tenantId: string
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
-
-  type HelmetOptions = Parameters<typeof helmet>[0];
-
   const { isProduction, isCloud, isMultiTenancy, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
   const adminOrigins = adminUrlSet.origins;
@@ -103,26 +114,30 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     },
   };
 
-  const buildHelmetMiddleware: (options: HelmetOptions) => Middleware = (options) =>
-    helmet(options);
-
   return async (ctx, next) => {
-    const requestPath = ctx.request.path;
+    const { request, req, res } = ctx;
+    const requestPath = request.path;
 
     // Admin Console
     if (
       requestPath.startsWith(`/${AdminApps.Console}`) ||
       requestPath.startsWith(`/${AdminApps.Welcome}`)
     ) {
-      return buildHelmetMiddleware(consoleSecurityHeaderSettings)(ctx, next);
+      await helmetPromise(consoleSecurityHeaderSettings, req, res);
+
+      return next();
     }
 
     // Route has been handled by one of mounted apps
     if (mountedApps.some((app) => app !== '' && requestPath.startsWith(`/${app}`))) {
-      return buildHelmetMiddleware(basicSecurityHeaderSettings)(ctx, next);
+      await helmetPromise(basicSecurityHeaderSettings, req, res);
+
+      return next();
     }
 
     // Main flow UI
-    return buildHelmetMiddleware(mainFlowUiSecurityHeaderSettings)(ctx, next);
+    await helmetPromise(mainFlowUiSecurityHeaderSettings, req, res);
+
+    return next();
   };
 }

@@ -262,6 +262,9 @@ importers:
       find-up:
         specifier: ^6.3.0
         version: 6.3.0
+      helmet:
+        specifier: ^6.0.1
+        version: 6.0.1
       http-proxy:
         specifier: ^1.18.1
         version: 1.18.1
@@ -3080,6 +3083,9 @@ importers:
       hash-wasm:
         specifier: ^4.9.0
         version: 4.9.0
+      helmet:
+        specifier: ^6.0.1
+        version: 6.0.1
       i18next:
         specifier: ^21.8.16
         version: 21.8.16
@@ -3104,9 +3110,6 @@ importers:
       koa-compress:
         specifier: ^5.1.0
         version: 5.1.0
-      koa-helmet:
-        specifier: ^7.0.2
-        version: 7.0.2
       koa-logger:
         specifier: ^3.2.1
         version: 3.2.1
@@ -13749,13 +13752,6 @@ packages:
     dependencies:
       co: 4.6.0
       koa-compose: 4.1.0
-
-  /koa-helmet@7.0.2:
-    resolution: {integrity: sha512-AvzS6VuEfFgbAm0mTUnkk/BpMarMcs5A56g+f0sfrJ6m63wII48d2GDrnUQGp0Nj+RR950vNtgqXm9UJSe7GOg==}
-    engines: {node: '>= 14.0.0'}
-    dependencies:
-      helmet: 6.0.1
-    dev: false
 
   /koa-is-json@1.0.0:
     resolution: {integrity: sha512-+97CtHAlWDx0ndt0J8y3P12EWLwTLMXIfMnYDev3wOTwH/RpBGMlfn4bDXlMEg1u73K6XRE9BbUp+5ZAYoRYWw==}
