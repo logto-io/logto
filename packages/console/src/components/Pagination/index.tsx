@@ -57,8 +57,22 @@ function Pagination({ page, totalCount, pageSize, className, mode = 'normal', on
             title={<DangerousRaw>{pageNumber}</DangerousRaw>}
           />
         )}
-        previousLabel={<Button className={styles.button} size="small" icon={<Previous />} />}
-        nextLabel={<Button className={styles.button} size="small" icon={<Next />} />}
+        previousLabel={
+          <Button
+            className={styles.button}
+            size="small"
+            icon={<Previous />}
+            disabled={page === 1}
+          />
+        }
+        nextLabel={
+          <Button
+            className={styles.button}
+            size="small"
+            icon={<Next />}
+            disabled={page === pageCount}
+          />
+        }
         breakLabel={
           <Button className={styles.button} size="small" title={<DangerousRaw>...</DangerousRaw>} />
         }
