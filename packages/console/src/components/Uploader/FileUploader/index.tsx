@@ -49,6 +49,10 @@ function FileUploader({
       const rejectedFile = fileRejection[0]?.file;
 
       if (rejectedFile) {
+        /**
+         * Note:
+         * We need to display this invalid file type error, since the user can select an invalid file type by modifying the file input dialog settings.
+         */
         if (!allowedMimeTypes.map(String).includes(rejectedFile.type)) {
           setUploadError(
             t('components.uploader.error_file_type', {
