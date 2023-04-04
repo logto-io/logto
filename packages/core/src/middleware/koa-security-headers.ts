@@ -8,7 +8,7 @@ import type { MiddlewareType } from 'koa';
 import { EnvSet, AdminApps, getTenantEndpoint } from '#src/env-set/index.js';
 
 /**
- * Apply security headers to the response using koa-helmet
+ * Apply security headers to the response using helmet
  * @see https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html for recommended headers
  * @see https://helmetjs.github.io/ for more details
  * @returns koa middleware
