@@ -5,11 +5,13 @@ import { EnvSet } from '#src/env-set/index.js';
 export default function withSecurityHeaders<InputContext extends RequestContext>() {
   const {
     global: { adminUrlSet, cloudUrlSet, urlSet },
+    isProduction,
   } = EnvSet;
 
   const adminOrigins = adminUrlSet.origins;
   const cloudOrigins = cloudUrlSet.origins;
   const urlSetOrigins = urlSet.origins;
+  const developmentOrigins = isProduction ? [] : ['ws:'];
 
   return async (
     context: InputContext,
@@ -67,7 +69,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
         "font-src 'self' data:",
         `connect-src 'self' ${adminOrigins.join(' ')} ${cloudOrigins.join(
           ' '
-        )} ${urlSetOrigins.join(' ')} ws:`,
+        )} ${urlSetOrigins.join(' ')} ${developmentOrigins.join(' ')}`,
         `frame-src 'self' ${urlSetOrigins.join(' ')}`,
         "worker-src 'self'",
         "child-src 'self'",

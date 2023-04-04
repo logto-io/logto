@@ -27,7 +27,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     isMultiTenancy ? tenantId : defaultTenantId,
     EnvSet.values
   ).origin;
-  const developmentOrigins = ['ws:'];
+  const developmentOrigins = isProduction ? [] : ['ws:'];
 
   /**
    * Default Applied rules:
