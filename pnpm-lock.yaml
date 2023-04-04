@@ -2201,8 +2201,8 @@ importers:
         specifier: ^12.5.3
         version: 12.5.3
       samlify:
-        specifier: 2.7.7
-        version: 2.7.7
+        specifier: 2.8.10
+        version: 2.8.10
       snakecase-keys:
         specifier: ^5.4.4
         version: 5.4.4
@@ -3999,13 +3999,12 @@ packages:
       '@jridgewell/trace-mapping': 0.3.17
     dev: true
 
-  /@authenio/xml-encryption@1.3.0:
-    resolution: {integrity: sha512-643tVCHSXDXOk8vBt37I0iSgvoO+yJrj1iY/RuQDePoyF2jveUyQhSHYmFdXsG63Zmx/4zmKU9DFjGGKcuIduw==}
-    engines: {node: '>=8'}
+  /@authenio/xml-encryption@2.0.2:
+    resolution: {integrity: sha512-cTlrKttbrRHEw3W+0/I609A2Matj5JQaRvfLtEIGZvlN0RaPi+3ANsMeqAyCAVlH/lUIW2tmtBlSMni74lcXeg==}
+    engines: {node: '>=12'}
     dependencies:
-      '@xmldom/xmldom': 0.7.10
+      '@xmldom/xmldom': 0.8.7
       escape-html: 1.0.3
-      node-forge: 0.10.0
       xpath: 0.0.32
     dev: false
 
@@ -8491,10 +8490,6 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
 
-  /@types/xmldom@0.1.31:
-    resolution: {integrity: sha512-bVy7s0nvaR5D1mT1a8ZkByHWNOGb6Vn4yi5TWhEdmyKlAG+08SA7Md6+jH+tYmMLueAwNeWvHHpeKrr6S4c4BA==}
-    dev: false
-
   /@types/yargs-parser@21.0.0:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
     dev: true
@@ -8672,8 +8667,8 @@ packages:
     resolution: {integrity: sha512-SADIVEospfIWAVK0LxX7F1T04hsWMZ0NkfR3lNfvJqOktJ52GglI3FOTVYOM1NJYReDT6pR0XFlCfaF8TVPt8w==}
     dev: false
 
-  /@xmldom/xmldom@0.7.10:
-    resolution: {integrity: sha512-hb9QhOg5MGmpVkFcoZ9XJMe1em5gd0e2eqqjK87O1dwULedXsnY/Zg/Ju6lcohA+t6jVkmKpe7I1etqhvdRdrQ==}
+  /@xmldom/xmldom@0.8.7:
+    resolution: {integrity: sha512-sI1Ly2cODlWStkINzqGrZ8K6n+MTSbAeQnAipGyL+KZCXuHaRlj2gyyy8B/9MvsFFqN7XHryQnB2QwhzvJXovg==}
     engines: {node: '>=10.0.0'}
     dev: false
 
@@ -9395,6 +9390,7 @@ packages:
   /camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
+    dev: true
 
   /camelcase@6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
@@ -15016,9 +15012,9 @@ packages:
       formdata-polyfill: 4.0.10
     dev: true
 
-  /node-forge@0.10.0:
-    resolution: {integrity: sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==}
-    engines: {node: '>= 6.0.0'}
+  /node-forge@1.3.1:
+    resolution: {integrity: sha512-dPEtOeMvF9VMcYV/1Wb8CPoVAXtp6MKMlcbAt4ddqmGqUJ6fQZFXkNZNkNlfevtNkGtaSoXf/vNNNSvgrdXwtA==}
+    engines: {node: '>= 6.13.0'}
     dev: false
 
   /node-gyp-build-optional-packages@5.0.3:
@@ -17146,20 +17142,19 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /samlify@2.7.7:
-    resolution: {integrity: sha512-mJNPG1YE/ihjJl2E9x+gD8CrIhPZj7OpuoVUa6puVSGOwOcT3vaT0ACo2JFc26sqV0dd4mo5nt8DqXsHqyGoHw==}
+  /samlify@2.8.10:
+    resolution: {integrity: sha512-g2M1Qq2uL7GHtmBRaTVYcJD0Vb+XOyvXHsPARHCoqQ54Vp7m5h3NMUGzvLEIFGujxaamyM3BhEi9fdVAkJMvHw==}
     dependencies:
-      '@authenio/xml-encryption': 1.3.0
-      '@types/xmldom': 0.1.31
-      camelcase: 5.3.1
-      node-forge: 0.10.0
+      '@authenio/xml-encryption': 2.0.2
+      '@xmldom/xmldom': 0.8.7
+      camelcase: 6.3.0
+      node-forge: 1.3.1
       node-rsa: 1.1.1
       pako: 1.0.11
-      uuid: 3.4.0
+      uuid: 8.3.2
       xml: 1.0.1
-      xml-crypto: 2.1.5
-      xmldom: 0.6.0
-      xpath: 0.0.27
+      xml-crypto: 3.0.1
+      xpath: 0.0.32
     dev: false
 
   /sass@1.56.1:
@@ -18724,12 +18719,6 @@ packages:
   /uuid-parse@1.1.0:
     resolution: {integrity: sha512-OdmXxA8rDsQ7YpNVbKSJkNzTw2I+S5WsbMDnCtIWSQaosNAcWtFuI/YK1TjzUI6nbkgiqEyh8gWngfcv8Asd9A==}
 
-  /uuid@3.4.0:
-    resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
-    hasBin: true
-    dev: false
-
   /uuid@8.0.0:
     resolution: {integrity: sha512-jOXGuXZAWdsTH7eZLtyXMqUb9EcWMGZNbL9YcGBJl4MH4nrxHmZJhEHvyLFrkxo+28uLb/NYRcStH48fnD0Vzw==}
     hasBin: true
@@ -19035,11 +19024,11 @@ packages:
         optional: true
     dev: true
 
-  /xml-crypto@2.1.5:
-    resolution: {integrity: sha512-xOSJmGFm+BTXmaPYk8pPV3duKo6hJuZ5niN4uMzoNcTlwYs0jAu/N3qY+ud9MhE4N7eMRuC1ayC7Yhmb7MmAWg==}
+  /xml-crypto@3.0.1:
+    resolution: {integrity: sha512-7XrwB3ujd95KCO6+u9fidb8ajvRJvIfGNWD0XLJoTWlBKz+tFpUzEYxsN+Il/6/gHtEs1RgRh2RH+TzhcWBZUw==}
     engines: {node: '>=0.4.0'}
     dependencies:
-      '@xmldom/xmldom': 0.7.10
+      '@xmldom/xmldom': 0.8.7
       xpath: 0.0.32
     dev: false
 
@@ -19080,16 +19069,6 @@ packages:
   /xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
     dev: true
-
-  /xmldom@0.6.0:
-    resolution: {integrity: sha512-iAcin401y58LckRZ0TkI4k0VSM1Qg0KGSc3i8rU+xrxe19A/BN1zHyVSJY7uoutVlaTSzYyk/v5AmkewAP7jtg==}
-    engines: {node: '>=10.0.0'}
-    dev: false
-
-  /xpath@0.0.27:
-    resolution: {integrity: sha512-fg03WRxtkCV6ohClePNAECYsmpKKTv5L8y/X3Dn1hQrec3POx2jHZ/0P2qQ6HvsrU1BmeqXcof3NGGueG6LxwQ==}
-    engines: {node: '>=0.6.0'}
-    dev: false
 
   /xpath@0.0.32:
     resolution: {integrity: sha512-rxMJhSIoiO8vXcWvSifKqhvV96GjiD5wYb8/QHdoRyQvraTpp4IEv944nhGausZZ3u7dhQXteZuZbaqfpB7uYw==}

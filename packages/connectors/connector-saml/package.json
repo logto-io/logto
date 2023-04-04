@@ -6,7 +6,7 @@
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
     "fast-xml-parser": "^4.0.13",
-    "samlify": "2.7.7"
+    "samlify": "2.8.10"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
