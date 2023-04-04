@@ -3802,6 +3802,9 @@ importers:
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@logto/shared':
+        specifier: workspace:^
+        version: link:../shared
       '@parcel/compressor-brotli':
         specifier: 2.8.3
         version: 2.8.3(@parcel/core@2.8.3)
@@ -3968,8 +3971,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       superstruct:
-        specifier: ^0.16.0
-        version: 0.16.0
+        specifier: ^1.0.3
+        version: 1.0.3
       tiny-cookie:
         specifier: ^2.4.1
         version: 2.4.1
@@ -17969,6 +17972,11 @@ packages:
 
   /superstruct@0.16.0:
     resolution: {integrity: sha512-IDQtwnnlaan1NhuHqyD/U11lROYvCQ79JyfwlFU9xEVHzqV/Ys/RrwmHPCG0CVH/1g0BuodEjH1msxK2UHxehA==}
+    dev: true
+
+  /superstruct@1.0.3:
+    resolution: {integrity: sha512-8iTn3oSS8nRGn+C2pgXSKPI3jmpm6FExNazNpjvqS6ZUJQCej3PUXEKM8NjHBOs54ExM+LPW/FBRhymrdcCiSg==}
+    engines: {node: '>=14.0.0'}
     dev: true
 
   /supertest@6.2.2:
