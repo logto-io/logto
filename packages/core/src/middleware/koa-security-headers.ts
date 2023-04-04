@@ -27,7 +27,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     isMultiTenancy ? tenantId : defaultTenantId,
     EnvSet.values
   ).origin;
-  const developmentOrigins = isProduction ? [] : ['ws:'];
+  const developmentOrigins = ['ws:'];
 
   /**
    * Default Applied rules:
@@ -66,7 +66,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       // Temporary set to report only to avoid breaking the app
       reportOnly: true,
       directives: {
+        'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
+        scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
         connectSrc: ["'self'", ...adminOrigins, ...cloudOrigins, ...developmentOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:'],
@@ -85,7 +87,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       // Temporary set to report only to avoid breaking the app
       reportOnly: true,
       directives: {
+        'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
+        scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
         connectSrc: [
           "'self'",
           tenantEndpointOrigin,
