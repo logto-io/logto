@@ -1,6 +1,6 @@
-import { generateStandardId } from '@logto/core-kit';
 import type { RoleResponse } from '@logto/schemas';
 import { userInfoSelectFields, Roles } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { pick, tryThat } from '@silverhand/essentials';
 import { object, string, z } from 'zod';
 

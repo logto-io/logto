@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import { useLogto } from '@logto/react';
 import { trySafe } from '@silverhand/essentials';
 import { useEffect } from 'react';

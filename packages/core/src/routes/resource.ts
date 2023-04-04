@@ -1,5 +1,5 @@
-import { buildIdGenerator } from '@logto/core-kit';
 import { Resources, Scopes } from '@logto/schemas';
+import { buildIdGenerator } from '@logto/shared';
 import { tryThat, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 

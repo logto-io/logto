@@ -7,7 +7,9 @@
   "license": "MPL-2.0",
   "type": "module",
   "private": true,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
@@ -28,6 +30,7 @@
     "@logto/phrases-ui": "workspace:^",
     "@logto/react": "1.1.0",
     "@logto/schemas": "workspace:^",
+    "@logto/shared": "workspace:^",
     "@mdx-js/react": "^1.6.22",
     "@parcel/compressor-brotli": "2.8.3",
     "@parcel/compressor-gzip": "2.8.3",
@@ -57,7 +60,7 @@
     "csstype": "^3.0.11",
     "date-fns": "^2.29.3",
     "dayjs": "^1.10.5",
-    "deep-object-diff": "^1.1.7",
+    "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.2.2",
     "dnd-core": "^16.0.0",
     "eslint": "^8.34.0",

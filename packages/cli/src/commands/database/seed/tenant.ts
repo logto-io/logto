@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { createTenantMetadata } from '@logto/core-kit';
 import type {
   TenantModel,
   AdminData,
@@ -6,7 +6,7 @@ import type {
   CreateScope,
   CreateRolesScope,
 } from '@logto/schemas';
-import { createTenantMetadata } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';

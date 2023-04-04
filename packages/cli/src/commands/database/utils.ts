@@ -1,7 +1,7 @@
 import { generateKeyPair } from 'node:crypto';
 import { promisify } from 'node:util';
 
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared';
 
 export const generateOidcPrivateKey = async (type: 'rsa' | 'ec' = 'ec') => {
   if (type === 'rsa') {

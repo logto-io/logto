@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 

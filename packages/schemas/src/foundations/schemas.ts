@@ -1,4 +1,7 @@
+import { type SchemaLike } from '@logto/shared/universal';
 import type { ZodObject, ZodType, ZodOptional } from 'zod';
+
+export type { SchemaLike, SchemaValue, SchemaValuePrimitive } from '@logto/shared/universal';
 
 type ParseOptional<K> = undefined extends K
   ? ZodOptional<ZodType<Exclude<K, undefined>>>
@@ -11,12 +14,6 @@ export type CreateGuard<T extends Record<string, unknown>> = ZodObject<{
 export type Guard<T extends Record<string, unknown>> = ZodObject<{
   [key in keyof T]: ZodType<T[key]>;
 }>;
-
-export type SchemaValuePrimitive = string | number | boolean | undefined;
-export type SchemaValue = SchemaValuePrimitive | Record<string, unknown> | unknown[] | null;
-export type SchemaLike<Key extends string = string> = {
-  [key in Key]: SchemaValue;
-};
 
 export type GeneratedSchema<
   CreateSchema extends SchemaLike,

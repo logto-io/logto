@@ -1,4 +1,3 @@
-import { generateStandardId } from '@logto/core-kit';
 import {
   HookEvent,
   type HookEventPayload,
@@ -6,6 +5,7 @@ import {
   LogResult,
   userInfoSelectFields,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';

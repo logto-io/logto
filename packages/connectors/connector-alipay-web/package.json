@@ -4,7 +4,6 @@
   "description": "Alipay implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
-    "@logto/core-kit": "workspace:^",
     "dayjs": "^1.10.5",
     "iconv-lite": "^0.6.3"
   },

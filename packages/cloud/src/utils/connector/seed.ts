@@ -1,6 +1,5 @@
-import { generateStandardId } from '@logto/core-kit';
 import { cloudApiIndicator } from '@logto/schemas';
-import { GlobalValues } from '@logto/shared';
+import { generateStandardId, GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 
 export const createCloudServiceConnector = (data: {

@@ -1,5 +1,5 @@
-import { generateStandardId } from '@logto/core-kit';
 import type { ScopeResponse } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 

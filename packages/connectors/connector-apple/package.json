@@ -4,7 +4,7 @@
   "description": "Apple web connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
-    "@logto/core-kit": "workspace:^",
+    "@logto/shared": "workspace:^",
     "jose": "^4.3.8"
   },
   "main": "./lib/index.js",

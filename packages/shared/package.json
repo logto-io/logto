@@ -10,11 +10,21 @@
   ],
   "exports": {
     ".": {
-      "import": "./lib/index.js"
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./universal": {
+      "import": "./lib/universal.js",
+      "types": "./lib/universal.d.ts"
     },
     "./esm": {
-      "import": "./lib/esm/index.js"
+      "import": "./lib/esm/index.js",
+      "types": "./lib/esm/index.d.ts"
     }
+  },
+  "//": "This field is for parcel. Remove after https://github.com/parcel-bundler/parcel/pull/8807 published.",
+  "alias": {
+    "./universal": "./lib/universal.js"
   },
   "publishConfig": {
     "access": "public"
@@ -54,8 +64,6 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/core-kit": "workspace:^",
-    "@logto/schemas": "workspace:^",
     "@silverhand/essentials": "^2.5.0",
     "chalk": "^5.0.0",
     "find-up": "^6.3.0",

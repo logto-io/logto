@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verificationTimeout } from '#src/routes/consts.js';

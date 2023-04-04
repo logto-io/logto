@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { toast } from 'react-hot-toast';

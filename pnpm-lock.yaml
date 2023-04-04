@@ -411,9 +411,6 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../../toolkit/connector-kit
-      '@logto/core-kit':
-        specifier: workspace:^
-        version: link:../../toolkit/core-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
@@ -660,9 +657,9 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../../toolkit/connector-kit
-      '@logto/core-kit':
+      '@logto/shared':
         specifier: workspace:^
-        version: link:../../toolkit/core-kit
+        version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
@@ -2103,9 +2100,9 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../../toolkit/connector-kit
-      '@logto/core-kit':
+      '@logto/shared':
         specifier: workspace:^
-        version: link:../../toolkit/core-kit
+        version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
@@ -2780,6 +2777,9 @@ importers:
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
+      '@logto/shared':
+        specifier: workspace:^
+        version: link:../shared
       '@mdx-js/react':
         specifier: ^1.6.22
         version: 1.6.22(react@18.2.0)
@@ -2868,8 +2868,8 @@ importers:
         specifier: ^1.10.5
         version: 1.11.6
       deep-object-diff:
-        specifier: ^1.1.7
-        version: 1.1.7
+        specifier: ^1.1.9
+        version: 1.1.9
       deepmerge:
         specifier: ^4.2.2
         version: 4.2.2
@@ -3519,6 +3519,9 @@ importers:
       '@logto/phrases-ui':
         specifier: workspace:^
         version: link:../phrases-ui
+      '@logto/shared':
+        specifier: workspace:^
+        version: link:../shared
       '@withtyped/server':
         specifier: ^0.8.1
         version: 0.8.1
@@ -3583,12 +3586,6 @@ importers:
 
   packages/shared:
     dependencies:
-      '@logto/core-kit':
-        specifier: workspace:^
-        version: link:../toolkit/core-kit
-      '@logto/schemas':
-        specifier: workspace:^
-        version: link:../schemas
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
@@ -3679,12 +3676,12 @@ importers:
       '@logto/language-kit':
         specifier: workspace:^
         version: link:../language-kit
+      '@logto/shared':
+        specifier: workspace:^
+        version: link:../../shared
       color:
         specifier: ^4.2.3
         version: 4.2.3
-      nanoid:
-        specifier: ^4.0.0
-        version: 4.0.0
     optionalDependencies:
       zod:
         specifier: ^3.20.2
@@ -10224,8 +10221,8 @@ packages:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
 
-  /deep-object-diff@1.1.7:
-    resolution: {integrity: sha512-QkgBca0mL08P6HiOjoqvmm6xOAl2W6CT2+34Ljhg0OeFan8cwlcdq8jrLKsBBuUFAZLsN5b6y491KdKEoSo9lg==}
+  /deep-object-diff@1.1.9:
+    resolution: {integrity: sha512-Rn+RuwkmkDwCi2/oXOFS9Gsr5lJZu/yTGpK7wAaAIE75CC+LCGEZHpY6VQJa/RoJcrmaA/docWJZvYohlNkWPA==}
     dev: true
 
   /deepmerge@4.2.2:

@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useMemo } from 'react';

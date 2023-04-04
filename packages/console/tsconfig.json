@@ -1,6 +1,7 @@
 {
   "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],

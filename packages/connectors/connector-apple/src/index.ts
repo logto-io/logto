@@ -13,7 +13,7 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';

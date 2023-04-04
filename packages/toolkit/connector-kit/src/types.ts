@@ -259,3 +259,15 @@ export type GetUserInfo = (
   data: unknown,
   getSession: GetSession
 ) => Promise<SocialUserInfo & Record<string, string | boolean | number | undefined>>;
+
+export enum DemoConnector {
+  Sms = 'logto-sms',
+  Email = 'logto-email',
+  Social = 'logto-social-demo',
+}
+
+export const demoConnectorIds: readonly string[] = Object.freeze([
+  DemoConnector.Sms,
+  DemoConnector.Email,
+  DemoConnector.Social,
+]);

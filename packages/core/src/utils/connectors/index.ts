@@ -6,8 +6,9 @@ import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/lib/connector/index.js';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
+import { demoConnectorIds } from '@logto/connector-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
-import { demoConnectorIds, findPackage } from '@logto/shared';
+import { findPackage } from '@logto/shared';
 import { deduplicate, pick } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';

@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import { format } from 'date-fns';
 import type { ChangeEventHandler } from 'react';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared/universal';
 import { sql } from 'slonik';
 
 import type { AlterationScript } from '../lib/types/alteration.js';

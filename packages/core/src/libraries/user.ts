@@ -1,6 +1,6 @@
-import { buildIdGenerator, generateStandardId } from '@logto/core-kit';
 import type { User, CreateUser, Scope } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { buildIdGenerator, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';

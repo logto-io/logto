@@ -1,11 +1,16 @@
 /* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
-import type { SmsConnector, EmailConnector } from '@logto/connector-kit';
-import { VerificationCodeType, validateConfig } from '@logto/connector-kit';
-import { emailRegEx, phoneRegEx, buildIdGenerator } from '@logto/core-kit';
+import {
+  type SmsConnector,
+  type EmailConnector,
+  demoConnectorIds,
+  VerificationCodeType,
+  validateConfig,
+} from '@logto/connector-kit';
+import { phoneRegEx, emailRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
-import { demoConnectorIds } from '@logto/shared';
+import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 

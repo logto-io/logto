@@ -1,4 +1,3 @@
-import { generateStandardId, buildIdGenerator } from '@logto/core-kit';
 import type { Role } from '@logto/schemas';
 import {
   demoAppApplicationId,
@@ -6,6 +5,7 @@ import {
   Applications,
   InternalRole,
 } from '@logto/schemas';
+import { generateStandardId, buildIdGenerator } from '@logto/shared';
 import { boolean, object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
