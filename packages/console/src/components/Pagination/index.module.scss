@@ -46,13 +46,10 @@
   }
 
   li.disabled {
-    .button {
-      cursor: not-allowed;
-      background: var(--color-neutral-95);
+    cursor: not-allowed;
 
-      &:hover {
-        background: var(--color-neutral-95);
-      }
+    .button {
+      background: var(--color-neutral-95);
     }
   }
 
