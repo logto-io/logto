@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';

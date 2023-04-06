@@ -10,7 +10,7 @@ const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
 const nanoIdMock = 'mockId';
-await mockEsmWithActual('@logto/core-kit', () => ({
+await mockEsmWithActual('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => nanoIdMock,
   generateStandardId: () => nanoIdMock,

@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import classNames from 'classnames';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';

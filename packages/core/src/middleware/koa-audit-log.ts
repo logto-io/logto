@@ -1,6 +1,6 @@
-import { generateStandardId } from '@logto/core-kit';
 import type { LogContextPayload, LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';

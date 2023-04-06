@@ -1,5 +1,5 @@
+import { DemoConnector } from '@logto/connector-kit';
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
-import { DemoConnector } from '@logto/shared';
 import { literal, object, string, z } from 'zod';
 
 import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';

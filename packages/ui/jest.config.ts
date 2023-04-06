@@ -10,7 +10,8 @@ const config: Config.InitialOptions = {
       '\\.(png)$': 'jest-transform-stub',
     },
     moduleNameMapper: {
-      '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/$1',
+      '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/lib/$1',
+      '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     },
   }),
   // Will update common config soon

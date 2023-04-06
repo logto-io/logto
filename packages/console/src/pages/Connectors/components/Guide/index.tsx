@@ -1,7 +1,7 @@
-import { generateStandardId } from '@logto/core-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse, RequestErrorBody } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';

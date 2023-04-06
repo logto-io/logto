@@ -4,7 +4,7 @@
   "description": "OIDC standard connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
-    "@logto/core-kit": "workspace:^",
+    "@logto/shared": "workspace:^",
     "jose": "^4.3.8",
     "nanoid": "^4.0.0"
   },

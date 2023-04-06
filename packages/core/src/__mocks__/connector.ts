@@ -1,8 +1,7 @@
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
-import { ConnectorPlatform } from '@logto/connector-kit';
+import { ConnectorPlatform, DemoConnector } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
-import { DemoConnector } from '@logto/shared';
 import { any } from 'zod';
 
 import type { LogtoConnector } from '#src/utils/connectors/types.js';

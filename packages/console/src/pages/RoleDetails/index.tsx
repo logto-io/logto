@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { Role } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';

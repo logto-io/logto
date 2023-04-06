@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

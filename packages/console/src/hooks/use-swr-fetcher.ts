@@ -1,10 +1,12 @@
 import { HTTPError, type Options } from 'ky';
-import type { KyInstance } from 'ky/distribution/types/ky';
+import type ky from 'ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { BareFetcher } from 'swr';
 
 import { RequestError } from './use-api';
+
+type KyInstance = typeof ky;
 
 type WithTotalNumber<T> = Array<Awaited<T> | number>;
 

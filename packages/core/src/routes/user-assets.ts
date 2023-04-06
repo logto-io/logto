@@ -1,6 +1,5 @@
 import { readFile } from 'node:fs/promises';
 
-import { generateStandardId } from '@logto/core-kit';
 import type { UserAssets } from '@logto/schemas';
 import {
   userAssetsGuard,
@@ -8,6 +7,7 @@ import {
   allowUploadMimeTypes,
   maxUploadFileSize,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
 import { object } from 'zod';
 

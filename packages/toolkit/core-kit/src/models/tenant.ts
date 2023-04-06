@@ -1,8 +1,7 @@
-import { generateStandardId } from '@logto/core-kit';
-import { customAlphabet } from 'nanoid';
+import { generateStandardId, buildIdGenerator } from '@logto/shared/universal';
 
 // Use lowercase letters for tenant IDs to improve compatibility
-export const tenantIdAlphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+const generateTenantId = buildIdGenerator(6, false);
 
 export type TenantMetadata = {
   id: string;
@@ -13,7 +12,7 @@ export type TenantMetadata = {
 
 export const createTenantMetadata = (
   databaseName: string,
-  tenantId = customAlphabet(tenantIdAlphabet)(6)
+  tenantId = generateTenantId(6)
 ): TenantMetadata => {
   const parentRole = `logto_tenant_${databaseName}`;
   const role = `logto_tenant_${databaseName}_${tenantId}`;

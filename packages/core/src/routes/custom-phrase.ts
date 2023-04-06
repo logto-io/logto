@@ -1,8 +1,8 @@
-import { generateStandardId } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import resource from '@logto/phrases-ui';
 import type { Translation } from '@logto/schemas';
 import { CustomPhrases, translationGuard } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { object } from 'zod';
 

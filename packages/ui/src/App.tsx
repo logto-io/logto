@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';

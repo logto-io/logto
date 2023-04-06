@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared/universal';
 
 import type { CreateScope, Role } from '../index.js';
 import { AdminTenantRole } from '../types/index.js';

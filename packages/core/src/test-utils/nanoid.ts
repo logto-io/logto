@@ -4,6 +4,6 @@ const { mockEsmWithActual } = createMockUtils(import.meta.jest);
 
 export const mockId = 'mockId';
 export const mockStandardId = async () =>
-  mockEsmWithActual('@logto/core-kit', () => ({
+  mockEsmWithActual('@logto/shared', () => ({
     generateStandardId: () => mockId,
   }));

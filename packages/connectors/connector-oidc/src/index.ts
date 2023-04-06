@@ -15,7 +15,7 @@ import {
   validateConfig,
   ConnectorType,
 } from '@logto/connector-kit';
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { defaultMetadata } from './constant.js';

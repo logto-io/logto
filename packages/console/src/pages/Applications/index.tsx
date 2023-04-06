@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';

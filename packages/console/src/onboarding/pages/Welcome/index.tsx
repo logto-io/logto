@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';

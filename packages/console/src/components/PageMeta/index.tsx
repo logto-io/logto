@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/lib/react';
+import { appInsightsReact } from '@logto/app-insights/react';
 import type { AdminConsoleKey } from '@logto/phrases';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';

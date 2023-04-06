@@ -2,7 +2,8 @@ import {
   generateOidcCookieKey,
   generateOidcPrivateKey,
 } from '@logto/cli/lib/commands/database/utils.js';
-import { generateStandardId } from '@logto/core-kit';
+import { DemoConnector } from '@logto/connector-kit';
+import { createTenantMetadata } from '@logto/core-kit';
 import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
 import {
   createAdminTenantApplicationRole,
@@ -17,7 +18,7 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
 } from '@logto/schemas';
-import { createTenantMetadata, DemoConnector } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';

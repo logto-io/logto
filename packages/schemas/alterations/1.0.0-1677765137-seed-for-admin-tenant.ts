@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/core-kit';
+import { generateStandardId } from '@logto/shared/universal';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 

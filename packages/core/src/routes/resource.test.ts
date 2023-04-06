@@ -47,7 +47,7 @@ const libraries = {
   },
 };
 
-mockEsm('@logto/core-kit', () => ({
+mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
 }));

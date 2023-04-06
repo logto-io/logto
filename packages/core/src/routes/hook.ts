@@ -1,5 +1,5 @@
-import { generateStandardId } from '@logto/core-kit';
 import { Hooks } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
