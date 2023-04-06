@@ -39,7 +39,7 @@ function AuditLogTable({ userId, className }: Props) {
   const url = buildUrl('api/logs', {
     page: String(page),
     page_size: String(pageSize),
-    ...conditional(event && { logType: event }),
+    ...conditional(event && { logKey: event }),
     ...conditional(applicationId && { applicationId }),
     ...conditional(userId && { userId }),
   });

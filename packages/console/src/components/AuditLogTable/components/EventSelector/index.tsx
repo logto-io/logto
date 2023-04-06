@@ -12,7 +12,7 @@ function EventSelector({ value, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const options = Object.entries(logEventTitle).map(([value, title]) => ({
     value,
-    title,
+    title: title ?? value,
   }));
 
   return (
