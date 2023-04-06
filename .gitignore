@@ -30,6 +30,7 @@ cache
 *.pem
 .history
 fly.toml
+dump.rdb
 
 # connectors
 /packages/core/connectors

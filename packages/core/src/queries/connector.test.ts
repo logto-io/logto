@@ -4,6 +4,7 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockConnector } from '#src/__mocks__/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
@@ -26,7 +27,7 @@ const {
   deleteConnectorByIds,
   insertConnector,
   updateConnector,
-} = createConnectorQueries(pool);
+} = createConnectorQueries(pool, new MockWellKnownCache());
 
 describe('connector queries', () => {
   const { table, fields } = convertToIdentifiers(Connectors);

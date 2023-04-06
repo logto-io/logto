@@ -4,13 +4,18 @@ import { manyRows, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { type ConnectorWellKnown } from '#src/utils/connectors/types.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
-export const createConnectorQueries = (pool: CommonQueryMethods) => {
+export const createConnectorQueries = (
+  pool: CommonQueryMethods,
+  wellKnownCache: WellKnownCache
+) => {
   const findAllConnectors = async () =>
     manyRows(
       pool.query<Connector>(sql`
@@ -19,6 +24,17 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
         order by ${fields.id} asc
       `)
     );
+  const findAllConnectorsWellKnown = wellKnownCache.memoize(
+    async () =>
+      manyRows(
+        pool.query<ConnectorWellKnown>(sql`
+          select ${sql.join([fields.id, fields.metadata, fields.connectorId], sql`, `)}
+          from ${table}
+          order by ${fields.id} asc
+        `)
+      ),
+    ['connectors-well-known']
+  );
   const findConnectorById = async (id: string) =>
     pool.one<Connector>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
@@ -31,35 +47,46 @@ export const createConnectorQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.connectorId}=${connectorId}
     `);
+  const deleteConnectorById = wellKnownCache.mutate(
+    async (id: string) => {
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.id}=${id}
+      `);
 
-  const deleteConnectorById = async (id: string) => {
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.id}=${id}
-    `);
+      if (rowCount < 1) {
+        throw new DeletionError(Connectors.table, id);
+      }
+    },
+    ['connectors-well-known']
+  );
+  const deleteConnectorByIds = wellKnownCache.mutate(
+    async (ids: string[]) => {
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.id} in (${sql.join(ids, sql`, `)})
+      `);
 
-    if (rowCount < 1) {
-      throw new DeletionError(Connectors.table, id);
-    }
-  };
-
-  const deleteConnectorByIds = async (ids: string[]) => {
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.id} in (${sql.join(ids, sql`, `)})
-    `);
-
-    if (rowCount !== ids.length) {
-      throw new DeletionError(Connectors.table, JSON.stringify({ ids }));
-    }
-  };
-  const insertConnector = buildInsertIntoWithPool(pool)(Connectors, {
-    returning: true,
-  });
-  const updateConnector = buildUpdateWhereWithPool(pool)(Connectors, true);
+      if (rowCount !== ids.length) {
+        throw new DeletionError(Connectors.table, JSON.stringify({ ids }));
+      }
+    },
+    ['connectors-well-known']
+  );
+  const insertConnector = wellKnownCache.mutate(
+    buildInsertIntoWithPool(pool)(Connectors, {
+      returning: true,
+    }),
+    ['connectors-well-known']
+  );
+  const updateConnector = wellKnownCache.mutate(buildUpdateWhereWithPool(pool)(Connectors, true), [
+    'connectors-well-known',
+  ]);
 
   return {
     findAllConnectors,
+    /** Find all connectors from database with no sensitive info. */
+    findAllConnectorsWellKnown,
     findConnectorById,
     countConnectorByConnectorId,
     deleteConnectorById,

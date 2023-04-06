@@ -71,6 +71,7 @@
     "p-memoize": "^7.1.1",
     "p-retry": "^5.1.2",
     "pg-protocol": "^1.6.0",
+    "redis": "^4.6.5",
     "roarr": "^7.11.0",
     "semver": "^7.3.8",
     "slonik": "^30.0.0",

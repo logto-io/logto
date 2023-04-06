@@ -4,7 +4,6 @@ import { pickDefault } from '@logto/shared/esm';
 
 import { trTrTag, zhCnTag, mockTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import { wellKnownCache } from '#src/caches/well-known.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -42,7 +41,6 @@ const phraseRequest = createRequester({
 });
 
 afterEach(() => {
-  wellKnownCache.invalidateAll(tenantContext.id);
   jest.clearAllMocks();
 });
 

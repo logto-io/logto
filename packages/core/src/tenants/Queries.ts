@@ -1,5 +1,6 @@
 import type { CommonQueryMethods } from 'slonik';
 
+import { type WellKnownCache } from '#src/caches/well-known.js';
 import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
@@ -20,8 +21,8 @@ import { createVerificationStatusQueries } from '#src/queries/verification-statu
 
 export default class Queries {
   applications = createApplicationQueries(this.pool);
-  connectors = createConnectorQueries(this.pool);
-  customPhrases = createCustomPhraseQueries(this.pool);
+  connectors = createConnectorQueries(this.pool, this.wellKnownCache);
+  customPhrases = createCustomPhraseQueries(this.pool, this.wellKnownCache);
   logs = createLogQueries(this.pool);
   oidcModelInstances = createOidcModelInstanceQueries(this.pool);
   passcodes = createPasscodeQueries(this.pool);
@@ -30,12 +31,15 @@ export default class Queries {
   roles = createRolesQueries(this.pool);
   scopes = createScopeQueries(this.pool);
   logtoConfigs = createLogtoConfigQueries(this.pool);
-  signInExperiences = createSignInExperienceQueries(this.pool);
+  signInExperiences = createSignInExperienceQueries(this.pool, this.wellKnownCache);
   users = createUserQueries(this.pool);
   usersRoles = createUsersRolesQueries(this.pool);
   applicationsRoles = createApplicationsRolesQueries(this.pool);
   verificationStatuses = createVerificationStatusQueries(this.pool);
   hooks = createHooksQueries(this.pool);
 
-  constructor(public readonly pool: CommonQueryMethods) {}
+  constructor(
+    public readonly pool: CommonQueryMethods,
+    public readonly wellKnownCache: WellKnownCache
+  ) {}
 }

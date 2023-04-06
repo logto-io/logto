@@ -7,6 +7,8 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
+import { type RedisCache } from '#src/caches/index.js';
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
@@ -28,12 +30,12 @@ import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string): Promise<Tenant> {
+  static async create(id: string, redisCache: RedisCache): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     await envSet.load();
 
-    return new Tenant(envSet, id);
+    return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
   }
 
   public readonly provider: Provider;
@@ -48,7 +50,8 @@ export default class Tenant implements TenantContext {
   private constructor(
     public readonly envSet: EnvSet,
     public readonly id: string,
-    public readonly queries = new Queries(envSet.pool),
+    public readonly wellKnownCache: WellKnownCache,
+    public readonly queries = new Queries(envSet.pool, wellKnownCache),
     public readonly connectors = createConnectorLibrary(queries),
     public readonly libraries = new Libraries(id, queries, connectors)
   ) {

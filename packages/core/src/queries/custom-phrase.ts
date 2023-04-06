@@ -1,16 +1,20 @@
-import type { CustomPhrase } from '@logto/schemas';
+import type { CustomPhrase, Translation } from '@logto/schemas';
 import { CustomPhrases } from '@logto/schemas';
-import { convertToIdentifiers, manyRows } from '@logto/shared';
+import { convertToIdentifiers, generateStandardId, manyRows } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
 
-export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
-  const findAllCustomLanguageTags = async () => {
+export const createCustomPhraseQueries = (
+  pool: CommonQueryMethods,
+  wellKnownCache: WellKnownCache
+) => {
+  const findAllCustomLanguageTags = wellKnownCache.memoize(async () => {
     const rows = await manyRows<{ languageTag: string }>(
       pool.query(sql`
         select ${fields.languageTag}
@@ -20,7 +24,7 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
     );
 
     return rows.map((row) => row.languageTag);
-  };
+  }, ['custom-phrases-tags']);
 
   const findAllCustomPhrases = async () =>
     manyRows(
@@ -31,14 +35,17 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
       `)
     );
 
-  const findCustomPhraseByLanguageTag = async (languageTag: string): Promise<CustomPhrase> =>
-    pool.one<CustomPhrase>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.languageTag} = ${languageTag}
-    `);
+  const findCustomPhraseByLanguageTag = wellKnownCache.memoize(
+    async (languageTag: string): Promise<CustomPhrase> =>
+      pool.one<CustomPhrase>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.languageTag} = ${languageTag}
+      `),
+    ['custom-phrases', (languageTag) => languageTag]
+  );
 
-  const upsertCustomPhrase = buildInsertIntoWithPool(pool)(CustomPhrases, {
+  const _upsertCustomPhrase = buildInsertIntoWithPool(pool)(CustomPhrases, {
     returning: true,
     onConflict: {
       fields: [fields.tenantId, fields.languageTag],
@@ -46,22 +53,30 @@ export const createCustomPhraseQueries = (pool: CommonQueryMethods) => {
     },
   });
 
-  const deleteCustomPhraseByLanguageTag = async (languageTag: string) => {
-    const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where ${fields.languageTag}=${languageTag}
-    `);
+  const upsertCustomPhrase = wellKnownCache.mutate(
+    async (languageTag: string, translation: Translation) =>
+      // LOG-5915 Remove `id` in custom phrases
+      _upsertCustomPhrase({ id: generateStandardId(), languageTag, translation }),
+    ['custom-phrases', (languageTag) => languageTag],
+    ['custom-phrases-tags'] // Invalidate tags cache as well since it may add a new language tag
+  );
 
-    if (rowCount < 1) {
-      throw new DeletionError(CustomPhrases.table, languageTag);
-    }
-  };
+  const deleteCustomPhraseByLanguageTag = wellKnownCache.mutate(
+    async (languageTag: string) => {
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.languageTag}=${languageTag}
+      `);
+
+      if (rowCount < 1) {
+        throw new DeletionError(CustomPhrases.table, languageTag);
+      }
+    },
+    ['custom-phrases', (languageTag) => languageTag],
+    ['custom-phrases-tags']
+  );
 
   return {
-    /**
-     * NOTE: Use `getAllCustomLanguageTags()` from phrase library
-     * if possible since that function leverages cache.
-     */
     findAllCustomLanguageTags,
     findAllCustomPhrases,
     findCustomPhraseByLanguageTag,

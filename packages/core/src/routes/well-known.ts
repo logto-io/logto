@@ -3,23 +3,22 @@ import { adminTenantId } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { wellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import detectLanguage from '#src/i18n/detect-language.js';
-import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/index.js';
+import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/types.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { noCache } from '#src/utils/request.js';
 
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 export default function wellKnownRoutes<T extends AnonymousRouter>(
-  ...[router, { libraries, id: tenantId }]: RouterInitArgs<T>
+  ...[router, { libraries, queries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
     signInExperiences: { getSignInExperience, getFullSignInExperience },
-    phrases: { getPhrases, getAllCustomLanguageTags },
+    phrases: { getPhrases },
   } = libraries;
+  const { findAllCustomLanguageTags } = queries.customPhrases;
 
   if (tenantId === adminTenantId) {
     router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
@@ -39,11 +38,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     '/.well-known/sign-in-exp',
     koaGuard({ response: guardFullSignInExperience, status: 200 }),
     async (ctx, next) => {
-      if (noCache(ctx.request)) {
-        wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
-        console.log('invalidated');
-      }
-
       ctx.body = await getFullSignInExperience();
 
       return next();
@@ -60,10 +54,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
       status: 200,
     }),
     async (ctx, next) => {
-      if (noCache(ctx.request)) {
-        wellKnownCache.invalidate(tenantId, ['sie', 'phrases-lng-tags', 'phrases']);
-      }
-
       const {
         query: { lng },
       } = ctx.guard;
@@ -77,14 +67,14 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
         autoDetect && detectLanguage(ctx),
         fallbackLanguage
       );
-      const customLanguages = await getAllCustomLanguageTags();
+      const customLanguages = await findAllCustomLanguageTags();
       const language =
         acceptableLanguages.find(
           (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
         ) ?? 'en';
 
       ctx.set('Content-Language', language);
-      ctx.body = await getPhrases(language, customLanguages);
+      ctx.body = await getPhrases(language);
 
       return next();
     }

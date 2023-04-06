@@ -10,7 +10,6 @@ import {
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 
-import { wellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
@@ -192,10 +191,6 @@ export default async function submitInteraction(
       await updateDefaultSignInExperience({
         signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       });
-
-      // Normally we don't need to manually invalidate TTL cache.
-      // This is for better OSS onboarding experience.
-      wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
     }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });

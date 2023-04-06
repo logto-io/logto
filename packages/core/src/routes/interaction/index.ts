@@ -69,7 +69,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         profile: profileGuard.optional(),
       }),
     }),
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
       const { signInExperience, createLog } = ctx;
@@ -119,7 +119,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.put(
     `${interactionPrefix}/event`,
     koaGuard({ body: z.object({ event: eventGuard }) }),
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -157,7 +157,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: identifierPayloadGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -194,7 +194,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -231,7 +231,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: profileGuard,
     }),
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -284,7 +284,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   // Submit Interaction
   router.post(
     `${interactionPrefix}/submit`,
-    koaInteractionSie(libraries.signInExperiences, tenantId),
+    koaInteractionSie(libraries.signInExperiences),
     koaInteractionHooks(tenant),
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;
