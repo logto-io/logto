@@ -27,7 +27,6 @@
     "@logto/phrases": "workspace:^",
     "@logto/phrases-ui": "workspace:^",
     "@logto/schemas": "workspace:^",
-    "@logto/shared": "workspace:^",
     "@parcel/compressor-brotli": "2.8.3",
     "@parcel/compressor-gzip": "2.8.3",
     "@parcel/core": "2.8.3",

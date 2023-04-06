@@ -11,7 +11,7 @@ const { mockEsmWithActual } = createMockUtils(jest);
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 
-await mockEsmWithActual('@logto/core-kit', () => ({
+await mockEsmWithActual('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
   generateStandardId: () => 'randomId',

@@ -3802,9 +3802,6 @@ importers:
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
-      '@logto/shared':
-        specifier: workspace:^
-        version: link:../shared
       '@parcel/compressor-brotli':
         specifier: 2.8.3
         version: 2.8.3(@parcel/core@2.8.3)

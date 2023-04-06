@@ -11,7 +11,7 @@ const config: Config.InitialOptions = {
     },
     moduleNameMapper: {
       '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/lib/$1',
-      '^@logto/shared/(.*)$': '<rootDir>/node_modules/@logto/shared/lib/$1',
+      '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     },
   }),
   // Will update common config soon
