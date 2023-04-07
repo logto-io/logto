@@ -3131,9 +3131,6 @@ importers:
       oidc-provider:
         specifier: ^8.0.0
         version: 8.0.0
-      p-memoize:
-        specifier: ^7.1.1
-        version: 7.1.1
       p-retry:
         specifier: ^5.1.2
         version: 5.1.2
@@ -14867,6 +14864,7 @@ packages:
   /mimic-fn@4.0.0:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
+    dev: true
 
   /mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
@@ -15491,14 +15489,6 @@ packages:
     dependencies:
       aggregate-error: 3.1.0
     dev: true
-
-  /p-memoize@7.1.1:
-    resolution: {integrity: sha512-DZ/bONJILHkQ721hSr/E9wMz5Am/OTJ9P6LhLFo2Tu+jL8044tgc9LwHO8g4PiaYePnlVVRAJcKmgy8J9MVFrA==}
-    engines: {node: '>=14.16'}
-    dependencies:
-      mimic-fn: 4.0.0
-      type-fest: 3.5.2
-    dev: false
 
   /p-queue@7.3.4:
     resolution: {integrity: sha512-esox8CWt0j9EZECFvkFl2WNPat8LN4t7WWeXq73D9ha0V96qPRufApZi4ZhPwXAln1uVVal429HVVKPa2X0yQg==}

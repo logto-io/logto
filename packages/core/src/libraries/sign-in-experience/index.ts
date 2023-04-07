@@ -53,11 +53,9 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getSignInExperience = findDefaultSignInExperience;
-
   const getFullSignInExperience = async (): Promise<FullSignInExperience> => {
     const [signInExperience, logtoConnectors] = await Promise.all([
-      getSignInExperience(),
+      findDefaultSignInExperience(),
       getLogtoConnectors(),
     ]);
 
@@ -89,7 +87,6 @@ export const createSignInExperienceLibrary = (
   return {
     validateLanguageInfo,
     removeUnavailableSocialConnectorTargets,
-    getSignInExperience,
     getFullSignInExperience,
   };
 };

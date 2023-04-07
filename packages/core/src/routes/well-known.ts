@@ -15,10 +15,13 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   ...[router, { libraries, queries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
-    signInExperiences: { getSignInExperience, getFullSignInExperience },
+    signInExperiences: { getFullSignInExperience },
     phrases: { getPhrases },
   } = libraries;
-  const { findAllCustomLanguageTags } = queries.customPhrases;
+  const {
+    customPhrases: { findAllCustomLanguageTags },
+    signInExperiences: { findDefaultSignInExperience },
+  } = queries;
 
   if (tenantId === adminTenantId) {
     router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
@@ -60,7 +63,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
       const {
         languageInfo: { autoDetect, fallbackLanguage },
-      } = await getSignInExperience();
+      } = await findDefaultSignInExperience();
 
       const acceptableLanguages = conditionalArray<string | string[]>(
         lng,
