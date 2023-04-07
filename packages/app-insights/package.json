@@ -31,7 +31,7 @@
     "prepack": "pnpm build"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/eslint-config": "3.0.1",
     "@silverhand/ts-config": "3.0.0",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.31",

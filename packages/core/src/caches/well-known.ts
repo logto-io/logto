@@ -13,8 +13,6 @@ type WellKnownMap = {
   'custom-phrases-tags': string[];
 };
 
-const defaultCacheKey = '#';
-
 export type WellKnownCacheType = keyof WellKnownMap;
 
 /**
@@ -70,6 +68,8 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
  * @see {@link getValueGuard} For how data will be guarded while getting from the cache.
  */
 export class WellKnownCache {
+  static defaultKey = '#';
+
   /**
    * @param tenantId The tenant ID this cache is intended for.
    * @param cacheStore The storage to use as the cache.
@@ -85,7 +85,6 @@ export class WellKnownCache {
     key: string
   ): Promise<Optional<WellKnownMap[Type]>> {
     const data = await this.cacheStore.get(this.cacheKey(type, key));
-
     return trySafe(() => getValueGuard(type).parse(JSON.parse(data ?? '')));
   }
 
@@ -128,7 +127,7 @@ export class WellKnownCache {
       // only happens when the original function executed successfully
       void Promise.all(
         types.map(async ([type, cacheKey]) =>
-          trySafe(kvCache.delete(type, cacheKey?.(...args) ?? defaultCacheKey))
+          trySafe(kvCache.delete(type, cacheKey?.(...args) ?? WellKnownCache.defaultKey))
         )
       );
 
@@ -158,7 +157,7 @@ export class WellKnownCache {
       this: unknown,
       ...args: Args
     ): Promise<Readonly<WellKnownMap[Type]>> {
-      const promiseKey = cacheKey?.(...args) ?? defaultCacheKey;
+      const promiseKey = cacheKey?.(...args) ?? WellKnownCache.defaultKey;
       const cachedPromise = promiseCache.get(promiseKey);
 
       if (cachedPromise) {
@@ -166,18 +165,21 @@ export class WellKnownCache {
       }
 
       const promise = (async () => {
-        // Wrap with `trySafe()` here to ignore Redis errors
-        const cachedValue = await trySafe(kvCache.get(type, promiseKey));
+        try {
+          // Wrap with `trySafe()` here to ignore Redis errors
+          const cachedValue = await trySafe(kvCache.get(type, promiseKey));
 
-        if (cachedValue) {
-          return cachedValue;
+          if (cachedValue) {
+            return cachedValue;
+          }
+
+          const value = await run.apply(this, args);
+          await trySafe(kvCache.set(type, promiseKey, value));
+
+          return value;
+        } finally {
+          promiseCache.delete(promiseKey);
         }
-
-        const value = await run.apply(this, args);
-        await trySafe(kvCache.set(type, promiseKey, value));
-        promiseCache.delete(promiseKey);
-
-        return value;
       })();
 
       promiseCache.set(promiseKey, promise);
