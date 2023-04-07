@@ -40,7 +40,7 @@
     "node": "^18.12.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/eslint-config": "3.0.1",
     "@silverhand/essentials": "^2.5.0",
     "@silverhand/ts-config": "3.0.0",
     "@types/inquirer": "^9.0.0",

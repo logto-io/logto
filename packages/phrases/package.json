@@ -38,7 +38,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "3.0.0",
+    "@silverhand/eslint-config": "3.0.1",
     "@silverhand/ts-config": "3.0.0",
     "eslint": "^8.34.0",
     "lint-staged": "^13.0.0",
