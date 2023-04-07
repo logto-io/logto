@@ -59,8 +59,9 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
 
 /**
  * A reusable cache for well-known data. The name "well-known" has no direct relation to the `.well-known` routes,
- * but indicates the data to store should be publicly viewable. You should never store any data that is protected
- * by any authentication method.
+ * but indicates the data to store should be publicly viewable.
+ *
+ * **CAUTION** You should never store any data that is protected by any authentication method.
  *
  * For better code maintainability, we recommend to use the cache for database queries only unless you have a strong
  * reason.
@@ -85,6 +86,7 @@ export class WellKnownCache {
     key: string
   ): Promise<Optional<WellKnownMap[Type]>> {
     const data = await this.cacheStore.get(this.cacheKey(type, key));
+
     return trySafe(() => getValueGuard(type).parse(JSON.parse(data ?? '')));
   }
 
