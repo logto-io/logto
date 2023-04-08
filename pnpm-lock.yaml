@@ -239,11 +239,11 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/postgres':
-        specifier: ^0.8.1
-        version: 0.8.1(@withtyped/server@0.8.1)
+        specifier: ^0.9.0
+        version: 0.9.0(@withtyped/server@0.9.0)
       '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
+        specifier: ^0.9.0
+        version: 0.9.0
       accepts:
         specifier: ^1.3.8
         version: 1.3.8
@@ -3356,10 +3356,6 @@ importers:
         version: 3.20.2
 
   packages/integration-tests:
-    dependencies:
-      '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
     devDependencies:
       '@jest/types':
         specifier: ^29.1.2
@@ -3523,8 +3519,8 @@ importers:
         specifier: workspace:^
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
+        specifier: ^0.9.0
+        version: 0.9.0
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -8631,22 +8627,23 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres@0.8.1(@withtyped/server@0.8.1):
-    resolution: {integrity: sha512-BkX1SPDV8bZFn1LEI6jzTes+y/4BGuPEBOi8p6jH9ZBySTuaW0/JqgEb1aKk5GtJ0aFGXhgq4Fk+JkLOc6zehA==}
+  /@withtyped/postgres@0.9.0(@withtyped/server@0.9.0):
+    resolution: {integrity: sha512-SaT/btAaglb/FZ7/iSBMfA6z6XCNgJpkDD5V5lKh4HSoxl6vjgcJaX0oTidQgEs5pjCo2pyQqoZZVsXZKBofhQ==}
     peerDependencies:
-      '@withtyped/server': ^0.8.0
+      '@withtyped/server': ^0.9.0
     dependencies:
       '@types/pg': 8.6.6
-      '@withtyped/server': 0.8.1
+      '@withtyped/server': 0.9.0
       '@withtyped/shared': 0.2.0
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
     dev: false
 
-  /@withtyped/server@0.8.1:
-    resolution: {integrity: sha512-gNJ0lmwYiAScb7oQWu7BHyy+PT2/j34kGWIjElyfrYZP7JWpZSrEyxaVwDFRo/oA9vzru3AOnPFTMcjmPq4AKg==}
+  /@withtyped/server@0.9.0:
+    resolution: {integrity: sha512-uQlX9Bj8607eR0sxL4i0I3J1cz5KmzBoMlcjvr6KJ0+iT1FWbNK3zQZMaKcRj5Em7MmWwsFIFkgrdQweqaHhSg==}
     dependencies:
+      '@silverhand/essentials': 2.5.0
       '@withtyped/shared': 0.2.0
     dev: false
 
