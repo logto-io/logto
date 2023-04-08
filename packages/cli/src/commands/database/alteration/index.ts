@@ -9,7 +9,7 @@ import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
 } from '../../../queries/system.js';
-import { log } from '../../../utils.js';
+import { consoleLog } from '../../../utils.js';
 
 import type { AlterationFile } from './type.js';
 import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
@@ -74,17 +74,17 @@ const deployAlteration = async (
       }
     });
   } catch (error: unknown) {
-    console.error(error);
+    consoleLog.error(error);
 
     await pool.end();
-    log.error(
+    consoleLog.fatal(
       `Error ocurred during running alteration ${chalk.blue(filename)}.\n\n` +
         "  This alteration didn't change anything since it was in a transaction.\n" +
         '  Try to fix the error and deploy again.'
     );
   }
 
-  log.info(`Run alteration ${filename} \`${action}()\` function succeeded`);
+  consoleLog.info(`Run alteration ${filename} \`${action}()\` function succeeded`);
 };
 
 const alteration: CommandModule<unknown, { action: string; target?: string }> = {
@@ -106,7 +106,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
       const files = await getAlterationFiles();
 
       for (const file of files) {
-        console.log(file.filename);
+        consoleLog.plain(file.filename);
       }
     } else if (action === 'deploy') {
       const pool = await createPoolFromConfig();
@@ -115,7 +115,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
         target
       );
 
-      log.info(
+      consoleLog.info(
         `Found ${alterations.length} alteration${conditionalString(
           alterations.length > 1 && 's'
         )} to deploy`
@@ -135,7 +135,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
         target ?? ''
       );
 
-      log.info(
+      consoleLog.info(
         `Found ${alterations.length} alteration${conditionalString(
           alterations.length > 1 && 's'
         )} to revert`
@@ -150,7 +150,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
 
       await pool.end();
     } else {
-      log.error('Unsupported action');
+      consoleLog.fatal('Unsupported action');
     }
   },
 };

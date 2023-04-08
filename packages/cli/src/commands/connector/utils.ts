@@ -14,7 +14,7 @@ import tar from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory } from '../../constants.js';
-import { getConnectorPackagesFromDirectory, isTty, log, oraPromise } from '../../utils.js';
+import { consoleLog, getConnectorPackagesFromDirectory, isTty, oraPromise } from '../../utils.js';
 import { defaultPath } from '../install/utils.js';
 
 const coreDirectory = 'packages/core';
@@ -78,7 +78,7 @@ export const inquireInstancePath = async (initialPath?: string) => {
   const validated = await validatePath(instancePath);
 
   if (validated !== true) {
-    log.error(validated);
+    consoleLog.fatal(validated);
   }
 
   return instancePath;
@@ -135,7 +135,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
     await fs.mkdir(cwd, { recursive: true });
   }
 
-  log.info('Fetch connector metadata');
+  consoleLog.info('Fetch connector metadata');
 
   const limit = pLimit(10);
   const results = await Promise.all(
@@ -162,14 +162,14 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
           await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
           await fs.unlink(tarPath);
 
-          log.succeed(`Added ${chalk.green(name)} v${version}`);
+          consoleLog.succeed(`Added ${chalk.green(name)} v${version}`);
         };
 
         return limit(async () => {
           try {
             await pRetry(run, { retries: 2 });
           } catch (error: unknown) {
-            console.warn(`[${packageName}]`, error);
+            consoleLog.error(`[${packageName}]`, error);
 
             return packageName;
           }
@@ -180,14 +180,14 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
   const errorPackages = results.filter(Boolean);
   const errorCount = errorPackages.length;
 
-  log.info(
+  consoleLog.info(
     errorCount
       ? `Finished with ${errorCount} error${conditionalString(errorCount > 1 && 's')}.`
       : 'Finished'
   );
 
   if (errorCount) {
-    log.warn('Failed to add ' + errorPackages.map((name) => chalk.green(name)).join(', '));
+    consoleLog.warn('Failed to add ' + errorPackages.map((name) => chalk.green(name)).join(', '));
   }
 };
 
@@ -257,7 +257,7 @@ export const addOfficialConnectors = async (
     prefixText: chalk.blue('[info]'),
   });
 
-  log.info(`Found ${packages.length} official connectors`);
+  consoleLog.info(`Found ${packages.length} official connectors`);
 
   await addConnectors(
     instancePath,

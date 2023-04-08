@@ -6,7 +6,7 @@ import type { CommandModule } from 'yargs';
 
 import { createPoolFromConfig } from '../../database.js';
 import { getRowByKey, updateValueByKey } from '../../queries/system.js';
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 const validKeysDisplay = chalk.green(systemKeys.join(', '));
 
@@ -19,7 +19,9 @@ const validateKey: ValidateKeysFunction = (key) => {
   // Using `.includes()` will result a type error
   // eslint-disable-next-line unicorn/prefer-includes
   if (!systemKeys.some((element) => element === key)) {
-    log.error(`Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`);
+    consoleLog.fatal(
+      `Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`
+    );
   }
 };
 
@@ -41,7 +43,7 @@ const getConfig: CommandModule<unknown, { key: string }> = {
 
     const value = row?.value;
 
-    console.log(
+    consoleLog.plain(
       chalk.magenta(key) +
         '=' +
         (value === undefined ? chalk.gray(value) : chalk.green(JSON.stringify(value)))
@@ -73,7 +75,7 @@ const setConfig: CommandModule<unknown, { key: string; value: string }> = {
     await updateValueByKey(pool, key, guarded);
     await pool.end();
 
-    log.info(`Update ${chalk.green(key)} succeeded`);
+    consoleLog.info(`Update ${chalk.green(key)} succeeded`);
   },
 };
 

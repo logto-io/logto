@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { getConnectorPackagesFrom } from './utils.js';
 
@@ -19,7 +19,7 @@ const remove: CommandModule<{ path?: string }, { path?: string; packages?: strin
     }),
   handler: async ({ path: inputPath, packages: packageNames }) => {
     if (!packageNames?.length) {
-      log.error('No connector name provided');
+      consoleLog.fatal('No connector name provided');
     }
 
     const existingPackages = await getConnectorPackagesFrom(inputPath);
@@ -28,7 +28,7 @@ const remove: CommandModule<{ path?: string }, { path?: string; packages?: strin
     );
 
     if (notFoundPackageNames.length > 0) {
-      log.error(
+      consoleLog.fatal(
         `Cannot remove ${notFoundPackageNames
           .map((name) => chalk.green(name))
           .join(', ')}: not found in your Logto instance directory`
@@ -45,8 +45,8 @@ const remove: CommandModule<{ path?: string }, { path?: string; packages?: strin
 
           return okSymbol;
         } catch (error: unknown) {
-          log.warn(`Error while removing ${chalk.green(packageInfo?.name)}`);
-          log.warn(error);
+          consoleLog.warn(`Error while removing ${chalk.green(packageInfo?.name)}`);
+          consoleLog.warn(error);
 
           return error;
         }
@@ -54,7 +54,7 @@ const remove: CommandModule<{ path?: string }, { path?: string; packages?: strin
     );
     const errorCount = result.filter((value) => value !== okSymbol).length;
 
-    log.info(`Removed ${result.length - errorCount} connectors`);
+    consoleLog.info(`Removed ${result.length - errorCount} connectors`);
   },
 };
 

@@ -8,7 +8,7 @@ import database from './commands/database/index.js';
 import install from './commands/install/index.js';
 import translate from './commands/translate/index.js';
 import { packageJson } from './package-json.js';
-import { cliConfig, ConfigKey } from './utils.js';
+import { cliConfig, ConfigKey, consoleLog } from './utils.js';
 
 void yargs(hideBin(process.argv))
   .version(false)
@@ -30,7 +30,7 @@ void yargs(hideBin(process.argv))
   })
   .middleware(({ version }) => {
     if (version) {
-      console.log(packageJson.name + ' v' + packageJson.version);
+      consoleLog.plain(packageJson.name + ' v' + packageJson.version);
       // eslint-disable-next-line unicorn/no-process-exit
       process.exit(0);
     }

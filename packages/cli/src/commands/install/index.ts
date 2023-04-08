@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
 import { getDatabaseUrlFromConfig } from '../../database.js';
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import {
   validateNodeVersion,
@@ -39,7 +39,7 @@ const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs)
 
   // Seed database
   if (skipSeed) {
-    log.info(
+    consoleLog.info(
       `Skipped database seeding.\n\n' + '  You can use the ${chalk.green(
         'db seed'
       )} command to seed database when ready.\n`

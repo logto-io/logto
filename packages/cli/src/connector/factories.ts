@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+import { consoleLog } from '../utils.js';
+
 import { notImplemented } from './consts.js';
 import { loadConnector } from './loader.js';
 import type { ConnectorFactory, ConnectorPackage } from './types.js';
@@ -30,10 +32,8 @@ export const loadConnectorFactories = async (
         };
       } catch (error: unknown) {
         if (error instanceof Error) {
-          console.log(
-            `${chalk.red(
-              `[load-connector] skip ${chalk.bold(name)} due to error: ${error.message}`
-            )}`
+          consoleLog.error(
+            `[load-connector] skip ${chalk.bold(name)} due to error: ${error.message}`
           );
 
           return;

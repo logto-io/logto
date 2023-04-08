@@ -2,6 +2,8 @@ import { getAvailableAlterations } from '@logto/cli/lib/commands/database/altera
 import chalk from 'chalk';
 import type { DatabasePool } from 'slonik';
 
+import { consoleLog } from '#src/utils/console.js';
+
 export const checkAlterationState = async (pool: DatabasePool) => {
   const alterations = await getAvailableAlterations(pool);
 
@@ -9,10 +11,8 @@ export const checkAlterationState = async (pool: DatabasePool) => {
     return;
   }
 
-  console.error(
-    `${chalk.red(
-      '[error]'
-    )} Found undeployed database alterations, you must deploy them first by ${chalk.green(
+  consoleLog.error(
+    `Found undeployed database alterations, you must deploy them first by ${chalk.green(
       'npm run alteration deploy'
     )} command.\n\n` +
       ` See ${chalk.blue(

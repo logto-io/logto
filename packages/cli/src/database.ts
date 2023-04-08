@@ -6,7 +6,7 @@ import { DatabaseError } from 'pg-protocol';
 import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
-import { ConfigKey, getCliConfigWithPrompt, log } from './utils.js';
+import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
@@ -39,7 +39,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     // Database does not exist, try to create one
     // https://www.postgresql.org/docs/14/errcodes-appendix.html
     if (!(error instanceof DatabaseError && error.code === '3D000')) {
-      log.error(error);
+      consoleLog.fatal(error);
     }
 
     const databaseUrl = await getDatabaseUrlFromConfig();
@@ -59,7 +59,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     `);
     await maintenancePool.end();
 
-    log.succeed(`Created database ${databaseName}`);
+    consoleLog.succeed(`Created database ${databaseName}`);
 
     return createPoolFromConfig();
   }

@@ -6,7 +6,7 @@ import { type LanguageTag } from '@logto/language-kit';
 import { conditionalString } from '@silverhand/essentials';
 import PQueue from 'p-queue';
 
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { createOpenaiApi, translate } from './openai.js';
 
@@ -33,7 +33,7 @@ export const readBaseLocaleFiles = async (directory: string): Promise<string[]> 
   const stat = await fs.stat(enDirectory);
 
   if (!stat.isDirectory()) {
-    log.error(directory, 'has no `' + baseLanguage.toLowerCase() + '` directory');
+    consoleLog.fatal(directory, 'has no `' + baseLanguage.toLowerCase() + '` directory');
   }
 
   return readLocaleFiles(enDirectory);
@@ -58,7 +58,7 @@ export const createFullTranslation = async ({
   const files = await readBaseLocaleFiles(directory);
 
   if (verbose) {
-    log.info(
+    consoleLog.info(
       'Found ' +
         String(files.length) +
         ' file' +
@@ -85,7 +85,9 @@ export const createFullTranslation = async ({
         }
 
         if (verbose) {
-          log.info(`Target path ${targetPath} exists and has no untranslated mark, skipping`);
+          consoleLog.info(
+            `Target path ${targetPath} exists and has no untranslated mark, skipping`
+          );
         }
 
         return;
@@ -101,16 +103,16 @@ export const createFullTranslation = async ({
     }
 
     void queue.add(async () => {
-      log.info(`Translating ${translationPath}`);
+      consoleLog.info(`Translating ${translationPath}`);
       const result = await translate(openai, languageTag, translationPath);
 
       if (!result) {
-        log.error(`Unable to translate ${translationPath}`);
+        consoleLog.fatal(`Unable to translate ${translationPath}`);
       }
 
       await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
       await fs.writeFile(targetPath, result);
-      log.succeed(`Translated ${targetPath}`);
+      consoleLog.succeed(`Translated ${targetPath}`);
     });
   }
   /* eslint-enable no-await-in-loop */

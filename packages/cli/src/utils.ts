@@ -4,6 +4,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import { ConsoleLog } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
@@ -21,29 +22,17 @@ export const safeExecSync = (command: string) => {
   } catch {}
 };
 
-type Log = Readonly<{
-  info: typeof console.log;
-  succeed: typeof console.log;
-  warn: typeof console.log;
-  error: (...args: Parameters<typeof console.log>) => never;
-}>;
-
-export const log: Log = Object.freeze({
-  info: (...args) => {
-    console.log(chalk.blue('[info]'), ...args);
-  },
-  succeed: (...args) => {
-    log.info(chalk.green('✔'), ...args);
-  },
-  warn: (...args) => {
-    console.warn(chalk.yellow('[warn]'), ...args);
-  },
-  error: (...args) => {
-    console.error(chalk.red('[error]'), ...args);
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(1);
-  },
-});
+// The explicit type annotation is required to make `.fatal()`
+// works correctly without `return`:
+//
+// ```ts
+// const foo: number | undefined;
+// consoleLog.fatal();
+// typeof foo // Still `number | undefined` without explicit type annotation
+// ```
+//
+// For now I have no idea why.
+export const consoleLog: ConsoleLog = new ConsoleLog();
 
 export const getProxy = () => {
   const { HTTPS_PROXY, HTTP_PROXY, https_proxy, http_proxy } = process.env;
@@ -110,7 +99,7 @@ export const oraPromise = async <T>(
     spinner.fail();
 
     if (exitOnError) {
-      log.error(error);
+      consoleLog.fatal(error);
     }
 
     throw error;

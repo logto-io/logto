@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
-import { findLastIndex, isTty, log } from '../../../utils.js';
+import { consoleLog, findLastIndex, isTty } from '../../../utils.js';
 
 import type { AlterationFile } from './type.js';
 
@@ -43,7 +43,7 @@ export const chooseAlterationsByVersion = async (
       return [];
     }
 
-    log.info(`Deploy target ${chalk.green(nextTag)}`);
+    consoleLog.info(`Deploy target ${chalk.green(nextTag)}`);
 
     return alterations.slice(0, endIndex + 1);
   }
@@ -89,7 +89,7 @@ export const chooseAlterationsByVersion = async (
 
   const targetVersion = await getTargetVersion();
 
-  log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
+  consoleLog.info(`Deploy target ${chalk.green(targetVersion.version)}`);
 
   return alterations.filter(({ filename }) => {
     const version = getVersionFromFilename(filename);
@@ -104,7 +104,7 @@ export const chooseRevertAlterationsByVersion = async (
 ) => {
   const semVersion = new SemVer(version);
 
-  log.info(`Revert target ${chalk.green(semVersion.version)}`);
+  consoleLog.info(`Revert target ${chalk.green(semVersion.version)}`);
 
   return alterations.filter(({ filename }) => {
     if (getVersionStringFromFilename(filename) === nextTag) {

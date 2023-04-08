@@ -118,7 +118,10 @@
     "node": "^18.12.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "rules": {
+      "no-console": "error"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

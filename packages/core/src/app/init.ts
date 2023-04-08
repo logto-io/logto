@@ -8,13 +8,14 @@ import type Koa from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { TenantNotFoundError, tenantPool } from '#src/tenants/index.js';
+import { consoleLog } from '#src/utils/console.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 const logListening = (type: 'core' | 'admin' = 'core') => {
   const urlSet = type === 'core' ? EnvSet.values.urlSet : EnvSet.values.adminUrlSet;
 
   for (const url of urlSet.deduplicated()) {
-    console.log(chalk.bold(chalk.green(`${toTitle(type)} app is running at ${url.toString()}`)));
+    consoleLog.info(chalk.bold(`${toTitle(type)} app is running at ${url.toString()}`));
   }
 };
 

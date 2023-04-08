@@ -41,7 +41,6 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       if (noCache(ctx.request)) {
         wellKnownCache.invalidate(tenantId, ['sie', 'sie-full']);
-        console.log('invalidated');
       }
 
       ctx.body = await getFullSignInExperience();

@@ -9,6 +9,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ResponseBodyError, StatusCodeError } from '#src/errors/ServerError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import { consoleLog } from '#src/utils/console.js';
 
 /** Configure what and how to guard. */
 export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
@@ -167,7 +168,7 @@ export default function koaGuard<
 
       if (!result.success) {
         if (!EnvSet.values.isProduction) {
-          console.error('Invalid response:', result.error);
+          consoleLog.error('Invalid response:', result.error);
         }
 
         throw new ResponseBodyError(result.error);

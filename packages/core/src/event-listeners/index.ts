@@ -1,5 +1,7 @@
 import type Provider from 'oidc-provider';
 
+import { consoleLog } from '#src/utils/console.js';
+
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 
@@ -14,6 +16,6 @@ export const addOidcEventListeners = (provider: Provider) => {
   provider.addListener('interaction.started', interactionStartedListener);
   provider.addListener('interaction.ended', interactionEndedListener);
   provider.addListener('server_error', (_, error) => {
-    console.error('OIDC Provider server_error:', error);
+    consoleLog.error('OIDC Provider server_error:', error);
   });
 };

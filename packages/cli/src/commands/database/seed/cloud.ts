@@ -4,7 +4,7 @@ import { appendPath } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
-import { log } from '../../../utils.js';
+import { consoleLog } from '../../../utils.js';
 
 /**
  * Append Redirect URIs for the default tenant callback in cloud Admin Console.
@@ -38,5 +38,5 @@ export const appendAdminConsoleRedirectUris = async (pool: CommonQueryMethods) =
     and tenant_id = ${adminTenantId}
   `);
 
-  log.succeed('Appended initial Redirect URIs to Admin Console:', redirectUris.map(String));
+  consoleLog.succeed('Appended initial Redirect URIs to Admin Console:', redirectUris.map(String));
 };
