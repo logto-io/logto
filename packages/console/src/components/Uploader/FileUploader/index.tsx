@@ -2,7 +2,7 @@ import type { AllowedUploadMimeType, UserAssets } from '@logto/schemas';
 import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 
 import UploaderIcon from '@/assets/images/upload.svg';
@@ -43,35 +43,49 @@ function FileUploader({
   const api = useApi();
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
       setUploadError(undefined);
 
-      const selectedFile = acceptedFiles[0];
+      if (fileRejection.length > 1) {
+        setUploadError(t('components.uploader.error_file_count'));
 
-      if (!selectedFile) {
         return;
       }
 
-      if (!allowedMimeTypes.map(String).includes(selectedFile.type)) {
-        setUploadError(
-          t('components.uploader.error_file_type', {
-            extensions: convertToFileExtensionArray(allowedMimeTypes),
-          })
-        );
+      const rejectedFile = fileRejection[0]?.file;
 
+      if (rejectedFile) {
+        /**
+         * Note:
+         * We need to display this invalid file type error, since the user can select an invalid file type by modifying the file input dialog settings.
+         */
+        if (!allowedMimeTypes.map(String).includes(rejectedFile.type)) {
+          setUploadError(
+            t('components.uploader.error_file_type', {
+              extensions: convertToFileExtensionArray(allowedMimeTypes),
+            })
+          );
+        }
+
+        return;
+      }
+
+      const acceptedFile = acceptedFiles[0];
+
+      if (!acceptedFile) {
         return;
       }
 
       const fileSizeLimit = Math.min(maxSize, maxUploadFileSize);
 
-      if (selectedFile.size > fileSizeLimit) {
+      if (acceptedFile.size > fileSizeLimit) {
         setUploadError(t('components.uploader.error_file_size', { size: fileSizeLimit / 1024 }));
 
         return;
       }
 
       const formData = new FormData();
-      formData.append('file', selectedFile);
+      formData.append('file', acceptedFile);
 
       try {
         setIsUploading(true);
@@ -91,6 +105,7 @@ function FileUploader({
     onDrop,
     disabled: isUploading,
     multiple: false,
+    accept: Object.fromEntries(allowedMimeTypes.map((mimeType) => [mimeType, []])),
   });
 
   return (

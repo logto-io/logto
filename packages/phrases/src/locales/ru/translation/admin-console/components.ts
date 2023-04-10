@@ -9,6 +9,7 @@ const components = {
       'Размер файла слишком большой. Пожалуйста, загрузите файл размером менее {{size, number}} КБ.',
     error_file_type:
       'Тип файла не поддерживается. Допустимы только файлы типа {{extensions, list(style: narrow; type: conjunction;)}}.',
+    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
   },
 };
 
