@@ -8,7 +8,7 @@ const components = {
     error_file_size: 'Il file è troppo grande. Carica un file sotto i {{size, number}}KB.',
     error_file_type:
       'Formato file non supportato. Sono accettati solo formati {{extensions, list(style: narrow; type: conjunction;)}}.',
-    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
+    error_file_count: 'Puoi caricare solo 1 file.',
   },
 };
 

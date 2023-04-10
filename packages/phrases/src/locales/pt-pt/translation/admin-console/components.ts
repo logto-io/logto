@@ -9,7 +9,7 @@ const components = {
       'O ficheiro é demasiado grande. Por favor carregue um ficheiro com menos de {{size, number}}KB.',
     error_file_type:
       'O tipo de ficheiro não é suportado. Apenas {{extensions, list(style: narrow; type: conjunction;)}}.',
-    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
+    error_file_count: 'Só é possível carregar 1 ficheiro.',
   },
 };
 

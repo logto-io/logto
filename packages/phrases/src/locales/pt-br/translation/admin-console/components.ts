@@ -9,7 +9,7 @@ const components = {
       'Tamanho do arquivo é muito grande. Por favor, envie um arquivo abaixo de {{size, number}}KB.',
     error_file_type:
       'Tipo de arquivo não é suportado. Apenas {{extensions, list(style: narrow; type: conjunction;)}}.',
-    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
+    error_file_count: 'Você só pode enviar 1 arquivo.',
   },
 };
 
