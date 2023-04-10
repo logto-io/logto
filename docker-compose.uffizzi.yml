@@ -4,7 +4,7 @@ version: "3.9"
 x-uffizzi:
   ingress:
     service: app
-    port: 3001
+    port: 3002
   continuous_previews:
     deploy_preview_when_pull_request_is_opened: true
     delete_preview_when_pull_request_is_closed: true
@@ -19,6 +19,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 3001:3001
+      - 3002:3002
     environment:
       TRUST_PROXY_HEADER: 1
       DB_URL: postgres://postgres:p0stgr3s@localhost:5432/logto
@@ -29,7 +30,7 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "npm run cli db seed -- --swe && ENDPOINT=$$UFFIZZI_URL npm start"
+      - "npm run cli db seed -- --swe && ENDPOINT=$$UFFIZZI_URL:3001 ADMIN_ENDPOINT=$$UFFIZZI_URL:3002 npm start"
 
   postgres:
     image: postgres:14-alpine
