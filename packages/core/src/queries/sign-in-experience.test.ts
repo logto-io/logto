@@ -1,6 +1,7 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
 
@@ -16,7 +17,7 @@ const pool = createMockPool({
 
 const { createSignInExperienceQueries } = await import('./sign-in-experience.js');
 const { findDefaultSignInExperience, updateDefaultSignInExperience } =
-  createSignInExperienceQueries(pool);
+  createSignInExperienceQueries(pool, new MockWellKnownCache());
 
 describe('sign-in-experience query', () => {
   const id = 'default';

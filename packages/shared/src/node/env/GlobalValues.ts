@@ -102,6 +102,13 @@ export default class GlobalValues {
   /** Maximum number of clients to keep in a single database pool (i.e. per `Tenant` class). */
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
+  /**
+   * The Redis endpoint (optional). If it's set, the central cache mechanism will be automatically enabled.
+   *
+   * You can set it to a truthy value like `true` or `1` to enable cache with the default Redis URL.
+   */
+  public readonly redisUrl = getEnv('REDIS_URL');
+
   public get dbUrl(): string {
     return this.databaseUrl;
   }

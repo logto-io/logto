@@ -13,8 +13,8 @@ import type Queries from './Queries.js';
 
 export default class Libraries {
   users = createUserLibrary(this.queries);
-  signInExperiences = createSignInExperienceLibrary(this.queries, this.connectors, this.tenantId);
-  phrases = createPhraseLibrary(this.queries, this.tenantId);
+  signInExperiences = createSignInExperienceLibrary(this.queries, this.connectors);
+  phrases = createPhraseLibrary(this.queries);
   resources = createResourceLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
