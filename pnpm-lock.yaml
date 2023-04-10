@@ -355,8 +355,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
@@ -443,8 +443,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
@@ -525,8 +525,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -604,8 +604,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -689,8 +689,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -774,8 +774,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -856,8 +856,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -935,8 +935,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1014,8 +1014,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1093,8 +1093,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1175,8 +1175,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1254,8 +1254,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1333,8 +1333,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1412,8 +1412,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1491,8 +1491,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1570,8 +1570,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1649,8 +1649,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1728,8 +1728,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1807,8 +1807,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1886,8 +1886,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1965,8 +1965,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2047,8 +2047,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2135,8 +2135,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2220,8 +2220,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2299,8 +2299,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2381,8 +2381,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2463,8 +2463,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2542,8 +2542,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2621,8 +2621,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2700,8 +2700,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -7465,8 +7465,8 @@ packages:
       rollup: 3.8.0
     dev: true
 
-  /@rollup/plugin-typescript@10.0.1(rollup@3.8.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-wBykxRLlX7EzL8BmUqMqk5zpx2onnmRMSw/l9M1sVfkJvdwfxogZQVNUM9gVMJbjRLDR5H6U0OMOrlDGmIV45A==}
+  /@rollup/plugin-typescript@11.0.0(rollup@3.8.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.14.0||^3.0.0
@@ -12481,12 +12481,6 @@ packages:
       ci-info: 3.5.0
     dev: true
 
-  /is-core-module@2.10.0:
-    resolution: {integrity: sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==}
-    dependencies:
-      has: 1.0.3
-    dev: true
-
   /is-core-module@2.11.0:
     resolution: {integrity: sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==}
     dependencies:
@@ -15095,7 +15089,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       hosted-git-info: 4.1.0
-      is-core-module: 2.10.0
+      is-core-module: 2.11.0
       semver: 7.3.8
       validate-npm-package-license: 3.0.4
     dev: true
