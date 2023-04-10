@@ -1,5 +1,6 @@
 import { LRUCache } from 'lru-cache';
 
+import { redisCache } from '#src/caches/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { consoleLog } from '#src/utils/console.js';
 
@@ -22,7 +23,7 @@ export class TenantPool {
     }
 
     consoleLog.info('Init tenant:', tenantId);
-    const newTenant = Tenant.create(tenantId);
+    const newTenant = Tenant.create(tenantId, redisCache);
     this.cache.set(tenantId, newTenant);
 
     return newTenant;

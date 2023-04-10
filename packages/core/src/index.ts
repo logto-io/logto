@@ -1,4 +1,4 @@
-import { noop } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 import dotenv from 'dotenv';
 import { findUp } from 'find-up';
 import Koa from 'koa';
@@ -18,6 +18,7 @@ if (await appInsights.setup('logto')) {
 // Import after env has been configured
 const { loadConnectorFactories } = await import('./utils/connectors/index.js');
 const { EnvSet } = await import('./env-set/index.js');
+const { redisCache } = await import('./caches/index.js');
 const { default: initI18n } = await import('./i18n/init.js');
 const { tenantPool, checkRowLevelSecurity } = await import('./tenants/index.js');
 
@@ -26,13 +27,15 @@ try {
     proxy: EnvSet.values.trustProxyHeader,
   });
   const sharedAdminPool = await EnvSet.sharedPool;
-  await initI18n();
-  await loadConnectorFactories();
+
   await Promise.all([
+    initI18n(),
+    redisCache.connect(),
+    loadConnectorFactories(),
     checkRowLevelSecurity(sharedAdminPool),
     checkAlterationState(sharedAdminPool),
+    SystemContext.shared.loadStorageProviderConfig(sharedAdminPool),
   ]);
-  await SystemContext.shared.loadStorageProviderConfig(sharedAdminPool);
 
   // Import last until init completed
   const { default: initApp } = await import('./app/init.js');
@@ -41,5 +44,5 @@ try {
   consoleLog.error('Error while initializing app:');
   consoleLog.error(error);
 
-  await tenantPool.endAll().catch(noop);
+  await Promise.all([trySafe(tenantPool.endAll()), trySafe(redisCache.disconnect())]);
 }

@@ -48,7 +48,7 @@ function Settings({ data }: Props) {
       <FormField isRequired title="application_details.application_name">
         <TextInput
           {...register('name', { required: true })}
-          hasError={Boolean(errors.name)}
+          error={Boolean(errors.name)}
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>

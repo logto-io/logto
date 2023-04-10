@@ -14,24 +14,13 @@ import {
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
-  hasError?: boolean;
-  errorMessage?: string;
+  error?: string | boolean;
   icon?: ReactElement;
   suffix?: ReactElement;
 };
 
 function TextInput(
-  {
-    errorMessage,
-    hasError = Boolean(errorMessage),
-    icon,
-    suffix,
-    disabled,
-    className,
-    readOnly,
-    type = 'text',
-    ...rest
-  }: Props,
+  { error, icon, suffix, disabled, className, readOnly, type = 'text', ...rest }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
 ) {
   const innerRef = useRef<HTMLInputElement>(null);
@@ -64,7 +53,7 @@ function TextInput(
       <div
         className={classNames(
           styles.container,
-          hasError && styles.error,
+          error && styles.error,
           icon && styles.withIcon,
           disabled && styles.disabled,
           readOnly && styles.readOnly
@@ -77,7 +66,9 @@ function TextInput(
             className: classNames([suffix.props.className, styles.suffix]),
           })}
       </div>
-      {hasError && errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+      {Boolean(error) && typeof error === 'string' && (
+        <div className={styles.errorMessage}>{error}</div>
+      )}
     </div>
   );
 }

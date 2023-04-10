@@ -9,6 +9,7 @@ const components = {
       'Dosya boyutu çok büyük. Lütfen {{size, number}}KB altında bir dosya yükleyin.',
     error_file_type:
       'Dosya türü desteklenmiyor. Yalnızca {{extensions, list(style: narrow; type: conjunction;)}} dosyaları kabul edilir.',
+    error_file_count: 'Sadece 1 dosya yükleyebilirsiniz.',
   },
 };
 

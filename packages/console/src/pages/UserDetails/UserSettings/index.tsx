@@ -116,8 +116,7 @@ function UserSettings() {
                 validate: (value) =>
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
-              hasError={Boolean(errors.avatar)}
-              errorMessage={errors.avatar?.message}
+              error={errors.avatar?.message}
               placeholder={t('user_details.field_avatar_placeholder')}
             />
           </FormField>

@@ -1,6 +1,7 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
+import { RedisCache } from '#src/caches/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
@@ -51,7 +52,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for user tenants', async () => {
-    await Tenant.create(defaultTenantId);
+    await Tenant.create(defaultTenantId, new RedisCache());
 
     for (const [, middleware, shouldCall] of userMiddlewareList) {
       if (shouldCall) {
@@ -63,7 +64,7 @@ describe('Tenant', () => {
   });
 
   it('should call middleware factories for the admin tenant', async () => {
-    await Tenant.create(adminTenantId);
+    await Tenant.create(adminTenantId, new RedisCache());
 
     for (const [, middleware, shouldCall] of adminMiddlewareList) {
       if (shouldCall) {
@@ -77,7 +78,7 @@ describe('Tenant', () => {
 
 describe('Tenant `.run()`', () => {
   it('should return a function ', async () => {
-    const tenant = await Tenant.create(defaultTenantId);
+    const tenant = await Tenant.create(defaultTenantId, new RedisCache());
     expect(typeof tenant.run).toBe('function');
   });
 });

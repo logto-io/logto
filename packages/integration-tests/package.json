@@ -53,8 +53,5 @@
   "eslintConfig": {
     "extends": "@silverhand"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc",
-  "dependencies": {
-    "@withtyped/server": "^0.8.1"
-  }
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }

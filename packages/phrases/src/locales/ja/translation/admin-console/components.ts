@@ -8,6 +8,7 @@ const components = {
     error_file_size: '{{size, number}}KB以下のファイルをアップロードしてください。',
     error_file_type:
       '{{extensions, list(style: narrow; type: conjunction;)}}のみサポートされます。',
+    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
   },
 };
 

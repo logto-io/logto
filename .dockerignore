@@ -27,6 +27,7 @@ cache
 .history
 .git
 .gitignore
+dump.rdb
 
 .changeset
 .devcontainer

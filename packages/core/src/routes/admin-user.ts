@@ -4,7 +4,7 @@ import { conditional, has, pick, tryThat } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword } from '#src/libraries/user.js';
+import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -229,6 +229,27 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/users/:userId/password/verify',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ password: string() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { password },
+      } = ctx.guard;
+
+      const user = await findUserById(userId);
+      await verifyUserPassword(user, password);
+
+      ctx.status = 204;
 
       return next();
     }

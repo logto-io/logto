@@ -118,7 +118,7 @@ function CreateForm({ isOpen, onClose }: Props) {
             <TextInput
               {...register('name', { required: true })}
               placeholder={t('applications.application_name_placeholder')}
-              hasError={Boolean(errors.name)}
+              error={Boolean(errors.name)}
             />
           </FormField>
           <FormField title="applications.application_description">

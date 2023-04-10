@@ -69,15 +69,14 @@ function BasicForm({
           <FormField isRequired title="connectors.guide.name" tip={t('connectors.guide.name_tip')}>
             <TextInput
               placeholder={t('connectors.guide.name_placeholder')}
-              hasError={Boolean(errors.name)}
+              error={Boolean(errors.name)}
               {...register('name', { required: true })}
             />
           </FormField>
           <FormField title="connectors.guide.logo" tip={t('connectors.guide.logo_tip')}>
             <TextInput
               placeholder={t('connectors.guide.logo_placeholder')}
-              hasError={Boolean(errors.logo)}
-              errorMessage={errors.logo?.message}
+              error={errors.logo?.message}
               {...register('logo', {
                 validate: (value) =>
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
@@ -88,8 +87,7 @@ function BasicForm({
             <FormField title="connectors.guide.logo_dark" tip={t('connectors.guide.logo_dark_tip')}>
               <TextInput
                 placeholder={t('connectors.guide.logo_dark_placeholder')}
-                hasError={Boolean(errors.logoDark)}
-                errorMessage={errors.logoDark?.message}
+                error={errors.logoDark?.message}
                 {...register('logoDark', {
                   validate: (value) =>
                     !value || uriValidator(value) || t('errors.invalid_uri_format'),
@@ -129,7 +127,7 @@ function BasicForm({
       >
         <TextInput
           placeholder={t('connectors.guide.target_placeholder')}
-          hasError={Boolean(errors.target)}
+          error={Boolean(errors.target)}
           disabled={!isAllowEditTarget}
           {...register('target', { required: true })}
         />

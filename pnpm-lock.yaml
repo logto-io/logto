@@ -239,11 +239,11 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/postgres':
-        specifier: ^0.8.1
-        version: 0.8.1(@withtyped/server@0.8.1)
+        specifier: ^0.9.0
+        version: 0.9.0(@withtyped/server@0.9.0)
       '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
+        specifier: ^0.9.0
+        version: 0.9.0
       accepts:
         specifier: ^1.3.8
         version: 1.3.8
@@ -262,6 +262,9 @@ importers:
       find-up:
         specifier: ^6.3.0
         version: 6.3.0
+      helmet:
+        specifier: ^6.0.1
+        version: 6.0.1
       http-proxy:
         specifier: ^1.18.1
         version: 1.18.1
@@ -355,8 +358,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
@@ -443,8 +446,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
@@ -525,8 +528,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -604,8 +607,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -689,8 +692,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -774,8 +777,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -856,8 +859,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -935,8 +938,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1014,8 +1017,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1093,8 +1096,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1175,8 +1178,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1254,8 +1257,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1333,8 +1336,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1412,8 +1415,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1491,8 +1494,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1570,8 +1573,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1649,8 +1652,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1728,8 +1731,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1807,8 +1810,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1886,8 +1889,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -1965,8 +1968,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2047,8 +2050,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2135,8 +2138,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2220,8 +2223,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2299,8 +2302,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2381,8 +2384,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2463,8 +2466,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2542,8 +2545,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2621,8 +2624,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -2700,8 +2703,8 @@ importers:
         specifier: ^15.0.1
         version: 15.0.1(rollup@3.8.0)
       '@rollup/plugin-typescript':
-        specifier: ^10.0.1
-        version: 10.0.1(rollup@3.8.0)(typescript@5.0.2)
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -3080,6 +3083,9 @@ importers:
       hash-wasm:
         specifier: ^4.9.0
         version: 4.9.0
+      helmet:
+        specifier: ^6.0.1
+        version: 6.0.1
       i18next:
         specifier: ^21.8.16
         version: 21.8.16
@@ -3104,9 +3110,6 @@ importers:
       koa-compress:
         specifier: ^5.1.0
         version: 5.1.0
-      koa-helmet:
-        specifier: ^7.0.2
-        version: 7.0.2
       koa-logger:
         specifier: ^3.2.1
         version: 3.2.1
@@ -3131,15 +3134,15 @@ importers:
       oidc-provider:
         specifier: ^8.0.0
         version: 8.0.0
-      p-memoize:
-        specifier: ^7.1.1
-        version: 7.1.1
       p-retry:
         specifier: ^5.1.2
         version: 5.1.2
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
+      redis:
+        specifier: ^4.6.5
+        version: 4.6.5
       roarr:
         specifier: ^7.11.0
         version: 7.11.0
@@ -3356,10 +3359,6 @@ importers:
         version: 3.20.2
 
   packages/integration-tests:
-    dependencies:
-      '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
     devDependencies:
       '@jest/types':
         specifier: ^29.1.2
@@ -3523,8 +3522,8 @@ importers:
         specifier: workspace:^
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.8.1
-        version: 0.8.1
+        specifier: ^0.9.0
+        version: 0.9.0
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -7416,6 +7415,55 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
+  /@redis/bloom@1.2.0(@redis/client@1.5.6):
+    resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.6
+    dev: false
+
+  /@redis/client@1.5.6:
+    resolution: {integrity: sha512-dFD1S6je+A47Lj22jN/upVU2fj4huR7S9APd7/ziUXsIXDL+11GPYti4Suv5y8FuXaN+0ZG4JF+y1houEJ7ToA==}
+    engines: {node: '>=14'}
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+    dev: false
+
+  /@redis/graph@1.1.0(@redis/client@1.5.6):
+    resolution: {integrity: sha512-16yZWngxyXPd+MJxeSr0dqh2AIOi8j9yXKcKCwVaKDbH3HTuETpDVPcLujhFYVPtYrngSco31BUcSa9TH31Gqg==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.6
+    dev: false
+
+  /@redis/json@1.0.4(@redis/client@1.5.6):
+    resolution: {integrity: sha512-LUZE2Gdrhg0Rx7AN+cZkb1e6HjoSKaeeW8rYnt89Tly13GBI5eP4CwDVr+MY8BAYfCg4/N15OUrtLoona9uSgw==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.6
+    dev: false
+
+  /@redis/search@1.1.2(@redis/client@1.5.6):
+    resolution: {integrity: sha512-/cMfstG/fOh/SsE+4/BQGeuH/JJloeWuH+qJzM8dbxuWvdWibWAOAHHCZTMPhV3xIlH4/cUEIA8OV5QnYpaVoA==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.6
+    dev: false
+
+  /@redis/time-series@1.0.4(@redis/client@1.5.6):
+    resolution: {integrity: sha512-ThUIgo2U/g7cCuZavucQTQzA9g9JbDDY2f64u3AbAoz/8vE2lt2U37LamDUVChhaDA3IRT9R6VvJwqnUfTJzng==}
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': 1.5.6
+    dev: false
+
   /@rollup/plugin-commonjs@24.0.0(rollup@3.8.0):
     resolution: {integrity: sha512-0w0wyykzdyRRPHOb0cQt14mIBLujfAv6GgP6g8nvg/iBxEm112t3YPPq+Buqe2+imvElTka+bjNlJ/gB56TD8g==}
     engines: {node: '>=14.0.0'}
@@ -7465,8 +7513,8 @@ packages:
       rollup: 3.8.0
     dev: true
 
-  /@rollup/plugin-typescript@10.0.1(rollup@3.8.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-wBykxRLlX7EzL8BmUqMqk5zpx2onnmRMSw/l9M1sVfkJvdwfxogZQVNUM9gVMJbjRLDR5H6U0OMOrlDGmIV45A==}
+  /@rollup/plugin-typescript@11.0.0(rollup@3.8.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-goPyCWBiimk1iJgSTgsehFD5OOFHiAknrRJjqFCudcW8JtWiBlK284Xnn4flqMqg6YAjVG/EE+3aVzrL5qNSzQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.14.0||^3.0.0
@@ -8631,22 +8679,23 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres@0.8.1(@withtyped/server@0.8.1):
-    resolution: {integrity: sha512-BkX1SPDV8bZFn1LEI6jzTes+y/4BGuPEBOi8p6jH9ZBySTuaW0/JqgEb1aKk5GtJ0aFGXhgq4Fk+JkLOc6zehA==}
+  /@withtyped/postgres@0.9.0(@withtyped/server@0.9.0):
+    resolution: {integrity: sha512-SaT/btAaglb/FZ7/iSBMfA6z6XCNgJpkDD5V5lKh4HSoxl6vjgcJaX0oTidQgEs5pjCo2pyQqoZZVsXZKBofhQ==}
     peerDependencies:
-      '@withtyped/server': ^0.8.0
+      '@withtyped/server': ^0.9.0
     dependencies:
       '@types/pg': 8.6.6
-      '@withtyped/server': 0.8.1
+      '@withtyped/server': 0.9.0
       '@withtyped/shared': 0.2.0
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
     dev: false
 
-  /@withtyped/server@0.8.1:
-    resolution: {integrity: sha512-gNJ0lmwYiAScb7oQWu7BHyy+PT2/j34kGWIjElyfrYZP7JWpZSrEyxaVwDFRo/oA9vzru3AOnPFTMcjmPq4AKg==}
+  /@withtyped/server@0.9.0:
+    resolution: {integrity: sha512-uQlX9Bj8607eR0sxL4i0I3J1cz5KmzBoMlcjvr6KJ0+iT1FWbNK3zQZMaKcRj5Em7MmWwsFIFkgrdQweqaHhSg==}
     dependencies:
+      '@silverhand/essentials': 2.5.0
       '@withtyped/shared': 0.2.0
     dev: false
 
@@ -9609,6 +9658,11 @@ packages:
       async-hook-jl: 1.7.6
       emitter-listener: 1.1.2
       semver: 5.7.1
+    dev: false
+
+  /cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
     dev: false
 
   /co-body@5.2.0:
@@ -11581,6 +11635,11 @@ packages:
       loader-utils: 3.2.0
     dev: true
 
+  /generic-pool@3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
+    engines: {node: '>= 4'}
+    dev: false
+
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -12479,12 +12538,6 @@ packages:
     hasBin: true
     dependencies:
       ci-info: 3.5.0
-    dev: true
-
-  /is-core-module@2.10.0:
-    resolution: {integrity: sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==}
-    dependencies:
-      has: 1.0.3
     dev: true
 
   /is-core-module@2.11.0:
@@ -13733,13 +13786,6 @@ packages:
       co: 4.6.0
       koa-compose: 4.1.0
 
-  /koa-helmet@7.0.2:
-    resolution: {integrity: sha512-AvzS6VuEfFgbAm0mTUnkk/BpMarMcs5A56g+f0sfrJ6m63wII48d2GDrnUQGp0Nj+RR950vNtgqXm9UJSe7GOg==}
-    engines: {node: '>= 14.0.0'}
-    dependencies:
-      helmet: 6.0.1
-    dev: false
-
   /koa-is-json@1.0.0:
     resolution: {integrity: sha512-+97CtHAlWDx0ndt0J8y3P12EWLwTLMXIfMnYDev3wOTwH/RpBGMlfn4bDXlMEg1u73K6XRE9BbUp+5ZAYoRYWw==}
     dev: false
@@ -14795,6 +14841,7 @@ packages:
   /mimic-fn@4.0.0:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
+    dev: true
 
   /mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
@@ -15095,7 +15142,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       hosted-git-info: 4.1.0
-      is-core-module: 2.10.0
+      is-core-module: 2.11.0
       semver: 7.3.8
       validate-npm-package-license: 3.0.4
     dev: true
@@ -15419,14 +15466,6 @@ packages:
     dependencies:
       aggregate-error: 3.1.0
     dev: true
-
-  /p-memoize@7.1.1:
-    resolution: {integrity: sha512-DZ/bONJILHkQ721hSr/E9wMz5Am/OTJ9P6LhLFo2Tu+jL8044tgc9LwHO8g4PiaYePnlVVRAJcKmgy8J9MVFrA==}
-    engines: {node: '>=14.16'}
-    dependencies:
-      mimic-fn: 4.0.0
-      type-fest: 3.5.2
-    dev: false
 
   /p-queue@7.3.4:
     resolution: {integrity: sha512-esox8CWt0j9EZECFvkFl2WNPat8LN4t7WWeXq73D9ha0V96qPRufApZi4ZhPwXAln1uVVal429HVVKPa2X0yQg==}
@@ -16782,6 +16821,17 @@ packages:
       indent-string: 4.0.0
       strip-indent: 3.0.0
     dev: true
+
+  /redis@4.6.5:
+    resolution: {integrity: sha512-O0OWA36gDQbswOdUuAhRL6mTZpHFN525HlgZgDaVNgCJIAZR3ya06NTESb0R+TUZ+BFaDpz6NnnVvoMx9meUFg==}
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.6)
+      '@redis/client': 1.5.6
+      '@redis/graph': 1.1.0(@redis/client@1.5.6)
+      '@redis/json': 1.0.4(@redis/client@1.5.6)
+      '@redis/search': 1.1.2(@redis/client@1.5.6)
+      '@redis/time-series': 1.0.4(@redis/client@1.5.6)
+    dev: false
 
   /reduce-css-calc@2.1.8:
     resolution: {integrity: sha512-8liAVezDmUcH+tdzoEGrhfbGcP7nOV4NkGE3a74+qqvE7nt9i4sKLGBuZNOnpI4WiGksiNPklZxva80061QiPg==}

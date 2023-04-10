@@ -53,6 +53,10 @@ const validatePath = async (value: string) => {
 
 export const inquireInstancePath = async (initialPath?: string) => {
   const inquire = async () => {
+    if (!initialPath && (await validatePath('.')) === true) {
+      return path.resolve('.');
+    }
+
     if (!isTty()) {
       assert(initialPath, new Error('Path is missing'));
 

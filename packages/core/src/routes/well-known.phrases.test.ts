@@ -4,18 +4,22 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { zhCnTag } from '#src/__mocks__/custom-phrase.js';
 import { mockSignInExperience } from '#src/__mocks__/index.js';
-import { wellKnownCache } from '#src/caches/well-known.js';
 import type Queries from '#src/tenants/Queries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
+import { MockTenant, MockWellKnownCache } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
 
 const { mockEsm } = createMockUtils(jest);
 
-const customizedLanguage = zhCnTag;
+const { default: detectLanguageSpy } = mockEsm('#src/i18n/detect-language.js', () => ({
+  default: jest.fn().mockReturnValue([]),
+}));
 
-const findDefaultSignInExperience = jest.fn(
+const customizedLanguage = zhCnTag;
+const mockCache = new MockWellKnownCache();
+
+const rawFindDefaultSignInExperience = jest.fn(
   async (): Promise<SignInExperience> => ({
     ...mockSignInExperience,
     languageInfo: {
@@ -24,13 +28,17 @@ const findDefaultSignInExperience = jest.fn(
     },
   })
 );
+const findDefaultSignInExperience = jest.fn(
+  mockCache.memoize(rawFindDefaultSignInExperience, ['sie'])
+);
 
-const { default: detectLanguageSpy } = mockEsm('#src/i18n/detect-language.js', () => ({
-  default: jest.fn().mockReturnValue([]),
-}));
+const rawFindAllCustomLanguageTags = jest.fn(async () => [customizedLanguage]);
+const findAllCustomLanguageTags = jest.fn(
+  mockCache.memoize(rawFindAllCustomLanguageTags, ['custom-phrases-tags'])
+);
 
 const customPhrases = {
-  findAllCustomLanguageTags: jest.fn(async () => [customizedLanguage]),
+  findAllCustomLanguageTags,
   findCustomPhraseByLanguageTag: jest.fn(
     async (tag: string): Promise<CustomPhrase> => ({
       tenantId: 'fake_tenant',
@@ -40,7 +48,6 @@ const customPhrases = {
     })
   ),
 } satisfies Partial<Queries['customPhrases']>;
-const { findAllCustomLanguageTags } = customPhrases;
 
 const getPhrases = jest.fn(async () => zhCN);
 
@@ -60,7 +67,7 @@ const phraseRequest = createRequester({
 });
 
 afterEach(() => {
-  wellKnownCache.invalidateAll(tenantContext.id);
+  mockCache.ttlCache.clear();
   jest.clearAllMocks();
 });
 
@@ -71,7 +78,7 @@ describe('when the application is not admin-console', () => {
   });
 
   it('should call detectLanguage when auto-detect is enabled', async () => {
-    findDefaultSignInExperience.mockResolvedValueOnce({
+    rawFindDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       languageInfo: {
         ...mockSignInExperience.languageInfo,
@@ -83,7 +90,7 @@ describe('when the application is not admin-console', () => {
   });
 
   it('should not call detectLanguage when auto-detect is not enabled', async () => {
-    findDefaultSignInExperience.mockResolvedValueOnce({
+    rawFindDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       languageInfo: {
         ...mockSignInExperience.languageInfo,
@@ -100,7 +107,7 @@ describe('when the application is not admin-console', () => {
   });
 
   it('should call getPhrases with fallback language from default sign-in experience', async () => {
-    findDefaultSignInExperience.mockResolvedValueOnce({
+    rawFindDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: false,
@@ -109,11 +116,11 @@ describe('when the application is not admin-console', () => {
     });
     await expect(phraseRequest.get('/.well-known/phrases')).resolves.toHaveProperty('status', 200);
     expect(getPhrases).toBeCalledTimes(1);
-    expect(getPhrases).toBeCalledWith(customizedLanguage, [customizedLanguage]);
+    expect(getPhrases).toBeCalledWith(customizedLanguage);
   });
 
   it('should call getPhrases with specific language is provided in params', async () => {
-    findDefaultSignInExperience.mockResolvedValueOnce({
+    rawFindDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: true,
@@ -124,7 +131,7 @@ describe('when the application is not admin-console', () => {
       'status',
       200
     );
-    expect(getPhrases).toBeCalledWith('fr', [customizedLanguage]);
+    expect(getPhrases).toBeCalledWith('fr');
   });
 
   it('should use cache for continuous requests', async () => {
@@ -133,8 +140,8 @@ describe('when the application is not admin-console', () => {
       phraseRequest.get('/.well-known/phrases'),
       phraseRequest.get('/.well-known/phrases'),
     ]);
-    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
-    expect(findAllCustomLanguageTags).toHaveBeenCalledTimes(1);
+    expect(rawFindDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(rawFindAllCustomLanguageTags).toHaveBeenCalledTimes(1);
     expect(response1.body).toStrictEqual(response2.body);
     expect(response1.body).toStrictEqual(response3.body);
   });

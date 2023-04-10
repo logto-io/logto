@@ -77,7 +77,7 @@ function SenderTester({ connectorFactoryId, connectorType, className, parse }: P
           className={styles.textField}
         >
           <TextInput
-            hasError={Boolean(inputError)}
+            error={Boolean(inputError)}
             type={isSms ? 'tel' : 'email'}
             placeholder={
               isSms

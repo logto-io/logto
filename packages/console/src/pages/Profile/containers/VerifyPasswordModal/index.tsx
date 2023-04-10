@@ -79,7 +79,7 @@ function VerifyPasswordModal() {
         {...register('password', { required: t('profile.password.required') })}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
-        errorMessage={errors.password?.message}
+        error={errors.password?.message}
         type={showPassword ? 'text' : 'password'}
         suffix={
           <IconButton

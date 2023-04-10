@@ -125,7 +125,7 @@ function ConfigForm({ formItems }: Props) {
           // This will happen when connector's version is ahead of AC
           return (
             <TextInput
-              hasError={hasError}
+              error={hasError}
               value={typeof value === 'string' ? value : ''}
               onChange={onChange}
             />

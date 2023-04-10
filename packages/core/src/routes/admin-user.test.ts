@@ -9,6 +9,7 @@ import {
   mockUserListResponse,
   mockUserResponse,
 } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -85,12 +86,16 @@ const { revokeInstanceByUserId } = mockedQueries.oidcModelInstances;
 const { hasUser, findUserById, updateUserById, deleteUserIdentity, deleteUserById } =
   mockedQueries.users;
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.js', () => ({
-  encryptUserPassword: jest.fn(() => ({
-    passwordEncrypted: 'password',
-    passwordEncryptionMethod: 'Argon2i',
-  })),
-}));
+const { encryptUserPassword, verifyUserPassword } = await mockEsmWithActual(
+  '#src/libraries/user.js',
+  () => ({
+    encryptUserPassword: jest.fn(() => ({
+      passwordEncrypted: 'password',
+      passwordEncryptionMethod: 'Argon2i',
+    })),
+    verifyUserPassword: jest.fn(),
+  })
+);
 
 const usersLibraries = {
   generateUserId: jest.fn(async () => 'fooId'),
@@ -345,6 +350,29 @@ describe('adminUserRoutes', () => {
     ).resolves.toHaveProperty('status', 500);
     expect(encryptUserPassword).not.toHaveBeenCalled();
     expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('POST /users/:userId/password/verify', async () => {
+    const mockedUserId = 'foo';
+    const password = '1234asd$';
+    const response = await userRequest
+      .post(`/users/${mockedUserId}/password/verify`)
+      .send({ password });
+
+    expect(findUserById).toHaveBeenCalledWith(mockedUserId);
+    expect(verifyUserPassword).toHaveBeenCalledWith(mockUser, password);
+    expect(response.status).toEqual(204);
+  });
+
+  it('POST /users/:userId/password/verify should throw if password is invalid', async () => {
+    const password = 'invalidPassword';
+    verifyUserPassword.mockImplementationOnce(async () => {
+      throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+    });
+    await expect(
+      userRequest.post(`/users/foo/password/verify`).send({ password })
+    ).resolves.toHaveProperty('status', 422);
+    expect(verifyUserPassword).toHaveBeenCalledWith(mockUser, password);
   });
 
   it('PATCH /users/:userId/is-suspended', async () => {

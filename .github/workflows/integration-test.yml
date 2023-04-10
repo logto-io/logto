@@ -90,6 +90,11 @@ jobs:
       - name: Setup Postgres
         uses: ikalnytskyi/action-setup-postgres@v4
 
+      - name: Setup Redis
+        uses: supercharge/redis-github-action@1.5.0
+        with:
+          redis-version: 6
+
       - uses: actions/download-artifact@v3
         with:
           name: integration-test-${{ github.sha }}-${{ contains(matrix.target, 'cloud') && 'cloud' || 'oss' }}
@@ -112,6 +117,8 @@ jobs:
       - name: Run Logto
         working-directory: logto/
         run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
+        env:
+          REDIS_URL: 1
 
       - name: Run Logto Cloud
         working-directory: logto/

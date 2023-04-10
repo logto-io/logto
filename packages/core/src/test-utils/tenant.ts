@@ -1,5 +1,7 @@
+import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from 'slonik';
 
+import { WellKnownCache } from '#src/caches/well-known.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import Libraries from '#src/tenants/Libraries.js';
@@ -10,6 +12,12 @@ import { mockEnvSet } from './env-set.js';
 import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
 
+export class MockWellKnownCache extends WellKnownCache {
+  constructor(public ttlCache = new TtlCache<string, string>(60_000)) {
+    super('mock_id', ttlCache);
+  }
+}
+
 export class MockQueries extends Queries {
   constructor(queriesOverride?: Partial2<Queries>) {
     super(
@@ -17,7 +25,8 @@ export class MockQueries extends Queries {
         query: async (sql, values) => {
           return createMockQueryResult([]);
         },
-      })
+      }),
+      new MockWellKnownCache()
     );
 
     if (!queriesOverride) {

@@ -42,7 +42,7 @@ const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
-  createSignInExperienceLibrary(queries, connectorLibrary, 'mock_id');
+  createSignInExperienceLibrary(queries, connectorLibrary);
 
 beforeEach(() => {
   jest.clearAllMocks();

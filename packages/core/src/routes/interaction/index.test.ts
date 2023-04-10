@@ -99,7 +99,11 @@ const baseProviderMock = {
 
 const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
-  undefined,
+  {
+    signInExperiences: {
+      findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+    },
+  },
   {
     getLogtoConnectorById: async (connectorId: string) => {
       const connector = await getLogtoConnectorByIdHelper(connectorId);
@@ -113,11 +117,6 @@ const tenantContext = new MockTenant(
 
       // @ts-expect-error
       return connector as LogtoConnector;
-    },
-  },
-  {
-    signInExperiences: {
-      getSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },
   }
 );
