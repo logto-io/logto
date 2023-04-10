@@ -8,7 +8,7 @@ const components = {
     error_file_size: '文件太大了，请上传小于 {{size, number}}KB 的文件。',
     error_file_type:
       '不支持该文件类型。只支持 {{extensions, list(style: narrow; type: conjunction;)}} 格式的文件。',
-    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
+    error_file_count: '只能上传一个文件。',
   },
 };
 
