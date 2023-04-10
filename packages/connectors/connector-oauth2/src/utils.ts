@@ -4,7 +4,7 @@ import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
 
 import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
-import * as qs from 'query-string';
+import qs from 'query-string';
 
 import { defaultTimeout } from './constant.js';
 import type {
