@@ -17,6 +17,7 @@ const { default: withHttpProxy } = await import('./middleware/with-http-proxy.js
 const { default: withPathname } = await import('./middleware/with-pathname.js');
 const { default: withSpa } = await import('./middleware/with-spa.js');
 const { default: withErrorReport } = await import('./middleware/with-error-report.js');
+const { default: withSecurityHeaders } = await import('./middleware/with-security-headers.js');
 
 const { EnvSet } = await import('./env-set/index.js');
 const { default: router } = await import('./routes/index.js');
@@ -30,6 +31,7 @@ const { listen } = createServer({
     .and(withErrorReport())
     .and(withRequest())
     .and(anonymousRouter.routes())
+    .and(withSecurityHeaders())
     .and(
       withPathname(
         '/api',

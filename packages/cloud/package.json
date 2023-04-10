@@ -38,6 +38,7 @@
     "dotenv": "^16.0.0",
     "fetch-retry": "^5.0.4",
     "find-up": "^6.3.0",
+    "helmet": "^6.0.1",
     "http-proxy": "^1.18.1",
     "jose": "^4.11.0",
     "mime-types": "^2.1.35",
