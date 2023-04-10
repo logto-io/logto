@@ -5,13 +5,14 @@ import Koa from 'koa';
 
 import { checkAlterationState } from './env-set/check-alteration-state.js';
 import SystemContext from './tenants/SystemContext.js';
+import { consoleLog } from './utils/console.js';
 
 dotenv.config({ path: await findUp('.env', {}) });
 
 const { appInsights } = await import('@logto/app-insights/node');
 
 if (await appInsights.setup('logto')) {
-  console.debug('Initialized ApplicationInsights');
+  consoleLog.info('Initialized ApplicationInsights');
 }
 
 // Import after env has been configured
@@ -40,8 +41,8 @@ try {
   const { default: initApp } = await import('./app/init.js');
   await initApp(app);
 } catch (error: unknown) {
-  console.error('Error while initializing app:');
-  console.error(error);
+  consoleLog.error('Error while initializing app:');
+  consoleLog.error(error);
 
   await Promise.all([trySafe(tenantPool.endAll()), trySafe(redisCache.disconnect())]);
 }

@@ -21,6 +21,7 @@ export const createMockProvider = (
   interactionDetails?: jest.Mock,
   Grant?: typeof GrantMock
 ): Provider => {
+  // eslint-disable-next-line no-console
   const originalWarn = console.warn;
   const warn = jest.spyOn(console, 'warn').mockImplementation((...args) => {
     // Disable while creating. Too many warnings.

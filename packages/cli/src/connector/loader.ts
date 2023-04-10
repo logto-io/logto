@@ -4,6 +4,8 @@ import type { AllConnector, CreateConnector } from '@logto/connector-kit';
 import connectorKitMeta from '@logto/connector-kit/package.json' assert { type: 'json' };
 import { satisfies } from 'semver';
 
+import { consoleLog } from '../utils.js';
+
 import { isKeyInObject } from './utils.js';
 
 const connectorKit = '@logto/connector-kit';
@@ -21,7 +23,7 @@ const checkConnectorKitVersion = (dependencies: unknown, ignoreVersionMismatch: 
       const message = `Connector requires ${connectorKit} to be ${value}, but the version here is ${currentVersion}.`;
 
       if (ignoreVersionMismatch) {
-        console.warn(`[warn] ${message}\n\nThis is highly discouraged in production.`);
+        consoleLog.warn(`${message}\n\nThis is highly discouraged in production.`);
 
         return;
       }
@@ -52,7 +54,7 @@ export const loadConnector = async (
     // CJS pattern
     if (isKeyInObject(loaded.default, 'default')) {
       if (typeof loaded.default.default === 'function') {
-        console.log(`[warn] Load connector ${connectorPath} in CJS mode`);
+        consoleLog.warn(`Load connector ${connectorPath} in CJS mode`);
 
         // eslint-disable-next-line no-restricted-syntax
         return loaded.default.default as CreateConnector<AllConnector>;

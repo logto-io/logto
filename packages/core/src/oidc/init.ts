@@ -24,6 +24,7 @@ import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.j
 import { routes } from '#src/routes/consts.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
@@ -63,7 +64,7 @@ export default function initOidc(
   const oidc = new Provider(issuer, {
     adapter: postgresAdapter.bind(null, envSet, queries),
     renderError: (_ctx, _out, error) => {
-      console.error(error);
+      consoleLog.error(error);
 
       throw error;
     },

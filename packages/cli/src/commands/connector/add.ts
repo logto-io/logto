@@ -1,6 +1,6 @@
 import type { CommandModule } from 'yargs';
 
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils.js';
 
@@ -36,7 +36,7 @@ const add: CommandModule<
     const instancePath = await inquireInstancePath(path);
 
     if (cloud && !official) {
-      log.error('--cloud option can only be used with --official option');
+      consoleLog.fatal('--cloud option can only be used with --official option');
     }
 
     if (official) {
@@ -44,12 +44,12 @@ const add: CommandModule<
       await addOfficialConnectors(instancePath, cloud);
     } else {
       if (!packageNames?.length) {
-        log.error('No connector name provided');
+        consoleLog.fatal('No connector name provided');
       }
       await addConnectors(instancePath, packageNames);
     }
 
-    log.info('Restart your Logto instance to get the changes reflected.');
+    consoleLog.info('Restart your Logto instance to get the changes reflected.');
   },
 };
 

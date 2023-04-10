@@ -4,6 +4,8 @@ import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { consoleLog } from '#src/utils/console.js';
+
 const { table, fields } = convertToIdentifiers(Systems);
 
 export default class SystemContext {
@@ -23,7 +25,7 @@ export default class SystemContext {
     const result = storageProviderDataGuard.safeParse(record.value);
 
     if (!result.success) {
-      console.error('Failed to parse storage provider config:', result.error);
+      consoleLog.error('Failed to parse storage provider config:', result.error);
 
       return;
     }

@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import { getAdminTenantTokenValidationSet } from './utils.js';
 
@@ -57,7 +58,7 @@ export const verifyBearerTokenFromRequest = async (
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
-    console.log(`Found dev user ID ${userId}, skip token validation.`);
+    consoleLog.warn(`Found dev user ID ${userId}, skip token validation.`);
 
     return { sub: userId, clientId: undefined, scopes: [defaultManagementApi.scope.name] };
   }

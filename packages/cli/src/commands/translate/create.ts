@@ -3,7 +3,7 @@ import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phra
 import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
 import type { CommandModule } from 'yargs';
 
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 import { inquireInstancePath } from '../connector/utils.js';
 
 import { createFullTranslation } from './utils.js';
@@ -20,18 +20,22 @@ const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': 
     }),
   handler: async ({ path: inputPath, languageTag }) => {
     if (!isLanguageTag(languageTag)) {
-      log.error('Invalid language tag. Run `logto translate list-tags` to see available list.');
+      consoleLog.fatal(
+        'Invalid language tag. Run `logto translate list-tags` to see available list.'
+      );
     }
 
     const instancePath = await inquireInstancePath(inputPath);
 
     if (isPhrasesBuiltInLanguageTag(languageTag)) {
-      log.info(languageTag + ' is a built-in tag of phrases, updating untranslated phrases');
+      consoleLog.info(languageTag + ' is a built-in tag of phrases, updating untranslated phrases');
     }
     await createFullTranslation({ instancePath, packageName: 'phrases', languageTag });
 
     if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
-      log.info(languageTag + ' is a built-in tag of phrases-ui, updating untranslated phrases');
+      consoleLog.info(
+        languageTag + ' is a built-in tag of phrases-ui, updating untranslated phrases'
+      );
     }
     await createFullTranslation({
       instancePath,

@@ -91,6 +91,9 @@
   },
   "eslintConfig": {
     "extends": "@silverhand",
+    "rules": {
+      "no-console": "error"
+    },
     "ignorePatterns": [
       "src/package-json.ts"
     ]

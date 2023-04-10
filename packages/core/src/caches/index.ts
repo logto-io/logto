@@ -3,6 +3,7 @@ import { type Optional, conditional, yes } from '@silverhand/essentials';
 import { createClient, type RedisClientType } from 'redis';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import { type CacheStore } from './types.js';
 
@@ -39,16 +40,16 @@ export class RedisCache implements CacheStore {
   async connect() {
     if (this.client) {
       await this.client.connect();
-      console.log('[CACHE] Connected to Redis');
+      consoleLog.info('[CACHE] Connected to Redis');
     } else {
-      console.warn('[CACHE] No Redis client initialized, skipping');
+      consoleLog.warn('[CACHE] No Redis client initialized, skipping');
     }
   }
 
   async disconnect() {
     if (this.client) {
       await this.client.disconnect();
-      console.log('[CACHE] Disconnected from Redis');
+      consoleLog.info('[CACHE] Disconnected from Redis');
     }
   }
 }

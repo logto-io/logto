@@ -11,7 +11,7 @@ import type { CommandModule } from 'yargs';
 
 import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
@@ -30,7 +30,7 @@ const validateKeys: ValidateKeysFunction = (keys) => {
   );
 
   if (invalidKey) {
-    log.error(
+    consoleLog.fatal(
       `Invalid config key ${chalk.red(invalidKey)} found, expected one of ${validKeysDisplay}`
     );
   }
@@ -47,7 +47,9 @@ const validateRotateKey: ValidateRotateKeyFunction = (key) => {
   // Using `.includes()` will result a type error
   // eslint-disable-next-line unicorn/prefer-includes
   if (!validRotateKeys.some((element) => element === key)) {
-    log.error(`Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`);
+    consoleLog.fatal(
+      `Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`
+    );
   }
 };
 
@@ -80,7 +82,7 @@ const getConfig: CommandModule<unknown, { key: string; keys: string[]; tenantId:
     const { rows } = await getRowsByKeys(pool, tenantId, queryKeys);
     await pool.end();
 
-    console.log(
+    consoleLog.plain(
       queryKeys
         .map((currentKey) => {
           const value = rows.find(({ key }) => currentKey === key)?.value;
@@ -125,7 +127,7 @@ const setConfig: CommandModule<unknown, { key: string; value: string; tenantId: 
     await updateValueByKey(pool, tenantId, key, guarded);
     await pool.end();
 
-    log.info(`Update ${chalk.green(key)} succeeded`);
+    consoleLog.info(`Update ${chalk.green(key)} succeeded`);
   },
 };
 
@@ -152,7 +154,7 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = 
     const { rows } = await getRowsByKeys(pool, tenantId, [key]);
 
     if (!rows[0]) {
-      log.warn('No key found, create a new one');
+      consoleLog.warn('No key found, create a new one');
     }
 
     const getValue = async () => {
@@ -174,7 +176,7 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = 
     await updateValueByKey(pool, tenantId, key, rotated);
     await pool.end();
 
-    log.info(`Rotate ${chalk.green(key)} succeeded, now it has ${rotated.length} keys`);
+    consoleLog.info(`Rotate ${chalk.green(key)} succeeded, now it has ${rotated.length} keys`);
   },
 };
 
@@ -203,14 +205,14 @@ const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId
     validateRotateKey(key);
 
     if (length < 1) {
-      log.error('Invalid length provided');
+      consoleLog.fatal('Invalid length provided');
     }
 
     const pool = await createPoolFromConfig();
     const { rows } = await getRowsByKeys(pool, tenantId, [key]);
 
     if (!rows[0]) {
-      log.warn('No key found, create a new one');
+      consoleLog.warn('No key found, create a new one');
     }
 
     const getValue = async () => {
@@ -218,7 +220,9 @@ const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId
 
       if (value.length - length < 1) {
         await pool.end();
-        log.error(`You should keep at least one key in the array, current length=${value.length}`);
+        consoleLog.fatal(
+          `You should keep at least one key in the array, current length=${value.length}`
+        );
       }
 
       return value.slice(0, -length);
@@ -227,7 +231,7 @@ const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId
     await updateValueByKey(pool, tenantId, key, trimmed);
     await pool.end();
 
-    log.info(`Trim ${chalk.green(key)} succeeded, now it has ${trimmed.length} keys`);
+    consoleLog.info(`Trim ${chalk.green(key)} succeeded, now it has ${trimmed.length} keys`);
   },
 };
 

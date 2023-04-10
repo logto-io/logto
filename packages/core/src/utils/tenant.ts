@@ -4,6 +4,8 @@ import { conditionalString } from '@silverhand/essentials';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
+import { consoleLog } from './console.js';
+
 const normalizePathname = (pathname: string) =>
   pathname + conditionalString(!pathname.endsWith('/') && '/');
 
@@ -57,7 +59,7 @@ export const getTenantId = (url: URL) => {
   }
 
   if ((!isProduction || isIntegrationTest) && developmentTenantId) {
-    console.log(`Found dev tenant ID ${developmentTenantId}.`);
+    consoleLog.warn(`Found dev tenant ID ${developmentTenantId}.`);
 
     return developmentTenantId;
   }

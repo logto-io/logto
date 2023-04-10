@@ -4,7 +4,7 @@ import type { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded } from '../../../database.js';
 import { doesConfigsTableExist } from '../../../queries/logto-config.js';
-import { log, oraPromise } from '../../../utils.js';
+import { consoleLog, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 
@@ -53,7 +53,7 @@ const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: bool
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (swe && (await doesConfigsTableExist(pool))) {
-      log.info('Seeding skipped');
+      consoleLog.info('Seeding skipped');
       await pool.end();
 
       return;
@@ -62,9 +62,8 @@ const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: bool
     try {
       await seedByPool(pool, cloud);
     } catch (error: unknown) {
-      console.error(error);
-      console.log();
-      log.warn(
+      consoleLog.error(error);
+      consoleLog.error(
         'Error ocurred during seeding your database.\n\n' +
           '  Nothing has changed since the seeding process was in a transaction.\n' +
           '  Try to fix the error and seed again.'

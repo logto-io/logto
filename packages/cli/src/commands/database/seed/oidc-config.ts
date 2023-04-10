@@ -8,7 +8,7 @@ import type { DatabaseTransactionConnection } from 'slonik';
 import { z } from 'zod';
 
 import { getRowsByKeys, updateValueByKey } from '../../../queries/logto-config.js';
-import { log } from '../../../utils.js';
+import { consoleLog } from '../../../utils.js';
 import { generateOidcCookieKey, generateOidcPrivateKey } from '../utils.js';
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
@@ -37,7 +37,7 @@ export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenan
     const included = existingKeys.has(key);
 
     if (included) {
-      log.info(tenantPrefix, `Key ${chalk.green(key)} exists, skipping`);
+      consoleLog.info(tenantPrefix, `Key ${chalk.green(key)} exists, skipping`);
     }
 
     return !included;
@@ -49,16 +49,16 @@ export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenan
     const { value, fromEnv } = await oidcConfigReaders[key]();
 
     if (fromEnv) {
-      log.info(tenantPrefix, `Read config ${chalk.green(key)} from env`);
+      consoleLog.info(tenantPrefix, `Read config ${chalk.green(key)} from env`);
     } else {
-      log.info(tenantPrefix, `Generated config ${chalk.green(key)}`);
+      consoleLog.info(tenantPrefix, `Generated config ${chalk.green(key)}`);
     }
 
     await updateValueByKey(pool, tenantId, key, value);
   }
   /* eslint-enable no-await-in-loop */
 
-  log.succeed(tenantPrefix, 'Seed OIDC config');
+  consoleLog.succeed(tenantPrefix, 'Seed OIDC config');
 };
 
 /**

@@ -5,6 +5,7 @@ import { HttpError } from 'koa';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { consoleLog } from '#src/utils/console.js';
 
 export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
   StateT,
@@ -16,7 +17,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
       await next();
     } catch (error: unknown) {
       if (!EnvSet.values.isProduction) {
-        console.error(error);
+        consoleLog.error(error);
       }
 
       // Report all exceptions to ApplicationInsights
@@ -36,7 +37,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
 
       // Should log 500 errors in prod anyway
       if (EnvSet.values.isProduction) {
-        console.error(error);
+        consoleLog.error(error);
       }
 
       ctx.status = 500;

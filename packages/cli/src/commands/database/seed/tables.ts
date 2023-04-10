@@ -25,7 +25,7 @@ import { raw } from 'slonik-sql-tag-raw';
 import { insertInto } from '../../../database.js';
 import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
-import { getPathInModule, log } from '../../../utils.js';
+import { consoleLog, getPathInModule } from '../../../utils.js';
 
 import { appendAdminConsoleRedirectUris } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
@@ -174,7 +174,7 @@ export const seedTables = async (
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 
-  log.succeed('Seed data');
+  consoleLog.succeed('Seed data');
 };
 
 export const seedCloud = async (connection: DatabaseTransactionConnection) => {

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import type { CommandModule } from 'yargs';
 
-import { log } from '../../utils.js';
+import { consoleLog } from '../../utils.js';
 
 import { getConnectorDirectory, getLocalConnectorPackages, inquireInstancePath } from './utils.js';
 
@@ -47,12 +47,12 @@ const link: CommandModule<{ path?: string }, { path?: string; cloud: boolean; mo
           await fs.rm(targetPath, { recursive: true, force: true });
           await fs.symlink(path.relative(connectorDirectory, packagePath), targetPath);
         } catch (error) {
-          log.warn(error);
+          consoleLog.warn(error);
 
           return;
         }
 
-        log.succeed('Linked', packagePath);
+        consoleLog.succeed('Linked', packagePath);
       })
     );
   },

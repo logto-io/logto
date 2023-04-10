@@ -13,6 +13,7 @@ import type Provider from 'oidc-provider';
 
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
+import { consoleLog } from '#src/utils/console.js';
 
 const parseResponse = ({ statusCode, body }: Response) => ({
   statusCode,
@@ -78,7 +79,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     await Promise.all(
       rows.map(async ({ config: { url, headers, retries }, id }) => {
-        console.log(`\tTriggering hook ${id} due to ${hookEvent} event`);
+        consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
         const json: HookEventPayload = { hookId: id, ...payload };
         const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
 
@@ -105,7 +106,7 @@ export const createHookLibrary = (queries: Queries) => {
             });
           });
 
-        console.log(
+        consoleLog.info(
           `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
         );
 

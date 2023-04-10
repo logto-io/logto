@@ -15,9 +15,9 @@ import { packageJson } from '../../package-json.js';
 import {
   cliConfig,
   ConfigKey,
+  consoleLog,
   downloadFile,
   isTty,
-  log,
   oraPromise,
   safeExecSync,
 } from '../../utils.js';
@@ -32,11 +32,13 @@ export const validateNodeVersion = () => {
   const current = new semver.SemVer(execSync('node -v', { encoding: 'utf8', stdio: 'pipe' }));
 
   if (required.every((version) => version.major !== current.major)) {
-    log.error(`Logto requires NodeJS ${requiredVersionString}, but ${current.version} found.`);
+    consoleLog.fatal(
+      `Logto requires NodeJS ${requiredVersionString}, but ${current.version} found.`
+    );
   }
 
   if (required.some((version) => version.major === current.major && version.compare(current) > 0)) {
-    log.warn(
+    consoleLog.warn(
       `Logto is tested under NodeJS ${requiredVersionString}, but version ${current.version} found.`
     );
   }
@@ -70,7 +72,7 @@ export const inquireInstancePath = async (initialPath?: string) => {
   const validated = validatePath(instancePath);
 
   if (validated !== true) {
-    log.error(validated);
+    consoleLog.fatal(validated);
   }
 
   return instancePath;
@@ -96,7 +98,7 @@ export const validateDatabase = async () => {
   });
 
   if (hasPostgresUrl === false) {
-    log.error('Logto requires a Postgres instance to run.');
+    consoleLog.fatal('Logto requires a Postgres instance to run.');
   }
 };
 
@@ -106,8 +108,8 @@ export const downloadRelease = async (url?: string) => {
     url ??
     `https://github.com/logto-io/logto/releases/download/v${packageJson.version}/logto.tar.gz`;
 
-  log.info(`Download Logto from ${from}`);
-  log.info(`Target ${tarFilePath}`);
+  consoleLog.info(`Download Logto from ${from}`);
+  consoleLog.info(`Target ${tarFilePath}`);
   await downloadFile(from, tarFilePath);
 
   return tarFilePath;
@@ -119,7 +121,7 @@ export const decompress = async (toPath: string, tarPath: string) => {
       await fs.mkdir(toPath);
       await tar.extract({ file: tarPath, cwd: toPath, strip: 1 });
     } catch (error: unknown) {
-      log.error(error);
+      consoleLog.fatal(error);
     }
   };
 
@@ -139,14 +141,14 @@ export const seedDatabase = async (instancePath: string, cloud: boolean) => {
     await seedByPool(pool);
     await pool.end();
   } catch (error: unknown) {
-    console.error(error);
+    consoleLog.error(error);
 
     await oraPromise(fs.rm(instancePath, { force: true, recursive: true }), {
       text: 'Clean up',
       prefixText: chalk.blue('[info]'),
     });
 
-    log.error(
+    consoleLog.fatal(
       'Error occurred during seeding your Logto database. Nothing has changed since the seeding process was in a transaction.\n\n' +
         `  To skip the database seeding, append ${chalk.green(
           '--skip-seed'
@@ -158,12 +160,12 @@ export const seedDatabase = async (instancePath: string, cloud: boolean) => {
 export const createEnv = async (instancePath: string, databaseUrl: string) => {
   const dotEnvPath = path.resolve(instancePath, '.env');
   await fs.writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, 'utf8');
-  log.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);
+  consoleLog.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);
 };
 
 export const logFinale = (instancePath: string) => {
   const startCommand = `cd ${instancePath} && npm start`;
-  log.info(
+  consoleLog.info(
     `Use the command below to start Logto. Happy hacking!\n\n  ${chalk.green(startCommand)}`
   );
 };

@@ -6,7 +6,7 @@ import { type Got, got, HTTPError } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import { z } from 'zod';
 
-import { getProxy, log } from '../../utils.js';
+import { consoleLog, getProxy } from '../../utils.js';
 
 export const createOpenaiApi = () => {
   const proxy = getProxy();
@@ -47,10 +47,10 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
       })
       .json(),
     (error) => {
-      log.warn(`Error while translating ${filePath}:`, String(error));
+      consoleLog.warn(`Error while translating ${filePath}:`, String(error));
 
       if (error instanceof HTTPError) {
-        log.warn(error.response.body);
+        consoleLog.warn(error.response.body);
       }
     }
   );
@@ -62,7 +62,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
   const guarded = gptResponseGuard.safeParse(response);
 
   if (!guarded.success) {
-    log.warn(`Error while guarding response for ${filePath}:`, response);
+    consoleLog.warn(`Error while guarding response for ${filePath}:`, response);
 
     return;
   }
@@ -70,13 +70,13 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
   const [entity] = guarded.data.choices;
 
   if (!entity) {
-    log.warn(`No choice found in response when translating ${filePath}`);
+    consoleLog.warn(`No choice found in response when translating ${filePath}`);
 
     return;
   }
 
   if (entity.finish_reason !== 'stop') {
-    log.warn(`Unexpected finish reason ${entity.finish_reason} for ${filePath}`);
+    consoleLog.warn(`Unexpected finish reason ${entity.finish_reason} for ${filePath}`);
   }
 
   const { content } = entity.message;
@@ -88,7 +88,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
       return content;
     }
 
-    log.warn('No matching code snippet from response:', content);
+    consoleLog.warn('No matching code snippet from response:', content);
   }
 
   return matched;

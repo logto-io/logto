@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
-import type { ConnectorPackage } from '../../utils.js';
+import { type ConnectorPackage, consoleLog } from '../../utils.js';
 
 import { getConnectorPackagesFrom, isOfficialConnector } from './utils.js';
 
@@ -10,9 +10,9 @@ const logConnectorNames = (type: string, packages: ConnectorPackage[]) => {
     return;
   }
 
-  console.log();
-  console.log(chalk.blue(type));
-  console.log(packages.map(({ name }) => '  ' + name).join('\n'));
+  consoleLog.plain();
+  consoleLog.plain(chalk.blue(type));
+  consoleLog.plain(packages.map(({ name }) => '  ' + name).join('\n'));
 };
 
 const list: CommandModule<{ path?: string }, { path?: string }> = {
