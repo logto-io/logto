@@ -61,7 +61,7 @@ function ApiResourceSettings() {
           <FormField isRequired title="api_resources.api_name">
             <TextInput
               {...register('name', { required: true })}
-              hasError={Boolean(errors.name)}
+              error={Boolean(errors.name)}
               readOnly={isLogtoManagementApiResource}
               placeholder={t('api_resources.api_name_placeholder')}
             />
@@ -73,7 +73,7 @@ function ApiResourceSettings() {
                 valueAsNumber: true,
               })}
               type="number"
-              hasError={Boolean(errors.accessTokenTtl)}
+              error={Boolean(errors.accessTokenTtl)}
               placeholder={t('api_resource_details.token_expiration_time_in_seconds_placeholder')}
             />
           </FormField>

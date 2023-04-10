@@ -24,8 +24,7 @@ function TermsForm() {
           {...register('termsOfUseUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
           })}
-          hasError={Boolean(errors.termsOfUseUrl)}
-          errorMessage={errors.termsOfUseUrl?.message}
+          error={errors.termsOfUseUrl?.message}
           placeholder={t('sign_in_exp.others.terms_of_use.terms_of_use_placeholder')}
         />
       </FormField>
@@ -34,8 +33,7 @@ function TermsForm() {
           {...register('privacyPolicyUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
           })}
-          hasError={Boolean(errors.termsOfUseUrl)}
-          errorMessage={errors.termsOfUseUrl?.message}
+          error={errors.termsOfUseUrl?.message}
           placeholder={t('sign_in_exp.others.terms_of_use.privacy_policy_placeholder')}
         />
       </FormField>

@@ -86,8 +86,7 @@ function BrandingForm() {
                 validate: (value) =>
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
-              hasError={Boolean(errors.branding?.logoUrl)}
-              errorMessage={errors.branding?.logoUrl?.message}
+              error={errors.branding?.logoUrl?.message}
               placeholder={t('sign_in_exp.branding.logo_image_url_placeholder')}
             />
           </FormField>
@@ -97,8 +96,7 @@ function BrandingForm() {
                 validate: (value) =>
                   !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
-              hasError={Boolean(errors.branding?.favicon)}
-              errorMessage={errors.branding?.favicon?.message}
+              error={errors.branding?.favicon?.message}
               placeholder={t('sign_in_exp.branding.favicon')}
             />
           </FormField>
@@ -157,8 +155,7 @@ function BrandingForm() {
                   validate: (value) =>
                     !value || uriValidator(value) || t('errors.invalid_uri_format'),
                 })}
-                hasError={Boolean(errors.branding?.darkLogoUrl)}
-                errorMessage={errors.branding?.darkLogoUrl?.message}
+                error={errors.branding?.darkLogoUrl?.message}
                 placeholder={t('sign_in_exp.branding.dark_logo_image_url_placeholder')}
               />
             </FormField>
