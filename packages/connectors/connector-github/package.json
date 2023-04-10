@@ -5,7 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
-    "query-string": "^7.0.1"
+    "query-string": "^8.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
