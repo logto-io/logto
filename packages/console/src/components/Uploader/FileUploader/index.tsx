@@ -46,6 +46,12 @@ function FileUploader({
     async (acceptedFiles: File[] = [], fileRejection: FileRejection[] = []) => {
       setUploadError(undefined);
 
+      if (fileRejection.length > 1) {
+        setUploadError(t('components.uploader.error_file_count'));
+
+        return;
+      }
+
       const rejectedFile = fileRejection[0]?.file;
 
       if (rejectedFile) {

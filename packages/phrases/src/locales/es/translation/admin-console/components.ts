@@ -9,6 +9,7 @@ const components = {
       'El archivo es demasiado grande. Por favor, sube un archivo de menos de {{size, number}}KB.',
     error_file_type:
       'El tipo de archivo no es compatible. Solo {{extensions, list(style: narrow; type: conjunction;)}}.',
+    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
   },
 };
 

@@ -8,6 +8,7 @@ const components = {
     error_file_size: 'Dateigröße ist zu groß. Bitte lade eine Datei unter {{size, number}}KB hoch.',
     error_file_type:
       'Dateityp wird nicht unterstützt. Nur {{extensions, list(style: narrow; type: conjunction;)}}.',
+    error_file_count: 'You can only upload 1 file.', // UNTRANSLATED
   },
 };
 
