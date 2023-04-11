@@ -6,6 +6,12 @@
   display: none;
 }
 
+.hideTextContainerContent {
+  input {
+    -webkit-text-security: disc;
+  }
+}
+
 .container {
   display: flex;
   align-items: center;
