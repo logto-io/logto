@@ -2775,8 +2775,8 @@ importers:
         specifier: workspace:^
         version: link:../phrases-ui
       '@logto/react':
-        specifier: 1.1.0
-        version: 1.1.0(react@18.2.0)
+        specifier: 1.1.1
+        version: 1.1.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -3283,8 +3283,8 @@ importers:
         specifier: workspace:^
         version: link:../phrases
       '@logto/react':
-        specifier: 1.1.0
-        version: 1.1.0(react@18.2.0)
+        specifier: 1.1.1
+        version: 1.1.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -3370,8 +3370,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       '@logto/node':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.1
+        version: 1.1.1
       '@logto/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -6190,16 +6190,16 @@ packages:
     dev: true
     optional: true
 
-  /@logto/browser@1.1.0:
-    resolution: {integrity: sha512-0NpRVM+D1d4bCwpQb0OcgE6cKKwLevqdMCBjVLlosi527ydMa25X3cEuvRw+bojxSF3QfS/Ig9GktS7xvUAnCg==}
+  /@logto/browser@1.1.1:
+    resolution: {integrity: sha512-igKvNceCMIOzfyLpJSigTYJvJH3tsJmuL4tyK55FHgKPMJdz1HNvw7V5FLHIQTdYe2eltWwQnlTREoYxxdX5Nw==}
     dependencies:
-      '@logto/client': 1.1.0
+      '@logto/client': 1.1.1
       '@silverhand/essentials': 1.3.0
       js-base64: 3.7.5
     dev: true
 
-  /@logto/client@1.1.0:
-    resolution: {integrity: sha512-HdUuH6vwbKzhLoa7JgWu85CMTU8a7lux9Uadv5yitMaJMEsYERUU0SntQC8jZ7K5/Ktc8r/3kbfo0MKyFNffMA==}
+  /@logto/client@1.1.1:
+    resolution: {integrity: sha512-RBRny/psJOF920oZQlPk9h207rWArdGe8u6TvWzG7O89lcLdwOKXcCSESHmDIxBpwRriWSHtP//WpDHkdnTCXg==}
     dependencies:
       '@logto/js': 1.1.0
       '@silverhand/essentials': 1.3.0
@@ -6218,23 +6218,23 @@ packages:
       lodash.get: 4.4.2
     dev: true
 
-  /@logto/node@1.1.0:
-    resolution: {integrity: sha512-HccBWwWIzN/hXTbuBZ1D2W1S30sqNXKxkcGvKF2uvbMzzkdxS7WeGFSBt3o2dYdLBUGamINmLxjMucvwBI8a4w==}
+  /@logto/node@1.1.1:
+    resolution: {integrity: sha512-PxZrE8T89my0/wMWhthPKC3mvFxAQAdMeLJ0lpXee5JEBMWpO/u9YChoHyxirzYNo0lwGj4dIOSyFICJqNdGtA==}
     dependencies:
-      '@logto/client': 1.1.0
+      '@logto/client': 1.1.1
       '@silverhand/essentials': 1.3.0
-      js-base64: 3.7.4
+      js-base64: 3.7.5
       node-fetch: 2.6.7
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@logto/react@1.1.0(react@18.2.0):
-    resolution: {integrity: sha512-uz7kevuDVd9CMXVhQ3Mt7eVcV0a5Ghcmn6YabS6Sjv9kJCmpRHXGJrVHP4mah+vSEUGirGtoKLVNE8kyPdDVIA==}
+  /@logto/react@1.1.1(react@18.2.0):
+    resolution: {integrity: sha512-tqWIaRerrO93l7ESjBBgUXxVTQe5bydDeH0rR12RGjaU3m2MQaHJJ3Oajbr4q3qrXXr/IgTRxTRnyXrlYiJb1A==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 1.1.0
+      '@logto/browser': 1.1.1
       '@silverhand/essentials': 1.3.0
       react: 18.2.0
     dev: true
@@ -6943,7 +6943,7 @@ packages:
       '@parcel/plugin': 2.8.3(@parcel/core@2.8.3)
       '@parcel/source-map': 2.1.1
       '@parcel/utils': 2.8.3
-      globals: 13.18.0
+      globals: 13.20.0
       nullthrows: 1.1.1
     transitivePeerDependencies:
       - '@parcel/core'
@@ -11806,13 +11806,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /globals@13.18.0:
-    resolution: {integrity: sha512-/mR4KI8Ps2spmoc0Ulu9L7agOF0du1CZNQ3dke8yItYlyKNmGrkONemBbd6V8UTc1Wgcqn21t3WYB7dbRmh6/A==}
-    engines: {node: '>=8'}
-    dependencies:
-      type-fest: 0.20.2
-    dev: true
-
   /globals@13.20.0:
     resolution: {integrity: sha512-Qg5QtVkCy/kv3FUSlu4ukeZDVf9ee0iXLAUYX13gbR17bnejFTzr4iS9bY7kwCf1NztRNm1t91fjOiyx4CSwPQ==}
     engines: {node: '>=8'}
@@ -13516,10 +13509,6 @@ packages:
 
   /jose@4.11.1:
     resolution: {integrity: sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==}
-
-  /js-base64@3.7.4:
-    resolution: {integrity: sha512-wpM/wi20Tl+3ifTyi0RdDckS4YTD4Lf953mBRrpG8547T7hInHNPEj8+ck4gB8VDcGyeAWFK++Wb/fU1BeavKQ==}
-    dev: true
 
   /js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
