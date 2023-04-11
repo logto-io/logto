@@ -57,6 +57,8 @@ const connectors = {
     target: 'Kimlik sağlayıcısı adı',
     target_placeholder: 'Connector kimlik sağlayıcısı adını girin',
     target_tip:
+      '“IdP adı” değeri, sosyal kimliklerinizi ayırt etmek için benzersiz bir tanımlayıcı dize olabilir.',
+    target_tip_standard:
       '“IdP adı” değeri, sosyal kimliklerinizi ayırt etmek için benzersiz bir tanımlayıcı dize olabilir. Bu ayar, connector oluşturulduktan sonra değiştirilemez.',
     target_tooltip:
       'Logto sosyal connectorlarındaki "Hedef", sosyal kimliklerinizin "kaynağı" na işaret eder. Logto tasarımında, aynı bir platformun "hedef" i kabul edilmez ve çakışmaları önlemek için benzersiz olmalıdır. Bir connector eklemeniz gerektiğinde çok dikkatli olmalısınız çünkü oluşturulduktan sonra "hedef" değerini DEĞİŞTİREMEZSİNİZ. <a>Daha fazla bilgi edinin.</a>',

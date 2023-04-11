@@ -55,7 +55,8 @@ const connectors = {
     logo_dark_show: 'ダークモード用のロゴ設定を表示',
     target: 'Identity Providerの名前',
     target_placeholder: 'コネクタIdentity Providerの名前を入力',
-    target_tip:
+    target_tip: '「IdP名」として、ソーシャルIDを識別するための一意の識別子文字列を指定します。',
+    target_tip_standard:
       '「IdP名」として、ソーシャルIDを識別するための一意の識別子文字列を指定します。この設定は、コネクタが作成された後に変更できません。',
     target_tooltip:
       'Logtoのソーシャルコネクタでの「IdP名」とは、ソーシャルIDの「ソース」を指します。「IdP名」は、Plat formごとに一意でなければならず、同じ名前は許可されません。「IdP名」は一度作成されたコネクタで変更することはできません。 <a>詳細を見る。</a>',

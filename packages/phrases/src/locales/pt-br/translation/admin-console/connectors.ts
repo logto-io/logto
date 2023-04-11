@@ -56,6 +56,8 @@ const connectors = {
     target: 'Nome do fornecedor de identidade',
     target_placeholder: 'Insira o nome do fornecedor de identidade do conector',
     target_tip:
+      'O valor de "Nome do fornecedor de identidade" pode ser uma string de identificador exclusiva para distinguir suas identidades sociais.',
+    target_tip_standard:
       'O valor de "Nome do fornecedor de identidade" pode ser uma string de identificador exclusiva para distinguir suas identidades sociais. Essa configuração não pode ser alterada após a criação do conector.',
     target_tooltip:
       '"Target" nos conectores sociais Logto refere-se à "origem" de suas identidades sociais. No design do Logto, não aceitamos o mesmo "target" de uma plataforma específica para evitar conflitos. Você deve tomar muito cuidado antes de adicionar um conector, pois NÃO PODE mudar seu valor depois de criá-lo. <a>Saiba mais.</a>',

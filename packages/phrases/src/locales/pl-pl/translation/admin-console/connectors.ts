@@ -57,6 +57,8 @@ const connectors = {
     target: 'Nazwa dostawcy tożsamości',
     target_placeholder: 'Wpisz nazwę dostawcy tożsamości łącznika',
     target_tip:
+      'Wartość „Nazwy dostawcy tożsamości” może być unikalnym ciągiem identyfikującym, który odróżnia Twoje tożsamości społecznościowe.',
+    target_tip_standard:
       'Wartość „Nazwy dostawcy tożsamości” może być unikalnym ciągiem identyfikującym, który odróżnia Twoje tożsamości społecznościowe. Po utworzeniu łącznika nie możesz go zmienić.',
     target_tooltip:
       '„Nazwa dostawcy tożsamości” w łącznikach społecznościowych Logto odnosi się do "źródła" Twoich tożsamości społecznościowych. W projektowaniu Logto nie akceptujemy tych samych „Nazw dostawców tożsamości” konkretnej platformy, aby uniknąć konfliktów. Powinieneś bardzo uważać przed dodaniem łącznika, ponieważ NIE MOŻESZ zmienić jego wartości po utworzeniu. <a>Dowiedz się więcej.</a>',

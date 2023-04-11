@@ -50,7 +50,8 @@ const connectors = {
     logo_dark_show: '展開深色模式 Logo 設置',
     target: '身份提供商名稱',
     target_placeholder: '輸入身份提供商的名稱',
-    target_tip:
+    target_tip: '在“身份供應商名稱”字段中輸入唯一的標識符字符串，用於區分社交身份來源。',
+    target_tip_standard:
       '在“身份供應商名稱”字段中輸入唯一的標識符字符串，用於區分社交身份來源。注意，在連接器創建成功後，無法再次修改此設置。',
     target_tooltip:
       'Logto 社交連接器的「target」指的是社交身份的「來源」。在 Logto 的設計裡，我們不允許某一平臺的連接器中有相同的「target」以避免身份的衝突。在添加連接器時，你需要格外小心，我們「不允許」用戶在創建之後更改「target」的值。<a>了解更多</a>',

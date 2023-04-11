@@ -55,7 +55,8 @@ const connectors = {
     logo_dark_show: '다크 모드를 위한 로고 설정 보이기',
     target: '연동 ID 공급자',
     target_placeholder: '연동 ID 공급자 이름을 입력하세요',
-    target_tip:
+    target_tip: '"IdP 이름"의 값은 소셜 식별자를 구분하기 위한 고유 식별자 문자열이 될 수 있어요.',
+    target_tip_standard:
       '"IdP 이름"의 값은 소셜 식별자를 구분하기 위한 고유 식별자 문자열이 될 수 있어요. 이 설정은 연동이 만들어진 후에는 변경할 수 없어요.',
     target_tooltip:
       'Logto의 소셜 연동에서의 "공급자"는 소셜 정보의 원천을 뜻해요. Logto의 디자인은 충돌을 피하기 위해서 같은 "공급자"를 허용하지 않아요. 연동을 추가한 후에는 값을 변경할 수 없으므로 주의해주세요. <a>자세히 알아보기</a>',
