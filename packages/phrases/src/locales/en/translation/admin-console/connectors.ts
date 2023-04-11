@@ -57,6 +57,8 @@ const connectors = {
     target: 'Identity provider name',
     target_placeholder: 'Enter connector identity provider name',
     target_tip:
+      'The value of “IdP name” can be a unique identifier string to distinguish your social identifies.',
+    target_tip_standard:
       'The value of “IdP name” can be a unique identifier string to distinguish your social identifies. This setting cannot be changed after the connector is built.',
     target_tooltip:
       '"IdP name" in Logto social connectors refers to the "source" of your social identities. In Logto design, we do not accept the same "IdP name" of a specific platform to avoid conflicts. You should be very careful before you add a connector since you CAN NOT change its value once you create it. <a>Learn more.</a>',

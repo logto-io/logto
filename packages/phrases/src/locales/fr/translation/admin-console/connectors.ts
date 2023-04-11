@@ -59,6 +59,8 @@ const connectors = {
     target: "Nom du fournisseur d'identité",
     target_placeholder: "Entrez le nom du fournisseur d'identité du connecteur",
     target_tip:
+      'La valeur de "nom de l\'IdP" peut être une chaîne d\'identificateur unique pour distinguer vos identifiants sociaux.',
+    target_tip_standard:
       'La valeur de "nom de l\'IdP" peut être une chaîne d\'identificateur unique pour distinguer vos identifiants sociaux. Ce paramètre ne peut pas être modifié une fois que le connecteur est créé.',
     target_tooltip:
       "«Cible» dans les connecteurs sociaux de Logto fait référence à la «source» de vos identités sociales. Dans la conception de Logto, nous n'acceptons pas la même «cible» d'une plateforme spécifique pour éviter les conflits. Vous devriez être très attentif avant d'ajouter un connecteur car vous NE POUVEZ PAS changer sa valeur une fois que vous l'avez créé. <a>En savoir plus.</a>",

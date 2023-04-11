@@ -107,7 +107,7 @@ function BasicForm({
         </>
       )}
       <FormField
-        isRequired
+        isRequired={isStandard}
         title="connectors.guide.target"
         tip={(closeTipHandler) => (
           <Trans
@@ -131,7 +131,11 @@ function BasicForm({
           disabled={!isAllowEditTarget}
           {...register('target', { required: true })}
         />
-        <div className={styles.tip}>{t('connectors.guide.target_tip')}</div>
+        <div className={styles.tip}>
+          {isStandard
+            ? t('connectors.guide.target_tip_standard')
+            : t('connectors.guide.target_tip')}
+        </div>
         {conflictConnectorName && (
           <div className={styles.error}>
             <div className={styles.icon}>
@@ -145,18 +149,29 @@ function BasicForm({
               >
                 {t('connectors.guide.target_conflict')}
               </Trans>
-              <ul>
-                <li>
-                  <Trans
-                    components={{
-                      span: <UnnamedTrans resource={conflictConnectorName} />,
-                    }}
-                  >
-                    {t('connectors.guide.target_conflict_line2')}
-                  </Trans>
-                </li>
-                <li>{t('connectors.guide.target_conflict_line3')}</li>
-              </ul>
+              {isStandard ? (
+                <ul>
+                  <li>
+                    <Trans
+                      components={{
+                        span: <UnnamedTrans resource={conflictConnectorName} />,
+                      }}
+                    >
+                      {t('connectors.guide.target_conflict_line2')}
+                    </Trans>
+                  </li>
+                  <li>{t('connectors.guide.target_conflict_line3')}</li>
+                </ul>
+              ) : (
+                <Trans
+                  components={{
+                    span: <UnnamedTrans resource={conflictConnectorName} />,
+                  }}
+                >
+                  <br />
+                  {t('connectors.guide.target_conflict_line2')}
+                </Trans>
+              )}
             </div>
           </div>
         )}
