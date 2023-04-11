@@ -27,8 +27,9 @@ const profile = {
     password_setting: '비밀번호 설정',
     new_password: '새 비밀번호',
     confirm_password: '비밀번호 확인',
-    enter_password: '비밀번호를 입력하세요',
-    enter_password_subtitle: '계정 보안을 보호하기 위해 본인임을 인증하세요.',
+    enter_password: '현재 비밀번호를 입력하세요',
+    enter_password_subtitle:
+      '계정 보안을 위해 본인 확인을 해주세요. 변경하기 전에 현재 비밀번호를 입력해주세요.',
     set_password: '비밀번호 설정',
     verify_via_password: '비밀번호로 인증',
     show_password: '비밀번호 보이기',

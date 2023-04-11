@@ -29,9 +29,9 @@ const profil = {
     password_setting: 'Passworteinstellungen',
     new_password: 'Neues Passwort',
     confirm_password: 'Passwort bestätigen',
-    enter_password: 'Passwort eingeben',
+    enter_password: 'Geben Sie das aktuelle Passwort ein',
     enter_password_subtitle:
-      'Überprüfen Sie, dass Sie es sind, um die Sicherheit Ihres Kontos zu schützen.',
+      'Überprüfen Sie, dass es sich um Sie handelt, um die Sicherheit Ihres Kontos zu schützen. Bitte geben Sie Ihr aktuelles Passwort ein, bevor Sie es ändern.',
     set_password: 'Passwort festlegen',
     verify_via_password: 'Überprüfen per Passwort',
     show_password: 'Passwort zeigen',

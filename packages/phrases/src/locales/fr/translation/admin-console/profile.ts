@@ -29,8 +29,9 @@ const profile = {
     password_setting: 'Paramètres de mot de passe',
     new_password: 'Nouveau mot de passe',
     confirm_password: 'Confirmer le mot de passe',
-    enter_password: 'Entrez votre mot de passe',
-    enter_password_subtitle: "Vérifiez que c'est bien vous pour protéger votre compte.",
+    enter_password: 'Entrez le mot de passe actuel',
+    enter_password_subtitle:
+      "Vérifiez que c'est vous pour protéger la sécurité de votre compte. Veuillez saisir votre mot de passe actuel avant de le changer.",
     set_password: 'Définir le mot de passe',
     verify_via_password: 'Vérifier via mot de passe',
     show_password: 'Afficher le mot de passe',
