@@ -30,8 +30,9 @@ const profile = {
     password_setting: 'Configuración de contraseña',
     new_password: 'Nueva contraseña',
     confirm_password: 'Confirmar contraseña',
-    enter_password: 'Ingrese contraseña',
-    enter_password_subtitle: 'Verifique que sea usted para proteger la seguridad de su cuenta.',
+    enter_password: 'Ingrese la contraseña actual',
+    enter_password_subtitle:
+      'Verifica que eres tú para proteger la seguridad de tu cuenta. Por favor, ingresa tu contraseña actual antes de cambiarla.',
     set_password: 'Establecer contraseña',
     verify_via_password: 'Verificar mediante contraseña',
     show_password: 'Mostrar contraseña',

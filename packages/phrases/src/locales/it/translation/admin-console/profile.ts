@@ -28,8 +28,9 @@ const profile = {
     password_setting: 'Impostazione password',
     new_password: 'Nuova password',
     confirm_password: 'Conferma password',
-    enter_password: 'Inserisci la tua password',
-    enter_password_subtitle: 'Verifica che sia tu per proteggere la sicurezza del tuo account.',
+    enter_password: 'Inserisci la password attuale',
+    enter_password_subtitle:
+      'Verifica che sei tu per proteggere la sicurezza del tuo account. Inserisci la tua password attuale prima di cambiarla.',
     set_password: 'Imposta password',
     verify_via_password: 'Verifica tramite password',
     show_password: 'Mostra password',

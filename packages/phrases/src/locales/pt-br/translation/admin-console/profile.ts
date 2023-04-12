@@ -28,8 +28,9 @@ const profile = {
     password_setting: 'Configuração de senha',
     new_password: 'Nova senha',
     confirm_password: 'Confirme a senha',
-    enter_password: 'Insira a senha',
-    enter_password_subtitle: 'Verifique se é você para proteger a segurança da sua conta.',
+    enter_password: 'Digite a senha atual',
+    enter_password_subtitle:
+      'Verifique se é você para proteger a segurança da sua conta. Por favor, digite sua senha atual antes de alterá-la.',
     set_password: 'Definir senha',
     verify_via_password: 'Verificar via senha',
     show_password: 'Mostrar senha',

@@ -29,8 +29,9 @@ const profile = {
     password_setting: 'Şifre ayarları',
     new_password: 'Yeni şifre',
     confirm_password: 'Şifreyi onayla',
-    enter_password: 'Şifre girin',
-    enter_password_subtitle: 'Hesap güvenliğinizi korumak için siz olduğunuzu doğrulayın.',
+    enter_password: 'Geçerli şifreyi girin',
+    enter_password_subtitle:
+      'Hesap güvenliğinizi korumak için kendinizi doğrulayın. Değiştirmeden önce lütfen mevcut şifrenizi girin.',
     set_password: 'Şifre oluştur',
     verify_via_password: 'Şifre ile doğrula',
     show_password: 'Şifreyi göster',

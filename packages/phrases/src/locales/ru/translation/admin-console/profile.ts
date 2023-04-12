@@ -29,8 +29,9 @@ const profile = {
     password_setting: 'Настройка пароля',
     new_password: 'Новый пароль',
     confirm_password: 'Подтвердите пароль',
-    enter_password: 'Введите пароль',
-    enter_password_subtitle: 'Убедитесь, что это вы, для защиты безопасности своего аккаунта.',
+    enter_password: 'Введите текущий пароль',
+    enter_password_subtitle:
+      'Для защиты безопасности вашей учетной записи подтвердите, что это вы. Пожалуйста, введите ваш текущий пароль перед изменением.',
     set_password: 'Установить пароль',
     verify_via_password: 'Проверить через пароль',
     show_password: 'Показать пароль',

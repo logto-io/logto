@@ -28,8 +28,9 @@ const profile = {
     password_setting: 'Password setting',
     new_password: 'New password',
     confirm_password: 'Confirm password',
-    enter_password: 'Enter password',
-    enter_password_subtitle: 'Verify it’s you to protect your account security.',
+    enter_password: 'Enter current password',
+    enter_password_subtitle:
+      "Verify it's you to protect your account security. Please enter your current password before changing it.",
     set_password: 'Set password',
     verify_via_password: 'Verify via password',
     show_password: 'Show password',

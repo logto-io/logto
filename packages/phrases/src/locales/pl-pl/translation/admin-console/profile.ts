@@ -28,8 +28,9 @@ const profile = {
     password_setting: 'Ustawienia hasła',
     new_password: 'Nowe hasło',
     confirm_password: 'Potwierdź hasło',
-    enter_password: 'Wprowadź hasło',
-    enter_password_subtitle: 'Zweryfikuj, czy to Ty, aby chronić bezpieczeństwo swojego konta.',
+    enter_password: 'Wprowadź obecne hasło',
+    enter_password_subtitle:
+      'Zweryfikuj swoją tożsamość, aby chronić bezpieczeństwo swojego konta. Przed zmianą proszę wprowadzić swoje aktualne hasło.',
     set_password: 'Ustaw hasło',
     verify_via_password: 'Zweryfikuj za pomocą hasła',
     show_password: 'Pokaż hasło',

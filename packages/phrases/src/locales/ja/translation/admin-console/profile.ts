@@ -28,8 +28,9 @@ const profile = {
     password_setting: 'パスワード設定',
     new_password: '新しいパスワード',
     confirm_password: 'パスワードの確認',
-    enter_password: 'パスワードを入力してください',
-    enter_password_subtitle: 'アカウントのセキュリティを保護するために確認してください。',
+    enter_password: '現在のパスワードを入力してください',
+    enter_password_subtitle:
+      'アカウントのセキュリティを保護するためにあなたが本人であることを確認してください。変更する前に現在のパスワードを入力してください。',
     set_password: 'パスワードを設定する',
     verify_via_password: 'パスワードを使って確認する',
     show_password: 'パスワードを表示する',
