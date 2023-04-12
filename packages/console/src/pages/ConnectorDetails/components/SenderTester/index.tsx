@@ -11,6 +11,7 @@ import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
+import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
 
@@ -58,9 +59,7 @@ function SenderTester({ connectorFactoryId, connectorType, className, parse }: P
 
     const data = {
       config: parse(),
-      ...(isSms
-        ? { phone: sendTo.replace(/[ ()-]/g, '').replace(/\+/g, '00') }
-        : { email: sendTo }),
+      ...(isSms ? { phone: parsePhoneNumber(sendTo) } : { email: sendTo }),
     };
 
     await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();

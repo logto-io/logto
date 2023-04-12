@@ -13,6 +13,8 @@ const errors = {
   more_details: '查看详情',
   username_pattern_error: '用户名只能包含英文字母、数字或下划线，且不以数字开头。',
   password_pattern_error: '密码至少需要 {{min}} 个字符，且必须包含字母、数字和符号。',
+  email_pattern_error: '邮箱地址无效',
+  phone_pattern_error: '手机号码无效',
   insecure_contexts: '不支持不安全的上下文（非 HTTPS）。',
   unexpected_error: '发生未知错误',
   not_found: '404 找不到资源',

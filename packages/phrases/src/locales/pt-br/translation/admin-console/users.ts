@@ -4,6 +4,8 @@ const users = {
   subtitle:
     'Gerenciar identidades de usuários, visualização de logs de usuários, redefinições de senha e exclusão de usuários',
   create: 'Adicionar usuário',
+  create_subtitle: 'Você deve inserir pelo menos um identificador para criar um usuário',
+  error_missing_identifier: 'Você deve fornecer pelo menos um identificador para criar um usuário.',
   user_name: 'Usuário',
   application_name: 'Aplicativo',
   latest_sign_in: 'Último login',

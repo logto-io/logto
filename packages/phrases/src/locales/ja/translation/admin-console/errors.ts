@@ -15,6 +15,8 @@ const errors = {
     'ユーザー名には、文字、数字、またはアンダースコアしか含めることができず、数字で始めることはできません。',
   password_pattern_error:
     'パスワードには、{{min}}文字以上の文字列と文字、数字、およびシンボルが必要です。',
+  email_pattern_error: 'メールアドレスが無効です。',
+  phone_pattern_error: '電話番号が無効です。',
   insecure_contexts: '安全でないコンテキスト（ノンHTTP）はサポートされていません。',
   unexpected_error: '予期しないエラーが発生しました。',
   not_found: '404が見つかりません',

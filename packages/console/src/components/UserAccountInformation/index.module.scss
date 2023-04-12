@@ -12,13 +12,14 @@
     .infoLine {
       display: flex;
       align-items: center;
+      font: var(--font-body-2);
 
       &:not(:last-child) {
         margin-bottom: _.unit(2);
       }
 
       .infoContent {
-        font-weight: bold;
+        font: var(--font-label-2);
         padding-left: _.unit(1);
       }
 

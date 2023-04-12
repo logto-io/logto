@@ -4,6 +4,9 @@ const users = {
   subtitle:
     'Kullanıcı oluşturma, kullanıcı bilgilerini düzenleme, kullanıcı kayıtlarını görüntüleme, parola sıfırlama ve kullanıcıları silme dahil olmak üzere kullanıcı kimliklerini yönetin',
   create: 'Kullanıcı ekle',
+  create_subtitle: 'Bir kullanıcı oluşturmak için en az bir tanımlayıcı girmelisiniz',
+  error_missing_identifier:
+    'Bir kullanıcı oluşturmak için en az bir tanımlayıcı sağlamanız gerekir.',
   user_name: 'Kullanıcı',
   application_name: 'Uygulamadan',
   latest_sign_in: 'En son oturum açma',

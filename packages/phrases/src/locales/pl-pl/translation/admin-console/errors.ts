@@ -15,6 +15,8 @@ const errors = {
     'Nazwa użytkownika powinna zawierać tylko litery, cyfry lub znak podkreślenia i nie powinna zaczynać się od cyfry.',
   password_pattern_error:
     'Hasło wymaga minimum {{min}} znaków i zawiera kombinację liter, cyfr i symboli.',
+  email_pattern_error: 'Adres e-mail jest nieprawidłowy.',
+  phone_pattern_error: 'Numer telefonu jest nieprawidłowy.',
   insecure_contexts: 'Nieobsługiwane są niebezpieczne konteksty (non-HTTPS).',
   unexpected_error: 'Wystąpił nieoczekiwany błąd.',
   not_found: '404 nie znaleziono',

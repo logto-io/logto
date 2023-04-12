@@ -15,6 +15,8 @@ const errors = {
     'Kullanıcı adı yalnızca harf, sayı veya alt çizgi içermeli ve bir sayı ile başlamamalıdır.',
   password_pattern_error:
     'Şifre en az {{min}} karakter ve harfler, sayılar ve simgelerin bir karışımını içermelidir.',
+  email_pattern_error: 'E-posta adresi geçersiz.',
+  phone_pattern_error: 'Telefon numarası geçersiz.',
   insecure_contexts: 'Güvenli olmayan bağlamlar (HTTPS olmayan) desteklenmez.',
   unexpected_error: 'Beklenmedik bir hata oluştu',
   not_found: '404 bulunamadı',

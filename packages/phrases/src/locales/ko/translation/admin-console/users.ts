@@ -3,6 +3,8 @@ const users = {
   title: '사용자 관리',
   subtitle: '사용자의 신원을 추가, 삭제, 수정, 조회하여 관리해보세요.',
   create: '사용자 추가',
+  create_subtitle: '사용자를 생성하려면 적어도 하나의 식별자를 입력해야 합니다',
+  error_missing_identifier: '사용자를 생성하려면 적어도 하나의 식별자를 제공해야 합니다.',
   user_name: '사용자',
   application_name: '어플리케이션으로부터',
   latest_sign_in: '최근 로그인 시각',

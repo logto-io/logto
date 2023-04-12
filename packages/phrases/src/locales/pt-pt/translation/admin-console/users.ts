@@ -4,6 +4,8 @@ const users = {
   subtitle:
     'Gerencie os utilizadores, incluindo a criação, edição de informações, visualização de logs, recuperações de password e exclusões',
   create: 'Adicionar usuário',
+  create_subtitle: 'Tem de inserir pelo menos um identificador para criar um utilizador',
+  error_missing_identifier: 'Tem de fornecer pelo menos um identificador para criar um utilizador.',
   user_name: 'Utilizador',
   application_name: 'Do app',
   latest_sign_in: 'Último login',

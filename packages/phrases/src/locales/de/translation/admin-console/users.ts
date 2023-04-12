@@ -4,6 +4,10 @@ const users = {
   subtitle:
     'Verwalten von Benutzeridentitäten, einschließlich des Anlegens von Benutzern, Bearbeiten von Benutzerinformationen, Anzeigen von Benutzer-Logs, Zurücksetzen von Passwörtern und Löschen von Benutzern',
   create: 'Benutzer hinzufügen',
+  create_subtitle:
+    'Sie müssen mindestens einen Identifikator eingeben, um einen Benutzer anzulegen',
+  error_missing_identifier:
+    'Sie müssen mindestens einen Identifikator eingeben, um einen Benutzer anzulegen',
   user_name: 'Benutzer',
   application_name: 'Anwendungsname',
   latest_sign_in: 'Letzte Anmeldung',

@@ -4,6 +4,9 @@ const users = {
   subtitle:
     'Zarządzaj tożsamościami użytkowników, w tym tworzeniem użytkowników, edycją informacji o użytkownikach, przeglądaniem dzienników użytkowników, resetowaniem hasła i usuwaniem użytkowników.',
   create: 'Dodaj użytkownika',
+  create_subtitle: 'Aby utworzyć użytkownika, musisz podać co najmniej jeden identyfikator',
+  error_missing_identifier:
+    'Aby utworzyć użytkownika, musisz podać co najmniej jeden identyfikator.',
   user_name: 'Użytkownik',
   application_name: 'Z aplikacji',
   latest_sign_in: 'Najnowsze logowanie',

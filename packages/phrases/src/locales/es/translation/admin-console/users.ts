@@ -5,6 +5,8 @@ const users = {
     'Administrar identidades de usuario, incluyendo la creación de usuarios, la edición de información de usuario, la visualización de registros de usuario, la restablecimiento de contraseña y la eliminación de usuarios',
   create: 'Agregar usuario',
   user_name: 'Usuario',
+  create_subtitle: 'Debe ingresar al menos un identificador para crear un usuario',
+  error_missing_identifier: 'Debe proporcionar al menos un identificador para crear un usuario.',
   application_name: 'De la aplicación',
   latest_sign_in: 'Último inicio de sesión',
   create_form_username: 'Nombre de usuario',

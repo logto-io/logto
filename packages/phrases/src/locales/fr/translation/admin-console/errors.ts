@@ -15,6 +15,8 @@ const errors = {
     "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des traits de soulignement et ne doit pas commencer par un chiffre.",
   password_pattern_error:
     'Le mot de passe nécessite un minimum de {{min}} caractères et contient un mélange de lettres, de chiffres et de symboles.',
+  email_pattern_error: "L'adresse e-mail n'est pas valide.",
+  phone_pattern_error: 'Le numéro de téléphone n’est pas valide.',
   insecure_contexts: 'Les contextes non sécurisés (non HTTPS) ne sont pas pris en charge.',
   unexpected_error: "Une erreur inattendue s'est produite",
   not_found: '404 non trouvé',
