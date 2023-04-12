@@ -12,6 +12,11 @@
     font: var(--font-body-2);
     @include _.text-ellipsis;
     margin-left: _.unit(2);
+    max-width: fit-content;
+  }
+
+  .suspended {
+    margin-left: _.unit(1);
   }
 
   &:hover {

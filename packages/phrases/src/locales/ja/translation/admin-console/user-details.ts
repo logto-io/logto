@@ -41,6 +41,16 @@ const user_details = {
       '既存の<name/>アイデンティティを削除しています。本当にそれをやり遂げますか？',
   },
   suspended: '停止中',
+  suspend_user: 'ユーザーを一時停止',
+  suspend_user_reminder:
+    'ユーザーを一時停止してよろしいですか？この操作を行うと、ユーザーはアプリにサインインできなくなり、現在のアクセストークンが期限切れになった後、新しいアクセストークンを取得できなくなります。さらに、このユーザーによって行われたすべての API リクエストは失敗します。',
+  suspend_action: '一時停止',
+  user_suspended: 'ユーザーが停止されました。',
+  reactivate_user: 'ユーザーをリアクティブ化',
+  reactivate_user_reminder:
+    'このユーザーをリアクティブ化することを確認しますか？それにより、このユーザーのサインイン試行が許可されます。',
+  reactivate_action: '活性化',
+  user_reactivated: 'ユーザーが再活性化されました。',
   roles: {
     name_column: '役割',
     description_column: '説明',

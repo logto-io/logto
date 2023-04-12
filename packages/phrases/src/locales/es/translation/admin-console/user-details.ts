@@ -1,13 +1,13 @@
 const user_details = {
   page_title: 'Detalles de usuario',
   back_to_users: 'Volver a la gestión de usuarios',
-  created_title: 'Se ha creado el usuario con éxito',
+  created_title: 'Usuario creado con éxito',
   created_guide: 'Puede enviar al usuario la siguiente información de inicio de sesión',
   created_username: 'Nombre de usuario:',
   created_password: 'Contraseña:',
   menu_delete: 'Eliminar',
   delete_description: 'Esta acción no se puede deshacer. Eliminará permanentemente al usuario.',
-  deleted: 'Se ha eliminado al usuario con éxito',
+  deleted: 'Usuario eliminado con éxito',
   reset_password: {
     reset_password: 'Restablecer contraseña',
     title: '¿Está seguro de que desea restablecer la contraseña?',
@@ -42,6 +42,16 @@ const user_details = {
       'Está eliminando la identidad de <name/> existente. ¿Está seguro de que desea hacer esto?',
   },
   suspended: 'Suspendido',
+  suspend_user: 'Suspender usuario',
+  suspend_user_reminder:
+    '¿Está seguro de que desea suspender a este usuario? El usuario no podrá iniciar sesión en su aplicación y no podrá obtener un nuevo token de acceso después de que expire el actual. Además, todas las solicitudes de API realizadas por este usuario fallarán.',
+  suspend_action: 'Suspender',
+  user_suspended: 'El usuario ha sido suspendido.',
+  reactivate_user: 'Reactivar usuario',
+  reactivate_user_reminder:
+    '¿Está seguro de que desea reactivar a este usuario? Al hacerlo, permitirá cualquier intento de inicio de sesión para este usuario.',
+  reactivate_action: 'Reactivar',
+  user_reactivated: 'El usuario ha sido reactivado.',
   roles: {
     name_column: 'Rol',
     description_column: 'Descripción',

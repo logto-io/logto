@@ -43,6 +43,16 @@ const user_details = {
       "Vous supprimez l'identité existante <nom/>. Etes-vous sûr de vouloir faire ça ?",
   },
   suspended: 'Suspendu',
+  suspend_user: "Suspendre l'utilisateur",
+  suspend_user_reminder:
+    "Êtes-vous sûr de vouloir suspendre cet utilisateur ? L'utilisateur ne pourra pas se connecter à votre application et ne pourra pas obtenir de nouveau jeton d'accès après l'expiration de celui en cours. En outre, toutes les demandes d'API effectuées par cet utilisateur échoueront.",
+  suspend_action: 'Suspendre',
+  user_suspended: "L'utilisateur a été suspendu.",
+  reactivate_user: "Réactiver l'utilisateur",
+  reactivate_user_reminder:
+    'Êtes-vous sûr de vouloir réactiver cet utilisateur ? Cela permettra toute tentative de connexion pour cet utilisateur.',
+  reactivate_action: 'Réactiver',
+  user_reactivated: "L'utilisateur a été réactivé.",
   roles: {
     name_column: 'Rôle',
     description_column: 'Description',

@@ -11,26 +11,30 @@ type Props = {
   icon?: ReactNode;
   to?: To;
   size?: 'default' | 'compact';
+  suffix?: ReactNode;
 };
 
-function ItemPreview({ title, subtitle, icon, to, size = 'default' }: Props) {
+function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix }: Props) {
   return (
     <div className={classNames(styles.item, styles[size])}>
       {icon}
       <div className={styles.content}>
-        {to && (
-          <Link
-            className={styles.title}
-            to={to}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            {title}
-          </Link>
-        )}
-        {!to && <div className={styles.title}>{title}</div>}
-        {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+        <div className={styles.meta}>
+          {to && (
+            <Link
+              className={styles.title}
+              to={to}
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              {title}
+            </Link>
+          )}
+          {!to && <div className={styles.title}>{title}</div>}
+          {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+        </div>
+        {suffix}
       </div>
     </div>
   );

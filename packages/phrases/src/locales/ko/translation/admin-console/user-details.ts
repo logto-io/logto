@@ -40,6 +40,16 @@ const user_details = {
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
   },
   suspended: '정지됨',
+  suspend_user: '사용자 정지',
+  suspend_user_reminder:
+    '이 사용자를 정지하시겠습니까? 사용자는 앱에 로그인할 수 없으며 현재 액세스 토큰이 만료된 후 새 액세스 토큰을 얻을 수 없게 됩니다. 또한 이 사용자가 수행한 모든 API 요청이 실패합니다.',
+  suspend_action: '정지',
+  user_suspended: '사용자가 정지되었습니다.',
+  reactivate_user: '사용자 재활성화',
+  reactivate_user_reminder:
+    '이 사용자를 다시 활성화하시겠습니까? 이렇게 하면이 사용자에 대한 로그인 시도가 허용됩니다.',
+  reactivate_action: '재활성화',
+  user_reactivated: '사용자가 재활성화되었습니다.',
   roles: {
     name_column: '역할',
     description_column: '설명',

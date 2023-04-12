@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Close from '@/assets/images/close.svg';
 import IconButton from '@/components/IconButton';
 import UserAvatar from '@/components/UserAvatar';
+import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 
 import * as styles from './index.module.scss';
 
@@ -17,8 +18,11 @@ function TargetUserItem({ user, onDelete }: Props) {
 
   return (
     <div className={styles.item}>
-      <UserAvatar user={user} size="micro" />
-      <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
+      <div className={styles.meta}>
+        <UserAvatar user={user} size="micro" />
+        <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
+        {user.isSuspended && <SuspendedTag className={styles.suspended} />}
+      </div>
       <IconButton
         size="small"
         iconClassName={styles.icon}

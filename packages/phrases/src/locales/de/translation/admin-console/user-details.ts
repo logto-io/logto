@@ -40,9 +40,19 @@ const user_details = {
     remove: 'Löschen',
     not_connected: 'Der Nutzer ist nicht mit einem Social Connector verbunden',
     deletion_confirmation:
-      'Du entfernst die bestehende <name/> Identität. Bist du sicher, dass du das tun willst?',
+      'Du entfernst die bestehende <name/> Identität. Bist du sicher, dass du das tun möchtest?',
   },
   suspended: 'Gesperrt',
+  suspend_user: 'Benutzer sperren',
+  suspend_user_reminder:
+    'Sind Sie sicher, dass Sie diesen Benutzer sperren möchten? Der Benutzer kann sich nicht bei Ihrer App anmelden und kann nach Ablauf des aktuellen Tokens kein neues Zugriffstoken mehr erhalten. Außerdem schlagen alle API-Anforderungen von diesem Benutzer fehl.',
+  suspend_action: 'Sperren',
+  user_suspended: 'Benutzer wurde gesperrt.',
+  reactivate_user: 'Benutzer entsperren',
+  reactivate_user_reminder:
+    'Sind Sie sicher, dass Sie diesen Benutzer wieder aktivieren möchten? Dadurch werden alle Anmeldeversuche für diesen Benutzer ermöglicht.',
+  reactivate_action: 'Aktivieren',
+  user_reactivated: 'Benutzer wurde aktiviert.',
   roles: {
     name_column: 'Rolle',
     description_column: 'Beschreibung',

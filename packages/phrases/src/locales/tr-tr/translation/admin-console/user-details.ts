@@ -41,6 +41,16 @@ const user_details = {
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
   },
   suspended: 'Askıya alınmış',
+  suspend_user: 'Kullanıcıyı Askıya Al',
+  suspend_user_reminder:
+    'Bu kullanıcıyı askıya almak istediğinizden emin misiniz? Kullanıcı uygulamanıza giriş yapamayacak ve mevcut erişim belirteci süresi dolduktan sonra yeni bir erişim belirteci alamayacak. Ayrıca bu kullanıcı tarafından yapılan herhangi bir API isteği başarısız olacaktır.',
+  suspend_action: 'Askıya Al',
+  user_suspended: 'Kullanıcı askıya alındı.',
+  reactivate_user: 'Kullanıcıyı Yeniden Etkinleştir',
+  reactivate_user_reminder:
+    'Bu kullanıcının yeniden etkinleştirmek istediğinizden emin misiniz? Böyle yapmak, bu kullanıcı için giriş girişimlerine izin verecektir.',
+  reactivate_action: 'Yeniden Etkinleştir',
+  user_reactivated: 'Kullanıcı yeniden etkinleştirildi.',
   roles: {
     name_column: 'Rol',
     description_column: 'Açıklama',

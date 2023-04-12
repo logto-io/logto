@@ -9,10 +9,13 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/images/delete.svg';
+import Forbidden from '@/assets/images/forbidden.svg';
 import More from '@/assets/images/more.svg';
 import Reset from '@/assets/images/reset.svg';
+import Shield from '@/assets/images/shield.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
+import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
@@ -25,6 +28,7 @@ import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
+import SuspendedTag from '../Users/components/SuspendedTag';
 
 import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
@@ -39,9 +43,12 @@ function UserDetails() {
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
+  const [isToggleSuspendFormOpen, setIsToggleSuspendFormOpen] = useState(false);
+  const [isUpdatingSuspendState, setIsUpdatingSuspendState] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
 
   const { data, error, mutate } = useSWR<User, RequestError>(id && `api/users/${id}`);
+  const { isSuspended: isSuspendedUser = false } = data ?? {};
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
@@ -49,6 +56,7 @@ function UserDetails() {
   useEffect(() => {
     setIsDeleteFormOpen(false);
     setIsResetPasswordFormOpen(false);
+    setIsToggleSuspendFormOpen(false);
   }, [pathname]);
 
   const onDelete = async () => {
@@ -64,6 +72,27 @@ function UserDetails() {
       navigate('/users');
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const onToggleSuspendState = async () => {
+    if (!data || isUpdatingSuspendState) {
+      return;
+    }
+
+    setIsUpdatingSuspendState(true);
+
+    try {
+      const updatedUser = await api
+        .patch(`api/users/${data.id}/is-suspended`, { json: { isSuspended: !isSuspendedUser } })
+        .json<User>();
+      void mutate(updatedUser);
+      setIsToggleSuspendFormOpen(false);
+      toast.success(
+        t(updatedUser.isSuspended ? 'user_details.user_suspended' : 'user_details.user_reactivated')
+      );
+    } finally {
+      setIsUpdatingSuspendState(false);
     }
   };
 
@@ -84,9 +113,7 @@ function UserDetails() {
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
-                {data.isSuspended && (
-                  <div className={styles.suspended}>{t('user_details.suspended')}</div>
-                )}
+                {isSuspendedUser && <SuspendedTag />}
                 {data.username && (
                   <>
                     <div className={styles.username}>{data.username}</div>
@@ -99,17 +126,28 @@ function UserDetails() {
             </div>
             <div>
               <ActionMenu
-                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
+                buttonProps={{ icon: <More className={styles.icon} />, size: 'large' }}
                 title={t('general.more_options')}
               >
                 <ActionMenuItem
                   icon={<Reset />}
-                  iconClassName={styles.resetIcon}
+                  iconClassName={styles.icon}
                   onClick={() => {
                     setIsResetPasswordFormOpen(true);
                   }}
                 >
                   {t('user_details.reset_password.reset_password')}
+                </ActionMenuItem>
+                <ActionMenuItem
+                  icon={isSuspendedUser ? <Shield /> : <Forbidden />}
+                  iconClassName={styles.icon}
+                  onClick={() => {
+                    setIsToggleSuspendFormOpen(true);
+                  }}
+                >
+                  {t(
+                    isSuspendedUser ? 'user_details.reactivate_user' : 'user_details.suspend_user'
+                  )}
                 </ActionMenuItem>
                 <ActionMenuItem
                   icon={<Delete />}
@@ -151,6 +189,23 @@ function UserDetails() {
               >
                 <div>{t('user_details.delete_description')}</div>
               </DeleteConfirmModal>
+              <ConfirmModal
+                isOpen={isToggleSuspendFormOpen}
+                isLoading={isUpdatingSuspendState}
+                confirmButtonText={
+                  isSuspendedUser ? 'user_details.reactivate_action' : 'user_details.suspend_action'
+                }
+                onCancel={() => {
+                  setIsToggleSuspendFormOpen(false);
+                }}
+                onConfirm={onToggleSuspendState}
+              >
+                {t(
+                  isSuspendedUser
+                    ? 'user_details.reactivate_user_reminder'
+                    : 'user_details.suspend_user_reminder'
+                )}
+              </ConfirmModal>
             </div>
           </Card>
           <TabNav>
