@@ -12,6 +12,8 @@ import { createOpenaiApi, translate } from './openai.js';
 
 export const baseLanguage = 'en' satisfies LanguageTag;
 
+const untranslatedMark = '// UNTRANSLATED';
+
 export const readLocaleFiles = async (directory: string): Promise<string[]> => {
   const entities = await fs.readdir(directory, { withFileTypes: true });
 
@@ -39,7 +41,7 @@ export const readBaseLocaleFiles = async (directory: string): Promise<string[]> 
   return readLocaleFiles(enDirectory);
 };
 
-export type CreateFullTranslation = {
+export type TranslationOptions = {
   instancePath: string;
   packageName: 'phrases' | 'phrases-ui';
   languageTag: LanguageTag;
@@ -53,16 +55,77 @@ export const createFullTranslation = async ({
   languageTag,
   verbose = true,
   queue = new PQueue({ concurrency: 5 }),
-}: CreateFullTranslation) => {
+}: TranslationOptions) => {
   const directory = path.join(instancePath, 'packages', packageName, 'src/locales');
-  const files = await readBaseLocaleFiles(directory);
+  const baseLocaleFiles = await readBaseLocaleFiles(directory);
 
   if (verbose) {
     consoleLog.info(
       'Found ' +
-        String(files.length) +
+        String(baseLocaleFiles.length) +
         ' file' +
-        conditionalString(files.length !== 1 && 's') +
+        conditionalString(baseLocaleFiles.length !== 1 && 's') +
+        ' in ' +
+        packageName +
+        ' to create'
+    );
+  }
+
+  const openai = createOpenaiApi();
+
+  for (const baseLocaleFile of baseLocaleFiles) {
+    const basePath = path.relative(
+      path.join(directory, baseLanguage.toLowerCase()),
+      baseLocaleFile
+    );
+
+    const targetPath = path.join(directory, languageTag.toLowerCase(), basePath);
+
+    if (existsSync(targetPath)) {
+      if (verbose) {
+        consoleLog.info(`Target locale file ${targetPath} exists, skipping`);
+      }
+
+      continue;
+    }
+
+    void queue.add(async () => {
+      consoleLog.info(`Creating the translation for ${targetPath}`);
+      const result = await translate({
+        api: openai,
+        sourceFilePath: baseLocaleFile,
+        targetLanguage: languageTag,
+      });
+
+      if (!result) {
+        consoleLog.fatal(`Unable to create the translation for ${targetPath}`);
+      }
+
+      await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
+      await fs.writeFile(targetPath, result);
+      consoleLog.succeed(`The translation for ${targetPath} created`);
+    });
+  }
+
+  return queue.onIdle();
+};
+
+export const syncTranslation = async ({
+  instancePath,
+  packageName,
+  languageTag,
+  verbose = true,
+  queue = new PQueue({ concurrency: 5 }),
+}: TranslationOptions) => {
+  const directory = path.join(instancePath, 'packages', packageName, 'src/locales');
+  const baseLocaleFiles = await readBaseLocaleFiles(directory);
+
+  if (verbose) {
+    consoleLog.info(
+      'Found ' +
+        String(baseLocaleFiles.length) +
+        ' file' +
+        conditionalString(baseLocaleFiles.length !== 1 && 's') +
         ' in ' +
         packageName +
         ' to translate'
@@ -72,45 +135,44 @@ export const createFullTranslation = async ({
   const openai = createOpenaiApi();
 
   /* eslint-disable no-await-in-loop */
-  for (const file of files) {
-    const basePath = path.relative(path.join(directory, baseLanguage.toLowerCase()), file);
+  for (const baseLocaleFile of baseLocaleFiles) {
+    const basePath = path.relative(
+      path.join(directory, baseLanguage.toLowerCase()),
+      baseLocaleFile
+    );
     const targetPath = path.join(directory, languageTag.toLowerCase(), basePath);
 
-    const getTranslationPath = async () => {
-      if (existsSync(targetPath)) {
-        const currentContent = await fs.readFile(targetPath, 'utf8');
-
-        if (currentContent.includes('// UNTRANSLATED')) {
-          return targetPath;
-        }
-
-        if (verbose) {
-          consoleLog.info(
-            `Target path ${targetPath} exists and has no untranslated mark, skipping`
-          );
-        }
-
-        return;
+    if (!existsSync(targetPath)) {
+      if (verbose) {
+        consoleLog.info(`Target locale file ${targetPath} does not exist, skipping`);
       }
 
-      return file;
-    };
+      continue;
+    }
 
-    const translationPath = await getTranslationPath();
+    const currentContent = await fs.readFile(targetPath, 'utf8');
 
-    if (!translationPath) {
+    if (!currentContent.includes(untranslatedMark)) {
+      if (verbose) {
+        consoleLog.info(`Target path ${targetPath} exists and has no untranslated mark, skipping`);
+      }
       continue;
     }
 
     void queue.add(async () => {
-      consoleLog.info(`Translating ${translationPath}`);
-      const result = await translate(openai, languageTag, translationPath);
+      consoleLog.info(`Translating ${targetPath}`);
+      const result = await translate({
+        api: openai,
+        sourceFilePath: targetPath,
+        targetLanguage: languageTag,
+        extraPrompts: `Object values without an "${untranslatedMark}" mark should be skipped and keep its original value. Remember to remove the "${untranslatedMark}" mark with the spaces before and after it in the output content.`,
+      });
 
       if (!result) {
-        consoleLog.fatal(`Unable to translate ${translationPath}`);
+        consoleLog.fatal(`Unable to translate ${targetPath}`);
       }
 
-      await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
+      await fs.unlink(targetPath);
       await fs.writeFile(targetPath, result);
       consoleLog.succeed(`Translated ${targetPath}`);
     });

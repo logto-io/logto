@@ -6,7 +6,7 @@ import type { CommandModule } from 'yargs';
 
 import { inquireInstancePath } from '../connector/utils.js';
 
-import { type CreateFullTranslation, baseLanguage, createFullTranslation } from './utils.js';
+import { type TranslationOptions, baseLanguage, syncTranslation } from './utils.js';
 
 const sync: CommandModule<{ path?: string }, { path?: string }> = {
   command: ['sync'],
@@ -25,10 +25,10 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
         instancePath,
         verbose: false,
         queue,
-      } satisfies Partial<CreateFullTranslation>;
+      } satisfies Partial<TranslationOptions>;
 
       if (isPhrasesBuiltInLanguageTag(languageTag)) {
-        void createFullTranslation({
+        void syncTranslation({
           ...baseOptions,
           packageName: 'phrases',
           languageTag,
@@ -36,7 +36,7 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
       }
 
       if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
-        void createFullTranslation({
+        void syncTranslation({
           ...baseOptions,
           packageName: 'phrases-ui',
           languageTag,
