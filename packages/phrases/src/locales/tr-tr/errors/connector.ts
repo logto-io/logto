@@ -10,6 +10,7 @@ const connector = {
   invalid_config: 'Bağlayıcının ayarları geçersiz.',
   invalid_response: 'Bağlayıcının yanıtı geçersiz.',
   template_not_found: 'Bağlayıcı yapılandırmasında doğru şablon bulunamıyor.',
+  rate_limit_exceeded: 'Tetikleyici oran sınırına ulaşıldı. Lütfen daha sonra tekrar deneyin.',
   not_implemented: '{{method}}: henüz uygulanmadı.',
   social_invalid_access_token: 'Bağlayıcının erişim tokenı geçersiz.',
   invalid_auth_code: 'Bağlayıcının yetki kodu geçersiz.',

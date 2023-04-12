@@ -11,6 +11,7 @@ const connector = {
   invalid_config: 'Konfiguracja łącznika jest nieprawidłowa.',
   invalid_response: 'Odpowiedź łącznika jest nieprawidłowa.',
   template_not_found: 'Nie można znaleźć poprawnego szablonu w konfiguracji łącznika.',
+  rate_limit_exceeded: 'Ograniczenie szybkości wywołań. Spróbuj ponownie później.',
   not_implemented: '{{method}}: jeszcze nie zaimplementowano.',
   social_invalid_access_token: 'Token dostępu łącznika jest nieprawidłowy.',
   invalid_auth_code: 'Kod autoryzacji łącznika jest nieprawidłowy.',

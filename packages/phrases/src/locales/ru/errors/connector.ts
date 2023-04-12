@@ -10,6 +10,7 @@ const connector = {
   invalid_config: 'Конфигурация коннектора недействительна.',
   invalid_response: 'Ответ коннектора недействителен.',
   template_not_found: 'Невозможно найти правильный шаблон в конфигурации коннектора.',
+  rate_limit_exceeded: 'Превышен лимит запросов. Пожалуйста, попробуйте позже.',
   not_implemented: '{{method}}: еще не реализован.',
   social_invalid_access_token: 'Токен доступа коннектора недействителен.',
   invalid_auth_code: 'Код аутентификации коннектора недействителен.',
@@ -34,4 +35,5 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     'Метаданные этого коннектора не могут быть перезаписаны.',
 };
+
 export default connector;

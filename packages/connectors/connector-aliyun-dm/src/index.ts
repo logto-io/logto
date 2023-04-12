@@ -74,7 +74,10 @@ const sendMessage =
 
         assert(
           typeof rawBody === 'string',
-          new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+          new ConnectorError(
+            ConnectorErrorCodes.InvalidResponse,
+            `Invalid response raw body type: ${typeof rawBody}`
+          )
         );
 
         errorHandler(rawBody);

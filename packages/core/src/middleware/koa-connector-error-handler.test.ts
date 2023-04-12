@@ -187,6 +187,24 @@ describe('koaConnectorErrorHandler middleware', () => {
     );
   });
 
+  it('Rate Limit Exceeded', async () => {
+    const message = 'Mock Rate Limit Exceeded';
+    const error = new ConnectorError(ConnectorErrorCodes.RateLimitExceeded, message);
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        {
+          code: 'connector.rate_limit_exceeded',
+          status: 429,
+        },
+        { message }
+      )
+    );
+  });
+
   it('General connector errors with string type messages', async () => {
     const message = 'Mock General connector errors';
     const error = new ConnectorError(ConnectorErrorCodes.General, message);

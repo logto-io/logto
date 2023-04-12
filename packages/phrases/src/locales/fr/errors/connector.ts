@@ -10,6 +10,7 @@ const connector = {
   invalid_config: "La configuration du connecteur n'est pas valide.",
   invalid_response: "La réponse du connecteur n'est pas valide.",
   template_not_found: 'Impossible de trouver le bon modèle dans la configuration du connecteur.',
+  rate_limit_exceeded: 'Limite de taux déclenchée. Veuillez réessayer plus tard.',
   not_implemented: "{{method}} : n'a pas encore été mis en œuvre.",
   social_invalid_access_token: "Le jeton d'accès du connecteur n'est pas valide.",
   invalid_auth_code: "Le code d'authentification du connecteur n'est pas valide.",

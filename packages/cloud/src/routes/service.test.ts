@@ -65,7 +65,9 @@ describe('POST /api/services/send-email', () => {
       async ({ status }) => {
         expect(status).toBe(201);
         expect(library.sendMessage).toBeCalledWith(ConnectorType.Email, mockSendMessagePayload);
-        expect(library.addLog).toBeCalledWith('tenantId', ServiceLogType.SendEmail);
+        expect(library.addLog).toBeCalledWith('tenantId', ServiceLogType.SendEmail, {
+          data: mockSendMessagePayload,
+        });
       },
       createHttpContext()
     );
@@ -125,7 +127,9 @@ describe('POST /api/services/send-sms', () => {
       async ({ status }) => {
         expect(status).toBe(201);
         expect(library.sendMessage).toBeCalledWith(ConnectorType.Sms, mockSendMessagePayload);
-        expect(library.addLog).toBeCalledWith('tenantId', ServiceLogType.SendSms);
+        expect(library.addLog).toBeCalledWith('tenantId', ServiceLogType.SendSms, {
+          data: mockSendMessagePayload,
+        });
       },
       createHttpContext()
     );

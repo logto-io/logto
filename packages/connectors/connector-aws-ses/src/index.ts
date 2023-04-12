@@ -1,6 +1,6 @@
 import { assert } from '@silverhand/essentials';
 
-import type { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
+import type { SESv2Client, SendEmailCommand, SendEmailCommandOutput } from '@aws-sdk/client-sesv2';
 import { SESv2ServiceException } from '@aws-sdk/client-sesv2';
 import type {
   CreateConnector,
@@ -42,18 +42,19 @@ const sendMessage =
     const command: SendEmailCommand = makeCommand(config, emailContent, to);
 
     try {
-      const response = await client.send(command);
+      const response: SendEmailCommandOutput = await client.send(command);
 
-      if (response.$metadata.httpStatusCode !== 200) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, { response });
-      }
+      assert(
+        response.$metadata.httpStatusCode === 200,
+        new ConnectorError(ConnectorErrorCodes.InvalidResponse, response)
+      );
 
       return response.MessageId;
     } catch (error: unknown) {
       if (error instanceof SESv2ServiceException) {
-        const { message } = error;
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, message);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, error.message);
       }
+
       throw error;
     }
   };
