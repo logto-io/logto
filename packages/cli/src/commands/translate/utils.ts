@@ -56,15 +56,14 @@ export const createFullTranslation = async ({
   verbose = true,
   queue = new PQueue({ concurrency: 5 }),
 }: TranslationOptions) => {
-  const directory = path.join(instancePath, 'packages', packageName, 'src/locales');
-  const baseLocaleFiles = await readBaseLocaleFiles(directory);
+  const localeFiles = await getBaseAndTargetLocaleFiles(instancePath, packageName, languageTag);
 
   if (verbose) {
     consoleLog.info(
       'Found ' +
-        String(baseLocaleFiles.length) +
+        String(localeFiles.length) +
         ' file' +
-        conditionalString(baseLocaleFiles.length !== 1 && 's') +
+        conditionalString(localeFiles.length !== 1 && 's') +
         ' in ' +
         packageName +
         ' to create'
@@ -73,24 +72,17 @@ export const createFullTranslation = async ({
 
   const openai = createOpenaiApi();
 
-  for (const baseLocaleFile of baseLocaleFiles) {
-    const basePath = path.relative(
-      path.join(directory, baseLanguage.toLowerCase()),
-      baseLocaleFile
-    );
-
-    const targetPath = path.join(directory, languageTag.toLowerCase(), basePath);
-
-    if (existsSync(targetPath)) {
+  for (const { baseLocaleFile, targetLocaleFile } of localeFiles) {
+    if (existsSync(targetLocaleFile)) {
       if (verbose) {
-        consoleLog.info(`Target locale file ${targetPath} exists, skipping`);
+        consoleLog.info(`Target locale file ${targetLocaleFile} exists, skipping`);
       }
 
       continue;
     }
 
     void queue.add(async () => {
-      consoleLog.info(`Creating the translation for ${targetPath}`);
+      consoleLog.info(`Creating the translation for ${targetLocaleFile}`);
       const result = await translate({
         api: openai,
         sourceFilePath: baseLocaleFile,
@@ -98,12 +90,12 @@ export const createFullTranslation = async ({
       });
 
       if (!result) {
-        consoleLog.fatal(`Unable to create the translation for ${targetPath}`);
+        consoleLog.fatal(`Unable to create the translation for ${targetLocaleFile}`);
       }
 
-      await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
-      await fs.writeFile(targetPath, result);
-      consoleLog.succeed(`The translation for ${targetPath} created`);
+      await fs.mkdir(path.parse(targetLocaleFile).dir, { recursive: true });
+      await fs.writeFile(targetLocaleFile, result);
+      consoleLog.succeed(`The translation for ${targetLocaleFile} created`);
     });
   }
 
@@ -117,15 +109,14 @@ export const syncTranslation = async ({
   verbose = true,
   queue = new PQueue({ concurrency: 5 }),
 }: TranslationOptions) => {
-  const directory = path.join(instancePath, 'packages', packageName, 'src/locales');
-  const baseLocaleFiles = await readBaseLocaleFiles(directory);
+  const localeFiles = await getBaseAndTargetLocaleFiles(instancePath, packageName, languageTag);
 
   if (verbose) {
     consoleLog.info(
       'Found ' +
-        String(baseLocaleFiles.length) +
+        String(localeFiles.length) +
         ' file' +
-        conditionalString(baseLocaleFiles.length !== 1 && 's') +
+        conditionalString(localeFiles.length !== 1 && 's') +
         ' in ' +
         packageName +
         ' to translate'
@@ -135,49 +126,66 @@ export const syncTranslation = async ({
   const openai = createOpenaiApi();
 
   /* eslint-disable no-await-in-loop */
-  for (const baseLocaleFile of baseLocaleFiles) {
-    const basePath = path.relative(
-      path.join(directory, baseLanguage.toLowerCase()),
-      baseLocaleFile
-    );
-    const targetPath = path.join(directory, languageTag.toLowerCase(), basePath);
-
-    if (!existsSync(targetPath)) {
+  for (const { targetLocaleFile } of localeFiles) {
+    if (!existsSync(targetLocaleFile)) {
       if (verbose) {
-        consoleLog.info(`Target locale file ${targetPath} does not exist, skipping`);
+        consoleLog.info(`Target locale file ${targetLocaleFile} does not exist, skipping`);
       }
 
       continue;
     }
 
-    const currentContent = await fs.readFile(targetPath, 'utf8');
+    const currentContent = await fs.readFile(targetLocaleFile, 'utf8');
 
     if (!currentContent.includes(untranslatedMark)) {
       if (verbose) {
-        consoleLog.info(`Target path ${targetPath} exists and has no untranslated mark, skipping`);
+        consoleLog.info(
+          `Target path ${targetLocaleFile} exists and has no untranslated mark, skipping`
+        );
       }
       continue;
     }
 
     void queue.add(async () => {
-      consoleLog.info(`Translating ${targetPath}`);
+      consoleLog.info(`Translating ${targetLocaleFile}`);
       const result = await translate({
         api: openai,
-        sourceFilePath: targetPath,
+        sourceFilePath: targetLocaleFile,
         targetLanguage: languageTag,
         extraPrompts: `Object values without an "${untranslatedMark}" mark should be skipped and keep its original value. Remember to remove the "${untranslatedMark}" mark with the spaces before and after it in the output content.`,
       });
 
       if (!result) {
-        consoleLog.fatal(`Unable to translate ${targetPath}`);
+        consoleLog.fatal(`Unable to translate ${targetLocaleFile}`);
       }
 
-      await fs.unlink(targetPath);
-      await fs.writeFile(targetPath, result);
-      consoleLog.succeed(`Translated ${targetPath}`);
+      await fs.unlink(targetLocaleFile);
+      await fs.writeFile(targetLocaleFile, result);
+      consoleLog.succeed(`Translated ${targetLocaleFile}`);
     });
   }
   /* eslint-enable no-await-in-loop */
 
   return queue.onIdle();
+};
+
+const getBaseAndTargetLocaleFiles = async (
+  instancePath: string,
+  packageName: string,
+  languageTag: LanguageTag
+) => {
+  const directory = path.join(instancePath, 'packages', packageName, 'src/locales');
+  const baseLocaleFiles = await readBaseLocaleFiles(directory);
+
+  return baseLocaleFiles.map((baseLocaleFile) => {
+    const basePath = path.relative(
+      path.join(directory, baseLanguage.toLowerCase()),
+      baseLocaleFile
+    );
+
+    return {
+      baseLocaleFile,
+      targetLocaleFile: path.join(directory, languageTag.toLowerCase(), basePath),
+    };
+  });
 };
