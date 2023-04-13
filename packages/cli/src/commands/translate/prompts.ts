@@ -4,13 +4,13 @@ import { conditionalString } from '@silverhand/essentials';
 type GetTranslationPromptProperties = {
   sourceFileContent: string;
   targetLanguage: LanguageTag;
-  extraPrompts?: string;
+  extraPrompt?: string;
 };
 
 export const getTranslationPrompt = ({
   sourceFileContent,
   targetLanguage,
-  extraPrompts,
+  extraPrompt,
 }: GetTranslationPromptProperties) => `Given the following code snippet:
 \`\`\`ts
 ${sourceFileContent}
@@ -43,4 +43,4 @@ const translation = {
 export default translation;
 
 \`\`\`
-${conditionalString(extraPrompts)}`;
+${conditionalString(extraPrompt)}`;

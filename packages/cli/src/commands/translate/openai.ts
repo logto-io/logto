@@ -36,14 +36,14 @@ type TranslateConfig = {
   api: Got;
   sourceFilePath: string;
   targetLanguage: LanguageTag;
-  extraPrompts?: string;
+  extraPrompt?: string;
 };
 
 export const translate = async ({
   api,
   targetLanguage,
   sourceFilePath,
-  extraPrompts,
+  extraPrompt,
 }: TranslateConfig) => {
   const sourceFileContent = await fs.readFile(sourceFilePath, 'utf8');
   const response = await trySafe(
@@ -57,7 +57,7 @@ export const translate = async ({
               content: getTranslationPrompt({
                 sourceFileContent,
                 targetLanguage,
-                extraPrompts,
+                extraPrompt,
               }),
             },
           ],

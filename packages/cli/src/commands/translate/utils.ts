@@ -152,7 +152,7 @@ export const syncTranslation = async ({
         api: openai,
         sourceFilePath: targetLocaleFile,
         targetLanguage: languageTag,
-        extraPrompts: `Object values without an "${untranslatedMark}" mark should be skipped and keep its original value. Remember to remove the "${untranslatedMark}" mark with the spaces before and after it in the output content.`,
+        extraPrompt: `Object values without an "${untranslatedMark}" mark should be skipped and keep its original value. Remember to remove the "${untranslatedMark}" mark with the spaces before and after it in the output content.`,
       });
 
       if (!result) {
