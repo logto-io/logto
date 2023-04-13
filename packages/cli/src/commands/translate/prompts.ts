@@ -15,7 +15,7 @@ export const getTranslationPrompt = ({
 \`\`\`ts
 ${sourceFileContent}
 \`\`\`
-only translate object values to ${targetLanguage}, keep all object keys original, output ts code only, and the code should be strictly consistent.
+only translate object values to ${targetLanguage}, keep all object keys original, output ts code only, and the code format should be strictly consistent.
 
 Take zh-cn as an example, if the input is:
 \`\`\`ts
