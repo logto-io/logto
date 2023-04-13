@@ -22,9 +22,9 @@ Take zh-cn as an example, if the input is:
 import others from './others.js';
 
 const translation = {
-  hello: 'hello',
-  world: 'world',
-  others
+  hello: '你好',
+  world: 'world', // UNTRANSLATED
+  others,
 };
 
 export default translation;
@@ -37,7 +37,7 @@ import others from './others.js';
 const translation = {
   hello: '你好',
   world: '世界',
-  others
+  others,
 };
 
 export default translation;
