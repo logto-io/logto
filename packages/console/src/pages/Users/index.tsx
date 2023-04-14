@@ -26,6 +26,7 @@ import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
+import SuspendedTag from './components/SuspendedTag';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
@@ -97,7 +98,7 @@ function Users() {
             dataIndex: 'name',
             colSpan: 6,
             render: (user) => {
-              const { id, name } = user;
+              const { id, name, isSuspended } = user;
 
               return (
                 <ItemPreview
@@ -106,6 +107,7 @@ function Users() {
                   icon={<UserAvatar user={user} />}
                   to={buildDetailsPathname(id)}
                   size="compact"
+                  suffix={conditional(isSuspended && <SuspendedTag />)}
                 />
               );
             },

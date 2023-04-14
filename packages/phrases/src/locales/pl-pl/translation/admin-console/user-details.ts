@@ -40,6 +40,16 @@ const user_details = {
     deletion_confirmation: 'Usuwasz istniejącą tożsamość <name/>. Czy na pewno chcesz to zrobić?',
   },
   suspended: 'Zawieszony',
+  suspend_user: 'Zawieś użytkownika',
+  suspend_user_reminder:
+    'Czy na pewno chcesz zawiesić tego użytkownika? Użytkownik nie będzie mógł się zalogować do Twojej aplikacji i nie będzie mógł uzyskać nowego tokena dostępu po wygaśnięciu obecnego. Ponadto, jakiekolwiek żądania API złożone przez tego użytkownika będą nieudane.',
+  suspend_action: 'Zawieś',
+  user_suspended: 'Użytkownik został zawieszony.',
+  reactivate_user: 'Aktywuj użytkownika',
+  reactivate_user_reminder:
+    'Czy na pewno chcesz aktywować tego użytkownika? Umożliwi to wszystkie próby logowania dla tego użytkownika.',
+  reactivate_action: 'Aktywuj',
+  user_reactivated: 'Użytkownik został aktywowany.',
   roles: {
     name_column: 'Rola',
     description_column: 'Opis',

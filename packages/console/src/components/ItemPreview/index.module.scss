@@ -12,29 +12,45 @@
   .content {
     padding-right: _.unit(4);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    // Note: add an offset to visually center the element.
+    margin-top: _.unit(-1);
 
-    .title {
-      display: block;
-      font: var(--font-body-2);
-      color: var(--color-text-link);
-      text-decoration: none;
-      @include _.text-ellipsis;
+    > div:not(:last-child) {
+      margin-right: _.unit(2);
     }
 
-    .subtitle {
-      font: var(--font-body-3);
-      color: var(--color-text-secondary);
-      @include _.text-ellipsis;
+    .meta {
+      overflow: hidden;
+
+      .title {
+        display: block;
+        font: var(--font-body-2);
+        color: var(--color-text-link);
+        text-decoration: none;
+        @include _.text-ellipsis;
+      }
+
+      .subtitle {
+        font: var(--font-body-3);
+        color: var(--color-text-secondary);
+        @include _.text-ellipsis;
+      }
     }
   }
 
   &.compact {
     .content {
-      display: flex;
-      align-items: baseline;
+      margin-top: unset;
 
-      .title {
-        margin-right: _.unit(1);
+      .meta {
+        display: flex;
+        align-items: baseline;
+
+        .title {
+          margin-right: _.unit(1);
+        }
       }
     }
   }

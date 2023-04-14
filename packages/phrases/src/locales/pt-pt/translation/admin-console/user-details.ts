@@ -4,18 +4,18 @@ const user_details = {
   created_title: 'Este utilizador foi criado com sucesso',
   created_guide: 'Pode enviar as seguintes informações de login para o utilizador',
   created_username: 'Utilizador:',
-  created_password: 'Password:',
+  created_password: 'Palavra-passe:',
   menu_delete: 'eliminar',
   delete_description:
-    'Esta ação não pode ser desfeita. Isso ira eliminar o utilizador permanentemente.',
+    'Esta ação não pode ser desfeita. Isso irá eliminar o utilizador permanentemente.',
   deleted: 'O utilizador foi eliminado com sucesso',
   reset_password: {
-    reset_password: 'Redefinir password',
-    title: 'Tem a certeza que deseja redefinir a password?',
+    reset_password: 'Redefinir palavra-passe',
+    title: 'Tem a certeza que deseja redefinir a palavra-passe?',
     content:
       'Esta ação não pode ser desfeita. Isso irá redefinir as informações de login do utilizador.',
     congratulations: 'Este utilizador foi redefinido',
-    new_password: 'Nova password:',
+    new_password: 'Nova palavra-passe:',
   },
   tab_settings: 'Definições',
   tab_roles: 'Funções',
@@ -43,6 +43,16 @@ const user_details = {
       'Está removendo a identidade <name/> existente. Tem a certeza que deseja fazer isso?',
   },
   suspended: 'suspenso',
+  suspend_user: 'Suspender utilizador',
+  suspend_user_reminder:
+    'Tem a certeza que deseja suspender este utilizador? O utilizador não conseguira entrar na sua aplicação e não será capaz de obter um novo Token de acesso após o termo do atual. Além disso, qualquer pedido API feito por este utilizador irá falhar.',
+  suspend_action: 'Suspender',
+  user_suspended: 'O utilizador foi suspenso.',
+  reactivate_user: 'Reativar utilizador',
+  reactivate_user_reminder:
+    'Tem a certeza que deseja reativar este utilizador? Isso permitirá tentativas de login para este utilizador.',
+  reactivate_action: 'Reativar',
+  user_reactivated: 'O utilizador foi reativado.',
   roles: {
     name_column: 'Função',
     description_column: 'Descrição',

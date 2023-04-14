@@ -41,6 +41,16 @@ const user_details = {
       'Você está removendo a identidade <name/> existente. Você tem certeza que deseja fazer isso?',
   },
   suspended: 'Suspenso',
+  suspend_user: 'Suspender usuário',
+  suspend_user_reminder:
+    'Tem certeza de que deseja suspender este usuário? O usuário não poderá entrar em seu aplicativo e não poderá obter um novo token de acesso após a expiração do atual. Além disso, qualquer solicitação de API feita por este usuário falhará.',
+  suspend_action: 'Suspender',
+  user_suspended: 'O usuário foi suspenso',
+  reactivate_user: 'Reativar usuário',
+  reactivate_user_reminder:
+    'Tem certeza de que deseja reativar este usuário? Fazendo isso permitirá quaisquer tentativas de login para este usuário.',
+  reactivate_action: 'Reativar',
+  user_reactivated: 'O usuário foi reativado',
   roles: {
     name_column: 'Função',
     description_column: 'Descrição',

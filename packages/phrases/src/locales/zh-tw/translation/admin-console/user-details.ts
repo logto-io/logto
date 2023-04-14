@@ -39,6 +39,15 @@ const user_details = {
     deletion_confirmation: '你在正要刪除現有的 <name /> 身份，是否確認？',
   },
   suspended: '已禁用',
+  suspend_user: '禁用用戶',
+  suspend_user_reminder:
+    '你確定要禁用這個用戶嗎？用戶將無法登錄你的應用程式，並且在當前令牌過期後將無法獲取新的訪問令牌。此外，此用戶發出的任何 API 請求都將失敗。',
+  suspend_action: '禁用',
+  user_suspended: '用戶已被禁用。',
+  reactivate_user: '啟用用戶',
+  reactivate_user_reminder: '你確定要啟用這個用戶嗎？這將允許該用戶的任何登錄嘗試。',
+  reactivate_action: '啟用',
+  user_reactivated: '用戶已被啟用。',
   roles: {
     name_column: '角色名稱',
     description_column: '描述',

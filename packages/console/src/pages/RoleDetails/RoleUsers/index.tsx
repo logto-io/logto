@@ -23,6 +23,7 @@ import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import type { RoleDetailsOutletContext } from '../types';
@@ -92,7 +93,7 @@ function RoleUsers() {
             dataIndex: 'name',
             colSpan: 5,
             render: (user) => {
-              const { id, name } = user;
+              const { id, name, isSuspended } = user;
 
               return (
                 <ItemPreview
@@ -101,6 +102,7 @@ function RoleUsers() {
                   icon={<UserAvatar user={user} />}
                   to={`/users/${id}`}
                   size="compact"
+                  suffix={conditional(isSuspended && <SuspendedTag />)}
                 />
               );
             },
