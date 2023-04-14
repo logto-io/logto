@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import { type LanguageTag } from '@logto/language-kit';
 import { conditionalString } from '@silverhand/essentials';
+import { type Got } from 'got';
 import PQueue from 'p-queue';
 
 import { consoleLog } from '../../utils.js';
@@ -81,21 +82,12 @@ export const createFullTranslation = async ({
       continue;
     }
 
-    void queue.add(async () => {
-      consoleLog.info(`Creating the translation for ${targetLocaleFile}`);
-      const result = await translate({
-        api: openai,
-        sourceFilePath: baseLocaleFile,
-        targetLanguage: languageTag,
-      });
-
-      if (!result) {
-        consoleLog.fatal(`Unable to create the translation for ${targetLocaleFile}`);
-      }
-
-      await fs.mkdir(path.parse(targetLocaleFile).dir, { recursive: true });
-      await fs.writeFile(targetLocaleFile, result);
-      consoleLog.succeed(`The translation for ${targetLocaleFile} created`);
+    void createLocaleFile({
+      api: openai,
+      baseLocaleFile,
+      targetPath: targetLocaleFile,
+      targetLanguage: languageTag,
+      queue,
     });
   }
 
@@ -126,11 +118,15 @@ export const syncTranslation = async ({
   const openai = createOpenaiApi();
 
   /* eslint-disable no-await-in-loop */
-  for (const { targetLocaleFile } of localeFiles) {
+  for (const { baseLocaleFile, targetLocaleFile } of localeFiles) {
     if (!existsSync(targetLocaleFile)) {
-      if (verbose) {
-        consoleLog.info(`Target locale file ${targetLocaleFile} does not exist, skipping`);
-      }
+      void createLocaleFile({
+        api: openai,
+        baseLocaleFile,
+        targetPath: targetLocaleFile,
+        targetLanguage: languageTag,
+        queue,
+      });
 
       continue;
     }
@@ -189,3 +185,35 @@ const getBaseAndTargetLocaleFiles = async (
     };
   });
 };
+
+type OperateLocaleFileOptions = {
+  api: Got;
+  baseLocaleFile: string;
+  targetPath: string;
+  targetLanguage: LanguageTag;
+  queue: PQueue;
+};
+
+const createLocaleFile = async ({
+  api,
+  baseLocaleFile,
+  targetPath,
+  targetLanguage,
+  queue,
+}: OperateLocaleFileOptions) =>
+  queue.add(async () => {
+    consoleLog.info(`Creating the translation for ${targetPath}`);
+    const result = await translate({
+      api,
+      sourceFilePath: baseLocaleFile,
+      targetLanguage,
+    });
+
+    if (!result) {
+      consoleLog.fatal(`Unable to create the translation for ${targetPath}`);
+    }
+
+    await fs.mkdir(path.parse(targetPath).dir, { recursive: true });
+    await fs.writeFile(targetPath, result);
+    consoleLog.succeed(`The translation for ${targetPath} created`);
+  });

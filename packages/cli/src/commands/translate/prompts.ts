@@ -1,4 +1,4 @@
-import { type LanguageTag } from '@logto/language-kit';
+import { languages, type LanguageTag } from '@logto/language-kit';
 import { conditionalString } from '@silverhand/essentials';
 
 type GetTranslationPromptProperties = {
@@ -7,6 +7,12 @@ type GetTranslationPromptProperties = {
   extraPrompt?: string;
 };
 
+/**
+ * Note:
+ * The input token limit of GPT 3.5 is 2048, the following prompt tokens with sourceFileContent is about 1200.
+ * Remember to check the token limit before adding more prompt.
+ * Tokens can be counted in https://platform.openai.com/tokenizer
+ */
 export const getTranslationPrompt = ({
   sourceFileContent,
   targetLanguage,
@@ -15,7 +21,9 @@ export const getTranslationPrompt = ({
 \`\`\`ts
 ${sourceFileContent}
 \`\`\`
-only translate object values to ${targetLanguage}, keep all object keys original, output ts code only, and the code format should be strictly consistent.
+only translate object values to ${
+  languages[targetLanguage]
+}, keep all object keys original, output ts code only, the code format should be strictly consistent, and should not contains the given code snippet.
 
 Take zh-cn as an example, if the input is:
 \`\`\`ts
