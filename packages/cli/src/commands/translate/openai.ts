@@ -1,12 +1,14 @@
 import fs from 'node:fs/promises';
 
-import { languages, type LanguageTag } from '@logto/language-kit';
+import { type LanguageTag } from '@logto/language-kit';
 import { trySafe } from '@silverhand/essentials';
 import { type Got, got, HTTPError } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import { z } from 'zod';
 
 import { consoleLog, getProxy } from '../../utils.js';
+
+import { getTranslationPrompt } from './prompts.js';
 
 export const createOpenaiApi = () => {
   const proxy = getProxy();
@@ -30,8 +32,20 @@ const gptResponseGuard = z.object({
     .array(),
 });
 
-export const translate = async (api: Got, languageTag: LanguageTag, filePath: string) => {
-  const fileContent = await fs.readFile(filePath, 'utf8');
+type TranslateConfig = {
+  api: Got;
+  sourceFilePath: string;
+  targetLanguage: LanguageTag;
+  extraPrompt?: string;
+};
+
+export const translate = async ({
+  api,
+  targetLanguage,
+  sourceFilePath,
+  extraPrompt,
+}: TranslateConfig) => {
+  const sourceFileContent = await fs.readFile(sourceFilePath, 'utf8');
   const response = await trySafe(
     api
       .post('chat/completions', {
@@ -40,14 +54,18 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
           messages: [
             {
               role: 'user',
-              content: `Given the following code snippet, only translate object values to ${languages[languageTag]}, keep all object keys original, output ts code only: \n \`\`\`ts\n${fileContent}\n\`\`\``,
+              content: getTranslationPrompt({
+                sourceFileContent,
+                targetLanguage,
+                extraPrompt,
+              }),
             },
           ],
         },
       })
       .json(),
     (error) => {
-      consoleLog.warn(`Error while translating ${filePath}:`, String(error));
+      consoleLog.warn(`Error while translating ${sourceFilePath}:`, String(error));
 
       if (error instanceof HTTPError) {
         consoleLog.warn(error.response.body);
@@ -62,7 +80,7 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
   const guarded = gptResponseGuard.safeParse(response);
 
   if (!guarded.success) {
-    consoleLog.warn(`Error while guarding response for ${filePath}:`, response);
+    consoleLog.warn(`Error while guarding response for ${sourceFilePath}:`, response);
 
     return;
   }
@@ -70,13 +88,13 @@ export const translate = async (api: Got, languageTag: LanguageTag, filePath: st
   const [entity] = guarded.data.choices;
 
   if (!entity) {
-    consoleLog.warn(`No choice found in response when translating ${filePath}`);
+    consoleLog.warn(`No choice found in response when translating ${sourceFilePath}`);
 
     return;
   }
 
   if (entity.finish_reason !== 'stop') {
-    consoleLog.warn(`Unexpected finish reason ${entity.finish_reason} for ${filePath}`);
+    consoleLog.warn(`Unexpected finish reason ${entity.finish_reason} for ${sourceFilePath}`);
   }
 
   const { content } = entity.message;

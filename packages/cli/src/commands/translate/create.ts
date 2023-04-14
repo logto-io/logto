@@ -30,7 +30,11 @@ const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': 
     if (isPhrasesBuiltInLanguageTag(languageTag)) {
       consoleLog.info(languageTag + ' is a built-in tag of phrases, updating untranslated phrases');
     }
-    await createFullTranslation({ instancePath, packageName: 'phrases', languageTag });
+    await createFullTranslation({
+      instancePath,
+      packageName: 'phrases',
+      languageTag,
+    });
 
     if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
       consoleLog.info(
