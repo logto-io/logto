@@ -233,7 +233,7 @@ function UserDetails() {
           {resetResult && (
             <UserAccountInformation
               title="user_details.reset_password.congratulations"
-              username={data.username ?? '-'}
+              user={data}
               password={resetResult}
               passwordLabel={t('user_details.reset_password.new_password')}
               onClose={() => {

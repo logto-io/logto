@@ -103,11 +103,7 @@ export const createUserLibrary = (queries: Queries) => {
     },
     excludeUserId?: string
   ) => {
-    const { username, primaryEmail, primaryPhone } = identifiers;
-
-    if (username && (await hasUser(username, excludeUserId))) {
-      throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
-    }
+    const { primaryEmail, primaryPhone, username } = identifiers;
 
     if (primaryEmail && (await hasUserWithEmail(primaryEmail, excludeUserId))) {
       throw new RequestError({ code: 'user.email_already_in_use', status: 422 });
@@ -115,6 +111,10 @@ export const createUserLibrary = (queries: Queries) => {
 
     if (primaryPhone && (await hasUserWithPhone(primaryPhone, excludeUserId))) {
       throw new RequestError({ code: 'user.phone_already_in_use', status: 422 });
+    }
+
+    if (username && (await hasUser(username, excludeUserId))) {
+      throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
     }
   };
 

@@ -15,6 +15,8 @@ const errors = {
     'Der Benutzername sollte nur Buchstaben, Zahlen oder Unterstriche enthalten und nicht mit einer Zahl beginnen.',
   password_pattern_error:
     'Das Passwort benötigt mindestens {{min}} Zeichen und enthält eine Mischung aus Buchstaben, Zahlen und Symbolen.',
+  email_pattern_error: 'Die E-Mail-Adresse ist ungültig.',
+  phone_pattern_error: 'Die Telefonnummer ist ungültig.',
   insecure_contexts: 'Unsichere Kontexte (nicht-HTTPS) werden nicht unterstützt.',
   unexpected_error: 'Ein unerwarteter Fehler ist aufgetreten',
   not_found: '404 not found',

@@ -2,7 +2,10 @@ const user_details = {
   page_title: 'Detalles de usuario',
   back_to_users: 'Volver a la gestión de usuarios',
   created_title: 'Usuario creado con éxito',
-  created_guide: 'Puede enviar al usuario la siguiente información de inicio de sesión',
+  created_guide:
+    'Aquí está la información para ayudar al usuario con su proceso de inicio de sesión.',
+  created_email: 'Dirección de correo electrónico:',
+  created_phone: 'Número de teléfono:',
   created_username: 'Nombre de usuario:',
   created_password: 'Contraseña:',
   menu_delete: 'Eliminar',

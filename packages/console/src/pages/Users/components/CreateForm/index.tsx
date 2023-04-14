@@ -1,5 +1,6 @@
-import { usernameRegEx } from '@logto/core-kit';
-import type { User } from '@logto/schemas';
+import { emailRegEx, phoneInputRegEx, usernameRegEx } from '@logto/core-kit';
+import type { CreateUser, User } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -13,13 +14,12 @@ import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { parsePhoneNumber } from '@/utils/phone';
 
+import * as styles from './index.module.scss';
 import { createInitialPassword } from './utils';
 
-type FormData = {
-  username: string;
-  name: string;
-};
+type FormData = Pick<CreateUser, 'name' | 'username' | 'primaryEmail' | 'primaryPhone'>;
 
 type CreatedUserInfo = {
   user: User;
@@ -36,23 +36,60 @@ function CreateForm({ onClose, onCreate }: Props) {
   const { search } = useLocation();
   const navigate = useNavigate();
   const [createdUserInfo, setCreatedUserInfo] = useState<CreatedUserInfo>();
+  const [missingIdentifierError, setMissingIdentifierError] = useState<string>();
 
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting, errors, submitCount },
+    getValues,
   } = useForm<FormData>();
 
   const api = useApi();
+
+  const hasIdentifier = () => {
+    const { username, primaryEmail, primaryPhone } = getValues();
+    return Boolean(username) || Boolean(primaryEmail) || Boolean(primaryPhone);
+  };
+
+  const revalidateForm = () => {
+    if (submitCount) {
+      if (hasIdentifier()) {
+        setMissingIdentifierError(undefined);
+      } else {
+        setMissingIdentifierError(t('users.error_missing_identifier'));
+      }
+    }
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     if (isSubmitting) {
       return;
     }
 
+    setMissingIdentifierError(undefined);
+
+    if (!hasIdentifier()) {
+      setMissingIdentifierError(t('users.error_missing_identifier'));
+      return;
+    }
+
     const password = createInitialPassword();
 
-    const createdUser = await api.post('api/users', { json: { ...data, password } }).json<User>();
+    const { primaryPhone } = data;
+
+    const userData = {
+      ...data,
+      password,
+      ...conditional(primaryPhone && { primaryPhone: parsePhoneNumber(primaryPhone) }),
+    };
+
+    // Filter out empty values
+    const payload = Object.fromEntries(
+      Object.entries(userData).filter(([, value]) => Boolean(value))
+    );
+
+    const createdUser = await api.post('api/users', { json: payload }).json<User>();
 
     setCreatedUserInfo({
       user: createdUser,
@@ -65,7 +102,7 @@ function CreateForm({ onClose, onCreate }: Props) {
   return createdUserInfo ? (
     <UserAccountInformation
       title="user_details.created_title"
-      username={createdUserInfo.user.username ?? '-'}
+      user={createdUserInfo.user}
       password={createdUserInfo.password}
       confirmButtonTitle="users.check_user_detail"
       onClose={() => {
@@ -85,6 +122,7 @@ function CreateForm({ onClose, onCreate }: Props) {
     >
       <ModalLayout
         title="users.create"
+        subtitle="users.create_subtitle"
         footer={
           <Button
             disabled={isSubmitting}
@@ -98,24 +136,53 @@ function CreateForm({ onClose, onCreate }: Props) {
         onClose={onClose}
       >
         <form>
-          <FormField isRequired title="users.create_form_username">
+          <FormField title="user_details.field_email">
             <TextInput
-              // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
+              {...register('primaryEmail', {
+                pattern: {
+                  value: emailRegEx,
+                  message: t('errors.email_pattern_error'),
+                },
+                onChange: () => {
+                  revalidateForm();
+                },
+              })}
+              placeholder={t('users.placeholder_email')}
+              error={errors.primaryEmail?.message ?? Boolean(missingIdentifierError)}
+            />
+          </FormField>
+          <FormField title="user_details.field_phone">
+            <TextInput
+              {...register('primaryPhone', {
+                pattern: {
+                  value: phoneInputRegEx,
+                  message: t('errors.phone_pattern_error'),
+                },
+                onChange: () => {
+                  revalidateForm();
+                },
+              })}
+              placeholder={t('users.placeholder_phone')}
+              error={errors.primaryPhone?.message ?? Boolean(missingIdentifierError)}
+            />
+          </FormField>
+          <FormField title="user_details.field_username">
+            <TextInput
               {...register('username', {
-                required: true,
                 pattern: {
                   value: usernameRegEx,
                   message: t('errors.username_pattern_error'),
                 },
+                onChange: () => {
+                  revalidateForm();
+                },
               })}
-              error={errors.username?.message}
+              placeholder={t('users.placeholder_username')}
+              error={errors.username?.message ?? Boolean(missingIdentifierError)}
             />
           </FormField>
-          <FormField title="users.create_form_name">
-            <TextInput {...register('name')} error={errors.name?.message} />
-          </FormField>
         </form>
+        {missingIdentifierError && <div className={styles.error}>{missingIdentifierError}</div>}
       </ModalLayout>
     </Modal>
   );

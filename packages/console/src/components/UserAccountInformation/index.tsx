@@ -1,4 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { type User } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +15,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  username: string;
+  user: User;
   password: string;
   title: AdminConsoleKey;
   onClose: () => void;
@@ -23,7 +25,7 @@ type Props = {
 };
 
 function UserAccountInformation({
-  username,
+  user,
   password,
   title,
   onClose,
@@ -33,16 +35,21 @@ function UserAccountInformation({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { primaryEmail, primaryPhone, username } = user;
 
   const handleCopy = async () => {
     if (!password) {
       return null;
     }
-    await navigator.clipboard.writeText(
-      `${t('user_details.created_username')} ${username}\n${
-        passwordLabel ?? t('user_details.created_password')
-      } ${password}`
-    );
+
+    const content = conditionalArray(
+      primaryEmail && `${t('user_details.created_email')} ${primaryEmail}`,
+      primaryPhone && `${t('user_details.created_phone')} ${primaryPhone}`,
+      username && `${t('user_details.created_username')} ${username}`,
+      `${passwordLabel ?? t('user_details.created_password')} ${password}`
+    ).join('\n');
+
+    await navigator.clipboard.writeText(content);
     toast.success(t('general.copied'));
   };
 
@@ -71,10 +78,24 @@ function UserAccountInformation({
       >
         <div>{t('user_details.created_guide')}</div>
         <div className={styles.info}>
-          <div className={styles.infoLine}>
-            <div>{t('user_details.created_username')}</div>
-            <div className={styles.infoContent}>{username}</div>
-          </div>
+          {username && (
+            <div className={styles.infoLine}>
+              <div>{t('user_details.created_username')}</div>
+              <div className={styles.infoContent}>{username}</div>
+            </div>
+          )}
+          {primaryEmail && (
+            <div className={styles.infoLine}>
+              <div>{t('user_details.created_email')}</div>
+              <div className={styles.infoContent}>{primaryEmail}</div>
+            </div>
+          )}
+          {primaryPhone && (
+            <div className={styles.infoLine}>
+              <div>{t('user_details.created_phone')}</div>
+              <div className={styles.infoContent}>{primaryPhone}</div>
+            </div>
+          )}
           <div className={styles.infoLine}>
             <div>{passwordLabel ?? t('user_details.created_password')}</div>
             <div className={styles.infoContent}>
