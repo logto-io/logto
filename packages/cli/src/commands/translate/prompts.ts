@@ -28,7 +28,6 @@ const translation = {
 };
 
 export default translation;
-
 \`\`\`
 the output should be:
 \`\`\`ts
@@ -41,6 +40,5 @@ const translation = {
 };
 
 export default translation;
-
 \`\`\`
 ${conditionalString(extraPrompt)}`;
