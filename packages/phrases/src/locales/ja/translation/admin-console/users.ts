@@ -4,7 +4,7 @@ const users = {
   subtitle:
     'ユーザーのアイデンティティを管理する、ユーザーの作成、情報の編集、ユーザーログの表示、パスワードのリセットおよびユーザーの削除を含む',
   create: 'ユーザーを追加する',
-  create_subtitle: 'ユーザーを作成するには、少なくとも1つの識別子を入力する必要があります',
+  create_subtitle: '少なくとも1つの以下のフィールドを提供してください。',
   error_missing_identifier:
     'ユーザーを作成するには、少なくとも1つの識別子を指定する必要があります。',
   user_name: 'ユーザー名',
@@ -14,7 +14,7 @@ const users = {
   create_form_password: 'パスワード',
   create_form_name: 'フルネーム',
   placeholder_email: 'youremail@domain.com',
-  placeholder_username: 'Your username',
+  placeholder_username: 'あなたのユーザー名',
   placeholder_phone: '+1 555-123-4567',
   unnamed: '名前がありません',
   search: '名前、メール、電話、またはユーザー名で検索',
