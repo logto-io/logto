@@ -43,7 +43,6 @@ function CreateForm({ onClose, onCreate }: Props) {
     register,
     formState: { isSubmitting, errors, submitCount },
     getValues,
-    trigger,
   } = useForm<FormData>();
 
   const api = useApi();
@@ -148,6 +147,7 @@ function CreateForm({ onClose, onCreate }: Props) {
                   revalidateForm();
                 },
               })}
+              placeholder={t('users.placeholder_email')}
               error={errors.primaryEmail?.message ?? Boolean(missingIdentifierError)}
             />
           </FormField>
@@ -162,6 +162,7 @@ function CreateForm({ onClose, onCreate }: Props) {
                   revalidateForm();
                 },
               })}
+              placeholder={t('users.placeholder_phone')}
               error={errors.primaryPhone?.message ?? Boolean(missingIdentifierError)}
             />
           </FormField>
@@ -176,6 +177,7 @@ function CreateForm({ onClose, onCreate }: Props) {
                   revalidateForm();
                 },
               })}
+              placeholder={t('users.placeholder_username')}
               error={errors.username?.message ?? Boolean(missingIdentifierError)}
             />
           </FormField>
