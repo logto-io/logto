@@ -260,6 +260,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       response: object({ hasPassword: boolean() }),
+      status: [200],
     }),
     async (ctx, next) => {
       const { userId } = ctx.guard.params;
