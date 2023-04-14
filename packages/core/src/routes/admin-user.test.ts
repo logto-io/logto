@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
 import { userInfoSelectFields } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -375,6 +376,19 @@ describe('adminUserRoutes', () => {
     expect(verifyUserPassword).toHaveBeenCalledWith(mockUser, password);
   });
 
+  it('GET /users/:userId/has-password should return true if user has password', async () => {
+    const response = await userRequest.get(`/users/foo/has-password`);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ hasPassword: true });
+  });
+
+  it('GET /users/:userId/has-password should return false if user does not have password', async () => {
+    findUserById.mockImplementationOnce(async () => ({ ...mockUser, passwordEncrypted: null }));
+    const response = await userRequest.get(`/users/foo/has-password`);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({ hasPassword: false });
+  });
+
   it('PATCH /users/:userId/is-suspended', async () => {
     const mockedUserId = 'foo';
     const response = await userRequest
@@ -460,3 +474,4 @@ describe('adminUserRoutes', () => {
     expect(deleteUserIdentity).toHaveBeenCalledWith(arbitraryUserId, arbitraryTarget);
   });
 });
+/* eslint-enable max-lines */

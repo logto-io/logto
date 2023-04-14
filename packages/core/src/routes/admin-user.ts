@@ -255,6 +255,25 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     }
   );
 
+  router.get(
+    '/users/:userId/has-password',
+    koaGuard({
+      params: object({ userId: string() }),
+      response: object({ hasPassword: boolean() }),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { userId } = ctx.guard.params;
+      const user = await findUserById(userId);
+
+      ctx.body = {
+        hasPassword: Boolean(user.passwordEncrypted),
+      };
+
+      return next();
+    }
+  );
+
   router.patch(
     '/users/:userId/is-suspended',
     koaGuard({
