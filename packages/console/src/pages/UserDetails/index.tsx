@@ -26,6 +26,7 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { getUserPrimaryIdentity, getUserSecondaryIdentity } from '@/utils/user';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
 import SuspendedTag from '../Users/components/SuspendedTag';
@@ -52,6 +53,8 @@ function UserDetails() {
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
+
+  const secondaryIdentity = data && getUserSecondaryIdentity(data);
 
   useEffect(() => {
     setIsDeleteFormOpen(false);
@@ -111,12 +114,14 @@ function UserDetails() {
           <Card className={styles.header}>
             <UserAvatar user={data} size="xlarge" />
             <div className={styles.metadata}>
-              <div className={styles.name}>{data.name ?? '-'}</div>
+              <div className={styles.primaryIdentity}>
+                {getUserPrimaryIdentity(data) ?? t('users.unnamed')}
+              </div>
               <div>
                 {isSuspendedUser && <SuspendedTag />}
-                {data.username && (
+                {secondaryIdentity && (
                   <>
-                    <div className={styles.username}>{data.username}</div>
+                    <div className={styles.secondaryIdentity}>{secondaryIdentity}</div>
                     <div className={styles.verticalBar} />
                   </>
                 )}

@@ -24,6 +24,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
+import { getUserPrimaryIdentity, getUserSecondaryIdentity } from '@/utils/user';
 
 import CreateForm from './components/CreateForm';
 import SuspendedTag from './components/SuspendedTag';
@@ -98,15 +99,14 @@ function Users() {
             dataIndex: 'name',
             colSpan: 6,
             render: (user) => {
-              const { id, name, isSuspended } = user;
+              const { id, isSuspended } = user;
 
               return (
                 <ItemPreview
-                  title={name ?? t('users.unnamed')}
-                  subtitle={id}
-                  icon={<UserAvatar user={user} />}
+                  title={getUserPrimaryIdentity(user) ?? t('users.unnamed')}
+                  subtitle={getUserSecondaryIdentity(user)}
+                  icon={<UserAvatar size="large" user={user} />}
                   to={buildDetailsPathname(id)}
-                  size="compact"
                   suffix={conditional(isSuspended && <SuspendedTag />)}
                 />
               );

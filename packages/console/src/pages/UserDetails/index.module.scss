@@ -26,7 +26,7 @@
       }
     }
 
-    .name {
+    .primaryIdentity {
       font: var(--font-title-1);
       color: var(--color-text);
     }
@@ -39,7 +39,7 @@
       border-radius: 10px;
     }
 
-    .username {
+    .secondaryIdentity {
       color: var(--color-text-secondary);
       font: var(--font-label-2);
     }

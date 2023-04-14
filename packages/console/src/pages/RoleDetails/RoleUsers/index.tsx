@@ -25,6 +25,7 @@ import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
+import { getUserPrimaryIdentity, getUserSecondaryIdentity } from '@/utils/user';
 
 import type { RoleDetailsOutletContext } from '../types';
 
@@ -93,15 +94,14 @@ function RoleUsers() {
             dataIndex: 'name',
             colSpan: 5,
             render: (user) => {
-              const { id, name, isSuspended } = user;
+              const { id, isSuspended } = user;
 
               return (
                 <ItemPreview
-                  title={name ?? t('users.unnamed')}
-                  subtitle={id}
-                  icon={<UserAvatar user={user} />}
+                  title={getUserPrimaryIdentity(user) ?? t('users.unnamed')}
+                  subtitle={getUserSecondaryIdentity(user)}
+                  icon={<UserAvatar size="large" user={user} />}
                   to={`/users/${id}`}
-                  size="compact"
                   suffix={conditional(isSuspended && <SuspendedTag />)}
                 />
               );

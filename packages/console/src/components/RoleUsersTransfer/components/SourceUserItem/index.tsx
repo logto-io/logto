@@ -5,6 +5,7 @@ import Checkbox from '@/components/Checkbox';
 import UserAvatar from '@/components/UserAvatar';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { onKeyDownHandler } from '@/utils/a11y';
+import { getUserPrimaryIdentity } from '@/utils/user';
 
 import * as styles from './index.module.scss';
 
@@ -36,7 +37,7 @@ function SourceUserItem({ user, isSelected, onSelect }: Props) {
         }}
       />
       <UserAvatar user={user} size="micro" />
-      <div className={styles.name}>{user.name ?? t('users.unnamed')}</div>
+      <div className={styles.identity}>{getUserPrimaryIdentity(user) ?? t('users.unnamed')}</div>
       {user.isSuspended && <SuspendedTag className={styles.suspended} />}
     </div>
   );
