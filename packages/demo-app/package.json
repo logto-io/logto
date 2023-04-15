@@ -5,7 +5,9 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "private": true,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "precommit": "lint-staged",
     "start": "parcel src/index.html",

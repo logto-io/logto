@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- ae6a54993: add it translation
+- 206fba2b5: add pl-PL translation
+
 ## 1.1.0
 
 ### Minor Changes

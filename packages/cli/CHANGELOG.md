@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- 3c84d81ff: add `logto connector link` command to link local connectors without downloading from the remote
+- 736d6d212: `logto translate sync` to create missing files or translate untranslated phrases across all existing languages
+
+### Patch Changes
+
+- 91906f0eb: use current directory as instance path if no path input for cli
+- Updated dependencies [ae6a54993]
+- Updated dependencies [206fba2b5]
+- Updated dependencies [457cb2822]
+- Updated dependencies [4945b0be2]
+- Updated dependencies [c5eb3a2ba]
+- Updated dependencies [5553425fc]
+- Updated dependencies [30033421c]
+  - @logto/phrases@1.2.0
+  - @logto/phrases-ui@1.2.0
+  - @logto/schemas@1.2.0
+  - @logto/shared@2.0.0
+  - @logto/core-kit@2.0.0
+  - @logto/connector-kit@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes
