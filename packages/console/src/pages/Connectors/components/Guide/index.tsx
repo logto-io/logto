@@ -125,9 +125,7 @@ function Guide({ connector, onClose }: Props) {
         })
         .json<ConnectorResponse>();
 
-      await updateConfigs({
-        ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
-      });
+      await updateConfigs({ passwordlessConfigured: true });
 
       onClose();
       toast.success(t('general.saved'));
