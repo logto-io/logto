@@ -35,12 +35,6 @@ jobs:
           git config --global user.email bot@silverhand.io
           git config --global user.name silverhand-bot
 
-      - name: Version packages
-        run: |
-          node .scripts/version.js
-          pnpm i --no-frozen-lockfile
-          git status
-
       - name: Create pull request
         if: github.event_name == 'push'
         uses: changesets/action@v1
