@@ -13,5 +13,5 @@
   "//": "END OF CAUTION",
   "access": "restricted",
   "baseBranch": "master",
-  "updateInternalDependencies": "patch"
+  "updateInternalDependencies": "minor"
 }
