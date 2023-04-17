@@ -21,7 +21,7 @@ function TargetUserItem({ user, onDelete }: Props) {
     <div className={styles.item}>
       <div className={styles.meta}>
         <UserAvatar user={user} size="micro" />
-        <div className={styles.identity}>{getUserTitle(user) ?? t('users.unnamed')}</div>
+        <div className={styles.title}>{getUserTitle(user) ?? t('users.unnamed')}</div>
         {user.isSuspended && <SuspendedTag className={styles.suspended} />}
       </div>
       <IconButton
