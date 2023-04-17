@@ -13,6 +13,7 @@ mockEsm('redis', () => ({
     set: mockFunction,
     get: mockFunction,
     del: mockFunction,
+    ping: async () => 'PONG',
     connect: mockFunction,
     disconnect: mockFunction,
     on: mockFunction,
