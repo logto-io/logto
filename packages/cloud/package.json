@@ -23,12 +23,12 @@
     "test:ci": "pnpm test:only --coverage --silent"
   },
   "dependencies": {
-    "@logto/app-insights": "workspace:^",
-    "@logto/cli": "workspace:^",
-    "@logto/connector-kit": "workspace:^",
-    "@logto/core-kit": "workspace:^",
-    "@logto/schemas": "workspace:^",
-    "@logto/shared": "workspace:^",
+    "@logto/app-insights": "workspace:^1.0.0",
+    "@logto/cli": "workspace:^1.1.0",
+    "@logto/connector-kit": "workspace:^1.1.0",
+    "@logto/core-kit": "workspace:^1.1.0",
+    "@logto/schemas": "workspace:^1.1.0",
+    "@logto/shared": "workspace:^1.0.0",
     "@silverhand/essentials": "^2.5.0",
     "@withtyped/postgres": "^0.9.0",
     "@withtyped/server": "^0.9.0",

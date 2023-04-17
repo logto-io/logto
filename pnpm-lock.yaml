@@ -5,7 +5,7 @@ importers:
   .:
     dependencies:
       '@logto/cli':
-        specifier: ^1.0.0-beta.10
+        specifier: workspace:^1.1.0
         version: link:packages/cli
     devDependencies:
       '@changesets/cli':
@@ -85,25 +85,25 @@ importers:
   packages/cli:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/phrases-ui':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -218,22 +218,22 @@ importers:
   packages/cloud:
     dependencies:
       '@logto/app-insights':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../cli
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -324,7 +324,7 @@ importers:
   packages/connectors/connector-alipay-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -412,7 +412,7 @@ importers:
   packages/connectors/connector-alipay-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -500,7 +500,7 @@ importers:
   packages/connectors/connector-aliyun-dm:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -579,7 +579,7 @@ importers:
   packages/connectors/connector-aliyun-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -658,10 +658,10 @@ importers:
   packages/connectors/connector-apple:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -749,7 +749,7 @@ importers:
         specifier: ^3.226.0
         version: 3.226.0
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -831,7 +831,7 @@ importers:
         specifier: ^1.12.0
         version: 1.12.0
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -910,7 +910,7 @@ importers:
   packages/connectors/connector-discord:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -989,7 +989,7 @@ importers:
   packages/connectors/connector-facebook:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1068,7 +1068,7 @@ importers:
   packages/connectors/connector-feishu-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1147,7 +1147,7 @@ importers:
   packages/connectors/connector-github:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1229,7 +1229,7 @@ importers:
   packages/connectors/connector-google:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1308,7 +1308,7 @@ importers:
   packages/connectors/connector-kakao:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1387,7 +1387,7 @@ importers:
   packages/connectors/connector-logto-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1466,7 +1466,7 @@ importers:
   packages/connectors/connector-logto-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1545,7 +1545,7 @@ importers:
   packages/connectors/connector-logto-social-demo:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1624,7 +1624,7 @@ importers:
   packages/connectors/connector-mock-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1703,7 +1703,7 @@ importers:
   packages/connectors/connector-mock-email-alternative:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1782,7 +1782,7 @@ importers:
   packages/connectors/connector-mock-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1861,7 +1861,7 @@ importers:
   packages/connectors/connector-mock-social:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -1940,7 +1940,7 @@ importers:
   packages/connectors/connector-naver:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2019,7 +2019,7 @@ importers:
   packages/connectors/connector-oauth2:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2101,10 +2101,10 @@ importers:
   packages/connectors/connector-oidc:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2189,7 +2189,7 @@ importers:
   packages/connectors/connector-saml:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2274,7 +2274,7 @@ importers:
   packages/connectors/connector-sendgrid-email:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2353,7 +2353,7 @@ importers:
   packages/connectors/connector-smtp:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2438,7 +2438,7 @@ importers:
   packages/connectors/connector-tencent-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2517,7 +2517,7 @@ importers:
   packages/connectors/connector-twilio-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2596,7 +2596,7 @@ importers:
   packages/connectors/connector-wechat-native:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2675,7 +2675,7 @@ importers:
   packages/connectors/connector-wechat-web:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -2757,31 +2757,31 @@ importers:
         specifier: ^4.5.7
         version: 4.5.7
       '@logto/app-insights':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../app-insights
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/phrases-ui':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases-ui
       '@logto/react':
         specifier: 1.1.1
         version: 1.1.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../shared
       '@mdx-js/react':
         specifier: ^1.6.22
@@ -3012,37 +3012,37 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@logto/app-insights':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../cli
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/console':
         specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/demo-app':
         specifier: workspace:*
         version: link:../demo-app
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/phrases-ui':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../shared
       '@logto/ui':
         specifier: workspace:*
@@ -3268,25 +3268,25 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../cli
 
   packages/demo-app:
     devDependencies:
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/react':
         specifier: 1.1.1
         version: 1.1.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@parcel/core':
         specifier: 2.8.3
@@ -3364,7 +3364,7 @@ importers:
         specifier: ^29.1.2
         version: 29.1.2
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/js':
         specifier: 1.1.0
@@ -3373,7 +3373,7 @@ importers:
         specifier: 1.1.1
         version: 1.1.1
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@peculiar/webcrypto':
         specifier: ^1.3.3
@@ -3439,7 +3439,7 @@ importers:
   packages/phrases:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -3470,7 +3470,7 @@ importers:
   packages/phrases-ui:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -3504,22 +3504,22 @@ importers:
   packages/schemas:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/phrases-ui':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases-ui
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.9.0
@@ -3602,7 +3602,7 @@ importers:
         version: 30.1.2
     devDependencies:
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@silverhand/eslint-config':
         specifier: 3.0.1
@@ -3635,7 +3635,7 @@ importers:
   packages/toolkit/connector-kit:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../language-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
@@ -3673,10 +3673,10 @@ importers:
   packages/toolkit/core-kit:
     dependencies:
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../language-kit
       '@logto/shared':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../../shared
       color:
         specifier: ^4.2.3
@@ -3781,25 +3781,25 @@ importers:
   packages/ui:
     devDependencies:
       '@logto/app-insights':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../app-insights
       '@logto/connector-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
-        specifier: workspace:^
+        specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases
       '@logto/phrases-ui':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^
+        specifier: workspace:^1.1.0
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.8.3

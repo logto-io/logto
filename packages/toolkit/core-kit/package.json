@@ -39,8 +39,8 @@
     "node": "^18.12.0"
   },
   "dependencies": {
-    "@logto/language-kit": "workspace:^",
-    "@logto/shared": "workspace:^",
+    "@logto/language-kit": "workspace:^1.0.0",
+    "@logto/shared": "workspace:^1.0.0",
     "color": "^4.2.3"
   },
   "optionalDependencies": {

@@ -4,7 +4,7 @@
   "description": "Kakao connector implementation.",
   "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^"
+    "@logto/connector-kit": "workspace:^1.1.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
