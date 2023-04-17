@@ -43,12 +43,11 @@ jobs:
 
       - name: Create pull request
         if: github.event_name == 'push'
-        uses: peter-evans/create-pull-request@v5
+        uses: changesets/action@v1
         with:
-          token: ${{ secrets.BOT_PAT }}
-          commit-message: 'release: version packages'
-          committer: silverhand-bot <bot@silverhand.io>
-          author: silverhand-bot <bot@silverhand.io>
-          base: master
-          branch: release/version-packages
+          version: node .scripts/version.js && pnpm i --no-frozen-lockfile && git status
+          setupGitUser: false
+          commit: 'release: version packages'
           title: 'release: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
