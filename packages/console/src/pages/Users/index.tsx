@@ -24,7 +24,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
-import { getUserPrimaryIdentity, getUserSecondaryIdentity } from '@/utils/user';
+import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import CreateForm from './components/CreateForm';
 import SuspendedTag from './components/SuspendedTag';
@@ -103,8 +103,8 @@ function Users() {
 
               return (
                 <ItemPreview
-                  title={getUserPrimaryIdentity(user) ?? t('users.unnamed')}
-                  subtitle={getUserSecondaryIdentity(user)}
+                  title={getUserTitle(user) ?? t('users.unnamed')}
+                  subtitle={getUserSubtitle(user)}
                   icon={<UserAvatar size="large" user={user} />}
                   to={buildDetailsPathname(id)}
                   suffix={conditional(isSuspended && <SuspendedTag />)}

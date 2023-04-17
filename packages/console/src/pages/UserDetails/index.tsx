@@ -26,7 +26,7 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { getUserPrimaryIdentity, getUserSecondaryIdentity } from '@/utils/user';
+import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
 import SuspendedTag from '../Users/components/SuspendedTag';
@@ -54,7 +54,7 @@ function UserDetails() {
   const api = useApi();
   const navigate = useNavigate();
 
-  const secondaryIdentity = data && getUserSecondaryIdentity(data);
+  const userSubtitle = data && getUserSubtitle(data);
 
   useEffect(() => {
     setIsDeleteFormOpen(false);
@@ -114,14 +114,12 @@ function UserDetails() {
           <Card className={styles.header}>
             <UserAvatar user={data} size="xlarge" />
             <div className={styles.metadata}>
-              <div className={styles.primaryIdentity}>
-                {getUserPrimaryIdentity(data) ?? t('users.unnamed')}
-              </div>
+              <div className={styles.title}>{getUserTitle(data) ?? t('users.unnamed')}</div>
               <div>
                 {isSuspendedUser && <SuspendedTag />}
-                {secondaryIdentity && (
+                {userSubtitle && (
                   <>
-                    <div className={styles.secondaryIdentity}>{secondaryIdentity}</div>
+                    <div className={styles.subtitle}>{userSubtitle}</div>
                     <div className={styles.verticalBar} />
                   </>
                 )}
