@@ -39,7 +39,7 @@ jobs:
         if: github.event_name == 'push'
         uses: changesets/action@v1
         with:
-          version: node .scripts/version.js && pnpm i --no-frozen-lockfile && git status
+          version: node .scripts/version.js
           setupGitUser: false
           commit: 'release: version packages'
           title: 'release: version packages'

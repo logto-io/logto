@@ -21,3 +21,9 @@ await execAsync(`pnpm -r version`).catch(catchCmdError);
 // Sanity check for prepublish scripts
 await execAsync(`pnpm -r prepack`).catch(catchCmdError);
 await execAsync(`pnpm -r prepublishOnly`).catch(catchCmdError);
+
+// Update lockfile
+await execAsync(`pnpm i --no-frozen-lockfile`).catch(catchCmdError);
+
+// Show Git changes
+await execAsync(`git status`).catch(catchCmdError);
