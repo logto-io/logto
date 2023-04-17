@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Aliyun SMS connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^"
+    "@logto/connector-kit": "workspace:^1.1.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

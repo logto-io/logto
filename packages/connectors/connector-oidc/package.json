@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "OIDC standard connector implementation.",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^",
-    "@logto/shared": "workspace:^",
+    "@logto/connector-kit": "workspace:^1.1.0",
+    "@logto/shared": "workspace:^1.0.0",
     "jose": "^4.3.8",
     "nanoid": "^4.0.0"
   },

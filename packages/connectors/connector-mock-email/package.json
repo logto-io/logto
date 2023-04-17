@@ -4,7 +4,7 @@
   "description": "Mock Email Service connector implementation for integration tests only.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^"
+    "@logto/connector-kit": "workspace:^1.1.0"
   },
   "scripts": {
     "precommit": "lint-staged",

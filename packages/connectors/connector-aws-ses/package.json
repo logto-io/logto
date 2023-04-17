@@ -4,7 +4,7 @@
   "description": "Logto Connector for Amazon SES",
   "author": "Jeff <admin@breadth.app>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^",
+    "@logto/connector-kit": "workspace:^1.1.0",
     "@aws-sdk/client-sesv2": "^3.224.0",
     "@aws-sdk/types": "^3.226.0"
   },

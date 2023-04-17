@@ -53,6 +53,6 @@
     }
   },
   "dependencies": {
-    "@logto/cli": "^1.0.0-beta.10"
+    "@logto/cli": "workspace:^1.1.0"
   }
 }

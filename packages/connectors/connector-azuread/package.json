@@ -4,7 +4,7 @@
   "description": "Microsoft Azure AD connector implementation.",
   "author": "Mobilist Inc. <info@mobilist.com.tr>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^",
+    "@logto/connector-kit": "workspace:^1.1.0",
     "@azure/msal-node": "^1.12.0"
   },
   "main": "./lib/index.js",
