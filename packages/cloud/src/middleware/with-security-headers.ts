@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
+import { conditionalArray } from '@silverhand/essentials';
 import type { NextFunction, HttpContext, RequestContext } from '@withtyped/server';
 import helmet, { type HelmetOptions } from 'helmet';
 
@@ -34,7 +35,8 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
   const adminOrigins = adminUrlSet.origins;
   const cloudOrigins = cloudUrlSet.origins;
   const urlSetOrigins = urlSet.origins;
-  const developmentOrigins = isProduction ? [] : ['ws:'];
+  const developmentOrigins = conditionalArray(!isProduction && 'ws:');
+  const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
 
   return async (
     context: InputContext,
@@ -96,6 +98,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
               ...cloudOrigins,
               ...urlSetOrigins,
               ...developmentOrigins,
+              ...appInsightsOrigins,
             ],
             frameSrc: ["'self'", ...urlSetOrigins],
           },
