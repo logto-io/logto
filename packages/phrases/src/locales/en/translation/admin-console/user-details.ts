@@ -23,8 +23,8 @@ const user_details = {
   settings: 'Settings',
   settings_description:
     'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
-  field_email: 'Primary email',
-  field_phone: 'Primary phone',
+  field_email: 'Email address',
+  field_phone: 'Phone number',
   field_username: 'Username',
   field_name: 'Name',
   field_avatar: 'Avatar image URL',

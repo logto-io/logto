@@ -23,8 +23,8 @@ const user_details = {
   settings: '설정',
   settings_description:
     '각 사용자는 모든 사용자 정보를 포함하는 프로파일을 가지고 있어요. 프로파일은 기본 데이터, 소셜 ID, 사용자 정의 데이터로 구성되어 있어요.',
-  field_email: '메인 이메일',
-  field_phone: '메인 휴대전화번호',
+  field_email: '이메일 주소',
+  field_phone: '휴대전화 번호',
   field_username: '사용자 이름',
   field_name: '이름',
   field_avatar: '아바타 이미지 URL',

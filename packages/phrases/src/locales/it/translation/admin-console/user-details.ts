@@ -25,8 +25,8 @@ const user_details = {
   settings: 'Impostazioni',
   settings_description:
     "Ogni utente ha un profilo contenente tutte le informazioni dell'utente. È composto da dati di base, identità sociali e dati personalizzati.",
-  field_email: 'Email principale',
-  field_phone: 'Telefono principale',
+  field_email: 'Indirizzo email',
+  field_phone: 'Numero di telefono',
   field_username: 'Nome utente',
   field_name: 'Nome',
   field_avatar: "URL dell'immagine dell'avatar",

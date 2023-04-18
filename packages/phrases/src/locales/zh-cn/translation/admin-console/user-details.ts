@@ -23,8 +23,8 @@ const user_details = {
   settings: '设置',
   settings_description:
     '每个用户都有一个包含所有用户信息的个人资料。它由基本数据、社交身份和自定义数据组成。',
-  field_email: '主要邮箱',
-  field_phone: '主要手机号码',
+  field_email: '邮箱地址',
+  field_phone: '手机号码',
   field_username: '用户名',
   field_name: '姓名',
   field_avatar: '头像图片链接',

@@ -23,8 +23,8 @@ const user_details = {
   settings: '設定',
   settings_description:
     '每個用戶都有一個包含所有用戶資訊的個人資料。它由基本數據、社交身份和自定義數據組成。',
-  field_email: '主要郵箱',
-  field_phone: '主要手機號碼',
+  field_email: '電子郵箱',
+  field_phone: '手機號碼',
   field_username: '用戶名',
   field_name: '姓名',
   field_avatar: '頭像圖片連結',
