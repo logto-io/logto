@@ -94,7 +94,8 @@ function PermissionsTable({
   const deleteColumn: Column<ScopeResponse> = {
     title: null,
     dataIndex: 'delete',
-    colSpan: 1,
+    colSpan: 2,
+    className: styles.deleteColumn,
     render: (scope) =>
       /**
        * When the table is read-only, hide the delete button rather than the whole column to keep the table column spaces.
@@ -143,6 +144,7 @@ function PermissionsTable({
           {!isReadOnly && (
             <Button
               title={createButtonTitle}
+              className={styles.createButton}
               type="primary"
               size="large"
               icon={<Plus />}
