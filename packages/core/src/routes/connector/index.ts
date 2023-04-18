@@ -1,15 +1,6 @@
-/* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
-import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
-import {
-  type SmsConnector,
-  type EmailConnector,
-  demoConnectorIds,
-  VerificationCodeType,
-  validateConfig,
-} from '@logto/connector-kit';
-import { phoneRegEx, emailRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, Connectors, ConnectorType } from '@logto/schemas';
+import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
+import { Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
@@ -24,12 +15,14 @@ import {
 } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
+
+import connectorConfigTestingRoutes from './config-testing.js';
 
 const generateConnectorId = buildIdGenerator(12);
 
 export default function connectorRoutes<T extends AuthedRouter>(
-  ...[router, { queries, connectors, libraries }]: RouterInitArgs<T>
+  ...[router, tenant]: RouterInitArgs<T>
 ) {
   const {
     findConnectorById,
@@ -38,88 +31,11 @@ export default function connectorRoutes<T extends AuthedRouter>(
     deleteConnectorByIds,
     insertConnector,
     updateConnector,
-  } = queries.connectors;
-  const { getLogtoConnectorById, getLogtoConnectors } = connectors;
+  } = tenant.queries.connectors;
+  const { getLogtoConnectorById, getLogtoConnectors } = tenant.connectors;
   const {
     signInExperiences: { removeUnavailableSocialConnectorTargets },
-  } = libraries;
-
-  router.get(
-    '/connectors',
-    koaGuard({
-      query: object({
-        target: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { target: filterTarget } = ctx.query;
-      const connectors = await getLogtoConnectors();
-
-      checkSocialConnectorTargetAndPlatformUniqueness(connectors);
-
-      assertThat(
-        connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
-        'connector.more_than_one_email'
-      );
-      assertThat(
-        connectors.filter((connector) => connector.type === ConnectorType.Sms).length <= 1,
-        'connector.more_than_one_sms'
-      );
-
-      const filteredConnectors = filterTarget
-        ? connectors.filter(({ metadata: { target } }) => target === filterTarget)
-        : connectors;
-
-      ctx.body = filteredConnectors.map((connector) => transpileLogtoConnector(connector));
-
-      return next();
-    }
-  );
-
-  router.get('/connector-factories', async (ctx, next) => {
-    const connectorFactories = await loadConnectorFactories();
-    ctx.body = connectorFactories.map((connectorFactory) =>
-      transpileConnectorFactory(connectorFactory)
-    );
-
-    return next();
-  });
-
-  router.get(
-    '/connector-factories/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-      } = ctx.guard;
-      const connectorFactories = await loadConnectorFactories();
-
-      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
-      assertThat(connectorFactory, 'entity.not_found');
-
-      ctx.body = transpileConnectorFactory(connectorFactory);
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/connectors/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-      } = ctx.guard;
-      const connector = await getLogtoConnectorById(id);
-
-      // Hide demo connector
-      assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
-
-      ctx.body = transpileLogtoConnector(connector);
-
-      return next();
-    }
-  );
+  } = tenant.libraries;
 
   router.post(
     '/connectors',
@@ -234,6 +150,89 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 
+  router.get(
+    '/connectors',
+    koaGuard({
+      query: object({
+        target: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { target: filterTarget } = ctx.query;
+      const connectors = await getLogtoConnectors();
+
+      checkSocialConnectorTargetAndPlatformUniqueness(connectors);
+
+      assertThat(
+        connectors.filter((connector) => connector.type === ConnectorType.Email).length <= 1,
+        'connector.more_than_one_email'
+      );
+      assertThat(
+        connectors.filter((connector) => connector.type === ConnectorType.Sms).length <= 1,
+        'connector.more_than_one_sms'
+      );
+
+      const filteredConnectors = filterTarget
+        ? connectors.filter(({ metadata: { target } }) => target === filterTarget)
+        : connectors;
+
+      ctx.body = filteredConnectors.map((connector) => transpileLogtoConnector(connector));
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/connectors/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+      const connector = await getLogtoConnectorById(id);
+
+      // Hide demo connector
+      assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
+
+      ctx.body = transpileLogtoConnector(connector);
+
+      return next();
+    }
+  );
+
+  router.get('/connector-factories', async (ctx, next) => {
+    const connectorFactories = await loadConnectorFactories();
+    ctx.body = connectorFactories.map((connectorFactory) =>
+      transpileConnectorFactory(connectorFactory)
+    );
+
+    return next();
+  });
+
+  router.get(
+    '/connector-factories/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+      const connectorFactories = await loadConnectorFactories();
+
+      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
+      assertThat(
+        connectorFactory,
+        new RequestError({
+          code: 'entity.not_found',
+          status: 404,
+        })
+      );
+
+      ctx.body = transpileConnectorFactory(connectorFactory);
+
+      return next();
+    }
+  );
+
   router.patch(
     '/connectors/:id',
     koaGuard({
@@ -288,67 +287,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.post(
-    '/connectors/:factoryId/test',
-    koaGuard({
-      params: object({ factoryId: string().min(1) }),
-      body: object({
-        phone: string().regex(phoneRegEx).optional(),
-        email: string().regex(emailRegEx).optional(),
-        config: arbitraryObjectGuard,
-      }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { factoryId },
-        body,
-      } = ctx.guard;
-      const { phone, email, config } = body;
-
-      const subject = phone ?? email;
-      assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
-
-      const connectorFactories = await loadConnectorFactories();
-      const connectorFactory = connectorFactories
-        .filter(
-          (factory): factory is ConnectorFactory<SmsConnector> | ConnectorFactory<EmailConnector> =>
-            factory.type === ConnectorType.Email || factory.type === ConnectorType.Sms
-        )
-        .find(({ metadata: { id } }) => id === factoryId && !demoConnectorIds.includes(id));
-      const expectType = phone ? ConnectorType.Sms : ConnectorType.Email;
-
-      assertThat(
-        connectorFactory,
-        new RequestError({
-          code: 'connector.not_found',
-          type: expectType,
-          factoryId,
-        })
-      );
-
-      assertThat(connectorFactory.type === expectType, 'connector.unexpected_type');
-
-      const {
-        rawConnector: { sendMessage },
-      } = await buildRawConnector<SmsConnector | EmailConnector>(connectorFactory);
-
-      await sendMessage(
-        {
-          to: subject,
-          type: VerificationCodeType.Generic,
-          payload: {
-            code: '000000',
-          },
-        },
-        config
-      );
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
   router.delete(
     '/connectors/:id',
     koaGuard({ params: object({ id: string().min(1) }) }),
@@ -375,5 +313,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
       return next();
     }
   );
+
+  connectorConfigTestingRoutes(router, tenant);
 }
-/* eslint-enable max-lines */

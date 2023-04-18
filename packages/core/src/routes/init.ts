@@ -13,7 +13,7 @@ import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
-import connectorRoutes from './connector.js';
+import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
 import dashboardRoutes from './dashboard.js';
 import hookRoutes from './hook.js';

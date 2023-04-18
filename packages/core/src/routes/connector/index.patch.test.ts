@@ -9,12 +9,15 @@ import {
   mockLogtoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import type Queries from '#src/tenants/Queries.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+const removeUnavailableSocialConnectorTargets = jest.fn();
 
 const getLogtoConnectors: jest.MockedFunction<() => Promise<LogtoConnector[]>> = jest.fn();
 const getLogtoConnectorById: jest.MockedFunction<(connectorId: string) => Promise<LogtoConnector>> =
@@ -38,27 +41,30 @@ const getLogtoConnectorById: jest.MockedFunction<(connectorId: string) => Promis
   });
 
 const sendMessagePlaceHolder = jest.fn();
-const updateConnector = jest.fn();
+
+const connectorQueries = {
+  findConnectorById: jest.fn(),
+  deleteConnectorById: jest.fn(),
+  updateConnector: jest.fn(),
+} satisfies Partial<Queries['connectors']>;
+const { updateConnector } = connectorQueries;
 
 const tenantContext = new MockTenant(
   undefined,
-  { connectors: { updateConnector } },
+  { connectors: connectorQueries },
   {
     getLogtoConnectors,
     getLogtoConnectorById,
   },
   {
-    signInExperiences: {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      removeUnavailableSocialConnectorTargets: async () => {},
-    },
+    signInExperiences: { removeUnavailableSocialConnectorTargets },
   }
 );
 
-const connectorRoutes = await pickDefault(import('./connector.js'));
+const connectorDataRoutes = await pickDefault(import('./index.js'));
 
-describe('connector PATCH routes', () => {
-  const connectorRequest = createRequester({ authedRoutes: connectorRoutes, tenantContext });
+describe('connector data routes', () => {
+  const connectorRequest = createRequester({ authedRoutes: connectorDataRoutes, tenantContext });
 
   describe('PATCH /connectors/:id', () => {
     afterEach(() => {
@@ -129,6 +135,20 @@ describe('connector PATCH routes', () => {
         },
       });
       expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('throws when set syncProfile to `true` and with non-social connector', async () => {
+      getLogtoConnectors.mockResolvedValueOnce([
+        {
+          dbEntry: mockConnector,
+          metadata: mockMetadata,
+          type: ConnectorType.Sms,
+          ...mockLogtoConnector,
+        },
+      ]);
+      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: true });
+      expect(response).toHaveProperty('statusCode', 422);
+      expect(updateConnector).toHaveBeenCalledTimes(0);
     });
 
     it('successfully updates connector config', async () => {
@@ -233,20 +253,6 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response).toHaveProperty('statusCode', 200);
-    });
-
-    it('throws when set syncProfile to `true` and with non-social connector', async () => {
-      getLogtoConnectors.mockResolvedValueOnce([
-        {
-          dbEntry: mockConnector,
-          metadata: mockMetadata,
-          type: ConnectorType.Sms,
-          ...mockLogtoConnector,
-        },
-      ]);
-      const response = await connectorRequest.patch('/connectors/id').send({ syncProfile: true });
-      expect(response).toHaveProperty('statusCode', 422);
-      expect(updateConnector).toHaveBeenCalledTimes(0);
     });
 
     it('successfully set syncProfile to `true` and with social connector', async () => {
