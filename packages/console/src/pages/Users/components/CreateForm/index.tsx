@@ -1,5 +1,5 @@
 import { emailRegEx, phoneInputRegEx, usernameRegEx } from '@logto/core-kit';
-import type { CreateUser, User } from '@logto/schemas';
+import type { CreateUser } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import type { User } from '@/types/user';
 import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';

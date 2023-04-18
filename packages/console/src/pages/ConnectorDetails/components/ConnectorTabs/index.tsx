@@ -1,4 +1,3 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType, ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +7,7 @@ import useSWR from 'swr';
 import { connectorPlatformLabel } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
+import type { ConnectorResponse } from '@/types/connector';
 
 import * as styles from './index.module.scss';
 

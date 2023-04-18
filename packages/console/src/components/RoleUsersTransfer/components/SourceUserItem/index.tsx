@@ -1,9 +1,9 @@
-import type { User } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Checkbox from '@/components/Checkbox';
 import UserAvatar from '@/components/UserAvatar';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
+import type { User } from '@/types/user';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { getUserTitle } from '@/utils/user';
 

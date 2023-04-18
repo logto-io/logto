@@ -1,10 +1,10 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
 import TextLink from '@/components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import type { ConnectorResponse } from '@/types/connector';
 
 import * as styles from './index.module.scss';
 

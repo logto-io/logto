@@ -1,5 +1,4 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +16,7 @@ import useCurrentUser from '@/hooks/use-current-user';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import * as resourcesStyles from '@/scss/resources.module.scss';
+import type { ConnectorResponse } from '@/types/connector';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';

@@ -1,10 +1,10 @@
-import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { RequestError } from '@/hooks/use-api';
+import type { User } from '@/types/user';
 
 import * as styles from './index.module.scss';
 

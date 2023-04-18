@@ -1,10 +1,10 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
 import { supportNativePlatformTargets } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import { getConnectorGroups } from '@/pages/Connectors/utils';
+import type { ConnectorResponse } from '@/types/connector';
 
 // Group connectors by target
 const useConnectorGroups = () => {

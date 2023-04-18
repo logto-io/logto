@@ -1,7 +1,7 @@
-import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
+import type { User } from '@/types/user';
 
 import SourceUsersBox from './components/SourceUsersBox';
 import TargetUsersBox from './components/TargetUsersBox';

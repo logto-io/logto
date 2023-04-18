@@ -1,5 +1,4 @@
-import type { User } from '@logto/schemas';
-import { arbitraryObjectGuard } from '@logto/schemas';
+import { jsonObjectGuard } from '@logto/schemas';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +12,7 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import type { User } from '@/types/user';
 import { safeParseJson } from '@/utils/json';
 import { uriValidator } from '@/utils/validator';
 
@@ -59,7 +59,7 @@ function UserSettings() {
       return;
     }
 
-    const guardResult = arbitraryObjectGuard.safeParse(parseResult.data);
+    const guardResult = jsonObjectGuard.safeParse(parseResult.data);
 
     if (!guardResult.success) {
       toast.error(t('user_details.custom_data_invalid'));

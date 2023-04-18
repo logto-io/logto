@@ -1,4 +1,3 @@
-import type { User } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import ModalLayout from '@/components/ModalLayout';
 import RoleUsersTransfer from '@/components/RoleUsersTransfer';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import type { User } from '@/types/user';
 
 type Props = {
   roleId: string;

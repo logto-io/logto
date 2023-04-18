@@ -1,6 +1,6 @@
 import type { SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import type { ConnectorResponse, UserInfo } from '@logto/schemas';
+import type { UserInfo } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
@@ -18,6 +18,7 @@ import { adminTenantEndpoint, getBasename, meApi, profileSocialLinkingKeyPrefix 
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
+import type { ConnectorResponse } from '@/types/connector';
 
 import { popupWindow } from '../../utils';
 import type { Row } from '../CardContent';

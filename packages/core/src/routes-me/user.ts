@@ -1,6 +1,6 @@
 import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import type { UserProfileResponse } from '@logto/schemas';
-import { userInfoSelectFields, arbitraryObjectGuard } from '@logto/schemas';
+import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
@@ -80,8 +80,8 @@ export default function userRoutes<T extends AuthedMeRouter>(
   router.patch(
     '/custom-data',
     koaGuard({
-      body: arbitraryObjectGuard,
-      response: arbitraryObjectGuard,
+      body: jsonObjectGuard,
+      response: jsonObjectGuard,
     }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;

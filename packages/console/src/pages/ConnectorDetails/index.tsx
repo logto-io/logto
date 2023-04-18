@@ -1,6 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { ConnectorType } from '@logto/schemas';
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,7 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
+import type { ConnectorResponse } from '@/types/connector';
 
 import CreateForm from '../Connectors/components/CreateForm';
 

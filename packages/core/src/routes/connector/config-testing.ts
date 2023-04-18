@@ -7,7 +7,7 @@ import {
   VerificationCodeType,
 } from '@logto/connector-kit';
 import { phoneRegEx, emailRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, ConnectorType } from '@logto/schemas';
+import { jsonObjectGuard, ConnectorType } from '@logto/schemas';
 import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -27,7 +27,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
       body: object({
         phone: string().regex(phoneRegEx).optional(),
         email: string().regex(emailRegEx).optional(),
-        config: arbitraryObjectGuard,
+        config: jsonObjectGuard,
       }),
     }),
     async (ctx, next) => {

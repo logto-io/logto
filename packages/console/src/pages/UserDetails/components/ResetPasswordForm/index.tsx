@@ -1,10 +1,10 @@
-import type { User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import useApi from '@/hooks/use-api';
+import type { User } from '@/types/user';
 
 type Props = {
   userId: string;

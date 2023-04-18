@@ -1,4 +1,4 @@
-import type { User } from '@logto/schemas';
+import type { User } from '@/types/user';
 
 export type UserDetailsForm = {
   primaryEmail: string;

@@ -1,4 +1,3 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
@@ -18,6 +17,7 @@ import { useConnectorFormConfigParser } from '@/pages/Connectors/components/Conn
 import { initFormData } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
+import type { ConnectorResponse } from '@/types/connector';
 
 import SenderTester from './SenderTester';
 

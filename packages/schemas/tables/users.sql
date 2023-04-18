@@ -15,7 +15,7 @@ create table users (
   avatar varchar(2048),
   application_id varchar(21),
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
-  custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
+  custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   is_suspended boolean not null default false,
   last_sign_in_at timestamptz,
   created_at timestamptz not null default (now()),

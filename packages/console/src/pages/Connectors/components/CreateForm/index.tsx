@@ -1,4 +1,4 @@
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
@@ -12,6 +12,7 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import type { ConnectorResponse } from '@/types/connector';
 
 import { getConnectorGroups } from '../../utils';
 

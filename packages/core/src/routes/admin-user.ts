@@ -1,5 +1,5 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
+import { jsonObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { conditional, has, pick, tryThat } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
@@ -86,7 +86,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId/custom-data',
     koaGuard({
       params: object({ userId: string() }),
-      response: arbitraryObjectGuard,
+      response: jsonObjectGuard,
     }),
     async (ctx, next) => {
       const {
@@ -104,8 +104,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId/custom-data',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ customData: arbitraryObjectGuard }),
-      response: arbitraryObjectGuard,
+      body: object({ customData: jsonObjectGuard }),
+      response: jsonObjectGuard,
     }),
     async (ctx, next) => {
       const {
@@ -188,7 +188,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         primaryPhone: string().regex(phoneRegEx).or(literal('')).nullable(),
         name: string().or(literal('')).nullable(),
         avatar: string().url().or(literal('')).nullable(),
-        customData: arbitraryObjectGuard,
+        customData: jsonObjectGuard,
       }).partial(),
     }),
     async (ctx, next) => {

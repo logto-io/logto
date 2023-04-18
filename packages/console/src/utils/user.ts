@@ -1,5 +1,6 @@
-import { type User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+
+import type { User } from '@/types/user';
 
 const getUserIdentity = (user: User) => {
   const { primaryEmail, primaryPhone, username } = user;

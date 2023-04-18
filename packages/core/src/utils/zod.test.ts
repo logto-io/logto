@@ -1,7 +1,7 @@
 import { languages, languageTagGuard } from '@logto/language-kit';
 import {
   ApplicationType,
-  arbitraryObjectGuard,
+  jsonObjectGuard,
   translationGuard,
   customContentGuard,
 } from '@logto/schemas';
@@ -14,7 +14,7 @@ import { zodTypeToSwagger } from './zod.js';
 
 describe('zodTypeToSwagger', () => {
   it('arbitrary object guard', () => {
-    expect(zodTypeToSwagger(arbitraryObjectGuard)).toEqual({
+    expect(zodTypeToSwagger(jsonObjectGuard)).toEqual({
       type: 'object',
       description: 'arbitrary',
     });

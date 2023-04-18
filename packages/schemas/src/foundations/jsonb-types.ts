@@ -1,17 +1,24 @@
 import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
+import type { Json } from '@withtyped/server';
 import { z } from 'zod';
 
 export {
   configurableConnectorMetadataGuard,
   type ConfigurableConnectorMetadata,
 } from '@logto/connector-kit';
+export type { JsonObject } from '@withtyped/server';
 
 /* === Commonly Used === */
 
-export const arbitraryObjectGuard = z.record(z.unknown());
+// Copied from https://github.com/colinhacks/zod#json-type
+const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
+const jsonGuard: z.ZodType<Json> = z.lazy(() =>
+  z.union([literalSchema, z.array(jsonGuard), z.record(jsonGuard)])
+);
+
+export const jsonObjectGuard = z.record(jsonGuard);
 
 /* === OIDC Model Instances === */
 

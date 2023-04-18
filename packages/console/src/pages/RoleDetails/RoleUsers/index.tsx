@@ -1,4 +1,3 @@
-import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -24,6 +23,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
+import type { User } from '@/types/user';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 

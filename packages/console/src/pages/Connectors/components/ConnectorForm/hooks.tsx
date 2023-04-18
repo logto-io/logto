@@ -1,9 +1,9 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
+import type { ConnectorResponse } from '@/types/connector';
 import { safeParseJson } from '@/utils/json';
 
 export const useJsonStringConfigParser = () => {
