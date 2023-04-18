@@ -12,7 +12,6 @@ import { adminTenantId } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { RequestError } from '@withtyped/server';
-import type { JsonObject } from '@withtyped/server';
 
 import type { Queries } from '#src/queries/index.js';
 import type { LogtoConnector } from '#src/utils/connector/index.js';
@@ -108,12 +107,11 @@ export class ServicesLibrary {
     return sendMessage(data);
   }
 
-  async addLog(tenantId: string, type: ServiceLogType, payload?: JsonObject) {
+  async addLog(tenantId: string, type: ServiceLogType) {
     return this.queries.serviceLogs.insertLog({
       id: generateStandardId(),
       type,
       tenantId,
-      payload,
     });
   }
 
