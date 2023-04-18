@@ -16,14 +16,17 @@ function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath }: Props) {
 
   // Reset the blocker if the conditions are met.
   useEffect(() => {
-    const targetPathname = blocker.location?.pathname;
-    if (
-      blocker.state === 'blocked' &&
-      (!hasUnsavedChanges ||
-        targetPathname === pathname ||
-        (parentPath && targetPathname?.startsWith(parentPath)))
-    ) {
+    if (blocker.state !== 'blocked') {
+      return;
+    }
+
+    const targetPathname = blocker.location.pathname;
+    if (!hasUnsavedChanges || targetPathname === pathname) {
       blocker.reset();
+      return;
+    }
+    if (parentPath && targetPathname.startsWith(parentPath)) {
+      blocker.proceed();
     }
   }, [blocker, pathname, hasUnsavedChanges, parentPath]);
 
