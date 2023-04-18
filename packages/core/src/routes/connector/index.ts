@@ -17,7 +17,7 @@ import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/conn
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
-import connectorTestRoutes from './test.js';
+import connectorConfigTestingRoutes from './config-testing.js';
 
 const generateConnectorId = buildIdGenerator(12);
 
@@ -314,5 +314,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 
-  connectorTestRoutes(router, tenant);
+  connectorConfigTestingRoutes(router, tenant);
 }

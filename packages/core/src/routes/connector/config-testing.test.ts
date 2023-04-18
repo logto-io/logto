@@ -51,11 +51,11 @@ const tenantContext = new MockTenant(
   {}
 );
 
-const connectorTestRoutes = await pickDefault(import('./test.js'));
+const connectorConfigTestingRoutes = await pickDefault(import('./config-testing.js'));
 
 describe('connector services route', () => {
   const connectorRequest = createRequester({
-    authedRoutes: connectorTestRoutes,
+    authedRoutes: connectorConfigTestingRoutes,
     tenantContext,
   });
 

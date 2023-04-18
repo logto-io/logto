@@ -16,7 +16,6 @@ import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-// Const { mockEsmWithActual } = createMockUtils(jest);
 
 const removeUnavailableSocialConnectorTargets = jest.fn();
 
@@ -49,13 +48,6 @@ const connectorQueries = {
   updateConnector: jest.fn(),
 } satisfies Partial<Queries['connectors']>;
 const { updateConnector } = connectorQueries;
-
-// Const { loadConnectorFactories } = await mockEsmWithActual(
-//   '#src/utils/connectors/index.js',
-//   () => ({
-//     loadConnectorFactories: jest.fn(),
-//   })
-// );
 
 const tenantContext = new MockTenant(
   undefined,
