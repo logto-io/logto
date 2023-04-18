@@ -23,8 +23,8 @@ const user_details = {
   settings: '設定',
   settings_description:
     '各ユーザーには、すべてのユーザー情報が含まれるプロファイルがあります。基本データ、ソーシャルアイデンティティ、およびカスタムデータで構成されています。',
-  field_email: '主なメール',
-  field_phone: '主な電話',
+  field_email: 'メールアドレス',
+  field_phone: '電話番号',
   field_username: 'ユーザー名',
   field_name: '名前',
   field_avatar: 'アバター画像のURL',

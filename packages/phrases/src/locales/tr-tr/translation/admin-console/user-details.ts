@@ -23,8 +23,8 @@ const user_details = {
   settings: 'Ayarlar',
   settings_description:
     'Her kullanıcının, temel veriler, sosyal kimlikler ve özel verilerden oluşan tüm kullanıcı bilgilerini içeren bir profil vardır.',
-  field_email: 'Öncelikli e-posta adresi',
-  field_phone: 'Öncelikli telefon',
+  field_email: 'Eposta adresi',
+  field_phone: 'Telefon numarası',
   field_username: 'Kullanıcı Adı',
   field_name: 'İsim',
   field_avatar: 'Avatar resmi URLi',
