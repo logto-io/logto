@@ -1,5 +1,31 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- c5eb3a2ba: support create user by multiple identifiers
+- 5553425fc: support suspend user
+
+### Patch Changes
+
+- 6cbc90389: ensure all log keys present in the filter, remove deprecated log keys, fix log event filter
+- 457cb2822: Adding social connectors will now mark the related get-started action item as completed.
+- 4945b0be2: Apply security headers
+
+  Apply security headers to logto http request response using (helmetjs)[https://helmetjs.github.io/].
+
+  - [x] crossOriginOpenerPolicy
+  - [x] crossOriginEmbedderPolicy
+  - [x] crossOriginResourcePolicy
+  - [x] hidePoweredBy
+  - [x] hsts
+  - [x] ieNoOpen
+  - [x] noSniff
+  - [x] referrerPolicy
+  - [x] xssFilter
+  - [x] Content-Security-Policy
+
 ## 1.1.0
 
 ### Patch Changes

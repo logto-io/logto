@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- ae6a54993: add it translation
+- 206fba2b5: add pl-PL translation
+- c5eb3a2ba: support create user by multiple identifiers
+- 5553425fc: support suspend user
+
 ## 1.1.0
 
 ### Minor Changes

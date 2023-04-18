@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.2.0
+
+### Patch Changes
+
+- 457cb2822: Adding social connectors will now mark the related get-started action item as completed.
+- Updated dependencies [ae6a54993]
+- Updated dependencies [206fba2b5]
+- Updated dependencies [4945b0be2]
+- Updated dependencies [c5eb3a2ba]
+- Updated dependencies [5553425fc]
+- Updated dependencies [30033421c]
+  - @logto/phrases@1.2.0
+  - @logto/phrases-ui@1.2.0
+  - @logto/shared@2.0.0
+  - @logto/core-kit@2.0.0
+  - @logto/connector-kit@1.1.1
+
 ## 1.1.0
 
 ### Patch Changes

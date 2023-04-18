@@ -1,5 +1,52 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- 1548e0732: implement a central cache store to cache well-known with Redis implementation
+
+### Patch Changes
+
+- 7af8e9c9b: Add new management API `/users/:userId/password/verify` to help verify user password, which would be helpful when building custom profile or sign-in pages
+- 6b1948592: Provide management API to detect if a user has set the password.
+- 4945b0be2: Apply security headers
+
+  Apply security headers to logto http request response using (helmetjs)[https://helmetjs.github.io/].
+
+  - [x] crossOriginOpenerPolicy
+  - [x] crossOriginEmbedderPolicy
+  - [x] crossOriginResourcePolicy
+  - [x] hidePoweredBy
+  - [x] hsts
+  - [x] ieNoOpen
+  - [x] noSniff
+  - [x] referrerPolicy
+  - [x] xssFilter
+  - [x] Content-Security-Policy
+
+- Updated dependencies [6cbc90389]
+- Updated dependencies [3c84d81ff]
+- Updated dependencies [ae6a54993]
+- Updated dependencies [206fba2b5]
+- Updated dependencies [457cb2822]
+- Updated dependencies [736d6d212]
+- Updated dependencies [4945b0be2]
+- Updated dependencies [c5eb3a2ba]
+- Updated dependencies [5553425fc]
+- Updated dependencies [30033421c]
+- Updated dependencies [91906f0eb]
+  - @logto/console@1.2.0
+  - @logto/cli@1.2.0
+  - @logto/phrases@1.2.0
+  - @logto/phrases-ui@1.2.0
+  - @logto/schemas@1.2.0
+  - @logto/shared@2.0.0
+  - @logto/ui@1.1.1
+  - @logto/core-kit@2.0.0
+  - @logto/connector-kit@1.1.1
+  - @logto/demo-app@1.0.0
+
 ## 1.1.0
 
 ### Patch Changes
