@@ -40,10 +40,14 @@ export class RedisCache implements CacheStore {
   async connect() {
     if (this.client) {
       await this.client.connect();
-      consoleLog.info('[CACHE] Connected to Redis');
-    } else {
-      consoleLog.warn('[CACHE] No Redis client initialized, skipping');
+      const pong = await this.client.ping();
+
+      if (pong === 'PONG') {
+        consoleLog.info('[CACHE] Connected to Redis');
+        return;
+      }
     }
+    consoleLog.warn('[CACHE] No Redis client initialized, skipping');
   }
 
   async disconnect() {

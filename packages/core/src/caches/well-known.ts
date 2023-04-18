@@ -3,6 +3,7 @@ import { type Optional, trySafe } from '@silverhand/essentials';
 import { type ZodType, z } from 'zod';
 
 import { type ConnectorWellKnown, connectorWellKnownGuard } from '#src/utils/connectors/types.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import { type CacheStore } from './types.js';
 
@@ -172,6 +173,7 @@ export class WellKnownCache {
           const cachedValue = await trySafe(kvCache.get(type, promiseKey));
 
           if (cachedValue) {
+            consoleLog.info('[CACHE] Well-known cache hit for', type, promiseKey);
             return cachedValue;
           }
 

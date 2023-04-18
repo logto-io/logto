@@ -44,5 +44,5 @@ try {
   consoleLog.error('Error while initializing app:');
   consoleLog.error(error);
 
-  await Promise.all([trySafe(tenantPool.endAll()), trySafe(redisCache.disconnect())]);
+  void Promise.all([trySafe(tenantPool.endAll()), trySafe(redisCache.disconnect())]);
 }
