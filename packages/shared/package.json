@@ -1,6 +1,6 @@
 {
   "name": "@logto/shared",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -42,7 +42,7 @@
     "test:ci": "pnpm test:only"
   },
   "devDependencies": {
-    "@logto/connector-kit": "workspace:^1.1.0",
+    "@logto/connector-kit": "workspace:^1.1.1",
     "@silverhand/eslint-config": "3.0.1",
     "@silverhand/ts-config": "3.0.0",
     "@types/jest": "^29.4.0",

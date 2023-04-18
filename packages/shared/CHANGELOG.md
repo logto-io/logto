@@ -1,5 +1,30 @@
 # Change Log
 
+## 2.0.0
+
+### Major Changes
+
+- 30033421c: - connector-kit: add `DemoConnector` type and demo connector ids
+  - core-kit: remove nanoid utils, add tenant model utils
+  - shared: remove models, add database types and universal export
+
+### Patch Changes
+
+- 4945b0be2: Apply security headers
+
+  Apply security headers to logto http request response using (helmetjs)[https://helmetjs.github.io/].
+
+  - [x] crossOriginOpenerPolicy
+  - [x] crossOriginEmbedderPolicy
+  - [x] crossOriginResourcePolicy
+  - [x] hidePoweredBy
+  - [x] hsts
+  - [x] ieNoOpen
+  - [x] noSniff
+  - [x] referrerPolicy
+  - [x] xssFilter
+  - [x] Content-Security-Policy
+
 ## 1.0.3
 
 ### Patch Changes

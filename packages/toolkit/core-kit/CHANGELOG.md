@@ -1,5 +1,19 @@
 # Change Log
 
+## 2.0.0
+
+### Major Changes
+
+- 30033421c: - connector-kit: add `DemoConnector` type and demo connector ids
+  - core-kit: remove nanoid utils, add tenant model utils
+  - shared: remove models, add database types and universal export
+
+### Patch Changes
+
+- Updated dependencies [4945b0be2]
+- Updated dependencies [30033421c]
+  - @logto/shared@2.0.0
+
 ## 1.1.0
 
 ### Minor Changes

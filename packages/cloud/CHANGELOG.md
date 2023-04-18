@@ -1,5 +1,21 @@
 # @logto/cloud
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [3c84d81ff]
+- Updated dependencies [457cb2822]
+- Updated dependencies [736d6d212]
+- Updated dependencies [4945b0be2]
+- Updated dependencies [30033421c]
+- Updated dependencies [91906f0eb]
+  - @logto/cli@1.2.0
+  - @logto/schemas@1.2.0
+  - @logto/shared@2.0.0
+  - @logto/core-kit@2.0.0
+  - @logto/connector-kit@1.1.1
+
 ## 0.2.4
 
 ### Patch Changes
