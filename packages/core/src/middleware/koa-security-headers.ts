@@ -2,6 +2,7 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
 import { defaultTenantId } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
 
@@ -33,12 +34,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const { isProduction, isCloud, isMultiTenancy, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
   const adminOrigins = adminUrlSet.origins;
-  const cloudOrigins = isCloud ? cloudUrlSet.origins : [];
+  const cloudOrigins = conditionalArray(isCloud && cloudUrlSet.origins);
   const tenantEndpointOrigin = getTenantEndpoint(
     isMultiTenancy ? tenantId : defaultTenantId,
     EnvSet.values
   ).origin;
-  const developmentOrigins = isProduction ? [] : ['ws:'];
+  const developmentOrigins = conditionalArray(!isProduction && 'ws:');
+  const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
 
   /**
    * Default Applied rules:
@@ -80,7 +82,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
         scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
-        connectSrc: ["'self'", ...adminOrigins, ...cloudOrigins, ...developmentOrigins],
+        connectSrc: [
+          "'self'",
+          ...adminOrigins,
+          ...cloudOrigins,
+          ...developmentOrigins,
+          ...appInsightsOrigins,
+        ],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:'],
         // Alow loaded by console preview iframe
