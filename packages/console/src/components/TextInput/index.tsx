@@ -84,7 +84,7 @@ function TextInput(
       <div
         className={classNames(
           styles.container,
-          error && styles.error,
+          Boolean(error) && styles.error,
           isConfidential && isContentHidden && type === 'text' && styles.hideTextContainerContent,
           icon && styles.withIcon,
           disabled && styles.disabled,

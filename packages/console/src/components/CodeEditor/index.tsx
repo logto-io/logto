@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -17,8 +17,7 @@ type Props = {
   value?: string;
   onChange?: (value: string) => void;
   tabSize?: number;
-  hasError?: boolean;
-  errorMessage?: string;
+  error?: string | boolean;
   placeholder?: string;
 };
 
@@ -29,8 +28,7 @@ function CodeEditor({
   value,
   onChange,
   tabSize = 2,
-  hasError,
-  errorMessage,
+  error,
   placeholder,
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -79,13 +77,7 @@ function CodeEditor({
   };
 
   // TODO @sijie temp solution for required error (the errorMessage is an empty string)
-  const finalErrorMessage = useMemo(() => {
-    if (errorMessage) {
-      return errorMessage;
-    }
-
-    return t('general.required');
-  }, [errorMessage, t]);
+  const finalErrorMessage = typeof error === 'string' && !!error ? error : t('general.required');
 
   const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
   const isShowingPlaceholder = !value;
@@ -141,7 +133,7 @@ function CodeEditor({
           </SyntaxHighlighter>
         </div>
       </div>
-      {hasError && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
+      {finalErrorMessage && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
     </>
   );
 }
