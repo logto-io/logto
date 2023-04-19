@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import type { UploadFile } from './types.js';
 
@@ -8,10 +8,20 @@ export const buildS3Storage = (
   accessKeyId: string,
   secretAccessKey: string
 ) => {
-  const s3 = new AWS.S3({
+  // Endpoint example: s3.us-west-2.amazonaws.com
+  const region = /s3\.([^.]*)\.amazonaws/.exec(endpoint)?.[1];
+
+  if (!region) {
+    throw new Error('Invalid S3 endpoint, can not find region');
+  }
+
+  const client = new S3Client({
+    region,
     endpoint,
-    accessKeyId,
-    secretAccessKey,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
   });
 
   const uploadFile: UploadFile = async (
@@ -19,21 +29,22 @@ export const buildS3Storage = (
     objectKey: string,
     { contentType, publicUrl } = {}
   ) => {
-    const { Location, Key } = await s3
-      .upload({
-        Body: data,
-        Key: objectKey,
-        Bucket: bucket,
-        ContentType: contentType,
-      })
-      .promise();
+    const command = new PutObjectCommand({
+      Bucket: bucket,
+      Key: objectKey,
+      Body: data,
+      ContentType: contentType,
+      ACL: 'public-read',
+    });
+
+    await client.send(command);
 
     if (publicUrl) {
       return { url: `${publicUrl}/${objectKey}` };
     }
 
     return {
-      url: Location,
+      url: `https://${bucket}.s3.${region}.amazonaws.com/${objectKey}`,
     };
   };
 

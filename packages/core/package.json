@@ -25,6 +25,7 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.315.0",
     "@azure/storage-blob": "^12.13.0",
     "@koa/cors": "^4.0.0",
     "@logto/app-insights": "workspace:^1.0.0",
@@ -40,7 +41,6 @@
     "@logto/shared": "workspace:^2.0.0",
     "@logto/ui": "workspace:*",
     "@silverhand/essentials": "^2.5.0",
-    "aws-sdk": "^2.1329.0",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
