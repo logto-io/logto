@@ -29,7 +29,7 @@ import './scss/normalized.scss';
 if (shouldTrack) {
   // Use `.then()` for better compatibility, update to top-level await some day
   // eslint-disable-next-line unicorn/prefer-top-level-await, promise/prefer-await-to-then
-  void appInsightsReact.setup().then((success) => {
+  void appInsightsReact.setup('ui').then((success) => {
     if (success) {
       console.debug('Initialized ApplicationInsights');
     }

@@ -16,12 +16,11 @@ class AppInsightsReact {
     return this.appInsights?.trackPageView.bind(this.appInsights);
   }
 
-  async setup(): Promise<boolean> {
+  async setup(cloudRole: string, connectionString_?: string): Promise<boolean> {
     // The string needs to be normalized since it may contain '"'
-    const connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.replace(
-      /^"?(.*)"?$/g,
-      '$1'
-    );
+    const connectionString = (
+      connectionString_ ?? process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+    )?.replace(/^"?(.*)"?$/g, '$1');
 
     if (!connectionString) {
       return false;
@@ -45,6 +44,14 @@ class AppInsightsReact {
           enableAutoRouteTracking: false,
           extensions: [this.reactPlugin],
         },
+      });
+
+      this.appInsights.addTelemetryInitializer((item) => {
+        // The key 'ai.cloud.role' is extracted from Node SDK
+        // @see https://learn.microsoft.com/en-us/azure/azure-monitor/app/nodejs#multiple-roles-for-multi-component-applications
+        // @see https://github.com/microsoft/ApplicationInsights-node.js/blob/a573e40fc66981c6a3106bdc5b783d1d94f64231/Schema/PublicSchema/ContextTagKeys.bond#L83
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        item.tags = [...(item.tags ?? []), { 'ai.cloud.role': cloudRole }];
       });
 
       this.appInsights.loadAppInsights();

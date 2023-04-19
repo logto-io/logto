@@ -28,7 +28,7 @@ import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 
 // Use `.then()` for better compatibility, update to top-level await some day
 // eslint-disable-next-line unicorn/prefer-top-level-await
-void appInsightsReact.setup().then((success) => {
+void appInsightsReact.setup('console').then((success) => {
   if (success) {
     console.debug('Initialized ApplicationInsights');
   }
