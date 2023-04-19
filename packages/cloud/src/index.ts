@@ -8,7 +8,7 @@ dotenv.config({ path: await findUp('.env', {}) });
 
 const { appInsights } = await import('@logto/app-insights/node');
 
-if (await appInsights.setup('logto-cloud')) {
+if (await appInsights.setup('cloud')) {
   console.debug('Initialized ApplicationInsights');
 }
 
