@@ -52,7 +52,7 @@ Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Se
 
 ## Test GitHub connector
 
-That's it. The GitHub connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+That's it. The GitHub connector should be available now. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
 
 ## Reference
 

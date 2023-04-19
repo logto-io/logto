@@ -72,7 +72,7 @@ The official Logto connector for Tencent short message service.
 
 你可以在「保存并完成」之前输入一个手机号码并点按「发送」来测试配置是否可以正常工作。
 
-大功告成！快去 [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)
+大功告成！快去 [启用短信或邮件验证码登录](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
 吧。
 
 ### 配置类型

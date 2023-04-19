@@ -73,7 +73,7 @@ To check "Sender Addresses", you can find the entrance on the left-side navigati
 
 You can type in an email address and click on "Send" to see whether the settings can work before "Save and Done".
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in/#enable-connector-in-sign-in-experience).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in).
 
 ### Config types
 
@@ -162,7 +162,7 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 
 你可以在「保存并完成」之前输入一个手机号码并点按「发送」来测试配置是否可以正常工作。
 
-大功告成！快去 [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8) 吧。
+大功告成！快去 [启用短信或邮件验证码登录](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in) 吧。
 
 ### 配置类型
 

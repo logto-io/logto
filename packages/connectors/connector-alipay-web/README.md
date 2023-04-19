@@ -76,7 +76,7 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
 
 ## Test Alipay web connector
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
 
 Once Alipay web connector is enabled, you can build and run your web app to see if it works.
 
@@ -140,7 +140,7 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
 
 ## 测试支付宝网页连接器
 
-大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)。
 
 在支付宝网页连接器启用后，你可以构建并运行你的网页应用看看是否生效。
 
