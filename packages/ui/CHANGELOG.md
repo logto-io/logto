@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.2
+
+### Patch Changes
+
+- 352807b16: support setting cloud role name for AppInsights in React
+
 ## 1.1.1
 
 ### Patch Changes
