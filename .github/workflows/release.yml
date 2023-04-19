@@ -77,6 +77,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             additional_connector_args=--cloud
+            applicationinsights_connection_string=${{ (inputs.target || 'dev') == 'dev' && secrets.APPLICATIONINSIGHTS_CONNECTION_STRING || secrets.APPLICATIONINSIGHTS_CONNECTION_STRING_PROD }}
 
       - name: Setup Depot
         if: ${{ startsWith(github.ref, 'refs/tags/') }}

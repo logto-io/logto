@@ -16,6 +16,9 @@ COPY . .
 ### Install dependencies and build ###
 RUN node .scripts/update-parcelrc.js
 RUN pnpm i
+
+ARG applicationinsights_connection_string
+ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 RUN pnpm -r build
 
 ### Add official connectors ###
