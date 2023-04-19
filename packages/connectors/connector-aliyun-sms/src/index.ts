@@ -41,7 +41,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
+      new ConnectorError(
+        ConnectorErrorCodes.TemplateNotFound,
+        `Cannot find template for type: ${type}`
+      )
     );
 
     try {
@@ -56,37 +59,49 @@ const sendMessage =
         accessKeySecret
       );
 
-      const { body: rawBody } = httpResponse;
+      const { Code, Message, ...rest } = parseResponseString(httpResponse.body);
 
-      const { Code, Message, ...rest } = parseResponseString(rawBody);
+      assert(
+        Code === 'OK',
+        new ConnectorError(
+          /**
+           * See https://help.aliyun.com/document_detail/101347.html for more details.
+           * Some errors (like rate limit) can be addressed by end users.
+           */
+          Code === 'isv.BUSINESS_LIMIT_CONTROL'
+            ? ConnectorErrorCodes.RateLimitExceeded
+            : ConnectorErrorCodes.General,
+          {
+            errorDescription: Message,
+            Code,
+            ...rest,
+          }
+        )
+      );
 
-      if (Code !== 'OK') {
+      return { Code, Message, ...rest };
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const {
+          response: { body: rawBody },
+        } = error;
+
+        assert(
+          typeof rawBody === 'string',
+          new ConnectorError(
+            ConnectorErrorCodes.InvalidResponse,
+            `Invalid response raw body type: ${typeof rawBody}`
+          )
+        );
+
+        const { Message, ...rest } = parseResponseString(rawBody);
         throw new ConnectorError(ConnectorErrorCodes.General, {
           errorDescription: Message,
-          Code,
           ...rest,
         });
       }
 
-      return httpResponse;
-    } catch (error: unknown) {
-      if (!(error instanceof HTTPError)) {
-        throw error;
-      }
-
-      const {
-        response: { body: rawBody },
-      } = error;
-
-      assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
-
-      const { Code, Message, ...rest } = parseResponseString(rawBody);
-
-      throw new ConnectorError(ConnectorErrorCodes.General, {
-        errorDescription: Message,
-        Code,
-        ...rest,
-      });
+      throw error;
     }
   };
 

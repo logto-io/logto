@@ -49,6 +49,7 @@ export enum ConnectorErrorCodes {
   InvalidConfig = 'invalid_config',
   InvalidResponse = 'invalid_response',
   TemplateNotFound = 'template_not_found',
+  RateLimitExceeded = 'rate_limit_exceeded',
   NotImplemented = 'not_implemented',
   SocialAuthCodeInvalid = 'social_auth_code_invalid',
   SocialAccessTokenInvalid = 'social_invalid_access_token',

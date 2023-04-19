@@ -52,6 +52,10 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
           throw new RequestError({ code: `connector.${code}`, status: 501 }, data);
         }
 
+        case ConnectorErrorCodes.RateLimitExceeded: {
+          throw new RequestError({ code: `connector.${code}`, status: 429 }, data);
+        }
+
         default: {
           throw new RequestError(
             {

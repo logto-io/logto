@@ -11,6 +11,7 @@ const connector = {
   invalid_response: 'La risposta del connettore non è valida.',
   template_not_found:
     'Impossibile trovare il modello corretto nella configurazione del connettore.',
+  rate_limit_exceeded: 'Limite di frequenza attivata. Riprova più tardi.',
   not_implemented: '{{method}}: non è stato ancora implementato.',
   social_invalid_access_token: 'Il token di accesso del connettore non è valido.',
   invalid_auth_code: 'Il codice di autenticazione del connettore non è valido.',

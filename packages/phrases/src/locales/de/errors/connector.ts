@@ -12,6 +12,7 @@ const connector = {
   invalid_response: 'Die Antwort des Connectors ist ungültig.',
   template_not_found:
     'Die richtige Vorlage in der Connector-Konfiguration konnte nicht gefunden werden.',
+  rate_limit_exceeded: 'Auslöser-Rate-Limit. Bitte versuchen Sie es später erneut.',
   not_implemented: '{{method}}: wurde noch nicht implementiert.',
   social_invalid_access_token: 'Der Access Token des Connectors ist ungültig.',
   invalid_auth_code: 'Der Authentifizierungscode des Connectors ist ungültig.',
@@ -38,5 +39,4 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     "Die 'Metadaten' dieses Connectors können nicht überschrieben werden.",
 };
-
 export default connector;

@@ -10,6 +10,7 @@ const connector = {
   invalid_config: 'A configuração do conector é inválida.',
   invalid_response: 'A resposta do conector é inválida.',
   template_not_found: 'Não foi possível encontrar o modelo correto na configuração do conector.',
+  rate_limit_exceeded: 'Limite de taxa de ativação. Por favor, tente novamente mais tarde.',
   not_implemented: '{{method}}: ainda não foi implementado.',
   social_invalid_access_token: 'O token de acesso do conector é inválido.',
   invalid_auth_code: 'O código de autenticação do conector é inválido.',
