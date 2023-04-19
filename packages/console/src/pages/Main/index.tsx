@@ -1,4 +1,9 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import Toast from '@/components/Toast';
@@ -14,23 +19,27 @@ import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 function Main() {
   const swrOptions = useSwrOptions();
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <>
+        <Route path="callback" element={<Callback />} />
+        <Route path="welcome" element={<Welcome />} />
+        <Route path="handle-social" element={<HandleSocialCallback />} />
+        <Route element={<AppContent />}>
+          <Route path="/*" element={<ConsoleContent />} />
+        </Route>
+      </>
+    ),
+    { basename: getBasename() }
+  );
 
   return (
-    <BrowserRouter basename={getBasename()}>
-      <SWRConfig value={swrOptions}>
-        <AppBoundary>
-          <Toast />
-          <Routes>
-            <Route path="callback" element={<Callback />} />
-            <Route path="welcome" element={<Welcome />} />
-            <Route path="handle-social" element={<HandleSocialCallback />} />
-            <Route element={<AppContent />}>
-              <Route path="/*" element={<ConsoleContent />} />
-            </Route>
-          </Routes>
-        </AppBoundary>
-      </SWRConfig>
-    </BrowserRouter>
+    <SWRConfig value={swrOptions}>
+      <AppBoundary>
+        <Toast />
+        <RouterProvider router={router} />
+      </AppBoundary>
+    </SWRConfig>
   );
 }
 
