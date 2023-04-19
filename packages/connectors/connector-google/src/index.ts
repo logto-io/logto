@@ -23,7 +23,7 @@ import {
 import {
   accessTokenEndpoint,
   authorizationEndpoint,
-  scope,
+  scope as defaultScope,
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
@@ -47,7 +47,7 @@ const getAuthorizationUri =
       redirect_uri: redirectUri,
       response_type: 'code',
       state,
-      scope,
+      scope: config.scope ?? defaultScope,
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-export const wechatConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
+export const wechatConfigGuard = z.object({
+  appId: z.string(),
+  appSecret: z.string(),
+  scope: z.string().optional(),
+});
 
 export type WechatConfig = z.infer<typeof wechatConfigGuard>;
 

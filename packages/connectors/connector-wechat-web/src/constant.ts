@@ -45,6 +45,15 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       placeholder: '<app-secret>',
     },
+    {
+      key: 'scope',
+      type: ConnectorConfigFormItemType.Text,
+      label: 'Scope',
+      required: false,
+      placeholder: '<scope>',
+      description:
+        "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+    },
   ],
 };
 

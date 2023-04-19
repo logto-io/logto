@@ -42,12 +42,15 @@ You can also find `Client ID` and generate `Client secrets` in OAuth app detail 
 
 Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Secret_ you've got from OAuth app detail pages mentioned in the previous section.
 
+`scope` is a space-delimited list of [scopes](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps). If not provided, scope defaults to be `read:user`.
+
 ### Config types
 
 | Name         | Type   |
 |--------------|--------|
 | clientId     | string |
 | clientSecret | string |
+| scope        | string |
 
 
 ## Test GitHub connector

@@ -9,6 +9,7 @@ export const alipayConfigGuard = z.object({
   privateKey: z.string(),
   signType: z.enum(alipaySigningAlgorithms),
   charset: charsetGuard.default(fallbackCharset),
+  scope: z.string().optional(),
 });
 
 export type AlipayConfig = z.infer<typeof alipayConfigGuard>;

@@ -12,6 +12,7 @@ const nullishToUndefined = <T = unknown>(input: Nullable<T>): Optional<T> => {
 export const discordConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
+  scope: z.string().optional(),
 });
 
 export type DiscordConfig = z.infer<typeof discordConfigGuard>;

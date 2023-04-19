@@ -64,6 +64,7 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
     - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Please MAKE SURE to use '\n' to replace all newline characters and do not remove header and footer in private key file.
     - Fill out the `signType` field with 'RSA2' due to the `Public key` signing mode we chose in step 7 of "Create And Configure Alipay Apps".
     - Fill out the `charset` field with either 'gbk' or 'utf8'. You can leave this field blank as it is OPTIONAL. The default value is set to be 'utf8'.
+    - Fill out the `scope` field with either 'auth_base' or 'auth_user'. You can leave this field blank as it is OPTIONAL. The default value is set to be 'auth_user'. You can check out the [difference](https://opendocs.alipay.com/fw/api/105942) between different values.
 
 ### Config types
 
@@ -73,6 +74,7 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
 | privateKey | string                 | N/A                          |
 | signType   | enum string            | 'RSA' \| 'RSA2'              |
 | charset    | enum string (OPTIONAL) | 'gbk' \| 'utf8' \| undefined |
+| scope      | enum string (OPTIONAL) | 'auth_user' \| 'auth_base'   |
 
 ## Test Alipay web connector
 
@@ -128,6 +130,7 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
     - 将你在第 2 步中获得的密钥对的私钥填入 `privateKey` 字段。请保留私钥文件内容中的文件头和文件尾，并 **确保** 使用 '\n' 替换了所有换行符。
     - 将你在第 2 步中所获得的密钥的签名模式 'RSA2' 填入 `signType` 字段。
     - 在 `charset` 字段中填入 'gbk' 或 'utf8' 字符串。这个字段也可以选择不填，此时我们会使用 'utf8' 的默认值。
+    - 在 `scope` 字段中填入 'auth_user' 或者 'auth_base'。这个字段也可以选择不填，此时我们会使用 'auth_user' 的默认值。你可以在[这里](https://opendocs.alipay.com/fw/api/105942)查看更多关于这两个值的信息。
 
 ### 配置类型
 
@@ -137,6 +140,7 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
 | privateKey | string                 | N/A                          |
 | signType   | enum string            | 'RSA' \| 'RSA2'              |
 | charset    | enum string (OPTIONAL) | 'gbk' \| 'utf8' \| undefined |
+| scope      | enum string (OPTIONAL) | 'auth_user' \| 'auth_base'   |
 
 ## 测试支付宝网页连接器
 

@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const githubConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
+  scope: z.string().optional(),
 });
 
 export type GithubConfig = z.infer<typeof githubConfigGuard>;
