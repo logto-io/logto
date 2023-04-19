@@ -100,7 +100,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -2757,7 +2757,7 @@ importers:
         specifier: ^4.5.7
         version: 4.5.7
       '@logto/app-insights':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../app-insights
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -2778,7 +2778,7 @@ importers:
         specifier: 1.1.1
         version: 1.1.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3012,10 +3012,10 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@logto/app-insights':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3039,7 +3039,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3268,7 +3268,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../cli
 
   packages/demo-app:
@@ -3781,7 +3781,7 @@ importers:
   packages/ui:
     devDependencies:
       '@logto/app-insights':
-        specifier: workspace:^1.0.0
+        specifier: workspace:^1.1.0
         version: link:../app-insights
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3799,7 +3799,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.1
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.8.3
