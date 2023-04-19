@@ -8,7 +8,6 @@ import { insertInto } from '#src/utils/query.js';
 export type ServiceLogsQueries = ReturnType<typeof createServiceLogsQueries>;
 
 export const createServiceLogsQueries = (client: Queryable<PostgreSql>) => {
-  // TODO: @sijie make with-typed JsonObject compatible with unknown or unify JsonObject and ArbitraryObject
   const insertLog = async (data: Omit<CreateServiceLog, 'payload'> & { payload?: JsonObject }) =>
     client.query(insertInto(data, 'service_logs'));
 
