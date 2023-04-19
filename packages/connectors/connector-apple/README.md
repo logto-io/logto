@@ -77,7 +77,7 @@ Click "Next" then "Done" to close the modal. Click "Continue" on the top-right c
 
 ## Test Apple connector
 
-That's it. The Apple connector should be available in both web and native apps. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+That's it. The Apple connector should be available in both web and native apps. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in).
 
 # Apple 连接器
 
@@ -139,4 +139,4 @@ That's it. The Apple connector should be available in both web and native apps. 
 
 ## 测试 Apple 连接器
 
-大功告成。Apple 连接器应该在 web 和原生应用中都可用了。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+大功告成。Apple 连接器应该在 web 和原生应用中都可用了。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)。
