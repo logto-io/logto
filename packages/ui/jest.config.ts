@@ -1,20 +1,32 @@
-import type { Config } from '@silverhand/jest-config';
-import { merge } from '@silverhand/jest-config';
+import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  ...merge({
-    testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
-    transform: {
-      '\\.(svg)$': 'jest-transformer-svg',
-      '\\.(png)$': 'jest-transform-stub',
-    },
-    moduleNameMapper: {
-      '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/lib/$1',
-      '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
-    },
-  }),
-  // Will update common config soon
+  roots: ['<rootDir>/src'],
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        sourceMaps: true,
+        jsc: {
+          transform: {
+            react: {
+              runtime: 'automatic',
+            },
+          },
+        },
+      },
+    ],
+    '\\.(svg)$': 'jest-transformer-svg',
+    '\\.(png)$': 'jest-transform-stub',
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@logto/app-insights/(.*)$': '<rootDir>/node_modules/@logto/app-insights/lib/$1',
+    '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
+    '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+  },
   transformIgnorePatterns: ['node_modules/(?!(.*(nanoid|jose|ky|@logto|@silverhand))/)'],
 };
 
