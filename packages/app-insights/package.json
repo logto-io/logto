@@ -51,8 +51,9 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@microsoft/applicationinsights-react-js": "^3.4.1",
-    "@microsoft/applicationinsights-web": "^2.8.11",
+    "@microsoft/applicationinsights-clickanalytics-js": "^2.8.12",
+    "@microsoft/applicationinsights-react-js": "^3.4.2",
+    "@microsoft/applicationinsights-web": "^2.8.12",
     "@silverhand/essentials": "^2.5.0",
     "applicationinsights": "^2.5.0"
   },

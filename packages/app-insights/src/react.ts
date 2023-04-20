@@ -1,10 +1,18 @@
+import { type ClickAnalyticsPlugin } from '@microsoft/applicationinsights-clickanalytics-js';
+import { type IClickAnalyticsConfiguration } from '@microsoft/applicationinsights-clickanalytics-js/types/Interfaces/Datamodel.js';
 import type { ReactPlugin, withAITracking } from '@microsoft/applicationinsights-react-js';
-import type { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { type Optional } from '@silverhand/essentials';
+import type { ApplicationInsights, ITelemetryPlugin } from '@microsoft/applicationinsights-web';
+import { conditional, conditionalArray, type Optional } from '@silverhand/essentials';
 import { type ComponentType } from 'react';
+
+export type SetupConfig = {
+  connectionString?: string;
+  clickPlugin?: IClickAnalyticsConfiguration;
+};
 
 class AppInsightsReact {
   protected reactPlugin?: ReactPlugin;
+  protected clickAnalyticsPlugin?: ClickAnalyticsPlugin;
   protected withAITracking?: typeof withAITracking;
   protected appInsights?: ApplicationInsights;
 
@@ -16,10 +24,12 @@ class AppInsightsReact {
     return this.appInsights?.trackPageView.bind(this.appInsights);
   }
 
-  async setup(cloudRole: string, connectionString_?: string): Promise<boolean> {
+  async setup(cloudRole: string, config?: string | SetupConfig): Promise<boolean> {
+    const connectionStringFromConfig =
+      typeof config === 'string' ? config : config?.connectionString;
     // The string needs to be normalized since it may contain '"'
     const connectionString = (
-      connectionString_ ?? process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+      connectionStringFromConfig ?? process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
     )?.replace(/^"?(.*)"?$/g, '$1');
 
     if (!connectionString) {
@@ -31,18 +41,45 @@ class AppInsightsReact {
     }
 
     try {
+      // Lazy load ApplicationInsights modules
       const { ReactPlugin, withAITracking } = await import(
         '@microsoft/applicationinsights-react-js'
       );
       const { ApplicationInsights } = await import('@microsoft/applicationinsights-web');
+
+      // Conditionally load ClickAnalytics plugin
+      const clickAnalyticsConfig = conditional(typeof config === 'object' && config.clickPlugin);
+      const initClickAnalyticsPlugin = async () => {
+        const { ClickAnalyticsPlugin } = await import(
+          '@microsoft/applicationinsights-clickanalytics-js'
+        );
+        return new ClickAnalyticsPlugin();
+      };
+
+      // Assign React props
       // https://github.com/microsoft/applicationinsights-react-js#readme
       this.withAITracking = withAITracking;
       this.reactPlugin = new ReactPlugin();
+
+      // Assign ClickAnalytics prop
+      this.clickAnalyticsPlugin = conditional(
+        clickAnalyticsConfig && (await initClickAnalyticsPlugin())
+      );
+
+      // Init ApplicationInsights instance
       this.appInsights = new ApplicationInsights({
         config: {
           connectionString,
           enableAutoRouteTracking: false,
-          extensions: [this.reactPlugin],
+          extensions: conditionalArray<ITelemetryPlugin>(
+            this.reactPlugin,
+            this.clickAnalyticsPlugin
+          ),
+          extensionConfig: conditional(
+            this.clickAnalyticsPlugin && {
+              [this.clickAnalyticsPlugin.identifier]: clickAnalyticsConfig,
+            }
+          ),
         },
       });
 
