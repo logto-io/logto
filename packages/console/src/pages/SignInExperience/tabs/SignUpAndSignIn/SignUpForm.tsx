@@ -131,7 +131,7 @@ function SignUpForm() {
           render={({ field: { value, onChange } }) => (
             <Select
               value={value}
-              hasError={Boolean(errors.signUp?.identifier)}
+              error={Boolean(errors.signUp?.identifier)}
               options={signUpIdentifiers.map((identifier) => ({
                 value: identifier,
                 title: (

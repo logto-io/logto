@@ -47,8 +47,7 @@ function ConfigForm({ formItems }: Props) {
   }, [formItems, values]);
 
   const renderFormItem = (item: ConnectorConfigFormItem) => {
-    const hasError = Boolean(errors[item.key]);
-    const errorMessage = errors[item.key]?.message;
+    const error = errors[item.key]?.message ?? Boolean(errors[item.key]);
 
     const buildCommonProperties = () => ({
       ...register(item.key, {
@@ -56,7 +55,7 @@ function ConfigForm({ formItems }: Props) {
         valueAsNumber: item.type === ConnectorConfigFormItemType.Number,
       }),
       placeholder: item.placeholder,
-      hasError,
+      error,
     });
 
     if (item.type === ConnectorConfigFormItemType.Text) {
@@ -109,7 +108,7 @@ function ConfigForm({ formItems }: Props) {
               <Select
                 options={item.selectItems}
                 value={typeof value === 'string' ? value : undefined}
-                hasError={hasError}
+                error={error}
                 onChange={onChange}
               />
             );
@@ -119,8 +118,7 @@ function ConfigForm({ formItems }: Props) {
             return (
               <CodeEditor
                 language="json"
-                hasError={hasError}
-                errorMessage={errorMessage}
+                error={error}
                 value={typeof value === 'string' ? value : '{}'}
                 onChange={onChange}
               />
@@ -131,7 +129,7 @@ function ConfigForm({ formItems }: Props) {
           // This will happen when connector's version is ahead of AC
           return (
             <TextInput
-              error={hasError}
+              error={error}
               value={typeof value === 'string' ? value : ''}
               onChange={onChange}
             />

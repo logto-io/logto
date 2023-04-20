@@ -54,8 +54,7 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
             }}
             render={({ field: { onChange, value } }) => (
               <CodeEditor
-                hasError={Boolean(errors.config)}
-                errorMessage={errors.config?.message}
+                error={errors.config?.message ?? Boolean(errors.config)}
                 language="json"
                 value={value}
                 onChange={onChange}

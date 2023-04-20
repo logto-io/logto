@@ -23,7 +23,7 @@ type Props<T> = {
   options: Array<Option<T>>;
   onChange?: (value?: T) => void;
   isReadOnly?: boolean;
-  hasError?: boolean;
+  error?: string | boolean;
   placeholder?: ReactNode;
   isClearable?: boolean;
   size?: 'small' | 'medium' | 'large';
@@ -35,7 +35,7 @@ function Select<T extends string>({
   options,
   onChange,
   isReadOnly,
-  hasError,
+  error,
   placeholder,
   isClearable,
   size = 'large',
@@ -64,7 +64,7 @@ function Select<T extends string>({
           styles[size],
           isOpen && styles.open,
           isReadOnly && styles.readOnly,
-          hasError && styles.error,
+          Boolean(error) && styles.error,
           isClearable && value && styles.clearable,
           className
         )}
