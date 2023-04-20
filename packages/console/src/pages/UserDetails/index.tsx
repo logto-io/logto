@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -250,4 +250,4 @@ function UserDetails() {
   );
 }
 
-export default appInsightsReact.withAppInsights(UserDetails);
+export default withAppInsights(UserDetails);

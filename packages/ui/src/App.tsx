@@ -1,4 +1,5 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { AppInsightsProvider, getPrimaryDomain, useAppInsights } from '@logto/app-insights/react';
+import { useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -26,19 +27,17 @@ import { handleSearchParametersData } from './utils/search-parameters';
 
 import './scss/normalized.scss';
 
-if (shouldTrack) {
-  // Use `.then()` for better compatibility, update to top-level await some day
-  // eslint-disable-next-line unicorn/prefer-top-level-await, promise/prefer-await-to-then
-  void appInsightsReact.setup('ui').then((success) => {
-    if (success) {
-      console.debug('Initialized ApplicationInsights');
-    }
-  });
-}
-
 handleSearchParametersData();
 
-const App = () => {
+const Content = () => {
+  const { setup } = useAppInsights();
+
+  useEffect(() => {
+    if (shouldTrack) {
+      void setup('ui', { cookieDomain: getPrimaryDomain() });
+    }
+  }, [setup]);
+
   return (
     <BrowserRouter>
       <PageContextProvider>
@@ -96,6 +95,14 @@ const App = () => {
         </SettingsProvider>
       </PageContextProvider>
     </BrowserRouter>
+  );
+};
+
+const App = () => {
+  return (
+    <AppInsightsProvider>
+      <Content />
+    </AppInsightsProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -225,4 +225,4 @@ function Connectors() {
   );
 }
 
-export default appInsightsReact.withAppInsights(Connectors);
+export default withAppInsights(Connectors);

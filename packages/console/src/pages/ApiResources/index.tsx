@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
@@ -151,4 +151,4 @@ function ApiResources() {
   );
 }
 
-export default appInsightsReact.withAppInsights(ApiResources);
+export default withAppInsights(ApiResources);

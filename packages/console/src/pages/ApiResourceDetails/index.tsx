@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
 import { isManagementApi, Theme } from '@logto/schemas';
 import classNames from 'classnames';
@@ -148,4 +148,4 @@ function ApiResourceDetails() {
   );
 }
 
-export default appInsightsReact.withAppInsights(ApiResourceDetails);
+export default withAppInsights(ApiResourceDetails);

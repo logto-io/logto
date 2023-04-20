@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { useAppInsights } from '@logto/app-insights/react';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { type TFuncKey, useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ type Props = {
 
 const PageMeta = ({ titleKey, trackPageView = true }: Props) => {
   const { t } = useTranslation();
+  const { initialized, appInsights } = useAppInsights();
   const [pageViewTracked, setPageViewTracked] = useState(false);
   const keys = typeof titleKey === 'string' ? [titleKey] : titleKey;
   const rawTitle = keys.map((key) => t(key, { lng: 'en' })).join(' - ');
@@ -20,11 +21,11 @@ const PageMeta = ({ titleKey, trackPageView = true }: Props) => {
 
   useEffect(() => {
     // Only track once for the same page
-    if (shouldTrack && trackPageView && !pageViewTracked) {
-      appInsightsReact.trackPageView?.({ name: [rawTitle, 'SIE'].join(' - ') });
+    if (shouldTrack && initialized && trackPageView && !pageViewTracked) {
+      appInsights.trackPageView?.({ name: [rawTitle, 'SIE'].join(' - ') });
       setPageViewTracked(true);
     }
-  }, [pageViewTracked, rawTitle, trackPageView]);
+  }, [appInsights, initialized, pageViewTracked, rawTitle, trackPageView]);
 
   return <Helmet title={title} />;
 };

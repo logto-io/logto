@@ -8,9 +8,10 @@ import { type ComponentType } from 'react';
 export type SetupConfig = {
   connectionString?: string;
   clickPlugin?: IClickAnalyticsConfiguration;
+  cookieDomain?: string;
 };
 
-class AppInsightsReact {
+export class AppInsightsReact {
   protected reactPlugin?: ReactPlugin;
   protected clickAnalyticsPlugin?: ClickAnalyticsPlugin;
   protected withAITracking?: typeof withAITracking;
@@ -48,7 +49,8 @@ class AppInsightsReact {
       const { ApplicationInsights } = await import('@microsoft/applicationinsights-web');
 
       // Conditionally load ClickAnalytics plugin
-      const clickAnalyticsConfig = conditional(typeof config === 'object' && config.clickPlugin);
+      const configObject = conditional(typeof config === 'object' && config) ?? {};
+      const { cookieDomain, clickPlugin } = configObject;
       const initClickAnalyticsPlugin = async () => {
         const { ClickAnalyticsPlugin } = await import(
           '@microsoft/applicationinsights-clickanalytics-js'
@@ -62,13 +64,12 @@ class AppInsightsReact {
       this.reactPlugin = new ReactPlugin();
 
       // Assign ClickAnalytics prop
-      this.clickAnalyticsPlugin = conditional(
-        clickAnalyticsConfig && (await initClickAnalyticsPlugin())
-      );
+      this.clickAnalyticsPlugin = conditional(clickPlugin && (await initClickAnalyticsPlugin()));
 
       // Init ApplicationInsights instance
       this.appInsights = new ApplicationInsights({
         config: {
+          cookieDomain,
           connectionString,
           enableAutoRouteTracking: false,
           extensions: conditionalArray<ITelemetryPlugin>(
@@ -77,18 +78,25 @@ class AppInsightsReact {
           ),
           extensionConfig: conditional(
             this.clickAnalyticsPlugin && {
-              [this.clickAnalyticsPlugin.identifier]: clickAnalyticsConfig,
+              [this.clickAnalyticsPlugin.identifier]: clickPlugin,
             }
           ),
         },
       });
 
       this.appInsights.addTelemetryInitializer((item) => {
-        // The key 'ai.cloud.role' is extracted from Node SDK
-        // @see https://learn.microsoft.com/en-us/azure/azure-monitor/app/nodejs#multiple-roles-for-multi-component-applications
+        // @see https://github.com/microsoft/ApplicationInsights-JS#example-setting-cloud-role-name
         // @see https://github.com/microsoft/ApplicationInsights-node.js/blob/a573e40fc66981c6a3106bdc5b783d1d94f64231/Schema/PublicSchema/ContextTagKeys.bond#L83
-        // eslint-disable-next-line @silverhand/fp/no-mutation
+        /* eslint-disable @silverhand/fp/no-mutation */
         item.tags = [...(item.tags ?? []), { 'ai.cloud.role': cloudRole }];
+
+        // Extract UTM parameters
+        const searchParams = [...new URLSearchParams(window.location.search).entries()];
+        item.data = {
+          ...item.data,
+          ...Object.fromEntries(searchParams.filter(([key]) => key.startsWith('utm_'))),
+        };
+        /* eslint-enable @silverhand/fp/no-mutation */
       });
 
       this.appInsights.loadAppInsights();
@@ -112,3 +120,5 @@ class AppInsightsReact {
 }
 
 export const appInsightsReact = new AppInsightsReact();
+
+export const withAppInsights = appInsightsReact.withAppInsights.bind(appInsightsReact);

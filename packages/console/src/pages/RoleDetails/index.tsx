@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { Role } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
@@ -135,4 +135,4 @@ function RoleDetails() {
   );
 }
 
-export default appInsightsReact.withAppInsights(RoleDetails);
+export default withAppInsights(RoleDetails);

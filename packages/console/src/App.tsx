@@ -1,9 +1,9 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { AppInsightsProvider, getPrimaryDomain, useAppInsights } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 
 import 'overlayscrollbars/styles/overlayscrollbars.css';
@@ -26,17 +26,15 @@ import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 
-// Use `.then()` for better compatibility, update to top-level await some day
-// eslint-disable-next-line unicorn/prefer-top-level-await
-void appInsightsReact.setup('console').then((success) => {
-  if (success) {
-    console.debug('Initialized ApplicationInsights');
-  }
-});
 void initI18n();
 
 function Content() {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
+  const { setup } = useAppInsights();
+
+  useEffect(() => {
+    void setup('console', { cookieDomain: getPrimaryDomain() });
+  }, [setup]);
 
   const resources = deduplicate(
     conditionalArray(
@@ -90,9 +88,11 @@ function Content() {
 
 function App() {
   return (
-    <TenantsProvider>
-      <Content />
-    </TenantsProvider>
+    <AppInsightsProvider>
+      <TenantsProvider>
+        <Content />
+      </TenantsProvider>
+    </AppInsightsProvider>
   );
 }
 

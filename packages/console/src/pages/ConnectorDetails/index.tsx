@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -235,4 +235,4 @@ function ConnectorDetails() {
   );
 }
 
-export default appInsightsReact.withAppInsights(ConnectorDetails);
+export default withAppInsights(ConnectorDetails);

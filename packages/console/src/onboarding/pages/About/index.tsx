@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -144,4 +144,4 @@ function About() {
   );
 }
 
-export default appInsightsReact.withAppInsights(About);
+export default withAppInsights(About);

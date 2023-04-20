@@ -12,11 +12,15 @@
     "./*": {
       "import": "./lib/*.js",
       "types": "./lib/*.d.ts"
+    },
+    "./react": {
+      "import": "./lib/react/index.js",
+      "types": "./lib/react/index.d.ts"
     }
   },
   "//": "This field is for parcel. Remove after https://github.com/parcel-bundler/parcel/pull/8807 published.",
   "alias": {
-    "./react": "./lib/react.js"
+    "./react": "./lib/react/index.js"
   },
   "publishConfig": {
     "access": "public"
@@ -32,7 +36,9 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "3.0.1",
+    "@silverhand/eslint-config-react": "3.0.1",
     "@silverhand/ts-config": "3.0.0",
+    "@silverhand/ts-config-react": "3.0.0",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.31",
     "eslint": "^8.34.0",
@@ -47,7 +53,7 @@
     "node": "^18.12.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand/react"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {

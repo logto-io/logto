@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
@@ -179,4 +179,4 @@ function Users() {
   );
 }
 
-export default appInsightsReact.withAppInsights(Users);
+export default withAppInsights(Users);

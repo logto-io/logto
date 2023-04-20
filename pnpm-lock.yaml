@@ -54,7 +54,13 @@ importers:
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+      '@silverhand/eslint-config-react':
+        specifier: 3.0.1
+        version: 3.0.1(eslint@8.34.0)(postcss@8.4.21)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
+        specifier: 3.0.0
+        version: 3.0.0(typescript@5.0.2)
+      '@silverhand/ts-config-react':
         specifier: 3.0.0
         version: 3.0.0(typescript@5.0.2)
       '@types/node':
@@ -8527,6 +8533,28 @@ packages:
       - typescript
     dev: true
 
+  /@silverhand/eslint-config-react@3.0.1(eslint@8.34.0)(postcss@8.4.21)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-8roPq3t5qgi4pxYh3It2BhS91LVsp740vhNXVn56RTID0ZdW27LMrV2yp5uTT6kVzLdFYis4nIPlOVFCnv+VKA==}
+    engines: {node: ^18.12.0}
+    peerDependencies:
+      stylelint: ^15.0.0
+    dependencies:
+      '@silverhand/eslint-config': 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.31.10)(eslint@8.34.0)
+      eslint-plugin-jsx-a11y: 6.6.1(eslint@8.34.0)
+      eslint-plugin-react: 7.31.10(eslint@8.34.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.34.0)
+      stylelint: 15.0.0
+      stylelint-config-xo-scss: 0.15.0(postcss@8.4.21)(stylelint@15.0.0)
+    transitivePeerDependencies:
+      - eslint
+      - eslint-import-resolver-webpack
+      - postcss
+      - prettier
+      - supports-color
+      - typescript
+    dev: true
+
   /@silverhand/eslint-config-react@3.0.1(eslint@8.34.0)(postcss@8.4.6)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2):
     resolution: {integrity: sha512-8roPq3t5qgi4pxYh3It2BhS91LVsp740vhNXVn56RTID0ZdW27LMrV2yp5uTT6kVzLdFYis4nIPlOVFCnv+VKA==}
     engines: {node: ^18.12.0}
@@ -16914,6 +16942,15 @@ packages:
       postcss: 8.4.14
     dev: true
 
+  /postcss-scss@4.0.5(postcss@8.4.21):
+    resolution: {integrity: sha512-F7xpB6TrXyqUh3GKdyB4Gkp3QL3DDW1+uI+gxx/oJnUt/qXI4trj5OGlp9rOKdoABGULuqtqeG+3HEVQk4DjmA==}
+    engines: {node: '>=12.0'}
+    peerDependencies:
+      postcss: ^8.3.3
+    dependencies:
+      postcss: 8.4.21
+    dev: true
+
   /postcss-scss@4.0.5(postcss@8.4.6):
     resolution: {integrity: sha512-F7xpB6TrXyqUh3GKdyB4Gkp3QL3DDW1+uI+gxx/oJnUt/qXI4trj5OGlp9rOKdoABGULuqtqeG+3HEVQk4DjmA==}
     engines: {node: '>=12.0'}
@@ -18814,6 +18851,20 @@ packages:
       stylelint: '>=14.5.1 || ^15.0.0'
     dependencies:
       postcss-scss: 4.0.5(postcss@8.4.14)
+      stylelint: 15.0.0
+      stylelint-config-xo: 0.21.1(stylelint@15.0.0)
+      stylelint-scss: 4.3.0(stylelint@15.0.0)
+    transitivePeerDependencies:
+      - postcss
+    dev: true
+
+  /stylelint-config-xo-scss@0.15.0(postcss@8.4.21)(stylelint@15.0.0):
+    resolution: {integrity: sha512-X9WD8cDofWFWy3uaKdwwm+DjEvgI/+h7AtlaPagkhNAeOWH/GFQoeciBvNvyJ8tB1p00SoIzCn2IIOIKXCbxYA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      stylelint: '>=14.5.1 || ^15.0.0'
+    dependencies:
+      postcss-scss: 4.0.5(postcss@8.4.21)
       stylelint: 15.0.0
       stylelint-config-xo: 0.21.1(stylelint@15.0.0)
       stylelint-scss: 4.3.0(stylelint@15.0.0)
