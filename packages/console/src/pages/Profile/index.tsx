@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,4 +99,4 @@ function Profile() {
   );
 }
 
-export default appInsightsReact.withAppInsights(Profile);
+export default withAppInsights(Profile);

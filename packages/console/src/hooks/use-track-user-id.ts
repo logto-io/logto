@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { useAppInsights } from '@logto/app-insights/react';
 import { useLogto } from '@logto/react';
 import { trySafe } from '@silverhand/essentials';
 import { useEffect } from 'react';
@@ -10,17 +10,19 @@ class NoIdTokenClaimsError extends Error {
 
 const useTrackUserId = () => {
   const { isAuthenticated, getIdTokenClaims } = useLogto();
+  const {
+    initialized,
+    appInsights: { instance },
+  } = useAppInsights();
 
   useEffect(() => {
     const setUserId = async () => {
-      const { instance: appInsights } = appInsightsReact;
-
-      if (!appInsights) {
+      if (!instance) {
         return;
       }
 
       if (!isAuthenticated) {
-        appInsights.clearAuthenticatedUserContext();
+        instance.clearAuthenticatedUserContext();
 
         return;
       }
@@ -28,14 +30,16 @@ const useTrackUserId = () => {
       const claims = await trySafe(getIdTokenClaims());
 
       if (claims) {
-        appInsights.setAuthenticatedUserContext(claims.sub, claims.sub, true);
+        instance.setAuthenticatedUserContext(claims.sub, claims.sub, true);
       } else {
-        appInsights.trackException({ exception: new NoIdTokenClaimsError() });
+        instance.trackException({ exception: new NoIdTokenClaimsError() });
       }
     };
 
-    void setUserId();
-  }, [getIdTokenClaims, isAuthenticated]);
+    if (initialized) {
+      void setUserId();
+    }
+  }, [getIdTokenClaims, initialized, instance, isAuthenticated]);
 };
 
 export default useTrackUserId;

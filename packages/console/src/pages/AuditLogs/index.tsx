@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 
 import AuditLogTable from '@/components/AuditLogTable';
 import CardTitle from '@/components/CardTitle';
@@ -17,4 +17,4 @@ function AuditLogs() {
   );
 }
 
-export default appInsightsReact.withAppInsights(AuditLogs);
+export default withAppInsights(AuditLogs);

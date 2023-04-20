@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { useAppInsights } from '@logto/app-insights/react';
 import type { AdminConsoleKey } from '@logto/phrases';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
@@ -14,6 +14,7 @@ type Props = {
 
 function PageMeta({ titleKey, trackPageView = true }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { initialized, appInsights } = useAppInsights();
   const [pageViewTracked, setPageViewTracked] = useState(false);
   const keys = typeof titleKey === 'string' ? [titleKey] : titleKey;
   const rawTitle = keys.map((key) => t(key, { lng: 'en' })).join(' - ');
@@ -21,11 +22,11 @@ function PageMeta({ titleKey, trackPageView = true }: Props) {
 
   useEffect(() => {
     // Only track once for the same page
-    if (trackPageView && !pageViewTracked) {
-      appInsightsReact.trackPageView?.({ name: [rawTitle, mainTitle].join(' - ') });
+    if (initialized && trackPageView && !pageViewTracked) {
+      appInsights.trackPageView?.({ name: [rawTitle, mainTitle].join(' - ') });
       setPageViewTracked(true);
     }
-  }, [pageViewTracked, rawTitle, trackPageView]);
+  }, [appInsights, initialized, pageViewTracked, rawTitle, trackPageView]);
 
   return <Helmet title={title} />;
 }

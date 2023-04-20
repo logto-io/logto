@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { Application, ApplicationResponse, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -235,4 +235,4 @@ function ApplicationDetails() {
   );
 }
 
-export default appInsightsReact.withAppInsights(ApplicationDetails);
+export default withAppInsights(ApplicationDetails);

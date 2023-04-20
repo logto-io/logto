@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
@@ -147,4 +147,4 @@ function Applications() {
   );
 }
 
-export default appInsightsReact.withAppInsights(Applications);
+export default withAppInsights(Applications);

@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import classNames from 'classnames';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -63,4 +63,4 @@ function Congrats() {
   );
 }
 
-export default appInsightsReact.withAppInsights(Congrats);
+export default withAppInsights(Congrats);

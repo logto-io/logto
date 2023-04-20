@@ -1,4 +1,4 @@
-import { appInsightsReact } from '@logto/app-insights/react';
+import { withAppInsights } from '@logto/app-insights/react';
 import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
@@ -252,4 +252,4 @@ function SignInExperience() {
   );
 }
 
-export default appInsightsReact.withAppInsights(SignInExperience);
+export default withAppInsights(SignInExperience);
