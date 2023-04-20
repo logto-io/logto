@@ -96,4 +96,6 @@ describe('buildInsertInto()', () => {
       new InsertionError(Users, dataToInsert)
     );
   });
+
+  // TODO(LOG-6039) @xiaoyijun Add tests for inserting data with array fields when hooks is updated
 });

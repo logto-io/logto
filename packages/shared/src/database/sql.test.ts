@@ -51,7 +51,11 @@ describe('convertToPrimitiveOrSql()', () => {
     expect(convertToPrimitiveOrSql(normalKey, 123)).toEqual(123);
     expect(convertToPrimitiveOrSql(normalKey, true)).toEqual(true);
     expect(convertToPrimitiveOrSql(normalKey, { foo: 'bar' })).toEqual('{"foo":"bar"}');
-    expect(convertToPrimitiveOrSql(normalKey, ['bar'])).toEqual('["bar"]');
+    expect(convertToPrimitiveOrSql(normalKey, ['bar'])).toEqual({
+      sql: 'ARRAY[$1]',
+      type: SqlToken,
+      values: ['bar'],
+    });
   });
 
   it('converts empty string to null value', () => {
@@ -131,6 +135,18 @@ describe('convertToTimestamp()', () => {
       sql: 'to_timestamp($1)',
       type: SqlToken,
       values: [time.valueOf() / 1000],
+    });
+  });
+});
+
+describe('convertToTimestamp()', () => {
+  const key = 'foo';
+  const value = ['bar', 'baz'];
+  it('converts value to sql when the value is an array', () => {
+    expect(convertToPrimitiveOrSql(key, value)).toEqual({
+      sql: 'ARRAY[$1, $2]',
+      type: SqlToken,
+      values: value,
     });
   });
 });
