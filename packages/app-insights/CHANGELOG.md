@@ -1,5 +1,12 @@
 # @logto/app-insights
 
+## 1.2.0
+
+### Minor Changes
+
+- 4331deb6f: support ClickAnalytics plugin
+- 748878ce5: add React context and hook to app-insights, fix init issue for frontend projects
+
 ## 1.1.0
 
 ### Minor Changes

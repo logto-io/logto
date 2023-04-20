@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.2
+
+### Patch Changes
+
+- 748878ce5: add React context and hook to app-insights, fix init issue for frontend projects
+
 ## 1.2.1
 
 ### Patch Changes

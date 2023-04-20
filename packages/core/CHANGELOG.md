@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [4331deb6f]
+- Updated dependencies [748878ce5]
+  - @logto/app-insights@1.2.0
+  - @logto/console@1.2.2
+  - @logto/ui@1.1.3
+  - @logto/schemas@1.2.2
+  - @logto/cli@1.2.2
+
 ## 1.2.1
 
 ### Patch Changes
