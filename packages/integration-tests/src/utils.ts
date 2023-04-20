@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+
 import { assert } from '@silverhand/essentials';
 
 export const generateName = () => crypto.randomUUID();
