@@ -1,7 +1,12 @@
 import type { IdentifierSqlToken } from 'slonik';
 
-export type SchemaValuePrimitive = string | number | boolean | undefined;
-export type SchemaValue = SchemaValuePrimitive | Record<string, unknown> | unknown[] | null;
+export type SchemaValuePrimitive = string | number | boolean;
+export type SchemaValue =
+  | SchemaValuePrimitive
+  | SchemaValuePrimitive[]
+  | Record<string, unknown>
+  | null
+  | undefined;
 export type SchemaLike<Key extends string = string> = {
   [key in Key]: SchemaValue;
 };

@@ -41,8 +41,10 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
       ({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType, isString, maxLength }) => {
         if (tsType) {
           return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-            nullable && '.nullable()'
-          )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
+            isArray && '.array()'
+          )}${conditionalString(nullable && '.nullable()')}${conditionalString(
+            (nullable || hasDefaultValue) && '.optional()'
+          )},`;
         }
 
         return `  ${camelcase(name)}: z.${
@@ -61,8 +63,8 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     ...fields.map(({ name, type, isArray, isEnum, nullable, tsType, isString, maxLength }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          nullable && '.nullable()'
-        )},`;
+          isArray && '.array()'
+        )}${conditionalString(nullable && '.nullable()')},`;
       }
 
       return `  ${camelcase(name)}: z.${

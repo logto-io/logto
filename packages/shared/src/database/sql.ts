@@ -43,6 +43,9 @@ export const convertToPrimitiveOrSql = (
   }
 
   if (typeof value === 'object') {
+    if (Array.isArray(value)) {
+      return sql`ARRAY[${sql.join(value, sql`, `)}]`;
+    }
     return JSON.stringify(value);
   }
 
