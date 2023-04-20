@@ -1,5 +1,3 @@
-import { Crypto } from '@peculiar/webcrypto';
-
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
 // eslint-disable-next-line @silverhand/fp/no-mutating-methods
 Object.defineProperty(window, 'matchMedia', {
@@ -16,9 +14,6 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
-
-// eslint-disable-next-line @silverhand/fp/no-mutation, no-restricted-syntax
-global.crypto = new Crypto() as typeof global.crypto;
 
 const translation = (key: string) => key;
 
