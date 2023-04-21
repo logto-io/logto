@@ -2898,8 +2898,8 @@ importers:
         specifier: ^22.4.15
         version: 22.4.15
       i18next-browser-languagedetector:
-        specifier: ^6.1.4
-        version: 6.1.4
+        specifier: ^7.0.1
+        version: 7.0.1
       just-kebab-case:
         specifier: ^4.2.0
         version: 4.2.0
@@ -2967,8 +2967,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(csstype@3.0.11)(react-dom@18.2.0)(react@18.2.0)
       react-i18next:
-        specifier: ^11.18.3
-        version: 11.18.3(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^12.2.0
+        version: 12.2.0(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
       react-markdown:
         specifier: ^8.0.0
         version: 8.0.0(@types/react@18.0.31)(react@18.2.0)
@@ -3334,8 +3334,8 @@ importers:
         specifier: ^22.4.15
         version: 22.4.15
       i18next-browser-languagedetector:
-        specifier: ^6.1.4
-        version: 6.1.4
+        specifier: ^7.0.1
+        version: 7.0.1
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
@@ -3355,8 +3355,8 @@ importers:
         specifier: ^18.0.0
         version: 18.2.0(react@18.2.0)
       react-i18next:
-        specifier: ^11.18.3
-        version: 11.18.3(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^12.2.0
+        version: 12.2.0(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
       stylelint:
         specifier: ^15.0.0
         version: 15.0.0
@@ -3895,8 +3895,8 @@ importers:
         specifier: ^22.4.15
         version: 22.4.15
       i18next-browser-languagedetector:
-        specifier: ^6.1.4
-        version: 6.1.4
+        specifier: ^7.0.1
+        version: 7.0.1
       identity-obj-proxy:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3955,8 +3955,8 @@ importers:
         specifier: ^7.34.0
         version: 7.34.0(react@18.2.0)
       react-i18next:
-        specifier: ^11.18.3
-        version: 11.18.3(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^12.2.0
+        version: 12.2.0(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
       react-modal:
         specifier: ^3.15.1
         version: 3.15.1(react-dom@18.2.0)(react@18.2.0)
@@ -6151,13 +6151,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
-    dev: true
-
-  /@babel/runtime@7.18.3:
-    resolution: {integrity: sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.9
     dev: true
 
   /@babel/runtime@7.19.4:
@@ -13300,10 +13293,10 @@ packages:
       uuid: 8.3.2
       uuid-parse: 1.1.0
 
-  /i18next-browser-languagedetector@6.1.4:
-    resolution: {integrity: sha512-wukWnFeU7rKIWT66VU5i8I+3Zc4wReGcuDK2+kuFhtoxBRGWGdvYI9UQmqNL/yQH1KogWwh+xGEaIPH8V/i2Zg==}
+  /i18next-browser-languagedetector@7.0.1:
+    resolution: {integrity: sha512-Pa5kFwaczXJAeHE56CHG2aWzFBMJNUNghf0Pm4SwSrEMps/PTKqW90EYWlIvhuYStf3Sn1K0vw+gH3+TLdkH1g==}
     dependencies:
-      '@babel/runtime': 7.18.3
+      '@babel/runtime': 7.21.0
     dev: true
 
   /i18next@22.4.15:
@@ -17446,8 +17439,8 @@ packages:
       - csstype
     dev: true
 
-  /react-i18next@11.18.3(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-EttTX31HbqzZymUM3SIrMPuvamfSXFZVsDHm/ZAqoDfTLjhzlwyxqfbDNxcKNAGOi2mjZaXfR7hSNMlvLNpB/g==}
+  /react-i18next@12.2.0(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-5XeVgSygaGfyFmDd2WcXvINRw2WEC1XviW1LXY/xLOEMzsCFRwKqfnHN+hUjla8ZipbVJR27GCMSuTr0BhBBBQ==}
     peerDependencies:
       i18next: '>= 19.0.0'
       react: '>= 16.8.0 || ^18.0.0'
@@ -17459,7 +17452,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.18.3
+      '@babel/runtime': 7.21.0
       html-parse-stringify: 3.0.1
       i18next: 22.4.15
       react: 18.2.0
@@ -17796,10 +17789,6 @@ packages:
 
   /regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-
-  /regenerator-runtime@0.13.9:
-    resolution: {integrity: sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==}
-    dev: true
 
   /regexp-tree@0.1.24:
     resolution: {integrity: sha512-s2aEVuLhvnVJW6s/iPgEGK6R+/xngd2jNQ+xy4bXNDKxZKJH6jpPHY6kVeVv1IeLCHgswRj+Kl3ELaDjG6V1iw==}
