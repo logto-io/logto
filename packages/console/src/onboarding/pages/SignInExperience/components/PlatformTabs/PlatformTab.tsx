@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import DynamicT from '@/components/DynamicT';
 import type { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -32,7 +33,7 @@ function PlatformTab({ isSelected, icon, title, tab, onClick }: Props) {
       })}
     >
       <span className={styles.icon}>{icon}</span>
-      {t(title)}
+      <DynamicT forKey={title} />
     </div>
   );
 }

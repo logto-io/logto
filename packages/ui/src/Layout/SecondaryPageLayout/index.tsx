@@ -1,5 +1,5 @@
+import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import type { TFuncKey } from 'react-i18next';
 
 import NavBar from '@/components/NavBar';
 import PageMeta from '@/components/PageMeta';
@@ -38,9 +38,9 @@ const SecondaryPageLayout = ({
       )}
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.title}>{t(title, titleProps)}</div>
+          <div className={styles.title}>{t(title, titleProps ?? {})}</div>
           {description && (
-            <div className={styles.description}>{t(description, descriptionProps)}</div>
+            <div className={styles.description}>{t(description, descriptionProps ?? {})}</div>
           )}
         </div>
 

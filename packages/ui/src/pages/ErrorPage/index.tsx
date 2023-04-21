@@ -1,6 +1,6 @@
 import { Theme } from '@logto/schemas';
+import type { TFuncKey } from 'i18next';
 import { useContext } from 'react';
-import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';

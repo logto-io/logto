@@ -26,30 +26,30 @@ type SignInIdentifierPhrase = {
   [key in SignInIdentifier]: AdminConsoleKey;
 };
 
-export const signInIdentifierPhrase: SignInIdentifierPhrase = Object.freeze({
+export const signInIdentifierPhrase = Object.freeze({
   [SignInIdentifier.Email]: 'sign_in_exp.sign_up_and_sign_in.identifiers_email',
   [SignInIdentifier.Phone]: 'sign_in_exp.sign_up_and_sign_in.identifiers_phone',
   [SignInIdentifier.Username]: 'sign_in_exp.sign_up_and_sign_in.identifiers_username',
-} as const);
+}) satisfies SignInIdentifierPhrase;
 
 type SignUpIdentifierPhrase = {
   [key in SignUpIdentifier]: AdminConsoleKey;
 };
 
-export const signUpIdentifierPhrase: SignUpIdentifierPhrase = Object.freeze({
+export const signUpIdentifierPhrase = Object.freeze({
   [SignUpIdentifier.Email]: 'sign_in_exp.sign_up_and_sign_in.identifiers_email',
   [SignUpIdentifier.Phone]: 'sign_in_exp.sign_up_and_sign_in.identifiers_phone',
   [SignUpIdentifier.Username]: 'sign_in_exp.sign_up_and_sign_in.identifiers_username',
   [SignUpIdentifier.EmailOrSms]: 'sign_in_exp.sign_up_and_sign_in.identifiers_email_or_sms',
   [SignUpIdentifier.None]: 'sign_in_exp.sign_up_and_sign_in.identifiers_none',
-} as const);
+}) satisfies SignUpIdentifierPhrase;
 
 type NoConnectorWarningPhrase = {
   [key in ConnectorType]: AdminConsoleKey;
 };
 
-export const noConnectorWarningPhrase: NoConnectorWarningPhrase = Object.freeze({
+export const noConnectorWarningPhrase = Object.freeze({
   [ConnectorType.Email]: 'sign_in_exp.setup_warning.no_connector_email',
   [ConnectorType.Sms]: 'sign_in_exp.setup_warning.no_connector_sms',
   [ConnectorType.Social]: 'sign_in_exp.setup_warning.no_connector_social',
-} as const);
+}) satisfies NoConnectorWarningPhrase;

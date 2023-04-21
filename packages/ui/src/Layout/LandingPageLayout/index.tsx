@@ -1,7 +1,7 @@
 import classNames from 'classnames';
+import type { TFuncKey } from 'i18next';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
-import type { TFuncKey } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import BrandingHeader from '@/components/BrandingHeader';

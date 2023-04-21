@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import TadaDark from '@/assets/images/tada-dark.svg';
 import Tada from '@/assets/images/tada.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import DynamicT from '@/components/DynamicT';
 import Index from '@/components/Index';
 import useTheme from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -77,7 +78,7 @@ function GetStartedProgress() {
               icon={<Index className={styles.index} index={index + 1} isComplete={isComplete} />}
               onClick={onClick}
             >
-              {t(title)}
+              <DynamicT forKey={title} />
             </DropdownItem>
           ))}
         </div>

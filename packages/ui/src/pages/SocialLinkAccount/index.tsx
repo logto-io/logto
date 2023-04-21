@@ -1,5 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
-import type { TFuncKey } from 'react-i18next';
+import type { TFuncKey } from 'i18next';
 import { useParams, useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
 

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import type { ReactChild, ReactNode } from 'react';
+import type { TFuncKey } from 'i18next';
+import type { ReactNode } from 'react';
 import { useMemo, useState } from 'react';
-import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ import { getPath } from '../../utils';
 import * as styles from './index.module.scss';
 
 type Props = {
-  icon?: ReactChild;
+  icon?: ReactNode;
   titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
   isActive?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;

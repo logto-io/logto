@@ -1,8 +1,8 @@
 import { usernameRegEx, emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
+import type { TFuncKey } from 'i18next';
 import { parsePhoneNumberWithError, ParseError } from 'libphonenumber-js/mobile';
-import type { TFuncKey } from 'react-i18next';
 
 import type { ErrorType } from '@/components/ErrorMessage';
 import type { IdentifierInputType } from '@/components/InputFields/SmartInputField';
@@ -108,14 +108,12 @@ export const getGeneralIdentifierErrorMessage = (
   type: 'required' | 'invalid'
 ) => {
   const data = {
-    types: enabledFields.map((field) =>
-      t<'translation', TFuncKey>(identifierInputDescriptionMap[field])
-    ),
+    types: enabledFields.map((field) => t(identifierInputDescriptionMap[field])),
   };
 
   const code = type === 'required' ? 'error.general_required' : 'error.general_invalid';
 
-  return t<'translation', TFuncKey>(code, data);
+  return t(code, data);
 };
 
 export const parseIdentifierValue = (type?: IdentifierInputType, value?: string) => {

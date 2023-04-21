@@ -9,21 +9,21 @@ type TitlePlaceHolder = {
   [key in ConnectorType]: AdminConsoleKey;
 };
 
-export const connectorTitlePlaceHolder: TitlePlaceHolder = Object.freeze({
+export const connectorTitlePlaceHolder = Object.freeze({
   [ConnectorType.Sms]: 'connectors.type.sms',
   [ConnectorType.Email]: 'connectors.type.email',
   [ConnectorType.Social]: 'connectors.type.social',
-});
+}) satisfies TitlePlaceHolder;
 
 type ConnectorPlatformLabel = {
   [key in ConnectorPlatform]: AdminConsoleKey;
 };
 
-export const connectorPlatformLabel: ConnectorPlatformLabel = Object.freeze({
+export const connectorPlatformLabel = Object.freeze({
   [ConnectorPlatform.Native]: 'connectors.platform.native',
   [ConnectorPlatform.Universal]: 'connectors.platform.universal',
   [ConnectorPlatform.Web]: 'connectors.platform.web',
-});
+}) satisfies ConnectorPlatformLabel;
 
 type ConnectorPlaceholderIcon = {
   [key in ConnectorType]?: SvgComponent;
@@ -32,7 +32,7 @@ type ConnectorPlaceholderIcon = {
 export const connectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.Sms]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
-} as const);
+});
 
 export const defaultSmsConnectorGroup: ConnectorGroup = {
   id: 'default-sms-connector',

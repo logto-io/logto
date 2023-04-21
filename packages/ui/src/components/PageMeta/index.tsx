@@ -1,7 +1,8 @@
 import { useAppInsights } from '@logto/app-insights/react';
+import { type TFuncKey } from 'i18next';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { type TFuncKey, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import { shouldTrack } from '@/utils/cookies';
 

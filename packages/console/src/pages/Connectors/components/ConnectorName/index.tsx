@@ -73,7 +73,7 @@ function ConnectorName({ connectorGroup, isDemo = false }: Props) {
                   platform && (
                     <div key={id} className={styles.platform}>
                       <ConnectorPlatformIcon platform={platform} />
-                      {t(`${connectorPlatformLabel[platform]}`)}
+                      {t(connectorPlatformLabel[platform])}
                     </div>
                   )
               )}

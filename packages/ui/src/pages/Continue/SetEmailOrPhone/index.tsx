@@ -1,6 +1,6 @@
 import type { MissingProfile } from '@logto/schemas';
 import { SignInIdentifier } from '@logto/schemas';
-import type { TFuncKey } from 'react-i18next';
+import type { TFuncKey } from 'i18next';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';

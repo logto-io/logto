@@ -5,6 +5,7 @@ import { cloneElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
+import DynamicT from '@/components/DynamicT';
 
 import NotSet from '../NotSet';
 
@@ -56,7 +57,7 @@ function CardContent<T extends Nullable<boolean | string | Record<string, unknow
                       cloneElement(icon, {
                         className: styles.icon,
                       })}
-                    {typeof label === 'string' ? t(label) : label}
+                    {typeof label === 'string' ? <DynamicT forKey={label} /> : label}
                   </div>
                 </td>
                 <td>{renderer(value)}</td>

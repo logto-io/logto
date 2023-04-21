@@ -1,7 +1,7 @@
 import { useLogto } from '@logto/react';
-import { t } from 'i18next';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -13,6 +13,7 @@ import useSwrFetcher from './use-swr-fetcher';
 
 const useMeCustomData = () => {
   const { isAuthenticated, error: authError } = useLogto();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const userId = useLogtoUserId();
   const shouldFetch = isAuthenticated && !authError && userId;
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
@@ -38,7 +39,7 @@ const useMeCustomData = () => {
         .json();
       await mutate(updated);
     },
-    [api, mutate, userId]
+    [api, mutate, t, userId]
   );
 
   return {

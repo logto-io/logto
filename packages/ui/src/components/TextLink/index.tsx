@@ -1,13 +1,15 @@
 import classNames from 'classnames';
+import type { TFuncKey } from 'i18next';
 import { useMemo } from 'react';
 import type { ReactNode, AnchorHTMLAttributes } from 'react';
-import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { LinkProps } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { useIframeModal } from '@/Providers/IframeModalProvider';
 import usePlatform from '@/hooks/use-platform';
+
+import DynamicT from '../DynamicT';
 
 import * as styles from './index.module.scss';
 
@@ -54,7 +56,7 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
     return (
       <Link className={classNames(styles.link, styles[type], className)} to={to} {...rest}>
         {icon}
-        {children ?? (text ? t(text) : '')}
+        {children ?? <DynamicT forKey={text} />}
       </Link>
     );
   }
@@ -66,7 +68,7 @@ const TextLink = ({ className, children, text, icon, type = 'primary', to, ...re
       rel="noopener"
     >
       {icon}
-      {children ?? (text ? t(text) : '')}
+      {children ?? <DynamicT forKey={text} />}
     </a>
   );
 };

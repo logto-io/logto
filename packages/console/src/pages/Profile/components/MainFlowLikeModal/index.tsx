@@ -44,7 +44,7 @@ function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, 
           {subtitle && (
             <span className={styles.subtitle}>
               <Trans components={{ strong: <span className={styles.strong} /> }}>
-                {t(subtitle, subtitleProps)}
+                {t(subtitle, subtitleProps ?? {})}
               </Trans>
             </span>
           )}

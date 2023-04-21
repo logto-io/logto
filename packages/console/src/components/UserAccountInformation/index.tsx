@@ -46,7 +46,7 @@ function UserAccountInformation({
       primaryEmail && `${t('user_details.created_email')} ${primaryEmail}`,
       primaryPhone && `${t('user_details.created_phone')} ${primaryPhone}`,
       username && `${t('user_details.created_username')} ${username}`,
-      `${passwordLabel ?? t('user_details.created_password')} ${password}`
+      `${passwordLabel ?? t('user_details.created_username')} ${password}`
     ).join('\n');
 
     await navigator.clipboard.writeText(content);

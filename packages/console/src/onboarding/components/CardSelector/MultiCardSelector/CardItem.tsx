@@ -2,6 +2,7 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
+import DynamicT from '@/components/DynamicT';
 import { Tooltip } from '@/components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -52,7 +53,7 @@ function CardItem({
         {icon && <span className={styles.icon}>{icon}</span>}
         <div className={styles.content}>
           <div>
-            {typeof title === 'string' ? t(title) : title}
+            {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
             {trailingTag && (
               <span className={classNames(styles.tag, styles.trailingTag)}>{t(trailingTag)}</span>
             )}

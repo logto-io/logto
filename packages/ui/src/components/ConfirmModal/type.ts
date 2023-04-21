@@ -1,5 +1,5 @@
+import type { TFuncKey } from 'i18next';
 import type { ReactNode } from 'react';
-import type { TFuncKey } from 'react-i18next';
 
 export type ModalProps = {
   className?: string;
