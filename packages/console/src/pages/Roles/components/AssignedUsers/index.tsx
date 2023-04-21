@@ -1,5 +1,6 @@
+import type { User } from '@logto/schemas';
+
 import UserAvatar from '@/components/UserAvatar';
-import type { User } from '@/types/user';
 
 import * as styles from './index.module.scss';
 

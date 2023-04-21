@@ -1,4 +1,4 @@
-import type { User } from '@/types/user';
+import type { User } from '@logto/schemas';
 
 import type { UserDetailsForm } from './types';
 

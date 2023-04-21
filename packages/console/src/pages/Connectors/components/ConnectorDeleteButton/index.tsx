@@ -1,3 +1,4 @@
+import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,7 @@ import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import DeleteConnectorConfirmModal from '@/pages/ConnectorDetails/components/DeleteConnectorConfirmModal';
-import type { ConnectorResponse, ConnectorGroup } from '@/types/connector';
+import type { ConnectorGroup } from '@/types/connector';
 
 type Props = {
   connectorGroup: ConnectorGroup;

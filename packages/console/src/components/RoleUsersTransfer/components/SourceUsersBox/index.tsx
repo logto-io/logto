@@ -1,3 +1,4 @@
+import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -13,7 +14,6 @@ import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';
-import type { User } from '@/types/user';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import SourceUserItem from '../SourceUserItem';

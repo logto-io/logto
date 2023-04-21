@@ -1,7 +1,7 @@
+import type { User } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
-import type { User } from '@/types/user';
 
 import TargetUserItem from '../TargetUserItem';
 

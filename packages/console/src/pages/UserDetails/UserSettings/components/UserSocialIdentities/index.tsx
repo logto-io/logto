@@ -1,4 +1,4 @@
-import type { Identities } from '@logto/schemas';
+import type { Identities, ConnectorResponse } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -12,7 +12,6 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { getConnectorGroups } from '@/pages/Connectors/utils';
-import type { ConnectorResponse } from '@/types/connector';
 
 import * as styles from './index.module.scss';
 

@@ -1,7 +1,7 @@
-import type { ConnectorFactoryResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 
-import type { ConnectorResponse, ConnectorGroup } from '@/types/connector';
+import type { ConnectorGroup } from '@/types/connector';
 
 export const getConnectorGroups = <
   T extends ConnectorResponse | ConnectorFactoryResponse = ConnectorResponse

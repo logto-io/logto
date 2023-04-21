@@ -1,8 +1,7 @@
 import type { IdTokenClaims } from '@logto/react';
+import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-
-import type { User } from '@/types/user';
 
 import UserAvatar from '../UserAvatar';
 

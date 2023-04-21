@@ -1,9 +1,7 @@
-import type { SignInExperience } from '@logto/schemas';
 import { SignInIdentifier, ConnectorType } from '@logto/schemas';
+import type { SignInExperience, ConnectorResponse } from '@logto/schemas';
 import { useCallback } from 'react';
 import useSWR from 'swr';
-
-import type { ConnectorResponse } from '@/types/connector';
 
 import type { RequestError } from './use-api';
 

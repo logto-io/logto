@@ -1,6 +1,6 @@
 import { isLanguageTag } from '@logto/language-kit';
-import type { ConnectorFactoryResponse, RequestErrorBody } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorFactoryResponse, RequestErrorBody, ConnectorResponse } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -24,7 +24,6 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import * as modalStyles from '@/scss/modal.module.scss';
-import type { ConnectorResponse } from '@/types/connector';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';

@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
-import type { ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import { Theme, ConnectorType } from '@logto/schemas';
+import type { ConnectorMetadata, SignInExperience, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';
@@ -12,7 +12,6 @@ import PhoneInfo from '@/assets/images/phone-info.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import type { ConnectorResponse } from '@/types/connector';
 
 import * as styles from './index.module.scss';
 import { PreviewPlatform } from './types';

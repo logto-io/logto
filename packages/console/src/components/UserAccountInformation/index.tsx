@@ -1,4 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import type { User } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -10,7 +11,6 @@ import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
-import type { User } from '@/types/user';
 
 import * as styles from './index.module.scss';
 

@@ -1,8 +1,8 @@
+import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 
 import DefaultAvatar from '@/assets/images/default-avatar.svg';
-import type { User } from '@/types/user';
 
 import ImageWithErrorFallback from '../ImageWithErrorFallback';
 

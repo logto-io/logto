@@ -1,10 +1,10 @@
+import type { User } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/images/close.svg';
 import IconButton from '@/components/IconButton';
 import UserAvatar from '@/components/UserAvatar';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
-import type { User } from '@/types/user';
 import { getUserTitle } from '@/utils/user';
 
 import * as styles from './index.module.scss';

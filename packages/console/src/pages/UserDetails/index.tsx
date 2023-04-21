@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import type { User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -25,7 +26,6 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import type { User } from '@/types/user';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import UserAccountInformation from '../../components/UserAccountInformation';

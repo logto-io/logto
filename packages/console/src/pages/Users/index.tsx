@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -22,7 +23,6 @@ import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import * as resourcesStyles from '@/scss/resources.module.scss';
-import type { User } from '@/types/user';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -87,7 +87,7 @@ function Users() {
           />
         )}
       </div>
-      <Table
+      <Table<User>
         className={resourcesStyles.table}
         rowGroups={[{ key: 'users', data: users }]}
         rowIndexKey="id"
