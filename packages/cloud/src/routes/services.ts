@@ -29,7 +29,7 @@ export const servicesRoutes = (library: ServicesLibrary) =>
         }
 
         await library.sendMessage(ConnectorType.Email, context.guarded.body.data);
-        await library.addLog(tenantId, ServiceLogType.SendEmail);
+        await library.addLog(tenantId, ServiceLogType.SendEmail, context.guarded.body);
 
         return next({ ...context, status: 201 });
       }
@@ -55,7 +55,7 @@ export const servicesRoutes = (library: ServicesLibrary) =>
         }
 
         await library.sendMessage(ConnectorType.Sms, context.guarded.body.data);
-        await library.addLog(tenantId, ServiceLogType.SendSms);
+        await library.addLog(tenantId, ServiceLogType.SendSms, context.guarded.body);
 
         return next({ ...context, status: 201 });
       }

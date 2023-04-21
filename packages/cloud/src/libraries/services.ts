@@ -16,6 +16,7 @@ import { RequestError } from '@withtyped/server';
 import type { Queries } from '#src/queries/index.js';
 import type { LogtoConnector } from '#src/utils/connector/index.js';
 import { loadConnectorFactories } from '#src/utils/connector/index.js';
+import { jsonObjectGuard } from '#src/utils/guard.js';
 
 export const serviceCountLimitForTenant = 100;
 
@@ -107,11 +108,12 @@ export class ServicesLibrary {
     return sendMessage(data);
   }
 
-  async addLog(tenantId: string, type: ServiceLogType) {
+  async addLog(tenantId: string, type: ServiceLogType, payload?: unknown) {
     return this.queries.serviceLogs.insertLog({
       id: generateStandardId(),
       type,
       tenantId,
+      payload: trySafe(() => jsonObjectGuard.parse(payload)),
     });
   }
 
