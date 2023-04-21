@@ -66,7 +66,7 @@
     "eslint": "^8.34.0",
     "history": "^5.3.0",
     "i18next": "^21.8.16",
-    "i18next-browser-languagedetector": "^6.1.4",
+    "i18next-browser-languagedetector": "^7.0.0",
     "just-kebab-case": "^4.2.0",
     "ky": "^0.33.0",
     "lint-staged": "^13.0.0",
