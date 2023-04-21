@@ -21,8 +21,11 @@ const url = 'https://logto.gg';
 const hook: Hook = {
   tenantId: 'bar',
   id: 'foo',
+  name: 'foo',
   event: HookEvent.PostSignIn,
-  config: { headers: { bar: 'baz' }, url, retries: 3 },
+  events: [HookEvent.PostSignIn],
+  config: { headers: { bar: 'baz' }, url, retries: 3, signingKey: nanoIdMock },
+  enabled: true,
   createdAt: Date.now() / 1000,
 };
 

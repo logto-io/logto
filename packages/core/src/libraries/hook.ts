@@ -15,6 +15,9 @@ import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
+// Note: the retry limit is fixed to 3 for now.
+export const hookRetryLimit = 3;
+
 const parseResponse = ({ statusCode, body }: Response) => ({
   statusCode,
   // eslint-disable-next-line no-restricted-syntax
@@ -53,7 +56,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const hookEvent = eventToHook[event];
     const found = await findAllHooks();
-    const rows = found.filter(({ event }) => event === hookEvent);
+    const rows = found.filter(({ events, enabled }) => enabled && events.includes(hookEvent));
 
     if (rows.length === 0) {
       return;
@@ -78,7 +81,7 @@ export const createHookLibrary = (queries: Queries) => {
     } satisfies Omit<HookEventPayload, 'hookId'>;
 
     await Promise.all(
-      rows.map(async ({ config: { url, headers, retries }, id }) => {
+      rows.map(async ({ config: { url, headers }, id }) => {
         consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
         const json: HookEventPayload = { hookId: id, ...payload };
         const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
@@ -90,7 +93,7 @@ export const createHookLibrary = (queries: Queries) => {
           .post(url, {
             headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
             json,
-            retry: { limit: retries },
+            retry: { limit: hookRetryLimit },
             timeout: { request: 10_000 },
           })
           .then(async (response) => {

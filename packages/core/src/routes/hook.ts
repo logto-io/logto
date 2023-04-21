@@ -1,7 +1,9 @@
-import { Hooks } from '@logto/schemas';
+import { Hooks, hookConfigGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { hookRetryLimit } from '#src/libraries/hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -23,11 +25,27 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.post(
     '/hooks',
-    koaGuard({ body: Hooks.createGuard.omit({ id: true }), response: Hooks.guard, status: 200 }),
+    koaGuard({
+      body: Hooks.createGuard
+        .omit({ id: true, event: true, enabled: true })
+        .extend({ config: hookConfigGuard.omit({ signingKey: true, retries: true }) }),
+      response: Hooks.guard,
+      status: [200, 422],
+    }),
     async (ctx, next) => {
+      const { config, events, ...rest } = ctx.guard.body;
+
       ctx.body = await insertHook({
+        ...rest,
         id: generateStandardId(),
-        ...ctx.guard.body,
+        event: events[0], // Note: the `event` is deprecated, but we still need to set it for backward compatibility.
+        events,
+        config: {
+          ...config,
+          signingKey: generateStandardId(),
+          retries: hookRetryLimit, // Note: the `retries` is deprecated, but we still need to set it for backward compatibility.
+        },
+        enabled: true,
       });
 
       return next();
@@ -56,9 +74,12 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
-      body: Hooks.createGuard.omit({ id: true }).partial(),
+      body: Hooks.createGuard
+        .pick({ name: true, events: true })
+        .extend({ config: hookConfigGuard.omit({ signingKey: true, retries: true }).partial() })
+        .partial(),
       response: Hooks.guard,
-      status: [200, 404],
+      status: [200, 422, 404],
     }),
     async (ctx, next) => {
       const {
@@ -66,7 +87,61 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      ctx.body = await updateHookById(id, body);
+      const { events } = body;
+
+      const hook = await findHookById(id);
+      const { config } = hook;
+
+      ctx.body = await updateHookById(id, {
+        ...body,
+        config: { ...config, ...body.config },
+        ...conditional(events && { event: events[0] }), // Note: the `event` is deprecated, but we still need to set it for backward compatibility.
+      });
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/hooks/:id/signing-key',
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      response: Hooks.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      const { config } = await findHookById(id);
+      const hook = await updateHookById(id, {
+        config: { ...config, signingKey: generateStandardId() },
+      });
+
+      ctx.body = hook;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/hooks/:id/enabled',
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: z.object({ enabled: z.boolean() }),
+      response: Hooks.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body: { enabled },
+      } = ctx.guard;
+
+      const hook = await updateHookById(id, { enabled });
+
+      ctx.body = hook;
 
       return next();
     }
