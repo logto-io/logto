@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Route,
   RouterProvider,
@@ -19,18 +20,22 @@ import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 function Main() {
   const swrOptions = useSwrOptions();
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-        <Route path="callback" element={<Callback />} />
-        <Route path="welcome" element={<Welcome />} />
-        <Route path="handle-social" element={<HandleSocialCallback />} />
-        <Route element={<AppContent />}>
-          <Route path="/*" element={<ConsoleContent />} />
-        </Route>
-      </>
-    ),
-    { basename: getBasename() }
+  const router = useMemo(
+    () =>
+      createBrowserRouter(
+        createRoutesFromElements(
+          <>
+            <Route path="callback" element={<Callback />} />
+            <Route path="welcome" element={<Welcome />} />
+            <Route path="handle-social" element={<HandleSocialCallback />} />
+            <Route element={<AppContent />}>
+              <Route path="/*" element={<ConsoleContent />} />
+            </Route>
+          </>
+        ),
+        { basename: getBasename() }
+      ),
+    []
   );
 
   return (
