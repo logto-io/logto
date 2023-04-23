@@ -8,9 +8,6 @@ type Props = {
 
 /**
  * A component to render a dynamic translation key.
- * Since `ReactNode` does not include vanilla objects while `JSX.Element` does. It's strange but no better way for now.
- *
- * @see https://github.com/i18next/i18next/issues/1852
  */
 const DynamicT = ({ forKey, interpolation }: Props) => {
   const { t } = useTranslation();
