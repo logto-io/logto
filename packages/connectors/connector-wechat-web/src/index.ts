@@ -25,7 +25,7 @@ import {
   authorizationEndpoint,
   accessTokenEndpoint,
   userInfoEndpoint,
-  scope,
+  scope as defaultScope,
   defaultMetadata,
   defaultTimeout,
   invalidAccessTokenErrcode,
@@ -49,13 +49,13 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
     validateConfig<WechatConfig>(config, wechatConfigGuard);
 
-    const { appId } = config;
+    const { appId, scope } = config;
 
     const queryParameters = new URLSearchParams({
       appid: appId,
       redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
       response_type: 'code',
-      scope,
+      scope: scope ?? defaultScope,
       state,
     });
 

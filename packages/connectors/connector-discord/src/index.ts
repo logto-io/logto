@@ -24,7 +24,7 @@ import {
 
 import {
   defaultMetadata,
-  scope,
+  scope as defaultScope,
   authorizationEndpoint,
   accessTokenEndpoint,
   defaultTimeout,
@@ -48,7 +48,7 @@ const getAuthorizationUri =
       client_id: config.clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
-      scope,
+      scope: config.scope ?? defaultScope,
       state,
     });
 

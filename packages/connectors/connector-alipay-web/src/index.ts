@@ -30,7 +30,7 @@ import {
   authorizationEndpoint,
   methodForAccessToken,
   methodForUserInfo,
-  scope,
+  scope as defaultScope,
   defaultMetadata,
   defaultTimeout,
   timestampFormat,
@@ -49,14 +49,14 @@ const getAuthorizationUri =
     const config = await getConfig(defaultMetadata.id);
     validateConfig<AlipayConfig>(config, alipayConfigGuard);
 
-    const { appId: app_id } = config;
+    const { appId: app_id, scope } = config;
 
     const redirect_uri = encodeURI(redirectUri);
 
     const queryParameters = new URLSearchParams({
       app_id,
       redirect_uri, // The variable `redirectUri` should match {appId, appSecret}
-      scope,
+      scope: scope ?? defaultScope,
       state,
     });
 

@@ -41,6 +41,7 @@ The Facebook connector provides a concise way for your application to use Facebo
 4. Fill out the Logto connector settings:
     - Fill out the `clientId` field with the string from _App ID_.
     - Fill out the `clientSecret` field with the string from _App secret_.
+    - Fill out the `scope` field with a comma or space separated list of [permissions](https://developers.facebook.com/docs/permissions/reference) in string. If you do not specify a scope, the default scope is `email,public_profile`.
 
 ## Test sign-in with Facebook's test users
 
@@ -70,6 +71,7 @@ E.g., the pure _business type_ app doesn't have the "live" switch button, but it
 |--------------|--------|
 | clientId     | string |
 | clientSecret | string |
+| scope        | string |
 
 ## References
 

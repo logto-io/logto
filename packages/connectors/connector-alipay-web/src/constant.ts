@@ -73,6 +73,15 @@ export const defaultMetadata: ConnectorMetadata = {
       ],
       defaultValue: 'utf8',
     },
+    {
+      key: 'scope',
+      label: 'Scope',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      placeholder: '<scope>',
+      description:
+        "The `scope` determines permissions granted by the user's authorization. If you are not sure what to enter, do not worry, just leave it blank.",
+    },
   ],
 };
 

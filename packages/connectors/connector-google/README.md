@@ -12,6 +12,7 @@ The Google connector provides a succinct way for your application to use Googleâ
       - [Config scopes](#config-scopes)
       - [Add test users (External user type only)](#add-test-users-external-user-type-only)
   - [Obtain OAuth 2.0 credentials](#obtain-oauth-20-credentials)
+  - [Configure your connector](#configure-your-connector)
     - [Config types](#config-types)
   - [References](#references)
 
@@ -39,7 +40,7 @@ Now you will be on the **Edit app registration** page.
 
 #### Config scopes
 
-- Click **ADD OR REMOVE SCOPES** and select `../auth/userinfo.email`, `../auth/userinfo.profile` and `openid` in the popup drawer, and click **UPDATE** to finish.
+- Click **ADD OR REMOVE SCOPES** and select `../auth/userinfo.email`, `../auth/userinfo.profile` and `openid` in the popup drawer, and click **UPDATE** to finish. It is recommended that you consider adding all the scopes you may use, otherwise some scopes you added in the configuration may not work.
 - Fill out the form as you need.
 - Click **SAVE AND CONTINUE** to continue.
 
@@ -60,12 +61,19 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_endpoint}/callback/${connector_id}`. e.g. `https://logto.dev/callback/${connector_id}`. The `connector_id` can be found on the top bar of the Logto Admin Console connector details page.
 - Click **Create** to finish and then you will get the **Client ID** and **Client Secret**.
 
+## Configure your connector
+
+Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Secret_ you've got from OAuth app detail pages mentioned in the previous section.
+
+`scope` is a space-delimited list of [scopes](https://developers.google.com/identity/protocols/oauth2/scopes). If not provided, scope defaults to be `openid profile email`.
+
 ### Config types
 
 | Name         | Type   |
 |--------------|--------|
 | clientId     | string |
 | clientSecret | string |
+| scope        | string |
 
 ## References
 * [Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)

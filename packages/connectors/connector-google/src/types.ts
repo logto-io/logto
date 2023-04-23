@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const googleConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
+  scope: z.string().optional(),
 });
 
 export type GoogleConfig = z.infer<typeof googleConfigGuard>;

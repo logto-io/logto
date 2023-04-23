@@ -20,7 +20,7 @@ import qs from 'query-string';
 import {
   authorizationEndpoint,
   accessTokenEndpoint,
-  scope,
+  scope as defaultScope,
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
@@ -43,7 +43,7 @@ const getAuthorizationUri =
       client_id: config.clientId,
       redirect_uri: redirectUri,
       state,
-      scope, // Only support fixed scope for v1.
+      scope: config.scope ?? defaultScope,
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

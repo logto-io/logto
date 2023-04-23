@@ -9,6 +9,7 @@ The Discord connector provides a way for your application to use Discord as an a
     - [Config types](#config-types)
       - [clientId](#clientid)
       - [clientSecret](#clientsecret)
+      - [scope](#scope)
 
 ## Register a developer application
 - Visit [Discord Developer Portal](https://discord.com/developers/applications) and sign in with your Discord account.
@@ -26,6 +27,7 @@ The Discord connector provides a way for your application to use Discord as an a
 |--------------|---------|
 | clientId     | string  |
 | clientSecret | string  |
+| scope        | string  |
 
 #### clientId
 `clientId` is the `CLIENT ID` field we saved earlier.
@@ -34,3 +36,7 @@ The Discord connector provides a way for your application to use Discord as an a
 #### clientSecret
 `clientSecret` is the `CLIENT SECRET` we saved earlier.
 (If you've lost it you need to click **Reset Secret**)
+
+#### scope
+`scope` is the permissions granted by the user's authorization. The default value is `identify email`.
+You can see the full list of scopes [here](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes).

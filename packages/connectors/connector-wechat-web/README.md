@@ -14,6 +14,7 @@ The official Logto connector for WeChat social sign-in in web apps.
       - [Basic info](#basic-info)
       - [Website info](#website-info)
       - [Waiting for the review result](#waiting-for-the-review-result)
+    - [Configure your WeChat connector](#configure-your-wechat-connector)
     - [Test WeChat web connector](#test-wechat-web-connector)
 - [微信网页连接器](#微信网页连接器)
   - [开始上手](#开始上手)
@@ -23,6 +24,7 @@ The official Logto connector for WeChat social sign-in in web apps.
       - [基础信息](#基础信息)
       - [网站信息](#网站信息)
       - [等待审核结果](#等待审核结果)
+    - [配置微信网页连接器](#配置微信网页连接器)
     - [测试微信网页连接器](#测试微信网页连接器)
 
 ## Get started
@@ -66,6 +68,12 @@ Fill "Authorization callback domain" (授权回调域) with your Logto domain. E
 After completing the website info, click "Submit Review" to continue. Usually, the review goes fast, which will end within 1-2 days.
 
 We suspect the reviewer is allocated randomly on each submission since the standard is floating. You may get rejected the first time, but don't give up! State your status quo and ask the reviewer how to modify it.
+
+### Configure your WeChat connector
+
+Fill out the `clientId` and `clientSecret` field with _Client ID_ and _Client Secret_ you've got from OAuth app detail pages.
+
+Fill out the `scope` field with either 'snsapi_userinfo' or 'snsapi_base'. You can leave this field blank as it is OPTIONAL. The default value is set to be 'snsapi_userinfo'. You can check out the [difference](https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html) between different values.
 
 ### Test WeChat web connector
 
@@ -116,6 +124,12 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 完成输入网站信息之后，点按「提交审核」以继续。审核速度通常很快，1-2 天即可完成。
 
 我们怀疑每次提交审核者都是随机分配的，因为审核标准飘忽不定。第一次提交也许会被拒绝，但别灰心！陈述你的现状并询问审核者如何修改。
+
+### 配置微信网页连接器
+
+分别用 OAuth 应用详情页面中的 _Client ID_ 和 _Client Secret_ 填写 `clientId` 和 `clientSecret` 字段。
+
+在 `scope` 字段中填入 'snsapi_userinfo' 或者 'snsapi_base'。这个字段也可以选择不填，此时我们会使用 'snsapi_userinfo' 的默认值。你可以在[这里](https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html)查看更多关于这两个值的信息。
 
 ### 测试微信网页连接器
 

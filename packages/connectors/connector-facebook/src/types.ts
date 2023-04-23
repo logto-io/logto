@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const facebookConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
+  scope: z.string().optional(),
 });
 
 export type FacebookConfig = z.infer<typeof facebookConfigGuard>;
