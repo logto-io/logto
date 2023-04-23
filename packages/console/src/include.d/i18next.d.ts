@@ -2,8 +2,9 @@
 
 import type { LocalePhrase } from '@logto/phrases';
 
-declare module 'react-i18next' {
+declare module 'i18next' {
   interface CustomTypeOptions {
+    returnNull: false;
     allowObjectInHTMLChildren: true;
     resources: LocalePhrase;
   }

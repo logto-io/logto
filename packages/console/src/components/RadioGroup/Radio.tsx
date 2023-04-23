@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type DangerousRaw from '../DangerousRaw';
+import DynamicT from '../DynamicT';
 
 import * as styles from './Radio.module.scss';
 
@@ -89,7 +90,7 @@ function Radio({
         {children}
         {type === 'plain' && <div className={styles.indicator} />}
         {icon && <span className={styles.icon}>{icon}</span>}
-        {title && (typeof title === 'string' ? t(title) : title)}
+        {title && (typeof title === 'string' ? <DynamicT forKey={title} /> : title)}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>
             {t(disabledLabel)}

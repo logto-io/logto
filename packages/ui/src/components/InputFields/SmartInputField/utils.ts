@@ -1,7 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
 import type { HTMLProps } from 'react';
-import type { TFuncKey } from 'react-i18next';
 
 import { identifierInputPlaceholderMap } from '@/utils/form';
 
@@ -20,7 +19,7 @@ export const getInputHtmlProps = (
       pattern: '[0-9]*',
       inputMode: 'numeric',
       autoComplete: 'tel',
-      placeholder: i18next.t<'translation', TFuncKey>('input.phone_number'),
+      placeholder: i18next.t('input.phone_number'),
     };
   }
 
@@ -29,7 +28,7 @@ export const getInputHtmlProps = (
       type: 'email',
       inputMode: 'email',
       autoComplete: 'email',
-      placeholder: i18next.t<'translation', TFuncKey>('input.email'),
+      placeholder: i18next.t('input.email'),
     };
   }
 
@@ -39,7 +38,7 @@ export const getInputHtmlProps = (
       .map((type) => (type === SignInIdentifier.Phone ? 'tel' : type))
       .join(' '),
     placeholder: enabledTypes
-      .map((type) => i18next.t<'translation', TFuncKey>(identifierInputPlaceholderMap[type]))
+      .map((type) => i18next.t(identifierInputPlaceholderMap[type]))
       .join(' / '),
   };
 };

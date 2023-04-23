@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Card from '../Card';
+import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
 import * as styles from './index.module.scss';
@@ -23,7 +24,7 @@ function FormCard({ title, description, learnMoreLink, children }: Props) {
         <div className={styles.title}>{t(title)}</div>
         {description && (
           <div className={styles.description}>
-            {t(description)}
+            <DynamicT forKey={description} />
             {learnMoreLink && (
               <>
                 {' '}

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import useTheme from '@/hooks/use-theme';
 
+import DynamicT from '../DynamicT';
 import TextLink from '../TextLink';
 
 import * as styles from './TablePlaceholder.module.scss';
@@ -27,7 +28,7 @@ function TablePlaceholder({ image, imageDark, title, description, learnMoreLink,
       <div className={styles.image}>{theme === Theme.Light ? image : imageDark}</div>
       <div className={styles.title}>{t(title)}</div>
       <div className={styles.description}>
-        {t(description)}
+        <DynamicT forKey={description} />
         {learnMoreLink && (
           <>
             {' '}

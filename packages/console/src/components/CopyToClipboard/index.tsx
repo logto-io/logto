@@ -1,7 +1,7 @@
 import classNames from 'classnames';
+import type { TFuncKey } from 'i18next';
 import type { MouseEventHandler } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { TFuncKey } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 
 import Copy from '@/assets/images/copy.svg';

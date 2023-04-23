@@ -3,6 +3,7 @@ import { getSafe } from '@silverhand/essentials';
 import { detailedDiff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
+import DynamicT from '@/components/DynamicT';
 import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';
 
@@ -55,7 +56,7 @@ function SignInDiffSection({ before, after, isAfter = false }: Props) {
           return (
             <li key={identifierKey}>
               <DiffSegment hasChanged={hasIdentifierChanged(identifierKey)} isAfter={isAfter}>
-                {String(t(signInIdentifierPhrase[identifierKey]))}
+                <DynamicT forKey={signInIdentifierPhrase[identifierKey]} />
                 {hasAuthentication && ' ('}
                 {password && (
                   <DiffSegment
@@ -65,7 +66,7 @@ function SignInDiffSection({ before, after, isAfter = false }: Props) {
                     {t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
                   </DiffSegment>
                 )}
-                {needDisjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.or'))} `}
+                {needDisjunction && ` ${t('sign_in_exp.sign_up_and_sign_in.or')} `}
                 {verificationCode && (
                   <DiffSegment
                     hasChanged={hasAuthenticationChanged(identifierKey, 'verificationCode')}

@@ -1,7 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
+import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import type { TFuncKey } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 

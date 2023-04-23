@@ -3,6 +3,7 @@ import { getSafe } from '@silverhand/essentials';
 import { diff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
+import DynamicT from '@/components/DynamicT';
 import { signUpIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignUpForm } from '@/pages/SignInExperience/types';
 import { signInExperienceParser } from '@/pages/SignInExperience/utils/form';
@@ -34,7 +35,7 @@ function SignUpDiffSection({ before, after, isAfter = false }: Props) {
       <ul className={styles.list}>
         <li>
           <DiffSegment hasChanged={hasChanged('identifier')} isAfter={isAfter}>
-            {String(t(signUpIdentifierPhrase[identifier]))}
+            <DynamicT forKey={signUpIdentifierPhrase[identifier]} />
           </DiffSegment>
           {hasAuthentication && ' ('}
           {password && (
@@ -42,7 +43,7 @@ function SignUpDiffSection({ before, after, isAfter = false }: Props) {
               {t('sign_in_exp.sign_up_and_sign_in.sign_up.set_a_password_option')}
             </DiffSegment>
           )}
-          {needConjunction && ` ${String(t('sign_in_exp.sign_up_and_sign_in.and'))} `}
+          {needConjunction && ` ${t('sign_in_exp.sign_up_and_sign_in.and')} `}
           {verify && (
             <DiffSegment hasChanged={hasChanged('verify')} isAfter={isAfter}>
               {needConjunction

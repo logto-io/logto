@@ -93,7 +93,7 @@ const IdentifierProfileForm = ({
             if (errorMessage) {
               return typeof errorMessage === 'string'
                 ? t(`error.${errorMessage}`)
-                : t(`error.${errorMessage.code}`, errorMessage.data);
+                : t(`error.${errorMessage.code}`, errorMessage.data ?? {});
             }
 
             return true;

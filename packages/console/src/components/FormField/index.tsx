@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Tip from '@/assets/images/tip.svg';
 
 import type DangerousRaw from '../DangerousRaw';
+import DynamicT from '../DynamicT';
 import IconButton from '../IconButton';
 import Spacer from '../Spacer';
 import { ToggleTip } from '../Tip';
@@ -38,7 +39,7 @@ function FormField({
     <div className={classNames(styles.field, className)}>
       <div className={classNames(styles.headline, headlineClassName)}>
         <div className={styles.title}>
-          {typeof title === 'string' ? t(title) : title}
+          {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
           {isMultiple && (
             <span className={styles.multiple}>{t('general.multiple_form_field')}</span>
           )}

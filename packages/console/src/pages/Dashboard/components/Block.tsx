@@ -7,6 +7,7 @@ import ArrowDown from '@/assets/images/arrow-down.svg';
 import ArrowUp from '@/assets/images/arrow-up.svg';
 import Tip from '@/assets/images/tip.svg';
 import Card from '@/components/Card';
+import DynamicT from '@/components/DynamicT';
 import IconButton from '@/components/IconButton';
 import { ToggleTip } from '@/components/Tip';
 import type { Props as ToggleTipProps } from '@/components/Tip/ToggleTip';
@@ -30,7 +31,7 @@ function Block({ variant = 'default', count, delta, title, tip }: Props) {
   return (
     <Card className={classNames(styles.block, styles[variant])}>
       <div className={styles.title}>
-        {t(title)}
+        <DynamicT forKey={title} />
         {tip && (
           <ToggleTip anchorClassName={styles.toggleTipButton} content={tip}>
             <IconButton size="small">

@@ -8,7 +8,7 @@ import * as styles from './DropdownItem.module.scss';
 type Props = {
   onClick?: (event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => void;
   className?: string;
-  children: ReactNode | Record<string, unknown>;
+  children: ReactNode;
   icon?: ReactNode;
   iconClassName?: string;
   type?: 'default' | 'danger';
