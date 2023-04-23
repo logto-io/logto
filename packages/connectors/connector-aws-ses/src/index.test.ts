@@ -64,4 +64,9 @@ describe('sendMessage()', () => {
       })
     ).rejects.toThrow();
   });
+
+  /**
+   * TODO: Add real test cases here to ensure the connector works as expected.
+   * For example, a real send email request triggers `crypto.getRandomValues` not supported error.
+   */
 });

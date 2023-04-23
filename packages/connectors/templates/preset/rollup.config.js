@@ -14,7 +14,7 @@ const configs = [
     external: ['zod', 'got', '@logto/connector-kit'],
     plugins: [
       typescript({ tsconfig: 'tsconfig.build.json' }),
-      nodeResolve(),
+      nodeResolve({ exportConditions: ['node'] }),
       commonjs(),
       json(),
       summary(),
