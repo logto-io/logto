@@ -47,7 +47,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha
+            type=raw,value=${{ inputs.target || 'dev' }},enable=${{ !startsWith(github.ref, 'refs/tags/') }}
             type=edge
 
       - name: Login to DockerHub
@@ -111,7 +111,7 @@ jobs:
             ghcr.io/logto-io/cloud
           # https://github.com/docker/metadata-action
           tags: |
-            type=sha
+            type=raw,value=${{ inputs.target || 'dev' }},enable=${{ !startsWith(github.ref, 'refs/tags/') }}
             type=edge
 
       - name: Login to GitHub Container Registry
@@ -153,10 +153,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set short sha
-        id: sha
-        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
       - name: Setup Node and pnpm
         if: ${{ (inputs.target || 'dev') == 'dev' && matrix.target == 'core' }}
         uses: silverhand-io/actions-node-pnpm-run-steps@v3
@@ -186,7 +182,7 @@ jobs:
         with:
           app-name: ${{ vars.APP_NAME }}
           slot-name: staging
-          images: ghcr.io/logto-io/${{ matrix.image }}:sha-${{ steps.sha.outputs.short }}
+          images: ghcr.io/logto-io/${{ matrix.image }}:${{ (inputs.target || 'dev') }}
 
   swap-staging-prod:
     strategy:

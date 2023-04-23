@@ -17,5 +17,5 @@ jobs:
           account-type: org
           org-name: logto-io
           keep-at-least: 1
-          untagged-only: true
+          filter-tags: "sha-*"
           token: ${{ secrets.BOT_PAT }}
