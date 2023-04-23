@@ -87,7 +87,7 @@ function Users() {
           />
         )}
       </div>
-      <Table<User>
+      <Table
         className={resourcesStyles.table}
         rowGroups={[{ key: 'users', data: users }]}
         rowIndexKey="id"
