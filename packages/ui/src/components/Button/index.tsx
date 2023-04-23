@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import type { HTMLProps } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import DynamicT from '../DynamicT';
 
 import * as styles from './index.module.scss';
 
@@ -32,8 +33,6 @@ const Button = ({
   onClick,
   ...rest
 }: Props) => {
-  const { t } = useTranslation();
-
   return (
     <button
       disabled={isDisabled}
@@ -48,7 +47,7 @@ const Button = ({
       onClick={onClick}
       {...rest}
     >
-      {t(title, { ...i18nProps })}
+      <DynamicT forKey={title} interpolation={i18nProps} />
     </button>
   );
 };

@@ -21,7 +21,9 @@ function FormCard({ title, description, learnMoreLink, children }: Props) {
   return (
     <Card className={styles.container}>
       <div className={styles.introduction}>
-        <div className={styles.title}>{t(title)}</div>
+        <div className={styles.title}>
+          <DynamicT forKey={title} />
+        </div>
         {description && (
           <div className={styles.description}>
             <DynamicT forKey={description} />

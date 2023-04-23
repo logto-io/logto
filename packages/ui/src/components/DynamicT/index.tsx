@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   forKey?: TFuncKey;
+  interpolation?: Record<string, unknown>;
 };
 
 /**
@@ -11,13 +12,23 @@ type Props = {
  *
  * @see https://github.com/i18next/i18next/issues/1852
  */
-const DynamicT = ({ forKey }: Props) => {
+const DynamicT = ({ forKey, interpolation }: Props) => {
   const { t } = useTranslation();
 
   if (!forKey) {
     return null;
   }
 
-  return <>{t(forKey)}</>;
+  const translated = t(forKey, interpolation ?? {});
+
+  if (typeof translated === 'string') {
+    // The fragment will ensure the component has the return type that is compatible with `JSX.Element`.
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    return <>{translated}</>;
+  }
+
+  // The fragment will ensure the component has the return type that is compatible with `JSX.Element`.
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{`Translation key ${forKey} is invalid.`}</>; // This would be great to have i18n as well. Not harmful for now.
 };
 export default DynamicT;

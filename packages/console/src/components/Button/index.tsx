@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Ring as Spinner } from '@/components/Spinner';
 
 import type DangerousRaw from '../DangerousRaw';
+import DynamicT from '../DynamicT';
 
 import * as styles from './index.module.scss';
 
@@ -96,7 +97,14 @@ function Button({
     >
       {showSpinner && <Spinner className={styles.spinner} />}
       {icon && <span className={styles.icon}>{icon}</span>}
-      {title && (typeof title === 'string' ? <span>{t(title)}</span> : title)}
+      {title &&
+        (typeof title === 'string' ? (
+          <span>
+            <DynamicT forKey={title} />
+          </span>
+        ) : (
+          title
+        ))}
       {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
     </button>
   );

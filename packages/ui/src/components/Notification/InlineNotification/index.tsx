@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
-import { useTranslation } from 'react-i18next';
+
+import DynamicT from '@/components/DynamicT';
 
 import * as styles from './index.module.scss';
 
@@ -10,9 +11,11 @@ type Props = {
 };
 
 const InlineNotification = ({ className, message }: Props) => {
-  const { t } = useTranslation();
-
-  return <div className={classNames(styles.notification, className)}>{t(message)}</div>;
+  return (
+    <div className={classNames(styles.notification, className)}>
+      <DynamicT forKey={message} />
+    </div>
+  );
 };
 
 export default InlineNotification;

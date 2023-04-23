@@ -1,7 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
+import DynamicT from '@/components/DynamicT';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -14,7 +14,6 @@ type Props = {
 };
 
 function Contact({ isOpen, onCancel }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const contacts = useContacts();
 
   return (
@@ -33,8 +32,12 @@ function Contact({ isOpen, onCancel }: Props) {
                 <ContactIcon />
               </div>
               <div className={styles.text}>
-                <div className={styles.title}>{t(title)}</div>
-                <div className={styles.description}>{t(description)}</div>
+                <div className={styles.title}>
+                  <DynamicT forKey={title} />
+                </div>
+                <div className={styles.description}>
+                  <DynamicT forKey={description} />
+                </div>
               </div>
               <div>
                 <Button

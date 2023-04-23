@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
+import DynamicT from '@/components/DynamicT';
 import { useSieMethods } from '@/hooks/use-sie';
 import useBindSocialRelatedUser from '@/hooks/use-social-link-related-user';
 import useSocialRegister from '@/hooks/use-social-register';
@@ -80,7 +81,9 @@ const SocialLinkAccount = ({ connectorId, className, relatedUser }: Props) => {
 
       <Divider label="description.or" className={styles.divider} />
 
-      <div className={styles.desc}>{t(content.desc)}</div>
+      <div className={styles.desc}>
+        <DynamicT forKey={content.desc} />
+      </div>
 
       <Button
         title={content.buttonText}
