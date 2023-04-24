@@ -1,7 +1,8 @@
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
-import { useTranslation } from 'react-i18next';
+
+import DynamicT from '../DynamicT';
 
 import * as styles from './index.module.scss';
 
@@ -12,12 +13,14 @@ export type Props = {
 };
 
 const BrandingHeader = ({ logo, headline, className }: Props) => {
-  const { t } = useTranslation();
-
   return (
     <div className={classNames(styles.container, className)}>
       {logo && <img className={styles.logo} alt="app logo" src={logo} crossOrigin="anonymous" />}
-      {headline && <div className={styles.headline}>{t(headline)}</div>}
+      {headline && (
+        <div className={styles.headline}>
+          <DynamicT forKey={headline} />
+        </div>
+      )}
     </div>
   );
 };

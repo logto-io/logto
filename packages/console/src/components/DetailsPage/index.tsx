@@ -1,13 +1,13 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import Back from '@/assets/images/back.svg';
 import type { RequestError } from '@/hooks/use-api';
 
 import type DangerousRaw from '../DangerousRaw';
 import DetailsSkeleton from '../DetailsSkeleton';
+import DynamicT from '../DynamicT';
 import RequestDataError from '../RequestDataError';
 import TextLink from '../TextLink';
 
@@ -32,12 +32,10 @@ function DetailsPage({
   children,
   className,
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <div className={classNames(styles.container, className)}>
       <TextLink to={backLink} icon={<Back />} className={styles.backLink}>
-        {typeof backLinkTitle === 'string' ? t(backLinkTitle) : backLinkTitle}
+        {typeof backLinkTitle === 'string' ? <DynamicT forKey={backLinkTitle} /> : backLinkTitle}
       </TextLink>
       {isLoading ? (
         <DetailsSkeleton />

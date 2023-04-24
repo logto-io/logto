@@ -1,12 +1,12 @@
 import { Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import EmptyStateDark from '@/assets/icons/empty-state-dark.svg';
 import EmptyState from '@/assets/icons/empty-state.svg';
+import DynamicT from '@/components/DynamicT';
 import NavBar from '@/components/NavBar';
 import PageMeta from '@/components/PageMeta';
 
@@ -19,11 +19,8 @@ type Props = {
 };
 
 const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
-  const { t } = useTranslation();
-
   const { theme } = useContext(PageContext);
-
-  const errorMessage = rawMessage ?? (message && t(message));
+  const errorMessage = Boolean(rawMessage ?? message);
 
   return (
     <StaticPageLayout>
@@ -31,8 +28,12 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
       {history.length > 1 && <NavBar />}
       <div className={styles.container}>
         {theme === Theme.Light ? <EmptyState /> : <EmptyStateDark />}
-        <div className={styles.title}>{t(title)}</div>
-        {errorMessage && <div className={styles.message}>{String(errorMessage)}</div>}
+        <div className={styles.title}>
+          <DynamicT forKey={title} />
+        </div>
+        {errorMessage && (
+          <div className={styles.message}>{rawMessage ?? <DynamicT forKey={message} />}</div>
+        )}
       </div>
     </StaticPageLayout>
   );

@@ -3,16 +3,29 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   forKey: AdminConsoleKey;
+  interpolation?: Record<string, unknown>;
 };
 
 /**
  * A component to render a dynamic translation key.
- * Since `ReactNode` does not include vanilla objects while `JSX.Element` does. It's strange but no better way for now.
- *
- * @see https://github.com/i18next/i18next/issues/1852
  */
-export default function DynamicT({ forKey }: Props) {
+export default function DynamicT({ forKey, interpolation }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  return <>{t(forKey)}</>;
+  /**
+   * The default return of `t()` is already string even if the given key is not a leaf key.
+   * For example:
+   *
+   * ```ts
+   * const translation = { foo: { bar: 'baz' } };
+   *
+   * t('foo.bar') // 'baz'
+   * t('foo') // 'key 'foo (en)' returned an object instead of string.'
+   * ```
+   *
+   * So actually there's no need to check key validity to make sure `t()` returns a string.
+   * But it seems the type definition is not correct for the function in `i18next`. Use this trick to
+   * bypass for now.
+   */
+  return <>{t(forKey, interpolation ?? {})}</>;
 }

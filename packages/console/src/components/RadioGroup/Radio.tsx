@@ -2,7 +2,6 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { KeyboardEventHandler, ReactElement, ReactNode } from 'react';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -49,8 +48,6 @@ function Radio({
   disabledLabel,
   icon,
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (isDisabled) {
@@ -93,7 +90,7 @@ function Radio({
         {title && (typeof title === 'string' ? <DynamicT forKey={title} /> : title)}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>
-            {t(disabledLabel)}
+            <DynamicT forKey={disabledLabel} />
           </div>
         )}
       </div>

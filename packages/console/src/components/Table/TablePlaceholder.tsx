@@ -26,7 +26,9 @@ function TablePlaceholder({ image, imageDark, title, description, learnMoreLink,
   return (
     <div className={styles.placeholder}>
       <div className={styles.image}>{theme === Theme.Light ? image : imageDark}</div>
-      <div className={styles.title}>{t(title)}</div>
+      <div className={styles.title}>
+        <DynamicT forKey={title} />
+      </div>
       <div className={styles.description}>
         <DynamicT forKey={description} />
         {learnMoreLink && (

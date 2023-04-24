@@ -1,6 +1,5 @@
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import DynamicT from '@/components/DynamicT';
 import { Tooltip } from '@/components/Tip';
@@ -23,10 +22,8 @@ function CardItem({
   onClick,
   className,
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
-    <Tooltip content={conditional(isDisabled && disabledTip && <>{t(disabledTip)}</>)}>
+    <Tooltip content={conditional(isDisabled && disabledTip && <DynamicT forKey={disabledTip} />)}>
       <div
         key={value}
         role="button"
@@ -55,10 +52,16 @@ function CardItem({
           <div>
             {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
             {trailingTag && (
-              <span className={classNames(styles.tag, styles.trailingTag)}>{t(trailingTag)}</span>
+              <span className={classNames(styles.tag, styles.trailingTag)}>
+                <DynamicT forKey={trailingTag} />
+              </span>
             )}
           </div>
-          {tag && <span className={styles.tag}>{t(tag)}</span>}
+          {tag && (
+            <span className={styles.tag}>
+              <DynamicT forKey={tag} />
+            </span>
+          )}
         </div>
       </div>
     </Tooltip>

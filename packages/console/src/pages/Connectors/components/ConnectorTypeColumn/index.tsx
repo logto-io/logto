@@ -26,7 +26,7 @@ function ConnectorTypeColumn({ connectorGroup: { type, connectors } }: Props) {
   );
 
   if (!firstStandardConnector) {
-    return <>{t(connectorTitlePlaceHolder[type])}</>;
+    return <span>{t(connectorTitlePlaceHolder[type])}</span>;
   }
 
   if (!connectorFactory) {

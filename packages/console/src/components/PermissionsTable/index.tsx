@@ -17,6 +17,7 @@ import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
+import DynamicT from '../DynamicT';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import type { Props as PaginationProps } from '../Pagination';
 import TablePlaceholder from '../Table/TablePlaceholder';
@@ -101,7 +102,7 @@ function PermissionsTable({
        * When the table is read-only, hide the delete button rather than the whole column to keep the table column spaces.
        */
       isReadOnly ? null : (
-        <Tooltip content={<div>{t(deleteButtonTitle)}</div>}>
+        <Tooltip content={<DynamicT forKey={deleteButtonTitle} />}>
           <IconButton
             onClick={() => {
               deleteHandler(scope);

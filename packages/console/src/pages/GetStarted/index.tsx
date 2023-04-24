@@ -7,6 +7,7 @@ import CompleteIndicator from '@/assets/images/task-complete.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
+import DynamicT from '@/components/DynamicT';
 import PageMeta from '@/components/PageMeta';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -73,8 +74,12 @@ function GetStarted() {
             {!isComplete && <CardIcon className={styles.icon} />}
             {isComplete && <CompleteIndicator className={styles.icon} />}
             <div className={styles.wrapper}>
-              <div className={styles.title}>{t(title)}</div>
-              <div className={styles.subtitle}>{t(subtitle)}</div>
+              <div className={styles.title}>
+                <DynamicT forKey={title} />
+              </div>
+              <div className={styles.subtitle}>
+                <DynamicT forKey={subtitle} />
+              </div>
             </div>
             <Button
               className={styles.button}

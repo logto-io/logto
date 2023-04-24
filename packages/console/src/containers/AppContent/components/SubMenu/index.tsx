@@ -2,11 +2,11 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useState, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import ArrowRight from '@/assets/images/arrow-right.svg';
 import Tick from '@/assets/images/tick.svg';
 import { DropdownItem } from '@/components/Dropdown';
+import DynamicT from '@/components/DynamicT';
 import type { Option } from '@/components/Select';
 import Spacer from '@/components/Spacer';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -32,7 +32,6 @@ function SubMenu<T extends string>({
   selectedOption,
   onItemClick,
 }: Props<T>) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showMenu, setShowMenu] = useState(false);
   const mouseEnterTimeoutRef = useRef(0);
@@ -67,7 +66,9 @@ function SubMenu<T extends string>({
       }}
     >
       {icon && <span className={styles.icon}>{icon}</span>}
-      <span className={styles.title}>{t(title)}</span>
+      <span className={styles.title}>
+        <DynamicT forKey={title} />
+      </span>
       <Spacer />
       <ArrowRight className={styles.icon} />
       <div className={classNames(styles.menu, showMenu && styles.visible)}>

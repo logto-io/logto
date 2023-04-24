@@ -6,6 +6,7 @@ import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
 import Arrow from '@/assets/images/arrow-left.svg';
+import DynamicT from '@/components/DynamicT';
 import TextLink from '@/components/TextLink';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -40,7 +41,9 @@ function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, 
           >
             {t('general.back')}
           </TextLink>
-          <span className={styles.title}>{t(title)}</span>
+          <span className={styles.title}>
+            <DynamicT forKey={title} />
+          </span>
           {subtitle && (
             <span className={styles.subtitle}>
               <Trans components={{ strong: <span className={styles.strong} /> }}>

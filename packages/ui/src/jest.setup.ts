@@ -1,4 +1,8 @@
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
+
+import i18next from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
 // eslint-disable-next-line @silverhand/fp/no-mutating-methods
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -15,15 +19,9 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const translation = (key: string) => key;
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('react-i18next', () => ({
-  ...jest.requireActual('react-i18next'),
-  useTranslation: () => ({
-    t: translation,
-    i18n: {
-      t: translation,
-    },
-  }),
-}));
+void i18next.use(initReactI18next).init({
+  // Simple resources for testing
+  resources: { en: { translation: { action: { agree: 'Agree' } } } },
+  lng: 'en',
+  react: { useSuspense: false },
+});
