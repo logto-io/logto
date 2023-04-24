@@ -77,9 +77,9 @@ function CodeEditor({
   };
 
   // TODO @sijie temp solution for required error (the errorMessage is an empty string)
-  const finalErrorMessage = typeof error === 'string' && !!error ? error : t('general.required');
+  const finalErrorMessage = typeof error === 'string' ? error : t('general.required');
 
-  const maxLineNumberDigits = ((value ?? '').split('\n').length + 1).toString().length;
+  const maxLineNumberDigits = (value ?? '').split('\n').length.toString().length;
   const isShowingPlaceholder = !value;
 
   return (
@@ -133,7 +133,7 @@ function CodeEditor({
           </SyntaxHighlighter>
         </div>
       </div>
-      {finalErrorMessage && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
+      {error && <div className={styles.errorMessage}>{finalErrorMessage}</div>}
     </>
   );
 }
