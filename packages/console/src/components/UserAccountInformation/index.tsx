@@ -1,5 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { type User } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';

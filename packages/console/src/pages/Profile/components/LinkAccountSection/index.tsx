@@ -1,7 +1,7 @@
 import type { SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import type { ConnectorResponse, UserInfo } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
+import type { UserInfo, ConnectorResponse } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';

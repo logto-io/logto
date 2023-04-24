@@ -1,6 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useMemo } from 'react';

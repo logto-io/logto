@@ -1,5 +1,5 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/components/ConfirmModal';

@@ -1,5 +1,5 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { Theme } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 import classNames from 'classnames';
 
 import useTheme from '@/hooks/use-theme';

@@ -1,4 +1,4 @@
-import type { ConnectorResponse, ConnectorType } from '@logto/schemas';
+import type { ConnectorType, ConnectorResponse } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 

@@ -1,5 +1,5 @@
 import { languages, languageTagGuard } from '@logto/language-kit';
-import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
+import { jsonObjectGuard, translationGuard } from '@logto/schemas';
 import type { ValuesOf } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -143,7 +143,7 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
 export const zodTypeToSwagger = (
   config: unknown
 ): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {
-  if (config === arbitraryObjectGuard) {
+  if (config === jsonObjectGuard) {
     return {
       type: 'object',
       description: 'arbitrary',

@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
-import type { ConnectorMetadata, ConnectorResponse, SignInExperience } from '@logto/schemas';
 import { Theme, ConnectorType } from '@logto/schemas';
+import type { ConnectorMetadata, SignInExperience, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { format } from 'date-fns';

@@ -1,5 +1,5 @@
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import Modal from 'react-modal';

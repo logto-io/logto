@@ -1,5 +1,5 @@
+import { jsonObjectGuard } from '@logto/schemas';
 import type { User } from '@logto/schemas';
-import { arbitraryObjectGuard } from '@logto/schemas';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +59,7 @@ function UserSettings() {
       return;
     }
 
-    const guardResult = arbitraryObjectGuard.safeParse(parseResult.data);
+    const guardResult = jsonObjectGuard.safeParse(parseResult.data);
 
     if (!guardResult.success) {
       toast.error(t('user_details.custom_data_invalid'));

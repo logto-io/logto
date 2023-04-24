@@ -1,7 +1,7 @@
 import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { arbitraryObjectGuard } from '../foundations/index.js';
+import { jsonObjectGuard } from '../foundations/index.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -36,7 +36,7 @@ export type PhonePasswordPayload = z.infer<typeof phonePasswordPayloadGuard>;
 
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),
-  connectorData: arbitraryObjectGuard,
+  connectorData: jsonObjectGuard,
 });
 export type SocialConnectorPayload = z.infer<typeof socialConnectorPayloadGuard>;
 

@@ -1,6 +1,6 @@
 import type { ConnectorSession } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
-import { arbitraryObjectGuard } from '@logto/schemas';
+import { jsonObjectGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -89,7 +89,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
      * The API does not care the type of the SAML assertion request body, simply pass this to
      * connector's built-in methods.
      */
-    koaGuard({ body: arbitraryObjectGuard, params: z.object({ connectorId: z.string().min(1) }) }),
+    koaGuard({ body: jsonObjectGuard, params: z.object({ connectorId: z.string().min(1) }) }),
     async (ctx, next) => {
       const {
         params: { connectorId },

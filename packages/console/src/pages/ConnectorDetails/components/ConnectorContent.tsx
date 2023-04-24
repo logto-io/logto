@@ -1,5 +1,5 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
+import type { ConnectorResponse } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
