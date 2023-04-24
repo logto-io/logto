@@ -1,6 +1,6 @@
 import type { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
@@ -17,7 +17,7 @@ type Props = {
 };
 
 function AdvancedSettings({ applicationType, oidcConfig }: Props) {
-  const { control } = useFormContext<Application & { isAdmin: boolean }>();
+  const { register } = useFormContext<Application & { isAdmin?: boolean }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -66,18 +66,9 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
       </FormField>
       {applicationType === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
-          <Controller
-            name="isAdmin"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <Switch
-                label={t('application_details.enable_admin_access_label')}
-                checked={value}
-                onChange={({ currentTarget: { checked } }) => {
-                  onChange(checked);
-                }}
-              />
-            )}
+          <Switch
+            label={t('application_details.enable_admin_access_label')}
+            {...register('isAdmin')}
           />
         </FormField>
       )}
