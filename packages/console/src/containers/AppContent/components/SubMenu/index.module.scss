@@ -29,14 +29,14 @@
   position: absolute;
   top: -4px;
   right: calc(100% + 5px);
-  display: none;
+  visibility: hidden;
   background: var(--color-float);
   border: 1px solid var(--color-divider);
   border-radius: _.unit(2);
   box-shadow: var(--shadow-2);
 
   &.visible {
-    display: block;
+    visibility: visible;
   }
 }
 
