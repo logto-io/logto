@@ -3,7 +3,7 @@ import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 
 import 'overlayscrollbars/styles/overlayscrollbars.css';
@@ -36,28 +36,35 @@ function Content() {
     void setup('console', { cookieDomain: getPrimaryDomain() });
   }, [setup]);
 
-  const resources = deduplicate(
-    conditionalArray(
-      // Explicitly add `currentTenantId` and deduplicate since the user may directly
-      // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
-      // additional redirect.
-      currentTenantId && getManagementApi(currentTenantId).indicator,
-      ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
-      isCloud && cloudApi.indicator,
-      meApi.indicator
-    )
+  const resources = useMemo(
+    () =>
+      deduplicate(
+        conditionalArray(
+          // Explicitly add `currentTenantId` and deduplicate since the user may directly
+          // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
+          // additional redirect.
+          currentTenantId && getManagementApi(currentTenantId).indicator,
+          ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
+          isCloud && cloudApi.indicator,
+          meApi.indicator
+        )
+      ),
+    [currentTenantId, tenants]
   );
 
-  const scopes = [
-    UserScope.Email,
-    UserScope.Identities,
-    UserScope.CustomData,
-    PredefinedScope.All,
-    ...conditionalArray(
-      isCloud && cloudApi.scopes.CreateTenant,
-      isCloud && cloudApi.scopes.ManageTenant
-    ),
-  ];
+  const scopes = useMemo(
+    () => [
+      UserScope.Email,
+      UserScope.Identities,
+      UserScope.CustomData,
+      PredefinedScope.All,
+      ...conditionalArray(
+        isCloud && cloudApi.scopes.CreateTenant,
+        isCloud && cloudApi.scopes.ManageTenant
+      ),
+    ],
+    []
+  );
 
   return (
     <LogtoProvider
