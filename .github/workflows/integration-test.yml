@@ -41,6 +41,8 @@ jobs:
           IS_CLOUD: 1
           CONSOLE_PUBLIC_URL: /
           ADMIN_ENDPOINT: http://localhost:3002
+          # Setup ApplicationInsights for smoke testing. Note the connection string should be a dev string.
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
 
       - uses: actions/upload-artifact@v3
         with:
