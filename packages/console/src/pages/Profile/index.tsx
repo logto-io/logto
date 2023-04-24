@@ -16,7 +16,7 @@ import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
-import * as resourcesStyles from '@/scss/resources.module.scss';
+import * as pageLayout from '@/scss/page-layout.module.scss';
 
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
@@ -43,9 +43,9 @@ function Profile() {
   const showLoadingSkeleton = isLoadingUser || isLoadingConnectors || isUserAssetServiceLoading;
 
   return (
-    <div className={resourcesStyles.container}>
+    <div className={pageLayout.container}>
       <PageMeta titleKey="profile.page_title" />
-      <div className={resourcesStyles.headline}>
+      <div className={pageLayout.headline}>
         <CardTitle title="profile.title" subtitle="profile.description" />
       </div>
       {showLoadingSkeleton && <Skeleton />}

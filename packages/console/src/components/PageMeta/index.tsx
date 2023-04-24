@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { mainTitle } from '@/consts/tenants';
 
-type Props = {
+export type Props = {
   titleKey: AdminConsoleKey | AdminConsoleKey[];
   // eslint-disable-next-line react/boolean-prop-naming
   trackPageView?: boolean;

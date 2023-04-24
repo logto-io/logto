@@ -5,19 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
-import PageMeta from '@/components/PageMeta';
-import Pagination from '@/components/Pagination';
-import Table from '@/components/Table';
+import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
@@ -63,30 +57,27 @@ function Applications() {
   };
 
   return (
-    <div className={resourcesStyles.container}>
-      <PageMeta titleKey="applications.title" />
-      <div className={resourcesStyles.headline}>
-        <CardTitle title="applications.title" subtitle="applications.subtitle" />
-        <Button
-          icon={<Plus />}
-          title="applications.create"
-          type="primary"
-          size="large"
-          onClick={() => {
-            navigate({
-              pathname: createApplicationPathname,
-              search,
-            });
-          }}
-        />
-      </div>
-      <Table
-        className={resourcesStyles.table}
-        rowGroups={[{ key: 'applications', data: applications }]}
-        rowIndexKey="id"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
+    <ListPage
+      title={{
+        title: 'applications.title',
+        subtitle: 'applications.subtitle',
+      }}
+      pageMeta={{ titleKey: 'applications.title' }}
+      createButton={{
+        title: 'applications.create',
+        onClick: () => {
+          navigate({
+            pathname: createApplicationPathname,
+            search,
+          });
+        },
+      }}
+      table={{
+        rowGroups: [{ key: 'applications', data: applications }],
+        rowIndexKey: 'id',
+        isLoading,
+        errorMessage: error?.body?.message ?? error?.message,
+        columns: [
           {
             title: t('applications.application_name'),
             dataIndex: 'name',
@@ -106,44 +97,45 @@ function Applications() {
             colSpan: 10,
             render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
           },
-        ]}
-        placeholder={
+        ],
+        placeholder: (
           <ApplicationsPlaceholder
             onCreate={async (newApp) => {
               await mutateApplicationList(newApp);
               navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
             }}
           />
-        }
-        rowClickHandler={({ id }) => {
+        ),
+        rowClickHandler: ({ id }) => {
           navigate(buildDetailsPathname(id));
-        }}
-        onRetry={async () => mutate(undefined, true)}
-      />
-      <Pagination
-        page={page}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        className={styles.pagination}
-        onChange={(page) => {
-          updateSearchParameters({ page });
-        }}
-      />
-      <CreateForm
-        isOpen={isShowingCreationForm}
-        onClose={async (newApp) => {
-          if (newApp) {
-            navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
+        },
+        onRetry: async () => mutate(undefined, true),
+        pagination: {
+          page,
+          totalCount,
+          pageSize,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
+        },
+      }}
+      widgets={
+        <CreateForm
+          isOpen={isShowingCreationForm}
+          onClose={async (newApp) => {
+            if (newApp) {
+              navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
 
-            return;
-          }
-          navigate({
-            pathname: applicationsPathname,
-            search,
-          });
-        }}
-      />
-    </div>
+              return;
+            }
+            navigate({
+              pathname: applicationsPathname,
+              search,
+            });
+          }}
+        />
+      }
+    />
   );
 }
 
