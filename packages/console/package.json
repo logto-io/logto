@@ -31,7 +31,7 @@
     "@logto/language-kit": "workspace:^1.0.0",
     "@logto/phrases": "workspace:^1.2.0",
     "@logto/phrases-ui": "workspace:^1.2.0",
-    "@logto/react": "1.1.1",
+    "@logto/react": "1.1.2",
     "@logto/schemas": "workspace:^1.2.2",
     "@logto/shared": "workspace:^2.0.0",
     "@mdx-js/react": "^1.6.22",
