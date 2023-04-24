@@ -1,12 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
-import { useState, useRef } from 'react';
+import { type ReactNode, useCallback, useEffect, useState, useRef } from 'react';
 
 import ArrowRight from '@/assets/images/arrow-right.svg';
 import Tick from '@/assets/images/tick.svg';
 import { DropdownItem } from '@/components/Dropdown';
 import DynamicT from '@/components/DynamicT';
+import OverlayScrollbar from '@/components/OverlayScrollbar';
 import type { Option } from '@/components/Select';
 import Spacer from '@/components/Spacer';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -23,6 +23,11 @@ type Props<T> = {
   onItemClick: (value: T) => void;
 };
 
+const menuItemHeight = 40;
+const menuItemMargin = 4;
+const menuBorderSize = 1;
+const menuBottomPadding = 16;
+
 function SubMenu<T extends string>({
   className,
   menuItemClassName,
@@ -36,6 +41,32 @@ function SubMenu<T extends string>({
   const [showMenu, setShowMenu] = useState(false);
   const mouseEnterTimeoutRef = useRef(0);
   const mouseLeaveTimeoutRef = useRef(0);
+  const [menuHeight, setMenuHeight] = useState<number>();
+
+  const calculateDropdownHeight = useCallback(() => {
+    if (anchorRef.current) {
+      const anchorRect = anchorRef.current.getBoundingClientRect();
+      const originalMenuHeight =
+        options.length * menuItemHeight +
+        (options.length + 1) * menuItemMargin +
+        2 * menuBorderSize;
+      const availableHeight = window.innerHeight - anchorRect.top - menuBottomPadding;
+
+      setMenuHeight(Math.min(originalMenuHeight, availableHeight));
+    }
+  }, [options.length]);
+
+  useEffect(() => {
+    calculateDropdownHeight();
+
+    window.addEventListener('resize', calculateDropdownHeight);
+    window.addEventListener('scroll', calculateDropdownHeight);
+
+    return () => {
+      window.removeEventListener('resize', calculateDropdownHeight);
+      window.removeEventListener('scroll', calculateDropdownHeight);
+    };
+  }, [calculateDropdownHeight]);
 
   return (
     <div
@@ -71,7 +102,10 @@ function SubMenu<T extends string>({
       </span>
       <Spacer />
       <ArrowRight className={styles.icon} />
-      <div className={classNames(styles.menu, showMenu && styles.visible)}>
+      <OverlayScrollbar
+        className={classNames(styles.menu, showMenu && styles.visible)}
+        style={{ maxHeight: menuHeight }}
+      >
         {options.map(({ value, title }) => {
           const selected = value === selectedOption;
 
@@ -92,7 +126,7 @@ function SubMenu<T extends string>({
             </DropdownItem>
           );
         })}
-      </div>
+      </OverlayScrollbar>
     </div>
   );
 }
