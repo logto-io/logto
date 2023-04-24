@@ -6,5 +6,6 @@ export * from './admin-user.js';
 export * from './logs.js';
 export * from './dashboard.js';
 export * from './interaction.js';
+export * from './logto-config.js';
 
 export { default as api, authedAdminApi } from './api.js';
