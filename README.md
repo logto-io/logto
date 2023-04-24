@@ -86,7 +86,7 @@ Logto uses the [default browserlist config](https://github.com/browserslist/brow
 - About other bug reports, feature requests, and feedback, you can:
   - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub;
   - 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat;
-  - Engage in our 🗓️ [public roadmap](https://silverhand.notion.site/Logto-Public-Roadmap-d6a1ad19039946b7b1139811aed82dcc).
+  - Engage in our 📍 [public roadmap](https://github.com/logto-io/logto/issues/1937).
 
 ## Licensing
 
