@@ -7,4 +7,4 @@
 "@logto/connector-wechat-web": minor
 ---
 
-Enable configurable `scope`.
+enable configurable `scope` (#3723)
