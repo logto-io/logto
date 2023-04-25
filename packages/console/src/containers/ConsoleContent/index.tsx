@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
+import OverlayScrollbar from '@/components/OverlayScrollbar';
 import {
   ApiResourceDetailsTabs,
   SignInExperiencePage,
@@ -48,74 +49,76 @@ function ConsoleContent() {
   return (
     <div className={styles.content}>
       <Sidebar />
-      <div ref={scrollableContent} className={styles.main}>
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route path="get-started" element={<GetStarted />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="applications">
-            <Route index element={<Applications />} />
-            <Route path="create" element={<Applications />} />
-            <Route path=":id/guide" element={<ApplicationDetails />} />
-            <Route path=":id" element={<ApplicationDetails />} />
-          </Route>
-          <Route path="api-resources">
-            <Route index element={<ApiResources />} />
-            <Route path="create" element={<ApiResources />} />
-            <Route path=":id" element={<ApiResourceDetails />}>
-              <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />} />
-              <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
-              <Route
-                path={ApiResourceDetailsTabs.Permissions}
-                element={<ApiResourcePermissions />}
-              />
+      <OverlayScrollbar className={styles.overlayScrollbarWrapper}>
+        <div ref={scrollableContent} className={styles.main}>
+          <Routes>
+            <Route path="*" element={<NotFound />} />
+            <Route path="get-started" element={<GetStarted />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="applications">
+              <Route index element={<Applications />} />
+              <Route path="create" element={<Applications />} />
+              <Route path=":id/guide" element={<ApplicationDetails />} />
+              <Route path=":id" element={<ApplicationDetails />} />
             </Route>
-          </Route>
-          <Route path="sign-in-experience">
-            <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
-            <Route path=":tab" element={<SignInExperience />} />
-          </Route>
-          <Route path="connectors">
-            <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
-            <Route path=":tab" element={<Connectors />} />
-            <Route path=":tab/create/:createType" element={<Connectors />} />
-            <Route path=":tab/guide/:factoryId" element={<Connectors />} />
-            <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
-          </Route>
-          <Route path="users">
-            <Route index element={<Users />} />
-            <Route path="create" element={<Users />} />
-            <Route path=":id" element={<UserDetails />}>
-              <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
-              <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
-              <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
-              <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
+            <Route path="api-resources">
+              <Route index element={<ApiResources />} />
+              <Route path="create" element={<ApiResources />} />
+              <Route path=":id" element={<ApiResourceDetails />}>
+                <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />} />
+                <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />
+                <Route
+                  path={ApiResourceDetailsTabs.Permissions}
+                  element={<ApiResourcePermissions />}
+                />
+              </Route>
             </Route>
-            <Route path={`:id/${UserDetailsTabs.Logs}/:logId`} element={<AuditLogDetails />} />
-          </Route>
-          <Route path="audit-logs">
-            <Route index element={<AuditLogs />} />
-            <Route path=":logId" element={<AuditLogDetails />} />
-          </Route>
-          <Route path="roles">
-            <Route index element={<Roles />} />
-            <Route path="create" element={<Roles />} />
-            <Route path=":id" element={<RoleDetails />}>
-              <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
-              <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
-              <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
-              <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
+            <Route path="sign-in-experience">
+              <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
+              <Route path=":tab" element={<SignInExperience />} />
             </Route>
-          </Route>
-          <Route path="profile">
-            <Route index element={<Profile />} />
-            <Route path="verify-password" element={<VerifyPasswordModal />} />
-            <Route path="change-password" element={<ChangePasswordModal />} />
-            <Route path="link-email" element={<LinkEmailModal />} />
-            <Route path="verification-code" element={<VerificationCodeModal />} />
-          </Route>
-        </Routes>
-      </div>
+            <Route path="connectors">
+              <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
+              <Route path=":tab" element={<Connectors />} />
+              <Route path=":tab/create/:createType" element={<Connectors />} />
+              <Route path=":tab/guide/:factoryId" element={<Connectors />} />
+              <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
+            </Route>
+            <Route path="users">
+              <Route index element={<Users />} />
+              <Route path="create" element={<Users />} />
+              <Route path=":id" element={<UserDetails />}>
+                <Route index element={<Navigate replace to={UserDetailsTabs.Settings} />} />
+                <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
+                <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
+                <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
+              </Route>
+              <Route path={`:id/${UserDetailsTabs.Logs}/:logId`} element={<AuditLogDetails />} />
+            </Route>
+            <Route path="audit-logs">
+              <Route index element={<AuditLogs />} />
+              <Route path=":logId" element={<AuditLogDetails />} />
+            </Route>
+            <Route path="roles">
+              <Route index element={<Roles />} />
+              <Route path="create" element={<Roles />} />
+              <Route path=":id" element={<RoleDetails />}>
+                <Route index element={<Navigate replace to={RoleDetailsTabs.Settings} />} />
+                <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
+                <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
+                <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
+              </Route>
+            </Route>
+            <Route path="profile">
+              <Route index element={<Profile />} />
+              <Route path="verify-password" element={<VerifyPasswordModal />} />
+              <Route path="change-password" element={<ChangePasswordModal />} />
+              <Route path="link-email" element={<LinkEmailModal />} />
+              <Route path="verification-code" element={<VerificationCodeModal />} />
+            </Route>
+          </Routes>
+        </div>
+      </OverlayScrollbar>
     </div>
   );
 }
