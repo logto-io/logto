@@ -10,6 +10,7 @@ import pRetry from 'p-retry';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
@@ -55,7 +56,7 @@ export const createUserLibrary = (queries: Queries) => {
     pool,
     roles: { findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
     users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
-    usersRoles: { insertUsersRoles, findUsersRolesByRoleId, findUsersRolesByUserId },
+    usersRoles: { findUsersRolesByRoleId, findUsersRolesByUserId },
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIdsAndResourceIndicator },
   } = queries;
@@ -74,25 +75,28 @@ export const createUserLibrary = (queries: Queries) => {
       { retries, factor: 0 } // No need for exponential backoff
     );
 
-  const insertUserQuery = buildInsertIntoWithPool(pool)(Users, {
-    returning: true,
-  });
-
   const insertUser = async (data: OmitAutoSetFields<CreateUser>, additionalRoleNames: string[]) => {
     const roleNames = deduplicate([...EnvSet.values.userDefaultRoleNames, ...additionalRoleNames]);
     const roles = await findRolesByRoleNames(roleNames);
 
     assertThat(roles.length === roleNames.length, 'role.default_role_missing');
 
-    const user = await insertUserQuery(data);
+    return pool.transaction(async (connection) => {
+      const insertUserQuery = buildInsertIntoWithPool(connection)(Users, {
+        returning: true,
+      });
 
-    if (roles.length > 0) {
-      await insertUsersRoles(
-        roles.map(({ id }) => ({ id: generateStandardId(), userId: user.id, roleId: id }))
-      );
-    }
+      const user = await insertUserQuery(data);
 
-    return user;
+      if (roles.length > 0) {
+        const { insertUsersRoles } = createUsersRolesQueries(connection);
+        await insertUsersRoles(
+          roles.map(({ id }) => ({ id: generateStandardId(), userId: user.id, roleId: id }))
+        );
+      }
+
+      return user;
+    });
   };
 
   const checkIdentifierCollision = async (
