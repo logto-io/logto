@@ -18,9 +18,17 @@ import {
   sendEmailTestMessage,
   sendSmsTestMessage,
   updateConnectorConfig,
+  listConnectorFactories,
+  getConnectorFactory,
 } from '#src/api/connector.js';
 
 const connectorIdMap = new Map<string, string>();
+
+const mockConnectorSetups = [
+  { connectorId: mockSmsConnectorId, config: mockSmsConnectorConfig },
+  { connectorId: mockEmailConnectorId, config: mockEmailConnectorConfig },
+  { connectorId: mockSocialConnectorId, config: mockSocialConnectorConfig },
+];
 
 /*
  * We'd better only use mock connectors in integration tests.
@@ -28,6 +36,25 @@ const connectorIdMap = new Map<string, string>();
  * for testing updating configs and enabling/disabling for now.
  */
 test('connector set-up flow', async () => {
+  /**
+   * Check whether mock connector factories are properly installed using
+   * both connector factory APIs:
+   * 1. GET /connector-factories (listConnectorFactories()).
+   * 2. GET /connector-factories/:connectorId (getConnectorFactory()).
+   */
+  const connectorFactories = await listConnectorFactories();
+  await Promise.all(
+    mockConnectorSetups.map(async ({ connectorId }) => {
+      expect(connectorFactories.find(({ id }) => id === connectorId)).toBeDefined();
+
+      const connectorFactory = await getConnectorFactory(connectorId);
+      expect(connectorFactory).toBeDefined();
+    })
+  );
+
+  /**
+   * Clean up `connector` table
+   */
   const connectors = await listConnectors();
   await Promise.all(
     connectors.map(async ({ id }) => {
@@ -40,11 +67,7 @@ test('connector set-up flow', async () => {
    * Set up social/SMS/email connectors
    */
   await Promise.all(
-    [
-      { connectorId: mockSmsConnectorId, config: mockSmsConnectorConfig },
-      { connectorId: mockEmailConnectorId, config: mockEmailConnectorConfig },
-      { connectorId: mockSocialConnectorId, config: mockSocialConnectorConfig },
-    ].map(async ({ connectorId, config }) => {
+    mockConnectorSetups.map(async ({ connectorId, config }) => {
       // @darcy FIXME: should call post method directly
       const { id } = await postConnector({ connectorId });
       connectorIdMap.set(connectorId, id);

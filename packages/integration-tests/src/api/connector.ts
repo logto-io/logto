@@ -1,4 +1,9 @@
-import type { Connector, ConnectorResponse, CreateConnector } from '@logto/schemas';
+import type {
+  Connector,
+  ConnectorFactoryResponse,
+  ConnectorResponse,
+  CreateConnector,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -7,6 +12,12 @@ export const listConnectors = async () =>
 
 export const getConnector = async (connectorId: string) =>
   authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
+
+export const listConnectorFactories = async () =>
+  authedAdminApi.get('connector-factories').json<ConnectorFactoryResponse[]>();
+
+export const getConnectorFactory = async (connectorId: string) =>
+  authedAdminApi.get(`connector-factories/${connectorId}`).json<ConnectorFactoryResponse>();
 
 // FIXME @Darcy: correct use of `id` and `connectorId`.
 export const postConnector = async (
