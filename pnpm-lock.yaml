@@ -3681,18 +3681,27 @@ importers:
         specifier: ^3.20.2
         version: 3.20.2
     devDependencies:
+      '@jest/types':
+        specifier: ^29.0.3
+        version: 29.1.2
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
       '@silverhand/ts-config':
         specifier: 3.0.0
         version: 3.0.0(typescript@5.0.2)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
       '@types/node':
         specifier: ^18.11.18
         version: 18.11.18
       eslint:
         specifier: ^8.34.0
         version: 8.34.0
+      jest:
+        specifier: ^29.5.0
+        version: 29.5.0(@types/node@18.11.18)
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
@@ -12570,7 +12579,7 @@ packages:
     resolution: {integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==}
     engines: {node: '>=12'}
     dependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
     dev: true
@@ -12880,10 +12889,6 @@ packages:
 
   /graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
-
-  /graceful-fs@4.2.9:
-    resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
     dev: true
 
   /grapheme-splitter@1.0.4:
