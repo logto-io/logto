@@ -49,7 +49,7 @@ describe('hooks', () => {
       await authedAdminApi
         .patch(`hooks/${created.id}`, { json: { events: [HookEvent.PostSignIn] } })
         .json<Hook>()
-    ).toMatchObject({ ...created, event: HookEvent.PostSignIn, events: [HookEvent.PostSignIn] });
+    ).toMatchObject({ ...created, events: [HookEvent.PostSignIn] });
     expect(await authedAdminApi.delete(`hooks/${created.id}`)).toHaveProperty('statusCode', 204);
     await expect(authedAdminApi.get(`hooks/${created.id}`)).rejects.toHaveProperty(
       'response.statusCode',

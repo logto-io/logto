@@ -1,9 +1,7 @@
 import { Hooks, hookConfigGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { hookRetryLimit } from '#src/libraries/hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -27,23 +25,20 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks',
     koaGuard({
       body: Hooks.createGuard
-        .omit({ id: true, event: true, enabled: true })
-        .extend({ config: hookConfigGuard.omit({ signingKey: true, retries: true }) }),
+        .omit({ id: true, enabled: true })
+        .extend({ config: hookConfigGuard.omit({ signingKey: true }) }),
       response: Hooks.guard,
       status: [200, 422],
     }),
     async (ctx, next) => {
-      const { config, events, ...rest } = ctx.guard.body;
+      const { config, ...rest } = ctx.guard.body;
 
       ctx.body = await insertHook({
         ...rest,
         id: generateStandardId(),
-        event: events[0], // Note: the `event` is deprecated, but we still need to set it for backward compatibility.
-        events,
         config: {
           ...config,
           signingKey: generateStandardId(),
-          retries: hookRetryLimit, // Note: the `retries` is deprecated, but we still need to set it for backward compatibility.
         },
         enabled: true,
       });
@@ -76,7 +71,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       params: z.object({ id: z.string().min(1) }),
       body: Hooks.createGuard
         .pick({ name: true, events: true })
-        .extend({ config: hookConfigGuard.omit({ signingKey: true, retries: true }).partial() })
+        .extend({ config: hookConfigGuard.omit({ signingKey: true }).partial() })
         .partial(),
       response: Hooks.guard,
       status: [200, 422, 404],
@@ -87,15 +82,12 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const { events } = body;
-
       const hook = await findHookById(id);
       const { config } = hook;
 
       ctx.body = await updateHookById(id, {
         ...body,
         config: { ...config, ...body.config },
-        ...conditional(events && { event: events[0] }), // Note: the `event` is deprecated, but we still need to set it for backward compatibility.
       });
 
       return next();

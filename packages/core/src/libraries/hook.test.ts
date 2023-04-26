@@ -22,9 +22,8 @@ const hook: Hook = {
   tenantId: 'bar',
   id: 'foo',
   name: 'foo',
-  event: HookEvent.PostSignIn,
   events: [HookEvent.PostSignIn],
-  config: { headers: { bar: 'baz' }, url, retries: 3, signingKey: nanoIdMock },
+  config: { headers: { bar: 'baz' }, url, signingKey: nanoIdMock },
   enabled: true,
   createdAt: Date.now() / 1000,
 };

@@ -49,17 +49,12 @@ describe('hook routes', () => {
 
   it('POST /hooks', async () => {
     const name = 'fooName';
-    const event: HookEvent = HookEvent.PostRegister;
-    const testDeprecatedEvent = HookEvent.PostSignIn;
-    const events: HookEvents = [event];
+    const events: HookEvents = [HookEvent.PostRegister];
     const config: Omit<HookConfig, 'signingKey'> = {
       url: 'https://example.com',
-      retries: 3,
     };
 
-    const response = await hookRequest
-      .post('/hooks')
-      .send({ name, event: testDeprecatedEvent, events, config });
+    const response = await hookRequest.post('/hooks').send({ name, events, config });
     expect(response.status).toEqual(200);
     const generatedId = response.body.id as string;
     const generatedSigningKey = response.body.config.signingKey as string;
@@ -68,7 +63,6 @@ describe('hook routes', () => {
       tenantId: mockTenantIdForHook,
       id: generatedId,
       name,
-      event,
       events,
       config: {
         ...config,
@@ -77,8 +71,6 @@ describe('hook routes', () => {
       enabled: true,
       createdAt: mockCreatedAtForHook,
     });
-
-    expect(response.body.event).not.toEqual(testDeprecatedEvent);
   });
 
   it('GET /hooks/:id', async () => {
@@ -89,30 +81,25 @@ describe('hook routes', () => {
 
   it('PATCH /hooks/:id', async () => {
     const name = 'newName';
-    const event = HookEvent.PostSignIn;
-    const events: HookEvents = [event];
-    const testDeprecatedEvent = HookEvent.PostRegister;
+    const events: HookEvents = [HookEvent.PostSignIn];
     const config: Omit<HookConfig, 'signingKey'> = {
       url: 'https://new.com',
-      retries: 3,
     };
 
     const response = await hookRequest
       .patch(`/hooks/${mockNanoIdForHook}`)
-      .send({ name, event: testDeprecatedEvent, events, config });
+      .send({ name, events, config });
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockHook,
       name,
-      event,
       events,
       config: {
         ...config,
         signingKey: mockHook.config.signingKey,
       },
     });
-    expect(response.body.event).not.toEqual(testDeprecatedEvent);
   });
 
   it('PATCH /hooks/:id should not update enable state', async () => {

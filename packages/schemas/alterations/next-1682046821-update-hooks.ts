@@ -22,16 +22,19 @@ type OldHook = {
   config: OldHookConfig;
 };
 
-type NewHookConfig = OldHookConfig & {
+type NewHookConfig = Omit<OldHookConfig, 'retries'> & {
   signingKey: string;
+  retries?: number;
 };
 
-type NewHook = OldHook & {
+type NewHook = Pick<OldHook, 'tenantId' | 'id'> & {
   name: string;
   events: HookEvent[];
   enabled: boolean;
   config: NewHookConfig;
 };
+
+const defaultRetries = 3;
 
 const alteration: AlterationScript = {
   up: async (pool) => {
@@ -43,7 +46,8 @@ const alteration: AlterationScript = {
       alter table hooks
         add column name varchar(256),
         add column events jsonb,
-        add column enabled boolean not null default true
+        add column enabled boolean not null default true,
+        alter column event drop not null;
     `);
 
     await Promise.all(
@@ -68,27 +72,55 @@ const alteration: AlterationScript = {
     `);
   },
   down: async (pool) => {
-    const { rows: newHooks } = await pool.query<NewHook>(sql`
-      select * from hooks;
-    `);
-
-    await Promise.all(
-      newHooks.map(async ({ id, tenantId, config }) => {
-        const { signingKey, ...oldConfig } = config;
-        await pool.query(sql`
-          update hooks
-          set config = ${JSON.stringify(oldConfig)}
-          where id = ${id} and tenant_id = ${tenantId};
-        `);
-      })
-    );
-
     await pool.query(sql`
       delete from hooks where enabled = false;
     `);
 
+    const { rows: newHooks } = await pool.query<NewHook>(sql`
+      select * from hooks;
+    `);
+
+    for (const { id, tenantId, events, config } of newHooks) {
+      const {
+        signingKey, // Exclude signingKey
+        retries,
+        ...oldConfig
+      } = config;
+
+      const updatedConfig = {
+        ...oldConfig,
+        retries: retries ?? defaultRetries,
+      };
+
+      /* eslint-disable no-await-in-loop */
+      for (const [index, event] of events.entries()) {
+        if (index === 0) {
+          await pool.query(sql`
+            update hooks
+            set event = ${event},
+            config = ${JSON.stringify(updatedConfig)}
+            where id = ${id} and tenant_id = ${tenantId};
+          `);
+
+          continue;
+        }
+
+        // Create new hook when there are multiple events
+        const newHookId = generateStandardId();
+
+        await pool.query(sql`
+          insert into hooks (id, tenant_id, name, event, config)
+          values (${newHookId}, ${tenantId}, ${'Hook_' + newHookId}, ${event}, ${JSON.stringify(
+          updatedConfig
+        )});
+        `);
+      }
+      /* eslint-enable no-await-in-loop */
+    }
+
     await pool.query(sql`
       alter table hooks
+      alter column event set not null,
       drop column name,
       drop column events,
       drop column enabled;

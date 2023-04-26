@@ -3,7 +3,6 @@ create table hooks (
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   name varchar(256) not null,
-  event varchar(128) /* @use HookEvent */ not null, /* deprecated */
   events jsonb /* @use HookEvents */ not null,
   config jsonb /* @use HookConfig */ not null,
   enabled boolean not null default true,
@@ -12,5 +11,3 @@ create table hooks (
 );
 
 create index hooks__id on hooks (tenant_id, id);
-
-create index hooks__event on hooks (tenant_id, event);

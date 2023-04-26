@@ -211,12 +211,6 @@ export const hookConfigGuard = z.object({
   url: z.string(),
   /** Additional headers that attach to the request */
   headers: z.record(z.string()).optional(),
-  /**
-   * Retry times when hook response status >= 500.
-   *
-   * Must be less than or equal to `3`. Use `0` to disable retry.
-   **/
-  retries: z.number().gte(0).lte(3),
   /** The signing key for the hook request */
   signingKey: z.string(),
 });
