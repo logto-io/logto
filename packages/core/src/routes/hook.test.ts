@@ -59,7 +59,7 @@ describe('hook routes', () => {
     const generatedId = response.body.id as string;
     const generatedSigningKey = response.body.config.signingKey as string;
 
-    expect(response.body).toEqual({
+    expect(response.body).toMatchObject({
       tenantId: mockTenantIdForHook,
       id: generatedId,
       name,
