@@ -74,6 +74,10 @@ const alteration: AlterationScript = {
   down: async (pool) => {
     await pool.query(sql`
       delete from hooks where enabled = false;
+      alter table hooks
+      alter column events drop not null,
+      alter column name drop not null,
+      alter column enabled drop not null;
     `);
 
     const { rows: newHooks } = await pool.query<NewHook>(sql`
