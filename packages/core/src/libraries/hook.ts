@@ -16,7 +16,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
 // Note: the retry limit is fixed to 3 for now.
-export const hookRetryLimit = 3;
+const hookRetryLimit = 3;
 
 const parseResponse = ({ statusCode, body }: Response) => ({
   statusCode,
