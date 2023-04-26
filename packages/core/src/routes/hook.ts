@@ -25,7 +25,7 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks',
     koaGuard({
       body: Hooks.createGuard
-        .omit({ id: true, enabled: true })
+        .omit({ id: true, event: true, enabled: true })
         .extend({ config: hookConfigGuard.omit({ signingKey: true }) }),
       response: Hooks.guard,
       status: [200, 422],

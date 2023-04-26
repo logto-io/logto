@@ -22,6 +22,7 @@ const hook: Hook = {
   tenantId: 'bar',
   id: 'foo',
   name: 'foo',
+  event: null,
   events: [HookEvent.PostSignIn],
   config: { headers: { bar: 'baz' }, url, signingKey: nanoIdMock },
   enabled: true,

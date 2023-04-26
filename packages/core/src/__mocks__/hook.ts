@@ -10,6 +10,7 @@ export const mockHook: Hook = {
   tenantId: mockTenantIdForHook,
   id: mockNanoIdForHook,
   name: 'foo',
+  event: null,
   events: [HookEvent.PostRegister],
   config: {
     url: 'https://example.com',
@@ -23,6 +24,7 @@ const mockHookData1: Hook = {
   tenantId: mockTenantIdForHook,
   id: 'hook_id_1',
   name: 'foo',
+  event: null,
   events: [HookEvent.PostRegister],
   config: {
     url: 'https://example1.com',
@@ -36,6 +38,7 @@ const mockHookData2: Hook = {
   tenantId: mockTenantIdForHook,
   id: 'hook_id_2',
   name: 'bar',
+  event: null,
   events: [HookEvent.PostResetPassword],
   config: {
     url: 'https://example2.com',
@@ -49,6 +52,7 @@ const mockHookData3: Hook = {
   tenantId: mockTenantIdForHook,
   id: 'hook_id_3',
   name: 'baz',
+  event: null,
   events: [HookEvent.PostSignIn],
   config: {
     url: 'https://example3.com',
