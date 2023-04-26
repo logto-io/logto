@@ -1,6 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { type ReactNode, useCallback, useEffect, useState, useRef } from 'react';
+import { type ReactNode, useCallback, useState, useRef } from 'react';
 
 import ArrowRight from '@/assets/images/arrow-right.svg';
 import Tick from '@/assets/images/tick.svg';
@@ -26,7 +26,7 @@ type Props<T> = {
 const menuItemHeight = 40;
 const menuItemMargin = 4;
 const menuBorderSize = 1;
-const menuBottomPadding = 16;
+const menuBottomMargin = 16;
 
 function SubMenu<T extends string>({
   className,
@@ -50,23 +50,11 @@ function SubMenu<T extends string>({
         options.length * menuItemHeight +
         (options.length + 1) * menuItemMargin +
         2 * menuBorderSize;
-      const availableHeight = window.innerHeight - anchorRect.top - menuBottomPadding;
+      const availableHeight = window.innerHeight - anchorRect.top - menuBottomMargin;
 
       setMenuHeight(Math.min(originalMenuHeight, availableHeight));
     }
   }, [options.length]);
-
-  useEffect(() => {
-    calculateDropdownHeight();
-
-    window.addEventListener('resize', calculateDropdownHeight);
-    window.addEventListener('scroll', calculateDropdownHeight);
-
-    return () => {
-      window.removeEventListener('resize', calculateDropdownHeight);
-      window.removeEventListener('scroll', calculateDropdownHeight);
-    };
-  }, [calculateDropdownHeight]);
 
   return (
     <div
@@ -79,6 +67,7 @@ function SubMenu<T extends string>({
       })}
       onMouseEnter={() => {
         window.clearTimeout(mouseLeaveTimeoutRef.current);
+        calculateDropdownHeight();
         // eslint-disable-next-line @silverhand/fp/no-mutation
         mouseEnterTimeoutRef.current = window.setTimeout(() => {
           setShowMenu(true);
