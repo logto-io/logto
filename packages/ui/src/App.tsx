@@ -1,5 +1,4 @@
-import { AppInsightsProvider, getPrimaryDomain, useAppInsights } from '@logto/app-insights/react';
-import { useEffect } from 'react';
+import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -22,87 +21,72 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
-import { shouldTrack } from './utils/cookies';
 import { handleSearchParametersData } from './utils/search-parameters';
 
 import './scss/normalized.scss';
 
 handleSearchParametersData();
 
-const Content = () => {
-  const { setup } = useAppInsights();
-
-  useEffect(() => {
-    if (shouldTrack) {
-      void setup('ui', { cookieDomain: getPrimaryDomain() });
-    }
-  }, [setup]);
-
+const App = () => {
   return (
     <BrowserRouter>
       <PageContextProvider>
         <SettingsProvider>
           <AppBoundary>
-            <Routes>
-              <Route path="sign-in/consent" element={<Consent />} />
-              <Route element={<AppLayout />}>
-                <Route
-                  path="unknown-session"
-                  element={<ErrorPage message="error.invalid_session" />}
-                />
-                <Route path="springboard" element={<Springboard />} />
+            <AppInsightsBoundary>
+              <Routes>
+                <Route path="sign-in/consent" element={<Consent />} />
+                <Route element={<AppLayout />}>
+                  <Route
+                    path="unknown-session"
+                    element={<ErrorPage message="error.invalid_session" />}
+                  />
+                  <Route path="springboard" element={<Springboard />} />
 
-                <Route element={<LoadingLayerProvider />}>
-                  {/* Sign-in */}
-                  <Route path="sign-in">
-                    <Route index element={<SignIn />} />
-                    <Route path="password" element={<SignInPassword />} />
-                    <Route path="social/:connectorId" element={<SocialSignIn />} />
+                  <Route element={<LoadingLayerProvider />}>
+                    {/* Sign-in */}
+                    <Route path="sign-in">
+                      <Route index element={<SignIn />} />
+                      <Route path="password" element={<SignInPassword />} />
+                      <Route path="social/:connectorId" element={<SocialSignIn />} />
+                    </Route>
+
+                    {/* Register */}
+                    <Route path="register">
+                      <Route index element={<Register />} />
+                      <Route path="password" element={<RegisterPassword />} />
+                    </Route>
+
+                    {/* Forgot password */}
+                    <Route path="forgot-password">
+                      <Route index element={<ForgotPassword />} />
+                      <Route path="reset" element={<ResetPassword />} />
+                    </Route>
+
+                    {/* Passwordless verification code */}
+                    <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                    {/* Continue set up missing profile */}
+                    <Route path="continue">
+                      <Route path=":method" element={<Continue />} />
+                    </Route>
+
+                    {/* Social sign-in pages */}
+                    <Route path="social">
+                      <Route path="link/:connectorId" element={<SocialLinkAccount />} />
+                      <Route path="landing/:connectorId" element={<SocialLanding />} />
+                    </Route>
+                    <Route path="callback/:connectorId" element={<Callback />} />
                   </Route>
 
-                  {/* Register */}
-                  <Route path="register">
-                    <Route index element={<Register />} />
-                    <Route path="password" element={<RegisterPassword />} />
-                  </Route>
-
-                  {/* Forgot password */}
-                  <Route path="forgot-password">
-                    <Route index element={<ForgotPassword />} />
-                    <Route path="reset" element={<ResetPassword />} />
-                  </Route>
-
-                  {/* Passwordless verification code */}
-                  <Route path=":flow/verification-code" element={<VerificationCode />} />
-
-                  {/* Continue set up missing profile */}
-                  <Route path="continue">
-                    <Route path=":method" element={<Continue />} />
-                  </Route>
-
-                  {/* Social sign-in pages */}
-                  <Route path="social">
-                    <Route path="link/:connectorId" element={<SocialLinkAccount />} />
-                    <Route path="landing/:connectorId" element={<SocialLanding />} />
-                  </Route>
-                  <Route path="callback/:connectorId" element={<Callback />} />
+                  <Route path="*" element={<ErrorPage />} />
                 </Route>
-
-                <Route path="*" element={<ErrorPage />} />
-              </Route>
-            </Routes>
+              </Routes>
+            </AppInsightsBoundary>
           </AppBoundary>
         </SettingsProvider>
       </PageContextProvider>
     </BrowserRouter>
-  );
-};
-
-const App = () => {
-  return (
-    <AppInsightsProvider>
-      <Content />
-    </AppInsightsProvider>
   );
 };
 
