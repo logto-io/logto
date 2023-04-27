@@ -35,20 +35,25 @@ export default function applicationRoutes<T extends AuthedRouter>(
     queries.applicationsRoles;
   const { findRoleByRoleName } = queries.roles;
 
-  router.get('/applications', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
+  router.get(
+    '/applications',
+    koaPagination(),
+    koaGuard({ response: z.array(Applications.guard), status: 200 }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
 
-    const [{ count }, applications] = await Promise.all([
-      findTotalNumberOfApplications(),
-      findAllApplications(limit, offset),
-    ]);
+      const [{ count }, applications] = await Promise.all([
+        findTotalNumberOfApplications(),
+        findAllApplications(limit, offset),
+      ]);
 
-    // Return totalCount to pagination middleware
-    ctx.pagination.totalCount = count;
-    ctx.body = applications;
+      // Return totalCount to pagination middleware
+      ctx.pagination.totalCount = count;
+      ctx.body = applications;
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.post(
     '/applications',
@@ -57,6 +62,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
         .omit({ id: true, createdAt: true })
         .partial()
         .merge(Applications.createGuard.pick({ name: true, type: true })),
+      response: Applications.guard,
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const { oidcClientMetadata, ...rest } = ctx.guard.body;
@@ -77,6 +84,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: Applications.guard.merge(z.object({ isAdmin: z.boolean() })),
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -114,6 +122,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
             isAdmin: boolean().optional(),
           })
         ),
+      response: Applications.guard,
+      status: [200, 404, 500],
     }),
     async (ctx, next) => {
       const {
@@ -135,7 +145,11 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
         assertThat(
           internalAdminRole,
-          new RequestError('entity.not_exists', { name: InternalRole.Admin })
+          new RequestError({
+            code: 'entity.not_exists',
+            status: 500,
+            data: { name: InternalRole.Admin },
+          })
         );
 
         if (isAdmin && !usedToBeAdmin) {
@@ -155,7 +169,11 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/applications/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      response: z.undefined(),
+      status: [204, 404],
+    }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       // Note: will need delete cascade when application is joint with other tables
