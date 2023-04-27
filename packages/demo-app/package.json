@@ -1,6 +1,6 @@
 {
   "name": "@logto/demo-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Logto demo app.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -23,7 +23,7 @@
     "@logto/language-kit": "workspace:^1.0.0",
     "@logto/phrases": "workspace:^1.2.0",
     "@logto/react": "^2.0.0",
-    "@logto/schemas": "workspace:^1.2.0",
+    "@logto/schemas": "workspace:^1.2.3",
     "@parcel/core": "2.8.3",
     "@parcel/transformer-sass": "2.8.3",
     "@silverhand/eslint-config": "3.0.1",

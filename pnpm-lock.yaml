@@ -109,7 +109,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -2790,7 +2790,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3057,7 +3057,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3081,7 +3081,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3307,7 +3307,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../cli
 
   packages/demo-app:
@@ -3325,7 +3325,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.2.3
         version: link:../schemas
       '@parcel/core':
         specifier: 2.8.3
@@ -3838,7 +3838,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.2
+        specifier: workspace:^1.2.3
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.8.3
