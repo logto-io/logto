@@ -9,94 +9,69 @@ export enum HookEvent {
   PostResetPassword = 'PostResetPassword',
 }
 
-type OldHookConfig = {
+type HookConfig = {
   url: string;
   headers?: Record<string, string>;
-  retries: number;
+  retries?: number;
+  signingKey?: string;
 };
 
-type OldHook = {
+type Hook = {
   tenantId: string;
   id: string;
-  event: HookEvent;
-  config: OldHookConfig;
-};
-
-type NewHookConfig = Omit<OldHookConfig, 'retries'> & {
-  signingKey: string;
-  retries?: number;
-};
-
-type NewHook = Pick<OldHook, 'tenantId' | 'id'> & {
-  name: string;
-  events: HookEvent[];
+  name: string | null;
+  event: HookEvent | null;
+  events: HookEvent[] | null;
+  config: HookConfig;
   enabled: boolean;
-  config: NewHookConfig;
+  createdAt: number;
 };
 
 const defaultRetries = 3;
 
 const alteration: AlterationScript = {
-  up: async (pool) => {
-    const { rows: oldHooks } = await pool.query<OldHook>(sql`
-      select * from hooks;
-    `);
-
+  down: async (pool) => {
     await pool.query(sql`
       alter table hooks
         add column name varchar(256),
         add column events jsonb,
         add column enabled boolean not null default true,
         alter column event drop not null;
-    `);
-
-    await Promise.all(
-      oldHooks.map(async ({ id, event, tenantId, config }) => {
-        await pool.query(sql`
-          update hooks
-          set name = ${'Hook_' + id},
-          events = ${JSON.stringify([event])},
-          config = ${JSON.stringify({
-            ...config,
-            signingKey: generateStandardId(),
-          })}
-          where id = ${id} and tenant_id = ${tenantId};
-        `);
-      })
-    );
-
-    await pool.query(sql`
-      alter table hooks
-      alter column name set not null,
-      alter column events set not null;
+      update hooks set name = concat('Hook_', id);
     `);
   },
-  down: async (pool) => {
+  up: async (pool) => {
     await pool.query(sql`
       delete from hooks where enabled = false;
-      alter table hooks
-      alter column events drop not null,
-      alter column name drop not null,
-      alter column enabled drop not null;
     `);
 
-    const { rows: newHooks } = await pool.query<NewHook>(sql`
+    const { rows: hooks } = await pool.query<Hook>(sql`
       select * from hooks;
     `);
 
-    for (const { id, tenantId, events, config } of newHooks) {
+    /* eslint-disable no-await-in-loop */
+    for (const { id, tenantId, events, config } of hooks) {
       const {
         signingKey, // Exclude signingKey
         retries,
-        ...oldConfig
+        ...rest
       } = config;
 
       const updatedConfig = {
-        ...oldConfig,
+        ...rest,
         retries: retries ?? defaultRetries,
       };
 
-      /* eslint-disable no-await-in-loop */
+      if (!events) {
+        await pool.query(sql`
+          update hooks
+          set config = ${JSON.stringify(updatedConfig)}
+          where id = ${id} and tenant_id = ${tenantId};
+        `);
+
+        continue;
+      }
+
       for (const [index, event] of events.entries()) {
         if (index === 0) {
           await pool.query(sql`
@@ -110,24 +85,24 @@ const alteration: AlterationScript = {
         }
 
         // Create new hook when there are multiple events
-        const newHookId = generateStandardId();
+        const hookId = generateStandardId();
 
         await pool.query(sql`
           insert into hooks (id, tenant_id, name, event, config)
-          values (${newHookId}, ${tenantId}, ${'Hook_' + newHookId}, ${event}, ${JSON.stringify(
+          values (${hookId}, ${tenantId}, ${'Hook_' + hookId}, ${event}, ${JSON.stringify(
           updatedConfig
         )});
         `);
       }
-      /* eslint-enable no-await-in-loop */
     }
+    /* eslint-enable no-await-in-loop */
 
     await pool.query(sql`
       alter table hooks
-      alter column event set not null,
-      drop column name,
-      drop column events,
-      drop column enabled;
+        alter column event set not null,
+        drop column name,
+        drop column events,
+        drop column enabled;
     `);
   },
 };

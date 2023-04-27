@@ -2,9 +2,9 @@ create table hooks (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
-  name varchar(256) not null,
+  name varchar(256),
   event varchar(128) /* @use HookEvent */, /* deprecated */
-  events jsonb /* @use HookEvents */ not null,
+  events jsonb /* @use HookEvents */,
   config jsonb /* @use HookConfig */ not null,
   enabled boolean not null default true,
   created_at timestamptz not null default(now()),

@@ -56,7 +56,10 @@ export const createHookLibrary = (queries: Queries) => {
 
     const hookEvent = eventToHook[event];
     const found = await findAllHooks();
-    const rows = found.filter(({ events, enabled }) => enabled && events.includes(hookEvent));
+    const rows = found.filter(
+      ({ event, events, enabled }) =>
+        enabled && (events ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
+    );
 
     if (rows.length === 0) {
       return;
