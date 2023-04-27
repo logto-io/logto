@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.2.3
+
+### Patch Changes
+
+- 046a5771b: upgrade i18next series packages (#3733, #3743)
+- Updated dependencies [046a5771b]
+  - @logto/console@1.2.3
+  - @logto/demo-app@1.0.1
+  - @logto/ui@1.1.4
+  - @logto/schemas@1.2.3
+  - @logto/cli@1.2.3
+
 ## 1.2.2
 
 ### Patch Changes

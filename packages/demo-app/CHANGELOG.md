@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.1
+
+### Patch Changes
+
+- 046a5771b: upgrade i18next series packages (#3733, #3743)
+
 ## 1.0.0
 
 ### Major Changes
