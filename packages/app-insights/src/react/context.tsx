@@ -1,29 +1,60 @@
-import { type ReactNode, createContext, useMemo, useState } from 'react';
+import { type ReactNode, createContext, useMemo, useState, useCallback } from 'react';
+
+import { type AppInsightsReact, appInsightsReact as appInsights } from './AppInsightsReact';
+
+const notImplemented = () => {
+  throw new Error('Not implemented');
+};
 
 type Context = {
-  initialized: boolean;
-  setInitialized: React.Dispatch<React.SetStateAction<boolean>>;
+  needsSetup: boolean;
+  isSetupFinished: boolean;
+  setup: (...args: Parameters<typeof appInsights.setup>) => Promise<void>;
+  appInsights: AppInsightsReact;
 };
 
 export const AppInsightsContext = createContext<Context>({
-  initialized: false,
-  setInitialized: () => {
-    throw new Error('Not implemented');
-  },
+  needsSetup: true,
+  isSetupFinished: false,
+  setup: notImplemented,
+  appInsights,
 });
 
 type Properties = {
   children: ReactNode;
 };
 
+export type SetupStatus = 'none' | 'loading' | 'initialized' | 'failed';
+
 export const AppInsightsProvider = ({ children }: Properties) => {
-  const [initialized, setInitialized] = useState(false);
+  const [setupStatus, setSetupStatus] = useState<SetupStatus>('none');
+  const setup = useCallback(
+    async (...args: Parameters<typeof appInsights.setup>) => {
+      if (setupStatus !== 'none') {
+        return;
+      }
+
+      setSetupStatus('loading');
+      const result = await appInsights.setup(...args);
+
+      if (result) {
+        console.debug('Initialized ApplicationInsights');
+        setSetupStatus('initialized');
+      } else {
+        setSetupStatus('failed');
+      }
+    },
+    [setupStatus]
+  );
+
   const context = useMemo<Context>(
     () => ({
-      initialized,
-      setInitialized,
+      needsSetup: setupStatus === 'none',
+      isSetupFinished: setupStatus === 'initialized' || setupStatus === 'failed',
+      setup,
+      appInsights,
     }),
-    [initialized]
+    [setup, setupStatus]
   );
 
   return <AppInsightsContext.Provider value={context}>{children}</AppInsightsContext.Provider>;

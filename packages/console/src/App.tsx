@@ -1,9 +1,9 @@
-import { AppInsightsProvider, getPrimaryDomain, useAppInsights } from '@logto/app-insights/react';
+import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 
 import 'overlayscrollbars/styles/overlayscrollbars.css';
@@ -30,11 +30,6 @@ void initI18n();
 
 function Content() {
   const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
-  const { setup } = useAppInsights();
-
-  useEffect(() => {
-    void setup('console', { cookieDomain: getPrimaryDomain() });
-  }, [setup]);
 
   const resources = useMemo(
     () =>
@@ -76,18 +71,20 @@ function Content() {
       }}
     >
       <AppThemeProvider>
-        <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
-        <ErrorBoundary>
-          {!isCloud || isSettle ? (
-            <AppEndpointsProvider>
-              <AppConfirmModalProvider>
-                <TenantAppContainer />
-              </AppConfirmModalProvider>
-            </AppEndpointsProvider>
-          ) : (
-            <CloudApp />
-          )}
-        </ErrorBoundary>
+        <AppInsightsBoundary>
+          <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
+          <ErrorBoundary>
+            {!isCloud || isSettle ? (
+              <AppEndpointsProvider>
+                <AppConfirmModalProvider>
+                  <TenantAppContainer />
+                </AppConfirmModalProvider>
+              </AppEndpointsProvider>
+            ) : (
+              <CloudApp />
+            )}
+          </ErrorBoundary>
+        </AppInsightsBoundary>
       </AppThemeProvider>
     </LogtoProvider>
   );
@@ -95,11 +92,9 @@ function Content() {
 
 function App() {
   return (
-    <AppInsightsProvider>
-      <TenantsProvider>
-        <Content />
-      </TenantsProvider>
-    </AppInsightsProvider>
+    <TenantsProvider>
+      <Content />
+    </TenantsProvider>
   );
 }
 

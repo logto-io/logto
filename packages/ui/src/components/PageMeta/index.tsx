@@ -1,6 +1,6 @@
-import { useAppInsights } from '@logto/app-insights/react';
+import { AppInsightsContext } from '@logto/app-insights/react';
 import { type TFuncKey } from 'i18next';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ type Props = {
 
 const PageMeta = ({ titleKey, trackPageView = true }: Props) => {
   const { t } = useTranslation();
-  const { initialized, appInsights } = useAppInsights();
+  const { isSetupFinished, appInsights } = useContext(AppInsightsContext);
   const [pageViewTracked, setPageViewTracked] = useState(false);
   const keys = typeof titleKey === 'string' ? [titleKey] : titleKey;
   const rawTitle = keys.map((key) => t(key, { lng: 'en' })).join(' - ');
@@ -22,11 +22,11 @@ const PageMeta = ({ titleKey, trackPageView = true }: Props) => {
 
   useEffect(() => {
     // Only track once for the same page
-    if (shouldTrack && initialized && trackPageView && !pageViewTracked) {
+    if (shouldTrack && isSetupFinished && trackPageView && !pageViewTracked) {
       appInsights.trackPageView?.({ name: [rawTitle, 'SIE'].join(' - ') });
       setPageViewTracked(true);
     }
-  }, [appInsights, initialized, pageViewTracked, rawTitle, trackPageView]);
+  }, [appInsights, isSetupFinished, pageViewTracked, rawTitle, trackPageView]);
 
   return <Helmet title={title} />;
 };
