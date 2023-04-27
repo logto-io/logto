@@ -4,7 +4,6 @@ import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import detectLanguage from '#src/i18n/detect-language.js';
 import { guardFullSignInExperience } from '#src/libraries/sign-in-experience/types.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -24,17 +23,21 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
   } = queries;
 
   if (tenantId === adminTenantId) {
-    router.get('/.well-known/endpoints/:tenantId', async (ctx, next) => {
-      if (!ctx.params.tenantId) {
-        throw new RequestError('request.invalid_input');
+    router.get(
+      '/.well-known/endpoints/:tenantId',
+      koaGuard({
+        params: z.object({ tenantId: z.string().min(1) }),
+        response: z.object({ user: z.string().url() }),
+        status: 200,
+      }),
+      async (ctx, next) => {
+        ctx.body = {
+          user: getTenantEndpoint(ctx.guard.params.tenantId, EnvSet.values).toString(),
+        };
+
+        return next();
       }
-
-      ctx.body = {
-        user: getTenantEndpoint(ctx.params.tenantId, EnvSet.values),
-      };
-
-      return next();
-    });
+    );
   }
 
   router.get(
