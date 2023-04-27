@@ -34,6 +34,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
     '/custom-phrases',
     koaGuard({
       response: CustomPhrases.guard.array(),
+      status: [200],
     }),
     async (ctx, next) => {
       ctx.body = await findAllCustomPhrases();
@@ -47,6 +48,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ languageTag: languageTagGuard }),
       response: CustomPhrases.guard,
+      status: [200],
     }),
     async (ctx, next) => {
       const {
@@ -65,6 +67,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
       params: object({ languageTag: languageTagGuard }),
       body: translationGuard,
       response: CustomPhrases.guard,
+      status: [200],
     }),
     async (ctx, next) => {
       const {
@@ -89,6 +92,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
     '/custom-phrases/:languageTag',
     koaGuard({
       params: object({ languageTag: languageTagGuard }),
+      status: [204],
     }),
     async (ctx, next) => {
       const {
