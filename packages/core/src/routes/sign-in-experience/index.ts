@@ -21,11 +21,18 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
    * As we only support single signInExperience settings for V1
    * always return the default settings in DB for the /sign-in-exp get method
    */
-  router.get('/sign-in-exp', async (ctx, next) => {
-    ctx.body = await findDefaultSignInExperience();
+  router.get(
+    '/sign-in-exp',
+    koaGuard({
+      response: SignInExperiences.guard,
+      status: [200],
+    }),
+    async (ctx, next) => {
+      ctx.body = await findDefaultSignInExperience();
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.patch(
     '/sign-in-exp',
@@ -40,6 +47,8 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
           })
         )
         .partial(),
+      response: SignInExperiences.guard,
+      status: [200],
     }),
     async (ctx, next) => {
       const {
