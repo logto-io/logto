@@ -6,6 +6,7 @@ import path from 'node:path';
 
 import { assert } from '@silverhand/essentials';
 import chalk from 'chalk';
+import { got, RequestError } from 'got';
 import inquirer from 'inquirer';
 import * as semver from 'semver';
 import tar from 'tar';
@@ -102,11 +103,31 @@ export const validateDatabase = async () => {
   }
 };
 
+const fetchDownloadUrl = async (url?: string) => {
+  if (url) {
+    return url;
+  }
+
+  const defaultUrl = `https://github.com/logto-io/logto/releases/download/v${packageJson.version}/logto.tar.gz`;
+
+  try {
+    await got.head(defaultUrl);
+  } catch (error) {
+    if (error instanceof RequestError && error.response?.statusCode === 404) {
+      consoleLog.warn(
+        `Current version "v${packageJson.version}" not found in GitHub Releases, fallback to "latest".\n` +
+          'If you want to download the latest version, please wait a few moments and try again.'
+      );
+      return 'https://github.com/logto-io/logto/releases/latest/download/logto.tar.gz';
+    }
+  }
+
+  return defaultUrl;
+};
+
 export const downloadRelease = async (url?: string) => {
   const tarFilePath = path.resolve(os.tmpdir(), './logto.tar.gz');
-  const from =
-    url ??
-    `https://github.com/logto-io/logto/releases/download/v${packageJson.version}/logto.tar.gz`;
+  const from = await fetchDownloadUrl(url);
 
   consoleLog.info(`Download Logto from ${from}`);
   consoleLog.info(`Target ${tarFilePath}`);
