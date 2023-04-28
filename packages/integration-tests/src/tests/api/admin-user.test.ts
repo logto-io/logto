@@ -12,7 +12,6 @@ import {
   updateUserPassword,
   deleteUserIdentity,
   postConnector,
-  updateConnectorConfig,
   deleteConnectorById,
 } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
@@ -95,9 +94,10 @@ describe('admin console user management', () => {
   });
 
   it('should delete user identities successfully', async () => {
-    // @darcy FIXME: merge post and update
-    const { id } = await postConnector({ connectorId: mockSocialConnectorId });
-    await updateConnectorConfig(id, mockSocialConnectorConfig);
+    const { id } = await postConnector({
+      connectorId: mockSocialConnectorId,
+      config: mockSocialConnectorConfig,
+    });
 
     const createdUserId = await createNewSocialUserWithUsernameAndPassword(id);
 

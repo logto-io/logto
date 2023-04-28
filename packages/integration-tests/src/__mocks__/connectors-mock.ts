@@ -160,8 +160,8 @@ export const mockEmailConnectorConfig = {
   ],
 };
 
-export const mockStandardEmailConnectorId = 'mock-email-service-alternative';
-export const mockStandardEmailConnectorConfig = {
+export const mockAlternativeEmailConnectorId = 'mock-email-service-alternative';
+export const mockAlternativeEmailConnectorConfig = {
   apiKey: 'api-key-value',
   fromEmail: 'noreply@logto.test.io',
   fromName: 'from-name-value',
@@ -204,4 +204,8 @@ export const mockSocialConnectorTarget = 'mock-social';
 export const mockSocialConnectorConfig = {
   clientId: 'client_id_value',
   clientSecret: 'client_secret_value',
+};
+export const mockSocialConnectorNewConfig = {
+  clientId: 'client_id_value_new',
+  clientSecret: 'client_secret_value_new',
 };
