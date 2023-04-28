@@ -5,6 +5,7 @@ const tabs = {
   api_resources: 'API Ressourcen',
   sign_in_experience: 'Anmeldeoberfläche',
   connectors: 'Connectoren',
+  webhooks: 'Webhooks',
   users: 'Benutzerverwaltung',
   audit_logs: 'Audit Logs',
   roles: 'Rollen',

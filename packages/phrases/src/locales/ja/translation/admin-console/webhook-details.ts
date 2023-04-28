@@ -1,0 +1,49 @@
+const webhook_details = {
+  page_title: 'Webhookの詳細',
+  back_to_webhooks: 'Webhooksに戻る',
+  not_in_use: '使用されていない',
+  success_rate: '{{value, number}}成功率',
+  requests: '24時間に{{value, number}}件のリクエスト',
+  disable_webhook: 'Webhookを無効にする',
+  disable_reminder:
+    '本当にこのWebhookを再度アクティブにしますか？これを行うとエンドポイントURLにHTTPリクエストが送信されなくなります。',
+  webhook_disabled: 'Webhookは無効になりました。',
+  webhook_reactivated: 'Webhookが再度有効になりました。',
+  reactivate_webhook: 'Webhookを再度アクティブにする',
+  delete_webhook: 'Webhookを削除する',
+  deletion_reminder:
+    'このWebhookを削除しています。削除した後はエンドポイントURLにHTTPリクエストが送信されなくなります。',
+  deleted: 'Webhookは削除されました。',
+  settings_tab: '設定',
+  recent_requests_tab: '最近のリクエスト',
+  settings: {
+    settings: '設定',
+    settings_description:
+      'Webhookは、特定のイベントが発生すると、POSTリクエストをエンドポイントURLに送信することで、リアルタイムのアップデートを受信できるようにするものです。これにより、新しい情報を受信した後、直ちにアクションを起こすことができます。',
+    events: 'イベント',
+    events_description: 'LogtoがPOSTリクエストを送信するトリガーイベントを選択します。',
+    name: '名前',
+    endpoint_url: 'エンドポイントURL',
+    endpoint_url_tip:
+      'イベントが発生したときにWebhookのペイロードが送信されるHTTPS URLを入力します。',
+    signing_key: '署名キー',
+    signing_key_tip:
+      'ログトから提供されたシークレットキーをエンドポイントにリクエストヘッダーとして追加して、Webhookのペイロードの正当性を保証します。',
+    regenerate: '再生成する',
+    regenerate_key_title: '署名キーの再生成',
+    regenerate_key_reminder:
+      '署名キーを変更してもよろしいですか？再生成すると、すぐに有効になります。エンドポイントに同期して署名キーを変更することを忘れないでください。',
+    regenerated: '署名キーが再生成されました。',
+    custom_headers: 'カスタムヘッダー',
+    custom_headers_tip:
+      'オプションで、Webhookのペイロードに追加のコンテキストまたはメタデータを提供するために、カスタムヘッダーを追加できます。',
+    test: 'テスト',
+    test_webhook: 'Webhookをテストする',
+    test_webhook_description:
+      'Webhookを設定してください。Testボタンをクリックすると、各選択されたイベントの個別のペイロード例がエンドポイントURLに送信されます。これにより、エンドポイントが正しくペイロードを受信し、処理していることを確認できます。',
+    send_test_payload: 'テストペイロードを送信する',
+    test_payload_sent: 'ペイロードが正常に送信されました！',
+  },
+};
+
+export default webhook_details;

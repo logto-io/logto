@@ -5,6 +5,7 @@ const tabs = {
   api_resources: 'API Kaynakları',
   sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
+  webhooks: 'Webhooks',
   users: 'Kullanıcı Yönetimi',
   audit_logs: 'Denetim Kayıtları',
   roles: 'Roller',

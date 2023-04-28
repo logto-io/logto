@@ -5,6 +5,7 @@ const tabs = {
   api_resources: 'API リソース',
   sign_in_experience: 'サインイン',
   connectors: 'コネクタ',
+  webhooks: 'Webhooks',
   users: 'ユーザー管理',
   audit_logs: '監査ログ',
   roles: '役割',

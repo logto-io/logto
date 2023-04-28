@@ -24,6 +24,8 @@ import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
 import user_details from './user-details.js';
 import users from './users.js';
+import webhook_details from './webhook-details.js';
+import webhooks from './webhooks.js';
 import welcome from './welcome.js';
 
 const admin_console = {
@@ -57,6 +59,8 @@ const admin_console = {
   cloud,
   profile,
   components,
+  webhooks,
+  webhook_details,
 };
 
 export default admin_console;
