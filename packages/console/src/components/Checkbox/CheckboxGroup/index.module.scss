@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.group {
+  > div:not(:last-child) {
+    margin-bottom: _.unit(3);
+  }
+}
