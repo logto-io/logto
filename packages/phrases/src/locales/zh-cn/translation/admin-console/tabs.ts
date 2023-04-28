@@ -5,6 +5,7 @@ const tabs = {
   api_resources: 'API 资源',
   sign_in_experience: '登录体验',
   connectors: '连接器',
+  webhooks: 'Webhooks',
   users: '用户管理',
   audit_logs: '审计日志',
   roles: '角色',

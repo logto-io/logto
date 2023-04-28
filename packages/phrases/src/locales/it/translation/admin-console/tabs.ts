@@ -5,6 +5,7 @@ const tabs = {
   api_resources: 'Risorse API',
   sign_in_experience: 'Esperienza di accesso',
   connectors: 'Connettori',
+  webhooks: 'Webhooks',
   users: 'Gestione utenti',
   audit_logs: 'Registri di verifica',
   roles: 'Ruoli',
