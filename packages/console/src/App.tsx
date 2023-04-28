@@ -71,7 +71,7 @@ function Content() {
       }}
     >
       <AppThemeProvider>
-        <AppInsightsBoundary>
+        <AppInsightsBoundary cloudRole="console">
           <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
           <ErrorBoundary>
             {!isCloud || isSettle ? (

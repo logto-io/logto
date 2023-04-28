@@ -1,4 +1,7 @@
 const cloud = {
+  general: {
+    onboarding: 'Başlatma',
+  },
   welcome: {
     page_title: 'Hoşgeldiniz',
     title: 'Hoşgeldiniz ve kendi Logto Cloud Önizlemenizi oluşturalım',

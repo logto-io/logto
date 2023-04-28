@@ -1,4 +1,7 @@
 const cloud = {
+  general: {
+    onboarding: 'Вводный курс',
+  },
   welcome: {
     page_title: 'Добро пожаловать',
     title:

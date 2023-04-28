@@ -33,7 +33,7 @@ const App = () => {
       <PageContextProvider>
         <SettingsProvider>
           <AppBoundary>
-            <AppInsightsBoundary>
+            <AppInsightsBoundary cloudRole="ui">
               <Routes>
                 <Route path="sign-in/consent" element={<Consent />} />
                 <Route element={<AppLayout />}>

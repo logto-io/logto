@@ -23,7 +23,7 @@ const PageMeta = ({ titleKey, trackPageView = true }: Props) => {
   useEffect(() => {
     // Only track once for the same page
     if (shouldTrack && isSetupFinished && trackPageView && !pageViewTracked) {
-      appInsights.trackPageView?.({ name: [rawTitle, 'SIE'].join(' - ') });
+      appInsights.trackPageView?.({ name: `Main flow: ${rawTitle}` });
       setPageViewTracked(true);
     }
   }, [appInsights, isSetupFinished, pageViewTracked, rawTitle, trackPageView]);

@@ -1,3 +1,5 @@
+import { Component, ConsoleEvent } from '@logto/app-insights/custom-event';
+import { TrackOnce } from '@logto/app-insights/react';
 import { Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -46,6 +48,7 @@ function App() {
 
   return (
     <BrowserRouter basename={getBasename()}>
+      <TrackOnce component={Component.Console} event={ConsoleEvent.Onboard} />
       <div className={styles.app}>
         <SWRConfig value={swrOptions}>
           <AppBoundary>

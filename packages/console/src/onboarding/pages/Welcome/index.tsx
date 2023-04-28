@@ -53,7 +53,7 @@ function Welcome() {
 
   return (
     <div className={pageLayout.page}>
-      <PageMeta titleKey="cloud.welcome.page_title" />
+      <PageMeta titleKey={['cloud.welcome.page_title', 'cloud.general.onboarding']} />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
           <WelcomeImage className={styles.congrats} />

@@ -56,7 +56,7 @@ function About() {
 
   return (
     <div className={pageLayout.page}>
-      <PageMeta titleKey="cloud.about.page_title" />
+      <PageMeta titleKey={['cloud.about.page_title', 'cloud.general.onboarding']} />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={pageLayout.content}>
           <Case />

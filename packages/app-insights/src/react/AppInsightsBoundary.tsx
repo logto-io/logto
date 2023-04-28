@@ -3,19 +3,27 @@ import { type ReactNode, useContext, useEffect } from 'react';
 import { AppInsightsContext, AppInsightsProvider } from './context.js';
 import { getPrimaryDomain } from './utils.js';
 
-const AppInsights = () => {
+type AppInsightsProps = {
+  cloudRole: string;
+};
+
+const AppInsights = ({ cloudRole }: AppInsightsProps) => {
   const { needsSetup, setup } = useContext(AppInsightsContext);
 
   useEffect(() => {
+    const run = async () => {
+      await setup(cloudRole, { cookieDomain: getPrimaryDomain() });
+    };
+
     if (needsSetup) {
-      void setup('console', { cookieDomain: getPrimaryDomain() });
+      void run();
     }
-  }, [needsSetup, setup]);
+  }, [cloudRole, needsSetup, setup]);
 
   return null;
 };
 
-type Props = {
+type Props = AppInsightsProps & {
   children: ReactNode;
 };
 
@@ -28,10 +36,10 @@ type Props = {
  * cause issues for some context providers. For example, `useHandleSignInCallback` will be
  * called twice if you use this component to wrap a `<LogtoProvider />`.
  */
-const AppInsightsBoundary = ({ children }: Props) => {
+const AppInsightsBoundary = ({ children, ...rest }: Props) => {
   return (
     <AppInsightsProvider>
-      <AppInsights />
+      <AppInsights {...rest} />
       {children}
     </AppInsightsProvider>
   );

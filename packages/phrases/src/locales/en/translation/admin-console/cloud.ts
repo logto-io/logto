@@ -1,4 +1,7 @@
 const cloud = {
+  general: {
+    onboarding: 'Onboarding',
+  },
   welcome: {
     page_title: 'Welcome',
     title: 'Welcome and let’s create your own Logto Cloud Preview',

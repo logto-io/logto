@@ -1,3 +1,5 @@
+import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
+import { appInsights } from '@logto/app-insights/node';
 import type { User, Profile } from '@logto/schemas';
 import {
   AdminTenantRole,
@@ -196,6 +198,7 @@ export default async function submitInteraction(
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     log?.append({ userId: id });
+    appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
 
     return;
   }
@@ -208,8 +211,9 @@ export default async function submitInteraction(
     const upsertProfile = await parseUserProfile(connectors, interaction, user);
 
     await updateUserById(accountId, upsertProfile);
-
     await assignInteractionResults(ctx, provider, { login: { accountId } });
+
+    appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
 
     return;
   }

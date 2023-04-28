@@ -31,7 +31,7 @@ function Congrats() {
 
   return (
     <div className={pageLayout.page}>
-      <PageMeta titleKey="cloud.congrats.page_title" />
+      <PageMeta titleKey={['cloud.congrats.page_title', 'cloud.general.onboarding']} />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={classNames(pageLayout.content, styles.content)}>
           <CongratsImage className={styles.congratsImage} />
