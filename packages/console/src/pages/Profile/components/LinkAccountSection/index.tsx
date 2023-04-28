@@ -14,7 +14,7 @@ import FormCard from '@/components/FormCard';
 import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
-import { adminTenantEndpoint, getBasename, meApi, profileSocialLinkingKeyPrefix } from '@/consts';
+import { adminTenantEndpoint, getBasename, meApi, storageKeys } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
@@ -48,7 +48,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
         .post('me/social/authorization-uri', { json: { connectorId, state, redirectUri } })
         .json<{ redirectTo: string }>();
 
-      sessionStorage.setItem(profileSocialLinkingKeyPrefix, connectorId);
+      sessionStorage.setItem(storageKeys.linkingSocialConnector, connectorId);
 
       return redirectTo;
     },
