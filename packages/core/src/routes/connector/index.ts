@@ -1,6 +1,6 @@
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
-import { Connectors, ConnectorType } from '@logto/schemas';
+import { connectorFactoryResponseGuard, Connectors, ConnectorType } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
@@ -200,18 +200,29 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.get('/connector-factories', async (ctx, next) => {
-    const connectorFactories = await loadConnectorFactories();
-    ctx.body = connectorFactories.map((connectorFactory) =>
-      transpileConnectorFactory(connectorFactory)
-    );
+  router.get(
+    '/connector-factories',
+    koaGuard({
+      response: connectorFactoryResponseGuard.array(),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const connectorFactories = await loadConnectorFactories();
+      ctx.body = connectorFactories.map((connectorFactory) =>
+        transpileConnectorFactory(connectorFactory)
+      );
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.get(
     '/connector-factories/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      response: connectorFactoryResponseGuard,
+      status: [200],
+    }),
     async (ctx, next) => {
       const {
         params: { id },
