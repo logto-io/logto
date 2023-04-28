@@ -100,7 +100,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
               ...developmentOrigins,
               ...appInsightsOrigins,
             ],
-            frameSrc: ["'self'", ...urlSetOrigins],
+            frameSrc: ["'self'", ...urlSetOrigins, ...adminOrigins],
           },
         },
       },
