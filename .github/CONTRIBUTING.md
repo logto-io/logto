@@ -42,14 +42,11 @@ Connector is the standard way in Logto to connect third-party services like SMS,
 
 > **Note**
 >
-> We've moved our connectors to an [independent repo](https://github.com/logto-io/connectors).
+> You can find all official connectors [here](https://github.com/logto-io/logto/tree/master/packages/connectors).
 
 Before starting the work, join our [Discord channel](https://discord.gg/cyWnux4cH6) or [email us](mailto:contact@logto.io) to double-check if there's an ongoing project for your desired connector. We'll confirm with you your need and the status quo.
 
-Since a new connector means a new Node.js package, we encourage you to separate your work into two Pull Requests:
-
-1. The initial setup of the connector package, including `package.json`, base dependencies and scripts (build, lint, etc.), and the connector class skeleton (a class extends the base class, but no implementation).
-2. The full connector implementation with unit tests.
+You can read this [documentation](https://docs.logto.io/docs/recipes/create-your-connector/) which describes how to implement and test a connector through concrete examples.
 
 ### Core features
 
