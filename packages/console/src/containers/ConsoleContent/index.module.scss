@@ -6,10 +6,14 @@
   overflow: hidden;
 }
 
-.main {
+.overlayScrollbarWrapper {
   flex-grow: 1;
-  padding: 0 _.unit(2);
-  overflow-y: scroll;
+}
+
+.main {
+  width: 100%;
+  padding: 0 _.unit(6) 0 _.unit(2);
+  min-width: 636px;
 
   > * {
     @include _.main-content-width;

@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
+import OverlayScrollbar from '@/components/OverlayScrollbar';
+
 import Item from './components/Item';
 import Section from './components/Section';
 import { useSidebarMenuItems } from './hook';
@@ -15,7 +17,7 @@ function Sidebar() {
   const { sections } = useSidebarMenuItems();
 
   return (
-    <div className={styles.sidebar}>
+    <OverlayScrollbar className={styles.sidebar}>
       {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
           {items.map(
@@ -33,7 +35,7 @@ function Sidebar() {
           )}
         </Section>
       ))}
-    </div>
+    </OverlayScrollbar>
   );
 }
 
