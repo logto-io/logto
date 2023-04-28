@@ -10,19 +10,16 @@ import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
 import DateTime from '@/components/DateTime';
 import ItemPreview from '@/components/ItemPreview';
-import PageMeta from '@/components/PageMeta';
+import ListPage from '@/components/ListPage';
 import Search from '@/components/Search';
-import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import UserAvatar from '@/components/UserAvatar';
 import { defaultPageSize } from '@/consts';
 import { UserDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -57,43 +54,27 @@ function Users() {
   const [users, totalCount] = data ?? [];
 
   return (
-    <div className={resourcesStyles.container}>
-      <PageMeta titleKey="users.page_title" />
-      <div className={resourcesStyles.headline}>
-        <CardTitle title="users.title" subtitle="users.subtitle" />
-        <Button
-          title="users.create"
-          size="large"
-          type="primary"
-          icon={<Plus />}
-          onClick={() => {
-            navigate({
-              pathname: createUserPathname,
-              search,
-            });
-          }}
-        />
-        {isCreateNew && (
-          <CreateForm
-            onClose={() => {
-              navigate({
-                pathname: usersPathname,
-                search,
-              });
-            }}
-            onCreate={() => {
-              void mutate();
-            }}
-          />
-        )}
-      </div>
-      <Table
-        className={resourcesStyles.table}
-        rowGroups={[{ key: 'users', data: users }]}
-        rowIndexKey="id"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
+    <ListPage
+      title={{
+        title: 'users.title',
+        subtitle: 'users.subtitle',
+      }}
+      pageMeta={{ titleKey: 'users.page_title' }}
+      createButton={{
+        title: 'users.create',
+        onClick: () => {
+          navigate({
+            pathname: createUserPathname,
+            search,
+          });
+        },
+      }}
+      table={{
+        rowGroups: [{ key: 'users', data: users }],
+        rowIndexKey: 'id',
+        isLoading,
+        errorMessage: error?.body?.message ?? error?.message,
+        columns: [
           {
             title: t('users.user_name'),
             dataIndex: 'name',
@@ -125,8 +106,8 @@ function Users() {
             colSpan: 5,
             render: ({ lastSignInAt }) => <DateTime>{lastSignInAt}</DateTime>,
           },
-        ]}
-        filter={
+        ],
+        filter: (
           <Search
             inputClassName={styles.searchInput}
             placeholder={t('users.search')}
@@ -139,8 +120,8 @@ function Users() {
               updateSearchParameters({ keyword: '', page: 1 });
             }}
           />
-        }
-        placeholder={
+        ),
+        placeholder: (
           <TablePlaceholder
             image={<UsersEmpty />}
             imageDark={<UsersEmptyDark />}
@@ -161,21 +142,36 @@ function Users() {
               />
             }
           />
-        }
-        rowClickHandler={({ id }) => {
+        ),
+        rowClickHandler: ({ id }) => {
           navigate(buildDetailsPathname(id));
-        }}
-        pagination={{
+        },
+        pagination: {
           page,
           pageSize,
           totalCount,
           onChange: (page) => {
             updateSearchParameters({ page });
           },
-        }}
-        onRetry={async () => mutate(undefined, true)}
-      />
-    </div>
+        },
+        onRetry: async () => mutate(undefined, true),
+      }}
+      widgets={
+        isCreateNew && (
+          <CreateForm
+            onClose={() => {
+              navigate({
+                pathname: usersPathname,
+                search,
+              });
+            }}
+            onCreate={() => {
+              void mutate();
+            }}
+          />
+        )
+      }
+    />
   );
 }
 

@@ -9,22 +9,16 @@ import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
-import Plus from '@/assets/images/plus.svg';
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
-import PageMeta from '@/components/PageMeta';
-import Pagination from '@/components/Pagination';
-import Table from '@/components/Table';
+import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
-import * as resourcesStyles from '@/scss/resources.module.scss';
 import { buildUrl } from '@/utils/url';
 
 import CreateForm from './components/CreateForm';
@@ -60,22 +54,61 @@ function ApiResources() {
   const ResourceIcon = theme === Theme.Light ? ApiResource : ApiResourceDark;
 
   return (
-    <div className={resourcesStyles.container}>
-      <PageMeta titleKey="api_resources.page_title" />
-      <div className={resourcesStyles.headline}>
-        <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
-        <Button
-          title="api_resources.create"
-          type="primary"
-          size="large"
-          icon={<Plus />}
-          onClick={() => {
-            navigate({
-              pathname: createApiResourcePathname,
-              search,
-            });
-          }}
-        />
+    <ListPage
+      title={{
+        title: 'api_resources.title',
+        subtitle: 'api_resources.subtitle',
+      }}
+      pageMeta={{ titleKey: 'api_resources.page_title' }}
+      createButton={{
+        title: 'api_resources.create',
+        onClick: () => {
+          navigate({
+            pathname: createApiResourcePathname,
+            search,
+          });
+        },
+      }}
+      table={{
+        rowGroups: [{ key: 'apiResources', data: apiResources }],
+        rowIndexKey: 'id',
+        isLoading,
+        errorMessage: error?.body?.message ?? error?.message,
+        columns: [
+          {
+            title: t('api_resources.api_name'),
+            dataIndex: 'name',
+            colSpan: 6,
+            render: ({ id, name }) => (
+              <ItemPreview
+                title={name}
+                icon={<ResourceIcon className={styles.icon} />}
+                to={buildDetailsPathname(id)}
+              />
+            ),
+          },
+          {
+            title: t('api_resources.api_identifier'),
+            dataIndex: 'indicator',
+            colSpan: 10,
+            render: ({ indicator }) => <CopyToClipboard value={indicator} variant="text" />,
+          },
+        ],
+        placeholder: <EmptyDataPlaceholder />,
+        rowClickHandler: ({ id }) => {
+          navigate(buildDetailsPathname(id));
+        },
+        onRetry: async () => mutate(undefined, true),
+        pagination: {
+          page,
+          totalCount,
+          pageSize,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
+        },
+      }}
+      widgets={
         <Modal
           shouldCloseOnEsc
           isOpen={isCreateNew}
@@ -105,49 +138,8 @@ function ApiResources() {
             }}
           />
         </Modal>
-      </div>
-      <Table
-        className={resourcesStyles.table}
-        rowGroups={[{ key: 'apiResources', data: apiResources }]}
-        rowIndexKey="id"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
-          {
-            title: t('api_resources.api_name'),
-            dataIndex: 'name',
-            colSpan: 6,
-            render: ({ id, name }) => (
-              <ItemPreview
-                title={name}
-                icon={<ResourceIcon className={styles.icon} />}
-                to={buildDetailsPathname(id)}
-              />
-            ),
-          },
-          {
-            title: t('api_resources.api_identifier'),
-            dataIndex: 'indicator',
-            colSpan: 10,
-            render: ({ indicator }) => <CopyToClipboard value={indicator} variant="text" />,
-          },
-        ]}
-        placeholder={<EmptyDataPlaceholder />}
-        rowClickHandler={({ id }) => {
-          navigate(buildDetailsPathname(id));
-        }}
-        onRetry={async () => mutate(undefined, true)}
-      />
-      <Pagination
-        page={page}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        className={styles.pagination}
-        onChange={(page) => {
-          updateSearchParameters({ page });
-        }}
-      />
-    </div>
+      }
+    />
   );
 }
 

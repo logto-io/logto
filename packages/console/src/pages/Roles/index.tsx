@@ -9,17 +9,14 @@ import Plus from '@/assets/images/plus.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
 import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
 import ItemPreview from '@/components/ItemPreview';
-import PageMeta from '@/components/PageMeta';
+import ListPage from '@/components/ListPage';
 import Search from '@/components/Search';
-import Table from '@/components/Table';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import { defaultPageSize } from '@/consts';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import * as pageStyles from '@/scss/resources.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedUsers from './components/AssignedUsers';
@@ -57,31 +54,26 @@ function Roles() {
   const [roles, totalCount] = data ?? [];
 
   return (
-    <div className={pageStyles.container}>
-      <PageMeta titleKey="roles.page_title" />
-      <div className={pageStyles.headline}>
-        <CardTitle
-          title="roles.title"
-          subtitle="roles.subtitle"
-          learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
-        />
-        <Button
-          icon={<Plus />}
-          title="roles.create"
-          type="primary"
-          size="large"
-          onClick={() => {
-            navigate({ pathname: createRolePathname, search });
-          }}
-        />
-      </div>
-      <Table
-        className={pageStyles.table}
-        rowGroups={[{ key: 'roles', data: roles }]}
-        rowIndexKey="id"
-        isLoading={isLoading}
-        errorMessage={error?.body?.message ?? error?.message}
-        columns={[
+    <ListPage
+      title={{
+        title: 'roles.title',
+        subtitle: 'roles.subtitle',
+        learnMoreLink:
+          'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+      }}
+      pageMeta={{ titleKey: 'roles.page_title' }}
+      createButton={{
+        title: 'roles.create',
+        onClick: () => {
+          navigate({ pathname: createRolePathname, search });
+        },
+      }}
+      table={{
+        rowGroups: [{ key: 'roles', data: roles }],
+        rowIndexKey: 'id',
+        isLoading,
+        errorMessage: error?.body?.message ?? error?.message,
+        columns: [
           {
             title: t('roles.role_name'),
             dataIndex: 'name',
@@ -102,11 +94,11 @@ function Roles() {
               <AssignedUsers users={featuredUsers} count={usersCount} />
             ),
           },
-        ]}
-        rowClickHandler={({ id }) => {
+        ],
+        rowClickHandler: ({ id }) => {
           navigate(buildDetailsPathname(id));
-        }}
-        filter={
+        },
+        filter: (
           <Search
             inputClassName={styles.search}
             placeholder={t('roles.search')}
@@ -119,16 +111,16 @@ function Roles() {
               updateSearchParameters({ keyword: '', page: 1 });
             }}
           />
-        }
-        pagination={{
+        ),
+        pagination: {
           page,
           totalCount,
           pageSize,
           onChange: (page) => {
             updateSearchParameters({ page });
           },
-        }}
-        placeholder={
+        },
+        placeholder: (
           <TablePlaceholder
             image={<RolesEmpty />}
             imageDark={<RolesEmptyDark />}
@@ -149,17 +141,19 @@ function Roles() {
               />
             }
           />
-        }
-        onRetry={async () => mutate(undefined, true)}
-      />
-      {isOnCreatePage && (
-        <CreateRoleModal
-          onClose={() => {
-            navigate({ pathname: rolesPathname, search });
-          }}
-        />
-      )}
-    </div>
+        ),
+        onRetry: async () => mutate(undefined, true),
+      }}
+      widgets={
+        isOnCreatePage && (
+          <CreateRoleModal
+            onClose={() => {
+              navigate({ pathname: rolesPathname, search });
+            }}
+          />
+        )
+      }
+    />
   );
 }
 

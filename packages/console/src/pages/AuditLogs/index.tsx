@@ -3,16 +3,16 @@ import { withAppInsights } from '@logto/app-insights/react';
 import AuditLogTable from '@/components/AuditLogTable';
 import CardTitle from '@/components/CardTitle';
 import PageMeta from '@/components/PageMeta';
-import * as resourcesStyles from '@/scss/resources.module.scss';
+import * as pageLayout from '@/scss/page-layout.module.scss';
 
 function AuditLogs() {
   return (
-    <div className={resourcesStyles.container}>
+    <div className={pageLayout.container}>
       <PageMeta titleKey="logs.page_title" />
-      <div className={resourcesStyles.headline}>
+      <div className={pageLayout.headline}>
         <CardTitle title="logs.title" subtitle="logs.subtitle" />
       </div>
-      <AuditLogTable className={resourcesStyles.table} />
+      <AuditLogTable className={pageLayout.table} />
     </div>
   );
 }
