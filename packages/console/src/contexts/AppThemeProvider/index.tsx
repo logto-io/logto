@@ -3,7 +3,7 @@ import { conditionalString, noop, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState, createContext } from 'react';
 
-import { appearanceModeStorageKey } from '@/consts';
+import { storageKeys } from '@/consts';
 import type { AppearanceMode } from '@/types/appearance-mode';
 import { appearanceModeGuard, DynamicAppearanceMode } from '@/types/appearance-mode';
 
@@ -24,7 +24,7 @@ const getThemeBySystemConfiguration = (): Theme =>
   darkThemeWatchMedia.matches ? Theme.Dark : Theme.Light;
 
 export const buildDefaultAppearanceMode = (): AppearanceMode =>
-  trySafe(() => appearanceModeGuard.parse(localStorage.getItem(appearanceModeStorageKey))) ??
+  trySafe(() => appearanceModeGuard.parse(localStorage.getItem(storageKeys.appearanceMode))) ??
   DynamicAppearanceMode.System;
 
 const defaultAppearanceMode = buildDefaultAppearanceMode();
@@ -47,7 +47,7 @@ export function AppThemeProvider({ children }: Props) {
 
   const setAppearanceMode = (mode: AppearanceMode) => {
     setMode(mode);
-    localStorage.setItem(appearanceModeStorageKey, mode);
+    localStorage.setItem(storageKeys.appearanceMode, mode);
   };
 
   useEffect(() => {

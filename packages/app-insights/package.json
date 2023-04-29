@@ -20,7 +20,8 @@
   },
   "//": "This field is for parcel. Remove after https://github.com/parcel-bundler/parcel/pull/8807 published.",
   "alias": {
-    "./react": "./lib/react/index.js"
+    "./react": "./lib/react/index.js",
+    "./custom-event": "./lib/custom-event.js"
   },
   "publishConfig": {
     "access": "public"

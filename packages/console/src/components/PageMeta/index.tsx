@@ -4,8 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
-import { mainTitle } from '@/consts/tenants';
-
 export type Props = {
   titleKey: AdminConsoleKey | AdminConsoleKey[];
   // eslint-disable-next-line react/boolean-prop-naming
@@ -23,7 +21,7 @@ function PageMeta({ titleKey, trackPageView = true }: Props) {
   useEffect(() => {
     // Only track once for the same page
     if (isSetupFinished && trackPageView && !pageViewTracked) {
-      appInsights.trackPageView?.({ name: [rawTitle, mainTitle].join(' - ') });
+      appInsights.trackPageView?.({ name: `Console: ${rawTitle}` });
       setPageViewTracked(true);
     }
   }, [appInsights, isSetupFinished, pageViewTracked, rawTitle, trackPageView]);

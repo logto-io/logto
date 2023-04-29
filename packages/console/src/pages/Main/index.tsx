@@ -1,3 +1,5 @@
+import { Component, GeneralEvent } from '@logto/app-insights/custom-event';
+import { TrackOnce } from '@logto/app-insights/react';
 import { useMemo } from 'react';
 import {
   Route,
@@ -41,6 +43,7 @@ function Main() {
   return (
     <SWRConfig value={swrOptions}>
       <AppBoundary>
+        <TrackOnce component={Component.Console} event={GeneralEvent.Visit} />
         <Toast />
         <RouterProvider router={router} />
       </AppBoundary>

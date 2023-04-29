@@ -107,7 +107,7 @@ function SignInExperience() {
 
   return (
     <div className={pageLayout.page}>
-      <PageMeta titleKey="cloud.sie.page_title" />
+      <PageMeta titleKey={['cloud.sie.page_title', 'cloud.general.onboarding']} />
       <OverlayScrollbar className={pageLayout.contentContainer}>
         <div className={styles.content}>
           <div className={styles.config}>

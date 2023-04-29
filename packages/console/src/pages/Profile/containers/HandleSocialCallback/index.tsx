@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { adminTenantEndpoint, meApi, profileSocialLinkingKeyPrefix } from '@/consts';
+import { adminTenantEndpoint, meApi, storageKeys } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
@@ -19,8 +19,8 @@ function HandleSocialCallback() {
 
   useEffect(() => {
     (async () => {
-      const connectorId = sessionStorage.getItem(profileSocialLinkingKeyPrefix);
-      sessionStorage.removeItem(profileSocialLinkingKeyPrefix);
+      const connectorId = sessionStorage.getItem(storageKeys.linkingSocialConnector);
+      sessionStorage.removeItem(storageKeys.linkingSocialConnector);
 
       if (connectorId) {
         const queries = new URLSearchParams(search);

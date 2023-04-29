@@ -1,4 +1,7 @@
 const cloud = {
+  general: {
+    onboarding: 'Intégration',
+  },
   welcome: {
     page_title: 'Bienvenue',
     title: 'Bienvenue et créons votre propre aperçu cloud de Logto',

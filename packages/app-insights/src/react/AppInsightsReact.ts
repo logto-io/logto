@@ -12,6 +12,12 @@ export type SetupConfig = {
 };
 
 export class AppInsightsReact {
+  /**
+   * URL search parameters that start with `utm_`. It is an empty object until you call `.setup()`,
+   * which will read the URL search string and store parameters in this property.
+   */
+  utmParameters: Record<string, string> = {};
+
   protected reactPlugin?: ReactPlugin;
   protected clickAnalyticsPlugin?: ClickAnalyticsPlugin;
   protected withAITracking?: typeof withAITracking;
@@ -84,18 +90,17 @@ export class AppInsightsReact {
         },
       });
 
+      // Extract UTM parameters
+      const searchParams = [...new URLSearchParams(window.location.search).entries()];
+      this.utmParameters = Object.fromEntries(
+        searchParams.filter(([key]) => key.startsWith('utm_'))
+      );
+
       this.appInsights.addTelemetryInitializer((item) => {
         // @see https://github.com/microsoft/ApplicationInsights-JS#example-setting-cloud-role-name
         // @see https://github.com/microsoft/ApplicationInsights-node.js/blob/a573e40fc66981c6a3106bdc5b783d1d94f64231/Schema/PublicSchema/ContextTagKeys.bond#L83
         /* eslint-disable @silverhand/fp/no-mutation */
         item.tags = [...(item.tags ?? []), { 'ai.cloud.role': cloudRole }];
-
-        // Extract UTM parameters
-        const searchParams = [...new URLSearchParams(window.location.search).entries()];
-        item.data = {
-          ...item.data,
-          ...Object.fromEntries(searchParams.filter(([key]) => key.startsWith('utm_'))),
-        };
         /* eslint-enable @silverhand/fp/no-mutation */
       });
 

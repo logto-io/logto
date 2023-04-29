@@ -1,4 +1,7 @@
 const cloud = {
+  general: {
+    onboarding: '入门',
+  },
   welcome: {
     page_title: '欢迎',
     title: '欢迎来到 Logto Cloud（预览版），让我们一起创建独属于你的体验',
