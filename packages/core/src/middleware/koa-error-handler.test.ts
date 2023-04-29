@@ -1,4 +1,4 @@
-import createHttpError from 'http-errors';
+import { HttpError } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
@@ -6,6 +6,10 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 import koaErrorHandler from './koa-error-handler.js';
 
 const { jest } = import.meta;
+
+// Avoid "TypeError: cannot construct abstract class"
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+const httpError = Object.create(HttpError.prototype);
 
 describe('koaErrorHandler middleware', () => {
   const mockBody = { data: 'foo' };
@@ -37,7 +41,7 @@ describe('koaErrorHandler middleware', () => {
 
   // Koa will handle `HttpError` with a built-in manner. Hence it needs to return 200 here.
   it('expect to return 200 if error type is HttpError', async () => {
-    next.mockRejectedValueOnce(createHttpError(404, 'not good'));
+    next.mockRejectedValueOnce(httpError);
     await koaErrorHandler()(ctx, next);
     expect(ctx.status).toEqual(200);
   });

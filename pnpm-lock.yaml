@@ -3219,9 +3219,6 @@ importers:
       '@types/etag':
         specifier: ^1.8.1
         version: 1.8.1
-      '@types/http-errors':
-        specifier: ^1.8.2
-        version: 1.8.2
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -3270,9 +3267,6 @@ importers:
       eslint:
         specifier: ^8.34.0
         version: 8.34.0
-      http-errors:
-        specifier: ^1.6.3
-        version: 1.8.1
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
