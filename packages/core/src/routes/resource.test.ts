@@ -159,22 +159,8 @@ describe('resource routes', () => {
   });
 
   it('PATCH /resources/:id should throw with invalid propreties', async () => {
-    const response = await resourceRequest.patch('/resources/foo').send({ indicator: 12 });
+    const response = await resourceRequest.patch('/resources/foo').send({ name: 12 });
     expect(response.status).toEqual(400);
-  });
-
-  it('PATCH /resources/:id should throw with duplicated indicator', async () => {
-    const name = 'user api';
-    const { indicator } = mockResource;
-
-    await expect(resourceRequest.patch('/resources/foo').send({ name })).resolves.toHaveProperty(
-      'status',
-      200
-    );
-
-    await expect(
-      resourceRequest.patch('/resources/foo').send({ name, indicator })
-    ).resolves.toHaveProperty('status', 422);
   });
 
   it('DELETE /resources/:id', async () => {

@@ -119,24 +119,13 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Resources.createGuard.omit({ id: true }).partial(),
+      body: Resources.createGuard.omit({ id: true, indicator: true }).partial(),
     }),
     async (ctx, next) => {
       const {
         params: { id },
         body,
       } = ctx.guard;
-
-      const { indicator } = body;
-
-      assertThat(
-        !indicator || !(await findResourceByIndicator(indicator, id)),
-        new RequestError({
-          code: 'resource.resource_identifier_in_use',
-          indicator,
-          status: 422,
-        })
-      );
 
       const resource = await updateResourceById(id, body);
       ctx.body = resource;

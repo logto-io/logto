@@ -58,18 +58,19 @@ describe('admin console api resources', () => {
     expect(updatedResource.accessTokenTtl).toBe(newAccessTokenTtl);
   });
 
-  it('should throw error when update api resource with duplicated resource indicator', async () => {
-    const resourceName = generateResourceName();
-    const resourceIndicator = generateResourceIndicator();
+  it('should not update api resource indicator', async () => {
+    const resource = await createResource();
+    const newResourceName = `new_${resource.name}`;
+    const newResourceIndicator = generateResourceIndicator();
 
-    // Create first resource
-    await createResource(resourceName, resourceIndicator);
-    const resource2 = await createResource();
+    const updatedResource = await updateResource(resource.id, {
+      name: newResourceName,
+      indicator: newResourceIndicator,
+    });
 
-    // Update resource2 with resourceIndicator should throw
-    await expect(
-      updateResource(resource2.id, { indicator: resourceIndicator })
-    ).rejects.toMatchObject(createResponseWithCode(422));
+    expect(updatedResource.id).toBe(resource.id);
+    expect(updatedResource.name).toBe(newResourceName);
+    expect(updatedResource.indicator).toBe(resource.indicator);
   });
 
   it('should delete api resource successfully', async () => {
