@@ -3,7 +3,7 @@ import { promisify } from 'node:util';
 
 const execAsync = promisify(exec);
 
-const cmd = ('pnpm changeset version');
+const cmd = ['pnpm changeset version', ...process.argv.slice(2)].join(' ');
 
 const catchCmdError = ({ stderr, stdout, code }) => {
   console.log(stdout);
