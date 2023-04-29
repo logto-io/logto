@@ -7,6 +7,7 @@ import log from './log.js';
 import oidc from './oidc.js';
 import password from './password.js';
 import request from './request.js';
+import resource from './resource.js';
 import role from './role.js';
 import scope from './scope.js';
 import session from './session.js';
@@ -34,6 +35,7 @@ const errors = {
   role,
   scope,
   storage,
+  resource,
 };
 
 export default errors;

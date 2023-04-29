@@ -2,6 +2,7 @@ import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createResource, getResource, updateResource, deleteResource } from '#src/api/index.js';
+import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
 describe('admin console api resources', () => {
@@ -25,6 +26,20 @@ describe('admin console api resources', () => {
     expect(fetchedCreatedResource).toBeTruthy();
   });
 
+  it('should throw error when create api resource with duplicated resource indicator', async () => {
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
+
+    // Create first resource
+    await createResource(resourceName, resourceIndicator);
+
+    // Create second resource with same indicator should throw
+    const resourceName2 = generateResourceName();
+    await expect(createResource(resourceName2, resourceIndicator)).rejects.toMatchObject(
+      createResponseWithCode(422)
+    );
+  });
+
   it('should update api resource details successfully', async () => {
     const resource = await createResource();
 
@@ -41,6 +56,20 @@ describe('admin console api resources', () => {
     expect(updatedResource.id).toBe(resource.id);
     expect(updatedResource.name).toBe(newResourceName);
     expect(updatedResource.accessTokenTtl).toBe(newAccessTokenTtl);
+  });
+
+  it('should throw error when update api resource with duplicated resource indicator', async () => {
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
+
+    // Create first resource
+    await createResource(resourceName, resourceIndicator);
+    const resource2 = await createResource();
+
+    // Update resource2 with resourceIndicator should throw
+    await expect(
+      updateResource(resource2.id, { indicator: resourceIndicator })
+    ).rejects.toMatchObject(createResponseWithCode(422));
   });
 
   it('should delete api resource successfully', async () => {

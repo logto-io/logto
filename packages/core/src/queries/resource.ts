@@ -26,11 +26,12 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
       `)
     );
 
-  const findResourceByIndicator = async (indicator: string) =>
+  const findResourceByIndicator = async (indicator: string, excludeRoleId?: string) =>
     pool.maybeOne<Resource>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.indicator}=${indicator}
+      ${conditionalSql(excludeRoleId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 
   const findResourceById = buildFindEntityByIdWithPool(pool)(Resources);

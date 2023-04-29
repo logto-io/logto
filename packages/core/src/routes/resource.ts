@@ -22,6 +22,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       findTotalNumberOfResources,
       findAllResources,
       findResourceById,
+      findResourceByIndicator,
       insertResource,
       updateResourceById,
       deleteResourceById,
@@ -76,9 +77,21 @@ export default function resourceRoutes<T extends AuthedRouter>(
       body: Resources.createGuard.omit({ id: true }),
     }),
     async (ctx, next) => {
+      const { body } = ctx.guard;
+      const { indicator } = body;
+
+      assertThat(
+        !(await findResourceByIndicator(indicator)),
+        new RequestError({
+          code: 'resource.resource_identifier_in_use',
+          indicator,
+          status: 422,
+        })
+      );
+
       const resource = await insertResource({
         id: resourceId(),
-        ...ctx.guard.body,
+        ...body,
       });
 
       ctx.body = { ...resource, scopes: [] };
@@ -113,6 +126,17 @@ export default function resourceRoutes<T extends AuthedRouter>(
         params: { id },
         body,
       } = ctx.guard;
+
+      const { indicator } = body;
+
+      assertThat(
+        !indicator || !(await findResourceByIndicator(indicator, id)),
+        new RequestError({
+          code: 'resource.resource_identifier_in_use',
+          indicator,
+          status: 422,
+        })
+      );
 
       const resource = await updateResourceById(id, body);
       ctx.body = resource;
