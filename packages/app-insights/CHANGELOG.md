@@ -1,5 +1,15 @@
 # @logto/app-insights
 
+## 1.3.0
+
+### Minor Changes
+
+- 5a8442712: add custom events and new component
+
+  - implement `getEventName()` to create standard event name with the format `<component>/<event>[/data]`. E.g. `core/sign_in`.
+  - four new event components `core`, `console`, `blog`, and `website`.
+  - implement `<TrackOnce />` for tracking a custom event once
+
 ## 1.2.0
 
 ### Minor Changes
