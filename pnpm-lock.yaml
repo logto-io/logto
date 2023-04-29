@@ -3027,8 +3027,8 @@ importers:
         specifier: ^15.0.0
         version: 15.0.0
       superstruct:
-        specifier: ^0.16.0
-        version: 0.16.0
+        specifier: ^1.0.3
+        version: 1.0.3
       swr:
         specifier: ^1.3.0
         version: 1.3.0(react@18.2.0)
@@ -18865,10 +18865,6 @@ packages:
       semver: 7.3.8
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /superstruct@0.16.0:
-    resolution: {integrity: sha512-IDQtwnnlaan1NhuHqyD/U11lROYvCQ79JyfwlFU9xEVHzqV/Ys/RrwmHPCG0CVH/1g0BuodEjH1msxK2UHxehA==}
     dev: true
 
   /superstruct@1.0.3:
