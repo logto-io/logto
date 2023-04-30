@@ -17,7 +17,7 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test:ci": "pnpm test --silent --coverage",
+    "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
