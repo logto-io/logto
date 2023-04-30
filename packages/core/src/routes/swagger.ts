@@ -1,7 +1,4 @@
-import { readFile } from 'node:fs/promises';
-
-import { toTitle } from '@silverhand/essentials';
-import { load } from 'js-yaml';
+import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -11,6 +8,7 @@ import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { fallbackDefaultPageSize, isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
+import { codeToMessage } from '#src/utils/http.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from './types.js';
@@ -79,29 +77,19 @@ const buildTag = (path: string) => {
   return toTitle(root ?? 'General');
 };
 
-export const defaultResponses: OpenAPIV3.ResponsesObject = {
-  '200': {
-    description: 'OK',
-  },
-};
-
-const buildOperation = (
-  stack: IMiddleware[],
-  path: string,
-  customResponses?: OpenAPIV3.ResponsesObject
-): OpenAPIV3.OperationObject => {
+const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
-  const pathParameters = buildParameters(guard?.config.params, 'path');
+  const { params, query, body, response, status } = guard?.config ?? {};
+  const pathParameters = buildParameters(params, 'path');
 
   const hasPagination = stack.some((function_) => isPaginationMiddleware(function_));
   const queryParameters = [
-    ...buildParameters(guard?.config.query, 'query'),
+    ...buildParameters(query, 'query'),
     ...(hasPagination ? paginationParameters : []),
   ];
 
-  const body = guard?.config.body;
   const requestBody = body && {
     required: true,
     content: {
@@ -111,11 +99,40 @@ const buildOperation = (
     },
   };
 
+  const hasInputGuard = Boolean(params ?? query ?? body);
+  const responses: OpenAPIV3.ResponsesObject = Object.fromEntries(
+    deduplicate(conditionalArray(status ?? 200, hasInputGuard && 400)).map<
+      [number, OpenAPIV3.ResponseObject]
+    >((status) => {
+      const description = codeToMessage[status];
+
+      if (!description) {
+        throw new Error(`Invalid status code ${status}.`);
+      }
+
+      if (status === 200) {
+        return [
+          status,
+          {
+            description,
+            content: {
+              'application/json': {
+                schema: response && zodTypeToSwagger(response),
+              },
+            },
+          },
+        ];
+      }
+
+      return [status, { description }];
+    })
+  );
+
   return {
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
-    responses: customResponses ?? defaultResponses,
+    responses,
   };
 };
 
@@ -126,12 +143,6 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
-    // Use `as` here since we'll check typing with integration tests
-    // eslint-disable-next-line no-restricted-syntax
-    const additionalSwagger = load(
-      await readFile('static/yaml/additional-swagger.yaml', { encoding: 'utf8' })
-    ) as OpenAPIV3.Document;
-
     const routes = allRouters.flatMap<RouteObject>((router) =>
       router.stack
         // Filter out universal routes (mostly like a proxy route to withtyped)
@@ -144,13 +155,10 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
             .map((httpMethod) => {
               const path = `/api${routerPath}`;
 
-              const additionalPathItem = additionalSwagger.paths[path] ?? {};
-              const additionalResponses = additionalPathItem[httpMethod]?.responses;
-
               return {
                 path,
                 method: httpMethod,
-                operation: buildOperation(stack, routerPath, additionalResponses),
+                operation: buildOperation(stack, routerPath),
               };
             })
         )
