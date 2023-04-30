@@ -153,7 +153,6 @@ describe('resource routes', () => {
     expect(response.body).toEqual({
       ...mockResource,
       name,
-      indicator,
       accessTokenTtl,
     });
   });
