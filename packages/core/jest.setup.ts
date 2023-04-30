@@ -30,5 +30,9 @@ mockEsmDefault('#src/env-set/oidc.js', () => () => ({
 /* End */
 
 // Logger is not considered in all test cases
-// eslint-disable-next-line unicorn/consistent-function-scoping
-mockEsm('koa-logger', () => ({ default: () => (_, next) => next() }));
+const logger = (_: unknown, next: () => void) => {
+  next();
+};
+mockEsm('koa-logger', () => ({
+  default: () => logger,
+}));

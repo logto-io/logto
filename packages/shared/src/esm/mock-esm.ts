@@ -70,9 +70,14 @@ export const createMockUtils = (jestInstance: WithEsmMock) => {
 
   const mockEsmWithActual = async <T>(...[moduleName, factory]: MockParameters<T>): Promise<T> => {
     // Remove this when we upgrade Node.js to v19+ since we can leverage `import.meta.resolve()` to manually resolve a module
-    const resolved = moduleName.startsWith('.')
+    const raw = moduleName.startsWith('.')
       ? path.join(path.dirname(callSites()[1]?.getFileName() ?? ''), moduleName)
       : moduleName;
+    // ESM mocking will be used only for testing.
+    // - We need to strip the `.js` extension since we are using '@swc' in Jest
+    // which will directly import from the `src` directory that has all `.ts` files.
+    // - Ignore `#` aliases (Node.js `imports`) since they will be resolved by Jest config `moduleNameMapper`.
+    const resolved = raw.endsWith('.js') && !raw.startsWith('#') ? raw.slice(0, -3) : raw;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const actual = await import(resolved);
 

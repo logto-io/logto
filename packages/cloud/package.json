@@ -13,14 +13,12 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf build/ && tsc -p tsconfig.build.json",
-    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && nodemon",
     "start": "NODE_ENV=production node .",
-    "test:only": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
-    "test": "pnpm build:test && pnpm test:only",
-    "test:ci": "pnpm test:only --coverage --silent"
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
+    "test:ci": "pnpm run test --coverage --silent"
   },
   "dependencies": {
     "@logto/app-insights": "workspace:^1.0.0",
@@ -45,6 +43,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@jest/types": "^29.5.0",
     "@silverhand/eslint-config": "3.0.1",
     "@silverhand/jest-config": "3.0.0",
     "@silverhand/ts-config": "3.0.0",

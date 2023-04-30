@@ -11,5 +11,5 @@
       ]
     }
   },
-  "include": ["src"]
+  "include": ["src", "jest.*.ts"]
 }
