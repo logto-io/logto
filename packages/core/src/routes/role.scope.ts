@@ -1,5 +1,5 @@
 import type { Scope, ScopeResponse } from '@logto/schemas';
-import { scopeResponseGuard } from '@logto/schemas';
+import { scopeResponseGuard, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
@@ -42,6 +42,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: scopeResponseGuard.array(),
+      status: [200, 404, 401, 403],
     }),
     async (ctx, next) => {
       const {
@@ -95,6 +96,8 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       body: object({ scopeIds: string().min(1).array() }),
+      response: Scopes.guard.array(),
+      status: [200, 400, 401, 403, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -133,6 +136,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     '/roles/:id/scopes/:scopeId',
     koaGuard({
       params: object({ id: string().min(1), scopeId: string().min(1) }),
+      status: [204, 401, 403, 404],
     }),
     async (ctx, next) => {
       const {
