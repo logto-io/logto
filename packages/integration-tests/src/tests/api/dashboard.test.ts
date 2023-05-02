@@ -1,7 +1,8 @@
 import { SignInIdentifier } from '@logto/schemas';
 
 import type { StatisticsData } from '#src/api/index.js';
-import { getTotalUsersCount, getNewUsersData, getActiveUsersData } from '#src/api/index.js';
+import { api, getTotalUsersCount, getNewUsersData, getActiveUsersData } from '#src/api/index.js';
+import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { registerNewUser, signInWithPassword } from '#src/helpers/interactions.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -14,6 +15,16 @@ describe('admin console dashboard', () => {
       password: true,
       verify: false,
     });
+  });
+
+  it('non authorized request should return 401', async () => {
+    await expect(api.get('dashboard/users/total')).rejects.toMatchObject(
+      createResponseWithCode(401)
+    );
+    await expect(api.get('dashboard/users/new')).rejects.toMatchObject(createResponseWithCode(401));
+    await expect(api.get('dashboard/users/active')).rejects.toMatchObject(
+      createResponseWithCode(401)
+    );
   });
 
   it('should get total user count successfully', async () => {

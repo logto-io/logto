@@ -17,3 +17,4 @@ export * from './hook.js';
 export * from './service-log.js';
 export * from './theme.js';
 export * from './cookie.js';
+export * from './dashboard.js';

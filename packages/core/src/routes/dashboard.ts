@@ -1,6 +1,7 @@
 import { dateRegex } from '@logto/core-kit';
+import { getNewUsersResponseGuard, getActiveUsersResponseGuard } from '@logto/schemas';
 import { endOfDay, format, subDays } from 'date-fns';
-import { object, string } from 'zod';
+import { number, object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -20,56 +21,74 @@ export default function dashboardRoutes<T extends AuthedRouter>(
     users: { countUsers, getDailyNewUserCountsByTimeInterval },
   } = queries;
 
-  router.get('/dashboard/users/total', async (ctx, next) => {
-    const { count: totalUserCount } = await countUsers();
-    ctx.body = { totalUserCount };
+  router.get(
+    '/dashboard/users/total',
+    koaGuard({
+      response: object({
+        totalUserCount: number(),
+      }),
+      status: [200, 401, 403],
+    }),
+    async (ctx, next) => {
+      const { count: totalUserCount } = await countUsers();
+      ctx.body = { totalUserCount };
 
-    return next();
-  });
+      return next();
+    }
+  );
 
-  router.get('/dashboard/users/new', async (ctx, next) => {
-    const today = Date.now();
-    const dailyNewUserCounts = await getDailyNewUserCountsByTimeInterval(
-      // (14 days ago 23:59:59.999, today 23:59:59.999]
-      getEndOfDayTimestamp(subDays(today, 14)),
-      getEndOfDayTimestamp(today)
-    );
+  router.get(
+    '/dashboard/users/new',
+    koaGuard({
+      response: getNewUsersResponseGuard,
+      status: [200, 401, 403],
+    }),
+    async (ctx, next) => {
+      const today = Date.now();
+      const dailyNewUserCounts = await getDailyNewUserCountsByTimeInterval(
+        // (14 days ago 23:59:59.999, today 23:59:59.999]
+        getEndOfDayTimestamp(subDays(today, 14)),
+        getEndOfDayTimestamp(today)
+      );
 
-    const last14DaysNewUserCounts = new Map(
-      dailyNewUserCounts.map(({ date, count }) => [date, count])
-    );
+      const last14DaysNewUserCounts = new Map(
+        dailyNewUserCounts.map(({ date, count }) => [date, count])
+      );
 
-    const todayNewUserCount = last14DaysNewUserCounts.get(getDateString(today)) ?? 0;
-    const yesterday = subDays(today, 1);
-    const yesterdayNewUserCount = last14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
-    const todayDelta = todayNewUserCount - yesterdayNewUserCount;
+      const todayNewUserCount = last14DaysNewUserCounts.get(getDateString(today)) ?? 0;
+      const yesterday = subDays(today, 1);
+      const yesterdayNewUserCount = last14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
+      const todayDelta = todayNewUserCount - yesterdayNewUserCount;
 
-    const last7DaysNewUserCount = indices(7)
-      .map((index) => getDateString(subDays(today, index)))
-      .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
-    const newUserCountFrom13DaysAgoTo7DaysAgo = indices(7)
-      .map((index) => getDateString(subDays(today, index + 7)))
-      .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
-    const last7DaysDelta = last7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
+      const last7DaysNewUserCount = indices(7)
+        .map((index) => getDateString(subDays(today, index)))
+        .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
+      const newUserCountFrom13DaysAgoTo7DaysAgo = indices(7)
+        .map((index) => getDateString(subDays(today, index + 7)))
+        .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
+      const last7DaysDelta = last7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
 
-    ctx.body = {
-      today: {
-        count: todayNewUserCount,
-        delta: todayDelta,
-      },
-      last7Days: {
-        count: last7DaysNewUserCount,
-        delta: last7DaysDelta,
-      },
-    };
+      ctx.body = {
+        today: {
+          count: todayNewUserCount,
+          delta: todayDelta,
+        },
+        last7Days: {
+          count: last7DaysNewUserCount,
+          delta: last7DaysDelta,
+        },
+      };
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.get(
     '/dashboard/users/active',
     koaGuard({
       query: object({ date: string().regex(dateRegex).optional() }),
+      response: getActiveUsersResponseGuard,
+      status: [200, 401, 403],
     }),
     async (ctx, next) => {
       const {
