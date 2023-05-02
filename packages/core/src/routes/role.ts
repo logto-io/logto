@@ -265,7 +265,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     '/roles/:id/users',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: object({ userIds: string().min(1).array() }),
+      body: object({ userIds: string().min(1).array().nonempty() }),
       status: [201, 400, 401, 403, 404, 422],
     }),
     async (ctx, next) => {
