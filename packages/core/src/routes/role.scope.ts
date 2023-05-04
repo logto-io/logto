@@ -97,7 +97,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
       params: object({ id: string().min(1) }),
       body: object({ scopeIds: string().min(1).array().nonempty() }),
       response: Scopes.guard.array(),
-      status: [200, 400, 401, 403, 404, 422],
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -136,7 +136,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     '/roles/:id/scopes/:scopeId',
     koaGuard({
       params: object({ id: string().min(1), scopeId: string().min(1) }),
-      status: [204, 401, 403, 404],
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const {

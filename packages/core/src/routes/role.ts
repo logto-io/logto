@@ -59,7 +59,7 @@ export default function roleRoutes<T extends AuthedRouter>(
           })
         )
         .array(),
-      status: [200, 400, 401, 403],
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
@@ -116,7 +116,7 @@ export default function roleRoutes<T extends AuthedRouter>(
       body: Roles.createGuard
         .omit({ id: true })
         .extend({ scopeIds: z.string().min(1).array().optional() }),
-      status: [200, 401, 403, 422],
+      status: [200, 422],
       response: Roles.guard,
     }),
     async (ctx, next) => {
@@ -155,7 +155,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: Roles.guard,
-      status: [200, 404, 401, 403],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -174,7 +174,7 @@ export default function roleRoutes<T extends AuthedRouter>(
       body: Roles.createGuard.pick({ name: true, description: true }).partial(),
       params: object({ id: string().min(1) }),
       response: Roles.guard,
-      status: [200, 400, 401, 403, 404, 422],
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -202,7 +202,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     '/roles/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      status: [204, 401, 403, 404],
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const {
@@ -221,7 +221,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: userInfoResponseGuard.array(),
-      status: [200, 400, 401, 403, 404],
+      status: [200, 400, 404],
     }),
     async (ctx, next) => {
       const {
@@ -266,7 +266,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       body: object({ userIds: string().min(1).array().nonempty() }),
-      status: [201, 400, 401, 403, 404, 422],
+      status: [201, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -299,7 +299,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     '/roles/:id/users/:userId',
     koaGuard({
       params: object({ id: string().min(1), userId: string().min(1) }),
-      status: [204, 401, 403, 404],
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const {
