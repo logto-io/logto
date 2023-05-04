@@ -66,6 +66,11 @@ export const mockScope: Scope = {
   createdAt: 1_645_334_775_356,
 };
 
+export const mockScopeWithResource = {
+  ...mockScope,
+  resource: mockResource,
+};
+
 export const mockRole: Role = {
   tenantId: 'fake_tenant',
   id: 'role_id',

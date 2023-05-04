@@ -1,4 +1,5 @@
-import type { ScopeResponse } from '@logto/schemas';
+import type { Scope, ScopeResponse } from '@logto/schemas';
+import { scopeResponseGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
@@ -21,11 +22,26 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     scopes: { findScopeById, findScopesByIds, countScopesByScopeIds, searchScopesByScopeIds },
   } = queries;
 
+  const attachResourceToScopes = async (scopes: readonly Scope[]): Promise<ScopeResponse[]> => {
+    const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
+    return scopes.map((scope) => {
+      const resource = resources.find(({ id }) => id === scope.resourceId);
+
+      assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
+
+      return {
+        ...scope,
+        resource,
+      };
+    });
+  };
+
   router.get(
     '/roles/:id/scopes',
     koaPagination({ isOptional: true }),
     koaGuard({
       params: object({ id: string().min(1) }),
+      response: scopeResponseGuard.array(),
     }),
     async (ctx, next) => {
       const {
@@ -43,7 +59,9 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
           const scopeIds = rolesScopes.map(({ scopeId }) => scopeId);
 
           if (disabled) {
-            ctx.body = await searchScopesByScopeIds(scopeIds, search);
+            const scopes = await searchScopesByScopeIds(scopeIds, search);
+
+            ctx.body = await attachResourceToScopes(scopes);
 
             return next();
           }
@@ -53,21 +71,9 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
             searchScopesByScopeIds(scopeIds, search, limit, offset),
           ]);
 
-          const resources = await findResourcesByIds(scopes.map(({ resourceId }) => resourceId));
-          const result: ScopeResponse[] = scopes.map((scope) => {
-            const resource = resources.find(({ id }) => id === scope.resourceId);
-
-            assertThat(resource, new Error(`Cannot find resource for id ${scope.resourceId}`));
-
-            return {
-              ...scope,
-              resource,
-            };
-          });
-
           // Return totalCount to pagination middleware
           ctx.pagination.totalCount = count;
-          ctx.body = result;
+          ctx.body = await attachResourceToScopes(scopes);
 
           return next();
         },
