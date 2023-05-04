@@ -21,7 +21,7 @@ import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
 
 const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
-  `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
+  `${pathname.slice(0, pathname.lastIndexOf('/'))}`;
 
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
