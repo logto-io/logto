@@ -21,6 +21,7 @@ import {
   listConnectorFactories,
   getConnectorFactory,
 } from '#src/api/connector.js';
+import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 
 const connectorIdMap = new Map<string, string>();
 
@@ -29,6 +30,16 @@ const mockConnectorSetups = [
   { connectorId: mockEmailConnectorId, config: mockEmailConnectorConfig },
   { connectorId: mockSocialConnectorId, config: mockSocialConnectorConfig },
 ];
+
+const cleanUpConnectorTable = async () => {
+  const connectors = await listConnectors();
+  await Promise.all(
+    connectors.map(async ({ id }) => {
+      await deleteConnectorById(id);
+    })
+  );
+  connectorIdMap.clear();
+};
 
 /*
  * We'd better only use mock connectors in integration tests.
@@ -52,16 +63,7 @@ test('connector set-up flow', async () => {
     })
   );
 
-  /**
-   * Clean up `connector` table
-   */
-  const connectors = await listConnectors();
-  await Promise.all(
-    connectors.map(async ({ id }) => {
-      await deleteConnectorById(id);
-    })
-  );
-  connectorIdMap.clear();
+  await cleanUpConnectorTable();
 
   /*
    * Set up social/SMS/email connectors
@@ -138,6 +140,36 @@ test('connector set-up flow', async () => {
         config: mockSocialConnectorConfig,
       }),
     ])
+  );
+});
+
+test('create connector with non-exist connectorId', async () => {
+  await cleanUpConnectorTable();
+  await expect(postConnector({ connectorId: 'non-exist-id' })).rejects.toMatchObject(
+    createResponseWithCode(422)
+  );
+});
+
+test('create non standard social connector with target', async () => {
+  await cleanUpConnectorTable();
+  await expect(
+    postConnector({ connectorId: mockSocialConnectorId, metadata: { target: 'target' } })
+  ).rejects.toMatchObject(createResponseWithCode(400));
+});
+
+test('create duplicated social connector', async () => {
+  await cleanUpConnectorTable();
+  await postConnector({ connectorId: mockSocialConnectorId });
+  await expect(postConnector({ connectorId: mockSocialConnectorId })).rejects.toMatchObject(
+    createResponseWithCode(422)
+  );
+});
+
+test('override metadata for non-standard social connector', async () => {
+  await cleanUpConnectorTable();
+  const { id } = await postConnector({ connectorId: mockSocialConnectorId });
+  await expect(updateConnectorConfig(id, {}, { target: 'target' })).rejects.toMatchObject(
+    createResponseWithCode(400)
   );
 });
 

@@ -1,6 +1,11 @@
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
-import { connectorFactoryResponseGuard, Connectors, ConnectorType } from '@logto/schemas';
+import {
+  connectorFactoryResponseGuard,
+  Connectors,
+  ConnectorType,
+  connectorResponseGuard,
+} from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
@@ -48,6 +53,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
           syncProfile: true,
         })
         .merge(Connectors.createGuard.pick({ id: true }).partial()), // `id` is optional
+      response: connectorResponseGuard,
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const {
@@ -156,6 +163,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
       query: object({
         target: string().optional(),
       }),
+      response: connectorResponseGuard.array(),
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { target: filterTarget } = ctx.query;
@@ -184,7 +193,11 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   router.get(
     '/connectors/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      response: connectorResponseGuard,
+      status: [200, 404],
+    }),
     async (ctx, next) => {
       const {
         params: { id },
@@ -221,7 +234,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: connectorFactoryResponseGuard,
-      status: [200],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -251,6 +264,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
       body: Connectors.createGuard
         .pick({ config: true, metadata: true, syncProfile: true })
         .partial(),
+      response: connectorResponseGuard,
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -300,7 +315,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/connectors/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({ params: object({ id: string().min(1) }), status: [204, 404] }),
     async (ctx, next) => {
       const {
         params: { id },
