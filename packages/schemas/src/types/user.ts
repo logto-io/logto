@@ -1,6 +1,6 @@
+import { z } from 'zod';
+
 import { Users } from '../db-entries/index.js';
-import type { User } from '../db-entries/index.js';
-import { type CreateGuard } from '../index.js';
 
 export const userInfoSelectFields = Object.freeze([
   'id',
@@ -17,27 +17,17 @@ export const userInfoSelectFields = Object.freeze([
   'isSuspended',
 ] as const);
 
-export type UserInfo<Keys extends keyof User = (typeof userInfoSelectFields)[number]> = Pick<
-  User,
-  Keys
->;
+export const userInfoGuard = Users.guard.pick(
+  Object.fromEntries(userInfoSelectFields.map((key) => [key, true]))
+);
 
-export const userInfoResponseGuard: CreateGuard<UserInfo> = Users.guard.pick({
-  id: true,
-  username: true,
-  primaryEmail: true,
-  primaryPhone: true,
-  name: true,
-  avatar: true,
-  customData: true,
-  identities: true,
-  lastSignInAt: true,
-  createdAt: true,
-  applicationId: true,
-  isSuspended: true,
+export type UserInfo = z.infer<typeof userInfoGuard>;
+
+export const userProfileResponseGuard = userInfoGuard.extend({
+  hasPassword: z.boolean().optional(),
 });
 
-export type UserProfileResponse = UserInfo & { hasPassword?: boolean };
+export type UserProfileResponse = z.infer<typeof userProfileResponseGuard>;
 
 /** Internal read-only roles for user tenants. */
 export enum InternalRole {

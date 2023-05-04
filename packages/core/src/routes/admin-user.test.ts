@@ -1,15 +1,7 @@
-/* eslint-disable max-lines */
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
-import { userInfoSelectFields } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import { pick } from '@silverhand/essentials';
 
-import {
-  mockUser,
-  mockUserList,
-  mockUserListResponse,
-  mockUserResponse,
-} from '#src/__mocks__/index.js';
+import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -43,17 +35,6 @@ const mockedQueries = {
     ),
   },
   users: {
-    countUsers: jest.fn(async (search) => ({
-      count: search
-        ? filterUsersWithSearch(mockUserList, String(search)).length
-        : mockUserList.length,
-    })),
-    findUsers: jest.fn(
-      async (limit, offset, search): Promise<User[]> =>
-        // For testing, type should be `Search` but we use `string` in `filterUsersWithSearch()` here
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        search ? filterUsersWithSearch(mockUserList, String(search)) : mockUserList
-    ),
     findUserById: jest.fn(async (id: string) => mockUser),
     hasUser: jest.fn(async () => mockHasUser()),
     hasUserWithEmail: jest.fn(async () => mockHasUserWithEmail()),
@@ -118,26 +99,6 @@ describe('adminUserRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('GET /users', async () => {
-    const response = await userRequest.get('/users');
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockUserListResponse);
-    expect(response.header).toHaveProperty('total-number', `${mockUserList.length}`);
-  });
-
-  it('GET /users should return matched data', async () => {
-    const search = 'foo';
-    const response = await userRequest.get('/users').send({ search });
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(
-      filterUsersWithSearch(mockUserList, search).map((user) => pick(user, ...userInfoSelectFields))
-    );
-    expect(response.header).toHaveProperty(
-      'total-number',
-      `${filterUsersWithSearch(mockUserList, search).length}`
-    );
   });
 
   it('GET /users/:userId', async () => {
@@ -474,4 +435,3 @@ describe('adminUserRoutes', () => {
     expect(deleteUserIdentity).toHaveBeenCalledWith(arbitraryUserId, arbitraryTarget);
   });
 });
-/* eslint-enable max-lines */

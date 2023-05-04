@@ -1,5 +1,5 @@
 import type { RoleResponse } from '@logto/schemas';
-import { userInfoSelectFields, userInfoResponseGuard, Roles, Users } from '@logto/schemas';
+import { userInfoSelectFields, userProfileResponseGuard, Roles, Users } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { pick, tryThat } from '@silverhand/essentials';
 import { object, string, z, number } from 'zod';
@@ -220,7 +220,7 @@ export default function roleRoutes<T extends AuthedRouter>(
     koaPagination(),
     koaGuard({
       params: object({ id: string().min(1) }),
-      response: userInfoResponseGuard.array(),
+      response: userProfileResponseGuard.array(),
       status: [200, 400, 404],
     }),
     async (ctx, next) => {
