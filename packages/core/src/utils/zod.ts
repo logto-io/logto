@@ -3,8 +3,9 @@ import { jsonObjectGuard, translationGuard } from '@logto/schemas';
 import type { ValuesOf } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import type { OpenAPIV3 } from 'openapi-types';
-import type { ZodStringDef } from 'zod';
 import {
+  ZodDiscriminatedUnion,
+  type ZodStringDef,
   ZodRecord,
   ZodArray,
   ZodBoolean,
@@ -191,7 +192,7 @@ export const zodTypeToSwagger = (
     return { example: {} }; // Any data type
   }
 
-  if (config instanceof ZodUnion) {
+  if (config instanceof ZodUnion || config instanceof ZodDiscriminatedUnion) {
     return {
       // ZodUnion.options type is any
       // eslint-disable-next-line no-restricted-syntax

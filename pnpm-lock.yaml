@@ -3134,9 +3134,6 @@ importers:
       jose:
         specifier: ^4.11.0
         version: 4.11.0
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
       koa:
         specifier: ^2.13.1
         version: 2.13.4
@@ -3222,9 +3219,6 @@ importers:
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
-      '@types/js-yaml':
-        specifier: ^4.0.5
-        version: 4.0.5
       '@types/koa':
         specifier: ^2.13.3
         version: 2.13.4
@@ -9251,10 +9245,6 @@ packages:
       pretty-format: 29.5.0
     dev: true
 
-  /@types/js-yaml@4.0.5:
-    resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
-    dev: true
-
   /@types/jsdom@20.0.0:
     resolution: {integrity: sha512-YfAchFs0yM1QPDrLm2VHe+WHGtqms3NXnXAMolrgrVP6fgBHHXy1ozAbo/dFtPNtZC/m66bPiCTWYmqp1F14gA==}
     dependencies:
@@ -9956,6 +9946,7 @@ packages:
 
   /argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+    dev: true
 
   /aria-query@4.2.2:
     resolution: {integrity: sha512-o/HelwhuKpTj/frsOsbNLNgnNGVIFsVP/SW2BSF14gVl7kAfMOJ6/8wUAUvG1R1NHKrfG+2sHZTu0yauT1qBrA==}
@@ -14451,6 +14442,7 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
+    dev: true
 
   /jsdom@20.0.2:
     resolution: {integrity: sha512-AHWa+QO/cgRg4N+DsmHg1Y7xnz+8KU3EflM0LVDTdmrYOc1WWTSkOjtpUveQH+1Bqd5rtcVnb/DuxV/UjDO4rA==}

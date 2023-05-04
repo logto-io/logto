@@ -1,6 +1,6 @@
-import { createMockUtils } from '@logto/shared/esm';
 import Koa from 'koa';
 import Router from 'koa-router';
+import { type OpenAPIV3 } from 'openapi-types';
 import request from 'supertest';
 import { number, object, string } from 'zod';
 
@@ -8,18 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
-const { jest } = import.meta;
-const { mockEsm } = createMockUtils(jest);
-
-const { load } = mockEsm('js-yaml', () => ({
-  load: jest.fn().mockReturnValue({ paths: {} }),
-}));
-
-const {
-  default: swaggerRoutes,
-  defaultResponses,
-  paginationParameters,
-} = await import('./swagger.js');
+const { default: swaggerRoutes, paginationParameters } = await import('./swagger.js');
 
 export const createSwaggerRequest = (
   allRouters: Router[],
@@ -227,55 +216,17 @@ describe('GET /swagger.json', () => {
     });
   });
 
-  describe('should use correct responses', () => {
-    it('should use "defaultResponses" if there is no custom "responses" from the additional swagger', async () => {
-      load.mockReturnValueOnce({
-        paths: { '/api/mock': { delete: {} } },
-      });
-
-      const swaggerRequest = createSwaggerRequest([mockRouter]);
-      const response = await swaggerRequest.get('/swagger.json');
-      expect(response.body.paths).toMatchObject({
-        '/api/mock': {
-          delete: { responses: defaultResponses },
+  it('should fall back to default when no response guard found', async () => {
+    const swaggerRequest = createSwaggerRequest([mockRouter]);
+    const response = await swaggerRequest.get('/swagger.json');
+    expect(response.body.paths).toMatchObject({
+      '/api/mock': {
+        delete: {
+          responses: {
+            200: { description: 'OK', content: { 'application/json': {} } },
+          } satisfies OpenAPIV3.ResponsesObject,
         },
-      });
-    });
-
-    it('should use custom "responses" from the additional swagger if it exists', async () => {
-      load.mockReturnValueOnce({
-        paths: {
-          '/api/mock': {
-            get: {
-              responses: {
-                '204': { description: 'No Content' },
-              },
-            },
-            patch: {
-              responses: {
-                '202': { description: 'Accepted' },
-              },
-            },
-          },
-        },
-      });
-
-      const swaggerRequest = createSwaggerRequest([mockRouter]);
-      const response = await swaggerRequest.get('/swagger.json');
-      expect(response.body.paths).toMatchObject({
-        '/api/mock': {
-          get: {
-            responses: {
-              '204': { description: 'No Content' },
-            },
-          },
-          patch: {
-            responses: {
-              '202': { description: 'Accepted' },
-            },
-          },
-        },
-      });
+      },
     });
   });
 });

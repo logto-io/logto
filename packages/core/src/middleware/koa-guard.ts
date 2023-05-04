@@ -178,7 +178,7 @@ export default function koaGuard<
 
   // Intended
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  guardMiddleware.config = { query, body, params };
+  guardMiddleware.config = { query, body, params, response, status };
 
   return guardMiddleware;
 }
