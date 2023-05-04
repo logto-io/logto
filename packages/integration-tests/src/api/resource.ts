@@ -20,7 +20,7 @@ export const getResource = async (resourceId: string, options?: OptionsOfTextRes
 
 export const updateResource = async (
   resourceId: string,
-  payload: Partial<Omit<CreateResource, 'id' | 'indicator'>>
+  payload: Partial<Omit<CreateResource, 'id'>>
 ) =>
   authedAdminApi
     .patch(`resources/${resourceId}`, {

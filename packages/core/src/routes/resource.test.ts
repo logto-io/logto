@@ -1,5 +1,6 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { type Nullable } from '@silverhand/essentials';
 
 import { mockResource, mockScope } from '#src/__mocks__/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -12,6 +13,12 @@ const { mockEsm } = createMockUtils(jest);
 const resources = {
   findTotalNumberOfResources: async () => ({ count: 10 }),
   findAllResources: async (): Promise<Resource[]> => [mockResource],
+  findResourceByIndicator: async (indicator: string): Promise<Nullable<Resource>> => {
+    if (indicator === mockResource.indicator) {
+      return mockResource;
+    }
+    return null;
+  },
   findResourceById: jest.fn(async (): Promise<Resource> => mockResource),
   insertResource: async (body: CreateResource): Promise<Resource> => ({
     ...mockResource,
@@ -114,6 +121,16 @@ describe('resource routes', () => {
     );
   });
 
+  it('POST /resource should throw with duplicated indicator', async () => {
+    const name = 'user api';
+    const { indicator } = mockResource;
+    const accessTokenTtl = 60;
+
+    await expect(
+      resourceRequest.post('/resources').send({ name, indicator, accessTokenTtl })
+    ).resolves.toHaveProperty('status', 422);
+  });
+
   it('GET /resources/:id', async () => {
     const response = await resourceRequest.get('/resources/foo');
 
@@ -136,13 +153,12 @@ describe('resource routes', () => {
     expect(response.body).toEqual({
       ...mockResource,
       name,
-      indicator,
       accessTokenTtl,
     });
   });
 
   it('PATCH /resources/:id should throw with invalid propreties', async () => {
-    const response = await resourceRequest.patch('/resources/foo').send({ indicator: 12 });
+    const response = await resourceRequest.patch('/resources/foo').send({ name: 12 });
     expect(response.status).toEqual(400);
   });
 
