@@ -48,13 +48,6 @@ const baseProviderMock = {
   client_id: 'client_id',
 };
 
-// Const samlAssertionHandlerRoutes = await pickDefault(import('./authn/saml.js'));
-// const tenantContext = new MockTenant(
-//   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
-//   undefined,
-//   { socials: socialsLibraries }
-// );
-
 const usersLibraries = {
   findUserRoles: jest.fn(async () => [mockRole]),
 } satisfies Partial<Libraries['users']>;
