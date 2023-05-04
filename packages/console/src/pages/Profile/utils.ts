@@ -2,19 +2,13 @@ import type { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { toast } from 'react-hot-toast';
 
-export type LocationState = {
-  email: string;
-  action: 'changePassword' | 'changeEmail';
-};
+import { type LocationState, locationStateGuard } from '@/types/profile';
 
-export const checkLocationState = (state: unknown): state is LocationState =>
-  typeof state === 'object' &&
-  state !== null &&
-  'email' in state &&
-  'action' in state &&
-  typeof state.email === 'string' &&
-  typeof state.action === 'string' &&
-  ['changePassword', 'changeEmail'].includes(state.action);
+export const parseLocationState = (state: unknown): Partial<LocationState> => {
+  const parsed = locationStateGuard.safeParse(state);
+
+  return parsed.success ? parsed.data : { email: undefined, action: undefined };
+};
 
 export const popupWindow = (url: string, windowName: string, width: number, height: number) => {
   const outerHeight = window.top?.outerHeight ?? 0;

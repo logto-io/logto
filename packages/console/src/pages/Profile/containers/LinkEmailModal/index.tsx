@@ -1,5 +1,4 @@
 import { emailRegEx } from '@logto/core-kit';
-import { conditional } from '@silverhand/essentials';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,7 +9,7 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
-import { checkLocationState } from '../../utils';
+import { parseLocationState } from '../../utils';
 
 type EmailForm = {
   email: string;
@@ -44,7 +43,7 @@ function LinkEmailModal() {
     })();
   };
 
-  const currentEmail = conditional(checkLocationState(state) && state.email);
+  const { email: currentEmail } = parseLocationState(state);
 
   return (
     <MainFlowLikeModal

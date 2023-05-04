@@ -1,8 +1,9 @@
-import * as s from 'superstruct';
+import { emailRegEx } from '@logto/core-kit';
+import { z } from 'zod';
 
-export const locationStateGuard = s.object({
-  email: s.string(),
-  action: s.union([s.literal('changeEmail'), s.literal('changePassword')]),
+export const locationStateGuard = z.object({
+  email: z.string().regex(emailRegEx),
+  action: z.union([z.literal('changeEmail'), z.literal('changePassword')]),
 });
 
-export type LocationState = s.Infer<typeof locationStateGuard>;
+export type LocationState = z.infer<typeof locationStateGuard>;
