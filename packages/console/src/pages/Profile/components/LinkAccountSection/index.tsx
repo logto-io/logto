@@ -62,7 +62,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === Theme.Dark && logoDark ? logoDark : logo;
-      const relatedUserDetails = user.identities?.[target]?.details;
+      const relatedUserDetails = user.identities[target]?.details;
 
       const socialUserInfo = socialUserInfoGuard.safeParse(relatedUserDetails);
       const hasLinked = socialUserInfo.success;
