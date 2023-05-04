@@ -98,7 +98,7 @@ describe('roles scopes', () => {
     expect(newScopes.length).toBe(0);
   });
 
-  it('should fail when try to remove scope from role that not assigned', async () => {
+  it('should fail when try to remove scope from role that is not assigned', async () => {
     const role = await createRole();
     const resource = await createResource();
     const scope = await createScope(resource.id);
@@ -106,7 +106,7 @@ describe('roles scopes', () => {
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 
-  it('should fail when try to remove scope from role that not found', async () => {
+  it('should fail when try to remove scope from role that is not found', async () => {
     const resource = await createResource();
     const scope = await createScope(resource.id);
     const response = await deleteScopeFromRole(scope.id, 'not-found').catch(
