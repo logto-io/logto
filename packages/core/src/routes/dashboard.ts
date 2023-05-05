@@ -27,7 +27,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(
       response: object({
         totalUserCount: number(),
       }),
-      status: [200, 401, 403],
+      status: [200],
     }),
     async (ctx, next) => {
       const { count: totalUserCount } = await countUsers();
@@ -41,7 +41,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(
     '/dashboard/users/new',
     koaGuard({
       response: getNewUsersResponseGuard,
-      status: [200, 401, 403],
+      status: [200],
     }),
     async (ctx, next) => {
       const today = Date.now();
@@ -88,7 +88,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(
     koaGuard({
       query: object({ date: string().regex(dateRegex).optional() }),
       response: getActiveUsersResponseGuard,
-      status: [200, 401, 403],
+      status: [200],
     }),
     async (ctx, next) => {
       const {

@@ -33,6 +33,7 @@ export const codeToMessage: Record<number, string> = Object.freeze({
   416: 'Requested Range Not Satisfiable',
   417: 'Expectation Failed',
   418: "I'm a teapot",
+  422: 'Unprocessable Content',
   429: 'Too Many Requests',
   500: 'Internal Server Error',
   501: 'Not Implemented',

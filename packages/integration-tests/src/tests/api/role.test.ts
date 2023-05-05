@@ -65,6 +65,12 @@ describe('roles', () => {
     expect(role.description).toBe(createdRole.description);
   });
 
+  it('should return 404 if role does not exist', async () => {
+    const response = await getRole('non_existent_role').catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+  });
+
   it('should update role details successfully', async () => {
     const role = await createRole();
 
@@ -91,12 +97,35 @@ describe('roles', () => {
     expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
   });
 
+  it('should fail when update a non-existent role', async () => {
+    const response = await updateRole('non_existent_role', {
+      name: 'new_name',
+    }).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+  });
+
+  it('should fail when try to update an internal role', async () => {
+    const role = await createRole();
+
+    const response = await updateRole(role.id, {
+      name: '#internal:foo',
+    }).catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
+  });
+
   it('should delete role successfully', async () => {
     const role = await createRole();
 
     await deleteRole(role.id);
 
     const response = await getRole(role.id).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+  });
+
+  it('should return 404 if role does not exist', async () => {
+    const response = await deleteRole('non_existent_role').catch((error: unknown) => error);
+
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 });

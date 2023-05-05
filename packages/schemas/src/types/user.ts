@@ -1,4 +1,6 @@
-import type { CreateUser } from '../db-entries/index.js';
+import { Users } from '../db-entries/index.js';
+import type { User } from '../db-entries/index.js';
+import { type CreateGuard } from '../index.js';
 
 export const userInfoSelectFields = Object.freeze([
   'id',
@@ -15,10 +17,25 @@ export const userInfoSelectFields = Object.freeze([
   'isSuspended',
 ] as const);
 
-export type UserInfo<Keys extends keyof CreateUser = (typeof userInfoSelectFields)[number]> = Pick<
-  CreateUser,
+export type UserInfo<Keys extends keyof User = (typeof userInfoSelectFields)[number]> = Pick<
+  User,
   Keys
 >;
+
+export const userInfoResponseGuard: CreateGuard<UserInfo> = Users.guard.pick({
+  id: true,
+  username: true,
+  primaryEmail: true,
+  primaryPhone: true,
+  name: true,
+  avatar: true,
+  customData: true,
+  identities: true,
+  lastSignInAt: true,
+  createdAt: true,
+  applicationId: true,
+  isSuspended: true,
+});
 
 export type UserProfileResponse = UserInfo & { hasPassword?: boolean };
 
