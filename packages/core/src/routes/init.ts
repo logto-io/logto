@@ -10,6 +10,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoleRoutes from './admin-user-role.js';
+import adminUserSearchRoutes from './admin-user-search.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
@@ -43,6 +44,7 @@ const createRouters = (tenant: TenantContext) => {
   resourceRoutes(managementRouter, tenant);
   signInExperiencesRoutes(managementRouter, tenant);
   adminUserRoutes(managementRouter, tenant);
+  adminUserSearchRoutes(managementRouter, tenant);
   adminUserRoleRoutes(managementRouter, tenant);
   logRoutes(managementRouter, tenant);
   roleRoutes(managementRouter, tenant);

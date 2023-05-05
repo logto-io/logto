@@ -1,14 +1,12 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import { jsonObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { conditional, has, pick, tryThat } from '@silverhand/essentials';
+import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import { conditional, has, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
-import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -20,54 +18,23 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     users: {
       deleteUserById,
       deleteUserIdentity,
-      findUsers,
-      countUsers,
       findUserById,
       hasUser,
       updateUserById,
       hasUserWithEmail,
       hasUserWithPhone,
     },
-    usersRoles: { findUsersRolesByRoleId },
   } = queries;
   const {
-    users: { checkIdentifierCollision, generateUserId, insertUser, findUsersByRoleName },
+    users: { checkIdentifierCollision, generateUserId, insertUser },
   } = libraries;
-
-  router.get('/users', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
-    const { searchParams } = ctx.request.URL;
-
-    return tryThat(
-      async () => {
-        const search = parseSearchParamsForSearch(searchParams);
-        const excludeRoleId = searchParams.get('excludeRoleId');
-        const excludeUsersRoles = excludeRoleId ? await findUsersRolesByRoleId(excludeRoleId) : [];
-        const excludeUserIds = excludeUsersRoles.map(({ userId }) => userId);
-
-        const [{ count }, users] = await Promise.all([
-          countUsers(search, excludeUserIds),
-          findUsers(limit, offset, search, excludeUserIds),
-        ]);
-
-        ctx.pagination.totalCount = count;
-        ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
-
-        return next();
-      },
-      (error) => {
-        if (error instanceof TypeError) {
-          throw new RequestError({ code: 'request.invalid_input', details: error.message }, error);
-        }
-        throw error;
-      }
-    );
-  });
 
   router.get(
     '/users/:userId',
     koaGuard({
       params: object({ userId: string() }),
+      response: userProfileResponseGuard,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -87,6 +54,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       response: jsonObjectGuard,
+      status: [200],
     }),
     async (ctx, next) => {
       const {
@@ -106,6 +74,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       params: object({ userId: string() }),
       body: object({ customData: jsonObjectGuard }),
       response: jsonObjectGuard,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -135,6 +104,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         password: string().regex(passwordRegEx),
         name: string(),
       }).partial(),
+      response: userProfileResponseGuard,
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const { primaryEmail, primaryPhone, username, password, name } = ctx.guard.body;
@@ -155,7 +126,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       );
       assertThat(
         !primaryPhone || !(await hasUserWithPhone(primaryPhone)),
-        new RequestError({ code: 'user.phone_already_in_use' })
+        new RequestError({ code: 'user.phone_already_in_use', status: 422 })
       );
 
       const id = await generateUserId();
@@ -190,6 +161,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
       }).partial(),
+      response: userProfileResponseGuard,
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -212,6 +185,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ password: string().regex(passwordRegEx) }),
+      response: userProfileResponseGuard,
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const {
@@ -239,6 +214,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ password: string() }),
+      status: [204],
     }),
     async (ctx, next) => {
       const {
@@ -260,7 +236,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       response: object({ hasPassword: boolean() }),
-      status: [200],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const { userId } = ctx.guard.params;
@@ -279,6 +255,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ isSuspended: boolean() }),
+      response: userProfileResponseGuard,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -306,6 +284,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId',
     koaGuard({
       params: object({ userId: string() }),
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
       const {
@@ -326,7 +305,11 @@ export default function adminUserRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/users/:userId/identities/:target',
-    koaGuard({ params: object({ userId: string(), target: string() }) }),
+    koaGuard({
+      params: object({ userId: string(), target: string() }),
+      response: userProfileResponseGuard,
+      status: [200, 404],
+    }),
     async (ctx, next) => {
       const {
         params: { userId, target },
