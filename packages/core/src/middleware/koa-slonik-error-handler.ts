@@ -38,6 +38,7 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       if (error instanceof InsertionError) {
         throw new RequestError({
           code: 'entity.create_failed',
+          status: 422,
           // Assert generic type of the Class instance
           // eslint-disable-next-line no-restricted-syntax
           name: (error as InsertionError<SchemaLike, SchemaLike>).schema.tableSingular,
@@ -47,6 +48,7 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       if (error instanceof UpdateError) {
         throw new RequestError({
           code: 'entity.not_exists',
+          status: 404,
           // Assert generic type of the Class instance
           // eslint-disable-next-line no-restricted-syntax
           name: (error as UpdateError<SchemaLike, SchemaLike>).schema.tableSingular,
