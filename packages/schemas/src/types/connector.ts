@@ -1,18 +1,28 @@
-import type { BaseConnector, ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorType, connectorMetadataGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import type { Connector } from '../db-entries/index.js';
+import { Connectors } from '../db-entries/index.js';
 
 export type { ConnectorMetadata } from '@logto/connector-kit';
 export { ConnectorType, ConnectorPlatform } from '@logto/connector-kit';
 
-export type ConnectorResponse = Pick<
-  Connector,
-  'id' | 'syncProfile' | 'config' | 'metadata' | 'connectorId'
-> &
-  Omit<BaseConnector<ConnectorType>, 'configGuard' | 'metadata'> &
-  ConnectorMetadata & { isDemo?: boolean };
+export const connectorResponseGuard = Connectors.guard
+  .pick({
+    id: true,
+    syncProfile: true,
+    config: true,
+    metadata: true,
+    connectorId: true,
+  })
+  .merge(connectorMetadataGuard)
+  .merge(
+    z.object({
+      type: z.nativeEnum(ConnectorType),
+      isDemo: z.boolean().optional(),
+    })
+  );
+
+export type ConnectorResponse = z.infer<typeof connectorResponseGuard>;
 
 export const connectorFactoryResponseGuard = z
   .object({
