@@ -14,7 +14,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
-import { checkLocationState, handleError } from '../../utils';
+import { handleError, parseLocationState } from '../../utils';
 
 import * as styles from './index.module.scss';
 
@@ -40,9 +40,7 @@ function VerificationCodeModal() {
     resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
-  const { email, action } = checkLocationState(state)
-    ? state
-    : { email: undefined, action: undefined };
+  const { email, action } = parseLocationState(state);
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,

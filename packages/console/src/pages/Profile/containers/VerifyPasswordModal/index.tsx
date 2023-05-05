@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
-import { checkLocationState, handleError } from '../../utils';
+import { handleError, parseLocationState } from '../../utils';
 
 import * as styles from './index.module.scss';
 
@@ -43,7 +42,7 @@ function VerifyPasswordModal() {
     hideErrorToast: true,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const email = conditional(checkLocationState(state) && state.email);
+  const { email } = parseLocationState(state);
 
   const onClose = () => {
     navigate('/profile');
