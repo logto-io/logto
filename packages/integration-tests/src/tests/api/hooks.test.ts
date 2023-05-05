@@ -13,7 +13,6 @@ const createPayload = (event: HookEvent, url = 'not_work_url'): Partial<Hook> =>
   config: {
     url,
     headers: { foo: 'bar' },
-    retries: 3,
   },
 });
 

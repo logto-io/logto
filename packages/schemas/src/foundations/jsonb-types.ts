@@ -200,23 +200,17 @@ export enum HookEvent {
 
 export const hookEventGuard: z.ZodType<HookEvent> = z.nativeEnum(HookEvent);
 
-export type HookConfig = {
+export const hookEventsGuard = hookEventGuard.array();
+
+export type HookEvents = z.infer<typeof hookEventsGuard>;
+
+export const hookConfigGuard = z.object({
   /** We don't need `type` since v1 only has web hook */
   // type: 'web';
   /** Method fixed to `POST` */
-  url: string;
-  /** Additional headers that attach to the request */
-  headers?: Record<string, string>;
-  /**
-   * Retry times when hook response status >= 500.
-   *
-   * Must be less than or equal to `3`. Use `0` to disable retry.
-   **/
-  retries: number;
-};
-
-export const hookConfigGuard: z.ZodType<HookConfig> = z.object({
   url: z.string(),
+  /** Additional headers that attach to the request */
   headers: z.record(z.string()).optional(),
-  retries: z.number().gte(0).lte(3),
 });
+
+export type HookConfig = z.infer<typeof hookConfigGuard>;
