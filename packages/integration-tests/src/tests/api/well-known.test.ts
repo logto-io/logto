@@ -1,8 +1,19 @@
-import type { SignInExperience, Translation } from '@logto/schemas';
+import { type SignInExperience, type Translation } from '@logto/schemas';
+import { HTTPError } from 'got';
 
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
 
 describe('.well-known api', () => {
+  it('should return tenant endpoint URL for any given tenant id', async () => {
+    const { user } = await adminTenantApi.get(`.well-known/endpoints/123`).json<{ user: string }>();
+    expect(user).not.toBeNull();
+  });
+
+  it('should not found API route in non-admin tenant', async () => {
+    const response = await api.get('.well-known/endpoints/123').catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+  });
+
   it('get /.well-known/sign-in-exp for console', async () => {
     const response = await adminTenantApi.get('.well-known/sign-in-exp').json<SignInExperience>();
 
