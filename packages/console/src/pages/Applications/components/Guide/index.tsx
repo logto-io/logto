@@ -94,9 +94,9 @@ function Guide({ app, isCompact, onClose }: Props) {
               const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
               return language ? (
-                <CodeEditor isReadonly language={language} value={String(children)} />
+                <CodeEditor isReadonly language={language} value={String(children).trimEnd()} />
               ) : (
-                <code>{String(children)}</code>
+                <code>{String(children).trimEnd()}</code>
               );
             },
             a: ({ children, ...props }) => (
