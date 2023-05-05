@@ -1,3 +1,9 @@
-import type { Resource, Scope } from '../db-entries/index.js';
+import { type z } from 'zod';
 
-export type ScopeResponse = Scope & { resource: Resource };
+import { Resources, Scopes } from '../db-entries/index.js';
+
+export const scopeResponseGuard = Scopes.guard.extend({
+  resource: Resources.guard,
+});
+
+export type ScopeResponse = z.infer<typeof scopeResponseGuard>;

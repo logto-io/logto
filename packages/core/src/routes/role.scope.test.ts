@@ -1,7 +1,7 @@
 import type { Role } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockRole, mockScope, mockResource } from '#src/__mocks__/index.js';
+import { mockRole, mockScope, mockResource, mockScopeWithResource } from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -68,7 +68,16 @@ describe('role scope routes', () => {
     findScopesByIds.mockResolvedValueOnce([mockScope]);
     const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockScope]);
+    expect(response.body).toEqual([mockScopeWithResource]);
+  });
+
+  it('GET /roles/:id/scopes (with pagination)', async () => {
+    findRoleById.mockResolvedValueOnce(mockRole);
+    findRolesScopesByRoleId.mockResolvedValueOnce([]);
+    findScopesByIds.mockResolvedValueOnce([mockScope]);
+    const response = await roleRequester.get(`/roles/${mockRole.id}/scopes?page=1`);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual([mockScopeWithResource]);
   });
 
   it('POST /roles/:id/scopes', async () => {
