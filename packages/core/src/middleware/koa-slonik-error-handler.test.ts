@@ -46,6 +46,7 @@ describe('koaSlonikErrorHandler middleware', () => {
     await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError({
         code: 'entity.create_failed',
+        status: 422,
         name: Users.tableSingular,
       })
     );
@@ -64,6 +65,7 @@ describe('koaSlonikErrorHandler middleware', () => {
     await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError({
         code: 'entity.not_exists',
+        status: 404,
         name: Users.tableSingular,
       })
     );
