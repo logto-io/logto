@@ -16,7 +16,7 @@ export const clearConnectorsByTypes = async (types: ConnectorType[]) => {
   await Promise.all(targetConnectors.map(async (connector) => deleteConnectorById(connector.id)));
 };
 
-export const clearConnectorById = async (connectorId: string) => deleteConnectorById(connectorId);
+export const clearConnectorById = async (id: string) => deleteConnectorById(id);
 
 export const setEmailConnector = async () =>
   postConnector({
