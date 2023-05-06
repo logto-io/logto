@@ -11,7 +11,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
 
   router.get(
     '/configs/admin-console',
-    koaGuard({ response: adminConsoleDataGuard, status: 200 }),
+    koaGuard({ response: adminConsoleDataGuard, status: [200, 404] }),
     async (ctx, next) => {
       const { value } = await getAdminConsoleConfig();
       ctx.body = value;
@@ -25,7 +25,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     koaGuard({
       body: adminConsoleDataGuard.partial(),
       response: adminConsoleDataGuard,
-      status: 200,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const { value } = await updateAdminConsoleConfig(ctx.guard.body);

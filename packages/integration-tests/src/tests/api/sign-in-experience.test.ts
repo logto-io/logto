@@ -1,4 +1,7 @@
+import { SignInIdentifier } from '@logto/schemas';
+
 import { getSignInExperience, updateSignInExperience } from '#src/api/index.js';
+import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {
@@ -24,5 +27,19 @@ describe('admin console sign-in experience', () => {
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
     expect(updatedSignInExperience).toMatchObject(newSignInExperience);
+  });
+
+  it('throw 400 when fail to validate SIE', async () => {
+    const newSignInExperience = {
+      signUp: {
+        identifiers: [SignInIdentifier.Username],
+        password: false,
+        verify: false,
+      },
+    };
+
+    await expect(updateSignInExperience(newSignInExperience)).rejects.toMatchObject(
+      createResponseWithCode(400)
+    );
   });
 });
