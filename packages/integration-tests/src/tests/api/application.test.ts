@@ -6,13 +6,13 @@ import {
   getApplication,
   updateApplication,
   deleteApplication,
+  getApplications,
 } from '#src/api/index.js';
 
 describe('admin console application', () => {
   it('should create application successfully', async () => {
     const applicationName = 'test-create-app';
     const applicationType = ApplicationType.SPA;
-
     const application = await createApplication(applicationName, applicationType);
 
     expect(application.name).toBe(applicationName);
@@ -25,7 +25,7 @@ describe('admin console application', () => {
   });
 
   it('should update application details successfully', async () => {
-    const application = await createApplication('test-update-app', ApplicationType.SPA);
+    const application = await createApplication('test-update-app', ApplicationType.Traditional);
 
     const newApplicationDescription = `new_${application.description ?? ''}`;
 
@@ -46,8 +46,15 @@ describe('admin console application', () => {
     expect(updatedApplication.oidcClientMetadata.redirectUris).toEqual(newRedirectUris);
   });
 
+  it('should fetch all applications created above', async () => {
+    const applications = await getApplications();
+    const applicationNames = applications.map(({ name }) => name);
+    expect(applicationNames).toContain('test-create-app');
+    expect(applicationNames).toContain('test-update-app');
+  });
+
   it('should delete application successfully', async () => {
-    const application = await createApplication('test-delete-app', ApplicationType.SPA);
+    const application = await createApplication('test-delete-app', ApplicationType.Native);
 
     await deleteApplication(application.id);
 

@@ -17,6 +17,8 @@ export const createApplication = async (name: string, type: ApplicationType) =>
     })
     .json<Application>();
 
+export const getApplications = async () => authedAdminApi.get('applications').json<Application[]>();
+
 export const getApplication = async (applicationId: string) =>
   authedAdminApi.get(`applications/${applicationId}`).json<Application>();
 

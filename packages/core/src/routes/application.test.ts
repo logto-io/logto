@@ -169,6 +169,7 @@ describe('application route', () => {
             'http://127.0.0.1',
             'http://localhost:3002',
           ],
+          postLogoutRedirectUris: [],
         },
       })
     ).resolves.toHaveProperty('status', 200);
@@ -179,6 +180,7 @@ describe('application route', () => {
       applicationRequest.patch('/applications/foo').send({
         oidcClientMetadata: {
           redirectUris: ['www.example.com', 'com.example://callback'],
+          postLogoutRedirectUris: [],
         },
       })
     ).resolves.toHaveProperty('status', 400);
@@ -194,6 +196,7 @@ describe('application route', () => {
             'com.example://callback',
             'io.logto://Abc123',
           ],
+          postLogoutRedirectUris: [],
         },
       })
     ).resolves.toHaveProperty('status', 200);
@@ -205,6 +208,7 @@ describe('application route', () => {
         type: ApplicationType.Native,
         oidcClientMetadata: {
           redirectUris: ['https://www.example.com', 'com.example/callback'],
+          postLogoutRedirectUris: [],
         },
       })
     ).resolves.toHaveProperty('status', 400);
