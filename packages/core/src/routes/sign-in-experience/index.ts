@@ -25,7 +25,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
     '/sign-in-exp',
     koaGuard({
       response: SignInExperiences.guard,
-      status: [200],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       ctx.body = await findDefaultSignInExperience();
@@ -48,7 +48,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         )
         .partial(),
       response: SignInExperiences.guard,
-      status: [200],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const {

@@ -60,6 +60,12 @@ describe('custom-phrase flow', () => {
     expect(zhTranslationNew).toEqual(mockZhTranslationUpdated);
   });
 
+  it('fail to update an existing custom phrase with invalid translation keys', async () => {
+    await expect(
+      createOrUpdateCustomPhrase('zh', { ...mockZhTranslationUpdated, invalidKey: 'invalid value' })
+    ).rejects.toThrow(HTTPError);
+  });
+
   it('failed to get a custom phrase with invalid language tag (zh-ZH)', async () => {
     await expect(getCustomPhrase('zh-ZH')).rejects.toThrow(HTTPError);
   });
@@ -84,6 +90,10 @@ describe('custom-phrase flow', () => {
 
   it('failed to delete a custom phrase with non-existing record', async () => {
     await expect(deleteCustomPhrase('zh-TW')).rejects.toThrow(HTTPError);
+  });
+
+  it('fail to delete a custom phrase which has been set as fallback language', async () => {
+    await expect(deleteCustomPhrase('en')).rejects.toThrow(HTTPError);
   });
 
   it('delete all custom phrases', async () => {

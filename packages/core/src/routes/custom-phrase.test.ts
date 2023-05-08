@@ -140,7 +140,7 @@ describe('customPhraseRoutes', () => {
       const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageTag}`)
         .send(translation);
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(422);
     });
 
     it('should call upsertCustomPhrase with specified language tag', async () => {
@@ -183,9 +183,9 @@ describe('customPhraseRoutes', () => {
       expect(response.status).toEqual(404);
     });
 
-    it('should return 400 status code when specified custom phrase is used as fallback language in sign-in experience', async () => {
+    it('should return 409 status code when specified custom phrase is used as fallback language in sign-in experience', async () => {
       const response = await customPhraseRequest.delete(`/custom-phrases/${mockFallbackLanguage}`);
-      expect(response.status).toEqual(400);
+      expect(response.status).toEqual(409);
     });
 
     it('should return 400 status code when the language tag is invalid', async () => {

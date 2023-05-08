@@ -48,7 +48,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ languageTag: languageTagGuard }),
       response: CustomPhrases.guard,
-      status: [200],
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -67,7 +67,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
       params: object({ languageTag: languageTagGuard }),
       body: translationGuard,
       response: CustomPhrases.guard,
-      status: [200],
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const {
@@ -79,7 +79,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
 
       assertThat(
         isStrictlyPartial(resource.en.translation, translation),
-        new RequestError('localization.invalid_translation_structure')
+        new RequestError({ code: 'localization.invalid_translation_structure', status: 422 })
       );
 
       ctx.body = await upsertCustomPhrase(languageTag, translation);
@@ -92,7 +92,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
     '/custom-phrases/:languageTag',
     koaGuard({
       params: object({ languageTag: languageTagGuard }),
-      status: [204],
+      status: [204, 404, 409],
     }),
     async (ctx, next) => {
       const {
@@ -106,6 +106,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
       if (fallbackLanguage === languageTag) {
         throw new RequestError({
           code: 'localization.cannot_delete_default_language',
+          status: 409,
           languageTag,
         });
       }
