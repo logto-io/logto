@@ -20,6 +20,8 @@ export default function logRoutes<T extends AuthedRouter>(
         applicationId: string().optional(),
         logKey: string().optional(),
       }),
+      response: Logs.guard.omit({ tenantId: true }).array(),
+      status: 200,
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
@@ -43,7 +45,7 @@ export default function logRoutes<T extends AuthedRouter>(
 
   router.get(
     '/logs/:id',
-    koaGuard({ params: object({ id: string().min(1) }), response: Logs.guard }),
+    koaGuard({ params: object({ id: string().min(1) }), response: Logs.guard, status: [200, 404] }),
     async (ctx, next) => {
       const {
         params: { id },
