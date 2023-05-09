@@ -50,6 +50,7 @@ const general = {
   try_now: '今すぐ試す',
   multiple_form_field: '(複数)',
   demo: 'デモ',
+  unnamed: '名前がありません',
 };
 
 export default general;

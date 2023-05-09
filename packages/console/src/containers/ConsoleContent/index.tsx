@@ -8,6 +8,7 @@ import {
   UserDetailsTabs,
   RoleDetailsTabs,
 } from '@/consts';
+import { isHookFeatureEnabled } from '@/consts/webhooks';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -37,6 +38,7 @@ import UserLogs from '@/pages/UserDetails/UserLogs';
 import UserRoles from '@/pages/UserDetails/UserRoles';
 import UserSettings from '@/pages/UserDetails/UserSettings';
 import Users from '@/pages/Users';
+import Webhooks from '@/pages/Webhooks';
 
 import type { AppContentOutletContext } from '../AppContent/types';
 
@@ -84,6 +86,12 @@ function ConsoleContent() {
               <Route path=":tab/guide/:factoryId" element={<Connectors />} />
               <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
             </Route>
+            {isHookFeatureEnabled && (
+              <Route path="webhooks">
+                <Route index element={<Webhooks />} />
+                <Route path="create" element={<Webhooks />} />
+              </Route>
+            )}
             <Route path="users">
               <Route index element={<Users />} />
               <Route path="create" element={<Users />} />

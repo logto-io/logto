@@ -50,6 +50,7 @@ const general = {
   try_now: '現在試試',
   multiple_form_field: '（多選）',
   demo: '演示',
+  unnamed: '未命名',
 };
 
 export default general;
