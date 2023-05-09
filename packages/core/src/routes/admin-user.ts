@@ -1,6 +1,6 @@
 import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
-import { conditional, has, pick } from '@silverhand/essentials';
+import { conditional, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,7 +17,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     oidcModelInstances: { revokeInstanceByUserId },
     users: {
       deleteUserById,
-      deleteUserIdentity,
       findUserById,
       hasUser,
       updateUserById,
@@ -298,31 +297,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(
       await deleteUserById(userId);
 
       ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.delete(
-    '/users/:userId/identities/:target',
-    koaGuard({
-      params: object({ userId: string(), target: string() }),
-      response: userProfileResponseGuard,
-      status: [200, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId, target },
-      } = ctx.guard;
-
-      const { identities } = await findUserById(userId);
-
-      if (!has(identities, target)) {
-        throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
-      }
-
-      const updatedUser = await deleteUserIdentity(userId, target);
-      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }

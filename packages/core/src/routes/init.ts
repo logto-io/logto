@@ -11,6 +11,7 @@ import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserSearchRoutes from './admin-user-search.js';
+import adminUserSocialRoutes from './admin-user-social.js';
 import adminUserRoutes from './admin-user.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
@@ -46,6 +47,7 @@ const createRouters = (tenant: TenantContext) => {
   adminUserRoutes(managementRouter, tenant);
   adminUserSearchRoutes(managementRouter, tenant);
   adminUserRoleRoutes(managementRouter, tenant);
+  adminUserSocialRoutes(managementRouter, tenant);
   logRoutes(managementRouter, tenant);
   roleRoutes(managementRouter, tenant);
   roleScopeRoutes(managementRouter, tenant);
