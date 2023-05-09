@@ -1,8 +1,11 @@
-import { Hooks } from '@logto/schemas';
+import { Hooks, hookEventsGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { z } from 'zod';
+import { conditional } from '@silverhand/essentials';
+import { string, z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -16,19 +19,6 @@ export default function hookRoutes<T extends AuthedRouter>(
     koaGuard({ response: Hooks.guard.array(), status: 200 }),
     async (ctx, next) => {
       ctx.body = await findAllHooks();
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/hooks',
-    koaGuard({ body: Hooks.createGuard.omit({ id: true }), response: Hooks.guard, status: 200 }),
-    async (ctx, next) => {
-      ctx.body = await insertHook({
-        id: generateStandardId(),
-        ...ctx.guard.body,
-      });
 
       return next();
     }
@@ -52,11 +42,68 @@ export default function hookRoutes<T extends AuthedRouter>(
     }
   );
 
+  router.post(
+    '/hooks',
+    koaGuard({
+      body: Hooks.createGuard
+        .omit({ id: true, name: true, signingKey: true, enabled: true, events: true })
+        .extend({
+          // Note: ensure the user will not create a hook with an empty name.
+          name: string().min(1).optional(),
+          events: hookEventsGuard.nonempty().optional(),
+        }),
+      response: Hooks.guard,
+      status: 200,
+    }),
+    async (ctx, next) => {
+      const { event, events, ...rest } = ctx.guard.body;
+      assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 422 }));
+
+      ctx.body = await insertHook({
+        ...rest,
+        id: generateStandardId(),
+        signingKey: generateStandardId(),
+        enabled: true,
+        ...conditional(event && { event }),
+        ...conditional(events && { events }),
+      });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/hooks/:id/signing-key',
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      response: Hooks.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      ctx.body = await updateHookById(id, {
+        signingKey: generateStandardId(),
+      });
+
+      return next();
+    }
+  );
+
   router.patch(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
-      body: Hooks.createGuard.omit({ id: true }).partial(),
+      body: Hooks.createGuard
+        .omit({ id: true, name: true, signingKey: true, events: true })
+        .deepPartial()
+        .extend({
+          // Note: ensure the user will not update the name to empty
+          name: string().min(1).optional(),
+          events: hookEventsGuard.nonempty().optional(),
+        }),
       response: Hooks.guard,
       status: [200, 404],
     }),
@@ -66,7 +113,15 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      ctx.body = await updateHookById(id, body);
+      const { config: configToUpdate, ...rest } = body;
+
+      const hook = await findHookById(id);
+      const { config } = hook;
+
+      ctx.body = await updateHookById(id, {
+        ...rest,
+        config: { ...config, ...configToUpdate },
+      });
 
       return next();
     }

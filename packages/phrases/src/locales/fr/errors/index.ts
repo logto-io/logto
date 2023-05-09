@@ -2,6 +2,7 @@ import auth from './auth.js';
 import connector from './connector.js';
 import entity from './entity.js';
 import guard from './guard.js';
+import hook from './hook.js';
 import localization from './localization.js';
 import log from './log.js';
 import oidc from './oidc.js';
@@ -36,6 +37,7 @@ const errors = {
   scope,
   storage,
   resource,
+  hook,
 };
 
 export default errors;

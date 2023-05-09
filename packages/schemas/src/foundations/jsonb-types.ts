@@ -217,7 +217,7 @@ export const hookConfigGuard = z.object({
    * Now the retry times is fixed to 3.
    * Keep for backward compatibility.
    */
-  retries: z.number().gte(0).lte(3),
+  retries: z.number().gte(0).lte(3).optional(),
 });
 
 export type HookConfig = z.infer<typeof hookConfigGuard>;
