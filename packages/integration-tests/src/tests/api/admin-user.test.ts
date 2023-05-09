@@ -12,7 +12,9 @@ import {
   updateUserPassword,
   deleteUserIdentity,
   postConnector,
+  getConnectorAuthorizationUri,
   deleteConnectorById,
+  postUserIdentity,
 } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
@@ -93,13 +95,52 @@ describe('admin console user management', () => {
     expect(userEntity).toMatchObject(user);
   });
 
-  it('should delete user identities successfully', async () => {
-    const { id } = await postConnector({
+  it('should link social identity successfully', async () => {
+    const { id: connectorId } = await postConnector({
       connectorId: mockSocialConnectorId,
       config: mockSocialConnectorConfig,
     });
 
-    const createdUserId = await createNewSocialUserWithUsernameAndPassword(id);
+    const state = 'random_state';
+    const redirectUri = 'http://mock.social.com/callback/random_string';
+    const code = 'random_code_from_social';
+    const socialUserId = 'social_platform_user_id';
+    const socialUserEmail = 'johndoe@gmail.com';
+
+    const { id: userId } = await createUserByAdmin();
+    const { redirectTo } = await getConnectorAuthorizationUri(connectorId, state, redirectUri);
+
+    expect(redirectTo).toBe(`http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`);
+
+    await postUserIdentity(userId, connectorId, {
+      code,
+      state,
+      redirectUri,
+      userId: socialUserId,
+      email: socialUserEmail,
+    });
+
+    const { identities } = await getUser(userId);
+
+    expect(identities).toHaveProperty(mockSocialConnectorTarget);
+    expect(identities[mockSocialConnectorTarget]).toMatchObject({
+      userId: socialUserId,
+      details: {
+        id: socialUserId,
+        email: socialUserEmail,
+      },
+    });
+
+    await deleteConnectorById(connectorId);
+  });
+
+  it('should delete user identities successfully', async () => {
+    const { id: connectorId } = await postConnector({
+      connectorId: mockSocialConnectorId,
+      config: mockSocialConnectorConfig,
+    });
+
+    const createdUserId = await createNewSocialUserWithUsernameAndPassword(connectorId);
 
     const userInfo = await getUser(createdUserId);
     expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
@@ -110,6 +151,6 @@ describe('admin console user management', () => {
 
     expect(updatedUser.identities).not.toHaveProperty(mockSocialConnectorTarget);
 
-    await deleteConnectorById(id);
+    await deleteConnectorById(connectorId);
   });
 });

@@ -74,3 +74,15 @@ const sendTestMessage = async (
     url: `connectors/${connectorFactoryId}/test`,
     json: { [receiverType]: receiver, config },
   });
+
+export const getConnectorAuthorizationUri = async (
+  connectorId: string,
+  state: string,
+  redirectUri: string
+) =>
+  authedAdminApi
+    .post({
+      url: `connectors/${connectorId}/authorization-uri`,
+      json: { state, redirectUri },
+    })
+    .json<{ redirectTo: string }>();
