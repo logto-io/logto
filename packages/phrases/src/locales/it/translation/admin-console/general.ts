@@ -51,6 +51,7 @@ const general = {
   try_now: 'Prova ora',
   multiple_form_field: '(Multiplo)',
   demo: 'Demo',
+  unnamed: 'Senza nome',
 };
 
 export default general;

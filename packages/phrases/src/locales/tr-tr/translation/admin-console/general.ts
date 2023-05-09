@@ -51,6 +51,7 @@ const general = {
   try_now: 'Şimdi dene',
   multiple_form_field: '(Çoklu)',
   demo: 'Demo',
+  unnamed: 'İsimsiz',
 };
 
 export default general;

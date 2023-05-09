@@ -50,6 +50,7 @@ const general = {
   try_now: '지금 시도하기',
   multiple_form_field: '(복수 선택)',
   demo: '데모',
+  unnamed: '이름없음',
 };
 
 export default general;
