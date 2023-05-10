@@ -28,10 +28,6 @@ function WebhookSettings() {
   } = formMethods;
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (isSubmitting) {
-      return;
-    }
-
     const updatedHook = await api
       .patch(`api/hooks/${hook.id}`, { json: webhookDetailsParser.toRemoteModel(formData) })
       .json<Hook>();
