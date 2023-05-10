@@ -39,7 +39,7 @@ export const parseFormConfig = (data: ConnectorFormType, formItems: ConnectorCon
 
         if (formItem.type === ConnectorConfigFormItemType.Number) {
           // The number input my return string value.
-          return [key, Number(value)];
+          return Number.isNaN(value) ? null : [key, Number(value)];
         }
 
         if (formItem.type === ConnectorConfigFormItemType.Json) {
