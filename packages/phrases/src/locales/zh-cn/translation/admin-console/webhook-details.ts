@@ -34,6 +34,9 @@ const webhook_details = {
     custom_headers: '自定义标头',
     custom_headers_tip:
       '选择性地，您可以向 Webhook 负载添加自定义标头，以提供事件的其他上下文或元数据。',
+    key_duplicated_error: 'Key 不能重复。',
+    key_missing_error: '必须填写 Key。',
+    value_missing_error: '必须填写值。',
     test: '测试',
     test_webhook: '测试您的 Webhook',
     test_webhook_description:

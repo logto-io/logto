@@ -37,6 +37,9 @@ const webhook_details = {
     custom_headers: 'Пользовательские заголовки',
     custom_headers_tip:
       'При желании вы можете добавлять пользовательские заголовки к нагрузке вебхука, чтобы предоставить дополнительный контекст или метаданные о событии.',
+    key_duplicated_error: 'Ключи не могут повторяться.',
+    key_missing_error: 'Ключ обязателен',
+    value_missing_error: 'Значение обязательно',
     test: 'Тестирование',
     test_webhook: 'Протестировать ваш вебхук',
     test_webhook_description:

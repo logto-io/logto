@@ -37,6 +37,9 @@ const webhook_details = {
     custom_headers: 'Cabeçalhos personalizados',
     custom_headers_tip:
       'Opcionalmente, você pode adicionar cabeçalhos personalizados ao corpo do webhook para fornecer contexto ou metadados adicionais sobre o evento.',
+    key_duplicated_error: 'As chaves não podem ser repetidas.',
+    key_missing_error: 'Key é obrigatório',
+    value_missing_error: 'O valor é obrigatório.',
     test: 'Teste',
     test_webhook: 'Teste seu webhook',
     test_webhook_description:

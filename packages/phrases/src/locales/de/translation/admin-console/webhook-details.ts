@@ -38,6 +38,9 @@ const webhook_details = {
     custom_headers: 'Benutzerdefinierte Header',
     custom_headers_tip:
       'Sie können optional benutzerdefinierte Header zur Nutzlast des Webhooks hinzufügen, um zusätzlichen Kontext oder Metadaten zum Ereignis bereitzustellen.',
+    key_duplicated_error: 'Schlüssel können nicht wiederholt werden.',
+    key_missing_error: 'Key ist erforderlich',
+    value_missing_error: 'Eine Eingabe ist erforderlich.',
     test: 'Test',
     test_webhook: 'Testen Sie Ihren Webhook',
     test_webhook_description:

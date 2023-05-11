@@ -20,7 +20,7 @@ export const webhookDetailsParser = {
       events: conditional(events.length > 0 && events) ?? (event ? [event] : []),
       name,
       url,
-      headers: headerFields,
+      headers: headerFields?.length ? headerFields : [{ key: '', value: '' }],
     };
   },
   toRemoteModel: (formData: WebhookDetailsFormType): Partial<Hook> => {

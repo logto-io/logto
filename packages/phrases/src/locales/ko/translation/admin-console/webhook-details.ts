@@ -36,6 +36,9 @@ const webhook_details = {
     custom_headers: '사용자 지정 헤더',
     custom_headers_tip:
       '이벤트에 대한 컨텍스트 또는 메타데이터를 제공하기 위해 webhook 페이로드에 사용자 지정 헤더를 추가할 수 있습니다.',
+    key_duplicated_error: '키는 반복될 수 없습니다.',
+    key_missing_error: '키는 필수 값입니다.',
+    value_missing_error: '값은 필수 값입니다.',
     test: '테스트',
     test_webhook: 'Webhook 테스트',
     test_webhook_description:

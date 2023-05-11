@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -30,22 +29,19 @@ function CustomHeaderField() {
     name: 'headers',
   });
 
-  useEffect(() => {
-    if (fields.length === 0) {
-      append({ key: '', value: '' }, { shouldFocus: false });
-    }
-  }, [append, fields]);
-
-  const keyValidator = (value: string) => {
+  const keyValidator = (key: string, index: number) => {
     const headers = getValues('headers');
     if (!headers) {
       return true;
     }
 
-    const isKeyExist = headers.filter(({ key }) => key === value).length > 1;
-
-    if (isKeyExist) {
+    if (headers.filter(({ key: _key }) => _key === key).length > 1) {
       return 'Key cannot be repeated.';
+    }
+
+    const correspondValue = getValues(`headers.${index}.value`);
+    if (correspondValue) {
+      return Boolean(key) || 'Key is required.';
     }
 
     return true;
@@ -74,7 +70,7 @@ function CustomHeaderField() {
                 placeholder="Key"
                 error={Boolean(headerErrors?.[index]?.key)}
                 {...register(`headers.${index}.key`, {
-                  validate: keyValidator,
+                  validate: (key) => keyValidator(key, index),
                   onChange: revalidate,
                 })}
               />
@@ -83,15 +79,11 @@ function CustomHeaderField() {
                 placeholder="Value"
                 error={Boolean(headerErrors?.[index]?.value)}
                 {...register(`headers.${index}.value`, {
-                  validate: (value) => {
-                    if (getValues(`headers.${index}.key`)) {
-                      if (value) {
-                        return true;
-                      }
-                      return 'Value is required.';
-                    }
-                    return true;
-                  },
+                  validate: (value) =>
+                    getValues(`headers.${index}.key`)
+                      ? Boolean(value) || 'Value is required.'
+                      : true,
+                  onChange: revalidate,
                 })}
               />
               {fields.length > 1 && (

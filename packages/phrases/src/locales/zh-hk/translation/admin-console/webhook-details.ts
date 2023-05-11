@@ -34,6 +34,9 @@ const webhook_details = {
     custom_headers: '自定義標頭',
     custom_headers_tip:
       '您可以選擇添加自定義標頭到 webhook 的負載，提供有關事件的更多上下文或元數據。',
+    key_duplicated_error: 'Key 不能重複。',
+    key_missing_error: '必須填寫 Key。',
+    value_missing_error: '未填寫值。',
     test: '測試',
     test_webhook: '測試您的 webhook',
     test_webhook_description:
