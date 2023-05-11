@@ -38,8 +38,8 @@ const webhook_details = {
     custom_headers_tip:
       'オプションで、Webhookのペイロードに追加のコンテキストまたはメタデータを提供するために、カスタムヘッダーを追加できます。',
     key_duplicated_error: 'キーは繰り返すことはできません。',
-    key_missing_error: 'キーは必須です',
-    value_missing_error: '値が必要です',
+    key_missing_error: 'キーは必須です。',
+    value_missing_error: '値が必要です。',
     test: 'テスト',
     test_webhook: 'Webhookをテストする',
     test_webhook_description:
