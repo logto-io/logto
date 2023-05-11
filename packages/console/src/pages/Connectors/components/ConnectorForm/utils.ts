@@ -38,6 +38,11 @@ export const parseFormConfig = (data: ConnectorFormType, formItems: ConnectorCon
         }
 
         if (formItem.type === ConnectorConfigFormItemType.Number) {
+          /**
+           * When set ReactHookForm valueAsNumber to true, the number input field
+           * will return number value. If the input can not be properly converted
+           * to number value, it will return NaN instead.
+           */
           // The number input my return string value.
           return Number.isNaN(value) ? null : [key, Number(value)];
         }
