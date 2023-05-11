@@ -69,10 +69,15 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
         )},`;
       }
 
-      return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
+      /**
+       * @TODO @xiaoyijun need to add this guard to the response type as well after the hook migration
+       * ${
         // Non-nullable strings should have a min length of 1
         conditionalString(isString && !nullable && `.min(1)`)
-      }${
+      }
+       */
+
+      return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
         // String types value in DB should have a max length
         conditionalString(isString && maxLength && `.max(${maxLength})`)
       }${conditionalString(isArray && '.array()')}${conditionalString(nullable && '.nullable()')},`;

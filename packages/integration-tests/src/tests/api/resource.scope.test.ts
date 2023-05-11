@@ -72,7 +72,6 @@ describe('scopes', () => {
     const createdScope2 = await createScope(resource.id);
     const response = await updateScope(resource.id, createdScope2.id, {
       name: createdScope.name,
-      description: '',
     }).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
   });
