@@ -1,4 +1,4 @@
-import { type HookConfig, type Hook } from '@logto/schemas';
+import { type Hook } from '@logto/schemas';
 
 import { type BasicWebhookFormType } from '../Webhooks/types';
 
@@ -8,4 +8,9 @@ export type WebhookDetailsOutletContext = {
   onHookUpdated: (hook?: Hook) => void;
 };
 
-export type WebhookDetailsFormType = BasicWebhookFormType & { headers: HookConfig['headers'] };
+type HeaderField = {
+  key: string;
+  value: string;
+};
+
+export type WebhookDetailsFormType = BasicWebhookFormType & { headers?: HeaderField[] };
