@@ -36,12 +36,12 @@ function CustomHeaderField() {
     }
 
     if (headers.filter(({ key: _key }) => _key === key).length > 1) {
-      return 'Key cannot be repeated.';
+      return t('webhook_details.settings.key_duplicated_error');
     }
 
     const correspondValue = getValues(`headers.${index}.value`);
     if (correspondValue) {
-      return Boolean(key) || 'Key is required.';
+      return Boolean(key) || t('webhook_details.settings.key_missing_error');
     }
 
     return true;
@@ -81,7 +81,7 @@ function CustomHeaderField() {
                 {...register(`headers.${index}.value`, {
                   validate: (value) =>
                     getValues(`headers.${index}.key`)
-                      ? Boolean(value) || 'Value is required.'
+                      ? Boolean(value) || t('webhook_details.settings.value_missing_error')
                       : true,
                   onChange: revalidate,
                 })}
