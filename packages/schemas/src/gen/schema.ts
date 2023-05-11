@@ -45,11 +45,15 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
           )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
         }
 
-        return `  ${camelcase(name)}: z.${
-          isEnum ? `nativeEnum(${type})` : `${type}()`
-        }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
-          isArray && '.array()'
-        )}${conditionalString(nullable && '.nullable()')}${conditionalString(
+        return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
+          // Non-nullable strings should have a min length of 1
+          conditionalString(isString && !(nullable || hasDefaultValue) && `.min(1)`)
+        }${
+          // String types value in DB should have a max length
+          conditionalString(isString && maxLength && `.max(${maxLength})`)
+        }${conditionalString(isArray && '.array()')}${conditionalString(
+          nullable && '.nullable()'
+        )}${conditionalString(
           (nullable || hasDefaultValue || name === tenantId) && '.optional()'
         )},`;
       }
@@ -65,11 +69,13 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
         )},`;
       }
 
-      return `  ${camelcase(name)}: z.${
-        isEnum ? `nativeEnum(${type})` : `${type}()`
-      }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
-        isArray && '.array()'
-      )}${conditionalString(nullable && '.nullable()')},`;
+      return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
+        // Non-nullable strings should have a min length of 1
+        conditionalString(isString && !nullable && `.min(1)`)
+      }${
+        // String types value in DB should have a max length
+        conditionalString(isString && maxLength && `.max(${maxLength})`)
+      }${conditionalString(isArray && '.array()')}${conditionalString(nullable && '.nullable()')},`;
     }),
     '  });',
     '',
