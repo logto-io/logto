@@ -22,7 +22,6 @@ function WebhookSettings() {
   const webhookFormData = webhookDetailsParser.toLocalForm(hook);
   const formMethods = useForm<WebhookDetailsFormType>({
     defaultValues: webhookFormData,
-    mode: 'onChange',
   });
   const api = useApi();
 
