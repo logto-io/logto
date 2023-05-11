@@ -95,7 +95,7 @@ describe('resource routes', () => {
       .post('/resources')
       .send({ name, indicator, accessTokenTtl });
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     expect(response.body).toEqual({
       tenantId: 'fake_tenant',
       id: 'randomId',
@@ -188,7 +188,7 @@ describe('resource routes', () => {
       .post('/resources/foo/scopes')
       .send({ name, description });
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     expect(findResourceById).toHaveBeenCalledWith('foo');
     expect(insertScope).toHaveBeenCalledWith({
       id: 'randomId',
