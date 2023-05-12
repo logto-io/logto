@@ -11,6 +11,7 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
+import { consoleLog } from '#src/utils/console.js';
 
 export type SocialUserInfoSession = {
   connectorId: string;
@@ -78,6 +79,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       })
     );
 
+    consoleLog.info('getUserInfo data:', data);
     return connector.getUserInfo(data, getConnectorSession);
   };
 

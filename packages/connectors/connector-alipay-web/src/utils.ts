@@ -44,10 +44,14 @@ export const signingParameters: SigningParameters = (
     .sort()
     .join('&');
 
-  const sign = crypto
-    .createSign(alipaySigningAlgorithmMapping[rest.signType])
-    .update(sortedParametersAsString, 'utf8')
-    .sign(privateKey, 'base64');
+  console.log('before signing:', sortedParametersAsString);
+  const newSign = crypto.createSign(alipaySigningAlgorithmMapping[rest.signType]);
+  console.log('new sign:', newSign);
+  const encodedNewSign = newSign.update(sortedParametersAsString, 'utf8');
+  console.log('encodedNewSign:', encodedNewSign);
+  const sign = encodedNewSign.sign(privateKey, 'base64');
+  console.log('sign:', sign);
+  console.log('after signing:', sign);
 
   return { ...decamelizeParameters, sign };
 };

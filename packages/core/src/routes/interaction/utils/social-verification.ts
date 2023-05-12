@@ -9,6 +9,7 @@ import { z } from 'zod';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { consoleLog } from '#src/utils/console.js';
 
 import type { SocialAuthorizationUrlPayload } from '../types/index.js';
 
@@ -32,7 +33,20 @@ export const createSocialAuthorizationUrl = async (
 
   const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-  return connector.getAuthorizationUri(
+  consoleLog.info('getAuthorizationUri payload:', {
+    state,
+    redirectUri,
+    /**
+     * For POST /authn/saml/:connectorId API, we need to block requests
+     * for non-SAML connector (relies on connectorFactoryId) and use `connectorId`
+     * to find correct connector config.
+     */
+    connectorId,
+    connectorFactoryId: connector.metadata.id,
+    jti,
+    headers: { userAgent },
+  });
+  const authorizationUri = connector.getAuthorizationUri(
     {
       state,
       redirectUri,
@@ -49,6 +63,8 @@ export const createSocialAuthorizationUrl = async (
     async (connectorStorage: ConnectorSession) =>
       assignConnectorSessionResult(ctx, provider, connectorStorage)
   );
+  consoleLog.info('authorizationUri:', authorizationUri);
+  return authorizationUri;
 };
 
 export const verifySocialIdentity = async (

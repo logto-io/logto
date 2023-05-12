@@ -107,6 +107,8 @@ const getUserInfo =
     const config = await getConfig(defaultMetadata.id);
     validateConfig<AlipayConfig>(config, alipayConfigGuard);
 
+    console.log('auth_code:', auth_code);
+    console.log('config:', config);
     const { accessToken } = await getAccessToken(auth_code, config);
 
     assert(
@@ -125,6 +127,8 @@ const getUserInfo =
       ...config,
     };
     const signedSearchParameters = signingParameters(initSearchParameters);
+    console.log('initSearchParameters:', initSearchParameters);
+    console.log('signedSearchParameters:', signedSearchParameters);
 
     const httpResponse = await got.post(alipayEndpoint, {
       searchParams: signedSearchParameters,
@@ -136,9 +140,11 @@ const getUserInfo =
     const result = userInfoResponseGuard.safeParse(parseJson(rawBody));
 
     if (!result.success) {
+      console.log('fail to parse httpResponse rawBody:', rawBody);
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
     }
 
+    console.log('parsed response:', result.data);
     const { alipay_user_info_share_response } = result.data;
 
     errorHandler(alipay_user_info_share_response);
@@ -176,6 +182,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
   const dataGuard = z.object({ auth_code: z.string() });
 
   const result = dataGuard.safeParse(parameterObject);
+  console.log('authorizationCallbackHandler:', parameterObject, result);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(parameterObject));
