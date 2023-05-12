@@ -24,7 +24,7 @@ Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a s
 
 - A ready-to-use management API can serve as your authentication provider, eliminating the need for extra implementation.
 - SDKs that can integrate your apps with Logto quickly, multi-platform and language compatible, tailored to your development environment.
-- Flexible connectors, scalable with community contributions, customizable with SMAL, OAuth, and OIDC protocols.
+- Flexible connectors, scalable with community contributions, customizable with SAML, OAuth, and OIDC protocols.
 
 💻 **Enterprise-ready solutions**
 
