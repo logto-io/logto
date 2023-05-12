@@ -13,12 +13,16 @@ import BasicWebhookForm from '@/pages/Webhooks/components/BasicWebhookForm';
 import { type WebhookDetailsFormType, type WebhookDetailsOutletContext } from '../types';
 import { webhookDetailsParser } from '../utils';
 
+import CustomHeaderField from './components/CustomHeaderField';
+
 function WebhookSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { hook, isDeleting, onHookUpdated } = useOutletContext<WebhookDetailsOutletContext>();
 
   const webhookFormData = webhookDetailsParser.toLocalForm(hook);
-  const formMethods = useForm<WebhookDetailsFormType>({ defaultValues: webhookFormData });
+  const formMethods = useForm<WebhookDetailsFormType>({
+    defaultValues: webhookFormData,
+  });
   const api = useApi();
 
   const {
@@ -50,6 +54,7 @@ function WebhookSettings() {
         >
           <FormProvider {...formMethods}>
             <BasicWebhookForm />
+            <CustomHeaderField />
           </FormProvider>
         </FormCard>
       </DetailsForm>

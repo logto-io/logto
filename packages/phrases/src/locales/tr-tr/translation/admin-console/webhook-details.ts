@@ -36,6 +36,9 @@ const webhook_details = {
     custom_headers: 'Özel başlıklar',
     custom_headers_tip:
       'İsteğin bir parçası olarak webhook’un yüküne isteğin bağlamı veya meta verileri sağlamak için isteğe bağlı olarak özel başlıklar ekleyebilirsiniz.',
+    key_duplicated_error: 'Anahtarlar tekrarlanamaz.',
+    key_missing_error: 'Anahtar gereklidir.',
+    value_missing_error: 'Değer gereklidir.',
     test: 'Test',
     test_webhook: 'Webhook’unuzu test edin',
     test_webhook_description:

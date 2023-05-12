@@ -37,6 +37,9 @@ const webhook_details = {
     custom_headers: 'Intestazioni personalizzate',
     custom_headers_tip:
       "Opzionalmente, puoi aggiungere intestazioni personalizzate al payload del webhook per fornire contesto o metadati aggiuntivi sull'evento.",
+    key_duplicated_error: 'Le chiavi non possono essere ripetute.',
+    key_missing_error: 'La chiave è necessaria.',
+    value_missing_error: 'Il valore è obbligatorio.',
     test: 'Test',
     test_webhook: 'Testa il tuo webhook',
     test_webhook_description:

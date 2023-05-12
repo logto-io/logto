@@ -38,6 +38,9 @@ const webhook_details = {
     custom_headers: 'En-têtes personnalisés',
     custom_headers_tip:
       "Optionnellement, vous pouvez ajouter des en-têtes personnalisés à la charge utile du webhook pour fournir un contexte ou des métadonnées supplémentaires sur l'événement.",
+    key_duplicated_error: 'Les clés ne peuvent pas se répéter.',
+    key_missing_error: 'La clé est requise.',
+    value_missing_error: 'La valeur est requise.',
     test: 'Tester',
     test_webhook: 'Tester votre webhook',
     test_webhook_description:

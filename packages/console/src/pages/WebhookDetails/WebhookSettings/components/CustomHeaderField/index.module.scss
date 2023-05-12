@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.field {
+  margin-bottom: _.unit(3);
+
+  .input {
+    display: flex;
+    gap: _.unit(2);
+    align-items: center;
+
+    .keyInput {
+      flex: 1;
+    }
+
+    .valueInput {
+      flex: 2;
+    }
+  }
+
+  .error {
+    font: var(--font-body-2);
+    color: var(--color-error);
+    margin-top: _.unit(1);
+  }
+}

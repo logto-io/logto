@@ -38,6 +38,9 @@ const webhook_details = {
     custom_headers: 'Encabezados Personalizados',
     custom_headers_tip:
       'De manera opcional, puede agregar encabezados personalizados al payload del webhook para proporcionar más contexto o metadatos sobre el evento.',
+    key_duplicated_error: 'Las claves no pueden repetirse.',
+    key_missing_error: 'Se requiere clave.',
+    value_missing_error: 'Se requiere valor.',
     test: 'Prueba',
     test_webhook: 'Probar su webhook',
     test_webhook_description:

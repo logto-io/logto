@@ -37,6 +37,9 @@ const webhook_details = {
     custom_headers: 'Niestandardowe nagłówki',
     custom_headers_tip:
       'Opcjonalnie możesz dodać niestandardowe nagłówki w ładunku webhooka, aby dostarczyć dodatkowy kontekst lub metadane na temat zdarzenia.',
+    key_duplicated_error: 'Klucze nie mogą się powtarzać.',
+    key_missing_error: 'Klucz jest wymagany.',
+    value_missing_error: 'Wartość jest wymagana.',
     test: 'Test',
     test_webhook: 'Wypróbuj swój webhook',
     test_webhook_description:

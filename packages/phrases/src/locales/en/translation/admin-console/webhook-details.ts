@@ -37,6 +37,9 @@ const webhook_details = {
     custom_headers: 'Custom headers',
     custom_headers_tip:
       'Optionally, you can add custom headers to the webhook’s payload to provide additional context or metadata about the event.',
+    key_duplicated_error: 'Key cannot be repeated.',
+    key_missing_error: 'Key is required.',
+    value_missing_error: 'Value is required.',
     test: 'Test',
     test_webhook: 'Test your webhook',
     test_webhook_description:
