@@ -99,7 +99,7 @@ function CreateForm({ onClose, onCreate }: Props) {
 
       onCreate();
     } catch {
-      // Do nothing
+      // Do nothing since we only show error toasts, which is handled in the useApi hook
     }
   });
 

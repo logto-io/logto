@@ -85,7 +85,7 @@ function UserSettings() {
       onUserUpdated(updatedUser);
       toast.success(t('general.saved'));
     } catch {
-      // Do nothing
+      // Do nothing since we only show error toasts, which is handled in the useApi hook
     }
   });
 
