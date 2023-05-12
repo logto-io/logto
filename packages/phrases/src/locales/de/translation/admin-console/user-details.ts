@@ -73,6 +73,8 @@ const user_details = {
     search: 'Nach Rollennamen, Beschreibung oder ID suchen',
     empty: 'Keine Rolle verfügbar',
   },
+  warning_no_sign_in_identifier:
+    'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
 };
 
 export default user_details;

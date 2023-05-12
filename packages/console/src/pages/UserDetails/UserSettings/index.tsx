@@ -1,5 +1,7 @@
-import { jsonObjectGuard } from '@logto/schemas';
+import { emailRegEx, usernameRegEx } from '@logto/core-kit';
 import type { User } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
+import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +14,10 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { safeParseJson } from '@/utils/json';
+import { safeParseJsonObject } from '@/utils/json';
+import { parsePhoneNumber } from '@/utils/phone';
 import { uriValidator } from '@/utils/validator';
 
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
@@ -24,7 +28,7 @@ import UserSocialIdentities from './components/UserSocialIdentities';
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-
+  const { show } = useConfirmModal();
   const { user, isDeleting, onUserUpdated } = useOutletContext<UserDetailsOutletContext>();
 
   const userFormData = userDetailsParser.toLocalForm(user);
@@ -35,7 +39,6 @@ function UserSettings() {
     control,
     reset,
     formState: { isSubmitting, errors, isDirty },
-    getValues,
   } = useForm<UserDetailsForm>({ defaultValues: userFormData });
 
   const {
@@ -48,35 +51,42 @@ function UserSettings() {
     if (isSubmitting) {
       return;
     }
+    const { identities, id: userId } = user;
+    const { customData: inputCustomData, username, primaryEmail, primaryPhone } = formData;
 
-    const { customData: inputCustomData, name, avatar } = formData;
+    if (!username && !primaryEmail && !primaryPhone && Object.keys(identities).length === 0) {
+      const [result] = await show({
+        ModalContent: t('user_details.warning_no_sign_in_identifier'),
+        type: 'confirm',
+      });
 
-    const parseResult = safeParseJson(inputCustomData);
-
-    if (!parseResult.success) {
-      toast.error(parseResult.error);
-
-      return;
+      if (!result) {
+        return;
+      }
     }
 
-    const guardResult = jsonObjectGuard.safeParse(parseResult.data);
+    const parseResult = safeParseJsonObject(inputCustomData);
 
-    if (!guardResult.success) {
+    if (!parseResult.success) {
       toast.error(t('user_details.custom_data_invalid'));
 
       return;
     }
 
     const payload: Partial<User> = {
-      name,
-      avatar,
-      customData: guardResult.data,
+      ...formData,
+      primaryPhone: parsePhoneNumber(primaryPhone),
+      customData: parseResult.data,
     };
 
-    const updatedUser = await api.patch(`api/users/${user.id}`, { json: payload }).json<User>();
-    reset(userDetailsParser.toLocalForm(updatedUser));
-    onUserUpdated(updatedUser);
-    toast.success(t('general.saved'));
+    try {
+      const updatedUser = await api.patch(`api/users/${userId}`, { json: payload }).json<User>();
+      reset(userDetailsParser.toLocalForm(updatedUser));
+      onUserUpdated(updatedUser);
+      toast.success(t('general.saved'));
+    } catch {
+      // Do nothing
+    }
   });
 
   return (
@@ -92,23 +102,45 @@ function UserSettings() {
           description="user_details.settings_description"
           learnMoreLink={getDocumentationUrl('/docs/references/users')}
         >
-          {getValues('primaryEmail') && (
-            <FormField title="user_details.field_email">
-              <TextInput readOnly {...register('primaryEmail')} />
-            </FormField>
-          )}
-          {getValues('primaryPhone') && (
-            <FormField title="user_details.field_phone">
-              <TextInput readOnly {...register('primaryPhone')} />
-            </FormField>
-          )}
-          {getValues('username') && (
-            <FormField title="user_details.field_username">
-              <TextInput readOnly {...register('username')} />
-            </FormField>
-          )}
           <FormField title="user_details.field_name">
-            <TextInput {...register('name')} />
+            <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
+          </FormField>
+          <FormField title="user_details.field_email">
+            <TextInput
+              {...register('primaryEmail', {
+                pattern: { value: emailRegEx, message: t('errors.email_pattern_error') },
+              })}
+              error={errors.primaryEmail?.message}
+              placeholder={t('users.placeholder_email')}
+            />
+          </FormField>
+          <FormField title="user_details.field_phone">
+            <TextInput
+              {...register('primaryPhone', {
+                validate: (value) => {
+                  if (!value) {
+                    return true;
+                  }
+                  const parsed = trySafe(() => parsePhoneNumberWithError(value));
+
+                  return (
+                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                    parsed?.isValid() || t('errors.phone_pattern_error')
+                  );
+                },
+              })}
+              error={errors.primaryPhone?.message}
+              placeholder={t('users.placeholder_phone')}
+            />
+          </FormField>
+          <FormField title="user_details.field_username">
+            <TextInput
+              {...register('username', {
+                pattern: { value: usernameRegEx, message: t('errors.username_pattern_error') },
+              })}
+              error={errors.username?.message}
+              placeholder={t('users.placeholder_username')}
+            />
           </FormField>
           <FormField title="user_details.field_avatar">
             <TextInput

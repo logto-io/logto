@@ -73,6 +73,8 @@ const user_details = {
     search: 'Pesquisar pelo nome, descrição ou ID da função',
     empty: 'Nenhuma função disponível',
   },
+  warning_no_sign_in_identifier:
+    'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone, ou social) para iniciar sessão. Tem a certeza de que quer continuar?',
 };
 
 export default user_details;

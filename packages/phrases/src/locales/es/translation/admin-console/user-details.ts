@@ -73,6 +73,8 @@ const user_details = {
     search: 'Buscar por nombre de rol, descripción o ID',
     empty: 'No hay roles disponibles',
   },
+  warning_no_sign_in_identifier:
+    'El usuario necesita tener al menos uno de los identificadores de inicio de sesión (nombre de usuario, correo electrónico, número de teléfono o red social) para iniciar sesión. ¿Estás seguro/a de que quieres continuar?',
 };
 
 export default user_details;

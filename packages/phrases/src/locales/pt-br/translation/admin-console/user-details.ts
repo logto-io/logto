@@ -71,6 +71,8 @@ const user_details = {
     search: 'Pesquisar por nome de função, descrição ou ID',
     empty: 'Nenhuma função disponível',
   },
+  warning_no_sign_in_identifier:
+    'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
 };
 
 export default user_details;

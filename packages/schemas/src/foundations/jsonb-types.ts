@@ -7,14 +7,14 @@ export {
   configurableConnectorMetadataGuard,
   type ConfigurableConnectorMetadata,
 } from '@logto/connector-kit';
-export type { JsonObject } from '@withtyped/server';
+export type { Json, JsonObject } from '@withtyped/server';
 
 /* === Commonly Used === */
 
 // Copied from https://github.com/colinhacks/zod#json-type
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-const jsonGuard: z.ZodType<Json> = z.lazy(() =>
+export const jsonGuard: z.ZodType<Json> = z.lazy(() =>
   z.union([literalSchema, z.array(jsonGuard), z.record(jsonGuard)])
 );
 

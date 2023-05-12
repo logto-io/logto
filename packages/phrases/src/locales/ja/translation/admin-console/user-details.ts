@@ -71,6 +71,8 @@ const user_details = {
     search: 'ロール名、説明、またはIDで検索',
     empty: '利用可能な役割はありません',
   },
+  warning_no_sign_in_identifier:
+    'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
 };
 
 export default user_details;

@@ -67,6 +67,8 @@ const user_details = {
     search: '按角色名称、描述或 ID 搜索',
     empty: '无可用角色',
   },
+  warning_no_sign_in_identifier:
+    '用户需要至少拥有一个登录标识（用户名、邮箱、手机号或社交账户）才能登录。确定要继续吗？',
 };
 
 export default user_details;

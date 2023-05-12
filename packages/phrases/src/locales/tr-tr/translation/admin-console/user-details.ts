@@ -71,6 +71,8 @@ const user_details = {
     search: 'Rol adına, açıklamasına veya Kimliğine göre arama yapın',
     empty: 'Uygun rol yok',
   },
+  warning_no_sign_in_identifier:
+    'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
 };
 
 export default user_details;
