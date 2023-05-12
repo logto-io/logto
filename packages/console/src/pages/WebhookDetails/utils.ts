@@ -40,7 +40,7 @@ export const webhookDetailsParser = {
         url,
         headers: headersObject,
         /**
-         * This is for backward compatibility, and will be removed in the minor version update.
+         * This is for backward compatibility.
          */
         retries: 3,
       },
