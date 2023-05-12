@@ -1,4 +1,4 @@
-import type { Role, User } from '@logto/schemas';
+import type { Identities, Role, User } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -57,9 +57,11 @@ export const postUserIdentity = async (
   connectorId: string,
   connectorData: Record<string, unknown>
 ) =>
-  authedAdminApi.post(`users/${userId}/identities`, {
-    json: {
-      connectorId,
-      connectorData,
-    },
-  });
+  authedAdminApi
+    .post(`users/${userId}/identities`, {
+      json: {
+        connectorId,
+        connectorData,
+      },
+    })
+    .json<Identities>();

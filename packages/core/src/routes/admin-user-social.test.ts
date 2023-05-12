@@ -150,16 +150,16 @@ describe('Admin user social identities APIs', () => {
       const mockedFindUserById = findUserById as jest.Mock;
       mockedFindUserById.mockImplementationOnce(() => ({
         ...mockUser,
-        identities: { connectorTarget1: {} },
+        identities: { connectorTarget1: { userId: 'socialIdForTarget1' } },
       }));
       await expect(
         userRequest
           .post(`/users/foo/identities`)
           .send({ connectorId: 'id0', connectorData: { code: 'random_code' } })
-      ).resolves.toHaveProperty('status', 204);
+      ).resolves.toHaveProperty('status', 200);
       expect(updateUserById).toHaveBeenCalledWith('foo', {
         identities: {
-          connectorTarget1: {},
+          connectorTarget1: { userId: 'socialIdForTarget1' },
           connector_0: { userId: 'socialId', details: mockedSocialUserInfo },
         },
       });

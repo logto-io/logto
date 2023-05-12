@@ -1,5 +1,10 @@
 import { notImplemented } from '@logto/cli/lib/connector/consts.js';
-import { ConnectorType, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import {
+  ConnectorType,
+  identitiesGuard,
+  userInfoSelectFields,
+  userProfileResponseGuard,
+} from '@logto/schemas';
 import { has, pick } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
 
@@ -27,7 +32,8 @@ export default function adminUserSocialRoutes<T extends AuthedRouter>(
         connectorId: string(),
         connectorData: record(string(), unknown()),
       }),
-      status: [204, 404, 422],
+      response: identitiesGuard,
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -65,7 +71,7 @@ export default function adminUserSocialRoutes<T extends AuthedRouter>(
         })
       );
 
-      await updateUserById(userId, {
+      const updatedUser = await updateUserById(userId, {
         identities: {
           ...user.identities,
           [target]: {
@@ -75,7 +81,7 @@ export default function adminUserSocialRoutes<T extends AuthedRouter>(
         },
       });
 
-      ctx.status = 204;
+      ctx.body = updatedUser.identities;
 
       return next();
     }

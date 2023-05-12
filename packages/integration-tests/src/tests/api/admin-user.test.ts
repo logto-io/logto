@@ -112,15 +112,13 @@ describe('admin console user management', () => {
 
     expect(redirectTo).toBe(`http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`);
 
-    await postUserIdentity(userId, connectorId, {
+    const identities = await postUserIdentity(userId, connectorId, {
       code,
       state,
       redirectUri,
       userId: socialUserId,
       email: socialUserEmail,
     });
-
-    const { identities } = await getUser(userId);
 
     expect(identities).toHaveProperty(mockSocialConnectorTarget);
     expect(identities[mockSocialConnectorTarget]).toMatchObject({
