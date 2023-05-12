@@ -211,6 +211,13 @@ export const hookConfigGuard = z.object({
   url: z.string(),
   /** Additional headers that attach to the request */
   headers: z.record(z.string()).optional(),
+  /**
+   * @deprecated
+   * Retry times when hook response status >= 500.
+   * Now the retry times is fixed to 3.
+   * Keep for backward compatibility.
+   */
+  retries: z.number().gte(0).lte(3),
 });
 
 export type HookConfig = z.infer<typeof hookConfigGuard>;
