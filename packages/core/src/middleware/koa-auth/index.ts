@@ -5,7 +5,7 @@ import type { Optional } from '@silverhand/essentials';
 import type { JWK } from 'jose';
 import { createLocalJWKSet, jwtVerify } from 'jose';
 import type { MiddlewareType, Request } from 'koa';
-import type { IRouterParamContext } from 'koa-router';
+import type { IMiddleware, IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -103,11 +103,17 @@ export const verifyBearerTokenFromRequest = async (
   }
 };
 
+export const isKoaAuthMiddleware = <Type extends IMiddleware>(function_: Type) =>
+  function_.name === 'authMiddleware';
+
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   envSet: EnvSet,
   audience: string
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
-  return async (ctx, next) => {
+  const authMiddleware: MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> = async (
+    ctx,
+    next
+  ) => {
     const { sub, clientId, scopes } = await verifyBearerTokenFromRequest(
       envSet,
       ctx.request,
@@ -126,4 +132,6 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
 
     return next();
   };
+
+  return authMiddleware;
 }

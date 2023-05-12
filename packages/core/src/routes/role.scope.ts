@@ -42,7 +42,7 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       response: scopeResponseGuard.array(),
-      status: [200, 404],
+      status: [200, 400, 404],
     }),
     async (ctx, next) => {
       const {
