@@ -63,7 +63,7 @@ describe('POST /connectors/:connectorId/authorization-uri', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should return 400 if state or redirectUri is missing in payload', async () => {
+  it('should return 400 if redirectUri is missing in payload', async () => {
     const response = await connectorRequest
       .post('/connectors/id0/authorization-uri')
       .send({ state: 'random_state' });
