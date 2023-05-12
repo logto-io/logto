@@ -67,7 +67,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
       params: object({ languageTag: languageTagGuard }),
       body: translationGuard,
       response: CustomPhrases.guard,
-      status: [200, 422],
+      status: [201, 422],
     }),
     async (ctx, next) => {
       const {
@@ -83,6 +83,7 @@ export default function customPhraseRoutes<T extends AuthedRouter>(
       );
 
       ctx.body = await upsertCustomPhrase(languageTag, translation);
+      ctx.status = 201;
 
       return next();
     }

@@ -154,7 +154,7 @@ describe('customPhraseRoutes', () => {
       const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageTag}`)
         .send(translation);
-      expect(response.status).toEqual(200);
+      expect(response.status).toEqual(201);
       expect(response.body).toEqual(mockCustomPhrases[mockLanguageTag]);
     });
 
