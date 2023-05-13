@@ -8,7 +8,7 @@
 [![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
 [![release](https://img.shields.io/github/v/release/logto-io/logto?color=3a3c3f)](https://github.com/logto-io/logto/releases)
 [![core coverage](https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage)](https://app.codecov.io/gh/logto-io/logto)
-[![cloud](https://img.shields.io/badge/cloud-available-7958ff)](https://cloud.logto.io/?sign_up=true)
+[![cloud](https://img.shields.io/badge/cloud-available-7958ff)](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto)
 [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
 [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
@@ -34,16 +34,16 @@ Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a s
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-[Subscribe to us](https://logto.io/subscribe) right away to receive up-to-date information about the Logto Cloud (SaaS) as well as in-time feature updates.
+[Subscribe to us](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) right away to receive up-to-date information about the Logto Cloud (SaaS) as well as in-time feature updates.
 
 ## Get started
 
-- Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
-- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io).
+- Visit our 🎨 [website](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
+- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io/?utm_source=github&utm_medium=repo_logto).
 
 ### Interactive demo
 
-- Try [Logto Cloud](https://cloud.logto.io/?sign_up=true) to have the same dev experience and zero deployment overhead.
+- Try [Logto Cloud](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto) to have the same dev experience and zero deployment overhead.
 
 - If you launch Logto [via GitPod](https://gitpod.io/#https://github.com/logto-io/demo), please wait until you see the message like `App is running at https://3002-...gitpod.io` in the terminal, press Cmd (or Ctrl on Windows) and click the URL starts with `https://3002-` to continue your Logto journey.
 
@@ -98,8 +98,8 @@ We have a [contributing guideline](https://github.com/logto-io/logto/blob/master
 
 ## Resources
 
-- [📖 Logto docs](https://docs.logto.io?utm_source=github)
-- [✍️ Blog](https://docs.logto.io/blog?utm_source=github)
+- [📖 Logto docs](https://docs.logto.io/?utm_source=github&utm_medium=repo_logto)
+- [✍️ Blog](https://blog.logto.io/?utm_source=github&utm_medium=repo_logto)
 
 <br/>
 
