@@ -161,7 +161,9 @@ export default function applicationRoutes<T extends AuthedRouter>(
         }
       }
 
-      ctx.body = await updateApplicationById(id, rest);
+      ctx.body = await (Object.keys(rest).length > 0
+        ? updateApplicationById(id, rest)
+        : findApplicationById(id));
 
       return next();
     }

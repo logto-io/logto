@@ -20,7 +20,7 @@ export const createApplication = async (name: string, type: ApplicationType) =>
 export const getApplications = async () => authedAdminApi.get('applications').json<Application[]>();
 
 export const getApplication = async (applicationId: string) =>
-  authedAdminApi.get(`applications/${applicationId}`).json<Application>();
+  authedAdminApi.get(`applications/${applicationId}`).json<Application & { isAdmin: boolean }>();
 
 export const updateApplication = async (
   applicationId: string,
@@ -28,7 +28,7 @@ export const updateApplication = async (
     Omit<CreateApplication, 'id' | 'created_at' | 'oidcClientMetadata'> & {
       oidcClientMetadata: Partial<OidcClientMetadata>;
     }
-  >
+  > & { isAdmin?: boolean }
 ) =>
   authedAdminApi
     .patch(`applications/${applicationId}`, {

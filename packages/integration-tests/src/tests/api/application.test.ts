@@ -46,6 +46,24 @@ describe('admin console application', () => {
     expect(updatedApplication.oidcClientMetadata.redirectUris).toEqual(newRedirectUris);
   });
 
+  it('should update application "admin" successfully', async () => {
+    const application = await createApplication(
+      'test-update-is-admin',
+      ApplicationType.MachineToMachine
+    );
+    await updateApplication(application.id, {
+      isAdmin: true,
+    });
+    const updatedApplication = await getApplication(application.id);
+    expect(updatedApplication.isAdmin).toBeTruthy();
+
+    await updateApplication(application.id, {
+      isAdmin: false,
+    });
+    const updatedAgainApplication = await getApplication(application.id);
+    expect(updatedAgainApplication.isAdmin).toBeFalsy();
+  });
+
   it('should fetch all applications created above', async () => {
     const applications = await getApplications();
     const applicationNames = applications.map(({ name }) => name);
