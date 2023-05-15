@@ -45,7 +45,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       query: object({
         includeScopes: string().optional(),
       }),
-      response: Resources.guard.merge(object({ scopes: Scopes.guard.array().optional() })).array(),
+      response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }).array(),
       status: [200],
     }),
     async (ctx, next) => {
@@ -77,7 +77,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources',
     koaGuard({
       body: Resources.createGuard.omit({ id: true }),
-      response: Resources.guard.merge(object({ scopes: Scopes.guard.array().optional() })),
+      response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
       status: [201, 422],
     }),
     async (ctx, next) => {
