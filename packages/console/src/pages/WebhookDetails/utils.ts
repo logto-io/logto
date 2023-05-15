@@ -39,6 +39,10 @@ export const webhookDetailsParser = {
       config: {
         url,
         headers: headersObject,
+        /**
+         * This is for backward compatibility.
+         */
+        retries: 3,
       },
     };
   },

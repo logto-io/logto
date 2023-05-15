@@ -26,7 +26,7 @@ const hook: Hook = {
   events: [HookEvent.PostSignIn],
   signingKey: 'signing_key',
   enabled: true,
-  config: { headers: { bar: 'baz' }, url },
+  config: { headers: { bar: 'baz' }, url, retries: 3 },
   createdAt: Date.now() / 1000,
 };
 
