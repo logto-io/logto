@@ -1,4 +1,4 @@
-import type { Role, User } from '@logto/schemas';
+import type { Identities, Role, User } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -51,3 +51,17 @@ export const getUserRoles = async (userId: string) =>
 
 export const deleteRoleFromUser = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`users/${userId}/roles/${roleId}`);
+
+export const postUserIdentity = async (
+  userId: string,
+  connectorId: string,
+  connectorData: Record<string, unknown>
+) =>
+  authedAdminApi
+    .post(`users/${userId}/identities`, {
+      json: {
+        connectorId,
+        connectorData,
+      },
+    })
+    .json<Identities>();

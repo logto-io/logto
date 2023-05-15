@@ -11,13 +11,6 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const filterUsersWithSearch = (users: User[], search: string) =>
-  users.filter((user) =>
-    [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>
-      value ? !value.includes(search) : false
-    )
-  );
-
 const mockedQueries = {
   oidcModelInstances: { revokeInstanceByUserId: jest.fn() },
   signInExperiences: {
@@ -390,48 +383,5 @@ describe('adminUserRoutes', () => {
       'status',
       500
     );
-  });
-
-  it('DELETE /users/:userId/identities/:target should throw if user cannot be found', async () => {
-    const notExistedUserId = 'notExistedUserId';
-    const arbitraryTarget = 'arbitraryTarget';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === notExistedUserId) {
-        throw new Error(' ');
-      }
-    });
-    await expect(
-      userRequest.delete(`/users/${notExistedUserId}/identities/${arbitraryTarget}`)
-    ).resolves.toHaveProperty('status', 500);
-    expect(deleteUserIdentity).not.toHaveBeenCalled();
-  });
-
-  it('DELETE /users/:userId/identities/:target should throw if user is found but connector cannot be found', async () => {
-    const arbitraryUserId = 'arbitraryUserId';
-    const nonExistedTarget = 'nonExistedTarget';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === arbitraryUserId) {
-        return { identities: { connector1: {}, connector2: {} } };
-      }
-    });
-    await expect(
-      userRequest.delete(`/users/${arbitraryUserId}/identities/${nonExistedTarget}`)
-    ).resolves.toHaveProperty('status', 404);
-    expect(deleteUserIdentity).not.toHaveBeenCalled();
-  });
-
-  it('DELETE /users/:userId/identities/:target', async () => {
-    const arbitraryUserId = 'arbitraryUserId';
-    const arbitraryTarget = 'arbitraryTarget';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === arbitraryUserId) {
-        return { identities: { connectorTarget1: {}, connectorTarget2: {}, arbitraryTarget: {} } };
-      }
-    });
-    await userRequest.delete(`/users/${arbitraryUserId}/identities/${arbitraryTarget}`);
-    expect(deleteUserIdentity).toHaveBeenCalledWith(arbitraryUserId, arbitraryTarget);
   });
 });
