@@ -145,7 +145,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     type: ConnectorConfigFormItemType.Number,
     label: 'Timeout',
     key: 'timeout',
-    defaultValue: 5000,
+    placeholder: '5000',
   },
   {
     type: ConnectorConfigFormItemType.Json,
