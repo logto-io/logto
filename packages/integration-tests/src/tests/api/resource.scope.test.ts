@@ -33,6 +33,27 @@ describe('scopes', () => {
     expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
   });
 
+  it('should return 404 when create scope with invalid resource id', async () => {
+    const response = await createScope('invalid_resource_id', 'invalid_scope_name').catch(
+      (error: unknown) => error
+    );
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+  });
+
+  it('should return 400 if scope name is empty', async () => {
+    const resource = await createResource();
+
+    const response = await createScope(resource.id, '').catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+  });
+
+  it('should return 400 if scope name has empty space', async () => {
+    const resource = await createResource();
+
+    const response = await createScope(resource.id, 'scope id').catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+  });
+
   it('should update scope successfully', async () => {
     const resource = await createResource();
     const scope = await createScope(resource.id);
@@ -58,9 +79,35 @@ describe('scopes', () => {
     const createdScope2 = await createScope(resource.id);
     const response = await updateScope(resource.id, createdScope2.id, {
       name: createdScope.name,
-      description: '',
     }).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 422).toBe(true);
+  });
+
+  it('should return 400 if update scope name that has empty space', async () => {
+    const resource = await createResource();
+    const scope = await createScope(resource.id);
+    const response = await updateScope(resource.id, scope.id, {
+      name: 'scope name',
+    }).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
+  });
+
+  it('should return 404 when update scope with invalid resource id', async () => {
+    const response = await updateScope('invalid_resource_id', 'invalid_scope_id', {
+      name: 'scope',
+    }).catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+  });
+
+  it('should return 404 when update scope with invalid scope id', async () => {
+    const resource = await createResource();
+
+    const response = await updateScope(resource.id, 'invalid_scope_id', {
+      name: 'scope',
+    }).catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 
   it('should delete scope successfully', async () => {

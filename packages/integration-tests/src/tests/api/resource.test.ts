@@ -1,7 +1,13 @@
 import { defaultManagementApi } from '@logto/schemas';
 import { HTTPError } from 'got';
 
-import { createResource, getResource, updateResource, deleteResource } from '#src/api/index.js';
+import {
+  createResource,
+  getResource,
+  getResources,
+  updateResource,
+  deleteResource,
+} from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
@@ -10,6 +16,11 @@ describe('admin console api resources', () => {
     const fetchedManagementApiResource = await getResource(defaultManagementApi.resource.id);
 
     expect(fetchedManagementApiResource).toMatchObject(defaultManagementApi.resource);
+  });
+
+  it('should return 404 if resource not found', async () => {
+    const response = await getResource('not_found').catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 
   it('should create api resource successfully', async () => {
@@ -40,6 +51,20 @@ describe('admin console api resources', () => {
     );
   });
 
+  it('should get resource list successfully', async () => {
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
+
+    // Create first resource
+    await createResource(resourceName, resourceIndicator);
+
+    // Get all resources
+    const resources = await getResources();
+
+    expect(resources.length).toBeGreaterThan(0);
+    expect(resources.findIndex(({ name }) => name === resourceName)).not.toBe(-1);
+  });
+
   it('should update api resource details successfully', async () => {
     const resource = await createResource();
 
@@ -56,6 +81,17 @@ describe('admin console api resources', () => {
     expect(updatedResource.id).toBe(resource.id);
     expect(updatedResource.name).toBe(newResourceName);
     expect(updatedResource.accessTokenTtl).toBe(newAccessTokenTtl);
+  });
+
+  it('should throw error when update api resource with invalid payload', async () => {
+    const resource = await createResource();
+
+    const response = await updateResource(resource.id, {
+      // @ts-expect-error for testing
+      name: 123,
+    }).catch((error: unknown) => error);
+
+    expect(response instanceof HTTPError && response.response.statusCode === 400).toBe(true);
   });
 
   it('should not update api resource indicator', async () => {
@@ -81,6 +117,11 @@ describe('admin console api resources', () => {
     await deleteResource(createdResource.id);
 
     const response = await getResource(createdResource.id).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+  });
+
+  it('should throw 404 when delete api resource not found', async () => {
+    const response = await deleteResource('dummy_id').catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 });

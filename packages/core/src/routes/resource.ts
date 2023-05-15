@@ -45,6 +45,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
       query: object({
         includeScopes: string().optional(),
       }),
+      response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }).array(),
+      status: [200],
     }),
     async (ctx, next) => {
       const { limit, offset, disabled } = ctx.pagination;
@@ -75,6 +77,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources',
     koaGuard({
       body: Resources.createGuard.omit({ id: true }),
+      response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
+      status: [201, 422],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
@@ -94,6 +98,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
         ...body,
       });
 
+      ctx.status = 201;
       ctx.body = { ...resource, scopes: [] };
 
       return next();
@@ -102,7 +107,11 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.get(
     '/resources/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      response: Resources.guard,
+      status: [200, 404],
+    }),
     async (ctx, next) => {
       const {
         params: { id },
@@ -120,6 +129,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ id: string().min(1) }),
       body: Resources.createGuard.omit({ id: true, indicator: true }).partial(),
+      response: Resources.guard,
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -136,7 +147,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/resources/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({ params: object({ id: string().min(1) }), status: [204, 404] }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await deleteResourceById(id);
@@ -149,7 +160,11 @@ export default function resourceRoutes<T extends AuthedRouter>(
   router.get(
     '/resources/:resourceId/scopes',
     koaPagination(),
-    koaGuard({ params: object({ resourceId: string().min(1) }) }),
+    koaGuard({
+      params: object({ resourceId: string().min(1) }),
+      status: [200, 400],
+      response: Scopes.guard.array(),
+    }),
     async (ctx, next) => {
       const {
         params: { resourceId },
@@ -161,14 +176,14 @@ export default function resourceRoutes<T extends AuthedRouter>(
         async () => {
           const search = parseSearchParamsForSearch(searchParams);
 
-          const [{ count }, roles] = await Promise.all([
+          const [{ count }, scopes] = await Promise.all([
             countScopesByResourceId(resourceId, search),
             searchScopesByResourceId(resourceId, search, limit, offset),
           ]);
 
           // Return totalCount to pagination middleware
           ctx.pagination.totalCount = count;
-          ctx.body = roles;
+          ctx.body = scopes;
 
           return next();
         },
@@ -190,6 +205,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ resourceId: string().min(1) }),
       body: Scopes.createGuard.pick({ name: true, description: true }),
+      response: Scopes.guard,
+      status: [201, 422, 400, 404],
     }),
     async (ctx, next) => {
       const {
@@ -200,6 +217,17 @@ export default function resourceRoutes<T extends AuthedRouter>(
       assertThat(!/\s/.test(body.name), 'scope.name_with_space');
 
       assertThat(
+        await findResourceById(resourceId),
+        new RequestError({
+          code: 'entity.not_exists_with_id',
+          name: 'resource',
+          id: resourceId,
+          resourceId,
+          status: 404,
+        })
+      );
+
+      assertThat(
         !(await findScopeByNameAndResourceId(body.name, resourceId)),
         new RequestError({
           code: 'scope.name_exists',
@@ -208,6 +236,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
         })
       );
 
+      ctx.status = 201;
       ctx.body = await insertScope({
         ...body,
         id: scopeId(),
@@ -222,13 +251,26 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources/:resourceId/scopes/:scopeId',
     koaGuard({
       params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
-      body: Scopes.createGuard.pick({ name: true, description: true }),
+      body: Scopes.createGuard.pick({ name: true, description: true }).partial(),
+      response: Scopes.guard,
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
         params: { scopeId, resourceId },
         body,
       } = ctx.guard;
+
+      assertThat(
+        await findResourceById(resourceId),
+        new RequestError({
+          code: 'entity.not_exists_with_id',
+          name: 'resource',
+          id: resourceId,
+          resourceId,
+          status: 404,
+        })
+      );
 
       if (body.name) {
         assertThat(!/\s/.test(body.name), 'scope.name_with_space');
@@ -252,10 +294,11 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources/:resourceId/scopes/:scopeId',
     koaGuard({
       params: object({ resourceId: string().min(1), scopeId: string().min(1) }),
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const {
-        params: { resourceId, scopeId },
+        params: { scopeId },
       } = ctx.guard;
 
       await deleteScopeById(scopeId);
