@@ -4,6 +4,7 @@ import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
 import { ZodObject, ZodOptional } from 'zod';
 
+import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
 import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { fallbackDefaultPageSize, isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
@@ -77,7 +78,11 @@ const buildTag = (path: string) => {
   return toTitle(root ?? 'General');
 };
 
-const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
+const buildOperation = (
+  stack: IMiddleware[],
+  path: string,
+  isAuthGuarded: boolean
+): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
@@ -101,9 +106,9 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
 
   const hasInputGuard = Boolean(params ?? query ?? body);
   const responses: OpenAPIV3.ResponsesObject = Object.fromEntries(
-    deduplicate(conditionalArray(status ?? 200, hasInputGuard && 400)).map<
-      [number, OpenAPIV3.ResponseObject]
-    >((status) => {
+    deduplicate(
+      conditionalArray(status ?? 200, hasInputGuard && 400, isAuthGuarded && [401, 403])
+    ).map<[number, OpenAPIV3.ResponseObject]>((status) => {
       const description = codeToMessage[status];
 
       if (!description) {
@@ -136,6 +141,11 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
   };
 };
 
+const isManagementApiRouter = ({ stack }: Router) =>
+  stack
+    .filter(({ path }) => !path.includes('.*'))
+    .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
+
 // Keep using `any` to accept various custom context types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
@@ -143,26 +153,30 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
-    const routes = allRouters.flatMap<RouteObject>((router) =>
-      router.stack
-        // Filter out universal routes (mostly like a proxy route to withtyped)
-        .filter(({ path }) => !path.includes('.*'))
-        .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
-          methods
-            .map((method) => method.toLowerCase())
-            // There is no need to show the HEAD method.
-            .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
-            .map((httpMethod) => {
-              const path = `/api${routerPath}`;
+    const routes = allRouters.flatMap<RouteObject>((router) => {
+      const isAuthGuarded = isManagementApiRouter(router);
 
-              return {
-                path,
-                method: httpMethod,
-                operation: buildOperation(stack, routerPath),
-              };
-            })
-        )
-    );
+      return (
+        router.stack
+          // Filter out universal routes (mostly like a proxy route to withtyped)
+          .filter(({ path }) => !path.includes('.*'))
+          .flatMap<RouteObject>(({ path: routerPath, stack, methods, name }) =>
+            methods
+              .map((method) => method.toLowerCase())
+              // There is no need to show the HEAD method.
+              .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
+              .map((httpMethod) => {
+                const path = `/api${routerPath}`;
+
+                return {
+                  path,
+                  method: httpMethod,
+                  operation: buildOperation(stack, routerPath, isAuthGuarded),
+                };
+              })
+          )
+      );
+    });
 
     const pathMap = new Map<string, MethodMap>();
 
