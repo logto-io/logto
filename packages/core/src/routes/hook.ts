@@ -23,12 +23,13 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.post(
     '/hooks',
-    koaGuard({ body: Hooks.createGuard.omit({ id: true }), response: Hooks.guard, status: 200 }),
+    koaGuard({ body: Hooks.createGuard.omit({ id: true }), response: Hooks.guard, status: 201 }),
     async (ctx, next) => {
       ctx.body = await insertHook({
         id: generateStandardId(),
         ...ctx.guard.body,
       });
+      ctx.status = 201;
 
       return next();
     }
