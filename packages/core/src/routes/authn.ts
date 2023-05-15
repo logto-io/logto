@@ -26,10 +26,18 @@ export default function authnRoutes<T extends AnonymousRouter>(
     socials: { getConnector },
   } = libraries;
 
+  const hasuraResponseGuard = z.object({
+    'X-Hasura-User-Id': z.string().optional(),
+    'X-Hasura-Role': z.string().optional(),
+  });
+
+  type HasuraResponse = z.infer<typeof hasuraResponseGuard>;
+
   router.get(
     '/authn/hasura',
     koaGuard({
       query: z.object({ resource: z.string().min(1), unauthorizedRole: z.string().optional() }),
+      response: hasuraResponseGuard,
       status: [200, 401],
     }),
     async (ctx, next) => {
@@ -59,7 +67,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
             // So we verify the token again with no resource provided.
             (await verifyToken().then(({ sub }) => sub)),
           'X-Hasura-Role': unauthorizedRole,
-        };
+        } satisfies HasuraResponse;
         ctx.status = 200;
 
         return next();
@@ -75,7 +83,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       ctx.body = {
         'X-Hasura-User-Id': sub,
         'X-Hasura-Role': expectedRole,
-      };
+      } satisfies HasuraResponse;
       ctx.status = 200;
 
       return next();
@@ -89,7 +97,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
      * The API does not care the type of the SAML assertion request body, simply pass this to
      * connector's built-in methods.
      */
-    koaGuard({ body: jsonObjectGuard, params: z.object({ connectorId: z.string().min(1) }) }),
+    koaGuard({
+      body: jsonObjectGuard,
+      params: z.object({ connectorId: z.string().min(1) }),
+      status: 302,
+    }),
     async (ctx, next) => {
       const {
         params: { connectorId },
