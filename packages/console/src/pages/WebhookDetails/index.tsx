@@ -1,3 +1,4 @@
+import { withAppInsights } from '@logto/app-insights/react';
 import { type Hook } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -195,4 +196,4 @@ function WebhookDetails() {
   );
 }
 
-export default WebhookDetails;
+export default withAppInsights(WebhookDetails);
