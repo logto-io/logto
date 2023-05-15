@@ -64,6 +64,11 @@ describe('admin console application', () => {
     expect(updatedAgainApplication.isAdmin).toBeFalsy();
   });
 
+  it('should get demo app application successfully', async () => {
+    const application = await getApplication('demo-app');
+    expect(application.id).toBe('demo-app');
+  });
+
   it('should fetch all applications created above', async () => {
     const applications = await getApplications();
     const applicationNames = applications.map(({ name }) => name);
