@@ -109,7 +109,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.3
+        specifier: workspace:1.2.3
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
