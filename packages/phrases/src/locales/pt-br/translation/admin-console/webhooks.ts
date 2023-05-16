@@ -29,13 +29,15 @@ const webhooks = {
     events_description: 'Selecione os eventos de gatilho que o Logto enviará a solicitação POST.',
     name: 'Nome',
     name_placeholder: 'Digite o nome do webhook',
-    endpoint_url: 'Endpoint URL',
+    endpoint_url: 'URL de endpoint',
     endpoint_url_placeholder: 'https://seu.url.endpoint.do.webhook',
     endpoint_url_tip:
       'Digite a URL HTTPS do seu endpoint para a qual a carga útil de um webhook é enviada quando o evento ocorre.',
     create_webhook: 'Criar webhook',
     missing_event_error: 'Você precisa selecionar pelo menos um evento.',
     https_format_error: 'Formato HTTPS necessário por motivos de segurança.',
+    block_description:
+      'A versão atual suporta apenas até três webhooks. Se você precisar de webhooks adicionais, envie um e-mail para nossa equipe de suporte em <a>{{link}}</a> e teremos prazer em ajudá-lo.',
   },
   webhook_created: 'O webhook {{name}foi criado com sucesso.',
 };
