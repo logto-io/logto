@@ -22,7 +22,7 @@ export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
   tenantId,
   id: demoAppApplicationId,
   name: 'Live Preview',
-  secret: '',
+  secret: 'N/A',
   description: 'Preview for Sign-in Experience.',
   type: ApplicationType.SPA,
   oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
