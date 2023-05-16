@@ -21,6 +21,7 @@ import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import Tag from '@/components/Tag';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -147,7 +148,7 @@ function ApplicationDetails() {
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name}</div>
               <div className={styles.details}>
-                <div className={styles.type}>{t(`${applicationTypeI18nKey[data.type]}.title`)}</div>
+                <Tag>{t(`${applicationTypeI18nKey[data.type]}.title`)}</Tag>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>App ID</div>
                 <CopyToClipboard size="small" value={data.id} />

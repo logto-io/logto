@@ -17,6 +17,7 @@ import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import Table from '@/components/Table';
+import Tag from '@/components/Tag';
 import Textarea from '@/components/Textarea';
 import { Tooltip } from '@/components/Tip';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -157,11 +158,7 @@ function LanguageDetails() {
         <div className={styles.languageInfo}>
           {uiLanguageNameMapping[selectedLanguage]}
           <span>{selectedLanguage}</span>
-          {isBuiltIn && (
-            <span className={styles.builtInFlag}>
-              {t('sign_in_exp.others.manage_language.logto_provided')}
-            </span>
-          )}
+          {isBuiltIn && <Tag>{t('sign_in_exp.others.manage_language.logto_provided')}</Tag>}
         </div>
         {!isBuiltIn && (
           <Tooltip content={t('sign_in_exp.others.manage_language.deletion_tip')}>

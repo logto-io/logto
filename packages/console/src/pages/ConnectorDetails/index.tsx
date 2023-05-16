@@ -19,8 +19,8 @@ import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
 import PageMeta from '@/components/PageMeta';
-import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import Tag from '@/components/Tag';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
@@ -129,19 +129,19 @@ function ConnectorDetails() {
                 <div className={styles.verticalBar} />
                 {connectorFactory && (
                   <>
-                    <div className={styles.factoryName}>
+                    <Tag>
                       <UnnamedTrans resource={connectorFactory.name} />
-                    </div>
+                    </Tag>
                     <div className={styles.verticalBar} />
                   </>
                 )}
-                <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
+                <Tag type="state" status={inUse ? 'success' : 'info'}>
                   {t(
                     inUse
                       ? 'connectors.connector_status_in_use'
                       : 'connectors.connector_status_not_in_use'
                   )}
-                </Status>
+                </Tag>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>ID</div>
                 <CopyToClipboard size="small" value={data.id} />
