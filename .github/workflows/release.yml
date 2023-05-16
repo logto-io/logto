@@ -15,8 +15,6 @@ on:
   push:
     branches:
       - master
-    tags:
-      - v*.*.*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -97,6 +95,7 @@ jobs:
   dockerize-cloud:
     # Use normal machine for OSS release since we'll build on Depot
     runs-on: ${{ (inputs.target || 'dev') == 'dev' && 'ubuntu-latest' || 'ubuntu-latest-4-cores' }}
+    if: github.event_name != 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v3
