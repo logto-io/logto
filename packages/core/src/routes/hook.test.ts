@@ -71,7 +71,7 @@ describe('hook routes', () => {
     };
 
     const response = await hookRequest.post('/hooks').send({ name, events, config });
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     expect(response.body.id).toBeTruthy();
     expect(response.body.signingKey).toBeTruthy();
 
@@ -93,7 +93,7 @@ describe('hook routes', () => {
     };
 
     const response = await hookRequest.post('/hooks').send({ name, events, config });
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     expect(response.body.id).toBeTruthy();
     expect(response.body.signingKey).toBeTruthy();
 
@@ -126,7 +126,7 @@ describe('hook routes', () => {
       },
     };
     const response = await hookRequest.post('/hooks').send(payload);
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(201);
     const generatedId = response.body.id as string;
 
     expect(response.body).toMatchObject({

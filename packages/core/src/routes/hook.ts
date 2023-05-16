@@ -1,7 +1,7 @@
-import { Hooks, hookEventsGuard } from '@logto/schemas';
+import { Hooks, createHookGuard, updateHookGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
-import { string, z } from 'zod';
+import { conditional, deduplicate } from '@silverhand/essentials';
+import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -27,7 +27,7 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.get(
     '/hooks/:id',
     koaGuard({
-      params: z.object({ id: z.string().min(1) }),
+      params: object({ id: string() }),
       response: Hooks.guard,
       status: [200, 404],
     }),
@@ -45,15 +45,9 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.post(
     '/hooks',
     koaGuard({
-      body: Hooks.createGuard
-        .omit({ id: true, name: true, signingKey: true, enabled: true, events: true })
-        .extend({
-          // Note: ensure the user will not create a hook with an empty name.
-          name: string().min(1).optional(),
-          events: hookEventsGuard.nonempty().optional(),
-        }),
+      body: createHookGuard,
       response: Hooks.guard,
-      status: 200,
+      status: [201, 422],
     }),
     async (ctx, next) => {
       const { event, events, ...rest } = ctx.guard.body;
@@ -63,10 +57,10 @@ export default function hookRoutes<T extends AuthedRouter>(
         ...rest,
         id: generateStandardId(),
         signingKey: generateStandardId(),
-        enabled: true,
         ...conditional(event && { event }),
-        ...conditional(events && { events }),
+        ...conditional(events && { events: deduplicate(events) }),
       });
+      ctx.status = 201;
 
       return next();
     }
@@ -75,7 +69,7 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.post(
     '/hooks/:id/signing-key',
     koaGuard({
-      params: z.object({ id: z.string().min(1) }),
+      params: object({ id: string() }),
       response: Hooks.guard,
       status: [200, 404],
     }),
@@ -95,15 +89,8 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.patch(
     '/hooks/:id',
     koaGuard({
-      params: z.object({ id: z.string().min(1) }),
-      body: Hooks.createGuard
-        .omit({ id: true, name: true, signingKey: true, events: true })
-        .deepPartial()
-        .extend({
-          // Note: ensure the user will not update the name to empty
-          name: string().min(1).optional(),
-          events: hookEventsGuard.nonempty().optional(),
-        }),
+      params: object({ id: string() }),
+      body: updateHookGuard,
       response: Hooks.guard,
       status: [200, 404],
     }),
@@ -113,7 +100,7 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const { config: configToUpdate, ...rest } = body;
+      const { events, config: configToUpdate, ...rest } = body;
 
       const hook = await findHookById(id);
       const { config } = hook;
@@ -121,6 +108,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       ctx.body = await updateHookById(id, {
         ...rest,
         config: { ...config, ...configToUpdate },
+        ...conditional(events && { events: deduplicate(events) }),
       });
 
       return next();
@@ -129,7 +117,7 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.delete(
     '/hooks/:id',
-    koaGuard({ params: z.object({ id: z.string().min(1) }), status: [204, 404] }),
+    koaGuard({ params: object({ id: string() }), status: [204, 404] }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await deleteHookById(id);
