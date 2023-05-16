@@ -86,8 +86,6 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
         frameguard: false,
         contentSecurityPolicy: {
           useDefaults: true,
-          // Temporary set to report only to avoid breaking the app
-          reportOnly: true,
           directives: {
             'upgrade-insecure-requests': null,
             imgSrc: ["'self'", 'data:', 'https:'],
