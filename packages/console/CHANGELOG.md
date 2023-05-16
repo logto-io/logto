@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.4
+
+### Patch Changes
+
+- a65bc9b13: Should ignore empty number input box when parsing connector config form.
+
 ## 1.2.3
 
 ### Patch Changes

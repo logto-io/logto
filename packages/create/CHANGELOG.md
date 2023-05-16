@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- 61aaf7d98: support CLI arguments
+
+### Patch Changes
+
+- @logto/cli@1.3.0
+
 ## 1.2.3
 
 ### Patch Changes
