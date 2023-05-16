@@ -37,6 +37,8 @@ const webhooks = {
     create_webhook: 'Créer un webhook',
     missing_event_error: 'Vous devez sélectionner au moins un événement.',
     https_format_error: 'Format HTTPS requis pour des raisons de sécurité.',
+    block_description:
+      "La version actuelle prend en charge jusqu'à trois webhooks. Si vous avez besoin de webhooks supplémentaires, veuillez envoyer un e-mail à notre équipe d'assistance <a>{{link}}</a> et nous serons heureux de vous aider.",
   },
   webhook_created: 'Le webhook {{name}} a été créé avec succès.',
 };
