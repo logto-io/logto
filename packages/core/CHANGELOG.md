@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- 0023dfe38: Provide management APIs to help link social identities to user
+
+  - POST `/users/:userId/identities` to link a social identity to a user
+  - POST `/connectors/:connectorId/authorization-uri` to get the authorization URI for a connector
+
+### Patch Changes
+
+- 1642df7e1: add response schemas to swagger.json API
+- Updated dependencies [a65bc9b13]
+- Updated dependencies [beb6ebad5]
+  - @logto/console@1.2.4
+  - @logto/schemas@1.3.0
+  - @logto/cli@1.3.0
+
 ## 1.2.3
 
 ### Patch Changes
