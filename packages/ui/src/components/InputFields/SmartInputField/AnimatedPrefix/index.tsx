@@ -48,7 +48,7 @@ const AnimatedPrefix = ({ children, isVisible }: Props) => {
 
   return (
     <animated.div className={styles.prefix} style={animation} data-testid="prefix">
-      {cloneElement(children, { ref: elementRef })}
+      {cloneElement(children, { ref: elementRef, isVisible })}
     </animated.div>
   );
 };

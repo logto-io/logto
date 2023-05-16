@@ -14,11 +14,12 @@ type Props = {
   className?: string;
   value?: string;
   inputRef?: Nullable<HTMLInputElement>;
+  isVisible?: boolean;
   onChange?: (value: string) => void;
 };
 
 const CountryCodeSelector = (
-  { className, value, inputRef, onChange }: Props,
+  { className, value, inputRef, isVisible = true, onChange }: Props,
   ref: ForwardedRef<HTMLDivElement>
 ) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -41,7 +42,7 @@ const CountryCodeSelector = (
       ref={ref}
       className={classNames(styles.countryCodeSelector, className)}
       role="button"
-      tabIndex={0}
+      tabIndex={isVisible ? 0 : -1}
       onClick={showDropDown}
       onKeyDown={onKeyDownHandler({
         Enter: showDropDown,
