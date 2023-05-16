@@ -81,7 +81,7 @@ export const createHookLibrary = (queries: Queries) => {
     } satisfies Omit<HookEventPayload, 'hookId'>;
 
     await Promise.all(
-      rows.map(async ({ config: { url, headers, retries }, id }) => {
+      rows.map(async ({ config: { url, headers }, id }) => {
         consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
         const json: HookEventPayload = { hookId: id, ...payload };
         const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
@@ -93,7 +93,7 @@ export const createHookLibrary = (queries: Queries) => {
           .post(url, {
             headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
             json,
-            retry: { limit: retries },
+            retry: { limit: 3 },
             timeout: { request: 10_000 },
           })
           .then(async (response) => {
