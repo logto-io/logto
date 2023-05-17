@@ -1,6 +1,7 @@
+import { Roles } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
-import { object, string } from 'zod';
+import { array, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -27,19 +28,19 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     koaPagination(),
     koaGuard({
       params: object({ userId: string() }),
+      response: array(Roles.guard),
+      status: [200, 400, 404],
     }),
     async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
+      const { userId } = ctx.guard.params;
       const { limit, offset } = ctx.pagination;
       const { searchParams } = ctx.request.URL;
+
       await findUserById(userId);
 
       return tryThat(
         async () => {
           const search = parseSearchParamsForSearch(searchParams);
-
           const usersRoles = await findUsersRolesByUserId(userId);
           const roleIds = usersRoles.map(({ roleId }) => roleId);
           const [{ count }, roles] = await Promise.all([
@@ -71,6 +72,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ roleIds: string().min(1).array() }),
+      status: [201, 404, 422],
     }),
     async (ctx, next) => {
       const {
@@ -107,6 +109,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ roleIds: string().min(1).array() }),
+      status: [200, 404],
     }),
     async (ctx, next) => {
       const {
@@ -144,6 +147,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     '/users/:userId/roles/:roleId',
     koaGuard({
       params: object({ userId: string(), roleId: string() }),
+      status: [204, 404],
     }),
     async (ctx, next) => {
       const {
