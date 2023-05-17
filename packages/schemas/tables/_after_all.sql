@@ -1,5 +1,11 @@
 /* This SQL will run after all other queries. */
 
+---- Create trigger to set tenant name ----
+create trigger set_tenant_name_trigger
+before insert on tenants
+for each row
+execute procedure set_tenant_name();
+
 ---- Grant CRUD access to the group ----
 grant select, insert, update, delete
   on all tables
