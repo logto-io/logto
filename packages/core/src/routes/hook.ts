@@ -1,6 +1,6 @@
 import { Hooks, createHookGuard, updateHookGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional, deduplicate } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -57,9 +57,10 @@ export default function hookRoutes<T extends AuthedRouter>(
         ...rest,
         id: generateStandardId(),
         signingKey: generateStandardId(),
+        events: events ?? [],
         ...conditional(event && { event }),
-        ...conditional(events && { events: deduplicate(events) }),
       });
+
       ctx.status = 201;
 
       return next();
@@ -80,7 +81,7 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const { events, config: configToUpdate, ...rest } = body;
+      const { config: configToUpdate, ...rest } = body;
 
       const hook = await findHookById(id);
       const { config } = hook;
@@ -88,7 +89,6 @@ export default function hookRoutes<T extends AuthedRouter>(
       ctx.body = await updateHookById(id, {
         ...rest,
         config: { ...config, ...configToUpdate },
-        ...conditional(events && { events: deduplicate(events) }),
       });
 
       return next();

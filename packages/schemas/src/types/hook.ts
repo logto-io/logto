@@ -1,3 +1,4 @@
+import { deduplicate } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
 import { type Application, type User } from '../db-entries/index.js';
@@ -21,11 +22,15 @@ export type HookEventPayload = {
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;
 
+const nonemptyUniqueHookEventsGuard = hookEventsGuard
+  .nonempty()
+  .refine((events) => deduplicate(events));
+
 export const createHookGuard = object({
   // Note: ensure the user will not create a hook with an empty name.
   name: string().min(1).optional(),
   event: hookEventGuard.optional(),
-  events: hookEventsGuard.nonempty().optional(),
+  events: nonemptyUniqueHookEventsGuard.optional(),
   config: hookConfigGuard,
   enabled: boolean().optional().default(true),
 });
@@ -33,4 +38,4 @@ export const createHookGuard = object({
 export const updateHookGuard = createHookGuard
   .omit({ events: true, enabled: true })
   .deepPartial()
-  .extend({ events: hookEventsGuard.nonempty().optional(), enabled: boolean().optional() });
+  .extend({ events: nonemptyUniqueHookEventsGuard.optional(), enabled: boolean().optional() });
