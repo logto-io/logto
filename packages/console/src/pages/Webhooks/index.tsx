@@ -125,6 +125,7 @@ function Webhooks() {
       }}
       widgets={
         <CreateFormModal
+          existingHooksCount={data?.length ?? 0}
           isOpen={isCreateNew}
           onClose={(createdHook?: Hook) => {
             if (createdHook) {

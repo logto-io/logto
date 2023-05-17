@@ -4,6 +4,7 @@ import ReactModal from 'react-modal';
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import TextLink from '@/components/TextLink';
+import { contactEmail, contactEmailLink } from '@/consts';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';
@@ -13,8 +14,7 @@ type Props = {
   onClose: () => void;
 };
 
-const contactUsEmail = 'contact@logto.io';
-const mailToLink = `mailto:${contactUsEmail}?subject=Account%20Deletion%20Request`;
+const mailToLink = `${contactEmailLink}?subject=Account%20Deletion%20Request`;
 
 function DeleteAccountModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -40,7 +40,7 @@ function DeleteAccountModal({ isOpen, onClose }: Props) {
                 a: <TextLink href={mailToLink} className={styles.mail} />,
               }}
             >
-              {t('profile.delete_account.dialog_paragraph_2', { mail: contactUsEmail })}
+              {t('profile.delete_account.dialog_paragraph_2', { mail: contactEmail })}
             </Trans>
           </p>
           <p>{t('profile.delete_account.dialog_paragraph_3')}</p>
