@@ -17,18 +17,9 @@
       align-items: center;
 
       > span {
-        margin-left: _.unit(2);
+        margin: _.unit(2);
         font: var(--font-body-2);
         color: var(--color-text-secondary);
-      }
-
-      .builtInFlag {
-        display: inline-block;
-        font: var(--font-label-3);
-        color: var(--color-text);
-        background-color: var(--color-surface-variant);
-        padding: _.unit(0.5) _.unit(2);
-        border-radius: 10px;
       }
     }
   }

@@ -1,0 +1,70 @@
+@use '@/scss/underscore' as _;
+
+.tag {
+  display: flex;
+  align-items: center;
+  font: var(--font-body-2);
+
+  .icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: _.unit(2);
+    background: var(--color-on-success-container);
+  }
+
+  .resultIcon {
+    width: 16px;
+    height: 16px;
+    border-radius: unset;
+    background-color: unset;
+    color: var(--color-on-success-container);
+  }
+
+  &.info {
+    .icon {
+      background: var(--color-on-info-container);
+    }
+  }
+
+  &.alert {
+    .icon {
+      background: var(--color-on-alert-container);
+    }
+  }
+
+  &.error {
+    .icon {
+      background: var(--color-on-error-container);
+    }
+
+    .resultIcon {
+      background: unset;
+      color: var(--color-on-error-container);
+    }
+  }
+
+  &.outlined {
+    padding: _.unit(0.5) _.unit(2);
+    border-radius: 10px;
+    background: var(--color-success-container);
+    font: var(--font-label-3);
+
+    &.info {
+      background: var(--color-info-container);
+    }
+
+    &.alert {
+      background: var(--color-alert-container);
+    }
+
+    &.error {
+      background: var(--color-error-container);
+
+      .resultIcon {
+        background: unset;
+        color: var(--color-on-error-container);
+      }
+    }
+  }
+}

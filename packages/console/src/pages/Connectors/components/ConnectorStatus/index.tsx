@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import Status from '@/components/Status';
+import Tag from '@/components/Tag';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import type { ConnectorGroup } from '@/types/connector';
 
@@ -18,9 +18,9 @@ function ConnectorStatus({ connectorGroup }: Props) {
   const inUse = isConnectorInUse(firstConnector);
 
   return firstConnector ? (
-    <Status status={inUse ? 'enabled' : 'disabled'}>
+    <Tag type="state" status={inUse ? 'success' : 'info'} variant="plain">
       {t(inUse ? 'connectors.connector_status_in_use' : 'connectors.connector_status_not_in_use')}
-    </Status>
+    </Tag>
   ) : (
     <span>-</span>
   );

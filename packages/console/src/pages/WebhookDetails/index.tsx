@@ -20,8 +20,8 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
 import DynamicT from '@/components/DynamicT';
 import PageMeta from '@/components/PageMeta';
-import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import Tag from '@/components/Tag';
 import { WebhookDetailsTabs } from '@/consts';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
@@ -108,9 +108,9 @@ function WebhookDetails() {
                 {isEnabled ? (
                   <div>Success Rate (WIP)</div>
                 ) : (
-                  <Status status="disabled" variant="outlined">
+                  <Tag type="state" status="info">
                     <DynamicT forKey="webhook_details.not_in_use" />
-                  </Status>
+                  </Tag>
                 )}
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>ID</div>
