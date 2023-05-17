@@ -47,11 +47,11 @@ export default function hookRoutes<T extends AuthedRouter>(
     koaGuard({
       body: createHookGuard,
       response: Hooks.guard,
-      status: [201, 422],
+      status: [201, 400],
     }),
     async (ctx, next) => {
       const { event, events, ...rest } = ctx.guard.body;
-      assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 422 }));
+      assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 400 }));
 
       ctx.body = await insertHook({
         ...rest,

@@ -114,7 +114,7 @@ describe('hook routes', () => {
         url: 'https://example.com',
       },
     };
-    await expect(hookRequest.post('/hooks').send(payload)).resolves.toHaveProperty('status', 422);
+    await expect(hookRequest.post('/hooks').send(payload)).resolves.toHaveProperty('status', 400);
   });
 
   it('POST /hooks should success when create a hook with the old payload format', async () => {

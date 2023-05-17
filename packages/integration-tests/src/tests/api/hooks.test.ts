@@ -108,7 +108,7 @@ describe('hooks', () => {
       },
     };
     await expect(authedAdminApi.post('hooks', { json: payload })).rejects.toMatchObject(
-      createResponseWithCode(422)
+      createResponseWithCode(400)
     );
   });
 
