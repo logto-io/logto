@@ -24,7 +24,7 @@ export type HookEventPayload = {
 
 const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .nonempty()
-  .refine((events) => deduplicate(events));
+  .transform((events) => deduplicate(events));
 
 export const createHookGuard = object({
   // Note: ensure the user will not create a hook with an empty name.
