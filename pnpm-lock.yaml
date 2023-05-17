@@ -3548,6 +3548,9 @@ importers:
       '@logto/shared':
         specifier: workspace:^2.0.0
         version: link:../shared
+      '@silverhand/essentials':
+        specifier: ^2.5.0
+        version: 2.6.2
       '@withtyped/server':
         specifier: ^0.9.0
         version: 0.9.0
@@ -3558,9 +3561,6 @@ importers:
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
-      '@silverhand/essentials':
-        specifier: ^2.5.0
-        version: 2.5.0
       '@silverhand/ts-config':
         specifier: 3.0.0
         version: 3.0.0(typescript@5.0.2)
@@ -8612,7 +8612,6 @@ packages:
   /@silverhand/essentials@2.6.2:
     resolution: {integrity: sha512-1b5u2BGEa14V3o8XzaE7eL+nuwmQe8c1wqSMcGvq+KAusPPZo9tV4glbfF16Xi/ohv37vUpBGJ2DNf4CfuxBLw==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
-    dev: true
 
   /@silverhand/jest-config@3.0.0(jest@29.5.0):
     resolution: {integrity: sha512-5ezkX1/EVQiL2Y3lMY3jLT00GvyRgNKWAB/LIToVN0BQPnasdzKV6sSn2wrQD6XY3lNvR9TBdZajGmG/jtcRjA==}
@@ -9732,7 +9731,7 @@ packages:
   /@withtyped/server@0.9.0:
     resolution: {integrity: sha512-uQlX9Bj8607eR0sxL4i0I3J1cz5KmzBoMlcjvr6KJ0+iT1FWbNK3zQZMaKcRj5Em7MmWwsFIFkgrdQweqaHhSg==}
     dependencies:
-      '@silverhand/essentials': 2.5.0
+      '@silverhand/essentials': 2.6.2
       '@withtyped/shared': 0.2.0
     dev: false
 
