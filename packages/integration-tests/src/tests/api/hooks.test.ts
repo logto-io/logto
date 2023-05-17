@@ -123,7 +123,7 @@ describe('hooks', () => {
   });
 
   it('should throw error if regenerate a hook signing key with a invalid hook id', async () => {
-    await expect(authedAdminApi.post('hooks/invalid_id/signing-key')).rejects.toMatchObject(
+    await expect(authedAdminApi.patch('hooks/invalid_id/signing-key')).rejects.toMatchObject(
       createResponseWithCode(404)
     );
   });

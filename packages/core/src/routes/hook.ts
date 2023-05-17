@@ -66,26 +66,6 @@ export default function hookRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.post(
-    '/hooks/:id/signing-key',
-    koaGuard({
-      params: object({ id: string() }),
-      response: Hooks.guard,
-      status: [200, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-      } = ctx.guard;
-
-      ctx.body = await updateHookById(id, {
-        signingKey: generateStandardId(),
-      });
-
-      return next();
-    }
-  );
-
   router.patch(
     '/hooks/:id',
     koaGuard({
@@ -109,6 +89,26 @@ export default function hookRoutes<T extends AuthedRouter>(
         ...rest,
         config: { ...config, ...configToUpdate },
         ...conditional(events && { events: deduplicate(events) }),
+      });
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/hooks/:id/signing-key',
+    koaGuard({
+      params: object({ id: string() }),
+      response: Hooks.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      ctx.body = await updateHookById(id, {
+        signingKey: generateStandardId(),
       });
 
       return next();

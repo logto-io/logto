@@ -140,20 +140,6 @@ describe('hook routes', () => {
     });
   });
 
-  it('POST /hooks/:id/signing-key', async () => {
-    const targetMockHook = mockHookList[0] ?? mockHook;
-    const originalSigningKey = targetMockHook.signingKey;
-    const response = await hookRequest.post(`/hooks/${targetMockHook.id}/signing-key`).send();
-    expect(response.status).toEqual(200);
-
-    const newSigningKey = response.body.signingKey as string;
-    expect(originalSigningKey).not.toEqual(newSigningKey);
-    expect(response.body).toEqual({
-      ...targetMockHook,
-      signingKey: newSigningKey,
-    });
-  });
-
   it('PATCH /hooks/:id', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const name = 'newName';
@@ -223,6 +209,20 @@ describe('hook routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(targetMockHook);
     expect(response.body.config.signingKey).not.toEqual(newSigningKey);
+  });
+
+  it('PATCH /hooks/:id/signing-key should update the singing key of a hook', async () => {
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const originalSigningKey = targetMockHook.signingKey;
+    const response = await hookRequest.patch(`/hooks/${targetMockHook.id}/signing-key`).send();
+    expect(response.status).toEqual(200);
+
+    const newSigningKey = response.body.signingKey as string;
+    expect(originalSigningKey).not.toEqual(newSigningKey);
+    expect(response.body).toEqual({
+      ...targetMockHook,
+      signingKey: newSigningKey,
+    });
   });
 
   it('DELETE /hooks/:id', async () => {
