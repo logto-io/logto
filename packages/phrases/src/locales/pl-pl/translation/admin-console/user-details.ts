@@ -70,6 +70,8 @@ const user_details = {
     search: 'Szukaj po nazwie roli, opisie lub ID',
     empty: 'Brak dostępnej roli',
   },
+  warning_no_sign_in_identifier:
+    'Aby się zalogować, użytkownik musi mieć co najmniej jeden z identyfikatorów logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
 };
 
 export default user_details;

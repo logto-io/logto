@@ -73,6 +73,8 @@ const user_details = {
     search: 'Cerca per nome ruolo, descrizione o ID',
     empty: 'Nessun ruolo disponibile',
   },
+  warning_no_sign_in_identifier:
+    "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
 };
 
 export default user_details;

@@ -73,6 +73,8 @@ const user_details = {
     search: 'Recherche par nom de rôle, description ou ID',
     empty: 'Aucun rôle disponible',
   },
+  warning_no_sign_in_identifier:
+    "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",
 };
 
 export default user_details;

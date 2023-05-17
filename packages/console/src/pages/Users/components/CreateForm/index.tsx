@@ -89,14 +89,18 @@ function CreateForm({ onClose, onCreate }: Props) {
       Object.entries(userData).filter(([, value]) => Boolean(value))
     );
 
-    const createdUser = await api.post('api/users', { json: payload }).json<User>();
+    try {
+      const createdUser = await api.post('api/users', { json: payload }).json<User>();
 
-    setCreatedUserInfo({
-      user: createdUser,
-      password,
-    });
+      setCreatedUserInfo({
+        user: createdUser,
+        password,
+      });
 
-    onCreate();
+      onCreate();
+    } catch {
+      // Do nothing since we only show error toasts, which is handled in the useApi hook
+    }
   });
 
   return createdUserInfo ? (

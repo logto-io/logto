@@ -2936,6 +2936,9 @@ importers:
       ky:
         specifier: ^0.33.0
         version: 0.33.0
+      libphonenumber-js:
+        specifier: ^1.9.49
+        version: 1.9.49
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
