@@ -50,7 +50,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       status: [201, 400],
     }),
     async (ctx, next) => {
-      const { event, events, ...rest } = ctx.guard.body;
+      const { event, events, enabled, ...rest } = ctx.guard.body;
       assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 400 }));
 
       ctx.body = await insertHook({
@@ -58,6 +58,7 @@ export default function hookRoutes<T extends AuthedRouter>(
         id: generateStandardId(),
         signingKey: generateStandardId(),
         events: events ?? [],
+        enabled: enabled ?? true,
         ...conditional(event && { event }),
       });
 

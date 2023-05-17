@@ -32,10 +32,10 @@ export const createHookGuard = object({
   event: hookEventGuard.optional(),
   events: nonemptyUniqueHookEventsGuard.optional(),
   config: hookConfigGuard,
-  enabled: boolean().optional().default(true),
+  enabled: boolean().optional(),
 });
 
 export const updateHookGuard = createHookGuard
-  .omit({ events: true, enabled: true })
+  .omit({ events: true })
   .deepPartial()
-  .extend({ events: nonemptyUniqueHookEventsGuard.optional(), enabled: boolean().optional() });
+  .extend({ events: nonemptyUniqueHookEventsGuard.optional() });
