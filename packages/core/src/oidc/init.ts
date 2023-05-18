@@ -254,6 +254,12 @@ export default function initOidc(
       Session: 1_209_600 /* 14 days in seconds */,
       Grant: 1_209_600 /* 14 days in seconds */,
     },
+    pkce: {
+      required: (ctx, client) => {
+        return client.tokenEndpointAuthMethod !== 'client_secret_basic';
+      },
+      methods: ['S256'],
+    },
   });
 
   addOidcEventListeners(oidc);

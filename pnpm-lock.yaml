@@ -109,7 +109,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:1.3.0
+        specifier: workspace:1.3.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3057,7 +3057,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.3.0
+        specifier: workspace:^1.3.1
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3081,7 +3081,7 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.3.0
+        specifier: workspace:^1.3.1
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3295,7 +3295,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.3.0
+        specifier: workspace:^1.3.1
         version: link:../cli
 
   packages/demo-app:

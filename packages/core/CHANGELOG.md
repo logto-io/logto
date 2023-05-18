@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.3.1
+
+### Patch Changes
+
+- 5a59cd38e: Disable pkce requirement for traditional web app
+  - @logto/schemas@1.3.1
+  - @logto/cli@1.3.1
+
 ## 1.3.0
 
 ### Minor Changes
