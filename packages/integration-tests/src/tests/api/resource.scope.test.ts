@@ -9,7 +9,7 @@ describe('scopes', () => {
   it('should get management api resource scopes successfully', async () => {
     const scopes = await getScopes(defaultManagementApi.resource.id);
 
-    expect(scopes[0]).toMatchObject(defaultManagementApi.scope);
+    expect(scopes[0]).toMatchObject(expect.objectContaining(defaultManagementApi.scopes[0]));
   });
 
   it('should create scope successfully', async () => {

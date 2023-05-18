@@ -33,10 +33,12 @@ export const seedAdminData = async (
   data: AdminData | UpdateAdminData,
   ...additionalScopes: CreateScope[]
 ) => {
-  const { resource, scope, role } = data;
+  const { resource, scopes, role } = data;
 
   assert(
-    resource.tenantId === scope.tenantId && scope.tenantId === role.tenantId,
+    scopes.every(
+      (scope) => resource.tenantId === scope.tenantId && scope.tenantId === role.tenantId
+    ),
     new Error('All data should have the same tenant ID')
   );
 
@@ -58,19 +60,24 @@ export const seedAdminData = async (
   };
 
   await pool.query(insertInto(resource, 'resources'));
-  await pool.query(insertInto(scope, 'scopes'));
-  await Promise.all(additionalScopes.map(async (scope) => pool.query(insertInto(scope, 'scopes'))));
+  await Promise.all(
+    [...scopes, ...additionalScopes].map(async (scope) => pool.query(insertInto(scope, 'scopes')))
+  );
 
   const roleId = await processRole();
-  await pool.query(
-    insertInto(
-      {
-        id: generateStandardId(),
-        roleId,
-        scopeId: scope.id,
-        tenantId: resource.tenantId,
-      } satisfies CreateRolesScope,
-      'roles_scopes'
+  await Promise.all(
+    scopes.map(async ({ id }) =>
+      pool.query(
+        insertInto(
+          {
+            id: generateStandardId(),
+            roleId,
+            scopeId: id,
+            tenantId: resource.tenantId,
+          } satisfies CreateRolesScope,
+          'roles_scopes'
+        )
+      )
     )
   );
 };

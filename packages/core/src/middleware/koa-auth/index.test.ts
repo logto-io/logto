@@ -20,9 +20,12 @@ mockEsm('./utils.js', () => ({
 
 const { jwtVerify } = mockEsm('jose', () => ({
   createLocalJWKSet: jest.fn(),
-  jwtVerify: jest
-    .fn()
-    .mockReturnValue({ payload: { sub: 'fooUser', scope: defaultManagementApi.scope.name } }),
+  jwtVerify: jest.fn().mockReturnValue({
+    payload: {
+      sub: 'fooUser',
+      scope: defaultManagementApi.scopes.map((scope) => scope.name).join(' '),
+    },
+  }),
 }));
 
 const audience = defaultManagementApi.resource.indicator;

@@ -60,7 +60,11 @@ export const verifyBearerTokenFromRequest = async (
   if ((!isProduction || isIntegrationTest) && userId) {
     consoleLog.warn(`Found dev user ID ${userId}, skip token validation.`);
 
-    return { sub: userId, clientId: undefined, scopes: [defaultManagementApi.scope.name] };
+    return {
+      sub: userId,
+      clientId: undefined,
+      scopes: defaultManagementApi.scopes.map(({ name }) => name),
+    };
   }
 
   const getKeysAndIssuer = async (): Promise<[JWK[], string[]]> => {

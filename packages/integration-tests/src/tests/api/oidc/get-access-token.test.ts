@@ -29,7 +29,7 @@ describe('get access token', () => {
   it('can sign in and getAccessToken with admin user', async () => {
     const client = new MockClient({
       resources: [defaultManagementApi.resource.indicator],
-      scopes: [defaultManagementApi.scope.name],
+      scopes: defaultManagementApi.scopes.map(({ name }) => name),
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -42,7 +42,7 @@ describe('get access token', () => {
     expect(accessToken).not.toBeNull();
     expect(getAccessTokenPayload(accessToken)).toHaveProperty(
       'scope',
-      defaultManagementApi.scope.name
+      defaultManagementApi.scopes.map(({ name }) => name).join(' ')
     );
 
     // Request for invalid resource should throw
@@ -52,7 +52,7 @@ describe('get access token', () => {
   it('can sign in and getAccessToken with guest user', async () => {
     const client = new MockClient({
       resources: [defaultManagementApi.resource.indicator],
-      scopes: [defaultManagementApi.scope.name],
+      scopes: defaultManagementApi.scopes.map(({ name }) => name),
     });
     await client.initSession();
     await client.successSend(putInteraction, {
@@ -65,7 +65,7 @@ describe('get access token', () => {
 
     expect(getAccessTokenPayload(accessToken)).not.toHaveProperty(
       'scope',
-      defaultManagementApi.scope.name
+      defaultManagementApi.scopes.map(({ name }) => name).join(' ')
     );
   });
 

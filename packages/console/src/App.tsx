@@ -55,7 +55,8 @@ function Content() {
       PredefinedScope.All,
       ...conditionalArray(
         isCloud && cloudApi.scopes.CreateTenant,
-        isCloud && cloudApi.scopes.ManageTenant
+        isCloud && cloudApi.scopes.ManageTenant,
+        isCloud && cloudApi.scopes.ManageOwnTenant
       ),
     ],
     []

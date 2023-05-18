@@ -12,6 +12,7 @@ export const cloudApiIndicator = 'https://cloud.logto.io/api';
 export enum CloudScope {
   CreateTenant = 'create:tenant',
   ManageTenant = 'manage:tenant',
+  ManageOwnTenant = 'manage:own-tenant',
   SendSms = 'send:sms',
   SendEmail = 'send:email',
 }
@@ -34,7 +35,13 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
         indicator: cloudApiIndicator,
         name: `Logto Cloud API`,
       },
-      scope: buildScope(CloudScope.CreateTenant, 'Allow creating new tenants.'),
+      scopes: [
+        buildScope(CloudScope.CreateTenant, 'Allow creating new tenants.'),
+        buildScope(
+          CloudScope.ManageOwnTenant,
+          'Allow managing own tenant, including update and delete.'
+        ),
+      ],
       role: {
         tenantId: adminTenantId,
         name: AdminTenantRole.User,
