@@ -34,7 +34,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
 
   const adminOrigins = adminUrlSet.origins;
   const cloudOrigins = cloudUrlSet.origins;
-  const urlSetOrigins = urlSet.origins;
+  const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
   const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
 
@@ -94,11 +94,11 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
               "'self'",
               ...adminOrigins,
               ...cloudOrigins,
-              ...urlSetOrigins,
+              ...coreOrigins,
               ...developmentOrigins,
               ...appInsightsOrigins,
             ],
-            frameSrc: ["'self'", ...urlSetOrigins, ...adminOrigins],
+            frameSrc: ["'self'", ...coreOrigins, ...adminOrigins],
           },
         },
       },
