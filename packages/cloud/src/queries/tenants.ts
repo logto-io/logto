@@ -4,17 +4,25 @@ import {
   adminConsoleApplicationId,
   adminTenantId,
   getManagementApiResourceIndicator,
+  getManagementApiAdminName,
   PredefinedScope,
+  ApplicationType,
   type AdminData,
   type CreateTenant,
   type PatchTenant,
   type CreateRolesScope,
-  type TenantInfo,
   type TenantModel,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import type { PostgreSql } from '@withtyped/postgres';
-import { jsonb, dangerousRaw, id, sql, jsonIfNeeded } from '@withtyped/postgres';
+import {
+  type PostgreSql,
+  jsonb,
+  dangerousRaw,
+  id,
+  sql,
+  jsonIfNeeded,
+  jsonbIfNeeded,
+} from '@withtyped/postgres';
 import type { Queryable } from '@withtyped/server';
 
 import { insertInto } from '#src/utils/query.js';
@@ -74,6 +82,9 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
         in role ${id(parentRole)};
     `);
 
+  const deleteDatabaseRoleForTenant = async (role: string) =>
+    client.query(sql`drop role ${id(role)};`);
+
   const insertAdminData = async (data: AdminData) => {
     const { resource, scopes, role } = data;
 
@@ -111,23 +122,54 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     );
   };
 
-  const getTenantById = async (id: string): Promise<Pick<TenantInfo, 'name' | 'tag'>> => {
-    return client.one<Pick<TenantInfo, 'name' | 'tag'>>(sql`
-      select name, tag from tenants
+  const getTenantById = async (
+    id: string
+  ): Promise<Pick<TenantModel, 'dbUser' | 'name' | 'tag'>> => {
+    return client.one<Pick<TenantModel, 'dbUser' | 'name' | 'tag'>>(sql`
+      select db_user as "dbUser", name, tag from tenants
       where id = ${id}
     `);
   };
 
   const getTenantsByIds = async (
     tenantIds: string[]
-  ): Promise<Array<Pick<TenantInfo, 'id' | 'name' | 'tag'>>> => {
-    const { rows } = await client.query<Pick<TenantInfo, 'id' | 'name' | 'tag'>>(sql`
+  ): Promise<Array<Pick<TenantModel, 'id' | 'name' | 'tag'>>> => {
+    const { rows } = await client.query<Pick<TenantModel, 'id' | 'name' | 'tag'>>(sql`
       select id, name, tag from tenants
       where id in (${tenantIds.map((tenantId) => jsonIfNeeded(tenantId))})
       order by created_at desc, name desc;
     `);
 
     return rows;
+  };
+
+  const deleteClientTenantManagementApplicationById = async (tenantId: string) => {
+    await client.query(sql`
+      delete from applications where custom_client_metadata->>'tenantId' = ${tenantId} and tenant_id = ${adminTenantId} and "type" = ${ApplicationType.MachineToMachine}
+    `);
+  };
+
+  const deleteClientTenantManagementApiResourceByTenantId = async (tenantId: string) => {
+    await client.query(sql`
+      delete from resources
+      where tenant_id = ${adminTenantId} and indicator = ${getManagementApiResourceIndicator(
+      tenantId
+    )}
+    `);
+  };
+
+  const deleteClientTenantRoleById = async (tenantId: string) => {
+    await client.query(sql`
+      delete from roles
+      where tenant_id = ${adminTenantId} and name = ${getManagementApiAdminName(tenantId)}
+    `);
+  };
+
+  const deleteTenantById = async (id: string) => {
+    await client.query(sql`
+      delete from tenants
+      where id = ${id}
+    `);
   };
 
   const appendAdminConsoleRedirectUris = async (...urls: URL[]) => {
@@ -147,14 +189,39 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     `);
   };
 
+  const removeUrisFromAdminConsoleRedirectUris = async (...urls: URL[]) => {
+    const metadataKey = id('oidc_client_metadata');
+
+    const { redirectUris } = await client.one<{ redirectUris: string[] }>(
+      sql`select ${metadataKey}->'redirectUris' as "redirectUris" from applications where id = ${adminConsoleApplicationId} and tenant_id = ${adminTenantId}`
+    );
+    const restRedirectUris = redirectUris.filter(
+      (redirectUri) => !urls.map(String).includes(redirectUri)
+    );
+
+    await client.query(sql`
+      update applications
+          set ${metadataKey} = jsonb_set(${metadataKey}, '{redirectUris}', ${jsonbIfNeeded(
+      restRedirectUris
+    )})
+          where id = ${adminConsoleApplicationId} and tenant_id = ${adminTenantId};
+    `);
+  };
+
   return {
     getManagementApiLikeIndicatorsForUser,
     insertTenant,
     updateTenantById,
     createTenantRole,
+    deleteDatabaseRoleForTenant,
     insertAdminData,
     getTenantById,
     getTenantsByIds,
+    deleteClientTenantManagementApplicationById,
+    deleteClientTenantManagementApiResourceByTenantId,
+    deleteClientTenantRoleById,
+    deleteTenantById,
     appendAdminConsoleRedirectUris,
+    removeUrisFromAdminConsoleRedirectUris,
   };
 };

@@ -35,3 +35,12 @@ export const updateTenant = async (
     .patch(`tenants/${tenantId}`, { json: payload })
     .json<TenantInfo>();
 };
+
+export const deleteTenant = async (accessToken: string, tenantId: string) => {
+  return cloudApi
+    .extend({
+      headers: { authorization: `Bearer ${accessToken}` },
+    })
+    .delete(`tenants/${tenantId}`)
+    .json();
+};

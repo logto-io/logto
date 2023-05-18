@@ -77,6 +77,46 @@ export class TenantsLibrary {
     return { id, name, tag, indicator: getManagementApiResourceIndicator(id) };
   }
 
+  async deleteTenantById(tenantId: string) {
+    const {
+      deleteTenantById,
+      deleteDatabaseRoleForTenant,
+      deleteClientTenantManagementApiResourceByTenantId,
+      deleteClientTenantRoleById,
+      getTenantById,
+      deleteClientTenantManagementApplicationById,
+      removeUrisFromAdminConsoleRedirectUris,
+    } = this.queries.tenants;
+    const { cloudUrlSet } = EnvSet.global;
+
+    /** `dbUser` is defined as nullable but we always specified this value when creating a new tenant. */
+    const { dbUser } = await getTenantById(tenantId);
+    if (dbUser) {
+      /** DB role for building connection for the current tenant. */
+      await deleteDatabaseRoleForTenant(dbUser);
+    }
+
+    await deleteTenantById(tenantId);
+
+    /**
+     * All applications, resources, scopes and roles attached to the current tenant
+     * will be deleted per DB design.
+     * Need to manually delete following applications, roles, resources since they
+     * are created for admin tenant which will not be deleted automatically.
+     */
+    /** Delete management API for the current tenant. */
+    /** `scopes` will be automatically deleted if its related resources have been removed. */
+    await deleteClientTenantManagementApiResourceByTenantId(tenantId);
+    /** Delete admin tenant admin role for the current tenant. */
+    await deleteClientTenantRoleById(tenantId);
+    /** Delete M2M application for the current principal (tenant, characterized by `tenantId`). */
+    await deleteClientTenantManagementApplicationById(tenantId);
+
+    await removeUrisFromAdminConsoleRedirectUris(
+      ...cloudUrlSet.deduplicated().map((url) => appendPath(url, tenantId, 'callback'))
+    );
+  }
+
   async createNewTenant(
     forUserId: string,
     payload: Pick<CreateTenant, 'name' | 'tag'>
