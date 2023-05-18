@@ -7,6 +7,7 @@ const config = {
     '^#src/(.*)\\.js(x)?$': '<rootDir>/lib/$1',
     '^(chalk|inquirer)$': '<rootDir>/../shared/lib/esm/module-proxy.js',
   },
+  testSequencer: './ui-test-sequencer.js',
 };
 
 export default config;

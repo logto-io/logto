@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import path from 'node:path';
 
 import { assert } from '@silverhand/essentials';
 
@@ -13,11 +14,38 @@ export const generateEmail = () => `${crypto.randomUUID().toLowerCase()}@logto.i
 export const generateScopeName = () => `sc:${crypto.randomUUID()}`;
 export const generateRoleName = () => `role_${crypto.randomUUID()}`;
 
-export const generatePhone = () => {
-  const array = new Uint32Array(1);
+export const generatePhone = (isE164?: boolean) => {
+  const plus = isE164 ? '+' : '';
+  const countryAndAreaCode = '1310'; // California, US
+  const validCentralOfficeCodes = [
+    '205',
+    '208',
+    '215',
+    '216',
+    '220',
+    '228',
+    '229',
+    '230',
+    '231',
+    '232',
+  ];
+  const centralOfficeCode =
+    validCentralOfficeCodes[Math.floor(Math.random() * validCentralOfficeCodes.length)] ?? '205';
+  const phoneNumber = Math.floor(Math.random() * 10_000)
+    .toString()
+    .padStart(4, '0');
 
-  return crypto.getRandomValues(array).join('');
+  return plus + countryAndAreaCode + centralOfficeCode + phoneNumber;
 };
+
+export const formatPhoneNumberToInternational = (phoneNumber: string) =>
+  phoneNumber.slice(0, 2) +
+  ' ' +
+  phoneNumber.slice(2, 5) +
+  ' ' +
+  phoneNumber.slice(5, 8) +
+  ' ' +
+  phoneNumber.slice(8);
 
 export const waitFor = async (ms: number) =>
   new Promise((resolve) => {
@@ -32,3 +60,6 @@ export const getAccessTokenPayload = (accessToken: string): Record<string, unkno
   // eslint-disable-next-line no-restricted-syntax
   return JSON.parse(payload) as Record<string, unknown>;
 };
+
+export const appendPathname = (pathname: string, baseUrl: URL) =>
+  new URL(path.join(baseUrl.pathname, pathname), baseUrl);

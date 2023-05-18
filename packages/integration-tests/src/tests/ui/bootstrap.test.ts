@@ -1,16 +1,11 @@
-import path from 'node:path';
-
 import { setDefaultOptions } from 'expect-puppeteer';
 
-import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { generatePassword } from '#src/utils.js';
-
-setDefaultOptions({ timeout: 2000 });
-
-const appendPathname = (pathname: string, baseUrl: URL) =>
-  new URL(path.join(baseUrl.pathname, pathname), baseUrl);
-
-const logtoConsoleUrl = new URL(logtoConsoleUrlString);
+import {
+  consolePassword,
+  consoleUsername,
+  logtoConsoleUrl as logtoConsoleUrlString,
+} from '#src/constants.js';
+import { appendPathname } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -18,9 +13,9 @@ const logtoConsoleUrl = new URL(logtoConsoleUrlString);
  */
 // Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
 // for convenient expect methods
-describe('smoke testing', () => {
-  const consoleUsername = 'admin';
-  const consolePassword = generatePassword();
+describe('smoke testing for console admin account creation and sign-in', () => {
+  setDefaultOptions({ timeout: 2000 });
+  const logtoConsoleUrl = new URL(logtoConsoleUrlString);
 
   it('can open with app element and navigate to welcome page', async () => {
     await page.goto(logtoConsoleUrl.href);
@@ -68,6 +63,8 @@ describe('smoke testing', () => {
   });
 
   it('can sign in to admin console', async () => {
+    await page.goto(logtoConsoleUrl.href);
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await expect(page).toFillForm('form', {
       identifier: consoleUsername,
       password: consolePassword,
@@ -83,6 +80,8 @@ describe('smoke testing', () => {
     await expect(userMenu).toMatchElement('div[class$=nameWrapper] > div[class$=name]', {
       text: consoleUsername,
     });
+
+    await expect(page).toClick('div[class^=ReactModal__Overlay]');
   });
 
   it('renders SVG correctly with viewbox property', async () => {

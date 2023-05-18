@@ -57,6 +57,9 @@ describe('admin console user management', () => {
 
     const newUserData = {
       name: 'new name',
+      primaryEmail: generateEmail(),
+      primaryPhone: generatePhone(),
+      username: generateUsername(),
       avatar: 'https://new.avatar.com/avatar.png',
       customData: {
         level: 1,
@@ -69,10 +72,17 @@ describe('admin console user management', () => {
   });
 
   it('should fail when update userinfo with conflict identifiers', async () => {
-    const user = await createUserByAdmin();
+    const [username, email, phone] = [generateUsername(), generateEmail(), generatePhone()];
+    await createUserByAdmin(username, undefined, email, phone);
     const anotherUser = await createUserByAdmin();
 
-    await expect(updateUser(user.id, { username: anotherUser.username })).rejects.toMatchObject(
+    await expect(updateUser(anotherUser.id, { username })).rejects.toMatchObject(
+      createResponseWithCode(422)
+    );
+    await expect(updateUser(anotherUser.id, { primaryEmail: email })).rejects.toMatchObject(
+      createResponseWithCode(422)
+    );
+    await expect(updateUser(anotherUser.id, { primaryPhone: phone })).rejects.toMatchObject(
       createResponseWithCode(422)
     );
   });
