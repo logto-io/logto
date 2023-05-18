@@ -1,3 +1,5 @@
+@use '@/scss/underscore' as _;
+
 .wrapper {
   position: relative;
   width: 48px;
@@ -63,5 +65,31 @@
 
   &.xlarge {
     transform: scale(1.25);
+  }
+}
+
+.tooltip {
+  padding: _.unit(2.5);
+  font: var(--font-body-2);
+
+  .row {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+
+    + .row {
+      margin-top: _.unit(1);
+    }
+  }
+
+  .label {
+    // Fixed font color should used in Tooltip component as the color does not change when theme changes.
+    color: #a9acac;
+  }
+
+  .value {
+    // Fixed font color should used in Tooltip component as the color does not change when theme changes.
+    color: #f7f8f8;
+    margin-left: _.unit(1);
   }
 }

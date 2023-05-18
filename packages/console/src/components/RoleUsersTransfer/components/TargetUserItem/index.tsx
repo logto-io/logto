@@ -1,5 +1,4 @@
 import type { User } from '@logto/schemas';
-import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/images/close.svg';
 import IconButton from '@/components/IconButton';
@@ -15,13 +14,11 @@ type Props = {
 };
 
 function TargetUserItem({ user, onDelete }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <div className={styles.item}>
       <div className={styles.meta}>
-        <UserAvatar user={user} size="micro" />
-        <div className={styles.title}>{getUserTitle(user) ?? t('users.unnamed')}</div>
+        <UserAvatar hasTooltip user={user} size="micro" />
+        <div className={styles.title}>{getUserTitle(user)}</div>
         {user.isSuspended && <SuspendedTag className={styles.suspended} />}
       </div>
       <IconButton

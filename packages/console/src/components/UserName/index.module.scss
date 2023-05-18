@@ -5,21 +5,18 @@
   color: var(--color-text);
 
   .title {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     max-width: 100%;
     @include _.text-ellipsis;
-    margin-right: _.unit(1);
-  }
 
-  .id {
-    display: inline-block;
-    font: var(--body-small);
-    color: var(--color-text-secondary);
-    @include _.text-ellipsis;
+    span {
+      margin-left: _.unit(2);
+    }
   }
 
   .link {
-    display: inline-block;
+    display: inline-flex;
     text-decoration: none;
     color: var(--color-text-link);
   }

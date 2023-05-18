@@ -43,7 +43,7 @@ function AuditLogDetails() {
     conditional(
       userId &&
         t('log_details.back_to', {
-          name: conditional(userData && getUserTitle(userData)) ?? t('users.unnamed'),
+          name: getUserTitle(userData),
         })
     ) ??
     conditional(

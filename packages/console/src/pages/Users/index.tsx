@@ -84,7 +84,7 @@ function Users() {
 
               return (
                 <ItemPreview
-                  title={getUserTitle(user) ?? t('users.unnamed')}
+                  title={getUserTitle(user)}
                   subtitle={getUserSubtitle(user)}
                   icon={<UserAvatar size="large" user={user} />}
                   to={buildDetailsPathname(id)}

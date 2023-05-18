@@ -114,7 +114,7 @@ function UserDetails() {
           <Card className={styles.header}>
             <UserAvatar user={data} size="xlarge" />
             <div className={styles.metadata}>
-              <div className={styles.title}>{getUserTitle(data) ?? t('users.unnamed')}</div>
+              <div className={styles.title}>{getUserTitle(data)}</div>
               <div>
                 {isSuspendedUser && <SuspendedTag />}
                 {userSubtitle && (
