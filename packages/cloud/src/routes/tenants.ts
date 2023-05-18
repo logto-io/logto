@@ -1,4 +1,5 @@
 import { CloudScope, tenantInfoGuard, createTenantGuard } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import { createRouter, RequestError } from '@withtyped/server';
 
 import type { TenantsLibrary } from '#src/libraries/tenants.js';
@@ -13,6 +14,44 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
         status: 200,
       });
     })
+    .patch(
+      '/:tenantId',
+      {
+        body: createTenantGuard.pick({ name: true, tag: true }).partial(),
+        response: tenantInfoGuard,
+      },
+      async (context, next) => {
+        /** Users w/o either `ManageTenant` or `ManageTenantSelf` scope does not have permission. */
+        if (
+          ![CloudScope.ManageTenant, CloudScope.ManageTenantSelf].some((scope) =>
+            context.auth.scopes.includes(scope)
+          )
+        ) {
+          throw new RequestError('Forbidden due to lack of permission.', 403);
+        }
+
+        /** Should throw 404 when users with `ManageTenantSelf` scope are attempting to change an unavailable tenant. */
+        if (!context.auth.scopes.includes(CloudScope.ManageTenant)) {
+          const availableTenants = await library.getAvailableTenants(context.auth.id);
+          assert(
+            availableTenants.map(({ id }) => id).includes(context.guarded.params.tenantId),
+            new RequestError(
+              `Can not find tenant whose id is '${context.guarded.params.tenantId}'.`,
+              404
+            )
+          );
+        }
+
+        return next({
+          ...context,
+          json: await library.updateTenantById(
+            context.guarded.params.tenantId,
+            context.guarded.body
+          ),
+          status: 200,
+        });
+      }
+    )
     .post(
       '/',
       {

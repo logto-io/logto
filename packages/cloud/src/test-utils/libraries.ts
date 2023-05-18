@@ -1,4 +1,4 @@
-import type { ServiceLogType, TenantInfo } from '@logto/schemas';
+import type { ServiceLogType, TenantInfo, TenantTag } from '@logto/schemas';
 
 import type { ServicesLibrary } from '#src/libraries/services.js';
 import type { TenantsLibrary } from '#src/libraries/tenants.js';
@@ -13,6 +13,10 @@ export class MockTenantsLibrary implements TenantsLibrary {
 
   public getAvailableTenants = jest.fn<Promise<TenantInfo[]>, [string]>();
   public createNewTenant = jest.fn<Promise<TenantInfo>, [string, Record<string, unknown>]>();
+  public updateTenantById = jest.fn<
+    Promise<TenantInfo>,
+    [string, { name?: string; tag?: TenantTag }]
+  >();
 }
 
 export class MockServicesLibrary implements ServicesLibrary {

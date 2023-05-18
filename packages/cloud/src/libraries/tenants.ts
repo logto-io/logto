@@ -20,6 +20,7 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
   getManagementApiResourceIndicator,
+  type PatchTenant,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
@@ -68,6 +69,12 @@ export class TenantsLibrary {
       tag,
       indicator: getManagementApiResourceIndicator(id),
     }));
+  }
+
+  async updateTenantById(tenantId: string, payload: PatchTenant): Promise<TenantInfo> {
+    const { id, name, tag } = await this.queries.tenants.updateTenantById(tenantId, payload);
+
+    return { id, name, tag, indicator: getManagementApiResourceIndicator(id) };
   }
 
   async createNewTenant(

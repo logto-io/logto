@@ -11,7 +11,7 @@ import {
 } from '@logto/schemas';
 
 import { authedAdminTenantApi } from '#src/api/api.js';
-import { createTenant, getTenants } from '#src/api/tenant.js';
+import { updateTenant, createTenant, getTenants } from '#src/api/tenant.js';
 import { createUserAndSignInToCloudClient } from '#src/helpers/admin-tenant.js';
 
 describe('Tenant APIs', () => {
@@ -36,10 +36,17 @@ describe('Tenant APIs', () => {
       expect(tenant).toHaveProperty('tag', payload.tag);
       expect(tenant).toHaveProperty('name', payload.name);
     }
+    const tenant2Updated = await updateTenant(accessToken, tenant2.id, {
+      tag: TenantTag.Staging,
+      name: 'tenant2-updated',
+    });
+    expect(tenant2Updated.id).toEqual(tenant2.id);
+    expect(tenant2Updated).toHaveProperty('tag', TenantTag.Staging);
+    expect(tenant2Updated).toHaveProperty('name', 'tenant2-updated');
     const tenants = await getTenants(accessToken);
     expect(tenants.length).toBeGreaterThan(2);
     expect(tenants.find((tenant) => tenant.id === tenant1.id)).toStrictEqual(tenant1);
-    expect(tenants.find((tenant) => tenant.id === tenant2.id)).toStrictEqual(tenant2);
+    expect(tenants.find((tenant) => tenant.id === tenant2Updated.id)).toStrictEqual(tenant2Updated);
   });
 
   it('should be able to create multiple tenants for `user` role', async () => {
@@ -67,6 +74,15 @@ describe('Tenant APIs', () => {
     expect(tenants.length).toEqual(2);
     expect(tenants.find((tenant) => tenant.id === tenant1.id)).toStrictEqual(tenant1);
     expect(tenants.find((tenant) => tenant.id === tenant2.id)).toStrictEqual(tenant2);
+    const { client: anotherClient } = await createUserAndSignInToCloudClient(AdminTenantRole.User);
+    const anotherAccessToken = await anotherClient.getAccessToken(cloudApiIndicator);
+    const anotherTenant = await createTenant(anotherAccessToken, {
+      name: 'another-tenant',
+      tag: TenantTag.Development,
+    });
+    await expect(
+      updateTenant(accessToken, anotherTenant.id, { name: 'another-tenant-updated' })
+    ).rejects.toThrow();
   });
 
   it('`user` role should have `CloudScope.ManageTenantSelf` scope', async () => {
