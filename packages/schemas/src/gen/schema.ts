@@ -47,9 +47,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
 
         return `  ${camelcase(name)}: z.${isEnum ? `nativeEnum(${type})` : `${type}()`}${
           // Non-nullable strings should have a min length of 1
-          conditionalString(
-            isString && !(nullable || hasDefaultValue || name === tenantId) && `.min(1)`
-          )
+          conditionalString(isString && !(nullable || name === tenantId) && `.min(1)`)
         }${
           // String types value in DB should have a max length
           conditionalString(isString && maxLength && `.max(${maxLength})`)
