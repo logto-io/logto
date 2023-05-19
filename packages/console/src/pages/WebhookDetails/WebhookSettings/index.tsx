@@ -1,4 +1,5 @@
 import { type Hook } from '@logto/schemas';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -14,11 +15,12 @@ import { type WebhookDetailsFormType, type WebhookDetailsOutletContext } from '.
 import { webhookDetailsParser } from '../utils';
 
 import CustomHeaderField from './components/CustomHeaderField';
+import SigningKeyField from './components/SigningKeyField';
 
 function WebhookSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { hook, isDeleting, onHookUpdated } = useOutletContext<WebhookDetailsOutletContext>();
-
+  const [signingKey, setSigningKey] = useState(hook.signingKey);
   const webhookFormData = webhookDetailsParser.toLocalForm(hook);
   const formMethods = useForm<WebhookDetailsFormType>({
     defaultValues: webhookFormData,
@@ -54,6 +56,11 @@ function WebhookSettings() {
         >
           <FormProvider {...formMethods}>
             <BasicWebhookForm />
+            <SigningKeyField
+              hookId={hook.id}
+              signingKey={signingKey}
+              onSigningKeyUpdated={setSigningKey}
+            />
             <CustomHeaderField />
           </FormProvider>
         </FormCard>
