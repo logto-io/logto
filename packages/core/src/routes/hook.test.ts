@@ -178,6 +178,7 @@ describe('hook routes', () => {
     const response = await hookRequest.patch(`/hooks/${targetMockHook.id}`).send({
       event,
       config: {
+        url: 'https://example2.com',
         retries: 1,
       },
     });
@@ -186,6 +187,7 @@ describe('hook routes', () => {
     expect(response.body).toMatchObject({
       event,
       config: {
+        url: 'https://example2.com',
         retries: 1,
       },
     });

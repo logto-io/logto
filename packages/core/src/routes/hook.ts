@@ -1,6 +1,6 @@
-import { Hooks, createHookGuard, updateHookGuard } from '@logto/schemas';
+import { Hooks, hookConfigGuard, hookEventGuard, hookEventsGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -8,6 +8,10 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
+
+const nonemptyUniqueHookEventsGuard = hookEventsGuard
+  .nonempty()
+  .transform((events) => deduplicate(events));
 
 export default function hookRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
@@ -45,7 +49,14 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.post(
     '/hooks',
     koaGuard({
-      body: createHookGuard,
+      body: z.object({
+        // Note: ensure the user will not create a hook with an empty name.
+        name: z.string().min(1).optional(),
+        event: hookEventGuard.optional(),
+        events: nonemptyUniqueHookEventsGuard.optional(),
+        config: hookConfigGuard,
+        enabled: z.boolean().optional(),
+      }),
       response: Hooks.guard,
       status: [201, 400],
     }),
@@ -72,7 +83,16 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string() }),
-      body: updateHookGuard,
+      body: z
+        .object({
+          // Note: ensure the user will not create a hook with an empty name.
+          name: z.string().min(1),
+          event: hookEventGuard,
+          events: nonemptyUniqueHookEventsGuard,
+          config: hookConfigGuard,
+          enabled: z.boolean(),
+        })
+        .partial(),
       response: Hooks.guard,
       status: [200, 404],
     }),
@@ -82,15 +102,7 @@ export default function hookRoutes<T extends AuthedRouter>(
         body,
       } = ctx.guard;
 
-      const { config: configToUpdate, ...rest } = body;
-
-      const hook = await findHookById(id);
-      const { config } = hook;
-
-      ctx.body = await updateHookById(id, {
-        ...rest,
-        config: { ...config, ...configToUpdate },
-      });
+      ctx.body = await updateHookById(id, body, 'replace');
 
       return next();
     }
