@@ -1,4 +1,4 @@
-import { Hooks, hookConfigGuard, hookEventGuard, hookEventsGuard } from '@logto/schemas';
+import { Hooks, hookEventsGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -49,13 +49,9 @@ export default function hookRoutes<T extends AuthedRouter>(
   router.post(
     '/hooks',
     koaGuard({
-      body: z.object({
-        // Note: ensure the user will not create a hook with an empty name.
-        name: z.string().min(1).optional(),
-        event: hookEventGuard.optional(),
+      body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
+        name: z.string().min(1).max(256).optional(),
         events: nonemptyUniqueHookEventsGuard.optional(),
-        config: hookConfigGuard,
-        enabled: z.boolean().optional(),
       }),
       response: Hooks.guard,
       status: [201, 400],
@@ -83,14 +79,11 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string() }),
-      body: z
-        .object({
-          // Note: ensure the user will not create a hook with an empty name.
-          name: z.string().min(1),
-          event: hookEventGuard,
+      body: Hooks.guard
+        .pick({ event: true, config: true, enabled: true })
+        .extend({
+          name: z.string().min(1).max(256),
           events: nonemptyUniqueHookEventsGuard,
-          config: hookConfigGuard,
-          enabled: z.boolean(),
         })
         .partial(),
       response: Hooks.guard,
