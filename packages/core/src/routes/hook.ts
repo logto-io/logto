@@ -50,7 +50,6 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks',
     koaGuard({
       body: Hooks.createGuard.omit({ id: true, signingKey: true }).extend({
-        name: z.string().min(1).max(256).optional(),
         events: nonemptyUniqueHookEventsGuard.optional(),
       }),
       response: Hooks.guard,
@@ -79,10 +78,9 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string() }),
-      body: Hooks.guard
-        .pick({ event: true, config: true, enabled: true })
+      body: Hooks.createGuard
+        .omit({ id: true, signingKey: true })
         .extend({
-          name: z.string().min(1).max(256),
           events: nonemptyUniqueHookEventsGuard,
         })
         .partial(),
