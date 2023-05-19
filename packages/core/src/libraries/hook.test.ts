@@ -6,13 +6,19 @@ import { got } from 'got';
 import type { Interaction } from './hook.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
 
 const nanoIdMock = 'mockId';
 await mockEsmWithActual('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => nanoIdMock,
   generateStandardId: () => nanoIdMock,
+}));
+
+const mockSignature = 'mockSignature';
+mockEsm('#src/utils/sign.js', () => ({
+  sign: () => mockSignature,
+  signAsync: jest.fn().mockResolvedValue(mockSignature),
 }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
@@ -78,7 +84,11 @@ describe('triggerInteractionHooksIfNeeded()', () => {
 
     expect(findAllHooks).toHaveBeenCalled();
     expect(post).toHaveBeenCalledWith(url, {
-      headers: { 'user-agent': 'Logto (https://logto.io)', bar: 'baz' },
+      headers: {
+        'user-agent': 'Logto (https://logto.io/)',
+        bar: 'baz',
+        'logto-signature-256': mockSignature,
+      },
       json: {
         hookId: 'foo',
         event: 'PostSignIn',
