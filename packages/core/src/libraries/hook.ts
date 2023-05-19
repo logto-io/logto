@@ -53,7 +53,10 @@ export const createHookLibrary = (queries: Queries) => {
 
     const hookEvent = eventToHook[event];
     const found = await findAllHooks();
-    const rows = found.filter(({ event }) => event === hookEvent);
+    const rows = found.filter(
+      ({ event, events, enabled }) =>
+        enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
+    );
 
     if (rows.length === 0) {
       return;
@@ -90,7 +93,7 @@ export const createHookLibrary = (queries: Queries) => {
           .post(url, {
             headers: { 'user-agent': 'Logto (https://logto.io)', ...headers },
             json,
-            retry: { limit: retries },
+            retry: { limit: retries ?? 3 },
             timeout: { request: 10_000 },
           })
           .then(async (response) => {

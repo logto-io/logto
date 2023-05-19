@@ -1,5 +1,5 @@
-import type { Application, User } from '../db-entries/index.js';
-import type { HookEvent } from '../foundations/index.js';
+import { type Application, type User } from '../db-entries/index.js';
+import { type HookEvent } from '../foundations/index.js';
 
 import type { userInfoSelectFields } from './user.js';
 

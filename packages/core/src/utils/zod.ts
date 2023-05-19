@@ -252,12 +252,18 @@ export const zodTypeToSwagger = (
     };
   }
 
-  // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
-  if (config instanceof ZodEffects && config._def.effect.type === 'refinement') {
-    return {
-      type: 'object',
-      description: 'Validator function',
-    };
+  if (config instanceof ZodEffects) {
+    if (config._def.effect.type === 'transform') {
+      return zodTypeToSwagger(config._def.schema);
+    }
+
+    // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
+    if (config._def.effect.type === 'refinement') {
+      return {
+        type: 'object',
+        description: 'Validator function',
+      };
+    }
   }
 
   throw new RequestError('swagger.invalid_zod_type', config);
