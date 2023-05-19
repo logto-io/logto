@@ -3548,9 +3548,6 @@ importers:
       '@logto/shared':
         specifier: workspace:^2.0.0
         version: link:../shared
-      '@silverhand/essentials':
-        specifier: ^2.5.0
-        version: 2.6.2
       '@withtyped/server':
         specifier: ^0.9.0
         version: 0.9.0
@@ -3561,6 +3558,9 @@ importers:
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+      '@silverhand/essentials':
+        specifier: ^2.5.0
+        version: 2.6.2
       '@silverhand/ts-config':
         specifier: 3.0.0
         version: 3.0.0(typescript@5.0.2)
