@@ -38,4 +38,5 @@ FROM node:18-alpine as app
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
 EXPOSE 3001
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["npm", "run"]
+CMD ["start"]
