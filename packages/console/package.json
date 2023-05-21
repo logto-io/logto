@@ -23,7 +23,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@fontsource/roboto-mono": "^4.5.7",
+    "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
     "@logto/app-insights": "workspace:^1.2.0",
     "@logto/connector-kit": "workspace:^1.1.1",
