@@ -4,6 +4,7 @@ import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import {
   createSocialAuthorizationUri,
   putInteraction,
+  getUser,
   deleteUser,
   putInteractionEvent,
   patchInteractionIdentifiers,
@@ -96,6 +97,72 @@ describe('Social Identifier Interactions', () => {
       const id = await processSession(client, redirectTo);
       await logoutClient(client);
       await deleteUser(id);
+    });
+
+    it('register with social and synced email', async () => {
+      const client = await initClient();
+      const socialEmail = generateEmail();
+
+      const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
+
+      await client.successSend(putInteraction, {
+        event: InteractionEvent.SignIn,
+      });
+
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId, email: socialEmail },
+      });
+
+      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+
+      await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
+      await client.successSend(putInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      const uid = await processSession(client, redirectTo);
+
+      const { primaryEmail } = await getUser(uid);
+      expect(primaryEmail).toBe(socialEmail);
+
+      await logoutClient(client);
+      await deleteUser(uid);
+    });
+
+    it('register with social and synced phone', async () => {
+      const client = await initClient();
+      const socialPhone = generatePhone();
+
+      const connectorId = connectorIdMap.get(mockSocialConnectorId) ?? '';
+
+      await client.successSend(putInteraction, {
+        event: InteractionEvent.SignIn,
+      });
+
+      await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
+
+      await client.successSend(patchInteractionIdentifiers, {
+        connectorId,
+        connectorData: { state, redirectUri, code, userId: socialUserId, phone: socialPhone },
+      });
+
+      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+
+      await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
+      await client.successSend(putInteractionProfile, { connectorId });
+
+      const { redirectTo } = await client.submitInteraction();
+
+      const uid = await processSession(client, redirectTo);
+
+      const { primaryPhone } = await getUser(uid);
+      expect(primaryPhone).toBe(socialPhone);
+
+      await logoutClient(client);
+      await deleteUser(uid);
     });
   });
 
