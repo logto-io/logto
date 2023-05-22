@@ -12,7 +12,7 @@ describe('content-type: application/json compatibility', () => {
   const expectErrorMessageForPayload = async (
     payload: Record<string, unknown>,
     errorMessage: string,
-    headers?: Headers
+    headers: Headers = {}
   ) => {
     return trySafe(
       api.post('token', {
