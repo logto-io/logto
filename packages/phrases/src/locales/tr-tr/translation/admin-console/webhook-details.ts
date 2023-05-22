@@ -15,7 +15,7 @@ const webhook_details = {
     'Bu webhook’u kaldırıyorsunuz. Silindikten sonra, HTTP isteği uç nokta URL’ye gönderilmeyecektir.',
   deleted: 'Webhook başarıyla silindi.',
   settings_tab: 'Ayarlar',
-  recent_requests_tab: 'Son istekler',
+  recent_requests_tab: 'Son istekler (24s)',
   settings: {
     settings: 'Ayarlar',
     settings_description:

@@ -15,7 +15,7 @@ const webhook_details = {
     'Está eliminando este webhook. Después de eliminarlo, no se enviará ninguna solicitud HTTP a la URL de extremo.',
   deleted: 'El webhook se ha eliminado correctamente.',
   settings_tab: 'Configuración',
-  recent_requests_tab: 'Solicitudes recientes',
+  recent_requests_tab: 'Solicitudes recientes (24 h)',
   settings: {
     settings: 'Configuración',
     settings_description:

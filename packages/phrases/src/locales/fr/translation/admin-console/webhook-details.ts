@@ -15,7 +15,7 @@ const webhook_details = {
     "Vous êtes en train de supprimer ce webhook. Après suppression, il n'enverra plus de requête HTTP à l'endpoint URL.",
   deleted: 'Le webhook a été supprimé avec succès.',
   settings_tab: 'Paramètres',
-  recent_requests_tab: 'Demandes récentes',
+  recent_requests_tab: 'Demandes récentes (24 h)',
   settings: {
     settings: 'Paramètres',
     settings_description:

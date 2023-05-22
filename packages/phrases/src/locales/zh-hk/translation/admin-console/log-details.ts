@@ -1,7 +1,7 @@
 const log_details = {
   page_title: '審計日誌詳情',
   back_to_logs: '返回審計日誌',
-  back_to_user: '返回 {{name}}',
+  back_to: '返回 {{name}}',
   success: '成功',
   failed: '失敗',
   event_key: '事件 Key',

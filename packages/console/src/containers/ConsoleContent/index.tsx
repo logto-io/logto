@@ -40,6 +40,7 @@ import UserRoles from '@/pages/UserDetails/UserRoles';
 import UserSettings from '@/pages/UserDetails/UserSettings';
 import Users from '@/pages/Users';
 import WebhookDetails from '@/pages/WebhookDetails';
+import WebhookLogs from '@/pages/WebhookDetails/WebhookLogs';
 import WebhookSettings from '@/pages/WebhookDetails/WebhookSettings';
 import Webhooks from '@/pages/Webhooks';
 
@@ -96,7 +97,12 @@ function ConsoleContent() {
                 <Route path=":id" element={<WebhookDetails />}>
                   <Route index element={<Navigate replace to={WebhookDetailsTabs.Settings} />} />
                   <Route path={WebhookDetailsTabs.Settings} element={<WebhookSettings />} />
+                  <Route path={WebhookDetailsTabs.RecentRequests} element={<WebhookLogs />} />
                 </Route>
+                <Route
+                  path={`:hookId/${WebhookDetailsTabs.RecentRequests}/:logId`}
+                  element={<AuditLogDetails />}
+                />
               </Route>
             )}
             <Route path="users">
@@ -108,7 +114,10 @@ function ConsoleContent() {
                 <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
                 <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
               </Route>
-              <Route path={`:id/${UserDetailsTabs.Logs}/:logId`} element={<AuditLogDetails />} />
+              <Route
+                path={`:userId/${UserDetailsTabs.Logs}/:logId`}
+                element={<AuditLogDetails />}
+              />
             </Route>
             <Route path="audit-logs">
               <Route index element={<AuditLogs />} />

@@ -15,7 +15,7 @@ const webhook_details = {
     'You are removing this webhook. After deleting it will not send HTTP request to endpoint URL.',
   deleted: 'The webhook has been successfully deleted.',
   settings_tab: 'Settings',
-  recent_requests_tab: 'Recent requests',
+  recent_requests_tab: 'Recent requests (24h)',
   settings: {
     settings: 'Settings',
     settings_description:

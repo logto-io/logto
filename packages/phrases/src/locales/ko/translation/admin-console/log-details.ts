@@ -1,7 +1,7 @@
 const log_details = {
   page_title: '감사 로그 세부 정보',
   back_to_logs: '감사 기록으로 돌아가기',
-  back_to_user: '{{name}}으로 돌아가기',
+  back_to: '{{name}}으로 돌아가기',
   success: '성공',
   failed: '실패',
   event_key: '이벤트 키',

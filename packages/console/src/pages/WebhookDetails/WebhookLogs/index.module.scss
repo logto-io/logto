@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.logs {
+  flex: 1;
+  margin-bottom: _.unit(6);
+  overflow-y: auto;
+}
+
+
+.filter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  .title {
+    color: var(--color-text-secondary);
+    font: var(--font-body-2);
+  }
+
+  .eventSelector {
+    width: 300px;
+    margin-left: _.unit(2);
+  }
+}
+

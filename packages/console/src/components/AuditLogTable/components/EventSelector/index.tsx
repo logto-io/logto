@@ -1,25 +1,27 @@
 import { useTranslation } from 'react-i18next';
 
-import Select from '@/components/Select';
+import Select, { type Option } from '@/components/Select';
 import { logEventTitle } from '@/consts/logs';
 
 type Props = {
   value?: string;
   onChange: (value?: string) => void;
+  options?: Array<Option<string>>;
 };
 
-function EventSelector({ value, onChange }: Props) {
+const defaultEventOptions = Object.entries(logEventTitle).map(([value, title]) => ({
+  value,
+  title: title ?? value,
+}));
+
+function EventSelector({ value, onChange, options }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const options = Object.entries(logEventTitle).map(([value, title]) => ({
-    value,
-    title: title ?? value,
-  }));
 
   return (
     <Select
       isClearable
       value={value}
-      options={options}
+      options={options ?? defaultEventOptions}
       placeholder={t('logs.event')}
       onChange={onChange}
     />

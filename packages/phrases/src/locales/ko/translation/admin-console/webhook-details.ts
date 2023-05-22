@@ -15,7 +15,7 @@ const webhook_details = {
     '이 webhook을 삭제하고 있습니다. 삭제 후, 엔드포인트 URL에 HTTP request를 보내지 않습니다.',
   deleted: 'Webhook이 성공적으로 삭제되었습니다.',
   settings_tab: '설정',
-  recent_requests_tab: '최근 요청',
+  recent_requests_tab: '최근 요청 (24시간)',
   settings: {
     settings: '설정',
     settings_description:
