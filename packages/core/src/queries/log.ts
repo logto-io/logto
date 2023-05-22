@@ -13,16 +13,24 @@ export type LogCondition = {
   logKey?: string;
   applicationId?: string;
   userId?: string;
+  hookId?: string;
+  startTimeExclusive?: number;
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logKey, applicationId, userId }) => {
+  conditionalSql(logCondition, ({ logKey, applicationId, userId, hookId, startTimeExclusive }) => {
     const subConditions = [
       conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
       conditionalSql(
         applicationId,
         (applicationId) => sql`${fields.payload}->>'applicationId'=${applicationId}`
+      ),
+      conditionalSql(hookId, (hookId) => sql`${fields.payload}->>'hookId'=${hookId}`),
+      conditionalSql(
+        startTimeExclusive,
+        (startTimeExclusive) =>
+          sql`${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)`
       ),
     ].filter(({ sql }) => sql);
 
