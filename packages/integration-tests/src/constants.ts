@@ -20,3 +20,6 @@ export const signUpIdentifiers = {
   emailOrSms: [SignInIdentifier.Email, SignInIdentifier.Phone],
   none: [],
 };
+
+export const consoleUsername = 'admin';
+export const consolePassword = 'abcd1234';

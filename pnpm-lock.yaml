@@ -3387,6 +3387,9 @@ importers:
 
   packages/integration-tests:
     devDependencies:
+      '@jest/test-sequencer':
+        specifier: ^29.5.0
+        version: 29.5.0
       '@jest/types':
         specifier: ^29.1.2
         version: 29.1.2
@@ -3396,9 +3399,6 @@ importers:
       '@logto/js':
         specifier: ^2.0.1
         version: 2.0.1
-      '@logto/language-kit':
-        specifier: workspace:^1.0.0
-        version: link:../toolkit/language-kit
       '@logto/node':
         specifier: ^2.0.0
         version: 2.0.0
