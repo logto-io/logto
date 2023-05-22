@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { createServer } from 'node:http';
+import { createServer, type RequestListener } from 'node:http';
 import path from 'node:path';
 
 import { mockSmsVerificationCodeFileName } from '@logto/connector-kit';
@@ -87,12 +87,14 @@ export const expectRequestError = (error: unknown, code: string, messageIncludes
   }
 };
 
-export const createMockServer = (port: number) => {
-  const server = createServer((request, response) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    response.statusCode = 204;
-    response.end();
-  });
+const defaultRequestListener: RequestListener = (request, response) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  response.statusCode = 204;
+  response.end();
+};
+
+export const createMockServer = (port: number, requestListener?: RequestListener) => {
+  const server = createServer(requestListener ?? defaultRequestListener);
 
   return {
     listen: async () =>
