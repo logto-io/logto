@@ -41,7 +41,7 @@ const application_details = {
   enable_admin_access: "Activer l'accès administrateur",
   enable_admin_access_label:
     "Activer ou désactiver l'accès à l'API de gestion. Une fois activé, vous pouvez utiliser des jetons d'accès pour appeler l'API de gestion au nom de cette application.",
-  always_issue_refresh_token: 'Always issue Refresh Token',
+  always_issue_refresh_token: 'Toujours émettre le Refresh Token.',
   always_issue_refresh_token_label:
     "En activant cette configuration, Logto pourra toujours émettre des Refresh Tokens, indépendamment de la présentation ou non de la demande d'authentification `prompt=consent`. Cependant, cette pratique est découragée sauf si nécessaire, car elle n'est pas compatible avec OpenID Connect et peut potentiellement causer des problèmes.",
   delete_description:
