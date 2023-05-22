@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.regenerateButton {
+  margin-top: _.unit(3);
+}
+
+.signingKeyField {
+  width: 100%;
+}
