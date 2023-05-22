@@ -4,8 +4,11 @@ import {
   type HookEvents,
   type HookConfig,
   type CreateHook,
+  LogResult,
+  type Log,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
+import { subDays } from 'date-fns';
 
 import {
   mockCreatedAtForHook,
@@ -42,12 +45,33 @@ const hooks = {
   deleteHookById: jest.fn(),
 };
 
-const tenantContext = new MockTenant(undefined, { hooks });
+const mockLog: Log = {
+  tenantId: 'fake_tenant',
+  id: '1',
+  key: 'a',
+  payload: { key: 'a', result: LogResult.Success },
+  createdAt: 123,
+};
+
+const logs = {
+  countLogs: jest.fn().mockResolvedValue({
+    count: 1,
+  }),
+  findLogs: jest.fn().mockResolvedValue([mockLog]),
+};
+
+const { countLogs, findLogs } = logs;
+
+const tenantContext = new MockTenant(undefined, { hooks, logs });
 
 const hookRoutes = await pickDefault(import('./hook.js'));
 
 describe('hook routes', () => {
   const hookRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('GET /hooks', async () => {
     const response = await hookRequest.get('/hooks');
@@ -61,6 +85,25 @@ describe('hook routes', () => {
     const response = await hookRequest.get(`/hooks/${hookIdInMockList}`);
     expect(response.status).toEqual(200);
     expect(response.body.id).toBe(hookIdInMockList);
+  });
+
+  it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {
+    jest.useFakeTimers().setSystemTime(100_000);
+
+    const hookId = 'foo';
+    const logKey = 'TriggerHook.PostSignIn';
+    const page = 1;
+    const pageSize = 5;
+
+    const startTimeExclusive = subDays(new Date(100_000), 1).getTime();
+
+    await hookRequest.get(
+      `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
+    );
+    expect(countLogs).toHaveBeenCalledWith({ hookId, logKey, startTimeExclusive });
+    expect(findLogs).toHaveBeenCalledWith(5, 0, { hookId, logKey, startTimeExclusive });
+
+    jest.useRealTimers();
   });
 
   it('POST /hooks', async () => {

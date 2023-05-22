@@ -1,10 +1,12 @@
-import { Hooks, hookEventsGuard } from '@logto/schemas';
+import { Hooks, Logs, hookEventsGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, deduplicate } from '@silverhand/essentials';
+import { subDays } from 'date-fns';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -16,7 +18,10 @@ const nonemptyUniqueHookEventsGuard = hookEventsGuard
 export default function hookRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  const { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById } = queries.hooks;
+  const {
+    hooks: { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById },
+    logs: { countLogs, findLogs },
+  } = queries;
 
   router.get(
     '/hooks',
@@ -41,6 +46,37 @@ export default function hookRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       ctx.body = await findHookById(id);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/hooks/:id/recent-logs',
+    koaPagination(),
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      query: z.object({ logKey: z.string().optional() }),
+      response: Logs.guard.omit({ tenantId: true }).array(),
+      status: 200,
+    }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+
+      const {
+        params: { id },
+        query: { logKey },
+      } = ctx.guard;
+
+      const startTimeExclusive = subDays(new Date(), 1).getTime();
+
+      const [{ count }, logs] = await Promise.all([
+        countLogs({ logKey, hookId: id, startTimeExclusive }),
+        findLogs(limit, offset, { logKey, hookId: id, startTimeExclusive }),
+      ]);
+
+      ctx.pagination.totalCount = count;
+      ctx.body = logs;
 
       return next();
     }

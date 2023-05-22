@@ -1,4 +1,4 @@
-import type { Hook, HookConfig, LogKey } from '@logto/schemas';
+import type { Hook, HookConfig, Log, LogKey } from '@logto/schemas';
 import { HookEvent, SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
 
 import { authedAdminApi, deleteUser, getLogs, putInteraction } from '#src/api/index.js';
@@ -223,6 +223,40 @@ describe('hooks', () => {
       authedAdminApi.delete(`hooks/${hook2.id}`),
       authedAdminApi.delete(`hooks/${hook3.id}`),
     ]);
+    await deleteUser(id);
+  });
+
+  it('should get recent hook logs correctly', async () => {
+    const createdHook = await authedAdminApi
+      .post('hooks', { json: createPayload(HookEvent.PostRegister, 'http://localhost:9999') })
+      .json<Hook>();
+
+    // Init session and submit
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const client = await initClient();
+    await client.send(putInteraction, {
+      event: InteractionEvent.Register,
+      profile: {
+        username,
+        password,
+      },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    const id = await processSession(client, redirectTo);
+    await waitFor(500); // Wait for hooks execution
+
+    const logs = await authedAdminApi
+      .get(`hooks/${createdHook.id}/recent-logs?page_size=100`)
+      .json<Log[]>();
+    expect(
+      logs.some(
+        ({ payload: { hookId, result } }) =>
+          hookId === createdHook.id && result === LogResult.Success
+      )
+    ).toBeTruthy();
+
+    await authedAdminApi.delete(`hooks/${createdHook.id}`);
+
     await deleteUser(id);
   });
 });
