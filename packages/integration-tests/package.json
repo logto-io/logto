@@ -25,7 +25,6 @@
     "@jest/types": "^29.1.2",
     "@logto/connector-kit": "workspace:^1.1.0",
     "@logto/js": "^2.0.1",
-    "@logto/language-kit": "workspace:^1.0.0",
     "@logto/node": "^2.0.0",
     "@logto/schemas": "workspace:^1.1.0",
     "@silverhand/eslint-config": "3.0.1",
