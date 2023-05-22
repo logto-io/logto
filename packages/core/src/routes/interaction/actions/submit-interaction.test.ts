@@ -73,7 +73,13 @@ describe('submit action', () => {
     connectorId: 'logto',
   };
 
-  const userInfo = { id: 'foo', name: 'foo_social', avatar: 'avatar' };
+  const userInfo = {
+    id: 'foo',
+    name: 'foo_social',
+    avatar: 'avatar',
+    email: 'email@socail.com',
+    phone: '123123',
+  };
 
   const identifiers: Identifier[] = [
     {
@@ -125,6 +131,37 @@ describe('submit action', () => {
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'uid' },
     });
+  });
+
+  it('register new social user', async () => {
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile: { connectorId: 'logto', username: 'username' },
+      identifiers,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(generateUserId).toBeCalled();
+    expect(hasActiveUsers).not.toBeCalled();
+    expect(encryptUserPassword).not.toBeCalled();
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        username: 'username',
+        identities: {
+          logto: { userId: userInfo.id, details: userInfo },
+        },
+        name: userInfo.name,
+        avatar: userInfo.avatar,
+        primaryEmail: userInfo.email,
+        primaryPhone: userInfo.phone,
+        lastSignInAt: now,
+      },
+      ['user']
+    );
   });
 
   it('admin user register', async () => {

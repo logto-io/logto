@@ -21,7 +21,7 @@ describe('content-type: application/json compatibility', () => {
       }),
       (error) => {
         if (!(error instanceof HTTPError)) {
-          return fail('Error is not a HTTPError instance.');
+          throw new TypeError('Error is not a HTTPError instance.');
         }
         expect(JSON.parse(String(error.response.body))).toHaveProperty(
           'error_description',

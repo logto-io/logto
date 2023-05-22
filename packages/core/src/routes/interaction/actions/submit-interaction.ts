@@ -1,6 +1,6 @@
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
-import type { User, Profile } from '@logto/schemas';
+import type { User, Profile, CreateUser } from '@logto/schemas';
 import {
   AdminTenantRole,
   SignInMode,
@@ -10,6 +10,7 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
 } from '@logto/schemas';
+import { type OmitAutoSetFields } from '@logto/shared';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -46,7 +47,6 @@ const getNewSocialProfile = async (
   }
 ) => {
   // TODO: @simeng refactor me. This step should be verified by the previous profile verification cycle Already.
-  // Should pickup the verified social user info result automatically
   const socialIdentifier = identifiers.find((identifier) => identifier.connectorId === connectorId);
 
   if (!socialIdentifier) {
@@ -59,26 +59,43 @@ const getNewSocialProfile = async (
   } = await getLogtoConnectorById(connectorId);
 
   const { userInfo } = socialIdentifier;
-  const { name, avatar, id } = userInfo;
+  const { name, avatar, id, email, phone } = userInfo;
 
-  // Update the user name and avatar if the connector has syncProfile enabled or is new registered user
-  const profileUpdate = conditional(
-    (syncProfile || !user) && {
+  const identities = { ...user?.identities, [target]: { userId: id, details: userInfo } };
+
+  // Sync the name, avatar, email and phone for new user
+  if (!user) {
+    return {
+      identities,
       ...conditional(name && { name }),
       ...conditional(avatar && { avatar }),
-    }
-  );
+      ...conditional(email && { primaryEmail: email }),
+      ...conditional(phone && { primaryPhone: phone }),
+    };
+  }
 
+  // Sync the user name and avatar if the connector has syncProfile enabled
   return {
-    identities: { ...user?.identities, [target]: { userId: id, details: userInfo } },
-    ...profileUpdate,
+    identities,
+    ...conditional(
+      syncProfile && {
+        ...conditional(name && { name }),
+        ...conditional(avatar && { avatar }),
+      }
+    ),
   };
 };
 
-const getSyncedSocialUserProfile = async (
+const getLatestUserProfileFromSocial = async (
   { getLogtoConnectorById }: ConnectorLibrary,
-  socialIdentifier: SocialIdentifier
+  authIdentifiers: Identifier[]
 ) => {
+  const socialIdentifier = filterSocialIdentifiers(authIdentifiers).slice(-1)[0];
+
+  if (!socialIdentifier) {
+    return;
+  }
+
   const {
     userInfo: { name, avatar },
     connectorId,
@@ -117,11 +134,11 @@ const parseNewUserProfile = async (
   ]);
 
   return {
+    ...socialProfile, // SocialProfile should be applied first
+    ...passwordProfile,
     ...conditional(phone && { primaryPhone: phone }),
     ...conditional(username && { username }),
     ...conditional(email && { primaryEmail: email }),
-    ...passwordProfile,
-    ...socialProfile,
   };
 };
 
@@ -129,17 +146,15 @@ const parseUserProfile = async (
   connectorLibrary: ConnectorLibrary,
   { profile, identifiers }: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult,
   user?: User
-) => {
+): Promise<Omit<OmitAutoSetFields<CreateUser>, 'id'>> => {
   const { authIdentifiers, profileIdentifiers } = categorizeIdentifiers(identifiers ?? [], profile);
 
   const newUserProfile =
     profile && (await parseNewUserProfile(connectorLibrary, profile, profileIdentifiers, user));
 
-  // Sync the last social profile
-  const socialIdentifier = filterSocialIdentifiers(authIdentifiers).slice(-1)[0];
-
+  // Sync from the latest social identity profile for existing users
   const syncedSocialUserProfile =
-    socialIdentifier && (await getSyncedSocialUserProfile(connectorLibrary, socialIdentifier));
+    user && (await getLatestUserProfileFromSocial(connectorLibrary, authIdentifiers));
 
   return {
     ...syncedSocialUserProfile,
@@ -151,7 +166,7 @@ const parseUserProfile = async (
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithInteractionDetailsContext,
-  { provider, libraries, connectors, queries, id: tenantId }: TenantContext,
+  { provider, libraries, connectors, queries }: TenantContext,
   log?: LogEntry
 ) {
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
@@ -164,7 +179,7 @@ export default async function submitInteraction(
 
   if (event === InteractionEvent.Register) {
     const id = await generateUserId();
-    const upsertProfile = await parseUserProfile(connectors, interaction);
+    const userProfile = await parseUserProfile(connectors, interaction);
 
     const { client_id } = ctx.interactionDetails.params;
 
@@ -178,7 +193,7 @@ export default async function submitInteraction(
     await insertUser(
       {
         id,
-        ...upsertProfile,
+        ...userProfile,
       },
       conditionalArray<string>(
         isInAdminTenant && AdminTenantRole.User,
@@ -208,9 +223,9 @@ export default async function submitInteraction(
 
   if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
-    const upsertProfile = await parseUserProfile(connectors, interaction, user);
+    const updateUserProfile = await parseUserProfile(connectors, interaction, user);
 
-    await updateUserById(accountId, upsertProfile);
+    await updateUserById(accountId, updateUserProfile);
     await assignInteractionResults(ctx, provider, { login: { accountId } });
 
     appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
