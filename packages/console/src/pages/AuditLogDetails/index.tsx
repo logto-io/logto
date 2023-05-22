@@ -1,6 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { User, Log } from '@logto/schemas';
+import type { User, Log, Hook } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -16,6 +17,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import type { RequestError } from '@/hooks/use-api';
+import { getUserTitle } from '@/utils/user';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
@@ -27,18 +29,31 @@ const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
 
 function AuditLogDetails() {
-  const { id, logId } = useParams();
+  const { userId, hookId, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Log, RequestError>(logId && `api/logs/${logId}`);
-  const { data: userData } = useSWR<User, RequestError>(id && `api/users/${id}`);
+  const { data: userData } = useSWR<User, RequestError>(userId && `api/users/${userId}`);
+  const { data: hookData } = useSWR<Hook, RequestError>(hookId && `api/hooks/${hookId}`);
 
   const isLoading = !data && !error;
 
   const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
-  const backLinkTitle = id
-    ? t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })
-    : t('log_details.back_to_logs');
+  const backLinkTitle =
+    conditional(
+      userId &&
+        t('log_details.back_to', {
+          name: conditional(userData && getUserTitle(userData)) ?? t('users.unnamed'),
+        })
+    ) ??
+    conditional(
+      hookId &&
+        t('log_details.back_to', {
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          name: hookData?.name || t('users.unnamed'),
+        })
+    ) ??
+    t('log_details.back_to_logs');
 
   if (!logId) {
     return null;
@@ -105,7 +120,7 @@ function AuditLogDetails() {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={getDetailsTabNavLink(logId, id)}>
+            <TabNavItem href={getDetailsTabNavLink(logId, userId)}>
               {t('log_details.tab_details')}
             </TabNavItem>
           </TabNav>

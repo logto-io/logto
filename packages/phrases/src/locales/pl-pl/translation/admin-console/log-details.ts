@@ -1,7 +1,7 @@
 const log_details = {
   page_title: 'Szczegóły dziennika audytu',
   back_to_logs: 'Powróć do dziennika audytu',
-  back_to_user: 'Powróć do {{name}}',
+  back_to: 'Powróć do {{name}}',
   success: 'Sukces',
   failed: 'Niepowodzenie',
   event_key: 'Klucz zdarzenia',

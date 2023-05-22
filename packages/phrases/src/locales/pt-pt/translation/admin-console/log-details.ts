@@ -1,7 +1,7 @@
 const log_details = {
   page_title: 'Detalhes do registo de auditoria',
   back_to_logs: 'Voltar aos registos de auditoria',
-  back_to_user: 'Voltar para {{name}}',
+  back_to: 'Voltar para {{name}}',
   success: 'Sucesso',
   failed: 'Falha',
   event_key: 'Chave do Evento',

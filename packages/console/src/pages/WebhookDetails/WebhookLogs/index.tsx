@@ -1,0 +1,126 @@
+import { type Log, HookEvent } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import useSWR from 'swr';
+import { z } from 'zod';
+
+import EventSelector from '@/components/AuditLogTable/components/EventSelector';
+import DynamicT from '@/components/DynamicT';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import Table from '@/components/Table';
+import Tag from '@/components/Tag';
+import { defaultPageSize } from '@/consts';
+import { hookEventLabel, hookEventLogKey } from '@/consts/webhooks';
+import { type RequestError } from '@/hooks/use-api';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import { buildUrl } from '@/utils/url';
+
+import { type WebhookDetailsOutletContext } from '../types';
+
+import * as styles from './index.module.scss';
+
+const hooLogEventOptions = Object.values(HookEvent).map((event) => ({
+  title: <DynamicT forKey={hookEventLabel[event]} />,
+  value: hookEventLogKey[event],
+}));
+
+function WebhookLogs() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const {
+    hook: { id },
+  } = useOutletContext<WebhookDetailsOutletContext>();
+
+  const pageSize = defaultPageSize;
+  const [{ page, event }, updateSearchParameters] = useSearchParametersWatcher({
+    page: 1,
+    event: '',
+    startTimeExclusive: '',
+  });
+
+  const url = buildUrl(`api/hooks/${id}/recent-logs`, {
+    page: String(page),
+    page_size: String(pageSize),
+    ...conditional(event && { logKey: event }),
+  });
+
+  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
+  const isLoading = !data && !error;
+  const [logs, totalCount] = data ?? [];
+
+  return (
+    <Table
+      className={styles.logs}
+      rowGroups={[{ key: 'logs', data: logs }]}
+      rowIndexKey="id"
+      rowClickHandler={({ id }) => {
+        navigate(`${pathname}/${id}`);
+      }}
+      filter={
+        <div className={styles.filter}>
+          <div className={styles.title}>{t('logs.filter_by')}</div>
+          <div className={styles.eventSelector}>
+            <EventSelector
+              value={event}
+              options={hooLogEventOptions}
+              onChange={(event) => {
+                updateSearchParameters({ event, page: undefined });
+              }}
+            />
+          </div>
+        </div>
+      }
+      columns={[
+        {
+          title: 'Status',
+          dataIndex: 'status',
+          colSpan: 5,
+          render: ({ payload }) => {
+            const result = z
+              .object({ response: z.object({ statusCode: z.number().optional() }) })
+              .optional()
+              .safeParse(payload);
+            const statusCode = result.success ? result.data?.response.statusCode : undefined;
+            const isError = !statusCode || statusCode >= 400;
+            return (
+              <Tag type="result" status={isError ? 'error' : 'success'}>
+                {statusCode ?? 'Request error'}
+              </Tag>
+            );
+          },
+        },
+        {
+          title: t('logs.event'),
+          dataIndex: 'event',
+          colSpan: 6,
+          render: ({ key }) => {
+            const event = Object.values(HookEvent).find((event) => hookEventLogKey[event] === key);
+            return conditional(event && t(hookEventLabel[event])) ?? '-';
+          },
+        },
+        {
+          title: t('logs.time'),
+          dataIndex: 'time',
+          colSpan: 5,
+          render: ({ createdAt }) => new Date(createdAt).toLocaleString(),
+        },
+      ]}
+      placeholder={<EmptyDataPlaceholder />}
+      pagination={{
+        page,
+        totalCount,
+        pageSize,
+        onChange: (page) => {
+          updateSearchParameters({ page });
+        },
+      }}
+      isLoading={isLoading}
+      errorMessage={error?.body?.message ?? error?.message}
+      onRetry={async () => mutate(undefined, true)}
+    />
+  );
+}
+
+export default WebhookLogs;

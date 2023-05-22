@@ -1,7 +1,7 @@
 const log_details = {
   page_title: 'Audit Log details',
   back_to_logs: 'Back to Audit Logs',
-  back_to_user: 'Back to {{name}}',
+  back_to: 'Back to {{name}}',
   success: 'Success',
   failed: 'Failed',
   event_key: 'Event Key',

@@ -1,7 +1,7 @@
 const log_details = {
   page_title: 'Denetim Kaydı Detayları',
   back_to_logs: 'Denetim Kayıtlarına Geri Dön',
-  back_to_user: "{{name}}'in Kayıtlarına Geri Dön",
+  back_to: "{{name}}'in Kayıtlarına Geri Dön",
   success: 'Başarılı',
   failed: 'Başarısız',
   event_key: 'Olay Anahtarı',

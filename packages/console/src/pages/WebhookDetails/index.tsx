@@ -1,5 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type Hook } from '@logto/schemas';
+import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +33,7 @@ import { type WebhookDetailsOutletContext } from './types';
 function WebhookDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
+  const isPageHasTable = pathname.endsWith(WebhookDetailsTabs.RecentRequests);
   const navigate = useNavigate();
   const { id } = useParams();
   const { data, error, mutate } = useSWR<Hook, RequestError>(id && `api/hooks/${id}`);
@@ -93,6 +95,7 @@ function WebhookDetails() {
     <DetailsPage
       backLink="/webhooks"
       backLinkTitle="webhook_details.back_to_webhooks"
+      className={classNames(isPageHasTable && styles.containsTableLayout)}
       isLoading={isLoading}
       error={error}
       onRetry={mutate}
@@ -177,6 +180,9 @@ function WebhookDetails() {
           <TabNav>
             <TabNavItem href={`/webhooks/${data.id}/${WebhookDetailsTabs.Settings}`}>
               <DynamicT forKey="webhook_details.settings_tab" />
+            </TabNavItem>
+            <TabNavItem href={`/webhooks/${data.id}/${WebhookDetailsTabs.RecentRequests}`}>
+              <DynamicT forKey="webhook_details.recent_requests_tab" />
             </TabNavItem>
           </TabNav>
           <Outlet

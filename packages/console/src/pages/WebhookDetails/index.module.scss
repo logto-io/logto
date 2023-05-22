@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.containsTableLayout {
+  height: 100%;
+}
+
 .header {
   padding: _.unit(6);
   display: flex;

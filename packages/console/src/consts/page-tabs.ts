@@ -10,6 +10,7 @@ export enum ConnectorsTabs {
 
 export enum WebhookDetailsTabs {
   Settings = 'settings',
+  RecentRequests = 'recent-requests',
 }
 
 export enum SignInExperiencePage {
