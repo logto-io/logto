@@ -15,7 +15,7 @@ const webhook_details = {
     'Sie entfernen diesen Webhook. Nach dem Löschen wird keine HTTP-Anforderung an die Endpunkt-URL gesendet.',
   deleted: 'Der Webhook wurde erfolgreich gelöscht.',
   settings_tab: 'Einstellungen',
-  recent_requests_tab: 'Letzte Anforderungen',
+  recent_requests_tab: 'Letzte Anforderungen (24h)',
   settings: {
     settings: 'Einstellungen',
     settings_description:

@@ -15,7 +15,7 @@ const webhook_details = {
     'このWebhookを削除しています。削除した後はエンドポイントURLにHTTPリクエストが送信されなくなります。',
   deleted: 'Webhookは削除されました。',
   settings_tab: '設定',
-  recent_requests_tab: '最近のリクエスト',
+  recent_requests_tab: '最近のリクエスト（24時間）',
   settings: {
     settings: '設定',
     settings_description:

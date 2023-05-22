@@ -15,7 +15,7 @@ const webhook_details = {
     'Вы удаляете этот вебхук. После удаления он не будет отправлять HTTP-запрос на URL-адрес точки доступа.',
   deleted: 'Вебхук был успешно удален.',
   settings_tab: 'Настройки',
-  recent_requests_tab: 'Недавние запросы',
+  recent_requests_tab: 'Недавние запросы (за 24ч)',
   settings: {
     settings: 'Настройки',
     settings_description:

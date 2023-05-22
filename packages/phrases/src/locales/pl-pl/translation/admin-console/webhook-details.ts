@@ -15,7 +15,7 @@ const webhook_details = {
     'Usuwasz ten webhook. Po jego usunięciu nie będzie wysyłany żaden żądanie HTTP do adresu URL końcowego.',
   deleted: 'Webhook został pomyślnie usunięty.',
   settings_tab: 'Ustawienia',
-  recent_requests_tab: 'Najnowsze żądania',
+  recent_requests_tab: 'Najnowsze żądania (24h)',
   settings: {
     settings: 'Ustawienia',
     settings_description:

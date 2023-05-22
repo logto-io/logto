@@ -13,7 +13,7 @@ const webhook_details = {
   deletion_reminder: '您正在刪除此 webhook。刪除後，不會對端點 URL 發送 HTTP 請求。',
   deleted: 'Webhook 已成功刪除。',
   settings_tab: '設置',
-  recent_requests_tab: '最新請求',
+  recent_requests_tab: '最新請求（24h）',
   settings: {
     settings: '設置',
     settings_description:
