@@ -3,7 +3,7 @@
 ---- Create trigger to set tenant name ----
 create trigger set_tenant_name_trigger
 before insert on tenants
-for each row
+for each row when (new.name is null)
 execute procedure set_tenant_name();
 
 ---- Grant CRUD access to the group ----
