@@ -41,6 +41,9 @@ const application_details = {
   enable_admin_access: 'Włącz dostęp administratora',
   enable_admin_access_label:
     'Włącz lub wyłącz dostęp do interfejsu API zarządzania. Po włączeniu możesz używać tokenów dostępu do wywoływania interfejsu API zarządzania w imieniu tej aplikacji.',
+  always_issue_refresh_token: 'Always issue Refresh Token', // UNTRANSLATED
+  always_issue_refresh_token_label:
+    'Enabling this configuration will allow Logto to always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.', // UNTRANSLATED
   delete_description:
     'Ta operacja nie może zostać cofnięta. Skutkuje ona trwałym usunięciem aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',

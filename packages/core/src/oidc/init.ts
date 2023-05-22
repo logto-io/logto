@@ -151,6 +151,16 @@ export default function initOidc(
         },
       },
     },
+    issueRefreshToken: (_, client, code) => {
+      if (!client.grantTypeAllowed('refresh_token')) {
+        return false;
+      }
+
+      return (
+        code.scopes.has('offline_access') ||
+        (client.applicationType === 'web' && Boolean(client.metadata().alwaysIssueRefreshToken))
+      );
+    },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const isDemoApp = appId === demoAppApplicationId;
@@ -256,7 +266,7 @@ export default function initOidc(
     },
     pkce: {
       required: (ctx, client) => {
-        return client.tokenEndpointAuthMethod !== 'client_secret_basic';
+        return client.clientAuthMethod !== 'client_secret_basic';
       },
       methods: ['S256'],
     },

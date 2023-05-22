@@ -41,6 +41,9 @@ const application_details = {
   enable_admin_access: '관리자 접근 활성화',
   enable_admin_access_label:
     '관리 API에 대한 접근을 활성화, 비활성화할 수 있어요. 활성화한다면, 이 어플리케이션에서 Access 토큰을 통해 관리 API를 사용할 수 있어요.',
+  always_issue_refresh_token: 'Always issue Refresh Token', // UNTRANSLATED
+  always_issue_refresh_token_label:
+    'Enabling this configuration will allow Logto to always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.', // UNTRANSLATED
   delete_description:
     '이 행동은 취소될 수 없어요. 어플리케이션을 영원히 삭제할 거에요. 삭제를 진행하기 위해 <span>{{name}}</span> 를 입력해주세요.',
   enter_your_application_name: '어플리케이션 이름을 입력해 주세요.',

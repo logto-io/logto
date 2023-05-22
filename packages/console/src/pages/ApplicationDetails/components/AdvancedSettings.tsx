@@ -64,6 +64,14 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
           variant="border"
         />
       </FormField>
+      {[ApplicationType.Traditional, ApplicationType.SPA].includes(applicationType) && (
+        <FormField title="application_details.always_issue_refresh_token">
+          <Switch
+            label={t('application_details.always_issue_refresh_token_label')}
+            {...register('customClientMetadata.alwaysIssueRefreshToken')}
+          />
+        </FormField>
+      )}
       {applicationType === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Switch
