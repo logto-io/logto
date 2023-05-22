@@ -4,7 +4,7 @@ WORKDIR /etc/logto
 ENV CI=true
 
 # No need for Docker build
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 ### Install toolchain ###
 RUN npm add --location=global pnpm@^8.0.0
