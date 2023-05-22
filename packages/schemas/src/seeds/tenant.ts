@@ -10,5 +10,3 @@ export const adminTenantId = 'admin';
  * type, manually define it here for now.
  */
 export type TenantModel = InferModelType<typeof Tenants>;
-export type CreateTenant = Pick<TenantModel, 'id' | 'dbUser' | 'dbUserPassword'> &
-  Partial<Pick<TenantModel, 'name'>>;

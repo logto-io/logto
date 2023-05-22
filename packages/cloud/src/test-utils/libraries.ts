@@ -12,7 +12,7 @@ export class MockTenantsLibrary implements TenantsLibrary {
   }
 
   public getAvailableTenants = jest.fn<Promise<TenantInfo[]>, [string]>();
-  public createNewTenant = jest.fn<Promise<TenantInfo>, [string]>();
+  public createNewTenant = jest.fn<Promise<TenantInfo>, [string, Record<string, unknown>]>();
 }
 
 export class MockServicesLibrary implements ServicesLibrary {
