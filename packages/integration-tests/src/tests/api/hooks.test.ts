@@ -1,3 +1,6 @@
+import { createHmac } from 'node:crypto';
+import { type RequestListener } from 'node:http';
+
 import type { Hook, HookConfig, Log, LogKey } from '@logto/schemas';
 import { HookEvent, SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
 
@@ -22,8 +25,35 @@ const createPayload = (event: HookEvent, url = 'not_work_url'): CreateHookPayloa
   },
 });
 
+type HookSecureData = {
+  signature: string;
+  payload: string;
+};
+
+// Note: return hook payload and signature for webhook security testing
+const hookServerRequestListener: RequestListener = (request, response) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  response.statusCode = 204;
+
+  const data: Buffer[] = [];
+  request.on('data', (chunk: Buffer) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    data.push(chunk);
+  });
+
+  request.on('end', () => {
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    const payload = Buffer.concat(data).toString();
+    response.end(
+      JSON.stringify({
+        signature: request.headers['logto-signature-sha-256'] as string,
+        payload,
+      } satisfies HookSecureData)
+    );
+  });
+};
 describe('hooks', () => {
-  const { listen, close } = createMockServer(9999);
+  const { listen, close } = createMockServer(9999, hookServerRequestListener);
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods({
@@ -254,6 +284,53 @@ describe('hooks', () => {
           hookId === createdHook.id && result === LogResult.Success
       )
     ).toBeTruthy();
+
+    await authedAdminApi.delete(`hooks/${createdHook.id}`);
+
+    await deleteUser(id);
+  });
+
+  it('should secure webhook payload data successfully', async () => {
+    const createdHook = await authedAdminApi
+      .post('hooks', { json: createPayload(HookEvent.PostRegister, 'http://localhost:9999') })
+      .json<Hook>();
+
+    // Init session and submit
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const client = await initClient();
+    await client.send(putInteraction, {
+      event: InteractionEvent.Register,
+      profile: {
+        username,
+        password,
+      },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    const id = await processSession(client, redirectTo);
+    await waitFor(500); // Wait for hooks execution
+
+    const logs = await authedAdminApi
+      .get(`hooks/${createdHook.id}/recent-logs?page_size=100`)
+      .json<Log[]>();
+
+    const log = logs.find(({ payload: { hookId } }) => hookId === createdHook.id);
+    expect(log).toBeTruthy();
+
+    const response = log?.payload.response;
+    expect(response).toBeTruthy();
+
+    const {
+      body: { signature, payload },
+    } = response as { body: HookSecureData };
+
+    expect(signature).toBeTruthy();
+    expect(payload).toBeTruthy();
+
+    const calculateSignature = createHmac('sha256', createdHook.signingKey)
+      .update(payload)
+      .digest('hex');
+
+    expect(calculateSignature).toEqual(signature);
 
     await authedAdminApi.delete(`hooks/${createdHook.id}`);
 
