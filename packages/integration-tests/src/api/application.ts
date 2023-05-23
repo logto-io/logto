@@ -7,12 +7,17 @@ import type {
 
 import { authedAdminApi } from './api.js';
 
-export const createApplication = async (name: string, type: ApplicationType) =>
+export const createApplication = async (
+  name: string,
+  type: ApplicationType,
+  rest?: Partial<CreateApplication>
+) =>
   authedAdminApi
     .post('applications', {
       json: {
         name,
         type,
+        ...rest,
       },
     })
     .json<Application>();

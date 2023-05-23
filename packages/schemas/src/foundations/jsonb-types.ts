@@ -69,6 +69,14 @@ export enum CustomClientMetadataKey {
   IdTokenTtl = 'idTokenTtl',
   RefreshTokenTtl = 'refreshTokenTtl',
   TenantId = 'tenantId',
+  /**
+   * Enabling this configuration will allow Logto to always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request.
+   *
+   * It only works for web applications when the client allowed grant types includes `refresh_token`.
+   *
+   * This config is for the third-party integrations that do not strictly follow OpenID Connect standards due to some reasons (e.g. they only know OAuth, but requires a Refresh Token to be returned anyway).
+   */
+  AlwaysIssueRefreshToken = 'alwaysIssueRefreshToken',
 }
 
 export const customClientMetadataGuard = z.object({
@@ -76,8 +84,12 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.IdTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.RefreshTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.TenantId]: z.string().optional(),
+  [CustomClientMetadataKey.AlwaysIssueRefreshToken]: z.boolean().optional(),
 });
 
+/**
+ * @see {@link CustomClientMetadataKey} for key descriptions.
+ */
 export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
 
 /* === Users === */

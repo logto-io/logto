@@ -41,6 +41,9 @@ const detalles_aplicacion = {
   enable_admin_access: 'Habilitar acceso de administrador',
   enable_admin_access_label:
     'Habilita o deshabilita el acceso a la API de Gestión. Una vez habilitado, puedes utilizar tokens de acceso para llamar a la API de Gestión en nombre de esta aplicación.',
+  always_issue_refresh_token: 'Siempre emitir Token de Refresco',
+  always_issue_refresh_token_label:
+    'Al habilitar esta configuración, Logto siempre emitirá Tokens de Refresco, independientemente de si se presenta o no “prompt=consent” en la solicitud de autenticación. Sin embargo, esta práctica no está recomendada a menos que sea necesario, ya que no es compatible con OpenID Connect y puede causar problemas potenciales.',
   delete_description:
     'Esta acción no se puede deshacer. Eliminará permanentemente la aplicación. Ingresa el nombre de la aplicación <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Ingresa el nombre de tu aplicación',

@@ -41,6 +41,9 @@ const application_details = {
   enable_admin_access: 'Ativar o acesso de administrador',
   enable_admin_access_label:
     'Ativar ou desativar o acesso à API de gestão. Uma vez ativado, pode utilizar tokens de acesso para chamar a API de gestão em nome desta aplicação.',
+  always_issue_refresh_token: 'Sempre emitir Refresh Token',
+  always_issue_refresh_token_label:
+    'Ao ativar essa configuração, a Logto sempre emitirá tokens de atualização, independentemente de `prompt=consent`ser apresentado na solicitação de autenticação. No entanto, essa prática é desencorajada, a menos que seja necessária, pois não é compatível com OpenID Connect e pode causar problemas.',
   delete_description:
     'Esta ação não pode ser revertida. Esta ação irá eliminar permanentemente a aplicação. Insira o nome da aplicação <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Insira o nome da aplicação',

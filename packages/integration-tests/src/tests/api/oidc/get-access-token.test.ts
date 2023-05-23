@@ -26,7 +26,7 @@ describe('get access token', () => {
     await enableAllPasswordSignInMethods();
   });
 
-  it('sign-in and getAccessToken with admin user', async () => {
+  it('can sign in and getAccessToken with admin user', async () => {
     const client = new MockClient({
       resources: [defaultManagementApi.resource.indicator],
       scopes: [defaultManagementApi.scope.name],
@@ -49,7 +49,7 @@ describe('get access token', () => {
     void expect(client.getAccessToken('api.foo.com')).rejects.toThrow();
   });
 
-  it('sign-in and getAccessToken with guest user', async () => {
+  it('can sign in and getAccessToken with guest user', async () => {
     const client = new MockClient({
       resources: [defaultManagementApi.resource.indicator],
       scopes: [defaultManagementApi.scope.name],
@@ -69,7 +69,7 @@ describe('get access token', () => {
     );
   });
 
-  it('sign-in and get multiple Access Token by the same Refresh Token within refreshTokenReuseInterval', async () => {
+  it('can sign in and get multiple Access Tokens by the same Refresh Token within refreshTokenReuseInterval', async () => {
     const client = new MockClient({ resources: [defaultManagementApi.resource.indicator] });
 
     await client.initSession();

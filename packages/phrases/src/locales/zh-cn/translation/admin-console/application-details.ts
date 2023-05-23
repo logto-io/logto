@@ -39,10 +39,13 @@ const application_details = {
   enable_admin_access: '启用管理访问',
   enable_admin_access_label:
     '启用或禁用对管理 API 的访问。启用后，你可以使用访问令牌代表该应用程序调用管理 API。',
+  always_issue_refresh_token: '总是颁发 Refresh Token',
+  always_issue_refresh_token_label:
+    '启用此配置将允许 Logto 始终颁发 Refresh Token，无论身份验证请求中是否呈现 `prompt=consent`。 然而，除非必要，否则不推荐这样做，因为它与 OpenID Connect 不兼容，可能会导致问题。',
   delete_description: '本操作会永久性地删除该应用，且不可撤销。输入 <span>{{name}}</span> 确认。',
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除。',
-  redirect_uri_required: '至少需要输入一个重定向 URL。',
+  redirect_uri_required: '至少需要输入一个重定向 URI。',
 };
 
 export default application_details;

@@ -41,6 +41,9 @@ const application_details = {
   enable_admin_access: '管理者アクセスを有効にする',
   enable_admin_access_label:
     '管理APIへのアクセスを有効または無効にします。有効にすると、アクセストークンを使用してこのアプリケーションを代表して管理APIを呼び出すことができます。',
+  always_issue_refresh_token: '常にRefresh Tokenを発行する',
+  always_issue_refresh_token_label:
+    'この設定を有効にすると、Logtoは、認証要求に「prompt = consent」が提示されたかどうかにかかわらず、常にRefresh Tokenを発行することができます。ただし、OpenID Connectと互換性がないため、必要でない限りこのプラクティスは推奨されず、問題が発生する可能性があります。',
   delete_description:
     'この操作は元に戻すことはできません。アプリケーション名「<span>{{name}}</span>」を入力して確認してください。',
   enter_your_application_name: 'アプリケーション名を入力してください',

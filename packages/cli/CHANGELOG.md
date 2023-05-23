@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.4.0
+
+### Patch Changes
+
+- 5d6720805: update default OpenAI concurrency to 1 for sync command
+- Updated dependencies [5d6720805]
+  - @logto/phrases@1.3.0
+  - @logto/schemas@1.4.0
+
 ## 1.3.1
 
 ### Patch Changes

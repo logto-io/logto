@@ -12,6 +12,7 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
+import koaBody from 'koa-body';
 import Provider, { errors, type ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -151,6 +152,16 @@ export default function initOidc(
         },
       },
     },
+    issueRefreshToken: (_, client, code) => {
+      if (!client.grantTypeAllowed('refresh_token')) {
+        return false;
+      }
+
+      return (
+        code.scopes.has('offline_access') ||
+        (client.applicationType === 'web' && Boolean(client.metadata().alwaysIssueRefreshToken))
+      );
+    },
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const isDemoApp = appId === demoAppApplicationId;
@@ -256,7 +267,7 @@ export default function initOidc(
     },
     pkce: {
       required: (ctx, client) => {
-        return client.tokenEndpointAuthMethod !== 'client_secret_basic';
+        return client.clientAuthMethod !== 'client_secret_basic';
       },
       methods: ['S256'],
     },
@@ -266,6 +277,30 @@ export default function initOidc(
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
+  /**
+   * Create a middleware function that transpile requests with content type `application/json`
+   * since `oidc-provider` only accepts `application/x-www-form-urlencoded` for most of routes.
+   *
+   * Other parsers are explicitly disabled to keep it neat.
+   */
+  oidc.use(koaBody({ urlencoded: false, text: false }));
+  /**
+   * `oidc-provider` [strictly checks](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L11)
+   * the `content-type` header for further processing.
+   *
+   * It will [directly use the `ctx.req.body` for parsing](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L39)
+   * so there's no need to change the raw request body as we uses `koaBody()` above.
+   *
+   * However, this is not recommended for other routes rather since it causes a header-body format mismatch.
+   */
+  oidc.use(async (ctx, next) => {
+    // WARNING: [Registration actions](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/actions/registration.js#L4) are using
+    // 'application/json' for body parsing. Update relatively when we enable that feature.
+    if (ctx.headers['content-type'] === 'application/json') {
+      ctx.headers['content-type'] = 'application/x-www-form-urlencoded';
+    }
+    return next();
+  });
   oidc.use(koaBodyEtag());
 
   return oidc;
