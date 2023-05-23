@@ -18,7 +18,6 @@ await mockEsmWithActual('@logto/shared', () => ({
 const mockSignature = 'mockSignature';
 mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
-  signAsync: jest.fn().mockResolvedValue(mockSignature),
 }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
