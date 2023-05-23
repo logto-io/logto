@@ -53,6 +53,11 @@ const mockLog: Log = {
   createdAt: 123,
 };
 
+const mockExecutionStats = {
+  requestCount: 1,
+  successCount: 1,
+};
+
 const logs = {
   countLogs: jest.fn().mockResolvedValue({
     count: 1,
@@ -62,7 +67,23 @@ const logs = {
 
 const { countLogs, findLogs } = logs;
 
-const tenantContext = new MockTenant(undefined, { hooks, logs });
+const mockQueries = {
+  hooks,
+  logs,
+};
+
+const attachExecutionStatsToHook = jest.fn().mockImplementation((hook) => ({
+  ...hook,
+  executionStats: mockExecutionStats,
+}));
+
+const mockLibraries = {
+  hooks: {
+    attachExecutionStatsToHook,
+  },
+};
+
+const tenantContext = new MockTenant(undefined, mockQueries, undefined, mockLibraries);
 
 const hookRoutes = await pickDefault(import('./hook.js'));
 
@@ -80,11 +101,32 @@ describe('hook routes', () => {
     expect(response.header).not.toHaveProperty('total-number');
   });
 
+  it('GET /hooks?includeExecutionStats', async () => {
+    const response = await hookRequest.get('/hooks?includeExecutionStats=true');
+    expect(attachExecutionStatsToHook).toHaveBeenCalledTimes(mockHookList.length);
+    expect(response.body).toEqual(
+      mockHookList.map((hook) => ({
+        ...hook,
+        executionStats: mockExecutionStats,
+      }))
+    );
+  });
+
   it('GET /hooks/:id', async () => {
     const hookIdInMockList = mockHookList[0]?.id ?? '';
     const response = await hookRequest.get(`/hooks/${hookIdInMockList}`);
     expect(response.status).toEqual(200);
     expect(response.body.id).toBe(hookIdInMockList);
+  });
+
+  it('GET /hooks/:id?includeExecutionStats', async () => {
+    const hookIdInMockList = mockHookList[0]?.id ?? '';
+    const response = await hookRequest.get(`/hooks/${hookIdInMockList}?includeExecutionStats=true`);
+    expect(attachExecutionStatsToHook).toHaveBeenCalledWith(mockHookList[0]);
+    expect(response.body).toEqual({
+      ...mockHookList[0],
+      executionStats: mockExecutionStats,
+    });
   });
 
   it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {

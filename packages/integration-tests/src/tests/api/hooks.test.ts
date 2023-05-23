@@ -1,7 +1,7 @@
 import { createHmac } from 'node:crypto';
 import { type RequestListener } from 'node:http';
 
-import type { Hook, HookConfig, Log, LogKey } from '@logto/schemas';
+import type { Hook, HookConfig, HookResponse, Log, LogKey } from '@logto/schemas';
 import { HookEvent, SignInIdentifier, LogResult, InteractionEvent } from '@logto/schemas';
 
 import { authedAdminApi, deleteUser, getLogs, putInteraction } from '#src/api/index.js';
@@ -331,6 +331,48 @@ describe('hooks', () => {
       .digest('hex');
 
     expect(calculateSignature).toEqual(signature);
+
+    await authedAdminApi.delete(`hooks/${createdHook.id}`);
+
+    await deleteUser(id);
+  });
+
+  it('should get hook execution stats correctly', async () => {
+    const createdHook = await authedAdminApi
+      .post('hooks', { json: createPayload(HookEvent.PostRegister, 'http://localhost:9999') })
+      .json<Hook>();
+
+    const hooksWithExecutionStats = await authedAdminApi
+      .get('hooks?includeExecutionStats=true')
+      .json<HookResponse[]>();
+
+    for (const hook of hooksWithExecutionStats) {
+      expect(hook.executionStats).toBeTruthy();
+    }
+
+    // Init session and submit
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const client = await initClient();
+    await client.send(putInteraction, {
+      event: InteractionEvent.Register,
+      profile: {
+        username,
+        password,
+      },
+    });
+    const { redirectTo } = await client.submitInteraction();
+    const id = await processSession(client, redirectTo);
+    await waitFor(500); // Wait for hooks execution
+
+    const hookWithExecutionStats = await authedAdminApi
+      .get(`hooks/${createdHook.id}?includeExecutionStats=true`)
+      .json<HookResponse>();
+
+    const { executionStats } = hookWithExecutionStats;
+
+    expect(executionStats).toBeTruthy();
+    expect(executionStats.requestCount).toBe(1);
+    expect(executionStats.successCount).toBe(1);
 
     await authedAdminApi.delete(`hooks/${createdHook.id}`);
 
