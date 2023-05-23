@@ -10,6 +10,7 @@ import ModalLayout from '@/components/ModalLayout';
 import UserRolesTransfer from '@/components/UserRolesTransfer';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { getUserTitle } from '@/utils/user';
 
 type Props = {
   user: User;
@@ -19,7 +20,7 @@ type Props = {
 function AssignRolesModal({ user, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const userName = user.name ?? t('users.unnamed');
+  const userName = getUserTitle(user);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [roles, setRoles] = useState<RoleResponse[]>([]);

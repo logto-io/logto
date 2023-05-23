@@ -1,5 +1,4 @@
 import type { User } from '@logto/schemas';
-import { useTranslation } from 'react-i18next';
 
 import Checkbox from '@/components/Checkbox';
 import UserAvatar from '@/components/UserAvatar';
@@ -16,8 +15,6 @@ type Props = {
 };
 
 function SourceUserItem({ user, isSelected, onSelect }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <div
       role="button"
@@ -36,8 +33,8 @@ function SourceUserItem({ user, isSelected, onSelect }: Props) {
           onSelect();
         }}
       />
-      <UserAvatar user={user} size="micro" />
-      <div className={styles.title}>{getUserTitle(user) ?? t('users.unnamed')}</div>
+      <UserAvatar hasTooltip user={user} size="micro" />
+      <div className={styles.title}>{getUserTitle(user)}</div>
       {user.isSuspended && <SuspendedTag className={styles.suspended} />}
     </div>
   );

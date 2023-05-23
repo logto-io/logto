@@ -9,6 +9,7 @@
   padding: _.unit(2) _.unit(3);
   font: var(--font-body-2);
   max-width: 300px;
+  z-index: 200;
 
   &.successful {
     background: var(--color-success-60);

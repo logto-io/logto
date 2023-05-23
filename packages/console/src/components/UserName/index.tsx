@@ -1,10 +1,13 @@
 import type { User } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { RequestError } from '@/hooks/use-api';
+import { getUserTitle } from '@/utils/user';
+
+import UserAvatar from '../UserAvatar';
 
 import * as styles from './index.module.scss';
 
@@ -15,10 +18,8 @@ type Props = {
 
 function UserName({ userId, isLink = false }: Props) {
   const { data, error } = useSWR<User, RequestError>(`api/users/${userId}`);
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   const isLoading = !data && !error;
-  const name = data?.name ?? t('users.unnamed');
+  const name = conditionalString(data && getUserTitle(data));
 
   if (isLoading) {
     return null;
@@ -28,12 +29,12 @@ function UserName({ userId, isLink = false }: Props) {
     <div className={styles.userName}>
       {isLink ? (
         <Link to={`/users/${userId}`} className={classNames(styles.title, styles.link)}>
-          {name}
+          <UserAvatar hasTooltip size="micro" user={data} />
+          <span>{name}</span>
         </Link>
       ) : (
         <div className={styles.title}>{name}</div>
       )}
-      <div className={styles.id}>{userId}</div>
     </div>
   );
 }
