@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Webhook details',
   back_to_webhooks: 'Back to Webhooks',
   not_in_use: 'Not in use',
-  success_rate: '{{value, number}} success rate',
+  success_rate: 'success rate',
   requests: '{{value, number}} requests in 24h',
   disable_webhook: 'Disable webhook',
   disable_reminder:

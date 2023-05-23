@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Webhook 담당자',
   back_to_webhooks: 'Webhooks로 돌아가기',
   not_in_use: '사용 중이 아님',
-  success_rate: '{{value, number}} 성공율',
+  success_rate: '성공율',
   requests: '24시간 동안 {{value, number}}개의 요청',
   disable_webhook: 'Webhook 비활성화',
   disable_reminder:

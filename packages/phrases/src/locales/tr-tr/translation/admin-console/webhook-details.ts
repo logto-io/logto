@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Webhook ayrıntıları',
   back_to_webhooks: 'Webhooklara geri dön',
   not_in_use: 'Kullanılmıyor',
-  success_rate: '{{value, number}} başarı oranı',
+  success_rate: 'başarı oranı',
   requests: '24 saatte {{value, number}} istek',
   disable_webhook: 'Webhooku devre dışı bırak',
   disable_reminder:
