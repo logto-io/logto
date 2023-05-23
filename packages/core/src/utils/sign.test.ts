@@ -1,14 +1,14 @@
 import { sign } from './sign.js';
 
 describe('sign', () => {
-  it('should generate correct signature with both async and sync version', async () => {
+  it('should generate correct signature', async () => {
     const signingKey = 'foo';
     const payload = {
       bar: 'bar',
       foo: 'foo',
     };
 
-    const signature = sign(signingKey, payload);
+    const signature = await sign(signingKey, payload);
 
     const expectedResult =
       'sha256=436958f1dbfefab37712fb3927760490fbf7757da8c0b2306ee7b485f0360eee';
@@ -16,7 +16,7 @@ describe('sign', () => {
     expect(signature).toBe(expectedResult);
   });
 
-  it('should generate correct signature if payload is empty with both async and sync version', async () => {
+  it('should generate correct signature if payload is empty', async () => {
     const signingKey = 'foo';
     const payload = {};
     const signature = await sign(signingKey, payload);
