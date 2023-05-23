@@ -1,5 +1,13 @@
+@use '@/scss/underscore' as _;
+
 .icon {
   width: 40px;
   height: 40px;
   flex-shrink: 0;
+}
+
+.requests {
+  font: var(--font-body-2);
+  text-align: right;
+  margin-right: _.unit(4);
 }

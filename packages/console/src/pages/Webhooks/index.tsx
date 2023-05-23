@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type HookEvent, type Hook, Theme } from '@logto/schemas';
+import { type HookEvent, type Hook, Theme, type HookResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,11 +16,14 @@ import DynamicT from '@/components/DynamicT';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
+import Tag from '@/components/Tag';
 import { hookEventLabel } from '@/consts/webhooks';
 import { type RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
+import { buildUrl } from '@/utils/url';
 
 import CreateFormModal from './components/CreateFormModal';
+import SuccessRate from './components/SuccessRate';
 import * as styles from './index.module.scss';
 
 const webhooksPathname = '/webhooks';
@@ -32,7 +35,9 @@ function Webhooks() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const isCreateNew = pathname === createWebhookPathname;
-  const { data, error, mutate } = useSWR<Hook[], RequestError>('api/hooks');
+  const { data, error, mutate } = useSWR<HookResponse[], RequestError>(
+    buildUrl('api/hooks', { includeExecutionStats: String(true) })
+  );
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const theme = useTheme();
@@ -87,16 +92,26 @@ function Webhooks() {
             title: <DynamicT forKey="webhooks.table.success_rate" />,
             dataIndex: 'successRate',
             colSpan: 3,
-            render: () => {
-              return <div>WIP</div>;
+            render: ({ enabled, executionStats: { successCount, requestCount } }) => {
+              return enabled ? (
+                <SuccessRate successCount={successCount} totalCount={requestCount} />
+              ) : (
+                <Tag type="state" status="info" variant="plain">
+                  <DynamicT forKey="webhook_details.not_in_use" />
+                </Tag>
+              );
             },
           },
           {
             title: <DynamicT forKey="webhooks.table.requests" />,
             dataIndex: 'Requests',
             colSpan: 2,
-            render: () => {
-              return <div>WIP</div>;
+            render: ({ enabled, executionStats: { requestCount } }) => {
+              return (
+                <div className={styles.requests}>
+                  {enabled ? requestCount.toLocaleString() : '-'}
+                </div>
+              );
             },
           },
         ],
