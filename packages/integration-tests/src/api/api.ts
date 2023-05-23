@@ -1,6 +1,6 @@
 import { got } from 'got';
 
-import { logtoConsoleUrl, logtoUrl } from '#src/constants.js';
+import { logtoConsoleUrl, logtoUrl, logtoCloudUrl } from '#src/constants.js';
 
 const api = got.extend({
   prefixUrl: new URL('/api', logtoUrl),
@@ -23,4 +23,8 @@ export const authedAdminTenantApi = adminTenantApi.extend({
   headers: {
     'development-user-id': 'integration-test-admin-user',
   },
+});
+
+export const cloudApi = got.extend({
+  prefixUrl: new URL('/api', logtoCloudUrl),
 });
