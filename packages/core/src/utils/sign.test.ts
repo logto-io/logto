@@ -8,7 +8,7 @@ describe('sign', () => {
       foo: 'foo',
     };
 
-    const signature = await sign(signingKey, payload);
+    const signature = sign(signingKey, payload);
 
     const expectedResult =
       'sha256=436958f1dbfefab37712fb3927760490fbf7757da8c0b2306ee7b485f0360eee';
@@ -19,7 +19,7 @@ describe('sign', () => {
   it('should generate correct signature if payload is empty', async () => {
     const signingKey = 'foo';
     const payload = {};
-    const signature = await sign(signingKey, payload);
+    const signature = sign(signingKey, payload);
 
     const expectedResult =
       'sha256=c76356efa19d219d1d7e08ccb20b1d26db53b143156f406c99dcb8e0876d6c55';
