@@ -14,7 +14,7 @@ import type Provider from 'oidc-provider';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
-import { signAsync } from '#src/utils/sign.js';
+import { sign } from '#src/utils/sign.js';
 
 const parseResponse = ({ statusCode, body }: Response) => ({
   statusCode,
@@ -95,9 +95,7 @@ export const createHookLibrary = (queries: Queries) => {
             headers: {
               'user-agent': 'Logto (https://logto.io/)',
               ...headers,
-              ...conditional(
-                signingKey && { 'logto-signature-256': await signAsync(signingKey, json) }
-              ),
+              ...conditional(signingKey && { 'logto-signature-256': await sign(signingKey, json) }),
             },
             json,
             retry: { limit: retries ?? 3 },
