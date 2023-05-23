@@ -1,5 +1,24 @@
 # Change Log
 
+## 1.4.0
+
+### Minor Changes
+
+- 9a3aa3aae: Automatically sync the trusted social email and phone info to the new registered user profile
+- 5d6720805: add config `alwaysIssueRefreshToken` for web apps to unblock OAuth integrations that are not strictly conform OpenID Connect.
+
+  when it's enabled, Refresh Tokens will be always issued regardless if `prompt=consent` was present in the authorization request.
+
+### Patch Changes
+
+- 5d6720805: parse requests with `application/json` content-type for `/oidc` APIs to increase compatibility
+- Updated dependencies [5d6720805]
+- Updated dependencies [5d6720805]
+  - @logto/cli@1.4.0
+  - @logto/console@1.3.0
+  - @logto/phrases@1.3.0
+  - @logto/schemas@1.4.0
+
 ## 1.3.1
 
 ### Patch Changes

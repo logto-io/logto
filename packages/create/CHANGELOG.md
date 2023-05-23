@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.4.0
+
+### Patch Changes
+
+- Updated dependencies [5d6720805]
+  - @logto/cli@1.4.0
+
 ## 1.3.1
 
 ### Patch Changes

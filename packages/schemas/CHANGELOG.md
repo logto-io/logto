@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.4.0
+
+### Minor Changes
+
+- 5d6720805: add config `alwaysIssueRefreshToken` for web apps to unblock OAuth integrations that are not strictly conform OpenID Connect.
+
+  when it's enabled, Refresh Tokens will be always issued regardless if `prompt=consent` was present in the authorization request.
+
+### Patch Changes
+
+- Updated dependencies [5d6720805]
+  - @logto/phrases@1.3.0
+
 ## 1.3.1
 
 ## 1.3.0

@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- 9a3aa3aae: Automatically sync the trusted social email and phone info to the new registered user profile
+
 ## 1.1.0
 
 ## 1.0.3
