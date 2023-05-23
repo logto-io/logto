@@ -46,7 +46,7 @@ const hookServerRequestListener: RequestListener = (request, response) => {
     const payload = Buffer.concat(data).toString();
     response.end(
       JSON.stringify({
-        signature: request.headers['logto-signature-256'] as string,
+        signature: request.headers['logto-signature-sha-256'] as string,
         payload,
       } satisfies HookSecureData)
     );
@@ -326,9 +326,9 @@ describe('hooks', () => {
     expect(signature).toBeTruthy();
     expect(payload).toBeTruthy();
 
-    const calculateSignature = `sha256=${createHmac('sha256', createdHook.signingKey)
+    const calculateSignature = createHmac('sha256', createdHook.signingKey)
       .update(payload)
-      .digest('hex')}`;
+      .digest('hex');
 
     expect(calculateSignature).toEqual(signature);
 

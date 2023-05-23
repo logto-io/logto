@@ -86,7 +86,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
       headers: {
         'user-agent': 'Logto (https://logto.io/)',
         bar: 'baz',
-        'logto-signature-256': mockSignature,
+        'logto-signature-sha-256': mockSignature,
       },
       json: {
         hookId: 'foo',

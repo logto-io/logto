@@ -95,7 +95,7 @@ export const createHookLibrary = (queries: Queries) => {
             headers: {
               'user-agent': 'Logto (https://logto.io/)',
               ...headers,
-              ...conditional(signingKey && { 'logto-signature-256': sign(signingKey, json) }),
+              ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, json) }),
             },
             json,
             retry: { limit: retries ?? 3 },
