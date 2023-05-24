@@ -1,5 +1,6 @@
 import auth from './auth.js';
 import connector from './connector.js';
+import domain from './domain.js';
 import entity from './entity.js';
 import guard from './guard.js';
 import hook from './hook.js';
@@ -38,6 +39,7 @@ const errors = {
   storage,
   resource,
   hook,
+  domain,
 };
 
 export default errors;
