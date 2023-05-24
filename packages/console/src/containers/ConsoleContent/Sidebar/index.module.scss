@@ -9,10 +9,6 @@
   overflow-y: auto;
   margin-bottom: _.unit(6);
 
-  > div + div {
-    margin-top: _.unit(6);
-  }
-
   .spacer {
     margin: 0;
     flex: 1 1 0;
