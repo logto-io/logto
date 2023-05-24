@@ -3,7 +3,7 @@ import { got } from 'got';
 import { logtoConsoleUrl, logtoUrl } from '#src/constants.js';
 import {
   createResponseWithCode,
-  createUserWithAllRolesAndSignInWithClient,
+  createUserWithAllRolesAndSignInToClient,
   deleteUser,
   resourceDefault,
   resourceMe,
@@ -22,7 +22,7 @@ describe('me', () => {
   });
 
   it('should only recognize the access token with correct resource and scope', async () => {
-    const { id, client } = await createUserWithAllRolesAndSignInWithClient();
+    const { id, client } = await createUserWithAllRolesAndSignInToClient();
 
     await expect(
       got.get(logtoConsoleUrl + '/me/custom-data', {
@@ -40,7 +40,7 @@ describe('me', () => {
   });
 
   it('should be able to update custom data', async () => {
-    const { id, client } = await createUserWithAllRolesAndSignInWithClient();
+    const { id, client } = await createUserWithAllRolesAndSignInToClient();
     const headers = { authorization: `Bearer ${await client.getAccessToken(resourceMe)}` };
 
     const data = await got

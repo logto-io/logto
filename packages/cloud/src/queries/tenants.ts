@@ -62,7 +62,7 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     await Promise.all(scopes.map(async (scope) => client.query(insertInto(scope, 'scopes'))));
     await client.query(insertInto(role, 'roles'));
 
-    const { tenantId } = resource; // Linter failed to infer `tenantId` from previous assertion.
+    const { tenantId } = resource;
     await Promise.all(
       scopes.map(async ({ id }) =>
         client.query(

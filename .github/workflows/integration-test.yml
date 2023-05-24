@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api, cloud, ui, ui-cloud]
+        target: [api, api-cloud, ui, ui-cloud]
 
     needs: package
     runs-on: ubuntu-latest

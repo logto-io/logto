@@ -21,19 +21,19 @@ const alteration: AlterationScript = {
       and name = 'user';
     `);
 
-    // Insert `manage:own-tenant` scope.
+    // Insert `manage:tenant:self` scope.
     const scopeId = generateStandardId();
     await pool.query(sql`
       insert into scopes (tenant_id, id, name, description, resource_id)
         values (
           ${adminTenantId},
           ${scopeId},
-          'manage:own-tenant',
-          'Allow managing own tenant, including update and delete.',
+          'manage:tenant:self',
+          'Allow managing tenant itself, including update and delete.',
           ${resourceId}
         );
     `);
-    // Assign `manage:own-tenant` scope to `user` role.
+    // Assign `manage:tenant:self` scope to `user` role.
     await pool.query(sql`
       insert into roles_scopes (tenant_id, id, role_id, scope_id)
         values (
@@ -45,11 +45,11 @@ const alteration: AlterationScript = {
     `);
   },
   down: async (pool) => {
-    // Delete `manage:own-tenant` scope.
+    // Delete `manage:tenant:self` scope.
     // No need to delete `roles_scopes` because it will be cascade deleted.
     await pool.query(sql`
       delete from scopes
-      where tenant_id = ${adminTenantId} and name = 'manage:own-tenant';
+      where tenant_id = ${adminTenantId} and name = 'manage:tenant:self';
     `);
   },
 };
