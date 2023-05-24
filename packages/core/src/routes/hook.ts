@@ -1,5 +1,5 @@
 import { Hooks, Logs, hookEventsGuard, hookResponseGuard } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { generateStandardId, webhookLimit } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
@@ -19,7 +19,7 @@ export default function hookRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    hooks: { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById },
+    hooks: { countHooks, findAllHooks, findHookById, insertHook, updateHookById, deleteHookById },
     logs: { countLogs, findLogs },
   } = queries;
 
@@ -114,6 +114,16 @@ export default function hookRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { event, events, enabled, ...rest } = ctx.guard.body;
       assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 400 }));
+
+      const { count } = await countHooks();
+      assertThat(
+        count < webhookLimit,
+        new RequestError({
+          code: 'hook.maximum_webhook_limit_exceeded',
+          value: webhookLimit,
+          status: 400,
+        })
+      );
 
       ctx.body = await insertHook({
         ...rest,

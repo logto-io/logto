@@ -13,6 +13,12 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 const { table, fields } = convertToIdentifiers(Hooks);
 
 export const createHooksQueries = (pool: CommonQueryMethods) => {
+  const countHooks = async () =>
+    pool.one<{ count: number }>(sql`
+      select count(*)
+      from ${table}
+    `);
+
   const findAllHooks = async () =>
     manyRows(
       pool.query<Hook>(sql`
@@ -47,6 +53,7 @@ export const createHooksQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
+    countHooks,
     findAllHooks,
     findHookById,
     insertHook,

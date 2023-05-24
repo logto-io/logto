@@ -7,6 +7,7 @@ import {
   LogResult,
   type Log,
 } from '@logto/schemas';
+import { webhookLimit } from '@logto/shared';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
 
@@ -23,6 +24,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const hooks = {
+  countHooks: jest.fn().mockResolvedValue({ count: 0 }),
   findAllHooks: async (): Promise<Hook[]> => mockHookList,
   insertHook: async (data: CreateHook): Promise<Hook> => ({
     ...mockHook,
@@ -199,6 +201,21 @@ describe('hook routes', () => {
         url: 'https://example.com',
       },
     };
+    await expect(hookRequest.post('/hooks').send(payload)).resolves.toHaveProperty('status', 400);
+  });
+
+  it('POST /hooks should fail when the total count of hooks exceeds the limit', async () => {
+    const payload: Partial<Hook> = {
+      name: 'hook_name',
+      events: [HookEvent.PostRegister],
+      config: {
+        url: 'https://example.com',
+      },
+    };
+    const { countHooks } = hooks;
+    countHooks.mockImplementationOnce(() => ({
+      count: webhookLimit,
+    }));
     await expect(hookRequest.post('/hooks').send(payload)).resolves.toHaveProperty('status', 400);
   });
 

@@ -3386,6 +3386,10 @@ importers:
         version: 3.20.2
 
   packages/integration-tests:
+    dependencies:
+      '@logto/shared':
+        specifier: workspace:^2.0.0
+        version: link:../shared
     devDependencies:
       '@jest/test-sequencer':
         specifier: ^29.5.0

@@ -1,5 +1,6 @@
 import type { Hook } from '@logto/schemas';
 import { HookEvent } from '@logto/schemas';
+import { webhookLimit } from '@logto/shared';
 
 import { authedAdminApi } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
@@ -94,5 +95,23 @@ describe('hooks', () => {
     await expect(authedAdminApi.patch('hooks/invalid_id/signing-key')).rejects.toMatchObject(
       createResponseWithCode(404)
     );
+  });
+
+  it('should throw error if the total count of hooks exceeds the limit', async () => {
+    const hookCreationPromises = Array.from({ length: webhookLimit }).map(async () =>
+      authedAdminApi
+        .post('hooks', { json: getHookCreationPayload(HookEvent.PostRegister) })
+        .json<Hook>()
+    );
+    const hooks = await Promise.all(hookCreationPromises);
+
+    await expect(
+      authedAdminApi
+        .post('hooks', { json: getHookCreationPayload(HookEvent.PostRegister) })
+        .json<Hook>()
+    ).rejects.toMatchObject(createResponseWithCode(400));
+
+    // Clean up
+    await Promise.all(hooks.map(async (hook) => authedAdminApi.delete(`hooks/${hook.id}`)));
   });
 });
