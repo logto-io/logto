@@ -4,7 +4,7 @@ import {
 } from '@logto/cli/lib/commands/database/utils.js';
 import { DemoConnector } from '@logto/connector-kit';
 import { createTenantMetadata } from '@logto/core-kit';
-import type { LogtoOidcConfigType, TenantInfo, TenantModel } from '@logto/schemas';
+import type { LogtoOidcConfigType, TenantInfo, CreateTenant } from '@logto/schemas';
 import {
   createAdminTenantApplicationRole,
   AdminTenantRole,
@@ -70,7 +70,7 @@ export class TenantsLibrary {
     const { id: tenantId, parentRole, role, password } = createTenantMetadata(databaseName);
 
     // Init tenant
-    const tenantModel: TenantModel = { id: tenantId, dbUser: role, dbUserPassword: password };
+    const createTenant: CreateTenant = { id: tenantId, dbUser: role, dbUserPassword: password };
     const transaction = await this.queries.client.transaction();
     const tenants = createTenantsQueries(transaction);
     const users = createUsersQueries(transaction);
@@ -83,7 +83,7 @@ export class TenantsLibrary {
     await transaction.start();
 
     // Init tenant
-    await tenants.insertTenant(tenantModel);
+    await tenants.insertTenant(createTenant);
     await tenants.createTenantRole(parentRole, role, password);
 
     // Create admin data set (resource, roles, etc.)
@@ -162,7 +162,7 @@ export class TenantsLibrary {
 
     // Update Redirect URI for Admin Console
     await tenants.appendAdminConsoleRedirectUris(
-      ...cloudUrlSet.deduplicated().map((url) => appendPath(url, tenantModel.id, 'callback'))
+      ...cloudUrlSet.deduplicated().map((url) => appendPath(url, createTenant.id, 'callback'))
     );
 
     await transaction.end();
