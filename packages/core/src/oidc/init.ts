@@ -21,7 +21,11 @@ import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import postgresAdapter from '#src/oidc/adapter.js';
-import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.js';
+import {
+  isOriginAllowed,
+  validateCustomClientMetadata,
+  rejectRevokedResourceScopesFromGrant,
+} from '#src/oidc/utils.js';
 import { routes } from '#src/routes/consts.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -116,6 +120,7 @@ export default function initOidc(
           }
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
+
           const result = {
             accessTokenFormat: 'jwt',
             accessTokenTTL,
@@ -125,10 +130,12 @@ export default function initOidc(
             scope: '',
           } satisfies ResourceServer;
 
-          const userId = ctx.oidc.session?.accountId;
+          const userId = ctx.oidc.session?.accountId ?? ctx.oidc.entities.Account?.accountId;
 
           if (userId) {
             const scopes = await findUserScopesForResourceIndicator(userId, indicator);
+
+            rejectRevokedResourceScopesFromGrant(ctx, indicator, scopes);
 
             return {
               ...result,
@@ -141,6 +148,8 @@ export default function initOidc(
           // Machine to machine app
           if (clientId) {
             const scopes = await findApplicationScopesForResourceIndicator(clientId, indicator);
+
+            rejectRevokedResourceScopesFromGrant(ctx, indicator, scopes);
 
             return {
               ...result,
