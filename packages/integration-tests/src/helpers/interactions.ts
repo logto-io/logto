@@ -30,8 +30,9 @@ export const registerNewUser = async (username: string, password: string) => {
   });
 
   const { redirectTo } = await client.submitInteraction();
-  await processSession(client, redirectTo);
+  const userId = await processSession(client, redirectTo);
   await logoutClient(client);
+  return userId;
 };
 
 export const signInWithPassword = async (
