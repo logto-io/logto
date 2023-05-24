@@ -4,6 +4,8 @@ import {
   InteractionEvent,
   LogResult,
   userInfoSelectFields,
+  type Hook,
+  type HookResponse,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -33,7 +35,7 @@ export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 export const createHookLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById },
-    logs: { insertLog },
+    logs: { insertLog, getHookExecutionStatsByHookId },
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
     hooks: { findAllHooks },
@@ -127,5 +129,13 @@ export const createHookLibrary = (queries: Queries) => {
     );
   };
 
-  return { triggerInteractionHooksIfNeeded };
+  const attachExecutionStatsToHook = async (hook: Hook): Promise<HookResponse> => ({
+    ...hook,
+    executionStats: await getHookExecutionStatsByHookId(hook.id),
+  });
+
+  return {
+    triggerInteractionHooksIfNeeded,
+    attachExecutionStatsToHook,
+  };
 };

@@ -1,6 +1,6 @@
-import { Hooks, Logs, hookEventsGuard } from '@logto/schemas';
+import { Hooks, Logs, hookEventsGuard, hookResponseGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { conditional, deduplicate } from '@silverhand/essentials';
+import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
@@ -16,18 +16,34 @@ const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .transform((events) => deduplicate(events));
 
 export default function hookRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     hooks: { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById },
     logs: { countLogs, findLogs },
   } = queries;
 
+  const {
+    hooks: { attachExecutionStatsToHook },
+  } = libraries;
+
   router.get(
     '/hooks',
-    koaGuard({ response: Hooks.guard.array(), status: 200 }),
+    koaGuard({
+      query: z.object({ includeExecutionStats: z.string().optional() }),
+      response: hookResponseGuard.partial({ executionStats: true }).array(),
+      status: 200,
+    }),
     async (ctx, next) => {
-      ctx.body = await findAllHooks();
+      const {
+        query: { includeExecutionStats },
+      } = ctx.guard;
+
+      const hooks = await findAllHooks();
+
+      ctx.body = yes(includeExecutionStats)
+        ? await Promise.all(hooks.map(async (hook) => attachExecutionStatsToHook(hook)))
+        : hooks;
 
       return next();
     }
@@ -37,15 +53,19 @@ export default function hookRoutes<T extends AuthedRouter>(
     '/hooks/:id',
     koaGuard({
       params: z.object({ id: z.string() }),
-      response: Hooks.guard,
+      query: z.object({ includeExecutionStats: z.string().optional() }),
+      response: hookResponseGuard.partial({ executionStats: true }),
       status: [200, 404],
     }),
     async (ctx, next) => {
       const {
         params: { id },
+        query: { includeExecutionStats },
       } = ctx.guard;
 
-      ctx.body = await findHookById(id);
+      const hook = await findHookById(id);
+
+      ctx.body = includeExecutionStats ? await attachExecutionStatsToHook(hook) : hook;
 
       return next();
     }

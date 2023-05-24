@@ -1,6 +1,7 @@
-import type { Log } from '@logto/schemas';
+import type { HookExecutionStats, Log } from '@logto/schemas';
 import { token, Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { subDays } from 'date-fns';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -86,6 +87,17 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       and ${fields.payload}->>'result' = 'Success'
     `);
 
+  const getHookExecutionStatsByHookId = async (hookId: string) => {
+    const startTimeExclusive = subDays(new Date(), 1).getTime();
+    return pool.one<HookExecutionStats>(sql`
+      select count(*) as request_count,
+      count(case when ${fields.payload}->>'result' = 'Success' then 1 end) as success_count
+      from ${table}
+      where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
+      and ${fields.payload}->>'hookId' = ${hookId}
+    `);
+  };
+
   return {
     insertLog,
     countLogs,
@@ -93,5 +105,6 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     findLogById,
     getDailyActiveUserCountsByTimeInterval,
     countActiveUsersByTimeInterval,
+    getHookExecutionStatsByHookId,
   };
 };

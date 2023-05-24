@@ -3,6 +3,8 @@ import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import { got } from 'got';
 
+import { mockHook } from '#src/__mocks__/hook.js';
+
 import type { Interaction } from './hook.js';
 
 const { jest } = import.meta;
@@ -41,10 +43,12 @@ const post = jest
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const insertLog = jest.fn();
+const mockHookState = { requestCount: 100, successCount: 10 };
+const getHookExecutionStatsByHookId = jest.fn().mockResolvedValue(mockHookState);
 const findAllHooks = jest.fn().mockResolvedValue([hook]);
 
 const { createHookLibrary } = await import('./hook.js');
-const { triggerInteractionHooksIfNeeded } = createHookLibrary(
+const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook } = createHookLibrary(
   new MockQueries({
     // @ts-expect-error
     users: { findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }) },
@@ -52,7 +56,7 @@ const { triggerInteractionHooksIfNeeded } = createHookLibrary(
       // @ts-expect-error
       findApplicationById: async () => ({ id: 'app_id', extraField: 'not_ok' }),
     },
-    logs: { insertLog },
+    logs: { insertLog, getHookExecutionStatsByHookId },
     hooks: { findAllHooks },
   })
 );
@@ -114,5 +118,12 @@ describe('triggerInteractionHooksIfNeeded()', () => {
     expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
     expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
     jest.useRealTimers();
+  });
+});
+
+describe('attachExecutionStatsToHook', () => {
+  it('should attach execution stats to a hook', async () => {
+    const result = await attachExecutionStatsToHook(mockHook);
+    expect(result).toEqual({ ...mockHook, executionStats: mockHookState });
   });
 });
