@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Данные вебхука',
   back_to_webhooks: 'Вернуться к вебхукам',
   not_in_use: 'Не используется',
-  success_rate: 'Коэффициент успешности {{value, number}}',
+  success_rate: 'Коэффициент успешности',
   requests: '{{value, number}} запросов за 24 часа',
   disable_webhook: 'Отключить вебхук',
   disable_reminder:

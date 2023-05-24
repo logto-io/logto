@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Webhookの詳細',
   back_to_webhooks: 'Webhooksに戻る',
   not_in_use: '使用されていない',
-  success_rate: '{{value, number}}成功率',
+  success_rate: '成功率',
   requests: '24時間に{{value, number}}件のリクエスト',
   disable_webhook: 'Webhookを無効にする',
   disable_reminder:

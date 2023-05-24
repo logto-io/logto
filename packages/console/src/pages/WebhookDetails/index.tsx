@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type Hook } from '@logto/schemas';
+import { type HookResponse, type Hook } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -26,6 +26,9 @@ import Tag from '@/components/Tag';
 import { WebhookDetailsTabs } from '@/consts';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
+import { buildUrl } from '@/utils/url';
+
+import SuccessRate from '../Webhooks/components/SuccessRate';
 
 import * as styles from './index.module.scss';
 import { type WebhookDetailsOutletContext } from './types';
@@ -36,7 +39,9 @@ function WebhookDetails() {
   const isPageHasTable = pathname.endsWith(WebhookDetailsTabs.RecentRequests);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data, error, mutate } = useSWR<Hook, RequestError>(id && `api/hooks/${id}`);
+  const { data, error, mutate } = useSWR<HookResponse, RequestError>(
+    id && buildUrl(`api/hooks/${id}`, { includeExecutionStats: String(true) })
+  );
   const isLoading = !data && !error;
   const api = useApi();
 
@@ -52,7 +57,7 @@ function WebhookDetails() {
   useEffect(() => {
     setIsDeleteFormOpen(false);
     setIsDisableFormOpen(false);
-  }, [pathname]);
+  }, [data?.enabled, pathname]);
 
   const onDelete = async () => {
     if (!data || isDeleting) {
@@ -109,7 +114,19 @@ function WebhookDetails() {
               <div className={styles.title}>{data.name}</div>
               <div>
                 {isEnabled ? (
-                  <div>Success Rate (WIP)</div>
+                  <div className={styles.state}>
+                    <SuccessRate
+                      className={styles.successRate}
+                      successCount={data.executionStats.successCount}
+                      totalCount={data.executionStats.requestCount}
+                    />
+                    <DynamicT forKey="webhook_details.success_rate" />
+                    <div className={styles.verticalBar} />
+                    <DynamicT
+                      forKey="webhook_details.requests"
+                      interpolation={{ value: data.executionStats.requestCount }}
+                    />
+                  </div>
                 ) : (
                   <Tag type="state" status="info">
                     <DynamicT forKey="webhook_details.not_in_use" />
@@ -191,7 +208,12 @@ function WebhookDetails() {
                 hook: data,
                 isDeleting,
                 onHookUpdated: (hook) => {
-                  void mutate(hook);
+                  if (hook) {
+                    const { executionStats } = data;
+                    void mutate({ ...hook, executionStats });
+                    return;
+                  }
+                  void mutate();
                 },
               } satisfies WebhookDetailsOutletContext
             }

@@ -1,9 +1,9 @@
-import { type Hook } from '@logto/schemas';
+import { type HookResponse, type Hook } from '@logto/schemas';
 
 import { type BasicWebhookFormType } from '../Webhooks/types';
 
 export type WebhookDetailsOutletContext = {
-  hook: Hook;
+  hook: HookResponse;
   isDeleting: boolean;
   onHookUpdated: (hook?: Hook) => void;
 };

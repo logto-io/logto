@@ -2,7 +2,7 @@ const webhook_details = {
   page_title: 'Webhook 詳細資料',
   back_to_webhooks: '返回 Webhooks',
   not_in_use: '未啟用',
-  success_rate: '{{value, number}} 成功率',
+  success_rate: '成功率',
   requests: '24 小時內收到 {{value, number}} 個請求',
   disable_webhook: '停用 webhook',
   disable_reminder: '確定要重新啟用此 webhook？重新啟用後，不會對端點 URL 發送 HTTP 請求。',
