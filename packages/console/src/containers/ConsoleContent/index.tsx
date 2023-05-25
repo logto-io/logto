@@ -9,7 +9,6 @@ import {
   RoleDetailsTabs,
   WebhookDetailsTabs,
 } from '@/consts';
-import { isHookFeatureEnabled } from '@/consts/webhooks';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -90,21 +89,19 @@ function ConsoleContent() {
               <Route path=":tab/guide/:factoryId" element={<Connectors />} />
               <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
             </Route>
-            {isHookFeatureEnabled && (
-              <Route path="webhooks">
-                <Route index element={<Webhooks />} />
-                <Route path="create" element={<Webhooks />} />
-                <Route path=":id" element={<WebhookDetails />}>
-                  <Route index element={<Navigate replace to={WebhookDetailsTabs.Settings} />} />
-                  <Route path={WebhookDetailsTabs.Settings} element={<WebhookSettings />} />
-                  <Route path={WebhookDetailsTabs.RecentRequests} element={<WebhookLogs />} />
-                </Route>
-                <Route
-                  path={`:hookId/${WebhookDetailsTabs.RecentRequests}/:logId`}
-                  element={<AuditLogDetails />}
-                />
+            <Route path="webhooks">
+              <Route index element={<Webhooks />} />
+              <Route path="create" element={<Webhooks />} />
+              <Route path=":id" element={<WebhookDetails />}>
+                <Route index element={<Navigate replace to={WebhookDetailsTabs.Settings} />} />
+                <Route path={WebhookDetailsTabs.Settings} element={<WebhookSettings />} />
+                <Route path={WebhookDetailsTabs.RecentRequests} element={<WebhookLogs />} />
               </Route>
-            )}
+              <Route
+                path={`:hookId/${WebhookDetailsTabs.RecentRequests}/:logId`}
+                element={<AuditLogDetails />}
+              />
+            </Route>
             <Route path="users">
               <Route index element={<Users />} />
               <Route path="create" element={<Users />} />
