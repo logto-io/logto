@@ -16,6 +16,7 @@ import { webhookDetailsParser } from '../utils';
 
 import CustomHeaderField from './components/CustomHeaderField';
 import SigningKeyField from './components/SigningKeyField';
+import TestWebhook from './components/TestWebhook';
 
 function WebhookSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -50,11 +51,11 @@ function WebhookSettings() {
         onSubmit={onSubmit}
         onDiscard={reset}
       >
-        <FormCard
-          title="webhook_details.settings.settings"
-          description="webhook_details.settings.settings_description"
-        >
-          <FormProvider {...formMethods}>
+        <FormProvider {...formMethods}>
+          <FormCard
+            title="webhook_details.settings.settings"
+            description="webhook_details.settings.settings_description"
+          >
             <BasicWebhookForm />
             <SigningKeyField
               hookId={hook.id}
@@ -62,8 +63,11 @@ function WebhookSettings() {
               onSigningKeyUpdated={setSigningKey}
             />
             <CustomHeaderField />
-          </FormProvider>
-        </FormCard>
+          </FormCard>
+          <FormCard title="webhook_details.settings.test">
+            <TestWebhook hookId={hook.id} />
+          </FormCard>
+        </FormProvider>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
     </>
