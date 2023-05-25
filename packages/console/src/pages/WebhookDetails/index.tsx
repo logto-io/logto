@@ -42,7 +42,7 @@ function WebhookDetails() {
   const { data, error, mutate } = useSWR<HookResponse, RequestError>(
     id && buildUrl(`api/hooks/${id}`, { includeExecutionStats: String(true) })
   );
-  const { executionStats } = data ?? {};
+  const { enabled: isEnabled, executionStats } = data ?? {};
   const isLoading = !data && !error;
   const api = useApi();
 
@@ -53,7 +53,6 @@ function WebhookDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDisableFormOpen, setIsDisableFormOpen] = useState(false);
   const [isUpdatingEnableState, setIsUpdatingEnableState] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(data?.enabled ?? true);
 
   useEffect(() => {
     setIsDeleteFormOpen(false);
@@ -84,11 +83,12 @@ function WebhookDetails() {
     setIsUpdatingEnableState(true);
 
     try {
-      const { enabled } = await api
+      const updatedHook = await api
         .patch(`api/hooks/${data.id}`, { json: { enabled: !isEnabled } })
         .json<Hook>();
-      setIsEnabled(enabled);
+      void mutate({ ...updatedHook, executionStats: data.executionStats });
       setIsDisableFormOpen(false);
+      const { enabled } = updatedHook;
       toast.success(
         t(enabled ? 'webhook_details.webhook_reactivated' : 'webhook_details.webhook_disabled')
       );
