@@ -42,6 +42,7 @@ function WebhookDetails() {
   const { data, error, mutate } = useSWR<HookResponse, RequestError>(
     id && buildUrl(`api/hooks/${id}`, { includeExecutionStats: String(true) })
   );
+  const { executionStats } = data ?? {};
   const isLoading = !data && !error;
   const api = useApi();
 
@@ -113,18 +114,22 @@ function WebhookDetails() {
             <div className={styles.metadata}>
               <div className={styles.title}>{data.name}</div>
               <div>
-                {isEnabled ? (
+                {isEnabled && executionStats ? (
                   <div className={styles.state}>
-                    <SuccessRate
-                      className={styles.successRate}
-                      successCount={data.executionStats.successCount}
-                      totalCount={data.executionStats.requestCount}
-                    />
-                    <DynamicT forKey="webhook_details.success_rate" />
-                    <div className={styles.verticalBar} />
+                    {executionStats.requestCount > 0 && (
+                      <>
+                        <SuccessRate
+                          className={styles.successRate}
+                          successCount={executionStats.successCount}
+                          totalCount={executionStats.requestCount}
+                        />
+                        <DynamicT forKey="webhook_details.success_rate" />
+                        <div className={styles.verticalBar} />
+                      </>
+                    )}
                     <DynamicT
                       forKey="webhook_details.requests"
-                      interpolation={{ value: data.executionStats.requestCount }}
+                      interpolation={{ value: executionStats.requestCount }}
                     />
                   </div>
                 ) : (
