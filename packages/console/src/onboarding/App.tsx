@@ -15,7 +15,7 @@ import useSwrOptions from '@/hooks/use-swr-options';
 import NotFound from '@/pages/NotFound';
 
 import * as styles from './App.module.scss';
-import { gtagAwTrackingId, gtagSignUpConversionId } from './constants';
+import { gtagAwTrackingId, gtagSignUpConversionId, logtoProductionHostname } from './constants';
 import AppContent from './containers/AppContent';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
 import About from './pages/About';
@@ -26,7 +26,11 @@ import { OnboardingPage, OnboardingRoute } from './types';
 import { getOnboardingPage, gtag } from './utils';
 
 const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
-const isLocalhost = window.location.hostname === 'localhost';
+/**
+ * Due to the special of Google Tag, it should be `true` only in the Logto Cloud production environment.
+ * Add the leading '.' to make it safer (ignore hostnames like "foologto.io").
+ */
+const shouldReportToGtag = window.location.hostname.endsWith('.' + logtoProductionHostname);
 
 function App() {
   const swrOptions = useSwrOptions();
@@ -51,14 +55,14 @@ function App() {
    * as "alpha" which looks unreliable.
    */
   useEffect(() => {
-    if (isLocalhost) {
-      console.debug('Fire Google Tag event');
-    } else {
+    if (shouldReportToGtag) {
       gtag('js', new Date());
       gtag('config', gtagAwTrackingId);
       gtag('event', 'conversion', {
         send_to: gtagSignUpConversionId,
       });
+    } else {
+      console.debug('Google Tag event fires');
     }
   }, []);
 
@@ -78,10 +82,12 @@ function App() {
         <SWRConfig value={swrOptions}>
           <AppBoundary>
             <Helmet>
-              <script
-                async
-                src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
-              />
+              {shouldReportToGtag && (
+                <script
+                  async
+                  src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
+                />
+              )}
             </Helmet>
             <Toast />
             <Routes>

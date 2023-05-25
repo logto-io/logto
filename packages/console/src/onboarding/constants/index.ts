@@ -14,3 +14,4 @@ export const aboutCloudPreviewLink = 'https://docs.logto.io/about/cloud-preview?
 export const gtagAwTrackingId = 'AW-11124811245';
 /** This ID indicates a user has truly signed up for Logto Cloud. */
 export const gtagSignUpConversionId = `${gtagAwTrackingId}/RVejCKC65qMYEO3L3Lgp`;
+export const logtoProductionHostname = 'logto.io';
