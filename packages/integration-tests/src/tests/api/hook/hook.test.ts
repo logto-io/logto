@@ -55,6 +55,19 @@ describe('hooks', () => {
     );
   });
 
+  it('should return hooks with pagination if pagination-related query params are provided', async () => {
+    const payload = getHookCreationPayload(HookEvent.PostRegister);
+    const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
+
+    const response = await authedAdminApi.get('hooks?page=1&page_size=20');
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers).toHaveProperty('total-number');
+
+    // Clean up
+    await authedAdminApi.delete(`hooks/${created.id}`);
+  });
+
   it('should throw error when creating a hook with an empty hook name', async () => {
     const payload = {
       name: '',

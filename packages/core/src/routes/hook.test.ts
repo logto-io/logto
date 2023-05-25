@@ -23,6 +23,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const hooks = {
+  getTotalNumberOfHooks: async (): Promise<{ count: number }> => ({ count: mockHookList.length }),
   findAllHooks: async (): Promise<Hook[]> => mockHookList,
   insertHook: async (data: CreateHook): Promise<Hook> => ({
     ...mockHook,
@@ -102,6 +103,13 @@ describe('hook routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockHookList);
     expect(response.header).not.toHaveProperty('total-number');
+  });
+
+  it('GET /hooks?page=1&page_size=20', async () => {
+    const response = await hookRequest.get('/hooks?page=1&page_size=20');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockHookList);
+    expect(response.header).toHaveProperty('total-number');
   });
 
   it('GET /hooks?includeExecutionStats', async () => {

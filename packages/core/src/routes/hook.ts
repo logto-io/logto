@@ -19,7 +19,14 @@ export default function hookRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    hooks: { findAllHooks, findHookById, insertHook, updateHookById, deleteHookById },
+    hooks: {
+      getTotalNumberOfHooks,
+      findAllHooks,
+      findHookById,
+      insertHook,
+      updateHookById,
+      deleteHookById,
+    },
     logs: { countLogs, findLogs },
   } = queries;
 
@@ -29,6 +36,7 @@ export default function hookRoutes<T extends AuthedRouter>(
 
   router.get(
     '/hooks',
+    koaPagination({ isOptional: true }),
     koaGuard({
       query: z.object({ includeExecutionStats: z.string().optional() }),
       response: hookResponseGuard.partial({ executionStats: true }).array(),
@@ -39,8 +47,24 @@ export default function hookRoutes<T extends AuthedRouter>(
         query: { includeExecutionStats },
       } = ctx.guard;
 
-      const hooks = await findAllHooks();
+      const { limit, offset, disabled: isPaginationDisabled } = ctx.pagination;
 
+      if (isPaginationDisabled) {
+        const hooks = await findAllHooks();
+
+        ctx.body = yes(includeExecutionStats)
+          ? await Promise.all(hooks.map(async (hook) => attachExecutionStatsToHook(hook)))
+          : hooks;
+
+        return next();
+      }
+
+      const [{ count }, hooks] = await Promise.all([
+        getTotalNumberOfHooks(),
+        findAllHooks(limit, offset),
+      ]);
+
+      ctx.pagination.totalCount = count;
       ctx.body = yes(includeExecutionStats)
         ? await Promise.all(hooks.map(async (hook) => attachExecutionStatsToHook(hook)))
         : hooks;
