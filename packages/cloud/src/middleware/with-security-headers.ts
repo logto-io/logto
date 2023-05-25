@@ -37,6 +37,8 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
   const urlSetOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
   const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
+  // Gtag will load by `<script />`
+  const gtagOrigins = ['https://*.googletagmanager.com'];
 
   return async (
     context: InputContext,
@@ -91,7 +93,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
           directives: {
             'upgrade-insecure-requests': null,
             imgSrc: ["'self'", 'data:', 'https:'],
-            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
+            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", ...gtagOrigins],
             connectSrc: [
               "'self'",
               ...adminOrigins,
