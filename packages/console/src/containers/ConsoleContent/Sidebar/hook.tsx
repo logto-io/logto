@@ -4,7 +4,6 @@ import type { FC, ReactNode } from 'react';
 
 import Hook from '@/assets/images/hook.svg';
 import Role from '@/assets/images/role.svg';
-import { isHookFeatureEnabled } from '@/consts/webhooks';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -52,25 +51,6 @@ export const useSidebarMenuItems = (): {
   } = useUserPreferences();
   const { documentationSiteUrl } = useDocumentationUrl();
 
-  const resourceManagementItems: SidebarItem[] = [
-    {
-      Icon: Box,
-      title: 'applications',
-    },
-    {
-      Icon: Cloud,
-      title: 'api_resources',
-    },
-    {
-      Icon: Web,
-      title: 'sign_in_experience',
-    },
-    {
-      Icon: Connection,
-      title: 'connectors',
-    },
-  ];
-
   const sections: SidebarSection[] = [
     {
       title: 'overview',
@@ -88,12 +68,28 @@ export const useSidebarMenuItems = (): {
     },
     {
       title: 'resource_management',
-      items: isHookFeatureEnabled
-        ? resourceManagementItems.concat({
-            Icon: Hook,
-            title: 'webhooks',
-          })
-        : resourceManagementItems,
+      items: [
+        {
+          Icon: Box,
+          title: 'applications',
+        },
+        {
+          Icon: Cloud,
+          title: 'api_resources',
+        },
+        {
+          Icon: Web,
+          title: 'sign_in_experience',
+        },
+        {
+          Icon: Connection,
+          title: 'connectors',
+        },
+        {
+          Icon: Hook,
+          title: 'webhooks',
+        },
+      ],
     },
     {
       title: 'user_management',
