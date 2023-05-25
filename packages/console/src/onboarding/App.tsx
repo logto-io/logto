@@ -85,6 +85,7 @@ function App() {
               {shouldReportToGtag && (
                 <script
                   async
+                  crossOrigin="anonymous"
                   src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
                 />
               )}

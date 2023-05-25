@@ -65,6 +65,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
 
     const basicSecurityHeaderSettings: HelmetOptions = {
       contentSecurityPolicy: false, // Exclusively set for console app only
+      crossOriginEmbedderPolicy: { policy: 'credentialless' },
       expectCt: false, // Not recommended, will be deprecated by modern browsers
       dnsPrefetchControl: false,
       referrerPolicy: {
@@ -93,7 +94,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
           directives: {
             'upgrade-insecure-requests': null,
             imgSrc: ["'self'", 'data:', 'https:'],
-            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", ...gtagOrigins],
+            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'"],
             connectSrc: [
               "'self'",
               ...adminOrigins,
@@ -101,6 +102,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
               ...urlSetOrigins,
               ...developmentOrigins,
               ...appInsightsOrigins,
+              ...gtagOrigins,
             ],
             frameSrc: ["'self'", ...urlSetOrigins, ...adminOrigins],
           },
