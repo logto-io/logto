@@ -81,15 +81,15 @@ function App() {
       <div className={styles.app}>
         <SWRConfig value={swrOptions}>
           <AppBoundary>
-            <Helmet>
-              {shouldReportToGtag && (
+            {shouldReportToGtag && (
+              <Helmet>
                 <script
                   async
                   crossOrigin="anonymous"
                   src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
                 />
-              )}
-            </Helmet>
+              </Helmet>
+            )}
             <Toast />
             <Routes>
               <Route index element={<Navigate replace to={welcomePathname} />} />
