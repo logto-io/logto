@@ -36,8 +36,6 @@ const webhooks = {
     create_webhook: 'Webhook 생성',
     missing_event_error: '하나 이상의 이벤트를 선택해야 합니다.',
     https_format_error: '보안 상의 이유로 HTTPS 형식이 필요합니다.',
-    block_description:
-      '현재 버전은 최대 세 개의 웹훅만 지원합니다. 추가 웹훅이 필요한 경우 지원팀 <a>{{link}}</a>에 문의하시기 바랍니다.',
   },
   webhook_created: 'Webhook {{name}}가 성공적으로 생성되었습니다.',
 };

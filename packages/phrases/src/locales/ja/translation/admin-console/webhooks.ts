@@ -36,8 +36,6 @@ const webhooks = {
     create_webhook: 'Webhookを作成する',
     missing_event_error: '少なくとも1つのイベントを選択する必要があります。',
     https_format_error: 'セキュリティ上の理由からHTTPS形式が必要です。',
-    block_description:
-      '現在のバージョンでは、最大3個の Webhook にしか対応していません。追加の webhook が必要な場合は、サポートチーム <a>{{link}}</a> までご連絡ください。',
   },
   webhook_created: 'Webhook {{name}}が正常に作成されました。',
 };
