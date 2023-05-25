@@ -1,11 +1,12 @@
 import type { Hook } from '@logto/schemas';
 import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import { got } from 'got';
 
 import { mockHook } from '#src/__mocks__/hook.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
-import type { Interaction } from './hook.js';
+import type { Interaction } from './index.js';
+import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
@@ -20,6 +21,12 @@ await mockEsmWithActual('@logto/shared', () => ({
 const mockSignature = 'mockSignature';
 mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
+}));
+
+const { sendWebhookRequest } = mockEsm('./utils.js', () => ({
+  sendWebhookRequest: jest.fn().mockResolvedValue({ statusCode: 200, body: '{"message":"ok"}' }),
+  generateHookTestPayload,
+  parseResponse,
 }));
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
@@ -37,18 +44,14 @@ const hook: Hook = {
   createdAt: Date.now() / 1000,
 };
 
-const post = jest
-  .spyOn(got, 'post')
-  // @ts-expect-error
-  .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
-
 const insertLog = jest.fn();
 const mockHookState = { requestCount: 100, successCount: 10 };
 const getHookExecutionStatsByHookId = jest.fn().mockResolvedValue(mockHookState);
 const findAllHooks = jest.fn().mockResolvedValue([hook]);
+const findHookById = jest.fn().mockResolvedValue(hook);
 
-const { createHookLibrary } = await import('./hook.js');
-const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook } = createHookLibrary(
+const { createHookLibrary } = await import('./index.js');
+const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook, testHook } = createHookLibrary(
   new MockQueries({
     // @ts-expect-error
     users: { findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }) },
@@ -57,7 +60,7 @@ const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook } = createHo
       findApplicationById: async () => ({ id: 'app_id', extraField: 'not_ok' }),
     },
     logs: { insertLog, getHookExecutionStatsByHookId },
-    hooks: { findAllHooks },
+    hooks: { findAllHooks, findHookById },
   })
 );
 
@@ -86,13 +89,9 @@ describe('triggerInteractionHooksIfNeeded()', () => {
     );
 
     expect(findAllHooks).toHaveBeenCalled();
-    expect(post).toHaveBeenCalledWith(url, {
-      headers: {
-        'user-agent': 'Logto (https://logto.io/)',
-        bar: 'baz',
-        'logto-signature-sha-256': mockSignature,
-      },
-      json: {
+    expect(sendWebhookRequest).toHaveBeenCalledWith({
+      hookConfig: hook.config,
+      payload: {
         hookId: 'foo',
         event: 'PostSignIn',
         interactionEvent: 'SignIn',
@@ -102,8 +101,7 @@ describe('triggerInteractionHooksIfNeeded()', () => {
         application: { id: 'app_id' },
         createdAt: new Date(100_000).toISOString(),
       },
-      retry: { limit: 3 },
-      timeout: { request: 10_000 },
+      signingKey: hook.signingKey,
     });
 
     const calledPayload: unknown = insertLog.mock.calls[0][0];
@@ -125,5 +123,37 @@ describe('attachExecutionStatsToHook', () => {
   it('should attach execution stats to a hook', async () => {
     const result = await attachExecutionStatsToHook(mockHook);
     expect(result).toEqual({ ...mockHook, executionStats: mockHookState });
+  });
+});
+
+describe('testHook', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should call sendWebhookRequest with correct values', async () => {
+    await testHook(hook.id, [HookEvent.PostSignIn], hook.config);
+    const testHookPayload = generateHookTestPayload(hook.id, HookEvent.PostSignIn);
+    expect(sendWebhookRequest).toHaveBeenCalledWith({
+      hookConfig: hook.config,
+      payload: testHookPayload,
+      signingKey: hook.signingKey,
+    });
+  });
+
+  it('should call sendWebhookRequest with correct times if multiple events are provided', async () => {
+    await testHook(hook.id, [HookEvent.PostSignIn, HookEvent.PostResetPassword], hook.config);
+    expect(sendWebhookRequest).toBeCalledTimes(2);
+  });
+
+  it('should throw send test payload failed error if sendWebhookRequest fails', async () => {
+    sendWebhookRequest.mockRejectedValueOnce(new Error('test error'));
+    await expect(testHook(hook.id, [HookEvent.PostSignIn], hook.config)).rejects.toThrowError(
+      new RequestError({
+        code: 'hook.send_test_payload_failed',
+        message: 'test error',
+        status: 500,
+      })
+    );
   });
 });

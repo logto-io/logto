@@ -1,4 +1,4 @@
-import { Hooks, Logs, hookEventsGuard, hookResponseGuard } from '@logto/schemas';
+import { Hooks, Logs, hookConfigGuard, hookEventsGuard, hookResponseGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
@@ -24,7 +24,7 @@ export default function hookRoutes<T extends AuthedRouter>(
   } = queries;
 
   const {
-    hooks: { attachExecutionStatsToHook },
+    hooks: { attachExecutionStatsToHook, testHook },
   } = libraries;
 
   router.get(
@@ -125,6 +125,27 @@ export default function hookRoutes<T extends AuthedRouter>(
       });
 
       ctx.status = 201;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/hooks/:id/test',
+    koaGuard({
+      params: z.object({ id: z.string() }),
+      body: z.object({ events: nonemptyUniqueHookEventsGuard, config: hookConfigGuard }),
+      status: [204, 404, 500],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body: { events, config },
+      } = ctx.guard;
+
+      await testHook(id, events, config);
+
+      ctx.status = 204;
 
       return next();
     }

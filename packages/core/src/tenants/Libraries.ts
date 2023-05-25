@@ -1,6 +1,6 @@
 import { createApplicationLibrary } from '#src/libraries/application.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
-import { createHookLibrary } from '#src/libraries/hook.js';
+import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createResourceLibrary } from '#src/libraries/resource.js';

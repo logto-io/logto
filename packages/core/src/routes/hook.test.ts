@@ -77,9 +77,12 @@ const attachExecutionStatsToHook = jest.fn().mockImplementation((hook) => ({
   executionStats: mockExecutionStats,
 }));
 
+const testHook = jest.fn();
+
 const mockLibraries = {
   hooks: {
     attachExecutionStatsToHook,
+    testHook,
   },
 };
 
@@ -223,6 +226,15 @@ describe('hook routes', () => {
         retries: 2,
       },
     });
+  });
+
+  it('POST /hooks/:id/test should return 204 if test is successful', async () => {
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
+      events: [HookEvent.PostRegister],
+      config: { url: 'https://example.com' },
+    });
+    expect(response.status).toEqual(204);
   });
 
   it('PATCH /hooks/:id', async () => {

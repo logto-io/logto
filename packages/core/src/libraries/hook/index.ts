@@ -6,23 +6,19 @@ import {
   userInfoSelectFields,
   type Hook,
   type HookResponse,
+  type HookConfig,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
-import { type Response } from 'got';
+import { HTTPError } from 'got';
 import type Provider from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
-import { sign } from '#src/utils/sign.js';
 
-const parseResponse = ({ statusCode, body }: Response) => ({
-  statusCode,
-  // eslint-disable-next-line no-restricted-syntax
-  body: trySafe(() => JSON.parse(String(body)) as unknown) ?? String(body),
-});
+import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
 const eventToHook: Record<InteractionEvent, HookEvent> = {
   [InteractionEvent.Register]: HookEvent.PostRegister,
@@ -38,7 +34,7 @@ export const createHookLibrary = (queries: Queries) => {
     logs: { insertLog, getHookExecutionStatsByHookId },
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
-    hooks: { findAllHooks },
+    hooks: { findAllHooks, findHookById },
   } = queries;
 
   const triggerInteractionHooksIfNeeded = async (
@@ -84,7 +80,7 @@ export const createHookLibrary = (queries: Queries) => {
     } satisfies Omit<HookEventPayload, 'hookId'>;
 
     await Promise.all(
-      rows.map(async ({ config: { url, headers, retries }, id, signingKey }) => {
+      rows.map(async ({ id, config, signingKey }) => {
         consoleLog.info(`\tTriggering hook ${id} due to ${hookEvent} event`);
         const json: HookEventPayload = { hookId: id, ...payload };
         const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
@@ -92,17 +88,11 @@ export const createHookLibrary = (queries: Queries) => {
         logEntry.append({ json, hookId: id });
 
         // Trigger web hook and log response
-        await got
-          .post(url, {
-            headers: {
-              'user-agent': 'Logto (https://logto.io/)',
-              ...headers,
-              ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, json) }),
-            },
-            json,
-            retry: { limit: retries ?? 3 },
-            timeout: { request: 10_000 },
-          })
+        await sendWebhookRequest({
+          hookConfig: config,
+          payload: json,
+          signingKey,
+        })
           .then(async (response) => {
             logEntry.append({
               response: parseResponse(response),
@@ -129,6 +119,36 @@ export const createHookLibrary = (queries: Queries) => {
     );
   };
 
+  const testHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
+    const { signingKey } = await findHookById(hookId);
+    try {
+      await Promise.all(
+        events.map(async (event) => {
+          const testPayload = generateHookTestPayload(hookId, event);
+          await sendWebhookRequest({
+            hookConfig: config,
+            payload: testPayload,
+            signingKey,
+          });
+        })
+      );
+    } catch (error: unknown) {
+      /**
+       * Note: We only care about whether the test payload is sent to the endpoint of the webhook,
+       * so we don't care about http errors returned by the endpoint.
+       */
+      if (error instanceof HTTPError) {
+        return;
+      }
+
+      throw new RequestError({
+        code: 'hook.send_test_payload_failed',
+        message: conditional(error instanceof Error && String(error)) ?? 'Unknown error',
+        status: 500,
+      });
+    }
+  };
+
   const attachExecutionStatsToHook = async (hook: Hook): Promise<HookResponse> => ({
     ...hook,
     executionStats: await getHookExecutionStatsByHookId(hook.id),
@@ -137,5 +157,6 @@ export const createHookLibrary = (queries: Queries) => {
   return {
     triggerInteractionHooksIfNeeded,
     attachExecutionStatsToHook,
+    testHook,
   };
 };
