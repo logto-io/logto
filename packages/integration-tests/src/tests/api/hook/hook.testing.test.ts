@@ -73,5 +73,8 @@ describe('hook testing', () => {
       json: { events: [HookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
     });
     expect(response.statusCode).toBe(204);
+
+    // Clean Up
+    await authedAdminApi.delete(`hooks/${created.id}`);
   });
 });
