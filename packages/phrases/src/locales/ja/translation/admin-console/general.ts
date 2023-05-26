@@ -51,6 +51,8 @@ const general = {
   multiple_form_field: '(複数)',
   demo: 'デモ',
   unnamed: '名前がありません',
+  view: '表示',
+  hide: '非表示',
 };
 
 export default general;

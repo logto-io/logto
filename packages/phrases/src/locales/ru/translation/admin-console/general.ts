@@ -51,6 +51,8 @@ const general = {
   multiple_form_field: '(Несколько)',
   demo: 'Демо',
   unnamed: 'Без имени',
+  view: 'Просмотр',
+  hide: 'Скрыть',
 };
 
 export default general;

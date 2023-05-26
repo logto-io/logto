@@ -41,7 +41,7 @@ function CopyToClipboard({
       return value;
     }
 
-    return '*'.repeat(value.length);
+    return '•'.repeat(value.length);
   }, [hasVisibilityToggle, showHiddenContent, value]);
 
   useEffect(() => {
@@ -75,14 +75,16 @@ function CopyToClipboard({
       <div className={styles.row}>
         {variant !== 'icon' && <div className={styles.content}>{displayValue}</div>}
         {hasVisibilityToggle && (
-          <IconButton
-            className={styles.iconButton}
-            iconClassName={styles.icon}
-            size="small"
-            onClick={toggleHiddenContent}
-          >
-            {showHiddenContent ? <EyeClosed /> : <Eye />}
-          </IconButton>
+          <Tooltip content={t(showHiddenContent ? 'hide' : 'view')}>
+            <IconButton
+              className={styles.iconButton}
+              iconClassName={styles.icon}
+              size="small"
+              onClick={toggleHiddenContent}
+            >
+              {showHiddenContent ? <EyeClosed /> : <Eye />}
+            </IconButton>
+          </Tooltip>
         )}
         <Tooltip
           isSuccessful={copyState === 'copied'}

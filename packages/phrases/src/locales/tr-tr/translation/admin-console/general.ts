@@ -52,6 +52,8 @@ const general = {
   multiple_form_field: '(Çoklu)',
   demo: 'Demo',
   unnamed: 'İsimsiz',
+  view: 'Görünüm',
+  hide: 'Gizle',
 };
 
 export default general;
