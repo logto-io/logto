@@ -35,7 +35,7 @@ function CustomHeaderField() {
       return true;
     }
 
-    if (headers.filter(({ key: _key }) => _key === key).length > 1) {
+    if (headers.filter(({ key: _key }) => _key.length > 0 && _key === key).length > 1) {
       return t('webhook_details.settings.key_duplicated_error');
     }
 
