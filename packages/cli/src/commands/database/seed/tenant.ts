@@ -1,6 +1,6 @@
 import { createTenantMetadata } from '@logto/core-kit';
 import type {
-  TenantModel,
+  CreateTenant,
   AdminData,
   UpdateAdminData,
   CreateScope,
@@ -18,9 +18,9 @@ import { getDatabaseName } from '../../../queries/database.js';
 export const createTenant = async (pool: CommonQueryMethods, tenantId: string) => {
   const database = await getDatabaseName(pool, true);
   const { parentRole, role, password } = createTenantMetadata(database, tenantId);
-  const tenantModel: TenantModel = { id: tenantId, dbUser: role, dbUserPassword: password };
+  const createTenant: CreateTenant = { id: tenantId, dbUser: role, dbUserPassword: password };
 
-  await pool.query(insertInto(tenantModel, 'tenants'));
+  await pool.query(insertInto(createTenant, 'tenants'));
   await pool.query(sql`
     create role ${sql.identifier([role])} with inherit login
       password '${raw(password)}'

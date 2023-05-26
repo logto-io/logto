@@ -6,7 +6,7 @@ import {
   getManagementApiResourceIndicator,
   PredefinedScope,
 } from '@logto/schemas';
-import type { AdminData, TenantModel, CreateRolesScope } from '@logto/schemas';
+import type { AdminData, CreateTenant, CreateRolesScope } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { PostgreSql } from '@withtyped/postgres';
 import { jsonb, dangerousRaw, id, sql } from '@withtyped/postgres';
@@ -34,7 +34,7 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
         where roles.tenant_id = ${adminTenantId};
     `);
 
-  const insertTenant = async (tenant: TenantModel) => client.query(insertInto(tenant, 'tenants'));
+  const insertTenant = async (tenant: CreateTenant) => client.query(insertInto(tenant, 'tenants'));
 
   const createTenantRole = async (parentRole: string, role: string, password: string) =>
     client.query(sql`

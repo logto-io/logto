@@ -9,4 +9,6 @@ export const adminTenantId = 'admin';
  * `createModel` from @withtyped/server can not properly infer the model
  * type, manually define it here for now.
  */
-export type TenantModel = Pick<InferModelType<typeof Tenants>, 'id' | 'dbUser' | 'dbUserPassword'>;
+export type TenantModel = InferModelType<typeof Tenants>;
+export type CreateTenant = Pick<TenantModel, 'id' | 'dbUser' | 'dbUserPassword'> &
+  Partial<Pick<TenantModel, 'name'>>;

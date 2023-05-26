@@ -13,10 +13,4 @@ $$ begin
   return new;
 end; $$ language plpgsql;
 
-create function set_tenant_name() returns trigger as
-$$ begin
-  new.name := concat('tenant_', new.id);
-  return new;
-end; $$ language plpgsql;
-
 /* no_after_each */
