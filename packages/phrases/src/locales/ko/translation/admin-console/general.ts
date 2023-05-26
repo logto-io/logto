@@ -51,6 +51,8 @@ const general = {
   multiple_form_field: '(복수 선택)',
   demo: '데모',
   unnamed: '이름없음',
+  view: '보기',
+  hide: '숨기기',
 };
 
 export default general;
