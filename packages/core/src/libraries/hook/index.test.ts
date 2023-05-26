@@ -13,9 +13,8 @@ const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
 
 const nanoIdMock = 'mockId';
 await mockEsmWithActual('@logto/shared', () => ({
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: () => () => nanoIdMock,
-  generateStandardId: () => nanoIdMock,
+  buildIdGenerator: jest.fn().mockReturnValue(nanoIdMock),
+  generateStandardId: jest.fn().mockReturnValue(nanoIdMock),
 }));
 
 const mockSignature = 'mockSignature';
@@ -53,11 +52,15 @@ const findHookById = jest.fn().mockResolvedValue(hook);
 const { createHookLibrary } = await import('./index.js');
 const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook, testHook } = createHookLibrary(
   new MockQueries({
-    // @ts-expect-error
-    users: { findUserById: () => ({ id: 'user_id', username: 'user', extraField: 'not_ok' }) },
+    users: {
+      findUserById: jest.fn().mockReturnValue({
+        id: 'user_id',
+        username: 'user',
+        extraField: 'not_ok',
+      }),
+    },
     applications: {
-      // @ts-expect-error
-      findApplicationById: async () => ({ id: 'app_id', extraField: 'not_ok' }),
+      findApplicationById: jest.fn().mockResolvedValue({ id: 'app_id', extraField: 'not_ok' }),
     },
     logs: { insertLog, getHookExecutionStatsByHookId },
     hooks: { findAllHooks, findHookById },

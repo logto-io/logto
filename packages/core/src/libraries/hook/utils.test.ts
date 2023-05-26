@@ -4,7 +4,7 @@ import { got } from 'got';
 
 const { jest } = import.meta;
 
-const { mockEsm } = createMockUtils(jest);
+const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
 
 const post = jest
   .spyOn(got, 'post')
@@ -14,6 +14,12 @@ const post = jest
 const mockSignature = 'mockSignature';
 mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
+}));
+
+const mockNanoId = 'mockNanoidId';
+await mockEsmWithActual('@logto/shared', () => ({
+  buildIdGenerator: jest.fn().mockReturnValue(mockNanoId),
+  generateStandardId: jest.fn().mockReturnValue(mockNanoId),
 }));
 
 const { generateHookTestPayload, sendWebhookRequest } = await import('./utils.js');
@@ -41,6 +47,7 @@ describe('sendWebhookRequest', () => {
         'user-agent': 'Logto (https://logto.io/)',
         foo: 'bar',
         'logto-signature-sha-256': mockSignature,
+        'logto-message-id': mockNanoId,
       },
       json: testPayload,
       retry: { limit: 3 },
