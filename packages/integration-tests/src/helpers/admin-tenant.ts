@@ -2,15 +2,21 @@
 // Since they are just different in URLs
 
 import type { LogtoConfig } from '@logto/node';
-import type { Role, User } from '@logto/schemas';
 import {
+  cloudApiIndicator,
+  CloudScope,
   PredefinedScope,
   adminTenantId,
   defaultTenantId,
   getManagementApiResourceIndicator,
+  getManagementApiAdminName,
   adminConsoleApplicationId,
   InteractionEvent,
+  AdminTenantRole,
+  type Role,
+  type User,
 } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 
 import { authedAdminTenantApi as api, adminTenantApi } from '#src/api/api.js';
 import type { InteractionPayload } from '#src/api/interaction.js';
@@ -25,7 +31,7 @@ export const createResponseWithCode = (statusCode: number) => ({
   response: { statusCode },
 });
 
-export const createUserWithAllRoles = async () => {
+const createUserWithRoles = async (roleNames: string[]) => {
   const username = generateUsername();
   const password = generatePassword();
   const user = await api
@@ -37,14 +43,22 @@ export const createUserWithAllRoles = async () => {
   // Should have roles for default tenant Management API and admin tenant Me API
   const roles = await api.get('roles').json<Role[]>();
   await Promise.all(
-    roles.map(async ({ id }) =>
-      api.post(`roles/${id}/users`, {
-        json: { userIds: [user.id] },
-      })
-    )
+    roles
+      .filter(({ name }) => roleNames.includes(name))
+      .map(async ({ id }) =>
+        api.post(`roles/${id}/users`, {
+          json: { userIds: [user.id] },
+        })
+      )
   );
 
   return [user, { username, password }] as const;
+};
+
+export const createUserWithAllRoles = async () => {
+  const allRoles = await api.get('roles').json<Role[]>();
+  const allRoleNames = allRoles.map(({ name }) => name);
+  return createUserWithRoles(allRoleNames);
 };
 
 export const deleteUser = async (id: string) => {
@@ -86,11 +100,28 @@ export const initClientAndSignIn = async (
   return client;
 };
 
-export const createUserAndSignInWithClient = async () => {
+export const createUserWithAllRolesAndSignInToClient = async () => {
   const [{ id }, { username, password }] = await createUserWithAllRoles();
   const client = await initClientAndSignIn(username, password, {
     resources: [resourceDefault, resourceMe],
     scopes: [PredefinedScope.All],
+  });
+
+  return { id, client };
+};
+
+export const createUserAndSignInToCloudClient = async (
+  userRoleType: AdminTenantRole.User | AdminTenantRole.Admin
+) => {
+  const [{ id }, { username, password }] = await createUserWithRoles(
+    conditionalArray<string>(
+      AdminTenantRole.User,
+      userRoleType === AdminTenantRole.Admin && getManagementApiAdminName(adminTenantId)
+    )
+  );
+  const client = await initClientAndSignIn(username, password, {
+    resources: [cloudApiIndicator],
+    scopes: Object.values(CloudScope),
   });
 
   return { id, client };

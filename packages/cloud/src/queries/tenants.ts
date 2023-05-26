@@ -44,30 +44,38 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     `);
 
   const insertAdminData = async (data: AdminData) => {
-    const { resource, scope, role } = data;
+    const { resource, scopes, role } = data;
 
     assert(
-      resource.tenantId && scope.tenantId && role.tenantId,
+      resource.tenantId && scopes.every(({ tenantId }) => tenantId) && role.tenantId,
       new Error('Tenant ID cannot be empty.')
     );
 
     assert(
-      resource.tenantId === scope.tenantId && scope.tenantId === role.tenantId,
+      scopes.every(
+        (scope) => resource.tenantId === scope.tenantId && scope.tenantId === role.tenantId
+      ),
       new Error('All data should have the same tenant ID.')
     );
 
     await client.query(insertInto(resource, 'resources'));
-    await client.query(insertInto(scope, 'scopes'));
+    await Promise.all(scopes.map(async (scope) => client.query(insertInto(scope, 'scopes'))));
     await client.query(insertInto(role, 'roles'));
-    await client.query(
-      insertInto(
-        {
-          id: generateStandardId(),
-          roleId: role.id,
-          scopeId: scope.id,
-          tenantId: resource.tenantId,
-        } satisfies CreateRolesScope,
-        'roles_scopes'
+
+    const { tenantId } = resource;
+    await Promise.all(
+      scopes.map(async ({ id }) =>
+        client.query(
+          insertInto(
+            {
+              id: generateStandardId(),
+              roleId: role.id,
+              scopeId: id,
+              tenantId,
+            } satisfies CreateRolesScope,
+            'roles_scopes'
+          )
+        )
       )
     );
   };
