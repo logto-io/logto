@@ -97,21 +97,51 @@ export const demoSocialGuard: Readonly<{
   [DemoSocialKey.DemoSocial]: demoSocialDataGuard,
 });
 
+// Cloudflare Hostnames
+export const hostnameProviderDataGuard = z.object({
+  zoneId: z.string(),
+  apiToken: z.string(), // Requires zone permission for "SSL and Certificates Edit"
+  fallbackOrigin: z.string(), // A domain name
+});
+
+export type HostnameProviderData = z.infer<typeof hostnameProviderDataGuard>;
+
+export enum CloudflareKey {
+  HostnameProvider = 'cloudflareHostnameProvider',
+}
+
+export type CloudflareType = {
+  [CloudflareKey.HostnameProvider]: HostnameProviderData;
+};
+
+export const cloudflareGuard: Readonly<{
+  [key in CloudflareKey]: ZodType<CloudflareType[key]>;
+}> = Object.freeze({
+  [CloudflareKey.HostnameProvider]: hostnameProviderDataGuard,
+});
+
 // Summary
-export type SystemKey = AlterationStateKey | StorageProviderKey | DemoSocialKey;
-export type SystemType = AlterationStateType | StorageProviderType | DemoSocialType;
+export type SystemKey = AlterationStateKey | StorageProviderKey | DemoSocialKey | CloudflareKey;
+export type SystemType =
+  | AlterationStateType
+  | StorageProviderType
+  | DemoSocialType
+  | CloudflareType;
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
-  typeof demoSocialGuard;
+  typeof demoSocialGuard &
+  typeof cloudflareGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
   ...Object.values(StorageProviderKey),
   ...Object.values(DemoSocialKey),
+  ...Object.values(CloudflareKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
   ...alterationStateGuard,
   ...storageProviderGuard,
   ...demoSocialGuard,
+  ...cloudflareGuard,
 });
