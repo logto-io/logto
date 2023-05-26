@@ -21,6 +21,8 @@ div.toast {
   .message {
     flex: 1;
     margin: 0 _.unit(3);
+    overflow: hidden;
+    overflow-wrap: break-word;
   }
 
   &.success {

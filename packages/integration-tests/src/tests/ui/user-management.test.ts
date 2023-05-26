@@ -104,7 +104,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This email is associated with an existing account.',
     });
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
@@ -113,7 +113,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This phone number is associated with an existing account.',
     });
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
@@ -122,7 +122,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This username is already in use.',
     });
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
@@ -157,7 +157,7 @@ describe('user management', () => {
     });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
     const successToastHandle = await page.waitForSelector('div[class$=success]');
-    await expect(successToastHandle).toMatchElement('span[class$=message]', {
+    await expect(successToastHandle).toMatchElement('div[class$=message]', {
       text: 'Saved!',
     });
     // Top userinfo card shows the updated user full name as the title
@@ -209,7 +209,7 @@ describe('user management', () => {
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await page.screenshot({ path: 'user-conflict-email.png' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This email is associated with an existing account.',
     });
     // Discard changes
@@ -218,7 +218,7 @@ describe('user management', () => {
     // Conflicted phone number
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This phone number is associated with an existing account.',
     });
     // Discard changes
@@ -227,7 +227,7 @@ describe('user management', () => {
     // Conflicted username
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] span[class$=message]', {
+    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This username is already in use.',
     });
     // Discard changes
