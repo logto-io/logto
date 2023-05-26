@@ -15,9 +15,7 @@ import WebhookDark from '@/assets/images/webhook-dark.svg';
 import Webhook from '@/assets/images/webhook.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
 import DynamicT from '@/components/DynamicT';
 import PageMeta from '@/components/PageMeta';
@@ -25,6 +23,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import Tag from '@/components/Tag';
 import { WebhookDetailsTabs } from '@/consts';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
@@ -49,18 +48,28 @@ function WebhookDetails() {
   const theme = useTheme();
   const WebhookIcon = theme === 'light' ? Webhook : WebhookDark;
 
-  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const { show, cancel } = useConfirmModal();
+
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isDisableFormOpen, setIsDisableFormOpen] = useState(false);
   const [isUpdatingEnableState, setIsUpdatingEnableState] = useState(false);
 
   useEffect(() => {
-    setIsDeleteFormOpen(false);
-    setIsDisableFormOpen(false);
-  }, [data?.enabled, pathname]);
+    return () => {
+      cancel();
+    };
+  }, [cancel, pathname]);
 
-  const onDelete = async () => {
+  const handleDelete = async () => {
     if (!data || isDeleting) {
+      return;
+    }
+
+    const [result] = await show({
+      ModalContent: () => <DynamicT forKey="webhook_details.deletion_reminder" />,
+      confirmButtonText: 'general.delete',
+    });
+
+    if (!result) {
       return;
     }
 
@@ -75,9 +84,20 @@ function WebhookDetails() {
     }
   };
 
-  const onToggleEnableState = async () => {
+  const handleToggleEnableState = async () => {
     if (!data || isUpdatingEnableState) {
       return;
+    }
+
+    if (isEnabled) {
+      const [result] = await show({
+        ModalContent: () => <DynamicT forKey="webhook_details.disable_reminder" />,
+        confirmButtonText: 'webhook_details.disable_webhook',
+      });
+
+      if (!result) {
+        return;
+      }
     }
 
     setIsUpdatingEnableState(true);
@@ -87,7 +107,6 @@ function WebhookDetails() {
         .patch(`api/hooks/${data.id}`, { json: { enabled: !isEnabled } })
         .json<Hook>();
       void mutate({ ...updatedHook, executionStats: data.executionStats });
-      setIsDisableFormOpen(false);
       const { enabled } = updatedHook;
       toast.success(
         t(enabled ? 'webhook_details.webhook_reactivated' : 'webhook_details.webhook_disabled')
@@ -150,13 +169,7 @@ function WebhookDetails() {
                 <ActionMenuItem
                   icon={isEnabled ? <Forbidden /> : <Shield />}
                   iconClassName={styles.icon}
-                  onClick={async () => {
-                    if (isEnabled) {
-                      setIsDisableFormOpen(true);
-                      return;
-                    }
-                    await onToggleEnableState();
-                  }}
+                  onClick={handleToggleEnableState}
                 >
                   <DynamicT
                     forKey={
@@ -166,37 +179,10 @@ function WebhookDetails() {
                     }
                   />
                 </ActionMenuItem>
-                <ActionMenuItem
-                  icon={<Delete />}
-                  type="danger"
-                  onClick={() => {
-                    setIsDeleteFormOpen(true);
-                  }}
-                >
+                <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
                   <DynamicT forKey="webhook_details.delete_webhook" />
                 </ActionMenuItem>
               </ActionMenu>
-              <DeleteConfirmModal
-                isOpen={isDeleteFormOpen}
-                isLoading={isDeleting}
-                onCancel={() => {
-                  setIsDeleteFormOpen(true);
-                }}
-                onConfirm={onDelete}
-              >
-                <div>{t('webhook_details.deletion_reminder')}</div>
-              </DeleteConfirmModal>
-              <ConfirmModal
-                isOpen={isDisableFormOpen}
-                isLoading={isUpdatingEnableState}
-                confirmButtonText="webhook_details.disable_webhook"
-                onCancel={async () => {
-                  setIsDisableFormOpen(false);
-                }}
-                onConfirm={onToggleEnableState}
-              >
-                <DynamicT forKey="webhook_details.disable_reminder" />
-              </ConfirmModal>
             </div>
           </Card>
           <TabNav>
