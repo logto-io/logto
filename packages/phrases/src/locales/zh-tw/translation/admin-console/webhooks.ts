@@ -34,8 +34,6 @@ const webhooks = {
     create_webhook: '創建 webhook',
     missing_event_error: '您需要選擇至少一個事件。',
     https_format_error: 'HTTPS 格式要求為了安全原因。',
-    block_description:
-      '目前版本僅支持三條 Webhook。 如果需要額外的 Webhook，請發送電子郵件至我們的支持團隊 <a>{{link}}</a>，我們將樂意為你提供協助。',
   },
   webhook_created: 'Webhook {{name}} 已成功創建。',
 };

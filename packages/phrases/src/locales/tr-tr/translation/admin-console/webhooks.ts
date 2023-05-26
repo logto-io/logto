@@ -36,8 +36,6 @@ const webhooks = {
     create_webhook: 'Webhook Oluştur',
     missing_event_error: 'En az bir olay seçmeniz gerekiyor.',
     https_format_error: 'Güvenliği nedeniyle HTTPS biçimi gereklidir.',
-    block_description:
-      'Geçerli sürüm üç adede kadar webhooks destekler. Ek webhooks gerekiyorsa, lütfen <a>{{link}}</a> e-posta ile destek ekibimize başvurun, yardımcı olmaktan memnuniyet duyarız.',
   },
   webhook_created: 'Webhook {{name}} başarıyla oluşturuldu.',
 };

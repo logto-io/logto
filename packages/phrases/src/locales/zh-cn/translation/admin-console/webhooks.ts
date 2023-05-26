@@ -33,8 +33,6 @@ const webhooks = {
     create_webhook: '创建Webhook',
     missing_event_error: '您必须至少选择一个事件。',
     https_format_error: 'HTTPS格式为安全性所必须。',
-    block_description:
-      '当前版本仅支持最多三个Webhook。如果你需要额外的Webhook，请通过<a>{{link}}</a>向我们的支持团队发送电子邮件，我们将很乐意提供帮助。',
   },
   webhook_created: 'Webhook {{name}} 已成功创建。',
 };
