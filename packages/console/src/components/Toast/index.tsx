@@ -24,9 +24,7 @@ function Toast() {
       {(toastInstance) => (
         <div className={toastInstance.className}>
           <div className={styles.image}>{toastInstance.icon}</div>
-          <span className={styles.message}>
-            {resolveValue(toastInstance.message, toastInstance)}
-          </span>
+          <div className={styles.message}>{resolveValue(toastInstance.message, toastInstance)}</div>
         </div>
       )}
     </Toaster>
