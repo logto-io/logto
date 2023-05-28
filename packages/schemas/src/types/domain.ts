@@ -19,3 +19,10 @@ export const domainResponseGuard = Domains.guard.pick({
 });
 
 export type DomainResponse = z.infer<typeof domainResponseGuard>;
+
+export enum DomainStatus {
+  PendingVerification = 'PendingVerification',
+  PendingSsl = 'PendingSsl',
+  Active = 'Active',
+  Error = 'Error',
+}
