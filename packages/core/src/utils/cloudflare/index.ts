@@ -17,7 +17,7 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
 
   const response = await got.post(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames`, {
     headers: {
-      Authentication: `Bearer ${auth.apiToken}`,
+      Authorization: `Bearer ${auth.apiToken}`,
     },
     json: {
       hostname,
@@ -42,7 +42,7 @@ export const getCustomHostname = async (auth: HostnameProviderData, identifier: 
 
   const response = await got.get(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames/${identifier}`, {
     headers: {
-      Authentication: `Bearer ${auth.apiToken}`,
+      Authorization: `Bearer ${auth.apiToken}`,
     },
   });
 

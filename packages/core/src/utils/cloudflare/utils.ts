@@ -10,5 +10,5 @@ export const parseCloudflareResponse = (body: string) => {
   assertThat(result.success, 'domain.cloudflare_response_error');
   assertThat(result.data.success, 'domain.cloudflare_response_error');
 
-  return result.data;
+  return result.data.result;
 };
