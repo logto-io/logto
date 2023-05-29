@@ -24,7 +24,7 @@ const api_resource_details = {
     description_placeholder: '能够读取资源',
     permission_created: '权限 "{{name}}" 已成功创建',
     delete_description: '如果删除此权限，拥有该权限的用户将失去由此权限授予的访问权限。',
-    deleted: '成功删除权限 "{{name}}"！',
+    deleted: '成功删除权限 "{{name}}"。',
   },
 };
 

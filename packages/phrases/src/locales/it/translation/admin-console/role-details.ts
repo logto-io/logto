@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identificatore',
   delete_description:
     'Ciò cancellerà anche i permessi associati a questo ruolo dagli utenti coinvolti e cancellerà la corrispondenza tra ruoli, utenti e permessi.',
-  role_deleted: '{{name}} è stato cancellato con successo!',
+  role_deleted: '{{name}} è stato cancellato con successo.',
   settings_tab: 'Impostazioni',
   users_tab: 'Utenti',
   permissions_tab: 'Permessi',

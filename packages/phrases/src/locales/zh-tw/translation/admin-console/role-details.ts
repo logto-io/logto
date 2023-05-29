@@ -3,7 +3,7 @@ const role_details = {
   identifier: '標識符',
   delete_description:
     '這樣做將從受影響的用戶中刪除與該角色關聯的權限，並刪除角色、用戶和權限之間的映射關係。',
-  role_deleted: '{{name}} 已成功刪除！',
+  role_deleted: '{{name}} 已成功刪除。',
   settings_tab: '設置',
   users_tab: '用戶',
   permissions_tab: '權限',

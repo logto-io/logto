@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identificador',
   delete_description:
     'Al hacerlo, se eliminarán los permisos asociados con este rol de los usuarios afectados y se eliminará la asignación entre roles, usuarios y permisos.',
-  role_deleted: '{{name}} fue eliminado correctamente!',
+  role_deleted: '{{name}} fue eliminado correctamente.',
   settings_tab: 'Configuración',
   users_tab: 'Usuarios',
   permissions_tab: 'Permisos',

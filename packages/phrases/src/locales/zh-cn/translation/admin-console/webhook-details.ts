@@ -42,7 +42,7 @@ const webhook_details = {
     test_webhook_description:
       '请完成上面的 Webhook 配置。单击测试按钮，我们将向您的端点 URL 发送每个选定事件的单独负载示例。这将使您能够验证您的端点是否正确接收和处理负载。',
     send_test_payload: '发送测试负载',
-    test_payload_sent: '负载已成功发送！',
+    test_payload_sent: '负载已成功发送。',
   },
 };
 

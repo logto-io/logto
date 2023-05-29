@@ -11,7 +11,7 @@ const applications = {
   select_application_type: 'Uygulama tipi seçiniz',
   no_application_type_selected: 'Henüz bir uygulama tipi seçmediniz',
   application_created:
-    '{{name}} Uygulaması başarıyla oluşturuldu! \nŞimdi uygulama ayarlarını tamamlayın.',
+    '{{name}} Uygulaması başarıyla oluşturuldu. \nŞimdi uygulama ayarlarını tamamlayın.',
   app_id: 'Uygulama IDsi',
   type: {
     native: {

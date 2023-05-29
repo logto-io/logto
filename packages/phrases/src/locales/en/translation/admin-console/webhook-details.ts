@@ -45,7 +45,7 @@ const webhook_details = {
     test_webhook_description:
       'Please finish configuring the webhook above. Click the test button, and we will send individual payload examples of each selected event to your endpoint URL. This will allow you to verify that your endpoint is correctly receiving and processing the payloads.',
     send_test_payload: 'Send test payload',
-    test_payload_sent: 'The payload has been sent successfully!',
+    test_payload_sent: 'The payload has been sent successfully.',
   },
 };
 

@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     "Créez et gérez des rôles pour vos applications. Les rôles contiennent des collections d'autorisations et peuvent être assignés aux utilisateurs.",
   create_role_button: 'Créer un rôle',
-  role_created: 'Le rôle {{name}} a été créé avec succès !',
+  role_created: 'Le rôle {{name}} a été créé avec succès .',
   search: 'Rechercher par nom de rôle, description ou ID',
   placeholder_title: 'Rôles',
   placeholder_description:

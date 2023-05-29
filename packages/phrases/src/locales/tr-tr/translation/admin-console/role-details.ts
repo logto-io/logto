@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Tanımlayıcı',
   delete_description:
     'Bunu yapmak, rolle ilişkili izinleri etkilenen kullanıcılardan kaldırır ve roller, kullanıcılar ve izinler arasındaki eşleştirmeyi siler.',
-  role_deleted: '{{name}} başarıyla silindi!',
+  role_deleted: '{{name}} başarıyla silindi.',
   settings_tab: 'Ayarlar',
   users_tab: 'Kullanıcılar',
   permissions_tab: 'İzinler',

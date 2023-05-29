@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     'アプリケーションのロールを作成して管理します。ロールには権限のコレクションが含まれ、ユーザーに割り当てることができます。',
   create_role_button: 'ロールを作成する',
-  role_created: '{{name}}ロールが正常に作成されました！',
+  role_created: '{{name}}ロールが正常に作成されました。',
   search: 'ロール名、説明、またはIDで検索',
   placeholder_title: 'ロール',
   placeholder_description:

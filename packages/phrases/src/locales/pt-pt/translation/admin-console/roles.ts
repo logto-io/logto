@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     'Crie e gerencie papéis para suas aplicações. Os papéis contêm coleções de permissões e podem ser atribuídos a usuários.',
   create_role_button: 'Criar papel',
-  role_created: 'O papel {{name}} foi criado com sucesso!',
+  role_created: 'O papel {{name}} foi criado com sucesso.',
   search: 'Pesquisar por nome de papel, descrição ou ID',
   placeholder_title: 'Papéis',
   placeholder_description:

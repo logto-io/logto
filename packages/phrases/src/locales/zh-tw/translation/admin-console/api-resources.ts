@@ -9,7 +9,7 @@ const api_resources = {
   api_identifier_placeholder: 'https://your-api-identifier/',
   api_identifier_tip:
     '對於 API 資源的唯一標識符。它必須是一個絕對 URI，並沒有 fragment (#) 組件。等價於 OAuth 2.0 中的 <a>resource parameter</a>。',
-  api_resource_created: ' API 資源 {{name}} 已成功創建！',
+  api_resource_created: ' API 資源 {{name}} 已成功創建。',
 };
 
 export default api_resources;

@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: '権限 {{name}} が正常に作成されました',
     delete_description:
       'この権限が削除されると、この権限を持っていたユーザーはそれによって与えられたアクセスを失います。',
-    deleted: '権限 "{{name}}" が正常に削除されました！',
+    deleted: '権限 "{{name}}" が正常に削除されました。',
   },
 };
 

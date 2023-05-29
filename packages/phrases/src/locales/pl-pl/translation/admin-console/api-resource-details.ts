@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: 'Uprawnienie {{name}} zostało pomyślnie utworzone',
     delete_description:
       'Jeśli to uprawnienie zostanie usunięte, użytkownik, który miał to uprawnienie, straci dostęp przyznany przez nie.',
-    deleted: 'Uprawnienie "{{name}}" zostało pomyślnie usunięte!',
+    deleted: 'Uprawnienie "{{name}}" zostało pomyślnie usunięte.',
   },
 };
 

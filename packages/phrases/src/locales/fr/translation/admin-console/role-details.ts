@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identificateur',
   delete_description:
     'Cela supprimera les autorisations associées à ce rôle des utilisateurs concernés et supprimera la correspondance entre les rôles, les utilisateurs et les autorisations.',
-  role_deleted: '{{name}} a été supprimé avec succès!',
+  role_deleted: '{{name}} a été supprimé avec succès.',
   settings_tab: 'Paramètres',
   users_tab: 'Utilisateurs',
   permissions_tab: 'Autorisations',

@@ -44,7 +44,7 @@ const webhook_details = {
     test_webhook_description:
       '위 설정을 완료하신 후, 아래의 테스트 버튼을 클릭하시어 각 선택한 이벤트별 페이로드 예제를 엔드포인트 URL로 보내서 페이지에서 수신된 것을 확인하실 수 있습니다.',
     send_test_payload: '테스트 페이로드 보내기',
-    test_payload_sent: '페이로드가 성공적으로 보내졌습니다!',
+    test_payload_sent: '페이로드가 성공적으로 보내졌습니다.',
   },
 };
 

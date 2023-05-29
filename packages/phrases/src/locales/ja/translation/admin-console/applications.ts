@@ -11,7 +11,7 @@ const applications = {
   select_application_type: 'アプリケーションタイプを選択してください',
   no_application_type_selected: 'まだアプリケーションタイプが選択されていません',
   application_created:
-    'アプリケーション {{name}} が正常に作成されました！\n今すぐアプリケーション設定を完了してください。',
+    'アプリケーション {{name}} が正常に作成されました。\n今すぐアプリケーション設定を完了してください。',
   app_id: 'アプリID',
   type: {
     native: {

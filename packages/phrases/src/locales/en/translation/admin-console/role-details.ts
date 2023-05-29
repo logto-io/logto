@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identifier',
   delete_description:
     'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.',
-  role_deleted: '{{name}} was successfully deleted!',
+  role_deleted: '{{name}} was successfully deleted.',
   settings_tab: 'Settings',
   users_tab: 'Users',
   permissions_tab: 'Permissions',

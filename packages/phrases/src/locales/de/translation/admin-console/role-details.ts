@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identifikator',
   delete_description:
     'Dadurch werden die mit dieser Rolle verbundenen Berechtigungen von den betroffenen Benutzern entfernt und die Zuordnung zwischen Rollen, Benutzern und Berechtigungen gelöscht.',
-  role_deleted: '{{name}} wurde erfolgreich gelöscht!',
+  role_deleted: '{{name}} wurde erfolgreich gelöscht.',
   settings_tab: 'Einstellungen',
   users_tab: 'Benutzer',
   permissions_tab: 'Berechtigungen',

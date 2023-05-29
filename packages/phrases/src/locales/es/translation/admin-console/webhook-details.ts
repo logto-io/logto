@@ -46,7 +46,7 @@ const webhook_details = {
     test_webhook_description:
       'Por favor, termine de configurar el webhook anterior. Haga clic en el botón de prueba, y enviaremos ejemplos de carga útil individuales de cada evento seleccionado a la URL de su extremo. Esto le permitirá verificar que su extremo está recibiendo y procesando correctamente las cargas útiles.',
     send_test_payload: 'Enviar carga útil de prueba',
-    test_payload_sent: 'La carga útil se ha enviado con éxito!',
+    test_payload_sent: 'La carga útil se ha enviado con éxito.',
   },
 };
 

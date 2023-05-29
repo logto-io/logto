@@ -10,7 +10,7 @@ const general = {
   clear_result: 'Sonuçları Temizle',
   save: 'Kaydet',
   save_changes: 'Değişiklikleri Kaydet',
-  saved: 'Kaydedildi!',
+  saved: 'Kaydedildi',
   discard: 'At',
   loading: 'Yükleniyor...',
   redirecting: 'Yönlendiriliyor...',

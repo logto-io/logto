@@ -10,7 +10,7 @@ const general = {
   clear_result: '検索結果をクリアする',
   save: '保存',
   save_changes: '変更を保存する',
-  saved: '保存しました！',
+  saved: '保存しました',
   discard: '破棄する',
   loading: '読み込み中...',
   redirecting: 'リダイレクト中...',

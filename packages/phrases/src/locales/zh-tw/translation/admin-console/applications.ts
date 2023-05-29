@@ -9,7 +9,7 @@ const applications = {
   application_description_placeholder: '請輸入應用描述',
   select_application_type: '選擇應用類型',
   no_application_type_selected: '你還沒有選擇應用類型',
-  application_created: '應用 {{name}} 成功創建! \n現在請完成你的應用設置。',
+  application_created: '應用 {{name}} 成功創建。\n現在請完成你的應用設置。',
   app_id: 'App ID',
   type: {
     native: {

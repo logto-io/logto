@@ -45,7 +45,7 @@ const webhook_details = {
     test_webhook_description:
       "Si prega di completare la configurazione del webhook sopra. Fai clic sul pulsante di test e invieremo esempi di payload individuali di ogni evento selezionato all'URL del tuo endpoint. Questo ti consentirà di verificare che il tuo endpoint riceva e elabori correttamente i payload.",
     send_test_payload: 'Invia Payload di Test',
-    test_payload_sent: 'Il payload è stato inviato con successo!',
+    test_payload_sent: 'Il payload è stato inviato con successo.',
   },
 };
 

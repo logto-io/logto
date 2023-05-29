@@ -10,7 +10,7 @@ const general = {
   clear_result: '결과 지우기',
   save: '저장',
   save_changes: '변경 내용 저장',
-  saved: '저장됨!',
+  saved: '저장됨',
   discard: '취소',
   loading: '로딩 중...',
   redirecting: '리다이렉트 중...',

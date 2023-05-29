@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: "L'autorizzazione {{name}} è stata creata con successo",
     delete_description:
       "Se questa autorizzazione viene eliminata, l'utente che aveva questa autorizzazione perderà l'accesso concessogli tramite di essa.",
-    deleted: 'L\'autorizzazione "{{name}}" è stata eliminata con successo!',
+    deleted: 'L\'autorizzazione "{{name}}" è stata eliminata con successo.',
   },
 };
 

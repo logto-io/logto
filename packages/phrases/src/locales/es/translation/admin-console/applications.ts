@@ -11,7 +11,7 @@ const applications = {
   select_application_type: 'Seleccionar un tipo de aplicación',
   no_application_type_selected: 'Aún no has seleccionado ningún tipo de aplicación',
   application_created:
-    '¡La aplicación {{name}} se ha creado correctamente! \nAhora completa la configuración de tu aplicación.',
+    '¡La aplicación {{name}} se ha creado correctamente. \nAhora completa la configuración de tu aplicación.',
   app_id: 'ID de la App',
   type: {
     native: {

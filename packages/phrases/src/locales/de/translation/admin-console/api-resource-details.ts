@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: 'Die Berechtigung {{name}} wurde erfolgreich erstellt',
     delete_description:
       'Wenn diese Berechtigung gelöscht wird, verliert der Benutzer, der diese Berechtigung hatte, den dadurch gewährten Zugriff.',
-    deleted: 'Die Berechtigung "{{name}}" wurde erfolgreich gelöscht!',
+    deleted: 'Die Berechtigung "{{name}}" wurde erfolgreich gelöscht.',
   },
 };
 

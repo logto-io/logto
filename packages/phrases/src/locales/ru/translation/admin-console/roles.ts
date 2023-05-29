@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     'Создание и управление ролями для ваших приложений. Роли содержат коллекции прав доступа и могут быть назначены пользователям.',
   create_role_button: 'Создать роль',
-  role_created: 'Роль "{{name}}" успешно создана!',
+  role_created: 'Роль "{{name}}" успешно создана.',
   search: 'Поиск по названию роли, описанию или ID',
   placeholder_title: 'Роли',
   placeholder_description:
