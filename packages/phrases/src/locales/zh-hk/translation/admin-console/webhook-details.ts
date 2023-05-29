@@ -42,7 +42,7 @@ const webhook_details = {
     test_webhook_description:
       '請完成上方 webhook 的配置，單擊測試按鈕，我們將向您的端點 URL 發送每個所選事件的單獨負載示例。這將允許您驗證您的端點是否正確接收和處理負載。',
     send_test_payload: '發送測試負載',
-    test_payload_sent: '負載已成功發送！',
+    test_payload_sent: '負載已成功發送。',
   },
 };
 

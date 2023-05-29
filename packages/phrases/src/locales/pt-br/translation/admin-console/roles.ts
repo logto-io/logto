@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     'Crie e gerencie funções para suas aplicações. As funções contêm coleções de permissões e podem ser atribuídas a usuários.',
   create_role_button: 'Criar função',
-  role_created: 'A função {{name}} foi criada com sucesso!',
+  role_created: 'A função {{name}} foi criada com sucesso.',
   search: 'Pesquisar pelo nome, descrição ou ID da função',
   placeholder_title: 'Funções',
   placeholder_description:

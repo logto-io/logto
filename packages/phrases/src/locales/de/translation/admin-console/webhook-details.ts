@@ -46,7 +46,7 @@ const webhook_details = {
     test_webhook_description:
       'Bitte schließen Sie die obige Konfiguration ab. Klicken Sie auf den Test-Button und wir senden einzelne Nutzlastbeispiele jedes ausgewählten Ereignisses an Ihre Endpunkt-URL. Dadurch können Sie überprüfen, ob Ihr Endpunkt die Nutzlasten korrekt empfängt und verarbeitet.',
     send_test_payload: 'Testnutzlast senden',
-    test_payload_sent: 'Die Nutzlast wurde erfolgreich gesendet!',
+    test_payload_sent: 'Die Nutzlast wurde erfolgreich gesendet.',
   },
 };
 

@@ -158,7 +158,7 @@ describe('user management', () => {
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
     const successToastHandle = await page.waitForSelector('div[class$=success]');
     await expect(successToastHandle).toMatchElement('div[class$=message]', {
-      text: 'Saved!',
+      text: 'Saved',
     });
     // Top userinfo card shows the updated user full name as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {

@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: '{{name}} İzni başarıyla oluşturuldu.',
     delete_description:
       'Bu izin silinirse, bu iznin sağladığı erişimi alan kullanıcı da erişimi kaybedecektir.',
-    deleted: '"{{name}}" izni başarıyla silindi!',
+    deleted: '"{{name}}" izni başarıyla silindi.',
   },
 };
 

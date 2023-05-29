@@ -10,7 +10,7 @@ const general = {
   clear_result: '清除結果',
   save: '儲存',
   save_changes: '儲存更改',
-  saved: '儲存成功!',
+  saved: '儲存成功',
   discard: '放棄',
   loading: '讀取中...',
   redirecting: '頁面跳轉中...',

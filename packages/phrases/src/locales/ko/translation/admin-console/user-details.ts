@@ -58,7 +58,7 @@ const user_details = {
     assign_button: '역할 할당',
     delete_description:
       '이 행동은 사용자에게서 이 역할을 삭제할 거예요. 역할은 그대로 존재하지만, 이 사용자에게 더 이상 할당되지 않아요.',
-    deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요!',
+    deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요.',
     assign_title: '{{name}}에게 역할 할당',
     assign_subtitle: '{{name}}에게 하나 이상의 역할을 할당하세요',
     assign_role_field: '역할 할당',

@@ -10,7 +10,7 @@ const general = {
   clear_result: '清除结果',
   save: '保存',
   save_changes: '保存更改',
-  saved: '保存成功!',
+  saved: '保存成功',
   discard: '放弃',
   loading: '读取中...',
   redirecting: '页面跳转中...',

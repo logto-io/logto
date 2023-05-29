@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identificador',
   delete_description:
     'Fazê-lo removerá as permissões associadas a este papel dos usuários afetados e excluirá o mapeamento entre papéis, usuários e permissões.',
-  role_deleted: '{{name}} foi excluído com sucesso!',
+  role_deleted: '{{name}} foi excluído com sucesso.',
   settings_tab: 'Configurações',
   users_tab: 'Usuários',
   permissions_tab: 'Permissões',

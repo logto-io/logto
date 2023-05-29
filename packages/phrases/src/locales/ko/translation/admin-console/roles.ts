@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     '당신의 애플리케이션을 위한 역할을 생성하고 관리해요. 역할은 권한들의 모음을 포함하며 사용자에게 할당될 수 있어요.',
   create_role_button: '역할 생성',
-  role_created: '역할 {{name}}이 성공적으로 생성되었어요!',
+  role_created: '역할 {{name}}이 성공적으로 생성되었어요.',
   search: '역할 이름, 설명, ID로 검색',
   placeholder_title: '역할',
   placeholder_description:

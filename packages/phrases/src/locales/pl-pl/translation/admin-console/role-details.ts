@@ -3,7 +3,7 @@ const role_details = {
   identifier: 'Identyfikator',
   delete_description:
     'Usunięcie tej roli usunie uprawnienia z nią związanymi od użytkowników i usunie odwzorowanie między rolami, użytkownikami i uprawnieniami.',
-  role_deleted: '{{name}} został pomyślnie usunięty!',
+  role_deleted: '{{name}} został pomyślnie usunięty.',
   settings_tab: 'Ustawienia',
   users_tab: 'Użytkownicy',
   permissions_tab: 'Uprawnienia',

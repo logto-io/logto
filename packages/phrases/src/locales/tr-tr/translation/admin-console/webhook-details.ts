@@ -44,7 +44,7 @@ const webhook_details = {
     test_webhook_description:
       'Yukarıdaki webhook’u yapılandırmayı tamamladıktan sonra, test düğmesine tıklayın, ve her seçili olayın ayrı ayrı yük örneklerini uç nokta URL’nize göndereceğiz. Bu, uç noktanızın doğru bir şekilde yükleri alıp işlemesini sağlamanıza olanak tanır.',
     send_test_payload: 'Test yükünü gönder',
-    test_payload_sent: 'Yük başarıyla gönderildi!',
+    test_payload_sent: 'Yük başarıyla gönderildi.',
   },
 };
 

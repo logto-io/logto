@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: 'El permiso {{name}} se ha creado correctamente',
     delete_description:
       'Si se elimina este permiso, el usuario que tenía este permiso perderá el acceso otorgado por él.',
-    deleted: '¡El permiso "{{name}}" se eliminó con éxito!',
+    deleted: '¡El permiso "{{name}}" se eliminó con éxito.',
   },
 };
 

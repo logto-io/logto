@@ -10,7 +10,7 @@ const general = {
   clear_result: 'Effacer les résultats',
   save: 'Sauvegarder',
   save_changes: 'Sauvegarder les modifications',
-  saved: 'Sauvegardé !',
+  saved: 'Sauvegardé',
   discard: 'Abandonner',
   loading: 'Chargement...',
   redirecting: 'Redirection...',

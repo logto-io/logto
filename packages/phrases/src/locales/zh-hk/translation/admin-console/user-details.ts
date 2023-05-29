@@ -9,7 +9,7 @@ const user_details = {
   created_password: '密碼：',
   menu_delete: '刪除用戶',
   delete_description: '本操作將永久刪除該用戶，且無法撤銷。',
-  deleted: '用戶已成功刪除！',
+  deleted: '用戶已成功刪除。',
   reset_password: {
     reset_password: '重置密碼',
     title: '確定要重置密碼？',

@@ -14,7 +14,7 @@ const roles = {
   create_role_description:
     'Uygulamalarınız için rolleri oluşturun ve yönetin. Roller, izin koleksiyonlarını içerir ve kullanıcılara atanabilir.',
   create_role_button: 'Rol Oluştur',
-  role_created: '{{name}} rolü başarıyla oluşturuldu!',
+  role_created: '{{name}} rolü başarıyla oluşturuldu.',
   search: 'Rol adı, açıklama veya kimlik numarasına göre arama yapın',
   placeholder_title: 'Roller',
   placeholder_description:

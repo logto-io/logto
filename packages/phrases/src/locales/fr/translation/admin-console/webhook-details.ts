@@ -46,7 +46,7 @@ const webhook_details = {
     test_webhook_description:
       "Veuillez finir de configurer le webhook ci-dessus. Cliquez sur le bouton de test, et nous enverrons des exemples de charge utile individuels de chaque événement sélectionné à votre URL d'endpoint. Cela vous permettra de vérifier que votre endpoint reçoit et traite correctement les charges utiles.",
     send_test_payload: 'Envoyer une charge utile de test',
-    test_payload_sent: 'La charge utile a été envoyée avec succès!',
+    test_payload_sent: 'La charge utile a été envoyée avec succès.',
   },
 };
 
