@@ -17,8 +17,10 @@ import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import TablePlaceholder from '@/components/Table/TablePlaceholder';
 import Tag from '@/components/Tag';
+import { defaultPageSize } from '@/consts';
 import { hookEventLabel } from '@/consts/webhooks';
 import { type RequestError } from '@/hooks/use-api';
+import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
@@ -26,6 +28,7 @@ import CreateFormModal from './components/CreateFormModal';
 import SuccessRate from './components/SuccessRate';
 import * as styles from './index.module.scss';
 
+const pageSize = defaultPageSize;
 const webhooksPathname = '/webhooks';
 const createWebhookPathname = `${webhooksPathname}/create`;
 
@@ -33,12 +36,20 @@ const buildDetailsPathname = (id: string) => `${webhooksPathname}/${id}`;
 
 function Webhooks() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isCreateNew = pathname === createWebhookPathname;
-  const { data, error, mutate } = useSWR<HookResponse[], RequestError>(
-    buildUrl('api/hooks', { includeExecutionStats: String(true) })
+  const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
+    page: 1,
+  });
+  const { data, error, mutate } = useSWR<[HookResponse[], number], RequestError>(
+    buildUrl('api/hooks', {
+      includeExecutionStats: String(true),
+      page: String(page),
+      page_size: String(pageSize),
+    })
   );
   const isLoading = !data && !error;
+  const [webhooks, totalCount] = data ?? [];
   const navigate = useNavigate();
   const theme = useTheme();
   const WebhookIcon = theme === Theme.Light ? Webhook : WebhookDark;
@@ -50,11 +61,11 @@ function Webhooks() {
       createButton={{
         title: 'webhooks.create',
         onClick: () => {
-          navigate(createWebhookPathname);
+          navigate({ pathname: createWebhookPathname, search });
         },
       }}
       table={{
-        rowGroups: [{ key: 'hooks', data }],
+        rowGroups: [{ key: 'hooks', data: webhooks }],
         rowIndexKey: 'id',
         isLoading,
         errorMessage: error?.body?.message ?? error?.message,
@@ -131,12 +142,20 @@ function Webhooks() {
                 size="large"
                 icon={<Plus />}
                 onClick={() => {
-                  navigate(createWebhookPathname);
+                  navigate({ pathname: createWebhookPathname, search });
                 }}
               />
             }
           />
         ),
+        pagination: {
+          page,
+          totalCount,
+          pageSize,
+          onChange: (page) => {
+            updateSearchParameters({ page });
+          },
+        },
       }}
       widgets={
         <CreateFormModal
@@ -149,7 +168,7 @@ function Webhooks() {
               return;
             }
 
-            navigate(webhooksPathname);
+            navigate({ pathname: webhooksPathname, search });
           }}
         />
       }
