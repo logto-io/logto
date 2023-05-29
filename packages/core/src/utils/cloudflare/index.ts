@@ -1,8 +1,6 @@
 import { type HostnameProviderData, cloudflareDataGuard } from '@logto/schemas';
 import { got } from 'got';
 
-import { EnvSet } from '#src/env-set/index.js';
-
 import assertThat from '../assert-that.js';
 
 import { baseUrl } from './consts.js';
@@ -10,7 +8,11 @@ import { mockCustomHostnameResponse } from './mock.js';
 import { parseCloudflareResponse } from './utils.js';
 
 export const createCustomHostname = async (auth: HostnameProviderData, hostname: string) => {
-  const { isIntegrationTest } = EnvSet.values;
+  const {
+    EnvSet: {
+      values: { isIntegrationTest },
+    },
+  } = await import('#src/env-set/index.js');
   if (isIntegrationTest) {
     return mockCustomHostnameResponse();
   }
@@ -35,7 +37,11 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
 };
 
 export const getCustomHostname = async (auth: HostnameProviderData, identifier: string) => {
-  const { isIntegrationTest } = EnvSet.values;
+  const {
+    EnvSet: {
+      values: { isIntegrationTest },
+    },
+  } = await import('#src/env-set/index.js');
   if (isIntegrationTest) {
     return mockCustomHostnameResponse(identifier);
   }
