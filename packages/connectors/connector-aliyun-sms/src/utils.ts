@@ -1,32 +1,35 @@
+import { type Optional } from '@silverhand/essentials';
 import { got } from 'got';
-import { createHmac } from 'node:crypto';
+import { createHmac, randomUUID } from 'node:crypto';
 
 import type { PublicParameters } from './types.js';
-
 // Aliyun has special escape rules.
 // https://help.aliyun.com/document_detail/29442.html
 const escaper = (string_: string) =>
   encodeURIComponent(string_)
-    .replace(/\*/g, '%2A')
-    .replace(/'/g, '%27')
     .replace(/!/g, '%21')
     .replace(/"/g, '%22')
+    .replace(/'/g, '%27')
     .replace(/\(/g, '%28')
     .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
     .replace(/\+/g, '%2B');
+
+// Format date string to 'YYYY-MM-DDThh:mm:ssZ' format.
+const formatDateString = (date: Date) => {
+  const rawString = date.toISOString();
+  return rawString.replace(/\.\d{3}Z$/, 'Z'); // Trim milliseconds.
+};
 
 export const getSignature = (
   parameters: Record<string, string>,
   secret: string,
   method: string
 ) => {
-  const canonicalizedQuery = Object.keys(parameters)
-    .map((key) => {
-      const value = parameters[key];
-
-      return value === undefined ? '' : `${escaper(key)}=${escaper(value)}`;
+  const canonicalizedQuery = Object.entries(parameters)
+    .map(([key, value]) => {
+      return `${escaper(key)}=${escaper(value)}`;
     })
-    .filter(Boolean)
     .slice()
     .sort()
     .join('&');
@@ -41,11 +44,14 @@ export const request = async (
   parameters: PublicParameters & Record<string, string>,
   accessKeySecret: string
 ) => {
-  const finalParameters: Record<string, string> = {
+  const finalParameters = Object.entries<Optional<string>>({
     ...parameters,
-    SignatureNonce: String(Math.random()),
-    Timestamp: new Date().toISOString(),
-  };
+    SignatureNonce: randomUUID(),
+    Timestamp: formatDateString(new Date()),
+  }).reduce<Record<string, string>>(
+    (result, [key, value]) => (value === undefined ? result : { ...result, [key]: value }),
+    {}
+  );
   const signature = getSignature(finalParameters, accessKeySecret, 'POST');
 
   return got.post({
