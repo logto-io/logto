@@ -10,18 +10,24 @@ import assertThat from '#src/utils/assert-that.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function domainRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
     domains: { findAllDomains, findDomainById, insertDomain, deleteDomainById },
   } = queries;
+  const {
+    domains: { syncDomainStatus, addDomainToCloudflare },
+  } = libraries;
 
   router.get(
     '/domains',
     koaGuard({ response: domainResponseGuard.array(), status: 200 }),
     async (ctx, next) => {
       const domains = await findAllDomains();
-      ctx.body = domains.map((domain) => pick(domain, ...domainSelectFields));
+      const syncedDomains = await Promise.all(
+        domains.map(async (domain) => syncDomainStatus(domain))
+      );
+      ctx.body = syncedDomains.map((domain) => pick(domain, ...domainSelectFields));
 
       return next();
     }
@@ -40,8 +46,9 @@ export default function domainRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       const domain = await findDomainById(id);
+      const syncedDomain = await syncDomainStatus(domain);
 
-      ctx.body = pick(domain, ...domainSelectFields);
+      ctx.body = pick(syncedDomain, ...domainSelectFields);
 
       return next();
     }
@@ -68,9 +75,10 @@ export default function domainRoutes<T extends AuthedRouter>(
         ...ctx.guard.body,
         id: generateStandardId(),
       });
+      const syncedDomain = await addDomainToCloudflare(domain);
 
       ctx.status = 201;
-      ctx.body = pick(domain, ...domainSelectFields);
+      ctx.body = pick(syncedDomain, ...domainSelectFields);
 
       return next();
     }

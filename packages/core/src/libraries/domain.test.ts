@@ -51,7 +51,7 @@ afterAll(() => {
 
 describe('addDomainToCloudflare()', () => {
   it('should call createCustomHostname and return cloudflare data', async () => {
-    const response = await addDomainToCloudflare(mockDomain, 'fake_origin');
+    const response = await addDomainToCloudflare(mockDomain);
     expect(createCustomHostname).toBeCalledTimes(1);
     expect(updateDomainById).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);

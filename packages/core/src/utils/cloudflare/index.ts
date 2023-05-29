@@ -1,12 +1,21 @@
 import { type HostnameProviderData, cloudflareDataGuard } from '@logto/schemas';
 import { got } from 'got';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 import assertThat from '../assert-that.js';
 
 import { baseUrl } from './consts.js';
+import { mockCustomHostnameResponse } from './mock.js';
 import { parseCloudflareResponse } from './utils.js';
 
+const { isIntegrationTest } = EnvSet.values;
+
 export const createCustomHostname = async (auth: HostnameProviderData, hostname: string) => {
+  if (isIntegrationTest) {
+    return mockCustomHostnameResponse();
+  }
+
   const response = await got.post(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames`, {
     headers: {
       Authentication: `Bearer ${auth.apiToken}`,
@@ -27,6 +36,10 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
 };
 
 export const getCustomHostname = async (auth: HostnameProviderData, identifier: string) => {
+  if (isIntegrationTest) {
+    return mockCustomHostnameResponse(identifier);
+  }
+
   const response = await got.get(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames/${identifier}`, {
     headers: {
       Authentication: `Bearer ${auth.apiToken}`,

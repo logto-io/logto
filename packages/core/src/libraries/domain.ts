@@ -89,11 +89,11 @@ export const createDomainLibrary = (queries: Queries) => {
     );
   };
 
-  const addDomainToCloudflare = async (domain: Domain, hostname: string): Promise<Domain> => {
+  const addDomainToCloudflare = async (domain: Domain): Promise<Domain> => {
     const { hostnameProviderConfig } = SystemContext.shared;
-    assertThat(hostnameProviderConfig, 'domain.cloudflare_data_missing');
+    assertThat(hostnameProviderConfig, 'domain.not_configured');
 
-    const cloudflareData = await createCustomHostname(hostnameProviderConfig, hostname);
+    const cloudflareData = await createCustomHostname(hostnameProviderConfig, domain.domain);
     return syncDomainStatusFromCloudflareData(
       {
         ...domain,

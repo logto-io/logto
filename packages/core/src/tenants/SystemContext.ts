@@ -6,12 +6,14 @@ import {
   storageProviderDataGuard,
   StorageProviderKey,
   Systems,
+  type SystemKey,
 } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 import { type ZodType } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { consoleLog } from '#src/utils/console.js';
 
 const { table, fields } = convertToIdentifiers(Systems);
@@ -36,9 +38,21 @@ export default class SystemContext {
 
   private async loadConfig<T>(
     pool: CommonQueryMethods,
-    key: string,
+    key: SystemKey,
     guard: ZodType
   ): Promise<T | undefined> {
+    const { isIntegrationTest } = EnvSet.values;
+
+    if (isIntegrationTest && key === CloudflareKey.HostnameProvider) {
+      // eslint-disable-next-line no-restricted-syntax
+      const data = guard.parse({
+        zoneId: 'mock-zone-id',
+        apiToken: '',
+        fallbackOrigin: 'mock.logto.dev',
+      }) as T;
+      return data;
+    }
+
     const record = await pool.maybeOne<Record<string, unknown>>(sql`
       select ${fields.value} from ${table}
       where ${fields.key} = ${key}
