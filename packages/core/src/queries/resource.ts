@@ -10,7 +10,7 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { DeletionError, UpdateError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Resources);
 
@@ -25,6 +25,35 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.indicator}=${indicator}
     `);
+
+  const findDefaultResource = async () =>
+    pool.maybeOne<Resource>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.isDefault}=true
+    `);
+
+  const setDefaultResource = async (id: string) => {
+    return pool.transaction(async (connection) => {
+      await connection.query(sql`
+        update ${table}
+          set ${fields.isDefault}=false
+          where ${fields.id}!=${id};
+      `);
+      const returning = await connection.maybeOne<Resource>(sql`
+        update ${table}
+          set ${fields.isDefault}=true
+          where ${fields.id}=${id}
+          returning *;
+      `);
+
+      if (!returning) {
+        throw new UpdateError(Resources, { set: { isDefault: true }, where: { id } });
+      }
+
+      return returning;
+    });
+  };
 
   const findResourceById = buildFindEntityByIdWithPool(pool)(Resources);
 
@@ -64,6 +93,8 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
     findTotalNumberOfResources,
     findAllResources,
     findResourceByIndicator,
+    findDefaultResource,
+    setDefaultResource,
     findResourceById,
     findResourcesByIds,
     insertResource,

@@ -48,7 +48,7 @@ export default function initOidc(
     defaultRefreshTokenTtl,
   } = envSet.oidc;
   const {
-    resources: { findResourceByIndicator },
+    resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
   } = queries;
   const { findUserScopesForResourceIndicator } = libraries.users;
@@ -105,7 +105,10 @@ export default function initOidc(
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresresourceindicators
       resourceIndicators: {
         enabled: true,
-        defaultResource: () => '',
+        defaultResource: async () => {
+          const resource = await findDefaultResource();
+          return resource?.indicator ?? '';
+        },
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {

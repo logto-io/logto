@@ -1,7 +1,7 @@
 import { Resources, Scopes } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import { tryThat, yes } from '@silverhand/essentials';
-import { object, string } from 'zod';
+import { boolean, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -23,6 +23,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       findAllResources,
       findResourceById,
       findResourceByIndicator,
+      setDefaultResource,
       insertResource,
       updateResourceById,
       deleteResourceById,
@@ -76,7 +77,9 @@ export default function resourceRoutes<T extends AuthedRouter>(
   router.post(
     '/resources',
     koaGuard({
-      body: Resources.createGuard.omit({ id: true }),
+      // Intentionally omit `isDefault` since it'll affect other rows.
+      // Use the dedicated API `PATCH /resources/:id/is-default` to update.
+      body: Resources.createGuard.omit({ id: true, isDefault: true }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
       status: [201, 422],
     }),
@@ -128,7 +131,9 @@ export default function resourceRoutes<T extends AuthedRouter>(
     '/resources/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Resources.createGuard.omit({ id: true, indicator: true }).partial(),
+      // Intentionally omit `isDefault` since it'll affect other rows.
+      // Use the dedicated API `PATCH /resources/:id/is-default` to update.
+      body: Resources.createGuard.omit({ id: true, indicator: true, isDefault: true }).partial(),
       response: Resources.guard,
       status: [200, 404],
     }),
@@ -140,6 +145,27 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
       const resource = await updateResourceById(id, body);
       ctx.body = resource;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/resources/:id/is-default',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      body: object({ isDefault: boolean() }),
+      response: Resources.guard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body: { isDefault },
+      } = ctx.guard;
+
+      // Only 0 or 1 default resource is allowed per tenant, so use a dedicated transaction query for setting the default.
+      ctx.body = await (isDefault ? setDefaultResource(id) : updateResourceById(id, { isDefault }));
 
       return next();
     }

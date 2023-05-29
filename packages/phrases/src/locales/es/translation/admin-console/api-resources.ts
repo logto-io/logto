@@ -8,6 +8,9 @@ const api_resources = {
   api_identifier: 'Identificador de API',
   api_identifier_tip:
     'El identificador único para el recurso de API. Debe ser una URI absoluta y no tiene componente de fragmento (#). Es igual al <a>parámetro de recurso</a> en OAuth 2.0.',
+  default_api: 'Default API', // UNTRANSLATED
+  default_api_label:
+    'If the current API Resource is set as the default API for the tenant, while each tenant can have either 0 or 1 default API. When a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs.', // UNTRANSLATED
   api_resource_created: 'El recurso de API {{name}} se ha creado correctamente',
   api_identifier_placeholder: 'https://su-identificador-de-api/',
 };
