@@ -9,9 +9,8 @@ import { baseUrl } from './consts.js';
 import { mockCustomHostnameResponse } from './mock.js';
 import { parseCloudflareResponse } from './utils.js';
 
-const { isIntegrationTest } = EnvSet.values;
-
 export const createCustomHostname = async (auth: HostnameProviderData, hostname: string) => {
+  const { isIntegrationTest } = EnvSet.values;
   if (isIntegrationTest) {
     return mockCustomHostnameResponse();
   }
@@ -36,6 +35,7 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
 };
 
 export const getCustomHostname = async (auth: HostnameProviderData, identifier: string) => {
+  const { isIntegrationTest } = EnvSet.values;
   if (isIntegrationTest) {
     return mockCustomHostnameResponse(identifier);
   }
