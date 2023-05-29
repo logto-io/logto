@@ -7,8 +7,10 @@ import {
   PredefinedScope,
   type AdminData,
   type CreateTenant,
+  type PatchTenant,
   type CreateRolesScope,
   type TenantInfo,
+  type TenantModel,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { PostgreSql } from '@withtyped/postgres';
@@ -45,6 +47,25 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
         'tenants'
       )
     );
+
+  const updateTenantById = async (tenantId: string, rawPayload: PatchTenant) => {
+    const payload: Record<string, string> = Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      Object.entries(rawPayload).filter(([_, value]) => value !== undefined)
+    );
+    const tenant = await client.maybeOne<TenantModel>(sql`
+      update tenants
+      set ${Object.entries(payload).map(([key, value]) => sql`${id(key)}=${jsonIfNeeded(value)}`)}
+      where id = ${tenantId}
+      returning *;
+    `);
+
+    if (!tenant) {
+      throw new Error(`Tenant ${tenantId} not found.`);
+    }
+
+    return tenant;
+  };
 
   const createTenantRole = async (parentRole: string, role: string, password: string) =>
     client.query(sql`
@@ -129,6 +150,7 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
   return {
     getManagementApiLikeIndicatorsForUser,
     insertTenant,
+    updateTenantById,
     createTenantRole,
     insertAdminData,
     getTenantById,
