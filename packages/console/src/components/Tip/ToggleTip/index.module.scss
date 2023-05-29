@@ -2,8 +2,8 @@
 
 .overlay {
   background: transparent;
-  position: fixed;
-  inset: 0;
+  padding: unset;
+  overflow-y: unset;
 
   .content {
     position: relative;

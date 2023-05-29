@@ -1,8 +1,10 @@
+import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useCallback, useState, useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition from '@/hooks/use-position';
+import * as modalStyles from '@/scss/modal.module.scss';
 import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -79,7 +81,7 @@ function ToggleTip({
         shouldCloseOnEsc
         isOpen={isOpen}
         className={styles.content}
-        overlayClassName={styles.overlay}
+        overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
         onRequestClose={onClose}
         onAfterOpen={mutate}
       >
