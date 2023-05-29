@@ -5,11 +5,14 @@ import {
   adminTenantId,
   getManagementApiResourceIndicator,
   PredefinedScope,
+  type AdminData,
+  type CreateTenant,
+  type CreateRolesScope,
+  type TenantInfo,
 } from '@logto/schemas';
-import type { AdminData, CreateTenant, CreateRolesScope } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { PostgreSql } from '@withtyped/postgres';
-import { jsonb, dangerousRaw, id, sql } from '@withtyped/postgres';
+import { jsonb, dangerousRaw, id, sql, jsonIfNeeded } from '@withtyped/postgres';
 import type { Queryable } from '@withtyped/server';
 
 import { insertInto } from '#src/utils/query.js';
@@ -34,7 +37,14 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
         where roles.tenant_id = ${adminTenantId};
     `);
 
-  const insertTenant = async (tenant: CreateTenant) => client.query(insertInto(tenant, 'tenants'));
+  const insertTenant = async (tenant: CreateTenant) =>
+    client.query(
+      insertInto(
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        Object.fromEntries(Object.entries(tenant).filter(([_, value]) => value !== undefined)),
+        'tenants'
+      )
+    );
 
   const createTenantRole = async (parentRole: string, role: string, password: string) =>
     client.query(sql`
@@ -80,6 +90,25 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     );
   };
 
+  const getTenantById = async (id: string): Promise<Pick<TenantInfo, 'name' | 'tag'>> => {
+    return client.one<Pick<TenantInfo, 'name' | 'tag'>>(sql`
+      select name, tag from tenants
+      where id = ${id}
+    `);
+  };
+
+  const getTenantsByIds = async (
+    tenantIds: string[]
+  ): Promise<Array<Pick<TenantInfo, 'id' | 'name' | 'tag'>>> => {
+    const { rows } = await client.query<Pick<TenantInfo, 'id' | 'name' | 'tag'>>(sql`
+      select id, name, tag from tenants
+      where id in (${tenantIds.map((tenantId) => jsonIfNeeded(tenantId))})
+      order by created_at desc, name desc;
+    `);
+
+    return rows;
+  };
+
   const appendAdminConsoleRedirectUris = async (...urls: URL[]) => {
     const metadataKey = id('oidc_client_metadata');
 
@@ -102,6 +131,8 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
     insertTenant,
     createTenantRole,
     insertAdminData,
+    getTenantById,
+    getTenantsByIds,
     appendAdminConsoleRedirectUris,
   };
 };

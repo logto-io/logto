@@ -1,5 +1,4 @@
-import type { TenantInfo } from '@logto/schemas';
-import { defaultManagementApi } from '@logto/schemas';
+import { type TenantInfo, TenantTag, defaultManagementApi } from '@logto/schemas';
 import { conditional, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
@@ -22,7 +21,11 @@ export type Tenants = {
 };
 
 const { tenantId, indicator } = defaultManagementApi.resource;
-const initialTenants = conditional(!isCloud && [{ id: tenantId, indicator }]);
+const initialTenants = conditional(
+  !isCloud && [
+    { id: tenantId, name: `tenant_${tenantId}`, tag: `${TenantTag.Development}`, indicator }, // Make `tag` value to be string type.
+  ]
+);
 
 export const TenantsContext = createContext<Tenants>({
   tenants: initialTenants,

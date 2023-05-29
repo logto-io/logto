@@ -1,4 +1,4 @@
-import type { TenantInfo } from '@logto/schemas';
+import { type TenantInfo, TenantTag } from '@logto/schemas';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -19,7 +19,15 @@ function Tenants({ data, onAdd }: Props) {
   const { navigate } = useContext(TenantsContext);
 
   const createTenant = useCallback(async () => {
-    onAdd(await api.post('api/tenants').json<TenantInfo>());
+    onAdd(
+      /**
+       * `name` and `tag` are required for POST /tenants API, add fixed value to avoid throwing error.
+       * This page page will be removed in upcoming changes on multi-tenancy cloud console.
+       */
+      await api
+        .post('api/tenants', { json: { name: 'My Project', tag: TenantTag.Development } })
+        .json<TenantInfo>()
+    );
   }, [api, onAdd]);
 
   useEffect(() => {

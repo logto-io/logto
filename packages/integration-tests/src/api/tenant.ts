@@ -1,13 +1,16 @@
-import type { TenantInfo } from '@logto/schemas';
+import type { CreateTenant, TenantInfo } from '@logto/schemas';
 
 import { cloudApi } from './api.js';
 
-export const createTenant = async (accessToken: string) => {
+export const createTenant = async (
+  accessToken: string,
+  payload: Required<Pick<CreateTenant, 'name' | 'tag'>>
+) => {
   return cloudApi
     .extend({
       headers: { authorization: `Bearer ${accessToken}` },
     })
-    .post('tenants')
+    .post('tenants', { json: payload })
     .json<TenantInfo>();
 };
 

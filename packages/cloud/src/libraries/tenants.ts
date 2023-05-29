@@ -4,8 +4,10 @@ import {
 } from '@logto/cli/lib/commands/database/utils.js';
 import { DemoConnector } from '@logto/connector-kit';
 import { createTenantMetadata } from '@logto/core-kit';
-import type { LogtoOidcConfigType, TenantInfo, CreateTenant } from '@logto/schemas';
 import {
+  type LogtoOidcConfigType,
+  type TenantInfo,
+  type CreateTenant,
   createAdminTenantApplicationRole,
   AdminTenantRole,
   createTenantMachineToMachineApplication,
@@ -17,11 +19,10 @@ import {
   adminTenantId,
   createAdminData,
   createAdminDataInAdminTenant,
+  getManagementApiResourceIndicator,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
-import type { ZodType } from 'zod';
-import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { createApplicationsQueries } from '#src/queries/application.js';
@@ -38,11 +39,6 @@ import { getTenantIdFromManagementApiIndicator } from '#src/utils/tenant.js';
 
 const demoSocialConnectorId = 'logto-social-demo';
 
-export const tenantInfoGuard: ZodType<TenantInfo> = z.object({
-  id: z.string(),
-  indicator: z.string(),
-});
-
 const oidcConfigBuilders: {
   [key in LogtoOidcConfigKey]: () => Promise<LogtoOidcConfigType[key]>;
 } = {
@@ -54,23 +50,40 @@ export class TenantsLibrary {
   constructor(public readonly queries: Queries) {}
 
   async getAvailableTenants(userId: string): Promise<TenantInfo[]> {
-    const { getManagementApiLikeIndicatorsForUser } = this.queries.tenants;
+    const { getManagementApiLikeIndicatorsForUser, getTenantsByIds } = this.queries.tenants;
     const { rows } = await getManagementApiLikeIndicatorsForUser(userId);
 
-    return rows
-      .map(({ indicator }) => ({
-        id: getTenantIdFromManagementApiIndicator(indicator),
-        indicator,
-      }))
-      .filter((tenant): tenant is TenantInfo => Boolean(tenant.id));
+    const tenantIds = rows
+      .map(({ indicator }) => getTenantIdFromManagementApiIndicator(indicator))
+      .filter((id): id is string => typeof id === 'string');
+
+    if (tenantIds.length === 0) {
+      return [];
+    }
+
+    const rawTenantInfos = await getTenantsByIds(tenantIds);
+    return rawTenantInfos.map(({ id, name, tag }) => ({
+      id,
+      name,
+      tag,
+      indicator: getManagementApiResourceIndicator(id),
+    }));
   }
 
-  async createNewTenant(forUserId: string): Promise<TenantInfo> {
+  async createNewTenant(
+    forUserId: string,
+    payload: Pick<CreateTenant, 'name' | 'tag'>
+  ): Promise<TenantInfo> {
     const databaseName = await getDatabaseName(this.queries.client);
     const { id: tenantId, parentRole, role, password } = createTenantMetadata(databaseName);
 
     // Init tenant
-    const createTenant: CreateTenant = { id: tenantId, dbUser: role, dbUserPassword: password };
+    const createTenant: CreateTenant = {
+      id: tenantId,
+      dbUser: role,
+      dbUserPassword: password,
+      ...payload,
+    };
     const transaction = await this.queries.client.transaction();
     const tenants = createTenantsQueries(transaction);
     const users = createUsersQueries(transaction);
@@ -84,6 +97,7 @@ export class TenantsLibrary {
 
     // Init tenant
     await tenants.insertTenant(createTenant);
+    const insertedTenant = await tenants.getTenantById(tenantId);
     await tenants.createTenantRole(parentRole, role, password);
 
     // Create admin data set (resource, roles, etc.)
@@ -168,6 +182,11 @@ export class TenantsLibrary {
     await transaction.end();
     /* === End === */
 
-    return { id: tenantId, indicator: adminDataInAdminTenant.resource.indicator };
+    return {
+      id: tenantId,
+      name: insertedTenant.name,
+      tag: insertedTenant.tag,
+      indicator: adminDataInAdminTenant.resource.indicator,
+    };
   }
 }

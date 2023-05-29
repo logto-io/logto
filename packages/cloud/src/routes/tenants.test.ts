@@ -1,5 +1,5 @@
 import type { TenantInfo } from '@logto/schemas';
-import { CloudScope } from '@logto/schemas';
+import { CloudScope, TenantTag } from '@logto/schemas';
 
 import { buildRequestAuthContext, createHttpContext } from '#src/test-utils/context.js';
 import { noop } from '#src/test-utils/function.js';
@@ -12,13 +12,21 @@ describe('GET /api/tenants', () => {
   const router = tenantsRoutes(library);
 
   it('should return whatever the library returns', async () => {
-    const tenants: TenantInfo[] = [{ id: 'tenant_a', indicator: 'https://foo.bar' }];
+    const tenants: TenantInfo[] = [
+      {
+        id: 'tenant_a',
+        name: 'tenant_a',
+        tag: TenantTag.Development,
+        indicator: 'https://foo.bar',
+      },
+    ];
     library.getAvailableTenants.mockResolvedValueOnce(tenants);
 
     await router.routes()(
       buildRequestAuthContext('GET /tenants')(),
-      async ({ json }) => {
+      async ({ json, status }) => {
         expect(json).toBe(tenants);
+        expect(status).toBe(200);
       },
       createHttpContext()
     );
@@ -31,47 +39,89 @@ describe('POST /api/tenants', () => {
 
   it('should throw 403 when lack of permission', async () => {
     await expect(
-      router.routes()(buildRequestAuthContext('POST /tenants')(), noop, createHttpContext())
-    ).rejects.toMatchObject({ status: 403 });
-  });
-
-  it('should throw 409 when user has a tenant', async () => {
-    const tenant: TenantInfo = { id: 'tenant_a', indicator: 'https://foo.bar' };
-    library.getAvailableTenants.mockResolvedValueOnce([tenant]);
-
-    await expect(
       router.routes()(
-        buildRequestAuthContext('POST /tenants')([CloudScope.CreateTenant]),
+        buildRequestAuthContext('POST /tenants', {
+          body: { name: 'tenant', tag: TenantTag.Development },
+        })(),
         noop,
         createHttpContext()
       )
-    ).rejects.toMatchObject({ status: 409 });
+    ).rejects.toMatchObject({ status: 403 });
   });
 
   it('should be able to create a new tenant', async () => {
-    const tenant: TenantInfo = { id: 'tenant_a', indicator: 'https://foo.bar' };
+    const tenant: TenantInfo = {
+      id: 'tenant_a',
+      name: 'tenant_a',
+      tag: TenantTag.Development,
+      indicator: 'https://foo.bar',
+    };
     library.getAvailableTenants.mockResolvedValueOnce([]);
     library.createNewTenant.mockResolvedValueOnce(tenant);
 
     await router.routes()(
-      buildRequestAuthContext('POST /tenants')([CloudScope.CreateTenant]),
-      async ({ json }) => {
+      buildRequestAuthContext('POST /tenants', {
+        body: { name: 'tenant_a', tag: TenantTag.Development },
+      })([CloudScope.CreateTenant]),
+      async ({ json, status }) => {
         expect(json).toBe(tenant);
+        expect(status).toBe(201);
+      },
+      createHttpContext()
+    );
+  });
+
+  it('should be able to create a new tenant with `create:tenant` scope even if user has a tenant', async () => {
+    const tenantA: TenantInfo = {
+      id: 'tenant_a',
+      name: 'tenant_a',
+      tag: TenantTag.Development,
+      indicator: 'https://foo.bar',
+    };
+    const tenantB: TenantInfo = {
+      id: 'tenant_b',
+      name: 'tenant_b',
+      tag: TenantTag.Development,
+      indicator: 'https://foo.baz',
+    };
+    library.getAvailableTenants.mockResolvedValueOnce([tenantA]);
+    library.createNewTenant.mockResolvedValueOnce(tenantB);
+
+    await router.routes()(
+      buildRequestAuthContext('POST /tenants', {
+        body: { name: 'tenant_b', tag: TenantTag.Development },
+      })([CloudScope.CreateTenant]),
+      async ({ json, status }) => {
+        expect(json).toBe(tenantB);
+        expect(status).toBe(201);
       },
       createHttpContext()
     );
   });
 
   it('should be able to create a new tenant with `manage:tenant` scope even if user has a tenant', async () => {
-    const tenantA: TenantInfo = { id: 'tenant_a', indicator: 'https://foo.bar' };
-    const tenantB: TenantInfo = { id: 'tenant_b', indicator: 'https://foo.baz' };
+    const tenantA: TenantInfo = {
+      id: 'tenant_a',
+      name: 'tenant_a',
+      tag: TenantTag.Development,
+      indicator: 'https://foo.bar',
+    };
+    const tenantB: TenantInfo = {
+      id: 'tenant_b',
+      name: 'tenant_b',
+      tag: TenantTag.Development,
+      indicator: 'https://foo.baz',
+    };
     library.getAvailableTenants.mockResolvedValueOnce([tenantA]);
     library.createNewTenant.mockResolvedValueOnce(tenantB);
 
     await router.routes()(
-      buildRequestAuthContext('POST /tenants')([CloudScope.ManageTenant]),
-      async ({ json }) => {
+      buildRequestAuthContext('POST /tenants', {
+        body: { name: 'tenant_b', tag: TenantTag.Development },
+      })([CloudScope.ManageTenant]),
+      async ({ json, status }) => {
         expect(json).toBe(tenantB);
+        expect(status).toBe(201);
       },
       createHttpContext()
     );
