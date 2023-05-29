@@ -25,7 +25,7 @@ const api_resource_details = {
     permission_created: "L'autorisation {{name}} a été créée avec succès",
     delete_description:
       "Si cette autorisation est supprimée, l'utilisateur qui avait cette autorisation perdra l'accès qui lui a été accordé.",
-    deleted: 'L\'autorisation "{{name}}" a été supprimée avec succès .',
+    deleted: 'L\'autorisation "{{name}}" a été supprimée avec succès.',
   },
 };
 
