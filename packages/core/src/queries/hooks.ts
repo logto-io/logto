@@ -1,25 +1,24 @@
-import type { CreateHook, Hook } from '@logto/schemas';
+import type { CreateHook } from '@logto/schemas';
 import { Hooks } from '@logto/schemas';
-import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, manyRows } from '@logto/shared';
+import { type OmitAutoSetFields, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { getTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(Hooks);
 
 export const createHooksQueries = (pool: CommonQueryMethods) => {
-  const findAllHooks = async () =>
-    manyRows(
-      pool.query<Hook>(sql`
-        select ${sql.join(Object.values(fields), sql`, `)}
-        from ${table}
-      `)
-    );
+  const getTotalNumberOfHooks = async () => getTotalRowCountWithPool(pool)(table);
+
+  const findAllHooks = buildFindAllEntitiesWithPool(pool)(Hooks, [
+    { field: 'createdAt', order: 'desc' },
+  ]);
 
   const findHookById = buildFindEntityByIdWithPool(pool)(Hooks);
 
@@ -47,6 +46,7 @@ export const createHooksQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
+    getTotalNumberOfHooks,
     findAllHooks,
     findHookById,
     insertHook,

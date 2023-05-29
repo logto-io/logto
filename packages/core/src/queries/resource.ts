@@ -1,10 +1,11 @@
 import type { Resource, CreateResource } from '@logto/schemas';
 import { Resources } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, conditionalSql, manyRows } from '@logto/shared';
+import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
@@ -16,15 +17,7 @@ const { table, fields } = convertToIdentifiers(Resources);
 export const createResourceQueries = (pool: CommonQueryMethods) => {
   const findTotalNumberOfResources = async () => getTotalRowCountWithPool(pool)(table);
 
-  const findAllResources = async (limit?: number, offset?: number) =>
-    manyRows(
-      pool.query<Resource>(sql`
-        select ${sql.join(Object.values(fields), sql`, `)}
-        from ${table}
-        ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
-        ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
-      `)
-    );
+  const findAllResources = buildFindAllEntitiesWithPool(pool)(Resources);
 
   const findResourceByIndicator = async (indicator: string) =>
     pool.maybeOne<Resource>(sql`

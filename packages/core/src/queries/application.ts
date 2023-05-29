@@ -1,10 +1,11 @@
-import type { Application, CreateApplication } from '@logto/schemas';
+import type { CreateApplication } from '@logto/schemas';
 import { Applications } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, conditionalSql, manyRows } from '@logto/shared';
+import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
@@ -15,16 +16,9 @@ const { table, fields } = convertToIdentifiers(Applications);
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
   const findTotalNumberOfApplications = async () => getTotalRowCountWithPool(pool)(table);
-  const findAllApplications = async (limit: number, offset: number) =>
-    manyRows(
-      pool.query<Application>(sql`
-        select ${sql.join(Object.values(fields), sql`, `)}
-        from ${table}
-        order by ${fields.createdAt} desc
-        ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
-        ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
-      `)
-    );
+  const findAllApplications = buildFindAllEntitiesWithPool(pool)(Applications, [
+    { field: 'createdAt', order: 'desc' },
+  ]);
   const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
   const insertApplication = buildInsertIntoWithPool(pool)(Applications, {
     returning: true,
