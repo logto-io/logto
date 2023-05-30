@@ -11,7 +11,6 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'got';
-import type Provider from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -20,13 +19,31 @@ import { consoleLog } from '#src/utils/console.js';
 
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
+/**
+ * The context for triggering interaction hooks by `triggerInteractionHooks`.
+ * In the `koaInteractionHooks` middleware,
+ * we will store the context before processing the interaction and consume it after the interaction is processed if needed.
+ */
+export type InteractionHookContext = {
+  event: InteractionEvent;
+  sessionId?: string;
+  applicationId?: string;
+};
+
+/**
+ * The interaction hook result for triggering interaction hooks by `triggerInteractionHooks`.
+ * In the `koaInteractionHooks` middleware,
+ * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
+ */
+export type InteractionHookResult = {
+  userId: string;
+};
+
 const eventToHook: Record<InteractionEvent, HookEvent> = {
   [InteractionEvent.Register]: HookEvent.PostRegister,
   [InteractionEvent.SignIn]: HookEvent.PostSignIn,
   [InteractionEvent.ForgotPassword]: HookEvent.PostResetPassword,
 };
-
-export type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
 
 export const createHookLibrary = (queries: Queries) => {
   const {
@@ -37,18 +54,13 @@ export const createHookLibrary = (queries: Queries) => {
     hooks: { findAllHooks, findHookById },
   } = queries;
 
-  const triggerInteractionHooksIfNeeded = async (
-    event: InteractionEvent,
-    details?: Interaction,
+  const triggerInteractionHooks = async (
+    interactionContext: InteractionHookContext,
+    interactionResult: InteractionHookResult,
     userAgent?: string
   ) => {
-    const userId = details?.result?.login?.accountId;
-    const sessionId = details?.jti;
-    const applicationId = details?.params.client_id;
-
-    if (!userId) {
-      return;
-    }
+    const { userId } = interactionResult;
+    const { event, sessionId, applicationId } = interactionContext;
 
     const hookEvent = eventToHook[event];
     const found = await findAllHooks();
@@ -63,9 +75,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const [user, application] = await Promise.all([
       trySafe(findUserById(userId)),
-      trySafe(async () =>
-        conditional(typeof applicationId === 'string' && (await findApplicationById(applicationId)))
-      ),
+      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
     ]);
 
     const payload = {
@@ -155,7 +165,7 @@ export const createHookLibrary = (queries: Queries) => {
   });
 
   return {
-    triggerInteractionHooksIfNeeded,
+    triggerInteractionHooks,
     attachExecutionStatsToHook,
     testHook,
   };

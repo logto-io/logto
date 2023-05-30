@@ -5,7 +5,6 @@ import { createMockUtils } from '@logto/shared/esm';
 import { mockHook } from '#src/__mocks__/hook.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
-import type { Interaction } from './index.js';
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
@@ -50,7 +49,7 @@ const findAllHooks = jest.fn().mockResolvedValue([hook]);
 const findHookById = jest.fn().mockResolvedValue(hook);
 
 const { createHookLibrary } = await import('./index.js');
-const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook, testHook } = createHookLibrary(
+const { triggerInteractionHooks, attachExecutionStatsToHook, testHook } = createHookLibrary(
   new MockQueries({
     users: {
       findUserById: jest.fn().mockReturnValue({
@@ -67,28 +66,17 @@ const { triggerInteractionHooksIfNeeded, attachExecutionStatsToHook, testHook } 
   })
 );
 
-describe('triggerInteractionHooksIfNeeded()', () => {
+describe('triggerInteractionHooks()', () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('should return if no user ID found', async () => {
-    await triggerInteractionHooksIfNeeded(InteractionEvent.SignIn);
-
-    expect(findAllHooks).not.toBeCalled();
   });
 
   it('should set correct payload when hook triggered', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
-    await triggerInteractionHooksIfNeeded(
-      InteractionEvent.SignIn,
-      // @ts-expect-error
-      {
-        jti: 'some_jti',
-        result: { login: { accountId: '123' } },
-        params: { client_id: 'some_client' },
-      } as Interaction
+    await triggerInteractionHooks(
+      { event: InteractionEvent.SignIn, sessionId: 'some_jti', applicationId: 'some_client' },
+      { userId: '123' }
     );
 
     expect(findAllHooks).toHaveBeenCalled();

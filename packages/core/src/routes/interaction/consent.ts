@@ -1,5 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
+import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '#src/libraries/session.js';
@@ -9,7 +10,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { interactionPrefix } from './const.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 
-export default function consentRoutes<T>(
+export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
   { provider, libraries, queries }: TenantContext
 ) {

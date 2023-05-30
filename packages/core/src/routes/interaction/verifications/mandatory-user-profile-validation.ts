@@ -2,12 +2,12 @@ import type { Profile, SignInExperience, User } from '@logto/schemas';
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import type { Context } from 'koa';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import type { WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
 import type {
   SocialIdentifier,
@@ -213,7 +213,7 @@ const fillMissingProfileWithSocialIdentity = async (
 
 export default async function validateMandatoryUserProfile(
   userQueries: Queries['users'],
-  ctx: WithInteractionSieContext<Context>,
+  ctx: WithInteractionSieContext & WithInteractionDetailsContext,
   interaction: MandatoryProfileValidationInteraction
 ) {
   const { signUp } = ctx.signInExperience;

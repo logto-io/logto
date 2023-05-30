@@ -1,15 +1,13 @@
 import type { SignInExperience } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
+import { type IRouterParamContext } from 'koa-router';
 
 import type Queries from '#src/tenants/Queries.js';
 
-import type { WithInteractionDetailsContext } from './koa-interaction-details.js';
+export type WithInteractionSieContext<ContextT extends IRouterParamContext = IRouterParamContext> =
+  ContextT & { signInExperience: SignInExperience };
 
-export type WithInteractionSieContext<ContextT> = WithInteractionDetailsContext<ContextT> & {
-  signInExperience: SignInExperience;
-};
-
-export default function koaInteractionSie<StateT, ContextT, ResponseT>({
+export default function koaInteractionSie<StateT, ContextT extends IRouterParamContext, ResponseT>({
   signInExperiences: { findDefaultSignInExperience },
 }: Queries): MiddlewareType<StateT, WithInteractionSieContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
