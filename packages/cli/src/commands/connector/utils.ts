@@ -132,9 +132,7 @@ export const getLocalConnectorPackages = async (instancePath: string) => {
   return packages.map(({ name }) => [name, path.join(directory, name)] as const);
 };
 
-export const addConnectors = async (instancePath: string, packageNames: string[]) => {
-  const cwd = getConnectorDirectory(instancePath);
-
+export const addConnectorsToPath = async (cwd: string, packageNames: string[]) => {
   if (!existsSync(cwd)) {
     await fs.mkdir(cwd, { recursive: true });
   }
@@ -195,11 +193,17 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
   }
 };
 
+export const addConnectors = async (instancePath: string, packageNames: string[]) => {
+  const cwd = getConnectorDirectory(instancePath);
+
+  await addConnectorsToPath(cwd, packageNames);
+};
+
 const officialConnectorPrefix = '@logto/connector-';
 
 type PackageMeta = { name: string; scope: string; version: string };
 
-const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
+export const fetchOfficialConnectorList = async (includingCloudConnectors = false) => {
   // See https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#get-v1search
   type FetchResult = {
     objects: Array<{
