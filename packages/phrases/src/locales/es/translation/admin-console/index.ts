@@ -8,6 +8,7 @@ import connector_details from './connector-details.js';
 import connectors from './connectors.js';
 import contact from './contact.js';
 import dashboard from './dashboard.js';
+import domain from './domain.js';
 import errors from './errors.js';
 import general from './general.js';
 import get_started from './get-started.js';
@@ -61,6 +62,7 @@ const admin_console = {
   components,
   webhooks,
   webhook_details,
+  domain,
 };
 
 export default admin_console;
