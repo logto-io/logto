@@ -17,6 +17,8 @@ export class MockTenantsLibrary implements TenantsLibrary {
     Promise<TenantInfo>,
     [string, { name?: string; tag?: TenantTag }]
   >();
+
+  public deleteTenantById = jest.fn<Promise<void>, [string]>();
 }
 
 export class MockServicesLibrary implements ServicesLibrary {

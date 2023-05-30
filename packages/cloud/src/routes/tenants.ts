@@ -73,4 +73,29 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
           status: 201,
         });
       }
-    );
+    )
+    .delete('/:tenantId', {}, async (context, next) => {
+      /** Users w/o either `ManageTenant` or `ManageTenantSelf` scope does not have permission. */
+      if (
+        ![CloudScope.ManageTenant, CloudScope.ManageTenantSelf].some((scope) =>
+          context.auth.scopes.includes(scope)
+        )
+      ) {
+        throw new RequestError('Forbidden due to lack of permission.', 403);
+      }
+
+      /** Should throw 404 when users with `ManageTenantSelf` scope are attempting to change an unavailable tenant. */
+      if (!context.auth.scopes.includes(CloudScope.ManageTenant)) {
+        const availableTenants = await library.getAvailableTenants(context.auth.id);
+        assert(
+          availableTenants.map(({ id }) => id).includes(context.guarded.params.tenantId),
+          new RequestError(
+            `Can not find tenant whose id is '${context.guarded.params.tenantId}'.`,
+            404
+          )
+        );
+      }
+
+      await library.deleteTenantById(context.guarded.params.tenantId);
+      return next({ ...context, status: 204 });
+    });

@@ -62,6 +62,7 @@ jobs:
       INTEGRATION_TEST: true
       IS_CLOUD: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
       PATH_BASED_MULTI_TENANCY: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
+      DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
       - uses: actions/checkout@v3
@@ -106,7 +107,6 @@ jobs:
         run: |
           npm run cli init -- \
             -p ../logto \
-            --db postgres://postgres:postgres@localhost:5432/postgres \
             --du ../logto.tar.gz \
             ${{ contains(matrix.target, 'cloud') && '--cloud' || '' }}
       
