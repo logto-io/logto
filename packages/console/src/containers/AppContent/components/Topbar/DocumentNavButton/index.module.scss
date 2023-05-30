@@ -1,0 +1,42 @@
+@use '@/scss/underscore' as _;
+
+.documentNavButton {
+  display: flex;
+  align-items: center;
+  padding: _.unit(1);
+  border-radius: _.unit(2);
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+
+  > :not(:last-child) {
+    margin-right: _.unit(1);
+  }
+
+  &:hover {
+    background-color: var(--color-hover-variant);
+  }
+
+  &.active {
+    background-color: var(--color-focused-variant);
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  span {
+    font: var(--font-label-2);
+    color: var(--color-text);
+  }
+}
+
+.textLink {
+  &:not(:disabled):hover {
+    text-decoration: none;
+  }
+}

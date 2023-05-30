@@ -23,4 +23,8 @@
     font: var(--font-title-2);
     color: var(--color-text);
   }
+
+  > :not(:last-child) {
+    margin-right: _.unit(4);
+  }
 }

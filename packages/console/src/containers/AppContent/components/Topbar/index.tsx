@@ -7,8 +7,9 @@ import Spacer from '@/components/Spacer';
 import { isCloud } from '@/consts/cloud';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
 
-import UserInfo from '../UserInfo';
-
+import Contact from './Contact';
+import DocumentNavButton from './DocumentNavButton';
+import UserInfo from './UserInfo';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -30,6 +31,8 @@ function Topbar({ className }: Props) {
       )}
       <Spacer />
       {isCloud && <EarlyBirdGift />}
+      <DocumentNavButton />
+      <Contact />
       <UserInfo />
     </div>
   );

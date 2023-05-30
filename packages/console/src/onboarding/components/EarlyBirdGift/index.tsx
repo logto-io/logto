@@ -11,7 +11,7 @@ function EarlyBirdGift() {
   return (
     <>
       <IconButton
-        size="large"
+        size="medium"
         onClick={() => {
           setIsGiftOpen(true);
         }}

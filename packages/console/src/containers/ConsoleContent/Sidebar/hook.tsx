@@ -6,18 +6,13 @@ import BarGraph from '@/assets/images/bar-graph.svg';
 import Bolt from '@/assets/images/bolt.svg';
 import Box from '@/assets/images/box.svg';
 import Connection from '@/assets/images/connection.svg';
-import ContactIcon from '@/assets/images/contact.svg';
-import Document from '@/assets/images/document.svg';
 import Hook from '@/assets/images/hook.svg';
 import List from '@/assets/images/list.svg';
 import UserProfile from '@/assets/images/profile.svg';
 import ResourceIcon from '@/assets/images/resource.svg';
 import Role from '@/assets/images/role.svg';
 import Web from '@/assets/images/web.svg';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
-
-import Contact from './components/Contact';
 
 type SidebarItem = {
   Icon: FC;
@@ -49,7 +44,6 @@ export const useSidebarMenuItems = (): {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
-  const { documentationSiteUrl } = useDocumentationUrl();
 
   const sections: SidebarSection[] = [
     {
@@ -85,10 +79,6 @@ export const useSidebarMenuItems = (): {
           Icon: Connection,
           title: 'connectors',
         },
-        {
-          Icon: Hook,
-          title: 'webhooks',
-        },
       ],
     },
     {
@@ -102,11 +92,6 @@ export const useSidebarMenuItems = (): {
           Icon: List,
           title: 'audit_logs',
         },
-      ],
-    },
-    {
-      title: 'access_control',
-      items: [
         {
           Icon: Role,
           title: 'roles',
@@ -114,17 +99,11 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
-      title: 'help_and_support',
+      title: 'automation',
       items: [
         {
-          Icon: ContactIcon,
-          title: 'contact_us',
-          modal: (isOpen, onCancel) => <Contact isOpen={isOpen} onCancel={onCancel} />,
-        },
-        {
-          Icon: Document,
-          title: 'docs',
-          externalLink: documentationSiteUrl,
+          Icon: Hook,
+          title: 'webhooks',
         },
       ],
     },

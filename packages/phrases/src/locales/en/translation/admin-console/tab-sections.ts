@@ -5,6 +5,7 @@ const tab_sections = {
   access_control: 'Access Control',
   help_and_support: 'Help and Support',
   tenant: 'Tenant',
+  automation: 'Automation',
 };
 
 export default tab_sections;

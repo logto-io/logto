@@ -13,12 +13,13 @@ type Props = {
   onCancel?: () => void;
 };
 
-function Contact({ isOpen, onCancel }: Props) {
+function ContactModal({ isOpen, onCancel }: Props) {
   const contacts = useContacts();
 
   return (
     <ReactModal
       shouldCloseOnEsc
+      shouldCloseOnOverlayClick
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
@@ -56,4 +57,4 @@ function Contact({ isOpen, onCancel }: Props) {
   );
 }
 
-export default Contact;
+export default ContactModal;
