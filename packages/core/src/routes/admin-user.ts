@@ -1,4 +1,4 @@
-import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
@@ -97,10 +97,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users',
     koaGuard({
       body: object({
-        primaryPhone: string().regex(phoneRegEx),
         primaryEmail: string().regex(emailRegEx),
-        username: string().regex(usernameRegEx),
-        password: string().regex(passwordRegEx),
+        primaryPhone: string().regex(phoneRegEx),
+        username: string(),
+        password: string(),
         name: string(),
       }).partial(),
       response: userProfileResponseGuard,
@@ -153,10 +153,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        username: string().regex(usernameRegEx).or(literal('')).nullable(),
+        username: string().nullable(),
         primaryEmail: string().regex(emailRegEx).or(literal('')).nullable(),
         primaryPhone: string().regex(phoneRegEx).or(literal('')).nullable(),
-        name: string().or(literal('')).nullable(),
+        name: string().nullable(),
         avatar: string().url().or(literal('')).nullable(),
         customData: jsonObjectGuard,
       }).partial(),
@@ -183,7 +183,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId/password',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ password: string().regex(passwordRegEx) }),
+      body: object({ password: string().nullable() }),
       response: userProfileResponseGuard,
       status: [200, 422],
     }),
@@ -195,7 +195,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(
 
       await findUserById(userId);
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
+      const { passwordEncrypted, passwordEncryptionMethod } = password
+        ? await encryptUserPassword(password)
+        : { passwordEncrypted: null, passwordEncryptionMethod: null };
 
       const user = await updateUserById(userId, {
         passwordEncrypted,

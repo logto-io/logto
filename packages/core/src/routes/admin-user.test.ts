@@ -121,10 +121,16 @@ describe('adminUserRoutes', () => {
   it('POST /users should throw with invalid input params', async () => {
     const username = 'MJAtLogto';
     const name = 'Michael';
+    const invalidEmail = 'invalid-email';
+    const invalidPhone = 'invalid-phone';
 
     // Invalid input format
     await expect(
-      userRequest.post('/users').send({ username, password: 'abc', name })
+      userRequest.post('/users').send({ username, primaryEmail: invalidEmail, name })
+    ).resolves.toHaveProperty('status', 400);
+
+    await expect(
+      userRequest.post('/users').send({ username, primaryPhone: invalidPhone, name })
     ).resolves.toHaveProperty('status', 400);
   });
 
