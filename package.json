@@ -38,11 +38,6 @@
     "node": "^18.12.0",
     "pnpm": "^8.0.0"
   },
-  "alias": {
-    "html-parse-stringify": "html-parse-stringify/dist/html-parse-stringify.module.js",
-    "react-hook-form": "react-hook-form/dist/index.esm.mjs",
-    "superstruct": "superstruct/lib/index.es.js"
-  },
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
