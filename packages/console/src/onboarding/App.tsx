@@ -61,7 +61,6 @@ function App() {
       gtag('event', 'conversion', {
         send_to: gtagSignUpConversionId,
       });
-    } else {
       console.debug('Google Tag event fires');
     }
   }, []);
