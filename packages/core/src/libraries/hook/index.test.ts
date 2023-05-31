@@ -135,6 +135,8 @@ describe('testHook', () => {
   });
 
   it('should call sendWebhookRequest with correct values', async () => {
+    jest.useFakeTimers().setSystemTime(100_000);
+
     await testHook(hook.id, [HookEvent.PostSignIn], hook.config);
     const testHookPayload = generateHookTestPayload(hook.id, HookEvent.PostSignIn);
     expect(sendWebhookRequest).toHaveBeenCalledWith({
@@ -142,6 +144,8 @@ describe('testHook', () => {
       payload: testHookPayload,
       signingKey: hook.signingKey,
     });
+
+    jest.useRealTimers();
   });
 
   it('should call sendWebhookRequest with correct times if multiple events are provided', async () => {
