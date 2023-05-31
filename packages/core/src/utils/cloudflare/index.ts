@@ -17,7 +17,7 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
     return mockCustomHostnameResponse();
   }
 
-  const response = await got.post(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames`, {
+  const response = await got.post(new URL(baseUrl, `/zones/${auth.zoneId}/custom_hostnames`), {
     headers: {
       Authorization: `Bearer ${auth.apiToken}`,
     },
@@ -46,11 +46,14 @@ export const getCustomHostname = async (auth: HostnameProviderData, identifier: 
     return mockCustomHostnameResponse(identifier);
   }
 
-  const response = await got.get(`${baseUrl}/zones/${auth.zoneId}/custom_hostnames/${identifier}`, {
-    headers: {
-      Authorization: `Bearer ${auth.apiToken}`,
-    },
-  });
+  const response = await got.get(
+    new URL(baseUrl, `/zones/${auth.zoneId}/custom_hostnames/${identifier}`),
+    {
+      headers: {
+        Authorization: `Bearer ${auth.apiToken}`,
+      },
+    }
+  );
 
   assertThat(response.ok, 'domain.cloudflare_unknown_error');
 

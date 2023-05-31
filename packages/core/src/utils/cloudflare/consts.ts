@@ -1,1 +1,1 @@
-export const baseUrl = 'https://api.cloudflare.com/client/v4';
+export const baseUrl = new URL('https://api.cloudflare.com/client/v4');

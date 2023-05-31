@@ -4,6 +4,7 @@ import {
   type DomainDnsRecords,
   DomainStatus,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import type Queries from '#src/tenants/Queries.js';
 import SystemContext from '#src/tenants/SystemContext.js';
@@ -13,19 +14,14 @@ import { getCustomHostname, createCustomHostname } from '#src/utils/cloudflare/i
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
 
 const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus => {
-  if (data.status === 'active' && data.ssl.status === 'active') {
-    return DomainStatus.Active;
+  switch (data.status) {
+    case 'active': {
+      return data.ssl.status === 'active' ? DomainStatus.Active : DomainStatus.PendingSsl;
+    }
+    default: {
+      return DomainStatus.PendingVerification;
+    }
   }
-
-  if (data.status === 'active' && data.ssl.status !== 'active') {
-    return DomainStatus.PendingSsl;
-  }
-
-  if (data.status !== 'active') {
-    return DomainStatus.PendingVerification;
-  }
-
-  return DomainStatus.Error;
 };
 
 export const createDomainLibrary = (queries: Queries) => {
@@ -39,30 +35,32 @@ export const createDomainLibrary = (queries: Queries) => {
     origin: string
   ): Promise<Domain> => {
     const status = getDomainStatusFromCloudflareData(cloudflareData);
+    const {
+      verification_errors: verificationErrors,
+      ssl: { validation_errors: sslVerificationErrors, txt_name: txtName, txt_value: txtValue },
+      ownership_verification: ownershipVerification,
+    } = cloudflareData;
 
-    const verificationError =
-      cloudflareData.verification_errors && cloudflareData.verification_errors.length > 0
-        ? cloudflareData.verification_errors.join('\n')
-        : null;
-    const sslError =
-      cloudflareData.ssl.validation_errors && cloudflareData.ssl.validation_errors.length > 0
-        ? cloudflareData.ssl.validation_errors.map(({ message }) => message).join('\n')
-        : null;
-    const errorMessage = [verificationError, sslError].filter(Boolean).join('\n');
+    const errorMessage: string = [
+      ...(verificationErrors ?? []),
+      ...(sslVerificationErrors ?? []).map(({ message }) => message),
+    ]
+      .filter(Boolean)
+      .join('\n');
 
-    const ownershipRecord = cloudflareData.ownership_verification;
-    const { txt_name, txt_value } = cloudflareData.ssl;
-    const sslRecord =
-      txt_name && txt_value ? { type: 'TXT', name: txt_name, value: txt_value } : undefined;
-    const cnameRecord =
-      status === DomainStatus.PendingVerification || status === DomainStatus.Error
-        ? {
-            type: 'CNAME',
-            name: domain.domain,
-            value: origin,
-          }
-        : undefined;
-    const dnsRecords: DomainDnsRecords = [cnameRecord, ownershipRecord, sslRecord].filter(Boolean);
+    const sslRecord = conditional(
+      txtName && txtValue && { type: 'TXT', name: txtName, value: txtValue }
+    );
+    const cnameRecord = conditional(
+      (status === DomainStatus.PendingVerification || status === DomainStatus.Error) && {
+        type: 'CNAME',
+        name: domain.domain,
+        value: origin,
+      }
+    );
+    const dnsRecords: DomainDnsRecords = [cnameRecord, ownershipVerification, sslRecord].filter(
+      Boolean
+    );
 
     return updateDomainById(
       domain.id,
@@ -73,7 +71,7 @@ export const createDomainLibrary = (queries: Queries) => {
 
   const syncDomainStatus = async (domain: Domain): Promise<Domain> => {
     const { hostnameProviderConfig } = SystemContext.shared;
-    assertThat(hostnameProviderConfig, 'domain.cloudflare_data_missing');
+    assertThat(hostnameProviderConfig, 'domain.not_configured');
 
     assertThat(domain.cloudflareData, 'domain.cloudflare_data_missing');
 

@@ -5,45 +5,45 @@ import {
   hostnameProviderDataGuard,
   storageProviderDataGuard,
   StorageProviderKey,
-  Systems,
   type SystemKey,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
 import { type ZodType } from 'zod';
 
+import { createSystemsQuery } from '#src/queries/system.js';
 import { consoleLog } from '#src/utils/console.js';
-
-const { table, fields } = convertToIdentifiers(Systems);
 
 export default class SystemContext {
   static shared = new SystemContext();
-  public storageProviderConfig: StorageProviderData | undefined;
-  public hostnameProviderConfig: HostnameProviderData | undefined;
+  public storageProviderConfig?: StorageProviderData;
+  public hostnameProviderConfig?: HostnameProviderData;
 
   async loadProviderConfigs(pool: CommonQueryMethods) {
-    this.storageProviderConfig = await this.loadConfig<StorageProviderData>(
-      pool,
-      StorageProviderKey.StorageProvider,
-      storageProviderDataGuard
-    );
-    this.hostnameProviderConfig = await this.loadConfig<HostnameProviderData>(
-      pool,
-      CloudflareKey.HostnameProvider,
-      hostnameProviderDataGuard
-    );
+    await Promise.all([
+      (async () => {
+        this.storageProviderConfig = await this.loadConfig(
+          pool,
+          StorageProviderKey.StorageProvider,
+          storageProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.hostnameProviderConfig = await this.loadConfig(
+          pool,
+          CloudflareKey.HostnameProvider,
+          hostnameProviderDataGuard
+        );
+      })(),
+    ]);
   }
 
   private async loadConfig<T>(
     pool: CommonQueryMethods,
     key: SystemKey,
-    guard: ZodType
+    guard: ZodType<T>
   ): Promise<T | undefined> {
-    const record = await pool.maybeOne<Record<string, unknown>>(sql`
-      select ${fields.value} from ${table}
-      where ${fields.key} = ${key}
-    `);
+    const { findSystemByKey } = createSystemsQuery(pool);
+    const record = await findSystemByKey(key);
 
     if (!record) {
       return;
@@ -52,12 +52,11 @@ export default class SystemContext {
     const result = guard.safeParse(record.value);
 
     if (!result.success) {
-      consoleLog.error('Failed to parse cloudflare hostname provider config:', result.error);
+      consoleLog.error(`Failed to parse ${key} config:`, result.error);
 
       return;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    return result.data as T;
+    return result.data;
   }
 }

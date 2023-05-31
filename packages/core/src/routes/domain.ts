@@ -45,8 +45,7 @@ export default function domainRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
 
-      const domain = await findDomainById(id);
-      const syncedDomain = await syncDomainStatus(domain);
+      const syncedDomain = await syncDomainStatus(await findDomainById(id));
 
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
@@ -71,11 +70,12 @@ export default function domainRoutes<T extends AuthedRouter>(
         })
       );
 
-      const domain = await insertDomain({
-        ...ctx.guard.body,
-        id: generateStandardId(),
-      });
-      const syncedDomain = await addDomainToCloudflare(domain);
+      const syncedDomain = await addDomainToCloudflare(
+        await insertDomain({
+          ...ctx.guard.body,
+          id: generateStandardId(),
+        })
+      );
 
       ctx.status = 201;
       ctx.body = pick(syncedDomain, ...domainSelectFields);

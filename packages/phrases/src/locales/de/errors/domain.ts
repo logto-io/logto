@@ -1,5 +1,5 @@
 const domain = {
-  not_configured: 'Domain-Hostname-Provider ist nicht konfiguriert.',
+  not_configured: 'Der Domain-Hostname-Anbieter ist nicht konfiguriert.',
   cloudflare_data_missing: 'cloudflare_data fehlt, bitte überprüfen Sie es.',
   cloudflare_unknown_error:
     'Beim Anfordern der Cloudflare-API ist ein unbekannter Fehler aufgetreten',

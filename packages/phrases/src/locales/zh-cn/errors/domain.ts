@@ -1,5 +1,5 @@
 const domain = {
-  not_configured: 'Domain hostname provider is not configured.',
+  not_configured: '域名主机提供商尚未配置。',
   cloudflare_data_missing: 'cloudflare_data 缺失，请检查。',
   cloudflare_unknown_error: '请求 Cloudflare API 时出现未知错误。',
   cloudflare_response_error: '从 Cloudflare 得到意外的响应。',
