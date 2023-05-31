@@ -144,7 +144,7 @@ function ConsoleContent() {
             </Route>
             {isCloud && (
               <Route path="tenant-settings" element={<TenantSettings />}>
-                <Route index element={<Navigate replace to={TenantSettingsTabs.Domains} />} />
+                <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 {!isProduction && (
                   <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 )}

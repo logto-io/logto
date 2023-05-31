@@ -10,7 +10,8 @@
   }
 }
 
-.compact {
+.compact,
+.small {
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;

@@ -17,6 +17,7 @@ type Tenants = {
   setTenants: (tenants: TenantInfo[]) => void;
   setIsSettle: (isSettle: boolean) => void;
   currentTenantId: string;
+  setCurrentTenantId: (tenantId: string) => void;
   navigate: (tenantId: string, options?: NavigateOptions) => void;
 };
 
@@ -33,6 +34,7 @@ export const TenantsContext = createContext<Tenants>({
   isSettle: false,
   setIsSettle: noop,
   currentTenantId: '',
+  setCurrentTenantId: noop,
   navigate: noop,
 });
 
@@ -52,7 +54,15 @@ function TenantsProvider({ children }: Props) {
   }, []);
 
   const memorizedContext = useMemo(
-    () => ({ tenants, setTenants, isSettle, setIsSettle, currentTenantId, navigate }),
+    () => ({
+      tenants,
+      setTenants,
+      isSettle,
+      setIsSettle,
+      currentTenantId,
+      setCurrentTenantId,
+      navigate,
+    }),
     [currentTenantId, isSettle, navigate, tenants]
   );
 
