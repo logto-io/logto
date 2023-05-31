@@ -7,6 +7,10 @@ importers:
       '@logto/cli':
         specifier: workspace:^1.1.0
         version: link:packages/cli
+    optionalDependencies:
+      zod:
+        specifier: ^3.20.2
+        version: 3.20.2
     devDependencies:
       '@changesets/cli':
         specifier: ^2.25.0

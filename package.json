@@ -49,5 +49,8 @@
   },
   "dependencies": {
     "@logto/cli": "workspace:^1.1.0"
+  },
+  "optionalDependencies": {
+    "zod": "^3.20.2"
   }
 }
