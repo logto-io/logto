@@ -1,8 +1,7 @@
 const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
-  subtitle:
-    'Webhooksを使用すると、エンドポイントURLに特定のイベントのリアルタイム更新を提供して、即時反応を可能にします。',
+  subtitle: '特定のイベントに関するリアルタイムの更新を手軽に受け取るためにWebhookを作成します。',
   create: 'Webhookを作成する',
   events: {
     post_register: '新しいアカウントを作成する',
@@ -18,7 +17,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Webhooksを使用すると、エンドポイントURLに特定のイベントのリアルタイム更新を提供して、即時反応を可能にします。これにより、新しい情報を受け取った後、すぐにアクションを実行できるようになります。「新しいアカウントを作成する、サインインする、パスワードをリセットする」のイベントが現在サポートされています。',
+      'POSTリクエストをエンドポイントURLに送信して、リアルタイムのアップデートを受け取るWebhookを作成します。 "アカウントを作成する"、"サインインする"、"パスワードをリセットする"などのイベントを受け取って、常に最新情報を把握しましょう。',
     create_webhook: 'Webhookを作成する',
   },
   create_form: {

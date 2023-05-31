@@ -2,7 +2,7 @@ const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
   subtitle:
-    'Les webhooks fournissent des mises à jour en temps réel sur des événements spécifiques à votre URL de point de terminaison, permettant des réactions immédiates.',
+    'Créez des webhooks pour recevoir sans effort des mises à jour en temps réel concernant des événements spécifiques.',
   create: 'Créer un webhook',
   events: {
     post_register: 'Nouveau compte créé',
@@ -18,7 +18,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Les webhooks fournissent des mises à jour en temps réel sur des événements spécifiques à votre URL de point de terminaison, permettant des réactions immédiates. Les événements de "Créer un compte, se connecter, réinitialiser un mot de passe" sont maintenant pris en charge.',
+      'Créez un webhook pour recevoir des mises à jour en temps réel via des demandes POST vers l\'URL de votre point de terminaison. Restez informé et agissez immédiatement sur des événements tels que "Créer un compte", "Se connecter" et "Réinitialiser le mot de passe".',
     create_webhook: 'Créer un webhook',
   },
   create_form: {

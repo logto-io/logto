@@ -40,7 +40,7 @@ const webhook_details = {
     test: '測試',
     test_webhook: '測試您的 Webhook',
     test_webhook_description:
-      '請完成上述 Webhook 配置。單擊測試按鈕，我們將向您的端點 URL 發送每個所選事件的單個有效載荷示例。這將允許您驗證您的端點是否正確接收和處理有效載荷。',
+      '配置 Webhook，並使用每個選定事件的有效載荷示例進行測試，以驗證正確的接收和處理。',
     send_test_payload: '發送測試有效載荷',
     test_payload_sent: '有效載荷已成功發送。',
   },

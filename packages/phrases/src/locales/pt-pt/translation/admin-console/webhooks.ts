@@ -1,8 +1,7 @@
 const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
-  subtitle:
-    'Os webhooks fornecem atualizações em tempo real sobre eventos específicos para o URL do seu ponto final, permitindo reações imediatas.',
+  subtitle: 'Crie webhooks para receber atualizações em tempo real sobre eventos específicos.',
   create: 'Criar Webhook',
   events: {
     post_register: 'Criar nova conta',
@@ -18,7 +17,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Os webhooks fornecem atualizações em tempo real sobre eventos específicos para o URL do seu ponto final, permitindo reações imediatas. Os eventos "Criar nova conta, Entrar, Redefinir senha" agora são suportados.',
+      'Crie um webhook para receber atualizações em tempo real por meio de solicitações POST para sua URL de endpoint. Fique informado e tome medidas imediatas em eventos como "Criar conta", "Entrar" e "Redefinir senha".',
     create_webhook: 'Criar Webhook',
   },
   create_form: {

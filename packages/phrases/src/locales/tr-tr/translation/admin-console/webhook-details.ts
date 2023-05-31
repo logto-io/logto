@@ -42,7 +42,7 @@ const webhook_details = {
     test: 'Test',
     test_webhook: 'Webhook’unuzu test edin',
     test_webhook_description:
-      'Yukarıdaki webhook’u yapılandırmayı tamamladıktan sonra, test düğmesine tıklayın, ve her seçili olayın ayrı ayrı yük örneklerini uç nokta URL’nize göndereceğiz. Bu, uç noktanızın doğru bir şekilde yükleri alıp işlemesini sağlamanıza olanak tanır.',
+      'Webhook’u yapılandırın ve her seçilen olay için yük örnekleriyle test ederek doğru alma ve işleme işlemini doğrulayın.',
     send_test_payload: 'Test yükünü gönder',
     test_payload_sent: 'Yük başarıyla gönderildi.',
   },

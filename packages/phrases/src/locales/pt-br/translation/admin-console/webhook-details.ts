@@ -43,7 +43,7 @@ const webhook_details = {
     test: 'Testar',
     test_webhook: 'Teste seu webhook',
     test_webhook_description:
-      'Por favor, termine de configurar o webhook acima. Clique no botão de teste e enviaremos exemplos de payload individuais de cada evento selecionado ao URL do seu endpoint. Isso permitirá que você verifique se o seu endpoint está recebendo e processando corretamente os payloads.',
+      'Configure o webhook e teste-o com exemplos de carga para cada evento selecionado para verificação da recepção e processamento corretos.',
     send_test_payload: 'Enviar carga de teste',
     test_payload_sent: 'A carga foi enviada com sucesso.',
   },

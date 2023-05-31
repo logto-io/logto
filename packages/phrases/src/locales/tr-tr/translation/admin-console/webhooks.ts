@@ -2,7 +2,7 @@ const webhooks = {
   page_title: 'Webhooklar',
   title: 'Webhooklar',
   subtitle:
-    'Webhooklar, belirli olaylar için uç nokta URL’nize gerçek zamanlı güncellemeler sağlayarak anında tepkileri mümkün kılan POST istekleri gönderir.',
+    'Belirli olaylarla ilgili gerçek zamanlı güncellemeler almak için webhooklar oluşturun.',
   create: 'Webhook Oluştur',
   events: {
     post_register: 'Yeni hesap oluştur',
@@ -18,7 +18,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Webhooklar, gerçekleşen belirli olaylar hakkında anında güncellemeler sağlayarak POST isteği gönderir. Bu, yeni bilgiye dayalı anında eylemler almanızı sağlar. "Hesap oluşturma, Oturum açma, Parola sıfırlama" olayları artık desteklenmektedir.',
+      'POST istekleri aracılığıyla uç nokta URL\'nize gerçek zamanlı güncellemeler almak için bir webhook oluşturun. "Hesap Oluşturma", "Oturum Açma" ve "Şifre Sıfırlama" gibi olayların etkinliklerini takip edin ve hemen harekete geçin.',
     create_webhook: 'Webhook Oluştur',
   },
   create_form: {
