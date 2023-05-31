@@ -43,9 +43,6 @@
     "@logto/shared": "workspace:^2.0.0",
     "color": "^4.2.3"
   },
-  "optionalDependencies": {
-    "zod": "^3.20.2"
-  },
   "devDependencies": {
     "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "3.0.1",
