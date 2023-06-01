@@ -15,6 +15,7 @@ import {
   getConnectorAuthorizationUri,
   deleteConnectorById,
   postUserIdentity,
+  verifyUserPassword,
 } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
@@ -160,5 +161,27 @@ describe('admin console user management', () => {
     expect(updatedUser.identities).not.toHaveProperty(mockSocialConnectorTarget);
 
     await deleteConnectorById(connectorId);
+  });
+
+  it('should return 204 if password is correct', async () => {
+    const user = await createUserByAdmin(undefined, 'new_password');
+    expect(await verifyUserPassword(user.id, 'new_password')).toHaveProperty('statusCode', 204);
+    void deleteUser(user.id);
+  });
+
+  it('should return 422 if password is incorrect', async () => {
+    const user = await createUserByAdmin(undefined, 'new_password');
+    await expect(verifyUserPassword(user.id, 'wrong_password')).rejects.toMatchObject(
+      createResponseWithCode(422)
+    );
+    void deleteUser(user.id);
+  });
+
+  it('should return 400 if password is empty', async () => {
+    const user = await createUserByAdmin();
+    await expect(verifyUserPassword(user.id, '')).rejects.toMatchObject(
+      createResponseWithCode(400)
+    );
+    void deleteUser(user.id);
   });
 });

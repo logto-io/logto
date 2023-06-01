@@ -212,8 +212,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId/password/verify',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ password: string() }),
-      status: [204],
+      body: object({ password: string().min(1) }),
+      status: [204, 404, 422],
     }),
     async (ctx, next) => {
       const {
