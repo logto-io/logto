@@ -194,7 +194,6 @@ describe('user management', () => {
     await page.waitForSelector('form');
     // Conflicted email
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
-    await page.screenshot({ path: 'user-conflict-email.png' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
     await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
       text: 'This email is associated with an existing account.',
