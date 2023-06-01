@@ -1,0 +1,31 @@
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: var(--color-surface-variant);
+  color: var(--color-text-link);
+  font: var(--font-body-3);
+  // Specify font-weight manually since we don't have a font token to fit this case
+  font-weight: 600;
+
+  .icon {
+    width: 12px;
+    height: 12px;
+    color: var(--color-white);
+  }
+
+  &.finished {
+    background-color: var(--color-on-success-container);
+  }
+
+  &.failed {
+    background-color: var(--color-on-error-container);
+  }
+
+  &.loading {
+    background-color: unset;
+  }
+}
