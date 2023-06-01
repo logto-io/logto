@@ -31,7 +31,7 @@ jobs:
         run: |
           pnpm -r build
           ./.scripts/package.sh
-      
+
       - name: Build and package (Cloud)
         if: matrix.env == 'cloud'
         run: |
@@ -109,12 +109,18 @@ jobs:
             -p ../logto \
             --du ../logto.tar.gz \
             ${{ contains(matrix.target, 'cloud') && '--cloud' || '' }}
-      
+
       - name: Check and add mock connectors
         working-directory: tests
         run: |
           npm run cli connector list -- -p ../logto | grep OFFICIAL
           npm run cli connector link -- --mock -p ../logto
+
+      - name: Setup mock Cloudflare Hostname Provider config
+        working-directory: tests
+        run: npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":"","fallbackOrigin":"mock.logto.dev"}'
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
       - name: Run Logto
         working-directory: logto/

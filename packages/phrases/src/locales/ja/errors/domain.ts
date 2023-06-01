@@ -1,4 +1,8 @@
 const domain = {
+  not_configured: 'Domain hostname provider が設定されていません。',
+  cloudflare_data_missing: 'cloudflare_data が見つかりませんでした。確認してください。',
+  cloudflare_unknown_error: 'Cloudflare API のリクエスト中に未知のエラーが発生しました。',
+  cloudflare_response_error: 'Cloudflare から予期しない応答がありました。',
   limit_to_one_domain: 'カスタムドメインは1つしか持てません。',
 };
 

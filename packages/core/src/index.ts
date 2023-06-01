@@ -34,7 +34,7 @@ try {
     loadConnectorFactories(),
     checkRowLevelSecurity(sharedAdminPool),
     checkAlterationState(sharedAdminPool),
-    SystemContext.shared.loadStorageProviderConfig(sharedAdminPool),
+    SystemContext.shared.loadProviderConfigs(sharedAdminPool),
   ]);
 
   // Import last until init completed

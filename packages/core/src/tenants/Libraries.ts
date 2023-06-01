@@ -1,5 +1,6 @@
 import { createApplicationLibrary } from '#src/libraries/application.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
@@ -21,6 +22,7 @@ export default class Libraries {
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
+  domains = createDomainLibrary(this.queries);
 
   constructor(
     public readonly tenantId: string,

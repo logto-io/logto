@@ -1,35 +1,62 @@
-import type { StorageProviderData } from '@logto/schemas';
-import { storageProviderDataGuard, StorageProviderKey, Systems } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import {
+  CloudflareKey,
+  type HostnameProviderData,
+  type StorageProviderData,
+  hostnameProviderDataGuard,
+  storageProviderDataGuard,
+  StorageProviderKey,
+  type SystemKey,
+} from '@logto/schemas';
 import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import { type ZodType } from 'zod';
 
+import { createSystemsQuery } from '#src/queries/system.js';
 import { consoleLog } from '#src/utils/console.js';
-
-const { table, fields } = convertToIdentifiers(Systems);
 
 export default class SystemContext {
   static shared = new SystemContext();
-  public storageProviderConfig: StorageProviderData | undefined;
+  public storageProviderConfig?: StorageProviderData;
+  public hostnameProviderConfig?: HostnameProviderData;
 
-  async loadStorageProviderConfig(pool: CommonQueryMethods) {
-    const record = await pool.maybeOne<Record<string, unknown>>(sql`
-      select ${fields.value} from ${table}
-      where ${fields.key} = ${StorageProviderKey.StorageProvider}
-    `);
+  async loadProviderConfigs(pool: CommonQueryMethods) {
+    await Promise.all([
+      (async () => {
+        this.storageProviderConfig = await this.loadConfig(
+          pool,
+          StorageProviderKey.StorageProvider,
+          storageProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.hostnameProviderConfig = await this.loadConfig(
+          pool,
+          CloudflareKey.HostnameProvider,
+          hostnameProviderDataGuard
+        );
+      })(),
+    ]);
+  }
+
+  private async loadConfig<T>(
+    pool: CommonQueryMethods,
+    key: SystemKey,
+    guard: ZodType<T>
+  ): Promise<T | undefined> {
+    const { findSystemByKey } = createSystemsQuery(pool);
+    const record = await findSystemByKey(key);
 
     if (!record) {
       return;
     }
 
-    const result = storageProviderDataGuard.safeParse(record.value);
+    const result = guard.safeParse(record.value);
 
     if (!result.success) {
-      consoleLog.error('Failed to parse storage provider config:', result.error);
+      consoleLog.error(`Failed to parse ${key} config:`, result.error);
 
       return;
     }
 
-    this.storageProviderConfig = result.data;
+    return result.data;
   }
 }

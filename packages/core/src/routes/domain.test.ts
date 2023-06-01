@@ -23,7 +23,17 @@ const domains = {
   deleteDomainById: jest.fn(),
 };
 
-const tenantContext = new MockTenant(undefined, { domains });
+const syncDomainStatus = jest.fn(async (domain: Domain): Promise<Domain> => domain);
+const addDomainToCloudflare = jest.fn(async (domain: Domain): Promise<Domain> => domain);
+
+const mockLibraries = {
+  domains: {
+    syncDomainStatus,
+    addDomainToCloudflare,
+  },
+};
+
+const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);
 
 const domainRoutes = await pickDefault(import('./domain.js'));
 
