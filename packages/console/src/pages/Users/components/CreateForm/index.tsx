@@ -14,10 +14,10 @@ import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { generateRandomPassword } from '@/utils/password';
 import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
-import { createInitialPassword } from './utils';
 
 type FormData = Pick<CreateUser, 'name' | 'username' | 'primaryEmail' | 'primaryPhone'>;
 
@@ -74,7 +74,7 @@ function CreateForm({ onClose, onCreate }: Props) {
       return;
     }
 
-    const password = createInitialPassword();
+    const password = generateRandomPassword();
 
     const { primaryPhone } = data;
 
