@@ -2787,8 +2787,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/react':
-        specifier: ^2.0.0
-        version: 2.0.0(react@18.2.0)
+        specifier: ^2.0.1
+        version: 2.0.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.4.0
         version: link:../schemas
@@ -3310,8 +3310,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^2.0.0
-        version: 2.0.0(react@18.2.0)
+        specifier: ^2.0.1
+        version: 2.0.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.2.3
         version: link:../schemas
@@ -3397,11 +3397,11 @@ importers:
         specifier: workspace:^1.1.0
         version: link:../toolkit/connector-kit
       '@logto/js':
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^2.1.1
+        version: 2.1.1
       '@logto/node':
-        specifier: ^2.0.0
-        version: 2.0.0
+        specifier: ^2.1.1
+        version: 2.1.1
       '@logto/schemas':
         specifier: workspace:^1.4.0
         version: link:../schemas
@@ -7131,32 +7131,32 @@ packages:
   /@logto/browser@2.0.0:
     resolution: {integrity: sha512-b5trzvdPWk00mk6A6J9GkcjC3fRaqe90lKVLJ2/UAOAtvBCcP/35mcKsdWyHHGP3juVNYCaGWepM3ifhxK+AsA==}
     dependencies:
-      '@logto/client': 2.0.0
+      '@logto/client': 2.1.0
       '@silverhand/essentials': 2.6.2
       js-base64: 3.7.5
     dev: true
 
-  /@logto/client@2.0.0:
-    resolution: {integrity: sha512-iGU/1ObqdxaoqFmkVTypv9tGzmTztgFZdNY4eOt9QJ+Ep83gWILcFSkiDsNFml6RmFxR1NJGyZYdunQE3zbUsg==}
+  /@logto/client@2.1.0:
+    resolution: {integrity: sha512-vw8xDW8k38/58Q1r592z/9JdsmUh4+LMmoVm/Nu7LbWKlT32eD3H9hZDkFK9XEHpriifhI0hP7asGWEmhrEUuQ==}
     dependencies:
-      '@logto/js': 2.0.1
+      '@logto/js': 2.1.1
       '@silverhand/essentials': 2.6.2
       camelcase-keys: 7.0.2
       jose: 4.14.2
     dev: true
 
-  /@logto/js@2.0.1:
-    resolution: {integrity: sha512-0YIf8z33OBjkha/7h0y3C8Zc5DxhJPzJivVXUpFcAzncXbTJaWS5cNHNhvaW2k9YesHLpcCclqgK62gCrdio0g==}
+  /@logto/js@2.1.1:
+    resolution: {integrity: sha512-PHikheavVK+l4ivgtzi14p184hEPgXjqQEAom1Gme1MZoopx+WlwxvHSEQBsmyvVqRtI0oiojhoU5tgYi1FKJw==}
     dependencies:
       '@silverhand/essentials': 2.6.2
       camelcase-keys: 7.0.2
       jose: 4.14.2
     dev: true
 
-  /@logto/node@2.0.0:
-    resolution: {integrity: sha512-Rg5vk2NTomVCTK3J/FuxksSl0BN33Ce1XAIRZtG3HwBNk4mapMmx2rbdn5uTGoqQ233R+ByubVPc2k8ulapb+A==}
+  /@logto/node@2.1.1:
+    resolution: {integrity: sha512-joSzzAqaRKeEquRenoFrIXXkNxkJci5zSkk4afywz1P8tTcTysnV4eXaBmwXNpmDfQdtHBwRdSACZPLgeF8JiQ==}
     dependencies:
-      '@logto/client': 2.0.0
+      '@logto/client': 2.1.0
       '@silverhand/essentials': 2.6.2
       js-base64: 3.7.5
       node-fetch: 2.6.7
@@ -7164,8 +7164,8 @@ packages:
       - encoding
     dev: true
 
-  /@logto/react@2.0.0(react@18.2.0):
-    resolution: {integrity: sha512-RI8hqOK2ERfXlo9gloOK7BQFRVYGOM/nVERikh8xcj4SOP0h5MEplmh04t3XRUUMdDn3WJF5vE08zx4GvO5hsQ==}
+  /@logto/react@2.0.1(react@18.2.0):
+    resolution: {integrity: sha512-p/zEv+VmLUWLrFBTZDRilJDIgXxiW5orREStZdB+Ix5ll0CmBRqT3G9DVdC95nkLL3oygwU7Hbd7a4KfvLs1gw==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
