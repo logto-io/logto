@@ -1,10 +1,10 @@
 import type { User } from '@logto/schemas';
-import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import useApi from '@/hooks/use-api';
+import { generateRandomPassword } from '@/utils/password';
 
 type Props = {
   userId: string;
@@ -19,7 +19,7 @@ function ResetPasswordForm({ onClose, userId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async () => {
-    const password = nanoid(8);
+    const password = generateRandomPassword();
     setIsLoading(true);
     await api.patch(`api/users/${userId}/password`, { json: { password } }).json<User>();
     setIsLoading(false);
