@@ -11,6 +11,7 @@ const createWebhookFromWebhooksPage = async () => {
   await expect(page).toFill('input[name=name]', 'hook_name');
   await expect(page).toFill('input[name=url]', 'https://example.com/webhook');
   await expect(page).toClick('button[type=submit]');
+  await page.waitForSelector('div[class$=header] div[class$=metadata] div[class$=title]');
 };
 
 describe('webhooks', () => {
@@ -38,7 +39,6 @@ describe('webhooks', () => {
     await createWebhookFromWebhooksPage();
 
     // Go to webhook details page
-    await page.waitForSelector('div[class$=header] div[class$=metadata] div[class$=title]');
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: 'hook_name',
     });
