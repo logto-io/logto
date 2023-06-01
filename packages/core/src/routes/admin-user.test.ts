@@ -319,6 +319,14 @@ describe('adminUserRoutes', () => {
     expect(response.status).toEqual(204);
   });
 
+  it('POST /users/:userId/password/verify should throw 400 if password is empty', async () => {
+    const password = '';
+    await expect(
+      userRequest.post(`/users/foo/password/verify`).send({ password })
+    ).resolves.toHaveProperty('status', 400);
+    expect(verifyUserPassword).not.toHaveBeenCalled();
+  });
+
   it('POST /users/:userId/password/verify should throw if password is invalid', async () => {
     const password = 'invalidPassword';
     verifyUserPassword.mockImplementationOnce(async () => {

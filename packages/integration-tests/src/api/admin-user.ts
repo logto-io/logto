@@ -65,3 +65,6 @@ export const postUserIdentity = async (
       },
     })
     .json<Identities>();
+
+export const verifyUserPassword = async (userId: string, password: string) =>
+  authedAdminApi.post(`users/${userId}/password/verify`, { json: { password } });
