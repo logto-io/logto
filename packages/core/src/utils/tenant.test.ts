@@ -4,7 +4,7 @@ import { createMockUtils } from '@logto/shared/esm';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
 
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
@@ -12,6 +12,13 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
       return new GlobalValues();
     },
   },
+}));
+
+const findActiveDomain = jest.fn();
+mockEsm('#src/queries/domains.js', () => ({
+  createDomainsQueries: () => ({
+    findActiveDomain,
+  }),
 }));
 
 const { getTenantId } = await import('./tenant.js');
@@ -30,7 +37,7 @@ describe('getTenantId()', () => {
       DEVELOPMENT_TENANT_ID: 'foo',
     };
 
-    expect(getTenantId(new URL('https://some.random.url'))).toBe('foo');
+    await expect(getTenantId(new URL('https://some.random.url'))).resolves.toBe('foo');
 
     process.env = {
       ...backupEnv,
@@ -39,14 +46,20 @@ describe('getTenantId()', () => {
       DEVELOPMENT_TENANT_ID: 'bar',
     };
 
-    expect(getTenantId(new URL('https://some.random.url'))).toBe('bar');
+    await expect(getTenantId(new URL('https://some.random.url'))).resolves.toBe('bar');
   });
 
   it('should resolve proper tenant ID for similar localhost endpoints', async () => {
-    expect(getTenantId(new URL('http://localhost:3002/some/path////'))).toBe(adminTenantId);
-    expect(getTenantId(new URL('http://localhost:30021/some/path'))).toBe(defaultTenantId);
-    expect(getTenantId(new URL('http://localhostt:30021/some/path'))).toBe(defaultTenantId);
-    expect(getTenantId(new URL('https://localhost:3002'))).toBe(defaultTenantId);
+    await expect(getTenantId(new URL('http://localhost:3002/some/path////'))).resolves.toBe(
+      adminTenantId
+    );
+    await expect(getTenantId(new URL('http://localhost:30021/some/path'))).resolves.toBe(
+      defaultTenantId
+    );
+    await expect(getTenantId(new URL('http://localhostt:30021/some/path'))).resolves.toBe(
+      defaultTenantId
+    );
+    await expect(getTenantId(new URL('https://localhost:3002'))).resolves.toBe(defaultTenantId);
   });
 
   it('should resolve proper tenant ID for similar domain endpoints', async () => {
@@ -56,14 +69,24 @@ describe('getTenantId()', () => {
       ENDPOINT: 'https://foo.*.logto.mock/app',
     };
 
-    expect(getTenantId(new URL('https://foo.foo.logto.mock/app///asdasd'))).toBe('foo');
-    expect(getTenantId(new URL('https://foo.*.logto.mock/app'))).toBe(undefined);
-    expect(getTenantId(new URL('https://foo.foo.logto.mockk/app///asdasd'))).toBe(undefined);
-    expect(getTenantId(new URL('https://foo.foo.logto.mock/appp'))).toBe(undefined);
-    expect(getTenantId(new URL('https://foo.foo.logto.mock:1/app/'))).toBe(undefined);
-    expect(getTenantId(new URL('http://foo.foo.logto.mock/app'))).toBe(undefined);
-    expect(getTenantId(new URL('https://user.foo.bar.logto.mock/app'))).toBe(undefined);
-    expect(getTenantId(new URL('https://foo.bar.bar.logto.mock/app'))).toBe(undefined);
+    await expect(getTenantId(new URL('https://foo.foo.logto.mock/app///asdasd'))).resolves.toBe(
+      'foo'
+    );
+    await expect(getTenantId(new URL('https://foo.*.logto.mock/app'))).resolves.toBe(undefined);
+    await expect(getTenantId(new URL('https://foo.foo.logto.mockk/app///asdasd'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('https://foo.foo.logto.mock/appp'))).resolves.toBe(undefined);
+    await expect(getTenantId(new URL('https://foo.foo.logto.mock:1/app/'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('http://foo.foo.logto.mock/app'))).resolves.toBe(undefined);
+    await expect(getTenantId(new URL('https://user.foo.bar.logto.mock/app'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('https://foo.bar.bar.logto.mock/app'))).resolves.toBe(
+      undefined
+    );
   });
 
   it('should resolve proper tenant ID if admin localhost is disabled', async () => {
@@ -76,11 +99,17 @@ describe('getTenantId()', () => {
       ADMIN_DISABLE_LOCALHOST: '1',
     };
 
-    expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).toBe(undefined);
-    expect(getTenantId(new URL('http://localhost:3002/app///asdasd'))).toBe(undefined);
-    expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).toBe('foo');
-    expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe(undefined); // Admin endpoint is explicitly set
-    expect(getTenantId(new URL('https://admin.logto.mock/app'))).toBe(adminTenantId);
+    await expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('http://localhost:3002/app///asdasd'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).resolves.toBe('foo');
+    await expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).resolves.toBe(
+      undefined
+    ); // Admin endpoint is explicitly set
+    await expect(getTenantId(new URL('https://admin.logto.mock/app'))).resolves.toBe(adminTenantId);
 
     process.env = {
       ...backupEnv,
@@ -89,7 +118,9 @@ describe('getTenantId()', () => {
       ENDPOINT: 'https://user.*.logto.mock/app',
       ADMIN_DISABLE_LOCALHOST: '1',
     };
-    expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe('admin');
+    await expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).resolves.toBe(
+      'admin'
+    );
   });
 
   it('should resolve proper tenant ID for path-based multi-tenancy', async () => {
@@ -101,11 +132,25 @@ describe('getTenantId()', () => {
       PATH_BASED_MULTI_TENANCY: '1',
     };
 
-    expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).toBe('app');
-    expect(getTenantId(new URL('http://localhost:3002///bar///asdasd'))).toBe(adminTenantId);
-    expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).toBe(undefined);
-    expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).toBe(undefined);
-    expect(getTenantId(new URL('https://user.logto.mock/app'))).toBe(undefined);
-    expect(getTenantId(new URL('https://user.logto.mock/app/admin'))).toBe('admin');
+    await expect(getTenantId(new URL('http://localhost:5000/app///asdasd'))).resolves.toBe('app');
+    await expect(getTenantId(new URL('http://localhost:3002///bar///asdasd'))).resolves.toBe(
+      adminTenantId
+    );
+    await expect(getTenantId(new URL('https://user.foo.logto.mock/app'))).resolves.toBe(undefined);
+    await expect(getTenantId(new URL('https://user.admin.logto.mock/app//'))).resolves.toBe(
+      undefined
+    );
+    await expect(getTenantId(new URL('https://user.logto.mock/app'))).resolves.toBe(undefined);
+    await expect(getTenantId(new URL('https://user.logto.mock/app/admin'))).resolves.toBe('admin');
+  });
+
+  it('should resolve proper custom domain', async () => {
+    process.env = {
+      ...backupEnv,
+      ENDPOINT: 'https://foo.*.logto.mock/app',
+      NODE_ENV: 'production',
+    };
+    findActiveDomain.mockResolvedValueOnce({ domain: 'logto.mock.com', tenantId: 'mock' });
+    await expect(getTenantId(new URL('https://logto.mock.com'))).resolves.toBe('mock');
   });
 });

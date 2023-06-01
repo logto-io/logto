@@ -1,10 +1,12 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
-import type { UrlSet } from '@logto/shared';
-import { conditionalString } from '@silverhand/essentials';
+import { type UrlSet } from '@logto/shared';
+import { conditionalString, trySafe } from '@silverhand/essentials';
+import { type CommonQueryMethods } from 'slonik';
 
+import { redisCache } from '#src/caches/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
-
-import { consoleLog } from './console.js';
+import { createDomainsQueries } from '#src/queries/domains.js';
+import { consoleLog } from '#src/utils/console.js';
 
 const normalizePathname = (pathname: string) =>
   pathname + conditionalString(!pathname.endsWith('/') && '/');
@@ -43,16 +45,45 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
   return urlSegments[found.pathname === '/' ? 1 : endpointSegments.length];
 };
 
-export const getTenantId = (url: URL) => {
+const cacheKey = 'custom-domain';
+const notFoundValue = 'not-found';
+const getDomainCacheKey = (url: URL) => `${cacheKey}:${url.hostname}`;
+
+const getTenantIdFromCustomDomain = async (
+  url: URL,
+  pool: CommonQueryMethods
+): Promise<string | undefined> => {
+  const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
+
+  if (cachedValue) {
+    return cachedValue === notFoundValue ? undefined : cachedValue;
+  }
+
+  const { findActiveDomain } = createDomainsQueries(pool);
+
+  const domain = await findActiveDomain(url.hostname);
+
+  await trySafe(async () =>
+    redisCache.set(getDomainCacheKey(url), domain?.tenantId ?? notFoundValue, 60)
+  );
+
+  return domain?.tenantId;
+};
+
+export const getTenantId = async (url: URL) => {
   const {
-    isMultiTenancy,
-    isPathBasedMultiTenancy,
-    isProduction,
-    isIntegrationTest,
-    developmentTenantId,
-    urlSet,
-    adminUrlSet,
-  } = EnvSet.values;
+    values: {
+      isMultiTenancy,
+      isPathBasedMultiTenancy,
+      isProduction,
+      isIntegrationTest,
+      developmentTenantId,
+      urlSet,
+      adminUrlSet,
+    },
+    sharedPool,
+  } = EnvSet;
+  const pool = await sharedPool;
 
   if (adminUrlSet.deduplicated().some((endpoint) => isEndpointOf(url, endpoint))) {
     return adminTenantId;
@@ -70,6 +101,12 @@ export const getTenantId = (url: URL) => {
 
   if (isPathBasedMultiTenancy) {
     return matchPathBasedTenantId(urlSet, url);
+  }
+
+  const customDomainTenantId = await getTenantIdFromCustomDomain(url, pool);
+
+  if (customDomainTenantId) {
+    return customDomainTenantId;
   }
 
   return matchDomainBasedTenantId(urlSet.endpoint, url);

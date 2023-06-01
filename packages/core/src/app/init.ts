@@ -29,7 +29,7 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
-    const tenantId = getTenantId(ctx.URL);
+    const tenantId = await getTenantId(ctx.URL);
 
     if (!tenantId) {
       ctx.status = 404;
