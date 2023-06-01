@@ -69,7 +69,7 @@ export const getAccessToken = async (
     code: string,
     config: QQConfig,
     redirectUri: string
-): Promise<{ accessToken: string; openid: string, unionid?: string }> => {
+): Promise<{ accessToken: string; }> => {
     const {clientId: client_id, clientSecret: client_secret} = config;
 
     const httpResponse = await got.get(accessTokenEndpoint, {
@@ -97,9 +97,7 @@ export const getAccessToken = async (
 
     assert(accessToken, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
-    const {openid, unionid} = await getOpenId(accessToken);
-
-    return {accessToken, openid, unionid};
+    return {accessToken};
 };
 
 const getUserInfo =
@@ -108,7 +106,8 @@ const getUserInfo =
             const {code, redirectUri} = await authorizationCallbackHandler(data);
             const config = await getConfig(defaultMetadata.id);
             validateConfig<QQConfig>(config, qqConfigGuard);
-            const {accessToken, openid, unionid} = await getAccessToken(code, config, redirectUri);
+            const {accessToken} = await getAccessToken(code, config, redirectUri);
+            const {openid, unionid} = await getOpenId(accessToken);
 
             try {
                 const httpResponse = await got.get(userInfoEndpoint, {
@@ -137,9 +136,6 @@ const getUserInfo =
                     ...data
                 } = result.data;
 
-                // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
-                // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
-                // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
                 userInfoResponseMessageParser(result.data);
 
                 const headimgurl = figureurl_qq_2 ?? figureurl_qq_1 ?? figureurl_qq ?? figureurl_2 ?? figureurl_1 ?? figureurl;
@@ -154,7 +150,7 @@ const getAccessTokenErrorHandler: GetAccessTokenErrorHandler = (accessToken) => 
     const {code, msg} = accessToken;
 
     if (code && code !== 0) {
-        throw new ConnectorError(ConnectorErrorCodes.General, {errorDescription: msg, errcode: code});
+        throw new ConnectorError(ConnectorErrorCodes.General, {errorDescription: msg, errorCode: code});
     }
 };
 
@@ -162,7 +158,7 @@ const userInfoResponseMessageParser: UserInfoResponseMessageParser = (userInfo) 
     const {ret, msg} = userInfo;
 
     if (ret && ret !== 0) {
-        throw new ConnectorError(ConnectorErrorCodes.General, {errorDescription: msg, errcode: ret});
+        throw new ConnectorError(ConnectorErrorCodes.General, {errorDescription: msg, errorCode: ret});
     }
 };
 
