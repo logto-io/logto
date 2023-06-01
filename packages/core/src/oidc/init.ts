@@ -110,6 +110,7 @@ export default function initOidc(
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
           const resourceServer = await findResourceByIndicator(indicator);
+          const { oidc } = ctx;
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
@@ -125,7 +126,7 @@ export default function initOidc(
             scope: '',
           } satisfies ResourceServer;
 
-          const userId = ctx.oidc.session?.accountId;
+          const userId = oidc.session?.accountId ?? oidc.entities.Account?.accountId;
 
           if (userId) {
             const scopes = await findUserScopesForResourceIndicator(userId, indicator);
@@ -136,7 +137,7 @@ export default function initOidc(
             };
           }
 
-          const clientId = ctx.oidc.entities.Client?.clientId;
+          const clientId = oidc.entities.Client?.clientId;
 
           // Machine to machine app
           if (clientId) {
