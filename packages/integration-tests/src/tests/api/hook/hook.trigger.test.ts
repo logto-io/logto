@@ -8,16 +8,26 @@ import {
   LogResult,
   SignInIdentifier,
   type Log,
+  ConnectorType,
 } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { authedAdminApi } from '#src/api/api.js';
 import { getLogs } from '#src/api/logs.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSmsConnector,
+} from '#src/helpers/connector.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
 import { createMockServer } from '#src/helpers/index.js';
-import { registerNewUser, signInWithPassword } from '#src/helpers/interactions.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { registerNewUser, resetPassword, signInWithPassword } from '#src/helpers/interactions.js';
+import {
+  enableAllPasswordSignInMethods,
+  enableAllVerificationCodeSignInMethods,
+} from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
+import { generatePassword, waitFor } from '#src/utils.js';
 
 type HookSecureData = {
   signature: string;
@@ -181,5 +191,47 @@ describe('trigger hooks', () => {
     await authedAdminApi.delete(`hooks/${createdHook.id}`);
 
     await deleteUser(userId);
+  });
+
+  it('should trigger reset password hook and record properly when interaction finished', async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    await setEmailConnector();
+    await setSmsConnector();
+    await enableAllVerificationCodeSignInMethods({
+      identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
+      password: true,
+      verify: true,
+    });
+    // Create a reset password hook
+    const resetPasswordHook = await authedAdminApi
+      .post('hooks', {
+        json: getHookCreationPayload(HookEvent.PostResetPassword, 'http://localhost:9999'),
+      })
+      .json<Hook>();
+    const logKey: LogKey = 'TriggerHook.PostResetPassword';
+
+    const { user, userProfile } = await generateNewUser({
+      primaryPhone: true,
+      primaryEmail: true,
+      password: true,
+    });
+    // Reset Password by Email
+    await resetPassword({ email: userProfile.primaryEmail }, generatePassword());
+    // Reset Password by Phone
+    await resetPassword({ phone: userProfile.primaryPhone }, generatePassword());
+    // Wait for the hook to be trigged
+    await waitFor(1000);
+
+    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
+    const relatedLogs = logs.filter(
+      ({ payload: { hookId, result } }) =>
+        hookId === resetPasswordHook.id && result === LogResult.Success
+    );
+
+    expect(relatedLogs).toHaveLength(2);
+
+    await authedAdminApi.delete(`hooks/${resetPasswordHook.id}`);
+    await deleteUser(user.id);
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 });

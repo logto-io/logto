@@ -17,11 +17,12 @@ import { EnvSet } from '#src/env-set/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
-import type { LogEntry } from '#src/middleware/koa-audit-log.js';
+import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
+import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 import type {
   Identifier,
   VerifiedInteractionResult,
@@ -165,7 +166,7 @@ const parseUserProfile = async (
 
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
-  ctx: WithInteractionDetailsContext,
+  ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
   { provider, libraries, connectors, queries }: TenantContext,
   log?: LogEntry
 ) {
@@ -211,6 +212,7 @@ export default async function submitInteraction(
     }
 
     await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+    ctx.assignInteractionHookResult({ userId: id });
 
     log?.append({ userId: id });
     appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
@@ -227,6 +229,7 @@ export default async function submitInteraction(
 
     await updateUserById(accountId, updateUserProfile);
     await assignInteractionResults(ctx, provider, { login: { accountId } });
+    ctx.assignInteractionHookResult({ userId: accountId });
 
     appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
 
@@ -239,6 +242,7 @@ export default async function submitInteraction(
   );
 
   await updateUserById(accountId, { passwordEncrypted, passwordEncryptionMethod });
+  ctx.assignInteractionHookResult({ userId: accountId });
   await clearInteractionStorage(ctx, provider);
   ctx.status = 204;
 }

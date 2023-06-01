@@ -10,11 +10,12 @@ import {
   createSocialAuthorizationUri,
   patchInteractionIdentifiers,
   putInteractionProfile,
+  sendVerificationCode,
 } from '#src/api/index.js';
 import { generateUserId } from '#src/utils.js';
 
 import { initClient, processSession, logoutClient } from './client.js';
-import { expectRejects } from './index.js';
+import { expectRejects, readVerificationCode } from './index.js';
 import { enableAllPasswordSignInMethods } from './sign-in-experience.js';
 import { generateNewUser } from './user.js';
 
@@ -84,4 +85,24 @@ export const createNewSocialUserWithUsernameAndPassword = async (connectorId: st
   const { redirectTo } = await client.submitInteraction();
 
   return processSession(client, redirectTo);
+};
+
+export const resetPassword = async (
+  profile: { email: string } | { phone: string },
+  newPassword: string
+) => {
+  const client = await initClient();
+
+  await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
+  await client.successSend(sendVerificationCode, {
+    ...profile,
+  });
+
+  const { code: verificationCode } = await readVerificationCode();
+  await client.successSend(patchInteractionIdentifiers, {
+    ...profile,
+    verificationCode,
+  });
+  await client.successSend(putInteractionProfile, { password: newPassword });
+  await client.submitInteraction();
 };

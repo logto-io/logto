@@ -1,15 +1,18 @@
 import type { MiddlewareType } from 'koa';
+import { type IRouterParamContext } from 'koa-router';
 import type Provider from 'oidc-provider';
 
-import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
-
-export type WithInteractionDetailsContext<ContextT = WithLogContext> = ContextT & {
+export type WithInteractionDetailsContext<
+  ContextT extends IRouterParamContext = IRouterParamContext
+> = ContextT & {
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
 };
 
-export default function koaInteractionDetails<StateT, ContextT>(
-  provider: Provider
-): MiddlewareType<StateT, WithInteractionDetailsContext<ContextT>> {
+export default function koaInteractionDetails<
+  StateT,
+  ContextT extends IRouterParamContext,
+  ResponseT
+>(provider: Provider): MiddlewareType<StateT, WithInteractionDetailsContext<ContextT>, ResponseT> {
   return async (ctx, next) => {
     ctx.interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
 

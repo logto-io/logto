@@ -285,7 +285,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   router.post(
     `${interactionPrefix}/submit`,
     koaInteractionSie(queries),
-    koaInteractionHooks(tenant),
+    koaInteractionHooks(libraries),
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
