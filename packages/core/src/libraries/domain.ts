@@ -4,6 +4,7 @@ import {
   type DomainDnsRecords,
   DomainStatus,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -26,7 +27,7 @@ const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus =
 
 export const createDomainLibrary = (queries: Queries) => {
   const {
-    domains: { updateDomainById },
+    domains: { updateDomainById, insertDomain },
   } = queries;
 
   const syncDomainStatusFromCloudflareData = async (
@@ -87,23 +88,22 @@ export const createDomainLibrary = (queries: Queries) => {
     );
   };
 
-  const addDomainToCloudflare = async (domain: Domain): Promise<Domain> => {
+  const addDomain = async (hostname: string): Promise<Domain> => {
     const { hostnameProviderConfig } = SystemContext.shared;
     assertThat(hostnameProviderConfig, 'domain.not_configured');
 
-    const cloudflareData = await createCustomHostname(hostnameProviderConfig, domain.domain);
-    return syncDomainStatusFromCloudflareData(
-      {
-        ...domain,
-        cloudflareData,
-      },
+    const cloudflareData = await createCustomHostname(hostnameProviderConfig, hostname);
+
+    return insertDomain({
+      domain: hostname,
+      id: generateStandardId(),
       cloudflareData,
-      hostnameProviderConfig.fallbackOrigin
-    );
+      status: DomainStatus.PendingVerification,
+    });
   };
 
   return {
     syncDomainStatus,
-    addDomainToCloudflare,
+    addDomain,
   };
 };

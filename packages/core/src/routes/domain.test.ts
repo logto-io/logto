@@ -24,12 +24,17 @@ const domains = {
 };
 
 const syncDomainStatus = jest.fn(async (domain: Domain): Promise<Domain> => domain);
-const addDomainToCloudflare = jest.fn(async (domain: Domain): Promise<Domain> => domain);
+const addDomain = jest.fn(
+  async (domain: string): Promise<Domain> => ({
+    ...mockDomain,
+    domain,
+  })
+);
 
 const mockLibraries = {
   domains: {
     syncDomainStatus,
-    addDomainToCloudflare,
+    addDomain,
   },
 };
 

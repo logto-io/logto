@@ -1,5 +1,4 @@
 import { Domains, domainResponseGuard, domainSelectFields } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -13,10 +12,10 @@ export default function domainRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    domains: { findAllDomains, findDomainById, insertDomain, deleteDomainById },
+    domains: { findAllDomains, findDomainById, deleteDomainById },
   } = queries;
   const {
-    domains: { syncDomainStatus, addDomainToCloudflare },
+    domains: { syncDomainStatus, addDomain },
   } = libraries;
 
   router.get(
@@ -70,12 +69,7 @@ export default function domainRoutes<T extends AuthedRouter>(
         })
       );
 
-      const syncedDomain = await addDomainToCloudflare(
-        await insertDomain({
-          ...ctx.guard.body,
-          id: generateStandardId(),
-        })
-      );
+      const syncedDomain = await addDomain(ctx.guard.body.domain);
 
       ctx.status = 201;
       ctx.body = pick(syncedDomain, ...domainSelectFields);
