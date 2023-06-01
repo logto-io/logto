@@ -6,7 +6,6 @@ import Logo from '@/assets/images/logo.svg';
 import Spacer from '@/components/Spacer';
 import { isCloud } from '@/consts/cloud';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
-import GetStartedProgress from '@/pages/GetStarted/components/GetStartedProgress';
 
 import UserInfo from '../UserInfo';
 
@@ -30,7 +29,6 @@ function Topbar({ className }: Props) {
         </>
       )}
       <Spacer />
-      <GetStartedProgress />
       {isCloud && <EarlyBirdGift />}
       <UserInfo />
     </div>
