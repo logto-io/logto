@@ -2,7 +2,7 @@ const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
   subtitle:
-    'Webhooks ermöglichen Echtzeitupdates zu speziellen Ereignissen an Ihre Endpunkt-URL, so dass umgehend Reaktionen erfolgen können.',
+    'Erstellen Sie Webhooks, um mühelos Echtzeit-Updates zu bestimmten Ereignissen zu empfangen.',
   create: 'Webhook erstellen',
   events: {
     post_register: 'Neuen Account anlegen',
@@ -18,7 +18,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Webhooks ermöglichen Echtzeitupdates zu speziellen Ereignissen an Ihre Endpunkt-URL, so dass umgehend Reaktionen erfolgen können.',
+      'Erstellen Sie einen Webhook, um Echtzeit-Updates über POST-Anfragen an Ihre Endpunkt-URL zu empfangen. Bleiben Sie über Ereignisse wie "Account erstellen", "Anmelden" und "Passwort zurücksetzen" informiert und ergreifen Sie sofort Maßnahmen.',
     create_webhook: 'Webhook erstellen',
   },
   create_form: {

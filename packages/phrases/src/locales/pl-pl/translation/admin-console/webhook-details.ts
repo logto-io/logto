@@ -43,7 +43,7 @@ const webhook_details = {
     test: 'Test',
     test_webhook: 'Wypróbuj swój webhook',
     test_webhook_description:
-      'Uzupełnij konfigurację webhooka powyżej. Kliknij przycisk testowy, a my wyślemy indywidualne przykłady ładunków każdego wybranego zdarzenia na Twój adres URL końcowy. To pozwoli Ci zweryfikować, czy Twój endpoint poprawnie otrzymuje i przetwarza ładunki.',
+      'Skonfiguruj webhooka i przetestuj go przy użyciu przykładów ładunku dla każdego wybranego zdarzenia, aby sprawdzić poprawne odbieranie i przetwarzanie.',
     send_test_payload: 'Wyślij testowy ładunek',
     test_payload_sent: 'Ladunek został pomyślnie wysłany.',
   },

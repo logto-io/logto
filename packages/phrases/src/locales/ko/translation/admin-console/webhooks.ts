@@ -1,8 +1,7 @@
 const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
-  subtitle:
-    'Webhooks는 엔드포인트 URL로 특정 이벤트에 대한 실시간 업데이트를 제공하여 즉각적인 반응을 가능하게 합니다.',
+  subtitle: '특정 이벤트에 대한 실시간 업데이트를 쉽게 수신할 수 있는 웹훅을 생성하세요.',
   create: 'Webhook 생성',
   events: {
     post_register: '새 계정 만들기',
@@ -18,7 +17,7 @@ const webhooks = {
   placeholder: {
     title: '웹훅',
     description:
-      'Webhooks는 엔드포인트 URL로 특정 이벤트에 대한 실시간 업데이트를 제공하여 즉각적인 반응을 가능하게 합니다. "계정 만들기", "로그인", "비밀번호 재설정"의 이벤트가 지원됩니다.',
+      'POST 요청을 통해 엔드포인트 URL로 실시간 업데이트를 수신할 수 있는 웹훅을 생성하세요. "계정 만들기", "로그인" 및 "비밀번호 재설정"과 같은 이벤트에서 정보를 받고 즉시 조치하세요.',
     create_webhook: 'Webhook 생성',
   },
   create_form: {

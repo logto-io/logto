@@ -1,12 +1,12 @@
 const webhooks = {
   page_title: 'Webhooks',
   title: 'Webhooks',
-  subtitle: 'Webhooks 可以實時更新特定事件的 endpoint URL，從而實現立即響應。',
+  subtitle: '創建 Webhooks，輕鬆地接收有關特定事件的實時更新。',
   create: '創建 Webhook',
   events: {
-    post_register: '創建新帐户',
-    post_sign_in: '登录',
-    post_reset_password: '重置密码',
+    post_register: '創建新帳戶',
+    post_sign_in: '登錄',
+    post_reset_password: '重置密碼',
   },
   table: {
     name: '名稱',
@@ -17,7 +17,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      'Webhooks 提供關於特定事件的即時更新至你的端點 URL，啟用即時反應。當事件發生時，Logto 會將 POST 請求發送到你的端點 URL，讓你可立即根據新收到的信息採取行動。目前支持的事件為「創建新帳戶」、「登錄」、「重置密碼」。',
+      '創建 Webhook 以通過 POST 請求向您的端點 URL 接收實時更新。了解詳情並針對“創建帳戶”、“登錄”和“重置密碼”等事件立即採取行動。',
     create_webhook: '創建 Webhook',
   },
   create_form: {
