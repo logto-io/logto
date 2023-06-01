@@ -185,7 +185,7 @@ export default async function submitInteraction(
     const { client_id } = ctx.interactionDetails.params;
 
     const { isCloud } = EnvSet.values;
-    const isInAdminTenant = getTenantId(ctx.URL) === adminTenantId;
+    const isInAdminTenant = (await getTenantId(ctx.URL)) === adminTenantId;
     const isCreatingFirstAdminUser =
       isInAdminTenant &&
       String(client_id) === adminConsoleApplicationId &&

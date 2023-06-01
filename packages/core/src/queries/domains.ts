@@ -1,5 +1,4 @@
-import type { CreateDomain, Domain } from '@logto/schemas';
-import { Domains } from '@logto/schemas';
+import { type CreateDomain, type Domain, DomainStatus, Domains } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers, manyRows } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -22,6 +21,14 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
     );
 
   const findDomainById = buildFindEntityByIdWithPool(pool)(Domains);
+
+  const findActiveDomain = async (domain: string) =>
+    pool.maybeOne<Domain>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.domain}=${domain}
+        and ${fields.status}=${DomainStatus.Active}
+    `);
 
   const insertDomain = buildInsertIntoWithPool(pool)(Domains, {
     returning: true,
@@ -49,6 +56,7 @@ export const createDomainsQueries = (pool: CommonQueryMethods) => {
   return {
     findAllDomains,
     findDomainById,
+    findActiveDomain,
     insertDomain,
     updateDomainById,
     deleteDomainById,

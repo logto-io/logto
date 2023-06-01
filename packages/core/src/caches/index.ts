@@ -23,9 +23,9 @@ export class RedisCache implements CacheStore {
     }
   }
 
-  async set(key: string, value: string) {
+  async set(key: string, value: string, expire: number = 30 * 60) {
     await this.client?.set(key, value, {
-      EX: 30 * 60 /* 30 minutes */,
+      EX: expire,
     });
   }
 
