@@ -66,7 +66,7 @@
     "koa-send": "^5.0.1",
     "lru-cache": "^9.0.0",
     "nanoid": "^4.0.0",
-    "oidc-provider": "^8.0.0",
+    "oidc-provider": "^8.2.2",
     "p-retry": "^5.1.2",
     "pg-protocol": "^1.6.0",
     "redis": "^4.6.5",
