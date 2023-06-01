@@ -30,8 +30,9 @@ const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createDomainLibrary } = await import('./domain.js');
 
 const updateDomainById = jest.fn(async (_, data) => data);
-const { syncDomainStatus, addDomainToCloudflare } = createDomainLibrary(
-  new MockQueries({ domains: { updateDomainById } })
+const insertDomain = jest.fn(async (data) => data);
+const { syncDomainStatus, addDomain } = createDomainLibrary(
+  new MockQueries({ domains: { updateDomainById, insertDomain } })
 );
 
 const fallbackOrigin = 'fake_origin';
@@ -51,9 +52,9 @@ afterAll(() => {
 
 describe('addDomainToCloudflare()', () => {
   it('should call createCustomHostname and return cloudflare data', async () => {
-    const response = await addDomainToCloudflare(mockDomain);
+    const response = await addDomain(mockDomain.domain);
     expect(createCustomHostname).toBeCalledTimes(1);
-    expect(updateDomainById).toBeCalledTimes(1);
+    expect(insertDomain).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
   });
 });
