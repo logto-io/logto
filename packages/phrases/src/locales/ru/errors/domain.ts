@@ -4,6 +4,7 @@ const domain = {
   cloudflare_unknown_error: 'Получена неизвестная ошибка при запросе к API Cloudflare',
   cloudflare_response_error: 'Получен неожиданный ответ от Cloudflare.',
   limit_to_one_domain: 'Вы можете использовать только один пользовательский домен.',
+  hostname_already_exists: 'Этот домен уже существует на нашем сервере.',
 };
 
 export default domain;

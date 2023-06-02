@@ -4,6 +4,7 @@ const domain = {
   cloudflare_unknown_error: 'Cloudflare API のリクエスト中に未知のエラーが発生しました。',
   cloudflare_response_error: 'Cloudflare から予期しない応答がありました。',
   limit_to_one_domain: 'カスタムドメインは1つしか持てません。',
+  hostname_already_exists: 'サーバーには既にこのドメインが存在しています。',
 };
 
 export default domain;
