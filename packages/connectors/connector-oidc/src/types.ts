@@ -28,6 +28,8 @@ export const idTokenProfileStandardClaimsGuard = z.object({
   nonce: z.string().nullish(),
 });
 
+export type IdTokenProfileStandardClaims = z.infer<typeof idTokenProfileStandardClaimsGuard>;
+
 export const userProfileGuard = z.object({
   id: z.preprocess(String, z.string()),
   email: z.string().optional(),

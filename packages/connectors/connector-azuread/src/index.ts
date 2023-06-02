@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 import path from 'node:path';
 
@@ -17,10 +17,16 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import { scopes, defaultMetadata, defaultTimeout, graphAPIEndpoint } from './constant.js';
-import type { AzureADConfig } from './types.js';
+import type {
+  AzureADConfig,
+  AccessTokenResponse,
+  UserInfoResponse,
+  AuthResponse,
+} from './types.js';
 import {
   azureADConfigGuard,
   accessTokenResponseGuard,
@@ -85,16 +91,17 @@ const getAccessToken = async (config: AzureADConfig, code: string, redirectUri: 
   });
 
   const authResult = await clientApplication.acquireTokenByCode(codeRequest);
-
-  const result = accessTokenResponseGuard.safeParse(authResult);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  const { accessToken } = connectorDataParser<AccessTokenResponse>(
+    authResult,
+    accessTokenResponseGuard
+  );
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
 
   return { accessToken };
 };
@@ -102,7 +109,11 @@ const getAccessToken = async (config: AzureADConfig, code: string, redirectUri: 
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const { code, redirectUri } = connectorDataParser<AuthResponse>(
+      data,
+      authResponseGuard,
+      ConnectorErrorCodes.General
+    );
 
     // Temporarily keep this as this is a refactor, which should not change the logics.
     const config = await getConfig(defaultMetadata.id);
@@ -118,13 +129,11 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { id, mail, displayName } = result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      const { id, mail, displayName } = connectorDataParser<UserInfoResponse>(
+        parsedBody,
+        userInfoResponseGuard
+      );
 
       return {
         id,
@@ -133,28 +142,19 @@ const getUserInfo =
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
+        const { statusCode } = error.response;
 
-        if (statusCode === 401) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+        throw new ConnectorError(
+          statusCode === 401
+            ? ConnectorErrorCodes.SocialAccessTokenInvalid
+            : ConnectorErrorCodes.General,
+          { data: error.response }
+        );
       }
 
       throw error;
     }
   };
-
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = authResponseGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
-};
 
 const createAzureAdConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {

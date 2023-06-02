@@ -12,13 +12,14 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  connectorDataParser,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';
-import type { AppleConfig } from './types.js';
-import { appleConfigGuard, dataGuard } from './types.js';
+import type { AppleConfig, AuthorizationData } from './types.js';
+import { appleConfigGuard, authorizationDataGuard } from './types.js';
 
 const generateNonce = () => generateStandardId();
 
@@ -56,10 +57,16 @@ const getAuthorizationUri =
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
-    const { id_token: idToken } = await authorizationCallbackHandler(data);
+    const { id_token: idToken } = connectorDataParser<AuthorizationData>(
+      data,
+      authorizationDataGuard,
+      ConnectorErrorCodes.General
+    );
 
     if (!idToken) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
+      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, {
+        message: 'IdToken is not presented.',
+      });
     }
 
     const config = await getConfig(defaultMetadata.id);
@@ -79,6 +86,7 @@ const getUserInfo =
           getSession,
           new ConnectorError(ConnectorErrorCodes.NotImplemented, {
             message: "'getSession' is not implemented.",
+            data: payload,
           })
         );
         const { nonce: validationNonce } = await getSession();
@@ -87,6 +95,7 @@ const getUserInfo =
           validationNonce,
           new ConnectorError(ConnectorErrorCodes.General, {
             message: "'nonce' not presented in session storage.",
+            data: payload,
           })
         );
 
@@ -94,31 +103,25 @@ const getUserInfo =
           validationNonce === payload.nonce,
           new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, {
             message: "IdToken validation failed due to 'nonce' mismatch.",
+            data: payload,
           })
         );
       }
 
       if (!payload.sub) {
-        throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
+        throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, {
+          message: "IdToken validation failed due to 'sub' not presented",
+          data: payload,
+        });
       }
 
       return {
         id: payload.sub,
       };
     } catch {
-      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
+      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, { data: idToken });
     }
   };
-
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = dataGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
-};
 
 const createAppleConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {

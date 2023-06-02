@@ -76,7 +76,7 @@ const getUserInfo =
       return userProfileMapping(parseJsonObject(httpResponse.body), parsedConfig.profileMap);
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+        throw new ConnectorError(ConnectorErrorCodes.General, { data: error.response.body });
       }
 
       throw error;

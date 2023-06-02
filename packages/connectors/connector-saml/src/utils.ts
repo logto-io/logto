@@ -1,5 +1,10 @@
-import type { SetSession } from '@logto/connector-kit';
-import { ConnectorError, ConnectorErrorCodes, socialUserInfoGuard } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  socialUserInfoGuard,
+  connectorDataParser,
+} from '@logto/connector-kit';
+import type { SetSession, SocialUserInfo } from '@logto/connector-kit';
 import { XMLValidator } from 'fast-xml-parser';
 import * as saml from 'samlify';
 
@@ -20,13 +25,7 @@ export const userProfileMapping = (
       .map(([key, value]) => [keyMap.get(key), value])
   );
 
-  const result = socialUserInfoGuard.safeParse(mappedUserProfile);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  return result.data;
+  return connectorDataParser<SocialUserInfo>(mappedUserProfile, socialUserInfoGuard);
 };
 
 export const getUserInfoFromRawUserProfile = (
@@ -34,13 +33,11 @@ export const getUserInfoFromRawUserProfile = (
   keyMapping: ProfileMap
 ) => {
   const userProfile = userProfileMapping(rawUserProfile, keyMapping);
-  const result = socialUserInfoGuard.safeParse(userProfile);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, result.error);
-  }
-
-  return result.data;
+  return connectorDataParser<SocialUserInfo>(
+    userProfile,
+    socialUserInfoGuard,
+    ConnectorErrorCodes.General
+  );
 };
 
 export const samlAssertionHandler = async (
@@ -106,6 +103,6 @@ export const samlAssertionHandler = async (
       },
     });
   } catch (error: unknown) {
-    throw new ConnectorError(ConnectorErrorCodes.General, String(error));
+    throw new ConnectorError(ConnectorErrorCodes.General, { data: error });
   }
 };

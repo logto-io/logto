@@ -19,6 +19,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import {
@@ -29,7 +30,7 @@ import {
   defaultMetadata,
   defaultTimeout,
 } from './constant.js';
-import type { FacebookConfig } from './types.js';
+import type { FacebookConfig, AccessTokenResponse, UserInfoResponse } from './types.js';
 import {
   authorizationCallbackErrorGuard,
   facebookConfigGuard,
@@ -74,15 +75,18 @@ export const getAccessToken = async (
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token: accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  const parsedBody = parseJson(httpResponse.body);
+  const { access_token: accessToken } = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
 
   return { accessToken };
 };
@@ -106,13 +110,11 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { id, email, name, picture } = result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      const { id, email, name, picture } = connectorDataParser<UserInfoResponse>(
+        parsedBody,
+        userInfoResponseGuard
+      );
 
       return {
         id,
@@ -122,13 +124,14 @@ const getUserInfo =
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
+        const { statusCode } = error.response;
 
-        if (statusCode === 400) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+        throw new ConnectorError(
+          statusCode === 400
+            ? ConnectorErrorCodes.SocialAccessTokenInvalid
+            : ConnectorErrorCodes.General,
+          { data: error.response }
+        );
       }
 
       throw error;
@@ -145,21 +148,18 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
   const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
   if (!parsedError.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(parameterObject));
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+      data: parameterObject,
+      zodError: parsedError.error,
+    });
   }
 
-  const { error, error_code, error_description, error_reason } = parsedError.data;
-
-  if (error === 'access_denied') {
-    throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
-  }
-
-  throw new ConnectorError(ConnectorErrorCodes.General, {
-    error,
-    error_code,
-    errorDescription: error_description,
-    error_reason,
-  });
+  throw new ConnectorError(
+    parsedError.data.error === 'access_denied'
+      ? ConnectorErrorCodes.AuthorizationFailed
+      : ConnectorErrorCodes.General,
+    { data: parsedError.data }
+  );
 };
 
 const createFacebookConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {

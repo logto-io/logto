@@ -19,6 +19,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import {
@@ -35,6 +36,9 @@ import type {
   GetAccessTokenErrorHandler,
   UserInfoResponseMessageParser,
   WechatConfig,
+  AccessTokenResponse,
+  UserInfoResponse,
+  AuthResponse,
 } from './types.js';
 import {
   wechatConfigGuard,
@@ -73,17 +77,22 @@ export const getAccessToken = async (
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
+  const parsedBody = parseJson(httpResponse.body);
+  const accessTokenResponse = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
 
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
+  const { access_token: accessToken, openid } = accessTokenResponse;
 
-  const { access_token: accessToken, openid } = result.data;
-
-  getAccessTokenErrorHandler(result.data);
-
-  assert(accessToken && openid, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+  getAccessTokenErrorHandler(accessTokenResponse);
+  assert(
+    accessToken && openid,
+    new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+      data: { accessToken, openid },
+      message: 'Access token or openid is missing.',
+    })
+  );
 
   return { accessToken, openid };
 };
@@ -91,7 +100,11 @@ export const getAccessToken = async (
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { code } = await authorizationCallbackHandler(data);
+    const { code } = connectorDataParser<AuthResponse>(
+      data,
+      authResponseGuard,
+      ConnectorErrorCodes.General
+    );
     const config = await getConfig(defaultMetadata.id);
     validateConfig<WechatConfig>(config, wechatConfigGuard);
     const { accessToken, openid } = await getAccessToken(code, config);
@@ -102,18 +115,18 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
+      const parsedBody = parseJson(httpResponse.body);
+      const userInfoResponse = connectorDataParser<UserInfoResponse>(
+        parsedBody,
+        userInfoResponseGuard
+      );
 
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { unionid, headimgurl, nickname } = result.data;
+      const { unionid, headimgurl, nickname } = userInfoResponse;
 
       // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
-      userInfoResponseMessageParser(result.data);
+      userInfoResponseMessageParser(userInfoResponse);
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
@@ -123,53 +136,44 @@ const getUserInfo =
 
 // See https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
 const getAccessTokenErrorHandler: GetAccessTokenErrorHandler = (accessToken) => {
-  const { errcode, errmsg } = accessToken;
+  const { errcode } = accessToken;
 
   if (errcode) {
-    assert(
-      !invalidAuthCodeErrcode.includes(errcode),
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+    throw new ConnectorError(
+      invalidAuthCodeErrcode.includes(errcode)
+        ? ConnectorErrorCodes.SocialAuthCodeInvalid
+        : ConnectorErrorCodes.General,
+      { data: accessToken }
     );
-
-    throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
   }
 };
 
 const userInfoResponseMessageParser: UserInfoResponseMessageParser = (userInfo) => {
-  const { errcode, errmsg } = userInfo;
+  const { errcode } = userInfo;
 
   if (errcode) {
-    assert(
-      !invalidAccessTokenErrcode.includes(errcode),
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
+    throw new ConnectorError(
+      invalidAccessTokenErrcode.includes(errcode)
+        ? ConnectorErrorCodes.SocialAccessTokenInvalid
+        : ConnectorErrorCodes.General,
+      { data: userInfo }
     );
-
-    throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
   }
 };
 
 const getUserInfoErrorHandler = (error: unknown) => {
   if (error instanceof HTTPError) {
-    const { statusCode, body: rawBody } = error.response;
+    const { statusCode } = error.response;
 
-    if (statusCode === 401) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-    }
-
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    throw new ConnectorError(
+      statusCode === 401
+        ? ConnectorErrorCodes.SocialAccessTokenInvalid
+        : ConnectorErrorCodes.General,
+      { data: error.response }
+    );
   }
 
   throw error;
-};
-
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = authResponseGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
 };
 
 const createWechatConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {

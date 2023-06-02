@@ -114,10 +114,10 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const samlAssertionParseResult = samlAssertionGuard.safeParse(body);
 
       if (!samlAssertionParseResult.success) {
-        throw new ConnectorError(
-          ConnectorErrorCodes.InvalidResponse,
-          samlAssertionParseResult.error
-        );
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+          zodError: samlAssertionParseResult.error,
+          data: body,
+        });
       }
 
       /**

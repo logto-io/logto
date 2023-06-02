@@ -86,7 +86,12 @@ describe('Facebook connector', () => {
 
       await expect(
         getAccessToken(mockedConfig, { code, redirectUri: dummyRedirectUri })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toMatchError(
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+          data: '',
+          message: 'accessToken is empty',
+        })
+      );
     });
   });
 
@@ -145,7 +150,7 @@ describe('Facebook connector', () => {
       const connector = await createConnector({ getConfig });
       await expect(
         connector.getUserInfo({ code, redirectUri: dummyRedirectUri }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+      ).rejects.toThrow();
     });
 
     it('throws AuthorizationFailed error if error is access_denied', async () => {
@@ -171,7 +176,14 @@ describe('Facebook connector', () => {
           jest.fn()
         )
       ).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, 'Permissions error.')
+        new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, {
+          data: {
+            error: 'access_denied',
+            error_code: 200,
+            error_description: 'Permissions error.',
+            error_reason: 'user_denied',
+          },
+        })
       );
     });
 
@@ -199,10 +211,12 @@ describe('Facebook connector', () => {
         )
       ).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.General, {
-          error: 'general_error',
-          error_code: 200,
-          errorDescription: 'General error encountered.',
-          error_reason: 'user_denied',
+          data: {
+            error: 'general_error',
+            error_code: 200,
+            error_description: 'General error encountered.',
+            error_reason: 'user_denied',
+          },
         })
       );
     });

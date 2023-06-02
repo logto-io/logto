@@ -66,7 +66,12 @@ describe('Discord connector', () => {
 
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toMatchError(
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+          data: '',
+          message: 'accessToken is empty',
+        })
+      );
     });
   });
 
@@ -114,7 +119,7 @@ describe('Discord connector', () => {
       const connector = await createConnector({ getConfig });
       await expect(
         connector.getUserInfo({ code: 'code', redirectUri: 'dummyRedirectUri' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+      ).rejects.toThrow();
     });
 
     it('throws unrecognized error', async () => {

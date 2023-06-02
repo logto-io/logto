@@ -12,10 +12,14 @@ export const feishuAuthCodeGuard = z.object({
   redirectUri: z.string(),
 });
 
+export type FeishuAuthCode = z.infer<typeof feishuAuthCodeGuard>;
+
 export const feishuErrorResponse = z.object({
   error: z.string(),
   error_description: z.string().optional(),
 });
+
+export type FeishuErrorResponse = z.infer<typeof feishuErrorResponse>;
 
 export const feishuAccessTokenResponse = z.object({
   access_token: z.string(),
@@ -24,6 +28,8 @@ export const feishuAccessTokenResponse = z.object({
   refresh_token: z.string().optional(),
   refresh_expires_in: z.number().optional(),
 });
+
+export type FeishuAccessTokenResponse = z.infer<typeof feishuAccessTokenResponse>;
 
 export const feishuUserInfoResponse = z.object({
   sub: z.string(),
@@ -42,3 +48,5 @@ export const feishuUserInfoResponse = z.object({
   employee_no: z.string().nullish(),
   mobile: z.string().nullish(),
 });
+
+export type FeishuUserInfoResponse = z.infer<typeof feishuUserInfoResponse>;

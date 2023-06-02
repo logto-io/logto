@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -14,6 +14,7 @@ import {
   ConnectorPlatform,
   ConnectorType,
   validateConfig,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import {
@@ -22,7 +23,13 @@ import {
   defaultMetadata,
   userInfoEndpoint,
 } from './constant.js';
-import type { FeishuConfig } from './types.js';
+import type {
+  FeishuConfig,
+  FeishuAuthCode,
+  FeishuAccessTokenResponse,
+  FeishuErrorResponse,
+  FeishuUserInfoResponse,
+} from './types.js';
 import {
   feishuAccessTokenResponse,
   feishuAuthCodeGuard,
@@ -57,16 +64,6 @@ export function getAuthorizationUri(getConfig: GetConnectorConfig): GetAuthoriza
   };
 }
 
-export async function authorizationCallbackHandler(data: unknown) {
-  const result = feishuAuthCodeGuard.safeParse(data);
-  assert(
-    result.success,
-    new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data))
-  );
-
-  return result.data;
-}
-
 export async function getAccessToken(
   code: string,
   appId: string,
@@ -88,44 +85,40 @@ export async function getAccessToken(
       responseType: 'json',
     });
 
-    const result = feishuAccessTokenResponse.safeParse(response.body);
-    assert(
-      result.success,
-      new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(response.body))
+    const { access_token: accessToken } = connectorDataParser<FeishuAccessTokenResponse>(
+      response.body,
+      feishuAccessTokenResponse
     );
 
-    if (result.data.access_token.length === 0) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'access_token is empty');
+    if (accessToken.length === 0) {
+      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        message: 'access_token is empty',
+      });
     }
 
-    return { accessToken: result.data.access_token };
+    return { accessToken };
   } catch (error: unknown) {
     if (error instanceof ConnectorError) {
       throw error;
     }
 
     if (error instanceof HTTPError) {
-      const result = feishuErrorResponse.safeParse(error.response.body);
-      assert(
-        result.success,
-        new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(error.response.body))
+      const errorResponse = connectorDataParser<FeishuErrorResponse>(
+        error.response.body,
+        feishuErrorResponse
       );
-
-      throw new ConnectorError(
-        ConnectorErrorCodes.SocialAuthCodeInvalid,
-        result.data.error_description
-      );
+      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, { data: errorResponse });
     }
 
     throw new ConnectorError(ConnectorErrorCodes.General, {
-      errorDescription: 'Failed to get access token',
+      message: 'Failed to get access token',
     });
   }
 }
 
 export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
   return async function (data) {
-    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const { code, redirectUri } = connectorDataParser<FeishuAuthCode>(data, feishuAuthCodeGuard);
     const config = await getConfig(defaultMetadata.id);
     validateConfig<FeishuConfig>(config, feishuConfigGuard);
 
@@ -139,13 +132,14 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
         responseType: 'json',
       });
 
-      const result = feishuUserInfoResponse.safeParse(response.body);
-      assert(
-        result.success,
-        new ConnectorError(ConnectorErrorCodes.InvalidResponse, `invalid user response`)
-      );
-
-      const { sub, user_id, name, email, avatar_url: avatar, mobile } = result.data;
+      const {
+        sub,
+        user_id,
+        name,
+        email,
+        avatar_url: avatar,
+        mobile,
+      } = connectorDataParser<FeishuUserInfoResponse>(response.body, feishuUserInfoResponse);
 
       return {
         id: sub,
@@ -161,24 +155,17 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
       }
 
       if (error instanceof HTTPError) {
-        const result = feishuErrorResponse.safeParse(error.response.body);
-
-        assert(
-          result.success,
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            JSON.stringify(error.response.body)
-          )
+        const errorResponse = connectorDataParser<FeishuErrorResponse>(
+          error.response.body,
+          feishuErrorResponse
         );
-
-        throw new ConnectorError(
-          ConnectorErrorCodes.SocialAccessTokenInvalid,
-          result.data.error_description
-        );
+        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, {
+          data: errorResponse,
+        });
       }
 
       throw new ConnectorError(ConnectorErrorCodes.General, {
-        errorDescription: 'Failed to get user info',
+        message: 'Failed to get user info',
       });
     }
   };

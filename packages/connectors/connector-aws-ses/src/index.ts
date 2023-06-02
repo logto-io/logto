@@ -31,10 +31,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Cannot find template for type: ${type}`,
+        data: templates,
+      })
     );
 
     const client: SESv2Client = makeClient(accessKeyId, accessKeySecret, region);
@@ -46,13 +46,13 @@ const sendMessage =
 
       assert(
         response.$metadata.httpStatusCode === 200,
-        new ConnectorError(ConnectorErrorCodes.InvalidResponse, response)
+        new ConnectorError(ConnectorErrorCodes.InvalidResponse, { data: response })
       );
 
       return response.MessageId;
     } catch (error: unknown) {
       if (error instanceof SESv2ServiceException) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, error.message);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, { data: error });
       }
 
       throw error;

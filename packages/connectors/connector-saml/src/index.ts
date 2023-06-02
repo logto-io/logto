@@ -91,7 +91,7 @@ const getAuthorizationUri =
 
       return loginRequest.context;
     } catch (error: unknown) {
-      throw new ConnectorError(ConnectorErrorCodes.General, String(error));
+      throw new ConnectorError(ConnectorErrorCodes.General, { data: error });
     }
   };
 
@@ -110,6 +110,10 @@ export const validateSamlAssertion =
       new ConnectorError(ConnectorErrorCodes.General, {
         message:
           'Can not find `connectorFactoryId` from connector session match the fixed metadata id.',
+        data: {
+          connectorFactoryId,
+          defaultMetadataId: defaultMetadata.id,
+        },
       })
     );
 
@@ -153,7 +157,10 @@ const getUserInfo =
     const rawProfileParseResult = extractedRawProfileGuard.safeParse(extractedRawProfile);
 
     if (!rawProfileParseResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, rawProfileParseResult.error);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+        zodError: rawProfileParseResult.error,
+        data: extractedRawProfile,
+      });
     }
 
     const rawUserProfile = rawProfileParseResult.data;

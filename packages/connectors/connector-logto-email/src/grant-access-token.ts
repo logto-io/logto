@@ -1,9 +1,9 @@
 import { got } from 'got';
 
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { connectorDataParser, parseJsonObject } from '@logto/connector-kit';
 
 import { defaultTimeout, scope } from './constant.js';
-import { accessTokenResponseGuard } from './types.js';
+import { accessTokenResponseGuard, type AccessTokenResponse } from './types.js';
 
 export type GrantAccessTokenParameters = {
   tokenEndpoint: string;
@@ -32,11 +32,6 @@ export const grantAccessToken = async ({
     },
   });
 
-  const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  return result.data;
+  const parsedBody = parseJsonObject(httpResponse.body);
+  return connectorDataParser<AccessTokenResponse>(parsedBody, accessTokenResponseGuard);
 };

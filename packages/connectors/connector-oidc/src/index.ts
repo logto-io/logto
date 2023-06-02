@@ -14,12 +14,13 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  connectorDataParser,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { defaultMetadata } from './constant.js';
-import type { OidcConfig } from './types.js';
+import type { OidcConfig, IdTokenProfileStandardClaims } from './types.js';
 import { idTokenProfileStandardClaimsGuard, oidcConfigGuard } from './types.js';
 import { getIdToken } from './utils.js';
 
@@ -98,11 +99,11 @@ const getUserInfo =
         }
       );
 
-      const result = idTokenProfileStandardClaimsGuard.safeParse(payload);
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, result.error);
-      }
+      const profile = connectorDataParser<IdTokenProfileStandardClaims>(
+        payload,
+        idTokenProfileStandardClaimsGuard,
+        ConnectorErrorCodes.SocialIdTokenInvalid
+      );
 
       const {
         sub: id,
@@ -113,7 +114,7 @@ const getUserInfo =
         phone,
         phone_verified,
         nonce,
-      } = result.data;
+      } = profile;
 
       if (nonce) {
         // TODO @darcy: need to specify error code
@@ -121,6 +122,7 @@ const getUserInfo =
           validationNonce,
           new ConnectorError(ConnectorErrorCodes.General, {
             message: 'Cannot find `nonce` in session storage.',
+            data: profile,
           })
         );
 
@@ -128,6 +130,7 @@ const getUserInfo =
           validationNonce === nonce,
           new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, {
             message: 'ID Token validation failed due to `nonce` mismatch.',
+            data: profile,
           })
         );
       }
@@ -141,7 +144,7 @@ const getUserInfo =
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+        throw new ConnectorError(ConnectorErrorCodes.General, { data: error.response.body });
       }
 
       throw error;

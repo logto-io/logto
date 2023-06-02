@@ -3,10 +3,15 @@ import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
 
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  parseJson,
+  connectorDataParser,
+} from '@logto/connector-kit';
 
 import { defaultTimeout } from './constant.js';
-import type { AccessTokenResponse, OidcConfig } from './types.js';
+import type { AccessTokenResponse, OidcConfig, AuthResponse } from './types.js';
 import { accessTokenResponseGuard, delimiter, authResponseGuard } from './types.js';
 
 export const accessTokenRequester = async (
@@ -24,7 +29,7 @@ export const accessTokenRequester = async (
     return await accessTokenResponseHandler(httpResponse);
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+      throw new ConnectorError(ConnectorErrorCodes.General, { data: error.response.body });
     }
     throw error;
   }
@@ -33,20 +38,20 @@ export const accessTokenRequester = async (
 const accessTokenResponseHandler = async (
   response: Response<string>
 ): Promise<AccessTokenResponse> => {
-  const result = accessTokenResponseGuard.safeParse(parseJson(response.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
+  const parsedBody = parseJson(response.body);
+  const accessTokenResponse = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
   assert(
-    result.data.access_token,
+    accessTokenResponse.access_token,
     new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
       message: 'Missing `access_token` in token response!',
+      data: accessTokenResponse,
     })
   );
 
-  return result.data;
+  return accessTokenResponse;
 };
 
 export const isIdTokenInResponseType = (responseType: string) => {
@@ -54,13 +59,11 @@ export const isIdTokenInResponseType = (responseType: string) => {
 };
 
 export const getIdToken = async (config: OidcConfig, data: unknown, redirectUri: string) => {
-  const result = authResponseGuard.safeParse(data);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, data);
-  }
-
-  const { code } = result.data;
+  const { code } = connectorDataParser<AuthResponse>(
+    data,
+    authResponseGuard,
+    ConnectorErrorCodes.General
+  );
 
   const { customConfig, ...rest } = config;
 

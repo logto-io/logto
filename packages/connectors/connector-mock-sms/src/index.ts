@@ -30,10 +30,9 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Template not found for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Template not found for type: ${type}`,
+      })
     );
 
     await fs.writeFile(

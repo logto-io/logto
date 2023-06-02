@@ -1,5 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
+import { conditionalArray } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -57,15 +58,45 @@ export enum ConnectorErrorCodes {
   AuthorizationFailed = 'authorization_failed',
 }
 
+/**
+ * This is copied from logto/packages/core/src/errors/RequestError/index.ts, this
+ * function should be moved to @logto/shared but relies on `zod`, which is not available there.
+ * Manually copied for now.
+ */
+const formatZodError = ({ issues }: z.ZodError): string[] =>
+  issues.map((issue) => {
+    const base = `Error in key path "${issue.path.map(String).join('.')}": (${issue.code}) `;
+
+    if (issue.code === 'invalid_type') {
+      return base + `Expected ${issue.expected} but received ${issue.received}.`;
+    }
+
+    return base + issue.message;
+  });
+
 export class ConnectorError extends Error {
   public code: ConnectorErrorCodes;
   public data: unknown;
 
-  constructor(code: ConnectorErrorCodes, data?: unknown) {
-    const message = typeof data === 'string' ? data : 'Connector error occurred.';
+  /**
+   * Should provide `zodError` when the expected data type is not met;
+   * `data` is the real data you receive.
+   */
+  constructor(
+    code: ConnectorErrorCodes,
+    payload?: { message?: string; data?: unknown; zodError?: z.ZodError }
+  ) {
+    const { message: additionalMessage, data, zodError } = payload ?? {};
+    const message = conditionalArray(
+      `Connector error occurred: ${code}`,
+      additionalMessage,
+      data && `Data: ${JSON.stringify(data)}`,
+      zodError && `ZodError: ${formatZodError(zodError).join(' ')}`
+    ).join('\n');
     super(message);
+    this.name = 'ConnectorError';
     this.code = code;
-    this.data = typeof data === 'string' ? { message: data } : data;
+    this.data = data;
   }
 }
 

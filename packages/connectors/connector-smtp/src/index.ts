@@ -29,10 +29,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Template not found for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Template not found for type: ${type}`,
+        data: config.templates,
+      })
     );
 
     const configOptions: SMTPTransport.Options = config;
@@ -57,10 +57,7 @@ const sendMessage =
     try {
       return await transporter.sendMail(mailOptions);
     } catch (error: unknown) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.General,
-        error instanceof Error ? error.message : ''
-      );
+      throw new ConnectorError(ConnectorErrorCodes.General, { data: error });
     }
   };
 
@@ -73,10 +70,10 @@ const parseContents = (contents: string, contentType: ContextType) => {
       return { html: contents };
     }
     default: {
-      throw new ConnectorError(
-        ConnectorErrorCodes.InvalidConfig,
-        '`contentType` should be ContextType.'
-      );
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, {
+        message: '`contentType` should be ContextType.',
+        data: contentType,
+      });
     }
   }
 };

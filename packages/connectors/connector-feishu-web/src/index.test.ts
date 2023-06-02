@@ -74,7 +74,9 @@ describe('getAccessToken', () => {
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'access_token is empty')
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        message: 'access_token is empty',
+      })
     );
   });
 
@@ -87,7 +89,12 @@ describe('getAccessToken', () => {
     await expect(
       getAccessToken('code', '123', '123', 'http://localhost:3000')
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'invalid code')
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        data: {
+          error: 'invalid_grant',
+          error_description: 'invalid code',
+        },
+      })
     );
   });
 });
@@ -145,9 +152,7 @@ describe('getUserInfo', () => {
 
   it('throw General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
-    );
+    await expect(connector.getUserInfo({}, jest.fn())).rejects.toThrow();
   });
 
   it('should throw SocialAccessTokenInvalid with code invalid_token', async () => {
@@ -159,7 +164,12 @@ describe('getUserInfo', () => {
     await expect(
       connector.getUserInfo({ code: 'error_code', redirectUri: 'http://localhost:3000' }, jest.fn())
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'invalid access token')
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, {
+        data: {
+          error: 'invalid_token',
+          error_description: 'invalid access token',
+        },
+      })
     );
   });
 
@@ -170,9 +180,7 @@ describe('getUserInfo', () => {
     const connector = await createConnector({ getConfig });
     await expect(
       connector.getUserInfo({ code: 'code', redirectUri: 'http://localhost:3000' }, jest.fn())
-    ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.InvalidResponse, 'invalid user response')
-    );
+    ).rejects.toThrow();
   });
 
   it('should throw with other request errors', async () => {

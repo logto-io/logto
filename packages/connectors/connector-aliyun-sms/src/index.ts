@@ -13,11 +13,12 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
 import { sendSms } from './single-send-text.js';
-import type { AliyunSmsConfig, Template } from './types.js';
+import type { AliyunSmsConfig, Template, SendSmsResponse } from './types.js';
 import { aliyunSmsConfigGuard, sendSmsResponseGuard } from './types.js';
 
 const isChinaNumber = (to: string) => /^(\+86|0086|86)?\d{11}$/.test(to);
@@ -41,10 +42,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Cannot find template for type: ${type}`,
+        data: templates,
+      })
     );
 
     try {
@@ -72,9 +73,8 @@ const sendMessage =
             ? ConnectorErrorCodes.RateLimitExceeded
             : ConnectorErrorCodes.General,
           {
-            errorDescription: Message,
-            Code,
-            ...rest,
+            message: Message,
+            data: rest,
           }
         )
       );
@@ -88,16 +88,16 @@ const sendMessage =
 
         assert(
           typeof rawBody === 'string',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+            message: `Invalid response raw body type: ${typeof rawBody}`,
+            data: rawBody,
+          })
         );
 
         const { Message, ...rest } = parseResponseString(rawBody);
         throw new ConnectorError(ConnectorErrorCodes.General, {
-          errorDescription: Message,
-          ...rest,
+          message: Message,
+          data: rest,
         });
       }
 
@@ -106,13 +106,8 @@ const sendMessage =
   };
 
 const parseResponseString = (response: string) => {
-  const result = sendSmsResponseGuard.safeParse(parseJson(response));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  return result.data;
+  const parsedBody = parseJson(response);
+  return connectorDataParser<SendSmsResponse>(parsedBody, sendSmsResponseGuard);
 };
 
 const createAliyunSmsConnector: CreateConnector<SmsConnector> = async ({ getConfig }) => {

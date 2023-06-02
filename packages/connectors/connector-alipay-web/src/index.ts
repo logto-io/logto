@@ -22,6 +22,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 import dayjs from 'dayjs';
 
@@ -37,7 +38,7 @@ import {
   invalidAccessTokenCode,
   invalidAccessTokenSubCode,
 } from './constant.js';
-import type { AlipayConfig, ErrorHandler } from './types.js';
+import type { AlipayConfig, ErrorHandler, AccessTokenResponse, UserInfoResponse } from './types.js';
 import { alipayConfigGuard, accessTokenResponseGuard, userInfoResponseGuard } from './types.js';
 import { signingParameters } from './utils.js';
 
@@ -80,22 +81,22 @@ export const getAccessToken = async (code: string, config: AlipayConfig) => {
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { error_response, alipay_system_oauth_token_response } = result.data;
-
-  const { msg, sub_msg } = error_response ?? {};
+  const parsedBody = parseJson(httpResponse.body);
+  const { error_response, alipay_system_oauth_token_response } =
+    connectorDataParser<AccessTokenResponse>(parsedBody, accessTokenResponseGuard);
 
   assert(
     alipay_system_oauth_token_response,
-    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg ?? sub_msg)
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, { data: error_response })
   );
   const { access_token: accessToken } = alipay_system_oauth_token_response;
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
 
   return { accessToken };
 };
@@ -103,7 +104,7 @@ export const getAccessToken = async (code: string, config: AlipayConfig) => {
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { auth_code } = await authorizationCallbackHandler(data);
+    const { auth_code } = connectorDataParser(data, z.object({ auth_code: z.string() }));
     const config = await getConfig(defaultMetadata.id);
     validateConfig<AlipayConfig>(config, alipayConfigGuard);
 
@@ -111,7 +112,9 @@ const getUserInfo =
 
     assert(
       accessToken && config,
-      new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)
+      new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters, {
+        message: 'access token or config is missing.',
+      })
     );
 
     const initSearchParameters = {
@@ -133,55 +136,39 @@ const getUserInfo =
 
     const { body: rawBody } = httpResponse;
 
-    const result = userInfoResponseGuard.safeParse(parseJson(rawBody));
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-    }
-
-    const { alipay_user_info_share_response } = result.data;
+    const parsedBody = parseJson(rawBody);
+    const { alipay_user_info_share_response } = connectorDataParser<UserInfoResponse>(
+      parsedBody,
+      userInfoResponseGuard
+    );
 
     errorHandler(alipay_user_info_share_response);
 
     const { user_id: id, avatar, nick_name: name } = alipay_user_info_share_response;
 
     if (!id) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+        message: 'user id is missing.',
+      });
     }
 
     return { id, avatar, name };
   };
 
 const errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
+  const payload = { code, msg, sub_code, sub_msg };
   if (invalidAccessTokenCode.includes(code)) {
-    throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+    throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, { data: payload });
   }
 
   if (sub_code) {
     assert(
       !invalidAccessTokenSubCode.includes(sub_code),
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, { data: payload })
     );
 
-    throw new ConnectorError(ConnectorErrorCodes.General, {
-      errorDescription: msg,
-      code,
-      sub_code,
-      sub_msg,
-    });
+    throw new ConnectorError(ConnectorErrorCodes.General, { data: payload });
   }
-};
-
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const dataGuard = z.object({ auth_code: z.string() });
-
-  const result = dataGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
 };
 
 const createAlipayConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {

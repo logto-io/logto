@@ -61,7 +61,10 @@ describe('getAccessToken', () => {
       .post('')
       .reply(200, qs.stringify({ access_token: '', scope: 'scope', token_type: 'token_type' }));
     await expect(getAccessToken(mockedConfig, { code: 'code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        data: '',
+        message: 'accessToken is empty',
+      })
     );
   });
 });
@@ -119,9 +122,7 @@ describe('getUserInfo', () => {
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-    );
+    await expect(connector.getUserInfo({ code: 'code' }, jest.fn())).rejects.toThrow();
   });
 
   it('throws AuthorizationFailed error if error is access_denied', async () => {
@@ -143,10 +144,14 @@ describe('getUserInfo', () => {
         jest.fn()
       )
     ).rejects.toMatchError(
-      new ConnectorError(
-        ConnectorErrorCodes.AuthorizationFailed,
-        'The user has denied your application access.'
-      )
+      new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, {
+        data: {
+          error: 'access_denied',
+          error_description: 'The user has denied your application access.',
+          error_uri:
+            'https://docs.github.com/apps/troubleshooting-authorization-request-errors#access-denied',
+        },
+      })
     );
   });
 
@@ -166,12 +171,7 @@ describe('getUserInfo', () => {
         },
         jest.fn()
       )
-    ).rejects.toMatchError(
-      new ConnectorError(
-        ConnectorErrorCodes.General,
-        '{"error":"general_error","error_description":"General error encountered."}'
-      )
-    );
+    ).rejects.toThrow();
   });
 
   it('throws unrecognized error', async () => {

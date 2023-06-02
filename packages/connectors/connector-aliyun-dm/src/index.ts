@@ -13,15 +13,18 @@ import {
   ConnectorType,
   validateConfig,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
 import { singleSendMail } from './single-send-mail.js';
-import type { AliyunDmConfig } from './types.js';
 import {
   aliyunDmConfigGuard,
   sendEmailResponseGuard,
   sendMailErrorResponseGuard,
+  type SendMailErrorResponse,
+  type AliyunDmConfig,
+  type SendEmailResponse,
 } from './types.js';
 
 const sendMessage =
@@ -35,10 +38,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        data: templates,
+        message: `Cannot find template for type: ${type}`,
+      })
     );
 
     try {
@@ -59,13 +62,8 @@ const sendMessage =
         accessKeySecret
       );
 
-      const result = sendEmailResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      return result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      return connectorDataParser<SendEmailResponse>(parsedBody, sendEmailResponseGuard);
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
@@ -74,10 +72,10 @@ const sendMessage =
 
         assert(
           typeof rawBody === 'string',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+            message: `Invalid response raw body type: ${typeof rawBody}`,
+            data: rawBody,
+          })
         );
 
         errorHandler(rawBody);
@@ -88,15 +86,13 @@ const sendMessage =
   };
 
 const errorHandler = (errorResponseBody: string) => {
-  const result = sendMailErrorResponseGuard.safeParse(parseJson(errorResponseBody));
+  const parsedBody = parseJson(errorResponseBody);
+  const errorResponse = connectorDataParser<SendMailErrorResponse>(
+    parsedBody,
+    sendMailErrorResponseGuard
+  );
 
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { Message: errorDescription, ...rest } = result.data;
-
-  throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription, ...rest });
+  throw new ConnectorError(ConnectorErrorCodes.General, { data: errorResponse });
 };
 
 const createAliyunDmConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {

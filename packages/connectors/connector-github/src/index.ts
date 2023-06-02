@@ -1,4 +1,4 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -14,6 +14,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 import qs from 'query-string';
 
@@ -25,7 +26,7 @@ import {
   defaultMetadata,
   defaultTimeout,
 } from './constant.js';
-import type { GithubConfig } from './types.js';
+import type { GithubConfig, AccessTokenResponse, UserInfoResponse } from './types.js';
 import {
   authorizationCallbackErrorGuard,
   githubConfigGuard,
@@ -59,20 +60,18 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
   const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
   if (!parsedError.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      data: parameterObject,
+      zodError: parsedError.error,
+    });
   }
 
-  const { error, error_description, error_uri } = parsedError.data;
-
-  if (error === 'access_denied') {
-    throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
-  }
-
-  throw new ConnectorError(ConnectorErrorCodes.General, {
-    error,
-    errorDescription: error_description,
-    error_uri,
-  });
+  throw new ConnectorError(
+    parsedError.data.error === 'access_denied'
+      ? ConnectorErrorCodes.AuthorizationFailed
+      : ConnectorErrorCodes.General,
+    { data: parsedError.data }
+  );
 };
 
 export const getAccessToken = async (config: GithubConfig, codeObject: { code: string }) => {
@@ -89,16 +88,18 @@ export const getAccessToken = async (config: GithubConfig, codeObject: { code: s
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(qs.parse(httpResponse.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token: accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
+  const parsedBody = qs.parse(httpResponse.body);
+  const { access_token: accessToken } = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
   return { accessToken };
 };
 
@@ -118,13 +119,13 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { id, avatar_url: avatar, email, name } = result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      const {
+        id,
+        avatar_url: avatar,
+        email,
+        name,
+      } = connectorDataParser<UserInfoResponse>(parsedBody, userInfoResponseGuard);
 
       return {
         id: String(id),
@@ -134,13 +135,14 @@ const getUserInfo =
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
+        const { statusCode } = error.response;
 
-        if (statusCode === 401) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+        throw new ConnectorError(
+          statusCode === 401
+            ? ConnectorErrorCodes.SocialAccessTokenInvalid
+            : ConnectorErrorCodes.General,
+          { data: error.response }
+        );
       }
 
       throw error;

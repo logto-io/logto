@@ -29,10 +29,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Cannot find template for type: ${type}`,
+        data: templates,
+      })
     );
 
     const parameters: PublicParameters = {
@@ -60,13 +60,13 @@ const sendMessage =
         } = error;
         assert(
           typeof rawBody === 'string',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+            message: `Invalid response raw body type: ${typeof rawBody}`,
+            data: rawBody,
+          })
         );
 
-        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+        throw new ConnectorError(ConnectorErrorCodes.General, { data: rawBody });
       }
 
       throw error;

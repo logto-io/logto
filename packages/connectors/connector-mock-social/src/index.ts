@@ -26,7 +26,7 @@ const getUserInfo: GetUserInfo = async (data) => {
   const result = dataGuard.safeParse(data);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, { data });
   }
 
   const { code, userId, ...rest } = result.data;

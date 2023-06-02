@@ -1,9 +1,15 @@
-import { assert, pick } from '@silverhand/essentials';
+import { pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
+import { type z } from 'zod';
 
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  parseJson,
+  connectorDataParser,
+} from '@logto/connector-kit';
 import qs from 'query-string';
 
 import { defaultTimeout } from './constant.js';
@@ -12,6 +18,8 @@ import type {
   TokenEndpointResponseType,
   AccessTokenResponse,
   ProfileMap,
+  UserProfile,
+  AuthResponse,
 } from './types.js';
 import { authResponseGuard, accessTokenResponseGuard, userProfileGuard } from './types.js';
 
@@ -31,7 +39,7 @@ export const accessTokenRequester = async (
     return await accessTokenResponseHandler(httpResponse, tokenEndpointResponseType);
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+      throw new ConnectorError(ConnectorErrorCodes.General, { data: error.response.body });
     }
     throw error;
   }
@@ -41,22 +49,13 @@ const accessTokenResponseHandler = async (
   response: Response<string>,
   tokenEndpointResponseType: TokenEndpointResponseType
 ): Promise<AccessTokenResponse> => {
-  const result = accessTokenResponseGuard.safeParse(
-    tokenEndpointResponseType === 'json' ? parseJson(response.body) : qs.parse(response.body)
-  ); // Why it works with qs.parse()
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  assert(
-    result.data.access_token,
-    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
-      message: 'Can not find `access_token` in token response!',
-    })
-  );
-
-  return result.data;
+  /**
+   * Why it works with qs.parse()?
+   * Some social vendor (like GitHub) does not strictly follow the OAuth2 protocol.
+   */
+  const parsedBody =
+    tokenEndpointResponseType === 'json' ? parseJson(response.body) : qs.parse(response.body);
+  return connectorDataParser<AccessTokenResponse>(parsedBody, accessTokenResponseGuard);
 };
 
 export const userProfileMapping = (
@@ -74,24 +73,14 @@ export const userProfileMapping = (
       .filter(([key, value]) => keyMap.get(key) && value)
       .map(([key, value]) => [keyMap.get(key), value])
   );
-
-  const result = userProfileGuard.safeParse(mappedUserProfile);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  return result.data;
+  return connectorDataParser<UserProfile, z.input<typeof userProfileGuard>>(
+    mappedUserProfile,
+    userProfileGuard
+  );
 };
 
 export const getAccessToken = async (config: OauthConfig, data: unknown, redirectUri: string) => {
-  const result = authResponseGuard.safeParse(data);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, data);
-  }
-
-  const { code } = result.data;
+  const { code } = connectorDataParser<AuthResponse>(data, authResponseGuard);
 
   const { customConfig, ...rest } = config;
 

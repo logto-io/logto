@@ -2,7 +2,7 @@
  * The Implementation of OpenID Connect of Kakao.
  * https://developers.kakao.com/docs/latest/en/kakaologin/rest-api
  */
-import { assert, conditional } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -18,6 +18,7 @@ import {
   ConnectorType,
   validateConfig,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import {
@@ -27,7 +28,7 @@ import {
   defaultTimeout,
   userInfoEndpoint,
 } from './constant.js';
-import type { KakaoConfig } from './types.js';
+import type { KakaoConfig, AccessTokenResponse, UserInfoResponse, AuthResponse } from './types.js';
 import {
   accessTokenResponseGuard,
   authResponseGuard,
@@ -71,15 +72,18 @@ export const getAccessToken = async (
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token: accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  const parsedBody = parseJson(httpResponse.body);
+  const { access_token: accessToken } = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
 
   return { accessToken };
 };
@@ -87,7 +91,11 @@ export const getAccessToken = async (
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const { code, redirectUri } = connectorDataParser<AuthResponse>(
+      data,
+      authResponseGuard,
+      ConnectorErrorCodes.General
+    );
     const config = await getConfig(defaultMetadata.id);
     validateConfig<KakaoConfig>(config, kakaoConfigGuard);
     const { accessToken } = await getAccessToken(config, { code, redirectUri });
@@ -100,13 +108,11 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { id, kakao_account } = result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      const { id, kakao_account } = connectorDataParser<UserInfoResponse>(
+        parsedBody,
+        userInfoResponseGuard
+      );
       const { is_email_valid, email, profile } = kakao_account ?? {
         is_email_valid: null,
         profile: null,
@@ -124,25 +130,16 @@ const getUserInfo =
     }
   };
 
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = authResponseGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
-};
-
 const getUserInfoErrorHandler = (error: unknown) => {
   if (error instanceof HTTPError) {
-    const { statusCode, body: rawBody } = error.response;
+    const { statusCode } = error.response;
 
-    if (statusCode === 401) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-    }
-
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    throw new ConnectorError(
+      statusCode === 401
+        ? ConnectorErrorCodes.SocialAccessTokenInvalid
+        : ConnectorErrorCodes.General,
+      { data: error.response }
+    );
   }
 
   throw error;

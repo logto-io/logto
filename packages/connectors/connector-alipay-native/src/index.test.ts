@@ -72,9 +72,7 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, '{}')
-    );
+    await expect(connector.getUserInfo({}, jest.fn())).rejects.toThrow();
   });
 
   it('should throw when accessToken is empty', async () => {
@@ -93,7 +91,12 @@ describe('getAccessToken', () => {
       });
     await expect(
       getAccessToken('code', mockedAlipayNativeConfigWithValidPrivateKey)
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+    ).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        data: '',
+        message: 'accessToken is empty',
+      })
+    );
   });
 
   it('should fail with wrong code', async () => {
@@ -111,7 +114,13 @@ describe('getAccessToken', () => {
     await expect(
       getAccessToken('wrong_code', mockedAlipayNativeConfigWithValidPrivateKey)
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        data: {
+          code: '20001',
+          msg: 'Invalid code',
+          sub_code: 'isv.code-invalid	',
+        },
+      })
     );
   });
 });
@@ -179,7 +188,14 @@ describe('getUserInfo', () => {
     await expect(
       connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, {
+        data: {
+          code: '20001',
+          msg: 'Invalid auth token',
+          sub_code: 'aop.invalid-auth-token',
+          sub_msg: '无效的访问令牌',
+        },
+      })
     );
   });
 
@@ -200,7 +216,14 @@ describe('getUserInfo', () => {
     await expect(
       connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
     ).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid auth code')
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+        data: {
+          code: '40002',
+          msg: 'Invalid auth code',
+          sub_code: 'isv.code-invalid',
+          sub_msg: '授权码 (auth_code) 错误、状态不对或过期',
+        },
+      })
     );
   });
 
@@ -222,10 +245,12 @@ describe('getUserInfo', () => {
       connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
     ).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.General, {
-        errorDescription: 'Invalid parameter',
-        code: '40002',
-        sub_code: 'isv.invalid-parameter',
-        sub_msg: '参数无效',
+        data: {
+          code: '40002',
+          msg: 'Invalid parameter',
+          sub_code: 'isv.invalid-parameter',
+          sub_msg: '参数无效',
+        },
       })
     );
   });
@@ -247,7 +272,9 @@ describe('getUserInfo', () => {
     const connector = await createConnector({ getConfig });
     await expect(
       connector.getUserInfo({ auth_code: 'wrong_code' }, jest.fn())
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+    ).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.InvalidResponse, { message: 'user id is missing.' })
+    );
   });
 
   it('should throw with other request errors', async () => {

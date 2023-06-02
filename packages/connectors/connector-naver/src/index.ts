@@ -18,6 +18,7 @@ import {
   ConnectorType,
   validateConfig,
   parseJson,
+  connectorDataParser,
 } from '@logto/connector-kit';
 
 import {
@@ -27,7 +28,7 @@ import {
   defaultTimeout,
   userInfoEndpoint,
 } from './constant.js';
-import type { NaverConfig } from './types.js';
+import type { NaverConfig, AccessTokenResponse, UserInfoResponse, AuthResponse } from './types.js';
 import {
   accessTokenResponseGuard,
   authResponseGuard,
@@ -71,15 +72,19 @@ export const getAccessToken = async (
     timeout: { request: defaultTimeout },
   });
 
-  const result = accessTokenResponseGuard.safeParse(parseJson(httpResponse.body));
+  const parsedBody = parseJson(httpResponse.body);
+  const { access_token: accessToken } = connectorDataParser<AccessTokenResponse>(
+    parsedBody,
+    accessTokenResponseGuard
+  );
 
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-  }
-
-  const { access_token: accessToken } = result.data;
-
-  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  assert(
+    accessToken,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+      data: accessToken,
+      message: 'accessToken is empty',
+    })
+  );
 
   return { accessToken };
 };
@@ -87,7 +92,11 @@ export const getAccessToken = async (
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const { code, redirectUri } = connectorDataParser<AuthResponse>(
+      data,
+      authResponseGuard,
+      ConnectorErrorCodes.General
+    );
     const config = await getConfig(defaultMetadata.id);
     validateConfig<NaverConfig>(config, naverConfigGuard);
     const { accessToken } = await getAccessToken(config, { code, redirectUri });
@@ -100,13 +109,8 @@ const getUserInfo =
         timeout: { request: defaultTimeout },
       });
 
-      const result = userInfoResponseGuard.safeParse(parseJson(httpResponse.body));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-      }
-
-      const { response } = result.data;
+      const parsedBody = parseJson(httpResponse.body);
+      const { response } = connectorDataParser<UserInfoResponse>(parsedBody, userInfoResponseGuard);
       const { id, email, nickname, profile_image } = response;
 
       return {
@@ -120,25 +124,16 @@ const getUserInfo =
     }
   };
 
-const authorizationCallbackHandler = async (parameterObject: unknown) => {
-  const result = authResponseGuard.safeParse(parameterObject);
-
-  if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-  }
-
-  return result.data;
-};
-
 const getUserInfoErrorHandler = (error: unknown) => {
   if (error instanceof HTTPError) {
-    const { statusCode, body: rawBody } = error.response;
+    const { statusCode } = error.response;
 
-    if (statusCode === 401) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-    }
-
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    throw new ConnectorError(
+      statusCode === 401
+        ? ConnectorErrorCodes.SocialAccessTokenInvalid
+        : ConnectorErrorCodes.General,
+      { data: error.response }
+    );
   }
 
   throw error;

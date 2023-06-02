@@ -35,10 +35,10 @@ const sendMessage =
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Template not found for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Template not found for type: ${type}`,
+        data: templates,
+      })
     );
 
     const toEmailData: EmailData[] = [{ email: to }];
@@ -78,13 +78,13 @@ const sendMessage =
 
         assert(
           typeof rawBody === 'string',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+            message: `Invalid response raw body type: ${typeof rawBody}`,
+            data: rawBody,
+          })
         );
 
-        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+        throw new ConnectorError(ConnectorErrorCodes.General, { data: rawBody });
       }
 
       throw error;

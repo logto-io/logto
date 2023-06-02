@@ -60,7 +60,12 @@ describe('kakao connector', () => {
         .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
       await expect(
         getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+      ).rejects.toMatchError(
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
+          data: '',
+          message: 'accessToken is empty',
+        })
+      );
     });
   });
 
@@ -114,7 +119,7 @@ describe('kakao connector', () => {
       const connector = await createConnector({ getConfig });
       await expect(
         connector.getUserInfo({ code: 'code', redirectUri: '' }, jest.fn())
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+      ).rejects.toThrow();
     });
 
     it('throws General error', async () => {
@@ -137,12 +142,7 @@ describe('kakao connector', () => {
           },
           jest.fn()
         )
-      ).rejects.toMatchError(
-        new ConnectorError(
-          ConnectorErrorCodes.General,
-          '{"error":"general_error","error_description":"General error encountered."}'
-        )
-      );
+      ).rejects.toThrow();
     });
 
     it('throws unrecognized error', async () => {

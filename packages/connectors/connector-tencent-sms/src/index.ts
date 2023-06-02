@@ -24,7 +24,9 @@ function safeGetArray<T>(value: Array<T | undefined>, index: number): T {
 
   assert(
     item,
-    new ConnectorError(ConnectorErrorCodes.General, `Cannot find item at index ${index}`)
+    new ConnectorError(ConnectorErrorCodes.General, {
+      message: `Cannot find item at index ${index}`,
+    })
   );
 
   return item;
@@ -40,10 +42,10 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
 
     assert(
       template,
-      new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
-      )
+      new ConnectorError(ConnectorErrorCodes.TemplateNotFound, {
+        message: `Cannot find template for type: ${type}`,
+        data: templates,
+      })
     );
 
     try {
@@ -61,7 +63,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
       if (isError) {
         const { Response } = responseData;
         const { Error } = Response;
-        throw new ConnectorError(ConnectorErrorCodes.General, `${Error.Code}: ${Error.Message}`);
+        throw new ConnectorError(ConnectorErrorCodes.General, { data: Error });
       }
 
       const {
@@ -72,10 +74,10 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
 
       assert(
         Code.toLowerCase() === 'ok',
-        new ConnectorError(
-          ConnectorErrorCodes.General,
-          `${Code}: ${Message}, RequestId: ${RequestId}`
-        )
+        new ConnectorError(ConnectorErrorCodes.General, {
+          message: Message,
+          data: { Code },
+        })
       );
 
       return httpResponse;
@@ -96,13 +98,12 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
         const { Message, Code } = Error;
 
         throw new ConnectorError(ConnectorErrorCodes.General, {
-          errorDescription: Message,
-          Code,
-          ...result,
+          message: Message,
+          data: { Code },
         });
       }
 
-      throw new ConnectorError(ConnectorErrorCodes.General, `Request error: ${message}`);
+      throw new ConnectorError(ConnectorErrorCodes.General, { data: error });
     }
   };
 }

@@ -88,7 +88,10 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     const messageTypeResult = verificationCodeTypeGuard.safeParse(passcode.type);
 
     if (!messageTypeResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, {
+        zodError: messageTypeResult.error,
+        data: passcode.type,
+      });
     }
 
     const response = await sendMessage({

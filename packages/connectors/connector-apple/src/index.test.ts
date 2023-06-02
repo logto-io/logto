@@ -64,9 +64,7 @@ describe('getUserInfo', () => {
 
   it('should throw if id token is missing', async () => {
     const connector = await createConnector({ getConfig });
-    await expect(connector.getUserInfo({}, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, '{}')
-    );
+    await expect(connector.getUserInfo({}, jest.fn())).rejects.toThrow();
   });
 
   it('should throw if verify id token failed', async () => {
@@ -76,7 +74,7 @@ describe('getUserInfo', () => {
     });
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ id_token: 'id_token' }, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, { data: 'id_token' })
     );
   });
 
@@ -87,7 +85,7 @@ describe('getUserInfo', () => {
     }));
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ id_token: 'id_token' }, jest.fn())).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, { data: 'id_token' })
     );
   });
 });

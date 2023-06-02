@@ -7,6 +7,8 @@ export const appleConfigGuard = z.object({
 export type AppleConfig = z.infer<typeof appleConfigGuard>;
 
 // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/configuring_your_webpage_for_sign_in_with_apple#3331292
-export const dataGuard = z.object({
+export const authorizationDataGuard = z.object({
   id_token: z.string(),
 });
+
+export type AuthorizationData = z.infer<typeof authorizationDataGuard>;
