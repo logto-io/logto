@@ -1,4 +1,9 @@
-import { type CloudflareData, type Domain, type DomainResponse } from '@logto/schemas';
+import {
+  DomainStatus,
+  type CloudflareData,
+  type Domain,
+  type DomainResponse,
+} from '@logto/schemas';
 
 export const mockNanoIdForDomain = 'random_string';
 
@@ -9,7 +14,7 @@ export const mockTenantIdForHook = 'fake_tenant';
 export const mockDomainResponse: DomainResponse = {
   id: mockNanoIdForDomain,
   domain: 'logto.example.com',
-  status: 'pending',
+  status: DomainStatus.PendingVerification,
   errorMessage: null,
   dnsRecords: [],
 };
