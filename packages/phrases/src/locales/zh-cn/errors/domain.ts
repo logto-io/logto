@@ -4,6 +4,7 @@ const domain = {
   cloudflare_unknown_error: '请求 Cloudflare API 时出现未知错误。',
   cloudflare_response_error: '从 Cloudflare 得到意外的响应。',
   limit_to_one_domain: '仅限一个自定义域名。',
+  hostname_already_exists: '该域名在我们的服务器中已存在。',
 };
 
 export default domain;

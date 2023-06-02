@@ -4,6 +4,7 @@ const domain = {
   cloudflare_unknown_error: 'Obteve um erro desconhecido ao solicitar a API Cloudflare',
   cloudflare_response_error: 'Obteve uma resposta inesperada da Cloudflare.',
   limit_to_one_domain: 'Você só pode ter um domínio personalizado.',
+  hostname_already_exists: 'Este domínio já existe em nosso servidor.',
 };
 
 export default domain;
