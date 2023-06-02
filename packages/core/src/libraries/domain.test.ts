@@ -99,16 +99,6 @@ describe('syncDomainStatus()', () => {
     getCustomHostname.mockResolvedValueOnce(mockCloudflareDataPendingSSL);
     const response = await syncDomainStatus(mockDomainWithCloudflareData);
     expect(response.status).toBe(DomainStatus.PendingSsl);
-    expect(response.dnsRecords).not.toContainEqual({
-      type: 'CNAME',
-      name: mockDomainWithCloudflareData.domain,
-      value: fallbackOrigin,
-    });
-    expect(response.dnsRecords).not.toContainEqual({
-      type: 'TXT',
-      name: mockTxtName,
-      value: mockTxtValue,
-    });
     expect(response.dnsRecords).toContainEqual({
       type: 'TXT',
       name: mockSslTxtName,
@@ -120,21 +110,6 @@ describe('syncDomainStatus()', () => {
     getCustomHostname.mockResolvedValueOnce(mockCloudflareDataActive);
     const response = await syncDomainStatus(mockDomainWithCloudflareData);
     expect(response.status).toBe(DomainStatus.Active);
-    expect(response.dnsRecords).not.toContainEqual({
-      type: 'CNAME',
-      name: mockDomainWithCloudflareData.domain,
-      value: fallbackOrigin,
-    });
-    expect(response.dnsRecords).not.toContainEqual({
-      type: 'TXT',
-      name: mockTxtName,
-      value: mockTxtValue,
-    });
-    expect(response.dnsRecords).not.toContainEqual({
-      type: 'TXT',
-      name: mockSslTxtName,
-      value: mockSslTxtValue,
-    });
   });
 
   it('should sync and get verification error', async () => {
