@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { consoleLog, getProxy } from '../../utils.js';
 
-import { getTranslationPrompt } from './prompts.js';
+import { getTranslationPromptMessages } from './prompts.js';
 
 export const createOpenaiApi = () => {
   const proxy = getProxy();
@@ -51,16 +51,11 @@ export const translate = async ({
       .post('chat/completions', {
         json: {
           model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'user',
-              content: getTranslationPrompt({
-                sourceFileContent,
-                targetLanguage,
-                extraPrompt,
-              }),
-            },
-          ],
+          messages: getTranslationPromptMessages({
+            sourceFileContent,
+            targetLanguage,
+            extraPrompt,
+          }),
         },
       })
       .json(),

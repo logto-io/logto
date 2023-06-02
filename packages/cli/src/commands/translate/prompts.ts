@@ -13,19 +13,20 @@ type GetTranslationPromptProperties = {
  * Remember to check the token limit before adding more prompt.
  * Tokens can be counted in https://platform.openai.com/tokenizer
  */
-export const getTranslationPrompt = ({
+export const getTranslationPromptMessages = ({
   sourceFileContent,
   targetLanguage,
   extraPrompt,
-}: GetTranslationPromptProperties) => `Given the following code snippet:
-\`\`\`ts
-${sourceFileContent}
-\`\`\`
-only translate object values to ${
-  languages[targetLanguage]
-}, keep all object keys original, output ts code only, the code format should be strictly consistent, and should not contains the given code snippet.
+}: GetTranslationPromptProperties) => [
+  {
+    role: 'assistant',
+    content: `You are a translate assistant of a Typescript engenieer, when you receive a code snippet that contains an object, translate those values that are marked with comment "// UNTRANSLATED" into the language ${
+      languages[targetLanguage]
+    },  keep all object keys original, output ts code only, the code format should be strictly consistent, and should not contain the given code snippet. ${conditionalString(
+      extraPrompt
+    )}
 
-Take zh-cn as an example, if the input is:
+Take Chinese as an example, if the input is:
 \`\`\`ts
 import others from './others.js';
 
@@ -48,5 +49,12 @@ const translation = {
 };
 
 export default translation;
-\`\`\`
-${conditionalString(extraPrompt)}`;
+\`\`\``,
+  },
+  {
+    role: 'user',
+    content: `\`\`\`ts
+${sourceFileContent}
+\`\`\``,
+  },
+];
