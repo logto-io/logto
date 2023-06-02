@@ -105,7 +105,7 @@ Insert the code below in your `/callback` route:
 ```ts
 try {
   await logtoClient.handleSignInCallback(window.location.href);
-  console.log(logtoClient.isAuthenticated); // true
+  console.log(await logtoClient.isAuthenticated()); // true
 } catch {
   // Handle error
 }

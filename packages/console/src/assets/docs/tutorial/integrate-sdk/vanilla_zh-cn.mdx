@@ -98,7 +98,7 @@ const logtoClient = new LogtoClient({
 ```ts
 try {
   await logtoClient.handleSignInCallback(window.location.href);
-  console.log(logtoClient.isAuthenticated); // true
+  console.log(await logtoClient.isAuthenticated()); // true
 } catch {
   // 处理错误
 }
