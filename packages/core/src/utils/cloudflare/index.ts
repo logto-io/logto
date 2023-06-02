@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import { type HostnameProviderData, cloudflareDataGuard } from '@logto/schemas';
 import { got } from 'got';
 
@@ -17,15 +19,18 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
     return mockCustomHostnameResponse();
   }
 
-  const response = await got.post(new URL(baseUrl, `/zones/${auth.zoneId}/custom_hostnames`), {
-    headers: {
-      Authorization: `Bearer ${auth.apiToken}`,
-    },
-    json: {
-      hostname,
-      ssl: { method: 'txt', type: 'dv', settings: { min_tls_version: '1.0' } },
-    },
-  });
+  const response = await got.post(
+    new URL(path.join(baseUrl.pathname, `/zones/${auth.zoneId}/custom_hostnames`), baseUrl),
+    {
+      headers: {
+        Authorization: `Bearer ${auth.apiToken}`,
+      },
+      json: {
+        hostname,
+        ssl: { method: 'txt', type: 'dv', settings: { min_tls_version: '1.0' } },
+      },
+    }
+  );
 
   assertThat(response.ok, 'domain.cloudflare_unknown_error');
 
@@ -47,7 +52,10 @@ export const getCustomHostname = async (auth: HostnameProviderData, identifier: 
   }
 
   const response = await got.get(
-    new URL(baseUrl, `/zones/${auth.zoneId}/custom_hostnames/${identifier}`),
+    new URL(
+      path.join(baseUrl.pathname, `/zones/${auth.zoneId}/custom_hostnames/${identifier}`),
+      baseUrl
+    ),
     {
       headers: {
         Authorization: `Bearer ${auth.apiToken}`,
