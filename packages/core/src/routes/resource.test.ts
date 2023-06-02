@@ -101,6 +101,7 @@ describe('resource routes', () => {
       id: 'randomId',
       name,
       indicator,
+      isDefault: false,
       accessTokenTtl,
       scopes: [],
     });
@@ -157,7 +158,7 @@ describe('resource routes', () => {
     });
   });
 
-  it('PATCH /resources/:id should throw with invalid propreties', async () => {
+  it('PATCH /resources/:id should throw with invalid properties', async () => {
     const response = await resourceRequest.patch('/resources/foo').send({ name: 12 });
     expect(response.status).toEqual(400);
   });

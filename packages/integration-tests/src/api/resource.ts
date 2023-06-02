@@ -34,3 +34,8 @@ export const updateResource = async (
 
 export const deleteResource = async (resourceId: string) =>
   authedAdminApi.delete(`resources/${resourceId}`);
+
+export const setDefaultResource = async (resourceId: string, isDefault = true) =>
+  authedAdminApi
+    .patch(`resources/${resourceId}/is-default`, { json: { isDefault } })
+    .json<Resource>();

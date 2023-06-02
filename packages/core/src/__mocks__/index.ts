@@ -40,6 +40,7 @@ export const mockResource: Resource = {
   name: 'management api',
   indicator: 'logto.dev/api',
   accessTokenTtl: 3600,
+  isDefault: false,
 };
 
 export const mockResource2: Resource = {
@@ -48,6 +49,7 @@ export const mockResource2: Resource = {
   name: 'management api',
   indicator: 'logto.dev/api',
   accessTokenTtl: 3600,
+  isDefault: false,
 };
 
 export const mockResource3: Resource = {
@@ -56,6 +58,7 @@ export const mockResource3: Resource = {
   name: 'management api',
   indicator: 'logto.dev/api',
   accessTokenTtl: 3600,
+  isDefault: false,
 };
 
 export const mockScope: Scope = {
