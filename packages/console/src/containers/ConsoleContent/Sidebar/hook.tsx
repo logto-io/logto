@@ -2,22 +2,22 @@ import { type Optional } from '@silverhand/essentials';
 import type { TFuncKey } from 'i18next';
 import type { FC, ReactNode } from 'react';
 
+import BarGraph from '@/assets/images/bar-graph.svg';
+import Bolt from '@/assets/images/bolt.svg';
+import Box from '@/assets/images/box.svg';
+import Connection from '@/assets/images/connection.svg';
+import ContactIcon from '@/assets/images/contact.svg';
+import Document from '@/assets/images/document.svg';
 import Hook from '@/assets/images/hook.svg';
+import List from '@/assets/images/list.svg';
+import UserProfile from '@/assets/images/profile.svg';
+import ResourceIcon from '@/assets/images/resource.svg';
 import Role from '@/assets/images/role.svg';
+import Web from '@/assets/images/web.svg';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Contact from './components/Contact';
-import BarGraph from './icons/BarGraph';
-import Bolt from './icons/Bolt';
-import Box from './icons/Box';
-import Cloud from './icons/Cloud';
-import Connection from './icons/Connection';
-import ContactIcon from './icons/Contact';
-import Document from './icons/Document';
-import List from './icons/List';
-import UserProfile from './icons/UserProfile';
-import Web from './icons/Web';
 
 type SidebarItem = {
   Icon: FC;
@@ -74,7 +74,7 @@ export const useSidebarMenuItems = (): {
           title: 'applications',
         },
         {
-          Icon: Cloud,
+          Icon: ResourceIcon,
           title: 'api_resources',
         },
         {
