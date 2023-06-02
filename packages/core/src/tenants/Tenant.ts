@@ -7,7 +7,6 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 import type Provider from 'oidc-provider';
 
-import { type RedisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
@@ -28,14 +27,15 @@ import Libraries from './Libraries.js';
 import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
 import { getTenantDatabaseDsn } from './utils.js';
+import { CacheStore } from '#src/caches/types.js';
 
 export default class Tenant implements TenantContext {
-  static async create(id: string, redisCache: RedisCache): Promise<Tenant> {
+  static async create(id: string, cacheStorage: CacheStore): Promise<Tenant> {
     // Treat the default database URL as the management URL
     const envSet = new EnvSet(id, await getTenantDatabaseDsn(id));
     await envSet.load();
 
-    return new Tenant(envSet, id, new WellKnownCache(id, redisCache));
+    return new Tenant(envSet, id, new WellKnownCache(id, cacheStorage));
   }
 
   public readonly provider: Provider;

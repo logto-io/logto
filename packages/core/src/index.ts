@@ -18,7 +18,7 @@ if (await appInsights.setup('core')) {
 // Import after env has been configured
 const { loadConnectorFactories } = await import('./utils/connectors/index.js');
 const { EnvSet } = await import('./env-set/index.js');
-const { redisCache } = await import('./caches/index.js');
+const { cacheStore } = await import('./caches/index.js');
 const { default: initI18n } = await import('./i18n/init.js');
 const { tenantPool, checkRowLevelSecurity } = await import('./tenants/index.js');
 
@@ -30,7 +30,7 @@ try {
 
   await Promise.all([
     initI18n(),
-    redisCache.connect(),
+    cacheStore.connect(),
     loadConnectorFactories(),
     checkRowLevelSecurity(sharedAdminPool),
     checkAlterationState(sharedAdminPool),
@@ -44,5 +44,5 @@ try {
   consoleLog.error('Error while initializing app:');
   consoleLog.error(error);
 
-  void Promise.all([trySafe(tenantPool.endAll()), trySafe(redisCache.disconnect())]);
+  void Promise.all([trySafe(tenantPool.endAll()), trySafe(() => cacheStore.disconnect())]);
 }

@@ -1,9 +1,9 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
-import { RedisCache } from '#src/caches/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
+import { RedisCache } from '#src/caches/redis-cache.js';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault } = createMockUtils(jest);
