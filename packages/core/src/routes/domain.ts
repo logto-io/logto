@@ -12,10 +12,10 @@ export default function domainRoutes<T extends AuthedRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
   const {
-    domains: { findAllDomains, findDomainById, deleteDomainById },
+    domains: { findAllDomains, findDomainById },
   } = queries;
   const {
-    domains: { syncDomainStatus, addDomain },
+    domains: { syncDomainStatus, addDomain, deleteDomain },
   } = libraries;
 
   router.get(
@@ -83,7 +83,7 @@ export default function domainRoutes<T extends AuthedRouter>(
     koaGuard({ params: z.object({ id: z.string() }), status: [204, 404] }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      await deleteDomainById(id);
+      await deleteDomain(id);
       ctx.status = 204;
 
       return next();

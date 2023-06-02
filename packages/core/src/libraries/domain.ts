@@ -9,7 +9,11 @@ import { generateStandardId } from '@logto/shared';
 import type Queries from '#src/tenants/Queries.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getCustomHostname, createCustomHostname } from '#src/utils/cloudflare/index.js';
+import {
+  getCustomHostname,
+  createCustomHostname,
+  deleteCustomHostname,
+} from '#src/utils/cloudflare/index.js';
 import { findSslTxtRecord, findVerificationTxtRecord } from '#src/utils/cloudflare/utils.js';
 
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
@@ -27,7 +31,7 @@ const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus =
 
 export const createDomainLibrary = (queries: Queries) => {
   const {
-    domains: { updateDomainById, insertDomain },
+    domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
   } = queries;
 
   const syncDomainStatusFromCloudflareData = async (
@@ -103,8 +107,22 @@ export const createDomainLibrary = (queries: Queries) => {
     });
   };
 
+  const deleteDomain = async (id: string) => {
+    const { hostnameProviderConfig } = SystemContext.shared;
+    assertThat(hostnameProviderConfig, 'domain.not_configured');
+
+    const domain = await findDomainById(id);
+
+    if (domain.cloudflareData?.id) {
+      await deleteCustomHostname(hostnameProviderConfig, domain.cloudflareData.id);
+    }
+
+    await deleteDomainById(id);
+  };
+
   return {
     syncDomainStatus,
     addDomain,
+    deleteDomain,
   };
 };

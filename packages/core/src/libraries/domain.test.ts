@@ -18,11 +18,12 @@ import SystemContext from '#src/tenants/SystemContext.js';
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
-const { getCustomHostname, createCustomHostname } = mockEsm(
+const { getCustomHostname, createCustomHostname, deleteCustomHostname } = mockEsm(
   '#src/utils/cloudflare/index.js',
   () => ({
     createCustomHostname: jest.fn(async () => mockCloudflareData),
     getCustomHostname: jest.fn(async () => mockCloudflareData),
+    deleteCustomHostname: jest.fn(),
   })
 );
 
@@ -31,8 +32,10 @@ const { createDomainLibrary } = await import('./domain.js');
 
 const updateDomainById = jest.fn(async (_, data) => data);
 const insertDomain = jest.fn(async (data) => data);
-const { syncDomainStatus, addDomain } = createDomainLibrary(
-  new MockQueries({ domains: { updateDomainById, insertDomain } })
+const findDomainById = jest.fn(async () => mockDomain);
+const deleteDomainById = jest.fn();
+const { syncDomainStatus, addDomain, deleteDomain } = createDomainLibrary(
+  new MockQueries({ domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById } })
 );
 
 const fallbackOrigin = 'fake_origin';
@@ -50,7 +53,7 @@ afterAll(() => {
   SystemContext.shared.hostnameProviderConfig = undefined;
 });
 
-describe('addDomainToCloudflare()', () => {
+describe('addDomain()', () => {
   it('should call createCustomHostname and return cloudflare data', async () => {
     const response = await addDomain(mockDomain.domain);
     expect(createCustomHostname).toBeCalledTimes(1);
@@ -131,5 +134,26 @@ describe('syncDomainStatus()', () => {
     });
     const response = await syncDomainStatus(mockDomainWithCloudflareData);
     expect(response.errorMessage).toContain('fake_error');
+  });
+});
+
+describe('deleteDomain()', () => {
+  afterEach(() => {
+    deleteDomainById.mockClear();
+    deleteCustomHostname.mockClear();
+  });
+
+  it('should delete from remote and then delete local record', async () => {
+    findDomainById.mockResolvedValueOnce(mockDomainWithCloudflareData);
+    await deleteDomain(mockDomain.id);
+    expect(deleteCustomHostname).toBeCalledTimes(1);
+    expect(deleteDomainById).toBeCalledTimes(1);
+  });
+
+  it('should delete local record for non-synced domain', async () => {
+    findDomainById.mockResolvedValueOnce(mockDomain);
+    await deleteDomain(mockDomain.id);
+    expect(deleteCustomHostname).not.toBeCalled();
+    expect(deleteDomainById).toBeCalledTimes(1);
   });
 });

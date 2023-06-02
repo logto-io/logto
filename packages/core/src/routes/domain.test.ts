@@ -1,4 +1,4 @@
-import { type Domain, type CreateDomain } from '@logto/schemas';
+import { type Domain } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockDomain, mockDomainResponse } from '#src/__mocks__/domain.js';
@@ -9,10 +9,6 @@ const { jest } = import.meta;
 
 const domains = {
   findAllDomains: jest.fn(async (): Promise<Domain[]> => [mockDomain]),
-  insertDomain: async (data: CreateDomain): Promise<Domain> => ({
-    ...mockDomain,
-    ...data,
-  }),
   findDomainById: async (id: string): Promise<Domain> => {
     const domain = [mockDomain].find((domain) => domain.id === id);
     if (!domain) {
@@ -20,7 +16,6 @@ const domains = {
     }
     return domain;
   },
-  deleteDomainById: jest.fn(),
 };
 
 const syncDomainStatus = jest.fn(async (domain: Domain): Promise<Domain> => domain);
@@ -30,11 +25,13 @@ const addDomain = jest.fn(
     domain,
   })
 );
+const deleteDomain = jest.fn();
 
 const mockLibraries = {
   domains: {
     syncDomainStatus,
     addDomain,
+    deleteDomain,
   },
 };
 
@@ -64,6 +61,7 @@ describe('domain routes', () => {
   it('POST /domains', async () => {
     domains.findAllDomains.mockResolvedValueOnce([]);
     const response = await domainRequest.post('/domains').send({ domain: 'test.com' });
+    expect(addDomain).toBeCalledWith('test.com');
     expect(response.status).toEqual(201);
     expect(response.body.id).toBeTruthy();
     expect(response.body.domain).toEqual('test.com');
@@ -80,5 +78,6 @@ describe('domain routes', () => {
       'status',
       204
     );
+    expect(deleteDomain).toBeCalledWith(mockDomain.id);
   });
 });

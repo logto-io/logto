@@ -71,3 +71,26 @@ export const getCustomHostname = async (auth: HostnameProviderData, identifier: 
 
   return result.data;
 };
+
+export const deleteCustomHostname = async (auth: HostnameProviderData, identifier: string) => {
+  const {
+    EnvSet: {
+      values: { isIntegrationTest },
+    },
+  } = await import('#src/env-set/index.js');
+  if (isIntegrationTest) {
+    return;
+  }
+
+  await got.delete(
+    new URL(
+      path.join(baseUrl.pathname, `/zones/${auth.zoneId}/custom_hostnames/${identifier}`),
+      baseUrl
+    ),
+    {
+      headers: {
+        Authorization: `Bearer ${auth.apiToken}`,
+      },
+    }
+  );
+};
