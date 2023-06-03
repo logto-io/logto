@@ -1,6 +1,6 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
-import type { ZodType } from 'zod';
+import type { ZodError, ZodType } from 'zod';
 import { z } from 'zod';
 
 // MARK: Foundation
@@ -59,13 +59,17 @@ export enum ConnectorErrorCodes {
 
 export class ConnectorError extends Error {
   public code: ConnectorErrorCodes;
-  public data: unknown;
+  public data?: unknown;
+  public zodError?: ZodError;
 
-  constructor(code: ConnectorErrorCodes, data?: unknown) {
-    const message = typeof data === 'string' ? data : 'Connector error occurred.';
+  constructor(code: ConnectorErrorCodes, payload?: { data?: unknown; zodError?: ZodError }) {
+    const message = `Connector error occurred: ${code}`;
     super(message);
+    this.name = 'ConnectorError';
     this.code = code;
-    this.data = typeof data === 'string' ? { message: data } : data;
+    const { data, zodError } = payload ?? {};
+    this.data = data;
+    this.zodError = zodError;
   }
 }
 

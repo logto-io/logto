@@ -114,10 +114,9 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const samlAssertionParseResult = samlAssertionGuard.safeParse(body);
 
       if (!samlAssertionParseResult.success) {
-        throw new ConnectorError(
-          ConnectorErrorCodes.InvalidResponse,
-          samlAssertionParseResult.error
-        );
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, {
+          zodError: samlAssertionParseResult.error,
+        });
       }
 
       /**
@@ -134,7 +133,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       assertThat(
         validateSamlAssertion,
         new ConnectorError(ConnectorErrorCodes.NotImplemented, {
-          message: 'Method `validateSamlAssertion()` is not implemented.',
+          data: 'Method `validateSamlAssertion()` is not implemented.',
         })
       );
       const redirectTo = await validateSamlAssertion({ body }, getSession, setSession);

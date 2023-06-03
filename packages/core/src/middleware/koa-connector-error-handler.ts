@@ -1,9 +1,10 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { trySafe } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import type { Middleware } from 'koa';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { formatZodError } from '#src/errors/utils/index.js';
 
 export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   // Too many error types :-)
@@ -16,7 +17,12 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         throw error;
       }
 
-      const { code, data } = error;
+      const { code, data, zodError, name } = error;
+      const requestErrorData = {
+        data,
+        name,
+        zodErrorMessage: conditional(zodError && formatZodError(zodError).join('\n')),
+      };
 
       const errorDescriptionGuard = z.object({ errorDescription: z.string() });
       const message = trySafe(() => errorDescriptionGuard.parse(data))?.errorDescription;
@@ -28,14 +34,14 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         case ConnectorErrorCodes.InsufficientRequestParameters:
         case ConnectorErrorCodes.InvalidConfig:
         case ConnectorErrorCodes.InvalidResponse: {
-          throw new RequestError({ code: `connector.${code}`, status: 400 }, data);
+          throw new RequestError({ code: `connector.${code}`, status: 400 }, requestErrorData);
         }
 
         case ConnectorErrorCodes.SocialAuthCodeInvalid:
         case ConnectorErrorCodes.SocialAccessTokenInvalid:
         case ConnectorErrorCodes.SocialIdTokenInvalid:
         case ConnectorErrorCodes.AuthorizationFailed: {
-          throw new RequestError({ code: `connector.${code}`, status: 401 }, data);
+          throw new RequestError({ code: `connector.${code}`, status: 401 }, requestErrorData);
         }
 
         case ConnectorErrorCodes.TemplateNotFound: {
@@ -44,16 +50,16 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
               code: `connector.${code}`,
               status: 400,
             },
-            data
+            requestErrorData
           );
         }
 
         case ConnectorErrorCodes.NotImplemented: {
-          throw new RequestError({ code: `connector.${code}`, status: 501 }, data);
+          throw new RequestError({ code: `connector.${code}`, status: 501 }, requestErrorData);
         }
 
         case ConnectorErrorCodes.RateLimitExceeded: {
-          throw new RequestError({ code: `connector.${code}`, status: 429 }, data);
+          throw new RequestError({ code: `connector.${code}`, status: 429 }, requestErrorData);
         }
 
         default: {
@@ -63,7 +69,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
               status: 400, // Temporarily use 400 to avoid false positives. May update later.
               errorDescription: message,
             },
-            data
+            requestErrorData
           );
         }
       }
