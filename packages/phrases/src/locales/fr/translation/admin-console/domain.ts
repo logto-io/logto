@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'Votre domaine personnalisé a été configuré avec succès. N’oubliez pas de mettre à jour le domaine que vous avez utilisé pour {{domain}} si vous avez configuré les ressources ci-dessous auparavant.',
+      'Votre domaine personnalisé a été configuré avec succès. N’oubliez pas de mettre à jour le domaine que vous avez utilisé pour <span>{{domain}}</span> si vous avez configuré les ressources ci-dessous auparavant.',
     endpoint_url: 'URL de point de terminaison de <a>{{link}}</a>',
     application_settings_link_text: 'Réglages de l’application',
     callback_url: 'URL de rappel de <a>{{link}}</a>',
@@ -20,43 +20,29 @@ const domain = {
     custom_domain_description:
       'Remplacez le domaine par défaut par votre propre domaine pour maintenir la cohérence avec votre marque et personnaliser l’expérience de connexion pour vos utilisateurs.',
     custom_domain_field: 'Domaine personnalisé',
-    custom_domain_placeholder: 'votredomaine.com',
+    custom_domain_placeholder: 'votre.domaine.com',
     add_domain: 'Ajouter un domaine',
-    invalid_domain_format: 'Format de domaine invalide',
-    steps: {
-      add_records: {
-        title: 'Ajoutez les enregistrements DNS suivants à votre fournisseur DNS',
-        generating_dns_records: 'Génération des enregistrements DNS...',
-        table: {
-          type_field: 'Type',
-          name_field: 'Nom',
-          value_field: 'Valeur',
-        },
-        finish_and_continue: 'Terminer et continuer',
-      },
-      verify_domain: {
-        title: 'Vérifier la connexion des enregistrements DNS automatiquement',
-        description:
-          "Le processus sera effectué automatiquement, ce qui peut prendre quelques minutes (jusqu'à 24 heures). Vous pouvez quitter cette interface pendant son exécution.",
-        error_message:
-          'Impossible de vérifier. Veuillez vérifier votre nom de domaine ou vos enregistrements DNS.',
-      },
-      generate_ssl_cert: {
-        title: 'Générer un certificat SSL automatiquement',
-        description:
-          "Le processus sera effectué automatiquement, ce qui peut prendre quelques minutes (jusqu'à 24 heures). Vous pouvez quitter cette interface pendant son exécution.",
-        error_message: 'Impossible de générer le certificat SSL.',
-      },
-      enable_domain: 'Activer votre domaine personnalisé automatiquement',
+    invalid_domain_format:
+      'Format de sous-domaine invalide. Veuillez entrer un sous-domaine d’au moins trois parties.',
+    verify_domain: 'Vérifier le domaine',
+    enable_ssl: 'Activer SSL',
+    checking_dns_tip:
+      'Après avoir configuré les enregistrements DNS, le processus s’exécutera automatiquement et peut prendre jusqu’à 24 heures. Vous pouvez quitter cette interface pendant son exécution.',
+    generating_dns_records: 'Génération des enregistrements DNS...',
+    add_dns_records: 'Veuillez ajouter ces enregistrements DNS à votre fournisseur DNS.',
+    dns_table: {
+      type_field: 'Type',
+      name_field: 'Nom',
+      value_field: 'Valeur',
     },
     deletion: {
       delete_domain: 'Supprimer le domaine',
       reminder: 'Supprimer le domaine personnalisé',
       description: 'Êtes-vous sûr de vouloir supprimer ce domaine personnalisé ?',
       in_used_description:
-        'Êtes-vous sûr de vouloir supprimer ce domaine personnalisé "{{domain}}" ?',
+        'Êtes-vous sûr de vouloir supprimer ce domaine personnalisé "<span>{{domain}}</span>" ?',
       in_used_tip:
-        "Si vous avez configuré ce domaine personnalisé dans votre fournisseur de connecteur social ou votre point de terminaison d'application auparavant, vous devrez d'abord modifier l'URI en domaine personnalisé de Logto \"{{domain}}\". C'est nécessaire pour que le bouton de connexion sociale fonctionne correctement.",
+        'Si vous avez configuré ce domaine personnalisé dans votre fournisseur de connecteur social ou le point de terminaison de l’application avant, vous devrez d’abord modifier l’URI vers le domaine Logto par défaut "<span>{{domain}}</span>". Ceci est nécessaire pour que le bouton de connexion sociale fonctionne correctement.',
       deleted: 'Suppression du domaine personnalisé réussie !',
     },
   },

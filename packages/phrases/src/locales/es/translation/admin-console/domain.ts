@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'Su dominio personalizado se ha configurado correctamente. No olvide actualizar el dominio que ha utilizado para {{domain}} si había configurado los recursos a continuación anteriormente.',
+      'Su dominio personalizado se ha configurado correctamente. No olvide actualizar el dominio que ha utilizado para <span>{{domain}}</span> si había configurado los recursos a continuación anteriormente.',
     endpoint_url: 'URL del endpoint de <a>{{link}}</a>',
     application_settings_link_text: 'Configuración de la aplicación',
     callback_url: 'URL de callback de <a>{{link}}</a>',
@@ -20,42 +20,29 @@ const domain = {
     custom_domain_description:
       'Reemplace el dominio predeterminado con su propio dominio para mantener la coherencia con su marca y personalizar la experiencia de inicio de sesión para sus usuarios.',
     custom_domain_field: 'Dominio personalizado',
-    custom_domain_placeholder: 'tudominio.com',
+    custom_domain_placeholder: 'tu.dominio.com',
     add_domain: 'Agregar dominio',
-    invalid_domain_format: 'Formato de dominio no válido',
-    steps: {
-      add_records: {
-        title: 'Agregue los siguientes registros DNS a su proveedor DNS',
-        generating_dns_records: 'Generar registros DNS...',
-        table: {
-          type_field: 'Tipo',
-          name_field: 'Nombre',
-          value_field: 'Valor',
-        },
-        finish_and_continue: 'Terminar y continuar',
-      },
-      verify_domain: {
-        title: 'Verifique la conexión de los registros DNS automáticamente',
-        description:
-          'El proceso se llevará a cabo automáticamente, lo que puede tomar algunos minutos (hasta 24 horas). Puede salir de esta interfaz mientras se ejecuta.',
-        error_message: 'Error al verificar. Compruebe su nombre de dominio o registros DNS.',
-      },
-      generate_ssl_cert: {
-        title: 'Genere un certificado SSL automáticamente',
-        description:
-          'El proceso se llevará a cabo automáticamente, lo que puede tomar algunos minutos (hasta 24 horas). Puede salir de esta interfaz mientras se ejecuta.',
-        error_message: 'Error al generar la certificación SSL. ',
-      },
-      enable_domain: 'Habilitar su dominio personalizado automáticamente',
+    invalid_domain_format:
+      'Formato de subdominio no válido. Por favor ingrese un subdominio con al menos tres partes.',
+    verify_domain: 'Verificar dominio',
+    enable_ssl: 'Habilitar SSL',
+    checking_dns_tip:
+      'Después de configurar los registros DNS, el proceso se ejecutará automáticamente y puede tardar hasta 24 horas. Puede dejar esta interfaz mientras se está ejecutando.',
+    generating_dns_records: 'Generando los registros DNS...',
+    add_dns_records: 'Agrega estos registros DNS a tu proveedor de DNS.',
+    dns_table: {
+      type_field: 'Tipo',
+      name_field: 'Nombre',
+      value_field: 'Valor',
     },
     deletion: {
-      delete_domain: 'Borrar dominio',
+      delete_domain: 'Eliminar dominio',
       reminder: 'Eliminar dominio personalizado',
       description: '¿Está seguro de que desea eliminar este dominio personalizado?',
       in_used_description:
-        '¿Está seguro de que desea eliminar este dominio personalizado "{{domain}}"?',
+        '¿Está seguro de que desea eliminar este dominio personalizado "<span>{{domain}}</span>"?',
       in_used_tip:
-        'Si configuró este dominio personalizado en su proveedor de conector social o en el endpoint de la aplicación antes, deberá modificar la URI al dominio personalizado de Logto "{{domain}}" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
+        'Si ha configurado este dominio personalizado en su proveedor de conector social o punto final de aplicación antes, deberá modificar la URI al dominio predeterminado de Logto "<span>{{domain}}</span>" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
       deleted: '¡Dominio personalizado eliminado con éxito!',
     },
   },

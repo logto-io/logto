@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'カスタムドメインの設定が正常に完了しました。以前に以下のリソースを設定していた場合は、使用していたドメインを{{domain}}に更新することを忘れないでください。',
+      'カスタムドメインの設定が正常に完了しました。以前に以下のリソースを設定していた場合は、使用していたドメインを <span>{{domain}}</span> に更新することを忘れないでください。',
     endpoint_url: '<a>{{link}}</a>のエンドポイントURL',
     application_settings_link_text: 'アプリケーション設定',
     callback_url: '<a>{{link}}</a>のコールバックURL',
@@ -20,41 +20,29 @@ const domain = {
     custom_domain_description:
       'デフォルトのドメインを独自のドメインに置き換えて、ブランドの一貫性を保ち、ユーザーのサインインエクスペリエンスを個別にカスタマイズします。',
     custom_domain_field: 'カスタムドメイン',
-    custom_domain_placeholder: 'yourdomain.com',
+    custom_domain_placeholder: 'your.domain.com',
     add_domain: 'ドメインを追加',
-    invalid_domain_format: '無効なドメイン形式です',
-    steps: {
-      add_records: {
-        title: '次のDNSレコードをDNSプロバイダに追加します',
-        generating_dns_records: 'DNSレコードを生成しています...',
-        table: {
-          type_field: 'タイプ',
-          name_field: '名前',
-          value_field: '値',
-        },
-        finish_and_continue: '完了して続行',
-      },
-      verify_domain: {
-        title: 'DNSレコードの接続を自動的に確認します',
-        description:
-          'このプロセスは自動的に行われますが、数分（最大24時間）かかる場合があります。実行中にこのインターフェースを終了しても構いません。',
-        error_message: '確認に失敗しました。ドメイン名またはDNSレコードを確認してください。',
-      },
-      generate_ssl_cert: {
-        title: 'SSL証明書を自動的に生成します',
-        description:
-          'このプロセスは自動的に行われますが、数分（最大24時間）かかる場合があります。実行中にこのインターフェースを終了しても構いません。',
-        error_message: 'SSL証明書の生成に失敗しました。',
-      },
-      enable_domain: 'カスタムドメインを自動的に有効にします',
+    invalid_domain_format:
+      'サブドメインの形式が無効です。サブドメインを少なくとも3つ含むサブドメインを入力してください。',
+    verify_domain: 'ドメインを検証',
+    enable_ssl: 'SSLを有効化',
+    checking_dns_tip:
+      'DNSレコードを設定した後、プロセスが自動的に実行され、最大24時間かかる場合があります。この間このインターフェースを開いたままにすることができます。',
+    generating_dns_records: 'DNSレコードを生成しています...',
+    add_dns_records: '以下のDNSレコードをDNSプロバイダに追加してください。',
+    dns_table: {
+      type_field: 'タイプ',
+      name_field: '名前',
+      value_field: '値',
     },
     deletion: {
       delete_domain: 'ドメインを削除',
       reminder: 'カスタムドメインを削除',
       description: 'このカスタムドメインを削除してもよろしいですか？',
-      in_used_description: 'このカスタムドメイン "{{domain}}" を削除してもよろしいですか？',
+      in_used_description:
+        'このカスタムドメイン "<span>{{domain}}</span>" を削除してもよろしいですか？',
       in_used_tip:
-        '以前にこのカスタムドメインをソーシャルコネクタプロバイダまたはアプリケーションエンドポイントに設定した場合は、まずURIをLogtoカスタムドメイン "{{domain}}" に変更する必要があります。これにより、ソーシャルサインインボタンが正常に機能します。',
+        'このカスタムドメインを以前に<br/>ソーシャルコネクタプロバイダまたはアプリケーションエンドポイントで設定した場合、そのURIをLogtoのデフォルトドメイン"<span>{{domain}}</span>"に変更する必要があります。これは、ソーシャルサインインボタンが正常に機能するために必要です。',
       deleted: 'カスタムドメインを正常に削除しました！',
     },
   },
