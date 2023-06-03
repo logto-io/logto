@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'Ihre benutzerdefinierte Domain wurde erfolgreich konfiguriert. Vergessen Sie nicht, die Domain zu aktualisieren, die Sie zuvor für die folgenden Ressourcen konfiguriert haben: {{domain}}.',
+      'Ihre benutzerdefinierte Domain wurde erfolgreich konfiguriert. Vergessen Sie nicht, die Domain zu aktualisieren, die Sie zuvor für die folgenden Ressourcen konfiguriert haben: <span>{{domain}}</span>.',
     endpoint_url: 'Endpunkt-URL von <a>{{link}}</a>',
     application_settings_link_text: 'Anwendungseinstellungen',
     callback_url: 'Callback-URL von <a>{{link}}</a>',
@@ -20,43 +20,29 @@ const domain = {
     custom_domain_description:
       'Ersetzen Sie die Standarddomain durch Ihre eigene Domain, um die Konsistenz mit Ihrer Marke beizubehalten und die Anmeldeerfahrung für Benutzer zu personalisieren.',
     custom_domain_field: 'Benutzerdefinierte Domain',
-    custom_domain_placeholder: 'ihredomain.com',
+    custom_domain_placeholder: 'ihre.domain.com',
     add_domain: 'Domain hinzufügen',
-    invalid_domain_format: 'Ungültiges Format',
-    steps: {
-      add_records: {
-        title: 'Fügen Sie die folgenden DNS-Einträge zu Ihrem DNS-Anbieter hinzu',
-        generating_dns_records: 'Erzeuge die DNS-Einträge...',
-        table: {
-          type_field: 'Typ',
-          name_field: 'Name',
-          value_field: 'Wert',
-        },
-        finish_and_continue: 'Fertigstellen und Fortfahren',
-      },
-      verify_domain: {
-        title: 'Verifizieren Sie die Verbindung der DNS-Einträge automatisch',
-        description:
-          'Der Prozess wird automatisch durchgeführt und kann einige Minuten (bis zu 24 Stunden) dauern. Sie können diese Schnittstelle verlassen, während sie ausgeführt wird.',
-        error_message:
-          'Verifizierung fehlgeschlagen. Bitte prüfen Sie Ihren Domainnamen oder DNS-Einträge.',
-      },
-      generate_ssl_cert: {
-        title: 'Generieren Sie automatisch ein SSL-Zertifikat',
-        description:
-          'Der Prozess wird automatisch durchgeführt und kann einige Minuten (bis zu 24 Stunden) dauern. Sie können diese Schnittstelle verlassen, während sie ausgeführt wird.',
-        error_message: 'SSL-Zertifizierung fehlgeschlagen. ',
-      },
-      enable_domain: 'Aktivieren Sie Ihre benutzerdefinierte Domain automatisch',
+    invalid_domain_format:
+      'Ungültiges Subdomänen-Format. Bitte geben Sie eine Subdomäne mit mindestens drei Teilen ein.',
+    verify_domain: 'Domain überprüfen',
+    enable_ssl: 'SSL aktivieren',
+    checking_dns_tip:
+      'Nachdem Sie die DNS-Einträge konfiguriert haben, wird der Prozess automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen während es läuft.',
+    generating_dns_records: 'DNS-Einträge werden generiert...',
+    add_dns_records: 'Bitte fügen Sie diese DNS-Einträge Ihrem DNS-Provider hinzu.',
+    dns_table: {
+      type_field: 'Typ',
+      name_field: 'Name',
+      value_field: 'Wert',
     },
     deletion: {
       delete_domain: 'Domain löschen',
       reminder: 'Benutzerdefinierte Domain löschen',
       description: 'Sind Sie sicher, dass Sie diese benutzerdefinierte Domain löschen möchten?',
       in_used_description:
-        'Sind Sie sicher, dass Sie diese benutzerdefinierte Domain "{{domain}}" löschen möchten?',
+        'Sind Sie sicher, dass Sie diese benutzerdefinierte Domain "<span>{{domain}}</span>" löschen möchten?',
       in_used_tip:
-        'Wenn Sie diese benutzerdefinierte Domain zuvor in Ihrem sozialen Anbindungsanbieter oder Anwendungs-Endpunkt eingerichtet haben, müssen Sie die URI zuerst auf die Logto benutzerdefinierte Domain "{{domain}}" ändern. Dies ist notwendig, damit der soziale Anmelde-Button ordnungsgemäß funktioniert.',
+        'Wenn Sie diese benutzerdefinierte Domain bereits in Ihrem Social-Connector-Provider oder Anwendungs-Endpunkt eingerichtet haben, müssen Sie die URI zu der Logto-Standarddomain "<span>{{domain}}</span>" ändern. Dies ist notwendig, damit die Social-Sign-In-Schaltfläche ordnungsgemäß funktioniert.',
       deleted: 'Benutzerdefinierte Domain wurde erfolgreich gelöscht!',
     },
   },

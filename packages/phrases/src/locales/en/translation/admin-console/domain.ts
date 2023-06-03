@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'Your custom domain has been successfully configured. Don’t forget to update the domain which you have used to {{domain}} if you had configured the resources below previously.',
+      'Your custom domain has been successfully configured. Don’t forget to update the domain which you have used to <span>{{domain}}</span> if you had configured the resources below previously.',
     endpoint_url: 'Endpoint URL of <a>{{link}}</a>',
     application_settings_link_text: 'Application Settings',
     callback_url: 'Callback URL of <a>{{link}}</a>',
@@ -20,41 +20,29 @@ const domain = {
     custom_domain_description:
       'Replace the default domain with your own domain to maintain consistency with your brand and personalize the sign-in experience for your users.',
     custom_domain_field: 'Custom domain',
-    custom_domain_placeholder: 'yourdomain.com',
+    custom_domain_placeholder: 'your.domain.com',
     add_domain: 'Add domain',
-    invalid_domain_format: 'Invalid domain format',
-    steps: {
-      add_records: {
-        title: 'Add the following DNS records to your DNS provider',
-        generating_dns_records: 'Generating the DNS records...',
-        table: {
-          type_field: 'Type',
-          name_field: 'Name',
-          value_field: 'Value',
-        },
-        finish_and_continue: 'Finish and Continue',
-      },
-      verify_domain: {
-        title: 'Verify the connection of DNS records automatically',
-        description:
-          'The process will be carried out automatically, which may take a few minutes (up to 24 hours). You can exit this interface while it runs.',
-        error_message: 'Failed to verify. Please check your domain name or DNS Records.',
-      },
-      generate_ssl_cert: {
-        title: 'Generate an SSL certificate automatically',
-        description:
-          'The process will be carried out automatically, which may take a few minutes (up to 24 hours). You can exit this interface while it runs.',
-        error_message: 'Failed to generate the SSL Certification. ',
-      },
-      enable_domain: 'Enable your custom domain automatically',
+    invalid_domain_format:
+      'Invalid subdomain format. Please enter a subdomain with at least three parts.',
+    verify_domain: 'Verify domain',
+    enable_ssl: 'Enable SSL',
+    checking_dns_tip:
+      'After you configuring the DNS records, the process will run automatically and may take up to 24 hours. You can leave this interface while it’s running.',
+    generating_dns_records: 'Generating the DNS records...',
+    add_dns_records: 'Please add these DNS records to your DNS provider.',
+    dns_table: {
+      type_field: 'Type',
+      name_field: 'Name',
+      value_field: 'Value',
     },
     deletion: {
       delete_domain: 'Delete domain',
       reminder: 'Delete custom domain',
       description: 'Are you sure you want to delete this custom domain?',
-      in_used_description: 'Are you sure you want to delete this custom domain "{{domain}}"?',
+      in_used_description:
+        'Are you sure you want to delete this custom domain "<span>{{domain}}</span>"?',
       in_used_tip:
-        'If you’ve set up this custom domain in your social connector provider or application endpoint before, you’ll need to modify the URI to the Logto custom domain "{{domain}}" first. This is necessary for the social sign-in button to work properly.',
+        'If you’ve set up this custom domain in your social connector provider or application endpoint before, you’ll need to modify the URI to the Logto default domain "<span>{{domain}}</span>" first. This is necessary for the social sign-in button to work properly.',
       deleted: 'Delete custom domain successfully!',
     },
   },

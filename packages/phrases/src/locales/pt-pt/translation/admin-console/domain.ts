@@ -6,7 +6,7 @@ const domain = {
   },
   update_endpoint_alert: {
     description:
-      'O seu domínio personalizado foi configurado com sucesso. Não se esqueça de atualizar o domínio que utilizou para {{domain}} caso tenha configurado os recursos abaixo anteriormente.',
+      'O seu domínio personalizado foi configurado com sucesso. Não se esqueça de atualizar o domínio que utilizou para <span>{{domain}}</span> caso tenha configurado os recursos abaixo anteriormente.',
     endpoint_url: 'URL de extremidade de <a>{{link}}</a>',
     application_settings_link_text: 'Definições da aplicação',
     callback_url: 'URL de retorno de chamada de <a>{{link}}</a>',
@@ -20,42 +20,29 @@ const domain = {
     custom_domain_description:
       'Troque o domínio predefinido pelo seu próprio domínio para manter a consistência com a sua marca e personalizar a experiência de início de sessão para os seus utilizadores.',
     custom_domain_field: 'Domínio personalizado',
-    custom_domain_placeholder: 'seudominio.com',
+    custom_domain_placeholder: 'your.domain.com',
     add_domain: 'Adicionar domínio',
-    invalid_domain_format: 'Formato de domínio inválido',
-    steps: {
-      add_records: {
-        title: 'Adicione os seguintes registos DNS ao seu fornecedor de DNS',
-        generating_dns_records: 'A gerar os registos DNS...',
-        table: {
-          type_field: 'Tipo',
-          name_field: 'Nome',
-          value_field: 'Valor',
-        },
-        finish_and_continue: 'Terminar e continuar',
-      },
-      verify_domain: {
-        title: 'Verificar a ligação dos registos DNS automaticamente',
-        description:
-          'O processo será realizado automaticamente, o que pode demorar alguns minutos (até 24 horas). Pode sair desta interface enquanto é executado.',
-        error_message: 'Falha na verificação. Verifique o seu nome de domínio ou registos DNS.',
-      },
-      generate_ssl_cert: {
-        title: 'Gerar um certificado SSL automaticamente',
-        description:
-          'O processo será realizado automaticamente, o que pode demorar alguns minutos (até 24 horas). Pode sair desta interface enquanto é executado.',
-        error_message: 'Falha na geração do Certificado SSL.',
-      },
-      enable_domain: 'Ativar o seu domínio personalizado automaticamente',
+    invalid_domain_format:
+      'Formato de subdomínio inválido. Introduza um subdomínio com pelo menos três partes.',
+    verify_domain: 'Verificar domínio',
+    enable_ssl: 'Ativar SSL',
+    checking_dns_tip:
+      'Após a configuração dos registos DNS, o processo será executado automaticamente e pode demorar até 24 horas. Pode sair desta interface enquanto o processo estiver em execução.',
+    generating_dns_records: 'Gerando os registos DNS...',
+    add_dns_records: 'Adicione estes registos DNS ao seu provedor de DNS.',
+    dns_table: {
+      type_field: 'Tipo',
+      name_field: 'Nome',
+      value_field: 'Valor',
     },
     deletion: {
       delete_domain: 'Eliminar domínio',
       reminder: 'Eliminar domínio personalizado',
       description: 'Tem a certeza de que pretende eliminar este domínio personalizado?',
       in_used_description:
-        'Tem a certeza de que pretende eliminar este domínio personalizado "{{domain}}"?',
+        'Tem a certeza de que pretende eliminar este domínio personalizado "<span>{{domain}}</span>"?',
       in_used_tip:
-        'Se tiver configurado este domínio personalizado no seu fornecedor de conector social ou no ponto final da aplicação antes, terá de modificar a URI para o domínio personalizado da Logto "{{domain}}" primeiro. Isto é necessário para que o botão de início de sessão social funcione corretamente.',
+        'Se já configurou este domínio personalizado no seu fornecedor de conector social ou extremidade de aplicação antes, terá de modificar a URI para o domínio padrão do Logto "<span>{{domain}}</span>" primeiro. Isto é necessário para que o botão de início de sessão social funcione corretamente.',
       deleted: 'Domínio personalizado eliminado com sucesso!',
     },
   },
