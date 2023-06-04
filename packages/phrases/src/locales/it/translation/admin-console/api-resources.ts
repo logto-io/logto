@@ -5,14 +5,14 @@ const api_resources = {
   create: 'Crea risorsa API',
   api_name: 'Nome API',
   api_name_placeholder: "Inserisci il nome dell'API",
-  api_identifier: 'Identificatore API',
+  api_identifier: 'API Identifier',
+  api_identifier_placeholder: 'https://your-api-identifier/',
   api_identifier_tip:
     "L'identificatore univoco della risorsa API. Deve essere un URI assoluto e non ha componenti di frammento (#). Corrisponde al parametro <a>risorsa</a> in OAuth 2.0.",
   default_api: 'API predefinita',
   default_api_label:
     'Solo zero o una API predefinita possono essere impostate per tenant. Quando viene designata una API predefinita, il parametro di risorsa può essere omesso nella richiesta di autorizzazione. Gli scambi di token successivi utilizzeranno quell API come destinatario per impostazione predefinita, con conseguente rilascio di JWT.',
   api_resource_created: 'La risorsa API {{name}} è stata creata con successo',
-  api_identifier_placeholder: 'https://tuo-identificatore-api/',
 };
 
 export default api_resources;
