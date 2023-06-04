@@ -8,9 +8,9 @@ const api_resources = {
   api_identifier: 'API 식별자',
   api_identifier_tip:
     'API 리소스에 대한 고유한 식별자예요. 절대 URI여야 하며 조각 (#) 컴포넌트가 없어야 해요. OAuth 2.0의 <a>resource parameter</a>와 같아요.',
-  default_api: 'Default API', // UNTRANSLATED
+  default_api: 'Default API',
   default_api_label:
-    'If the current API Resource is set as the default API for the tenant, while each tenant can have either 0 or 1 default API. When a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs.', // UNTRANSLATED
+    '테넌트 당 기본 API는 0개 또는 1개만 지정 할 수 있어요. 기본 API가 지정되면 인증 요청에서 리소스 매개 변수를 생략할 수 있어요. 이후 토큰 교환이 기본적으로 대상에 해당하는 API를 사용하여 수행되어 JWT가 발급되어요.',
   api_resource_created: '{{name}} API 리소스가 성공적으로 생성되었어요.',
   api_identifier_placeholder: 'https://your-api-identifier/',
 };

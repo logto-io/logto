@@ -8,9 +8,9 @@ const api_resources = {
   api_identifier: 'Identifiant API',
   api_identifier_tip:
     "L'identifiant unique de la ressource API. Il doit s'agir d'un URI absolu et ne doit pas comporter de fragment (#). Équivaut au <a>paramètre de ressource</> dans OAuth 2.0.",
-  default_api: 'Default API', // UNTRANSLATED
+  default_api: 'API par défaut',
   default_api_label:
-    'If the current API Resource is set as the default API for the tenant, while each tenant can have either 0 or 1 default API. When a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs.', // UNTRANSLATED
+    'Seulement zéro ou une API par défaut peut être définie par tenant. Lorsqu\'une API par défaut est désignée, le paramètre "resource" peut être omis dans la demande d\'authentification. Les échanges de jetons ultérieurs utiliseront cette API comme public cible par défaut, ce qui entraînera la délivrance de JWT.',
   api_resource_created: 'La ressource API {{name}} a été créée avec succès.',
   api_identifier_placeholder: 'https://votre-identifiant-api/',
 };

@@ -5,14 +5,14 @@ const api_resources = {
   create: '创建 API 资源',
   api_name: 'API 名称',
   api_name_placeholder: '输入API名称',
-  api_identifier: 'API Identifier',
+  api_identifier: 'API 标识符',
   api_identifier_placeholder: 'https://your-api-identifier/',
   api_identifier_tip:
     '对于 API 资源的唯一标识符。它必须是一个绝对 URI 并没有 fragment (#) 组件。等价于 OAuth 2.0 中的 <a>resource parameter</a>。',
   api_resource_created: ' API 资源 {{name}} 已成功创建。',
-  default_api: 'Default API', // UNTRANSLATED
+  default_api: '默认API',
   default_api_label:
-    'If the current API Resource is set as the default API for the tenant, while each tenant can have either 0 or 1 default API. When a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs.', // UNTRANSLATED
+    '每个租户只能设置零个或一个默认API。当指定默认API时，可以在认证请求中省略资源参数。后续令牌交换将默认使用该API作为受众，导致JWT的签发。',
 };
 
 export default api_resources;

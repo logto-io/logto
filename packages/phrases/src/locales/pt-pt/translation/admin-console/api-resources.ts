@@ -1,18 +1,18 @@
 const api_resources = {
-  page_title: 'Recursos API',
-  title: 'Recursos API',
-  subtitle: 'Defina APIs que pode consumir nos aplicações autorizadas',
-  create: 'Criar recurso API',
+  page_title: 'Recursos de API',
+  title: 'Recursos de API',
+  subtitle: 'Defina as APIs que podem ser consumidas ​​pelas aplicações autorizadas',
+  create: 'Criar recurso de API',
   api_name: 'Nome da API',
-  api_name_placeholder: 'Introduza o nome da sua API',
-  api_identifier: 'identificador da API',
+  api_name_placeholder: 'Insira o nome da sua API',
+  api_identifier: 'Identificador da API',
   api_identifier_tip:
-    'O identificador exclusivo para o recurso API. Deve ser um URI absoluto e não tem componente de fragmento (#). Igual ao <a>resource parameter</a> no OAuth 2.0.',
-  default_api: 'Default API', // UNTRANSLATED
+    'O identificador exclusivo para o recurso de API. Deve ser um URI absoluto e não ter um componente de fragmento (#). Igual ao <a>parâmetro resource</a> no OAuth 2.0.',
+  default_api: 'API padrão',
   default_api_label:
-    'If the current API Resource is set as the default API for the tenant, while each tenant can have either 0 or 1 default API. When a default API is designated, the resource parameter can be omitted in the auth request. Subsequent token exchanges will use that API as the audience by default, resulting in the issuance of JWTs.', // UNTRANSLATED
-  api_resource_created: 'O recurso API {{name}} foi criado com sucesso',
-  api_identifier_placeholder: 'https://your-api-identifier/',
+    'Somente uma API padrão pode ser definida por inquilino. Quando uma API padrão é definida, o parâmetro de recurso pode ser omitido na solicitação de autorização. Subsequentes trocas de token usarão essa API como audiência por padrão, resultando na emissão de JWTs.',
+  api_resource_created: 'O recurso de API {{name}} foi criado com sucesso',
+  api_identifier_placeholder: 'https://seu-identificador-de-api/',
 };
 
 export default api_resources;
