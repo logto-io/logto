@@ -19,6 +19,7 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import Tag from '@/components/Tag';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -81,9 +82,18 @@ function ApiResourceDetails() {
           <Card className={styles.header}>
             <div className={styles.info}>
               <Icon className={styles.icon} />
-              <div className={styles.meta}>
+              <div className={styles.metadata}>
                 <div className={styles.name}>{data.name}</div>
-                <CopyToClipboard size="small" value={data.indicator} />
+                <div className={styles.row}>
+                  {data.isDefault && (
+                    <>
+                      <Tag>{t('api_resources.default_api')}</Tag>
+                      <div className={styles.verticalBar} />
+                    </>
+                  )}
+                  <div className={styles.text}>API Identifier</div>
+                  <CopyToClipboard size="small" value={data.indicator} />
+                </div>
               </div>
             </div>
             {!isLogtoManagementApiResource && (
