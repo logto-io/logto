@@ -43,15 +43,9 @@ function ContactModal({ isOpen, onCancel }: Props) {
                     <DynamicT forKey={description} />
                   </div>
                 </div>
-                <div>
-                  <Button
-                    type="outline"
-                    title={label}
-                    to={link}
-                    className={styles.button}
-                    onClick={() => window.open(link)}
-                  />
-                </div>
+                <a href={link} target="_blank" className={styles.link} rel="noopener">
+                  <Button type="outline" title={label} className={styles.button} />
+                </a>
               </div>
             ))}
         </div>
