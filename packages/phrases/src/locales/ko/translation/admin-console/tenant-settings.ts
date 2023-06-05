@@ -3,6 +3,7 @@ const tenant_settings = {
   description: '계정 보안을 위해 여기서 계정 설정 및 개인 정보를 관리하세요.',
   tabs: {
     settings: '설정',
+    domains: '도메인',
   },
   profile: {
     title: '프로필 설정',

@@ -4,6 +4,7 @@ const tenant_settings = {
     'Alterar suas informações da conta e gerenciar suas informações pessoais aqui para garantir a segurança da sua conta.',
   tabs: {
     settings: 'Configurações',
+    domains: 'Domínios',
   },
   profile: {
     title: 'CONFIGURAÇÃO DE PERFIL',
