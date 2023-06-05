@@ -29,7 +29,7 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
 
-const isWebHookEventLog = (key?: string) =>
+const isWebhookEventLog = (key?: string) =>
   key && Object.values<string>(hookEventLogKey).includes(key);
 
 function AuditLogDetails() {
@@ -63,7 +63,7 @@ function AuditLogDetails() {
     return null;
   }
 
-  const isWebHookEvent = isWebHookEventLog(data?.key);
+  const isWebHookEvent = isWebhookEventLog(data?.key);
 
   return (
     <DetailsPage
