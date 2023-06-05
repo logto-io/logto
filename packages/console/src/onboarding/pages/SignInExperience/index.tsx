@@ -10,6 +10,7 @@ import useSWR from 'swr';
 
 import Tools from '@/assets/images/tools.svg';
 import Button from '@/components/Button';
+import { CardSelector, MultiCardSelector } from '@/components/CardSelector';
 import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
@@ -20,7 +21,6 @@ import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
-import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication, OnboardingPage } from '@/onboarding/types';

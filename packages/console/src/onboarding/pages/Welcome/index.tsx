@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import Button from '@/components/Button';
+import { CardSelector } from '@/components/CardSelector';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import PageMeta from '@/components/PageMeta';
 import ActionBar from '@/onboarding/components/ActionBar';
-import { CardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
