@@ -4,6 +4,7 @@ const tenant_settings = {
     'Modifiez vos paramètres de compte et gérez vos informations personnelles ici pour assurer la sécurité de votre compte.',
   tabs: {
     settings: 'Paramètres',
+    domains: 'Domaines',
   },
   profile: {
     title: 'PARAMÈTRES DU PROFIL',

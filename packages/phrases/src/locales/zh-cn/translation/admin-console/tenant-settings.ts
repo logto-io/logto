@@ -3,6 +3,7 @@ const tenant_settings = {
   description: '在这里更改您的帐户设置和管理个人信息，以确保帐户安全。',
   tabs: {
     settings: '设置',
+    domains: '域名管理',
   },
   profile: {
     title: '配置文件设置',

@@ -4,6 +4,7 @@ const tenant_settings = {
     'アカウントのセキュリティを確保するために、ここでアカウント設定を変更し、個人情報を管理します。',
   tabs: {
     settings: '設定',
+    domains: 'ドメイン',
   },
   profile: {
     title: 'プロファイル設定',

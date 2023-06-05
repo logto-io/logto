@@ -4,6 +4,7 @@ const tenant_settings = {
     'Hesap güvenliğinizi sağlamak için burada hesap ayarlarınızı ve kişisel bilgilerinizi yönetin.',
   tabs: {
     settings: 'Ayarlar',
+    domains: 'Alan adları',
   },
   profile: {
     title: 'PROFİL AYARI',
