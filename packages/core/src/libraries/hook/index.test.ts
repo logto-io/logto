@@ -147,7 +147,7 @@ describe('testHook', () => {
       new RequestError({
         code: 'hook.send_test_payload_failed',
         message: 'test error',
-        status: 500,
+        status: 422,
       })
     );
   });

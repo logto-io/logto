@@ -159,7 +159,7 @@ export default function hookRoutes<T extends AuthedRouter>(
     koaGuard({
       params: z.object({ id: z.string() }),
       body: z.object({ events: nonemptyUniqueHookEventsGuard, config: hookConfigGuard }),
-      status: [204, 404, 500],
+      status: [204, 404, 422],
     }),
     async (ctx, next) => {
       const {

@@ -154,7 +154,7 @@ export const createHookLibrary = (queries: Queries) => {
       throw new RequestError({
         code: 'hook.send_test_payload_failed',
         message: conditional(error instanceof Error && String(error)) ?? 'Unknown error',
-        status: 500,
+        status: 422,
       });
     }
   };
