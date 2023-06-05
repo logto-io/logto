@@ -4,6 +4,7 @@ const tab_sections = {
   user_management: 'Kullanıcı Yönetimi',
   access_control: 'Erişim Kontrolü',
   help_and_support: 'Yardım ve Destek',
+  tenant: 'Kiracı',
 };
 
 export default tab_sections;

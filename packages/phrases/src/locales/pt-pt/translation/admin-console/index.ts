@@ -23,6 +23,7 @@ import session_expired from './session-expired.js';
 import sign_in_exp from './sign-in-exp/index.js';
 import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
+import tenant_settings from './tenant-settings.js';
 import user_details from './user-details.js';
 import users from './users.js';
 import webhook_details from './webhook-details.js';
@@ -63,6 +64,7 @@ const admin_console = {
   webhooks,
   webhook_details,
   domain,
+  tenant_settings,
 };
 
 export default admin_console;
