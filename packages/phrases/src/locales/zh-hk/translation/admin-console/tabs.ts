@@ -11,7 +11,7 @@ const tabs = {
   roles: '角色',
   docs: '文檔',
   contact_us: '聯繫我們',
-  settings: '設置',
+  tenant_settings: '設置',
 };
 
 export default tabs;
