@@ -95,7 +95,7 @@ export const createHookLibrary = (queries: Queries) => {
         const json: HookEventPayload = { hookId: id, ...payload };
         const logEntry = new LogEntry(`TriggerHook.${hookEvent}`);
 
-        logEntry.append({ json, hookId: id });
+        logEntry.append({ hookId: id, hookRequest: { body: json } });
 
         // Trigger web hook and log response
         await sendWebhookRequest({

@@ -100,10 +100,13 @@ describe('triggerInteractionHooks()', () => {
     expect(calledPayload).toHaveProperty('key', 'TriggerHook.' + HookEvent.PostSignIn);
     expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
     expect(calledPayload).toHaveProperty('payload.hookId', 'foo');
-    expect(calledPayload).toHaveProperty('payload.json.event', HookEvent.PostSignIn);
-    expect(calledPayload).toHaveProperty('payload.json.interactionEvent', InteractionEvent.SignIn);
-    expect(calledPayload).toHaveProperty('payload.json.hookId', 'foo');
-    expect(calledPayload).toHaveProperty('payload.json.userId', '123');
+    expect(calledPayload).toHaveProperty('payload.hookRequest.body.event', HookEvent.PostSignIn);
+    expect(calledPayload).toHaveProperty(
+      'payload.hookRequest.body.interactionEvent',
+      InteractionEvent.SignIn
+    );
+    expect(calledPayload).toHaveProperty('payload.hookRequest.body.hookId', 'foo');
+    expect(calledPayload).toHaveProperty('payload.hookRequest.body.userId', '123');
     expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
     expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
     jest.useRealTimers();
