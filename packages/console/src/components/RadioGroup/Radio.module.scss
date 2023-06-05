@@ -131,6 +131,7 @@
   border: 1px solid var(--color-border);
   flex: 1;
   font: var(--font-body-2);
+  height: 36px;
 
   &:first-child {
     border-radius: 6px 0 0 6px;
@@ -149,7 +150,8 @@
   }
 
   .content {
-    padding: _.unit(2) 0;
+    height: 100%;
+    display: flex;
     justify-content: center;
   }
 }
