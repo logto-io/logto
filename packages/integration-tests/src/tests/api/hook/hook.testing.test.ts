@@ -53,14 +53,14 @@ describe('hook testing', () => {
     ).rejects.toMatchObject(createResponseWithCode(404));
   });
 
-  it('should return 500 if the hook endpoint is not working', async () => {
+  it('should return 422 if the hook endpoint is not working', async () => {
     const payload = getHookCreationPayload(HookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     await expect(
       authedAdminApi.post(`hooks/${created.id}/test`, {
         json: { events: [HookEvent.PostSignIn], config: { url: 'not_work_url' } },
       })
-    ).rejects.toMatchObject(createResponseWithCode(500));
+    ).rejects.toMatchObject(createResponseWithCode(422));
 
     // Clean Up
     await authedAdminApi.delete(`hooks/${created.id}`);
