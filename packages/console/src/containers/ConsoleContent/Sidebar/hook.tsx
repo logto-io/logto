@@ -6,12 +6,14 @@ import BarGraph from '@/assets/images/bar-graph.svg';
 import Bolt from '@/assets/images/bolt.svg';
 import Box from '@/assets/images/box.svg';
 import Connection from '@/assets/images/connection.svg';
+import Gear from '@/assets/images/gear.svg';
 import Hook from '@/assets/images/hook.svg';
 import List from '@/assets/images/list.svg';
 import UserProfile from '@/assets/images/profile.svg';
 import ResourceIcon from '@/assets/images/resource.svg';
 import Role from '@/assets/images/role.svg';
 import Web from '@/assets/images/web.svg';
+import { isTenantSettingsSectionEnabled } from '@/consts/tenant-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 type SidebarItem = {
@@ -24,6 +26,7 @@ type SidebarItem = {
 
 type SidebarSection = {
   title: TFuncKey<'translation', 'admin_console.tab_sections'>;
+  isHidden?: boolean;
   items: SidebarItem[];
 };
 
@@ -45,7 +48,7 @@ export const useSidebarMenuItems = (): {
     data: { getStartedHidden },
   } = useUserPreferences();
 
-  const sections: SidebarSection[] = [
+  const allSections: SidebarSection[] = [
     {
       title: 'overview',
       items: [
@@ -107,7 +110,19 @@ export const useSidebarMenuItems = (): {
         },
       ],
     },
+    {
+      title: 'tenant',
+      isHidden: !isTenantSettingsSectionEnabled,
+      items: [
+        {
+          Icon: Gear,
+          title: 'tenant_settings',
+        },
+      ],
+    },
   ];
 
-  return { sections, firstItem: findFirstItem(sections) };
+  const enabledSections = allSections.filter((section) => !section.isHidden);
+
+  return { sections: enabledSections, firstItem: findFirstItem(enabledSections) };
 };

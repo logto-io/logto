@@ -8,7 +8,13 @@ import {
   UserDetailsTabs,
   RoleDetailsTabs,
   WebhookDetailsTabs,
+  TenantSettingsTabs,
 } from '@/consts';
+import {
+  isTenantBasicSettingsReady,
+  isTenantDomainSettingsReady,
+  isTenantSettingsSectionEnabled,
+} from '@/consts/tenant-settings';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -33,6 +39,9 @@ import RoleSettings from '@/pages/RoleDetails/RoleSettings';
 import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
 import SignInExperience from '@/pages/SignInExperience';
+import TenantSettings from '@/pages/TenantSettings';
+import TenantBasicSettings from '@/pages/TenantSettings/tabs/TenantBasicSettings';
+import TenantDomainSettings from '@/pages/TenantSettings/tabs/TenantDomainSettings';
 import UserDetails from '@/pages/UserDetails';
 import UserLogs from '@/pages/UserDetails/UserLogs';
 import UserRoles from '@/pages/UserDetails/UserRoles';
@@ -137,6 +146,24 @@ function ConsoleContent() {
               <Route path="link-email" element={<LinkEmailModal />} />
               <Route path="verification-code" element={<VerificationCodeModal />} />
             </Route>
+            {isTenantSettingsSectionEnabled && (
+              <Route path="tenant-settings" element={<TenantSettings />}>
+                {isTenantBasicSettingsReady && (
+                  <>
+                    <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
+                    <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                  </>
+                )}
+                {isTenantDomainSettingsReady && (
+                  <>
+                    {!isTenantBasicSettingsReady && (
+                      <Route index element={<Navigate replace to={TenantSettingsTabs.Domains} />} />
+                    )}
+                    <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
+                  </>
+                )}
+              </Route>
+            )}
           </Routes>
         </div>
       </OverlayScrollbar>

@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  overflow-y: auto;
+
+  > *:not(:first-child) {
+    margin-top: _.unit(4);
+  }
+}

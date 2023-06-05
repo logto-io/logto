@@ -30,3 +30,8 @@ export enum RoleDetailsTabs {
   Permissions = 'permissions',
   Users = 'users',
 }
+
+export enum TenantSettingsTabs {
+  Settings = 'settings',
+  Domains = 'domains',
+}
