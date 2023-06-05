@@ -62,7 +62,7 @@ const connectors = {
     target_tip_standard:
       'Il valore del "Nome IdP" può essere una stringa di identificatore univoco per distinguere le identità social. Questa impostazione non può essere cambiata dopo la costruzione del connettore.',
     target_tooltip:
-      "'Nome IdP' nei connettori social di Logto si riferisce alla 'fonte' delle tue identità social media. Nel design di Logto, non accettiamo lo stesso 'Nome IdP' di una piattaforma specifica per evitare conflitti. Devi fare molta attenzione prima di aggiungere un connettore, poiché NON PUOI cambiarne il valore una volta creato. <a>Scopri di più.</a>",
+      "'Nome IdP' nei connettori social di Logto si riferisce alla 'fonte' delle tue identità social media. Nel design di Logto, non accettiamo lo stesso 'Nome IdP' di una piattaforma specifica per evitare conflitti. Devi fare molta attenzione prima di aggiungere un connettore, poiché NON PUOI cambiarne il valore una volta creato. <a>Scopri di più</a>",
     target_conflict:
       'Il nome IdP inserito corrisponde al connettore <span>nome</span> esistente. L’utilizzo dello stesso nome IdP potrebbe causare un comportamento di accesso imprevisto in cui gli utenti possono accedere allo stesso account tramite due connettori diversi.',
     target_conflict_line2:

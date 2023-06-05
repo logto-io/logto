@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 
 import * as styles from './index.module.scss';
 
-type Props = HTMLProps<HTMLInputElement> & {
+type Props = Omit<HTMLProps<HTMLInputElement>, 'label'> & {
   label?: ReactNode;
 };
 

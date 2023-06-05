@@ -11,7 +11,7 @@ const api_resources = {
     'Unikalny identyfikator zasobu API. Musi to być bezwzględny adres URI bez składnika fragmentu (#). Jest równy <a>parametrowi zasobu</a> w standardzie OAuth 2.0.',
   default_api: 'Domyślne API',
   default_api_label:
-    'Tylko jedno API domyślne może być ustawione na jeden najem. Kiedy określone zostanie API domyślne, parametr zasobu może zostać pominięty w żądaniu autoryzacji. Następujące procesy wymiany tokenu będą domyślnie korzystać z tego API, co umożliwi wydanie JWT.',
+    'Tylko jedno API domyślne może być ustawione na jeden najem. Kiedy określone zostanie API domyślne, parametr zasobu może zostać pominięty w żądaniu autoryzacji. Następujące procesy wymiany tokenu będą domyślnie korzystać z tego API, co umożliwi wydanie JWT. <a>Dowiedz się więcej</a>',
   api_resource_created: 'Zasób API {{name}} został pomyślnie utworzony',
 };
 
