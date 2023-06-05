@@ -1,22 +1,22 @@
-const contatto = {
-  title: 'Contattaci',
+const contact = {
+  title: 'Ottieni Aiuto',
   description:
-    'Unisciti alla nostra comunità per fornire feedback, chiedere aiuto e condividere le tue idee con altri sviluppatori',
+    'Per richieste di assistenza o commenti sui prodotti, contattaci tramite i seguenti metodi.',
   discord: {
-    title: 'Canale Discord',
+    title: 'Unisciti alla comunità di Discord',
     description: 'Unisciti al nostro canale pubblico per chattare con altri sviluppatori',
     button: 'Unisciti',
   },
   github: {
-    title: 'GitHub',
+    title: 'Crea problema su GitHub',
     description: 'Crea un problema e invialo su GitHub',
     button: 'Apri',
   },
   email: {
-    title: 'Invia email',
-    description: 'Invia una email per ulteriori informazioni e supporto',
+    title: 'Contattare il supporto tramite e-mail',
+    description: 'Invia una e-mail per ulteriori informazioni e assistenza',
     button: 'Invia',
   },
 };
 
-export default contatto;
+export default contact;

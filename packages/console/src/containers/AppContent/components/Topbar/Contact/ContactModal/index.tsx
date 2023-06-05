@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 import Button from '@/components/Button';
 import DynamicT from '@/components/DynamicT';
 import ModalLayout from '@/components/ModalLayout';
+import { isCloud } from '@/consts/cloud';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { useContacts } from './hook';
@@ -27,30 +28,32 @@ function ContactModal({ isOpen, onCancel }: Props) {
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
-          {contacts.map(({ title, icon: ContactIcon, description, label, link }) => (
-            <div key={title} className={styles.row}>
-              <div className={styles.icon}>
-                <ContactIcon />
-              </div>
-              <div className={styles.text}>
-                <div className={styles.title}>
-                  <DynamicT forKey={title} />
+          {contacts
+            .filter(({ isVisibleToCloud }) => (isCloud ? isVisibleToCloud : true))
+            .map(({ title, icon: ContactIcon, description, label, link }) => (
+              <div key={title} className={styles.row}>
+                <div className={styles.icon}>
+                  <ContactIcon />
                 </div>
-                <div className={styles.description}>
-                  <DynamicT forKey={description} />
+                <div className={styles.text}>
+                  <div className={styles.title}>
+                    <DynamicT forKey={title} />
+                  </div>
+                  <div className={styles.description}>
+                    <DynamicT forKey={description} />
+                  </div>
+                </div>
+                <div>
+                  <Button
+                    type="outline"
+                    title={label}
+                    to={link}
+                    className={styles.button}
+                    onClick={() => window.open(link)}
+                  />
                 </div>
               </div>
-              <div>
-                <Button
-                  type="outline"
-                  title={label}
-                  to={link}
-                  className={styles.button}
-                  onClick={() => window.open(link)}
-                />
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </ModalLayout>
     </ReactModal>

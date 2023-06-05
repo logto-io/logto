@@ -1,21 +1,21 @@
 const contact = {
-  title: 'お問い合わせ',
+  title: 'ヘルプを得る',
   description:
-    'フィードバックを提供したり、助けを求めたり、他の開発者との考えを共有するために、当社コミュニティに参加してください。',
+    'ヘルプ要求または製品フィードバックについては、次の方法を使用してお問い合わせください。',
   discord: {
-    title: 'ディスコードチャンネル',
-    description: '他の開発者とチャットするために、パブリックチャンネルに参加してください。',
-    button: '参加',
+    title: 'Discord コミュニティに参加する',
+    description: '他の開発者とチャットするためにパブリックチャンネルに参加してください',
+    button: '参加する',
   },
   github: {
-    title: 'GitHub',
-    description: '問題を作成してGitHubに提出してください。',
+    title: 'GitHub issue を作成する',
+    description: '問題を作成して GitHub に提出する',
     button: '開く',
   },
   email: {
-    title: 'メール送信',
-    description: '詳細な情報やヘルプを求めるために、私たちにメールを送信してください。',
-    button: '送信',
+    title: 'メールでサポートに連絡する',
+    description: '詳細情報やヘルプをご希望の場合は、私たちにメッセージを送ってください',
+    button: '送信する',
   },
 };
 
