@@ -147,7 +147,7 @@ function ApplicationDetails() {
             <ApplicationIcon type={data.type} className={styles.icon} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name}</div>
-              <div className={styles.details}>
+              <div className={styles.row}>
                 <Tag>{t(`${applicationTypeI18nKey[data.type]}.title`)}</Tag>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>App ID</div>

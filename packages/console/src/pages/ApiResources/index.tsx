@@ -13,6 +13,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
+import Tag from '@/components/Tag';
 import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
@@ -79,11 +80,12 @@ function ApiResources() {
             title: t('api_resources.api_name'),
             dataIndex: 'name',
             colSpan: 6,
-            render: ({ id, name }) => (
+            render: ({ id, name, isDefault }) => (
               <ItemPreview
                 title={name}
                 icon={<ResourceIcon className={styles.icon} />}
                 to={buildDetailsPathname(id)}
+                suffix={isDefault && <Tag>{t('api_resources.default_api')}</Tag>}
               />
             ),
           },

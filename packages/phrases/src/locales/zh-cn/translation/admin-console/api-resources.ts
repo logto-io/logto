@@ -10,6 +10,9 @@ const api_resources = {
   api_identifier_tip:
     '对于 API 资源的唯一标识符。它必须是一个绝对 URI 并没有 fragment (#) 组件。等价于 OAuth 2.0 中的 <a>resource parameter</a>。',
   api_resource_created: ' API 资源 {{name}} 已成功创建。',
+  default_api: '默认API',
+  default_api_label:
+    '每个租户只能设置零个或一个默认 API。当指定默认 API 时，可以在认证请求中省略资源参数。后续令牌交换将默认使用该 API 作为 Audience，导致 JWT 的签发。',
 };
 
 export default api_resources;

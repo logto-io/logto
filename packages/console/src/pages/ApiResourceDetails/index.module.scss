@@ -33,7 +33,7 @@
       object-fit: cover;
     }
 
-    .meta {
+    .metadata {
       margin-left: _.unit(6);
       display: flex;
       flex-direction: column;
@@ -42,6 +42,23 @@
       .name {
         font: var(--font-title-1);
         color: var(--color-text);
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: _.unit(1);
+      }
+
+      .text {
+        font: var(--font-label-2);
+        color: var(--color-text-secondary);
+      }
+
+      .verticalBar {
+        @include _.vertical-bar;
+        height: 12px;
+        margin: 0 _.unit(2);
       }
     }
   }

@@ -7,6 +7,7 @@ import {
   getResources,
   updateResource,
   deleteResource,
+  setDefaultResource,
 } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
@@ -123,5 +124,23 @@ describe('admin console api resources', () => {
   it('should throw 404 when delete api resource not found', async () => {
     const response = await deleteResource('dummy_id').catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
+  });
+
+  it('be able to set only one default api resource', async () => {
+    const [resource1, resource2] = await Promise.all([
+      createResource(generateResourceName(), generateResourceIndicator()),
+      createResource(generateResourceName(), generateResourceIndicator()),
+    ]);
+
+    await setDefaultResource(resource1.id);
+    await setDefaultResource(resource2.id);
+
+    const resources = await getResources();
+    const defaultData = resources.filter(({ isDefault }) => isDefault);
+
+    expect(defaultData).toHaveLength(1);
+    expect(defaultData[0]?.id).toBe(resource2.id);
+
+    await Promise.all([deleteResource(resource1.id), deleteResource(resource2.id)]);
   });
 });

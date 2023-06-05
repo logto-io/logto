@@ -7,6 +7,7 @@ import { useOutletContext } from 'react-router-dom';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
+import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
@@ -32,14 +33,20 @@ function ApiResourceSettings() {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
+  const onSubmit = handleSubmit(async ({ isDefault, ...rest }) => {
     if (isSubmitting) {
       return;
     }
 
-    const updatedApiResource = await api
-      .patch(`api/resources/${resource.id}`, { json: formData })
-      .json<Resource>();
+    const [data] = await Promise.all([
+      api.patch(`api/resources/${resource.id}`, { json: rest }).json<Resource>(),
+      api
+        .patch(`api/resources/${resource.id}/is-default`, { json: { isDefault } })
+        .json<Resource>(),
+    ]);
+
+    // We cannot ensure the order of API requests, manually combine the results
+    const updatedApiResource = { ...data, isDefault };
     reset(updatedApiResource);
     onResourceUpdated(updatedApiResource);
     toast.success(t('general.saved'));
@@ -77,6 +84,11 @@ function ApiResourceSettings() {
               placeholder={t('api_resource_details.token_expiration_time_in_seconds_placeholder')}
             />
           </FormField>
+          {!isLogtoManagementApiResource && (
+            <FormField title="api_resources.default_api">
+              <Switch {...register('isDefault')} label={t('api_resources.default_api_label')} />
+            </FormField>
+          )}
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleting && isDirty} />
