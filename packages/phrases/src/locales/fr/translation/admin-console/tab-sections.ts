@@ -4,6 +4,7 @@ const tab_sections = {
   user_management: 'Gestion des utilisateurs',
   access_control: "Contrôle d'accès", // NON TRADUIT
   help_and_support: 'Aide et support',
+  tenant: 'Locataire',
 };
 
 export default tab_sections;
