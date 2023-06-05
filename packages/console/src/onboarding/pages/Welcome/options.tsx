@@ -2,7 +2,7 @@ import Building from '@/assets/images/building.svg';
 import Cloud from '@/assets/images/cloud.svg';
 import Database from '@/assets/images/database.svg';
 import Pizza from '@/assets/images/pizza.svg';
-import type { CardSelectorOption } from '@/onboarding/components/CardSelector';
+import type { CardSelectorOption } from '@/components/CardSelector';
 
 import { DeploymentType, Project } from '../../types';
 

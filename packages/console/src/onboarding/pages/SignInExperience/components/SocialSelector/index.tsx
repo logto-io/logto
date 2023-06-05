@@ -1,11 +1,11 @@
 import { ConnectorType } from '@logto/schemas';
 
+import type { MultiCardSelectorOption } from '@/components/CardSelector';
+import { MultiCardSelector } from '@/components/CardSelector';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import DangerousRaw from '@/components/DangerousRaw';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useConnectorGroups from '@/hooks/use-connector-groups';
-import type { MultiCardSelectorOption } from '@/onboarding/components/CardSelector';
-import { MultiCardSelector } from '@/onboarding/components/CardSelector';
 
 import { fakeSocialTargetOptions } from '../../options';
 

@@ -14,8 +14,8 @@ import TextInput from '@/components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 
+import { CardSelector, MultiCardSelector } from '../../../components/CardSelector';
 import ActionBar from '../../components/ActionBar';
-import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';
