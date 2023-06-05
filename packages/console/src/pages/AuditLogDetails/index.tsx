@@ -16,6 +16,7 @@ import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
+import { hookEventLogKey } from '@/consts/webhooks';
 import type { RequestError } from '@/hooks/use-api';
 import { getUserTitle } from '@/utils/user';
 
@@ -27,6 +28,9 @@ const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
 
 const getDetailsTabNavLink = (logId: string, userId?: string) =>
   userId ? `/users/${userId}/logs/${logId}` : `/audit-logs/${logId}`;
+
+const isWebhookEventLog = (key?: string) =>
+  key && Object.values<string>(hookEventLogKey).includes(key);
 
 function AuditLogDetails() {
   const { userId, hookId, logId } = useParams();
@@ -59,6 +63,8 @@ function AuditLogDetails() {
     return null;
   }
 
+  const isWebHookEvent = isWebhookEventLog(data?.key);
+
   return (
     <DetailsPage
       backLink={backLink}
@@ -79,29 +85,37 @@ function AuditLogDetails() {
                   <div className={styles.label}>{t('log_details.event_key')}</div>
                   <div>{data.key}</div>
                 </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.label}>{t('log_details.application')}</div>
-                  <div>
-                    {data.payload.applicationId ? (
-                      <ApplicationName
-                        isLink={data.payload.applicationId !== demoAppApplicationId}
-                        applicationId={data.payload.applicationId}
-                      />
-                    ) : (
-                      '-'
-                    )}
-                  </div>
-                </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.label}>{t('log_details.ip_address')}</div>
-                  <div>{data.payload.ip ?? '-'}</div>
-                </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.label}>{t('log_details.user')}</div>
-                  <div>
-                    {data.payload.userId ? <UserName isLink userId={data.payload.userId} /> : '-'}
-                  </div>
-                </div>
+                {!isWebHookEvent && (
+                  <>
+                    <div className={styles.infoItem}>
+                      <div className={styles.label}>{t('log_details.application')}</div>
+                      <div>
+                        {data.payload.applicationId ? (
+                          <ApplicationName
+                            isLink={data.payload.applicationId !== demoAppApplicationId}
+                            applicationId={data.payload.applicationId}
+                          />
+                        ) : (
+                          '-'
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <div className={styles.label}>{t('log_details.ip_address')}</div>
+                      <div>{data.payload.ip ?? '-'}</div>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <div className={styles.label}>{t('log_details.user')}</div>
+                      <div>
+                        {data.payload.userId ? (
+                          <UserName isLink userId={data.payload.userId} />
+                        ) : (
+                          '-'
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
                 <div className={styles.infoItem}>
                   <div className={styles.label}>{t('log_details.log_id')}</div>
                   <div>{data.id}</div>
@@ -111,12 +125,14 @@ function AuditLogDetails() {
                   <div>{new Date(data.createdAt).toLocaleString()}</div>
                 </div>
               </div>
-              <div>
-                <div className={styles.infoItem}>
-                  <div className={styles.label}>{t('log_details.user_agent')}</div>
-                  <div>{data.payload.userAgent}</div>
+              {!isWebHookEvent && (
+                <div>
+                  <div className={styles.infoItem}>
+                    <div className={styles.label}>{t('log_details.user_agent')}</div>
+                    <div>{data.payload.userAgent}</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </Card>
           <TabNav>
