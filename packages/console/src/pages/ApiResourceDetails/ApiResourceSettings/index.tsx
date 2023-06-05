@@ -1,7 +1,7 @@
 import type { Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
@@ -9,6 +9,7 @@ import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
+import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -86,7 +87,23 @@ function ApiResourceSettings() {
           </FormField>
           {!isLogtoManagementApiResource && (
             <FormField title="api_resources.default_api">
-              <Switch {...register('isDefault')} label={t('api_resources.default_api_label')} />
+              <Switch
+                {...register('isDefault')}
+                label={
+                  <Trans
+                    components={{
+                      a: (
+                        <TextLink
+                          href="https://docs.logto.io/docs/references/resources/#default-api"
+                          target="_blank"
+                        />
+                      ),
+                    }}
+                  >
+                    {t('api_resources.default_api_label')}
+                  </Trans>
+                }
+              />
             </FormField>
           )}
         </FormCard>

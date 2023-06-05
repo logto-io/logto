@@ -12,7 +12,7 @@ const api_resources = {
   api_resource_created: ' API 资源 {{name}} 已成功创建。',
   default_api: '默认API',
   default_api_label:
-    '每个租户只能设置零个或一个默认 API。当指定默认 API 时，可以在认证请求中省略资源参数。后续令牌交换将默认使用该 API 作为 Audience，导致 JWT 的签发。',
+    '每个租户只能设置零个或一个默认 API。当指定默认 API 时，可以在认证请求中省略资源参数。后续令牌交换将默认使用该 API 作为 Audience，从而签发 JWT。<a>了解更多</a>',
 };
 
 export default api_resources;

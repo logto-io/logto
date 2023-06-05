@@ -11,7 +11,7 @@ const api_resources = {
     "L'identificatore univoco della risorsa API. Deve essere un URI assoluto e non ha componenti di frammento (#). Corrisponde al parametro <a>risorsa</a> in OAuth 2.0.",
   default_api: 'API predefinita',
   default_api_label:
-    'Solo zero o una API predefinita possono essere impostate per tenant. Quando viene designata una API predefinita, il parametro di risorsa può essere omesso nella richiesta di autorizzazione. Gli scambi di token successivi utilizzeranno quell API come destinatario per impostazione predefinita, con conseguente rilascio di JWT.',
+    'Solo zero o una API predefinita possono essere impostate per tenant. Quando viene designata una API predefinita, il parametro di risorsa può essere omesso nella richiesta di autorizzazione. Gli scambi di token successivi utilizzeranno quell API come destinatario per impostazione predefinita, con conseguente rilascio di JWT. <a>Scopri di più</a>',
   api_resource_created: 'La risorsa API {{name}} è stata creata con successo',
 };
 

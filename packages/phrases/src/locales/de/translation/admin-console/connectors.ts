@@ -62,7 +62,7 @@ const connectors = {
     target_tip_standard:
       'Der Wert von "IdP-Name" kann eine eindeutige Kennung sein, um Ihre Social-Identitäten zu unterscheiden. Diese Einstellung kann nach der Erstellung des Connectors nicht mehr geändert werden.',
     target_tooltip:
-      '„Target“ in Logto-Social-Connectors bezieht sich auf die „Quelle“ Ihrer Social-Identitäten. Im Logto-Design akzeptieren wir nicht dasselbe „Target“ einer bestimmten Plattform, um Konflikte zu vermeiden. Sie sollten sehr vorsichtig sein, bevor Sie einen Connector hinzufügen, da Sie seinen Wert NICHT ändern können, sobald Sie ihn erstellt haben. <a>Erfahren Sie mehr.</a>',
+      '„Target“ in Logto-Social-Connectors bezieht sich auf die „Quelle“ Ihrer Social-Identitäten. Im Logto-Design akzeptieren wir nicht dasselbe „Target“ einer bestimmten Plattform, um Konflikte zu vermeiden. Sie sollten sehr vorsichtig sein, bevor Sie einen Connector hinzufügen, da Sie seinen Wert NICHT ändern können, sobald Sie ihn erstellt haben. <a>Erfahren Sie mehr</a>',
     target_conflict:
       'Der eingegebene IdP-Name stimmt mit dem vorhandenen <span>Namen</span> überein. Die Verwendung desselben IdP-Namens kann ein unerwartetes Anmeldeverhalten verursachen, bei dem Benutzer über zwei verschiedene Connectoren auf dasselbe Konto zugreifen können.',
     target_conflict_line2:

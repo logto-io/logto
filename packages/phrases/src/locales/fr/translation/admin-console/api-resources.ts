@@ -11,7 +11,7 @@ const api_resources = {
     "L'identifiant unique de la ressource API. Il doit s'agir d'un URI absolu et ne doit pas comporter de fragment (#). Équivaut au <a>paramètre de ressource</> dans OAuth 2.0.",
   default_api: 'API par défaut',
   default_api_label:
-    'Seulement zéro ou une API par défaut peut être définie par tenant. Lorsqu\'une API par défaut est désignée, le paramètre "resource" peut être omis dans la demande d\'authentification. Les échanges de jetons ultérieurs utiliseront cette API comme public cible par défaut, ce qui entraînera la délivrance de JWT.',
+    'Seulement zéro ou une API par défaut peut être définie par tenant. Lorsqu\'une API par défaut est désignée, le paramètre "resource" peut être omis dans la demande d\'authentification. Les échanges de jetons ultérieurs utiliseront cette API comme public cible par défaut, ce qui entraînera la délivrance de JWT. <a>En savoir plus</a>',
   api_resource_created: 'La ressource API {{name}} a été créée avec succès.',
 };
 

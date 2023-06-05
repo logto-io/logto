@@ -9,7 +9,7 @@ export const emailUsLink = buildUrl(contactEmailLink, {
   subject: 'Cloud pricing and special offer',
 }).replace(/\+/g, '%20');
 
-export const logtoBlogLink = 'https://docs.logto.io/blog?utm_source=console';
+export const logtoBlogLink = 'https://blog.logto.io/?utm_source=console';
 export const aboutCloudPreviewLink = 'https://docs.logto.io/about/cloud-preview?utm_source=console';
 
 export const gtagAwTrackingId = 'AW-11124811245';

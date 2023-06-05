@@ -61,7 +61,7 @@ const connectors = {
     target_tip_standard:
       'Wartość „Nazwy dostawcy tożsamości” może być unikalnym ciągiem identyfikującym, który odróżnia Twoje tożsamości społecznościowe. Po utworzeniu łącznika nie możesz go zmienić.',
     target_tooltip:
-      '„Nazwa dostawcy tożsamości” w łącznikach społecznościowych Logto odnosi się do "źródła" Twoich tożsamości społecznościowych. W projektowaniu Logto nie akceptujemy tych samych „Nazw dostawców tożsamości” konkretnej platformy, aby uniknąć konfliktów. Powinieneś bardzo uważać przed dodaniem łącznika, ponieważ NIE MOŻESZ zmienić jego wartości po utworzeniu. <a>Dowiedz się więcej.</a>',
+      '„Nazwa dostawcy tożsamości” w łącznikach społecznościowych Logto odnosi się do "źródła" Twoich tożsamości społecznościowych. W projektowaniu Logto nie akceptujemy tych samych „Nazw dostawców tożsamości” konkretnej platformy, aby uniknąć konfliktów. Powinieneś bardzo uważać przed dodaniem łącznika, ponieważ NIE MOŻESZ zmienić jego wartości po utworzeniu. <a>Dowiedz się więcej</a>',
     target_conflict:
       'Wprowadzona nazwa IdP pasuje do istniejącego łącznika <span>nazwa</span>. Użycie tej samej nazwy IdP może spowodować nieoczekiwane zachowanie logowania, gdzie użytkownicy mogą uzyskać dostęp do tego samego konta za pośrednictwem dwóch różnych łączników.',
     target_conflict_line2:
