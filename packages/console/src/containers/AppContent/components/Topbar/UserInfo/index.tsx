@@ -22,9 +22,8 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import SubMenu from '../SubMenu';
-import UserInfoSkeleton from '../UserInfoSkeleton';
-
+import SubMenu from './SubMenu';
+import UserInfoSkeleton from './UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
 function UserInfo() {

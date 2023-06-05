@@ -5,6 +5,7 @@ const tab_sections = {
   access_control: '访问控制',
   help_and_support: '帮助与支持',
   tenant: '租户',
+  automation: '自动化',
 };
 
 export default tab_sections;

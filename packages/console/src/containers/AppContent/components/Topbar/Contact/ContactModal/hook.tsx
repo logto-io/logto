@@ -16,6 +16,7 @@ type ContactItem = {
   description: AdminConsoleKey;
   label: AdminConsoleKey;
   link: string;
+  isVisibleToCloud: boolean;
 };
 
 export const useContacts = (): ContactItem[] => {
@@ -29,6 +30,7 @@ export const useContacts = (): ContactItem[] => {
       description: 'contact.discord.description',
       label: 'contact.discord.button',
       link: discordLink,
+      isVisibleToCloud: true,
     },
     {
       title: 'contact.github.title',
@@ -36,6 +38,7 @@ export const useContacts = (): ContactItem[] => {
       description: 'contact.github.description',
       label: 'contact.github.button',
       link: githubIssuesLink,
+      isVisibleToCloud: false,
     },
     {
       title: 'contact.email.title',
@@ -43,6 +46,7 @@ export const useContacts = (): ContactItem[] => {
       description: 'contact.email.description',
       label: 'contact.email.button',
       link: contactEmailLink,
+      isVisibleToCloud: true,
     },
   ];
 };

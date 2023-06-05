@@ -1,20 +1,19 @@
 const contact = {
-  title: '연락처',
-  description:
-    '커뮤니티에 참여하여 피드백을 제공하고 도움을 요청하며 다른 개발자와 생각을 공유해 보세요.',
+  title: '지원 받기',
+  description: '도움 요청 또는 제품 피드백을 위해서, 아래의 방법을 통해 저희에게 문의해주세요.',
   discord: {
-    title: 'Discord 채널',
-    description: '공개 채널에 참여하여 다른 개발자와 채팅해 보세요.',
-    button: '참가',
+    title: '디스코드 커뮤니티 가입하기',
+    description: '다른 개발자들과 함께 채팅할 수 있는 공개 채널에서 저희와 함께해주세요.',
+    button: '가입하기',
   },
   github: {
-    title: 'GitHub',
-    description: 'GitHub에서 이슈를 생성해 보세요.',
+    title: 'GitHub 이슈 생성하기',
+    description: '이슈를 생성하고 GitHub에 제출해주세요.',
     button: '열기',
   },
   email: {
-    title: '이메일 보내기',
-    description: '추가 정보 및 도움말을 보려면 이메일을 보내 주세요.',
+    title: '이메일로 지원팀과 연락하기',
+    description: '더 많은 정보나 도움을 위해 이메일을 보내주세요.',
     button: '보내기',
   },
 };

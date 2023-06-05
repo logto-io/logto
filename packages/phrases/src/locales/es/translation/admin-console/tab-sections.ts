@@ -5,6 +5,7 @@ const tab_sections = {
   access_control: 'Control de acceso',
   help_and_support: 'Ayuda y soporte',
   tenant: 'Inquilino',
+  automation: 'Automatización',
 };
 
 export default tab_sections;

@@ -5,6 +5,7 @@ const tab_sections = {
   access_control: '접근 제어',
   help_and_support: '고객센터',
   tenant: '세입자',
+  automation: '자동화',
 };
 
 export default tab_sections;

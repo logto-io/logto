@@ -1,20 +1,20 @@
 const contact = {
-  title: 'Skontaktuj się z nami',
+  title: 'Zdobądź pomoc',
   description:
-    'Dołącz do naszej społeczności, żeby dać opinię, poprosić o pomoc i podzielić się swoimi myślami z innymi developerami',
+    'W przypadku żądań pomocy lub opinii na temat produktu, skontaktuj się z nami za pomocą następujących metod.',
   discord: {
-    title: 'Kanał Discord',
-    description: 'Dołącz do naszego publicznego kanału, żeby rozmawiać z innymi developerami',
+    title: 'Dołącz do społeczności Discorda',
+    description: 'Dołącz do naszego kanału publicznego, aby porozmawiać z innymi programistami',
     button: 'Dołącz',
   },
   github: {
-    title: 'GitHub',
-    description: 'Utwórz problem i wyślij na GitHub',
+    title: 'Utwórz problem w GitHub',
+    description: 'Utwórz problem i zgłoś w GitHub',
     button: 'Otwórz',
   },
   email: {
-    title: 'Wyślij e-mail',
-    description: 'Wyślij nam e-maila dla dalszych informacji i pomocy',
+    title: 'Skontaktuj się z pomocą techniczną przez e-mail',
+    description: 'Wyślij do nas e-maila w celu uzyskania dalszych informacji i pomocy',
     button: 'Wyślij',
   },
 };

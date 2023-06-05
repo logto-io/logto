@@ -1,20 +1,20 @@
 const contact = {
-  title: '聯繫我們',
-  description: '加入我們的社區，在這裡你可以給我們提供產品建議，尋求幫助或和其他開發者交流心得',
+  title: '獲得幫助',
+  description: '欲查詢幫助或提供產品反饋，請透過以下方式聯絡我們。',
   discord: {
-    title: 'Discord 頻道',
-    description: '加入我們的公共頻道，和其他開發者一起交流使用經驗',
-    button: '立即加入',
+    title: '加入 Discord 社群',
+    description: '加入我們的公開頻道與其他開發者聊天',
+    button: '加入',
   },
   github: {
-    title: 'GitHub',
-    description: '通過 GitHub 給我們提一個 issue',
-    button: '前往頁面',
+    title: '建立 GitHub issue',
+    description: '建立問題並提交到 GitHub',
+    button: '打開',
   },
   email: {
-    title: '郵件聯繫',
-    description: '通過郵件聯繫獲取信息或尋求幫助',
-    button: '發送郵件',
+    title: '透過電子郵件聯絡客服支援',
+    description: '發送電子郵件以獲取進一步信息和幫助',
+    button: '發送',
   },
 };
 
