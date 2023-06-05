@@ -11,7 +11,7 @@ const tabs = {
   roles: 'Rollen',
   docs: 'Dokumentation',
   contact_us: 'Kontakt',
-  settings: 'Einstellungen',
+  tenant_settings: 'Einstellungen',
 };
 
 export default tabs;
