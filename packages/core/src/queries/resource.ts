@@ -38,7 +38,7 @@ export const createResourceQueries = (pool: CommonQueryMethods) => {
       await connection.query(sql`
         update ${table}
           set ${fields.isDefault}=false
-          where ${fields.id}!=${id};
+          where ${fields.isDefault}=true;
       `);
       const returning = await connection.maybeOne<Resource>(sql`
         update ${table}
