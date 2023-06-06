@@ -252,8 +252,6 @@ export const cloudflareDataGuard = z
     ssl: z
       .object({
         status: z.string(),
-        txt_name: z.string().optional(),
-        txt_value: z.string().optional(),
         validation_errors: z
           .object({
             message: z.string(),
@@ -263,7 +261,6 @@ export const cloudflareDataGuard = z
           .optional(),
       })
       .catchall(z.unknown()),
-    ownership_verification: domainDnsRecordGuard.catchall(z.unknown()).optional(),
     verification_errors: z.string().array().optional(),
   })
   .catchall(z.unknown());
