@@ -4,7 +4,6 @@ import {
   ApplicationType,
   type HookConfig,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { got, type Response } from 'got';
 
@@ -34,7 +33,6 @@ export const sendWebhookRequest = async ({
       'user-agent': 'Logto (https://logto.io/)',
       ...headers,
       ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
-      'logto-message-id': generateStandardId(),
     },
     json: payload,
     retry: { limit: retries ?? 3 },

@@ -14,7 +14,6 @@ Provide new features for webhooks
 - Allow to enable/disable a webhook
 - Track recent execution status of a webhook
 - Support multi-events for a webhook
-- Add a unique message id for each webhook request
   
 ## Updates
 
@@ -22,7 +21,6 @@ Provide new features for webhooks
 - core: change the `user-agent` value from `Logto (https://logto.io)` to `Logto (https://logto.io/)` in the webhook request headers
 - core: deprecate `event` field in all hook-related APIs, use `events` instead
 - core: deprecate `retries` field in the `HookConfig` for all hook-related APIs, now it will fallback to `3` if not specified and will be removed in the future
-- core: add a unique message id for each webhook request
 - core: add new APIs for webhook management
   - `GET /api/hooks/:id/recent-logs` to retrieve recent execution logs(24h) of a webhook
   - `POST /api/hooks/:id/test` to test a webhook
