@@ -1,5 +1,21 @@
 # @logto/cloud
 
+## 0.2.6
+
+### Patch Changes
+
+- ac65c8de4: ### Enable strict CSP policy check header
+
+  This change removes the report only flag from CSP security header settings, which will enables the strict CSP policy check for all requests.
+
+- Updated dependencies [2cab3787c]
+- Updated dependencies [73666f8fa]
+- Updated dependencies [268dc50e7]
+- Updated dependencies [fa0dbafe8]
+- Updated dependencies [497d5b526]
+  - @logto/schemas@1.5.0
+  - @logto/cli@1.5.0
+
 ## 0.2.5
 
 ### Patch Changes

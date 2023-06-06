@@ -1,5 +1,51 @@
 # Change Log
 
+## 1.5.0
+
+### Minor Changes
+
+- 2cab3787c: Add cloudflare configurations to system
+- 73666f8fa: Provide new features for webhooks
+
+  ## Features
+
+  - Manage webhooks via the Admin Console
+  - Securing webhooks by validating signature
+  - Allow to enable/disable a webhook
+  - Track recent execution status of a webhook
+  - Support multi-events for a webhook
+
+  ## Updates
+
+  - schemas: add `name`, `events`, `signingKey`, and `enabled` fields to the `hook` schema
+  - core: change the `user-agent` value from `Logto (https://logto.io)` to `Logto (https://logto.io/)` in the webhook request headers
+  - core: deprecate `event` field in all hook-related APIs, use `events` instead
+  - core: deprecate `retries` field in the `HookConfig` for all hook-related APIs, now it will fallback to `3` if not specified and will be removed in the future
+  - core: add new APIs for webhook management
+    - `GET /api/hooks/:id/recent-logs` to retrieve recent execution logs(24h) of a webhook
+    - `POST /api/hooks/:id/test` to test a webhook
+    - `PATCH /api/hooks/:id/signing-key` to regenerate the signing key of a webhook
+  - core: support query webhook execution stats(24h) via `GET /api/hooks/:id` and `GET /api/hooks/:id` by specifying `includeExecutionStats` query parameter
+  - console: support webhook management
+
+- 268dc50e7: Support setting default API Resource from Console and API
+
+  - New API Resources will not be treated as default.
+  - Added `PATCH /resources/:id/is-default` to setting `isDefault` for an API Resource.
+    - Only one default API Resource is allowed per tenant. Setting one API default will reset all others.
+
+- fa0dbafe8: Add custom domain support
+
+### Patch Changes
+
+- 497d5b526: Support updating sign-in identifiers in user details form
+  - Admin can now update user sign-in identifiers (username, email, phone number) in the user details form in user management.
+  - Other trivial improvements and fixes, e.g. input field placeholder, error handling, etc.
+- Updated dependencies [268dc50e7]
+- Updated dependencies [fa0dbafe8]
+- Updated dependencies [497d5b526]
+  - @logto/phrases@1.4.0
+
 ## 1.4.0
 
 ### Minor Changes

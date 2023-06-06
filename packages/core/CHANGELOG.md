@@ -1,5 +1,65 @@
 # Change Log
 
+## 1.5.0
+
+### Minor Changes
+
+- 73666f8fa: Provide new features for webhooks
+
+  ## Features
+
+  - Manage webhooks via the Admin Console
+  - Securing webhooks by validating signature
+  - Allow to enable/disable a webhook
+  - Track recent execution status of a webhook
+  - Support multi-events for a webhook
+
+  ## Updates
+
+  - schemas: add `name`, `events`, `signingKey`, and `enabled` fields to the `hook` schema
+  - core: change the `user-agent` value from `Logto (https://logto.io)` to `Logto (https://logto.io/)` in the webhook request headers
+  - core: deprecate `event` field in all hook-related APIs, use `events` instead
+  - core: deprecate `retries` field in the `HookConfig` for all hook-related APIs, now it will fallback to `3` if not specified and will be removed in the future
+  - core: add new APIs for webhook management
+    - `GET /api/hooks/:id/recent-logs` to retrieve recent execution logs(24h) of a webhook
+    - `POST /api/hooks/:id/test` to test a webhook
+    - `PATCH /api/hooks/:id/signing-key` to regenerate the signing key of a webhook
+  - core: support query webhook execution stats(24h) via `GET /api/hooks/:id` and `GET /api/hooks/:id` by specifying `includeExecutionStats` query parameter
+  - console: support webhook management
+
+- 268dc50e7: Support setting default API Resource from Console and API
+
+  - New API Resources will not be treated as default.
+  - Added `PATCH /resources/:id/is-default` to setting `isDefault` for an API Resource.
+    - Only one default API Resource is allowed per tenant. Setting one API default will reset all others.
+
+- fa0dbafe8: Add custom domain support
+
+### Patch Changes
+
+- ac65c8de4: ### Enable strict CSP policy check header
+
+  This change removes the report only flag from CSP security header settings, which will enables the strict CSP policy check for all requests.
+
+- 3d9885233: ## Bump oidc-provider version
+
+  Bump oidc-provider version to [v8.2.2](https://github.com/panva/node-oidc-provider/releases/tag/v8.2.2). This version fixes a bug that prevented the revoked scopes from being removed from the access token.
+
+  > Issued Access Tokens always only contain scopes that are defined on the respective Resource Server (returned from features.resourceIndicators.getResourceServerInfo).
+
+  If the scopes are revoked from the resource server, they should be removed from the newly granted access token. This is now fixed in the new version of oidc-provider.
+
+- 813e21639: Bug fix: reset password webhook should be triggered when the user resets password
+- Updated dependencies [2cab3787c]
+- Updated dependencies [73666f8fa]
+- Updated dependencies [268dc50e7]
+- Updated dependencies [fa0dbafe8]
+- Updated dependencies [497d5b526]
+  - @logto/schemas@1.5.0
+  - @logto/console@1.4.0
+  - @logto/phrases@1.4.0
+  - @logto/cli@1.5.0
+
 ## 1.4.0
 
 ### Minor Changes

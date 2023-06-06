@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.5.0
+
+### Patch Changes
+
+- Updated dependencies [2cab3787c]
+- Updated dependencies [73666f8fa]
+- Updated dependencies [268dc50e7]
+- Updated dependencies [fa0dbafe8]
+- Updated dependencies [497d5b526]
+  - @logto/schemas@1.5.0
+  - @logto/phrases@1.4.0
+
 ## 1.4.0
 
 ### Patch Changes
