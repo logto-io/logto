@@ -1,5 +1,6 @@
-import { type Domain } from '@logto/schemas';
+import { type Domain, DomainStatus } from '@logto/schemas';
 
+import ActiveProcess from './components/ActiveProcess';
 import CustomDomainHeader from './components/CustomDomainHeader';
 import * as styles from './index.module.scss';
 
@@ -12,7 +13,7 @@ function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
   return (
     <div className={styles.container}>
       <CustomDomainHeader customDomain={customDomain} onDeleteCustomDomain={onDeleteCustomDomain} />
-      {/* TODO @xiaoyijun add custom domain active process content */}
+      {customDomain.status !== DomainStatus.Active && <ActiveProcess customDomain={customDomain} />}
     </div>
   );
 }

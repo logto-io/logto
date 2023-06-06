@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-top: 1px solid var(--color-divider);
+  padding: _.unit(5) _.unit(6) 0;
+}

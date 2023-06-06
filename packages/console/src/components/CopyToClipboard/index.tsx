@@ -20,6 +20,7 @@ type Props = {
   variant?: 'text' | 'contained' | 'border' | 'icon';
   hasVisibilityToggle?: boolean;
   size?: 'default' | 'small';
+  isWordWrapAllowed?: boolean;
 };
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
@@ -30,6 +31,7 @@ function CopyToClipboard({
   hasVisibilityToggle,
   variant = 'contained',
   size = 'default',
+  isWordWrapAllowed = false,
 }: Props) {
   const copyIconReference = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
@@ -73,7 +75,11 @@ function CopyToClipboard({
       }}
     >
       <div className={styles.row}>
-        {variant !== 'icon' && <div className={styles.content}>{displayValue}</div>}
+        {variant !== 'icon' && (
+          <div className={classNames(styles.content, isWordWrapAllowed && styles.wrapContent)}>
+            {displayValue}
+          </div>
+        )}
         {hasVisibilityToggle && (
           <Tooltip content={t(showHiddenContent ? 'hide' : 'view')}>
             <IconButton

@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 importers:
 
@@ -2876,6 +2880,9 @@ importers:
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
+      camelcase:
+        specifier: ^7.0.0
+        version: 7.0.0
       classnames:
         specifier: ^2.3.1
         version: 2.3.1

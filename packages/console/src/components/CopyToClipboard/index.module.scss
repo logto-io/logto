@@ -29,8 +29,12 @@
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
 
+      &.wrapContent {
+        text-overflow: unset;
+        word-break: break-all;
+      }
+    }
 
     .copyToolTipAnchor {
       margin-left: _.unit(2);
