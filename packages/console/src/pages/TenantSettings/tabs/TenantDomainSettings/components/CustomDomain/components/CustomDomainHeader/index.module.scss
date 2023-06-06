@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: _.unit(5) _.unit(6);
+
+  .domainInfo {
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(1);
+
+    .domain {
+      font: var(--font-title-2);
+    }
+  }
+
+  .icon {
+    color: var(--color-text-secondary);
+  }
+}
+
+.strong {
+  font: var(--font-title-3);
+}
+
+.inUsedDeletionTip {
+  margin-top: _.unit(5);
+}

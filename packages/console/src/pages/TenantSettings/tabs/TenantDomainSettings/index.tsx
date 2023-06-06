@@ -7,6 +7,7 @@ import FormField from '@/components/FormField';
 import { type RequestError } from '@/hooks/use-api';
 
 import AddDomainForm from './components/AddDomainForm';
+import CustomDomain from './components/CustomDomain';
 import DefaultDomain from './components/DefaultDomain';
 import * as styles from './index.module.scss';
 
@@ -30,14 +31,20 @@ function TenantDomainSettings() {
         description="domain.custom.custom_domain_description"
       >
         <FormField title="domain.custom.custom_domain_field">
-          {!customDomain && (
+          {customDomain ? (
+            <CustomDomain
+              customDomain={customDomain}
+              onDeleteCustomDomain={() => {
+                void mutate();
+              }}
+            />
+          ) : (
             <AddDomainForm
               onCustomDomainAdded={(domain) => {
                 void mutate([domain]);
               }}
             />
           )}
-          {/* TODO @xiaoyijun add custom domain content if a custom domain is created */}
         </FormField>
       </FormCard>
       <FormCard
