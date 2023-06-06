@@ -9,8 +9,12 @@ function DocumentNavButton() {
   const { documentationSiteUrl } = useDocumentationUrl();
   return (
     <div className={styles.documentNavButton}>
-      <DocumentIcon className={styles.icon} />
-      <TextLink href={documentationSiteUrl} target="_blank" className={styles.textLink}>
+      <TextLink
+        href={documentationSiteUrl}
+        target="_blank"
+        className={styles.textLink}
+        icon={<DocumentIcon className={styles.icon} />}
+      >
         <DangerousRaw>Docs</DangerousRaw>
       </TextLink>
     </div>
