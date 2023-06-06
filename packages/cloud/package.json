@@ -1,6 +1,6 @@
 {
   "name": "@logto/cloud",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Logto Cloud service.",
   "main": "build/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "@logto/app-insights": "workspace:^1.0.0",
-    "@logto/cli": "workspace:^1.2.0",
+    "@logto/cli": "workspace:^1.5.0",
     "@logto/connector-kit": "workspace:^1.1.1",
     "@logto/core-kit": "workspace:^2.0.0",
-    "@logto/schemas": "workspace:^1.2.0",
+    "@logto/schemas": "workspace:^1.5.0",
     "@logto/shared": "workspace:^2.0.0",
     "@silverhand/essentials": "^2.5.0",
     "@withtyped/postgres": "^0.9.0",

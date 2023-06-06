@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.4.0
+
+### Minor Changes
+
+- 268dc50e7: Support setting default API Resource from Console and API
+
+  - New API Resources will not be treated as default.
+  - Added `PATCH /resources/:id/is-default` to setting `isDefault` for an API Resource.
+    - Only one default API Resource is allowed per tenant. Setting one API default will reset all others.
+
+- fa0dbafe8: Add custom domain support
+- 497d5b526: Support updating sign-in identifiers in user details form
+  - Admin can now update user sign-in identifiers (username, email, phone number) in the user details form in user management.
+  - Other trivial improvements and fixes, e.g. input field placeholder, error handling, etc.
+
 ## 1.3.0
 
 ### Minor Changes
