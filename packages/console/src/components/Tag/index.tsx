@@ -7,7 +7,7 @@ import Success from '@/assets/images/success.svg';
 
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   type?: 'property' | 'state' | 'result';
   status?: 'info' | 'success' | 'alert' | 'error';
   variant?: 'plain' | 'outlined';

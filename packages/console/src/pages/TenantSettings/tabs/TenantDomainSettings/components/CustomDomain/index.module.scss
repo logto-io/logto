@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+}
