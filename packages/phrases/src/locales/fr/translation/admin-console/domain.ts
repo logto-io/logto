@@ -5,20 +5,19 @@ const domain = {
     failed_to_connect: 'Échec de la connexion',
   },
   update_endpoint_alert: {
-    description:
-      'Votre domaine personnalisé a été configuré avec succès. N’oubliez pas de mettre à jour le domaine que vous avez utilisé pour <span>{{domain}}</span> si vous avez configuré les ressources ci-dessous auparavant.',
-    endpoint_url: 'URL de point de terminaison de <a>{{link}}</a>',
-    application_settings_link_text: 'Réglages de l’application',
-    callback_url: 'URL de rappel de <a>{{link}}</a>',
-    social_connector_link_text: 'Connecteur social',
-    api_identifier: 'Identificateur d’API de <a>{{link}}</a>',
-    uri_management_api_link_text: 'API de gestion des URI',
-    tip: 'Après avoir modifié les paramètres, vous pouvez le tester dans notre expérience de connexion <a>{{link}}</a>.',
+    deleted: 'Supprimer le domaine personnalisé réussie !',
+    set_up: 'Votre domaine personnalisé a été configuré avec succès.',
+    update_tip:
+      "N'oubliez pas de mettre à jour le domaine utilisé pour le <social-link>{{socialLink}}</social-link> et le <app-link>{{appLink}}</app-link> si vous avez précédemment configuré les ressources.",
+    callback_uri_text: 'URI de rappel des connecteurs sociaux',
+    application_text: 'Endpoint de Logto pour votre application',
   },
+  error_hint:
+    'Assurez-vous de mettre à jour vos enregistrements DNS. Nous continuerons à vérifier toutes les {{value}} secondes.',
   custom: {
     custom_domain: 'Domaine personnalisé',
     custom_domain_description:
-      'Remplacez le domaine par défaut par votre propre domaine pour maintenir la cohérence avec votre marque et personnaliser l’expérience de connexion pour vos utilisateurs.',
+      'Remplacez le domaine par défaut par votre propre domaine afin de maintenir la cohérence avec votre marque et de personnaliser l’expérience de connexion pour vos utilisateurs.',
     custom_domain_field: 'Domaine personnalisé',
     custom_domain_placeholder: 'votre.domaine.com',
     add_domain: 'Ajouter un domaine',
@@ -27,7 +26,7 @@ const domain = {
     verify_domain: 'Vérifier le domaine',
     enable_ssl: 'Activer SSL',
     checking_dns_tip:
-      'Après avoir configuré les enregistrements DNS, le processus s’exécutera automatiquement et peut prendre jusqu’à 24 heures. Vous pouvez quitter cette interface pendant son exécution.',
+      "Après avoir configuré les enregistrements DNS, le processus s'exécutera automatiquement et peut prendre jusqu'à 24 heures. Vous pouvez quitter cette interface pendant son exécution.",
     generating_dns_records: 'Génération des enregistrements DNS...',
     add_dns_records: 'Veuillez ajouter ces enregistrements DNS à votre fournisseur DNS.',
     dns_table: {

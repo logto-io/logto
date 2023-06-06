@@ -5,16 +5,15 @@ const domain = {
     failed_to_connect: 'Failed to connect',
   },
   update_endpoint_alert: {
-    description:
-      'Your custom domain has been successfully configured. Don’t forget to update the domain which you have used to <span>{{domain}}</span> if you had configured the resources below previously.',
-    endpoint_url: 'Endpoint URL of <a>{{link}}</a>',
-    application_settings_link_text: 'Application Settings',
-    callback_url: 'Callback URL of <a>{{link}}</a>',
-    social_connector_link_text: 'Social connector',
-    api_identifier: 'API identifier of <a>{{link}}</a>',
-    uri_management_api_link_text: 'URI Management API',
-    tip: 'After change settings, you can test it in our sign-in experience <a>{{link}}</a>.',
+    deleted: 'Delete custom domain successfully!',
+    set_up: 'Your custom domain has been successfully set up.',
+    update_tip:
+      'Remember to update the domain used for the <social-link>{{socialLink}}</social-link> and <app-link>{{appLink}}</app-link> if you had previously configured the resources previously.',
+    callback_uri_text: 'Social connector callback URI',
+    application_text: 'Logto endpoint for your application',
   },
+  error_hint:
+    'Make sure to update your DNS records. We will continue to check every {{value}} seconds.',
   custom: {
     custom_domain: 'Custom Domain',
     custom_domain_description:

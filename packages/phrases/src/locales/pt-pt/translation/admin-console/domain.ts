@@ -5,22 +5,21 @@ const domain = {
     failed_to_connect: 'Falha ao conectar',
   },
   update_endpoint_alert: {
-    description:
-      'O seu domínio personalizado foi configurado com sucesso. Não se esqueça de atualizar o domínio que utilizou para <span>{{domain}}</span> caso tenha configurado os recursos abaixo anteriormente.',
-    endpoint_url: 'URL de extremidade de <a>{{link}}</a>',
-    application_settings_link_text: 'Definições da aplicação',
-    callback_url: 'URL de retorno de chamada de <a>{{link}}</a>',
-    social_connector_link_text: 'Conector social',
-    api_identifier: 'Identificador de API de <a>{{link}}</a>',
-    uri_management_api_link_text: 'API de gestão de URI',
-    tip: 'Depois de alterar as definições, pode testá-las na nossa experiência de início de sessão <a>{{link}}</a>.',
+    deleted: 'Domínio personalizado eliminado com sucesso!',
+    set_up: 'O seu domínio personalizado foi configurado com sucesso.',
+    update_tip:
+      'Lembre-se de atualizar o domínio utilizado para o <social-link>{{socialLink}}</social-link> e <app-link>{{appLink}}</app-link> se anteriormente tiver configurado previamente os recursos.',
+    callback_uri_text: 'URI de retorno do conector social',
+    application_text: 'Extremidade de Logto para a sua aplicação',
   },
+  error_hint:
+    'Certifique-se de atualizar os seus registos DNS. Continuaremos a verificar a cada {{value}} segundos.',
   custom: {
     custom_domain: 'Domínio personalizado',
     custom_domain_description:
       'Troque o domínio predefinido pelo seu próprio domínio para manter a consistência com a sua marca e personalizar a experiência de início de sessão para os seus utilizadores.',
     custom_domain_field: 'Domínio personalizado',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'seu.dominio.com',
     add_domain: 'Adicionar domínio',
     invalid_domain_format:
       'Formato de subdomínio inválido. Introduza um subdomínio com pelo menos três partes.',
