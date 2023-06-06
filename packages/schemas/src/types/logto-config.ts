@@ -20,6 +20,12 @@ export const logtoOidcConfigGuard: Readonly<{
 });
 
 /* --- Logto tenant configs --- */
+export enum CustomDomainProgress {
+  NotStarted = 'NotStarted',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+}
+
 export const adminConsoleDataGuard = z.object({
   // Get started challenges
   livePreviewChecked: z.boolean(),
@@ -30,6 +36,8 @@ export const adminConsoleDataGuard = z.object({
   furtherReadingsChecked: z.boolean(),
   roleCreated: z.boolean(),
   m2mApplicationCreated: z.boolean(),
+  // Custom domain console states
+  customDomainProgress: z.nativeEnum(CustomDomainProgress),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

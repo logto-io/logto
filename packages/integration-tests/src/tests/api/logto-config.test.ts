@@ -1,4 +1,4 @@
-import { type AdminConsoleData } from '@logto/schemas';
+import { CustomDomainProgress, type AdminConsoleData } from '@logto/schemas';
 
 import { getAdminConsoleConfig, updateAdminConsoleConfig } from '#src/api/index.js';
 
@@ -11,6 +11,7 @@ const defaultAdminConsoleConfig: AdminConsoleData = {
   roleCreated: false,
   communityChecked: false,
   m2mApplicationCreated: false,
+  customDomainProgress: CustomDomainProgress.NotStarted,
 };
 
 describe('admin console sign-in experience', () => {

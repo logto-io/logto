@@ -1,6 +1,9 @@
 import { type CreateLogtoConfig } from '../db-entries/index.js';
-import type { AdminConsoleData } from '../types/index.js';
-import { LogtoTenantConfigKey } from '../types/index.js';
+import {
+  type AdminConsoleData,
+  LogtoTenantConfigKey,
+  CustomDomainProgress,
+} from '../types/index.js';
 
 export const createDefaultAdminConsoleConfig = (
   forTenantId: string
@@ -21,5 +24,6 @@ export const createDefaultAdminConsoleConfig = (
       roleCreated: false,
       communityChecked: false,
       m2mApplicationCreated: false,
+      customDomainProgress: CustomDomainProgress.NotStarted,
     },
   } satisfies CreateLogtoConfig);

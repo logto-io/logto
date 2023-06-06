@@ -1,14 +1,15 @@
 import { VerificationCodeType } from '@logto/connector-kit';
-import type {
-  AdminConsoleData,
-  Application,
-  Passcode,
-  Resource,
-  Role,
-  Scope,
-  UsersRole,
+import {
+  type AdminConsoleData,
+  type Application,
+  CustomDomainProgress,
+  type Passcode,
+  type Resource,
+  type Role,
+  type Scope,
+  type UsersRole,
+  ApplicationType,
 } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
 
 export * from './connector.js';
 export * from './sign-in-experience.js';
@@ -98,6 +99,7 @@ export const mockAdminConsoleData: AdminConsoleData = {
   roleCreated: false,
   communityChecked: false,
   m2mApplicationCreated: false,
+  customDomainProgress: CustomDomainProgress.NotStarted,
 };
 
 export const mockPasscode: Passcode = {
