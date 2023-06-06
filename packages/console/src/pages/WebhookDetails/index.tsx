@@ -1,7 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type HookResponse, type Hook } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -48,16 +48,10 @@ function WebhookDetails() {
   const theme = useTheme();
   const WebhookIcon = theme === 'light' ? Webhook : WebhookDark;
 
-  const { show, cancel } = useConfirmModal();
+  const { show } = useConfirmModal();
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdatingEnableState, setIsUpdatingEnableState] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      cancel();
-    };
-  }, [cancel, pathname]);
 
   const handleDelete = async () => {
     if (!data || isDeleting) {
