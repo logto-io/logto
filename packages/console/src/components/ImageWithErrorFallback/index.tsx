@@ -39,14 +39,7 @@ function ImageWithErrorFallback({
 
   return (
     <div className={containerClassName}>
-      <img
-        className={className}
-        src={src}
-        alt={alt}
-        onError={errorHandler}
-        {...props}
-        crossOrigin="anonymous"
-      />
+      <img className={className} src={src} alt={alt} onError={errorHandler} {...props} />
     </div>
   );
 }
