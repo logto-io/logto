@@ -56,6 +56,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
 
   const basicSecurityHeaderSettings: HelmetOptions = {
     contentSecurityPolicy: false, // Exclusively set per app
+    crossOriginEmbedderPolicy: { policy: 'credentialless' },
     expectCt: false, // Not recommended, will be deprecated by modern browsers
     dnsPrefetchControl: false,
     referrerPolicy: {
