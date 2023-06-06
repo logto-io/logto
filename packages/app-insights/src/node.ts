@@ -2,7 +2,7 @@ import { trySafe } from '@silverhand/essentials';
 import type { TelemetryClient } from 'applicationinsights';
 
 export const normalizeError = (error: unknown) => {
-  const normalized = error instanceof Error ? error : new Error(String(error));
+  const errorObject = error instanceof Error ? error : new Error(String(error));
 
   /**
    * - Ensure the message if not empty otherwise Application Insights will respond 400
@@ -10,12 +10,21 @@ export const normalizeError = (error: unknown) => {
    * - We stringify error object here since other error properties won't show on the
    *   ApplicationInsights details page.
    */
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  normalized.message = JSON.stringify(
-    error,
+  const message = JSON.stringify(
+    errorObject,
     // ApplicationInsights shows call stack, no need to stringify
-    Object.getOwnPropertyNames(error).filter((value) => value !== 'stack')
+    Object.getOwnPropertyNames(errorObject).filter((value) => value !== 'stack')
   );
+
+  // Ensure we don't mutate the original error
+  const normalized = new Error(message);
+
+  // Manually clone key fields of the error for AppInsights display
+  /* eslint-disable @silverhand/fp/no-mutation */
+  normalized.name = errorObject.name;
+  normalized.stack = errorObject.stack;
+  normalized.cause = errorObject.cause;
+  /* eslint-enable @silverhand/fp/no-mutation */
 
   return normalized;
 };
