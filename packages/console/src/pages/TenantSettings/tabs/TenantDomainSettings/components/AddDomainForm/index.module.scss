@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.addDomain {
+  width: 100%;
+  display: flex;
+
+  .textInput {
+    flex: 1;
+    margin-right: _.unit(3);
+  }
+
+  .addButton {
+    flex-shrink: 0;
+  }
+}
