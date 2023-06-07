@@ -1,6 +1,6 @@
 import type { Nullable } from '@silverhand/essentials';
 import { noop } from '@silverhand/essentials';
-import { useState, useRef, useMemo, createContext, useCallback } from 'react';
+import { useState, useRef, useMemo, createContext, useCallback, useEffect } from 'react';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import type { ConfirmModalProps } from '@/components/ConfirmModal';
@@ -84,6 +84,22 @@ function AppConfirmModalProvider({ children }: Props) {
     }),
     [handleCancel, handleConfirm, handleShow]
   );
+
+  useEffect(() => {
+    const handlePathChange = () => {
+      handleCancel();
+    };
+
+    /**
+     * Note: Close the modal when the location path changes.
+     * We don't use react-router-dom's `UseLocation` since this is a global component and not relying on the router.
+     */
+    window.addEventListener('popstate', handlePathChange);
+
+    return () => {
+      window.removeEventListener('popstate', handlePathChange);
+    };
+  }, [handleCancel]);
 
   const { ModalContent, type, ...restProps } = modalState;
 
