@@ -7,49 +7,22 @@ import {
 
 import { isDomainStatus } from '../../utils';
 
-import ActiveStep from './components/ActiveStep';
-import { StepStatus } from './components/ActiveStepStatus';
 import DnsRecordsTable from './components/DnsRecordsTable';
+import Step from './components/Step';
 import * as styles from './index.module.scss';
 
 type Props = {
   customDomain: Domain;
 };
 
-const domainStatusToStep: Record<DomainStatus, number> = {
-  /**
-   * TODO @xiaoyijun
-   * Aligned with designers how to handle error status since error is a global state, and we don't have an error for each step.
-   * The error handling logic will be implemented in the error handling PR.
-   */
-  [DomainStatus.Error]: 0,
-  [DomainStatus.PendingVerification]: 1,
-  [DomainStatus.PendingSsl]: 2,
-  [DomainStatus.Active]: 3,
-};
-
-const getStepStatus = (step: number, domainStatus: DomainStatus): StepStatus => {
-  const domainStatusStep = domainStatusToStep[domainStatus];
-
-  if (step < domainStatusStep) {
-    return StepStatus.Finished;
-  }
-
-  if (step === domainStatusStep) {
-    return StepStatus.Loading;
-  }
-
-  return StepStatus.Pending;
-};
-
 const isSetupSslDnsRecord = ({ type, name }: DomainDnsRecord) =>
   type.toUpperCase() === 'TXT' && name.includes('_acme-challenge');
 
-function ActiveProcess({ customDomain }: Props) {
+function ActivationProcess({ customDomain }: Props) {
   const { dnsRecords, status } = customDomain;
 
   // TODO @xiaoyijun Remove this type assertion when the LOG-6276 issue is done by @wangsijie
-  const typedStatus = isDomainStatus(status) ? status : DomainStatus.Error;
+  const typedDomainStatus = isDomainStatus(status) ? status : DomainStatus.Error;
 
   const { verifyDomainDnsRecord, setupSslDnsRecord } = dnsRecords.reduce<{
     verifyDomainDnsRecord: DomainDnsRecords;
@@ -73,24 +46,24 @@ function ActiveProcess({ customDomain }: Props) {
 
   return (
     <div className={styles.container}>
-      <ActiveStep
+      <Step
         step={1}
         title="domain.custom.verify_domain"
         tip="domain.custom.checking_dns_tip"
-        status={getStepStatus(1, typedStatus)}
+        domainStatus={typedDomainStatus}
       >
         <DnsRecordsTable records={verifyDomainDnsRecord} />
-      </ActiveStep>
-      <ActiveStep
+      </Step>
+      <Step
         step={2}
         title="domain.custom.enable_ssl"
         tip="domain.custom.checking_dns_tip"
-        status={getStepStatus(2, typedStatus)}
+        domainStatus={typedDomainStatus}
       >
         <DnsRecordsTable records={setupSslDnsRecord} />
-      </ActiveStep>
+      </Step>
     </div>
   );
 }
 
-export default ActiveProcess;
+export default ActivationProcess;

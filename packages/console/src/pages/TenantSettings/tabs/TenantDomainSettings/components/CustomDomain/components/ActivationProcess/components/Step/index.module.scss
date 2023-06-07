@@ -36,3 +36,30 @@
     }
   }
 }
+
+.stepIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: var(--color-surface-variant);
+  color: var(--color-text-link);
+  font: var(--font-label-3);
+
+  .icon {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    color: var(--color-white);
+  }
+
+  &.finished {
+    background-color: var(--color-on-success-container);
+  }
+
+  &.loading {
+    background-color: unset;
+  }
+}
