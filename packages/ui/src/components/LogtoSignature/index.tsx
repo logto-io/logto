@@ -8,11 +8,10 @@ import LogtoLogoShadow from '@/assets/icons/logto-logo-shadow.svg';
 
 import * as styles from './index.module.scss';
 
-const logtoUrl = new URL(
-  `https://logto.io?${new URLSearchParams({
-    src: window.location.href,
-  }).toString()}`
-);
+const logtoUrl = `https://logto.io/?${new URLSearchParams({
+  utm_source: 'sign_in',
+  utm_medium: 'powered_by',
+}).toString()}`;
 
 type Props = {
   className?: string;
