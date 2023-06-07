@@ -1,0 +1,48 @@
+@use '@/scss/underscore' as _;
+
+.tip {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
+.container {
+  border-radius: 12px;
+  background-color: var(--color-layer-light);
+}
+
+.loading {
+  padding: _.unit(5);
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  font: var(--font-body-2);
+
+  .loadingIcon {
+    color: var(--color-primary);
+  }
+}
+
+.table {
+  padding: _.unit(2) 0;
+
+  .header {
+    background-color: unset;
+  }
+
+  .bodyTableContainer {
+    background-color: unset;
+    padding-bottom: unset;
+
+    table > tbody > tr > td {
+      border: unset;
+    }
+  }
+}
+
+
+.column {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
