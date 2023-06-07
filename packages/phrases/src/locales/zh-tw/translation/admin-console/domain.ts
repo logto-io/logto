@@ -4,12 +4,10 @@ const domain = {
     in_used: '使用中',
     failed_to_connect: '連線失敗',
   },
-  update_endpoint_alert: {
-    deleted: '已成功刪除自定義網域！',
-    set_up: '已成功設置自定義網域。',
-    update_tip:
-      '請記得更新您以前配置的 <social-link>{{socialLink}}</social-link> 和 <app-link>{{appLink}}</app-link> 使用的網域名稱。',
-    callback_uri_text: '社交連接器回撥 URI',
+  update_endpoint_notice: {
+    content:
+      '已成功設置自定義網域。請記得更新您以前配置的 <social-link>{{socialLink}}</social-link> 和 <app-link>{{appLink}}</app-link> 使用的網域名稱。',
+    connector_callback_uri_text: '社交連接器回撥 URI',
     application_text: '您的應用程式的 Logto 端點',
   },
   error_hint: '請確保您更新了您的 DNS 記錄。 我們將繼續每{{value}}秒檢查一次。',

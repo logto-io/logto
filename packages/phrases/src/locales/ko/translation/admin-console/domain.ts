@@ -4,12 +4,10 @@ const domain = {
     in_used: '사용 중',
     failed_to_connect: '연결 실패',
   },
-  update_endpoint_alert: {
-    deleted: '커스텀 도메인이 성공적으로 삭제되었습니다!',
-    set_up: '커스텀 도메인이 성공적으로 설정되었습니다.',
-    update_tip:
-      '이전에 리소스를 구성한 경우 <social-link>{{socialLink}}</social-link> 및 <app-link>{{appLink}}</app-link>에 사용한 도메인을 업데이트하기를 잊지 마세요.',
-    callback_uri_text: 'Social 커넥터 콜백 URI',
+  update_endpoint_notice: {
+    content:
+      '커스텀 도메인이 성공적으로 설정되었습니다. 이전에 리소스를 구성한 경우 <social-link>{{socialLink}}</social-link> 및 <app-link>{{appLink}}</app-link>에 사용한 도메인을 업데이트하기를 잊지 마세요.',
+    connector_callback_uri_text: 'Social 커넥터 콜백 URI',
     application_text: '애플리케이션을 위한 Logto 엔드포인트',
   },
   error_hint: 'DNS 레코드를 업데이트해야 합니다. {{value}}초마다 계속해서 확인하겠습니다.',

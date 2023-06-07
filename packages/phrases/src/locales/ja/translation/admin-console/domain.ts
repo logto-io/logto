@@ -4,12 +4,10 @@ const domain = {
     in_used: '使用中',
     failed_to_connect: '接続に失敗しました',
   },
-  update_endpoint_alert: {
-    deleted: 'カスタムドメインを正常に削除しました！',
-    set_up: 'カスタムドメインが正常に設定されました。',
-    update_tip:
-      '以前にリソースを設定した場合は、<social-link>{{socialLink}}</social-link>と<app-link>{{appLink}}</app-link>に使用するドメインを更新することをお忘れなく。',
-    callback_uri_text: 'ソーシャルコネクタのコールバックURI',
+  update_endpoint_notice: {
+    content:
+      'カスタムドメインが正常に設定されました。以前にリソースを設定した場合は、<social-link>{{socialLink}}</social-link>と<app-link>{{appLink}}</app-link>に使用するドメインを更新することをお忘れなく。',
+    connector_callback_uri_text: 'ソーシャルコネクタのコールバックURI',
     application_text: 'アプリケーションのLogtoエンドポイント',
   },
   error_hint: '{{value}} 秒後にもう一度確認するようにDNSレコードを更新してください。',
