@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 import type { NavigateOptions } from 'react-router-dom';
 
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import { getUserTenantId } from '@/consts/tenants';
 
 type Props = {

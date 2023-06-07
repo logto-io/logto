@@ -10,7 +10,7 @@ import CardTitle from '@/components/CardTitle';
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import type { RequestError } from '@/hooks/use-api';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';

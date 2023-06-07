@@ -18,7 +18,7 @@ import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import initI18n from '@/i18n/init';
 
 import { adminTenantEndpoint, mainTitle } from './consts';
-import { isCloud } from './consts/cloud';
+import { isCloud } from './consts/env';
 import ErrorBoundary from './containers/ErrorBoundary';
 import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';

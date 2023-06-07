@@ -2,7 +2,7 @@ import { adminTenantId } from '@logto/schemas';
 import { useCallback, useContext, useMemo } from 'react';
 import { z } from 'zod';
 
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useMeCustomData from '@/hooks/use-me-custom-data';
 

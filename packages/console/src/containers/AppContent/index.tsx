@@ -7,7 +7,7 @@ import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';

@@ -16,7 +16,7 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { getBasename } from '@/consts';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import { SignInExperiencePage } from '@/consts/page-tabs';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
