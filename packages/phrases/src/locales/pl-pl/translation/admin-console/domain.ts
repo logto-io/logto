@@ -1,26 +1,25 @@
 const domain = {
   status: {
-    connecting: 'Połączenie',
+    connecting: 'Łączenie',
     in_used: 'W użyciu',
     failed_to_connect: 'Nieudane połączenie',
   },
   update_endpoint_alert: {
-    description:
-      'Twoja niestandardowa domena została pomyślnie skonfigurowana. Nie zapomnij zaktualizować domeny, którą użyłeś do <span>{{domain}}</span>, jeśli skonfigurowałeś poniższe zasoby wcześniej.',
-    endpoint_url: 'Url końcówki <a>{{link}}</a>',
-    application_settings_link_text: 'Ustawienia aplikacji',
-    callback_url: 'Url zwrotny<a>{{link}}</a>',
-    social_connector_link_text: 'Konwerter społecznościowy',
-    api_identifier: 'Identyfikator API<a>{{link}}</a>',
-    uri_management_api_link_text: 'API zarządzania URI',
-    tip: 'Po zmianie ustawień możesz to przetestować w naszym doświadczeniu logowania <a>{{link}}</a>.',
+    deleted: 'Pomyślnie usunięto niestandardową domenę!',
+    set_up: 'Twoja niestandardowa domena została pomyślnie skonfigurowana.',
+    update_tip:
+      'Pamiętaj, aby zaktualizować domenę używaną dla <social-link>{{socialLink}}</social-link> i <app-link>{{appLink}}</app-link>, jeśli wcześniej skonfigurowałeś zasoby.',
+    callback_uri_text: 'URI wywołania łącznika społecznego',
+    application_text: 'Endpoint Logto dla twojej aplikacji',
   },
+  error_hint:
+    'Upewnij się, że zaktualizowałeś swoje rekordy DNS. Będziemy nadal sprawdzać co {{value}} sekund.',
   custom: {
     custom_domain: 'Niestandardowa domena',
     custom_domain_description:
       'Zastąp domyślną domenę swoją własną domeną, aby zachować spójność z Twoją marką i spersonalizować doświadczenie logowania dla swoich użytkowników.',
     custom_domain_field: 'Niestandardowa domena',
-    custom_domain_placeholder: 'your.domain.com',
+    custom_domain_placeholder: 'twoja.domena.com',
     add_domain: 'Dodaj domenę',
     invalid_domain_format:
       'Nieprawidłowy format poddomeny. Wprowadź poddomenę z co najmniej trzema elementami.',

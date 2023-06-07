@@ -5,16 +5,15 @@ const domain = {
     failed_to_connect: 'Error de conexión',
   },
   update_endpoint_alert: {
-    description:
-      'Su dominio personalizado se ha configurado correctamente. No olvide actualizar el dominio que ha utilizado para <span>{{domain}}</span> si había configurado los recursos a continuación anteriormente.',
-    endpoint_url: 'URL del endpoint de <a>{{link}}</a>',
-    application_settings_link_text: 'Configuración de la aplicación',
-    callback_url: 'URL de callback de <a>{{link}}</a>',
-    social_connector_link_text: 'Conector social',
-    api_identifier: 'Identificador API de <a>{{link}}</a>',
-    uri_management_api_link_text: 'API de gestión de URI',
-    tip: 'Después de cambiar la configuración, puede probarla en nuestra experiencia de inicio de sesión <a>{{link}}</a>.',
+    deleted: '¡Dominio personalizado eliminado con éxito!',
+    set_up: 'Su dominio personalizado se ha configurado correctamente.',
+    update_tip:
+      'Recuerde actualizar el dominio utilizado para <social-link>{{socialLink}}</social-link> y <app-link>{{appLink}}</app-link> si había configurado previamente los recursos.',
+    callback_uri_text: 'URI de devolución de llamada del conector social',
+    application_text: 'Endpoint Logto para su aplicación',
   },
+  error_hint:
+    'Asegúrese de actualizar sus registros DNS. Continuaremos verificando cada {{value}} segundos.',
   custom: {
     custom_domain: 'Dominio personalizado',
     custom_domain_description:
@@ -29,7 +28,7 @@ const domain = {
     checking_dns_tip:
       'Después de configurar los registros DNS, el proceso se ejecutará automáticamente y puede tardar hasta 24 horas. Puede dejar esta interfaz mientras se está ejecutando.',
     generating_dns_records: 'Generando los registros DNS...',
-    add_dns_records: 'Agrega estos registros DNS a tu proveedor de DNS.',
+    add_dns_records: 'Agregue estos registros DNS a su proveedor de DNS.',
     dns_table: {
       type_field: 'Tipo',
       name_field: 'Nombre',
@@ -42,14 +41,14 @@ const domain = {
       in_used_description:
         '¿Está seguro de que desea eliminar este dominio personalizado "<span>{{domain}}</span>"?',
       in_used_tip:
-        'Si ha configurado este dominio personalizado en su proveedor de conector social o punto final de aplicación antes, deberá modificar la URI al dominio predeterminado de Logto "<span>{{domain}}</span>" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
+        'Si había configurado este dominio personalizado en su proveedor de conector social o punto final de aplicación antes, deberá modificar la URI al dominio predeterminado de Logto "<span>{{dominio}}</span>" primero. Esto es necesario para que el botón de inicio de sesión social funcione correctamente.',
       deleted: '¡Dominio personalizado eliminado con éxito!',
     },
   },
   default: {
     default_domain: 'Dominio predeterminado',
     default_domain_description:
-      'Proporcionamos un nombre de dominio predeterminado que se puede utilizar directamente en línea. Siempre está disponible, lo que garantiza que su aplicación siempre se pueda acceder para iniciar sesión, incluso si cambia a un dominio personalizado.',
+      'Proporcionamos un nombre de dominio predeterminado que se puede utilizar directamente en línea. Siempre está disponible, lo que garantiza que se pueda acceder a su aplicación para iniciar sesión, incluso si cambia a un dominio personalizado.',
     default_domain_field: 'Dominio predeterminado de Logto',
   },
 };

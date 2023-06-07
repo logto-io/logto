@@ -5,16 +5,15 @@ const domain = {
     failed_to_connect: 'Falha na conexão',
   },
   update_endpoint_alert: {
-    description:
-      'Seu domínio personalizado foi configurado com sucesso. Não se esqueça de atualizar o domínio que você usou para <span>{{domain}}</span> se você já configurou os recursos abaixo anteriormente.',
-    endpoint_url: 'URL do ponto de extremidade de <a>{{link}}</a>',
-    application_settings_link_text: 'Configurações de aplicativo',
-    callback_url: 'URL de retorno de chamada de <a>{{link}}</a>',
-    social_connector_link_text: 'Conector social',
-    api_identifier: 'Identificador de API de <a>{{link}}</a>',
-    uri_management_api_link_text: 'API de Gerenciamento de URI',
-    tip: 'Após alterar as configurações, você pode testá-las em nossa experiência de login <a>{{link}}</a>.',
+    deleted: 'Excluir domínio personalizado com sucesso!',
+    set_up: 'Seu domínio personalizado foi configurado com sucesso.',
+    update_tip:
+      'Lembre-se de atualizar o domínio usado para o <social-link>{{socialLink}}</social-link> e <app-link>{{appLink}}</app-link> se você tiver configurado anteriormente os recursos antes.',
+    callback_uri_text: 'URI de retorno para conector social',
+    application_text: 'Endpoint do Logto para seu aplicativo',
   },
+  error_hint:
+    'Certifique-se de atualizar seus registros DNS. Nós continuaremos a verificação a cada {{value}} segundos.',
   custom: {
     custom_domain: 'Domínio personalizado',
     custom_domain_description:
