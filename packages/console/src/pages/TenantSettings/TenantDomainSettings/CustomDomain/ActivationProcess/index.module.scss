@@ -4,3 +4,12 @@
   border-top: 1px solid var(--color-divider);
   padding: _.unit(5) _.unit(6) 0;
 }
+
+.errorNotification {
+  margin-bottom: _.unit(6);
+
+  .hint {
+    margin-top: _.unit(1);
+    color: var(--color-text-secondary);
+  }
+}

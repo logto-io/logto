@@ -4,6 +4,7 @@ import useSWR from 'swr';
 
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
+import { customDomainSyncInterval } from '@/consts/custom-domain';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 
@@ -16,8 +17,7 @@ function TenantDomainSettings() {
   const api = useApi();
   const fetcher = useSwrFetcher<Domain[]>(api);
   const { data, error, mutate } = useSWR<Domain[], RequestError>('api/domains', fetcher, {
-    // Note: check the custom domain status every 10 seconds.
-    refreshInterval: 10_000,
+    refreshInterval: customDomainSyncInterval * 1000,
   });
 
   const isLoading = !data && !error;
