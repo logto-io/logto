@@ -14,6 +14,7 @@ import {
   TenantTag,
   type TenantInfo,
   type CreateTenant,
+  defaultTenantId,
 } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
@@ -55,6 +56,8 @@ describe('Tenant APIs', () => {
     expect(tenants.length).toBeGreaterThan(2);
     expect(tenants.find((tenant) => tenant.id === tenant1.id)).toStrictEqual(tenant1);
     expect(tenants.find((tenant) => tenant.id === tenant2Updated.id)).toStrictEqual(tenant2Updated);
+    await expect(deleteTenant(accessToken, adminTenantId)).rejects.toThrow();
+    await expect(deleteTenant(accessToken, defaultTenantId)).rejects.toThrow();
   });
 
   it('should be able to create multiple tenants for `user` role', async () => {

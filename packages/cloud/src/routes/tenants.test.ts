@@ -165,6 +165,26 @@ describe('DELETE /api/tenants/:tenantId', () => {
   const library = new MockTenantsLibrary();
   const router = tenantsRoutes(library);
 
+  it('should throw 422 when try to delete `admin` tenant', async () => {
+    await expect(
+      router.routes()(
+        buildRequestAuthContext('DELETE /tenants/admin', { body: {} })(),
+        noop,
+        createHttpContext()
+      )
+    ).rejects.toMatchObject({ status: 422 });
+  });
+
+  it('should throw 422 when try to delete `default` tenant', async () => {
+    await expect(
+      router.routes()(
+        buildRequestAuthContext('DELETE /tenants/default', { body: {} })(),
+        noop,
+        createHttpContext()
+      )
+    ).rejects.toMatchObject({ status: 422 });
+  });
+
   it('should throw 403 when lack of permission', async () => {
     await expect(
       router.routes()(

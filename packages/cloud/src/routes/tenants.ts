@@ -1,4 +1,10 @@
-import { CloudScope, tenantInfoGuard, createTenantGuard } from '@logto/schemas';
+import {
+  CloudScope,
+  tenantInfoGuard,
+  createTenantGuard,
+  adminTenantId,
+  defaultTenantId,
+} from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { createRouter, RequestError } from '@withtyped/server';
 
@@ -75,6 +81,10 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
       }
     )
     .delete('/:tenantId', {}, async (context, next) => {
+      if ([adminTenantId, defaultTenantId].includes(context.guarded.params.tenantId)) {
+        throw new RequestError(`Should not delete built-in tenants.`, 422);
+      }
+
       /** Users w/o either `ManageTenant` or `ManageTenantSelf` scope does not have permission. */
       if (
         ![CloudScope.ManageTenant, CloudScope.ManageTenantSelf].some((scope) =>
