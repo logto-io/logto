@@ -12,11 +12,6 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
-export type SocialUserInfoSession = {
-  connectorId: string;
-  userInfo: SocialUserInfo;
-};
-
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
   interactionResult: InteractionResults
@@ -39,8 +34,6 @@ const getUserInfoFromInteractionResult = async (
 
   return result.socialUserInfo.userInfo;
 };
-
-export type SocialLibrary = ReturnType<typeof createSocialLibrary>;
 
 export const createSocialLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
   const { findUserByEmail, findUserByPhone } = queries.users;

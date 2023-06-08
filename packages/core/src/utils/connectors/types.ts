@@ -1,10 +1,8 @@
-import type { AllConnector, VerificationCodeType } from '@logto/connector-kit';
+import type { AllConnector } from '@logto/connector-kit';
 import { type Connector, Connectors } from '@logto/schemas';
 import { type z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';
-
-export type TemplateType = VerificationCodeType;
 
 /**
  * The connector type with full context.

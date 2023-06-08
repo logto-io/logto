@@ -5,7 +5,7 @@ import { number } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildLink } from '#src/utils/pagination.js';
 
-export type Pagination = {
+type Pagination = {
   offset: number;
   limit: number;
   totalCount?: number;
@@ -16,7 +16,7 @@ export type WithPaginationContext<ContextT> = ContextT & {
   pagination: Pagination;
 };
 
-export type PaginationConfig = {
+type PaginationConfig = {
   defaultPageSize?: number;
   maxPageSize?: number;
   isOptional?: boolean;

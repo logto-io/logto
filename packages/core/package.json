@@ -116,8 +116,22 @@
   "eslintConfig": {
     "extends": "@silverhand",
     "rules": {
-      "no-console": "error"
-    }
+      "no-console": "error",
+      "import/no-unused-modules": [
+        "error",
+        { "unusedExports": true }
+      ]
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.d.ts"
+        ],
+        "rules": {
+          "import/no-unused-modules": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

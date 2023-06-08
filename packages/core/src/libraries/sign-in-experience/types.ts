@@ -2,12 +2,12 @@ import { connectorMetadataGuard, type ConnectorMetadata } from '@logto/connector
 import { type SignInExperience, SignInExperiences } from '@logto/schemas';
 import { z } from 'zod';
 
-export type ForgotPassword = {
+type ForgotPassword = {
   phone: boolean;
   email: boolean;
 };
 
-export type ConnectorMetadataWithId = ConnectorMetadata & { id: string };
+type ConnectorMetadataWithId = ConnectorMetadata & { id: string };
 
 export type FullSignInExperience = SignInExperience & {
   socialConnectors: ConnectorMetadataWithId[];

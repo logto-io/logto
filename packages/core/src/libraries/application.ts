@@ -2,8 +2,6 @@ import type { Scope } from '@logto/schemas';
 
 import type Queries from '#src/tenants/Queries.js';
 
-export type ApplicationLibrary = ReturnType<typeof createApplicationLibrary>;
-
 export const createApplicationLibrary = (queries: Queries) => {
   const {
     applicationsRoles: { findApplicationsRolesByApplicationId },

@@ -4,7 +4,7 @@ import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
-export const claimToUserKey: Readonly<
+const claimToUserKey: Readonly<
   Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified'>, keyof User>
 > = Object.freeze({
   name: 'name',

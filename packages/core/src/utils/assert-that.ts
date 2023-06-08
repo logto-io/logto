@@ -3,7 +3,7 @@ import { assert } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-export type AssertThatFunction = <E extends Error>(
+type AssertThatFunction = <E extends Error>(
   value: unknown,
   error: E | LogtoErrorCode
 ) => asserts value;

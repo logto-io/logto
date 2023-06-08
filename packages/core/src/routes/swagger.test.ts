@@ -10,7 +10,7 @@ import type { AnonymousRouter } from '#src/routes/types.js';
 
 const { default: swaggerRoutes, paginationParameters } = await import('./swagger.js');
 
-export const createSwaggerRequest = (
+const createSwaggerRequest = (
   allRouters: Router[],
   swaggerRouter: AnonymousRouter = new Router()
 ) => {
