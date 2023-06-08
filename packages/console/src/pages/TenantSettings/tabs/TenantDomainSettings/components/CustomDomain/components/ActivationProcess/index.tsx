@@ -1,11 +1,4 @@
-import {
-  DomainStatus,
-  type Domain,
-  type DomainDnsRecords,
-  type DomainDnsRecord,
-} from '@logto/schemas';
-
-import { isDomainStatus } from '../../utils';
+import { type Domain, type DomainDnsRecords, type DomainDnsRecord } from '@logto/schemas';
 
 import DnsRecordsTable from './components/DnsRecordsTable';
 import Step from './components/Step';
@@ -19,10 +12,7 @@ const isSetupSslDnsRecord = ({ type, name }: DomainDnsRecord) =>
   type.toUpperCase() === 'TXT' && name.includes('_acme-challenge');
 
 function ActivationProcess({ customDomain }: Props) {
-  const { dnsRecords, status } = customDomain;
-
-  // TODO @xiaoyijun Remove this type assertion when the LOG-6276 issue is done by @wangsijie
-  const typedDomainStatus = isDomainStatus(status) ? status : DomainStatus.Error;
+  const { dnsRecords, status: domainStatus } = customDomain;
 
   const { verifyDomainDnsRecord, setupSslDnsRecord } = dnsRecords.reduce<{
     verifyDomainDnsRecord: DomainDnsRecords;
@@ -50,7 +40,7 @@ function ActivationProcess({ customDomain }: Props) {
         step={1}
         title="domain.custom.verify_domain"
         tip="domain.custom.checking_dns_tip"
-        domainStatus={typedDomainStatus}
+        domainStatus={domainStatus}
       >
         <DnsRecordsTable records={verifyDomainDnsRecord} />
       </Step>
@@ -58,7 +48,7 @@ function ActivationProcess({ customDomain }: Props) {
         step={2}
         title="domain.custom.enable_ssl"
         tip="domain.custom.checking_dns_tip"
-        domainStatus={typedDomainStatus}
+        domainStatus={domainStatus}
       >
         <DnsRecordsTable records={setupSslDnsRecord} />
       </Step>
