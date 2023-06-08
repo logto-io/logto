@@ -4,12 +4,8 @@ const domain = {
     in_used: 'In uso',
     failed_to_connect: 'Connessione fallita',
   },
-  update_endpoint_notice: {
-    content:
-      'Il tuo dominio personalizzato è stato configurato con successo. Ricorda di aggiornare il dominio utilizzato per il <social-link>{{socialLink}}</social-link> e per il <app-link>{{appLink}}</app-link> se avevi in precedenza configurato le risorse precedenti.',
-    connector_callback_uri_text: 'URI di callback del connettore social',
-    application_text: 'Endpoint di Logto per la tua applicazione',
-  },
+  update_endpoint_notice:
+    'Il tuo dominio personalizzato è stato impostato correttamente. Ricorda di aggiornare il dominio utilizzato per il callback URI del connettore social e il punto di endpoint Logto per la tua applicazione se avevi configurato in precedenza le risorse. <a>{{link}}</a>',
   error_hint:
     'Assicurati di aggiornare i tuoi record DNS. Continueremo a controllarli ogni {{value}} secondi.',
   custom: {

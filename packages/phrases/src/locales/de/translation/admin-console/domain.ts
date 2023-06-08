@@ -4,12 +4,8 @@ const domain = {
     in_used: 'In Benutzung',
     failed_to_connect: 'Verbindung fehlgeschlagen',
   },
-  update_endpoint_notice: {
-    content:
-      'Ihre benutzerdefinierte Domain wurde erfolgreich eingerichtet. Denken Sie daran, die für die Ressourcen zu verwendende Domain für den <social-link>{{socialLink}}</social-link> und <app-link>{{appLink}}</app-link> zu aktualisieren, wenn Sie die Ressourcen zuvor konfiguriert hatten.',
-    connector_callback_uri_text: 'Social-Connector-Callback-URI',
-    application_text: 'Logto-Endpunkt für Ihre Anwendung',
-  },
+  update_endpoint_notice:
+    'Ihre benutzerdefinierte Domain wurde erfolgreich eingerichtet. Denken Sie daran, die für die Social-Connector-Rückruf-URI und Logto-Endpunkt für Ihre Anwendung verwendete Domain zu aktualisieren, wenn Sie die Ressourcen zuvor konfiguriert hatten. <a>{{link}}</a>',
   error_hint:
     'Stellen Sie sicher, dass Sie Ihre DNS-Einträge aktualisiert haben. Wir werden alle {{value}} Sekunden weiter überprüfen.',
   custom: {

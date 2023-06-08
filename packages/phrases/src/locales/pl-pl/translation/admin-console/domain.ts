@@ -4,12 +4,8 @@ const domain = {
     in_used: 'W użyciu',
     failed_to_connect: 'Nieudane połączenie',
   },
-  update_endpoint_notice: {
-    content:
-      'Twoja niestandardowa domena została pomyślnie skonfigurowana. Pamiętaj, aby zaktualizować domenę używaną dla <social-link>{{socialLink}}</social-link> i <app-link>{{appLink}}</app-link>, jeśli wcześniej skonfigurowałeś zasoby.',
-    connector_callback_uri_text: 'URI wywołania łącznika społecznego',
-    application_text: 'Endpoint Logto dla twojej aplikacji',
-  },
+  update_endpoint_notice:
+    'Twój niestandardowy domenowy został pomyślnie skonfigurowany. Pamiętaj, aby zaktualizować domenę używaną dla łącznika społecznego oraz endpointu dziennika Logto dla Twojej aplikacji, jeśli wcześniej skonfigurowałeś zasoby. <a>{{link}}</a>',
   error_hint:
     'Upewnij się, że zaktualizowałeś swoje rekordy DNS. Będziemy nadal sprawdzać co {{value}} sekund.',
   custom: {

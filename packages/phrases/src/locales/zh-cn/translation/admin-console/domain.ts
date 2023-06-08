@@ -4,26 +4,22 @@ const domain = {
     in_used: '使用中',
     failed_to_connect: '连接失败',
   },
-  update_endpoint_notice: {
-    content:
-      '您的自定义域名已成功设置。请记得更新 <social-link>{{socialLink}}</social-link> 和 <app-link>{{appLink}}</app-link> 中的域名，如果您之前已经配置了资源。',
-    connector_callback_uri_text: '社交连接器回调 URI',
-    application_text: '您的应用程序终结点的 Logto',
-  },
+  update_endpoint_notice:
+    '您的自定义域名已成功设置。如果您之前已配置了资源，请记得更新用于社交连接器回调 URI 和应用程序日志终结点的域名。 <a>{{link}}</a>',
   error_hint: '请确保更新您的 DNS 记录。我们将继续每 {{value}} 秒检查一次。',
   custom: {
     custom_domain: '自定义域名',
     custom_domain_description:
       '使用您自己的域名替换默认域名，以保持一致的品牌形象，并为用户提供个性化的登录体验。',
     custom_domain_field: '自定义域名',
-    custom_domain_placeholder: '您的域名.com',
+    custom_domain_placeholder: 'your.domain.com',
     add_domain: '添加域名',
     invalid_domain_format: '无效的子域名格式，请至少输入三个部分的子域名。',
     verify_domain: '验证域名',
     enable_ssl: '启用 SSL',
     checking_dns_tip:
       'DNS 记录已配置，请等待最长 24 小时，以使变更生效。在域名是否有效期间，您可以离开此界面。',
-    generating_dns_records: '正在生成 DNS 记录…',
+    generating_dns_records: '正在生成 DNS 记录...',
     add_dns_records: '请将以下 DNS 记录添加到您的 DNS 服务提供商。',
     dns_table: {
       type_field: '类型',

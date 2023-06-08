@@ -4,12 +4,8 @@ const domain = {
     in_used: '使用中',
     failed_to_connect: '接続に失敗しました',
   },
-  update_endpoint_notice: {
-    content:
-      'カスタムドメインが正常に設定されました。以前にリソースを設定した場合は、<social-link>{{socialLink}}</social-link>と<app-link>{{appLink}}</app-link>に使用するドメインを更新することをお忘れなく。',
-    connector_callback_uri_text: 'ソーシャルコネクタのコールバックURI',
-    application_text: 'アプリケーションのLogtoエンドポイント',
-  },
+  update_endpoint_notice:
+    'カスタムドメインが正常に設定されました。以前にリソースを構成した場合は、アプリケーションに使用されるドメインのソーシャル連携コールバックURIとLogtoエンドポイントを更新することを忘れないでください。 <a>{{link}}</a>',
   error_hint: '{{value}} 秒後にもう一度確認するようにDNSレコードを更新してください。',
   custom: {
     custom_domain: 'カスタムドメイン',
@@ -21,7 +17,7 @@ const domain = {
     invalid_domain_format:
       '無効なドメイン形式または少なくとも3つのサブドメインを含む有効なドメインを入力してください。',
     verify_domain: 'ドメインを検証',
-    enable_ssl: 'SSLを有効化',
+    enable_ssl: 'SSLを有効にする',
     checking_dns_tip:
       'DNSレコードを設定したら、最大で24時間かかる自動プロセスを待つ必要があります。移動中や一時的に中断することができますが、この動作を削除しないでください。',
     generating_dns_records: 'DNSレコードを生成しています...',
@@ -36,9 +32,9 @@ const domain = {
       reminder: 'カスタムドメインの削除',
       description: 'このカスタムドメインを削除してもよろしいですか？',
       in_used_description:
-        'このカスタムドメイン "<span>{{domain}}</span>" を削除してもよろしいですか？',
+        'このカスタムドメイン「<span>{{domain}}</span>」を削除してもよろしいですか？',
       in_used_tip:
-        '以前にソーシャルコネクタプロバイダまたはアプリエンドポイントでこのカスタムドメインを使用して設定した場合、それらのURIをLogtoデフォルトドメイン "<span>{{domain}}</span>" に変更する必要があります。これは、ソーシャルサインインボタンを機能させるために必要です。',
+        '以前にソーシャルコネクタプロバイダまたはアプリ終了ポイントでこのカスタムドメインを使用して設定した場合、それらのURIをLogtoデフォルトドメイン「<span>{{domain}}</span>」に変更する必要があります。これは、ソーシャルサインインボタンを機能させるために必要です。',
       deleted: 'カスタムドメインを正常に削除しました！',
     },
   },

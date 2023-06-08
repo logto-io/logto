@@ -4,12 +4,8 @@ const domain = {
     in_used: 'In used',
     failed_to_connect: 'Failed to connect',
   },
-  update_endpoint_notice: {
-    content:
-      'Your custom domain has been successfully set up. Remember to update the domain used for the <social-link>{{socialLink}}</social-link> and <app-link>{{appLink}}</app-link> if you had previously configured the resources previously.',
-    connector_callback_uri_text: 'Social connector callback URI',
-    application_text: 'Logto endpoint for your application',
-  },
+  update_endpoint_notice:
+    'Your custom domain has been successfully set up. Remember to update the domain used for the social connector callback URI and Logto endpoint for your application if you had previously configured the resources previously. <a>{{link}}</a>',
   error_hint:
     'Make sure to update your DNS records. We will continue to check every {{value}} seconds.',
   custom: {
