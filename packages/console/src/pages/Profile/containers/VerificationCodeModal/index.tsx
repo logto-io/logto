@@ -18,7 +18,7 @@ import { handleError, parseLocationState } from '../../utils';
 
 import * as styles from './index.module.scss';
 
-export const resendTimeout = 59;
+const resendTimeout = 59;
 
 const getTimeout = () => {
   const now = new Date();

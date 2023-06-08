@@ -16,7 +16,7 @@ import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
-import { ImageUploaderField } from '@/components/Uploader';
+import ImageUploaderField from '@/components/Uploader/ImageUploaderField';
 import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
 import useUserAssetsService from '@/hooks/use-user-assets-service';

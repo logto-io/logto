@@ -6,7 +6,7 @@ import { parseFormConfig } from '@/pages/Connectors/components/ConnectorForm/uti
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { safeParseJson } from '@/utils/json';
 
-export const useJsonStringConfigParser = () => {
+const useJsonStringConfigParser = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (config: string) => {

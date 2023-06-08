@@ -4,9 +4,8 @@ import { useTranslation, Trans } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import TermsLinks from '@/components/TermsLinks';
-import type { ModalContentRenderProps } from '@/hooks/use-confirm-modal';
 
-const TermsAndPrivacyConfirmModalContent = ({ cancel }: ModalContentRenderProps) => {
+const TermsAndPrivacyConfirmModalContent = () => {
   const { experienceSettings } = useContext(PageContext);
   const { termsOfUseUrl, privacyPolicyUrl } = experienceSettings ?? {};
 

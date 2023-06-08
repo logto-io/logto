@@ -5,10 +5,7 @@ import { safeParseJson } from '@/utils/json';
 import type { MultiTextInputError, MultiTextInputRule } from './types';
 import { multiTextInputErrorGuard } from './types';
 
-export const validate = (
-  value?: string[],
-  rule?: MultiTextInputRule
-): MultiTextInputError | undefined => {
+const validate = (value?: string[], rule?: MultiTextInputRule): MultiTextInputError | undefined => {
   if (!rule) {
     return;
   }

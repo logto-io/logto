@@ -8,7 +8,7 @@ import ReactModal from 'react-modal';
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
-import { ImageUploaderField } from '@/components/Uploader';
+import ImageUploaderField from '@/components/Uploader/ImageUploaderField';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';

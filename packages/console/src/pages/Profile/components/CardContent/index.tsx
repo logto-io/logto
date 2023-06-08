@@ -10,7 +10,7 @@ import NotSet from '../NotSet';
 
 import * as styles from './index.module.scss';
 
-export type Action = {
+type Action = {
   name: AdminConsoleKey;
   handler: () => void;
 };

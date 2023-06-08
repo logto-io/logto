@@ -11,7 +11,7 @@ type Props = {
   children: ReactNode;
 };
 
-export type Tenants = {
+type Tenants = {
   tenants?: TenantInfo[];
   isSettle: boolean;
   setTenants: (tenants: TenantInfo[]) => void;

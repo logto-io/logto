@@ -2,9 +2,9 @@ import type { LanguageTag } from '@logto/language-kit';
 import { noop } from '@silverhand/essentials';
 import { createContext, useMemo, useState } from 'react';
 
-export type ConfirmationState = 'none' | 'try-close' | 'try-switch-language' | 'try-add-language';
+type ConfirmationState = 'none' | 'try-close' | 'try-switch-language' | 'try-add-language';
 
-export type Context = {
+type Context = {
   selectedLanguage: LanguageTag;
   preSelectedLanguage?: LanguageTag;
   preAddedLanguage?: LanguageTag;
