@@ -119,6 +119,9 @@ const cloud = {
     description:
       "Hai effettuato l'accesso con successo utilizzando il tuo account social. Per garantire integrazione senza problemi e accesso a tutte le funzionalità di Logto, ti consigliamo di procedere alla configurazione del tuo connettore social.",
   },
+  tenant: {
+    create_tenant: 'Create tenant',
+  },
 };
 
 export default cloud;

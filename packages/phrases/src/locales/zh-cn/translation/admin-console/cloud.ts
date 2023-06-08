@@ -114,6 +114,9 @@ const cloud = {
     description:
       '你已成功使用社交账户登录。为确保与 Logto 的无缝集成并获得所有功能的访问权限，我们建议你继续配置自己的社交连接器。',
   },
+  tenant: {
+    create_tenant: '创建租户',
+  },
 };
 
 export default cloud;

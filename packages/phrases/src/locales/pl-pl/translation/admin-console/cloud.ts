@@ -119,6 +119,9 @@ const cloud = {
     description:
       'Zalogowałeś się pomyślnie używając swojego konta społecznościowego. Aby zapewnić bezproblemową integrację i dostęp do wszystkich funkcji Logto, zalecamy przejście do konfiguracji własnego konektora społecznościowego.',
   },
+  tenant: {
+    create_tenant: 'Stwórz najemcę',
+  },
 };
 
 export default cloud;
