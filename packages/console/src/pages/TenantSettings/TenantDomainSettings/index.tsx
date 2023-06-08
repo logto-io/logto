@@ -7,9 +7,9 @@ import FormField from '@/components/FormField';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 
-import AddDomainForm from './components/AddDomainForm';
-import CustomDomain from './components/CustomDomain';
-import DefaultDomain from './components/DefaultDomain';
+import AddDomainForm from './AddDomainForm';
+import CustomDomain from './CustomDomain';
+import DefaultDomain from './DefaultDomain';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {

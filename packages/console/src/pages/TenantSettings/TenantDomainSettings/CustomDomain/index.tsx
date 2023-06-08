@@ -1,7 +1,7 @@
 import { type Domain, DomainStatus } from '@logto/schemas';
 
-import ActivationProcess from './components/ActivationProcess';
-import CustomDomainHeader from './components/CustomDomainHeader';
+import ActivationProcess from './ActivationProcess';
+import CustomDomainHeader from './CustomDomainHeader';
 import * as styles from './index.module.scss';
 
 type Props = {
