@@ -118,6 +118,9 @@ const cloud = {
     description:
       'ソーシャルアカウントを使用して正常にサインインしました。Logtoのすべての機能にシームレスにアクセスできるようにするために、独自のソーシャルコネクタを設定することをお勧めします。',
   },
+  tenant: {
+    create_tenant: 'テナントを作成する',
+  },
 };
 
 export default cloud;

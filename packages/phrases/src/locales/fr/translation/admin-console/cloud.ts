@@ -7,7 +7,7 @@ const cloud = {
     title: 'Bienvenue et créons votre propre aperçu cloud de Logto',
     description:
       'Que vous soyez un utilisateur open-source ou cloud, faites une visite de la vitrine et découvrez la valeur totale de Logto. Le Cloud Preview sert également de version préliminaire de Logto Cloud.',
-    project_field: 'J’utilise Logto pour',
+    project_field: "J'utilise Logto pour",
     project_options: {
       personal: 'Projet personnel',
       company: "Projet d'entreprise",
@@ -120,6 +120,9 @@ const cloud = {
     title: 'Connexion réussie',
     description:
       'Vous vous êtes connecté avec succès en utilisant votre compte social. Pour assurer une intégration fluide et accéder à toutes les fonctionnalités de Logto, nous vous recommandons de configurer votre propre connecteur social.',
+  },
+  tenant: {
+    create_tenant: 'Créer un locataire',
   },
 };
 

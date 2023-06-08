@@ -118,6 +118,9 @@ const cloud = {
     description:
       "Sosyal hesabınızı kullanarak başarılı bir şekilde giriş yaptınız. Logto'nun tüm özelliklerine sorunsuz entegrasyon ve erişim sağlamak için kendi sosyal konektörünüzü yapılandırmaya devam etmenizi öneririz.",
   },
+  tenant: {
+    create_tenant: 'Kiracı Oluştur',
+  },
 };
 
 export default cloud;

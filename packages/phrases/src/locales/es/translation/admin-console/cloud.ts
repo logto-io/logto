@@ -122,6 +122,9 @@ const cloud = {
     description:
       'Ha iniciado sesión correctamente utilizando su cuenta social. Para garantizar una integración perfecta y el acceso a todas las funciones de Logto, recomendamos que proceda a configurar su propio conector social.',
   },
+  tenant: {
+    create_tenant: 'Crear inquilino',
+  },
 };
 
 export default cloud;

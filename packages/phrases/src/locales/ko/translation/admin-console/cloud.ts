@@ -117,6 +117,9 @@ const cloud = {
     description:
       '소셜 계정을 사용하여 로그인에 성공했어요. Logto의 모든 기능을 원활하게 통합하고 접근하려면 당신의 소셜 연동을 구성하는 것이 좋아요.',
   },
+  tenant: {
+    create_tenant: '테넌트 생성하기',
+  },
 };
 
 export default cloud;
