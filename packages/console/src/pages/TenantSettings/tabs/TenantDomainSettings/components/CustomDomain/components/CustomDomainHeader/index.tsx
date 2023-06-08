@@ -13,8 +13,6 @@ import type { Props as TagProps } from '@/components/Tag';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 
-import { isDomainStatus } from '../../utils';
-
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -34,8 +32,7 @@ const domainStatusToTag: Record<
 
 function CustomDomainHeader({ customDomain: { id, domain, status }, onDeleteCustomDomain }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  // TODO @xiaoyijun Remove this type assertion when the LOG-6276 issue is done by @wangsijie
-  const tag = domainStatusToTag[isDomainStatus(status) ? status : DomainStatus.Error];
+  const tag = domainStatusToTag[status];
   const { show } = useConfirmModal();
   const api = useApi();
 
