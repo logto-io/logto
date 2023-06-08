@@ -7,5 +7,4 @@ export const mockStorageProviderData = {
 export const mockHostnameProviderData = {
   apiToken: 'api-token',
   zoneId: 'zone-id',
-  fallbackOrigin: 'logto.com',
 };

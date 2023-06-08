@@ -10,6 +10,7 @@ import {
 } from '#src/__mocks__/domain.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import SystemContext from '#src/tenants/SystemContext.js';
+import { mockFallbackOrigin } from '#src/utils/cloudflare/mock.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -20,6 +21,7 @@ const { getCustomHostname, createCustomHostname, deleteCustomHostname } = mockEs
     createCustomHostname: jest.fn(async () => mockCloudflareData),
     getCustomHostname: jest.fn(async () => mockCloudflareData),
     deleteCustomHostname: jest.fn(),
+    getFallbackOrigin: jest.fn(async () => mockFallbackOrigin),
   })
 );
 
@@ -34,13 +36,11 @@ const { syncDomainStatus, addDomain, deleteDomain } = createDomainLibrary(
   new MockQueries({ domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById } })
 );
 
-const fallbackOrigin = 'fake_origin';
 beforeAll(() => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   SystemContext.shared.hostnameProviderConfig = {
     zoneId: 'fake_zone_id',
     apiToken: '',
-    fallbackOrigin,
   };
 });
 
@@ -58,7 +58,7 @@ describe('addDomain()', () => {
     expect(response.dnsRecords).toContainEqual({
       type: 'CNAME',
       name: mockDomainWithCloudflareData.domain,
-      value: fallbackOrigin,
+      value: mockFallbackOrigin,
     });
   });
 });
