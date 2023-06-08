@@ -4,12 +4,10 @@ const domain = {
     in_used: 'Em uso',
     failed_to_connect: 'Falha ao conectar',
   },
-  update_endpoint_alert: {
-    deleted: 'Domínio personalizado eliminado com sucesso!',
-    set_up: 'O seu domínio personalizado foi configurado com sucesso.',
-    update_tip:
-      'Lembre-se de atualizar o domínio utilizado para o <social-link>{{socialLink}}</social-link> e <app-link>{{appLink}}</app-link> se anteriormente tiver configurado previamente os recursos.',
-    callback_uri_text: 'URI de retorno do conector social',
+  update_endpoint_notice: {
+    content:
+      'O seu domínio personalizado foi configurado com sucesso. Lembre-se de atualizar o domínio utilizado para o <social-link>{{socialLink}}</social-link> e <app-link>{{appLink}}</app-link> se anteriormente tiver configurado previamente os recursos.',
+    connector_callback_uri_text: 'URI de retorno do conector social',
     application_text: 'Extremidade de Logto para a sua aplicação',
   },
   error_hint:

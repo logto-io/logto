@@ -4,12 +4,10 @@ const domain = {
     in_used: 'Используется',
     failed_to_connect: 'Не удалось соединиться',
   },
-  update_endpoint_alert: {
-    deleted: 'Пользовательский домен успешно удалён!',
-    set_up: 'Ваш пользовательский домен успешно настроен.',
-    update_tip:
-      'Не забудьте обновить домен, используемый для <social-link>{{socialLink}}</social-link> и <app-link>{{appLink}}</app-link>, если ранее настраивали ресурсы.',
-    callback_uri_text: 'URI обратного вызова соединения соцсетей',
+  update_endpoint_notice: {
+    content:
+      'Ваш пользовательский домен успешно настроен. Не забудьте обновить домен, используемый для <social-link>{{socialLink}}</social-link> и <app-link>{{appLink}}</app-link>, если ранее настраивали ресурсы.',
+    connector_callback_uri_text: 'URI обратного вызова соединения соцсетей',
     application_text: 'Logto конечная точка для вашего приложения',
   },
   error_hint:

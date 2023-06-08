@@ -4,12 +4,10 @@ const domain = {
     in_used: 'In Benutzung',
     failed_to_connect: 'Verbindung fehlgeschlagen',
   },
-  update_endpoint_alert: {
-    deleted: 'Benutzerdefinierte Domain erfolgreich gelöscht!',
-    set_up: 'Ihre benutzerdefinierte Domain wurde erfolgreich eingerichtet.',
-    update_tip:
-      'Denken Sie daran, die für die Ressourcen zu verwendende Domain für den <social-link>{{socialLink}}</social-link> und <app-link>{{appLink}}</app-link> zu aktualisieren, wenn Sie die Ressourcen zuvor konfiguriert hatten.',
-    callback_uri_text: 'Social-Connector-Callback-URI',
+  update_endpoint_notice: {
+    content:
+      'Ihre benutzerdefinierte Domain wurde erfolgreich eingerichtet. Denken Sie daran, die für die Ressourcen zu verwendende Domain für den <social-link>{{socialLink}}</social-link> und <app-link>{{appLink}}</app-link> zu aktualisieren, wenn Sie die Ressourcen zuvor konfiguriert hatten.',
+    connector_callback_uri_text: 'Social-Connector-Callback-URI',
     application_text: 'Logto-Endpunkt für Ihre Anwendung',
   },
   error_hint:

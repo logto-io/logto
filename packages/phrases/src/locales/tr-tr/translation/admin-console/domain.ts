@@ -4,12 +4,10 @@ const domain = {
     in_used: 'Kullanımda',
     failed_to_connect: 'Bağlantı başarısız oldu',
   },
-  update_endpoint_alert: {
-    deleted: 'Özel alan adı başarıyla silindi!',
-    set_up: 'Özel alan adınız başarıyla kuruldu.',
-    update_tip:
-      'Daha önce kaynakları yapılandırmışsanız, lütfen <social-link>{{socialLink}}</social-link> ve <app-link>{{appLink}}</app-link> için kullanılan alan adını güncellediğinizden emin olunuz.',
-    callback_uri_text: 'Sosyal bağlayıcı geri çağrı URI',
+  update_endpoint_notice: {
+    content:
+      'Özel alan adınız başarıyla kuruldu. Daha önce kaynakları yapılandırmışsanız, lütfen <social-link>{{socialLink}}</social-link> ve <app-link>{{appLink}}</app-link> için kullanılan alan adını güncellediğinizden emin olunuz.',
+    connector_callback_uri_text: 'Sosyal bağlayıcı geri çağrı URI',
     application_text: 'Uygulamanız için Logto uç noktası',
   },
   error_hint:
