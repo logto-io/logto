@@ -4,12 +4,8 @@ const domain = {
     in_used: '使用中',
     failed_to_connect: '連接失敗',
   },
-  update_endpoint_notice: {
-    content:
-      '已成功設置您的自定義域名。請務必更新之前配置的<social-link>{{socialLink}}</social-link>和<app-link>{{appLink}}</app-link>所使用的域名。',
-    connector_callback_uri_text: '社交連接器回呼 URI',
-    application_text: '用於您的應用程序的 Logto 終端點',
-  },
+  update_endpoint_notice:
+    '您的自定義域名已成功設置。如果您之前配置過社交連接組件回調URI和Logto終端點中使用的域名，請務必更新這些用於應用程式的域名記錄。 <a>{{link}}</a>',
   error_hint: '確保更新您的 DNS 記錄。我們將繼續每 {{value}} 秒檢查。',
   custom: {
     custom_domain: '自定義域名',

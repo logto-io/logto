@@ -4,12 +4,8 @@ const domain = {
     in_used: 'Kullanımda',
     failed_to_connect: 'Bağlantı başarısız oldu',
   },
-  update_endpoint_notice: {
-    content:
-      'Özel alan adınız başarıyla kuruldu. Daha önce kaynakları yapılandırmışsanız, lütfen <social-link>{{socialLink}}</social-link> ve <app-link>{{appLink}}</app-link> için kullanılan alan adını güncellediğinizden emin olunuz.',
-    connector_callback_uri_text: 'Sosyal bağlayıcı geri çağrı URI',
-    application_text: 'Uygulamanız için Logto uç noktası',
-  },
+  update_endpoint_notice:
+    'Özel alan adınız başarıyla ayarlandı. Eğer önceden yapılandırdıysanız, uygulamanız için kullanılan yansıtıcı geri çağrı URI ve Logto uç noktası alan adını güncellemeyi unutmayın.  <a>{{link}}</a>',
   error_hint:
     'DNS kayıtlarınızı güncellediğinizden emin olunuz. {{value}} saniyede bir kontrol edeceğiz.',
   custom: {
