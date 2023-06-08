@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 import { buildIdGenerator } from '@logto/shared/universal';
 
 <Step
@@ -46,9 +46,9 @@ pnpm add @logto/express cookie-parser express-session
   onButtonClick={() => props.onNext(2)}
 >
 
-<Alert>
+<InlineNotification>
   In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</Alert>
+</InlineNotification>
 
 Import and initialize LogtoClient:
 

@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="Integrate Logto Swift SDK"
@@ -92,13 +92,13 @@ First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
   title="application_details.redirect_uri"
 />
 
-<Alert>
+<InlineNotification>
   The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a{' '}
   <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">
     Custom URL Scheme
   </a>{' '}
   until a connector asks.
-</Alert>
+</InlineNotification>
 
 Go back to Xcode, use the following code to implement sign-in:
 

@@ -1,13 +1,17 @@
 import { useTranslation } from 'react-i18next';
 
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 import * as styles from './index.module.scss';
 
 function DemoConnectorNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  return <Alert className={styles.notice}>{t('cloud.sie.connectors.notice')}</Alert>;
+  return (
+    <InlineNotification className={styles.notice}>
+      {t('cloud.sie.connectors.notice')}
+    </InlineNotification>
+  );
 }
 
 export default DemoConnectorNotice;

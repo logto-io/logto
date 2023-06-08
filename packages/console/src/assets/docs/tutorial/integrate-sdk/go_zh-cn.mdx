@@ -1,6 +1,6 @@
 import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="为项目安装 Logto SDK 依赖"
@@ -8,10 +8,10 @@ import Alert from '@/components/Alert';
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
 >
-<Alert>
+<InlineNotification>
   在本指南中，我们基于 <a href="https://gin-gonic.com">Gin Web 框架</a> 示范 SDK 的集成过程。你也可以采取同样的步骤轻松地将 Logto 集成到其他的 Web 框架中。
   在示例代码中，我们假定你的应用运行在 <code>http://localhost:8080</code> 上。
-</Alert>
+</InlineNotification>
 
 在项目目录下执行：
 
@@ -53,9 +53,9 @@ func main() {
 
 Logto SDK 提供了一个 `Storage` 接口，你可以结合自己所使用的网络框架实现一个 `Storage` 的适配器，使 Logto SDK 能将用户认证信息存储到 session 中。
 
-<Alert>
+<InlineNotification>
   我们推荐使用非 cookie 的 session，因为 Logto 所存储的信息可能会超过 cookie 的大小限制。在示例中我们使用基于内存 session，在实际项目中，你可以根据需要使用 Redis、 MongoDB 等技术来存储 session。
-</Alert>
+</InlineNotification>
 
 Logto SDK 中的 `Storage` 类型如下：
 

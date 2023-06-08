@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="集成 Logto Swift SDK"
@@ -86,9 +86,9 @@ let config = try? LogtoConfig(
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
-<Alert>
+<InlineNotification>
   iOS SDK 中的 Redirect URI 仅用于内部。除非连接器有要求，否则 <em>无需</em> 在项目中添加 <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">Custom URL Scheme</a>。
-</Alert>
+</InlineNotification>
 
 回到 Xcode，使用如下代码实现登录：
 

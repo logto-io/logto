@@ -6,10 +6,10 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Close from '@/assets/images/close.svg';
-import Alert from '@/components/Alert';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import IconButton from '@/components/IconButton';
+import InlineNotification from '@/components/InlineNotification';
 import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
@@ -108,11 +108,14 @@ function GuideModal({ isOpen, onClose }: Props) {
           <FormProvider {...methods}>
             <form className={styles.form} onSubmit={onSubmit}>
               {!preferences.experienceNoticeConfirmed && (
-                <div className={styles.reminder}>
-                  <Alert action="general.got_it" variant="shadow" onClick={onGotIt}>
-                    {t('sign_in_exp.welcome.apply_remind')}
-                  </Alert>
-                </div>
+                <InlineNotification
+                  action="general.got_it"
+                  variant="shadow"
+                  className={styles.reminder}
+                  onClick={onGotIt}
+                >
+                  {t('sign_in_exp.welcome.apply_remind')}
+                </InlineNotification>
               )}
               <div className={styles.main}>
                 <div className={styles.form}>
