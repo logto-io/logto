@@ -1,7 +1,7 @@
 import { type Domain, type DomainDnsRecords, type DomainDnsRecord } from '@logto/schemas';
 
-import DnsRecordsTable from './components/DnsRecordsTable';
-import Step from './components/Step';
+import DnsRecordsTable from './DnsRecordsTable';
+import Step from './Step';
 import * as styles from './index.module.scss';
 
 type Props = {
