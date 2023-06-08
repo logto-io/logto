@@ -266,3 +266,12 @@ export const cloudflareDataGuard = z
   .catchall(z.unknown());
 
 export type CloudflareData = z.infer<typeof cloudflareDataGuard>;
+
+export enum DomainStatus {
+  PendingVerification = 'PendingVerification',
+  PendingSsl = 'PendingSsl',
+  Active = 'Active',
+  Error = 'Error',
+}
+
+export const domainStatusGuard = z.nativeEnum(DomainStatus);

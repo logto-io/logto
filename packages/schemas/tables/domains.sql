@@ -3,7 +3,7 @@ create table domains (
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   domain varchar(256) not null,
-  status varchar(32) not null default('PendingVerification'),
+  status varchar(32) /* @use DomainStatus */ not null default('PendingVerification'),
   error_message varchar(1024),
   dns_records jsonb /* @use DomainDnsRecords */ not null default '[]'::jsonb,
   cloudflare_data jsonb /* @use CloudflareData */,
