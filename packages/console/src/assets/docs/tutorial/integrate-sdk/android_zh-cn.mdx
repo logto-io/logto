@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="集成 Logto Android SDK"
@@ -12,9 +12,9 @@ import Alert from '@/components/Alert';
   onButtonClick={() => props.onNext(1)}
 >
 
-<Alert>
+<InlineNotification>
   Logto Andorid SDK 支持的最小 Android API 级别为 24
-</Alert>
+</InlineNotification>
 
 将 `mavenCentral()` 添加到构建脚本中：
 

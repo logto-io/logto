@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="Integrate Logto Android SDK"
@@ -12,7 +12,7 @@ import Alert from '@/components/Alert';
   onButtonClick={() => props.onNext(1)}
 >
 
-<Alert>The minimum supported Android API is level 24</Alert>
+<InlineNotification>The minimum supported Android API is level 24</InlineNotification>
 
 Add the `mavenCentral()` repository to your Gradle project build file:
 

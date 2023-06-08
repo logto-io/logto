@@ -2,7 +2,7 @@ import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 import TextLink from '@/components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -21,23 +21,21 @@ function SignInExperienceSetupNotice() {
   }
 
   return (
-    <div className={styles.container}>
-      <Alert
-        action="general.got_it"
-        className={styles.notice}
-        onClick={() => {
-          void update({ connectorSieNoticeConfirmed: true });
+    <InlineNotification
+      action="general.got_it"
+      className={styles.notice}
+      onClick={() => {
+        void update({ connectorSieNoticeConfirmed: true });
+      }}
+    >
+      <Trans
+        components={{
+          a: <TextLink to="/sign-in-experience/sign-up-and-sign-in" />,
         }}
       >
-        <Trans
-          components={{
-            a: <TextLink to="/sign-in-experience/sign-up-and-sign-in" />,
-          }}
-        >
-          {t('connectors.config_sie_notice', { link: t('connectors.config_sie_link_text') })}
-        </Trans>
-      </Alert>
-    </div>
+        {t('connectors.config_sie_notice', { link: t('connectors.config_sie_link_text') })}
+      </Trans>
+    </InlineNotification>
   );
 }
 

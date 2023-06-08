@@ -2,7 +2,7 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
-import Alert from '@/components/Alert';
+import InlineNotification from '@/components/InlineNotification';
 
 <Step
   title="将 Logto SDK 添加至依赖"
@@ -73,9 +73,9 @@ const App = () => (
   onButtonClick={() => props.onNext(3)}
 >
 
-<Alert>
+<InlineNotification>
   在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:3000</code> 上。
-</Alert>
+</InlineNotification>
 
 ### 配置 Redirect URI
 
