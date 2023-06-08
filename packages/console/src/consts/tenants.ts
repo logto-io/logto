@@ -2,12 +2,12 @@ import { defaultTenantId, ossConsolePath } from '@logto/schemas';
 
 import { CloudRoute } from '@/cloud/types';
 
-import { isCloud } from './cloud';
+import { adminEndpoint, isCloud } from './env';
 
 const getAdminTenantEndpoint = () => {
   // Allow endpoint override for dev or testing
-  if (process.env.ADMIN_ENDPOINT) {
-    return new URL(process.env.ADMIN_ENDPOINT);
+  if (adminEndpoint) {
+    return new URL(adminEndpoint);
   }
 
   return new URL(

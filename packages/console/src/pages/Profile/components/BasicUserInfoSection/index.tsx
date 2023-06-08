@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import FormCard from '@/components/FormCard';
 import UserAvatar from '@/components/UserAvatar';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 
 import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
 import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal';

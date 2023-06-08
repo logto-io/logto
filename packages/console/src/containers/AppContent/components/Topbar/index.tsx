@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import CloudLogo from '@/assets/images/cloud-logo.svg';
 import Logo from '@/assets/images/logo.svg';
 import Spacer from '@/components/Spacer';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
 
 import Contact from './Contact';

@@ -1,6 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { HookEvent, type LogKey } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
 
 type HookEventLabel = {
   [key in HookEvent]: AdminConsoleKey;
@@ -21,5 +20,3 @@ export const hookEventLogKey = Object.freeze({
   [HookEvent.PostResetPassword]: 'TriggerHook.PostResetPassword',
   [HookEvent.PostSignIn]: 'TriggerHook.PostSignIn',
 }) satisfies HookEventLogKey;
-
-export const isHookFeatureEnabled = yes(process.env.HOOK_FEATURE_ENABLED);

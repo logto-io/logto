@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/cloud';
+import { isCloud } from '@/consts/env';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useTrackUserId from '@/hooks/use-track-user-id';
 import OnboardingApp from '@/onboarding/App';

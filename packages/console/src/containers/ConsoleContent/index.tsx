@@ -10,11 +10,7 @@ import {
   WebhookDetailsTabs,
   TenantSettingsTabs,
 } from '@/consts';
-import {
-  isTenantBasicSettingsReady,
-  isTenantDomainSettingsReady,
-  isTenantSettingsSectionEnabled,
-} from '@/consts/tenant-settings';
+import { isCloud, isProduction } from '@/consts/env';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
@@ -146,22 +142,11 @@ function ConsoleContent() {
               <Route path="link-email" element={<LinkEmailModal />} />
               <Route path="verification-code" element={<VerificationCodeModal />} />
             </Route>
-            {isTenantSettingsSectionEnabled && (
+            {isCloud && !isProduction && (
               <Route path="tenant-settings" element={<TenantSettings />}>
-                {isTenantBasicSettingsReady && (
-                  <>
-                    <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
-                    <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
-                  </>
-                )}
-                {isTenantDomainSettingsReady && (
-                  <>
-                    {!isTenantBasicSettingsReady && (
-                      <Route index element={<Navigate replace to={TenantSettingsTabs.Domains} />} />
-                    )}
-                    <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                  </>
-                )}
+                <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
+                <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
               </Route>
             )}
           </Routes>
