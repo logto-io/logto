@@ -1,6 +1,7 @@
 import { createModel } from '@withtyped/server/model';
+import { z } from 'zod';
 
-import { TenantTag } from '../index.js';
+import { TenantTag } from '../types/tenant/tag.js';
 
 export const Tenants = createModel(/* sql */ `
   /* init_order = 0 */
@@ -16,4 +17,6 @@ export const Tenants = createModel(/* sql */ `
       unique (db_user)
   );
   /* no_after_each */
-`);
+`)
+  .extend('tag', z.nativeEnum(TenantTag))
+  .extend('createdAt', { readonly: true });

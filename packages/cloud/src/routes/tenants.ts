@@ -2,6 +2,7 @@ import {
   CloudScope,
   tenantInfoGuard,
   createTenantGuard,
+  patchTenantGuard,
   adminTenantId,
   defaultTenantId,
 } from '@logto/schemas';
@@ -23,7 +24,7 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
     .patch(
       '/:tenantId',
       {
-        body: createTenantGuard.pick({ name: true, tag: true }).partial(),
+        body: patchTenantGuard,
         response: tenantInfoGuard,
       },
       async (context, next) => {
