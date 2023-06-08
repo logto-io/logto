@@ -29,7 +29,7 @@ export const createCustomHostname = async (auth: HostnameProviderData, hostname:
       },
       json: {
         hostname,
-        ssl: { method: 'txt', type: 'dv', settings: { min_tls_version: '1.0' } },
+        ssl: { method: 'http', type: 'dv', settings: { min_tls_version: '1.2' } },
       },
       throwHttpErrors: false,
     }

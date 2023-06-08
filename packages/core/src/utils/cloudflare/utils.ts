@@ -1,5 +1,4 @@
 import { parseJson } from '@logto/connector-kit';
-import { type DomainDnsRecords } from '@logto/schemas';
 
 import assertThat from '../assert-that.js';
 
@@ -12,13 +11,3 @@ export const parseCloudflareResponse = (body: string) => {
 
   return result.data.result;
 };
-
-export const findVerificationTxtRecord = (records: DomainDnsRecords) =>
-  records.find(
-    ({ type, name }) => type.toUpperCase() === 'TXT' && name.includes('_cf-custom-hostname')
-  );
-
-export const findSslTxtRecord = (records: DomainDnsRecords) =>
-  records.find(
-    ({ type, name }) => type.toUpperCase() === 'TXT' && name.includes('_acme-challenge')
-  );

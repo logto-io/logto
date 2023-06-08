@@ -7,10 +7,6 @@ import {
   mockCloudflareDataPendingSSL,
   mockDomain,
   mockDomainWithCloudflareData,
-  mockSslTxtName,
-  mockSslTxtValue,
-  mockTxtName,
-  mockTxtValue,
 } from '#src/__mocks__/domain.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import SystemContext from '#src/tenants/SystemContext.js';
@@ -59,6 +55,11 @@ describe('addDomain()', () => {
     expect(createCustomHostname).toBeCalledTimes(1);
     expect(insertDomain).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
+    expect(response.dnsRecords).toContainEqual({
+      type: 'CNAME',
+      name: mockDomainWithCloudflareData.domain,
+      value: fallbackOrigin,
+    });
   });
 });
 
@@ -81,32 +82,12 @@ describe('syncDomainStatus()', () => {
   it('should sync and get result with pendingVerification', async () => {
     const response = await syncDomainStatus(mockDomainWithCloudflareData);
     expect(response.status).toBe(DomainStatus.PendingVerification);
-    expect(response.dnsRecords).toContainEqual({
-      type: 'CNAME',
-      name: mockDomainWithCloudflareData.domain,
-      value: fallbackOrigin,
-    });
-    expect(response.dnsRecords).toContainEqual({
-      type: 'TXT',
-      name: mockTxtName,
-      value: mockTxtValue,
-    });
-    expect(response.dnsRecords).toContainEqual({
-      type: 'TXT',
-      name: mockSslTxtName,
-      value: mockSslTxtValue,
-    });
   });
 
   it('should sync and get result with pendingSsl', async () => {
     getCustomHostname.mockResolvedValueOnce(mockCloudflareDataPendingSSL);
     const response = await syncDomainStatus(mockDomainWithCloudflareData);
     expect(response.status).toBe(DomainStatus.PendingSsl);
-    expect(response.dnsRecords).toContainEqual({
-      type: 'TXT',
-      name: mockSslTxtName,
-      value: mockSslTxtValue,
-    });
   });
 
   it('should sync and get result with active', async () => {
