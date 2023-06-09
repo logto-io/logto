@@ -142,10 +142,12 @@ function ConsoleContent() {
               <Route path="link-email" element={<LinkEmailModal />} />
               <Route path="verification-code" element={<VerificationCodeModal />} />
             </Route>
-            {isCloud && !isProduction && (
+            {isCloud && (
               <Route path="tenant-settings" element={<TenantSettings />}>
-                <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
-                <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                <Route index element={<Navigate replace to={TenantSettingsTabs.Domains} />} />
+                {!isProduction && (
+                  <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
+                )}
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
               </Route>
             )}

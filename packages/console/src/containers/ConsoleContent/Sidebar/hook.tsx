@@ -13,7 +13,7 @@ import UserProfile from '@/assets/images/profile.svg';
 import ResourceIcon from '@/assets/images/resource.svg';
 import Role from '@/assets/images/role.svg';
 import Web from '@/assets/images/web.svg';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 type SidebarItem = {
@@ -112,7 +112,7 @@ export const useSidebarMenuItems = (): {
     },
     {
       title: 'tenant',
-      isHidden: !(isCloud && !isProduction),
+      isHidden: !isCloud,
       items: [
         {
           Icon: Gear,
