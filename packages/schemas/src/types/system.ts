@@ -101,7 +101,6 @@ export const demoSocialGuard: Readonly<{
 export const hostnameProviderDataGuard = z.object({
   zoneId: z.string(),
   apiToken: z.string(), // Requires zone permission for "SSL and Certificates Edit"
-  fallbackOrigin: z.string(), // A domain name
 });
 
 export type HostnameProviderData = z.infer<typeof hostnameProviderDataGuard>;

@@ -118,7 +118,7 @@ jobs:
 
       - name: Setup mock Cloudflare Hostname Provider config
         working-directory: tests
-        run: npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":"","fallbackOrigin":"mock.logto.dev"}'
+        run: npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
