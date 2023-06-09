@@ -19,6 +19,7 @@ type Props = {
   href?: string;
   onClick?: () => void;
   variant?: 'plain' | 'shadow';
+  hasIcon?: boolean;
   className?: string;
 };
 
@@ -29,6 +30,7 @@ function InlineNotification({
   onClick,
   severity = 'info',
   variant = 'plain',
+  hasIcon = true,
   className,
 }: Props) {
   return (
@@ -40,11 +42,13 @@ function InlineNotification({
         className
       )}
     >
-      <div className={styles.icon}>
-        {(severity === 'info' || severity === 'alert') && <Info />}
-        {severity === 'success' && <Success />}
-        {severity === 'error' && <Error />}
-      </div>
+      {hasIcon && (
+        <div className={styles.icon}>
+          {(severity === 'info' || severity === 'alert') && <Info />}
+          {severity === 'success' && <Success />}
+          {severity === 'error' && <Error />}
+        </div>
+      )}
       <div className={styles.content}>{children}</div>
       {action && href && (
         <TextLink to={href}>
