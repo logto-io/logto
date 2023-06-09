@@ -8,7 +8,7 @@ import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
-export type Props = {
+type Props = {
   title?: string;
   size?: 'large' | 'medium' | 'small';
 };

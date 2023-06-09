@@ -5,7 +5,7 @@ import { useState, useRef, useMemo, createContext, useCallback, useEffect } from
 import ConfirmModal from '@/components/ConfirmModal';
 import type { ConfirmModalProps } from '@/components/ConfirmModal';
 
-export type ModalContentRenderProps = {
+type ModalContentRenderProps = {
   confirm: (data?: unknown) => void;
   cancel: (data?: unknown) => void;
 };

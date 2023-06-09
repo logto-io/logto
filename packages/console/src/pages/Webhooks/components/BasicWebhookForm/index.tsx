@@ -12,7 +12,7 @@ import { type BasicWebhookFormType } from '../../types';
 
 import * as styles from './index.module.scss';
 
-export const hookEventOptions = Object.values(HookEvent).map((event) => ({
+const hookEventOptions = Object.values(HookEvent).map((event) => ({
   title: hookEventLabel[event],
   value: event,
 }));

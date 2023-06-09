@@ -4,7 +4,7 @@ import { forwardRef, useRef } from 'react';
 
 import * as styles from './index.module.scss';
 
-export type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
+type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
   size?: 'small' | 'medium' | 'large';
   iconClassName?: string;
 };

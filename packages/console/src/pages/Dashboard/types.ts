@@ -1,4 +1,4 @@
-export type CountAndDelta = {
+type CountAndDelta = {
   count: number;
   delta: number;
 };

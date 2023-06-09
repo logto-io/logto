@@ -48,7 +48,7 @@ export enum Reason {
   Others = 'others',
 }
 
-export const questionnaireGuard = z.object({
+const questionnaireGuard = z.object({
   project: z.nativeEnum(Project),
   deploymentType: z.nativeEnum(DeploymentType),
   titles: z.array(z.nativeEnum(Title)).optional(),

@@ -10,7 +10,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
-import { ImageUploaderField } from '@/components/Uploader';
+import ImageUploaderField from '@/components/Uploader/ImageUploaderField';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 

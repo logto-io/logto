@@ -19,7 +19,7 @@ const userPreferencesGuard = z.object({
   connectorSieNoticeConfirmed: z.boolean().optional(),
 });
 
-export type UserPreferences = z.infer<typeof userPreferencesGuard>;
+type UserPreferences = z.infer<typeof userPreferencesGuard>;
 
 type DefaultUserPreference = {
   language: (typeof builtInConsoleLanguages)[number];

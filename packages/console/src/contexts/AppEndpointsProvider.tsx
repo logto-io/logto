@@ -10,7 +10,7 @@ type Props = {
   children: ReactNode;
 };
 
-export type AppEndpoints = {
+type AppEndpoints = {
   /**
    * The Logto endpoint for the current tenant.
    *

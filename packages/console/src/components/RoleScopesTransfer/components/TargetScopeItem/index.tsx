@@ -5,7 +5,7 @@ import IconButton from '@/components/IconButton';
 
 import * as styles from './index.module.scss';
 
-export type Props = {
+type Props = {
   scope: ScopeResponse;
   onDelete: (scope: ScopeResponse) => void;
 };

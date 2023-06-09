@@ -5,7 +5,7 @@ import * as styles from './index.module.scss';
 
 export const defaultLength = 6;
 
-export type Props = {
+type Props = {
   name: string;
   className?: string;
   length?: number;
