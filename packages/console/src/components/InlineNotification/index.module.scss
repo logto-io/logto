@@ -21,6 +21,8 @@
 
   .content {
     flex: 1;
+    overflow: hidden;
+    overflow-wrap: break-word;
   }
 
   &.info {
