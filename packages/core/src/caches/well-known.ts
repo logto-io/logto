@@ -14,7 +14,7 @@ type WellKnownMap = {
   'custom-phrases-tags': string[];
 };
 
-export type WellKnownCacheType = keyof WellKnownMap;
+type WellKnownCacheType = keyof WellKnownMap;
 
 /**
  * The array tuple to determine how cache will be built.

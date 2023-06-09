@@ -10,7 +10,7 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
-export type LogCondition = {
+type LogCondition = {
   logKey?: string;
   applicationId?: string;
   userId?: string;

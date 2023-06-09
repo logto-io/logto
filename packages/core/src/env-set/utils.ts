@@ -30,7 +30,7 @@ export const getTenantEndpoint = (
   return tenantUrl;
 };
 
-export const getTenantLocalhost = (
+const getTenantLocalhost = (
   id: string,
   { urlSet, adminUrlSet, isDomainBasedMultiTenancy, isPathBasedMultiTenancy }: GlobalValues
 ): Optional<URL> => {

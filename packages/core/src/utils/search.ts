@@ -10,7 +10,7 @@ import { isEnum } from './type.js';
 const searchJointModes = Object.values(SearchJointMode);
 const searchMatchModes = Object.values(SearchMatchMode);
 
-export type SearchItem = {
+type SearchItem = {
   mode: SearchMatchMode;
   field?: string;
   values: string[];

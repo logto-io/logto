@@ -1,4 +1,4 @@
-export type UploadFileOptions = {
+type UploadFileOptions = {
   contentType?: string;
   publicUrl?: string;
 };

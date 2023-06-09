@@ -13,5 +13,5 @@ export type AuthedRouter = Router<
   WithAuthContext & WithLogContext & WithI18nContext & ExtendableContext
 >;
 
-export type RouterInit<T> = (router: T, tenant: TenantContext) => void;
+type RouterInit<T> = (router: T, tenant: TenantContext) => void;
 export type RouterInitArgs<T> = Parameters<RouterInit<T>>;

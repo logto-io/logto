@@ -13,7 +13,6 @@ import { anonymousInteractionResultGuard } from '../types/guard.js';
 import type {
   Identifier,
   AnonymousInteractionResult,
-  AccountVerifiedInteractionResult,
   VerifiedForgotPasswordInteractionResult,
   VerifiedInteractionResult,
 } from '../types/index.js';
@@ -81,10 +80,6 @@ export const categorizeIdentifiers = (
     profileIdentifiers: [...profileIdentifiers],
   };
 };
-
-export const isAccountVerifiedInteractionResult = (
-  interaction: AnonymousInteractionResult
-): interaction is AccountVerifiedInteractionResult => Boolean(interaction.accountId);
 
 export const isForgotPasswordInteractionResult = (
   interaction: VerifiedInteractionResult

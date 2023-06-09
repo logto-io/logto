@@ -5,8 +5,6 @@ import { verificationTimeout } from '#src/routes/consts.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-export type VerificationStatusLibrary = ReturnType<typeof createVerificationStatusLibrary>;
-
 export const createVerificationStatusLibrary = (queries: Queries) => {
   const {
     findVerificationStatusByUserId,
