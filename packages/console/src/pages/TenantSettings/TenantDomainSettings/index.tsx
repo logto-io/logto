@@ -1,9 +1,11 @@
+import { withAppInsights } from '@logto/app-insights/react';
 import { type Domain } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import useSWR from 'swr';
 
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
+import PageMeta from '@/components/PageMeta';
 import { customDomainSyncInterval } from '@/consts/custom-domain';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
@@ -32,6 +34,7 @@ function TenantDomainSettings() {
 
   return (
     <div className={styles.container}>
+      <PageMeta titleKey={['tenant_settings.title', 'tenant_settings.tabs.domains']} />
       <FormCard
         title="domain.custom.custom_domain"
         description="domain.custom.custom_domain_description"
@@ -65,4 +68,4 @@ function TenantDomainSettings() {
   );
 }
 
-export default TenantDomainSettings;
+export default withAppInsights(TenantDomainSettings);
