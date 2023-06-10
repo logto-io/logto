@@ -11,7 +11,7 @@ const domain = {
   custom: {
     custom_domain: 'Benutzerdefinierte Domain',
     custom_domain_description:
-      'Ersetzen Sie die Standarddomain durch Ihre eigene Domain, um die Konsistenz mit Ihrer Marke beizubehalten und die Anmeldeerfahrung für Benutzer zu personalisieren.',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'Benutzerdefinierte Domain',
     custom_domain_placeholder: 'ihre.domain.com',
     add_domain: 'Domain hinzufügen',

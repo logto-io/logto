@@ -11,7 +11,7 @@ const domain = {
   custom: {
     custom_domain: 'Dominio personalizzato',
     custom_domain_description:
-      "Sostituisci il dominio predefinito con il dominio di tua scelta per mantenere la coerenza con il tuo marchio e personalizzare l'esperienza di accesso per i tuoi utenti.",
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'Dominio personalizzato',
     custom_domain_placeholder: 'il-tuo-dominio.com',
     add_domain: 'Aggiungi dominio',

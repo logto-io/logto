@@ -10,7 +10,7 @@ const domain = {
   custom: {
     custom_domain: '自定义域名',
     custom_domain_description:
-      '使用您自己的域名替换默认域名，以保持一致的品牌形象，并为用户提供个性化的登录体验。',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: '自定义域名',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '添加域名',

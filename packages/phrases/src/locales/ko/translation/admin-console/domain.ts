@@ -10,7 +10,7 @@ const domain = {
   custom: {
     custom_domain: '사용자 지정 도메인',
     custom_domain_description:
-      '사용자 지정 로그인 경험을 제공하고 브랜드 일관성을 유지하기 위해 기본 도메인 대신 사용자 고유의 도메인 이름을 사용합니다.',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: '사용자 지정 도메인',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '도메인 추가',

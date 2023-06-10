@@ -11,7 +11,7 @@ const domain = {
   custom: {
     custom_domain: 'Niestandardowa domena',
     custom_domain_description:
-      'Zastąp domyślną domenę swoją własną domeną, aby zachować spójność z Twoją marką i spersonalizować doświadczenie logowania dla swoich użytkowników.',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'Niestandardowa domena',
     custom_domain_placeholder: 'twoja.domena.com',
     add_domain: 'Dodaj domenę',

@@ -11,7 +11,7 @@ const domain = {
   custom: {
     custom_domain: 'Özel Alan Adı',
     custom_domain_description:
-      'Kullanıcılarınız için oturum açma deneyimini kişiselleştirmek ve markanızla tutarlılık sağlamak için varsayılan alan adınızı kendi alan adınızla değiştirin.',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'Özel alan adı',
     custom_domain_placeholder: 'alan_adınız.com',
     add_domain: 'Alan Adı Ekle',

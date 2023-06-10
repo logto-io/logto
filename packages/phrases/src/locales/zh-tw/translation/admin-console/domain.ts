@@ -10,7 +10,7 @@ const domain = {
   custom: {
     custom_domain: '自定義網域',
     custom_domain_description:
-      '將預設的網域名稱替換為您自己的網域名稱，以保持品牌一致性並為用戶提供個性化的登錄體驗。',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: '自訂網域',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '新增網域',

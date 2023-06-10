@@ -11,7 +11,7 @@ const domain = {
   custom: {
     custom_domain: 'Пользовательский домен',
     custom_domain_description:
-      'Замените домен по умолчанию на свой собственный домен, чтобы поддерживать согласованность с вашим брендом и персонализировать процесс входа для ваших пользователей.',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'Пользовательский домен',
     custom_domain_placeholder: 'Ваш.домен.com',
     add_domain: 'Добавить домен',

@@ -10,7 +10,7 @@ const domain = {
   custom: {
     custom_domain: 'カスタムドメイン',
     custom_domain_description:
-      'ブランドの一貫性を維持し、ユーザーのサインインエクスペリエンスをカスタマイズするために、Logtoのデフォルトのドメインをカスタムのドメインに置き換えてください。',
+      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
     custom_domain_field: 'カスタムドメイン',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: 'ドメインを追加',
