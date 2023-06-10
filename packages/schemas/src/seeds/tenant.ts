@@ -1,4 +1,4 @@
-import type { InferModelType } from '@withtyped/server';
+import type { InferModelType } from '@withtyped/server/model';
 
 import type { Tenants } from '../models/tenants.js';
 
