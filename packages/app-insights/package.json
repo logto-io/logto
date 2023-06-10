@@ -18,11 +18,6 @@
       "types": "./lib/react/index.d.ts"
     }
   },
-  "//": "This field is for parcel. It is still needed after https://github.com/parcel-bundler/parcel/pull/8807 published.",
-  "alias": {
-    "./react": "./lib/react/index.js",
-    "./custom-event": "./lib/custom-event.js"
-  },
   "publishConfig": {
     "access": "public"
   },

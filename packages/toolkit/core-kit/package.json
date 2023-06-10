@@ -11,9 +11,12 @@
   "type": "module",
   "main": "./lib/index.js",
   "exports": {
-    "default": "./lib/index.js",
-    "types": "./lib/index.d.ts",
-    "import": "./lib/index.js"
+    ".": {
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    },
+    "./scss/*": "./scss/*.scss"
   },
   "types": "./lib/index.d.ts",
   "files": [

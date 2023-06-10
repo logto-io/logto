@@ -6,7 +6,7 @@ import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 
-import 'overlayscrollbars/styles/overlayscrollbars.css';
+import 'overlayscrollbars/overlayscrollbars.css';
 import './scss/normalized.scss';
 import './scss/overlayscrollbars.scss';
 

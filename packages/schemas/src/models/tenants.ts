@@ -1,4 +1,4 @@
-import { createModel } from '@withtyped/server';
+import { createModel } from '@withtyped/server/model';
 
 import { TenantTag } from '../index.js';
 
