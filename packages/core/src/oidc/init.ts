@@ -87,6 +87,7 @@ export default function initOidc(
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
+      introspection: { enabled: true },
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       rpInitiatedLogout: {
