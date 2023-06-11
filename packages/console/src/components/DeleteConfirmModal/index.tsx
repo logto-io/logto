@@ -1,3 +1,4 @@
+import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
@@ -13,6 +14,8 @@ type Props = {
   className?: string;
   onCancel: () => void;
   onConfirm: () => void;
+  title?: AdminConsoleKey;
+  confirmButtonText?: AdminConsoleKey;
 };
 
 function DeleteConfirmModal({
@@ -24,6 +27,8 @@ function DeleteConfirmModal({
   className,
   onCancel,
   onConfirm,
+  title,
+  confirmButtonText,
 }: Props) {
   const [input, setInput] = useState('');
   const isConfirmBlocked = Boolean(expectedInput) && input !== expectedInput;
@@ -33,8 +38,9 @@ function DeleteConfirmModal({
       isOpen={isOpen}
       isLoading={isLoading}
       isConfirmButtonDisabled={isConfirmBlocked}
-      confirmButtonText="general.delete"
+      confirmButtonText={confirmButtonText ?? 'general.delete'}
       className={className}
+      title={title}
       onCancel={onCancel}
       onConfirm={onConfirm}
     >

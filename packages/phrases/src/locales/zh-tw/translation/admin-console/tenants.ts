@@ -16,7 +16,7 @@ const tenants = {
     description_line1:
       '您是否確定要刪除具有環境後綴標籤 "<span>{{tag}}</span>" 的租戶 "<span>{{name}}</span>"？這個動作是無法撤銷的，並會永久刪除您的所有資料和帳戶資訊。',
     description_line2:
-      '在刪除帳戶之前，也許我們能提供幫助。 <span><a>通過電子郵件與我們聯繫</a></span>',
+      '在刪除帳戶之前，也許我們能提供幫助。<span><a>通過電子郵件與我們聯繫</a></span>',
     description_line3: '如果您確定要繼續，請輸入租戶名稱 "<span>{{name}}</span>" 以確認。',
     delete_button: '永久刪除',
   },

@@ -1,5 +1,5 @@
-import { type PatchTenant } from '@logto/schemas';
+import { type TenantInfo } from '@logto/schemas';
 
 export type TenantSettingsForm = {
-  profile: Required<PatchTenant>;
+  profile: Pick<TenantInfo, 'name' | 'tag'>;
 };
