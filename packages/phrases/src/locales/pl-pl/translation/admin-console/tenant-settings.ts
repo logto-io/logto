@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Produkcja',
   },
+  deletion_card: {
+    title: 'USUWANIE',
+    tenant_deletion: 'Usuń najemcę',
+    tenant_deletion_description:
+      'Usunięcie twojego konta spowoduje usunięcie wszystkich twoich danych osobowych, danych użytkownika i konfiguracji. Ta operacja jest nieodwracalna.',
+    tenant_deletion_button: 'Usuń najemcę',
+  },
 };
 
 export default tenant_settings;

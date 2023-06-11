@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'ステージング',
     environment_tag_production: 'プロダクション',
   },
+  deletion_card: {
+    title: '削除',
+    tenant_deletion: 'テナントの削除',
+    tenant_deletion_description:
+      'アカウントを削除すると、すべての個人情報、ユーザーデータ、および構成が削除されます。この操作は元に戻すことはできません。',
+    tenant_deletion_button: 'テナントを削除する',
+  },
 };
 
 export default tenant_settings;

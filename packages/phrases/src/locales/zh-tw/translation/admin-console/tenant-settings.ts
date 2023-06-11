@@ -15,6 +15,13 @@ const tenant_settings = {
     environment_tag_staging: '暫存',
     environment_tag_production: '生產',
   },
+  deletion_card: {
+    title: '刪除',
+    tenant_deletion: '刪除租戶',
+    tenant_deletion_description:
+      '刪除您的帳戶將刪除所有個人資訊、使用者資料和配置。這個動作是無法撤銷的。',
+    tenant_deletion_button: '刪除租戶',
+  },
 };
 
 export default tenant_settings;

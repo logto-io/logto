@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Teste',
     environment_tag_production: 'Produção',
   },
+  deletion_card: {
+    title: 'EXCLUIR',
+    tenant_deletion: 'Excluir locatário',
+    tenant_deletion_description:
+      'A exclusão da sua conta removerá todas as suas informações pessoais, dados de usuário e configurações. Essa ação não pode ser desfeita.',
+    tenant_deletion_button: 'Excluir locatário',
+  },
 };
 
 export default tenant_settings;

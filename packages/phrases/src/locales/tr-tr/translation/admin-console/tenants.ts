@@ -12,6 +12,16 @@ const tenants = {
     environment_tag_staging: 'Daha Yüksek Birlik',
     environment_tag_production: 'Üretim',
   },
+  delete_modal: {
+    title: 'Kiracıyı Sil',
+    description_line1:
+      'Ortam etiketi "<span>{{tag}}</span>" olan "<span>{{name}}</span>" kiracınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verilerinizin ve hesap bilgilerinizin kalıcı olarak silinmesine neden olur.',
+    description_line2:
+      'Hesabınızı silmeden önce size yardımcı olabiliriz. <span><a>E-posta yoluyla bize ulaşın</a></span>',
+    description_line3:
+      'Devam etmek isterseniz, "<span>{{name}}</span>" kiracı adını onaylamak için yazın.',
+    delete_button: 'Kalıcı olarak sil',
+  },
   tenant_created: "Kiracı '{{name}}' başarıyla oluşturuldu.",
 };
 

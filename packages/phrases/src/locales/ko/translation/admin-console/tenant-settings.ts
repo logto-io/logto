@@ -16,6 +16,13 @@ const tenant_settings = {
     environment_tag_staging: '스테이징',
     environment_tag_production: '프로덕션',
   },
+  deletion_card: {
+    title: '삭제',
+    tenant_deletion: '테넌트 삭제',
+    tenant_deletion_description:
+      '계정을 삭제하면 개인 정보, 사용자 데이터 및 구성이 모두 제거됩니다. 이 작업은 실행 취소할 수 없습니다.',
+    tenant_deletion_button: '테넌트 삭제',
+  },
 };
 
 export default tenant_settings;

@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Üretim',
   },
+  deletion_card: {
+    title: 'SİL',
+    tenant_deletion: 'Kiracıyı Sil',
+    tenant_deletion_description:
+      'Hesabınızı silmek, tüm kişisel bilgilerinizi, kullanıcı verilerinizi ve yapılandırmalarınızı kaldıracaktır. Bu işlem geri alınamaz.',
+    tenant_deletion_button: 'Kiracıyı Sil',
+  },
 };
 
 export default tenant_settings;

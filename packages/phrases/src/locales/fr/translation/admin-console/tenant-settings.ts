@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Mise en scène',
     environment_tag_production: 'Production',
   },
+  deletion_card: {
+    title: 'SUPPRIMER',
+    tenant_deletion: 'Supprimer le locataire',
+    tenant_deletion_description:
+      "La suppression de votre compte entraînera la suppression de toutes vos informations personnelles, données d'utilisateur et configuration. Cette action est irréversible.",
+    tenant_deletion_button: 'Supprimer le locataire',
+  },
 };
 
 export default tenant_settings;

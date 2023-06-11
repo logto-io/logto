@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Puesta en escena',
     environment_tag_production: 'Producción',
   },
+  deletion_card: {
+    title: 'ELIMINAR',
+    tenant_deletion: 'Eliminar inquilino',
+    tenant_deletion_description:
+      'La eliminación de su cuenta eliminará toda su información personal, datos de usuario y configuración. Esta acción no se puede deshacer.',
+    tenant_deletion_button: 'Eliminar inquilino',
+  },
 };
 
 export default tenant_settings;
