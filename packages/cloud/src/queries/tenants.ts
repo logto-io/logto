@@ -8,11 +8,9 @@ import {
   PredefinedScope,
   ApplicationType,
   type AdminData,
-  type CreateTenant,
-  type PatchTenant,
   type CreateRolesScope,
-  type TenantModel,
 } from '@logto/schemas';
+import type { TenantModel } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
 import {
   type PostgreSql,
@@ -47,20 +45,15 @@ export const createTenantsQueries = (client: Queryable<PostgreSql>) => {
         where roles.tenant_id = ${adminTenantId};
     `);
 
-  const insertTenant = async (tenant: CreateTenant) =>
-    client.query(
-      insertInto(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        Object.fromEntries(Object.entries(tenant).filter(([_, value]) => value !== undefined)),
-        'tenants'
-      )
-    );
+  const insertTenant = async (
+    tenant: Pick<TenantModel, 'id' | 'dbUser' | 'dbUserPassword'> &
+      Partial<Pick<TenantModel, 'name' | 'tag'>>
+  ) => client.query(insertInto(tenant, 'tenants'));
 
-  const updateTenantById = async (tenantId: string, rawPayload: PatchTenant) => {
-    const payload: Record<string, string> = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      Object.entries(rawPayload).filter(([_, value]) => value !== undefined)
-    );
+  const updateTenantById = async (
+    tenantId: string,
+    payload: Partial<Pick<TenantModel, 'name' | 'tag'>>
+  ) => {
     const tenant = await client.maybeOne<TenantModel>(sql`
       update tenants
       set ${Object.entries(payload).map(([key, value]) => sql`${id(key)}=${jsonIfNeeded(value)}`)}

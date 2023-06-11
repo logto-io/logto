@@ -11,11 +11,9 @@ import {
   type Resource,
   type Scope,
   type Role,
-  TenantTag,
-  type TenantInfo,
-  type CreateTenant,
   defaultTenantId,
 } from '@logto/schemas';
+import { TenantTag, type TenantInfo } from '@logto/schemas/models';
 import { GlobalValues } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 
@@ -40,7 +38,7 @@ describe('Tenant APIs', () => {
     for (const [payload, tenant] of [
       [payload1, tenant1],
       [payload2, tenant2],
-    ] as Array<[Required<Pick<CreateTenant, 'name' | 'tag'>>, TenantInfo]>) {
+    ] as Array<[{ name: string; tag: TenantTag }, TenantInfo]>) {
       expect(tenant).toHaveProperty('id');
       expect(tenant).toHaveProperty('tag', payload.tag);
       expect(tenant).toHaveProperty('name', payload.name);
@@ -82,7 +80,7 @@ describe('Tenant APIs', () => {
       [payload1, tenant1],
       [payload2, tenant2],
       [payload3, tenant3],
-    ] as Array<[Required<Pick<CreateTenant, 'name' | 'tag'>>, TenantInfo]>) {
+    ] as Array<[{ name: string; tag: TenantTag }, TenantInfo]>) {
       expect(tenant).toHaveProperty('id');
       expect(tenant).toHaveProperty('tag', payload.tag);
       expect(tenant).toHaveProperty('name', payload.name);

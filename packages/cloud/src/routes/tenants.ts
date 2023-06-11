@@ -1,11 +1,5 @@
-import {
-  CloudScope,
-  tenantInfoGuard,
-  createTenantGuard,
-  patchTenantGuard,
-  adminTenantId,
-  defaultTenantId,
-} from '@logto/schemas';
+import { CloudScope, adminTenantId, defaultTenantId } from '@logto/schemas';
+import { Tenants, tenantInfoGuard } from '@logto/schemas/models';
 import { assert } from '@silverhand/essentials';
 import { createRouter, RequestError } from '@withtyped/server';
 
@@ -24,7 +18,7 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
     .patch(
       '/:tenantId',
       {
-        body: patchTenantGuard,
+        body: Tenants.guard('patch').pick({ name: true, tag: true }),
         response: tenantInfoGuard,
       },
       async (context, next) => {
@@ -62,7 +56,7 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
     .post(
       '/',
       {
-        body: createTenantGuard.pick({ name: true, tag: true }).required(),
+        body: Tenants.guard('create').pick({ name: true, tag: true }),
         response: tenantInfoGuard,
       },
       async (context, next) => {

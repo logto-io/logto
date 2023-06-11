@@ -253,10 +253,10 @@ importers:
         version: 2.5.0
       '@withtyped/postgres':
         specifier: ^0.11.0
-        version: 0.11.0(@withtyped/server@0.11.0)
+        version: 0.11.0(@withtyped/server@0.11.1)
       '@withtyped/server':
-        specifier: ^0.11.0
-        version: 0.11.0(zod@3.20.2)
+        specifier: ^0.11.1
+        version: 0.11.1(zod@3.20.2)
       accepts:
         specifier: ^1.3.8
         version: 1.3.8
@@ -3556,8 +3556,8 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.11.0
-        version: 0.11.0(zod@3.20.2)
+        specifier: ^0.11.1
+        version: 0.11.1(zod@3.20.2)
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -9808,21 +9808,21 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/postgres@0.11.0(@withtyped/server@0.11.0):
+  /@withtyped/postgres@0.11.0(@withtyped/server@0.11.1):
     resolution: {integrity: sha512-PHnx6ake/MDdyy4sZXS/7l5XNBtjqlPSqSHrlmCYUXYxUV0sHSrXECKxX7deAvWZtcHVh9VaWEpiQBhFS06Vig==}
     peerDependencies:
       '@withtyped/server': ^0.11.0
     dependencies:
       '@types/pg': 8.6.6
-      '@withtyped/server': 0.11.0(zod@3.20.2)
+      '@withtyped/server': 0.11.1(zod@3.20.2)
       '@withtyped/shared': 0.2.0
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
     dev: false
 
-  /@withtyped/server@0.11.0(zod@3.20.2):
-    resolution: {integrity: sha512-InF3g9uv63ImK/sTIywcwX9tg2KnyFOlYsqeVI1WDjV1eTdzVxRJInD8iA08+U10S/dhBimukSx2Bfjwt8MWiw==}
+  /@withtyped/server@0.11.1(zod@3.20.2):
+    resolution: {integrity: sha512-9b/rH+6S8rKlgVTuDfDOSXiVjOBz5yd4EIP6qswncIJvA+i9j1ykR0GIBGuJSQAr7SWrSNCILUVK+oDTiWzJ6g==}
     peerDependencies:
       zod: ^3.19.1
     dependencies:

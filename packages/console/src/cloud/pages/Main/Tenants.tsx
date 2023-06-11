@@ -1,4 +1,4 @@
-import { type TenantInfo, TenantTag } from '@logto/schemas';
+import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import { useCallback, useContext, useEffect } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';

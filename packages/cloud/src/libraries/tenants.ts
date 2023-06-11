@@ -6,8 +6,6 @@ import { DemoConnector } from '@logto/connector-kit';
 import { createTenantMetadata } from '@logto/core-kit';
 import {
   type LogtoOidcConfigType,
-  type TenantInfo,
-  type CreateTenant,
   createAdminTenantApplicationRole,
   AdminTenantRole,
   createTenantMachineToMachineApplication,
@@ -20,8 +18,9 @@ import {
   createAdminData,
   createAdminDataInAdminTenant,
   getManagementApiResourceIndicator,
-  type PatchTenant,
+  type TenantModel,
 } from '@logto/schemas';
+import type { TenantInfo } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 
@@ -71,7 +70,10 @@ export class TenantsLibrary {
     }));
   }
 
-  async updateTenantById(tenantId: string, payload: PatchTenant): Promise<TenantInfo> {
+  async updateTenantById(
+    tenantId: string,
+    payload: Partial<Pick<TenantModel, 'name' | 'tag'>>
+  ): Promise<TenantInfo> {
     const { id, name, tag } = await this.queries.tenants.updateTenantById(tenantId, payload);
 
     return { id, name, tag, indicator: getManagementApiResourceIndicator(id) };
@@ -119,13 +121,13 @@ export class TenantsLibrary {
 
   async createNewTenant(
     forUserId: string,
-    payload: Pick<CreateTenant, 'name' | 'tag'>
+    payload: Partial<Pick<TenantModel, 'name' | 'tag'>>
   ): Promise<TenantInfo> {
     const databaseName = await getDatabaseName(this.queries.client);
     const { id: tenantId, parentRole, role, password } = createTenantMetadata(databaseName);
 
     // Init tenant
-    const createTenant: CreateTenant = {
+    const createTenant = {
       id: tenantId,
       dbUser: role,
       dbUserPassword: password,

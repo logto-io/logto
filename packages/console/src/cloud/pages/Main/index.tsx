@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import type { TenantInfo } from '@logto/schemas';
+import type { TenantInfo } from '@logto/schemas/models';
 import { conditional, yes } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useContext, useEffect, useState } from 'react';

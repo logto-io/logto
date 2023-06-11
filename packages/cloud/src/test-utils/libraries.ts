@@ -1,4 +1,5 @@
-import type { ServiceLogType, TenantInfo, TenantTag } from '@logto/schemas';
+import type { ServiceLogType } from '@logto/schemas';
+import type { TenantInfo, TenantTag } from '@logto/schemas/models';
 
 import type { ServicesLibrary } from '#src/libraries/services.js';
 import type { TenantsLibrary } from '#src/libraries/tenants.js';

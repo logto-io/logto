@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import type { TenantInfo } from '@logto/schemas';
+import type { TenantInfo } from '@logto/schemas/models';
 import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useHref } from 'react-router-dom';

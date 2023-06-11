@@ -1,5 +1,5 @@
-import type { TenantInfo } from '@logto/schemas';
-import { CloudScope, TenantTag } from '@logto/schemas';
+import { CloudScope } from '@logto/schemas';
+import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 
 import { buildRequestAuthContext, createHttpContext } from '#src/test-utils/context.js';
 import { noop } from '#src/test-utils/function.js';
