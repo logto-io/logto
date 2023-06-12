@@ -16,6 +16,12 @@ import ProfileForm from './ProfileForm';
 import * as styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
+const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
+  return {
+    profile: { name: tenant?.name ?? 'My project', tag: tenant?.tag ?? TenantTag.Development },
+  };
+};
+
 function TenantBasicSettings() {
   const {
     api: cloudApi,
@@ -36,7 +42,9 @@ function TenantBasicSettings() {
     }
   }, [requestError]);
 
-  const methods = useForm<TenantSettingsForm>();
+  const methods = useForm<TenantSettingsForm>({
+    defaultValues: tenantProfileToForm(currentTenant),
+  });
   const {
     watch,
     reset,
@@ -45,8 +53,7 @@ function TenantBasicSettings() {
   } = methods;
 
   useEffect(() => {
-    const { name, tag } = currentTenant ?? { name: 'My project', tag: TenantTag.Development };
-    reset({ profile: { name, tag } });
+    reset(tenantProfileToForm(currentTenant));
   }, [currentTenant, reset]);
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
