@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'My App',
   description: 'Description',
   description_placeholder: 'Enter your application description',
+  config_endpoint: 'OpenID Provider configuration endpoint',
   authorization_endpoint: 'Authorization Endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect <a>Authentication</a>.",
@@ -43,7 +44,13 @@ const application_details = {
     'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.',
   always_issue_refresh_token: 'Always issue Refresh Token',
   always_issue_refresh_token_label:
-    'Enabling this configuration will allow Logto to always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.',
+    'When enabled, Logto will always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.',
+  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days',
+  refresh_token_ttl_tip:
+    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.',
+  rotate_refresh_token: 'Rotate Refresh Token',
+  rotate_refresh_token_label:
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',

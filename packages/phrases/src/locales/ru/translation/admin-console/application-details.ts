@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'Мое приложение',
   description: 'Описание',
   description_placeholder: 'Введите описание своего приложения',
+  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
   authorization_endpoint: 'Конечная точка авторизации',
   authorization_endpoint_tip:
     'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a> OpenID Connect </a>.',
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Всегда выдавать Refresh Token',
   always_issue_refresh_token_label:
     'Включение этой настройки позволит Logto всегда выдавать Refresh Tokens, независимо от того, была ли в запросе на аутентификацию предложена команда `prompt=consent`. Однако данная практика не рекомендуется, если это необходимо, поскольку она несовместима с OpenID Connect и может вызвать проблемы.',
+  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl_tip:
+    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.', // UNTRANSLATED
+  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+  rotate_refresh_token_label:
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
   delete_description:
     'Это действие нельзя отменить. Оно навсегда удалит приложение. Введите название приложения <span> {{name}} </span>, чтобы подтвердить.',
   enter_your_application_name: 'Введите название своего приложения',

@@ -12,7 +12,8 @@ const application_details = {
   application_name_placeholder: '나의 앱',
   description: '설명',
   description_placeholder: '어플리케이션 설명을 적어주세요.',
-  authorization_endpoint: '인증 End-Point',
+  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
+  authorization_endpoint: '인증 Endpoint',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 End-Point예요. OpenID Connect <a>인증</a>에서 사용되던 값이에요.',
   application_id: '앱 ID',
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: '항상 Refresh Token을 발급하세요',
   always_issue_refresh_token_label:
     '다음 구성을 활성화하면 Logto가 인증 요청에 `prompt=consent`가 제시되었는지 여부와 상관없이 항상 Refresh Token을 발급할 수 있게 됩니다. 그러나 OpenID Connect와 호환되지 않으며 문제가 발생할 수 있으므로 필요하지 않은 경우에는 이러한 방법을 권장하지 않습니다. ',
+  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl_tip:
+    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.', // UNTRANSLATED
+  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+  rotate_refresh_token_label:
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
   delete_description:
     '이 행동은 취소될 수 없어요. 어플리케이션을 영원히 삭제할 거에요. 삭제를 진행하기 위해 <span>{{name}}</span> 를 입력해주세요.',
   enter_your_application_name: '어플리케이션 이름을 입력해 주세요.',

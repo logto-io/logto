@@ -12,6 +12,7 @@ const detalles_aplicacion = {
   application_name_placeholder: 'Mi App',
   description: 'Descripción',
   description_placeholder: 'Ingresa la descripción de tu aplicación',
+  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
   authorization_endpoint: 'Endpoint de Autorización',
   authorization_endpoint_tip:
     'El endpoint para la autenticación y autorización. Se utiliza para OpenID Connect <a>Autenticación</a>.',
@@ -44,6 +45,12 @@ const detalles_aplicacion = {
   always_issue_refresh_token: 'Siempre emitir Token de Refresco',
   always_issue_refresh_token_label:
     'Al habilitar esta configuración, Logto siempre emitirá Tokens de Refresco, independientemente de si se presenta o no “prompt=consent” en la solicitud de autenticación. Sin embargo, esta práctica no está recomendada a menos que sea necesario, ya que no es compatible con OpenID Connect y puede causar problemas potenciales.',
+  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl_tip:
+    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.', // UNTRANSLATED
+  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+  rotate_refresh_token_label:
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
   delete_description:
     'Esta acción no se puede deshacer. Eliminará permanentemente la aplicación. Ingresa el nombre de la aplicación <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Ingresa el nombre de tu aplicación',

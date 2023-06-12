@@ -5,8 +5,10 @@ import { readFileSync } from 'node:fs';
 import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
+  customClientMetadataDefault,
   CustomClientMetadataKey,
   demoAppApplicationId,
+  inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
 } from '@logto/schemas';
@@ -27,6 +29,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
+import defaults from './defaults.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
@@ -39,14 +42,7 @@ export default function initOidc(
   queries: Queries,
   libraries: Libraries
 ): Provider {
-  const {
-    issuer,
-    cookieKeys,
-    privateJwks,
-    jwkSigningAlg,
-    defaultIdTokenTtl,
-    defaultRefreshTokenTtl,
-  } = envSet.oidc;
+  const { issuer, cookieKeys, privateJwks, jwkSigningAlg } = envSet.oidc;
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
@@ -252,12 +248,25 @@ export default function initOidc(
       IdToken: (_ctx, _token, client) => {
         const { idTokenTtl } = client.metadata();
 
-        return idTokenTtl ?? defaultIdTokenTtl;
+        return idTokenTtl ?? customClientMetadataDefault.idTokenTtl;
       },
-      RefreshToken: (_ctx, _token, client) => {
-        const { refreshTokenTtl } = client.metadata();
+      RefreshToken: (ctx, token, client) => {
+        const defaultTtl = defaults.refreshTokenTtl(ctx, token, client);
 
-        return refreshTokenTtl ?? defaultRefreshTokenTtl;
+        if (defaultTtl !== undefined) {
+          return defaultTtl;
+        }
+
+        /** Customized logic for Refresh Token TTL */
+        const { refreshTokenTtlInDays, refreshTokenTtl } = client.metadata();
+
+        if (refreshTokenTtlInDays !== undefined) {
+          return refreshTokenTtlInDays * inSeconds.oneDay;
+        }
+
+        return (
+          refreshTokenTtl ?? customClientMetadataDefault.refreshTokenTtlInDays * inSeconds.oneDay
+        );
       },
       AccessToken: (ctx, token) => {
         if (token.resourceServer) {
@@ -269,6 +278,18 @@ export default function initOidc(
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
       Grant: 1_209_600 /* 14 days in seconds */,
+    },
+    rotateRefreshToken: (ctx) => {
+      const { Client: client } = ctx.oidc.entities;
+
+      // Directly return false only when `rotateRefreshToken` has been explicitly set to `false`.
+      if (
+        !(client?.metadata()?.rotateRefreshToken ?? customClientMetadataDefault.rotateRefreshToken)
+      ) {
+        return false;
+      }
+
+      return defaults.rotateRefreshToken(ctx);
     },
     pkce: {
       required: (ctx, client) => {
