@@ -7,8 +7,7 @@ import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import PageMeta from '@/components/PageMeta';
 import { customDomainSyncInterval } from '@/consts/custom-domain';
-import useApi, { type RequestError } from '@/hooks/use-api';
-import useSwrFetcher from '@/hooks/use-swr-fetcher';
+import { type RequestError } from '@/hooks/use-api';
 
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
@@ -16,9 +15,7 @@ import DefaultDomain from './DefaultDomain';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
-  const api = useApi();
-  const fetcher = useSwrFetcher<Domain[]>(api);
-  const { data, error, mutate } = useSWR<Domain[], RequestError>('api/domains', fetcher, {
+  const { data, error, mutate } = useSWR<Domain[], RequestError>('api/domains', {
     refreshInterval: customDomainSyncInterval * 1000,
   });
 
