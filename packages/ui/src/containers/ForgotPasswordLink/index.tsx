@@ -13,7 +13,7 @@ const ForgotPasswordLink = ({ className, ...identifierData }: Props) => (
   <TextLink
     className={className}
     to={{
-      pathname: `/${UserFlow.forgotPassword}`,
+      pathname: `/${UserFlow.ForgotPassword}`,
     }}
     state={identifierData}
     text="action.forgot_password"

@@ -19,7 +19,7 @@ const useOnSubmit = () => {
     errorMessage: sendVerificationCodeErrorMessage,
     clearErrorMessage: clearSendVerificationCodeErrorMessage,
     onSubmit: sendVerificationCode,
-  } = useSendVerificationCode(UserFlow.register);
+  } = useSendVerificationCode(UserFlow.Register);
 
   const clearErrorMessage = useCallback(() => {
     clearUsernameRegisterErrorMessage();

@@ -35,7 +35,7 @@ const VerificationCode = () => {
   const methodSettings = signInMethods.find((method) => method.identifier === identifier);
 
   // SignIn Method not enabled
-  if (!methodSettings && flow !== UserFlow.forgotPassword) {
+  if (!methodSettings && flow !== UserFlow.ForgotPassword) {
     return <ErrorPage />;
   }
 
@@ -52,7 +52,7 @@ const VerificationCode = () => {
         flow={useFlow}
         identifier={identifier}
         target={value}
-        hasPasswordButton={useFlow === UserFlow.signIn && methodSettings?.password}
+        hasPasswordButton={useFlow === UserFlow.SignIn && methodSettings?.password}
       />
     </SecondaryPageLayout>
   );

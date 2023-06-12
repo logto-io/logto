@@ -10,15 +10,15 @@ export const sendVerificationCodeApi = async (
   type: UserFlow,
   payload: SendVerificationCodePayload
 ) => {
-  if (type === UserFlow.forgotPassword) {
+  if (type === UserFlow.ForgotPassword) {
     await putInteraction(InteractionEvent.ForgotPassword);
   }
 
-  if (type === UserFlow.signIn) {
+  if (type === UserFlow.SignIn) {
     await putInteraction(InteractionEvent.SignIn);
   }
 
-  if (type === UserFlow.register) {
+  if (type === UserFlow.Register) {
     await putInteraction(InteractionEvent.Register);
   }
 

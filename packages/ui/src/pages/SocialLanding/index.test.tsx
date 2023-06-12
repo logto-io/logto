@@ -21,8 +21,8 @@ describe(`SocialLanding Page`, () => {
         origin,
         href: `/social/landing?`,
         search: queryStringify({
-          [SearchParameters.redirectTo]: redirectUri,
-          [SearchParameters.nativeCallbackLink]: callbackLink,
+          [SearchParameters.RedirectTo]: redirectUri,
+          [SearchParameters.NativeCallbackLink]: callbackLink,
         }),
         replace,
       },

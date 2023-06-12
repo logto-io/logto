@@ -17,7 +17,7 @@ const VerificationCodeLink = ({ className, identifier, value }: Props) => {
   const { setToast } = useToast();
 
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
-    UserFlow.signIn,
+    UserFlow.SignIn,
     true
   );
 

@@ -58,7 +58,7 @@ const formSettings: Record<
 };
 
 const SetEmailOrPhone = ({ missingProfile, notification }: Props) => {
-  const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(UserFlow.continue);
+  const { onSubmit, errorMessage, clearErrorMessage } = useSendVerificationCode(UserFlow.Continue);
 
   const handleSubmit = async (identifier: SignInIdentifier, value: string) => {
     // Only handles email and phone

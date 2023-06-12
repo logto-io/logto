@@ -15,7 +15,7 @@ const useSocialLandingHandler = () => {
 
   const socialLandingHandler = useCallback(
     (connectorId: string) => {
-      const redirectUri = getSearchParameters(search, SearchParameters.redirectTo);
+      const redirectUri = getSearchParameters(search, SearchParameters.RedirectTo);
 
       if (!redirectUri) {
         setLoading(false);
@@ -24,7 +24,7 @@ const useSocialLandingHandler = () => {
         return;
       }
 
-      const nativeCallbackLink = getSearchParameters(search, SearchParameters.nativeCallbackLink);
+      const nativeCallbackLink = getSearchParameters(search, SearchParameters.NativeCallbackLink);
 
       if (nativeCallbackLink) {
         storeCallbackLink(connectorId, nativeCallbackLink);

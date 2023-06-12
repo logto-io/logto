@@ -56,7 +56,7 @@ describe('<VerificationCode />', () => {
 
   it('render counter', () => {
     const { queryByText } = renderWithPageContext(
-      <VerificationCode flow={UserFlow.signIn} identifier={SignInIdentifier.Email} target={email} />
+      <VerificationCode flow={UserFlow.SignIn} identifier={SignInIdentifier.Email} target={email} />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
@@ -70,7 +70,7 @@ describe('<VerificationCode />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = renderWithPageContext(
-      <VerificationCode flow={UserFlow.signIn} identifier={SignInIdentifier.Email} target={email} />
+      <VerificationCode flow={UserFlow.SignIn} identifier={SignInIdentifier.Email} target={email} />
     );
     act(() => {
       jest.advanceTimersByTime(1e3 * 60);
@@ -81,7 +81,7 @@ describe('<VerificationCode />', () => {
       fireEvent.click(resendButton);
     });
 
-    expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.signIn, { email });
+    expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, { email });
   });
 
   describe('sign-in', () => {
@@ -92,7 +92,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.signIn}
+          flow={UserFlow.SignIn}
           identifier={SignInIdentifier.Email}
           target={email}
         />
@@ -124,7 +124,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.signIn}
+          flow={UserFlow.SignIn}
           identifier={SignInIdentifier.Phone}
           target={phone}
         />
@@ -158,7 +158,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.register}
+          flow={UserFlow.Register}
           identifier={SignInIdentifier.Email}
           target={email}
         />
@@ -190,7 +190,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.register}
+          flow={UserFlow.Register}
           identifier={SignInIdentifier.Phone}
           target={phone}
         />
@@ -224,7 +224,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.forgotPassword}
+          flow={UserFlow.ForgotPassword}
           identifier={SignInIdentifier.Email}
           target={email}
         />
@@ -253,7 +253,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.forgotPassword}
+          flow={UserFlow.ForgotPassword}
           identifier={SignInIdentifier.Phone}
           target={phone}
         />
@@ -284,7 +284,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.continue}
+          flow={UserFlow.Continue}
           identifier={SignInIdentifier.Email}
           target={email}
         />
@@ -317,7 +317,7 @@ describe('<VerificationCode />', () => {
 
       const { container } = renderWithPageContext(
         <VerificationCode
-          flow={UserFlow.continue}
+          flow={UserFlow.Continue}
           identifier={SignInIdentifier.Phone}
           target={phone}
         />

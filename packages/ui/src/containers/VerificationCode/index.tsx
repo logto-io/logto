@@ -79,7 +79,7 @@ const VerificationCode = ({ flow, identifier, className, hasPasswordButton, targ
         />
       )}
 
-      {flow === UserFlow.signIn && hasPasswordButton && (
+      {flow === UserFlow.SignIn && hasPasswordButton && (
         <PasswordSignInLink method={identifier} target={target} className={styles.switch} />
       )}
     </form>

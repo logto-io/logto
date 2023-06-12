@@ -6,10 +6,10 @@ import useRegisterFlowCodeVerification from './use-register-flow-code-verificati
 import useSignInFlowCodeVerification from './use-sign-in-flow-code-verification';
 
 export const codeVerificationHooks = Object.freeze({
-  [UserFlow.signIn]: useSignInFlowCodeVerification,
-  [UserFlow.register]: useRegisterFlowCodeVerification,
-  [UserFlow.forgotPassword]: useForgotPasswordFlowCodeVerification,
-  [UserFlow.continue]: useContinueFlowCodeVerification,
+  [UserFlow.SignIn]: useSignInFlowCodeVerification,
+  [UserFlow.Register]: useRegisterFlowCodeVerification,
+  [UserFlow.ForgotPassword]: useForgotPasswordFlowCodeVerification,
+  [UserFlow.Continue]: useContinueFlowCodeVerification,
 });
 
 export const getCodeVerificationHookByFlow = (flow: UserFlow) => codeVerificationHooks[flow];

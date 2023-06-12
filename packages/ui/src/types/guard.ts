@@ -4,10 +4,10 @@ import * as s from 'superstruct';
 import { UserFlow } from '.';
 
 export const userFlowGuard = s.enums([
-  UserFlow.signIn,
-  UserFlow.register,
-  UserFlow.forgotPassword,
-  UserFlow.continue,
+  UserFlow.SignIn,
+  UserFlow.Register,
+  UserFlow.ForgotPassword,
+  UserFlow.Continue,
 ]);
 
 /* Password SignIn Flow */
