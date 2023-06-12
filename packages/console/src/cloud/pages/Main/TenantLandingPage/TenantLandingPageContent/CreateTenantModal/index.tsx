@@ -46,6 +46,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     defaultValues: { tag: TenantTag.Development },
   });
   const {
+    reset,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -58,7 +59,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     try {
       const { name, tag } = data;
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
-
+      reset();
       onClose(newTenant);
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : String(error));

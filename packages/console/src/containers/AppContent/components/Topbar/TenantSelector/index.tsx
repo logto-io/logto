@@ -107,6 +107,7 @@ function TenantSelector() {
           if (tenant) {
             toast.success(t('tenants.tenant_created', { name: tenant.name }));
             void mutate();
+            window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
           }
           setShowCreateTenantModal(false);
         }}

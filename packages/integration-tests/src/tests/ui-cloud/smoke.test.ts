@@ -154,10 +154,10 @@ describe('smoke testing for cloud', () => {
       'div[class$=ReactModalPortal] div[class*=card][class$=medium] div[class$=footer] button[type=submit]'
     );
 
-    expect(new URL(page.url()).pathname.endsWith(`${defaultTenantId}/get-started`)).toBeTruthy();
+    expect(new URL(page.url()).pathname.endsWith(`/get-started`)).toBeTruthy();
   });
 
-  it('check current tenant list and switch to new tenant', async () => {
+  it('should navigate to the new tenant', async () => {
     // Wait for toast to disappear.
     await page.waitForTimeout(5000);
 
@@ -165,25 +165,10 @@ describe('smoke testing for cloud', () => {
     const currentTenantCard = await page.waitForSelector(
       'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
     );
-    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: 'My Project' });
-    await currentTenantCard.click();
-
-    const newTenant = await page.waitForSelector(
-      'div[class$=ReactModalPortal] div[class$=dropdownContainer] div[class$=dropdownItem]:first-child'
-    );
-    await expect(newTenant).toMatchElement('div[class$=dropdownName]', { text: createTenantName });
-    await newTenant.click();
-
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: createTenantName });
   });
 
   it('can sign out of admin console', async () => {
-    // Check if the current tenant is switched to new tenant.
-    const currentTenantCard = await page.waitForSelector(
-      'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
-    );
-    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: createTenantName });
-
     const userInfoButton = await page.waitForSelector('div[class$=topbar] > div[class$=container]');
     await userInfoButton.click();
 
