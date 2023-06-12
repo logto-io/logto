@@ -1,13 +1,13 @@
 const tenant_settings = {
-  title: 'Definições de Inquilino',
+  title: 'Definições',
   description:
     'Mude suas configurações de conta e gerencie suas informações pessoais aqui para garantir a segurança de sua conta.',
   tabs: {
-    settings: 'Configurações',
+    settings: 'Definições',
     domains: 'Domínios',
   },
   profile: {
-    title: 'CONFIGURAÇÕES DE PERFIL',
+    title: 'DEFINIÇÕES DE PERFIL',
     tenant_id: 'ID do Inquilino',
     tenant_name: 'Nome do Inquilino',
     environment_tag: 'Tag de Ambiente',

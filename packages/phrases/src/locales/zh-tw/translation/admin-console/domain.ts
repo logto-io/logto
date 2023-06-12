@@ -5,12 +5,11 @@ const domain = {
     failed_to_connect: '連線失敗',
   },
   update_endpoint_notice:
-    '您的自訂網域已成功設置。如果您之前已配置了Social connector回撥URI和Logto端點的資源，請記得更新它們使用的網域。<a>{{link}}</a>',
+    '不要忘記在應用程序中更新社交連接器回調 URI 和 Logto 端點的域，如果您想使用自定義域來使用這些功能。<a>{{link}}</a>',
   error_hint: '請確保您更新了您的 DNS 記錄。 我們將繼續每{{value}}秒檢查一次。',
   custom: {
-    custom_domain: '自定義網域',
-    custom_domain_description:
-      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
+    custom_domain: '自訂網域',
+    custom_domain_description: '提高品牌形象，使用自訂網域。此網域將用於您的登錄體驗。',
     custom_domain_field: '自訂網域',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '新增網域',
@@ -19,6 +18,7 @@ const domain = {
     enable_ssl: '啟用 SSL',
     checking_dns_tip:
       '當您配置 DNS 記錄後，這個過程將自動運行，它可能需要長達 24 小時。 您可以在運行期間離開這個介面。',
+    enable_ssl_tip: '啟用 SSL 將自動運行，可能需要長達 24 小時。您可以在運行期間離開此介面。',
     generating_dns_records: '正在生成 DNS 記錄...',
     add_dns_records: '請將這些 DNS 記錄添加到您的 DNS 供應商。',
     dns_table: {
@@ -39,7 +39,7 @@ const domain = {
   default: {
     default_domain: '預設網域',
     default_domain_description:
-      '我們提供了一個可即時使用的默認網域名稱。 它始終可用，可確保您的應用程序總是可用於登錄，即使您切換到自訂網域。',
+      'Logto 提供預先配置的預設網域，無需進行任何其他設置即可使用。即使啟用了自訂網域，此預設網域也可作為備用選項。',
     default_domain_field: 'Logto 默認網域',
   },
 };

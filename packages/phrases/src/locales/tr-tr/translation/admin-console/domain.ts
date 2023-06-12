@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Bağlantı başarısız oldu',
   },
   update_endpoint_notice:
-    'Özel alan adınız başarıyla ayarlandı. Eğer önceden yapılandırdıysanız, uygulamanız için kullanılan yansıtıcı geri çağrı URI ve Logto uç noktası alan adını güncellemeyi unutmayın.  <a>{{link}}</a>',
+    'Özellikleri için özel bir alan adı kullanmak istiyorsanız, uygulamanızda Sosyal bağlayıcı geri çağrı URI ve Logto uç noktası için alan adını güncellemeyi unutmayın. <a>{{link}}</a>',
   error_hint:
     'DNS kayıtlarınızı güncellediğinizden emin olunuz. {{value}} saniyede bir kontrol edeceğiz.',
   custom: {
     custom_domain: 'Özel Alan Adı',
     custom_domain_description:
-      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
+      'Markalaşmanızı geliştirin ve özel bir alan adı kullanın. Bu alan adı oturum açma deneyiminizde kullanılacaktır.',
     custom_domain_field: 'Özel alan adı',
     custom_domain_placeholder: 'alan_adınız.com',
     add_domain: 'Alan Adı Ekle',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'SSL etkinleştirilsin mi',
     checking_dns_tip:
       'DNS kayıtlarını yapılandırdıktan sonra, işlem otomatik olarak çalışır ve 24 saate kadar sürebilir. Bu arayüzden ayrılabilirsiniz.',
+    enable_ssl_tip:
+      'SSL etkinleştirilsin mi otomatik olarak çalışır ve 24 saate kadar sürebilir. Bu arayüzden ayrılabilirsiniz.',
     generating_dns_records: 'DNS kayıtları oluşturuluyor...',
     add_dns_records: 'Lütfen bu DNS kayıtlarını DNS sağlayıcınıza ekleyin.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Varsayılan Alan Adı',
     default_domain_description:
-      'Hemen kullanarak başlayabileceğiniz bir varsayılan alan adı sağlıyoruz. Her zaman kullanılabilir, böylece uygulamanıza her zaman oturum açma imkanı vardır.',
+      'Logto, ek bir yapılandırma olmadan kullanıma hazır önceden yapılandırılmış bir varsayılan alan adı sunar. Bu varsayılan alan adı, özel bir alan adı etkinleştirdiyseniz bile yedek seçeneği olarak hizmet verir.',
     default_domain_field: 'Logto varsayılan alan adı',
   },
 };

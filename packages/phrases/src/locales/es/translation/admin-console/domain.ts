@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Error de conexión',
   },
   update_endpoint_notice:
-    'Su dominio personalizado se ha configurado correctamente. Asegúrese de actualizar el dominio utilizado para la URI de callback del conector social y el punto final de Logto para su aplicación si había configurado los recursos anteriormente. <a>{{link}}</a>',
+    'No olvide actualizar el dominio para el URI de devolución de llamada del conector social y el punto final de Logto en su aplicación si desea utilizar un dominio personalizado para las funciones. <a>{{link}}</a>',
   error_hint:
     'Asegúrese de actualizar sus registros DNS. Continuaremos verificando cada {{value}} segundos.',
   custom: {
     custom_domain: 'Dominio personalizado',
     custom_domain_description:
-      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
+      'Mejore su marca utilizando un dominio personalizado. Este dominio se utilizará en su experiencia de inicio de sesión.',
     custom_domain_field: 'Dominio personalizado',
     custom_domain_placeholder: 'tu.dominio.com',
     add_domain: 'Agregar dominio',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'Habilitar SSL',
     checking_dns_tip:
       'Después de configurar los registros DNS, el proceso se ejecutará automáticamente y puede tardar hasta 24 horas. Puede dejar esta interfaz mientras se está ejecutando.',
+    enable_ssl_tip:
+      'Habilitar SSL se ejecutará automáticamente y puede tardar hasta 24 horas. Puede dejar esta interfaz mientras se está ejecutando.',
     generating_dns_records: 'Generando los registros DNS...',
     add_dns_records: 'Agregue estos registros DNS a su proveedor de DNS.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Dominio predeterminado',
     default_domain_description:
-      'Proporcionamos un nombre de dominio predeterminado que se puede utilizar directamente en línea. Siempre está disponible, lo que garantiza que se pueda acceder a su aplicación para iniciar sesión, incluso si cambia a un dominio personalizado.',
+      'Logto ofrece un dominio predeterminado preconfigurado, listo para usar sin ninguna configuración adicional. Este dominio predeterminado sirve como opción de respaldo incluso si habilitó un dominio personalizado.',
     default_domain_field: 'Dominio predeterminado de Logto',
   },
 };

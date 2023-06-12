@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'テナント設定',
+  title: '設定',
   description:
     'アカウントのセキュリティを確保するために、ここでアカウント設定を変更し、個人情報を管理します。',
   tabs: {

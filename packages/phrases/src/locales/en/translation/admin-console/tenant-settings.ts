@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'Tenant Settings',
+  title: 'Settings',
   description:
     'Change your account settings and manage your personal information here to ensure your account security.',
   tabs: {

@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Échec de la connexion',
   },
   update_endpoint_notice:
-    "Votre domaine personnalisé a été configuré avec succès. Pensez à mettre à jour le domaine utilisé pour l'URI de rappel du connecteur social et le point de terminaison Logto pour votre application si vous avez précédemment configuré les ressources. <a>{{link}}</a>",
+    'N’oubliez pas de mettre à jour le domaine pour l’URI de rappel du connecteur social et le point de terminaison Logto dans votre application si vous souhaitez utiliser un domaine personnalisé pour les fonctionnalités. <a>{{link}}</a>',
   error_hint:
     'Assurez-vous de mettre à jour vos enregistrements DNS. Nous continuerons à vérifier toutes les {{value}} secondes.',
   custom: {
     custom_domain: 'Domaine personnalisé',
     custom_domain_description:
-      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
+      'Améliorez votre image de marque en utilisant un domaine personnalisé. Ce domaine sera utilisé dans votre expérience de connexion.',
     custom_domain_field: 'Domaine personnalisé',
     custom_domain_placeholder: 'votre.domaine.com',
     add_domain: 'Ajouter un domaine',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'Activer SSL',
     checking_dns_tip:
       "Après avoir configuré les enregistrements DNS, le processus s'exécutera automatiquement et peut prendre jusqu'à 24 heures. Vous pouvez quitter cette interface pendant son exécution.",
+    enable_ssl_tip:
+      'Activer SSL s’exécutera automatiquement et peut prendre jusqu’à 24 heures. Vous pouvez quitter cette interface pendant son exécution.',
     generating_dns_records: 'Génération des enregistrements DNS...',
     add_dns_records: 'Veuillez ajouter ces enregistrements DNS à votre fournisseur DNS.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Domaine par défaut',
     default_domain_description:
-      'Nous fournissons un nom de domaine par défaut qui peut être utilisé directement en ligne. Il est toujours disponible, assurant que votre application peut toujours être accessible pour la connexion, même si vous passez à un domaine personnalisé.',
+      'Logto offre un domaine par défaut préconfiguré, prêt à être utilisé sans aucune configuration supplémentaire. Ce domaine par défaut sert de solution de secours même si vous avez activé un domaine personnalisé.',
     default_domain_field: 'Domaine par défaut de Logto',
   },
 };

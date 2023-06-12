@@ -39,7 +39,7 @@ function ActivationProcess({ customDomain }: Props) {
       <Step
         step={2}
         title="domain.custom.enable_ssl"
-        tip="domain.custom.checking_dns_tip"
+        tip="domain.custom.enable_ssl_tip"
         domainStatus={domainStatus}
       />
     </div>

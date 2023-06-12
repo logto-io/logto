@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'Impostazioni Tenant',
+  title: 'Impostazioni',
   description:
     'Cambia le impostazioni del tuo account e gestisci le tue informazioni personali qui per garantire la sicurezza del tuo account.',
   tabs: {

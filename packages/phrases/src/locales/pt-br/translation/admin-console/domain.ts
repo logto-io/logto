@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Falha na conexão',
   },
   update_endpoint_notice:
-    'Seu domínio personalizado foi configurado com sucesso. Lembre-se de atualizar o domínio usado para o callback URI do conector social e o endpoint Logto para o seu aplicativo, se você tiver configurado esses recursos anteriormente. <a>{{link}}</a>',
+    'Não se esqueça de atualizar o domínio para o URI de retorno do conector social e o ponto de extremidade de logto em seu aplicativo se você quiser usar um domínio personalizado para os recursos. <a>{{link}}</a>',
   error_hint:
     'Certifique-se de atualizar seus registros DNS. Nós continuaremos a verificação a cada {{value}} segundos.',
   custom: {
     custom_domain: 'Domínio personalizado',
     custom_domain_description:
-      'Improve your branding by utilizing a custom domain. This domain will be used in your sign-in experience.', // UNTRANSLATED
+      'Melhore sua marca utilizando um domínio personalizado. Este domínio será utilizado em sua experiência de login.',
     custom_domain_field: 'Domínio personalizado',
     custom_domain_placeholder: 'seu.domínio.com',
     add_domain: 'Adicionar domínio',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'Habilitar SSL',
     checking_dns_tip:
       'Após configurar os registros DNS, o processo será iniciado automaticamente e pode levar até 24 horas. Você pode deixar esta interface enquanto o processo é executado.',
+    enable_ssl_tip:
+      'Habilitar SSL será executado automaticamente e pode levar até 24 horas. Você pode deixar esta interface enquanto o processo é executado.',
     generating_dns_records: 'Gerando os registros DNS...',
     add_dns_records: 'Por favor, adicione estes registros DNS ao seu provedor DNS.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Domínio padrão',
     default_domain_description:
-      'Fornecemos um nome de domínio padrão que pode ser usado diretamente online. Está sempre disponível, garantindo que seu aplicativo possa sempre ser acessado para login, mesmo se você mudar para um domínio personalizado.',
+      'Logto oferece um domínio padrão pré-configurado, pronto para uso sem nenhuma configuração adicional. Este domínio padrão serve como uma opção de backup mesmo se você habilitou um domínio personalizado.',
     default_domain_field: 'Domínio padrão do Logto',
   },
 };
