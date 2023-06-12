@@ -25,6 +25,10 @@ const { getCustomHostname, createCustomHostname, deleteCustomHostname } = mockEs
   })
 );
 
+const { clearCustomDomainCache } = mockEsm('#src/utils/tenant.js', () => ({
+  clearCustomDomainCache: jest.fn(),
+}));
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createDomainLibrary } = await import('./domain.js');
 
@@ -49,11 +53,16 @@ afterAll(() => {
   SystemContext.shared.hostnameProviderConfig = undefined;
 });
 
+afterEach(() => {
+  clearCustomDomainCache.mockClear();
+});
+
 describe('addDomain()', () => {
   it('should call createCustomHostname and return cloudflare data', async () => {
     const response = await addDomain(mockDomain.domain);
     expect(createCustomHostname).toBeCalledTimes(1);
     expect(insertDomain).toBeCalledTimes(1);
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
     expect(response.dnsRecords).toContainEqual({
       type: 'CNAME',
@@ -76,6 +85,7 @@ describe('syncDomainStatus()', () => {
       cloudflareData: mockCloudflareDataPendingSSL,
     });
     expect(getCustomHostname).toBeCalledTimes(1);
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
   });
 
@@ -128,6 +138,7 @@ describe('deleteDomain()', () => {
     findDomainById.mockResolvedValueOnce(mockDomainWithCloudflareData);
     await deleteDomain(mockDomain.id);
     expect(deleteCustomHostname).toBeCalledTimes(1);
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(deleteDomainById).toBeCalledTimes(1);
   });
 
@@ -135,6 +146,7 @@ describe('deleteDomain()', () => {
     findDomainById.mockResolvedValueOnce(mockDomain);
     await deleteDomain(mockDomain.id);
     expect(deleteCustomHostname).not.toBeCalled();
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(deleteDomainById).toBeCalledTimes(1);
   });
 });
