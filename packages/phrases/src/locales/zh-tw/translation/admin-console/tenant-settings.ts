@@ -10,10 +10,12 @@ const tenant_settings = {
     tenant_id: '租戶 ID',
     tenant_name: '租戶名稱',
     environment_tag: '環境標籤',
-    environment_tag_description: '使用標籤區分租戶使用環境。每個標籤中的服務均相同，確保一致性。',
-    environment_tag_development: '開發',
-    environment_tag_staging: '暫存',
-    environment_tag_production: '生產',
+    environment_tag_description:
+      '帶有不同標籤的服務完全相同。它充當後綴的作用,以幫助您的團隊區分不同的環境。',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: '租戶資訊成功儲存。',
   },
   deletion_card: {
     title: '刪除',

@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Benim kiracım',
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
-      'Kiracı kullanım ortamlarını ayırt etmek için etiketleri kullanın. Her etiket içindeki hizmetler aynıdır, tutarlılığı sağlar.',
-    environment_tag_development: 'Geliştirme',
-    environment_tag_staging: 'Daha Yüksek Birlik',
-    environment_tag_production: 'Üretim',
+      'Farklı etiketlere sahip hizmetler aynıdır. Ortamları ayırt etmek için ekibinize yardımcı olmak için bir sonek görevi görür.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Kiracıyı Sil',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Devam etmek isterseniz, "<span>{{name}}</span>" kiracı adını onaylamak için yazın.',
     delete_button: 'Kalıcı olarak sil',
+  },
+  tenant_landing_page: {
+    title: 'Henüz bir kiracı oluşturmadınız',
+    description:
+      'Logto ile projenizi yapılandırmaya başlamak için lütfen yeni bir kiracı oluşturun. Hesabınızdan çıkış yapmanız veya hesabınızı silmeniz gerekiyorsa, sağ üst köşedeki avatar düğmesine tıklayın.',
+    create_tenant_button: 'Kiracı oluştur',
   },
   tenant_created: "Kiracı '{{name}}' başarıyla oluşturuldu.",
 };

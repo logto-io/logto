@@ -6,10 +6,11 @@ const tenants = {
     tenant_name: '租户名称',
     tenant_name_placeholder: '我的租户',
     environment_tag: '环境标签',
-    environment_tag_description: '使用标签区分租户使用环境。每个标签内的服务相同，确保一致性。',
-    environment_tag_development: '开发环境',
-    environment_tag_staging: '暂存环境',
-    environment_tag_production: '生产环境',
+    environment_tag_description:
+      '携带不同标签的服务完全相同。它充当后缀的作用,以帮助您的团队区分不同的环境。',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: '删除租户',
@@ -19,6 +20,12 @@ const tenants = {
       '在删除帐户之前，也许我们可以帮助您。<span><a>通过电子邮件联系我们</a></span>',
     description_line3: '如果你想继续，请输入租户名 "<span>{{name}}</span>" 确认。',
     delete_button: '永久删除',
+  },
+  tenant_landing_page: {
+    title: '你还没有创建租户',
+    description:
+      '要开始使用 Logto 配置项目，请创建一个新租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
+    create_tenant_button: '创建租户',
   },
   tenant_created: "租户'{{name}}'创建成功。",
 };

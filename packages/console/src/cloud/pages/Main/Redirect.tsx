@@ -15,7 +15,7 @@ type Props = {
 function Redirect({ tenants, toTenantId }: Props) {
   const { getAccessToken, signIn } = useLogto();
   const tenant = tenants.find(({ id }) => id === toTenantId);
-  const { setIsSettle } = useContext(TenantsContext);
+  const { setIsSettle, navigate } = useContext(TenantsContext);
   const href = useHref(toTenantId + '/callback');
 
   useEffect(() => {
@@ -36,7 +36,8 @@ function Redirect({ tenants, toTenantId }: Props) {
   }, [getAccessToken, href, setIsSettle, signIn, tenant]);
 
   if (!tenant) {
-    return <div>Forbidden</div>;
+    /** Fallback to another available tenant instead of showing `Forbidden`. */
+    navigate(tenants[0]?.id ?? '');
   }
 
   return <AppLoading />;

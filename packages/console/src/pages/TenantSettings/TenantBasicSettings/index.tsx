@@ -2,6 +2,8 @@ import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppError from '@/components/AppError';
@@ -24,6 +26,7 @@ const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
 };
 
 function TenantBasicSettings() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useCloudApi();
   const {
     currentTenant,
@@ -65,6 +68,7 @@ function TenantBasicSettings() {
       });
       reset({ profile: { name, tag } });
       void mutate();
+      toast.success(t('tenant_settings.profile.tenant_info_saved'));
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -98,10 +102,7 @@ function TenantBasicSettings() {
     try {
       await api.delete(`/api/tenants/:tenantId`, { params: { tenantId: currentTenantId } });
       setIsDeletionModalOpen(false);
-      await mutate();
-      if (tenants?.[0]?.id) {
-        window.open(new URL(`/${tenants[0].id}`, window.location.origin).toString(), '_self');
-      }
+      void mutate();
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -112,6 +113,20 @@ function TenantBasicSettings() {
       setIsDeleting(false);
     }
   };
+
+  useEffect(() => {
+    /**
+     * Redirect to the first tenant if the current tenant is deleted;
+     * Redirect to Cloud console landing page if there is no tenant.
+     */
+    if (tenants && !tenants.some(({ id }) => id === currentTenantId)) {
+      window.location.assign(
+        tenants[0]?.id
+          ? new URL(`/${tenants[0]?.id}`, window.location.origin).toString()
+          : new URL(window.location.origin).toString()
+      );
+    }
+  }, [currentTenantId, tenants]);
 
   if (isLoading) {
     return <AppLoading />;

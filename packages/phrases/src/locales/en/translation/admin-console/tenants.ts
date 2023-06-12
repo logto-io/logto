@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'My tenant',
     environment_tag: 'Environment Tag',
     environment_tag_description:
-      'Use tags to differentiate tenant usage environments. Services within each tag are identical, ensuring consistency.',
-    environment_tag_development: 'Development',
+      'The services with different tags are identical. It functions as a suffix to help your team differentiate environments.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Production',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Delete tenant',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'If you would like to proceed, please enter the tenant name "<span>{{name}}</span>" to confirm.',
     delete_button: 'Permanently delete',
+  },
+  tenant_landing_page: {
+    title: 'You haven’t created a tenant yet',
+    description:
+      'To start configuring your project with Logto, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
+    create_tenant_button: 'Create tenant',
   },
   tenant_created: "Tenant '{{name}}' created successfully.",
 };

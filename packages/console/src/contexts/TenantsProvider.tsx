@@ -46,11 +46,20 @@ function TenantsProvider({ children }: Props) {
 
   const navigate = useCallback((tenantId: string, options?: NavigateOptions) => {
     if (options?.replace) {
-      window.history.replaceState(options.state ?? {}, '', '/' + tenantId);
+      window.history.replaceState(
+        options.state ?? {},
+        '',
+        new URL(`/${tenantId}`, window.location.origin).toString()
+      );
 
       return;
     }
-    window.history.pushState(options?.state ?? {}, '', '/' + tenantId);
+
+    window.history.pushState(
+      options?.state ?? {},
+      '',
+      new URL(`/${tenantId}`, window.location.origin).toString()
+    );
     setCurrentTenantId(tenantId);
   }, []);
 

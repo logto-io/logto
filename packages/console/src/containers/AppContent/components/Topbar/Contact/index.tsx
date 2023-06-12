@@ -4,6 +4,7 @@ import ContactIcon from '@/assets/icons/contact-us.svg';
 import IconButton from '@/ds-components/IconButton';
 
 import ContactModal from './ContactModal';
+import * as styles from './index.module.scss';
 
 function Contact() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -12,6 +13,7 @@ function Contact() {
     <>
       <IconButton
         size="medium"
+        iconClassName={styles.icon}
         onClick={() => {
           setIsContactOpen(true);
         }}
