@@ -17,6 +17,12 @@
     flex-shrink: 0;
     margin-bottom: _.unit(6);
 
+    .iconAndTitle {
+      display: flex;
+      flex-direction: column;
+      gap: _.unit(3);
+    }
+
     .closeIcon {
       color: var(--color-text-secondary);
     }
