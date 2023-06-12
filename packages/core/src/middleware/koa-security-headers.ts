@@ -57,13 +57,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const basicSecurityHeaderSettings: HelmetOptions = {
     contentSecurityPolicy: false, // Exclusively set per app
     crossOriginEmbedderPolicy: { policy: 'credentialless' },
-    expectCt: false, // Not recommended, will be deprecated by modern browsers
     dnsPrefetchControl: false,
     referrerPolicy: {
       policy: 'strict-origin-when-cross-origin',
     },
   };
 
+  // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
   const mainFlowUiSecurityHeaderSettings: HelmetOptions = {
     ...basicSecurityHeaderSettings,
     // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
@@ -87,6 +87,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     },
   };
 
+  // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
   const consoleSecurityHeaderSettings: HelmetOptions = {
     ...basicSecurityHeaderSettings,
     // Guarded by CSP header bellow
