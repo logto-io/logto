@@ -96,7 +96,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
           directives: {
             'upgrade-insecure-requests': null,
             imgSrc: ["'self'", 'data:', 'https:'],
-            scriptSrc: ["'self'", "'unsafe-eval'", "'unsafe-inline'", ...gtagOrigins],
+            scriptSrc: ["'self'", ...gtagOrigins],
             connectSrc: [
               "'self'",
               ...adminOrigins,
