@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'Paramètres du locataire',
+  title: 'Paramètres',
   description:
     'Modifiez vos paramètres de compte et gérez vos informations personnelles ici pour assurer la sécurité de votre compte.',
   tabs: {

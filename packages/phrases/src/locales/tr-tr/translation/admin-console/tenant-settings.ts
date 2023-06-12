@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'Kiralama Ayarları',
+  title: 'Ayarlar',
   description:
     'Hesap güvenliğinizi sağlamak için burada hesap ayarlarınızı ve kişisel bilgilerinizi yönetin.',
   tabs: {

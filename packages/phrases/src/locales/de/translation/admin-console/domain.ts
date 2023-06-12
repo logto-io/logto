@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Verbindung fehlgeschlagen',
   },
   update_endpoint_notice:
-    'Ihre benutzerdefinierte Domain wurde erfolgreich eingerichtet. Denken Sie daran, die für die Social-Connector-Rückruf-URI und Logto-Endpunkt für Ihre Anwendung verwendete Domain zu aktualisieren, wenn Sie die Ressourcen zuvor konfiguriert hatten. <a>{{link}}</a>',
+    'Vergessen Sie nicht, die Domain für die Social-Connector-Callback-URI und den Logto-Endpunkt in Ihrer Anwendung zu aktualisieren, wenn Sie eine benutzerdefinierte Domain für die Funktionen verwenden möchten. <a>{{link}}</a>',
   error_hint:
     'Stellen Sie sicher, dass Sie Ihre DNS-Einträge aktualisiert haben. Wir werden alle {{value}} Sekunden weiter überprüfen.',
   custom: {
     custom_domain: 'Benutzerdefinierte Domain',
     custom_domain_description:
-      'Ersetzen Sie die Standarddomain durch Ihre eigene Domain, um die Konsistenz mit Ihrer Marke beizubehalten und die Anmeldeerfahrung für Benutzer zu personalisieren.',
+      'Verbessern Sie Ihre Markenbildung durch die Verwendung einer benutzerdefinierten Domain. Diese Domain wird in Ihrem Anmeldeerlebnis verwendet.',
     custom_domain_field: 'Benutzerdefinierte Domain',
     custom_domain_placeholder: 'ihre.domain.com',
     add_domain: 'Domain hinzufügen',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'SSL aktivieren',
     checking_dns_tip:
       'Nachdem Sie die DNS-Einträge konfiguriert haben, wird der Prozess automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen während er läuft.',
+    enable_ssl_tip:
+      'SSL aktivieren wird automatisch ausgeführt und kann bis zu 24 Stunden dauern. Sie können diese Oberfläche verlassen während er läuft.',
     generating_dns_records: 'DNS-Einträge werden generiert...',
     add_dns_records: 'Bitte fügen Sie diese DNS-Einträge Ihrem DNS-Provider hinzu.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Standarddomain',
     default_domain_description:
-      'Wir bieten einen Standard-Domainnamen an, der direkt online verwendet werden kann. Er ist immer verfügbar und stellt sicher, dass Ihre Anwendung immer für die Anmeldung erreichbar ist, auch wenn Sie auf eine benutzerdefinierte Domain umsteigen.',
+      'Logto bietet eine vorkonfigurierte Standarddomain, die ohne zusätzliche Einrichtung verwendet werden kann. Diese Standarddomain dient als Backup-Option, auch wenn Sie eine benutzerdefinierte Domain aktiviert haben.',
     default_domain_field: 'Logto Standard-Domain',
   },
 };

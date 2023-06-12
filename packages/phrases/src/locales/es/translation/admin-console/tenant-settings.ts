@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: 'Configuración del inquilino',
+  title: 'Configuraciones',
   description:
     'Cambie sus configuraciones de cuenta y administre su información personal aquí para garantizar la seguridad de su cuenta.',
   tabs: {

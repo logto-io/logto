@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Nieudane połączenie',
   },
   update_endpoint_notice:
-    'Twój niestandardowy domenowy został pomyślnie skonfigurowany. Pamiętaj, aby zaktualizować domenę używaną dla łącznika społecznego oraz endpointu dziennika Logto dla Twojej aplikacji, jeśli wcześniej skonfigurowałeś zasoby. <a>{{link}}</a>',
+    'Nie zapomnij zaktualizować domeny dla URI wywołania łącznika społecznego i punktu końcowego Logto w swojej aplikacji, jeśli chcesz używać niestandardowej domeny dla funkcji. <a>{{link}}</a>',
   error_hint:
     'Upewnij się, że zaktualizowałeś swoje rekordy DNS. Będziemy nadal sprawdzać co {{value}} sekund.',
   custom: {
     custom_domain: 'Niestandardowa domena',
     custom_domain_description:
-      'Zastąp domyślną domenę swoją własną domeną, aby zachować spójność z Twoją marką i spersonalizować doświadczenie logowania dla swoich użytkowników.',
+      'Ulepsz swoją markę, wykorzystując niestandardową domenę. Ta domena będzie używana w Twoim procesie logowania.',
     custom_domain_field: 'Niestandardowa domena',
     custom_domain_placeholder: 'twoja.domena.com',
     add_domain: 'Dodaj domenę',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'Włącz SSL',
     checking_dns_tip:
       'Po skonfigurowaniu rekordów DNS proces zostanie uruchomiony automatycznie i może potrwać do 24 godzin. Możesz opuścić ten interfejs podczas jego działania.',
+    enable_ssl_tip:
+      'Włączenie SSL zostanie uruchomione automatycznie i może potrwać do 24 godzin. Możesz opuścić ten interfejs podczas jego działania.',
     generating_dns_records: 'Generowanie rekordów DNS...',
     add_dns_records: 'Dodaj te rekordy DNS do swojego dostawcy DNS.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Domyślna domena',
     default_domain_description:
-      'Oferujemy domenę domyślną, którą można używać bezpośrednio online. Jest zawsze dostępny, zapewniając, że Twoja aplikacja zawsze może być używana do logowania, nawet jeśli przejdziesz na niestandardową domenę.',
+      'Logto oferuje prekonfigurowaną domenę domyślną, gotową do użycia bez dodatkowej konfiguracji. Ta domyślna domena służy jako opcja zapasowa, nawet jeśli włączyłeś niestandardową domenę.',
     default_domain_field: 'Domyślna domena Logto',
   },
 };

@@ -5,12 +5,12 @@ const domain = {
     failed_to_connect: '接続に失敗しました',
   },
   update_endpoint_notice:
-    'カスタムドメインが正常に設定されました。以前にリソースを構成した場合は、アプリケーションに使用されるドメインのソーシャル連携コールバックURIとLogtoエンドポイントを更新することを忘れないでください。 <a>{{link}}</a>',
+    'カスタムドメインを使用する場合は、アプリケーションのソーシャルコネクタコールバックURIとLogtoエンドポイントのドメインを更新することを忘れないでください。 <a>{{link}}</a>',
   error_hint: '{{value}} 秒後にもう一度確認するようにDNSレコードを更新してください。',
   custom: {
     custom_domain: 'カスタムドメイン',
     custom_domain_description:
-      'ブランドの一貫性を維持し、ユーザーのサインインエクスペリエンスをカスタマイズするために、Logtoのデフォルトのドメインをカスタムのドメインに置き換えてください。',
+      'ブランディングを向上させるために、カスタムドメインを利用してください。このドメインは、サインインエクスペリエンスで使用されます。',
     custom_domain_field: 'カスタムドメイン',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: 'ドメインを追加',
@@ -20,6 +20,8 @@ const domain = {
     enable_ssl: 'SSLを有効にする',
     checking_dns_tip:
       'DNSレコードを設定したら、最大で24時間かかる自動プロセスを待つ必要があります。移動中や一時的に中断することができますが、この動作を削除しないでください。',
+    enable_ssl_tip:
+      'SSLを有効にするには、自動的に実行され、最大で24時間かかる場合があります。このインターフェースを実行中のままにしておくことができます。',
     generating_dns_records: 'DNSレコードを生成しています...',
     add_dns_records: 'DNSプロバイダに次のDNSレコードを追加してください。',
     dns_table: {
@@ -41,7 +43,7 @@ const domain = {
   default: {
     default_domain: 'デフォルトドメイン',
     default_domain_description:
-      'デフォルトのLogtoドメインは常に利用可能であり、アプリケーションに必要なサインイン用のドメインを提供します。',
+      'Logtoは、追加のセットアップなしで使用できる事前に構成されたデフォルトドメインを提供しています。このデフォルトドメインは、カスタムドメインを有効にしていない場合でもバックアップオプションとして機能します。',
     default_domain_field: 'Logtoデフォルトドメイン',
   },
 };

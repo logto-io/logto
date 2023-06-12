@@ -1,5 +1,5 @@
 const tenant_settings = {
-  title: '租戶設置',
+  title: '設置',
   description: '在此處更改帳戶設置和管理個人信息，以確保您的帳戶安全。',
   tabs: {
     settings: '設置',

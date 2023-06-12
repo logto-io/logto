@@ -5,13 +5,13 @@ const domain = {
     failed_to_connect: 'Connessione fallita',
   },
   update_endpoint_notice:
-    'Il tuo dominio personalizzato è stato impostato correttamente. Ricorda di aggiornare il dominio utilizzato per il callback URI del connettore social e il punto di endpoint Logto per la tua applicazione se avevi configurato in precedenza le risorse. <a>{{link}}</a>',
+    "Non dimenticare di aggiornare il dominio per l'URI di callback del connettore social e l'endpoint Logto nella tua applicazione se vuoi utilizzare un dominio personalizzato per le funzionalità. <a>{{link}}</a>",
   error_hint:
     'Assicurati di aggiornare i tuoi record DNS. Continueremo a controllarli ogni {{value}} secondi.',
   custom: {
     custom_domain: 'Dominio personalizzato',
     custom_domain_description:
-      "Sostituisci il dominio predefinito con il dominio di tua scelta per mantenere la coerenza con il tuo marchio e personalizzare l'esperienza di accesso per i tuoi utenti.",
+      'Migliora il tuo branding utilizzando un dominio personalizzato. Questo dominio verrà utilizzato nella tua esperienza di accesso.',
     custom_domain_field: 'Dominio personalizzato',
     custom_domain_placeholder: 'il-tuo-dominio.com',
     add_domain: 'Aggiungi dominio',
@@ -21,6 +21,8 @@ const domain = {
     enable_ssl: 'Abilita SSL',
     checking_dns_tip:
       "Dopo aver configurato i record DNS, il processo verrà eseguito automaticamente e potrebbe richiedere fino a 24 ore. Puoi lasciare questa interfaccia durante l'esecuzione.",
+    enable_ssl_tip:
+      "Abilitare SSL verrà eseguito automaticamente e potrebbe richiedere fino a 24 ore. Puoi lasciare questa interfaccia durante l'esecuzione.",
     generating_dns_records: 'Generazione dei record DNS in corso...',
     add_dns_records: 'Inserisci questi record DNS nel tuo provider DNS.',
     dns_table: {
@@ -42,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Dominio predefinito',
     default_domain_description:
-      "Forniamo un nome di dominio predefinito che può essere utilizzato direttamente online. È sempre disponibile, garantendo che la tua applicazione possa essere sempre accessibile per l'accesso, anche se passi a un dominio personalizzato.",
+      "Logto offre un dominio preconfigurato predefinito, pronto all'uso senza alcuna configurazione aggiuntiva. Questo dominio predefinito serve come opzione di backup anche se hai abilitato un dominio personalizzato.",
     default_domain_field: 'Dominio predefinito Logto',
   },
 };

@@ -5,12 +5,11 @@ const domain = {
     failed_to_connect: '连接失败',
   },
   update_endpoint_notice:
-    '您的自定义域名已成功设置。如果您之前已配置了资源，请记得更新用于社交连接器回调 URI 和应用程序日志终结点的域名。 <a>{{link}}</a>',
+    '如果您想使用自定义域名，请不要忘记在应用程序中更新社交连接器回调 URI 和 Logto 终结点的域名。 <a>{{link}}</a>',
   error_hint: '请确保更新您的 DNS 记录。我们将继续每 {{value}} 秒检查一次。',
   custom: {
     custom_domain: '自定义域名',
-    custom_domain_description:
-      '使用您自己的域名替换默认域名，以保持一致的品牌形象，并为用户提供个性化的登录体验。',
+    custom_domain_description: '通过使用自定义域名来提高品牌形象。此域名将用于您的登录体验。',
     custom_domain_field: '自定义域名',
     custom_domain_placeholder: 'your.domain.com',
     add_domain: '添加域名',
@@ -19,6 +18,7 @@ const domain = {
     enable_ssl: '启用 SSL',
     checking_dns_tip:
       'DNS 记录已配置，请等待最长 24 小时，以使变更生效。在域名是否有效期间，您可以离开此界面。',
+    enable_ssl_tip: '启用 SSL 将自动运行，可能需要最长 24 小时。在运行期间，您可以离开此界面。',
     generating_dns_records: '正在生成 DNS 记录...',
     add_dns_records: '请将以下 DNS 记录添加到您的 DNS 服务提供商。',
     dns_table: {
@@ -39,7 +39,7 @@ const domain = {
   default: {
     default_domain: '默认域名',
     default_domain_description:
-      '我们提供了一个默认域名，可以直接在线使用。它始终可用，确保您的应用程序始终可以被访问，即使您使用自定义域名。',
+      'Logto 提供了一个预配置的默认域名，无需任何其他设置即可使用。即使您启用了自定义域名，此默认域名也可作为备用选项。',
     default_domain_field: 'Logto 默认域名',
   },
 };
