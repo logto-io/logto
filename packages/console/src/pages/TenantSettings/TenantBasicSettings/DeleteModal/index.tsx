@@ -1,4 +1,4 @@
-import { type TenantInfo } from '@logto/schemas';
+import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 

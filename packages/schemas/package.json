@@ -86,7 +86,7 @@
     "@logto/phrases": "workspace:^1.4.0",
     "@logto/phrases-ui": "workspace:^1.2.0",
     "@logto/shared": "workspace:^2.0.0",
-    "@withtyped/server": "^0.11.0",
+    "@withtyped/server": "^0.11.1",
     "zod": "^3.20.2"
   }
 }

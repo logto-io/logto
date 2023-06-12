@@ -1,10 +1,10 @@
-import type { CreateTenant, TenantInfo, TenantTag } from '@logto/schemas';
+import type { TenantInfo, TenantTag } from '@logto/schemas/models';
 
 import { cloudApi } from './api.js';
 
 export const createTenant = async (
   accessToken: string,
-  payload: Required<Pick<CreateTenant, 'name' | 'tag'>>
+  payload: { name: string; tag: TenantTag }
 ) => {
   return cloudApi
     .extend({

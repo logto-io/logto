@@ -1,6 +1,12 @@
 import { createModel } from '@withtyped/server/model';
+import type { InferModelType } from '@withtyped/server/model';
+import { z } from 'zod';
 
-import { TenantTag } from '../index.js';
+export enum TenantTag {
+  Development = 'development',
+  Staging = 'staging',
+  Production = 'production',
+}
 
 export const Tenants = createModel(/* sql */ `
   /* init_order = 0 */
@@ -16,4 +22,14 @@ export const Tenants = createModel(/* sql */ `
       unique (db_user)
   );
   /* no_after_each */
-`);
+`)
+  .extend('tag', z.nativeEnum(TenantTag))
+  .extend('createdAt', { readonly: true });
+
+export type TenantModel = InferModelType<typeof Tenants>;
+
+export type TenantInfo = Pick<TenantModel, 'id' | 'name' | 'tag'> & { indicator: string };
+
+export const tenantInfoGuard: z.ZodType<TenantInfo> = Tenants.guard('model')
+  .pick({ id: true, name: true, tag: true })
+  .extend({ indicator: z.string() });

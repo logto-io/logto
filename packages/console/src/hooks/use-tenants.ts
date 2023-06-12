@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { type TenantInfo } from '@logto/schemas';
+import { type TenantInfo } from '@logto/schemas/models';
 import { type Optional, trySafe } from '@silverhand/essentials';
 import type ky from 'ky';
 import { useCallback, useContext, useEffect, useMemo } from 'react';

@@ -1,5 +1,5 @@
-import { type TenantInfo } from '@logto/schemas';
+import { type TenantModel } from '@logto/schemas/models';
 
 export type TenantSettingsForm = {
-  profile: Pick<TenantInfo, 'name' | 'tag'>;
+  profile: Pick<TenantModel, 'name' | 'tag'>;
 };

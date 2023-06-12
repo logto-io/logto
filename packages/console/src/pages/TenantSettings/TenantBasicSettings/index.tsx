@@ -1,4 +1,4 @@
-import { type PatchTenant, type TenantInfo, TenantTag } from '@logto/schemas';
+import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -49,7 +49,7 @@ function TenantBasicSettings() {
     reset({ profile: { name, tag } });
   }, [currentTenant, reset]);
 
-  const saveData = async (data: PatchTenant) => {
+  const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     try {
       const { name, tag } = await cloudApi
         .patch(`/api/tenants/${currentTenantId}`, {
