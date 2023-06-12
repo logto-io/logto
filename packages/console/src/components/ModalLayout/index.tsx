@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 
 import Close from '@/assets/images/close.svg';
 
@@ -16,6 +16,7 @@ type Props = {
   onClose?: () => void;
   className?: string;
   size?: 'medium' | 'large' | 'xlarge';
+  headerIcon?: ReactElement;
 } & Pick<CardTitleProps, 'learnMoreLink' | 'title' | 'subtitle' | 'isWordWrapEnabled'>;
 
 function ModalLayout({
@@ -24,12 +25,16 @@ function ModalLayout({
   onClose,
   className,
   size = 'medium',
+  headerIcon,
   ...cardTitleProps
 }: Props) {
   return (
     <Card className={classNames(styles.container, styles[size])}>
       <div className={styles.header}>
-        <CardTitle {...cardTitleProps} />
+        <div className={styles.iconAndTitle}>
+          {headerIcon}
+          <CardTitle {...cardTitleProps} />
+        </div>
         {onClose && (
           <IconButton
             onClick={() => {
