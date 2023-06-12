@@ -15,6 +15,7 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 import usePreviewConfigs from '../../hooks/use-preview-configs';
 import BrandingForm from '../../tabs/Branding/BrandingForm';
@@ -59,20 +60,22 @@ function GuideModal({ isOpen, onClose }: Props) {
     await updatePreferences({ experienceNoticeConfirmed: true });
   };
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (!data || isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (!data || isSubmitting) {
+        return;
+      }
 
-    await Promise.all([
-      api.patch('api/sign-in-exp', {
-        json: signInExperienceParser.toRemoteModel(formData),
-      }),
-      updateConfigs({ signInExperienceCustomized: true }),
-    ]);
+      await Promise.all([
+        api.patch('api/sign-in-exp', {
+          json: signInExperienceParser.toRemoteModel(formData),
+        }),
+        updateConfigs({ signInExperienceCustomized: true }),
+      ]);
 
-    onClose();
-  });
+      onClose();
+    })
+  );
 
   const onSkip = async () => {
     setIsLoading(true);

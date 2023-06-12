@@ -18,6 +18,7 @@ import { useConnectorFormConfigParser } from '@/pages/Connectors/components/Conn
 import { initFormData } from '@/pages/Connectors/components/ConnectorForm/utils';
 import type { ConnectorFormType } from '@/pages/Connectors/types';
 import { SyncProfileMode } from '@/pages/Connectors/types';
+import { trySubmitSafe } from '@/utils/form';
 
 import SenderTester from './SenderTester';
 
@@ -71,33 +72,35 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
   const configParser = useConnectorFormConfigParser();
 
-  const onSubmit = handleSubmit(async (data) => {
-    const { formItems, isStandard, id } = connectorData;
-    const config = configParser(data, formItems);
-    const { syncProfile, name, logo, logoDark, target } = data;
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      const { formItems, isStandard, id } = connectorData;
+      const config = configParser(data, formItems);
+      const { syncProfile, name, logo, logoDark, target } = data;
 
-    const payload = isSocialConnector
-      ? {
-          config,
-          syncProfile: syncProfile === SyncProfileMode.EachSignIn,
-        }
-      : { config };
-    const standardConnectorPayload = {
-      ...payload,
-      metadata: { name: { en: name }, logo, logoDark, target },
-    };
-    // Should not update `target` for neither passwordless connectors nor non-standard social connectors.
-    const body = isStandard ? standardConnectorPayload : { ...payload, target: undefined };
+      const payload = isSocialConnector
+        ? {
+            config,
+            syncProfile: syncProfile === SyncProfileMode.EachSignIn,
+          }
+        : { config };
+      const standardConnectorPayload = {
+        ...payload,
+        metadata: { name: { en: name }, logo, logoDark, target },
+      };
+      // Should not update `target` for neither passwordless connectors nor non-standard social connectors.
+      const body = isStandard ? standardConnectorPayload : { ...payload, target: undefined };
 
-    const updatedConnector = await api
-      .patch(`api/connectors/${id}`, {
-        json: body,
-      })
-      .json<ConnectorResponse>();
+      const updatedConnector = await api
+        .patch(`api/connectors/${id}`, {
+          json: body,
+        })
+        .json<ConnectorResponse>();
 
-    onConnectorUpdated(updatedConnector);
-    toast.success(t('general.saved'));
-  });
+      onConnectorUpdated(updatedConnector);
+      toast.success(t('general.saved'));
+    })
+  );
 
   return (
     <FormProvider {...methods}>

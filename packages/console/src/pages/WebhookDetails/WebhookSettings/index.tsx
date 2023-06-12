@@ -9,6 +9,7 @@ import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import BasicWebhookForm from '@/pages/Webhooks/components/BasicWebhookForm';
+import { trySubmitSafe } from '@/utils/form';
 
 import { type WebhookDetailsFormType, type WebhookDetailsOutletContext } from '../types';
 import { webhookDetailsParser } from '../utils';
@@ -32,14 +33,16 @@ function WebhookSettings() {
     formState: { isSubmitting, isDirty },
   } = formMethods;
 
-  const onSubmit = handleSubmit(async (formData) => {
-    const updatedHook = await api
-      .patch(`api/hooks/${hook.id}`, { json: webhookDetailsParser.toRemoteModel(formData) })
-      .json<Hook>();
-    reset(webhookDetailsParser.toLocalForm(updatedHook));
-    onHookUpdated(updatedHook);
-    toast.success(t('general.saved'));
-  });
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      const updatedHook = await api
+        .patch(`api/hooks/${hook.id}`, { json: webhookDetailsParser.toRemoteModel(formData) })
+        .json<Hook>();
+      reset(webhookDetailsParser.toLocalForm(updatedHook));
+      onHookUpdated(updatedHook);
+      toast.success(t('general.saved'));
+    })
+  );
 
   return (
     <>

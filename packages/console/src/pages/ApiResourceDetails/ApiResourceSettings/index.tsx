@@ -13,6 +13,7 @@ import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { trySubmitSafe } from '@/utils/form';
 
 import type { ApiResourceDetailsOutletContext } from '../types';
 
@@ -34,24 +35,26 @@ function ApiResourceSettings() {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async ({ isDefault, ...rest }) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async ({ isDefault, ...rest }) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    const [data] = await Promise.all([
-      api.patch(`api/resources/${resource.id}`, { json: rest }).json<Resource>(),
-      api
-        .patch(`api/resources/${resource.id}/is-default`, { json: { isDefault } })
-        .json<Resource>(),
-    ]);
+      const [data] = await Promise.all([
+        api.patch(`api/resources/${resource.id}`, { json: rest }).json<Resource>(),
+        api
+          .patch(`api/resources/${resource.id}/is-default`, { json: { isDefault } })
+          .json<Resource>(),
+      ]);
 
-    // We cannot ensure the order of API requests, manually combine the results
-    const updatedApiResource = { ...data, isDefault };
-    reset(updatedApiResource);
-    onResourceUpdated(updatedApiResource);
-    toast.success(t('general.saved'));
-  });
+      // We cannot ensure the order of API requests, manually combine the results
+      const updatedApiResource = { ...data, isDefault };
+      reset(updatedApiResource);
+      onResourceUpdated(updatedApiResource);
+      toast.success(t('general.saved'));
+    })
+  );
 
   return (
     <>

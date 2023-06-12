@@ -23,6 +23,7 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
+import { trySubmitSafe } from '@/utils/form';
 
 import Preview from './components/Preview';
 import SignUpAndSignInChangePreview from './components/SignUpAndSignInChangePreview';
@@ -133,22 +134,24 @@ function SignInExperience() {
     }
   };
 
-  const onSubmit = handleSubmit(async (formData: SignInExperienceForm) => {
-    if (!data || isSaving) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData: SignInExperienceForm) => {
+      if (!data || isSaving) {
+        return;
+      }
 
-    const formatted = signInExperienceParser.toRemoteModel(formData);
+      const formatted = signInExperienceParser.toRemoteModel(formData);
 
-    // Sign-in methods changed, need to show confirm modal first.
-    if (!hasSignUpAndSignInConfigChanged(data, formatted)) {
-      setDataToCompare(formatted);
+      // Sign-in methods changed, need to show confirm modal first.
+      if (!hasSignUpAndSignInConfigChanged(data, formatted)) {
+        setDataToCompare(formatted);
 
-      return;
-    }
+        return;
+      }
 
-    await saveData();
-  });
+      await saveData();
+    })
+  );
 
   if (isLoading) {
     return <Skeleton />;

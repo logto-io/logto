@@ -10,6 +10,7 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 type Props = {
   resourceId: string;
@@ -28,17 +29,19 @@ function CreatePermissionModal({ resourceId, onClose }: Props) {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    const createdScope = await api
-      .post(`api/resources/${resourceId}/scopes`, { json: formData })
-      .json<Scope>();
+      const createdScope = await api
+        .post(`api/resources/${resourceId}/scopes`, { json: formData })
+        .json<Scope>();
 
-    onClose(createdScope);
-  });
+      onClose(createdScope);
+    })
+  );
 
   return (
     <ReactModal

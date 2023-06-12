@@ -25,6 +25,7 @@ import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication, OnboardingPage } from '@/onboarding/types';
 import { getOnboardingPage } from '@/onboarding/utils';
+import { trySubmitSafe } from '@/utils/form';
 import { buildUrl } from '@/utils/url';
 import { uriValidator } from '@/utils/validator';
 
@@ -85,21 +86,22 @@ function SignInExperience() {
     }
   }, [onboardingSieConfig, signInExperience]);
 
-  const submit = (onSuccess: () => void) => async (formData: OnboardingSieConfig) => {
-    if (!signInExperience) {
-      return;
-    }
+  const submit = (onSuccess: () => void) =>
+    trySubmitSafe(async (formData: OnboardingSieConfig) => {
+      if (!signInExperience) {
+        return;
+      }
 
-    const updatedData = await api
-      .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
-        json: parser.onboardSieConfigToSignInExperience(formData, signInExperience),
-      })
-      .json<SignInExperienceType>();
+      const updatedData = await api
+        .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
+          json: parser.onboardSieConfigToSignInExperience(formData, signInExperience),
+        })
+        .json<SignInExperienceType>();
 
-    void mutate(updatedData);
+      void mutate(updatedData);
 
-    onSuccess();
-  };
+      onSuccess();
+    });
 
   if (isLoading) {
     return <Skeleton />;

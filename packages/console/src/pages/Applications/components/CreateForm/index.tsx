@@ -14,6 +14,7 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { trySubmitSafe } from '@/utils/form';
 
 import TypeDescription from '../TypeDescription';
 
@@ -48,20 +49,22 @@ function CreateForm({ isOpen, onClose }: Props) {
     return null;
   }
 
-  const onSubmit = handleSubmit(async (data) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    const createdApp = await api.post('api/applications', { json: data }).json<Application>();
-    void updateConfigs({
-      applicationCreated: true,
-      ...conditional(
-        createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
-      ),
-    });
-    onClose?.(createdApp);
-  });
+      const createdApp = await api.post('api/applications', { json: data }).json<Application>();
+      void updateConfigs({
+        applicationCreated: true,
+        ...conditional(
+          createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
+        ),
+      });
+      onClose?.(createdApp);
+    })
+  );
 
   return (
     <Modal

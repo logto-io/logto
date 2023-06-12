@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { useStaticApi } from '@/hooks/use-api';
+import { trySubmitSafe } from '@/utils/form';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { parseLocationState } from '../../utils';
@@ -36,11 +37,13 @@ function LinkEmailModal() {
 
   const onSubmit = () => {
     clearErrors();
-    void handleSubmit(async ({ email }) => {
-      await api.post(`me/verification-codes`, { json: { email } });
-      reset();
-      navigate('../verification-code', { state: { email, action: 'changeEmail' } });
-    })();
+    void handleSubmit(
+      trySubmitSafe(async ({ email }) => {
+        await api.post(`me/verification-codes`, { json: { email } });
+        reset();
+        navigate('../verification-code', { state: { email, action: 'changeEmail' } });
+      })
+    )();
   };
 
   const { email: currentEmail } = parseLocationState(state);

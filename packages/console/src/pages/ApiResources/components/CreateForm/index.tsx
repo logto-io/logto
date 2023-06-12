@@ -8,6 +8,7 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
+import { trySubmitSafe } from '@/utils/form';
 
 type FormData = {
   name: string;
@@ -28,14 +29,16 @@ function CreateForm({ onClose }: Props) {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (data) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    const createdApiResource = await api.post('api/resources', { json: data }).json<Resource>();
-    onClose?.(createdApiResource);
-  });
+      const createdApiResource = await api.post('api/resources', { json: data }).json<Resource>();
+      onClose?.(createdApiResource);
+    })
+  );
 
   return (
     <ModalLayout

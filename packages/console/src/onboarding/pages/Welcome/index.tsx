@@ -14,6 +14,7 @@ import PageMeta from '@/components/PageMeta';
 import ActionBar from '@/onboarding/components/ActionBar';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
@@ -42,9 +43,11 @@ function Welcome() {
     reset(questionnaire);
   }, [questionnaire, reset]);
 
-  const onSubmit = handleSubmit(async (formData) => {
-    await update({ questionnaire: formData });
-  });
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      await update({ questionnaire: formData });
+    })
+  );
 
   const onNext = async () => {
     await onSubmit();

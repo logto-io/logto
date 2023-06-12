@@ -16,6 +16,7 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import { trySubmitSafe } from '@/utils/form';
 import { safeParseJsonObject } from '@/utils/json';
 import { parsePhoneNumber } from '@/utils/phone';
 import { uriValidator } from '@/utils/validator';
@@ -47,47 +48,45 @@ function UserSettings() {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (isSubmitting) {
-      return;
-    }
-    const { identities, id: userId } = user;
-    const { customData: inputCustomData, username, primaryEmail, primaryPhone } = formData;
-
-    if (!username && !primaryEmail && !primaryPhone && Object.keys(identities).length === 0) {
-      const [result] = await show({
-        ModalContent: t('user_details.warning_no_sign_in_identifier'),
-        type: 'confirm',
-      });
-
-      if (!result) {
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (isSubmitting) {
         return;
       }
-    }
+      const { identities, id: userId } = user;
+      const { customData: inputCustomData, username, primaryEmail, primaryPhone } = formData;
 
-    const parseResult = safeParseJsonObject(inputCustomData);
+      if (!username && !primaryEmail && !primaryPhone && Object.keys(identities).length === 0) {
+        const [result] = await show({
+          ModalContent: t('user_details.warning_no_sign_in_identifier'),
+          type: 'confirm',
+        });
 
-    if (!parseResult.success) {
-      toast.error(t('user_details.custom_data_invalid'));
+        if (!result) {
+          return;
+        }
+      }
 
-      return;
-    }
+      const parseResult = safeParseJsonObject(inputCustomData);
 
-    const payload: Partial<User> = {
-      ...formData,
-      primaryPhone: parsePhoneNumber(primaryPhone),
-      customData: parseResult.data,
-    };
+      if (!parseResult.success) {
+        toast.error(t('user_details.custom_data_invalid'));
 
-    try {
+        return;
+      }
+
+      const payload: Partial<User> = {
+        ...formData,
+        primaryPhone: parsePhoneNumber(primaryPhone),
+        customData: parseResult.data,
+      };
+
       const updatedUser = await api.patch(`api/users/${userId}`, { json: payload }).json<User>();
       reset(userDetailsParser.toLocalForm(updatedUser));
       onUserUpdated(updatedUser);
       toast.success(t('general.saved'));
-    } catch {
-      // Do nothing since we only show error toasts, which is handled in the useApi hook
-    }
-  });
+    })
+  );
 
   return (
     <>

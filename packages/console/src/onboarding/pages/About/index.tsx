@@ -13,6 +13,7 @@ import PageMeta from '@/components/PageMeta';
 import TextInput from '@/components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 import { CardSelector, MultiCardSelector } from '../../../components/CardSelector';
 import ActionBar from '../../components/ActionBar';
@@ -41,9 +42,11 @@ function About() {
     reset(questionnaire);
   }, [questionnaire, reset]);
 
-  const onSubmit = handleSubmit(async (formData) => {
-    await update({ questionnaire: formData });
-  });
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      await update({ questionnaire: formData });
+    })
+  );
 
   const onNext = async () => {
     await onSubmit();

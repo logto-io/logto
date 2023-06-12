@@ -14,6 +14,7 @@ import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 import { generateRandomPassword } from '@/utils/password';
 import { parsePhoneNumber } from '@/utils/phone';
 
@@ -62,46 +63,48 @@ function CreateForm({ onClose, onCreate }: Props) {
     }
   };
 
-  const onSubmit = handleSubmit(async (data) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    setMissingIdentifierError(undefined);
+      setMissingIdentifierError(undefined);
 
-    if (!hasIdentifier()) {
-      setMissingIdentifierError(t('users.error_missing_identifier'));
-      return;
-    }
+      if (!hasIdentifier()) {
+        setMissingIdentifierError(t('users.error_missing_identifier'));
+        return;
+      }
 
-    const password = generateRandomPassword();
+      const password = generateRandomPassword();
 
-    const { primaryPhone } = data;
+      const { primaryPhone } = data;
 
-    const userData = {
-      ...data,
-      password,
-      ...conditional(primaryPhone && { primaryPhone: parsePhoneNumber(primaryPhone) }),
-    };
-
-    // Filter out empty values
-    const payload = Object.fromEntries(
-      Object.entries(userData).filter(([, value]) => Boolean(value))
-    );
-
-    try {
-      const createdUser = await api.post('api/users', { json: payload }).json<User>();
-
-      setCreatedUserInfo({
-        user: createdUser,
+      const userData = {
+        ...data,
         password,
-      });
+        ...conditional(primaryPhone && { primaryPhone: parsePhoneNumber(primaryPhone) }),
+      };
 
-      onCreate();
-    } catch {
-      // Do nothing since we only show error toasts, which is handled in the useApi hook
-    }
-  });
+      // Filter out empty values
+      const payload = Object.fromEntries(
+        Object.entries(userData).filter(([, value]) => Boolean(value))
+      );
+
+      try {
+        const createdUser = await api.post('api/users', { json: payload }).json<User>();
+
+        setCreatedUserInfo({
+          user: createdUser,
+          password,
+        });
+
+        onCreate();
+      } catch {
+        // Do nothing since we only show error toasts, which is handled in the useApi hook
+      }
+    })
+  );
 
   return createdUserInfo ? (
     <UserAccountInformation

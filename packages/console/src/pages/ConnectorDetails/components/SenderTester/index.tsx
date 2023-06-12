@@ -11,6 +11,7 @@ import TextInput from '@/components/TextInput';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
+import { trySubmitSafe } from '@/utils/form';
 import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
@@ -54,17 +55,19 @@ function SenderTester({ connectorFactoryId, connectorType, className, parse }: P
     };
   }, [showTooltip]);
 
-  const onSubmit = handleSubmit(async (formData) => {
-    const { sendTo } = formData;
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      const { sendTo } = formData;
 
-    const data = {
-      config: parse(),
-      ...(isSms ? { phone: parsePhoneNumber(sendTo) } : { email: sendTo }),
-    };
+      const data = {
+        config: parse(),
+        ...(isSms ? { phone: parsePhoneNumber(sendTo) } : { email: sendTo }),
+      };
 
-    await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
-    setShowTooltip(true);
-  });
+      await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
+      setShowTooltip(true);
+    })
+  );
 
   return (
     <div className={className}>
