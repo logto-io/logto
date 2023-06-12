@@ -119,9 +119,24 @@
     cursor: pointer;
   }
 
-  .icon {
+  > svg {
     width: 20px;
     height: 20px;
     color: var(--color-neutral-50);
+  }
+
+  &.disabled {
+    &:hover {
+      background: transparent;
+    }
+
+    &:not(:disabled) {
+      cursor: not-allowed;
+    }
+
+    > div,
+    > svg {
+      color: var(--color-placeholder);
+    }
   }
 }

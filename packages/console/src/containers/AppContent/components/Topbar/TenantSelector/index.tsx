@@ -1,4 +1,4 @@
-import { type TenantInfo, TenantTag } from '@logto/schemas/models';
+import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -35,9 +35,11 @@ function TenantSelector() {
     return <AppError errorMessage={error.message} callStack={error.stack} />;
   }
 
-  if (!tenants?.length) {
+  if (!tenants?.length || !currentTenantInfo) {
     return null;
   }
+
+  const isCreateButtonDisabled = tenants.length >= 3;
 
   return (
     <>
@@ -53,11 +55,8 @@ function TenantSelector() {
           setShowDropdown(true);
         }}
       >
-        <div className={styles.name}>{currentTenantInfo?.name ?? 'My project'}</div>
-        <TenantEnvTag
-          className={styles.tag}
-          tag={currentTenantInfo?.tag ?? TenantTag.Development}
-        />
+        <div className={styles.name}>{currentTenantInfo.name}</div>
+        <TenantEnvTag className={styles.tag} tag={currentTenantInfo.tag} />
         <KeyboardArrowDown className={styles.arrowIcon} />
       </div>
       <Dropdown
@@ -89,16 +88,25 @@ function TenantSelector() {
         <div
           role="button"
           tabIndex={0}
-          className={styles.createTenantButton}
+          className={classNames(
+            isCreateButtonDisabled && styles.disabled,
+            styles.createTenantButton
+          )}
           onClick={() => {
+            if (isCreateButtonDisabled) {
+              return;
+            }
             setShowCreateTenantModal(true);
           }}
           onKeyDown={onKeyDownHandler(() => {
+            if (isCreateButtonDisabled) {
+              return;
+            }
             setShowCreateTenantModal(true);
           })}
         >
           <div>{t('cloud.tenant.create_tenant')}</div>
-          <PlusSign className={styles.icon} />
+          <PlusSign />
         </div>
       </Dropdown>
       <CreateTenantModal

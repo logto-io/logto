@@ -49,6 +49,26 @@ describe('POST /api/tenants', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
+  it('should throw 403 when trying to create more than 3 tenants with `CreateTenant` scope', async () => {
+    const tenant: TenantInfo = {
+      id: 'tenant',
+      name: 'tenant',
+      tag: TenantTag.Development,
+      indicator: 'https://tenant.foo.bar',
+    };
+    library.getAvailableTenants.mockResolvedValueOnce([tenant, tenant, tenant]);
+
+    await expect(
+      router.routes()(
+        buildRequestAuthContext('POST /tenants', {
+          body: { name: 'tenant', tag: TenantTag.Development },
+        })([CloudScope.CreateTenant]),
+        noop,
+        createHttpContext()
+      )
+    ).rejects.toMatchObject({ status: 403 });
+  });
+
   it('should be able to create a new tenant', async () => {
     const tenant: TenantInfo = {
       id: 'tenant_a',
@@ -56,6 +76,7 @@ describe('POST /api/tenants', () => {
       tag: TenantTag.Development,
       indicator: 'https://foo.bar',
     };
+    library.getAvailableTenants.mockResolvedValueOnce([]);
     library.createNewTenant.mockImplementationOnce(async (_, payload) => {
       return { ...tenant, ...payload };
     });
