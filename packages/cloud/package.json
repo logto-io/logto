@@ -7,6 +7,9 @@
   "license": "Elastic-2.0",
   "type": "module",
   "private": true,
+  "exports": {
+    "./routes": "./build/routes/index.js"
+  },
   "imports": {
     "#src/*": "./build/*"
   },

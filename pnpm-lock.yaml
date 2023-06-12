@@ -2775,6 +2775,9 @@ importers:
       '@logto/app-insights':
         specifier: workspace:^1.2.0
         version: link:../app-insights
+      '@logto/cloud':
+        specifier: workspace:^
+        version: link:../cloud
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -2877,6 +2880,9 @@ importers:
       '@types/react-syntax-highlighter':
         specifier: ^15.5.1
         version: 15.5.1
+      '@withtyped/client':
+        specifier: ^0.7.10
+        version: 0.7.10(zod@3.20.2)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -9808,6 +9814,15 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
+  /@withtyped/client@0.7.10(zod@3.20.2):
+    resolution: {integrity: sha512-8EndTFr1+V6WbAW1kldxPZztk4uIbmoBnfWKG1zvVC6TTPwEOiB3SP3BsjiW8si7wUmO8GWjazKqnq5CYlSjGg==}
+    dependencies:
+      '@withtyped/server': 0.11.1(zod@3.20.2)
+      '@withtyped/shared': 0.2.0
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
   /@withtyped/postgres@0.11.0(@withtyped/server@0.11.1):
     resolution: {integrity: sha512-PHnx6ake/MDdyy4sZXS/7l5XNBtjqlPSqSHrlmCYUXYxUV0sHSrXECKxX7deAvWZtcHVh9VaWEpiQBhFS06Vig==}
     peerDependencies:
@@ -9829,11 +9844,9 @@ packages:
       '@silverhand/essentials': 2.6.2
       '@withtyped/shared': 0.2.0
       zod: 3.20.2
-    dev: false
 
   /@withtyped/shared@0.2.0:
     resolution: {integrity: sha512-SADIVEospfIWAVK0LxX7F1T04hsWMZ0NkfR3lNfvJqOktJ52GglI3FOTVYOM1NJYReDT6pR0XFlCfaF8TVPt8w==}
-    dev: false
 
   /@xmldom/xmldom@0.8.7:
     resolution: {integrity: sha512-sI1Ly2cODlWStkINzqGrZ8K6n+MTSbAeQnAipGyL+KZCXuHaRlj2gyyy8B/9MvsFFqN7XHryQnB2QwhzvJXovg==}

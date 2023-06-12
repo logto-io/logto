@@ -24,9 +24,7 @@ function Tenants({ data, onAdd }: Props) {
        * `name` and `tag` are required for POST /tenants API, add fixed value to avoid throwing error.
        * This page page will be removed in upcoming changes on multi-tenancy cloud console.
        */
-      await api
-        .post('api/tenants', { json: { name: 'My Project', tag: TenantTag.Development } })
-        .json<TenantInfo>()
+      await api.post('/api/tenants', { body: { name: 'My Project', tag: TenantTag.Development } })
     );
   }, [api, onAdd]);
 

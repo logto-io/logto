@@ -1,19 +1,13 @@
 import { useLogto } from '@logto/react';
 import { type TenantInfo } from '@logto/schemas/models';
 import { type Optional, trySafe } from '@silverhand/essentials';
-import type ky from 'ky';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
-import useSWR, { type KeyedMutator } from 'swr';
+import { type KeyedMutator } from 'swr';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-import useSwrFetcher from './use-swr-fetcher';
-
-type KyInstance = typeof ky;
-
 type TenantsHook = {
-  api: KyInstance;
   currentTenant?: TenantInfo;
   currentTenantId: string;
   error?: Error;
@@ -26,16 +20,9 @@ type TenantsHook = {
 };
 
 const useTenants = (): TenantsHook => {
-  const cloudApi = useCloudApi();
   const { signIn, getAccessToken } = useLogto();
   const { currentTenantId, setCurrentTenantId, isSettle, setIsSettle } = useContext(TenantsContext);
-
-  const fetcher = useSwrFetcher<TenantInfo[]>(cloudApi);
-  const {
-    data: availableTenants,
-    error,
-    mutate,
-  } = useSWR<TenantInfo[], Error>('/api/tenants', fetcher);
+  const { data: availableTenants, error, mutate } = useCloudSwr('/api/tenants');
   const isLoading = !availableTenants && !error;
   const isLoaded = Boolean(availableTenants && !error);
 
@@ -62,7 +49,6 @@ const useTenants = (): TenantsHook => {
   }, [currentTenant, validate]);
 
   return {
-    api: cloudApi,
     currentTenant,
     currentTenantId,
     error,

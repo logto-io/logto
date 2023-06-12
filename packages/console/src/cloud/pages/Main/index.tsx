@@ -1,5 +1,4 @@
 import { useLogto } from '@logto/react';
-import type { TenantInfo } from '@logto/schemas/models';
 import { conditional, yes } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import { useContext, useEffect, useState } from 'react';
@@ -25,7 +24,7 @@ function Protected() {
       setError(undefined);
 
       try {
-        const data = await api.get('/api/tenants').json<TenantInfo[]>();
+        const data = await api.get('/api/tenants');
         setTenants(data);
       } catch (error: unknown) {
         setError(error instanceof Error ? error : new Error(String(error)));
