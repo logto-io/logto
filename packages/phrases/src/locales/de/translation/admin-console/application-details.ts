@@ -47,10 +47,10 @@ const application_details = {
     'Durch Aktivieren dieser Konfiguration kann Logto immer Refresh Tokens ausgeben, unabhängig davon, ob in der Authentifizierungsanforderung "prompt=consent" angegeben ist. Diese Praxis wird jedoch nur dann empfohlen, wenn es notwendig ist, da sie nicht mit OpenID Connect kompatibel ist und möglicherweise Probleme verursacht.',
   refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
   refresh_token_ttl_tip:
-    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.', // UNTRANSLATED
+    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
   rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
   delete_description:
     'Diese Aktion kann nicht rückgängig gemacht werden. Die Anwendung wird permanent gelöscht. Bitte gib den Anwendungsnamen <span>{{name}}</span> zur Bestätigung ein.',
   enter_your_application_name: 'Gib einen Anwendungsnamen ein',

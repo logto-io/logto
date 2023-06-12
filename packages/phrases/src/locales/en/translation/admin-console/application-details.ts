@@ -47,10 +47,10 @@ const application_details = {
     'When enabled, Logto will always issue Refresh Tokens, regardless of whether `prompt=consent` is presented in the authentication request. However, this practice is discouraged unless necessary, as it is not compatible with OpenID Connect and may potentially cause issues.',
   refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days',
   refresh_token_ttl_tip:
-    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.',
+    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.',
   rotate_refresh_token: 'Rotate Refresh Token',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.',
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',

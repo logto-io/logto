@@ -47,10 +47,10 @@ const application_details = {
     'Rozwiazanie tej konfiguracji pozwoli Logto zawsze wydawac cwiecze tokeny, bez wzgledu na to, czy w zadaniu autoryzacji zostal przedstawiony `prompt=consent`. Jednak ta praktyka jest odstraszana, chyba ze konieczne, jak nie jest w pelni kompatybilna z OpenID Connect i moze potencjalnie powodowac problemy.',
   refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
   refresh_token_ttl_tip:
-    'The duration during which a refresh token can be used to request new access tokens before it expires and becomes invalid.', // UNTRANSLATED
+    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
   rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
+    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
   delete_description:
     'Ta operacja nie może zostać cofnięta. Skutkuje ona trwałym usunięciem aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',
