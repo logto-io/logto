@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Produzione',
   },
+  deletion_card: {
+    title: 'ELIMINA',
+    tenant_deletion: 'Elimina tenant',
+    tenant_deletion_description:
+      "L'eliminazione del tuo account rimuoverà tutte le tue informazioni personali, i dati dell'utente e la configurazione. Questa azione non può essere annullata.",
+    tenant_deletion_button: 'Elimina tenant',
+  },
 };
 
 export default tenant_settings;

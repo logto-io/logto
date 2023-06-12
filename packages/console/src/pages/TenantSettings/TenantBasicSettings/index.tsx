@@ -10,6 +10,8 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useTenants from '@/hooks/use-tenants';
 
+import DeleteCard from './DeleteCard';
+import DeleteModal from './DeleteModal';
 import ProfileForm from './ProfileForm';
 import * as styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
@@ -22,8 +24,11 @@ function TenantBasicSettings() {
     error: requestError,
     mutate,
     isLoading,
+    tenants,
   } = useTenants();
   const [error, setError] = useState<Error>();
+  const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (requestError) {
@@ -33,6 +38,7 @@ function TenantBasicSettings() {
 
   const methods = useForm<TenantSettingsForm>();
   const {
+    watch,
     reset,
     handleSubmit,
     formState: { isDirty, isSubmitting },
@@ -72,6 +78,34 @@ function TenantBasicSettings() {
     await saveData({ name, tag });
   });
 
+  const onClickDeletionButton = () => {
+    setIsDeletionModalOpen(true);
+  };
+
+  const onDelete = async () => {
+    if (isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await cloudApi.delete(`/api/tenants/${currentTenantId}`);
+      setIsDeletionModalOpen(false);
+      await mutate();
+      if (tenants?.[0]?.id) {
+        window.open(new URL(`/${tenants[0].id}`, window.location.origin).toString(), '_self');
+      }
+    } catch (error: unknown) {
+      setError(
+        error instanceof Error
+          ? error
+          : new Error(JSON.stringify(error, Object.getOwnPropertyNames(error)))
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (isLoading) {
     return <AppLoading />;
   }
@@ -87,6 +121,7 @@ function TenantBasicSettings() {
         <FormProvider {...methods}>
           <div className={styles.fields}>
             <ProfileForm currentTenantId={currentTenantId} />
+            <DeleteCard currentTenantId={currentTenantId} onClick={onClickDeletionButton} />
           </div>
         </FormProvider>
         <SubmitFormChangesActionBar
@@ -96,6 +131,15 @@ function TenantBasicSettings() {
           onSubmit={onSubmit}
         />
         <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+        <DeleteModal
+          isOpen={isDeletionModalOpen}
+          isLoading={isDeleting}
+          tenant={watch('profile')}
+          onClose={() => {
+            setIsDeletionModalOpen(false);
+          }}
+          onDelete={onDelete}
+        />
       </form>
     </>
   );

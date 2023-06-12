@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Inszenierung',
     environment_tag_production: 'Produktion',
   },
+  deletion_card: {
+    title: 'LÖSCHEN',
+    tenant_deletion: 'Mieter löschen',
+    tenant_deletion_description:
+      'Wenn Sie Ihr Konto löschen, werden alle persönlichen Informationen, Benutzerdaten und Konfigurationen entfernt. Dieser Vorgang kann nicht rückgängig gemacht werden.',
+    tenant_deletion_button: 'Mieter löschen',
+  },
 };
 
 export default tenant_settings;

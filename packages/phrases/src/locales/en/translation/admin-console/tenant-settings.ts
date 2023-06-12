@@ -17,6 +17,13 @@ const tenant_settings = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Production',
   },
+  deletion_card: {
+    title: 'DELETE',
+    tenant_deletion: 'Delete tenant',
+    tenant_deletion_description:
+      'Deleting your account will remove all of your personal information, user data, and configuration. This action cannot be undone.',
+    tenant_deletion_button: 'Delete tenant',
+  },
 };
 
 export default tenant_settings;

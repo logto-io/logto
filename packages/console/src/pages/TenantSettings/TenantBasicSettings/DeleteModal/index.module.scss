@@ -1,0 +1,27 @@
+@use '@/scss/underscore' as _;
+
+.deleteConfirmModal {
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .content {
+    > p {
+      margin-bottom: _.unit(5);
+    }
+  }
+
+  .description {
+    gap: _.unit(2);
+    font: var(--font-body-2);
+  }
+
+  .bold {
+    font: var(--font-title-3);
+  }
+
+  .highlight {
+    font: var(--font-label-2);
+    color: var(--color-primary-80);
+  }
+}
