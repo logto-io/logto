@@ -1,4 +1,4 @@
-name: Bump cloud Logto submodule HEAD
+name: Bump Logto submodule HEAD
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ on:
       - master
 jobs:
   build:
-    name: Bump cloud Logto submodule HEAD
+    name: cloud
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,9 +16,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Bump cloud Logto submodule HEAD
-        uses: ./.github/actions/create-pr-parent-submodule
+        uses: ./.github/actions/create-submodule-bump-pr
         with:
-          github-token: ${{ secrets.BOT_PAT }}
+          github_token: ${{ secrets.BOT_PAT }}
           checkout_branch: "master"
           pr_against_branch: "master"
           parent_repository: "https://github.com/logto-io/cloud"

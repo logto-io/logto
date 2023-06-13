@@ -40,7 +40,7 @@ runs:
         fetch-depth: 0
 
     - name: Check if branch exists
-      id: branch_exists
+      shell: bash
       run: |
         if git rev-parse --verify ${{ inputs.branch_name }} >/dev/null 2>&1
         then
