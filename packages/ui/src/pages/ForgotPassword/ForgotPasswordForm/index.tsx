@@ -38,7 +38,7 @@ const ForgotPasswordForm = ({
 }: Props) => {
   const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useSendVerificationCode(
-    UserFlow.forgotPassword
+    UserFlow.ForgotPassword
   );
 
   const {

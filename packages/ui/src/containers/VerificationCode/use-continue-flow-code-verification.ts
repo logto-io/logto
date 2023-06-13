@@ -32,7 +32,7 @@ const useContinueFlowCodeVerification = (
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
   const identifierExistErrorHandler = useCallback(
     async (method: VerificationCodeIdentifier, target: string) => {
-      const linkSocial = searchParameters.get(SearchParameters.linkSocial);
+      const linkSocial = searchParameters.get(SearchParameters.LinkSocial);
 
       // Show bind with social confirm modal
       if (linkSocial) {

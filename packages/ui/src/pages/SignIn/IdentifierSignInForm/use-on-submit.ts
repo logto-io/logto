@@ -25,7 +25,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
     errorMessage,
     clearErrorMessage,
     onSubmit: sendVerificationCode,
-  } = useSendVerificationCode(UserFlow.signIn);
+  } = useSendVerificationCode(UserFlow.SignIn);
 
   const onSubmit = async (identifier: SignInIdentifier, value: string) => {
     const method = signInMethods.find((method) => method.identifier === identifier);

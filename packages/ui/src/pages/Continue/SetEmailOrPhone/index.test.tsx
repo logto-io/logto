@@ -24,7 +24,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigate,
   useLocation: jest.fn(() => ({
     state: {
-      flow: UserFlow.signIn,
+      flow: UserFlow.SignIn,
       registeredSocialIdentity: {
         email: 'foo@logto.io',
       },
@@ -92,7 +92,7 @@ describe('continue with email or phone', () => {
       });
 
       await waitFor(() => {
-        expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.continue, {
+        expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Continue, {
           [identifier]: identifier === SignInIdentifier.Phone ? `${countryCode}${input}` : input,
         });
       });

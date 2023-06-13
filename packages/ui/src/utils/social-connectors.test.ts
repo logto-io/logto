@@ -147,8 +147,8 @@ describe('buildSocialLandingUri', () => {
     const callbackUri = buildSocialLandingUri(socialLandingPath, redirectUri);
 
     expect(callbackUri.pathname).toEqual(socialLandingPath);
-    expect(callbackUri.searchParams.get(SearchParameters.redirectTo)).toEqual(redirectUri);
-    expect(callbackUri.searchParams.get(SearchParameters.nativeCallbackLink)).toEqual(
+    expect(callbackUri.searchParams.get(SearchParameters.RedirectTo)).toEqual(redirectUri);
+    expect(callbackUri.searchParams.get(SearchParameters.NativeCallbackLink)).toEqual(
       'logto://callback'
     );
   });

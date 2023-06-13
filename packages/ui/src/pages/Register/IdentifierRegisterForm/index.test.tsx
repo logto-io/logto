@@ -216,7 +216,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         await waitFor(() => {
           expect(registerWithUsernamePassword).not.toBeCalled();
-          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.register, {
+          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
             email: 'foo@logto.io',
           });
         });
@@ -275,7 +275,7 @@ describe('<IdentifierRegisterForm />', () => {
 
         await waitFor(() => {
           expect(registerWithUsernamePassword).not.toBeCalled();
-          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.register, {
+          expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
             phone: `${getDefaultCountryCallingCode()}8573333333`,
           });
         });

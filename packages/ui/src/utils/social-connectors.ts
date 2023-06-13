@@ -37,12 +37,12 @@ export const storageCallbackLinkKeyPrefix = 'social_callback_data';
 export const buildSocialLandingUri = (path: string, redirectTo: string) => {
   const { origin } = window.location;
   const url = new URL(`${origin}${path}`);
-  url.searchParams.set(SearchParameters.redirectTo, redirectTo);
+  url.searchParams.set(SearchParameters.RedirectTo, redirectTo);
 
   const callbackLink = getLogtoNativeSdk()?.callbackLink;
 
   if (callbackLink) {
-    url.searchParams.set(SearchParameters.nativeCallbackLink, callbackLink);
+    url.searchParams.set(SearchParameters.NativeCallbackLink, callbackLink);
   }
 
   return url;

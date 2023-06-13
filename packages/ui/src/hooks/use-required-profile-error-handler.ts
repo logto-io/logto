@@ -31,7 +31,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
         const registeredSocialIdentity = data?.registeredSocialIdentity;
 
         const linkSocialQueryString = linkSocial
-          ? `?${queryStringify({ [SearchParameters.linkSocial]: linkSocial })}`
+          ? `?${queryStringify({ [SearchParameters.LinkSocial]: linkSocial })}`
           : undefined;
 
         switch (missingProfile) {
@@ -39,7 +39,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
           case MissingProfile.username: {
             navigate(
               {
-                pathname: `/${UserFlow.continue}/${missingProfile}`,
+                pathname: `/${UserFlow.Continue}/${missingProfile}`,
               },
               { replace }
             );
@@ -50,7 +50,7 @@ const useRequiredProfileErrorHandler = ({ replace, linkSocial }: Options = {}) =
           case MissingProfile.emailOrPhone: {
             navigate(
               {
-                pathname: `/${UserFlow.continue}/${missingProfile}`,
+                pathname: `/${UserFlow.Continue}/${missingProfile}`,
                 search: linkSocialQueryString,
               },
               { replace, state: { registeredSocialIdentity } }

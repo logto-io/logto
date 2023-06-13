@@ -140,7 +140,7 @@ describe('IdentifierSignInForm', () => {
 
         if (verificationCode) {
           await waitFor(() => {
-            expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.signIn, {
+            expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.SignIn, {
               [identifier]:
                 identifier === SignInIdentifier.Phone
                   ? `${getDefaultCountryCallingCode()}${value}`

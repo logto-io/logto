@@ -30,7 +30,7 @@ const useForgotPasswordFlowCodeVerification = (
       'user.user_not_exist': async () =>
         identifierErrorHandler(IdentifierErrorType.IdentifierNotExist, method, target),
       'user.new_password_required_in_profile': () => {
-        navigate(`/${UserFlow.forgotPassword}/reset`, { replace: true });
+        navigate(`/${UserFlow.ForgotPassword}/reset`, { replace: true });
       },
       ...generalVerificationCodeErrorHandlers,
     }),
@@ -49,7 +49,7 @@ const useForgotPasswordFlowCodeVerification = (
       }
 
       if (result) {
-        navigate(`/${UserFlow.signIn}`, { replace: true });
+        navigate(`/${UserFlow.SignIn}`, { replace: true });
       }
     },
     [errorCallback, errorHandlers, handleError, navigate, verifyVerificationCode]

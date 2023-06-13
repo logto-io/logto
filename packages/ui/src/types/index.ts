@@ -1,16 +1,16 @@
 import type { SignInExperience, ConnectorMetadata, SignInIdentifier, Theme } from '@logto/schemas';
 
 export enum UserFlow {
-  signIn = 'sign-in',
-  register = 'register',
-  forgotPassword = 'forgot-password',
-  continue = 'continue',
+  SignIn = 'sign-in',
+  Register = 'register',
+  ForgotPassword = 'forgot-password',
+  Continue = 'continue',
 }
 
 export enum SearchParameters {
-  nativeCallbackLink = 'native_callback',
-  redirectTo = 'redirect_to',
-  linkSocial = 'link_social',
+  NativeCallbackLink = 'native_callback',
+  RedirectTo = 'redirect_to',
+  LinkSocial = 'link_social',
 }
 
 export type Platform = 'web' | 'mobile';
@@ -26,10 +26,6 @@ export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConne
     email: boolean;
   };
 };
-
-export enum ConfirmModalMessage {
-  SHOW_TERMS_DETAIL_MODAL = 'SHOW_TERMS_DETAIL_MODAL',
-}
 
 export type PreviewConfig = {
   signInExperience: SignInExperienceResponse;
