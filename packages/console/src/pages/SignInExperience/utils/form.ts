@@ -32,13 +32,19 @@ export const signInExperienceParser = {
     };
   },
   toLocalForm: (signInExperience: SignInExperience): SignInExperienceForm => {
-    const { signUp, signInMode, customCss } = signInExperience;
+    const { signUp, signInMode, customCss, branding } = signInExperience;
 
     return {
       ...signInExperience,
       signUp: signInExperienceParser.toLocalSignUp(signUp),
       createAccountEnabled: signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
+      branding: {
+        ...branding,
+        logoUrl: branding.logoUrl ?? '',
+        darkLogoUrl: branding.darkLogoUrl ?? '',
+        favicon: branding.favicon ?? '',
+      },
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
