@@ -1,7 +1,6 @@
 import { type Domain, DomainStatus } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
-import InlineNotification from '@/components/InlineNotification';
 import TextLink from '@/components/TextLink';
 
 import ActivationProcess from './ActivationProcess';
@@ -28,7 +27,7 @@ function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
         )}
       </div>
       {customDomain.status === DomainStatus.Active && (
-        <InlineNotification className={styles.notice} severity="success" hasIcon={false}>
+        <div className={styles.notes}>
           <Trans
             components={{
               // TODO LOG-6298 @xiaoyijun update this link when related docs are ready.
@@ -37,7 +36,7 @@ function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
           >
             {t('domain.update_endpoint_notice', { link: t('general.learn_more') })}
           </Trans>
-        </InlineNotification>
+        </div>
       )}
     </>
   );
