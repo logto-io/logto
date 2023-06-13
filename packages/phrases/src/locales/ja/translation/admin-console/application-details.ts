@@ -12,13 +12,13 @@ const application_details = {
   application_name_placeholder: '私のアプリ',
   description: '説明',
   description_placeholder: 'アプリケーションの説明を入力してください',
-  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
+  config_endpoint: 'OpenID Providerの構成エンドポイント',
   authorization_endpoint: '認可エンドポイント',
   authorization_endpoint_tip:
-    '認証と認可を実行するエンドポイントです。 OpenID Connectの<a>認証</a>に使用されます。',
+    '認証と認可を実行するエンドポイントです。OpenID Connectの<a>認証</a>に使用されます。',
   application_id: 'アプリID',
   application_id_tip:
-    '通常Logtoによって生成される一意のアプリケーション識別子です。 OpenID Connectでは「<a>client_id</a>」とも呼ばれます。',
+    '通常Logtoによって生成される一意のアプリケーション識別子です。OpenID Connectでは「<a>client_id</a>」とも呼ばれます。',
   application_secret: 'アプリのシークレット',
   redirect_uri: 'リダイレクトURI',
   redirect_uris: 'リダイレクトURI',
@@ -45,12 +45,12 @@ const application_details = {
   always_issue_refresh_token: '常にRefresh Tokenを発行する',
   always_issue_refresh_token_label:
     'この設定を有効にすると、Logtoは、認証要求に「prompt = consent」が提示されたかどうかにかかわらず、常にRefresh Tokenを発行することができます。ただし、OpenID Connectと互換性がないため、必要でない限りこのプラクティスは推奨されず、問題が発生する可能性があります。',
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl: 'リフレッシュトークンの有効期限（日単位）',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
-  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+    'リフレッシュトークンが期限切れになるまでの期間です。トークンリクエストは、リフレッシュトークンのTTLをこの値に延長します。',
+  rotate_refresh_token: 'Refresh Tokenを切り替える',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
+    '有効にすると、Logtoは、元のTTLの70％が経過したときまたは特定の条件が満たされた場合、トークン要求で新しいRefresh Tokenを発行します。<a>詳細を見る</a>',
   delete_description:
     'この操作は元に戻すことはできません。アプリケーション名「<span>{{name}}</span>」を入力して確認してください。',
   enter_your_application_name: 'アプリケーション名を入力してください',

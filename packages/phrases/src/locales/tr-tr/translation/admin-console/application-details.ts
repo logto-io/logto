@@ -12,7 +12,7 @@ const application_details = {
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',
   description_placeholder: 'Uygulama açıklamasını giriniz',
-  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
+  config_endpoint: 'OpenID Provider yapılandırma bitiş noktası',
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
@@ -45,12 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Her zaman Refresh Token ver',
   always_issue_refresh_token_label:
     "Bu yapılandırmayı etkinleştirmek, Logto'nun OpenID Connect ile uyumlu olmayan ve olası sorunlara neden olabilecek her zaman Refresh Token çıkarmasına izin verir `prompt=consent` kimlik doğrulama isteğinin sunulup sunulmadığına bakılmaksızın. Ancak, bu uygulama yalnızca zorunlu olduğunda caydırılmayan bir uygulamadır.",
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl: 'Refresh Token süresi (gün cinsinden)',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
-  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+    'Yeni erişim belirteği istekleri için Refresh Belirteği kullanılabilecek süre. Belirteğin süresi dolmadan önce yapılan talepler belirteğin ömrünü uzatacaktır.',
+  rotate_refresh_token: 'Refresh Tokenı değiştir',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
+    'Bu seçenek etkinleştirildiğinde, Logto Token Bitiş Süresinin %70&#39;i geçildiğinde veya belli koşullar sağlandığında yeni bir Refresh Token verecektir. <a>Daha fazlası için tıklayın</a>',
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',

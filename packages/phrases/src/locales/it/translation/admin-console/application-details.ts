@@ -12,11 +12,11 @@ const application_details = {
   application_name_placeholder: 'La mia app',
   description: 'Descrizione',
   description_placeholder: 'Inserisci la descrizione della tua applicazione',
-  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
-  authorization_endpoint: 'Authorization Endpoint',
+  config_endpoint: 'Endpoint di configurazione OpenID Provider',
+  authorization_endpoint: 'Endpoint di autorizzazione',
   authorization_endpoint_tip:
     "L'endpoint per effettuare l'autenticazione e l'autorizzazione. Viene utilizzato per la connessione OpenID <a>autenticazione</a>.",
-  application_id: 'ID Applicazione',
+  application_id: 'App ID',
   application_id_tip:
     'L\'identificatore univoco dell\'applicazione generato normalmente da Logto. Sta anche per "<a>client_id</a>" in OpenID Connect.',
   application_secret: 'App Segreta',
@@ -45,14 +45,14 @@ const application_details = {
   always_issue_refresh_token: 'Rilascia sempre il token di aggiornamento',
   always_issue_refresh_token_label:
     'Abilitando questa configurazione, Logto potrà rilasciare sempre token di aggiornamento, anche se `prompt=consent` non viene presentata nella richiesta di autenticazione. Tuttavia, questa pratica è scoraggiata a meno che non sia necessaria, in quanto non è compatibile con OpenID Connect e potrebbe potenzialmente causare problemi.',
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl: 'Tempo di vita del token di aggiornamento in giorni',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
-  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+    'La durata per cui un token di aggiornamento può essere utilizzato per richiedere nuovi access token prima che scada e diventa non valido, le richieste di token estenderanno il TTL del token di aggiornamento a questo valore.',
+  rotate_refresh_token: 'Ruota token di aggiornamento',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed.', // UNTRANSLATED
+    'Quando abilitato, Logto emetterà un nuovo token di aggiornamento per le richieste di token quando è passato il 70% del Tempo di vita (TTL) originale o sono soddisfatte determinate condizioni. <a>Ulteriori informazioni</a>',
   delete_description:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
+    "Questa azione non può essere annullata. Eliminerà definitivamente l'applicazione. Inserisci il nome dell'applicazione <span>{{name}}</span> per confermare.",
   enter_your_application_name: 'Inserisci il nome della tua applicazione',
   application_deleted: "L'applicazione {{name}} è stata eliminata con successo",
   redirect_uri_required: 'Devi inserire almeno un URI di reindirizzamento',

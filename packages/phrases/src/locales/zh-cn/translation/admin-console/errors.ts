@@ -20,6 +20,8 @@ const errors = {
   not_found: '404 找不到资源',
   create_internal_role_violation:
     '你正在创建一个被 Logto 禁止内部角色。尝试使用不以 "#internal:" 开头的其他名称。',
+  should_be_an_integer: '应该是整数。',
+  number_should_be_between_inclusive: '然后数字应该在 {{min}} 到 {{max}} 之间（两端都包括）。',
 };
 
 export default errors;

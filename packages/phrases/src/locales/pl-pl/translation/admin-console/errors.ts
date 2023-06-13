@@ -21,7 +21,10 @@ const errors = {
   unexpected_error: 'Wystąpił nieoczekiwany błąd.',
   not_found: '404 nie znaleziono',
   create_internal_role_violation:
-    'Tworzysz nową wewnętrzną rolę, co jest zabronione przez Logto. Spróbuj użyć innego nazwy, która nie zaczyna się od "# internal:".',
+    'Tworzysz nową wewnętrzną rolę, co jest zabronione przez Logto. Spróbuj użyć innego nazwy, która nie zaczyna się od "#internal:".',
+  should_be_an_integer: 'Powinno być liczbą całkowitą.',
+  number_should_be_between_inclusive:
+    'Następnie liczba powinna być między {{min}} a {{max}} (włącznie).',
 };
 
 export default errors;

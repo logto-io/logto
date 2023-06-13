@@ -12,10 +12,10 @@ const application_details = {
   application_name_placeholder: 'Meine App',
   description: 'Beschreibung',
   description_placeholder: 'Gib eine Beschreibung ein',
-  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
+  config_endpoint: 'OpenID Provider Konfigurations-Endpunkt',
   authorization_endpoint: 'Autorisierungs-Endpoint',
   authorization_endpoint_tip:
-    'Der Endpoint, der für die Authentifizierung und <a>Autorisierung</a> via OpenID Connect verwendet wird.',
+    'Der Endpoint, der für die Authentifizierung und <a>Authorisierung</a> via OpenID Connect verwendet wird.',
   application_id: 'App ID',
   application_id_tip:
     'Die eindeutige Anwendungs-ID, die normalerweise von Logto generiert wird. Es steht auch für "<a>client_id</a>" in OpenID Connect.',
@@ -45,12 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Immer den Refresh Token ausgeben',
   always_issue_refresh_token_label:
     'Durch Aktivieren dieser Konfiguration kann Logto immer Refresh Tokens ausgeben, unabhängig davon, ob in der Authentifizierungsanforderung "prompt=consent" angegeben ist. Diese Praxis wird jedoch nur dann empfohlen, wenn es notwendig ist, da sie nicht mit OpenID Connect kompatibel ist und möglicherweise Probleme verursacht.',
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl: 'Ablaufzeit des Refresh Tokens in Tagen',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
-  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+    'Die Dauer, für die ein Refresh Token verwendet werden kann, um neue Zugriffstoken anzufordern, bevor es abläuft und ungültig wird. Token-Anfragen erweitern die Verfallszeit des Refresh Tokens auf diesen Wert.',
+  rotate_refresh_token: 'Refresh Token drehen',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
+    'Wenn diese Option aktiviert ist, wird Logto für Tokenanfragen ein neues Refresh Token ausgeben, wenn 70% der ursprünglichen Zeit bis zur Ausführung (TTL) verstrichen sind oder bestimmte Bedingungen erfüllt sind. <a>Erfahren Sie mehr</a>',
   delete_description:
     'Diese Aktion kann nicht rückgängig gemacht werden. Die Anwendung wird permanent gelöscht. Bitte gib den Anwendungsnamen <span>{{name}}</span> zur Bestätigung ein.',
   enter_your_application_name: 'Gib einen Anwendungsnamen ein',

@@ -11,13 +11,13 @@ const application_details = {
   application_name_placeholder: '我的應用程式',
   description: '說明',
   description_placeholder: '請輸入應用程式說明',
-  config_endpoint: 'OpenID Provider configuration endpoint', // UNTRANSLATED
+  config_endpoint: 'OpenID Provider 配置端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證與授權的端點。用於 OpenID Connect 中的 <a>驗證</a> 流程。',
   application_id: '應用程式 ID',
   application_id_tip:
     '應用程式的唯一標識，通常由 Logto 生成。相當於 OpenID Connect 中的 <a>client_id</a>。',
-  application_secret: '應用程式密鑰',
+  application_secret: '應用程式秘鑰',
   redirect_uri: '重定向 URI',
   redirect_uris: '重定向 URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',
@@ -43,12 +43,12 @@ const application_details = {
   always_issue_refresh_token: '始終發放 Refresh Token',
   always_issue_refresh_token_label:
     '啟用此配置將使 Logto 無論在驗證請求中是否提供 prompt=consent，都能始終發放 Refresh Token。然而，除非必要，否則不鼓勵這種做法，因為它與 OpenID Connect 不相容並可能引起問題。',
-  refresh_token_ttl: 'Refresh Token Time to Live (TTL) in days', // UNTRANSLATED
+  refresh_token_ttl: 'Refresh Token 有效期（天數）',
   refresh_token_ttl_tip:
-    'The duration for which a Refresh Token can be used to request new access tokens before it expires and becomes invalid. Token requests will extend the TTL of the Refresh Token to this value.', // UNTRANSLATED
-  rotate_refresh_token: 'Rotate Refresh Token', // UNTRANSLATED
+    'Refresh Token 可用來獲取新的訪問令牌，失效日期之前可用。獲取訪問令牌時，該令牌的期限將被延長至此值。',
+  rotate_refresh_token: '旋轉 Refresh Token',
   rotate_refresh_token_label:
-    'When enabled, Logto will issue a new Refresh Token for token requests when 70% of the original Time to Live (TTL) has passed or certain conditions are met. <a>Learn more</a>', // UNTRANSLATED
+    '啟用此配置將使 Logto 当 Refresh Token 的原始有效期剩下 70% 时或当满足某些条件时，授予新的 Refresh Token 以获取新的 Access Token。<a>了解更多</a>',
   delete_description:
     '本操作會永久性地刪除該應用程式，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式姓名',

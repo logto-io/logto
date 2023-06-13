@@ -22,6 +22,9 @@ const errors = {
   not_found: '404 не найдено',
   create_internal_role_violation:
     'Вы создаете новую внутреннюю роль, что запрещено Logto. Попробуйте другое имя, которое не начинается с "#internal:".',
+  should_be_an_integer: 'Должно быть целым числом.',
+  number_should_be_between_inclusive:
+    'Тогда число должно быть между {{min}} и {{max}} (включительно).',
 };
 
 export default errors;

@@ -21,6 +21,8 @@ const errors = {
   not_found: '404 찾을 수 없음',
   create_internal_role_violation:
     'Logto에 의해 금지된 내부 역할을 생성하려고 하고 있어요. "#internal:"로 시작하지 않는 다른 이름을 사용하세요.',
+  should_be_an_integer: '정수이어야 합니다.',
+  number_should_be_between_inclusive: '숫자는 {{min}} 이상 {{max}} 이하이어야 합니다.',
 };
 
 export default errors;
