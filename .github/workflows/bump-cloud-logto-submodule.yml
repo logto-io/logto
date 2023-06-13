@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Bump cloud Logto submodule
-        uses: ./.github/actions/create-submodule-bump-pr/action.yml
+        uses: ./.github/actions/create-submodule-bump-pr
         with:
           github_token: ${{ secrets.BOT_PAT }}
           checkout_branch: "master"
