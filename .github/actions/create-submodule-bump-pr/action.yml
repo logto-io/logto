@@ -56,10 +56,12 @@ runs:
         git config user.name silverhand-bot
         git config user.email bot@silverhand.io
         git submodule update --remote
-        echo ${{ steps.branch_exists.outputs.exists }}
-        if [[ "${{ steps.branch_exists.outputs.exists }}" == "true" ]]; then
+
+        if "${{ steps.branch_exists.outputs.exists }}" == "true";
+        then
           git checkout ${{ inputs.branch_name }}
           git pull
+          echo "Branch exists"
         else
           git checkout -b ${{ inputs.branch_name }}
         fi
