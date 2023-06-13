@@ -26,6 +26,7 @@
     "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
     "@logto/app-insights": "workspace:^1.2.0",
+    "@logto/cloud": "workspace:^",
     "@logto/connector-kit": "workspace:^1.1.1",
     "@logto/core-kit": "workspace:^2.0.0",
     "@logto/language-kit": "workspace:^1.0.0",
@@ -60,6 +61,7 @@
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
     "@types/react-syntax-highlighter": "^15.5.1",
+    "@withtyped/client": "^0.7.10",
     "buffer": "^5.7.1",
     "classnames": "^2.3.1",
     "clean-deep": "^3.4.0",
@@ -145,13 +147,16 @@
       ],
       "import/no-unused-modules": [
         "error",
-        { "unusedExports": true }
+        {
+          "unusedExports": true
+        }
       ]
     },
     "overrides": [
       {
         "files": [
-          "*.d.ts", "**/mdx-components/*/index.tsx"
+          "*.d.ts",
+          "**/mdx-components/*/index.tsx"
         ],
         "rules": {
           "import/no-unused-modules": "off"

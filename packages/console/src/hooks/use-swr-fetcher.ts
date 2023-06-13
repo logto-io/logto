@@ -1,8 +1,8 @@
-import { HTTPError, type Options } from 'ky';
+import { HTTPError } from 'ky';
 import type ky from 'ky';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { BareFetcher } from 'swr';
+import type { Fetcher } from 'swr';
 
 import { RequestError } from './use-api';
 
@@ -10,18 +10,18 @@ type KyInstance = typeof ky;
 
 type WithTotalNumber<T> = Array<Awaited<T> | number>;
 
-type useSwrFetcherHook = {
-  <T>(api: KyInstance): BareFetcher<T>;
-  <T extends unknown[]>(api: KyInstance): BareFetcher<WithTotalNumber<T>>;
+type UseSwrFetcherHook = {
+  <T>(api: KyInstance): Fetcher<T>;
+  <T extends unknown[]>(api: KyInstance): Fetcher<WithTotalNumber<T>>;
 };
 
-const useSwrFetcher: useSwrFetcherHook = <T>(api: KyInstance) => {
+const useSwrFetcher: UseSwrFetcherHook = <T>(api: KyInstance) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const fetcher = useCallback<BareFetcher<T | WithTotalNumber<T>>>(
-    async (resource: string | URL, init: Options) => {
+  const fetcher = useCallback<Fetcher<T | WithTotalNumber<T>>>(
+    async (resource: string) => {
       try {
-        const response = await api.get(resource, init);
+        const response = await api.get(resource);
         const data = await response.json<T>();
 
         if (typeof resource === 'string' && resource.includes('?')) {

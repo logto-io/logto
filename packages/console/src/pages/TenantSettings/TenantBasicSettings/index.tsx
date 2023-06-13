@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
@@ -23,8 +24,8 @@ const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
 };
 
 function TenantBasicSettings() {
+  const api = useCloudApi();
   const {
-    api: cloudApi,
     currentTenant,
     currentTenantId,
     error: requestError,
@@ -58,11 +59,10 @@ function TenantBasicSettings() {
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     try {
-      const { name, tag } = await cloudApi
-        .patch(`/api/tenants/${currentTenantId}`, {
-          json: data,
-        })
-        .json<TenantInfo>();
+      const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
+        params: { tenantId: currentTenantId },
+        body: data,
+      });
       reset({ profile: { name, tag } });
       void mutate();
     } catch (error: unknown) {
@@ -96,7 +96,7 @@ function TenantBasicSettings() {
 
     setIsDeleting(true);
     try {
-      await cloudApi.delete(`/api/tenants/${currentTenantId}`);
+      await api.delete(`/api/tenants/:tenantId`, { params: { tenantId: currentTenantId } });
       setIsDeletionModalOpen(false);
       await mutate();
       if (tenants?.[0]?.id) {

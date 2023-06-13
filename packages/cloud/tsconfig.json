@@ -2,7 +2,7 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "types": ["node", "jest"],
-    "declaration": false,
+    "declaration": true,
     "outDir": "build",
     "baseUrl": ".",
     "paths": {

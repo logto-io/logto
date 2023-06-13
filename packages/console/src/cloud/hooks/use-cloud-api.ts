@@ -1,23 +1,20 @@
+import type router from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
-import ky from 'ky';
+import Client from '@withtyped/client';
 import { useMemo } from 'react';
 
 import { cloudApi } from '@/consts';
 
-export const useCloudApi = () => {
+export const useCloudApi = (): Client<typeof router> => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const api = useMemo(
     () =>
-      ky.create({
-        hooks: {
-          beforeRequest: [
-            async (request) => {
-              if (isAuthenticated) {
-                const accessToken = await getAccessToken(cloudApi.indicator);
-                request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
-              }
-            },
-          ],
+      new Client<typeof router>({
+        baseUrl: window.location.origin,
+        headers: async () => {
+          if (isAuthenticated) {
+            return { Authorization: `Bearer ${(await getAccessToken(cloudApi.indicator)) ?? ''}` };
+          }
         },
       }),
     [getAccessToken, isAuthenticated]

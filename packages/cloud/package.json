@@ -7,6 +7,9 @@
   "license": "Elastic-2.0",
   "type": "module",
   "private": true,
+  "exports": {
+    "./routes": "./build/routes/index.js"
+  },
   "imports": {
     "#src/*": "./build/*"
   },
@@ -18,6 +21,7 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && nodemon",
     "start": "NODE_ENV=production node .",
+    "prepack": "pnpm build",
     "test:only": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
     "test": "pnpm build:test && pnpm test:only",
     "test:ci": "pnpm test:only --coverage --silent"
