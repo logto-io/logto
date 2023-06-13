@@ -42,7 +42,7 @@ runs:
     - name: Check if branch exists
       shell: bash
       run: |
-        if git rev-parse --verify ${{ inputs.branch_name }} >/dev/null 2>&1
+        if git ls-remote --exit-code --heads origin ${{inputs.branch_name}};
         then
           echo "::set-output name=exists::true"
         else
