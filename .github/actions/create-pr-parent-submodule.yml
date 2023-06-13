@@ -1,0 +1,81 @@
+# Forked from https://github.com/releasehub-com/github-action-create-pr-parent-submodule
+# Copy rights reserved to releasehub.com
+
+name: "GitHub Action Submodule Updates"
+description: "Update submodules and creates new pull request against parent repository"
+author: "releasehub"
+
+branding:
+  icon: "git-pull-request"
+  color: "yellow"
+
+inputs:
+  github_token:
+    description: "Github Token"
+    required: true
+  checkout_branch:
+    description: "Branch to checkout"
+    required: false
+    default: "main"
+  pr_against_branch:
+    description: "Parent branch"
+    required: true
+  parent_repository:
+    description: "Parent Repository"
+    required: true
+  branch_name:
+    description: "Branch Name to create on the Parent Repository"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout parent repository and branch
+      uses: actions/checkout@v2
+      with:
+        token: ${{ inputs.github_token }}
+        repository: ${{ inputs.parent_repository }}
+        ref: ${{ inputs.checkout_branch }}
+        submodules: true
+        fetch-depth: 0
+
+    - name: Check if branch exists
+      id: branch_exists
+      run: |
+        if git rev-parse --verify ${{ inputs.branch_name }} >/dev/null 2>&1
+        then
+          echo "::set-output name=exists::true"
+        else
+          echo "::set-output name=exists::false"
+        fi
+
+    - name: Create new branch and push changes
+      shell: bash
+      run: |
+        git config user.name silverhand-bot
+        git config user.email bot@silverhand.io
+        git submodule update --remote
+        if [[ "${{ steps.branch_exists.outputs.exists }}" == "true" ]]; then
+          git checkout ${{ inputs.branch_name }}
+          git pull
+        else
+          git checkout -b ${{ inputs.branch_name }}
+        fi
+        git add .
+        git commit -am "chore: updating submodules"
+        git push --set-upstream origin ${{ inputs.branch_name }}
+
+    - name: Create pull request against target branch
+      if: steps.branch_exists.outputs.exists == 'false'
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          await github.rest.pulls.create({
+            owner: '${{ inputs.owner }}',
+            repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
+            head: process.env.GITHUB_RUN_ID,
+            base: '${{ inputs.pr_against_branch }}',
+            title: `chore[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
+            body: `[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
+          });
