@@ -155,6 +155,9 @@
   --color-hover-variant: rgba(93, 52, 242, 8%); // 8% Primary-40
   --color-pressed-variant: rgba(93, 52, 242, 12%); // 12% Primary-40
   --color-focused-variant: rgba(93, 52, 242, 16%); // 16% Primary-40
+  --color-env-tag-development: var(--color-pressed-variant);
+  --color-env-tag-staging: rgba(255, 185, 90, 18%);
+  --color-env-tag-production: rgba(104, 190, 108, 18%);
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
@@ -333,6 +336,10 @@
   --color-hover-variant: rgba(202, 190, 255, 8%); // 8% Primary-40
   --color-pressed-variant: rgba(202, 190, 255, 12%); // 12% Primary-40
   --color-focused-variant: rgba(202, 190, 255, 16%); // 16% Primary-40
+  --color-env-tag-development: rgba(202, 190, 255, 32%);
+  --color-env-tag-staging: rgba(235, 153, 24, 36%);
+  --color-env-tag-production: rgba(104, 190, 108, 36%);
+
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);

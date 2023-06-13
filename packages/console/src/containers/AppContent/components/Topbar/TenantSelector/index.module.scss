@@ -1,0 +1,121 @@
+@use '@/scss/underscore' as _;
+
+.currentTenantCard {
+  display: flex;
+  align-items: center;
+  padding: _.unit(1);
+  margin-left: _.unit(5);
+  max-width: 500px;
+  border-radius: _.unit(2);
+  transition: background-color 0.2s ease-in-out;
+  position: relative;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--color-hover-variant);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .name {
+    font: var(--font-title-2);
+    margin-right: _.unit(1.5);
+    @include _.text-ellipsis;
+  }
+
+  .tag {
+    font: var(--font-body-3);
+    margin-right: _.unit(2);
+  }
+
+  .arrowIcon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-secondary);
+  }
+
+  &::before {
+    content: '';
+    width: 1px;
+    height: 16px;
+    background-color: var(--color-neutral-80);
+    flex-shrink: 0;
+    position: absolute;
+    left: _.unit(-4);
+  }
+}
+
+.dropdown {
+  max-width: 500px;
+  min-width: 320px;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
+  margin: _.unit(1);
+  border-radius: _.unit(1.5);
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .dropdownName {
+    font: var(--font-body-2);
+    margin-right: _.unit(2);
+    @include _.text-ellipsis;
+  }
+
+  .dropdownTag {
+    font: var(--font-body-3);
+    margin-right: _.unit(4);
+  }
+
+  .checkIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: transparent;
+    margin-left: auto;
+
+    &.visible {
+      color: var(--color-brand-40);
+    }
+  }
+}
+
+.createTenantButton {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
+  margin: _.unit(1);
+  border-radius: _.unit(1.5);
+  transition: background-color 0.2s ease-in-out;
+  font: var(--font-body-2);
+  @include _.text-ellipsis;
+  justify-content: space-between;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-placeholder);
+  }
+}

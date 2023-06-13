@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.tag {
+  display: flex;
+  align-items: center;
+  padding: 0 _.unit(1.5);
+  border-radius: _.unit(1);
+  height: 18px;
+
+  .text {
+    font: var(--font-label-3);
+  }
+
+  &.development {
+    background: var(--color-env-tag-development);
+  }
+
+  &.staging {
+    background: var(--color-env-tag-staging);
+  }
+
+  &.production {
+    background: var(--color-env-tag-production);
+  }
+}
