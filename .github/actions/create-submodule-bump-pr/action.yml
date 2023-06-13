@@ -40,6 +40,7 @@ runs:
         fetch-depth: 0
 
     - name: Check if branch exists
+      id: branch_exists
       shell: bash
       run: |
         if git ls-remote --exit-code --heads origin ${{inputs.branch_name}};
