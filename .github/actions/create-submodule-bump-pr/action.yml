@@ -77,7 +77,7 @@ runs:
         github-token: ${{ inputs.github_token }}
         script: |
           await github.rest.pulls.create({
-            owner: '${{ inputs.owner }}',
+            owner: 'logto-io',
             repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
             head: process.env.GITHUB_RUN_ID,
             base: '${{ inputs.pr_against_branch }}',
