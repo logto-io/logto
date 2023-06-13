@@ -14,6 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          path: ${{ github.repository }}
           fetch-depth: 0
       - name: Bump cloud Logto submodule
         uses: ./.github/actions/create-submodule-bump-pr
