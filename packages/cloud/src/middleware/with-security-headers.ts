@@ -70,7 +70,6 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
     const basicSecurityHeaderSettings: HelmetOptions = {
       contentSecurityPolicy: false, // Exclusively set for console app only
       crossOriginEmbedderPolicy: { policy: 'credentialless' },
-      expectCt: false, // Not recommended, will be deprecated by modern browsers
       dnsPrefetchControl: false,
       referrerPolicy: {
         policy: 'strict-origin-when-cross-origin',
@@ -88,6 +87,7 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
     // For cloud console
     // ContentSecurityPolicy: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
     await helmetPromise(
+      // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
       {
         ...basicSecurityHeaderSettings,
         frameguard: false,
