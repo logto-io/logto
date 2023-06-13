@@ -79,7 +79,7 @@ runs:
           await github.rest.pulls.create({
             owner: 'logto-io',
             repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
-            head: ${{branch_name}}}},
+            head: ${{inputs.branch_name}}}},
             base: '${{ inputs.pr_against_branch }}',
             title: `chore[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
             body: `[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
