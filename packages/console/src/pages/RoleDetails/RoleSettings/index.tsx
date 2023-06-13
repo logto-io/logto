@@ -10,6 +10,7 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import { trySubmitSafe } from '@/utils/form';
 
 import type { RoleDetailsOutletContext } from '../types';
 
@@ -27,16 +28,18 @@ function RoleSettings() {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (isSubmitting) {
+        return;
+      }
 
-    const updatedRole = await api.patch(`api/roles/${role.id}`, { json: formData }).json<Role>();
-    reset(updatedRole);
-    onRoleUpdated(updatedRole);
-    toast.success(t('general.saved'));
-  });
+      const updatedRole = await api.patch(`api/roles/${role.id}`, { json: formData }).json<Role>();
+      reset(updatedRole);
+      onRoleUpdated(updatedRole);
+      toast.success(t('general.saved'));
+    })
+  );
 
   return (
     <>

@@ -27,6 +27,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { trySubmitSafe } from '@/utils/form';
 
 import Guide from '../Applications/components/Guide';
 import GuideModal from '../Applications/components/Guide/GuideModal';
@@ -79,34 +80,36 @@ function ApplicationDetails() {
     reset(data);
   }, [data, reset]);
 
-  const onSubmit = handleSubmit(async (formData) => {
-    if (!data || isSubmitting) {
-      return;
-    }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      if (!data || isSubmitting) {
+        return;
+      }
 
-    await api
-      .patch(`api/applications/${data.id}`, {
-        json: {
-          ...formData,
-          oidcClientMetadata: {
-            ...formData.oidcClientMetadata,
-            redirectUris: mapToUriFormatArrays(formData.oidcClientMetadata.redirectUris),
-            postLogoutRedirectUris: mapToUriFormatArrays(
-              formData.oidcClientMetadata.postLogoutRedirectUris
-            ),
+      await api
+        .patch(`api/applications/${data.id}`, {
+          json: {
+            ...formData,
+            oidcClientMetadata: {
+              ...formData.oidcClientMetadata,
+              redirectUris: mapToUriFormatArrays(formData.oidcClientMetadata.redirectUris),
+              postLogoutRedirectUris: mapToUriFormatArrays(
+                formData.oidcClientMetadata.postLogoutRedirectUris
+              ),
+            },
+            customClientMetadata: {
+              ...formData.customClientMetadata,
+              corsAllowedOrigins: mapToUriOriginFormatArrays(
+                formData.customClientMetadata.corsAllowedOrigins
+              ),
+            },
           },
-          customClientMetadata: {
-            ...formData.customClientMetadata,
-            corsAllowedOrigins: mapToUriOriginFormatArrays(
-              formData.customClientMetadata.corsAllowedOrigins
-            ),
-          },
-        },
-      })
-      .json<Application>();
-    void mutate();
-    toast.success(t('general.saved'));
-  });
+        })
+        .json<Application>();
+      void mutate();
+      toast.success(t('general.saved'));
+    })
+  );
 
   const onDelete = async () => {
     if (!data || isDeleting) {

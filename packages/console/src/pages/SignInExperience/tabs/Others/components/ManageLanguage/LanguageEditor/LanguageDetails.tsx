@@ -28,6 +28,7 @@ import {
   flattenTranslation,
 } from '@/pages/SignInExperience/utils/language';
 import type { CustomPhraseResponse } from '@/types/custom-phrase';
+import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './LanguageDetails.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';
@@ -134,11 +135,13 @@ function LanguageDetails() {
     setSelectedLanguage(languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en');
   }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);
 
-  const onSubmit = handleSubmit(async (formData: Translation) => {
-    const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
-    void mutate(updatedCustomPhrase);
-    toast.success(t('general.saved'));
-  });
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData: Translation) => {
+      const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
+      void mutate(updatedCustomPhrase);
+      toast.success(t('general.saved'));
+    })
+  );
 
   useEffect(() => {
     reset(defaultFormValues);

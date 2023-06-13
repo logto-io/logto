@@ -4,6 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import useApi from '@/hooks/use-api';
+import { trySubmitSafe } from '@/utils/form';
 
 import { type BasicWebhookFormType } from '../../types';
 import BasicWebhookForm from '../BasicWebhookForm';
@@ -28,19 +29,21 @@ function CreateForm({ onClose }: Props) {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (data) => {
-    const { name, events, url } = data;
-    const payload: CreateHookPayload = {
-      name,
-      events,
-      config: {
-        url,
-      },
-    };
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      const { name, events, url } = data;
+      const payload: CreateHookPayload = {
+        name,
+        events,
+        config: {
+          url,
+        },
+      };
 
-    const created = await api.post('api/hooks', { json: payload }).json<Hook>();
-    onClose(created);
-  });
+      const created = await api.post('api/hooks', { json: payload }).json<Hook>();
+      onClose(created);
+    })
+  );
 
   return (
     <ModalLayout

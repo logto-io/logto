@@ -24,6 +24,7 @@ import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 import type { ConnectorFormType } from '../../types';
 import { SyncProfileMode } from '../../types';
@@ -88,70 +89,72 @@ function Guide({ connector, onClose }: Props) {
   const { title, content } = splitMarkdownByTitle(readme);
   const connectorName = conditional(isLanguageTag(language) && name[language]) ?? name.en;
 
-  const onSubmit = handleSubmit(async (data) => {
-    if (isSubmitting) {
-      return;
-    }
-
-    // Recover error state
-    setConflictConnectorName(undefined);
-
-    const config = configParser(data, formItems);
-
-    const { syncProfile, name, logo, logoDark, target } = data;
-
-    const basePayload = {
-      config,
-      connectorId,
-      id: conditional(connectorType === ConnectorType.Social && callbackConnectorId.current),
-      metadata: conditional(
-        isStandard && {
-          logo,
-          logoDark,
-          target,
-          name: { en: name },
-        }
-      ),
-    };
-
-    const payload = isSocialConnector
-      ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
-      : basePayload;
-
-    try {
-      const createdConnector = await api
-        .post('api/connectors', {
-          json: payload,
-        })
-        .json<ConnectorResponse>();
-
-      await updateConfigs({ passwordlessConfigured: true });
-
-      onClose();
-      toast.success(t('general.saved'));
-      navigate(
-        `/connectors/${isSocialConnector ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}/${
-          createdConnector.id
-        }`
-      );
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { response } = error;
-        const metadata = await response.json<
-          RequestErrorBody<{ connectorName: Record<string, string> }>
-        >();
-
-        if (metadata.code === targetErrorCode) {
-          setConflictConnectorName(metadata.data.connectorName);
-          setError('target', {}, { shouldFocus: true });
-
-          return;
-        }
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (data) => {
+      if (isSubmitting) {
+        return;
       }
 
-      throw error;
-    }
-  });
+      // Recover error state
+      setConflictConnectorName(undefined);
+
+      const config = configParser(data, formItems);
+
+      const { syncProfile, name, logo, logoDark, target } = data;
+
+      const basePayload = {
+        config,
+        connectorId,
+        id: conditional(connectorType === ConnectorType.Social && callbackConnectorId.current),
+        metadata: conditional(
+          isStandard && {
+            logo,
+            logoDark,
+            target,
+            name: { en: name },
+          }
+        ),
+      };
+
+      const payload = isSocialConnector
+        ? { ...basePayload, syncProfile: syncProfile === SyncProfileMode.EachSignIn }
+        : basePayload;
+
+      try {
+        const createdConnector = await api
+          .post('api/connectors', {
+            json: payload,
+          })
+          .json<ConnectorResponse>();
+
+        await updateConfigs({ passwordlessConfigured: true });
+
+        onClose();
+        toast.success(t('general.saved'));
+        navigate(
+          `/connectors/${isSocialConnector ? ConnectorsTabs.Social : ConnectorsTabs.Passwordless}/${
+            createdConnector.id
+          }`
+        );
+      } catch (error: unknown) {
+        if (error instanceof HTTPError) {
+          const { response } = error;
+          const metadata = await response.json<
+            RequestErrorBody<{ connectorName: Record<string, string> }>
+          >();
+
+          if (metadata.code === targetErrorCode) {
+            setConflictConnectorName(metadata.data.connectorName);
+            setError('target', {}, { shouldFocus: true });
+
+            return;
+          }
+        }
+
+        throw error;
+      }
+    })
+  );
 
   return (
     <Modal

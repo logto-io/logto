@@ -15,6 +15,7 @@ import TextInput from '@/components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { GuideForm } from '@/types/guide';
+import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
 import * as styles from './index.module.scss';
@@ -42,7 +43,7 @@ function UriInputField({ appId, name, title, isSingle = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
 
-  const onSubmit = async (value: string[]) => {
+  const onSubmit = trySubmitSafe(async (value: string[]) => {
     const updatedApp = await api
       .patch(`api/applications/${appId}`, {
         json: {
@@ -57,7 +58,7 @@ function UriInputField({ appId, name, title, isSingle = false }: Props) {
 
     // Reset form to set 'isDirty' to false
     reset(getValues());
-  };
+  });
 
   const onKeyPress = (event: KeyboardEvent<HTMLInputElement>, value: string[]) => {
     if (event.key === 'Enter') {

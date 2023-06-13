@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
+import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './index.module.scss';
 
@@ -36,10 +37,12 @@ function AddDomainForm({ onCustomDomainAdded }: Props) {
 
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (formData) => {
-    const createdDomain = await api.post('api/domains', { json: formData }).json<Domain>();
-    onCustomDomainAdded(createdDomain);
-  });
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData) => {
+      const createdDomain = await api.post('api/domains', { json: formData }).json<Domain>();
+      onCustomDomainAdded(createdDomain);
+    })
+  );
 
   return (
     <div className={styles.addDomain}>
