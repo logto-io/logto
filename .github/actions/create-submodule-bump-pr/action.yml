@@ -65,8 +65,12 @@ runs:
         else
           git checkout -b ${{ inputs.branch_name }}
         fi
+
+        echo "Pushing changes"
         git add .
         git commit -am "chore: updating submodules"
+
+        echo "Pushing to branch ${{ inputs.branch_name }}"
         git push --set-upstream origin ${{ inputs.branch_name }}
 
     - name: Create pull request against target branch
