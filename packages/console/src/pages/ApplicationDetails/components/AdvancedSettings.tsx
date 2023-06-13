@@ -1,4 +1,9 @@
-import { type Application, type SnakeCaseOidcConfig, ApplicationType } from '@logto/schemas';
+import {
+  type Application,
+  type SnakeCaseOidcConfig,
+  ApplicationType,
+  customClientMetadataGuard,
+} from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -27,6 +32,14 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
     formState: { errors },
   } = useFormContext<Application & { isAdmin?: boolean }>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { minValue, maxValue } =
+    customClientMetadataGuard.shape.refreshTokenTtlInDays._def.innerType;
+  const minTtl = minValue ?? Number.NEGATIVE_INFINITY;
+  const maxTtl = maxValue ?? Number.POSITIVE_INFINITY;
+  const ttlErrorMessage = t('errors.number_should_be_between_inclusive', {
+    min: minTtl,
+    max: maxTtl,
+  });
 
   return (
     <FormCard
@@ -93,7 +106,20 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
         <>
           <FormField title="application_details.rotate_refresh_token">
             <Switch
-              label={t('application_details.rotate_refresh_token_label')}
+              label={
+                <Trans
+                  components={{
+                    a: (
+                      <TextLink
+                        href="https://docs.logto.io/docs/references/applications/#rotate-refresh-token"
+                        target="_blank"
+                      />
+                    ),
+                  }}
+                >
+                  {t('application_details.rotate_refresh_token_label')}
+                </Trans>
+              }
               {...register('customClientMetadata.rotateRefreshToken')}
             />
           </FormField>
@@ -103,9 +129,19 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
           >
             <TextInput
               {...register('customClientMetadata.refreshTokenTtlInDays', {
-                min: 1,
-                max: 90,
+                min: {
+                  value: minTtl,
+                  message: ttlErrorMessage,
+                },
+                max: {
+                  value: maxTtl,
+                  message: ttlErrorMessage,
+                },
                 valueAsNumber: true,
+                validate: (value) =>
+                  value === undefined ||
+                  Number.isInteger(value) ||
+                  t('errors.should_be_an_integer'),
               })}
               placeholder="14"
               // Confirm if we need a customized message here

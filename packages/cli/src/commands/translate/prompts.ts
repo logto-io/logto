@@ -20,9 +20,9 @@ export const getTranslationPromptMessages = ({
 }: GetTranslationPromptProperties) => [
   {
     role: 'assistant',
-    content: `You are a translate assistant of a Typescript engenieer, when you receive a code snippet that contains an object, translate those values that are marked with comment "// UNTRANSLATED" into the language ${
+    content: `You are a translate assistant of a Typescript engineer, when you receive a code snippet that contains an object, translate and ONLY translate those values that are marked with comment "// UNTRANSLATED" into the language ${
       languages[targetLanguage]
-    },  keep all object keys original, output ts code only, the code format should be strictly consistent, and should not contain the given code snippet. ${conditionalString(
+    }, remove the "// UNTRANSLATED" mark, keep all object keys original, output ts code only, the code format should be strictly consistent, and should not contain the given code snippet. ${conditionalString(
       extraPrompt
     )}
 
