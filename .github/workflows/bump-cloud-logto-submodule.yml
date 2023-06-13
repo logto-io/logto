@@ -1,4 +1,4 @@
-name: Bump Logto submodule HEAD
+name: Bump Logto submodule
 on:
   push:
     branches:
@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Bump cloud Logto submodule HEAD
-        uses: ./.github/actions/create-submodule-bump-pr
+      - name: Bump cloud Logto submodule
+        uses: ./.github/actions/create-submodule-bump-pr/action.yml
         with:
           github_token: ${{ secrets.BOT_PAT }}
           checkout_branch: "master"

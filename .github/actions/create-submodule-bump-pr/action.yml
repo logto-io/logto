@@ -81,6 +81,6 @@ runs:
             repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
             head: '${{ inputs.branch_name }}',
             base: '${{ inputs.pr_against_branch }}',
-            title: `chore[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
-            body: `[Auto-generated]: Submodule Updates ${process.env.GITHUB_RUN_ID}`,
+            title: `chore: logto submodule updates`,
+            body: `[Auto-generated]: Logto submodule updates`,
           });
