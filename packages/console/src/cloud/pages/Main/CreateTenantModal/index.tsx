@@ -57,9 +57,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const { name, tag } = data;
-      const newTenant = await cloudApi
-        .post('/api/tenants', { json: { name, tag } })
-        .json<TenantInfo>();
+      const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
+
       onClose(newTenant);
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : String(error));
