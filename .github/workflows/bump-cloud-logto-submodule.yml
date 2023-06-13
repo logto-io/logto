@@ -21,5 +21,5 @@ jobs:
           github_token: ${{ secrets.BOT_PAT }}
           checkout_branch: "master"
           pr_against_branch: "master"
-          parent_repository: "https://github.com/logto-io/cloud"
+          parent_repository: "https://github.com/logto-io/cloud.git"
           branch_name: "bump-cloud-logto-submodule"
