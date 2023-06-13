@@ -1,13 +1,17 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
+import { DomainStatus } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CodeEditor from '@/components/CodeEditor';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DynamicT from '@/components/DynamicT';
 import FormField from '@/components/FormField';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import useCustomDomain from '@/hooks/use-custom-domain';
+import { applyDomain } from '@/utils/domain';
 import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';
@@ -29,17 +33,36 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
   const { userEndpoint } = useContext(AppEndpointsContext);
+  const { data: customDomain } = useCustomDomain();
+  const callbackUri = new URL(`/callback/${connectorId}`, userEndpoint).toString();
 
   return (
     <div className={className}>
       {connectorType === ConnectorType.Social && (
-        <FormField title="connectors.guide.callback_uri">
+        <FormField
+          title="connectors.guide.callback_uri"
+          tip={t('connectors.guide.callback_uri_description')}
+        >
           <CopyToClipboard
             className={styles.copyToClipboard}
             variant="border"
-            value={new URL(`/callback/${connectorId}`, userEndpoint).toString()}
+            value={
+              customDomain?.status === DomainStatus.Active
+                ? applyDomain(callbackUri, customDomain.domain)
+                : callbackUri
+            }
           />
-          <div className={styles.description}>{t('connectors.guide.callback_uri_description')}</div>
+          {customDomain?.status === DomainStatus.Active && userEndpoint && (
+            <div className={styles.description}>
+              <DynamicT
+                forKey="domain.custom_social_callback_url_note"
+                interpolation={{
+                  custom: customDomain.domain,
+                  default: new URL(userEndpoint).host,
+                }}
+              />
+            </div>
+          )}
         </FormField>
       )}
       {formItems ? (

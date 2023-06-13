@@ -46,6 +46,10 @@ const domain = {
       'Logto는 추가 구성 없이 사용할 수 있는 미리 구성된 기본 도메인을 제공합니다. 이 기본 도메인은 사용자 지정 도메인을 사용하지 않더라도 백업 옵션으로 사용됩니다.',
     default_domain_field: 'Logto 기본 도메인',
   },
+  custom_endpoint_note:
+    '이 엔드포인트의 도메인 이름을 필요에 따라 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
+  custom_social_callback_url_note:
+    '이 URI의 도메인 이름을 애플리케이션 엔드포인트와 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
 };
 
 export default domain;

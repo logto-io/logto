@@ -42,6 +42,9 @@ const domain = {
       'Logto提供預配置的默認域名，無需進行任何其他設置即可使用。即使啟用了自定義域名，此默認域名也可作為備用選項。',
     default_domain_field: 'Logto 默認域名',
   },
+  custom_endpoint_note: '您可以根據需要自定義這些端點的域名。選擇“{{custom}}”或“{{default}}”。',
+  custom_social_callback_url_note:
+    '您可以自定義此URI的域名以匹配您的應用程序端點。選擇“{{custom}}”或“{{default}}”。',
 };
 
 export default domain;
