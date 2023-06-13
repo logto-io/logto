@@ -50,7 +50,7 @@ runs:
           echo "::set-output name=exists::false"
         fi
 
-    - name: Create new branch and push changes
+    - name: Create new branch if not exist and push changes
       shell: bash
       run: |
         git config user.name silverhand-bot
