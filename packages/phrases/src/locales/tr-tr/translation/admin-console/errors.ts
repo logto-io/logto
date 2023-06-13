@@ -22,6 +22,9 @@ const errors = {
   not_found: '404 bulunamadı',
   create_internal_role_violation:
     'Yeni bir dahili rol oluşturuyorsunuz, bu Logto tarafından yasaklanmıştır. "#internal:" ile başlamayan başka bir ad deneyin.',
+  should_be_an_integer: 'Tamsayı olmalıdır.',
+  number_should_be_between_inclusive:
+    'Sayı {{min}} ve {{max}} arasında (her ikisi de dahil) olmalıdır.',
 };
 
 export default errors;

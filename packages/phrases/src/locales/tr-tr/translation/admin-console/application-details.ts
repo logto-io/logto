@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',
   description_placeholder: 'Uygulama açıklamasını giriniz',
+  config_endpoint: 'OpenID Provider yapılandırma bitiş noktası',
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Her zaman Refresh Token ver',
   always_issue_refresh_token_label:
     "Bu yapılandırmayı etkinleştirmek, Logto'nun OpenID Connect ile uyumlu olmayan ve olası sorunlara neden olabilecek her zaman Refresh Token çıkarmasına izin verir `prompt=consent` kimlik doğrulama isteğinin sunulup sunulmadığına bakılmaksızın. Ancak, bu uygulama yalnızca zorunlu olduğunda caydırılmayan bir uygulamadır.",
+  refresh_token_ttl: 'Refresh Token süresi (gün cinsinden)',
+  refresh_token_ttl_tip:
+    'Yeni erişim belirteği istekleri için Refresh Belirteği kullanılabilecek süre. Belirteğin süresi dolmadan önce yapılan talepler belirteğin ömrünü uzatacaktır.',
+  rotate_refresh_token: 'Refresh Tokenı değiştir',
+  rotate_refresh_token_label:
+    'Bu seçenek etkinleştirildiğinde, Logto Token Bitiş Süresinin %70&#39;i geçildiğinde veya belli koşullar sağlandığında yeni bir Refresh Token verecektir. <a>Daha fazlası için tıklayın</a>',
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',

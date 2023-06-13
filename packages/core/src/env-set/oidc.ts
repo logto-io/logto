@@ -28,8 +28,6 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
     jwkSigningAlg,
     localJWKSet,
     issuer,
-    defaultIdTokenTtl: 60 * 60,
-    defaultRefreshTokenTtl: 14 * 24 * 60 * 60,
   });
 };
 

@@ -22,6 +22,9 @@ const errors = {
   not_found: '404 não encontrado',
   create_internal_role_violation:
     'Você está criando uma nova função interna que é proibida pela Logto. Tente outro nome que não comece com "#internal:".',
+  should_be_an_integer: 'Deveria ser um inteiro.',
+  number_should_be_between_inclusive:
+    'Então o número deve estar entre {{min}} e {{max}} (ambos inclusive).',
 };
 
 export default errors;

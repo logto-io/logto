@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'Ex: Site da Empresa',
   description: 'Descrição',
   description_placeholder: 'Insira a descrição da sua aplicação',
+  config_endpoint: 'OpenID Provedor endpoint de configuração',
   authorization_endpoint: 'Endpoint de autorização',
   authorization_endpoint_tip:
     'O endpoint para realizar a autenticação e autorização. É usado para <a>autenticação</a> OpenID Connect.',
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Sempre emitir Refresh Token',
   always_issue_refresh_token_label:
     'Ao ativar essa configuração, a Logto sempre emitirá tokens de atualização, independentemente de `prompt=consent`ser apresentado na solicitação de autenticação. No entanto, essa prática é desencorajada, a menos que seja necessária, pois não é compatível com OpenID Connect e pode causar problemas.',
+  refresh_token_ttl: 'Tempo de vida do token de atualização em dias',
+  refresh_token_ttl_tip:
+    'O tempo pelo qual um token de atualização pode ser usado para solicitar novos tokens de acesso antes de expirar e se tornar inválido. As solicitações de token estenderão o TTL do token de atualização para esse valor.',
+  rotate_refresh_token: 'Rodar o Token de Atualização',
+  rotate_refresh_token_label:
+    'Quando ativado, o Logto emitirá um novo Token de Atualização para solicitações de token quando 70% do tempo de vida original (TTL) tiver passado ou certas condições forem atendidas. <a>Learn more</a>',
   delete_description:
     'Esta ação não pode ser revertida. Esta ação irá eliminar permanentemente a aplicação. Insira o nome da aplicação <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Insira o nome da aplicação',

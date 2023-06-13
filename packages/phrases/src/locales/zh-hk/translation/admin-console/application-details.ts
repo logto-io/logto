@@ -11,6 +11,7 @@ const application_details = {
   application_name_placeholder: '我的應用程式',
   description: '描述',
   description_placeholder: '請輸入應用程式描述',
+  config_endpoint: 'OpenID Provider 配置端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證和授權的端點。用於 OpenID Connect 中的<a> 驗證 </a> 流程。',
   application_id: '應用程式 ID',
@@ -41,7 +42,13 @@ const application_details = {
     '啟用或禁用對管理 API 的訪問。啟用後，你可以使用訪問權杖代表該應用程式調用管理 API。',
   always_issue_refresh_token: '始終發放 Refresh Token',
   always_issue_refresh_token_label:
-    '啟用此配置將允許 Logto 始終發行 Refresh Token，無論是否在驗證請求中呈現 `prompt=consent`。但是，除非必要，否則不建議這樣做，因為它不兼容 OpenID Connect，可能會引起問題。',
+    '啟用此配置將允許 Logto 始麼發行 Refresh Token，無論是否在驗證請求中呈現 `prompt=consent`。但是，除非必要，否則不建議這樣做，因為它不兼容 OpenID Connect，可能會引起問題。',
+  refresh_token_ttl: 'Refresh Token 的有效期（天）',
+  refresh_token_ttl_tip:
+    'Refresh Token 可用來在其過期之前請求新的訪問權杖的持續時間。訪問令牌將將缺省的 TTL 延長到此值。',
+  rotate_refresh_token: '旋轉 Refresh Token',
+  rotate_refresh_token_label:
+    '啟用後，當原始 TTL 達到 70% 或滿足某些條件時就可以在令牌請求中為 Refresh Token 發行新的 Refresh Token。 <a>瞭解更多。</a>',
   delete_description: '本操作會永久性地刪除該應用，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式名稱',
   application_deleted: '應用 {{name}} 成功刪除。',

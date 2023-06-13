@@ -1,6 +1,6 @@
 const application_details = {
   page_title: 'Szczegóły aplikacji',
-  back_to_applications: 'Powrót do Aplikacji',
+  back_to_applications: 'Powrót do aplikacji',
   check_guide: 'Sprawdź przewodnik',
   settings: 'Ustawienia',
   settings_description:
@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'Moja aplikacja',
   description: 'Opis',
   description_placeholder: 'Wpisz opis swojej aplikacji',
+  config_endpoint: 'Konfiguracja punktu końcowego OpenID Provider',
   authorization_endpoint: 'Endpoint autoryzacji',
   authorization_endpoint_tip:
     'Endpoint wykorzystywany do autentykacji i autoryzacji. Używany jest dla OpenID Connect <a>Autentykacji</a>.',
@@ -35,7 +36,7 @@ const application_details = {
   cors_allowed_origins_tip:
     'Domyślnie dozwolone będą wszystkie źródła z adresów URL przekierowania. Zazwyczaj nie wymaga to żadnych działań. Zobacz dokumentację <a>MDN</a> dla szczegółowych informacji.',
   id_token_expiration: 'Ważność ID Token',
-  refresh_token_expiration: 'Ważność Token odświeżania',
+  refresh_token_expiration: 'Ważność Tokena odświeżania',
   token_endpoint: 'Endpoint Tokena',
   user_info_endpoint: 'Endpoint Informacji o użytkowniku',
   enable_admin_access: 'Włącz dostęp administratora',
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Zawsze wydawaj Refresh Token',
   always_issue_refresh_token_label:
     'Rozwiazanie tej konfiguracji pozwoli Logto zawsze wydawac cwiecze tokeny, bez wzgledu na to, czy w zadaniu autoryzacji zostal przedstawiony `prompt=consent`. Jednak ta praktyka jest odstraszana, chyba ze konieczne, jak nie jest w pelni kompatybilna z OpenID Connect i moze potencjalnie powodowac problemy.',
+  refresh_token_ttl: 'Czas życia tokena odświeżania w dniach',
+  refresh_token_ttl_tip:
+    'Okres, przez który Token odświeżania można używać do żądania nowych tokenów dostępu, zanim wygaśnie i zostanie unieważniony. Wymaga to przedłużenia czasu życia tokenów żądania. ',
+  rotate_refresh_token: 'Obróć token odświeżania',
+  rotate_refresh_token_label:
+    'Po włączeniu tej opcji Logto wydaje nowy Token odświeżania dla żądań tokenów, gdy upłynęło 70% oryginalnego czasu życia (TTL) lub spełnione są pewne warunki. <a>Dowiedz się więcej</a>',
   delete_description:
     'Ta operacja nie może zostać cofnięta. Skutkuje ona trwałym usunięciem aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',

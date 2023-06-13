@@ -12,6 +12,7 @@ const application_details = {
   application_name_placeholder: 'Mon App',
   description: 'Description',
   description_placeholder: 'Entrez la description de votre application',
+  config_endpoint: 'Point de configuration du fournisseur OpenID',
   authorization_endpoint: "Point de terminaison d'autorisation",
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
@@ -44,6 +45,12 @@ const application_details = {
   always_issue_refresh_token: 'Toujours émettre le Refresh Token.',
   always_issue_refresh_token_label:
     "En activant cette configuration, Logto pourra toujours émettre des Refresh Tokens, indépendamment de la présentation ou non de la demande d'authentification `prompt=consent`. Cependant, cette pratique est découragée sauf si nécessaire, car elle n'est pas compatible avec OpenID Connect et peut potentiellement causer des problèmes.",
+  refresh_token_ttl: 'Durée de vie du rafraîchissement du jeton en jours',
+  refresh_token_ttl_tip:
+    "La durée pendant laquelle un Refresh Token peut être utilisé pour demander de nouveaux jetons d'accès avant qu'il n'expire et devienne invalide. Les demandes de jeton étendront la durée de vie du Refresh Token à cette valeur.",
+  rotate_refresh_token: 'Tourner le Refresh Token',
+  rotate_refresh_token_label:
+    "Lorsqu'elle est activée, Logto émettra un nouveau Refresh Token pour les demandes de jeton lorsque 70% de la durée de vie (TTL) d'origine est écoulée ou que certaines conditions sont remplies. <a>En savoir plus</a>",
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",
   enter_your_application_name: 'Entrez le nom de votre application',

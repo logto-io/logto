@@ -1,6 +1,11 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { Application, ApplicationResponse, SnakeCaseOidcConfig } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
+import {
+  type Application,
+  type ApplicationResponse,
+  type SnakeCaseOidcConfig,
+  ApplicationType,
+  customClientMetadataDefault,
+} from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -23,6 +28,7 @@ import PageMeta from '@/components/PageMeta';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import Tag from '@/components/Tag';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { openIdProviderConfigPath } from '@/consts/oidc';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -54,7 +60,7 @@ function ApplicationDetails() {
     data: oidcConfig,
     error: fetchOidcConfigError,
     mutate: mutateOidcConfig,
-  } = useSWR<SnakeCaseOidcConfig, RequestError>('oidc/.well-known/openid-configuration');
+  } = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const requestError = error ?? fetchOidcConfigError;
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
@@ -63,7 +69,9 @@ function ApplicationDetails() {
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
   const navigate = useNavigate();
-  const formMethods = useForm<Application & { isAdmin: boolean }>();
+  const formMethods = useForm<Application & { isAdmin: boolean }>({
+    defaultValues: { customClientMetadata: customClientMetadataDefault },
+  });
   const { getDocumentationUrl } = useDocumentationUrl();
 
   const {

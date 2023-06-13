@@ -11,6 +11,7 @@ const application_details = {
   application_name_placeholder: '我的应用',
   description: '描述',
   description_placeholder: '请输入应用描述',
+  config_endpoint: 'OpenID Provider 配置端点',
   authorization_endpoint: '授权端点',
   authorization_endpoint_tip: '进行鉴权与授权的端点。用于 OpenID Connect 中的 <a>鉴权</a> 流程。',
   application_id: '应用 ID',
@@ -42,6 +43,12 @@ const application_details = {
   always_issue_refresh_token: '总是颁发 Refresh Token',
   always_issue_refresh_token_label:
     '启用此配置将允许 Logto 始终颁发 Refresh Token，无论身份验证请求中是否呈现 `prompt=consent`。 然而，除非必要，否则不推荐这样做，因为它与 OpenID Connect 不兼容，可能会导致问题。',
+  refresh_token_ttl: 'Refresh Token 有效期（天）',
+  refresh_token_ttl_tip:
+    '可用于请求新访问令牌的 Refresh Token 在过期之前的时间段。访问令牌请求将把 Refresh Token 的时效延长到此值。',
+  rotate_refresh_token: '轮换 Refresh Token',
+  rotate_refresh_token_label:
+    '启用后，当原先的 Refresh Token 的时效已经过去 70%，或者满足一定条件时，Logto 将会为访问令牌请求发放新的 Refresh Token。<a>了解更多</a>',
   delete_description: '本操作会永久性地删除该应用，且不可撤销。输入 <span>{{name}}</span> 确认。',
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除。',

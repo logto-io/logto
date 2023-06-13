@@ -38,12 +38,17 @@ describe('admin console application', () => {
       oidcClientMetadata: {
         redirectUris: newRedirectUris,
       },
+      customClientMetadata: { rotateRefreshToken: true, refreshTokenTtlInDays: 10 },
     });
 
     const updatedApplication = await getApplication(application.id);
 
     expect(updatedApplication.description).toBe(newApplicationDescription);
     expect(updatedApplication.oidcClientMetadata.redirectUris).toEqual(newRedirectUris);
+    expect(updatedApplication.customClientMetadata).toStrictEqual({
+      rotateRefreshToken: true,
+      refreshTokenTtlInDays: 10,
+    });
   });
 
   it('should update application "admin" successfully', async () => {

@@ -22,6 +22,9 @@ const errors = {
   not_found: '404 non trovato',
   create_internal_role_violation:
     "Stai creando un nuovo ruolo interno che è proibito da Logto. Prova un altro nome che non inizi con '#internal:'.",
+  should_be_an_integer: 'Deve essere un numero intero.',
+  number_should_be_between_inclusive:
+    'Il numero deve essere compreso tra {{min}} e {{max}} (inclusi).',
 };
 
 export default errors;
