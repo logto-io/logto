@@ -169,9 +169,7 @@ describe('smoke testing for cloud', () => {
     });
 
     await expect(page).toClick('button[name=submit]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
-
-    console.log('???', page.url());
+    await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
 
     expect(page.url().startsWith(logtoCloudUrl.href)).toBeTruthy();
     expect(new URL(page.url()).pathname.endsWith('/onboarding/welcome')).toBeTruthy();

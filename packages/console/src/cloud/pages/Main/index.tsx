@@ -1,7 +1,8 @@
 import { useLogto } from '@logto/react';
+import { type TenantInfo } from '@logto/schemas/models';
 import { conditional, yes } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useHref, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -36,6 +37,13 @@ function Protected() {
     }
   }, [api, setTenants, tenants]);
 
+  const onAdd = useCallback(
+    (tenant: TenantInfo) => {
+      setTenants([...(tenants ?? []), tenant]);
+    },
+    [setTenants, tenants]
+  );
+
   if (error) {
     if (error instanceof HTTPError && error.response.status === 401) {
       return <SessionExpired error={error} />;
@@ -49,14 +57,7 @@ function Protected() {
       return <Redirect tenants={tenants} toTenantId={currentTenantId} />;
     }
 
-    return (
-      <Tenants
-        data={tenants}
-        onAdd={(tenant) => {
-          setTenants([...tenants, tenant]);
-        }}
-      />
-    );
+    return <Tenants data={tenants} onAdd={onAdd} />;
   }
 
   return <AppLoading />;
