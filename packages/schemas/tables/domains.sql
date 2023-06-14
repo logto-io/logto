@@ -11,7 +11,7 @@ create table domains (
   created_at timestamptz not null default(now()),
   primary key (id),
   constraint domains__domain
-    unique (domain)
+    unique (tenant_id, domain)
 );
 
 create index domains__id on domains (tenant_id, id);
