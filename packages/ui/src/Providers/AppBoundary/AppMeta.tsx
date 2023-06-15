@@ -38,6 +38,8 @@ const AppMeta = () => {
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
       <body
         className={classNames(
+          // Should preserve any existing classNames
+          conditionalString(document.body.className),
           platform === 'mobile' ? 'mobile' : 'desktop',
           conditionalString(styles[theme])
         )}
