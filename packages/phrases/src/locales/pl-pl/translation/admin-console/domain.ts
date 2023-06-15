@@ -47,6 +47,10 @@ const domain = {
       'Logto oferuje prekonfigurowaną domenę domyślną, gotową do użycia bez dodatkowej konfiguracji. Ta domyślna domena służy jako opcja zapasowa, nawet jeśli włączyłeś niestandardową domenę.',
     default_domain_field: 'Domyślna domena Logto',
   },
+  custom_endpoint_note:
+    'Możesz dostosować nazwę domeny tych punktów końcowych według swoich wymagań. Wybierz "{{custom}}" lub "{{default}}".',
+  custom_social_callback_url_note:
+    'Możesz dostosować nazwę domeny tego adresu URI, aby dopasować ją do punktu końcowego Twojej aplikacji. Wybierz "{{custom}}" lub "{{default}}".',
 };
 
 export default domain;

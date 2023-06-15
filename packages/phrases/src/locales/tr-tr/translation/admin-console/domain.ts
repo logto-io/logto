@@ -47,6 +47,10 @@ const domain = {
       'Logto, ek bir yapılandırma olmadan kullanıma hazır önceden yapılandırılmış bir varsayılan alan adı sunar. Bu varsayılan alan adı, özel bir alan adı etkinleştirdiyseniz bile yedek seçeneği olarak hizmet verir.',
     default_domain_field: 'Logto varsayılan alan adı',
   },
+  custom_endpoint_note:
+    'Bu uç noktaların alan adını özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
+  custom_social_callback_url_note:
+    'Bu URI\'nin alan adını uygulamanızın uç noktasıyla eşleştirmek için özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
 };
 
 export default domain;

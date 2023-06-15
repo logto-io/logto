@@ -1,13 +1,9 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type Domain } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
-import useSWR from 'swr';
 
 import FormCard from '@/components/FormCard';
 import FormField from '@/components/FormField';
 import PageMeta from '@/components/PageMeta';
-import { customDomainSyncInterval } from '@/consts/custom-domain';
-import { type RequestError } from '@/hooks/use-api';
+import useCustomDomain from '@/hooks/use-custom-domain';
 
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
@@ -15,15 +11,7 @@ import DefaultDomain from './DefaultDomain';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
-  const { data, error, mutate } = useSWR<Domain[], RequestError>('api/domains', {
-    refreshInterval: customDomainSyncInterval * 1000,
-  });
-
-  const isLoading = !data && !error;
-  /**
-   * Note: we can only create a custom domain, and we don't have a default id for it, so the first element of the array is the custom domain.
-   */
-  const customDomain = conditional(!isLoading && data)?.[0];
+  const { data: customDomain, isLoading, mutate } = useCustomDomain(true);
 
   if (isLoading) {
     return null;
@@ -38,18 +26,9 @@ function TenantDomainSettings() {
       >
         <FormField title="domain.custom.custom_domain_field">
           {customDomain ? (
-            <CustomDomain
-              customDomain={customDomain}
-              onDeleteCustomDomain={() => {
-                void mutate();
-              }}
-            />
+            <CustomDomain customDomain={customDomain} onDeleteCustomDomain={mutate} />
           ) : (
-            <AddDomainForm
-              onCustomDomainAdded={(domain) => {
-                void mutate([domain]);
-              }}
-            />
+            <AddDomainForm onCustomDomainAdded={mutate} />
           )}
         </FormField>
       </FormCard>

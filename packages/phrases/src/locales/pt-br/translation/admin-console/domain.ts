@@ -47,6 +47,10 @@ const domain = {
       'Logto oferece um domínio padrão pré-configurado, pronto para uso sem nenhuma configuração adicional. Este domínio padrão serve como uma opção de backup mesmo se você habilitou um domínio personalizado.',
     default_domain_field: 'Domínio padrão do Logto',
   },
+  custom_endpoint_note:
+    'Você pode personalizar o nome de domínio desses endpoints conforme necessário. Escolha "{{custom}}" ou "{{default}}".',
+  custom_social_callback_url_note:
+    'Você pode personalizar o nome de domínio desta URI para corresponder ao endpoint de seu aplicativo. Escolha "{{custom}}" ou "{{default}}".',
 };
 
 export default domain;

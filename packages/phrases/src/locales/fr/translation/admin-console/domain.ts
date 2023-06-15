@@ -47,6 +47,10 @@ const domain = {
       'Logto offre un domaine par défaut préconfiguré, prêt à être utilisé sans aucune configuration supplémentaire. Ce domaine par défaut sert de solution de secours même si vous avez activé un domaine personnalisé.',
     default_domain_field: 'Domaine par défaut de Logto',
   },
+  custom_endpoint_note:
+    'Vous pouvez personnaliser le nom de domaine de ces points de terminaison selon vos besoins. Choisissez soit "{{custom}}" ou "{{default}}".',
+  custom_social_callback_url_note:
+    'Vous pouvez personnaliser le nom de domaine de cette URI pour correspondre au point de terminaison de votre application. Choisissez soit "{{custom}}" ou "{{default}}".',
 };
 
 export default domain;

@@ -46,6 +46,10 @@ const domain = {
       'Logtoは、追加のセットアップなしで使用できる事前に構成されたデフォルトドメインを提供しています。このデフォルトドメインは、カスタムドメインを有効にしていない場合でもバックアップオプションとして機能します。',
     default_domain_field: 'Logtoデフォルトドメイン',
   },
+  custom_endpoint_note:
+    'これらのエンドポイントのドメイン名を必要に応じてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
+  custom_social_callback_url_note:
+    'このURIのドメイン名をアプリケーションのエンドポイントに合わせてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
 };
 
 export default domain;

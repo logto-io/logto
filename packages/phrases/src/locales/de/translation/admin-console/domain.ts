@@ -47,6 +47,10 @@ const domain = {
       'Logto bietet eine vorkonfigurierte Standarddomain, die ohne zusätzliche Einrichtung verwendet werden kann. Diese Standarddomain dient als Backup-Option, auch wenn Sie eine benutzerdefinierte Domain aktiviert haben.',
     default_domain_field: 'Logto Standard-Domain',
   },
+  custom_endpoint_note:
+    'Sie können den Domainnamen dieser Endpunkte anpassen, wie Sie möchten. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
+  custom_social_callback_url_note:
+    'Sie können den Domainnamen dieser URI anpassen, um mit dem Endpunkt Ihrer Anwendung übereinzustimmen. Wählen Sie entweder "{{custom}}" oder "{{default}}".',
 };
 
 export default domain;
