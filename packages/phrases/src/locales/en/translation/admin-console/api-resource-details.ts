@@ -6,6 +6,8 @@ const api_resource_details = {
   settings: 'Settings',
   settings_description:
     'API resources, a.k.a. Resource Indicators, indicate the target services or resources to be requested, usually, a URI format variable representing the resource‘s identity.',
+  management_api_settings_description:
+    'The Logto Management API is a comprehensive collection of APIs that empower administrators to manage a wide range of identity-related tasks, enforce security policies, and comply with regulations and standards.',
   token_expiration_time_in_seconds: 'Token expiration time (in seconds)',
   token_expiration_time_in_seconds_placeholder: 'Enter your token expiration time',
   delete_description:

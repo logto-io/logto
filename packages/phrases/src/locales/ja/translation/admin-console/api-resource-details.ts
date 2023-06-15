@@ -6,6 +6,8 @@ const api_resource_details = {
   settings: '設定',
   settings_description:
     'APIリソース、またはリソースインジケータは、通常、リソースの識別子を表すURI形式の変数を表します。',
+  management_api_settings_description:
+    'Logto管理APIは、管理者が幅広いID関連タスクを管理し、セキュリティポリシーを強制し、規制や標準に準拠するための包括的なAPIのコレクションです。',
   token_expiration_time_in_seconds: 'トークンの有効期限（秒単位）',
   token_expiration_time_in_seconds_placeholder: 'トークンの有効期限を入力してください',
   delete_description:
