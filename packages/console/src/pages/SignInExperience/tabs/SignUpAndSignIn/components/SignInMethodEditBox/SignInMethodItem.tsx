@@ -62,7 +62,6 @@ function SignInMethodItem({
             )}
           >
             <Checkbox
-              className={styles.checkBox}
               label={t('sign_in_exp.sign_up_and_sign_in.sign_in.password_auth')}
               checked={password}
               disabled={!isPasswordCheckable}
@@ -84,7 +83,6 @@ function SignInMethodItem({
                   </IconButton>
                 </Tooltip>
                 <Checkbox
-                  className={styles.checkBox}
                   label={t('sign_in_exp.sign_up_and_sign_in.sign_in.verification_code_auth')}
                   checked={verificationCode}
                   disabled={!isVerificationCodeCheckable}

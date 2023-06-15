@@ -40,13 +40,10 @@
     padding: 0 _.unit(2);
     flex-grow: 1;
 
-    .checkBox {
-      flex-grow: 1;
-      width: 100%;
-    }
-
     .swapButton {
-      margin: 0 _.unit(4);
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
     }
 
     &.verifyCodePrimary {
