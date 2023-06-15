@@ -6,6 +6,8 @@ const api_resource_details = {
   settings: 'Ayarlar',
   settings_description:
     'API kaynakları, Resource göstergeleri olarak da bilinir. Genellikle, kaynağın kimliğini temsil eden bir URI formatındaki değişkeni içerir.',
+  management_api_settings_description:
+    "Logto Yönetim API'si, yöneticilerin kimlikle ilgili birçok görevi yönetmelerine, güvenlik politikalarını uygulamalarına ve yönetmeliklere ve standartlara uyum sağlamalarına olanak tanıyan kapsamlı bir API koleksiyonudur.",
   token_expiration_time_in_seconds: 'Token sona erme süresi (saniye)',
   token_expiration_time_in_seconds_placeholder: 'Token zaman aşım süresini giriniz',
   delete_description:

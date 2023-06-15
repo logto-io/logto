@@ -66,8 +66,16 @@ function ApiResourceSettings() {
       >
         <FormCard
           title="api_resource_details.settings"
-          description="api_resource_details.settings_description"
-          learnMoreLink={getDocumentationUrl('/docs/recipes/protect-your-api')}
+          description={
+            isLogtoManagementApiResource
+              ? 'api_resource_details.management_api_settings_description'
+              : 'api_resource_details.settings_description'
+          }
+          learnMoreLink={getDocumentationUrl(
+            isLogtoManagementApiResource
+              ? '/docs/tutorials/get-started/explore-management-api'
+              : '/docs/recipes/protect-your-api'
+          )}
         >
           <FormField isRequired title="api_resources.api_name">
             <TextInput
