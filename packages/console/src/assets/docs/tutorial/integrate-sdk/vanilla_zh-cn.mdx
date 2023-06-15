@@ -51,7 +51,7 @@ Import 并传入 config 以初始化 `LogtoClient`：
 {`import LogtoClient from '@logto/browser';
 
 const logtoClient = new LogtoClient({
-  endpoint: '${props.endpoint}',
+  endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // 或 "${props.alternativeEndpoint}"` : ''}
   appId: '${props.appId}',
 });`}
 </code>

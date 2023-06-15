@@ -55,7 +55,7 @@ Import 并使用 `createLogto` 以插件的形式安装 Logto:
 {`import { createLogto, LogtoConfig } from '@logto/vue';
 
 const config: LogtoConfig = {
-  endpoint: '${props.endpoint}',
+  endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // 或 "${props.alternativeEndpoint}"` : ''}
   appId: '${props.appId}',
 };
 

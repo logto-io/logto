@@ -57,7 +57,7 @@ pnpm add @logto/express cookie-parser express-session
 {`import LogtoClient from '@logto/express';
 
 export const logtoClient = new LogtoClient({
-  endpoint: '${props.endpoint}',
+  endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // 或 "${props.alternativeEndpoint}"` : ''}
   appId: '${props.appId}',
   appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL

@@ -158,7 +158,7 @@ func main() {
 	// ...
 
 	logtoConfig := &client.LogtoConfig{
-		Endpoint:           "${props.endpoint}",
+		Endpoint:           "${props.endpoint}",${props.alternativeEndpoint ? ` // 或 "${props.alternativeEndpoint}"` : ''}
 		AppId:              "${props.appId}",
 		AppSecret:          "${props.appSecret}",
 	}

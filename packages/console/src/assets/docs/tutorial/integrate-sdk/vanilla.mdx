@@ -51,7 +51,7 @@ Import and init `LogtoClient` by passing config:
     {`import LogtoClient from '@logto/browser';
 
 const logtoClient = new LogtoClient({
-  endpoint: '${props.endpoint}',
+  endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
   appId: '${props.appId}',
 });`}
   </code>
