@@ -69,7 +69,7 @@ import io.logto.sdk.android.type.LogtoConfig
 
 class MainActivity : AppCompatActivity() {
     val logtoConfig = LogtoConfig(
-        endpoint = "${props.endpoint}",
+        endpoint = "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
         appId = "${props.appId}",
         scopes = null,
         resources = null,
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LogtoConfig logtoConfig = new LogtoConfig(
-            "${props.endpoint}",
+            "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
             "${props.appId}",
             null,
             null,

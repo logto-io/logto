@@ -1,6 +1,6 @@
-import type { Application } from '@logto/schemas';
+import { DomainStatus, type Application } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
-import type { Optional } from '@silverhand/essentials';
+import { conditional, type Optional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import type { MDXProps } from 'mdx/types';
 import type { LazyExoticComponent } from 'react';
@@ -9,9 +9,11 @@ import { useEffect, useContext, cloneElement, lazy, Suspense, useState } from 'r
 import CodeEditor from '@/components/CodeEditor';
 import TextLink from '@/components/TextLink';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';
 import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
+import { applyDomain } from '@/utils/domain';
 
 import GuideHeader from '../GuideHeader';
 import SdkSelector from '../SdkSelector';
@@ -55,6 +57,8 @@ function Guide({ app, isCompact, onClose }: Props) {
   const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const { userEndpoint } = useContext(AppEndpointsContext);
+  const { data: customDomain } = useCustomDomain();
+  const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
 
   useEffect(() => {
     if (sdks?.length) {
@@ -108,11 +112,16 @@ function Guide({ app, isCompact, onClose }: Props) {
           }}
         >
           <Suspense fallback={<StepsSkeleton />}>
-            {GuideComponent && (
+            {GuideComponent && userEndpoint && (
               <GuideComponent
                 appId={appId}
                 appSecret={appSecret}
-                endpoint={userEndpoint}
+                endpoint={
+                  isCustomDomainActive
+                    ? applyDomain(userEndpoint.toString(), customDomain.domain)
+                    : userEndpoint
+                }
+                alternativeEndpoint={conditional(isCustomDomainActive && userEndpoint)}
                 redirectUris={oidcClientMetadata.redirectUris}
                 postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
                 activeStepIndex={activeStepIndex}
