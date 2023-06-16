@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CodeEditor from '@/components/CodeEditor';
-import DangerousRaw from '@/components/DangerousRaw';
-import FormField from '@/components/FormField';
-import Select from '@/components/Select';
-import Switch from '@/components/Switch';
-import TextInput from '@/components/TextInput';
-import Textarea from '@/components/Textarea';
+import CodeEditor from '@/ds-components/CodeEditor';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import FormField from '@/ds-components/FormField';
+import Select from '@/ds-components/Select';
+import Switch from '@/ds-components/Switch';
+import TextInput from '@/ds-components/TextInput';
+import Textarea from '@/ds-components/Textarea';
 import { jsonValidator } from '@/utils/validator';
 
 import type { ConnectorFormType } from '../../types';

@@ -3,14 +3,14 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import Card from '@/components/Card';
-import ColorPicker from '@/components/ColorPicker';
-import DangerousRaw from '@/components/DangerousRaw';
-import FormField from '@/components/FormField';
-import Switch from '@/components/Switch';
-import TextInput from '@/components/TextInput';
-import ImageUploaderField from '@/components/Uploader/ImageUploaderField';
+import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import ColorPicker from '@/ds-components/ColorPicker';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
+import TextInput from '@/ds-components/TextInput';
+import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { uriValidator } from '@/utils/validator';
 

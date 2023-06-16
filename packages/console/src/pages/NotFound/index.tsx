@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 
 import NotFoundDarkImage from '@/assets/images/not-found-dark.svg';
 import NotFoundImage from '@/assets/images/not-found.svg';
-import Card from '@/components/Card';
 import PageMeta from '@/components/PageMeta';
+import Card from '@/ds-components/Card';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';

@@ -3,9 +3,9 @@ import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import DynamicT from '@/components/DynamicT';
-import FormField from '@/components/FormField';
+import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
+import FormField from '@/ds-components/FormField';
 import useApi from '@/hooks/use-api';
 import { type WebhookDetailsFormType } from '@/pages/WebhookDetails/types';
 import { webhookDetailsParser } from '@/pages/WebhookDetails/utils';

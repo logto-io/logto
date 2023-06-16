@@ -7,11 +7,11 @@ import TadaDark from '@/assets/icons/tada-dark.svg';
 import Tada from '@/assets/icons/tada.svg';
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
-import Button from '@/components/Button';
-import Card from '@/components/Card';
-import RadioGroup, { Radio } from '@/components/RadioGroup';
-import Select from '@/components/Select';
-import Spacer from '@/components/Spacer';
+import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import Select from '@/ds-components/Select';
+import Spacer from '@/ds-components/Spacer';
 import useTheme from '@/hooks/use-theme';
 import type { SupportedSdk } from '@/types/applications';
 

@@ -4,10 +4,9 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import DefaultAvatar from '@/assets/images/default-avatar.svg';
+import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
+import { Tooltip } from '@/ds-components/Tip';
 import { formatToInternationalPhoneNumber } from '@/utils/phone';
-
-import ImageWithErrorFallback from '../ImageWithErrorFallback';
-import { Tooltip } from '../Tip';
 
 import * as styles from './index.module.scss';
 

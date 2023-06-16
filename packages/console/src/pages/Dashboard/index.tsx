@@ -15,9 +15,9 @@ import {
 import useSWR from 'swr';
 
 import AppError from '@/components/AppError';
-import Card from '@/components/Card';
 import PageMeta from '@/components/PageMeta';
-import TextInput from '@/components/TextInput';
+import Card from '@/ds-components/Card';
+import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';

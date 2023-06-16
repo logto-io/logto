@@ -3,8 +3,8 @@ import type { Nullable } from '@silverhand/essentials';
 import type { ReactElement } from 'react';
 import { cloneElement } from 'react';
 
-import Button from '@/components/Button';
-import DynamicT from '@/components/DynamicT';
+import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 
 import NotSet from '../NotSet';
 

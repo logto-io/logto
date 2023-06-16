@@ -3,11 +3,11 @@ import { TenantTag } from '@logto/schemas/models';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CopyToClipboard from '@/components/CopyToClipboard';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import RadioGroup, { Radio } from '@/components/RadioGroup';
-import TextInput from '@/components/TextInput';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import FormField from '@/ds-components/FormField';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import TextInput from '@/ds-components/TextInput';
 
 import { type TenantSettingsForm } from '../types.js';
 

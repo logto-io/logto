@@ -6,8 +6,8 @@ import { useNavigate, useHref } from 'react-router-dom';
 
 import Logo from '@/assets/images/logo.svg';
 import AppError from '@/components/AppError';
-import Button from '@/components/Button';
 import SessionExpired from '@/components/SessionExpired';
+import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';

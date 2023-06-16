@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import TextInput from '@/components/TextInput';
-import { Tooltip } from '@/components/Tip';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import TextInput from '@/ds-components/TextInput';
+import { Tooltip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';

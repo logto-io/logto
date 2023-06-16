@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
-import Card from '@/components/Card';
 import * as formCardStyles from '@/components/FormCard/index.module.scss';
-import Spacer from '@/components/Spacer';
+import Card from '@/ds-components/Card';
+import Spacer from '@/ds-components/Spacer';
 
 import * as styles from './index.module.scss';
 

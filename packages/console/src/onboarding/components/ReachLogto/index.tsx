@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { cloneElement } from 'react';
 import type { ReactNode, ReactElement } from 'react';
 
-import Button from '@/components/Button';
-import DynamicT from '@/components/DynamicT';
+import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 
 import * as styles from './index.module.scss';
 

@@ -2,7 +2,7 @@ import type { RoleResponse } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
-import IconButton from '@/components/IconButton';
+import IconButton from '@/ds-components/IconButton';
 
 import * as styles from './index.module.scss';
 

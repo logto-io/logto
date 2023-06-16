@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import ArrowDown from '@/assets/icons/arrow-down.svg';
 import ArrowUp from '@/assets/icons/arrow-up.svg';
 import Tip from '@/assets/icons/tip.svg';
-import Card from '@/components/Card';
-import DynamicT from '@/components/DynamicT';
-import IconButton from '@/components/IconButton';
-import { ToggleTip } from '@/components/Tip';
-import type { Props as ToggleTipProps } from '@/components/Tip/ToggleTip';
+import Card from '@/ds-components/Card';
+import DynamicT from '@/ds-components/DynamicT';
+import IconButton from '@/ds-components/IconButton';
+import { ToggleTip } from '@/ds-components/Tip';
+import type { Props as ToggleTipProps } from '@/ds-components/Tip/ToggleTip';
 import { formatNumberWithComma } from '@/utils/number';
 
 import * as styles from './Block.module.scss';

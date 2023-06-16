@@ -1,8 +1,8 @@
 import type { User } from '@logto/schemas';
 
 import Close from '@/assets/icons/close.svg';
-import IconButton from '@/components/IconButton';
 import UserAvatar from '@/components/UserAvatar';
+import IconButton from '@/ds-components/IconButton';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { getUserTitle } from '@/utils/user';
 

@@ -1,7 +1,7 @@
 import type { AllowedUploadMimeType } from '@logto/schemas';
 
 import Delete from '@/assets/icons/delete.svg';
-import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
+import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 
 import IconButton from '../../IconButton';
 import FileUploader from '../FileUploader';

@@ -1,8 +1,8 @@
 import { type Hook, type CreateHook, type HookEvent, type HookConfig } from '@logto/schemas';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import Button from '@/components/Button';
-import ModalLayout from '@/components/ModalLayout';
+import Button from '@/ds-components/Button';
+import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 

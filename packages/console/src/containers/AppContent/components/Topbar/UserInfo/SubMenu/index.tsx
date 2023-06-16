@@ -4,11 +4,11 @@ import { type ReactNode, useCallback, useState, useRef } from 'react';
 
 import ArrowRight from '@/assets/icons/arrow-right.svg';
 import Tick from '@/assets/icons/tick.svg';
-import { DropdownItem } from '@/components/Dropdown';
-import DynamicT from '@/components/DynamicT';
-import OverlayScrollbar from '@/components/OverlayScrollbar';
-import type { Option } from '@/components/Select';
-import Spacer from '@/components/Spacer';
+import { DropdownItem } from '@/ds-components/Dropdown';
+import DynamicT from '@/ds-components/DynamicT';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import type { Option } from '@/ds-components/Select';
+import Spacer from '@/ds-components/Spacer';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';

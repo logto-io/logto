@@ -11,10 +11,10 @@ import { useNavigate } from 'react-router-dom';
 
 import MailIcon from '@/assets/icons/mail.svg';
 import FormCard from '@/components/FormCard';
-import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint, getBasename, meApi, storageKeys } from '@/consts';
+import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTheme from '@/hooks/use-theme';

@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 
 import CaretExpanded from '@/assets/icons/caret-expanded.svg';
 import CaretFolded from '@/assets/icons/caret-folded.svg';
-import Checkbox from '@/components/Checkbox';
-import IconButton from '@/components/IconButton';
+import Checkbox from '@/ds-components/Checkbox';
+import IconButton from '@/ds-components/IconButton';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { DetailedResourceResponse } from '../../types';

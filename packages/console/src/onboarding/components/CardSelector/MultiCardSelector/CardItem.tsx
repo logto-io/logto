@@ -1,8 +1,8 @@
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 
-import DynamicT from '@/components/DynamicT';
-import { Tooltip } from '@/components/Tip';
+import DynamicT from '@/ds-components/DynamicT';
+import { Tooltip } from '@/ds-components/Tip';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import type { MultiCardSelectorOption } from '../types';

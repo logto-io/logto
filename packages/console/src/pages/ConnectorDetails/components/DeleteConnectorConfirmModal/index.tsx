@@ -2,8 +2,8 @@ import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
-import ConfirmModal from '@/components/ConfirmModal';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import ConfirmModal from '@/ds-components/ConfirmModal';
 
 type Props = {
   data: ConnectorResponse;

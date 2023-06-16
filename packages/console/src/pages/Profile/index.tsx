@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
 
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import { adminTenantEndpoint, meApi } from '@/consts';
 import { isCloud } from '@/consts/env';
+import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
 import type { RequestError } from '@/hooks/use-api';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';

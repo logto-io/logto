@@ -1,7 +1,7 @@
 import { TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
 
-import DangerousRaw from '@/components/DangerousRaw';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 
 import * as styles from './index.module.scss';
 

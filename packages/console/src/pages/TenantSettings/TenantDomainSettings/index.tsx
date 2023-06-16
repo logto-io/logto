@@ -1,8 +1,8 @@
 import { withAppInsights } from '@logto/app-insights/react';
 
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
 import PageMeta from '@/components/PageMeta';
+import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 
 import AddDomainForm from './AddDomainForm';

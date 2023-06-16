@@ -3,14 +3,13 @@ import { type ReactNode } from 'react';
 import { type FieldValues, type FieldPath } from 'react-hook-form';
 
 import Plus from '@/assets/icons/plus.svg';
-import { type Props as ButtonProps } from '@/components/Button';
-import { type Props as CardTitleProps } from '@/components/CardTitle';
 import PageMeta, { type Props as PageMetaProps } from '@/components/PageMeta';
-import Table, { type Props as TableProps } from '@/components/Table';
+import { type Props as ButtonProps } from '@/ds-components/Button';
+import Button from '@/ds-components/Button';
+import { type Props as CardTitleProps } from '@/ds-components/CardTitle';
+import CardTitle from '@/ds-components/CardTitle';
+import Table, { type Props as TableProps } from '@/ds-components/Table';
 import * as pageLayout from '@/scss/page-layout.module.scss';
-
-import Button from '../Button';
-import CardTitle from '../CardTitle';
 
 type CreateButtonProps = {
   title: ButtonProps['title'];

@@ -4,10 +4,10 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
-import DangerousRaw from '@/components/DangerousRaw';
-import ModalLayout from '@/components/ModalLayout';
 import UserRolesTransfer from '@/components/UserRolesTransfer';
+import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { getUserTitle } from '@/utils/user';

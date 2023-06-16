@@ -1,8 +1,8 @@
 import { ConnectorType } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
-import InlineNotification from '@/components/InlineNotification';
-import TextLink from '@/components/TextLink';
+import InlineNotification from '@/ds-components/InlineNotification';
+import TextLink from '@/ds-components/TextLink';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import { noConnectorWarningPhrase } from '@/pages/SignInExperience/constants';
 

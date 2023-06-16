@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import OverlayScrollbar from '@/components/OverlayScrollbar';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 
 import Item from './components/Item';
 import Section from './components/Section';

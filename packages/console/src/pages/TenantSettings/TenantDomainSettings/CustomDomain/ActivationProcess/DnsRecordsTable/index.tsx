@@ -1,9 +1,9 @@
 import { type DomainDnsRecords } from '@logto/schemas';
 
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DynamicT from '@/components/DynamicT';
-import { Ring } from '@/components/Spinner';
-import Table from '@/components/Table';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
+import { Ring } from '@/ds-components/Spinner';
+import Table from '@/ds-components/Table';
 
 import * as styles from './index.module.scss';
 

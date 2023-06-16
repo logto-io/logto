@@ -1,7 +1,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 
-import DynamicT from '@/components/DynamicT';
+import DynamicT from '@/ds-components/DynamicT';
 
 import Checkbox from '../Checkbox';
 

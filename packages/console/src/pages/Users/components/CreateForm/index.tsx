@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
-import TextInput from '@/components/TextInput';
 import UserAccountInformation from '@/components/UserAccountInformation';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';

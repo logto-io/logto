@@ -3,9 +3,8 @@ import classNames from 'classnames';
 
 import Moon from '@/assets/icons/moon.svg';
 import Sun from '@/assets/icons/sun.svg';
-
-import type { Props as ButtonProps } from '../../../Button';
-import Button from '../../../Button';
+import Button from '@/ds-components/Button';
+import type { Props as ButtonProps } from '@/ds-components/Button';
 
 import * as styles from './index.module.scss';
 

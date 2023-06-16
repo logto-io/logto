@@ -1,7 +1,7 @@
 import type { User } from '@logto/schemas';
 
-import Checkbox from '@/components/Checkbox';
 import UserAvatar from '@/components/UserAvatar';
+import Checkbox from '@/ds-components/Checkbox';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { getUserTitle } from '@/utils/user';

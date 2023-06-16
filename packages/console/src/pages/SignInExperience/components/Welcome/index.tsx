@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import WelcomeImageDark from '@/assets/images/sign-in-experience-welcome-dark.svg';
 import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
-import Button from '@/components/Button';
+import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 
 import GuideModal from './GuideModal';

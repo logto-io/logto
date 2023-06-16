@@ -1,7 +1,7 @@
 import { type Domain, DomainStatus } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
-import TextLink from '@/components/TextLink';
+import TextLink from '@/ds-components/TextLink';
 
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';

@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import Close from '@/assets/icons/close.svg';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
-import ConfirmModal from '@/components/ConfirmModal';
-import IconButton from '@/components/IconButton';
+import Card from '@/ds-components/Card';
+import CardTitle from '@/ds-components/CardTitle';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import IconButton from '@/ds-components/IconButton';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
 import LanguageDetails from './LanguageDetails';

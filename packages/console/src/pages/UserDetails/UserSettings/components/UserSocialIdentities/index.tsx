@@ -3,12 +3,12 @@ import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Button from '@/components/Button';
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
-import Table from '@/components/Table';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import Button from '@/ds-components/Button';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
+import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
+import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import { getConnectorGroups } from '@/pages/Connectors/utils';

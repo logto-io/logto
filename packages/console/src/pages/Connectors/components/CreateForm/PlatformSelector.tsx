@@ -1,9 +1,9 @@
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorPlatformLabel } from '@/consts/connectors';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { ConnectorGroup } from '@/types/connector';
 
 import * as styles from './PlatformSelector.module.scss';

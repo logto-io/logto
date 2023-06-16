@@ -5,11 +5,11 @@ import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import Button from '@/components/Button';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import ModalLayout from '@/components/ModalLayout';
-import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import Button from '@/ds-components/Button';
+import ModalLayout from '@/ds-components/ModalLayout';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 

@@ -10,15 +10,15 @@ import { useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DynamicT from '@/components/DynamicT';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import Switch from '@/components/Switch';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
+import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import { applyDomain } from '@/utils/domain';
 

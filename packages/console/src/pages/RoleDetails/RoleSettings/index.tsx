@@ -6,9 +6,9 @@ import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import FormField from '@/ds-components/FormField';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 

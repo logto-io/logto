@@ -1,10 +1,10 @@
 import { useFormContext, Controller } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Card from '@/components/Card';
-import CodeEditor from '@/components/CodeEditor';
-import FormField from '@/components/FormField';
-import TextLink from '@/components/TextLink';
+import Card from '@/ds-components/Card';
+import CodeEditor from '@/ds-components/CodeEditor';
+import FormField from '@/ds-components/FormField';
+import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import type { SignInExperienceForm } from '../../types';

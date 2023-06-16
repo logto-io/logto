@@ -3,7 +3,7 @@ import ReactModal from 'react-modal';
 
 import Calendar from '@/assets/icons/calendar.svg';
 import Email from '@/assets/icons/email.svg';
-import ModalLayout from '@/components/ModalLayout';
+import ModalLayout from '@/ds-components/ModalLayout';
 import { emailUsLink, reservationLink } from '@/onboarding/constants';
 import * as modalStyles from '@/scss/modal.module.scss';
 

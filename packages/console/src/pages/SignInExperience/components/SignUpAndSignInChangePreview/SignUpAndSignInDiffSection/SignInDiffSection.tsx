@@ -3,7 +3,7 @@ import { getSafe } from '@silverhand/essentials';
 import { detailedDiff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
-import DynamicT from '@/components/DynamicT';
+import DynamicT from '@/ds-components/DynamicT';
 import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod, SignInMethodsObject } from '@/pages/SignInExperience/types';
 

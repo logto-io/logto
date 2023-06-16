@@ -14,7 +14,7 @@ import {
 
 import EyeClosed from '@/assets/icons/eye-closed.svg';
 import Eye from '@/assets/icons/eye.svg';
-import IconButton from '@/components/IconButton';
+import IconButton from '@/ds-components/IconButton';
 
 import * as styles from './index.module.scss';
 

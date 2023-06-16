@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DynamicT from '@/components/DynamicT';
-import Tag from '@/components/Tag';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
+import Tag from '@/ds-components/Tag';
 
 import * as styles from './index.module.scss';
 

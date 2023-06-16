@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ImageUploader, {
   allowedImageMimeTypes,
   maxImageSizeLimit,
-} from '@/components/Uploader/ImageUploader';
+} from '@/ds-components/Uploader/ImageUploader';
 import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 

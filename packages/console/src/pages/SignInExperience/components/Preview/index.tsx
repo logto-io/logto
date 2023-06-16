@@ -6,10 +6,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LivePreviewButton from '@/components/LivePreviewButton';
-import Select from '@/components/Select';
 import SignInExperiencePreview, { ToggleUiThemeButton } from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
-import TabNav, { TabNavItem } from '@/components/TabNav';
+import Select from '@/ds-components/Select';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useUiLanguages from '@/hooks/use-ui-languages';
 

@@ -2,9 +2,8 @@ import { Theme } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import classNames from 'classnames';
 
+import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useTheme from '@/hooks/use-theme';
-
-import ImageWithErrorFallback from '../ImageWithErrorFallback';
 
 import * as styles from './index.module.scss';
 

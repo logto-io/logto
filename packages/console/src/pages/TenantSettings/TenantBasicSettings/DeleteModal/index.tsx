@@ -2,9 +2,9 @@ import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
-import DeleteConfirmModal from '@/components/DeleteConfirmModal';
-import TextLink from '@/components/TextLink';
 import { contactEmailLink } from '@/consts';
+import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
+import TextLink from '@/ds-components/TextLink';
 
 import * as styles from './index.module.scss';
 

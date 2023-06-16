@@ -6,8 +6,8 @@ import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
 import Arrow from '@/assets/icons/arrow-left.svg';
-import DynamicT from '@/components/DynamicT';
-import TextLink from '@/components/TextLink';
+import DynamicT from '@/ds-components/DynamicT';
+import TextLink from '@/ds-components/TextLink';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';

@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import Draggable from '@/assets/icons/draggable.svg';
 import Minus from '@/assets/icons/minus.svg';
 import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg';
-import Checkbox from '@/components/Checkbox';
-import IconButton from '@/components/IconButton';
-import { Tooltip } from '@/components/Tip';
+import Checkbox from '@/ds-components/Checkbox';
+import IconButton from '@/ds-components/IconButton';
+import { Tooltip } from '@/ds-components/Tip';
 import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignInMethod } from '@/pages/SignInExperience/types';
 

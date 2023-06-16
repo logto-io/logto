@@ -5,8 +5,11 @@ import Keyboard from '@/assets/icons/keyboard.svg';
 import Label from '@/assets/icons/label.svg';
 import Lock from '@/assets/icons/lock.svg';
 import Mobile from '@/assets/icons/mobile.svg';
-import type { MultiCardSelectorOption, CardSelectorOption } from '@/components/CardSelector';
-import DangerousRaw from '@/components/DangerousRaw';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import type {
+  MultiCardSelectorOption,
+  CardSelectorOption,
+} from '@/onboarding/components/CardSelector';
 import { Authentication } from '@/onboarding/types';
 
 import Apple from '../../assets/icons/social-apple.svg';

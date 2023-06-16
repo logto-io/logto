@@ -1,10 +1,10 @@
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
-import ModalLayout from '@/components/ModalLayout';
-import TextLink from '@/components/TextLink';
 import { contactEmail, contactEmailLink } from '@/consts';
+import Button from '@/ds-components/Button';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextLink from '@/ds-components/TextLink';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';

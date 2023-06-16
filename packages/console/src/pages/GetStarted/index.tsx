@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import CompleteIndicator from '@/assets/icons/task-complete.svg';
-import Button from '@/components/Button';
-import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
-import DynamicT from '@/components/DynamicT';
 import PageMeta from '@/components/PageMeta';
-import Spacer from '@/components/Spacer';
+import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import DynamicT from '@/ds-components/DynamicT';
+import Spacer from '@/ds-components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Skeleton from './components/Skeleton';

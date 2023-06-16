@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Gift from '@/assets/icons/gift.svg';
-import IconButton from '@/components/IconButton';
+import IconButton from '@/ds-components/IconButton';
 
 import GiftModal from './GiftModal';
 

@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import DynamicT from '@/components/DynamicT';
 import type { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
+import DynamicT from '@/ds-components/DynamicT';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './PlatformTab.module.scss';

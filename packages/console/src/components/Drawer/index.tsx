@@ -2,10 +2,9 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import ReactModal from 'react-modal';
 
 import Close from '@/assets/icons/close.svg';
-
-import CardTitle from '../CardTitle';
-import IconButton from '../IconButton';
-import Spacer from '../Spacer';
+import CardTitle from '@/ds-components/CardTitle';
+import IconButton from '@/ds-components/IconButton';
+import Spacer from '@/ds-components/Spacer';
 
 import * as styles from './index.module.scss';
 

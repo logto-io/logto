@@ -9,11 +9,11 @@ import {
 } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import Toast from '@/components/Toast';
 import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
+import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import Welcome from '@/pages/Welcome';

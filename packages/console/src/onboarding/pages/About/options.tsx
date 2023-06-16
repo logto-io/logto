@@ -1,4 +1,7 @@
-import type { CardSelectorOption, MultiCardSelectorOption } from '@/components/CardSelector';
+import type {
+  CardSelectorOption,
+  MultiCardSelectorOption,
+} from '@/onboarding/components/CardSelector';
 
 import { CompanySize, Reason, Title } from '../../types';
 

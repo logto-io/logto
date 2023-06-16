@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import TextLink from '@/components/TextLink';
+import TextLink from '@/ds-components/TextLink';
 import { aboutCloudPreviewLink } from '@/onboarding/constants';
 
 import * as styles from './index.module.scss';

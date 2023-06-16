@@ -5,11 +5,11 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
-import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DynamicT from '@/components/DynamicT';
-import Tag from '@/components/Tag';
-import type { Props as TagProps } from '@/components/Tag';
+import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
+import Tag from '@/ds-components/Tag';
+import type { Props as TagProps } from '@/ds-components/Tag';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 

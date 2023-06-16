@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import Button from '@/components/Button';
-import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import Button from '@/ds-components/Button';
+import TextInput from '@/ds-components/TextInput';
 import { useStaticApi } from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 

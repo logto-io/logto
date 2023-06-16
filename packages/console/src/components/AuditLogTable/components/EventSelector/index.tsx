@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import Select, { type Option } from '@/components/Select';
 import { logEventTitle } from '@/consts/logs';
+import Select, { type Option } from '@/ds-components/Select';
 
 type Props = {
   value?: string;

@@ -1,10 +1,9 @@
 import { conditional } from '@silverhand/essentials';
 
-import type { Props as FormFieldProps } from '@/components/FormField';
-import FormField from '@/components/FormField';
-import type { Props as MultiTextInputProps } from '@/components/MultiTextInput';
-
-import MultiTextInput from '../MultiTextInput';
+import type { Props as FormFieldProps } from '@/ds-components/FormField';
+import FormField from '@/ds-components/FormField';
+import type { Props as MultiTextInputProps } from '@/ds-components/MultiTextInput';
+import MultiTextInput from '@/ds-components/MultiTextInput';
 
 import * as styles from './index.module.scss';
 

@@ -1,9 +1,9 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
 
 import * as styles from './index.module.scss';
 
