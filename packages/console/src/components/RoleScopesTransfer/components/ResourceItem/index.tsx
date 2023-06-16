@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CaretExpanded from '@/assets/images/caret-expanded.svg';
-import CaretFolded from '@/assets/images/caret-folded.svg';
+import CaretExpanded from '@/assets/icons/caret-expanded.svg';
+import CaretFolded from '@/assets/icons/caret-folded.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
 import { onKeyDownHandler } from '@/utils/a11y';

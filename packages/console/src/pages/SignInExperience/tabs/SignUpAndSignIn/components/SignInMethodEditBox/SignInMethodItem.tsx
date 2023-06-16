@@ -4,9 +4,9 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import Draggable from '@/assets/images/draggable.svg';
-import Minus from '@/assets/images/minus.svg';
-import SwitchArrowIcon from '@/assets/images/switch-arrow.svg';
+import Draggable from '@/assets/icons/draggable.svg';
+import Minus from '@/assets/icons/minus.svg';
+import SwitchArrowIcon from '@/assets/icons/switch-arrow.svg';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';
 import { Tooltip } from '@/components/Tip';

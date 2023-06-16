@@ -5,8 +5,8 @@ import type { KeyboardEvent } from 'react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/images/circle-plus.svg';
-import Minus from '@/assets/images/minus.svg';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Minus from '@/assets/icons/minus.svg';
 
 import Button from '../Button';
 import ConfirmModal from '../ConfirmModal';

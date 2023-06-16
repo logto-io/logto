@@ -8,11 +8,11 @@ import ReactModal from 'react-modal';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/images/delete.svg';
-import Forbidden from '@/assets/images/forbidden.svg';
-import More from '@/assets/images/more.svg';
-import Reset from '@/assets/images/reset.svg';
-import Shield from '@/assets/images/shield.svg';
+import Delete from '@/assets/icons/delete.svg';
+import Forbidden from '@/assets/icons/forbidden.svg';
+import More from '@/assets/icons/more.svg';
+import Reset from '@/assets/icons/reset.svg';
+import Shield from '@/assets/icons/shield.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';

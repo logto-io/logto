@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Redo from '@/assets/images/redo.svg';
+import Redo from '@/assets/icons/redo.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';

@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import ArrowConnection from '@/assets/images/arrow-connection.svg';
-import PasswordHideIcon from '@/assets/images/password-hide.svg';
-import PasswordShowIcon from '@/assets/images/password-show.svg';
+import ArrowConnection from '@/assets/icons/arrow-connection.svg';
+import PasswordHideIcon from '@/assets/icons/password-hide.svg';
+import PasswordShowIcon from '@/assets/icons/password-show.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';

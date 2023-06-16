@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import Close from '@/assets/images/close.svg';
-import GetSample from '@/assets/images/get-sample.svg';
+import Close from '@/assets/icons/close.svg';
+import GetSample from '@/assets/icons/get-sample.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';

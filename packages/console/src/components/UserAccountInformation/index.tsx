@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Eye from '@/assets/images/eye.svg';
+import Eye from '@/assets/icons/eye.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
 import ModalLayout from '@/components/ModalLayout';

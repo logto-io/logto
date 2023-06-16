@@ -1,6 +1,6 @@
 import type { AllowedUploadMimeType } from '@logto/schemas';
 
-import Delete from '@/assets/images/delete.svg';
+import Delete from '@/assets/icons/delete.svg';
 import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 
 import IconButton from '../../IconButton';

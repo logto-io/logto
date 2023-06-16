@@ -2,17 +2,17 @@ import { type Optional } from '@silverhand/essentials';
 import type { TFuncKey } from 'i18next';
 import type { FC, ReactNode } from 'react';
 
-import BarGraph from '@/assets/images/bar-graph.svg';
-import Bolt from '@/assets/images/bolt.svg';
-import Box from '@/assets/images/box.svg';
-import Connection from '@/assets/images/connection.svg';
-import Gear from '@/assets/images/gear.svg';
-import Hook from '@/assets/images/hook.svg';
-import List from '@/assets/images/list.svg';
-import UserProfile from '@/assets/images/profile.svg';
-import ResourceIcon from '@/assets/images/resource.svg';
-import Role from '@/assets/images/role.svg';
-import Web from '@/assets/images/web.svg';
+import BarGraph from '@/assets/icons/bar-graph.svg';
+import Bolt from '@/assets/icons/bolt.svg';
+import Box from '@/assets/icons/box.svg';
+import Connection from '@/assets/icons/connection.svg';
+import Gear from '@/assets/icons/gear.svg';
+import Hook from '@/assets/icons/hook.svg';
+import List from '@/assets/icons/list.svg';
+import UserProfile from '@/assets/icons/profile.svg';
+import ResourceIcon from '@/assets/icons/resource.svg';
+import Role from '@/assets/icons/role.svg';
+import Web from '@/assets/icons/web.svg';
 import { isCloud } from '@/consts/env';
 import useUserPreferences from '@/hooks/use-user-preferences';
 

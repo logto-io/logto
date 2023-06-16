@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Search from '@/assets/images/search.svg';
+import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import Pagination from '@/components/Pagination';
 import TextInput from '@/components/TextInput';

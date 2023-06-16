@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg';
 import UsersEmpty from '@/assets/images/users-empty.svg';
 import ApplicationName from '@/components/ApplicationName';

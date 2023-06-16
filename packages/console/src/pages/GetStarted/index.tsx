@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import CompleteIndicator from '@/assets/images/task-complete.svg';
+import CompleteIndicator from '@/assets/icons/task-complete.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';

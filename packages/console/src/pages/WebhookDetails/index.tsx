@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/images/delete.svg';
-import Forbidden from '@/assets/images/forbidden.svg';
-import More from '@/assets/images/more.svg';
-import Shield from '@/assets/images/shield.svg';
-import WebhookDark from '@/assets/images/webhook-dark.svg';
-import Webhook from '@/assets/images/webhook.svg';
+import Delete from '@/assets/icons/delete.svg';
+import Forbidden from '@/assets/icons/forbidden.svg';
+import More from '@/assets/icons/more.svg';
+import Shield from '@/assets/icons/shield.svg';
+import WebhookDark from '@/assets/icons/webhook-dark.svg';
+import Webhook from '@/assets/icons/webhook.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';

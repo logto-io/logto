@@ -12,8 +12,8 @@ import {
   useState,
 } from 'react';
 
-import EyeClosed from '@/assets/images/eye-closed.svg';
-import Eye from '@/assets/images/eye.svg';
+import EyeClosed from '@/assets/icons/eye-closed.svg';
+import Eye from '@/assets/icons/eye.svg';
 import IconButton from '@/components/IconButton';
 
 import * as styles from './index.module.scss';

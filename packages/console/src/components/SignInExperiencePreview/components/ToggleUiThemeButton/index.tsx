@@ -1,8 +1,8 @@
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 
-import Moon from '@/assets/images/moon.svg';
-import Sun from '@/assets/images/sun.svg';
+import Moon from '@/assets/icons/moon.svg';
+import Sun from '@/assets/icons/sun.svg';
 
 import type { Props as ButtonProps } from '../../../Button';
 import Button from '../../../Button';

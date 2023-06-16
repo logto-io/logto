@@ -1,5 +1,5 @@
-import Native from '@/assets/images/connector-platform-icon-native.svg';
-import Web from '@/assets/images/connector-platform-icon-web.svg';
+import Native from '@/assets/icons/connector-platform-icon-native.svg';
+import Web from '@/assets/icons/connector-platform-icon-web.svg';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
 import PlatformTab from './PlatformTab';

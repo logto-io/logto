@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ExternalLinkIcon from '@/assets/images/external-link.svg';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
 import useConfigs from '@/hooks/use-configs';
 

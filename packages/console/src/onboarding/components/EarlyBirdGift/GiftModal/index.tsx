@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Calendar from '@/assets/images/calendar.svg';
-import Email from '@/assets/images/email.svg';
+import Calendar from '@/assets/icons/calendar.svg';
+import Email from '@/assets/icons/email.svg';
 import ModalLayout from '@/components/ModalLayout';
 import { emailUsLink, reservationLink } from '@/onboarding/constants';
 import * as modalStyles from '@/scss/modal.module.scss';

@@ -4,9 +4,9 @@ import { useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
-import PlusSign from '@/assets/images/plus.svg';
-import Tick from '@/assets/images/tick.svg';
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
+import PlusSign from '@/assets/icons/plus.svg';
+import Tick from '@/assets/icons/tick.svg';
 import CreateTenantModal from '@/cloud/pages/Main/CreateTenantModal';
 import AppError from '@/components/AppError';
 import Divider from '@/components/Divider';

@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
-import Arrow from '@/assets/images/arrow-left.svg';
+import Arrow from '@/assets/icons/arrow-left.svg';
 import DynamicT from '@/components/DynamicT';
 import TextLink from '@/components/TextLink';
 import * as modalStyles from '@/scss/modal.module.scss';

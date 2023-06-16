@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/assets/icons/close.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import IconButton from '@/components/IconButton';

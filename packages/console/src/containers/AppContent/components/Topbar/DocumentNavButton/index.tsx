@@ -1,4 +1,4 @@
-import DocumentIcon from '@/assets/images/document-nav-button.svg';
+import DocumentIcon from '@/assets/icons/document-nav-button.svg';
 import DangerousRaw from '@/components/DangerousRaw';
 import TextLink from '@/components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';

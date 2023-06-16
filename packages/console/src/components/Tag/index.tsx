@@ -2,8 +2,8 @@ import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 
-import Failed from '@/assets/images/failed.svg';
-import Success from '@/assets/images/success.svg';
+import Failed from '@/assets/icons/failed.svg';
+import Success from '@/assets/icons/success.svg';
 
 import * as styles from './index.module.scss';
 

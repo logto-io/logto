@@ -1,12 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 
-import DiscordDark from '@/assets/images/discord-dark.svg';
-import Discord from '@/assets/images/discord.svg';
-import EmailDark from '@/assets/images/email-dark.svg';
-import Email from '@/assets/images/email.svg';
-import GithubDark from '@/assets/images/github-dark.svg';
-import Github from '@/assets/images/github.svg';
+import DiscordDark from '@/assets/icons/discord-dark.svg';
+import Discord from '@/assets/icons/discord.svg';
+import EmailDark from '@/assets/icons/email-dark.svg';
+import Email from '@/assets/icons/email.svg';
+import GithubDark from '@/assets/icons/github-dark.svg';
+import Github from '@/assets/icons/github.svg';
 import { contactEmailLink, discordLink, githubIssuesLink } from '@/consts';
 import useTheme from '@/hooks/use-theme';
 

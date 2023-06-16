@@ -2,7 +2,7 @@ import type { FormEventHandler, KeyboardEventHandler } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SearchIcon from '@/assets/images/search.svg';
+import SearchIcon from '@/assets/icons/search.svg';
 
 import Button from '../Button';
 import TextInput from '../TextInput';

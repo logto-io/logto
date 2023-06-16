@@ -4,8 +4,8 @@ import type { ChangeEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Plus from '@/assets/images/plus.svg';
-import SearchIcon from '@/assets/images/search.svg';
+import Plus from '@/assets/icons/plus.svg';
+import SearchIcon from '@/assets/icons/search.svg';
 import Button from '@/components/Button';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
 import TextInput from '@/components/TextInput';

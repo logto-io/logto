@@ -3,10 +3,10 @@ import type { ScopeResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 
-import Delete from '@/assets/images/delete.svg';
+import Delete from '@/assets/icons/delete.svg';
+import Plus from '@/assets/icons/plus.svg';
 import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
 import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
-import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
 import Search from '@/components/Search';

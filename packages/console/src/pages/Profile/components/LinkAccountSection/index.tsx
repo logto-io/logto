@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import MailIcon from '@/assets/images/mail.svg';
+import MailIcon from '@/assets/icons/mail.svg';
 import FormCard from '@/components/FormCard';
 import ImageWithErrorFallback from '@/components/ImageWithErrorFallback';
 import UnnamedTrans from '@/components/UnnamedTrans';

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { type ReactElement, type ReactNode } from 'react';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/assets/icons/close.svg';
 
 import Card from '../Card';
 import type { Props as CardTitleProps } from '../CardTitle';

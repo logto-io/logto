@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import CirclePlus from '@/assets/images/circle-plus.svg';
-import Plus from '@/assets/images/plus.svg';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
 import ConnectorLogo from '@/components/ConnectorLogo';

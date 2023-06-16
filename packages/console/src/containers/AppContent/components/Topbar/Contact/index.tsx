@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import ContactIcon from '@/assets/images/contact-us.svg';
+import ContactIcon from '@/assets/icons/contact-us.svg';
 import IconButton from '@/components/IconButton';
 
 import ContactModal from './ContactModal';

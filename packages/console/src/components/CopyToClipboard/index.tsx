@@ -4,9 +4,9 @@ import type { MouseEventHandler } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Copy from '@/assets/images/copy.svg';
-import EyeClosed from '@/assets/images/eye-closed.svg';
-import Eye from '@/assets/images/eye.svg';
+import Copy from '@/assets/icons/copy.svg';
+import EyeClosed from '@/assets/icons/eye-closed.svg';
+import Eye from '@/assets/icons/eye.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import IconButton from '../IconButton';

@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
-import Failed from '@/assets/images/failed.svg';
-import Success from '@/assets/images/success.svg';
+import Failed from '@/assets/icons/failed.svg';
+import Success from '@/assets/icons/success.svg';
 import { logEventTitle } from '@/consts/logs';
 
 import * as styles from './index.module.scss';

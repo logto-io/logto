@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import Tick from '@/assets/images/tick.svg';
+import Tick from '@/assets/icons/tick.svg';
 
 import * as styles from './index.module.scss';
 

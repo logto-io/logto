@@ -3,9 +3,9 @@ import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import ArrowDown from '@/assets/images/arrow-down.svg';
-import ArrowUp from '@/assets/images/arrow-up.svg';
-import Tip from '@/assets/images/tip.svg';
+import ArrowDown from '@/assets/icons/arrow-down.svg';
+import ArrowUp from '@/assets/icons/arrow-up.svg';
+import Tip from '@/assets/icons/tip.svg';
 import Card from '@/components/Card';
 import DynamicT from '@/components/DynamicT';
 import IconButton from '@/components/IconButton';

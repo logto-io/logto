@@ -2,8 +2,8 @@ import { ConnectorType } from '@logto/connector-kit';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Bulb from '@/assets/images/bulb.svg';
-import LightBulb from '@/assets/images/light-bulb.svg';
+import Bulb from '@/assets/icons/bulb.svg';
+import LightBulb from '@/assets/icons/light-bulb.svg';
 import Button from '@/components/Button';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { OnboardingSieConfig } from '@/onboarding/types';

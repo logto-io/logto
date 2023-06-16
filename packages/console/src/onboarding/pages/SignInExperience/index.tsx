@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Tools from '@/assets/images/tools.svg';
+import Tools from '@/assets/icons/tools.svg';
 import Button from '@/components/Button';
 import { CardSelector, MultiCardSelector } from '@/components/CardSelector';
 import ColorPicker from '@/components/ColorPicker';
