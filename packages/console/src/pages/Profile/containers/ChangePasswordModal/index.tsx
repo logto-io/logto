@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import ClearInput from '@/assets/images/clear-input.svg';
+import ClearInput from '@/assets/icons/clear-input.svg';
 import Button from '@/components/Button';
 import Checkbox from '@/components/Checkbox';
 import IconButton from '@/components/IconButton';

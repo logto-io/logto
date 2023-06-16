@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { type ReactNode } from 'react';
 import { type FieldValues, type FieldPath } from 'react-hook-form';
 
-import Plus from '@/assets/images/plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import { type Props as ButtonProps } from '@/components/Button';
 import { type Props as CardTitleProps } from '@/components/CardTitle';
 import PageMeta, { type Props as PageMetaProps } from '@/components/PageMeta';

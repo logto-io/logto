@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/images/tip.svg';
+import Tip from '@/assets/icons/tip.svg';
 import IconButton from '@/components/IconButton';
 import TextLink from '@/components/TextLink';
 import { ToggleTip } from '@/components/Tip';

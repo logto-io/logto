@@ -1,20 +1,20 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import Envelop from '@/assets/images/envelop.svg';
-import Keyboard from '@/assets/images/keyboard.svg';
-import Label from '@/assets/images/label.svg';
-import Lock from '@/assets/images/lock.svg';
-import Mobile from '@/assets/images/mobile.svg';
+import Envelop from '@/assets/icons/envelop.svg';
+import Keyboard from '@/assets/icons/keyboard.svg';
+import Label from '@/assets/icons/label.svg';
+import Lock from '@/assets/icons/lock.svg';
+import Mobile from '@/assets/icons/mobile.svg';
 import type { MultiCardSelectorOption, CardSelectorOption } from '@/components/CardSelector';
 import DangerousRaw from '@/components/DangerousRaw';
 import { Authentication } from '@/onboarding/types';
 
-import Apple from '../../assets/images/social-apple.svg';
-import Facebook from '../../assets/images/social-facebook.svg';
-import Kakao from '../../assets/images/social-kakao.svg';
-import Microsoft from '../../assets/images/social-microsoft.svg';
-import Oidc from '../../assets/images/social-oidc.svg';
-import Smal from '../../assets/images/social-smal.svg';
+import Apple from '../../assets/icons/social-apple.svg';
+import Facebook from '../../assets/icons/social-facebook.svg';
+import Kakao from '../../assets/icons/social-kakao.svg';
+import Microsoft from '../../assets/icons/social-microsoft.svg';
+import Oidc from '../../assets/icons/social-oidc.svg';
+import Smal from '../../assets/icons/social-smal.svg';
 
 export const identifierOptions: CardSelectorOption[] = [
   {

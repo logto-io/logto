@@ -2,8 +2,8 @@ import type { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/images/circle-plus.svg';
-import Plus from '@/assets/images/plus.svg';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import ActionMenu from '@/components/ActionMenu';
 import type { Props as ButtonProps } from '@/components/Button';
 import { DropdownItem } from '@/components/Dropdown';

@@ -7,8 +7,8 @@ import Modal from 'react-modal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
-import ApiResource from '@/assets/images/api-resource.svg';
+import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
+import ApiResource from '@/assets/icons/api-resource.svg';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';

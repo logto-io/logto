@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
 
-import UploaderIcon from '@/assets/images/upload.svg';
+import UploaderIcon from '@/assets/icons/upload.svg';
 import useApi from '@/hooks/use-api';
 import { convertToFileExtensionArray } from '@/utils/uploader';
 

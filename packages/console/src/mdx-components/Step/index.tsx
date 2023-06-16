@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
-import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
+import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';

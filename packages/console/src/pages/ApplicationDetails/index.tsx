@@ -13,8 +13,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/images/delete.svg';
-import More from '@/assets/images/more.svg';
+import Delete from '@/assets/icons/delete.svg';
+import More from '@/assets/icons/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';

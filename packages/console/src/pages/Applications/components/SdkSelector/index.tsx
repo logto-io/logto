@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import TadaDark from '@/assets/icons/tada-dark.svg';
+import Tada from '@/assets/icons/tada.svg';
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
-import TadaDark from '@/assets/images/tada-dark.svg';
-import Tada from '@/assets/images/tada.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import RadioGroup, { Radio } from '@/components/RadioGroup';

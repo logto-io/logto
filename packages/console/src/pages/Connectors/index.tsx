@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
+import Plus from '@/assets/icons/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
 import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';

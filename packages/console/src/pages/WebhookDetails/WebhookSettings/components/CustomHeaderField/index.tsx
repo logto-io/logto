@@ -1,8 +1,8 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CirclePlus from '@/assets/images/circle-plus.svg';
-import Minus from '@/assets/images/minus.svg';
+import CirclePlus from '@/assets/icons/circle-plus.svg';
+import Minus from '@/assets/icons/minus.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import IconButton from '@/components/IconButton';

@@ -3,8 +3,8 @@ import { DomainStatus, type Domain } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Delete from '@/assets/images/delete.svg';
-import More from '@/assets/images/more.svg';
+import Delete from '@/assets/icons/delete.svg';
+import More from '@/assets/icons/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DynamicT from '@/components/DynamicT';

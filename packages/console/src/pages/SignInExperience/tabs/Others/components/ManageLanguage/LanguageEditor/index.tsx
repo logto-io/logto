@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/assets/icons/close.svg';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ConfirmModal from '@/components/ConfirmModal';

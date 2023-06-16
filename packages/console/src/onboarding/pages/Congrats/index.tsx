@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import EmailUsIcon from '@/assets/icons/email-us.svg';
+import Email from '@/assets/icons/email.svg';
 import CongratsImage from '@/assets/images/congrats.svg';
-import EmailUsIcon from '@/assets/images/email-us.svg';
-import Email from '@/assets/images/email.svg';
 import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import OverlayScrollbar from '@/components/OverlayScrollbar';

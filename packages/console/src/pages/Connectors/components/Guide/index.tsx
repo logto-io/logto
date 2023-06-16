@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/assets/icons/close.svg';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';

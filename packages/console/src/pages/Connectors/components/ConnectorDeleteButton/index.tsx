@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 
-import Delete from '@/assets/images/delete.svg';
+import Delete from '@/assets/icons/delete.svg';
 import IconButton from '@/components/IconButton';
 import { Tooltip } from '@/components/Tip';
 import useApi from '@/hooks/use-api';

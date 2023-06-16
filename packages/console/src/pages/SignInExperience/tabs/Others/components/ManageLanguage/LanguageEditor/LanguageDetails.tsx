@@ -11,8 +11,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
-import Clear from '@/assets/images/clear.svg';
-import Delete from '@/assets/images/delete.svg';
+import Clear from '@/assets/icons/clear.svg';
+import Delete from '@/assets/icons/delete.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';

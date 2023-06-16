@@ -2,7 +2,7 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
 
-import Back from '@/assets/images/back.svg';
+import Back from '@/assets/icons/back.svg';
 import type { RequestError } from '@/hooks/use-api';
 
 import type DangerousRaw from '../DangerousRaw';

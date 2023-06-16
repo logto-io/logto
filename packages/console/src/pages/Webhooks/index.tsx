@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Plus from '@/assets/images/plus.svg';
-import WebhookDark from '@/assets/images/webhook-dark.svg';
-import Webhook from '@/assets/images/webhook.svg';
+import Plus from '@/assets/icons/plus.svg';
+import WebhookDark from '@/assets/icons/webhook-dark.svg';
+import Webhook from '@/assets/icons/webhook.svg';
 import WebhooksEmptyDark from '@/assets/images/webhooks-empty-dark.svg';
 import WebhooksEmpty from '@/assets/images/webhooks-empty.svg';
 import Button from '@/components/Button';

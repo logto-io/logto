@@ -8,10 +8,10 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
-import ApiResource from '@/assets/images/api-resource.svg';
-import Delete from '@/assets/images/delete.svg';
-import More from '@/assets/images/more.svg';
+import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
+import ApiResource from '@/assets/icons/api-resource.svg';
+import Delete from '@/assets/icons/delete.svg';
+import More from '@/assets/icons/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';

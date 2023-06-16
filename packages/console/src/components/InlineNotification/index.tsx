@@ -2,9 +2,9 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
 
-import Info from '@/assets/images/info.svg';
-import Error from '@/assets/images/toast-error.svg';
-import Success from '@/assets/images/toast-success.svg';
+import Info from '@/assets/icons/info.svg';
+import Error from '@/assets/icons/toast-error.svg';
+import Success from '@/assets/icons/toast-success.svg';
 
 import Button from '../Button';
 import DynamicT from '../DynamicT';

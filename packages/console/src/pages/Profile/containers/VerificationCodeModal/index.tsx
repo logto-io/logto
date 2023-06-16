@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
-import ArrowConnection from '@/assets/images/arrow-connection.svg';
+import ArrowConnection from '@/assets/icons/arrow-connection.svg';
 import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCodeInput';
 import { adminTenantEndpoint, meApi } from '@/consts';

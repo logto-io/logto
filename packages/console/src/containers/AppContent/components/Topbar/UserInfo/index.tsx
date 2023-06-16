@@ -6,10 +6,10 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import Globe from '@/assets/images/globe.svg';
-import Palette from '@/assets/images/palette.svg';
-import Profile from '@/assets/images/profile.svg';
-import SignOut from '@/assets/images/sign-out.svg';
+import Globe from '@/assets/icons/globe.svg';
+import Palette from '@/assets/icons/palette.svg';
+import Profile from '@/assets/icons/profile.svg';
+import SignOut from '@/assets/icons/sign-out.svg';
 import Divider from '@/components/Divider';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Spacer from '@/components/Spacer';

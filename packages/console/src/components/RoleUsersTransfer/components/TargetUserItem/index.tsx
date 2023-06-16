@@ -1,6 +1,6 @@
 import type { User } from '@logto/schemas';
 
-import Close from '@/assets/images/close.svg';
+import Close from '@/assets/icons/close.svg';
 import IconButton from '@/components/IconButton';
 import UserAvatar from '@/components/UserAvatar';
 import SuspendedTag from '@/pages/Users/components/SuspendedTag';

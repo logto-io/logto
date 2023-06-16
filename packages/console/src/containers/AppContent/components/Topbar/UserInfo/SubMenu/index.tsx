@@ -2,8 +2,8 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { type ReactNode, useCallback, useState, useRef } from 'react';
 
-import ArrowRight from '@/assets/images/arrow-right.svg';
-import Tick from '@/assets/images/tick.svg';
+import ArrowRight from '@/assets/icons/arrow-right.svg';
+import Tick from '@/assets/icons/tick.svg';
 import { DropdownItem } from '@/components/Dropdown';
 import DynamicT from '@/components/DynamicT';
 import OverlayScrollbar from '@/components/OverlayScrollbar';

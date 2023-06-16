@@ -1,13 +1,13 @@
 import { ApplicationType } from '@logto/schemas';
 
-import MachineToMachineDark from '@/assets/images/machine-to-machine-dark.svg';
-import MachineToMachine from '@/assets/images/machine-to-machine.svg';
-import NativeAppDark from '@/assets/images/native-app-dark.svg';
-import NativeApp from '@/assets/images/native-app.svg';
-import SinglePageAppDark from '@/assets/images/single-page-app-dark.svg';
-import SinglePageApp from '@/assets/images/single-page-app.svg';
-import TraditionalWebAppDark from '@/assets/images/traditional-web-app-dark.svg';
-import TraditionalWebApp from '@/assets/images/traditional-web-app.svg';
+import MachineToMachineDark from '@/assets/icons/machine-to-machine-dark.svg';
+import MachineToMachine from '@/assets/icons/machine-to-machine.svg';
+import NativeAppDark from '@/assets/icons/native-app-dark.svg';
+import NativeApp from '@/assets/icons/native-app.svg';
+import SinglePageAppDark from '@/assets/icons/single-page-app-dark.svg';
+import SinglePageApp from '@/assets/icons/single-page-app.svg';
+import TraditionalWebAppDark from '@/assets/icons/traditional-web-app-dark.svg';
+import TraditionalWebApp from '@/assets/icons/traditional-web-app.svg';
 
 type ApplicationIconMap = {
   [key in ApplicationType]: SvgComponent;

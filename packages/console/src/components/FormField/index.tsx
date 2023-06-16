@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Tip from '@/assets/images/tip.svg';
+import Tip from '@/assets/icons/tip.svg';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';

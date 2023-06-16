@@ -6,8 +6,8 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import CreateTenantHeaderIconDark from '@/assets/images/create-tenant-header-dark.svg';
-import CreateTenantHeaderIcon from '@/assets/images/create-tenant-header.svg';
+import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
+import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';

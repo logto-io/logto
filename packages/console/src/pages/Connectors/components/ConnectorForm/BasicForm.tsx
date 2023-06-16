@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CaretDown from '@/assets/images/caret-down.svg';
-import CaretUp from '@/assets/images/caret-up.svg';
-import Error from '@/assets/images/toast-error.svg';
+import CaretDown from '@/assets/icons/caret-down.svg';
+import CaretUp from '@/assets/icons/caret-up.svg';
+import Error from '@/assets/icons/toast-error.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';

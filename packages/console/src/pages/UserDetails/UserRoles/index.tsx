@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Delete from '@/assets/images/delete.svg';
-import Plus from '@/assets/images/plus.svg';
+import Delete from '@/assets/icons/delete.svg';
+import Plus from '@/assets/icons/plus.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';

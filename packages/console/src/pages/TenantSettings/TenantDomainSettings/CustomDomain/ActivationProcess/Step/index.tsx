@@ -3,8 +3,8 @@ import { DomainStatus } from '@logto/schemas';
 import classNames from 'classnames';
 import { type ReactNode } from 'react';
 
-import Success from '@/assets/images/success.svg';
-import Tip from '@/assets/images/tip.svg';
+import Success from '@/assets/icons/success.svg';
+import Tip from '@/assets/icons/tip.svg';
 import DynamicT from '@/components/DynamicT';
 import IconButton from '@/components/IconButton';
 import { Ring } from '@/components/Spinner';

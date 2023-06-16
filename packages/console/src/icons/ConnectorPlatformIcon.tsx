@@ -1,8 +1,8 @@
 import { ConnectorPlatform } from '@logto/schemas';
 
-import Native from '@/assets/images/connector-platform-icon-native.svg';
-import Universal from '@/assets/images/connector-platform-icon-universal.svg';
-import Web from '@/assets/images/connector-platform-icon-web.svg';
+import Native from '@/assets/icons/connector-platform-icon-native.svg';
+import Universal from '@/assets/icons/connector-platform-icon-universal.svg';
+import Web from '@/assets/icons/connector-platform-icon-web.svg';
 
 type Props = {
   platform: ConnectorPlatform;

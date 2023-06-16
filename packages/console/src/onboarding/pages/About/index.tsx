@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import Case from '@/assets/images/case.svg';
+import Case from '@/assets/icons/case.svg';
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import OverlayScrollbar from '@/components/OverlayScrollbar';
