@@ -1,9 +1,9 @@
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
-import IconButton from '@/components/IconButton';
-import TextLink from '@/components/TextLink';
-import { ToggleTip } from '@/components/Tip';
+import IconButton from '@/ds-components/IconButton';
+import TextLink from '@/ds-components/TextLink';
+import { ToggleTip } from '@/ds-components/Tip';
 
 import * as styles from './index.module.scss';
 

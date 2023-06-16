@@ -13,13 +13,13 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
 import Close from '@/assets/icons/close.svg';
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
-import DangerousRaw from '@/components/DangerousRaw';
-import IconButton from '@/components/IconButton';
 import Markdown from '@/components/Markdown';
-import OverlayScrollbar from '@/components/OverlayScrollbar';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import IconButton from '@/ds-components/IconButton';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';

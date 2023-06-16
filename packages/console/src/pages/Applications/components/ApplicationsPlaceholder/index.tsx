@@ -4,7 +4,7 @@ import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
+import Button from '@/ds-components/Button';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import { applicationTypeI18nKey } from '@/types/applications';

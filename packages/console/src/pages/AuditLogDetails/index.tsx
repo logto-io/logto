@@ -7,16 +7,16 @@ import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
-import Card from '@/components/Card';
-import CodeEditor from '@/components/CodeEditor';
-import DangerousRaw from '@/components/DangerousRaw';
 import DetailsPage from '@/components/DetailsPage';
-import FormField from '@/components/FormField';
 import PageMeta from '@/components/PageMeta';
-import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
 import { logEventTitle } from '@/consts/logs';
 import { hookEventLogKey } from '@/consts/webhooks';
+import Card from '@/ds-components/Card';
+import CodeEditor from '@/ds-components/CodeEditor';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import FormField from '@/ds-components/FormField';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import { getUserTitle } from '@/utils/user';
 

@@ -2,10 +2,10 @@ import { HookEvent } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { CheckboxGroup } from '@/components/Checkbox';
-import FormField from '@/components/FormField';
-import TextInput from '@/components/TextInput';
 import { hookEventLabel } from '@/consts/webhooks';
+import { CheckboxGroup } from '@/ds-components/Checkbox';
+import FormField from '@/ds-components/FormField';
+import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
 import { type BasicWebhookFormType } from '../../types';

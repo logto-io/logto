@@ -1,4 +1,4 @@
-import Tag from '@/components/Tag';
+import Tag from '@/ds-components/Tag';
 
 type Props = {
   successCount: number;

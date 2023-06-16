@@ -5,13 +5,13 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
-import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
-import DangerousRaw from '@/components/DangerousRaw';
-import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
-import Spacer from '@/components/Spacer';
+import Button from '@/ds-components/Button';
+import Card from '@/ds-components/Card';
+import CardTitle from '@/ds-components/CardTitle';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import IconButton from '@/ds-components/IconButton';
+import Spacer from '@/ds-components/Spacer';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';

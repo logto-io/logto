@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Minus from '@/assets/icons/minus.svg';
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import IconButton from '@/components/IconButton';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import IconButton from '@/ds-components/IconButton';
+import TextInput from '@/ds-components/TextInput';
 import { type WebhookDetailsFormType } from '@/pages/WebhookDetails/types';
 
 import * as styles from './index.module.scss';

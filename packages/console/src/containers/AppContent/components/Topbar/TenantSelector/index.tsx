@@ -9,8 +9,8 @@ import PlusSign from '@/assets/icons/plus.svg';
 import Tick from '@/assets/icons/tick.svg';
 import CreateTenantModal from '@/cloud/pages/Main/CreateTenantModal';
 import AppError from '@/components/AppError';
-import Divider from '@/components/Divider';
-import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import Divider from '@/ds-components/Divider';
+import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import useTenants from '@/hooks/use-tenants';
 import { onKeyDownHandler } from '@/utils/a11y';
 

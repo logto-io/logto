@@ -4,7 +4,7 @@ import type { HTMLProps, ReactElement, ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Ring as Spinner } from '@/components/Spinner';
+import { Ring as Spinner } from '@/ds-components/Spinner';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';

@@ -1,8 +1,8 @@
 import { withAppInsights } from '@logto/app-insights/react';
 
 import AuditLogTable from '@/components/AuditLogTable';
-import CardTitle from '@/components/CardTitle';
 import PageMeta from '@/components/PageMeta';
+import CardTitle from '@/ds-components/CardTitle';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
 function AuditLogs() {

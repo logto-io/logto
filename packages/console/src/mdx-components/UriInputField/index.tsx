@@ -7,11 +7,14 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import { convertRhfErrorMessage, createValidatorForRhf } from '@/components/MultiTextInput/utils';
 import MultiTextInputField from '@/components/MultiTextInputField';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import {
+  convertRhfErrorMessage,
+  createValidatorForRhf,
+} from '@/ds-components/MultiTextInput/utils';
+import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import type { GuideForm } from '@/types/guide';

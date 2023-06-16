@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import CloudLogo from '@/assets/images/cloud-logo.svg';
 import Logo from '@/assets/images/logo.svg';
-import Spacer from '@/components/Spacer';
 import { isProduction, isCloud } from '@/consts/env';
+import Spacer from '@/ds-components/Spacer';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
 
 import Contact from './Contact';

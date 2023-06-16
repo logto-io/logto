@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import SearchIcon from '@/assets/icons/search.svg';
-import Button from '@/components/Button';
-import OverlayScrollbar from '@/components/OverlayScrollbar';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import TextInput from '@/ds-components/TextInput';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as style from './AddLanguageSelector.module.scss';

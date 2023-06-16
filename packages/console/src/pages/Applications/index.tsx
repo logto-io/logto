@@ -6,10 +6,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
-import CopyToClipboard from '@/components/CopyToClipboard';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { applicationTypeI18nKey } from '@/types/applications';

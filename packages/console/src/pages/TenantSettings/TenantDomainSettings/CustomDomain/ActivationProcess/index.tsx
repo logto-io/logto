@@ -1,8 +1,8 @@
 import { type Domain } from '@logto/schemas';
 
-import DynamicT from '@/components/DynamicT';
-import InlineNotification from '@/components/InlineNotification';
 import { customDomainSyncInterval } from '@/consts/custom-domain';
+import DynamicT from '@/ds-components/DynamicT';
+import InlineNotification from '@/ds-components/InlineNotification';
 
 import DnsRecordsTable from './DnsRecordsTable';
 import Step from './Step';

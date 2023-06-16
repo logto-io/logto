@@ -2,10 +2,10 @@ import { conditional } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Card from '@/components/Card';
-import Checkbox from '@/components/Checkbox';
-import FormField from '@/components/FormField';
-import Select from '@/components/Select';
+import Card from '@/ds-components/Card';
+import Checkbox from '@/ds-components/Checkbox';
+import FormField from '@/ds-components/FormField';
+import Select from '@/ds-components/Select';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 import {

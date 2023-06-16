@@ -4,11 +4,11 @@ import { conditional } from '@silverhand/essentials';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import { trySubmitSafe } from '@/utils/form';

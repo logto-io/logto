@@ -6,17 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Case from '@/assets/icons/case.svg';
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import OverlayScrollbar from '@/components/OverlayScrollbar';
 import PageMeta from '@/components/PageMeta';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import TextInput from '@/ds-components/TextInput';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-import { CardSelector, MultiCardSelector } from '../../../components/CardSelector';
 import ActionBar from '../../components/ActionBar';
+import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage } from '../../types';
 import { getOnboardingPage } from '../../utils';

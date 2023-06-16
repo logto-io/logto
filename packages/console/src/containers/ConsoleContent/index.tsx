@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
-import OverlayScrollbar from '@/components/OverlayScrollbar';
 import {
   ApiResourceDetailsTabs,
   SignInExperiencePage,
@@ -11,6 +10,7 @@ import {
   TenantSettingsTabs,
 } from '@/consts';
 import { isCloud, isProduction } from '@/consts/env';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';

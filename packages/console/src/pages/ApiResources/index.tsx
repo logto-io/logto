@@ -9,13 +9,13 @@ import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
 import ApiResource from '@/assets/icons/api-resource.svg';
-import CopyToClipboard from '@/components/CopyToClipboard';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
-import Tag from '@/components/Tag';
 import { defaultPageSize } from '@/consts';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTheme from '@/hooks/use-theme';

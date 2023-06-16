@@ -5,11 +5,11 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
-import ModalLayout from '@/components/ModalLayout';
-import TextInput from '@/components/TextInput';
-import ImageUploaderField from '@/components/Uploader/ImageUploaderField';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import Button from '@/ds-components/Button';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextInput from '@/ds-components/TextInput';
+import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserAssetsService from '@/hooks/use-user-assets-service';

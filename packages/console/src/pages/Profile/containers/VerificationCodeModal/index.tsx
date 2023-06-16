@@ -6,9 +6,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
 import ArrowConnection from '@/assets/icons/arrow-connection.svg';
-import TextLink from '@/components/TextLink';
 import VerificationCodeInput, { defaultLength } from '@/components/VerificationCodeInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';

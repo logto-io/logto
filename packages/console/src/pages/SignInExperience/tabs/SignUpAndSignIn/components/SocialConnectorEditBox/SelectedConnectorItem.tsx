@@ -1,8 +1,8 @@
 import Draggable from '@/assets/icons/draggable.svg';
 import Minus from '@/assets/icons/minus.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import IconButton from '@/components/IconButton';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import IconButton from '@/ds-components/IconButton';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 

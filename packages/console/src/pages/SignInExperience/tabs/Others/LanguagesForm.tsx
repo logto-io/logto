@@ -5,10 +5,10 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Card from '@/components/Card';
-import FormField from '@/components/FormField';
-import Select from '@/components/Select';
-import Switch from '@/components/Switch';
+import Card from '@/ds-components/Card';
+import FormField from '@/ds-components/FormField';
+import Select from '@/ds-components/Select';
+import Switch from '@/ds-components/Switch';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 

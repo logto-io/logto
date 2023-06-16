@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
-import Card from '@/components/Card';
+import Card from '@/ds-components/Card';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';

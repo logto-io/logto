@@ -5,11 +5,11 @@ import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import CodeEditor from '@/components/CodeEditor';
-import CopyToClipboard from '@/components/CopyToClipboard';
-import DynamicT from '@/components/DynamicT';
-import FormField from '@/components/FormField';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import CodeEditor from '@/ds-components/CodeEditor';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DynamicT from '@/ds-components/DynamicT';
+import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import { applyDomain } from '@/utils/domain';
 import { jsonValidator } from '@/utils/validator';

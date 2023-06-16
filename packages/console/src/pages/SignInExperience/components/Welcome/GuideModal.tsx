@@ -6,11 +6,11 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Close from '@/assets/icons/close.svg';
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
-import IconButton from '@/components/IconButton';
-import InlineNotification from '@/components/InlineNotification';
-import Spacer from '@/components/Spacer';
+import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
+import IconButton from '@/ds-components/IconButton';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Spacer from '@/ds-components/Spacer';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 import useUserPreferences from '@/hooks/use-user-preferences';

@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';

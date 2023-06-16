@@ -3,7 +3,6 @@ import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@/components/Button';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
@@ -13,6 +12,7 @@ import {
   connectorTitlePlaceHolder,
 } from '@/consts/connectors';
 import { ConnectorsTabs } from '@/consts/page-tabs';
+import Button from '@/ds-components/Button';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 

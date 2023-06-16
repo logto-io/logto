@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { unstable_useBlocker as useBlocker, useLocation } from 'react-router-dom';
 
-import ConfirmModal from '../ConfirmModal';
+import ConfirmModal from '@/ds-components/ConfirmModal';
 
 type Props = {
   hasUnsavedChanges: boolean;

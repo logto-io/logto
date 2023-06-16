@@ -3,7 +3,7 @@ import { adminConsoleApplicationId } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import Select from '@/components/Select';
+import Select from '@/ds-components/Select';
 
 type Props = {
   value?: string;

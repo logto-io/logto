@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import Button from '../Button';
+import Button from '@/ds-components/Button';
 
 import * as styles from './index.module.scss';
 

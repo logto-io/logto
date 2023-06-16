@@ -1,8 +1,9 @@
 import { useLogto } from '@logto/react';
 import { useTranslation } from 'react-i18next';
 
+import Button from '@/ds-components/Button';
+
 import AppError from '../AppError';
-import Button from '../Button';
 
 import * as styles from './index.module.scss';
 

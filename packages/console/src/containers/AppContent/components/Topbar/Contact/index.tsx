@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ContactIcon from '@/assets/icons/contact-us.svg';
-import IconButton from '@/components/IconButton';
+import IconButton from '@/ds-components/IconButton';
 
 import ContactModal from './ContactModal';
 

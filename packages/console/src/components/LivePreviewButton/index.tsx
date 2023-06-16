@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import type { Props as ButtonProps, ButtonType } from '@/ds-components/Button';
+import Button from '@/ds-components/Button';
+import { Tooltip } from '@/ds-components/Tip';
 import useConfigs from '@/hooks/use-configs';
-
-import type { Props as ButtonProps, ButtonType } from '../Button';
-import Button from '../Button';
-import { Tooltip } from '../Tip';
 
 import * as styles from './index.module.scss';
 

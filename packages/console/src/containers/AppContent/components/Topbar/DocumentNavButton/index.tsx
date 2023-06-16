@@ -1,6 +1,6 @@
 import DocumentIcon from '@/assets/icons/document-nav-button.svg';
-import DangerousRaw from '@/components/DangerousRaw';
-import TextLink from '@/components/TextLink';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import * as styles from './index.module.scss';

@@ -2,8 +2,8 @@ import type { Nullable } from '@silverhand/essentials';
 import { noop } from '@silverhand/essentials';
 import { useState, useRef, useMemo, createContext, useCallback, useEffect } from 'react';
 
-import ConfirmModal from '@/components/ConfirmModal';
-import type { ConfirmModalProps } from '@/components/ConfirmModal';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import type { ConfirmModalProps } from '@/ds-components/ConfirmModal';
 
 type ModalContentRenderProps = {
   confirm: (data?: unknown) => void;

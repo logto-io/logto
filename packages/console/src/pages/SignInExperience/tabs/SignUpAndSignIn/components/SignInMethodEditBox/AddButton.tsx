@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Plus from '@/assets/icons/plus.svg';
-import ActionMenu from '@/components/ActionMenu';
-import type { Props as ButtonProps } from '@/components/Button';
-import { DropdownItem } from '@/components/Dropdown';
+import ActionMenu from '@/ds-components/ActionMenu';
+import type { Props as ButtonProps } from '@/ds-components/Button';
+import { DropdownItem } from '@/ds-components/Dropdown';
 import { signInIdentifierPhrase } from '@/pages/SignInExperience/constants';
 
 import * as styles from './index.module.scss';

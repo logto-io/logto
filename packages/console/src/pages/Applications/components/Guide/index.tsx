@@ -6,9 +6,9 @@ import type { MDXProps } from 'mdx/types';
 import type { LazyExoticComponent } from 'react';
 import { useEffect, useContext, cloneElement, lazy, Suspense, useState } from 'react';
 
-import CodeEditor from '@/components/CodeEditor';
-import TextLink from '@/components/TextLink';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import CodeEditor from '@/ds-components/CodeEditor';
+import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import type { SupportedSdk } from '@/types/applications';

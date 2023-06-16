@@ -9,11 +9,11 @@ import Modal from 'react-modal';
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
-import RadioGroup, { Radio } from '@/components/RadioGroup';
-import TextInput from '@/components/TextInput';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import ModalLayout from '@/ds-components/ModalLayout';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
+import TextInput from '@/ds-components/TextInput';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 

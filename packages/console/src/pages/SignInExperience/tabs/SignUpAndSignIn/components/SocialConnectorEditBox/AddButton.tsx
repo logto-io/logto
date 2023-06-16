@@ -2,11 +2,11 @@ import classNames from 'classnames';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Plus from '@/assets/icons/plus.svg';
-import ActionMenu from '@/components/ActionMenu';
-import type { Props as ButtonProps } from '@/components/Button';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import { DropdownItem } from '@/components/Dropdown';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import ActionMenu from '@/ds-components/ActionMenu';
+import type { Props as ButtonProps } from '@/ds-components/Button';
+import { DropdownItem } from '@/ds-components/Dropdown';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 

@@ -8,9 +8,9 @@ import useSWR from 'swr';
 
 import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import Pagination from '@/components/Pagination';
-import TextInput from '@/components/TextInput';
 import { defaultPageSize } from '@/consts';
+import Pagination from '@/ds-components/Pagination';
+import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';

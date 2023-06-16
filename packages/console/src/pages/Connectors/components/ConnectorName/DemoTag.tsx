@@ -1,8 +1,8 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { useTranslation } from 'react-i18next';
 
-import Tag from '@/components/Tag';
-import { Tooltip } from '@/components/Tip';
+import Tag from '@/ds-components/Tag';
+import { Tooltip } from '@/ds-components/Tip';
 
 type Props = {
   connectorType: ConnectorType;

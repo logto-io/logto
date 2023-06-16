@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import Bulb from '@/assets/icons/bulb.svg';
 import LightBulb from '@/assets/icons/light-bulb.svg';
-import Button from '@/components/Button';
+import Button from '@/ds-components/Button';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 

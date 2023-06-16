@@ -6,11 +6,11 @@ import { useOutletContext } from 'react-router-dom';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import Switch from '@/components/Switch';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import FormField from '@/ds-components/FormField';
+import Switch from '@/ds-components/Switch';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';

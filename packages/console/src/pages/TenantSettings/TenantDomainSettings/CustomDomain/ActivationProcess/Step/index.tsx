@@ -5,10 +5,10 @@ import { type ReactNode } from 'react';
 
 import Success from '@/assets/icons/success.svg';
 import Tip from '@/assets/icons/tip.svg';
-import DynamicT from '@/components/DynamicT';
-import IconButton from '@/components/IconButton';
-import { Ring } from '@/components/Spinner';
-import ToggleTip from '@/components/Tip/ToggleTip';
+import DynamicT from '@/ds-components/DynamicT';
+import IconButton from '@/ds-components/IconButton';
+import { Ring } from '@/ds-components/Spinner';
+import ToggleTip from '@/ds-components/Tip/ToggleTip';
 
 import * as styles from './index.module.scss';
 

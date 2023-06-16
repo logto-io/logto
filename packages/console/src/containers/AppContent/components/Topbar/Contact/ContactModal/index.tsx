@@ -1,9 +1,9 @@
 import ReactModal from 'react-modal';
 
-import Button from '@/components/Button';
-import DynamicT from '@/components/DynamicT';
-import ModalLayout from '@/components/ModalLayout';
 import { isCloud } from '@/consts/env';
+import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
+import ModalLayout from '@/ds-components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { useContacts } from './hook';

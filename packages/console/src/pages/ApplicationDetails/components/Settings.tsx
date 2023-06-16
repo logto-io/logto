@@ -3,14 +3,17 @@ import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import CopyToClipboard from '@/components/CopyToClipboard';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import type { MultiTextInputRule } from '@/components/MultiTextInput/types';
-import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import MultiTextInputField from '@/components/MultiTextInputField';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import FormField from '@/ds-components/FormField';
+import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
+import {
+  createValidatorForRhf,
+  convertRhfErrorMessage,
+} from '@/ds-components/MultiTextInput/utils';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriOriginValidator } from '@/utils/validator';
 

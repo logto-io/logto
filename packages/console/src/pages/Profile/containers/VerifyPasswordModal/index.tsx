@@ -6,11 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowConnection from '@/assets/icons/arrow-connection.svg';
 import PasswordHideIcon from '@/assets/icons/password-hide.svg';
 import PasswordShowIcon from '@/assets/icons/password-show.svg';
-import Button from '@/components/Button';
-import IconButton from '@/components/IconButton';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import Button from '@/ds-components/Button';
+import IconButton from '@/ds-components/IconButton';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';

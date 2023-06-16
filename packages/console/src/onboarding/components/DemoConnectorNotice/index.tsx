@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import InlineNotification from '@/components/InlineNotification';
+import InlineNotification from '@/ds-components/InlineNotification';
 
 import * as styles from './index.module.scss';
 

@@ -9,15 +9,15 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import CardTitle from '@/components/CardTitle';
-import ConfirmModal from '@/components/ConfirmModal';
 import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
-import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { SignInExperiencePage } from '@/consts/page-tabs';
+import CardTitle from '@/ds-components/CardTitle';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';

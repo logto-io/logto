@@ -2,8 +2,8 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-import ConfirmModal from '@/components/ConfirmModal';
-import TextInput from '@/components/TextInput';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import TextInput from '@/ds-components/TextInput';
 
 type Props = {
   isOpen: boolean;

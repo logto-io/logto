@@ -9,13 +9,13 @@ import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
-import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
-import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsPage from '@/components/DetailsPage';
-import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RoleDetailsTabs } from '@/consts/page-tabs';
+import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
+import Card from '@/ds-components/Card';
+import ConfirmModal from '@/ds-components/ConfirmModal';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 

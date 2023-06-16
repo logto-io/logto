@@ -2,8 +2,8 @@ import type { ConnectorResponse } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import InlineNotification from '@/components/InlineNotification';
-import TextLink from '@/components/TextLink';
+import InlineNotification from '@/ds-components/InlineNotification';
+import TextLink from '@/ds-components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import * as styles from './index.module.scss';

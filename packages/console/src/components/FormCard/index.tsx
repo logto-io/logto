@@ -2,9 +2,9 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Card from '../Card';
-import DynamicT from '../DynamicT';
-import TextLink from '../TextLink';
+import Card from '@/ds-components/Card';
+import DynamicT from '@/ds-components/DynamicT';
+import TextLink from '@/ds-components/TextLink';
 
 import * as styles from './index.module.scss';
 

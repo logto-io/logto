@@ -6,12 +6,12 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import EventSelector from '@/components/AuditLogTable/components/EventSelector';
-import DynamicT from '@/components/DynamicT';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import Table from '@/components/Table';
-import Tag from '@/components/Tag';
 import { defaultPageSize } from '@/consts';
 import { hookEventLabel, hookEventLogKey } from '@/consts/webhooks';
+import DynamicT from '@/ds-components/DynamicT';
+import Table from '@/ds-components/Table';
+import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl } from '@/utils/url';

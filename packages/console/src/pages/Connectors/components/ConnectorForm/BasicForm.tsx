@@ -5,12 +5,12 @@ import { Trans, useTranslation } from 'react-i18next';
 import CaretDown from '@/assets/icons/caret-down.svg';
 import CaretUp from '@/assets/icons/caret-up.svg';
 import Error from '@/assets/icons/toast-error.svg';
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import Select from '@/components/Select';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import Select from '@/ds-components/Select';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { uriValidator } from '@/utils/validator';
 

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import CardTitle from '@/components/CardTitle';
-import Spacer from '@/components/Spacer';
+import CardTitle from '@/ds-components/CardTitle';
+import Spacer from '@/ds-components/Spacer';
 
 import * as pageStyles from '../../index.module.scss';
 

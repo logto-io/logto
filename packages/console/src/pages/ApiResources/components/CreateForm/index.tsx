@@ -2,11 +2,11 @@ import type { Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
-import TextInput from '@/components/TextInput';
-import TextLink from '@/components/TextLink';
+import Button from '@/ds-components/Button';
+import FormField from '@/ds-components/FormField';
+import ModalLayout from '@/ds-components/ModalLayout';
+import TextInput from '@/ds-components/TextInput';
+import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 

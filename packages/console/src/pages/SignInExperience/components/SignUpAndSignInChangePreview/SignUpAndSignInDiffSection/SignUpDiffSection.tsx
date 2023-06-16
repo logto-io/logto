@@ -3,7 +3,7 @@ import { getSafe } from '@silverhand/essentials';
 import { diff } from 'deep-object-diff';
 import { useTranslation } from 'react-i18next';
 
-import DynamicT from '@/components/DynamicT';
+import DynamicT from '@/ds-components/DynamicT';
 import { signUpIdentifierPhrase } from '@/pages/SignInExperience/constants';
 import type { SignUpForm } from '@/pages/SignInExperience/types';
 import { signInExperienceParser } from '@/pages/SignInExperience/utils/form';

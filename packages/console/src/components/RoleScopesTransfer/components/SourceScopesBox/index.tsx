@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
-import TextInput from '@/components/TextInput';
+import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import Button from '@/components/Button';
+import Button from '@/ds-components/Button';
 
 import LanguageEditor from './LanguageEditor';
 

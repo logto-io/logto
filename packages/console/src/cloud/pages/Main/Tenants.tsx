@@ -3,9 +3,9 @@ import { useCallback, useContext, useEffect } from 'react';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
-import Button from '@/components/Button';
-import DangerousRaw from '@/components/DangerousRaw';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 
 import * as styles from './index.module.scss';
 

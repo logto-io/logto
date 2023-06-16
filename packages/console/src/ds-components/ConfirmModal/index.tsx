@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
-import type { ButtonType } from '@/components/Button';
-import Button from '@/components/Button';
+import type { ButtonType } from '@/ds-components/Button';
+import Button from '@/ds-components/Button';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import ModalLayout from '../ModalLayout';

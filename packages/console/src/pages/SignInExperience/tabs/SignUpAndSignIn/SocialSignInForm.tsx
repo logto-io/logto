@@ -1,8 +1,8 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Card from '@/components/Card';
-import FormField from '@/components/FormField';
+import Card from '@/ds-components/Card';
+import FormField from '@/ds-components/FormField';
 
 import type { SignInExperienceForm } from '../../types';
 import * as styles from '../index.module.scss';

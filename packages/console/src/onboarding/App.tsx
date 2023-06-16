@@ -7,10 +7,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import AppLoading from '@/components/AppLoading';
-import Toast from '@/components/Toast';
 import { getBasename } from '@/consts';
 import AppBoundary from '@/containers/AppBoundary';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
+import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import NotFound from '@/pages/NotFound';
 

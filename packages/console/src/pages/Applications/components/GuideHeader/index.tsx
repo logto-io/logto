@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
 import GetSample from '@/assets/icons/get-sample.svg';
-import Button from '@/components/Button';
-import CardTitle from '@/components/CardTitle';
-import DangerousRaw from '@/components/DangerousRaw';
-import IconButton from '@/components/IconButton';
-import Spacer from '@/components/Spacer';
-import Tooltip from '@/components/Tip/Tooltip';
+import Button from '@/ds-components/Button';
+import CardTitle from '@/ds-components/CardTitle';
+import DangerousRaw from '@/ds-components/DangerousRaw';
+import IconButton from '@/ds-components/IconButton';
+import Spacer from '@/ds-components/Spacer';
+import Tooltip from '@/ds-components/Tip/Tooltip';
 import { SupportedSdk } from '@/types/applications';
 
 import * as styles from './index.module.scss';

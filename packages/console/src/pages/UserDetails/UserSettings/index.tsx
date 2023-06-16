@@ -7,12 +7,12 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 
-import CodeEditor from '@/components/CodeEditor';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
-import FormField from '@/components/FormField';
-import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import CodeEditor from '@/ds-components/CodeEditor';
+import FormField from '@/ds-components/FormField';
+import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';

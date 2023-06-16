@@ -8,13 +8,13 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { defaultPageSize } from '@/consts';
+import Table from '@/ds-components/Table';
+import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import { buildUrl } from '@/utils/url';
 
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
-import Table from '../Table';
-import type { Column } from '../Table/types';
 
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';

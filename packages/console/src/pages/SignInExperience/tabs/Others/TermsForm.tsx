@@ -1,9 +1,9 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Card from '@/components/Card';
-import FormField from '@/components/FormField';
-import TextInput from '@/components/TextInput';
+import Card from '@/ds-components/Card';
+import FormField from '@/ds-components/FormField';
+import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../types';

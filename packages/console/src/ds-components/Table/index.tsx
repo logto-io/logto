@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 import { Fragment } from 'react';
 import type { FieldPath, FieldValues } from 'react-hook-form';
 
-import type { Props as PaginationProps } from '@/components/Pagination';
-import Pagination from '@/components/Pagination';
+import type { Props as PaginationProps } from '@/ds-components/Pagination';
+import Pagination from '@/ds-components/Pagination';
 
 import OverlayScrollbar from '../OverlayScrollbar';
 

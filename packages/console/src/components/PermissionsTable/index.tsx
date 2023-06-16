@@ -7,20 +7,20 @@ import Delete from '@/assets/icons/delete.svg';
 import Plus from '@/assets/icons/plus.svg';
 import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
 import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
-import Button from '@/components/Button';
-import IconButton from '@/components/IconButton';
-import Search from '@/components/Search';
-import Table from '@/components/Table';
-import type { Column } from '@/components/Table/types';
-import TextLink from '@/components/TextLink';
-import { Tooltip } from '@/components/Tip';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
+import IconButton from '@/ds-components/IconButton';
+import type { Props as PaginationProps } from '@/ds-components/Pagination';
+import Search from '@/ds-components/Search';
+import Table from '@/ds-components/Table';
+import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
+import type { Column } from '@/ds-components/Table/types';
+import TextLink from '@/ds-components/TextLink';
+import { Tooltip } from '@/ds-components/Tip';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
-import DynamicT from '../DynamicT';
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
-import type { Props as PaginationProps } from '../Pagination';
-import TablePlaceholder from '../Table/TablePlaceholder';
 
 import * as styles from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import Card from '@/components/Card';
+import Card from '@/ds-components/Card';
 
 import * as styles from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import RadioGroup, { Radio } from '@/components/RadioGroup';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 
 import type { CardSelectorOption } from './types';
 

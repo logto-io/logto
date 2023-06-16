@@ -7,11 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ClearInput from '@/assets/icons/clear-input.svg';
-import Button from '@/components/Button';
-import Checkbox from '@/components/Checkbox';
-import IconButton from '@/components/IconButton';
-import TextInput from '@/components/TextInput';
 import { adminTenantEndpoint, meApi } from '@/consts';
+import Button from '@/ds-components/Button';
+import Checkbox from '@/ds-components/Checkbox';
+import IconButton from '@/ds-components/IconButton';
+import TextInput from '@/ds-components/TextInput';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 

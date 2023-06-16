@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import Tag from '@/components/Tag';
+import Tag from '@/ds-components/Tag';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import type { ConnectorGroup } from '@/types/connector';
 
