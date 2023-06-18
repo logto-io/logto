@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import CloudLogo from '@/assets/images/cloud-logo.svg';
 import Logo from '@/assets/images/logo.svg';
-import { isProduction, isCloud } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import Spacer from '@/ds-components/Spacer';
 import EarlyBirdGift from '@/onboarding/components/EarlyBirdGift';
 
@@ -24,7 +24,7 @@ function Topbar({ className }: Props) {
   return (
     <div className={classNames(styles.topbar, className)}>
       <LogtoLogo className={styles.logo} />
-      {isCloud && !isProduction && <TenantSelector />}
+      {isCloud && <TenantSelector />}
       {!isCloud && (
         <>
           <div className={styles.line} />

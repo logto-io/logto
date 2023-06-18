@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Mon locataire',
     environment_tag: 'Balise environnement',
     environment_tag_description:
-      "Utilisez des balises pour différencier les environnements d'utilisation des locataires. Les services dans chaque balise sont identiques, assurant ainsi la cohérence.",
-    environment_tag_development: 'Développement',
-    environment_tag_staging: 'Mise en scène',
-    environment_tag_production: 'Production',
+      'Les services avec différentes balises sont identiques. Il fonctionne comme un suffixe pour aider votre équipe à différencier les environnements.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Supprimer le locataire',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Si vous souhaitez continuer, veuillez entrer le nom du locataire "<span>{{name}}</span>" pour confirmer.',
     delete_button: 'Supprimer définitivement',
+  },
+  tenant_landing_page: {
+    title: "Vous n'avez pas encore créé de locataire",
+    description:
+      "Pour commencer à configurer votre projet avec Logto, veuillez créer un nouveau locataire. Si vous devez vous déconnecter ou supprimer votre compte, cliquez simplement sur le bouton d'avatar dans le coin supérieur droit.",
+    create_tenant_button: 'Créer un locataire',
   },
   tenant_created: "Locataire '{{name}}' créé avec succès.",
 };

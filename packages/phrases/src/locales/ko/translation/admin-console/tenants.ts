@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: '내 테넌트',
     environment_tag: '환경 태그',
     environment_tag_description:
-      '태그를 사용하여 테넌트 사용 환경을 구분하세요. 각 태그 내의 서비스는 동일하여 일관성을 보장합니다.',
-    environment_tag_development: '개발',
-    environment_tag_staging: '스테이징',
-    environment_tag_production: '프로덕션',
+      '태그가 다른 서비스는 동일합니다. 환경을 구분하는 데 팀을 돕는 접미사로 기능합니다.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: '테넌트 삭제',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       '삭제하려는 테넌트 이름 "<span>{{name}}</span>"을(를) 입력하여 확인하십시오.',
     delete_button: '영구 삭제',
+  },
+  tenant_landing_page: {
+    title: '아직 테넌트를 만들지 않았습니다.',
+    description:
+      'Logto 를 사용하여 프로젝트를 구성하려면 새 테넌트를 만드세요. 로그아웃하거나 계정을 삭제하려면 오른쪽 상단 모서리에있는 아바타 버튼을 클릭하세요.',
+    create_tenant_button: '테넌트 만들기',
   },
   tenant_created: "테넌트 '{{name}}'가(이) 성공적으로 만들어졌습니다.",
 };

@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Meu inquilino',
     environment_tag: 'Etiqueta de ambiente',
     environment_tag_description:
-      'Use etiquetas para diferenciar os ambientes de utilização do inquilino. Os serviços em cada etiqueta são idênticos, garantindo consistência.',
-    environment_tag_development: 'Desenvolvimento',
+      'Os serviços com etiquetas diferentes são idênticos. Funciona como um sufixo para ajudar a sua equipa a diferenciar ambientes.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Produção',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Eliminar inquilino',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Se desejar continuar, introduza o nome do inquilino "<span>{{name}}</span>" para confirmar.',
     delete_button: 'Eliminar permanentemente',
+  },
+  tenant_landing_page: {
+    title: 'Ainda não criou um inquilino',
+    description:
+      'Para começar a configurar o seu projeto com o Logto, crie um novo inquilino. Se precisar de fazer logout ou excluir a sua conta, basta clicar no botão avatar no canto superior direito.',
+    create_tenant_button: 'Criar inquilino',
   },
   tenant_created: "Inquilino '{{name}}' criado com sucesso.",
 };

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
 import Tick from '@/assets/icons/tick.svg';
-import CreateTenantModal from '@/cloud/pages/Main/CreateTenantModal';
+import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandingPageContent/CreateTenantModal';
 import AppError from '@/components/AppError';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';

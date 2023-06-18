@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Mój najemca',
     environment_tag: 'Tag środowiska',
     environment_tag_description:
-      'Użyj tagów do odróżniania środowisk wykorzystania najemcy. Usługi w każdym tagu są identyczne, zapewniając spójność.',
-    environment_tag_development: 'Rozwój',
+      'Usługi z różnymi tagami są identyczne. Działa jako przyrostek, aby pomóc Twojemu zespołowi w różnicowaniu środowisk.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Produkcja',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Usuń najemcę',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Jeśli chcesz kontynuować, wprowadź nazwę najemcy "<span>{{name}}</span>" w celu potwierdzenia.',
     delete_button: 'Usuń na stałe',
+  },
+  tenant_landing_page: {
+    title: 'Nie utworzyłeś jeszcze najemcy',
+    description:
+      'Aby rozpocząć konfigurowanie projektu z Logto, utwórz nowego najemcę. Jeśli musisz się wylogować lub usunąć swoje konto, wystarczy kliknąć przycisk awatara w prawym górnym rogu.',
+    create_tenant_button: 'Utwórz najemcę',
   },
   tenant_created: "Najemca '{{name}}' utworzony pomyślnie.",
 };

@@ -12,10 +12,11 @@ const tenant_settings = {
     tenant_name: 'Nazwa Najemcy',
     environment_tag: 'Tag Środowiska',
     environment_tag_description:
-      'Użyj tagów, aby rozróżnić środowiska użytkowe najemcy. Usługi w każdym tagu są identyczne, co zapewnia spójność.',
-    environment_tag_development: 'Rozwój',
+      'Usługi z różnymi tagami są identyczne. Działa jako przyrostek, aby pomóc Twojemu zespołowi w różnicowaniu środowisk.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Produkcja',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: 'Informacje o najemcy zostały pomyślnie zapisane.',
   },
   deletion_card: {
     title: 'USUWANIE',

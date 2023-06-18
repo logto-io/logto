@@ -12,10 +12,11 @@ const tenant_settings = {
     tenant_name: 'Kiracı Adı',
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
-      'Etiketleri kullanarak kiracı kullanım ortamlarını farklılaştırın. Her etiketin içindeki hizmetler aynıdır, tutarlılığı sağlar.',
-    environment_tag_development: 'Geliştirme',
+      'Farklı etiketlere sahip hizmetler aynıdır. Ortamları ayırt etmek için ekibinize yardımcı olmak için bir sonek görevi görür.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Üretim',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   deletion_card: {
     title: 'SİL',

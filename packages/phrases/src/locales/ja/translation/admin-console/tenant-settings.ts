@@ -12,10 +12,11 @@ const tenant_settings = {
     tenant_name: 'テナント名',
     environment_tag: '環境タグ',
     environment_tag_description:
-      'タグを使用してテナント使用環境を区別します。 各タグ内のサービスは同一で、一貫性が保たれます。',
-    environment_tag_development: '開発',
-    environment_tag_staging: 'ステージング',
-    environment_tag_production: 'プロダクション',
+      'タグの異なるサービスは同一です。環境を区別するためにチームを支援する接尾辞として機能します。',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: 'テナント情報は正常に保存されました。',
   },
   deletion_card: {
     title: '削除',

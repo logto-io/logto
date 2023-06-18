@@ -1,10 +1,12 @@
+import { defaultTenantId } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { setDefaultOptions } from 'expect-puppeteer';
 
 import { logtoCloudUrl as logtoCloudUrlString, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
-setDefaultOptions({ timeout: 2000 });
+await page.setViewport({ width: 1280, height: 720 });
+setDefaultOptions({ timeout: 5000 });
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -18,6 +20,8 @@ describe('smoke testing for cloud', () => {
   const logtoCloudUrl = new URL(logtoCloudUrlString);
   const adminTenantUrl = new URL(logtoConsoleUrl); // In dev mode, the console URL is actually for admin tenant
 
+  const createTenantName = 'new-tenant';
+
   it('can open with app element and navigate to register page', async () => {
     await page.goto(logtoCloudUrl.href);
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
@@ -27,8 +31,6 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can register the first admin account', async () => {
-    await expect(page).toClick('button', { text: 'Create account' });
-
     await expect(page).toFill('input[name=identifier]', consoleUsername);
     await expect(page).toClick('button[name=submit]');
 
@@ -40,35 +42,12 @@ describe('smoke testing for cloud', () => {
       confirmPassword: consolePassword,
     });
     await expect(page).toClick('button[name=submit]');
+
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    expect(page.url()).toBe(logtoCloudUrl.href);
-  });
-
-  it('shows a tenant-select page with two tenants', async () => {
-    const tenantsWrapper = await page.waitForSelector('div[class$=wrapper]');
-
-    await expect(tenantsWrapper).toMatchElement('a:nth-of-type(1)', { text: 'default' });
-    await expect(tenantsWrapper).toMatchElement('a:nth-of-type(2)', { text: 'admin' });
-  });
-
-  it('can create another tenant', async () => {
-    await expect(page).toClick('button', { text: 'Create' });
-
-    await page.waitForTimeout(1000);
-    const tenants = await page.$$('div[class$=wrapper] > a');
-    expect(tenants.length).toBe(3);
-  });
-
-  it('can enter the tenant just created', async () => {
-    const button = await page.waitForSelector('div[class$=wrapper] > a:last-of-type');
-    const tenantId = await button.evaluate((element) => element.textContent);
-
-    await button.click();
-
-    // Wait for our beautiful logo to show up
-    await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
-    expect(page.url()).toBe(new URL(`/${tenantId ?? ''}/onboarding/welcome`, logtoCloudUrl).href);
+    expect(page.url()).toBe(
+      appendPath(logtoCloudUrl, `/${defaultTenantId}/onboarding/welcome`).href
+    );
   });
 
   it('can complete the onboarding welcome process and enter the user survey page', async () => {
@@ -129,6 +108,7 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('div[class$=content] >button');
 
     // Wait for the admin console to load
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
     await expect(mainContent).toMatchElement('div[class$=title]', {
       text: 'Something to explore to help you succeed',
@@ -137,15 +117,84 @@ describe('smoke testing for cloud', () => {
     expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
   });
 
+  it('can create a new tenant using tenant dropdown', async () => {
+    // Click 'current tenant card' locates in topbar
+    const currentTenantCard = await page.waitForSelector(
+      'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
+    );
+    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: 'My Project' });
+    await currentTenantCard.click();
+
+    await page.waitForTimeout(500);
+    const createTenantButton = await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class$=dropdownContainer] > div[class$=dropdown] > div[class$=createTenantButton][role=button]:has(div)'
+    );
+    await expect(createTenantButton).toMatchElement('div', { text: 'Create tenant' });
+    await createTenantButton.click();
+
+    // Create tenant with name 'new-tenant' and tag 'production'
+    await page.waitForTimeout(500);
+    await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class*=card][class$=medium] input[type=text][name=name]'
+    );
+    await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class*=radioGroup][class$=small] div[class*=radio][class$=small][role=radio] > div[class$=content]:has(input[value=production])'
+    );
+    await expect(page).toFill(
+      'div[class$=ReactModalPortal] div[class*=card][class$=medium] input[type=text][name=name]',
+      createTenantName
+    );
+    await expect(page).toClick(
+      'div[class$=ReactModalPortal] div[class*=radioGroup][class$=small] div[class*=radio][class$=small][role=radio] > div[class$=content]:has(input[value=production])'
+    );
+
+    // Click create button
+    await page.waitForTimeout(500);
+    await expect(page).toClick(
+      'div[class$=ReactModalPortal] div[class*=card][class$=medium] div[class$=footer] button[type=submit]'
+    );
+
+    expect(new URL(page.url()).pathname.endsWith(`${defaultTenantId}/get-started`)).toBeTruthy();
+  });
+
+  it('check current tenant list and switch to new tenant', async () => {
+    // Wait for toast to disappear.
+    await page.waitForTimeout(5000);
+
+    // Click 'current tenant card' locates in topbar
+    const currentTenantCard = await page.waitForSelector(
+      'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
+    );
+    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: 'My Project' });
+    await currentTenantCard.click();
+
+    const newTenant = await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class$=dropdownContainer] div[class$=dropdownItem]:first-child'
+    );
+    await expect(newTenant).toMatchElement('div[class$=dropdownName]', { text: createTenantName });
+    await newTenant.click();
+
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  });
+
   it('can sign out of admin console', async () => {
-    await expect(page).toClick('div[class$=topbar] > div[class$=container]');
+    // Check if the current tenant is switched to new tenant.
+    const currentTenantCard = await page.waitForSelector(
+      'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
+    );
+    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: createTenantName });
+
+    const userInfoButton = await page.waitForSelector('div[class$=topbar] > div[class$=container]');
+    await userInfoButton.click();
 
     // Try awaiting for 500ms before clicking sign-out button
     await page.waitForTimeout(500);
 
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
+    const signOutButton = await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
     );
+    await signOutButton.click();
+
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
@@ -169,9 +218,9 @@ describe('smoke testing for cloud', () => {
     });
 
     await expect(page).toClick('button[name=submit]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 5000 });
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    expect(page.url().startsWith(logtoCloudUrl.href)).toBeTruthy();
-    expect(new URL(page.url()).pathname.endsWith('/onboarding/welcome')).toBeTruthy();
+    expect(page.url().startsWith(logtoCloudUrl.origin)).toBeTruthy();
+    expect(page.url().endsWith('/onboarding/welcome')).toBeTruthy();
   });
 });

@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Мой арендатор',
     environment_tag: 'Тег окружения',
     environment_tag_description:
-      'Используйте теги для отделения сред сред использования арендаторов. Сервисы в каждом теге идентичны, обеспечивая согласованность.',
-    environment_tag_development: 'Разработка',
-    environment_tag_staging: 'Стадия',
-    environment_tag_production: 'Производство',
+      'Сервисы с разными тегами идентичны. Он работает как суффикс, чтобы помочь вашей команде различать среды.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Удалить арендатора',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Если вы хотите продолжить, введите название арендатора "<span>{{name}}</span>" для подтверждения.',
     delete_button: 'Навсегда удалить',
+  },
+  tenant_landing_page: {
+    title: 'Вы еще не создали арендатора',
+    description:
+      'Чтобы начать настройку вашего проекта с помощью Logto, создайте нового арендатора. Если вам нужно выйти из системы или удалить свою учетную запись, просто нажмите на кнопку аватара в правом верхнем углу.',
+    create_tenant_button: 'Создать арендатора',
   },
   tenant_created: "Арендатор '{{name}}' успешно создан.",
 };

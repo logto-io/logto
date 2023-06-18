@@ -12,10 +12,11 @@ const tenant_settings = {
     tenant_name: 'Nome Tenant',
     environment_tag: 'Tag Ambiente',
     environment_tag_description:
-      "Utilizza i tag per differenziare gli ambienti di utilizzo del tenant. I servizi all'interno di ogni tag sono identici, garantendo la coerenza.",
-    environment_tag_development: 'Sviluppo',
+      'I servizi con tag diversi sono identici. Funziona come suffisso per aiutare il tuo team a differenziare gli ambienti.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Produzione',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
   },
   deletion_card: {
     title: 'ELIMINA',

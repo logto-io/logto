@@ -4,7 +4,8 @@
   display: flex;
   align-items: center;
   padding: _.unit(1);
-  margin-left: _.unit(5);
+  padding-left: _.unit(2);
+  margin-left: _.unit(4);
   max-width: 500px;
   border-radius: _.unit(2);
   transition: background-color 0.2s ease-in-out;
@@ -45,7 +46,12 @@
     background-color: var(--color-neutral-80);
     flex-shrink: 0;
     position: absolute;
-    left: _.unit(-4);
+    left: _.unit(-3);
+  }
+
+  &:hover::before {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -89,7 +95,7 @@
     margin-left: auto;
 
     &.visible {
-      color: var(--color-brand-40);
+      color: var(--color-primary-40);
     }
   }
 }
@@ -116,6 +122,6 @@
   .icon {
     width: 20px;
     height: 20px;
-    color: var(--color-placeholder);
+    color: var(--color-neutral-50);
   }
 }

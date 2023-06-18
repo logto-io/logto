@@ -11,10 +11,11 @@ const tenant_settings = {
     tenant_name: '테넌트 이름',
     environment_tag: '환경 태그',
     environment_tag_description:
-      '태그를 사용하여 테넌트 사용 환경을 구분합니다. 각 태그에 대한 서비스는 동일하므로 일관성이 유지됩니다.',
-    environment_tag_development: '개발',
-    environment_tag_staging: '스테이징',
-    environment_tag_production: '프로덕션',
+      '태그가 다른 서비스는 동일합니다. 환경을 구분하는 데 팀을 돕는 접미사로 기능합니다.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: '세입자 정보가 성공적으로 저장되었습니다.',
   },
   deletion_card: {
     title: '삭제',

@@ -12,10 +12,11 @@ const tenant_settings = {
     tenant_name: 'Имя арендатора',
     environment_tag: 'Тег окружения',
     environment_tag_description:
-      'Используйте теги для различения окружений использования арендаторов. Сервисы в каждом теге идентичны, обеспечивая согласованность.',
-    environment_tag_development: 'Разработка',
-    environment_tag_staging: 'Стадия',
-    environment_tag_production: 'Производство',
+      'Сервисы с разными тегами идентичны. Он работает как суффикс, чтобы помочь вашей команде различать среды.',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: 'Информация о квартиросъемщике успешно сохранена.',
   },
   deletion_card: {
     title: 'УДАЛИТЬ',

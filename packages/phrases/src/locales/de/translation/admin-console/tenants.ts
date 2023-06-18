@@ -7,10 +7,10 @@ const tenants = {
     tenant_name_placeholder: 'Mein Mieter',
     environment_tag: 'Umwelt Tag',
     environment_tag_description:
-      'Verwenden Sie Tags, um die Verwendungsumgebungen von Mieter zu unterscheiden. Dienste innerhalb jeder Marke sind identisch und sorgen für Konsistenz.',
-    environment_tag_development: 'Entwicklung',
+      'Die Dienste mit unterschiedlichen Tags sind identisch. Es funktioniert als Suffix, um Ihrem Team Umgebungen zu unterscheiden.',
+    environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
-    environment_tag_production: 'Produktion',
+    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Mieter löschen',
@@ -21,6 +21,12 @@ const tenants = {
     description_line3:
       'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',
+  },
+  tenant_landing_page: {
+    title: 'Du hast noch keinen Mandanten erstellt',
+    description:
+      'Um Ihr Projekt mit Logto zu konfigurieren, erstellen Sie bitte einen neuen Mandanten. Wenn Sie sich abmelden oder Ihr Konto löschen möchten, klicken Sie einfach auf die Avatar-Taste in der oberen rechten Ecke.',
+    create_tenant_button: 'Mandanten erstellen',
   },
   tenant_created: "Mieter '{{name}}' erfolgreich erstellt.",
 };
