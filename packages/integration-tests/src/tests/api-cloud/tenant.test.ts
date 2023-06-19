@@ -85,6 +85,9 @@ describe('Tenant APIs', () => {
       expect(tenant).toHaveProperty('tag', payload.tag);
       expect(tenant).toHaveProperty('name', payload.name);
     }
+    await expect(
+      createTenant(accessToken, { name: 'tenant4', tag: TenantTag.Staging })
+    ).rejects.toThrow();
     await deleteTenant(accessToken, tenant3.id);
     const resources = await authedAdminTenantApi.get('resources').json<Resource[]>();
     expect(

@@ -68,6 +68,18 @@ export const tenantsRoutes = (library: TenantsLibrary) =>
           throw new RequestError('Forbidden due to lack of permission.', 403);
         }
 
+        /**
+         * Should throw 403 when users with `CreateTenant` scope are attempting to create more than 3 tenants.
+         * This does not apply to users with `ManageTenant` scope.
+         */
+        if (context.auth.scopes.includes(CloudScope.CreateTenant)) {
+          const availableTenants = await library.getAvailableTenants(context.auth.id);
+          assert(
+            availableTenants.length < 3,
+            new RequestError(`Can not have more than 3 tenants.`, 403)
+          );
+        }
+
         return next({
           ...context,
           json: await library.createNewTenant(context.auth.id, context.guarded.body),
