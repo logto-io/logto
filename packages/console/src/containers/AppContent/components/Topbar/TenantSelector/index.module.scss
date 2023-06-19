@@ -66,13 +66,8 @@ $dropdown-item-height: 40px;
   max-width: 500px;
   min-width: 320px;
 
-  > div:first-child {
+  .scrollableContent {
     max-height: calc(100vh - ($topbar-height - $topbar-tenant-card-margin + $dropdown-top-margin) - $dropdown-bottom-margin - ($dropdown-item-height + $dropdown-item-margin * 2)); // Secure 24px bottom safe margin.
-    overflow-y: hidden;
-
-    &:hover {
-      overflow-y: auto;
-    }
   }
 }
 
