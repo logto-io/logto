@@ -27,8 +27,8 @@ function DnsRecordsTable({ records }: Props) {
           <Table
             isRowHoverEffectDisabled
             className={styles.table}
-            headerClassName={styles.header}
-            bodyClassName={styles.bodyTableContainer}
+            headerTableClassName={styles.header}
+            bodyTableWrapperClassName={styles.bodyTableWrapper}
             rowGroups={[{ key: 'dnsRecords', data: records }]}
             rowIndexKey="name"
             isRowClickable={() => false}
