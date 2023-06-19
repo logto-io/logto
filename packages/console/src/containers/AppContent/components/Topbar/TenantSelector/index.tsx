@@ -11,6 +11,7 @@ import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandin
 import AppError from '@/components/AppError';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useTenants from '@/hooks/use-tenants';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -69,21 +70,23 @@ function TenantSelector() {
           setShowDropdown(false);
         }}
       >
-        {tenants.map(({ id, name, tag }) => (
-          <DropdownItem
-            key={id}
-            className={styles.dropdownItem}
-            onClick={() => {
-              window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
-            }}
-          >
-            <div className={styles.dropdownName}>{name}</div>
-            <TenantEnvTag className={styles.dropdownTag} tag={tag} />
-            <Tick
-              className={classNames(styles.checkIcon, id === currentTenantId && styles.visible)}
-            />
-          </DropdownItem>
-        ))}
+        <OverlayScrollbar className={styles.scrollableContent}>
+          {tenants.map(({ id, name, tag }) => (
+            <DropdownItem
+              key={id}
+              className={styles.dropdownItem}
+              onClick={() => {
+                window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
+              }}
+            >
+              <div className={styles.dropdownName}>{name}</div>
+              <TenantEnvTag className={styles.dropdownTag} tag={tag} />
+              <Tick
+                className={classNames(styles.checkIcon, id === currentTenantId && styles.visible)}
+              />
+            </DropdownItem>
+          ))}
+        </OverlayScrollbar>
         <Divider />
         <div
           role="button"
