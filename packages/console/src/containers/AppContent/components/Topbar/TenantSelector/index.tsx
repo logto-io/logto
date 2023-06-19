@@ -70,21 +70,23 @@ function TenantSelector() {
           setShowDropdown(false);
         }}
       >
-        {tenants.map(({ id, name, tag }) => (
-          <DropdownItem
-            key={id}
-            className={styles.dropdownItem}
-            onClick={() => {
-              window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
-            }}
-          >
-            <div className={styles.dropdownName}>{name}</div>
-            <TenantEnvTag className={styles.dropdownTag} tag={tag} />
-            <Tick
-              className={classNames(styles.checkIcon, id === currentTenantId && styles.visible)}
-            />
-          </DropdownItem>
-        ))}
+        <div>
+          {tenants.map(({ id, name, tag }) => (
+            <DropdownItem
+              key={id}
+              className={styles.dropdownItem}
+              onClick={() => {
+                window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
+              }}
+            >
+              <div className={styles.dropdownName}>{name}</div>
+              <TenantEnvTag className={styles.dropdownTag} tag={tag} />
+              <Tick
+                className={classNames(styles.checkIcon, id === currentTenantId && styles.visible)}
+              />
+            </DropdownItem>
+          ))}
+        </div>
         <Divider />
         <div
           role="button"

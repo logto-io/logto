@@ -58,6 +58,15 @@
 .dropdown {
   max-width: 500px;
   min-width: 320px;
+
+  > div:first-child {
+    max-height: calc(100vh - (64px - _.unit(4) + _.unit(1)) - _.unit(6) - (40px + _.unit(1) * 2)); // Secure 24px bottom safe margin.
+    overflow-y: hidden;
+
+    &:hover {
+      overflow-y: auto;
+    }
+  }
 }
 
 .dropdownItem {
