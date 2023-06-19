@@ -2,4 +2,6 @@
 /packages/core @simeng-li @wangsijie @gao-sun
 /packages/console @wangsijie @charIeszhao
 /packages/ui @simeng-li @charIeszhao
+/packages/cloud @simeng-li
+/packages/integration-tests @simeng-li
 /.changeset @gao-sun
