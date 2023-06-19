@@ -1,7 +1,8 @@
 import { createMockUtils } from '@logto/shared/esm';
 import Provider from 'oidc-provider';
+import Sinon from 'sinon';
 
-import { UserApps } from '#src/env-set/index.js';
+import { EnvSet, UserApps } from '#src/env-set/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -99,5 +100,19 @@ describe('koaSpaSessionGuard', () => {
     });
     await koaSpaSessionGuard(provider, queries)(ctx, next);
     expect(ctx.redirect).toBeCalledWith('https://foo.bar');
+  });
+
+  it(`should redirect to current hostname if isDomainBasedMultiTenancy`, async () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDomainBasedMultiTenancy: true,
+    });
+    interactionDetails.mockRejectedValue(new Error('session not found'));
+    const ctx = createContextWithRouteParameters({
+      url: '/sign-in/foo',
+    });
+    await koaSpaSessionGuard(provider, queries)(ctx, next);
+    expect(ctx.redirect).toBeCalledWith('https://test.com/unknown-session');
+    stub.restore();
   });
 });

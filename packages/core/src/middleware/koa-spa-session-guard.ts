@@ -55,9 +55,15 @@ export default function koaSpaSessionGuard<
           throw new RequestError({ code: 'session.not_found', status: 404 });
         }
 
-        ctx.redirect(
-          appendPath(getTenantEndpoint(tenantId, EnvSet.values), sessionNotFoundPath).href
-        );
+        const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+
+        if (EnvSet.values.isDomainBasedMultiTenancy) {
+          // Replace to current hostname (if custom domain is used)
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          tenantEndpoint.hostname = ctx.request.hostname;
+        }
+
+        ctx.redirect(appendPath(tenantEndpoint, sessionNotFoundPath).href);
 
         return;
       }
