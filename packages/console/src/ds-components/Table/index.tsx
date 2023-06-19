@@ -27,8 +27,8 @@ export type Props<
   isRowClickable?: (row: TFieldValues) => boolean;
   rowClickHandler?: (row: TFieldValues) => void;
   className?: string;
-  headerClassName?: string;
-  bodyClassName?: string;
+  headerTableClassName?: string;
+  bodyTableWrapperClassName?: string;
   isLoading?: boolean;
   pagination?: PaginationProps;
   placeholder?: ReactNode;
@@ -49,8 +49,8 @@ function Table<
   rowClickHandler,
   isRowClickable = () => Boolean(rowClickHandler),
   className,
-  headerClassName,
-  bodyClassName,
+  headerTableClassName,
+  bodyTableWrapperClassName,
   isLoading,
   pagination,
   placeholder,
@@ -79,7 +79,7 @@ function Table<
           className={classNames(
             styles.headerTable,
             filter && styles.hideTopBorderRadius,
-            headerClassName
+            headerTableClassName
           )}
         >
           <thead>
@@ -93,7 +93,11 @@ function Table<
           </thead>
         </table>
         <OverlayScrollbar
-          className={classNames(styles.bodyTable, isEmpty && styles.empty, bodyClassName)}
+          className={classNames(
+            styles.bodyTable,
+            isEmpty && styles.empty,
+            bodyTableWrapperClassName
+          )}
         >
           <table>
             <tbody>

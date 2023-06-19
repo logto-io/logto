@@ -179,8 +179,8 @@ function LanguageDetails() {
         <Table
           isRowHoverEffectDisabled
           className={styles.content}
-          headerClassName={styles.tableWrapper}
-          bodyClassName={styles.tableWrapper}
+          headerTableClassName={styles.tableWrapper}
+          bodyTableWrapperClassName={styles.tableWrapper}
           rowIndexKey="phraseKey"
           rowGroups={translationEntries.map(([groupKey, value]) => ({
             key: groupKey,
