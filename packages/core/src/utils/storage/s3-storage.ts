@@ -9,11 +9,7 @@ export const buildS3Storage = (
   secretAccessKey: string
 ) => {
   // Endpoint example: s3.us-west-2.amazonaws.com
-  const region = /s3\.([^.]*)\.amazonaws/.exec(endpoint)?.[1];
-
-  if (!region) {
-    throw new Error('Invalid S3 endpoint, can not find region');
-  }
+  const region = /s3\.([^.]*)\.amazonaws/.exec(endpoint)?.[1] ?? 'us-east-1';
 
   const client = new S3Client({
     region,
