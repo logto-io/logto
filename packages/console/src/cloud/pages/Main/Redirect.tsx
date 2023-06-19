@@ -25,6 +25,7 @@ function Redirect({ tenants, toTenantId }: Props) {
       // fetch the full-scoped (with all available tenants) token.
       if (await trySafe(getAccessToken(indicator))) {
         setIsSettle(true);
+        navigate(toTenantId);
       } else {
         void signIn(new URL(href, window.location.origin).toString());
       }
@@ -33,7 +34,7 @@ function Redirect({ tenants, toTenantId }: Props) {
     if (tenant) {
       void validate(tenant.indicator);
     }
-  }, [getAccessToken, href, setIsSettle, signIn, tenant]);
+  }, [getAccessToken, href, navigate, setIsSettle, signIn, tenant, toTenantId]);
 
   if (!tenant) {
     /** Fallback to another available tenant instead of showing `Forbidden`. */
