@@ -1,5 +1,12 @@
 @use '@/scss/underscore' as _;
 
+$topbar-height: 64px;
+$topbar-tenant-card-margin: _.unit(4);
+$dropdown-top-margin: _.unit(1);
+$dropdown-bottom-margin: _.unit(6);
+$dropdown-item-margin: _.unit(1);
+$dropdown-item-height: 40px;
+
 .currentTenantCard {
   display: flex;
   align-items: center;
@@ -60,7 +67,7 @@
   min-width: 320px;
 
   > div:first-child {
-    max-height: calc(100vh - (64px - _.unit(4) + _.unit(1)) - _.unit(6) - (40px + _.unit(1) * 2)); // Secure 24px bottom safe margin.
+    max-height: calc(100vh - ($topbar-height - $topbar-tenant-card-margin + $dropdown-top-margin) - $dropdown-bottom-margin - ($dropdown-item-height + $dropdown-item-margin * 2)); // Secure 24px bottom safe margin.
     overflow-y: hidden;
 
     &:hover {
