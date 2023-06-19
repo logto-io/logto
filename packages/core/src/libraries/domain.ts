@@ -10,6 +10,7 @@ import {
   deleteCustomHostname,
   getFallbackOrigin,
 } from '#src/utils/cloudflare/index.js';
+import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
 
@@ -60,7 +61,9 @@ export const createDomainLibrary = (queries: Queries) => {
       domain.cloudflareData.id
     );
 
-    return syncDomainStatusFromCloudflareData(domain, cloudflareData);
+    const updatedDomain = await syncDomainStatusFromCloudflareData(domain, cloudflareData);
+    await clearCustomDomainCache(domain.domain);
+    return updatedDomain;
   };
 
   const addDomain = async (hostname: string): Promise<Domain> => {
@@ -72,7 +75,7 @@ export const createDomainLibrary = (queries: Queries) => {
       createCustomHostname(hostnameProviderConfig, hostname),
     ]);
 
-    return insertDomain({
+    const insertedDomain = await insertDomain({
       domain: hostname,
       id: generateStandardId(),
       cloudflareData,
@@ -85,6 +88,8 @@ export const createDomainLibrary = (queries: Queries) => {
         },
       ],
     });
+    await clearCustomDomainCache(hostname);
+    return insertedDomain;
   };
 
   const deleteDomain = async (id: string) => {
@@ -98,6 +103,7 @@ export const createDomainLibrary = (queries: Queries) => {
     }
 
     await deleteDomainById(id);
+    await clearCustomDomainCache(domain.domain);
   };
 
   return {

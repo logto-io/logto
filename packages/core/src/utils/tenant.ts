@@ -46,8 +46,12 @@ const matchPathBasedTenantId = (urlSet: UrlSet, url: URL) => {
 };
 
 const cacheKey = 'custom-domain';
-const notFoundValue = 'not-found';
-const getDomainCacheKey = (url: URL) => `${cacheKey}:${url.hostname}`;
+const getDomainCacheKey = (url: URL | string) =>
+  `${cacheKey}:${typeof url === 'string' ? url : url.hostname}`;
+
+export const clearCustomDomainCache = async (url: URL | string) => {
+  await trySafe(async () => redisCache.delete(getDomainCacheKey(url)));
+};
 
 const getTenantIdFromCustomDomain = async (
   url: URL,
@@ -56,16 +60,16 @@ const getTenantIdFromCustomDomain = async (
   const cachedValue = await trySafe(async () => redisCache.get(getDomainCacheKey(url)));
 
   if (cachedValue) {
-    return cachedValue === notFoundValue ? undefined : cachedValue;
+    return cachedValue;
   }
 
   const { findActiveDomain } = createDomainsQueries(pool);
 
   const domain = await findActiveDomain(url.hostname);
 
-  await trySafe(async () =>
-    redisCache.set(getDomainCacheKey(url), domain?.tenantId ?? notFoundValue, 60)
-  );
+  if (domain?.tenantId) {
+    await trySafe(async () => redisCache.set(getDomainCacheKey(url), domain.tenantId));
+  }
 
   return domain?.tenantId;
 };
