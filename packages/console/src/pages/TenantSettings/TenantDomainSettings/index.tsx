@@ -4,6 +4,7 @@ import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
@@ -12,6 +13,7 @@ import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
   const { data: customDomain, isLoading, mutate } = useCustomDomain(true);
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   if (isLoading) {
     return null;
@@ -23,6 +25,7 @@ function TenantDomainSettings() {
       <FormCard
         title="domain.custom.custom_domain"
         description="domain.custom.custom_domain_description"
+        learnMoreLink={getDocumentationUrl('docs/recipes/custom-domain')}
       >
         <FormField title="domain.custom.custom_domain_field">
           {customDomain ? (
