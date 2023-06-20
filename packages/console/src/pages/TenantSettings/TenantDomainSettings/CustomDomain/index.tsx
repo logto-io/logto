@@ -2,6 +2,7 @@ import { type Domain, DomainStatus } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
 import TextLink from '@/ds-components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import ActivationProcess from './ActivationProcess';
 import CustomDomainHeader from './CustomDomainHeader';
@@ -14,6 +15,7 @@ type Props = {
 
 function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   return (
     <>
@@ -30,8 +32,11 @@ function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
         <div className={styles.notes}>
           <Trans
             components={{
-              // TODO LOG-6298 @xiaoyijun update this link when related docs are ready.
-              a: <TextLink to="#" />,
+              a: (
+                <TextLink
+                  to={getDocumentationUrl('docs/recipes/custom-domain/use-custom-domain')}
+                />
+              ),
             }}
           >
             {t('domain.update_endpoint_notice', { link: t('general.learn_more') })}
