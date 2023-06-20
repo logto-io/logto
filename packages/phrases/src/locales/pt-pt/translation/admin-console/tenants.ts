@@ -28,7 +28,6 @@ const tenants = {
       'Para começar a configurar o seu projeto com o Logto, crie um novo inquilino. Se precisar de fazer logout ou excluir a sua conta, basta clicar no botão avatar no canto superior direito.',
     create_tenant_button: 'Criar inquilino',
   },
-  tenant_created: "Inquilino '{{name}}' criado com sucesso.",
 };
 
 export default tenants;

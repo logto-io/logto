@@ -28,7 +28,6 @@ const tenants = {
       'Aby rozpocząć konfigurowanie projektu z Logto, utwórz nowego najemcę. Jeśli musisz się wylogować lub usunąć swoje konto, wystarczy kliknąć przycisk awatara w prawym górnym rogu.',
     create_tenant_button: 'Utwórz najemcę',
   },
-  tenant_created: "Najemca '{{name}}' utworzony pomyślnie.",
 };
 
 export default tenants;

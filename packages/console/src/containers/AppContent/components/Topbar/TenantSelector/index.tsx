@@ -1,7 +1,6 @@
 import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useRef, useState, useEffect, useMemo } from 'react';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
@@ -122,7 +121,6 @@ function TenantSelector() {
         isOpen={showCreateTenantModal}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
-            toast.success(t('tenants.tenant_created', { name: tenant.name }));
             void mutate();
             window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
           }

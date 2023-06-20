@@ -28,7 +28,6 @@ const tenants = {
       'Per iniziare a configurare il tuo progetto con Logto, crea un nuovo tenant. Se hai bisogno di uscire o eliminare il tuo account, clicca sul pulsante avatar in alto a destra.',
     create_tenant_button: 'Crea tenant',
   },
-  tenant_created: "Tenant '{{name}}' creato con successo.",
 };
 
 export default tenants;

@@ -27,7 +27,6 @@ const tenants = {
       '要开始使用 Logto 配置项目，请创建一个新租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
     create_tenant_button: '创建租户',
   },
-  tenant_created: "租户'{{name}}'创建成功。",
 };
 
 export default tenants;
