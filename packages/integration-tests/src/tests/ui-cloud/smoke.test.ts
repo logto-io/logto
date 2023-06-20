@@ -235,5 +235,11 @@ describe('smoke testing for cloud', () => {
     await expect(pageTitle).toMatchElement('div[class$=title]', {
       text: 'Something to explore to help you succeed',
     });
-  });
+
+    const createTenantModalTitleSelector =
+      'div[class$=ReactModalPortal] div[class$=iconAndTitle] > div[class*=container][class$=large]:has(div[class*=title][class$=titleEllipsis])';
+    await expect(
+      page.waitForSelector(createTenantModalTitleSelector, { timeout: 3000 })
+    ).rejects.toThrow(); // Throws error if selector is not found.
+  }, 20_000);
 });
