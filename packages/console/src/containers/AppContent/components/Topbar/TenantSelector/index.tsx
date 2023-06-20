@@ -123,7 +123,7 @@ function TenantSelector() {
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
             toast.success(t('tenants.tenant_created', { name: tenant.name }));
-            void mutate();
+            void mutate([tenant, ...tenants]);
             window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
           }
           setShowCreateTenantModal(false);

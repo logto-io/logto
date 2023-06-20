@@ -69,13 +69,23 @@ function TenantBasicSettings() {
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     try {
-      const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
+      const updatedTenant = await api.patch(`/api/tenants/:tenantId`, {
         params: { tenantId: currentTenantId },
         body: data,
       });
+      const { name, tag } = updatedTenant;
       reset({ profile: { name, tag } });
-      void mutate();
       toast.success(t('tenant_settings.profile.tenant_info_saved'));
+      const currentTenantIndex = tenants?.findIndex(({ id }) => id === currentTenantId);
+      if (currentTenantIndex !== undefined && currentTenantIndex !== -1) {
+        void mutate([
+          ...(tenants?.slice(0, currentTenantIndex) ?? []),
+          updatedTenant,
+          ...(tenants?.slice(currentTenantIndex + 1) ?? []),
+        ]);
+        return;
+      }
+      void mutate([updatedTenant]);
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -109,7 +119,7 @@ function TenantBasicSettings() {
     try {
       await api.delete(`/api/tenants/:tenantId`, { params: { tenantId: currentTenantId } });
       setIsDeletionModalOpen(false);
-      void mutate();
+      void mutate((tenants ?? []).filter(({ id }) => id !== currentTenantId));
     } catch (error: unknown) {
       setError(
         error instanceof Error
