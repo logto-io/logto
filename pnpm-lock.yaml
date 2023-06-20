@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -2794,8 +2794,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/react':
-        specifier: ^2.0.1
-        version: 2.0.1(react@18.2.0)
+        specifier: ^2.1.0
+        version: 2.1.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.5.0
         version: link:../schemas
@@ -3320,8 +3320,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^2.0.1
-        version: 2.0.1(react@18.2.0)
+        specifier: ^2.1.0
+        version: 2.1.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.2.3
         version: link:../schemas
@@ -7172,16 +7172,25 @@ packages:
     dev: true
     optional: true
 
-  /@logto/browser@2.0.0:
-    resolution: {integrity: sha512-b5trzvdPWk00mk6A6J9GkcjC3fRaqe90lKVLJ2/UAOAtvBCcP/35mcKsdWyHHGP3juVNYCaGWepM3ifhxK+AsA==}
+  /@logto/browser@2.1.0:
+    resolution: {integrity: sha512-4XsXlCC0uZHcfazV09/4YKo4koqvSzQlkPUAToTp/WHpb6h2XDOJh5/hi55LXL4zp0PCcgpErKRxFCtgXCc6WQ==}
     dependencies:
-      '@logto/client': 2.1.0
+      '@logto/client': 2.2.0
       '@silverhand/essentials': 2.6.2
       js-base64: 3.7.5
     dev: true
 
   /@logto/client@2.1.0:
     resolution: {integrity: sha512-vw8xDW8k38/58Q1r592z/9JdsmUh4+LMmoVm/Nu7LbWKlT32eD3H9hZDkFK9XEHpriifhI0hP7asGWEmhrEUuQ==}
+    dependencies:
+      '@logto/js': 2.1.1
+      '@silverhand/essentials': 2.6.2
+      camelcase-keys: 7.0.2
+      jose: 4.14.4
+    dev: true
+
+  /@logto/client@2.2.0:
+    resolution: {integrity: sha512-7I2ELo5UWIJsFCYK/gX465l0+QhXTdyYWkgb2CcdPu5KbaPBNpASedm+fEV2NREYe2svbNODFhog6UMA/xGQnQ==}
     dependencies:
       '@logto/js': 2.1.1
       '@silverhand/essentials': 2.6.2
@@ -7208,12 +7217,12 @@ packages:
       - encoding
     dev: true
 
-  /@logto/react@2.0.1(react@18.2.0):
-    resolution: {integrity: sha512-p/zEv+VmLUWLrFBTZDRilJDIgXxiW5orREStZdB+Ix5ll0CmBRqT3G9DVdC95nkLL3oygwU7Hbd7a4KfvLs1gw==}
+  /@logto/react@2.1.0(react@18.2.0):
+    resolution: {integrity: sha512-xP/EW/N7Fh/5yyogCavCf43U114hiuACGxWql8CTmCbSJEXKVU5kiHNQXi2upV7AvB+lNA1as7LT/KbR9wM/2Q==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 2.0.0
+      '@logto/browser': 2.1.0
       '@silverhand/essentials': 2.6.2
       react: 18.2.0
     dev: true

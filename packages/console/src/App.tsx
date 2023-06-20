@@ -64,6 +64,7 @@ function Content() {
 
   return (
     <LogtoProvider
+      unstable_enableCache
       config={{
         endpoint: adminTenantEndpoint.href,
         appId: adminConsoleApplicationId,
