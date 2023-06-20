@@ -1,17 +1,18 @@
 import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import useTenants from '@/hooks/use-tenants';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
@@ -28,14 +29,20 @@ const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useCloudApi();
-  const {
-    currentTenant,
-    currentTenantId,
-    error: requestError,
-    mutate,
-    isLoading,
-    tenants,
-  } = useTenants();
+  const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
+  const { data: availableTenants, mutate, error: requestError } = useCloudSwr('/api/tenants');
+  const isLoading = !availableTenants && !requestError;
+
+  useEffect(() => {
+    if (availableTenants) {
+      setTenants(availableTenants);
+    }
+  }, [availableTenants, setTenants]);
+
+  const currentTenant = useMemo(() => {
+    return tenants?.find((tenant) => tenant.id === currentTenantId);
+  }, [currentTenantId, tenants]);
+
   const [error, setError] = useState<Error>();
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

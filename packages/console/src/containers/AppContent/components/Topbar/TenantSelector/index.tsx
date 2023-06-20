@@ -1,18 +1,19 @@
 import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState, useEffect, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
 import Tick from '@/assets/icons/tick.svg';
+import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandingPageContent/CreateTenantModal';
 import AppError from '@/components/AppError';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import useTenants from '@/hooks/use-tenants';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantEnvTag from './TenantEnvTag';
@@ -20,13 +21,18 @@ import * as styles from './index.module.scss';
 
 function TenantSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    tenants,
-    currentTenant: currentTenantInfo,
-    currentTenantId,
-    error,
-    mutate,
-  } = useTenants();
+  const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
+  const { data: availableTenants, mutate, error } = useCloudSwr('/api/tenants');
+
+  useEffect(() => {
+    if (availableTenants) {
+      setTenants(availableTenants);
+    }
+  }, [availableTenants, setTenants]);
+
+  const currentTenantInfo = useMemo(() => {
+    return tenants?.find((tenant) => tenant.id === currentTenantId);
+  }, [currentTenantId, tenants]);
 
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);

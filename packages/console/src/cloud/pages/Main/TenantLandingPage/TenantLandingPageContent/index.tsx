@@ -1,16 +1,17 @@
 import { Theme } from '@logto/schemas';
 import type { TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
+import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
-import useTenants from '@/hooks/use-tenants';
 import useTheme from '@/hooks/use-theme';
 
 import CreateTenantModal from './CreateTenantModal';
@@ -22,7 +23,15 @@ type Props = {
 
 function TenantLandingPageContent({ className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tenants, mutate } = useTenants();
+  const { tenants, setTenants } = useContext(TenantsContext);
+  const { data: availableTenants, mutate } = useCloudSwr('/api/tenants');
+
+  useEffect(() => {
+    if (availableTenants) {
+      setTenants(availableTenants);
+    }
+  }, [availableTenants, setTenants]);
+
   const theme = useTheme();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
