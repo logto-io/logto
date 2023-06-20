@@ -73,13 +73,13 @@ function Connectors() {
   const isLoading = !data && !factories && !error && !factoriesError;
 
   const passwordlessConnectors = useMemo(() => {
-    const smsConnector =
-      data?.find(({ type }) => type === ConnectorType.Sms) ?? defaultSmsConnectorGroup;
-
     const emailConnector =
       data?.find(({ type }) => type === ConnectorType.Email) ?? defaultEmailConnectorGroup;
 
-    return [smsConnector, emailConnector];
+    const smsConnector =
+      data?.find(({ type }) => type === ConnectorType.Sms) ?? defaultSmsConnectorGroup;
+
+    return [emailConnector, smsConnector];
   }, [data]);
 
   const socialConnectors = useMemo(
