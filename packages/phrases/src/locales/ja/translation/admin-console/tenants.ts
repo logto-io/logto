@@ -28,7 +28,6 @@ const tenants = {
       'Logto でプロジェクトを設定するには、新しいテナントを作成してください。ログアウトまたはアカウントを削除する必要がある場合は、右上隅のアバターボタンをクリックしてください。',
     create_tenant_button: 'テナントを作成',
   },
-  tenant_created: "{{name}}'のテナントが正常に作成されました。",
 };
 
 export default tenants;

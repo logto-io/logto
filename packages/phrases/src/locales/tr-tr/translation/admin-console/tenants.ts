@@ -28,7 +28,6 @@ const tenants = {
       'Logto ile projenizi yapılandırmaya başlamak için lütfen yeni bir kiracı oluşturun. Hesabınızdan çıkış yapmanız veya hesabınızı silmeniz gerekiyorsa, sağ üst köşedeki avatar düğmesine tıklayın.',
     create_tenant_button: 'Kiracı oluştur',
   },
-  tenant_created: "Kiracı '{{name}}' başarıyla oluşturuldu.",
 };
 
 export default tenants;

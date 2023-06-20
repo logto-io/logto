@@ -28,7 +28,6 @@ const tenants = {
       'Um Ihr Projekt mit Logto zu konfigurieren, erstellen Sie bitte einen neuen Mandanten. Wenn Sie sich abmelden oder Ihr Konto löschen möchten, klicken Sie einfach auf die Avatar-Taste in der oberen rechten Ecke.',
     create_tenant_button: 'Mandanten erstellen',
   },
-  tenant_created: "Mieter '{{name}}' erfolgreich erstellt.",
 };
 
 export default tenants;

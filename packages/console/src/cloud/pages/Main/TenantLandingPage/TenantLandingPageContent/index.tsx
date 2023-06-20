@@ -2,7 +2,6 @@ import { Theme } from '@logto/schemas';
 import type { TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -68,7 +67,6 @@ function TenantLandingPageContent({ className }: Props) {
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
             void mutate();
-            toast.success(t('tenants.tenant_created', { name: tenant.name }));
             window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
           }
           setIsCreateModalOpen(false);

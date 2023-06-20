@@ -28,7 +28,6 @@ const tenants = {
       'To start configuring your project with Logto, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
     create_tenant_button: 'Create tenant',
   },
-  tenant_created: "Tenant '{{name}}' created successfully.",
 };
 
 export default tenants;
