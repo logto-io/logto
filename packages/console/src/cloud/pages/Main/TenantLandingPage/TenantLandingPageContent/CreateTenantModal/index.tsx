@@ -26,15 +26,15 @@ type Props = {
 
 const tagOptions: Array<{ title: AdminConsoleKey; value: TenantTag }> = [
   {
-    title: 'tenants.create_modal.environment_tag_development',
+    title: 'tenant_settings.settings.environment_tag_development',
     value: TenantTag.Development,
   },
   {
-    title: 'tenants.create_modal.environment_tag_staging',
+    title: 'tenant_settings.settings.environment_tag_staging',
     value: TenantTag.Staging,
   },
   {
-    title: 'tenants.create_modal.environment_tag_production',
+    title: 'tenant_settings.settings.environment_tag_production',
     value: TenantTag.Production,
   },
 ];
@@ -96,10 +96,15 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         onClose={onClose}
       >
         <FormProvider {...methods}>
-          <FormField isRequired title="tenants.create_modal.tenant_name">
-            <TextInput {...register('name', { required: true })} error={Boolean(errors.name)} />
+          <FormField isRequired title="tenant_settings.settings.tenant_name">
+            <TextInput
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              {...register('name', { required: true })}
+              error={Boolean(errors.name)}
+            />
           </FormField>
-          <FormField title="tenants.create_modal.environment_tag">
+          <FormField title="tenant_settings.settings.environment_tag">
             <Controller
               control={control}
               name="tag"
@@ -113,7 +118,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
               )}
             />
             <div className={styles.description}>
-              {t('tenants.create_modal.environment_tag_description')}
+              {t('tenant_settings.settings.environment_tag_description')}
             </div>
           </FormField>
         </FormProvider>

@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Ustawienia',
-  description:
-    'Zmieniaj swoje ustawienia konta i zarządzaj swoimi informacjami osobistymi tutaj, aby zapewnić bezpieczeństwo Twojego konta.',
+  description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
   tabs: {
     settings: 'Ustawienia',
     domains: 'Domeny',
   },
-  profile: {
-    title: 'USTAWIENIA PROFILU',
+  settings: {
+    title: 'USTAWIENIA',
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
     environment_tag: 'Tag Środowiska',
     environment_tag_description:
-      'Usługi z różnymi tagami są identyczne. Działa jako przyrostek, aby pomóc Twojemu zespołowi w różnicowaniu środowisk.',
+      'Tagi nie zmieniają usługi. Po prostu pomagają odróżnić różne środowiska.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'USUWANIE',
     tenant_deletion: 'Usuń najemcę',
     tenant_deletion_description:
-      'Usunięcie twojego konta spowoduje usunięcie wszystkich twoich danych osobowych, danych użytkownika i konfiguracji. Ta operacja jest nieodwracalna.',
+      'Usunięcie najemcy spowoduje trwałe usunięcie wszystkich powiązanych danych użytkowników i konfiguracji. Proszę postępować ostrożnie.',
     tenant_deletion_button: 'Usuń najemcę',
   },
 };

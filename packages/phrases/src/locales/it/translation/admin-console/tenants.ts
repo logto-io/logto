@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: 'Il mio tenant',
     environment_tag: 'Tag ambiente',
     environment_tag_description:
-      'I servizi con tag diversi sono identici. Funziona come suffisso per aiutare il tuo team a differenziare gli ambienti.',
+      'I tag non alterano il servizio. Semplicemente ti guidano a distinguere vari ambienti.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

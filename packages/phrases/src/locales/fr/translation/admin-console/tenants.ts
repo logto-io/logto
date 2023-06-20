@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: 'Mon locataire',
     environment_tag: 'Balise environnement',
     environment_tag_description:
-      'Les services avec différentes balises sont identiques. Il fonctionne comme un suffixe pour aider votre équipe à différencier les environnements.',
+      'Les balises ne modifient pas le service. Elles servent simplement à différencier différents environnements.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

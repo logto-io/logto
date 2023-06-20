@@ -9,8 +9,8 @@ const contact = {
     button: 'Присоединиться',
   },
   github: {
-    title: 'Создать проблему в GitHub',
-    description: 'Создайте проблему и отправьте запрос в службу поддержки',
+    title: 'Присоединитесь к обсуждениям на GitHub',
+    description: 'Задавайте вопросы и делитесь идеями на GitHub',
     button: 'Открыть',
   },
   email: {

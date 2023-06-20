@@ -155,9 +155,9 @@
   --color-hover-variant: rgba(93, 52, 242, 8%); // 8% Primary-40
   --color-pressed-variant: rgba(93, 52, 242, 12%); // 12% Primary-40
   --color-focused-variant: rgba(93, 52, 242, 16%); // 16% Primary-40
-  --color-env-tag-development: var(--color-pressed-variant);
-  --color-env-tag-staging: rgba(255, 185, 90, 18%);
-  --color-env-tag-production: rgba(104, 190, 108, 18%);
+  --color-env-tag-development: rgba(93, 52, 242, 15%);
+  --color-env-tag-staging: rgba(255, 185, 90, 35%);
+  --color-env-tag-production: rgba(131, 218, 133, 35%);
 
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
@@ -340,7 +340,6 @@
   --color-env-tag-staging: rgba(235, 153, 24, 36%);
   --color-env-tag-production: rgba(104, 190, 108, 36%);
 
-
   // Shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
   --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);
@@ -354,7 +353,7 @@
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
   --color-tooltip-background: var(--color-surface-4);
   --color-tooltip-text: var(--color-neutral-10);
-  --color-overlay: rgba(0, 0, 0, 30%);
+  --color-overlay: rgba(0, 0, 0, 70%); // 70% Neutral-100
   --color-drawer-overlay: rgba(0, 0, 0, 60%);
   --color-guide-dropdown-background: var(--color-neutral-variant-80);
   --color-guide-dropdown-border: var(--color-neutral-variant-70);

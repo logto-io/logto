@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Ayarlar',
-  description:
-    'Hesap güvenliğinizi sağlamak için burada hesap ayarlarınızı ve kişisel bilgilerinizi yönetin.',
+  description: 'Kiracı ayarlarını verimli bir şekilde yönetin ve alan adınızı özelleştirin.',
   tabs: {
     settings: 'Ayarlar',
     domains: 'Alan adları',
   },
-  profile: {
-    title: 'PROFİL AYARI',
+  settings: {
+    title: 'AYARLAR',
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
-      'Farklı etiketlere sahip hizmetler aynıdır. Ortamları ayırt etmek için ekibinize yardımcı olmak için bir sonek görevi görür.',
+      'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'SİL',
     tenant_deletion: 'Kiracıyı Sil',
     tenant_deletion_description:
-      'Hesabınızı silmek, tüm kişisel bilgilerinizi, kullanıcı verilerinizi ve yapılandırmalarınızı kaldıracaktır. Bu işlem geri alınamaz.',
+      'Kiracının silinmesi, tüm ilişkili kullanıcı verilerinin ve yapılandırmalarının kalıcı olarak silinmesine neden olur. Lütfen dikkatli bir şekilde devam edin.',
     tenant_deletion_button: 'Kiracıyı Sil',
   },
 };

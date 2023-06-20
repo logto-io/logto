@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Definições',
-  description:
-    'Mude suas configurações de conta e gerencie suas informações pessoais aqui para garantir a segurança de sua conta.',
+  description: 'Gerir eficientemente as configurações do inquilino e personalizar o seu domínio.',
   tabs: {
     settings: 'Definições',
     domains: 'Domínios',
   },
-  profile: {
-    title: 'DEFINIÇÕES DE PERFIL',
+  settings: {
+    title: 'DEFINIÇÕES',
     tenant_id: 'ID do Inquilino',
     tenant_name: 'Nome do Inquilino',
     environment_tag: 'Tag de Ambiente',
     environment_tag_description:
-      'Os serviços com etiquetas diferentes são idênticos. Funciona como um sufixo para ajudar a sua equipa a diferenciar ambientes.',
+      'As etiquetas não alteram o serviço. Simplesmente guiam-no para diferenciar vários ambientes.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'ELIMINAR',
     tenant_deletion: 'Eliminar inquilino',
     tenant_deletion_description:
-      'A eliminação da sua conta removerá todas as suas informações pessoais, dados de utilizador e configuração. Esta ação não pode ser desfeita.',
+      'A eliminação do inquilino resultará na remoção permanente de todos os dados de utilizador e configuração associados. Por favor, proceda com cuidado.',
     tenant_deletion_button: 'Eliminar inquilino',
   },
 };

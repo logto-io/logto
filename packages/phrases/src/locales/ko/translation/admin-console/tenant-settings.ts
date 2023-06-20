@@ -1,17 +1,17 @@
 const tenant_settings = {
   title: '설정',
-  description: '계정 보안을 위해 여기서 계정 설정 및 개인 정보를 관리하세요.',
+  description: '테넌트 설정을 효율적으로 관리하고 도메인을 사용자 정의합니다.',
   tabs: {
     settings: '설정',
     domains: '도메인',
   },
-  profile: {
-    title: '프로필 설정',
+  settings: {
+    title: '설정',
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
     environment_tag: '환경 태그',
     environment_tag_description:
-      '태그가 다른 서비스는 동일합니다. 환경을 구분하는 데 팀을 돕는 접미사로 기능합니다.',
+      '태그는 서비스를 변경하지 않습니다. 단지 다양한 환경을 구별하는 데 도움을 줍니다.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -21,7 +21,7 @@ const tenant_settings = {
     title: '삭제',
     tenant_deletion: '테넌트 삭제',
     tenant_deletion_description:
-      '계정을 삭제하면 개인 정보, 사용자 데이터 및 구성이 모두 제거됩니다. 이 작업은 실행 취소할 수 없습니다.',
+      '테넌트를 삭제하면 관련된 모든 사용자 데이터와 설정이 영구적으로 삭제됩니다. 신중하게 진행해주십시오.',
     tenant_deletion_button: '테넌트 삭제',
   },
 };

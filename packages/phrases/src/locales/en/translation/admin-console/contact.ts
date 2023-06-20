@@ -8,8 +8,8 @@ const contact = {
     button: 'Join',
   },
   github: {
-    title: 'Create GitHub issue',
-    description: 'Create an issue and submit at GitHub',
+    title: 'Join GitHub Discussions',
+    description: 'Ask questions, and share ideas on GitHub',
     button: 'Open',
   },
   email: {

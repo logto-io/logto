@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: 'Mi inquilino',
     environment_tag: 'Etiqueta de ambiente',
     environment_tag_description:
-      'Los servicios con diferentes etiquetas son idénticos. Funciona como sufijo para ayudar a su equipo a diferenciar entornos.',
+      'Las etiquetas no alteran el servicio. Simplemente te guían para diferenciar diversos entornos.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

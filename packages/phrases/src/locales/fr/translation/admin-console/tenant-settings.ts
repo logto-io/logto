@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Paramètres',
-  description:
-    'Modifiez vos paramètres de compte et gérez vos informations personnelles ici pour assurer la sécurité de votre compte.',
+  description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
   tabs: {
     settings: 'Paramètres',
     domains: 'Domaines',
   },
-  profile: {
-    title: 'PARAMÈTRES DU PROFIL',
+  settings: {
+    title: 'PARAMÈTRES',
     tenant_id: 'ID du locataire',
     tenant_name: 'Nom du locataire',
     environment_tag: "Tag de l'environnement",
     environment_tag_description:
-      'Les services avec différentes balises sont identiques. Il fonctionne comme un suffixe pour aider votre équipe à différencier les environnements.',
+      'Les balises ne modifient pas le service. Elles servent simplement à différencier différents environnements.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'SUPPRIMER',
     tenant_deletion: 'Supprimer le locataire',
     tenant_deletion_description:
-      "La suppression de votre compte entraînera la suppression de toutes vos informations personnelles, données d'utilisateur et configuration. Cette action est irréversible.",
+      'La suppression du locataire entraînera la suppression permanente de toutes les données utilisateur et configurations associées. Veuillez procéder avec prudence.',
     tenant_deletion_button: 'Supprimer le locataire',
   },
 };

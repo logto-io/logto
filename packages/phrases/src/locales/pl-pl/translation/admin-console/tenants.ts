@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: 'Mój najemca',
     environment_tag: 'Tag środowiska',
     environment_tag_description:
-      'Usługi z różnymi tagami są identyczne. Działa jako przyrostek, aby pomóc Twojemu zespołowi w różnicowaniu środowisk.',
+      'Tagi nie zmieniają usługi. Po prostu pomagają odróżnić różne środowiska.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

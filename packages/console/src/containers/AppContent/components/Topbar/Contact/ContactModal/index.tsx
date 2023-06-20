@@ -1,6 +1,5 @@
 import ReactModal from 'react-modal';
 
-import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -28,26 +27,24 @@ function ContactModal({ isOpen, onCancel }: Props) {
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
-          {contacts
-            .filter(({ isVisibleToCloud }) => (isCloud ? isVisibleToCloud : true))
-            .map(({ title, icon: ContactIcon, description, label, link }) => (
-              <div key={title} className={styles.row}>
-                <div className={styles.icon}>
-                  <ContactIcon />
-                </div>
-                <div className={styles.text}>
-                  <div className={styles.title}>
-                    <DynamicT forKey={title} />
-                  </div>
-                  <div className={styles.description}>
-                    <DynamicT forKey={description} />
-                  </div>
-                </div>
-                <a href={link} target="_blank" className={styles.link} rel="noopener">
-                  <Button type="outline" title={label} className={styles.button} />
-                </a>
+          {contacts.map(({ title, icon: ContactIcon, description, label, link }) => (
+            <div key={title} className={styles.row}>
+              <div className={styles.icon}>
+                <ContactIcon />
               </div>
-            ))}
+              <div className={styles.text}>
+                <div className={styles.title}>
+                  <DynamicT forKey={title} />
+                </div>
+                <div className={styles.description}>
+                  <DynamicT forKey={description} />
+                </div>
+              </div>
+              <a href={link} target="_blank" className={styles.link} rel="noopener">
+                <Button type="outline" title={label} className={styles.button} />
+              </a>
+            </div>
+          ))}
         </div>
       </ModalLayout>
     </ReactModal>

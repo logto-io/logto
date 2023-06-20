@@ -6,8 +6,7 @@ const tenants = {
     tenant_name: '租户名称',
     tenant_name_placeholder: '我的租户',
     environment_tag: '环境标签',
-    environment_tag_description:
-      '携带不同标签的服务完全相同。它充当后缀的作用,以帮助您的团队区分不同的环境。',
+    environment_tag_description: '标签不会改变服务。它们只是指导您区分不同的环境。',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

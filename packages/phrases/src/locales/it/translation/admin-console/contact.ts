@@ -8,8 +8,8 @@ const contact = {
     button: 'Unisciti',
   },
   github: {
-    title: 'Crea problema su GitHub',
-    description: 'Crea un problema e invialo su GitHub',
+    title: 'Partecipa alle Discussioni di GitHub',
+    description: 'Fai domande e condividi idee su GitHub',
     button: 'Apri',
   },
   email: {

@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Configurações',
-  description:
-    'Alterar suas informações da conta e gerenciar suas informações pessoais aqui para garantir a segurança da sua conta.',
+  description: 'Gerencie eficientemente as configurações do locatário e personalize seu domínio.',
   tabs: {
     settings: 'Configurações',
     domains: 'Domínios',
   },
-  profile: {
-    title: 'CONFIGURAÇÃO DE PERFIL',
+  settings: {
+    title: 'CONFIGURAÇÕES',
     tenant_id: 'ID do Locatário',
     tenant_name: 'Nome do Locatário',
     environment_tag: 'Tag do Ambiente',
     environment_tag_description:
-      'Os serviços com diferentes tags são idênticos. Funciona como um sufixo para ajudar sua equipe a diferenciar ambientes.',
+      'As tags não alteram o serviço. Elas apenas ajudam a diferenciar vários ambientes.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'EXCLUIR',
     tenant_deletion: 'Excluir locatário',
     tenant_deletion_description:
-      'A exclusão da sua conta removerá todas as suas informações pessoais, dados de usuário e configurações. Essa ação não pode ser desfeita.',
+      'A exclusão do locatário resultará na remoção permanente de todos os dados de usuário e configuração associados. Por favor, prossiga com cuidado.',
     tenant_deletion_button: 'Excluir locatário',
   },
 };

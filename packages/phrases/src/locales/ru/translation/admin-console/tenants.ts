@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: 'Мой арендатор',
     environment_tag: 'Тег окружения',
     environment_tag_description:
-      'Сервисы с разными тегами идентичны. Он работает как суффикс, чтобы помочь вашей команде различать среды.',
+      'Теги не изменяют сервис. Они просто помогают отличать различные среды.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

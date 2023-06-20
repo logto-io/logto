@@ -75,7 +75,7 @@ function TenantBasicSettings() {
       });
       reset({ profile: { name, tag } });
       void mutate();
-      toast.success(t('tenant_settings.profile.tenant_info_saved'));
+      toast.success(t('tenant_settings.settings.tenant_info_saved'));
     } catch (error: unknown) {
       setError(
         error instanceof Error

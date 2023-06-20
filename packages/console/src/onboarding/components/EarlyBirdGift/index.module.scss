@@ -1,0 +1,5 @@
+.giftButton {
+  &:not(:disabled):hover {
+    background-color: var(--color-hover-variant);
+  }
+}

@@ -1,18 +1,17 @@
 const tenant_settings = {
   title: 'Settings',
-  description:
-    'Change your account settings and manage your personal information here to ensure your account security.',
+  description: 'Efficiently manage tenant settings and customize your domain.',
   tabs: {
     settings: 'Settings',
     domains: 'Domains',
   },
-  profile: {
-    title: 'PROFILE SETTING',
+  settings: {
+    title: 'SETTINGS',
     tenant_id: 'Tenant ID',
     tenant_name: 'Tenant Name',
     environment_tag: 'Environment Tag',
     environment_tag_description:
-      'The services with different tags are identical. It functions as a suffix to help your team differentiate environments.',
+      'Tags don’t alter the service. They simply guide you to differentiate various environments.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +21,7 @@ const tenant_settings = {
     title: 'DELETE',
     tenant_deletion: 'Delete tenant',
     tenant_deletion_description:
-      'Deleting your account will remove all of your personal information, user data, and configuration. This action cannot be undone.',
+      'Deleting the tenant will result in the permanent removal of all associated user data and configuration. Please proceed with caution.',
     tenant_deletion_button: 'Delete tenant',
   },
 };

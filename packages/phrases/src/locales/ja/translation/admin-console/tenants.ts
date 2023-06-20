@@ -7,7 +7,7 @@ const tenants = {
     tenant_name_placeholder: '私のテナント',
     environment_tag: '環境タグ',
     environment_tag_description:
-      'タグの異なるサービスは同一です。環境を区別するためにチームを支援する接尾辞として機能します。',
+      'タグはサービスを変更しません。単にさまざまな環境を区別するためのガイドです。',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',

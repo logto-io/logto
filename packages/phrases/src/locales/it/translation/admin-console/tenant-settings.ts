@@ -1,18 +1,18 @@
 const tenant_settings = {
   title: 'Impostazioni',
   description:
-    'Cambia le impostazioni del tuo account e gestisci le tue informazioni personali qui per garantire la sicurezza del tuo account.',
+    "Gestisci efficacemente le impostazioni dell'inquilino e personalizza il tuo dominio.",
   tabs: {
     settings: 'Impostazioni',
     domains: 'Domini',
   },
-  profile: {
-    title: 'IMPOSTAZIONI DEL PROFILO',
+  settings: {
+    title: 'IMPOSTAZIONI',
     tenant_id: 'ID Tenant',
     tenant_name: 'Nome Tenant',
     environment_tag: 'Tag Ambiente',
     environment_tag_description:
-      'I servizi con tag diversi sono identici. Funziona come suffisso per aiutare il tuo team a differenziare gli ambienti.',
+      'I tag non alterano il servizio. Semplicemente ti guidano a distinguere vari ambienti.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -22,7 +22,7 @@ const tenant_settings = {
     title: 'ELIMINA',
     tenant_deletion: 'Elimina tenant',
     tenant_deletion_description:
-      "L'eliminazione del tuo account rimuoverà tutte le tue informazioni personali, i dati dell'utente e la configurazione. Questa azione non può essere annullata.",
+      "L'eliminazione del tenant comporterà la rimozione permanente di tutti i dati utente e le configurazioni associate. Procedere con cautela.",
     tenant_deletion_button: 'Elimina tenant',
   },
 };
