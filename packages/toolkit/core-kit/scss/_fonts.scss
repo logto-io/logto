@@ -12,6 +12,9 @@ $font-family:
 
 :root {
   --font-family: #{$font-family};
+  --font-display-1: 700 48/56px #{$font-family};
+  --font-display-2: 700 40px/48px #{$font-family};
+  --font-display-3: 700 32px/40px #{$font-family};
   --font-headline-1: 600 32px/40px #{$font-family};
   --font-headline-2: 600 28px/36px #{$font-family};
   --font-headline-3: 600 24px/32px #{$font-family};
@@ -21,6 +24,7 @@ $font-family:
   --font-label-1: 500 16px/24px #{$font-family};
   --font-label-2: 500 14px/20px #{$font-family};
   --font-label-3: 500 12px/16px #{$font-family};
+  --font-body-0: 400 18px/26px #{$font-family};
   --font-body-1: 400 16px/24px #{$font-family};
   --font-body-2: 400 14px/20px #{$font-family};
   --font-body-3: 400 12px/16px #{$font-family};
