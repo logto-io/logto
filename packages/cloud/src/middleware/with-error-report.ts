@@ -8,7 +8,7 @@ import type { BaseContext, NextFunction } from '@withtyped/server';
 export default function withErrorReport<InputContext extends BaseContext>() {
   return async (context: InputContext, next: NextFunction<InputContext>) => {
     await tryThat(next(context), (error) => {
-      appInsights.trackException(error);
+      void appInsights.trackException(error);
       throw error;
     });
   };

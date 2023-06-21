@@ -2,7 +2,7 @@
   "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
-    "types": ["node"]
+    "types": ["node", "jest"],
   },
   "include": [
     "src"
