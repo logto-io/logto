@@ -22,15 +22,15 @@ const tagOptions: Array<{
   value: TenantTag;
 }> = [
   {
-    title: 'tenant_settings.settings.environment_tag_development',
+    title: 'tenants.settings.environment_tag_development',
     value: TenantTag.Development,
   },
   {
-    title: 'tenant_settings.settings.environment_tag_staging',
+    title: 'tenants.settings.environment_tag_staging',
     value: TenantTag.Staging,
   },
   {
-    title: 'tenant_settings.settings.environment_tag_production',
+    title: 'tenants.settings.environment_tag_production',
     value: TenantTag.Production,
   },
 ];
@@ -44,17 +44,17 @@ function ProfileForm({ currentTenantId }: Props) {
   } = useFormContext<TenantSettingsForm>();
 
   return (
-    <FormCard title="tenant_settings.settings.title">
-      <FormField title="tenant_settings.settings.tenant_id">
+    <FormCard title="tenants.settings.title">
+      <FormField title="tenants.settings.tenant_id">
         <CopyToClipboard value={currentTenantId} variant="border" className={styles.textField} />
       </FormField>
-      <FormField isRequired title="tenant_settings.settings.tenant_name">
+      <FormField isRequired title="tenants.settings.tenant_name">
         <TextInput
           {...register('profile.name', { required: true })}
           error={Boolean(errors.profile?.name)}
         />
       </FormField>
-      <FormField title="tenant_settings.settings.environment_tag">
+      <FormField title="tenants.settings.environment_tag">
         <Controller
           control={control}
           name="profile.tag"
@@ -67,7 +67,7 @@ function ProfileForm({ currentTenantId }: Props) {
           )}
         />
         <div className={styles.description}>
-          {t('tenant_settings.settings.environment_tag_description')}
+          {t('tenants.settings.environment_tag_description')}
         </div>
       </FormField>
     </FormCard>

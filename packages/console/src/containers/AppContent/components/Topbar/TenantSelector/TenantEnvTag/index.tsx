@@ -16,9 +16,9 @@ type TenantTagMap = {
 };
 
 const tenantTagMap = Object.freeze({
-  [TenantTag.Development]: 'tenant_settings.settings.environment_tag_development',
-  [TenantTag.Staging]: 'tenant_settings.settings.environment_tag_staging',
-  [TenantTag.Production]: 'tenant_settings.settings.environment_tag_production',
+  [TenantTag.Development]: 'tenants.settings.environment_tag_development',
+  [TenantTag.Staging]: 'tenants.settings.environment_tag_staging',
+  [TenantTag.Production]: 'tenants.settings.environment_tag_production',
 }) satisfies TenantTagMap;
 
 function TenantEnvTag({ tag, className }: Props) {

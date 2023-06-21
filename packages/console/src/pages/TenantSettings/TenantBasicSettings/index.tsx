@@ -75,7 +75,7 @@ function TenantBasicSettings() {
       });
       reset({ profile: { name, tag } });
       void mutate();
-      toast.success(t('tenant_settings.settings.tenant_info_saved'));
+      toast.success(t('tenants.settings.tenant_info_saved'));
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -145,7 +145,7 @@ function TenantBasicSettings() {
 
   return (
     <>
-      <PageMeta titleKey={['tenant_settings.tabs.settings', 'tenant_settings.title']} />
+      <PageMeta titleKey={['tenants.tabs.settings', 'tenants.title']} />
       <form className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}>
         <FormProvider {...methods}>
           <div className={styles.fields}>

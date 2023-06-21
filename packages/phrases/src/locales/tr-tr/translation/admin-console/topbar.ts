@@ -4,4 +4,3 @@ const topbar = {
 };
 
 export default topbar;
-
