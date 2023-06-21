@@ -3,14 +3,7 @@ const tenants = {
     title: 'Crear inquilino',
     subtitle: 'Cree un nuevo inquilino para separar recursos y usuarios.',
     create_button: 'Crear inquilino',
-    tenant_name: 'Nombre del inquilino',
     tenant_name_placeholder: 'Mi inquilino',
-    environment_tag: 'Etiqueta de ambiente',
-    environment_tag_description:
-      'Las etiquetas no alteran el servicio. Simplemente te guían para diferenciar diversos entornos.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Eliminar inquilino',

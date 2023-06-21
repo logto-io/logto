@@ -13,7 +13,7 @@ const tenant_settings = {
     environment_tag: 'Tag Ambiente',
     environment_tag_description:
       'I tag non alterano il servizio. Semplicemente ti guidano a distinguere vari ambienti.',
-    environment_tag_development: 'Dev',
+    environment_tag_development: 'Svil',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",

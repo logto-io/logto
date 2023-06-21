@@ -12,9 +12,9 @@ const tenant_settings = {
     environment_tag: '環境タグ',
     environment_tag_description:
       'タグはサービスを変更しません。単にさまざまな環境を区別するためのガイドです。',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
+    environment_tag_development: '開発',
+    environment_tag_staging: 'ステージング',
+    environment_tag_production: '本番',
     tenant_info_saved: 'テナント情報は正常に保存されました。',
   },
   deletion_card: {

@@ -3,14 +3,7 @@ const tenants = {
     title: 'Mieter erstellen',
     subtitle: 'Erstellen Sie einen neuen Mieter, um Ressourcen und Benutzer zu trennen.',
     create_button: 'Mieter erstellen',
-    tenant_name: 'Mietername',
     tenant_name_placeholder: 'Mein Mieter',
-    environment_tag: 'Umwelt Tag',
-    environment_tag_description:
-      'Tags verändern den Service nicht. Sie dienen lediglich zur Unterscheidung verschiedener Umgebungen.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Mieter löschen',

@@ -12,9 +12,9 @@ const tenant_settings = {
     environment_tag: '환경 태그',
     environment_tag_description:
       '태그는 서비스를 변경하지 않습니다. 단지 다양한 환경을 구별하는 데 도움을 줍니다.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
+    environment_tag_development: '개발',
+    environment_tag_staging: '스테이징',
+    environment_tag_production: '프로드',
     tenant_info_saved: '세입자 정보가 성공적으로 저장되었습니다.',
   },
   deletion_card: {

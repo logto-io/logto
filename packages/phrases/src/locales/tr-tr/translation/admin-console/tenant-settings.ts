@@ -12,7 +12,7 @@ const tenant_settings = {
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
       'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
-    environment_tag_development: 'Dev',
+    environment_tag_development: 'Geliş',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',

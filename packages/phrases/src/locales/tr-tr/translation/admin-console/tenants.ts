@@ -3,14 +3,7 @@ const tenants = {
     title: 'Kiracı Oluştur',
     subtitle: 'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun.',
     create_button: 'Kiracı oluştur',
-    tenant_name: 'Kiracı Adı',
     tenant_name_placeholder: 'Benim kiracım',
-    environment_tag: 'Çevre Etiketi',
-    environment_tag_description:
-      'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Kiracıyı Sil',

@@ -12,8 +12,8 @@ const tenant_settings = {
     environment_tag: 'Etiqueta del entorno',
     environment_tag_description:
       'Las etiquetas no alteran el servicio. Simplemente te guían para diferenciar diversos entornos.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
+    environment_tag_development: 'Des',
+    environment_tag_staging: 'Pruebas',
     environment_tag_production: 'Prod',
     tenant_info_saved: 'Información del inquilino guardada correctamente.',
   },

@@ -11,9 +11,9 @@ const tenant_settings = {
     tenant_name: '租户名称',
     environment_tag: '环境标签',
     environment_tag_description: '标签不会改变服务。它们只是指导您区分不同的环境。',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
+    environment_tag_development: '开发',
+    environment_tag_staging: '预发布',
+    environment_tag_production: '产品',
     tenant_info_saved: '租户信息成功保存。',
   },
   deletion_card: {

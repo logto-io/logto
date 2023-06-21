@@ -3,14 +3,7 @@ const tenants = {
     title: 'Create tenant',
     subtitle: 'Create a new tenant to separate resources and users.',
     create_button: 'Create tenant',
-    tenant_name: 'Tenant Name',
     tenant_name_placeholder: 'My tenant',
-    environment_tag: 'Environment Tag',
-    environment_tag_description:
-      'Tags don’t alter the service. They simply guide you to differentiate various environments.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Delete tenant',

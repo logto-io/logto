@@ -13,7 +13,7 @@ const tenant_settings = {
     environment_tag_description:
       'As tags não alteram o serviço. Elas apenas ajudam a diferenciar vários ambientes.',
     environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
+    environment_tag_staging: 'Homol',
     environment_tag_production: 'Prod',
     tenant_info_saved: 'As informações do locatário foram salvas com sucesso.',
   },

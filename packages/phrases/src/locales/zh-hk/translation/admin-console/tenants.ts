@@ -3,13 +3,7 @@ const tenants = {
     title: '創建租戶',
     subtitle: '創建新租戶來區分資源及使用者。',
     create_button: '創建租戶',
-    tenant_name: '租戶名稱',
     tenant_name_placeholder: '我的租戶',
-    environment_tag: '環境標籤',
-    environment_tag_description: '標籤不會改變服務。它們只是協助您區分不同的環境。',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: '刪除租戶',

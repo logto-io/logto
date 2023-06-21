@@ -3,14 +3,7 @@ const tenants = {
     title: 'Créer un locataire',
     subtitle: 'Créez un nouveau locataire pour séparer les ressources et les utilisateurs.',
     create_button: 'Créer un locataire',
-    tenant_name: 'Nom du locataire',
     tenant_name_placeholder: 'Mon locataire',
-    environment_tag: 'Balise environnement',
-    environment_tag_description:
-      'Les balises ne modifient pas le service. Elles servent simplement à différencier différents environnements.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Supprimer le locataire',

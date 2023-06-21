@@ -3,14 +3,7 @@ const tenants = {
     title: 'テナントを作成する',
     subtitle: 'リソースとユーザーを分離するには、新しいテナントを作成します。',
     create_button: 'テナントを作成する',
-    tenant_name: 'テナント名',
     tenant_name_placeholder: '私のテナント',
-    environment_tag: '環境タグ',
-    environment_tag_description:
-      'タグはサービスを変更しません。単にさまざまな環境を区別するためのガイドです。',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'テナントを削除します',

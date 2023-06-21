@@ -12,7 +12,7 @@ const tenant_settings = {
     environment_tag: 'Umgebungsmarke',
     environment_tag_description:
       'Tags verändern den Service nicht. Sie dienen lediglich zur Unterscheidung verschiedener Umgebungen.',
-    environment_tag_development: 'Dev',
+    environment_tag_development: 'Entw',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
