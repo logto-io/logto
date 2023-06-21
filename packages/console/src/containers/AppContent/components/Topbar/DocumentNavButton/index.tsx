@@ -16,7 +16,6 @@ function DocumentNavButton() {
       className={classNames(styles.textLink, styles.documentNavButton)}
       icon={<DocumentIcon className={styles.icon} />}
     >
-      {/* <DangerousRaw>Docs</DangerousRaw> */}
       <span>
         <DynamicT forKey="topbar.docs" />
       </span>
