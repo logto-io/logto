@@ -15,7 +15,7 @@ type TenantTagMap = {
   [key in TenantTag]: AdminConsoleKey;
 };
 
-const tenantTagMap = Object.freeze({
+export const tenantTagMap = Object.freeze({
   [TenantTag.Development]: 'tenants.settings.environment_tag_development',
   [TenantTag.Staging]: 'tenants.settings.environment_tag_staging',
   [TenantTag.Production]: 'tenants.settings.environment_tag_production',
