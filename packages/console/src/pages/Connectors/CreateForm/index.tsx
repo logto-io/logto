@@ -86,6 +86,14 @@ function CreateForm({ onClose, isOpen: isFormOpen, type }: Props) {
   }, [type]);
 
   const modalSize = useMemo(() => {
+    /**
+     * Note:
+     * Fix the size to large, since now we have little passwordless connectors.
+     */
+    if (type !== ConnectorType.Social) {
+      return 'large';
+    }
+
     if (groups.length <= 2) {
       return 'medium';
     }
@@ -95,7 +103,7 @@ function CreateForm({ onClose, isOpen: isFormOpen, type }: Props) {
     }
 
     return 'xlarge';
-  }, [groups.length]);
+  }, [groups.length, type]);
 
   if (!isFormOpen) {
     return null;
