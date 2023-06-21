@@ -40,7 +40,7 @@ function TenantSelector() {
     () =>
       /** Should not block admin tenant owners from creating more than three tenants */
       tenants &&
-      !tenants.map(({ id }) => id).includes(adminTenantId) &&
+      !tenants.some(({ id }) => id === adminTenantId) &&
       tenants.length >= maxFreeTenantNumbers,
     [tenants]
   );
