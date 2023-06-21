@@ -21,7 +21,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
       }
 
       // Report all exceptions to ApplicationInsights
-      appInsights.trackException(error);
+      void appInsights.trackException(error);
 
       if (error instanceof RequestError) {
         ctx.status = error.status;
