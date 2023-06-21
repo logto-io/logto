@@ -11,6 +11,7 @@ import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
 import Reset from '@/assets/icons/reset.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
+import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
@@ -27,12 +28,11 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 
-import CreateForm from '../Connectors/components/CreateForm';
+import CreateForm from '../Connectors/CreateForm';
 
-import ConnectorContent from './components/ConnectorContent';
-import ConnectorTabs from './components/ConnectorTabs';
-import ConnectorTypeName from './components/ConnectorTypeName';
-import DeleteConnectorConfirmModal from './components/DeleteConnectorConfirmModal';
+import ConnectorContent from './ConnectorContent';
+import ConnectorTabs from './ConnectorTabs';
+import ConnectorTypeName from './ConnectorTypeName';
 import * as styles from './index.module.scss';
 
 // TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page

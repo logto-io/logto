@@ -12,12 +12,11 @@ import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import type { ConnectorFormType } from '@/types/connector';
+import { SyncProfileMode } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
 
-import type { ConnectorFormType } from '../../types';
-import { SyncProfileMode } from '../../types';
-
-import * as styles from './BasicForm.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   isAllowEditTarget?: boolean;

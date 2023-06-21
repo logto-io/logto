@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
+import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-import DeleteConnectorConfirmModal from '@/pages/ConnectorDetails/components/DeleteConnectorConfirmModal';
 import type { ConnectorGroup } from '@/types/connector';
 
 type Props = {

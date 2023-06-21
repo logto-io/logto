@@ -13,6 +13,9 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 
 import Close from '@/assets/icons/close.svg';
+import BasicForm from '@/components/ConnectorForm/BasicForm';
+import ConfigForm from '@/components/ConnectorForm/ConfigForm';
+import ConnectorTester from '@/components/ConnectorTester';
 import Markdown from '@/components/Markdown';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
@@ -22,17 +25,14 @@ import IconButton from '@/ds-components/IconButton';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
-import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
+import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
 import * as modalStyles from '@/scss/modal.module.scss';
+import type { ConnectorFormType } from '@/types/connector';
+import { SyncProfileMode } from '@/types/connector';
+import { initFormData } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
 
-import type { ConnectorFormType } from '../../types';
-import { SyncProfileMode } from '../../types';
-import { splitMarkdownByTitle } from '../../utils';
-import BasicForm from '../ConnectorForm/BasicForm';
-import ConfigForm from '../ConnectorForm/ConfigForm';
-import { useConnectorFormConfigParser } from '../ConnectorForm/hooks';
-import { initFormData } from '../ConnectorForm/utils';
+import { splitMarkdownByTitle } from '../utils';
 
 import * as styles from './index.module.scss';
 
@@ -220,7 +220,7 @@ function Guide({ connector, onClose }: Props) {
                       <div className={styles.number}>2</div>
                       <div>{t('connectors.guide.test_connection')}</div>
                     </div>
-                    <SenderTester
+                    <ConnectorTester
                       connectorFactoryId={connectorId}
                       connectorType={connectorType}
                       parse={() => configParser(watch(), formItems)}

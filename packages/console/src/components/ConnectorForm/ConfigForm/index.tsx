@@ -11,13 +11,12 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
+import type { ConnectorFormType } from '@/types/connector';
 import { applyDomain } from '@/utils/domain';
 import { jsonValidator } from '@/utils/validator';
 
-import type { ConnectorFormType } from '../../types';
-import ConfigFormItems from '../ConfigForm';
-
-import * as styles from './ConfigForm.module.scss';
+import ConfigFormFields from './ConfigFormFields';
+import * as styles from './index.module.scss';
 
 type Props = {
   formItems?: ConnectorConfigFormItem[];
@@ -66,7 +65,7 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
         </FormField>
       )}
       {formItems ? (
-        <ConfigFormItems formItems={formItems} />
+        <ConfigFormFields formItems={formItems} />
       ) : (
         <FormField title="connectors.guide.config">
           <Controller

@@ -7,20 +7,19 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import BasicForm from '@/components/ConnectorForm/BasicForm';
+import ConfigForm from '@/components/ConnectorForm/ConfigForm';
+import ConnectorTester from '@/components/ConnectorTester';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import BasicForm from '@/pages/Connectors/components/ConnectorForm/BasicForm';
-import ConfigForm from '@/pages/Connectors/components/ConnectorForm/ConfigForm';
-import { useConnectorFormConfigParser } from '@/pages/Connectors/components/ConnectorForm/hooks';
-import { initFormData } from '@/pages/Connectors/components/ConnectorForm/utils';
-import type { ConnectorFormType } from '@/pages/Connectors/types';
-import { SyncProfileMode } from '@/pages/Connectors/types';
+import { SyncProfileMode } from '@/types/connector';
+import type { ConnectorFormType } from '@/types/connector';
+import { initFormData } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
-
-import SenderTester from './SenderTester';
 
 type Props = {
   isDeleted: boolean;
@@ -139,7 +138,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         {/* Tell typescript that the connectorType is Email or Sms */}
         {connectorData.type !== ConnectorType.Social && (
           <FormCard title="connector_details.test_connection">
-            <SenderTester
+            <ConnectorTester
               connectorFactoryId={connectorData.connectorId}
               connectorType={connectorData.type}
               parse={() => configParser(watch(), connectorData.formItems)}
