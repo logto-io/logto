@@ -22,7 +22,7 @@
     "@logto/core-kit": "workspace:^2.0.0",
     "@logto/language-kit": "workspace:^1.0.0",
     "@logto/phrases": "workspace:^1.2.0",
-    "@logto/react": "^2.0.1",
+    "@logto/react": "^2.1.0",
     "@logto/schemas": "workspace:^1.2.3",
     "@parcel/core": "2.9.2",
     "@parcel/transformer-sass": "2.9.2",
