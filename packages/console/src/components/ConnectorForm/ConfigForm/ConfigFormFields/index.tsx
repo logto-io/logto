@@ -63,6 +63,7 @@ function ConfigFormFields({ formItems }: Props) {
           {...buildCommonProperties()}
           // TODO: update connectors form config and remove RegExp check
           isConfidential={item.isConfidential ?? /(Key|Secret)$/.test(item.key)}
+          readOnly={Boolean(item.isReadonly)}
         />
       );
     }
