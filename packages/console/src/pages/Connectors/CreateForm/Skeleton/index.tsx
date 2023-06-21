@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 
-import * as styles from './Skeleton.module.scss';
-import * as layout from './index.module.scss';
+import * as layout from '../index.module.scss';
+
+import * as styles from './index.module.scss';
 
 function Skeleton() {
   return (

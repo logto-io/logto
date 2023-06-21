@@ -27,7 +27,7 @@ type FormData = {
   sendTo: string;
 };
 
-function SenderTester({ connectorFactoryId, connectorType, className, parse }: Props) {
+function ConnectorTester({ connectorFactoryId, connectorType, className, parse }: Props) {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -116,4 +116,4 @@ function SenderTester({ connectorFactoryId, connectorType, className, parse }: P
   );
 }
 
-export default SenderTester;
+export default ConnectorTester;

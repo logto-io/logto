@@ -21,14 +21,14 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 
-import ConnectorDeleteButton from './components/ConnectorDeleteButton';
-import ConnectorName from './components/ConnectorName';
-import ConnectorStatus from './components/ConnectorStatus';
-import ConnectorStatusField from './components/ConnectorStatusField';
-import ConnectorTypeColumn from './components/ConnectorTypeColumn';
-import CreateForm from './components/CreateForm';
-import Guide from './components/Guide';
-import SignInExperienceSetupNotice from './components/SignInExperienceSetupNotice';
+import ConnectorDeleteButton from './ConnectorDeleteButton';
+import ConnectorName from './ConnectorName';
+import ConnectorStatus from './ConnectorStatus';
+import ConnectorStatusField from './ConnectorStatusField';
+import ConnectorTypeColumn from './ConnectorTypeColumn';
+import CreateForm from './CreateForm';
+import Guide from './Guide';
+import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
 
 const basePathname = '/connectors';

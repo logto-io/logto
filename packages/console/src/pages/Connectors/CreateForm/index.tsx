@@ -13,7 +13,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { getConnectorGroups } from '../../utils';
+import { getConnectorGroups } from '../utils';
 
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';

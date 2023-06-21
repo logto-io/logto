@@ -11,17 +11,16 @@ import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import Textarea from '@/ds-components/Textarea';
+import type { ConnectorFormType } from '@/types/connector';
 import { jsonValidator } from '@/utils/validator';
 
-import type { ConnectorFormType } from '../../types';
-
-import * as styles from './ConfigForm.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   formItems: ConnectorConfigFormItem[];
 };
 
-function ConfigForm({ formItems }: Props) {
+function ConfigFormFields({ formItems }: Props) {
   const {
     watch,
     register,
@@ -163,4 +162,4 @@ function ConfigForm({ formItems }: Props) {
   );
 }
 
-export default ConfigForm;
+export default ConfigFormFields;
