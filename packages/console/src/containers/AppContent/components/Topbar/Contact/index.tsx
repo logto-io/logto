@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 import ContactIcon from '@/assets/icons/contact-us.svg';
-import DangerousRaw from '@/ds-components/DangerousRaw';
+import DynamicT from '@/ds-components/DynamicT';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import ContactModal from './ContactModal';
@@ -26,7 +26,9 @@ function Contact() {
         }}
       >
         <ContactIcon className={styles.icon} />
-        <DangerousRaw>Help</DangerousRaw>
+        <span>
+          <DynamicT forKey="topbar.help" />
+        </span>
       </div>
       <ContactModal
         isOpen={isContactOpen}

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import DocumentIcon from '@/assets/icons/document-nav-button.svg';
-import DangerousRaw from '@/ds-components/DangerousRaw';
+import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
@@ -16,7 +16,10 @@ function DocumentNavButton() {
       className={classNames(styles.textLink, styles.documentNavButton)}
       icon={<DocumentIcon className={styles.icon} />}
     >
-      <DangerousRaw>Docs</DangerousRaw>
+      {/* <DangerousRaw>Docs</DangerousRaw> */}
+      <span>
+        <DynamicT forKey="topbar.docs" />
+      </span>
     </TextLink>
   );
 }
