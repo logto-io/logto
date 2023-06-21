@@ -1,3 +1,4 @@
+import { adminTenantId } from '@logto/schemas';
 import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useRef, useState, useEffect, useMemo } from 'react';
@@ -9,6 +10,7 @@ import Tick from '@/assets/icons/tick.svg';
 import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandingPageContent/CreateTenantModal';
 import AppError from '@/components/AppError';
+import { maxFreeTenantNumbers } from '@/consts/tenants';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
@@ -33,6 +35,15 @@ function TenantSelector() {
     return tenants?.find((tenant) => tenant.id === currentTenantId);
   }, [currentTenantId, tenants]);
 
+  const isCreateButtonDisabled = useMemo(
+    () =>
+      /** Should not block admin tenant owners from creating more than three tenants */
+      tenants &&
+      !tenants.some(({ id }) => id === adminTenantId) &&
+      tenants.length >= maxFreeTenantNumbers,
+    [tenants]
+  );
+
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateTenantModal, setShowCreateTenantModal] = useState(false);
@@ -44,8 +55,6 @@ function TenantSelector() {
   if (!tenants?.length || !currentTenantInfo) {
     return null;
   }
-
-  const isCreateButtonDisabled = tenants.length >= 3;
 
   return (
     <>

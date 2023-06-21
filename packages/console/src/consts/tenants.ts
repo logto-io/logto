@@ -37,3 +37,5 @@ export const getUserTenantId = () => {
 export const getBasename = () => (isCloud ? '/' + getUserTenantId() : ossConsolePath);
 
 export const getSignOutRedirectPathname = () => (isCloud ? '/' : ossConsolePath);
+
+export const maxFreeTenantNumbers = 3;
