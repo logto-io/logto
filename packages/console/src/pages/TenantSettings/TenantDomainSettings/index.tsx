@@ -21,7 +21,7 @@ function TenantDomainSettings() {
 
   return (
     <div className={styles.container}>
-      <PageMeta titleKey={['tenant_settings.tabs.domains', 'tenant_settings.title']} />
+      <PageMeta titleKey={['tenants.tabs.domains', 'tenants.title']} />
       <FormCard
         title="domain.custom.custom_domain"
         description="domain.custom.custom_domain_description"

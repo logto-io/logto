@@ -1,16 +1,35 @@
 const tenants = {
+  title: 'Impostazioni',
+  description:
+    "Gestisci efficacemente le impostazioni dell'inquilino e personalizza il tuo dominio.",
+  tabs: {
+    settings: 'Impostazioni',
+    domains: 'Domini',
+  },
+  settings: {
+    title: 'IMPOSTAZIONI',
+    tenant_id: 'ID Tenant',
+    tenant_name: 'Nome Tenant',
+    environment_tag: 'Tag Ambiente',
+    environment_tag_description:
+      'I tag non alterano il servizio. Semplicemente ti guidano a distinguere vari ambienti.',
+    environment_tag_development: 'Svil',
+    environment_tag_staging: 'Staging',
+    environment_tag_production: 'Prod',
+    tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
+  },
+  deletion_card: {
+    title: 'ELIMINA',
+    tenant_deletion: 'Elimina tenant',
+    tenant_deletion_description:
+      "L'eliminazione del tenant comporterà la rimozione permanente di tutti i dati utente e le configurazioni associate. Procedere con cautela.",
+    tenant_deletion_button: 'Elimina tenant',
+  },
   create_modal: {
     title: 'Crea nuovo tenant',
     subtitle: 'Crea un nuovo tenant per separare risorse e utenti.',
     create_button: 'Crea tenant',
-    tenant_name: 'Nome tenant',
     tenant_name_placeholder: 'Il mio tenant',
-    environment_tag: 'Tag ambiente',
-    environment_tag_description:
-      'I servizi con tag diversi sono identici. Funziona come suffisso per aiutare il tuo team a differenziare gli ambienti.',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Staging',
-    environment_tag_production: 'Prod',
   },
   delete_modal: {
     title: 'Elimina tenant',

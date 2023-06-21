@@ -11,16 +11,16 @@ function TenantSettings() {
   return (
     <div className={styles.container}>
       <CardTitle
-        title="tenant_settings.title"
-        subtitle="tenant_settings.description"
+        title="tenants.title"
+        subtitle="tenants.description"
         className={styles.cardTitle}
       />
       <TabNav className={styles.tabs}>
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Settings}`}>
-          <DynamicT forKey="tenant_settings.tabs.settings" />
+          <DynamicT forKey="tenants.tabs.settings" />
         </TabNavItem>
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
-          <DynamicT forKey="tenant_settings.tabs.domains" />
+          <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
       </TabNav>
       <Outlet />

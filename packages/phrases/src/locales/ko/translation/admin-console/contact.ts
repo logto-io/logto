@@ -7,8 +7,8 @@ const contact = {
     button: '가입하기',
   },
   github: {
-    title: 'GitHub 이슈 생성하기',
-    description: '이슈를 생성하고 GitHub에 제출해주세요.',
+    title: 'GitHub 토론에 참여하세요',
+    description: 'GitHub 에서 질문을 하고 아이디어를 공유하세요',
     button: '열기',
   },
   email: {

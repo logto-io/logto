@@ -7,8 +7,8 @@ const contact = {
     button: '加入',
   },
   github: {
-    title: '创建 GitHub 问题',
-    description: '创建问题并在 GitHub 提交',
+    title: '加入 GitHub 讨论',
+    description: ' GitHub 上提问并分享想法',
     button: '打开',
   },
   email: {

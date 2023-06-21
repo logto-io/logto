@@ -16,15 +16,15 @@ function DeleteCard({ currentTenantId, onClick }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <FormCard title="tenant_settings.deletion_card.title">
-      <FormField title="tenant_settings.deletion_card.tenant_deletion">
+    <FormCard title="tenants.deletion_card.title">
+      <FormField title="tenants.deletion_card.tenant_deletion">
         <div className={styles.deletionButtonContainer}>
           <div className={styles.description}>
-            {t('tenant_settings.deletion_card.tenant_deletion_description')}
+            {t('tenants.deletion_card.tenant_deletion_description')}
           </div>
           <Button
             type="default"
-            title="tenant_settings.deletion_card.tenant_deletion_button"
+            title="tenants.deletion_card.tenant_deletion_button"
             disabled={[adminTenantId, defaultTenantId].includes(currentTenantId)}
             onClick={onClick}
           />

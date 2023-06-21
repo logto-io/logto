@@ -43,7 +43,7 @@ $dropdown-item-height: 40px;
   .arrowIcon {
     width: 16px;
     height: 16px;
-    color: var(--color-text-secondary);
+    color: var(--color-neutral-variant-50);
   }
 
   &::before {
@@ -76,7 +76,7 @@ $dropdown-item-height: 40px;
   align-items: center;
   padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
   margin: _.unit(1);
-  border-radius: _.unit(1.5);
+  border-radius: 6px;
   transition: background-color 0.2s ease-in-out;
 
   &:hover {
@@ -116,7 +116,7 @@ $dropdown-item-height: 40px;
   align-items: center;
   padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
   margin: _.unit(1);
-  border-radius: _.unit(1.5);
+  border-radius: 6px;
   transition: background-color 0.2s ease-in-out;
   font: var(--font-body-2);
   @include _.text-ellipsis;
