@@ -1,93 +1,56 @@
 import { useLogto } from '@logto/react';
 import { conditional, yes } from '@silverhand/essentials';
-import { HTTPError } from 'ky';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useHref, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
-import SessionExpired from '@/components/SessionExpired';
 import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
+import AutoCreateTenant from './AutoCreateTenant';
 import Redirect from './Redirect';
 import TenantLandingPage from './TenantLandingPage';
 
-function Protected() {
+function Content() {
   const api = useCloudApi();
-  const { tenants, setTenants, currentTenantId, navigate } = useContext(TenantsContext);
-  const { isOnboarding, isLoaded } = useUserOnboardingData();
-  const [error, setError] = useState<Error>();
+  const { tenants, resetTenants, currentTenantId, isInitComplete } = useContext(TenantsContext);
+  const { isOnboarding, isLoaded: isOnboardingDataLoaded } = useUserOnboardingData();
 
+  // Load tenants from the cloud API for the first render.
   useEffect(() => {
     const loadTenants = async () => {
-      setError(undefined);
-
-      try {
-        const data = await api.get('/api/tenants');
-        setTenants(data);
-      } catch (error: unknown) {
-        setError(error instanceof Error ? error : new Error(String(error)));
-      }
+      const data = await api.get('/api/tenants');
+      resetTenants(data);
     };
 
-    if (!tenants) {
+    if (!isInitComplete) {
       void loadTenants();
     }
-  }, [api, setTenants, tenants]);
+  }, [api, resetTenants, tenants, isInitComplete]);
 
-  useEffect(() => {
-    const createFirstTenant = async () => {
-      setError(undefined);
-
-      try {
-        const newTenant = await api.post('/api/tenants', { body: {} }); // Use DB default value.
-        setTenants([newTenant]);
-        navigate(newTenant.id);
-      } catch (error: unknown) {
-        setError(error instanceof Error ? error : new Error(String(error)));
-      }
-    };
-
-    if (isLoaded && isOnboarding && tenants?.length === 0) {
-      void createFirstTenant();
-    }
-  }, [api, isOnboarding, isLoaded, setTenants, tenants, navigate]);
-
-  if (error) {
-    if (error instanceof HTTPError && error.response.status === 401) {
-      return <SessionExpired error={error} />;
-    }
-
-    return <AppError errorMessage={error.message} callStack={error.stack} />;
+  if (!isInitComplete || !isOnboardingDataLoaded) {
+    return <AppLoading />;
   }
 
-  if (tenants) {
-    /**
-     * Redirect to the first tenant if the current tenant ID is not set or can not be found.
-     *
-     * `currentTenantId` can be empty string, so that Boolean is required and `??` is
-     * not applicable for current case.
-     */
-
-    // eslint-disable-next-line no-extra-boolean-cast
-    const toTenantId = Boolean(currentTenantId) ? currentTenantId : tenants[0]?.id;
-    if (toTenantId) {
-      return <Redirect tenants={tenants} toTenantId={toTenantId} />;
-    }
-
-    /**
-     * Will create a new tenant for new users that need go through onboarding process,
-     * but create tenant takes time, the screen will have a glance of landing page of empty tenant.
-     */
-    if (isLoaded && !isOnboarding) {
-      return <TenantLandingPage />;
-    }
+  /**
+   * Trigger a redirect when one of the following conditions is met:
+   *
+   * - If a current tenant ID has been set in the URL; or
+   * - If current tenant ID is not set, but there is at least one tenant available.
+   */
+  if (currentTenantId || tenants[0]) {
+    return <Redirect />;
   }
 
-  return <AppLoading />;
+  // A new user has just signed up and has no tenant, needs to create a new tenant.
+  if (isOnboarding) {
+    return <AutoCreateTenant />;
+  }
+
+  // If user has completed onboarding and still has no tenant, redirect to a special landing page.
+  return <TenantLandingPage />;
 }
 
 function Main() {
@@ -110,7 +73,7 @@ function Main() {
     return <AppLoading />;
   }
 
-  return <Protected />;
+  return <Content />;
 }
 
 export default Main;

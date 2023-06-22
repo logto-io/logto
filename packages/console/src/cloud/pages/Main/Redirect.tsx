@@ -1,5 +1,4 @@
 import { useLogto } from '@logto/react';
-import type { TenantInfo } from '@logto/schemas/models';
 import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useHref } from 'react-router-dom';
@@ -7,16 +6,12 @@ import { useHref } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
-type Props = {
-  tenants: TenantInfo[];
-  toTenantId: string;
-};
-
-function Redirect({ tenants, toTenantId }: Props) {
+function Redirect() {
   const { getAccessToken, signIn } = useLogto();
-  const tenant = tenants.find(({ id }) => id === toTenantId);
-  const { setIsSettle, navigate } = useContext(TenantsContext);
-  const href = useHref(toTenantId + '/callback');
+  const { navigateTenant, tenants, currentTenantId } = useContext(TenantsContext);
+
+  const tenant = tenants.find(({ id }) => id === currentTenantId);
+  const href = useHref(currentTenantId + '/callback');
 
   useEffect(() => {
     const validate = async (indicator: string) => {
@@ -24,8 +19,7 @@ function Redirect({ tenants, toTenantId }: Props) {
       // If failed, it means the user finishes the first auth, ands still needs to auth again to
       // fetch the full-scoped (with all available tenants) token.
       if (await trySafe(getAccessToken(indicator))) {
-        setIsSettle(true);
-        navigate(toTenantId);
+        navigateTenant(currentTenantId);
       } else {
         void signIn(new URL(href, window.location.origin).toString());
       }
@@ -34,12 +28,14 @@ function Redirect({ tenants, toTenantId }: Props) {
     if (tenant) {
       void validate(tenant.indicator);
     }
-  }, [getAccessToken, href, navigate, setIsSettle, signIn, tenant, toTenantId]);
+  }, [currentTenantId, getAccessToken, href, navigateTenant, signIn, tenant]);
 
-  if (!tenant) {
-    /** Fallback to another available tenant instead of showing `Forbidden`. */
-    navigate(tenants[0]?.id ?? '');
-  }
+  useEffect(() => {
+    if (!tenant) {
+      /** Fallback to another available tenant instead of showing `Forbidden`. */
+      navigateTenant(tenants[0]?.id ?? '');
+    }
+  }, [navigateTenant, tenant, tenants]);
 
   return <AppLoading />;
 }

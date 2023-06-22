@@ -21,12 +21,12 @@ import * as styles from './index.module.scss';
 function Congrats() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { update } = useUserOnboardingData();
-  const { navigate, currentTenantId } = useContext(TenantsContext);
+  const { navigateTenant, currentTenantId } = useContext(TenantsContext);
 
   const enterAdminConsole = () => {
     void update({ isOnboardingDone: true });
     // Note: navigate to the admin console page directly instead of using the router
-    navigate(currentTenantId);
+    navigateTenant(currentTenantId);
   };
 
   return (

@@ -29,7 +29,7 @@ import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 void initI18n();
 
 function Content() {
-  const { tenants, isSettle, currentTenantId } = useContext(TenantsContext);
+  const { tenants, isInitComplete, currentTenantId } = useContext(TenantsContext);
 
   const resources = useMemo(
     () =>
@@ -39,7 +39,7 @@ function Content() {
           // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
           // additional redirect.
           currentTenantId && getManagementApi(currentTenantId).indicator,
-          ...(tenants ?? []).map(({ id }) => getManagementApi(id).indicator),
+          ...tenants.map(({ id }) => getManagementApi(id).indicator),
           isCloud && cloudApi.indicator,
           meApi.indicator
         )
@@ -76,7 +76,11 @@ function Content() {
         <AppInsightsBoundary cloudRole="console">
           <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
           <ErrorBoundary>
-            {!isCloud || isSettle ? (
+            {/**
+             * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
+             * if it's Cloud, render the tenant app container only when init is complete and a tenant ID is available (in a tenant context).
+             */}
+            {!isCloud || (isInitComplete && currentTenantId) ? (
               <AppEndpointsProvider>
                 <AppConfirmModalProvider>
                   <TenantAppContainer />
