@@ -75,7 +75,7 @@ describe('smoke testing for cloud', () => {
     await expect(page).toClick('div[role=button][class$=item]');
 
     // Click the next button
-    await expect(page).toClick('div[class$=actions] button:first-child');
+    await expect(page).toClick('div[class$=actions] button', { text: 'Next' });
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
@@ -127,7 +127,7 @@ describe('smoke testing for cloud', () => {
 
     await page.waitForTimeout(500);
     const createTenantButton = await page.waitForSelector(
-      'div[class$=ReactModalPortal] div[class$=dropdownContainer] > div[class$=dropdown] > div[class$=createTenantButton][role=button]:has(div)'
+      'div[class$=ReactModalPortal] div[class$=dropdownContainer] > div[class$=dropdown] > button[class$=createTenantButton]:has(div)'
     );
     await expect(createTenantButton).toMatchElement('div', { text: 'Create tenant' });
     await createTenantButton.click();

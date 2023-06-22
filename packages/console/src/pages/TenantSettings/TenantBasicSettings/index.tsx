@@ -101,20 +101,6 @@ function TenantBasicSettings() {
     }
   };
 
-  useEffect(() => {
-    /**
-     * Redirect to the first tenant if the current tenant is deleted;
-     * Redirect to Cloud console landing page if there is no tenant.
-     */
-    if (!tenants.some(({ id }) => id === currentTenantId)) {
-      window.location.assign(
-        tenants[0]?.id
-          ? new URL(`/${tenants[0]?.id}`, window.location.origin).toString()
-          : new URL(window.location.origin).toString()
-      );
-    }
-  }, [currentTenantId, tenants]);
-
   if (error) {
     return <AppError errorMessage={error.message} callStack={error.stack} />;
   }

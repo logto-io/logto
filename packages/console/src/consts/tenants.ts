@@ -1,4 +1,5 @@
 import { defaultTenantId, ossConsolePath } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 
 import { CloudRoute } from '@/cloud/types';
 
@@ -35,6 +36,9 @@ export const getUserTenantId = () => {
 };
 
 export const getBasename = () => (isCloud ? '/' + getUserTenantId() : ossConsolePath);
+
+export const getCallbackUrl = (tenantId?: string) =>
+  new URL('/' + conditionalArray(tenantId, 'callback').join('/'), window.location.origin);
 
 export const getSignOutRedirectPathname = () => (isCloud ? '/' : ossConsolePath);
 

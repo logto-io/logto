@@ -22,19 +22,28 @@ import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 function Main() {
   const swrOptions = useSwrOptions();
+
   const router = useMemo(
     () =>
       createBrowserRouter(
         createRoutesFromElements(
-          <>
+          <Route path="/*">
             <Route path="callback" element={<Callback />} />
             <Route path="welcome" element={<Welcome />} />
             <Route path="handle-social" element={<HandleSocialCallback />} />
             <Route element={<AppContent />}>
-              <Route path="/*" element={<ConsoleContent />} />
+              <Route path="*" element={<ConsoleContent />} />
             </Route>
-          </>
+          </Route>
         ),
+        // Currently we use `window.open()` to navigate between tenants so the `useMemo` hook
+        // can have no dependency and the router will be created anyway. Consider integrating the
+        // tenant ID into the router and remove basename here if we want to use `history.pushState()`
+        // to navigate.
+        //
+        // Caveat: To use `history.pushState()`, we'd better to create a browser router in the upper
+        // level of the component tree to make the tenant ID a part of the URL. Otherwise, we need
+        // to handle `popstate` event to update the tenant ID when the user navigates back.
         { basename: getBasename() }
       ),
     []

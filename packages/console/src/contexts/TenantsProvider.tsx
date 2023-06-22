@@ -76,19 +76,10 @@ function TenantsProvider({ children }: Props) {
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
   const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
 
-  const navigateTenant = useCallback((tenantId: string, options?: NavigateOptions) => {
-    const params = [
-      options?.state ?? {},
-      '',
-      new URL(`/${tenantId}`, window.location.origin).toString(),
-    ] satisfies Parameters<typeof window.history.pushState>;
-
-    if (options?.replace) {
-      window.history.replaceState(...params);
-      return;
-    }
-
-    window.history.pushState(...params);
+  const navigateTenant = useCallback((tenantId: string) => {
+    // Use `window.open()` to force page reload since we use `basename` for the router
+    // which will not re-create the router instance when the URL changes.
+    window.open(`/${tenantId}`, '_self');
     setCurrentTenantId(tenantId);
   }, []);
 

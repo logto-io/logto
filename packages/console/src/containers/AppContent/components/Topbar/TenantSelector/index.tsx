@@ -25,6 +25,7 @@ export default function TenantSelector() {
     appendTenant,
     currentTenant: currentTenantInfo,
     currentTenantId,
+    navigateTenant,
   } = useContext(TenantsContext);
 
   const isCreateButtonDisabled = useMemo(
@@ -75,7 +76,8 @@ export default function TenantSelector() {
               key={id}
               className={styles.dropdownItem}
               onClick={() => {
-                window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
+                navigateTenant(id);
+                setShowDropdown(false);
               }}
             >
               <div className={styles.dropdownName}>{name}</div>
@@ -110,7 +112,7 @@ export default function TenantSelector() {
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
             appendTenant(tenant);
-            window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
+            navigateTenant(tenant.id);
           }
           setShowCreateTenantModal(false);
         }}
