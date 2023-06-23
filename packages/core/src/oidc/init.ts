@@ -3,7 +3,6 @@
 import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
-import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
@@ -95,7 +94,7 @@ export default function initOidc(
           ctx.body = logoutSuccessSource.replace(
             // eslint-disable-next-line no-template-curly-in-string
             '${message}',
-            i18next.t<string, I18nKey>('oidc.logout_success')
+            i18next.t('oidc.logout_success')
           );
         },
       },

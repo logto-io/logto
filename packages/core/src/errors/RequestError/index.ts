@@ -1,4 +1,4 @@
-import type { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
+import type { LogtoErrorCode } from '@logto/phrases';
 import type { RequestErrorBody, RequestErrorMetadata } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional, pick } from '@silverhand/essentials';
@@ -29,7 +29,7 @@ export default class RequestError extends Error {
       expose = true,
       ...interpolation
     } = typeof input === 'string' ? { code: input } : input;
-    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, interpolation);
+    const message = i18next.t(`errors:${code}`, interpolation);
 
     super(message);
 

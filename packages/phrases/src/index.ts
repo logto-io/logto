@@ -52,7 +52,9 @@ export const builtInLanguageTagGuard = z.enum(builtInLanguages);
 export type BuiltInLanguageTag = z.infer<typeof builtInLanguageTagGuard>;
 
 export type Errors = typeof en.errors;
-export type LogtoErrorCode = NormalizeKeyPaths<Errors>;
+// Explicitly exclude the first-level keys of `Errors` to prevent invalid keys from being used.
+// Maybe we can use a more elegant way to do this.
+export type LogtoErrorCode = Exclude<NormalizeKeyPaths<Errors>, keyof Errors>;
 export type LogtoErrorI18nKey = `errors:${LogtoErrorCode}`;
 
 export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_console>;

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { TFuncKey } from 'i18next';
+import type { ParseKeys } from 'i18next';
 import type { MouseEventHandler } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ type Props = {
   isWordWrapAllowed?: boolean;
 };
 
-type CopyState = TFuncKey<'translation', 'admin_console.general'>;
+type CopyState = ParseKeys<'translation', {}, 'admin_console.general'>;
 
 function CopyToClipboard({
   value,
