@@ -8,7 +8,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 
 const useValidateTenantAccess = () => {
   const { getAccessToken, signIn, isAuthenticated } = useLogto();
-  const { currentTenant, currentTenantValidated, setCurrentTenantValidated } =
+  const { currentTenant, currentTenantId, currentTenantValidated, setCurrentTenantValidated } =
     useContext(TenantsContext);
 
   useEffect(() => {
@@ -21,12 +21,20 @@ const useValidateTenantAccess = () => {
       }
     };
 
-    if (isAuthenticated && currentTenant && !currentTenantValidated) {
+    if (isAuthenticated && currentTenantId && !currentTenantValidated) {
       setCurrentTenantValidated();
-      void validate(currentTenant);
+      if (currentTenant) {
+        void validate(currentTenant);
+      } else {
+        // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
+        // the user has no access to. Fall back to the home page.
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        window.location.href = '/';
+      }
     }
   }, [
     currentTenant,
+    currentTenantId,
     currentTenantValidated,
     getAccessToken,
     isAuthenticated,

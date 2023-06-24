@@ -98,6 +98,7 @@ function TenantsProvider({ children }: Props) {
       tenants,
       resetTenants: (tenants: TenantInfo[]) => {
         setTenants(tenants);
+        setCurrentTenantValidated(false);
         setIsInitComplete(true);
       },
       appendTenant: (tenant: TenantInfo) => {

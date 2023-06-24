@@ -11,7 +11,6 @@ import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
-import useValidateTenantAccess from '@/hooks/use-validate-tenant-access';
 import NotFound from '@/pages/NotFound';
 
 import { gtagAwTrackingId, gtagSignUpConversionId, logtoProductionHostname } from './constants';
@@ -65,8 +64,6 @@ function Layout() {
       console.debug('Google Tag event fires');
     }
   }, []);
-
-  useValidateTenantAccess();
 
   const {
     data: { questionnaire },

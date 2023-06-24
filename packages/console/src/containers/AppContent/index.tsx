@@ -11,7 +11,6 @@ import { isCloud } from '@/consts/env';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import useValidateTenantAccess from '@/hooks/use-validate-tenant-access';
 import Broadcast from '@/onboarding/components/Broadcast';
 
 import { getPath } from '../ConsoleContent/Sidebar';
@@ -34,8 +33,6 @@ function AppContent() {
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  useValidateTenantAccess();
 
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
