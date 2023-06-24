@@ -7,7 +7,7 @@ import { getCallbackUrl } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 const useValidateTenantAccess = () => {
-  const { getAccessToken, signIn, isAuthenticated } = useLogto();
+  const { getAccessToken, signIn } = useLogto();
   const { currentTenant, currentTenantId, currentTenantValidated, setCurrentTenantValidated } =
     useContext(TenantsContext);
 
@@ -21,7 +21,7 @@ const useValidateTenantAccess = () => {
       }
     };
 
-    if (isAuthenticated && currentTenantId && !currentTenantValidated) {
+    if (currentTenantId && !currentTenantValidated) {
       setCurrentTenantValidated();
       if (currentTenant) {
         void validate(currentTenant);
@@ -37,7 +37,6 @@ const useValidateTenantAccess = () => {
     currentTenantId,
     currentTenantValidated,
     getAccessToken,
-    isAuthenticated,
     setCurrentTenantValidated,
     signIn,
   ]);

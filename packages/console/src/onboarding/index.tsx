@@ -103,9 +103,9 @@ export function OnboardingRoutes() {
     <Routes>
       <Route element={<ProtectedRoutes />}>
         <Route element={<Layout />}>
-          <Route index element={<Navigate replace to={welcomePathname} />} />
+          <Route path="/" element={<Navigate replace to={welcomePathname} />} />
           <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
-            <Route index element={<Navigate replace to={welcomePathname} />} />
+            <Route path="" element={<Navigate replace to={welcomePathname} />} />
             <Route path={OnboardingPage.Welcome} element={<Welcome />} />
             <Route path={OnboardingPage.AboutUser} element={<About />} />
             <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />

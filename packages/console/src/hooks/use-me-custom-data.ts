@@ -1,3 +1,4 @@
+import { type JsonObject } from '@logto/schemas';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,19 +10,20 @@ const useMeCustomData = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const update = useCallback(
-    async (customData: Record<string, unknown>) => {
+    async (customData: JsonObject) => {
       if (!user) {
         toast.error(t('errors.unexpected_error'));
         return;
       }
 
-      const updated = await api
-        .patch(`me/custom-data`, {
-          json: customData,
-        })
-        .json<(typeof user)['customData']>();
-
-      await reload({ ...user, customData: updated });
+      await reload({
+        ...user,
+        customData: await api
+          .patch(`me/custom-data`, {
+            json: customData,
+          })
+          .json<JsonObject>(),
+      });
     },
     [api, reload, t, user]
   );
