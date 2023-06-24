@@ -1,8 +1,6 @@
 import { defaultTenantId, ossConsolePath } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 
-import { CloudRoute } from '@/cloud/types';
-
 import { adminEndpoint, isCloud } from './env';
 
 const getAdminTenantEndpoint = () => {
@@ -24,12 +22,11 @@ export const getUserTenantId = () => {
   if (isCloud) {
     const segment = window.location.pathname.split('/')[1];
 
-    // eslint-disable-next-line no-restricted-syntax
-    if (Object.values(CloudRoute).includes(segment as CloudRoute)) {
+    if (!segment || segment === 'callback' || segment.endsWith('-callback')) {
       return '';
     }
 
-    return segment ?? '';
+    return segment;
   }
 
   return defaultTenantId;
@@ -38,7 +35,11 @@ export const getUserTenantId = () => {
 export const getBasename = () => (isCloud ? '/' + getUserTenantId() : ossConsolePath);
 
 export const getCallbackUrl = (tenantId?: string) =>
-  new URL('/' + conditionalArray(tenantId, 'callback').join('/'), window.location.origin);
+  new URL(
+    // Only Cloud has tenantId in callback URL
+    '/' + conditionalArray(isCloud ? tenantId : 'console', 'callback').join('/'),
+    window.location.origin
+  );
 
 export const getSignOutRedirectPathname = () => (isCloud ? '/' : ossConsolePath);
 

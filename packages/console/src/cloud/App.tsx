@@ -1,21 +1,23 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import ProtectedContent from '@/containers/ProtectedRoutes';
 import Callback from '@cloud/pages/Callback';
 
 import * as styles from './App.module.scss';
 import Main from './pages/Main';
 import SocialDemoCallback from './pages/SocialDemoCallback';
-import { CloudRoute } from './types';
 
 function App() {
   return (
     <BrowserRouter>
       <div className={styles.app}>
         <Routes>
-          <Route path={`/${CloudRoute.Callback}`} element={<Callback />} />
-          <Route path={`/${CloudRoute.SocialDemoCallback}`} element={<SocialDemoCallback />} />
-          <Route path={`/:tenantId/${CloudRoute.Callback}`} element={<Callback />} />
-          <Route path="/*" element={<Main />} />
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/social-demo-callback" element={<SocialDemoCallback />} />
+          <Route path="/:tenantId/callback" element={<Callback />} />
+          <Route path="/*" element={<ProtectedContent />}>
+            <Route path="*" element={<Main />} />
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>

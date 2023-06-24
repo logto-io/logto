@@ -1,4 +1,6 @@
 import { useLogto } from '@logto/react';
+import { isKeyInObject } from '@logto/shared/universal';
+import { conditional } from '@silverhand/essentials';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +22,13 @@ const useMeCustomData = () => {
 
   const fetcher = useSwrFetcher(api);
 
-  const { data, mutate, error } = useSWR<unknown, RequestError>(
-    shouldFetch && `me/custom-data`,
-    fetcher
-  );
+  const {
+    data: meData,
+    mutate,
+    error,
+    // Reuse the same key `me` as `useCurrentUser()` to avoid additional requests.
+  } = useSWR<unknown, RequestError>(shouldFetch && 'me', fetcher);
+  const data = conditional(isKeyInObject(meData, 'customData') && meData.customData);
 
   const update = useCallback(
     async (data: Record<string, unknown>) => {

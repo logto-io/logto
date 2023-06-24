@@ -32,7 +32,9 @@ type Tenants = {
    */
   currentTenantId: string;
   currentTenant?: TenantInfo;
-  setCurrentTenantId: (tenantId: string) => void;
+  /** Indicates if the Access Token has been validated for use. Will be reset to false when the current tenant changes. */
+  currentTenantValidated: boolean;
+  setCurrentTenantValidated: () => void;
   navigateTenant: (tenantId: string, options?: NavigateOptions) => void;
 };
 
@@ -56,7 +58,8 @@ export const TenantsContext = createContext<Tenants>({
   removeTenant: noop,
   updateTenant: noop,
   currentTenantId: '',
-  setCurrentTenantId: noop,
+  currentTenantValidated: false,
+  setCurrentTenantValidated: noop,
   navigateTenant: noop,
 });
 
@@ -75,12 +78,14 @@ function TenantsProvider({ children }: Props) {
   /** @see {@link initialTenants} */
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
   const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
+  const [currentTenantValidated, setCurrentTenantValidated] = useState(false);
 
   const navigateTenant = useCallback((tenantId: string) => {
     // Use `window.open()` to force page reload since we use `basename` for the router
     // which will not re-create the router instance when the URL changes.
     window.open(`/${tenantId}`, '_self');
     setCurrentTenantId(tenantId);
+    setCurrentTenantValidated(false);
   }, []);
 
   const currentTenant = useMemo(
@@ -109,10 +114,20 @@ function TenantsProvider({ children }: Props) {
       isInitComplete,
       currentTenantId,
       currentTenant,
-      setCurrentTenantId,
+      currentTenantValidated,
+      setCurrentTenantValidated: () => {
+        setCurrentTenantValidated(true);
+      },
       navigateTenant,
     }),
-    [currentTenant, currentTenantId, isInitComplete, navigateTenant, tenants]
+    [
+      currentTenant,
+      currentTenantId,
+      currentTenantValidated,
+      isInitComplete,
+      navigateTenant,
+      tenants,
+    ]
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;

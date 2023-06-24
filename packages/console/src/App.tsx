@@ -15,7 +15,6 @@ import '@fontsource/roboto-mono';
 
 import CloudApp from '@/cloud/App';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
-import initI18n from '@/i18n/init';
 
 import { adminTenantEndpoint, mainTitle } from './consts';
 import { isCloud } from './consts/env';
@@ -25,11 +24,12 @@ import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
+import initI18n from './i18n/init';
 
 void initI18n();
 
 function Content() {
-  const { tenants, isInitComplete, currentTenantId } = useContext(TenantsContext);
+  const { tenants, currentTenantId } = useContext(TenantsContext);
 
   const resources = useMemo(
     () =>
@@ -80,7 +80,7 @@ function Content() {
              * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
              * if it's Cloud, render the tenant app container only when init is complete and a tenant ID is available (in a tenant context).
              */}
-            {!isCloud || (isInitComplete && currentTenantId) ? (
+            {!isCloud || currentTenantId ? (
               <AppEndpointsProvider>
                 <AppConfirmModalProvider>
                   <TenantAppContainer />

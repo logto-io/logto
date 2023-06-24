@@ -1,38 +1,35 @@
-import { useLogto } from '@logto/react';
-import { type TenantInfo } from '@logto/schemas/lib/models/tenants.js';
-import { trySafe } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { useContext, useMemo } from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { getCallbackUrl } from '@/consts';
+import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import useTrackUserId from '@/hooks/use-track-user-id';
-import OnboardingApp from '@/onboarding/App';
+import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
-import ConsoleApp from '@/pages/Main';
+import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
 function TenantAppContainer() {
-  const { getAccessToken, signIn } = useLogto();
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { isOnboarding, isLoaded } = useUserOnboardingData();
-  const { currentTenant } = useContext(TenantsContext);
 
-  useEffect(() => {
-    const validate = async ({ indicator, id }: TenantInfo) => {
-      // Test fetching an access token for the current Tenant ID.
-      // If failed, it means the user finishes the first auth, ands still needs to auth again to
-      // fetch the full-scoped (with all available tenants) token.
-      if (!(await trySafe(getAccessToken(indicator)))) {
-        void signIn(getCallbackUrl(id).href);
-      }
-    };
-
-    if (currentTenant) {
-      void validate(currentTenant);
-    }
-  }, [currentTenant, getAccessToken, signIn]);
+  const router = useMemo(
+    () =>
+      createBrowserRouter(
+        [{ path: '*', Component: isOnboarding ? OnboardingRoutes : ConsoleRoutes }],
+        // Currently we use `window.open()` to navigate between tenants so the `useMemo` hook
+        // can have no dependency and the router will be created anyway. Consider integrating the
+        // tenant ID into the router and remove basename here if we want to use `history.pushState()`
+        // to navigate.
+        //
+        // Caveat: To use `history.pushState()`, we'd better to create a browser router in the upper
+        // level of the component tree to make the tenant ID a part of the URL. Otherwise, we need
+        // to handle `popstate` event to update the tenant ID when the user navigates back.
+        { basename: getBasename() }
+      ),
+    [isOnboarding]
+  );
 
   useTrackUserId();
 
@@ -40,11 +37,7 @@ function TenantAppContainer() {
     return <AppLoading />;
   }
 
-  if (isOnboarding) {
-    return <OnboardingApp />;
-  }
-
-  return <ConsoleApp />;
+  return <RouterProvider router={router} />;
 }
 
 export default TenantAppContainer;

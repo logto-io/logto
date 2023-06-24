@@ -1,6 +1,7 @@
 import { useLogto } from '@logto/react';
 import { useTranslation } from 'react-i18next';
 
+import { getCallbackUrl } from '@/consts';
 import Button from '@/ds-components/Button';
 
 import AppError from '../AppError';
@@ -9,10 +10,9 @@ import * as styles from './index.module.scss';
 
 type Props = {
   error: Error;
-  callbackHref?: string;
 };
 
-function SessionExpired({ callbackHref = '/callback', error }: Props) {
+function SessionExpired({ error }: Props) {
   const { signIn } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -28,7 +28,7 @@ function SessionExpired({ callbackHref = '/callback', error }: Props) {
         type="outline"
         title="session_expired.button"
         onClick={() => {
-          void signIn(new URL(callbackHref, window.location.origin).toString());
+          void signIn(getCallbackUrl().href);
         }}
       />
     </AppError>
