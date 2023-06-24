@@ -20,7 +20,7 @@ const useCurrentUser = () => {
 
   const isLoading = !user && !error;
 
-  return { user, isLoading, error, reload: mutate };
+  return { user, isLoading, error, reload: mutate, api };
 };
 
 export default useCurrentUser;
