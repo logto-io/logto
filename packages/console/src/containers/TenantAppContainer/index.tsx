@@ -1,3 +1,4 @@
+import { useLogto } from '@logto/react';
 import { useContext, useMemo } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
@@ -10,14 +11,24 @@ import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
+/** @deprecated Remove this layer. */
 function TenantAppContainer() {
   const { userEndpoint } = useContext(AppEndpointsContext);
   const { isOnboarding, isLoaded } = useUserOnboardingData();
+  const { isAuthenticated } = useLogto();
 
   const router = useMemo(
     () =>
       createBrowserRouter(
-        [{ path: '*', Component: isOnboarding ? OnboardingRoutes : ConsoleRoutes }],
+        [
+          {
+            path: '*',
+            // Only authenticated user can access onboarding routes.
+            // This looks weird and it will be refactored soon by merging the onboarding
+            // routes with the console routes.
+            Component: isAuthenticated && isOnboarding ? OnboardingRoutes : ConsoleRoutes,
+          },
+        ],
         // Currently we use `window.open()` to navigate between tenants so the `useMemo` hook
         // can have no dependency and the router will be created anyway. Consider integrating the
         // tenant ID into the router and remove basename here if we want to use `history.pushState()`
@@ -28,12 +39,15 @@ function TenantAppContainer() {
         // to handle `popstate` event to update the tenant ID when the user navigates back.
         { basename: getBasename() }
       ),
-    [isOnboarding]
+    [isAuthenticated, isOnboarding]
   );
 
   useTrackUserId();
 
-  if (!userEndpoint || (isCloud && !isLoaded)) {
+  // Authenticated user should loading onboarding data before rendering the app.
+  // This looks weird and it will be refactored soon by merging the onboarding
+  // routes with the console routes.
+  if (!userEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
     return <AppLoading />;
   }
 

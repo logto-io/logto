@@ -8,6 +8,7 @@ import { SWRConfig } from 'swr';
 
 import AppBoundary from '@/containers/AppBoundary';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
+import TenantAccess from '@/containers/TenantAccess';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
@@ -102,16 +103,18 @@ export function OnboardingRoutes() {
   return (
     <Routes>
       <Route element={<ProtectedRoutes />}>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Navigate replace to={welcomePathname} />} />
-          <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
-            <Route path="" element={<Navigate replace to={welcomePathname} />} />
-            <Route path={OnboardingPage.Welcome} element={<Welcome />} />
-            <Route path={OnboardingPage.AboutUser} element={<About />} />
-            <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />
-            <Route path={OnboardingPage.Congrats} element={<Congrats />} />
+        <Route element={<TenantAccess />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Navigate replace to={welcomePathname} />} />
+            <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
+              <Route index element={<Navigate replace to={welcomePathname} />} />
+              <Route path={OnboardingPage.Welcome} element={<Welcome />} />
+              <Route path={OnboardingPage.AboutUser} element={<About />} />
+              <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />
+              <Route path={OnboardingPage.Congrats} element={<Congrats />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
     </Routes>

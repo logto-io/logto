@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import ProtectedContent from '@/containers/ProtectedRoutes';
+import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import Callback from '@cloud/pages/Callback';
 
 import * as styles from './App.module.scss';
@@ -15,7 +15,7 @@ function App() {
           <Route path="/callback" element={<Callback />} />
           <Route path="/social-demo-callback" element={<SocialDemoCallback />} />
           <Route path="/:tenantId/callback" element={<Callback />} />
-          <Route path="/*" element={<ProtectedContent />}>
+          <Route element={<ProtectedRoutes />}>
             <Route path="*" element={<Main />} />
           </Route>
         </Routes>

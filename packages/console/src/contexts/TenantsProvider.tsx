@@ -8,9 +8,7 @@ import type { NavigateOptions } from 'react-router-dom';
 import { isCloud } from '@/consts/env';
 import { getUserTenantId } from '@/consts/tenants';
 
-type Props = {
-  children: ReactNode;
-};
+type CurrentTenantStatus = 'pending' | 'validating' | 'validated';
 
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
@@ -33,8 +31,8 @@ type Tenants = {
   currentTenantId: string;
   currentTenant?: TenantInfo;
   /** Indicates if the Access Token has been validated for use. Will be reset to false when the current tenant changes. */
-  currentTenantValidated: boolean;
-  setCurrentTenantValidated: () => void;
+  currentTenantStatus: CurrentTenantStatus;
+  setCurrentTenantStatus: (status: CurrentTenantStatus) => void;
   navigateTenant: (tenantId: string, options?: NavigateOptions) => void;
 };
 
@@ -58,10 +56,14 @@ export const TenantsContext = createContext<Tenants>({
   removeTenant: noop,
   updateTenant: noop,
   currentTenantId: '',
-  currentTenantValidated: false,
-  setCurrentTenantValidated: noop,
+  currentTenantStatus: 'pending',
+  setCurrentTenantStatus: noop,
   navigateTenant: noop,
 });
+
+type Props = {
+  children: ReactNode;
+};
 
 /**
  * The global tenants context provider for all available tenants of the current users.
@@ -78,14 +80,14 @@ function TenantsProvider({ children }: Props) {
   /** @see {@link initialTenants} */
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
   const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
-  const [currentTenantValidated, setCurrentTenantValidated] = useState(false);
+  const [currentTenantStatus, setCurrentTenantStatus] = useState<CurrentTenantStatus>('pending');
 
   const navigateTenant = useCallback((tenantId: string) => {
     // Use `window.open()` to force page reload since we use `basename` for the router
     // which will not re-create the router instance when the URL changes.
     window.open(`/${tenantId}`, '_self');
     setCurrentTenantId(tenantId);
-    setCurrentTenantValidated(false);
+    setCurrentTenantStatus('pending');
   }, []);
 
   const currentTenant = useMemo(
@@ -98,7 +100,7 @@ function TenantsProvider({ children }: Props) {
       tenants,
       resetTenants: (tenants: TenantInfo[]) => {
         setTenants(tenants);
-        setCurrentTenantValidated(false);
+        setCurrentTenantStatus('pending');
         setIsInitComplete(true);
       },
       appendTenant: (tenant: TenantInfo) => {
@@ -115,20 +117,11 @@ function TenantsProvider({ children }: Props) {
       isInitComplete,
       currentTenantId,
       currentTenant,
-      currentTenantValidated,
-      setCurrentTenantValidated: () => {
-        setCurrentTenantValidated(true);
-      },
+      currentTenantStatus,
+      setCurrentTenantStatus,
       navigateTenant,
     }),
-    [
-      currentTenant,
-      currentTenantId,
-      currentTenantValidated,
-      isInitComplete,
-      navigateTenant,
-      tenants,
-    ]
+    [currentTenant, currentTenantId, currentTenantStatus, isInitComplete, navigateTenant, tenants]
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;

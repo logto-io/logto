@@ -29,7 +29,7 @@ import initI18n from './i18n/init';
 void initI18n();
 
 function Content() {
-  const { tenants, currentTenantId, currentTenantValidated } = useContext(TenantsContext);
+  const { tenants, currentTenantId } = useContext(TenantsContext);
 
   const resources = useMemo(
     () =>
@@ -80,7 +80,7 @@ function Content() {
              * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
              * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
              */}
-            {!isCloud || (currentTenantId && currentTenantValidated) ? (
+            {!isCloud || currentTenantId ? (
               <AppEndpointsProvider>
                 <AppConfirmModalProvider>
                   <TenantAppContainer />

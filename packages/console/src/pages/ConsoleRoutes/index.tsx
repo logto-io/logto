@@ -7,6 +7,7 @@ import AppBoundary from '@/containers/AppBoundary';
 import AppContent from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
+import TenantAccess from '@/containers/TenantAccess';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
@@ -36,8 +37,10 @@ export function ConsoleRoutes() {
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="handle-social" element={<HandleSocialCallback />} />
-          <Route element={<AppContent />}>
-            <Route path="*" element={<ConsoleContent />} />
+          <Route element={<TenantAccess />}>
+            <Route element={<AppContent />}>
+              <Route path="*" element={<ConsoleContent />} />
+            </Route>
           </Route>
         </Route>
       </Route>

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
+import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import useValidateTenantAccess from '@/hooks/use-validate-tenant-access';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import AutoCreateTenant from './AutoCreateTenant';
@@ -10,9 +10,11 @@ import TenantLandingPage from './TenantLandingPage';
 
 export default function Main() {
   const { tenants } = useContext(TenantsContext);
-  const { isOnboarding } = useUserOnboardingData();
+  const { isOnboarding, isLoaded } = useUserOnboardingData();
 
-  useValidateTenantAccess();
+  if (!isLoaded) {
+    return <AppLoading />;
+  }
 
   /**
    * If current tenant ID is not set, but there is at least one tenant available,
