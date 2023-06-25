@@ -8,9 +8,9 @@ import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 
-import DetailsSkeleton from '../DetailsSkeleton';
 import RequestDataError from '../RequestDataError';
 
+import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -38,7 +38,7 @@ function DetailsPage({
         {typeof backLinkTitle === 'string' ? <DynamicT forKey={backLinkTitle} /> : backLinkTitle}
       </TextLink>
       {isLoading ? (
-        <DetailsSkeleton />
+        <Skeleton />
       ) : error ? (
         <RequestDataError error={error} onRetry={onRetry} />
       ) : (

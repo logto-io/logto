@@ -9,6 +9,7 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
 import DefaultDomain from './DefaultDomain';
+import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
@@ -16,7 +17,7 @@ function TenantDomainSettings() {
   const { getDocumentationUrl } = useDocumentationUrl();
 
   if (isLoading) {
-    return null;
+    return <Skeleton />;
   }
 
   return (

@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  padding: _.unit(6) _.unit(8);
+  display: flex;
+}
+
+.introduction {
+  width: 296px;
+  padding-bottom: _.unit(6);
+  margin-right: _.unit(14);
+  flex-shrink: 0;
+
+  > :not(:first-child) {
+    margin-top: _.unit(2);
+  }
+}
+
+.form {
+  flex-grow: 1;
+  overflow: hidden;
+  padding: 0 _.unit(1);
+}
+
+@media screen and (max-width: 1080px) {
+  .container {
+    flex-direction: column;
+
+    .introduction {
+      width: 100%;
+      margin-right: unset;
+    }
+  }
+}
