@@ -229,9 +229,11 @@ export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 export const sendMessagePayloadGuard = z.object({
   to: z.string(),
   type: verificationCodeTypeGuard,
-  payload: z.object({
-    code: z.string(),
-  }),
+  payload: z
+    .object({
+      code: z.string(),
+    })
+    .merge(emailServiceBrandingGuard),
 });
 
 export type SendMessagePayload = z.infer<typeof sendMessagePayloadGuard>;

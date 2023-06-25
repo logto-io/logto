@@ -1,9 +1,12 @@
 import {
   CloudflareKey,
+  EmailServiceProviderKey,
   type HostnameProviderData,
   type StorageProviderData,
+  type EmailServiceData,
   hostnameProviderDataGuard,
   storageProviderDataGuard,
+  emailServiceDataGuard,
   StorageProviderKey,
   type SystemKey,
 } from '@logto/schemas';
@@ -17,6 +20,7 @@ export default class SystemContext {
   static shared = new SystemContext();
   public storageProviderConfig?: StorageProviderData;
   public hostnameProviderConfig?: HostnameProviderData;
+  public emailServiceProviderConfig?: EmailServiceData;
 
   async loadProviderConfigs(pool: CommonQueryMethods) {
     await Promise.all([
@@ -32,6 +36,13 @@ export default class SystemContext {
           pool,
           CloudflareKey.HostnameProvider,
           hostnameProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.emailServiceProviderConfig = await this.loadConfig(
+          pool,
+          EmailServiceProviderKey.EmailServiceProvider,
+          emailServiceDataGuard
         );
       })(),
     ]);
