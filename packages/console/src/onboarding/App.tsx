@@ -23,9 +23,8 @@ import Congrats from './pages/Congrats';
 import SignInExperience from './pages/SignInExperience';
 import Welcome from './pages/Welcome';
 import { OnboardingPage, OnboardingRoute } from './types';
-import { getOnboardingPage, gtag } from './utils';
+import { gtag } from './utils';
 
-const welcomePathname = getOnboardingPage(OnboardingPage.Welcome);
 /**
  * Due to the special of Google Tag, it should be `true` only in the Logto Cloud production environment.
  * Add the leading '.' to make it safer (ignore hostnames like "foologto.io").
@@ -91,24 +90,20 @@ function App() {
             )}
             <Toast />
             <Routes>
-              <Route index element={<Navigate replace to={welcomePathname} />} />
-              <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
-                <Route index element={<Navigate replace to={welcomePathname} />} />
+              <Route index element={<Navigate replace to={OnboardingRoute.Onboarding} />} />
+              <Route path={OnboardingRoute.Onboarding} element={<AppContent />}>
+                <Route index element={<Navigate replace to={OnboardingPage.Welcome} />} />
                 <Route path={OnboardingPage.Welcome} element={<Welcome />} />
-                <Route
-                  path={OnboardingPage.AboutUser}
-                  element={questionnaire ? <About /> : <Navigate replace to={welcomePathname} />}
-                />
-                <Route
-                  path={OnboardingPage.SignInExperience}
-                  element={
-                    questionnaire ? <SignInExperience /> : <Navigate replace to={welcomePathname} />
-                  }
-                />
-                <Route
-                  path={OnboardingPage.Congrats}
-                  element={questionnaire ? <Congrats /> : <Navigate replace to={welcomePathname} />}
-                />
+                {questionnaire && (
+                  <>
+                    <Route path={OnboardingPage.AboutUser} element={<About />} />
+                    <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />
+                    <Route path={OnboardingPage.Congrats} element={<Congrats />} />
+                  </>
+                )}
+                {!questionnaire && (
+                  <Route path="*" element={<Navigate replace to={OnboardingPage.Welcome} />} />
+                )}
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
