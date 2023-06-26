@@ -30,6 +30,29 @@ const connector_details = {
     'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.',
   deletion_description:
     'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.',
+  logto_email: {
+    total_email_sent: 'Total email sent: {{value, number}}',
+    total_email_sent_tip:
+      'Logto utilizes SendGrid for secure and stable built-in email. It’s completely free to use.',
+    email_template_title: 'Email Template',
+    template_description:
+      'Built-in email uses default templates for seamless delivery of verification emails. No configuration is required, and you can customize basic brand information.',
+    description_action_text: 'View templates',
+    from_email_field: 'From email',
+    from_name_field: 'From name',
+    from_name_tip:
+      'Customize the sender name for emails. If left empty, “Verification” will be used as the default name.',
+    from_name_placeholder: 'Your sender name',
+    company_address_field: 'Company address',
+    company_address_tip:
+      'Displaying company address and zip code in the bottom of emails enhances authenticity, provides contact information, and ensures compliance.',
+    company_address_placeholder: 'Your company address',
+    app_logo_field: 'App Logo',
+    app_logo_tip:
+      'Display your brand logo in the top of emails. Use the same image for both light mode and dark mode.',
+    urls_not_allowed: 'URLs are not allowed',
+    test_notes: 'Logto uses the “Generic” template for testing.',
+  },
 };
 
 export default connector_details;

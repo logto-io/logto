@@ -30,6 +30,29 @@ const connector_details = {
     'Ten {{name}} jest używany w Twoim procesie logowania. Usunięcie spowoduje, że Twoje doświadczenie logowania nie będzie działać poprawnie, dopóki nie rozwiążesz konfliktu. Będziesz musiał go ponownie skonfigurować, jeśli zdecydujesz się go dodać z powrotem.',
   deletion_description:
     'Usuwasz ten konektor. Nie można tego cofnąć, będziesz musiał go ponownie skonfigurować, jeśli zdecydujesz się go ponownie dodać.',
+  logto_email: {
+    total_email_sent: 'Wysłano łącznie emaili: {{value, number}}',
+    total_email_sent_tip:
+      'Logto wykorzystuje SendGrid do bezpiecznego i stabilnego wbudowanego e-maila. Jest to całkowicie darmowe w użyciu.',
+    email_template_title: 'Szablon e-maila',
+    template_description:
+      'Wbudowany e-mail używa domyślnych szablonów dla bezproblemowej dostawy wiadomości weryfikacyjnych. Nie wymaga to konfiguracji, a podstawowe informacje o marce można dostosować.',
+    description_action_text: 'Wyświetl szablony',
+    from_email_field: 'Adres e-mail nadawcy',
+    from_name_field: 'Nazwa nadawcy',
+    from_name_tip:
+      'Dostosuj nazwę nadawcy dla wiadomości e-mail. Jeśli pozostawisz to pole puste, domyślnie użyta zostanie nazwa "Weryfikacja".',
+    from_name_placeholder: 'Nazwa nadawcy',
+    company_address_field: 'Adres firmy',
+    company_address_tip:
+      'Wyświetlanie adresu firmy i kodu pocztowego na dole wiadomości e-mail zwiększa autentyczność, zapewnia informacje kontaktowe i zapewnia zgodność.',
+    company_address_placeholder: 'Adres firmy',
+    app_logo_field: 'Logo aplikacji',
+    app_logo_tip:
+      'Wyświetlaj logo marki na górze wiadomości e-mail. Użyj tego samego obrazu zarówno dla trybu jasnego, jak i ciemnego.',
+    urls_not_allowed: 'Nie dozwolone adresy URL',
+    test_notes: 'Logto używa szablonu "Ogólny" do testów.',
+  },
 };
 
 export default connector_details;

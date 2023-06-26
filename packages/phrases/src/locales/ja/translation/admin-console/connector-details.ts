@@ -30,6 +30,29 @@ const connector_details = {
     'この{{name}}はあなたのサインイン体験で使用されています。削除すると、競合が解決されるまでサインイン体験が正常に機能しません。再追加する場合は再設定する必要があります。',
   deletion_description:
     'このコネクタを削除します。元に戻すことはできず、再追加する場合は再設定する必要があります。',
+  logto_email: {
+    total_email_sent: '総送信数: {{value, number}}',
+    total_email_sent_tip:
+      'Logtoは、安全で安定した組み込みのメールにSendGridを利用しています。完全に無料で使用できます。',
+    email_template_title: 'メールテンプレート',
+    template_description:
+      '組み込みのメールは、シームレスな認証メールの配信のためにデフォルトのテンプレートを使用します。設定は必要ありません。基本的なブランド情報をカスタマイズできます。',
+    description_action_text: 'テンプレートを表示',
+    from_email_field: '送信元メールアドレス',
+    from_name_field: '送信元名',
+    from_name_tip:
+      'メールの送信元名をカスタマイズします。空白の場合、「Verification」がデフォルト名として使用されます。',
+    from_name_placeholder: '送信元の名前を入力してください',
+    company_address_field: '会社住所',
+    company_address_tip:
+      'メールの下部に会社住所と郵便番号を表示することで、信頼性を高め、連絡先情報を提供し、コンプライアンスを確保します。',
+    company_address_placeholder: '会社の住所を入力してください',
+    app_logo_field: 'アプリのロゴ',
+    app_logo_tip:
+      'メールの上部にブランドロゴを表示します。ライトモードとダークモードの両方で同じ画像を使用してください。',
+    urls_not_allowed: 'URLは許可されません',
+    test_notes: 'Logtoはテストのために「共通」テンプレートを使用しています。',
+  },
 };
 
 export default connector_details;

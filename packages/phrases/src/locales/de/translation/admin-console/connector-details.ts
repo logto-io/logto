@@ -30,6 +30,29 @@ const connector_details = {
     'Dieser {{name}} wird in Ihrem Anmeldeerlebnis verwendet. Wenn Sie ihn löschen, funktioniert Ihr Anmeldeerlebnis nicht ordnungsgemäß, bis Sie das Problem gelöst haben. Wenn Sie ihn wieder hinzufügen möchten, müssen Sie ihn erneut konfigurieren.',
   deletion_description:
     'Sie entfernen diesen Connector. Dies kann nicht rückgängig gemacht werden, und Sie müssen ihn erneut konfigurieren, wenn Sie ihn wieder hinzufügen möchten.',
+  logto_email: {
+    total_email_sent: 'Gesamtanzahl gesendeter E-Mails: {{value, number}}',
+    total_email_sent_tip:
+      'Logto nutzt SendGrid für sicheren und stabilen E-Mail-Versand. Es ist komplett kostenlos zu nutzen.',
+    email_template_title: 'E-Mail-Vorlage',
+    template_description:
+      'Der integrierte E-Mail-Versand verwendet Standardvorlagen für eine nahtlose Zustellung von Verifizierungs-E-Mails. Es ist keine Konfiguration erforderlich, und Sie können grundlegende Markeninformationen anpassen.',
+    description_action_text: 'Vorlagen anzeigen',
+    from_email_field: 'Absender-E-Mail',
+    from_name_field: 'Absender-Name',
+    from_name_tip:
+      'Passen Sie den Absendernamen für E-Mails an. Wenn es leer gelassen wird, wird "Verifizierung" als Standardname verwendet.',
+    from_name_placeholder: 'Ihr Absendername',
+    company_address_field: 'Firmenadresse',
+    company_address_tip:
+      'Die Anzeige der Firmenadresse und der Postleitzahl am Ende von E-Mails verbessert die Authentizität, bietet Kontaktinformationen und stellt die Einhaltung sicher.',
+    company_address_placeholder: 'Ihre Firmenadresse',
+    app_logo_field: 'App-Logo',
+    app_logo_tip:
+      'Zeigen Sie Ihr Markenlogo oben in E-Mails an. Verwenden Sie dasselbe Bild für den hellen und den dunklen Modus.',
+    urls_not_allowed: 'URLs sind nicht erlaubt',
+    test_notes: 'Logto verwendet die "Generic"-Vorlage zum Testen.',
+  },
 };
 
 export default connector_details;
