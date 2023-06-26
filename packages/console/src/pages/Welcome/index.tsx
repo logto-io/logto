@@ -2,11 +2,12 @@ import { LogtoClientError, useLogto } from '@logto/react';
 import classNames from 'classnames';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useHref } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Logo from '@/assets/images/logo.svg';
 import AppError from '@/components/AppError';
 import SessionExpired from '@/components/SessionExpired';
+import { getCallbackUrl } from '@/consts';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 
@@ -16,7 +17,6 @@ function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { isAuthenticated, error, signIn } = useLogto();
-  const href = useHref('/callback');
   const theme = useTheme();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function Welcome() {
 
   if (error) {
     if (error instanceof LogtoClientError) {
-      return <SessionExpired error={error} callbackHref={href} />;
+      return <SessionExpired error={error} />;
     }
 
     return <AppError errorMessage={error.message} callStack={error.stack} />;
@@ -50,7 +50,7 @@ function Welcome() {
             type="branding"
             title="welcome.create_account"
             onClick={() => {
-              void signIn(new URL(href, window.location.origin).toString());
+              void signIn(getCallbackUrl().href);
             }}
           />
         </div>

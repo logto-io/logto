@@ -1,52 +1,38 @@
-import { useLogto } from '@logto/react';
+import { type JsonObject } from '@logto/schemas';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
-import { adminTenantEndpoint, meApi } from '@/consts';
-
-import type { RequestError } from './use-api';
-import { useStaticApi } from './use-api';
-import useLogtoUserId from './use-logto-user-id';
-import useSwrFetcher from './use-swr-fetcher';
+import useCurrentUser from './use-current-user';
 
 const useMeCustomData = () => {
-  const { isAuthenticated, error: authError } = useLogto();
+  const { user, isLoading, error, reload, api } = useCurrentUser();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const userId = useLogtoUserId();
-  const shouldFetch = isAuthenticated && !authError && userId;
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-
-  const fetcher = useSwrFetcher(api);
-
-  const { data, mutate, error } = useSWR<unknown, RequestError>(
-    shouldFetch && `me/custom-data`,
-    fetcher
-  );
 
   const update = useCallback(
-    async (data: Record<string, unknown>) => {
-      if (!userId) {
+    async (customData: JsonObject) => {
+      if (!user) {
         toast.error(t('errors.unexpected_error'));
-
         return;
       }
-      const updated = await api
-        .patch(`me/custom-data`, {
-          json: data,
-        })
-        .json();
-      await mutate(updated);
+
+      await reload({
+        ...user,
+        customData: await api
+          .patch(`me/custom-data`, {
+            json: customData,
+          })
+          .json<JsonObject>(),
+      });
     },
-    [api, mutate, t, userId]
+    [api, reload, t, user]
   );
 
   return {
-    data,
+    data: user?.customData,
     error,
-    isLoading: !data && !error,
-    isLoaded: Boolean(data && !error),
+    isLoading,
+    isLoaded: !isLoading && !error,
     update,
   };
 };

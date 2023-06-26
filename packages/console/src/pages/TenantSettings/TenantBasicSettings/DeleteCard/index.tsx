@@ -1,4 +1,4 @@
-import { adminTenantId, defaultTenantId } from '@logto/schemas';
+import { adminTenantId } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
@@ -25,7 +25,7 @@ function DeleteCard({ currentTenantId, onClick }: Props) {
           <Button
             type="default"
             title="tenants.deletion_card.tenant_deletion_button"
-            disabled={[adminTenantId, defaultTenantId].includes(currentTenantId)}
+            disabled={[adminTenantId].includes(currentTenantId)}
             onClick={onClick}
           />
         </div>

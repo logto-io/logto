@@ -3,9 +3,8 @@ import { HTTPError } from 'ky';
 import type { ReactNode } from 'react';
 import { Component } from 'react';
 
+import AppError from '@/components/AppError';
 import SessionExpired from '@/components/SessionExpired';
-
-import AppError from '../../components/AppError';
 
 type Props = {
   children: ReactNode;
@@ -15,6 +14,14 @@ type State = {
   error?: Error;
 };
 
+/**
+ * An error boundary that catches errors in its children.
+ * Note it uses several hooks and contexts:
+ *
+ * - Includes `useLogto()` (depending on `<LogtoProvider />`) to provide a "Sign in again" button for session expired errors.
+ * - Includes `useTranslation()` to provide translations for the error messages.
+ * - includes `useTheme()` (depending on `<AppThemeProvider />`) to provide the local stored theme.
+ */
 class ErrorBoundary extends Component<Props, State> {
   static getDerivedStateFromError(error: Error): State {
     return { error };

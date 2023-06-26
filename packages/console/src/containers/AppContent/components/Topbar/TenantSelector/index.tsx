@@ -1,16 +1,14 @@
 import { adminTenantId } from '@logto/schemas';
 import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useContext, useRef, useState, useEffect, useMemo } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
 import Tick from '@/assets/icons/tick.svg';
-import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandingPageContent/CreateTenantModal';
-import AppError from '@/components/AppError';
-import { maxFreeTenantNumbers } from '@/consts/tenants';
+import { maxFreeTenantNumbers } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
@@ -20,39 +18,27 @@ import { onKeyDownHandler } from '@/utils/a11y';
 import TenantEnvTag from './TenantEnvTag';
 import * as styles from './index.module.scss';
 
-function TenantSelector() {
+export default function TenantSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
-  const { data: availableTenants, mutate, error } = useCloudSwr('/api/tenants');
-
-  useEffect(() => {
-    if (availableTenants) {
-      setTenants(availableTenants);
-    }
-  }, [availableTenants, setTenants]);
-
-  const currentTenantInfo = useMemo(() => {
-    return tenants?.find((tenant) => tenant.id === currentTenantId);
-  }, [currentTenantId, tenants]);
+  const {
+    tenants,
+    prependTenant,
+    currentTenant: currentTenantInfo,
+    currentTenantId,
+    navigateTenant,
+  } = useContext(TenantsContext);
 
   const isCreateButtonDisabled = useMemo(
     () =>
       /** Should not block admin tenant owners from creating more than three tenants */
-      tenants &&
-      !tenants.some(({ id }) => id === adminTenantId) &&
-      tenants.length >= maxFreeTenantNumbers,
+      !tenants.some(({ id }) => id === adminTenantId) && tenants.length >= maxFreeTenantNumbers,
     [tenants]
   );
-
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateTenantModal, setShowCreateTenantModal] = useState(false);
 
-  if (error) {
-    return <AppError errorMessage={error.message} callStack={error.stack} />;
-  }
-
-  if (!tenants?.length || !currentTenantInfo) {
+  if (tenants.length === 0 || !currentTenantInfo) {
     return null;
   }
 
@@ -90,7 +76,8 @@ function TenantSelector() {
               key={id}
               className={styles.dropdownItem}
               onClick={() => {
-                window.open(new URL(`/${id}`, window.location.origin).toString(), '_self');
+                navigateTenant(id);
+                setShowDropdown(false);
               }}
             >
               <div className={styles.dropdownName}>{name}</div>
@@ -102,36 +89,30 @@ function TenantSelector() {
           ))}
         </OverlayScrollbar>
         <Divider />
-        <div
-          role="button"
+        <button
           tabIndex={0}
           className={classNames(
             isCreateButtonDisabled && styles.disabled,
             styles.createTenantButton
           )}
+          disabled={isCreateButtonDisabled}
           onClick={() => {
-            if (isCreateButtonDisabled) {
-              return;
-            }
             setShowCreateTenantModal(true);
           }}
           onKeyDown={onKeyDownHandler(() => {
-            if (isCreateButtonDisabled) {
-              return;
-            }
             setShowCreateTenantModal(true);
           })}
         >
           <div>{t('cloud.tenant.create_tenant')}</div>
           <PlusSign />
-        </div>
+        </button>
       </Dropdown>
       <CreateTenantModal
         isOpen={showCreateTenantModal}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
-            void mutate();
-            window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
+            prependTenant(tenant);
+            navigateTenant(tenant.id);
           }
           setShowCreateTenantModal(false);
         }}
@@ -139,5 +120,3 @@ function TenantSelector() {
     </>
   );
 }
-
-export default TenantSelector;

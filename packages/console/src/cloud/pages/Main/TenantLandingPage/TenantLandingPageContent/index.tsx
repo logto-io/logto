@@ -1,13 +1,11 @@
 import { Theme } from '@logto/schemas';
 import type { TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useContext, useState } from 'react';
 
 import Plus from '@/assets/icons/plus.svg';
 import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
-import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -21,21 +19,12 @@ type Props = {
 };
 
 function TenantLandingPageContent({ className }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tenants, setTenants } = useContext(TenantsContext);
-  const { data: availableTenants, mutate } = useCloudSwr('/api/tenants');
-
-  useEffect(() => {
-    if (availableTenants) {
-      setTenants(availableTenants);
-    }
-  }, [availableTenants, setTenants]);
-
+  const { tenants, prependTenant, navigateTenant } = useContext(TenantsContext);
   const theme = useTheme();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  if (tenants?.length) {
+  if (tenants.length > 0) {
     return null;
   }
 
@@ -66,8 +55,8 @@ function TenantLandingPageContent({ className }: Props) {
         isOpen={isCreateModalOpen}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
-            void mutate();
-            window.location.assign(new URL(`/${tenant.id}`, window.location.origin).toString());
+            prependTenant(tenant);
+            navigateTenant(tenant.id);
           }
           setIsCreateModalOpen(false);
         }}

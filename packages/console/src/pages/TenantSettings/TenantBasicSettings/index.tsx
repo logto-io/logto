@@ -1,14 +1,12 @@
 import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
-import { useEffect, useState, useContext, useMemo } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { useCloudSwr } from '@/cloud/hooks/use-cloud-swr';
 import AppError from '@/components/AppError';
-import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -29,29 +27,11 @@ const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useCloudApi();
-  const { tenants, setTenants, currentTenantId } = useContext(TenantsContext);
-  const { data: availableTenants, mutate, error: requestError } = useCloudSwr('/api/tenants');
-  const isLoading = !availableTenants && !requestError;
-
-  useEffect(() => {
-    if (availableTenants) {
-      setTenants(availableTenants);
-    }
-  }, [availableTenants, setTenants]);
-
-  const currentTenant = useMemo(() => {
-    return tenants?.find((tenant) => tenant.id === currentTenantId);
-  }, [currentTenantId, tenants]);
-
+  const { currentTenant, currentTenantId, tenants, updateTenant, removeTenant } =
+    useContext(TenantsContext);
   const [error, setError] = useState<Error>();
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    if (requestError) {
-      setError(requestError);
-    }
-  }, [requestError]);
 
   const methods = useForm<TenantSettingsForm>({
     defaultValues: tenantProfileToForm(currentTenant),
@@ -74,8 +54,8 @@ function TenantBasicSettings() {
         body: data,
       });
       reset({ profile: { name, tag } });
-      void mutate();
       toast.success(t('tenants.settings.tenant_info_saved'));
+      updateTenant(currentTenantId, data);
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -109,7 +89,7 @@ function TenantBasicSettings() {
     try {
       await api.delete(`/api/tenants/:tenantId`, { params: { tenantId: currentTenantId } });
       setIsDeletionModalOpen(false);
-      void mutate();
+      removeTenant(currentTenantId);
     } catch (error: unknown) {
       setError(
         error instanceof Error
@@ -120,24 +100,6 @@ function TenantBasicSettings() {
       setIsDeleting(false);
     }
   };
-
-  useEffect(() => {
-    /**
-     * Redirect to the first tenant if the current tenant is deleted;
-     * Redirect to Cloud console landing page if there is no tenant.
-     */
-    if (tenants && !tenants.some(({ id }) => id === currentTenantId)) {
-      window.location.assign(
-        tenants[0]?.id
-          ? new URL(`/${tenants[0]?.id}`, window.location.origin).toString()
-          : new URL(window.location.origin).toString()
-      );
-    }
-  }, [currentTenantId, tenants]);
-
-  if (isLoading) {
-    return <AppLoading />;
-  }
 
   if (error) {
     return <AppError errorMessage={error.message} callStack={error.stack} />;
