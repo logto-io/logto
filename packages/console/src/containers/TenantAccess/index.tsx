@@ -47,27 +47,29 @@ export default function TenantAccess() {
     useContext(TenantsContext);
 
   useEffect(() => {
-    const validate = async ({ indicator, id }: TenantInfo) => {
+    const validate = async ({ indicator, id: tenantId }: TenantInfo) => {
       // Test fetching an access token for the current Tenant ID.
       // If failed, it means the user finishes the first auth, ands still needs to auth again to
       // fetch the full-scoped (with all available tenants) token.
       if (await trySafe(getAccessToken(indicator))) {
         setCurrentTenantStatus('validated');
       } else {
-        void signIn(getCallbackUrl(id).href);
+        void signIn(getCallbackUrl(tenantId).href);
       }
     };
 
     if (isAuthenticated && currentTenantId && currentTenantStatus === 'pending') {
       setCurrentTenantStatus('validating');
-      if (currentTenant) {
-        void validate(currentTenant);
-      } else {
-        // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
-        // the user has no access to. Fall back to the home page.
+
+      // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
+      // the user has no access to. Fall back to the home page.
+      if (!currentTenant) {
         // eslint-disable-next-line @silverhand/fp/no-mutation
         window.location.href = '/';
+        return;
       }
+
+      void validate(currentTenant);
     }
   }, [
     currentTenant,

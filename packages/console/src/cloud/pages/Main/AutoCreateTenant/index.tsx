@@ -6,18 +6,18 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 
 export default function AutoCreateTenant() {
   const api = useCloudApi();
-  const { appendTenant, tenants } = useContext(TenantsContext);
+  const { prependTenant, tenants } = useContext(TenantsContext);
 
   useEffect(() => {
     const createTenant = async () => {
       const newTenant = await api.post('/api/tenants', { body: {} });
-      appendTenant(newTenant);
+      prependTenant(newTenant);
     };
 
     if (tenants.length === 0) {
       void createTenant();
     }
-  }, [api, appendTenant, tenants.length]);
+  }, [api, prependTenant, tenants.length]);
 
   return <AppLoading />;
 }

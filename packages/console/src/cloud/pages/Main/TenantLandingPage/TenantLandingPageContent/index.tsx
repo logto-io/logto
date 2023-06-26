@@ -19,7 +19,7 @@ type Props = {
 };
 
 function TenantLandingPageContent({ className }: Props) {
-  const { tenants, appendTenant, navigateTenant } = useContext(TenantsContext);
+  const { tenants, prependTenant, navigateTenant } = useContext(TenantsContext);
   const theme = useTheme();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -55,7 +55,7 @@ function TenantLandingPageContent({ className }: Props) {
         isOpen={isCreateModalOpen}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
-            appendTenant(tenant);
+            prependTenant(tenant);
             navigateTenant(tenant.id);
           }
           setIsCreateModalOpen(false);

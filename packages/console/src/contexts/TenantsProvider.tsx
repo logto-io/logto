@@ -8,6 +8,10 @@ import type { NavigateOptions } from 'react-router-dom';
 import { isCloud } from '@/consts/env';
 import { getUserTenantId } from '@/consts/tenants';
 
+/**
+ * The current tenant status of access validation. When it's `validated`, it indicates that a
+ * valid Access Token for the current tenant is available.
+ */
 type CurrentTenantStatus = 'pending' | 'validating' | 'validated';
 
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
@@ -17,8 +21,8 @@ type Tenants = {
   isInitComplete: boolean;
   /** Reset tenants to the given value. It will overwrite the current tenants data and set `isInitComplete` to `true`. */
   resetTenants: (tenants: TenantInfo[]) => void;
-  /** Append a new tenant to the current tenants data. */
-  appendTenant: (tenant: TenantInfo) => void;
+  /** Prepend a new tenant to the current tenants data. */
+  prependTenant: (tenant: TenantInfo) => void;
   /** Remove a tenant by ID from the current tenants data. */
   removeTenant: (tenantId: string) => void;
   /** Update a tenant by ID if it exists in the current tenants data. */
@@ -30,7 +34,11 @@ type Tenants = {
    */
   currentTenantId: string;
   currentTenant?: TenantInfo;
-  /** Indicates if the Access Token has been validated for use. Will be reset to false when the current tenant changes. */
+  /**
+   * Indicates if the Access Token has been validated for use. Will be reset to `pending` when the current tenant changes.
+   *
+   * @see {@link CurrentTenantStatus}
+   */
   currentTenantStatus: CurrentTenantStatus;
   setCurrentTenantStatus: (status: CurrentTenantStatus) => void;
   navigateTenant: (tenantId: string, options?: NavigateOptions) => void;
@@ -52,7 +60,7 @@ export const TenantsContext = createContext<Tenants>({
   tenants: initialTenants,
   isInitComplete: false,
   resetTenants: noop,
-  appendTenant: noop,
+  prependTenant: noop,
   removeTenant: noop,
   updateTenant: noop,
   currentTenantId: '',
@@ -103,8 +111,8 @@ function TenantsProvider({ children }: Props) {
         setCurrentTenantStatus('pending');
         setIsInitComplete(true);
       },
-      appendTenant: (tenant: TenantInfo) => {
-        setTenants((tenants) => [...tenants, tenant]);
+      prependTenant: (tenant: TenantInfo) => {
+        setTenants((tenants) => [tenant, ...tenants]);
       },
       removeTenant: (tenantId: string) => {
         setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));

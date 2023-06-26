@@ -22,7 +22,7 @@ export default function TenantSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     tenants,
-    appendTenant,
+    prependTenant,
     currentTenant: currentTenantInfo,
     currentTenantId,
     navigateTenant,
@@ -111,7 +111,7 @@ export default function TenantSelector() {
         isOpen={showCreateTenantModal}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {
-            appendTenant(tenant);
+            prependTenant(tenant);
             navigateTenant(tenant.id);
           }
           setShowCreateTenantModal(false);
