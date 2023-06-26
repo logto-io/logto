@@ -11,6 +11,21 @@ body {
   }
 }
 
+/* Preview Settings */
+.preview {
+  pointer-events: none;
+  user-select: none;
+
+  .viewBox::-webkit-scrollbar {
+    display: none;
+  }
+
+  main {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 :global(body.mobile) {
   --max-width: 360px;
   background: var(--color-bg-body);

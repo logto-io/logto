@@ -1,20 +1,5 @@
 @use '@/scss/underscore' as _;
 
-/* Preview Settings */
-.preview {
-  pointer-events: none;
-  user-select: none;
-
-  .viewBox::-webkit-scrollbar {
-    display: none;
-  }
-
-  main {
-    pointer-events: none;
-    user-select: none;
-  }
-}
-
 /* Main Layout */
 .viewBox {
   position: absolute;
