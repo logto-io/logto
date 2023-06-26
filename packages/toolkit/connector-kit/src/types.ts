@@ -203,10 +203,12 @@ export type AllConnector = SmsConnector | EmailConnector | SocialConnector;
 // MARK: SMS + Email connector
 export type SmsConnector = BaseConnector<ConnectorType.Sms> & {
   sendMessage: SendMessageFunction;
+  getUsage?: GetUsageFunction;
 };
 
 export type EmailConnector = BaseConnector<ConnectorType.Email> & {
   sendMessage: SendMessageFunction;
+  getUsage?: GetUsageFunction;
 };
 
 export const urlRegEx =
@@ -239,6 +241,8 @@ export const sendMessagePayloadGuard = z.object({
 export type SendMessagePayload = z.infer<typeof sendMessagePayloadGuard>;
 
 export type SendMessageFunction = (data: SendMessagePayload, config?: unknown) => Promise<unknown>;
+
+export type GetUsageFunction = (startFrom?: Date) => Promise<number>;
 
 // MARK: Social connector
 export type SocialConnector = BaseConnector<ConnectorType.Social> & {

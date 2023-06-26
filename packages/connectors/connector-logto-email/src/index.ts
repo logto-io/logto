@@ -4,14 +4,17 @@ import type {
   CreateConnector,
   EmailConnector,
   GetConnectorConfig,
+  GetUsageFunction,
   SendMessageFunction,
 } from '@logto/connector-kit';
 import { ConnectorType, validateConfig } from '@logto/connector-kit';
 
-import { defaultMetadata, defaultTimeout, emailEndpoint } from './constant.js';
+import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';
 import type { LogtoEmailConfig } from './types.js';
 import { logtoEmailConfigGuard } from './types.js';
+
+export type { EmailServiceBasicConfig } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
@@ -19,7 +22,17 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
 
-    const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
+    const {
+      endpoint,
+      tokenEndpoint,
+      appId,
+      appSecret,
+      resource,
+      fromName,
+      companyAddress,
+      appLogo,
+    } = config;
+    const { to, type, payload } = data;
 
     const accessTokenResponse = await grantAccessToken({
       tokenEndpoint,
@@ -34,7 +47,7 @@ const sendMessage =
         headers: {
           Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
         },
-        json: { data },
+        json: { data: { to, type, payload: { ...payload, fromName, companyAddress, appLogo } } },
         timeout: { request: defaultTimeout },
       });
     } catch (error: unknown) {
@@ -46,12 +59,42 @@ const sendMessage =
     }
   };
 
+const getUsage =
+  (getConfig: GetConnectorConfig): GetUsageFunction =>
+  async (startFrom?: Date) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
+
+    const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
+
+    const accessTokenResponse = await grantAccessToken({
+      tokenEndpoint,
+      resource,
+      appId,
+      appSecret,
+    });
+
+    const httpResponse = await got.get({
+      url: `${endpoint}${usageEndpoint}`,
+      headers: {
+        Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
+      },
+      timeout: { request: defaultTimeout },
+      searchParams: {
+        startFrom: startFrom?.toISOString(),
+      },
+    });
+
+    return Number(httpResponse.body);
+  };
+
 const createLogtoEmailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: logtoEmailConfigGuard,
     sendMessage: sendMessage(getConfig),
+    getUsage: getUsage(getConfig),
   };
 };
 
