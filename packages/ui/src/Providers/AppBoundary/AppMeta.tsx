@@ -1,7 +1,6 @@
 import { conditionalString } from '@silverhand/essentials';
-import classNames from 'classnames';
 import i18next from 'i18next';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -26,6 +25,17 @@ import * as styles from './index.module.scss';
 const AppMeta = () => {
   const { experienceSettings, theme, platform } = useContext(PageContext);
 
+  useEffect(() => {
+    document.body.classList.remove(
+      conditionalString(styles.light),
+      conditionalString(styles.dark),
+      'mobile',
+      'desktop'
+    );
+    document.body.classList.add(conditionalString(styles[theme]));
+    document.body.classList.add(platform === 'mobile' ? 'mobile' : 'desktop');
+  }, [platform, theme]);
+
   return (
     <Helmet>
       <html lang={i18next.language} data-theme={theme} />
@@ -36,14 +46,6 @@ const AppMeta = () => {
         sizes="180x180"
       />
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
-      <body
-        className={classNames(
-          // Should preserve any existing classNames
-          conditionalString(document.body.className),
-          platform === 'mobile' ? 'mobile' : 'desktop',
-          conditionalString(styles[theme])
-        )}
-      />
     </Helmet>
   );
 };
