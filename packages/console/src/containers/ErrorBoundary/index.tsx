@@ -57,7 +57,8 @@ class ErrorBoundary extends Component<Props, State> {
     const { error } = this.state;
 
     if (error) {
-      // Different strategies for handling errors in callback pages
+      // Different strategies for handling errors in callback pages since the callback errors
+      // are likely unexpected and unrecoverable.
       const { pathname } = window.location;
       if (['/callback', '-callback'].some((path) => pathname.endsWith(path))) {
         if (error instanceof LogtoError && error.data instanceof OidcError) {
