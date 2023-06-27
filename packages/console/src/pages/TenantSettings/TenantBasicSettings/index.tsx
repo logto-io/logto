@@ -27,7 +27,8 @@ const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useCloudApi();
-  const { currentTenant, currentTenantId, updateTenant, removeTenant } = useContext(TenantsContext);
+  const { currentTenant, currentTenantId, updateTenant, removeTenant, navigateTenant } =
+    useContext(TenantsContext);
   const [error, setError] = useState<Error>();
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -89,6 +90,7 @@ function TenantBasicSettings() {
       await api.delete(`/api/tenants/:tenantId`, { params: { tenantId: currentTenantId } });
       setIsDeletionModalOpen(false);
       removeTenant(currentTenantId);
+      navigateTenant('');
     } catch (error: unknown) {
       setError(
         error instanceof Error

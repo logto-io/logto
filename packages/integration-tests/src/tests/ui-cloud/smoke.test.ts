@@ -5,6 +5,17 @@ import { setDefaultOptions } from 'expect-puppeteer';
 import { logtoCloudUrl as logtoCloudUrlString, logtoConsoleUrl } from '#src/constants.js';
 import { generatePassword } from '#src/utils.js';
 
+import {
+  onboardingWelcome,
+  onboardingUserSurvey,
+  onboardingSieConfig,
+  onboardingFinish,
+  createNewTenant,
+  fillAndCreateTenant,
+  openTenantDropdown,
+  openCreateTenantModal,
+} from './operations.js';
+
 await page.setViewport({ width: 1280, height: 720 });
 setDefaultOptions({ timeout: 5000 });
 
@@ -51,16 +62,7 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the onboarding welcome process and enter the user survey page', async () => {
-    // Select the project type option
-    await expect(page).toClick('div[role=radio]:has(input[name=project][value=personal])');
-
-    // Select the deployment type option
-    await expect(page).toClick(
-      'div[role=radio]:has(input[name=deploymentType][value=open-source])'
-    );
-
-    // Click the next button
-    await expect(page).toClick('div[class$=actions] button:first-child');
+    await onboardingWelcome(page);
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
@@ -71,11 +73,7 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the onboarding user survey process and enter the sie page', async () => {
-    // Select the first reason option
-    await expect(page).toClick('div[role=button][class$=item]');
-
-    // Click the next button
-    await expect(page).toClick('div[class$=actions] button', { text: 'Next' });
+    await onboardingUserSurvey(page);
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=config] div[class$=title]', {
@@ -86,14 +84,7 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the sie configuration process and enter the congrats page', async () => {
-    // Wait for the sie config to load
-    await page.waitForTimeout(1000);
-
-    // Select username as the identifier
-    await expect(page).toClick('div[role=radio]:has(input[name=identifier][value=username])');
-
-    // Click the finish button
-    await expect(page).toClick('div[class$=continueActions] button:last-child');
+    await onboardingSieConfig(page);
 
     // Wait for the next page to load
     await expect(page).toMatchElement('div[class$=content] div[class$=title]', {
@@ -104,11 +95,7 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can complete the onboarding process and enter the admin console', async () => {
-    // Click the enter ac button
-    await expect(page).toClick('div[class$=content] >button');
-
-    // Wait for the admin console to load
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await onboardingFinish(page);
     const mainContent = await page.waitForSelector('div[class$=main]:has(div[class$=title])');
     await expect(mainContent).toMatchElement('div[class$=title]', {
       text: 'Something to explore to help you succeed',
@@ -118,41 +105,8 @@ describe('smoke testing for cloud', () => {
   });
 
   it('can create a new tenant using tenant dropdown', async () => {
-    // Click 'current tenant card' locates in topbar
-    const currentTenantCard = await page.waitForSelector(
-      'div[class$=topbar] > div[class$=currentTenantCard][role=button]:has(div[class$=name])'
-    );
-    await expect(currentTenantCard).toMatchElement('div[class$=name]', { text: 'My Project' });
-    await currentTenantCard.click();
-
-    await page.waitForTimeout(500);
-    const createTenantButton = await page.waitForSelector(
-      'div[class$=ReactModalPortal] div[class$=dropdownContainer] > div[class$=dropdown] > button[class$=createTenantButton]:has(div)'
-    );
-    await expect(createTenantButton).toMatchElement('div', { text: 'Create tenant' });
-    await createTenantButton.click();
-
-    // Create tenant with name 'new-tenant' and tag 'production'
-    await page.waitForTimeout(500);
-    await page.waitForSelector(
-      'div[class$=ReactModalPortal] div[class*=card][class$=medium] input[type=text][name=name]'
-    );
-    await page.waitForSelector(
-      'div[class$=ReactModalPortal] div[class*=radioGroup][class$=small] div[class*=radio][class$=small][role=radio] > div[class$=content]:has(input[value=production])'
-    );
-    await expect(page).toFill(
-      'div[class$=ReactModalPortal] div[class*=card][class$=medium] input[type=text][name=name]',
-      createTenantName
-    );
-    await expect(page).toClick(
-      'div[class$=ReactModalPortal] div[class*=radioGroup][class$=small] div[class*=radio][class$=small][role=radio] > div[class$=content]:has(input[value=production])'
-    );
-
-    // Click create button
-    await page.waitForTimeout(500);
-    await expect(page).toClick(
-      'div[class$=ReactModalPortal] div[class*=card][class$=medium] div[class$=footer] button[type=submit]'
-    );
+    await page.waitForTimeout(2000);
+    await createNewTenant(page, createTenantName);
 
     expect(new URL(page.url()).pathname.endsWith(`/get-started`)).toBeTruthy();
   });
@@ -170,7 +124,7 @@ describe('smoke testing for cloud', () => {
 
   it('can sign out of admin console', async () => {
     const userInfoButton = await page.waitForSelector('div[class$=topbar] > div[class$=container]');
-    await userInfoButton.click();
+    await userInfoButton?.click();
 
     // Try awaiting for 500ms before clicking sign-out button
     await page.waitForTimeout(500);
@@ -178,7 +132,7 @@ describe('smoke testing for cloud', () => {
     const signOutButton = await page.waitForSelector(
       'div[class$=ReactModalPortal] div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
     );
-    await signOutButton.click();
+    await signOutButton?.click();
 
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
@@ -208,4 +162,84 @@ describe('smoke testing for cloud', () => {
     expect(page.url().startsWith(logtoCloudUrl.origin)).toBeTruthy();
     expect(page.url().endsWith('/onboarding/welcome')).toBeTruthy();
   });
+
+  it('can complete onboarding process with new account', async () => {
+    await onboardingWelcome(page);
+    await onboardingUserSurvey(page);
+    await onboardingSieConfig(page);
+    await onboardingFinish(page);
+
+    await page.waitForTimeout(1000);
+    expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
+  });
+
+  it('go to tenant settings and delete current tenant', async () => {
+    await page.waitForTimeout(2000);
+    const tenantSettingButton = await page.waitForSelector(
+      'div[class$=content] > div[class$=sidebar] a[class$=row][href$=tenant-settings] > div[class$=title]'
+    );
+    await tenantSettingButton?.click();
+
+    const deleteButton = await page.waitForSelector(
+      'div[class$=main] form[class$=container] div[class$=deletionButtonContainer] button[class$=medium][type=button]'
+    );
+    await deleteButton?.click();
+
+    const textInput = await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class$=container] input[type=text]'
+    );
+    await textInput?.type('My Project');
+
+    const deleteConfirmButton = await page.waitForSelector(
+      'div[class$=ReactModalPortal] div[class$=footer] > button:last-child'
+    );
+    await deleteConfirmButton?.click();
+
+    await page.waitForTimeout(2000);
+    const placeholderTitle = await page.waitForSelector(
+      'div[class$=pageContainer] div[class$=placeholder]:has(div[class$=title])'
+    );
+    await expect(placeholderTitle).toMatchElement('div[class$=title]', {
+      text: 'You haven’t created a tenant yet',
+    });
+  });
+
+  it('can create tenant from landing page', async () => {
+    const createTenantButton = await page.waitForSelector(
+      'div[class$=pageContainer] div[class$=placeholder] button[class$=button][type=button]'
+    );
+    await createTenantButton?.click();
+
+    await fillAndCreateTenant(page, 'tenant1');
+    await page.waitForTimeout(5000);
+    expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
+  });
+
+  it('can create two more tenant for new account', async () => {
+    await createNewTenant(page, 'tenant2');
+    await page.waitForTimeout(5000);
+    await createNewTenant(page, 'tenant3');
+    await page.waitForTimeout(5000);
+    expect(new URL(page.url()).pathname.endsWith('/get-started')).toBeTruthy();
+  });
+
+  it('can not open create tenant modal when reach the limit', async () => {
+    await page.waitForTimeout(2000);
+    await openTenantDropdown(page);
+    await openCreateTenantModal(page);
+
+    await page.waitForTimeout(500);
+    const pageTitle = await page.waitForSelector(
+      'div[class$=main] > div[class$=container] > div[class$=header]:has(div[class$=title])'
+    );
+    await expect(pageTitle).toMatchElement('div[class$=title]', {
+      text: 'Something to explore to help you succeed',
+    });
+
+    const createTenantModalTitleSelector =
+      'div[class$=ReactModalPortal] div[class$=iconAndTitle] > div[class*=container][class$=large]:has(div[class*=title][class$=titleEllipsis])';
+    await expect(
+      page.waitForSelector(createTenantModalTitleSelector, { timeout: 3000 })
+    ).rejects.toThrow(); // Throws error if selector is not found.
+  }, 20_000);
 });

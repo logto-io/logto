@@ -9,7 +9,8 @@
       "#src/*": [
         "src/*"
       ]
-    }
+    },
+    "types": ["jest", "jest-puppeteer"],
   },
   "include": ["src"]
 }
