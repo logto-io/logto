@@ -209,6 +209,23 @@ export type EmailConnector = BaseConnector<ConnectorType.Email> & {
   sendMessage: SendMessageFunction;
 };
 
+export const urlRegEx =
+  /(https?:\/\/)?(?:www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@~-]*/;
+
+export const emailServiceBrandingGuard = z
+  .object({
+    fromName: z
+      .string()
+      .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the sender name!'),
+    companyAddress: z
+      .string()
+      .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the company address!'),
+    appLogo: z.string().url(),
+  })
+  .partial();
+
+export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
+
 export const sendMessagePayloadGuard = z.object({
   to: z.string(),
   type: verificationCodeTypeGuard,
