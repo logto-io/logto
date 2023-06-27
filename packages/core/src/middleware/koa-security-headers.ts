@@ -77,7 +77,11 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       directives: {
         'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
-        scriptSrc: ["'self'"],
+        // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
+        scriptSrc: [
+          "'self'",
+          ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
+        ],
         connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins, ...appInsightsOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
         frameSrc: ["'self'", 'https:'],
@@ -97,7 +101,11 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       directives: {
         'upgrade-insecure-requests': null,
         imgSrc: ["'self'", 'data:', 'https:'],
-        scriptSrc: ["'self'"],
+        // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
+        scriptSrc: [
+          "'self'",
+          ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
+        ],
         connectSrc: ["'self'", ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         // Allow Main Flow origin loaded in preview iframe
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],

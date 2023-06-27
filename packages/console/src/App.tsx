@@ -19,6 +19,7 @@ import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
 import { adminTenantEndpoint, mainTitle } from './consts';
 import { isCloud } from './consts/env';
 import ErrorBoundary from './containers/ErrorBoundary';
+import LogtoErrorBoundary from './containers/LogtoErrorBoundary';
 import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
 import AppEndpointsProvider from './contexts/AppEndpointsProvider';
@@ -76,19 +77,21 @@ function Content() {
         <AppInsightsBoundary cloudRole="console">
           <Helmet titleTemplate={`%s - ${mainTitle}`} defaultTitle={mainTitle} />
           <ErrorBoundary>
-            {/**
-             * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
-             * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
-             */}
-            {!isCloud || currentTenantId ? (
-              <AppEndpointsProvider>
-                <AppConfirmModalProvider>
-                  <TenantAppContainer />
-                </AppConfirmModalProvider>
-              </AppEndpointsProvider>
-            ) : (
-              <CloudApp />
-            )}
+            <LogtoErrorBoundary>
+              {/**
+               * If it's not Cloud (OSS), render the tenant app container directly since only default tenant is available;
+               * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
+               */}
+              {!isCloud || currentTenantId ? (
+                <AppEndpointsProvider>
+                  <AppConfirmModalProvider>
+                    <TenantAppContainer />
+                  </AppConfirmModalProvider>
+                </AppEndpointsProvider>
+              ) : (
+                <CloudApp />
+              )}
+            </LogtoErrorBoundary>
           </ErrorBoundary>
         </AppInsightsBoundary>
       </AppThemeProvider>

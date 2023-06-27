@@ -96,7 +96,12 @@ export default function withSecurityHeaders<InputContext extends RequestContext>
           directives: {
             'upgrade-insecure-requests': null,
             imgSrc: ["'self'", 'data:', 'https:'],
-            scriptSrc: ["'self'", ...gtagOrigins],
+            scriptSrc: [
+              "'self'",
+              ...gtagOrigins,
+              // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
+              ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
+            ],
             connectSrc: [
               "'self'",
               ...adminOrigins,

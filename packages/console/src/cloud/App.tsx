@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
-import Callback from '@cloud/pages/Callback';
+import Callback from '@/pages/Callback';
 
 import * as styles from './App.module.scss';
 import Main from './pages/Main';
