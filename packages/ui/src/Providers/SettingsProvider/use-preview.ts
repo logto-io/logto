@@ -1,8 +1,6 @@
 import { ConnectorPlatform } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
 import { useContext, useEffect, useState } from 'react';
 
-import * as styles from '@/Layout/AppLayout/index.module.scss';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
@@ -17,9 +15,6 @@ const usePreview = () => {
   useEffect(() => {
     // Init i18n
     const i18nInit = initI18n();
-
-    // Block pointer event
-    document.body.classList.add(conditionalString(styles.preview));
 
     // Listen to the message from the ancestor window
     const previewMessageHandler = async (event: MessageEvent) => {

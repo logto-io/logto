@@ -18,13 +18,14 @@ import * as styles from './index.module.scss';
  * - data-theme: set html data-theme attribute
  * - favicon: set favicon
  * - apple-touch-icon: set apple touch icon
+ * - body class: set preview body class
  * - body class: set platform body class
  * - body class: set theme body class
  * - custom css: set custom css style tag
  */
 
 const AppMeta = () => {
-  const { experienceSettings, theme, platform } = useContext(PageContext);
+  const { experienceSettings, theme, platform, isPreview } = useContext(PageContext);
 
   return (
     <Helmet>
@@ -38,8 +39,7 @@ const AppMeta = () => {
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
       <body
         className={classNames(
-          // Should preserve any existing classNames
-          conditionalString(document.body.className),
+          conditionalString(isPreview && styles.preview),
           platform === 'mobile' ? 'mobile' : 'desktop',
           conditionalString(styles[theme])
         )}
