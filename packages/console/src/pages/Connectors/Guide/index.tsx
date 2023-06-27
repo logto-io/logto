@@ -64,16 +64,23 @@ function Guide({ connector, onClose }: Props) {
     watch,
     setError,
     reset,
+    setValue,
   } = methods;
 
   useEffect(() => {
+    const formConfig = conditional(formItems && initFormData(formItems));
     reset({
-      ...(formItems ? initFormData(formItems) : {}),
-      ...(configTemplate ? { config: configTemplate } : {}),
+      ...(configTemplate ? { jsonConfig: configTemplate } : {}),
       ...(isSocialConnector && !isStandard && target ? { target } : {}),
       syncProfile: SyncProfileMode.OnlyAtRegister,
     });
-  }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard]);
+    /**
+     * Note:
+     * Set `formConfig` independently.
+     * Since react-hook-form's reset function infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly.
+     */
+    setValue('formConfig', formConfig ?? {}, { shouldDirty: false });
+  }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard, setValue]);
 
   const configParser = useConnectorFormConfigParser();
 

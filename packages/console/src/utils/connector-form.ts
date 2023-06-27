@@ -1,7 +1,6 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
-import type { ConnectorFormType } from '@/types/connector';
 import { safeParseJson } from '@/utils/json';
 
 export const initFormData = (
@@ -21,9 +20,12 @@ export const initFormData = (
   return Object.fromEntries(data);
 };
 
-export const parseFormConfig = (data: ConnectorFormType, formItems: ConnectorConfigFormItem[]) => {
+export const parseFormConfig = (
+  config: Record<string, unknown>,
+  formItems: ConnectorConfigFormItem[]
+) => {
   return Object.fromEntries(
-    Object.entries(data)
+    Object.entries(config)
       .map(([key, value]) => {
         // Filter out empty input
         if (value === '') {
