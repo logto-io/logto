@@ -9,6 +9,7 @@ import { withTranslation } from 'react-i18next';
 
 import AppError from '@/components/AppError';
 import SessionExpired from '@/components/SessionExpired';
+import { isInCallback } from '@/utils/url';
 
 type Props = {
   children: ReactNode;
@@ -59,8 +60,7 @@ class ErrorBoundary extends Component<Props, State> {
     if (error) {
       // Different strategies for handling errors in callback pages since the callback errors
       // are likely unexpected and unrecoverable.
-      const { pathname } = window.location;
-      if (['/callback', '-callback'].some((path) => pathname.endsWith(path))) {
+      if (isInCallback()) {
         if (error instanceof LogtoError && error.data instanceof OidcError) {
           return (
             <AppError

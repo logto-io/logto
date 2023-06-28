@@ -1,15 +1,22 @@
 import { useHandleSignInCallback } from '@logto/react';
-import { conditionalString } from '@silverhand/essentials';
 import { useNavigate } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/env';
-import { getUserTenantId } from '@/consts/tenants';
+import { getUserTenantId } from '@/consts';
+import { isInFirstLevelCallback } from '@/utils/url';
 
 function Callback() {
   const navigate = useNavigate();
+
   useHandleSignInCallback(() => {
-    navigate('/' + conditionalString(isCloud && getUserTenantId()), { replace: true });
+    /**
+     * The first level callback check is due to the usage of `basename`
+     * for tenant-specific routes, e.g., `/:tenantId/applications`.
+     * Once we merge all the routes into one router, we can remove this check.
+     */
+    navigate(isInFirstLevelCallback() ? `/${getUserTenantId()}` : '/', {
+      replace: true,
+    });
   });
 
   return <AppLoading />;
