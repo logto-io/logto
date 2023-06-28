@@ -107,19 +107,19 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.0.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.4.1
         version: link:../phrases
       '@logto/phrases-ui':
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:1.5.0
+        specifier: workspace:1.6.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -2779,7 +2779,7 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/app-insights':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
         specifier: workspace:^
@@ -2788,13 +2788,13 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.0.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.4.1
         version: link:../phrases
       '@logto/phrases-ui':
         specifier: workspace:^1.2.0
@@ -2803,7 +2803,7 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3070,10 +3070,10 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@logto/app-insights':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3082,7 +3082,7 @@ importers:
         specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.0.1
         version: link:../toolkit/core-kit
       '@logto/demo-app':
         specifier: workspace:*
@@ -3091,13 +3091,13 @@ importers:
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.4.1
         version: link:../phrases
       '@logto/phrases-ui':
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3311,7 +3311,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../cli
 
   packages/demo-app:
@@ -3419,7 +3419,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       '@logto/schemas':
-        specifier: workspace:^1.5.0
+        specifier: workspace:^1.6.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^2.0.0
@@ -3553,13 +3553,13 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.0.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.4.1
         version: link:../phrases
       '@logto/phrases-ui':
         specifier: workspace:^1.2.0
@@ -3839,25 +3839,25 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/app-insights':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.0.0
+        specifier: workspace:^2.0.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.2.0
+        specifier: workspace:^1.4.1
         version: link:../phrases
       '@logto/phrases-ui':
         specifier: workspace:^1.2.0
         version: link:../phrases-ui
       '@logto/schemas':
-        specifier: workspace:^1.2.3
+        specifier: workspace:^1.6.0
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.9.2
@@ -11291,17 +11291,6 @@ packages:
   /dayjs@1.11.6:
     resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==}
 
-  /debug@3.2.7:
-    resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-    dependencies:
-      ms: 2.1.3
-    dev: true
-
   /debug@3.2.7(supports-color@5.5.0):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -11843,7 +11832,7 @@ packages:
   /eslint-import-resolver-node@0.3.7:
     resolution: {integrity: sha512-gozW2blMLJCeFpBwugLTGyvVjNoeo1knonXAcatC6bjPBZitotxdWf7Gimr25N4c0AAOo4eOUfaG82IJPDpqCA==}
     dependencies:
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       is-core-module: 2.11.0
       resolve: 1.22.1
     transitivePeerDependencies:
@@ -11892,7 +11881,7 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       eslint: 8.34.0
       eslint-import-resolver-node: 0.3.7
       eslint-import-resolver-typescript: 3.5.4(eslint-plugin-import@2.27.5)(eslint@8.34.0)
@@ -11944,7 +11933,7 @@ packages:
       array-includes: 3.1.6
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
-      debug: 3.2.7
+      debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
       eslint: 8.34.0
       eslint-import-resolver-node: 0.3.7

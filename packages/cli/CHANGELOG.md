@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.6.0
+
+### Patch Changes
+
+- ecbecd8e4: improve translate prompt
+- Updated dependencies [e9c2c9a6d]
+- Updated dependencies [ecbecd8e4]
+  - @logto/core-kit@2.0.1
+  - @logto/schemas@1.6.0
+  - @logto/phrases@1.4.1
+
 ## 1.5.0
 
 ### Patch Changes

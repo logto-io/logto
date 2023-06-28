@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.6.0
+
+### Minor Changes
+
+- ecbecd8e4: various application improvements
+
+  - Show OpenID Provider configuration endpoint in Console
+  - Configure "Rotate Refresh Token" in Console
+  - Configure "Refresh Token TTL" in Console
+
+### Patch Changes
+
+- Updated dependencies [e9c2c9a6d]
+- Updated dependencies [ecbecd8e4]
+  - @logto/core-kit@2.0.1
+  - @logto/phrases@1.4.1
+
 ## 1.5.0
 
 ### Minor Changes

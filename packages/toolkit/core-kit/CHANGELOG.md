@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- e9c2c9a6d: Add new font tokens in core-kit
+
 ## 2.0.0
 
 ### Major Changes

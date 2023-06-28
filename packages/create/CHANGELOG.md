@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.6.0
+
+### Patch Changes
+
+- Updated dependencies [ecbecd8e4]
+  - @logto/cli@1.6.0
+
 ## 1.5.0
 
 ### Patch Changes
