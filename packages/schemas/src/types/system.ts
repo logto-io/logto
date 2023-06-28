@@ -81,20 +81,28 @@ export enum OtherEmailTemplate {
 
 export const otherEmailTemplateGuard = z.nativeEnum(OtherEmailTemplate);
 
+const emailServiceBasicConfig = {
+  fromName: z.string(),
+  fromEmail: z.string(),
+  templates: z.record(
+    verificationCodeTypeGuard.or(otherEmailTemplateGuard),
+    z.object({
+      subject: z.string(),
+      content: z.string(),
+    })
+  ),
+};
+
+export const sendgridEmailServiceDataGuard = z.object({
+  provider: z.literal(EmailServiceProvider.SendGrid),
+  apiKey: z.string(),
+  ...emailServiceBasicConfig,
+});
+
+export type SendgridEmailServiceData = z.infer<typeof sendgridEmailServiceDataGuard>;
+
 export const emailServiceDataGuard = z.discriminatedUnion('provider', [
-  z.object({
-    provider: z.literal(EmailServiceProvider.SendGrid),
-    appId: z.string(),
-    appSecret: z.string(),
-    fromEmail: z.string(),
-    templates: z.record(
-      verificationCodeTypeGuard.or(otherEmailTemplateGuard),
-      z.object({
-        subject: z.string(),
-        content: z.string(),
-      })
-    ),
-  }),
+  sendgridEmailServiceDataGuard,
 ]);
 
 export type EmailServiceData = z.infer<typeof emailServiceDataGuard>;
