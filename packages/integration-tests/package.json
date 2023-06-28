@@ -1,6 +1,6 @@
 {
   "name": "@logto/integration-tests",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Integration tests for Logto.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -27,7 +27,7 @@
     "@logto/connector-kit": "workspace:^1.1.0",
     "@logto/js": "^2.1.1",
     "@logto/node": "^2.1.1",
-    "@logto/schemas": "workspace:^1.5.0",
+    "@logto/schemas": "workspace:^1.6.0",
     "@logto/shared": "workspace:^2.0.0",
     "@silverhand/eslint-config": "3.0.1",
     "@silverhand/essentials": "^2.5.0",

@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.1.5
+
+### Patch Changes
+
+- c743cef42: Bug fix main flow preview mode should not allow user interaction.
+
+  - Recover the missing preview classname from the preview mode body element
+
 ## 1.1.4
 
 ### Patch Changes

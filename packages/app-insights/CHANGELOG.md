@@ -1,5 +1,11 @@
 # @logto/app-insights
 
+## 1.3.1
+
+### Patch Changes
+
+- cfe4fce51: fix JSON stringify circular structure issue
+
 ## 1.3.0
 
 ### Minor Changes

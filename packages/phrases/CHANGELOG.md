@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.4.1
+
+### Patch Changes
+
+- ecbecd8e4: various application improvements
+
+  - Show OpenID Provider configuration endpoint in Console
+  - Configure "Rotate Refresh Token" in Console
+  - Configure "Refresh Token TTL" in Console
+
 ## 1.4.0
 
 ### Minor Changes
