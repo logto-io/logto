@@ -1,3 +1,4 @@
+import { verificationCodeTypeGuard } from '@logto/connector-kit';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -64,6 +65,54 @@ export const storageProviderGuard: Readonly<{
   [StorageProviderKey.StorageProvider]: storageProviderDataGuard,
 });
 
+// Email service provider
+export enum EmailServiceProvider {
+  SendGrid = 'SendGrid',
+}
+
+/**
+ * `General` is now used as a fallback scenario.
+ * This will be extended in the future since we will send different emails for
+ * different purposes (such as webhook that inform users of suspicious account activities).
+ */
+export enum OtherEmailTemplate {
+  General = 'General',
+}
+
+export const otherEmailTemplateGuard = z.nativeEnum(OtherEmailTemplate);
+
+export const emailServiceDataGuard = z.discriminatedUnion('provider', [
+  z.object({
+    provider: z.literal(EmailServiceProvider.SendGrid),
+    appId: z.string(),
+    appSecret: z.string(),
+    fromEmail: z.string(),
+    templates: z.record(
+      verificationCodeTypeGuard.or(otherEmailTemplateGuard),
+      z.object({
+        subject: z.string(),
+        content: z.string(),
+      })
+    ),
+  }),
+]);
+
+export type EmailServiceData = z.infer<typeof emailServiceDataGuard>;
+
+export enum EmailServiceProviderKey {
+  EmailServiceProvider = 'EmailServiceProvider',
+}
+
+export type EmailServiceProviderType = {
+  [EmailServiceProviderKey.EmailServiceProvider]: EmailServiceData;
+};
+
+export const emailServiceProviderGuard: Readonly<{
+  [key in EmailServiceProviderKey]: ZodType<EmailServiceProviderType[key]>;
+}> = Object.freeze({
+  [EmailServiceProviderKey.EmailServiceProvider]: emailServiceDataGuard,
+});
+
 // Demo social connectors
 export enum DemoSocialProvider {
   Google = 'google',
@@ -120,22 +169,30 @@ export const cloudflareGuard: Readonly<{
 });
 
 // Summary
-export type SystemKey = AlterationStateKey | StorageProviderKey | DemoSocialKey | CloudflareKey;
+export type SystemKey =
+  | AlterationStateKey
+  | StorageProviderKey
+  | DemoSocialKey
+  | CloudflareKey
+  | EmailServiceProviderKey;
 export type SystemType =
   | AlterationStateType
   | StorageProviderType
   | DemoSocialType
-  | CloudflareType;
+  | CloudflareType
+  | EmailServiceProviderType;
 export type SystemGuard = typeof alterationStateGuard &
   typeof storageProviderGuard &
   typeof demoSocialGuard &
-  typeof cloudflareGuard;
+  typeof cloudflareGuard &
+  typeof emailServiceProviderGuard;
 
 export const systemKeys: readonly SystemKey[] = Object.freeze([
   ...Object.values(AlterationStateKey),
   ...Object.values(StorageProviderKey),
   ...Object.values(DemoSocialKey),
   ...Object.values(CloudflareKey),
+  ...Object.values(EmailServiceProviderKey),
 ]);
 
 export const systemGuards: SystemGuard = Object.freeze({
@@ -143,4 +200,5 @@ export const systemGuards: SystemGuard = Object.freeze({
   ...storageProviderGuard,
   ...demoSocialGuard,
   ...cloudflareGuard,
+  ...emailServiceProviderGuard,
 });
