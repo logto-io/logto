@@ -4,6 +4,9 @@ const config: Config.InitialOptions = {
   roots: ['<rootDir>/src'],
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
+  collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/', '/src/include.d/'],
+  coverageReporters: ['text-summary', 'lcov'],
   transform: {
     '^.+\\.(t|j)sx?$': [
       '@swc/jest',
