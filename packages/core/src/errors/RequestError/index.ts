@@ -45,6 +45,10 @@ export default class RequestError extends Error {
   }
 
   get details(): Optional<string> {
+    if (this.data instanceof SyntaxError) {
+      return conditional(this.data.message);
+    }
+
     return conditional(this.data instanceof ZodError && formatZodError(this.data).join('\n'));
   }
 }
