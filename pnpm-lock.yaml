@@ -2369,6 +2369,85 @@ importers:
         specifier: ^5.0.0
         version: 5.0.2
 
+  packages/connectors/connector-smsaero-sms:
+    dependencies:
+      '@logto/connector-kit':
+        specifier: workspace:^1.1.0
+        version: link:../../toolkit/connector-kit
+      '@silverhand/essentials':
+        specifier: ^2.5.0
+        version: 2.5.0
+      got:
+        specifier: ^13.0.0
+        version: 13.0.0
+      snakecase-keys:
+        specifier: ^5.4.4
+        version: 5.4.4
+      zod:
+        specifier: ^3.20.2
+        version: 3.20.2
+    devDependencies:
+      '@jest/types':
+        specifier: ^29.5.0
+        version: 29.5.0
+      '@rollup/plugin-commonjs':
+        specifier: ^25.0.0
+        version: 25.0.0(rollup@3.8.0)
+      '@rollup/plugin-json':
+        specifier: ^6.0.0
+        version: 6.0.0(rollup@3.8.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.0.1
+        version: 15.0.1(rollup@3.8.0)
+      '@rollup/plugin-typescript':
+        specifier: ^11.0.0
+        version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
+      '@silverhand/eslint-config':
+        specifier: 3.0.1
+        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+      '@silverhand/ts-config':
+        specifier: 3.0.0
+        version: 3.0.0(typescript@5.0.2)
+      '@types/jest':
+        specifier: ^29.4.0
+        version: 29.4.0
+      '@types/node':
+        specifier: ^18.11.18
+        version: 18.11.18
+      '@types/supertest':
+        specifier: ^2.0.11
+        version: 2.0.11
+      eslint:
+        specifier: ^8.34.0
+        version: 8.34.0
+      jest:
+        specifier: ^29.5.0
+        version: 29.5.0(@types/node@18.11.18)
+      jest-matcher-specific-error:
+        specifier: ^1.0.0
+        version: 1.0.0
+      lint-staged:
+        specifier: ^13.0.0
+        version: 13.0.0
+      nock:
+        specifier: ^13.2.2
+        version: 13.2.2
+      prettier:
+        specifier: ^2.8.2
+        version: 2.8.4
+      rollup:
+        specifier: ^3.8.0
+        version: 3.8.0
+      rollup-plugin-summary:
+        specifier: ^2.0.0
+        version: 2.0.0(rollup@3.8.0)
+      supertest:
+        specifier: ^6.2.2
+        version: 6.2.2
+      typescript:
+        specifier: ^5.0.0
+        version: 5.0.2
+
   packages/connectors/connector-smtp:
     dependencies:
       '@logto/connector-kit':
