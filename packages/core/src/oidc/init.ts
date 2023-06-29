@@ -311,6 +311,10 @@ export default function initOidc(
    * Other parsers are explicitly disabled to keep it neat.
    */
   oidc.use(async (ctx, next) => {
+    // `koa-body` will throw `SyntaxError` if the request body is not a valid JSON
+    // By default any untracked server error will throw a `500` internal error. Instead of throwing 500 error
+    // we should throw a `400` RequestError for all the invalid request body input.
+
     try {
       await koaBody({ urlencoded: false, text: false })(ctx, next);
     } catch (error: unknown) {
