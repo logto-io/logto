@@ -11,8 +11,9 @@ import {
   ConnectorType,
   type EmailConnector,
   type SmsConnector,
+  ServiceConnector,
 } from '@logto/connector-kit';
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse, EmailServiceData } from '@logto/schemas';
 import { findPackage } from '@logto/shared';
 import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 
@@ -28,7 +29,7 @@ export const isPasswordlessLogtoConnector = (
 
 export const transpileLogtoConnector = async (
   connector: LogtoConnector,
-  extraInfo?: Record<string, unknown>
+  extraInfo?: ConnectorResponse['extraInfo']
 ): Promise<ConnectorResponse> => {
   const usagePayload = conditional(
     /** Should do the check in advance since only passwordless connectors could have `getUsage` method. */
@@ -58,6 +59,20 @@ export const transpileConnectorFactory = ({
   type,
 }: ConnectorFactory): ConnectorFactoryResponse => {
   return { type, ...metadata, isDemo: demoConnectorIds.includes(metadata.id) };
+};
+
+/**
+ * `extraInfo` is only used to expose email service vendors `fromEmail` setup to Logto email connector.
+ * Can extend this method in the future for other use cases.
+ */
+export const buildExtraInfoFromEmailServiceData = (
+  connectorFactoryId: string,
+  emailServiceProviderConfig?: EmailServiceData
+): ConnectorResponse['extraInfo'] => {
+  return conditional(
+    connectorFactoryId === ServiceConnector.Email &&
+      emailServiceProviderConfig?.fromEmail && { fromEmail: emailServiceProviderConfig.fromEmail }
+  );
 };
 
 const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
