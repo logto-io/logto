@@ -108,7 +108,7 @@ export const emailServiceDataGuard = z.discriminatedUnion('provider', [
 export type EmailServiceData = z.infer<typeof emailServiceDataGuard>;
 
 export enum EmailServiceProviderKey {
-  EmailServiceProvider = 'EmailServiceProvider',
+  EmailServiceProvider = 'emailServiceProvider',
 }
 
 export type EmailServiceProviderType = {
