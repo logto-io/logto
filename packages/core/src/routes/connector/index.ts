@@ -24,6 +24,7 @@ import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
+import connectorStatusRoutes from './status.js';
 
 const generateConnectorId = buildIdGenerator(12);
 
@@ -343,4 +344,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
+  connectorStatusRoutes(router, tenant);
 }
