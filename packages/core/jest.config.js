@@ -1,6 +1,7 @@
 /** @type {import('jest').Config} */
 const config = {
   transform: {},
+  collectCoverageFrom: ['**/*.{js,ts}'],
   coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
   coverageProvider: 'v8',
