@@ -19,6 +19,7 @@ import Provider, { errors, type ResourceServer } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import type { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
@@ -309,7 +310,21 @@ export default function initOidc(
    *
    * Other parsers are explicitly disabled to keep it neat.
    */
-  oidc.use(koaBody({ urlencoded: false, text: false }));
+  oidc.use(async (ctx, next) => {
+    // `koa-body` will throw `SyntaxError` if the request body is not a valid JSON
+    // By default any untracked server error will throw a `500` internal error. Instead of throwing 500 error
+    // we should throw a `400` RequestError for all the invalid request body input.
+
+    try {
+      await koaBody({ urlencoded: false, text: false })(ctx, next);
+    } catch (error: unknown) {
+      if (error instanceof SyntaxError) {
+        throw new RequestError({ code: 'guard.invalid_input', type: 'body' }, error);
+      }
+
+      throw error;
+    }
+  });
   /**
    * `oidc-provider` [strictly checks](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L11)
    * the `content-type` header for further processing.
