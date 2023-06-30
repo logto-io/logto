@@ -283,12 +283,16 @@ export type GetUserInfo = (
 
 export enum DemoConnector {
   Sms = 'logto-sms',
-  Email = 'logto-email',
   Social = 'logto-social-demo',
 }
 
 export const demoConnectorIds: readonly string[] = Object.freeze([
   DemoConnector.Sms,
-  DemoConnector.Email,
   DemoConnector.Social,
 ]);
+
+export enum ServiceConnector {
+  Email = 'logto-email',
+}
+
+export const serviceConnectorIds: readonly string[] = Object.freeze([ServiceConnector.Email]);

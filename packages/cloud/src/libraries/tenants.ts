@@ -2,7 +2,7 @@ import {
   generateOidcCookieKey,
   generateOidcPrivateKey,
 } from '@logto/cli/lib/commands/database/utils.js';
-import { DemoConnector } from '@logto/connector-kit';
+import { DemoConnector, ServiceConnector } from '@logto/connector-kit';
 import { createTenantMetadata } from '@logto/core-kit';
 import {
   type LogtoOidcConfigType,
@@ -185,7 +185,7 @@ export class TenantsLibrary {
     const { cloudUrlSet } = EnvSet.global;
 
     await Promise.all(
-      [DemoConnector.Email, DemoConnector.Sms].map(async (connectorId) => {
+      [ServiceConnector.Email, DemoConnector.Sms].map(async (connectorId) => {
         return connectors.insertConnector(
           createCloudServiceConnector({
             tenantId,
