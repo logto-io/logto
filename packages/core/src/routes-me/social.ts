@@ -32,12 +32,14 @@ export default function socialRoutes<T extends AuthedMeRouter>(
     const connectors = await getLogtoConnectors();
     const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
 
-    ctx.body = connectors
-      .filter(
-        ({ type, metadata: { target } }) =>
-          type === ConnectorType.Social && socialSignInConnectorTargets.includes(target)
-      )
-      .map((connector) => transpileLogtoConnector(connector));
+    ctx.body = await Promise.all(
+      connectors
+        .filter(
+          ({ type, metadata: { target } }) =>
+            type === ConnectorType.Social && socialSignInConnectorTargets.includes(target)
+        )
+        .map(async (connector) => transpileLogtoConnector(connector))
+    );
 
     return next();
   });
