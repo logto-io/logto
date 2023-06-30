@@ -6,31 +6,50 @@ import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/lib/connector/index.js';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
-import { demoConnectorIds } from '@logto/connector-kit';
+import {
+  demoConnectorIds,
+  ConnectorType,
+  type EmailConnector,
+  type SmsConnector,
+} from '@logto/connector-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { findPackage } from '@logto/shared';
-import { deduplicate, pick } from '@silverhand/essentials';
+import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
-import type { LogtoConnector } from './types.js';
+import { type LogtoConnector } from './types.js';
 
-export const transpileLogtoConnector = ({
-  dbEntry,
-  metadata,
-  type,
-}: LogtoConnector): ConnectorResponse => {
-  const isDemo = demoConnectorIds.includes(dbEntry.connectorId);
-  const { config } = dbEntry;
+export const isPasswordlessLogtoConnector = (
+  connector: LogtoConnector
+): connector is LogtoConnector<EmailConnector | SmsConnector> =>
+  connector.type !== ConnectorType.Social;
+
+export const transpileLogtoConnector = async (
+  connector: LogtoConnector,
+  extraInfo?: Record<string, unknown>
+): Promise<ConnectorResponse> => {
+  const usagePayload = conditional(
+    /** Should do the check in advance since only passwordless connectors could have `getUsage` method. */
+    isPasswordlessLogtoConnector(connector) &&
+      connector.getUsage && {
+        usage: await trySafe(connector.getUsage(new Date(connector.dbEntry.createdAt))),
+      }
+  );
+  const { dbEntry, metadata, type } = connector;
+  const { config, connectorId: id } = dbEntry;
+  const isDemo = demoConnectorIds.includes(id);
 
   return {
     type,
     ...metadata,
     ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'metadata'),
     isDemo,
+    extraInfo,
     // Hide demo connector config
     config: isDemo ? {} : config,
+    ...usagePayload,
   };
 };
 

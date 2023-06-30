@@ -20,6 +20,7 @@ export const connectorResponseGuard = Connectors.guard
       type: z.nativeEnum(ConnectorType),
       isDemo: z.boolean().optional(),
       extraInfo: z.record(z.unknown()).optional(),
+      usage: z.number().optional(),
     })
   );
 

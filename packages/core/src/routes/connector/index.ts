@@ -152,7 +152,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       const connector = await getLogtoConnectorById(insertConnectorId);
-      ctx.body = transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector);
 
       return next();
     }
@@ -186,7 +186,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
         ? connectors.filter(({ metadata: { target } }) => target === filterTarget)
         : connectors;
 
-      ctx.body = filteredConnectors.map((connector) => transpileLogtoConnector(connector));
+      ctx.body = await Promise.all(
+        filteredConnectors.map(async (connector) => transpileLogtoConnector(connector))
+      );
 
       return next();
     }
@@ -208,7 +210,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       // Hide demo connector
       assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
 
-      ctx.body = transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector);
 
       return next();
     }
@@ -308,7 +310,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         jsonbMode: 'replace',
       });
       const connector = await getLogtoConnectorById(id);
-      ctx.body = transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector);
 
       return next();
     }
