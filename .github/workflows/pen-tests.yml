@@ -29,7 +29,7 @@ jobs:
         run: sleep 30s
 
       - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.4.0
+        uses: zaproxy/action-full-scan@v0.5.0
         with:
           target: http://localhost:3001
           cmd_options: '-a'
