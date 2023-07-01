@@ -15,10 +15,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # `github.sha` is the full SHA, but the short SHA looks nicer
+      - name: Set short SHA output
+        id: sha
+        run: echo "short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Dispatch Event
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.BOT_PAT }}
           repository: ${{ matrix.target }}
           event-type: ${{ github.event_name }}
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "sha_short": "${{ steps.sha.outputs.short }}"}'
