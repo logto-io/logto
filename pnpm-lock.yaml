@@ -2853,9 +2853,6 @@ importers:
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
-      '@tsconfig/docusaurus':
-        specifier: ^1.0.5
-        version: 1.0.5
       '@types/color':
         specifier: ^3.0.3
         version: 3.0.3
@@ -9124,10 +9121,6 @@ packages:
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
-    dev: true
-
-  /@tsconfig/docusaurus@1.0.5:
-    resolution: {integrity: sha512-KM/TuJa9fugo67dTGx+ktIqf3fVc077J6jwHu845Hex4EQf7LABlNonP/mohDKT0cmncdtlYVHHF74xR/YpThg==}
     dev: true
 
   /@tsconfig/node10@1.0.8:
