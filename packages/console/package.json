@@ -26,7 +26,7 @@
     "@fontsource/roboto-mono": "^5.0.0",
     "@jest/types": "^29.5.0",
     "@logto/app-insights": "workspace:^1.3.1",
-    "@logto/cloud": "workspace:^",
+    "@logto/cloud": "0.2.5-fadb481",
     "@logto/connector-kit": "workspace:^1.1.1",
     "@logto/core-kit": "workspace:^2.0.1",
     "@logto/language-kit": "workspace:^1.0.0",
