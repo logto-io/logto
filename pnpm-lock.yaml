@@ -258,11 +258,11 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/postgres':
-        specifier: ^0.11.0
-        version: 0.11.0(@withtyped/server@0.11.1)
+        specifier: ^0.12.0
+        version: 0.12.0(@withtyped/server@0.12.0)
       '@withtyped/server':
-        specifier: ^0.11.1
-        version: 0.11.1(zod@3.20.2)
+        specifier: ^0.12.0
+        version: 0.12.0(zod@3.20.2)
       accepts:
         specifier: ^1.3.8
         version: 1.3.8
@@ -2884,8 +2884,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.7.10
-        version: 0.7.10(zod@3.20.2)
+        specifier: ^0.7.11
+        version: 0.7.11(zod@3.20.2)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -3565,8 +3565,8 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.11.1
-        version: 0.11.1(zod@3.20.2)
+        specifier: ^0.12.0
+        version: 0.12.0(zod@3.20.2)
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -9822,39 +9822,39 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@withtyped/client@0.7.10(zod@3.20.2):
-    resolution: {integrity: sha512-8EndTFr1+V6WbAW1kldxPZztk4uIbmoBnfWKG1zvVC6TTPwEOiB3SP3BsjiW8si7wUmO8GWjazKqnq5CYlSjGg==}
+  /@withtyped/client@0.7.11(zod@3.20.2):
+    resolution: {integrity: sha512-scFmj4O7R83KlIEsjWEZ9QoxQ3D0k5LD/+JQ/zOk8Wg7iXPIDs9A/j/Loea4UCuNTkLPZR9Sgfho9PBnyqNnsg==}
     dependencies:
-      '@withtyped/server': 0.11.1(zod@3.20.2)
-      '@withtyped/shared': 0.2.0
+      '@withtyped/server': 0.12.0(zod@3.20.2)
+      '@withtyped/shared': 0.2.1
     transitivePeerDependencies:
       - zod
     dev: true
 
-  /@withtyped/postgres@0.11.0(@withtyped/server@0.11.1):
-    resolution: {integrity: sha512-PHnx6ake/MDdyy4sZXS/7l5XNBtjqlPSqSHrlmCYUXYxUV0sHSrXECKxX7deAvWZtcHVh9VaWEpiQBhFS06Vig==}
+  /@withtyped/postgres@0.12.0(@withtyped/server@0.12.0):
+    resolution: {integrity: sha512-NLdWJu1RmVMOLrY8JDgKW0/qovJOr+D/hjdLKI2vK41xTzGf5op2B9oVlpdGFyLBDO+9E7jdMxpceN9j/MpBRg==}
     peerDependencies:
-      '@withtyped/server': ^0.11.0
+      '@withtyped/server': ^0.12.0
     dependencies:
       '@types/pg': 8.6.6
-      '@withtyped/server': 0.11.1(zod@3.20.2)
-      '@withtyped/shared': 0.2.0
+      '@withtyped/server': 0.12.0(zod@3.20.2)
+      '@withtyped/shared': 0.2.1
       pg: 8.8.0
     transitivePeerDependencies:
       - pg-native
     dev: false
 
-  /@withtyped/server@0.11.1(zod@3.20.2):
-    resolution: {integrity: sha512-9b/rH+6S8rKlgVTuDfDOSXiVjOBz5yd4EIP6qswncIJvA+i9j1ykR0GIBGuJSQAr7SWrSNCILUVK+oDTiWzJ6g==}
+  /@withtyped/server@0.12.0(zod@3.20.2):
+    resolution: {integrity: sha512-u5Qe+gr1kK/5CJi7NKf2iIQkbXlxhPXdDYqc7IeoMn0QHGn1hSkB9G3FB6gtx7kI28LY1gSUii4CJf7vX40PZw==}
     peerDependencies:
       zod: ^3.19.1
     dependencies:
       '@silverhand/essentials': 2.6.2
-      '@withtyped/shared': 0.2.0
+      '@withtyped/shared': 0.2.1
       zod: 3.20.2
 
-  /@withtyped/shared@0.2.0:
-    resolution: {integrity: sha512-SADIVEospfIWAVK0LxX7F1T04hsWMZ0NkfR3lNfvJqOktJ52GglI3FOTVYOM1NJYReDT6pR0XFlCfaF8TVPt8w==}
+  /@withtyped/shared@0.2.1:
+    resolution: {integrity: sha512-5Cfcku3rgzQJ4rjdv7SHonD7KPIsLzFItw/szOdGbUl4eiJQ9sH42L87e81W2w/vTecPEaZKztGrUCd3RFDILQ==}
 
   /@xmldom/xmldom@0.8.7:
     resolution: {integrity: sha512-sI1Ly2cODlWStkINzqGrZ8K6n+MTSbAeQnAipGyL+KZCXuHaRlj2gyyy8B/9MvsFFqN7XHryQnB2QwhzvJXovg==}
