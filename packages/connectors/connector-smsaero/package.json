@@ -1,7 +1,7 @@
 {
-  "name": "@logto/connector-smsaero-sms",
+  "name": "@logto/connector-smsaero",
   "version": "1.0.0",
-  "description": "SMSAero SMS connector implementation.",
+  "description": "SMSAero connector implementation.",
   "author": "Danil Tankov <danil.tankoff@yandex.ru>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^1.1.0"

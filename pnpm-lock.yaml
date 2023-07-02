@@ -2369,7 +2369,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.2
 
-  packages/connectors/connector-smsaero-sms:
+  packages/connectors/connector-smsaero:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
@@ -10961,7 +10961,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
 
   /concat-stream@2.0.0:
@@ -11544,7 +11544,7 @@ packages:
     dev: true
 
   /dezalgo@1.0.3:
-    resolution: {integrity: sha1-f3Qt4Gb8dIvI24IFad3c5Jvw1FY=}
+    resolution: {integrity: sha512-K7i4zNfT2kgQz3GylDw40ot9GAE47sFZ9EXHFSPP6zONLgH6kWXE0KWJchkbQJLBkRazq4APwZ4OwiFFlT95OQ==}
     dependencies:
       asap: 2.0.6
       wrappy: 1.0.2

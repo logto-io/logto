@@ -43,14 +43,14 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
       text: template.content.replace(/{{code}}/g, payload.code),
     };
 
+    const auth = Buffer.from(`${email}:${apiKey}`).toString('base64');
+
     try {
       return await got.post(endpoint, {
         headers: {
-          Authorization: 'Basic ' + Buffer.from([email, apiKey].join(':')).toString('base64'),
+          Authorization: `Basic ${auth}`,
         },
-        json: {
-          ...parameters,
-        },
+        json: parameters,
       });
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
