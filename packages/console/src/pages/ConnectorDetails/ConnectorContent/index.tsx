@@ -1,3 +1,4 @@
+import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
@@ -20,6 +21,8 @@ import { SyncProfileMode } from '@/types/connector';
 import type { ConnectorFormType } from '@/types/connector';
 import { initFormData } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
+
+import EmailServiceConnectorForm from './EmailServiceConnectorForm';
 
 type Props = {
   isDeleted: boolean;
@@ -60,8 +63,17 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     reset,
     setValue,
   } = methods;
-  const isSocialConnector = connectorData.type === ConnectorType.Social;
 
+  const {
+    id,
+    connectorId,
+    type: connectorType,
+    formItems,
+    isStandard: isStandardConnector,
+    metadata: { logoDark },
+  } = connectorData;
+  const isSocialConnector = connectorType === ConnectorType.Social;
+  const isEmailServiceConnector = connectorId === ServiceConnector.Email;
   useEffect(() => {
     const { metadata, config, syncProfile } = connectorData;
     const { name, logo, logoDark } = metadata;
@@ -136,32 +148,30 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             description="connector_details.settings_description"
             learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
           >
-            <BasicForm
-              isStandard={connectorData.isStandard}
-              isDarkDefaultVisible={Boolean(connectorData.metadata.logoDark)}
-            />
+            <BasicForm isStandard={isStandardConnector} isDarkDefaultVisible={Boolean(logoDark)} />
           </FormCard>
         )}
-        <FormCard
-          title="connector_details.parameter_configuration"
-          description={conditional(!isSocialConnector && 'connector_details.settings_description')}
-          learnMoreLink={conditional(
-            !isSocialConnector && getDocumentationUrl('/docs/references/connectors')
-          )}
-        >
-          <ConfigForm
-            formItems={connectorData.formItems}
-            connectorId={connectorData.id}
-            connectorType={connectorData.type}
-          />
-        </FormCard>
-        {/* Tell typescript that the connectorType is Email or Sms */}
-        {connectorData.type !== ConnectorType.Social && (
+        {isEmailServiceConnector ? (
+          <EmailServiceConnectorForm extraInfo={connectorData.extraInfo} />
+        ) : (
+          <FormCard
+            title="connector_details.parameter_configuration"
+            description={conditional(
+              !isSocialConnector && 'connector_details.settings_description'
+            )}
+            learnMoreLink={conditional(
+              !isSocialConnector && getDocumentationUrl('/docs/references/connectors')
+            )}
+          >
+            <ConfigForm formItems={formItems} connectorId={id} connectorType={connectorType} />
+          </FormCard>
+        )}
+        {!isSocialConnector && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester
-              connectorFactoryId={connectorData.connectorId}
-              connectorType={connectorData.type}
-              parse={() => configParser(watch(), connectorData.formItems)}
+              connectorFactoryId={connectorId}
+              connectorType={connectorType}
+              parse={() => configParser(watch(), formItems)}
             />
           </FormCard>
         )}

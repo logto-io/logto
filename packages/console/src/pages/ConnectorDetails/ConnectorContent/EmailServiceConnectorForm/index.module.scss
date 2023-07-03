@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.imageFieldHeadline {
+  margin-bottom: _.unit(2);
+}

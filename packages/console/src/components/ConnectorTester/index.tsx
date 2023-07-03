@@ -1,3 +1,4 @@
+import { ServiceConnector } from '@logto/connector-kit';
 import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -40,6 +41,7 @@ function ConnectorTester({ connectorFactoryId, connectorType, className, parse }
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const isSms = connectorType === ConnectorType.Sms;
+  const isEmailServiceConnector = connectorFactoryId === ServiceConnector.Email;
 
   useEffect(() => {
     if (!showTooltip) {
@@ -110,7 +112,13 @@ function ConnectorTester({ connectorFactoryId, connectorType, className, parse }
           />
         </Tooltip>
       </div>
-      <div className={styles.description}>{t('connector_details.test_sender_description')}</div>
+      <div className={styles.description}>
+        {t(
+          isEmailServiceConnector
+            ? 'connector_details.logto_email.test_notes'
+            : 'connector_details.test_sender_description'
+        )}
+      </div>
       <div className={styles.error}>{inputError?.message}</div>
     </div>
   );
