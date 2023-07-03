@@ -13,11 +13,6 @@ concurrency:
 
 jobs:
   package:
-    # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs#expanding-or-adding-matrix-configurations
-    strategy:
-      matrix:
-        env: [oss, cloud]
-
     runs-on: ubuntu-latest
 
     steps:
@@ -27,26 +22,13 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v3
 
       - name: Build and package
-        if: matrix.env != 'cloud'
         run: |
           pnpm -r build
           ./.scripts/package.sh
-
-      - name: Build and package (Cloud)
-        if: matrix.env == 'cloud'
-        run: |
-          pnpm -r build
-          ./.scripts/package.sh
-        env:
-          IS_CLOUD: 1
-          CONSOLE_PUBLIC_URL: /
-          ADMIN_ENDPOINT: http://localhost:3002
-          # Setup ApplicationInsights for smoke testing. Note the connection string should be a dev string.
-          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}-${{ matrix.env }}
+          name: integration-test-${{ github.sha }}
           path: /tmp/logto.tar.gz
           retention-days: 3
 
@@ -54,14 +36,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api, api-cloud, ui, ui-cloud]
+        target: [api, ui]
 
     needs: package
     runs-on: ubuntu-latest
     env:
       INTEGRATION_TEST: true
-      IS_CLOUD: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
-      PATH_BASED_MULTI_TENANCY: ${{ contains(matrix.target, 'cloud') && '1' || '0' }}
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
@@ -100,15 +80,14 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
-          name: integration-test-${{ github.sha }}-${{ contains(matrix.target, 'cloud') && 'cloud' || 'oss' }}
+          name: integration-test-${{ github.sha }}
 
       - name: Extract
         working-directory: tests
         run: |
           npm run cli init -- \
             -p ../logto \
-            --du ../logto.tar.gz \
-            ${{ contains(matrix.target, 'cloud') && '--cloud' || '' }}
+            --du ../logto.tar.gz 
 
       - name: Check and add mock connectors
         working-directory: tests
@@ -128,11 +107,6 @@ jobs:
         env:
           REDIS_URL: 1
 
-      - name: Run Logto Cloud
-        working-directory: logto/
-        if: contains(matrix.target, 'cloud')
-        run: nohup npm run start:cloud > nohup-cloud.out 2> nohup-cloud.err < /dev/null &
-
       - name: Sleep for 5 seconds
         run: sleep 5
 
@@ -151,13 +125,3 @@ jobs:
       - name: Show error logs
         working-directory: logto/
         run: cat nohup.err
-
-      - name: Show cloud logs
-        working-directory: logto/
-        if: contains(matrix.target, 'cloud')
-        run: cat nohup-cloud.out
-
-      - name: Show cloud error logs
-        working-directory: logto/
-        if: contains(matrix.target, 'cloud')
-        run: cat nohup-cloud.err
