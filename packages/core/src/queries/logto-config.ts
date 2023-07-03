@@ -21,11 +21,17 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       returning ${fields.value}
     `);
 
+  const getCloudConnectionData = async () =>
+    pool.one<Record<string, unknown>>(sql`
+      select ${fields.value} from ${table}
+      where ${fields.key} = ${LogtoTenantConfigKey.CloudConnection}
+    `);
+
   const getRowsByKeys = async (keys: LogtoConfigKey[]) =>
     pool.query<LogtoConfig>(sql`
       select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
-  return { getAdminConsoleConfig, updateAdminConsoleConfig, getRowsByKeys };
+  return { getAdminConsoleConfig, updateAdminConsoleConfig, getCloudConnectionData, getRowsByKeys };
 };

@@ -69,7 +69,9 @@ export class EnvSet {
 
     this.#pool = pool;
 
-    const { getOidcConfigs } = createLogtoConfigLibrary(createLogtoConfigQueries(pool));
+    const { getOidcConfigs } = createLogtoConfigLibrary({
+      logtoConfigs: createLogtoConfigQueries(pool),
+    });
 
     const oidcConfigs = await getOidcConfigs();
     const endpoint = getTenantEndpoint(this.tenantId, EnvSet.values);

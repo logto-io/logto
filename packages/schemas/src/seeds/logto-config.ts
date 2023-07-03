@@ -26,7 +26,7 @@ export const createDefaultAdminConsoleConfig = (
     },
   } satisfies CreateLogtoConfig);
 
-export const createDefaultCloudConnectionConfig = (
+export const createCloudConnectionConfig = (
   forTenantId: string,
   appId: string,
   appSecret: string

@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import {
   createDefaultAdminConsoleConfig,
+  createCloudConnectionConfig,
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
@@ -165,6 +166,16 @@ export const seedTables = async (
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
+    connection.query(
+      insertInto(
+        createCloudConnectionConfig(
+          defaultTenantId,
+          defaultTenantApplication.id,
+          defaultTenantApplication.secret
+        ),
+        'logto_configs'
+      )
+    ),
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), 'sign_in_experiences')
     ),
