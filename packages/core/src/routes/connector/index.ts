@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import {
@@ -12,11 +13,13 @@ import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   loadConnectorFactories,
   transpileConnectorFactory,
   transpileLogtoConnector,
+  buildExtraInfoFromEmailServiceData,
 } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
@@ -42,6 +45,15 @@ export default function connectorRoutes<T extends AuthedRouter>(
   const {
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
+
+  // Will accept other source of `extraInfo` in the future.
+  const { emailServiceProviderConfig } = SystemContext.shared;
+  const buildExtraInfo = (connectorFactoryId: string) => {
+    const extraInfo = {
+      ...buildExtraInfoFromEmailServiceData(connectorFactoryId, emailServiceProviderConfig),
+    };
+    return cleanDeep(extraInfo, { emptyObjects: false });
+  };
 
   router.post(
     '/connectors',
@@ -152,7 +164,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       const connector = await getLogtoConnectorById(insertConnectorId);
-      ctx.body = await transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
 
       return next();
     }
@@ -187,7 +199,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
         : connectors;
 
       ctx.body = await Promise.all(
-        filteredConnectors.map(async (connector) => transpileLogtoConnector(connector))
+        filteredConnectors.map(async (connector) =>
+          transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id))
+        )
       );
 
       return next();
@@ -210,7 +224,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       // Hide demo connector
       assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
 
-      ctx.body = await transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
 
       return next();
     }
@@ -310,7 +324,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         jsonbMode: 'replace',
       });
       const connector = await getLogtoConnectorById(id);
-      ctx.body = await transpileLogtoConnector(connector);
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
 
       return next();
     }
@@ -346,3 +360,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
 }
+/** TODO @Darcy: refactor this file later. */
+/* eslint-enable max-lines */
