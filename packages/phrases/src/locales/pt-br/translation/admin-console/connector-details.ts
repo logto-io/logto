@@ -25,11 +25,34 @@ const connector_details = {
   type_sms: 'Conector de SMS',
   type_social: 'Conector social',
   in_used_social_deletion_description:
-    'This connector is in-use in your sign in experience. By deleting, <name/> sign in experience will be deleted in sign in experience settings. You will need to reconfigure it if you decide to add it back.',
+    'Este conector está em uso em sua experiência de login. Ao excluí-lo, a experiência de login <name/> será excluída nas configurações de experiência de login. Você precisará reconfigurá-lo se decidir adicioná-lo novamente.',
   in_used_passwordless_deletion_description:
-    'This {{name}} is in-use in your sign-in experience. By deleting, your sign-in experience will not work properly until you resolve the conflict. You will need to reconfigure it if you decide to add it back.',
+    'Este {{name}} está em uso em sua experiência de login. Ao excluí-lo, sua experiência de login não funcionará corretamente até que você resolva o conflito. Você precisará reconfigurá-lo se decidir adicioná-lo novamente.',
   deletion_description:
-    'You are removing this connector. It cannot be undone, and you will need to reconfigure it if you decide to add it back.',
+    'Você está removendo este conector. Isso não pode ser desfeito e você precisará reconfigurá-lo se decidir adicioná-lo novamente.',
+  logto_email: {
+    total_email_sent: 'Total de e-mails enviados: {{value, number}}',
+    total_email_sent_tip:
+      'O Logto utiliza o SendGrid para e-mails integrados seguros e estáveis. É completamente gratuito para usar.',
+    email_template_title: 'Modelo de e-mail',
+    template_description:
+      'O e-mail integrado usa modelos padrão para entrega perfeita de e-mails de verificação. Nenhuma configuração é necessária e você pode personalizar informações básicas da marca.',
+    description_action_text: 'Ver modelos',
+    from_email_field: 'E-mail do remetente',
+    from_name_field: 'Nome do remetente',
+    from_name_tip:
+      'Personalize o nome do remetente para e-mails. Se deixado em branco, "Verificação" será usado como nome padrão.',
+    from_name_placeholder: 'Seu nome de remetente',
+    company_address_field: 'Endereço da empresa',
+    company_address_tip:
+      'Exibir o endereço da empresa e o código postal no final dos e-mails aumenta a autenticidade, fornece informações de contato e garante conformidade.',
+    company_address_placeholder: 'O endereço da sua empresa',
+    app_logo_field: 'Logotipo do aplicativo',
+    app_logo_tip:
+      'Exiba o logotipo da sua marca no topo dos e-mails. Use a mesma imagem para o modo claro e escuro.',
+    urls_not_allowed: 'URLs não permitidas',
+    test_notes: 'Logto utiliza o modelo "Generic" para testes.',
+  },
 };
 
 export default connector_details;

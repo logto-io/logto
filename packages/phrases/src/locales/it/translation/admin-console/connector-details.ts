@@ -30,6 +30,29 @@ const connector_details = {
     'Questo {{name}} è in uso nella tua esperienza di accesso. Eliminandolo, la tua esperienza di accesso non funzionerà correttamente fino a quando non risolverai il conflitto. Dovrai riconfigurarlo se decidi di aggiungerlo di nuovo.',
   deletion_description:
     'Stai rimuovendo questo connettore. Non può essere annullato e dovrai riconfigurarlo se decidi di aggiungerlo di nuovo.',
+  logto_email: {
+    total_email_sent: 'Totale email inviate: {{value, number}}',
+    total_email_sent_tip:
+      "Logto utilizza SendGrid per l'invio di email sicure e stabili. È completamente gratuito da utilizzare.",
+    email_template_title: 'Modello email',
+    template_description:
+      "L'email integrata utilizza modelli predefiniti per la consegna senza soluzione di continuità delle email di verifica. Non è richiesta alcuna configurazione e puoi personalizzare le informazioni di base del marchio.",
+    description_action_text: 'Visualizza i modelli',
+    from_email_field: 'Email mittente',
+    from_name_field: 'Nome mittente',
+    from_name_tip:
+      'Personalizza il nome del mittente per le email. Se lasciato vuoto, verrà utilizzato "Verifica" come nome predefinito.',
+    from_name_placeholder: 'Il tuo nome mittente',
+    company_address_field: 'Indirizzo aziendale',
+    company_address_tip:
+      "La visualizzazione dell'indirizzo e del codice postale dell'azienda in fondo alle email migliora l'autenticità, fornisce informazioni di contatto e garantisce la conformità.",
+    company_address_placeholder: 'Il tuo indirizzo aziendale',
+    app_logo_field: "Logo dell'app",
+    app_logo_tip:
+      'Mostra il logo del tuo marchio in cima alle email. Utilizza la stessa immagine per la modalità chiara e scura.',
+    urls_not_allowed: 'URL non sono ammessi',
+    test_notes: 'Logto utilizza il modello "Generico" per i test.',
+  },
 };
 
 export default connector_details;

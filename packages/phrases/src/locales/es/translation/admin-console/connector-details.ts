@@ -1,4 +1,4 @@
-const detalles_conector = {
+const connector_details = {
   page_title: 'Detalles del conector',
   back_to_connectors: 'Volver a conectores',
   check_readme: 'Ver el archivo README',
@@ -30,6 +30,29 @@ const detalles_conector = {
     'Este {{name}} se utiliza en su experiencia de inicio de sesión. Al eliminarlo, su experiencia de inicio de sesión no funcionará correctamente hasta que resuelva el conflicto. Deberá reconfigurarlo si decide agregarlo nuevamente.',
   deletion_description:
     'Está eliminando este conector. No se puede deshacer, y deberá reconfigurarlo si decide agregarlo nuevamente.',
+  logto_email: {
+    total_email_sent: 'Total de correos electrónicos enviados: {{value, number}}',
+    total_email_sent_tip:
+      'Logto utiliza SendGrid para el correo electrónico integrado seguro y estable. Es completamente gratuito de usar.',
+    email_template_title: 'Plantilla de correo electrónico',
+    template_description:
+      'El correo electrónico integrado utiliza plantillas predeterminadas para la entrega sin problemas de correos electrónicos de verificación. No se requiere configuración, y puede personalizar la información básica de la marca.',
+    description_action_text: 'Ver plantillas',
+    from_email_field: 'Correo electrónico de origen',
+    from_name_field: 'Nombre del remitente',
+    from_name_tip:
+      'Personalice el nombre del remitente para los correos electrónicos. Si se deja en blanco, se utilizará "Verificación" como nombre predeterminado.',
+    from_name_placeholder: 'Su nombre de remitente',
+    company_address_field: 'Dirección de la empresa',
+    company_address_tip:
+      'Mostrar la dirección de la empresa y el código postal en la parte inferior de los correos electrónicos mejora la autenticidad, proporciona información de contacto y garantiza el cumplimiento.',
+    company_address_placeholder: 'La dirección de su empresa',
+    app_logo_field: 'Logotipo de la aplicación',
+    app_logo_tip:
+      'Muestre el logotipo de su marca en la parte superior de los correos electrónicos. Use la misma imagen para el modo claro y oscuro.',
+    urls_not_allowed: 'Las URL no están permitidas',
+    test_notes: 'Logto utiliza la plantilla "Generic" para realizar pruebas.',
+  },
 };
 
-export default detalles_conector;
+export default connector_details;

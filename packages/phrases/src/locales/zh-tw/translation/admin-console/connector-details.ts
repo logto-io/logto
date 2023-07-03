@@ -29,6 +29,25 @@ const connector_details = {
   in_used_passwordless_deletion_description:
     '您的登錄體驗正在使用 {{name}} 連接器。刪除後，您的登錄體驗將無法正常工作，直到您解決衝突，再次添加需重新配置。',
   deletion_description: '您將刪除此連接器。此操作不可撤銷，再次添加需重新配置。',
+  logto_email: {
+    total_email_sent: '總發送郵件數：{{value, number}}',
+    total_email_sent_tip: 'Logto 使用 SendGrid 進行安全穩定的內置郵件。完全免費使用。',
+    email_template_title: '郵件模板',
+    template_description:
+      '內置郵件使用默認模板實現無縫交付驗證郵件。無需配置，您可以自定義基本品牌信息。',
+    description_action_text: '查看模板',
+    from_email_field: '發件人郵箱',
+    from_name_field: '發件人姓名',
+    from_name_tip: '自定義郵件發件人姓名。如果未填寫，將使用“驗證”作為默認姓名。',
+    from_name_placeholder: '您的發件人姓名',
+    company_address_field: '公司地址',
+    company_address_tip: '在郵件底部顯示公司地址和郵政編碼，增強真實性，提供聯繫信息，確保合規性。',
+    company_address_placeholder: '您的公司地址',
+    app_logo_field: '應用程式標誌',
+    app_logo_tip: '在郵件頂部顯示您的品牌標誌。在淺色模式和深色模式下使用相同的圖像。',
+    urls_not_allowed: '不允許使用 URL',
+    test_notes: 'Logto 使用 "通用" 模板進行測試。',
+  },
 };
 
 export default connector_details;

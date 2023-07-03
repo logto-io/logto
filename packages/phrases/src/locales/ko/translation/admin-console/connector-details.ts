@@ -30,6 +30,29 @@ const connector_details = {
     '{name}}은/는 로그인 경험에서 사용 중이에요. 삭제하면 충돌을 해결할 때까지 로그인 환경이 제대로 작동하지 않을 거예요. 나중에 되돌리려면 다시 구성해야 해요.',
   deletion_description:
     '이 연동을 삭제하려고 하고 있어요. 이 작업은 돌이킬 수 없으며, 나중에 되돌리려면 다시 구성해야 해요.',
+  logto_email: {
+    total_email_sent: '전체 이메일 발송: {{value, number}}',
+    total_email_sent_tip:
+      'Logto는 안전하고 안정적인 내장형 이메일에 SendGrid를 사용합니다. 완전히 무료로 사용할 수 있습니다.',
+    email_template_title: '이메일 템플릿',
+    template_description:
+      '내장형 이메일은 기본 템플릿을 사용하여 검증 이메일을 원활하게 전달합니다. 구성이 필요하지 않으며, 기본 브랜드 정보를 사용자 정의할 수 있습니다.',
+    description_action_text: '템플릿 보기',
+    from_email_field: '보내는 이메일',
+    from_name_field: '보내는 사람 이름',
+    from_name_tip:
+      '이메일의 보내는 사람 이름을 사용자 정의합니다. 비워 두면 기본 이름으로 "Verification"이 사용됩니다.',
+    from_name_placeholder: 'Your sender name',
+    company_address_field: '회사 주소',
+    company_address_tip:
+      '이메일 하단에 회사 주소와 우편번호를 표시하면 신뢰성을 높이고 연락처 정보를 제공하며 규정 준수를 보장합니다.',
+    company_address_placeholder: 'Your company address',
+    app_logo_field: '앱 로고',
+    app_logo_tip:
+      '이메일 상단에 브랜드 로고를 표시합니다. 라이트 모드와 다크 모드에 모두 동일한 이미지를 사용합니다.',
+    urls_not_allowed: 'URLs are not allowed',
+    test_notes: 'Logto는 "Generic" 템플릿을 사용하여 테스트합니다.',
+  },
 };
 
 export default connector_details;
