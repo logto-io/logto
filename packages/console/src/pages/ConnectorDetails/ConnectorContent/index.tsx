@@ -2,7 +2,7 @@ import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +39,12 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
+
+  const formConfig = useMemo(() => {
+    const { formItems, config } = connectorData;
+    return conditional(formItems && initFormData(formItems, config)) ?? {};
+  }, [connectorData]);
+
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
     defaultValues: {
@@ -46,28 +52,35 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
       target: getConnectorTarget(connectorData),
     },
   });
+
   const {
     formState: { isSubmitting, isDirty },
     handleSubmit,
     watch,
     reset,
+    setValue,
   } = methods;
   const isSocialConnector = connectorData.type === ConnectorType.Social;
 
   useEffect(() => {
-    const { formItems, metadata, config, syncProfile } = connectorData;
-    const { name, logo, logoDark, target } = metadata;
+    const { metadata, config, syncProfile } = connectorData;
+    const { name, logo, logoDark } = metadata;
 
     reset({
-      ...(formItems ? initFormData(formItems, config) : {}),
-      target: getConnectorTarget(connectorData) ?? target,
+      target: getConnectorTarget(connectorData),
       logo,
       logoDark: logoDark ?? '',
       name: name?.en,
-      config: JSON.stringify(config, null, 2),
+      jsonConfig: JSON.stringify(config, null, 2),
       syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
     });
-  }, [connectorData, reset]);
+    /**
+     * Note:
+     * Set `formConfig` independently.
+     * Since react-hook-form's reset function infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly.
+     */
+    setValue('formConfig', formConfig, { shouldDirty: false });
+  }, [connectorData, formConfig, reset, setValue]);
 
   const configParser = useConnectorFormConfigParser();
 
@@ -95,7 +108,6 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           json: body,
         })
         .json<ConnectorResponse>();
-
       onConnectorUpdated(updatedConnector);
       toast.success(t('general.saved'));
     })
@@ -107,7 +119,15 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         autoComplete="off"
         isDirty={isDirty}
         isSubmitting={isSubmitting}
-        onDiscard={reset}
+        onDiscard={() => {
+          reset();
+          /**
+           * Note:
+           * Reset `formConfig` manually since react-hook-form's `useForm` hook infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly,
+           * this causes we cannot apply the default value of `formConfig` to the form.
+           */
+          setValue('formConfig', formConfig, { shouldDirty: false });
+        }}
         onSubmit={onSubmit}
       >
         {isSocialConnector && (

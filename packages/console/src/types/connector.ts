@@ -14,10 +14,11 @@ export enum SyncProfileMode {
 }
 
 export type ConnectorFormType = {
-  config: string;
+  jsonConfig: string; // Support editing configs by the code editor
+  formConfig: Record<string, unknown>; // Support custom connector config form
   name: string;
   logo: string;
   logoDark: string;
   target: string;
   syncProfile: SyncProfileMode;
-} & Record<string, unknown>; // Extend custom connector config form
+};

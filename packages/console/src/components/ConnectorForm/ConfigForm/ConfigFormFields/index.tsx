@@ -1,5 +1,6 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -25,11 +26,13 @@ function ConfigFormFields({ formItems }: Props) {
     watch,
     register,
     control,
-    formState: { errors },
+    formState: {
+      errors: { formConfig: formConfigErrors },
+    },
   } = useFormContext<ConnectorFormType>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const values = watch();
+  const values = watch('formConfig');
 
   const filteredFormItems = useMemo(() => {
     return formItems.filter((item) => {
@@ -46,10 +49,13 @@ function ConfigFormFields({ formItems }: Props) {
   }, [formItems, values]);
 
   const renderFormItem = (item: ConnectorConfigFormItem) => {
-    const error = errors[item.key]?.message ?? Boolean(errors[item.key]);
+    const error = conditional(
+      formConfigErrors &&
+        (formConfigErrors[item.key]?.message ?? Boolean(formConfigErrors[item.key]))
+    );
 
     const buildCommonProperties = () => ({
-      ...register(item.key, {
+      ...register(`formConfig.${item.key}`, {
         required: item.required,
         valueAsNumber: item.type === ConnectorConfigFormItemType.Number,
       }),
@@ -77,7 +83,7 @@ function ConfigFormFields({ formItems }: Props) {
 
     return (
       <Controller
-        name={item.key}
+        name={`formConfig.${item.key}`}
         control={control}
         rules={{
           // For switch, "false" will be treated as an empty value, so we need to set required to false.

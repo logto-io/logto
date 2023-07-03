@@ -69,14 +69,14 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
       ) : (
         <FormField title="connectors.guide.config">
           <Controller
-            name="config"
+            name="jsonConfig"
             control={control}
             rules={{
               validate: (value) => jsonValidator(value) || t('errors.invalid_json_format'),
             }}
             render={({ field: { onChange, value } }) => (
               <CodeEditor
-                error={errors.config?.message ?? Boolean(errors.config)}
+                error={errors.jsonConfig?.message ?? Boolean(errors.jsonConfig)}
                 language="json"
                 value={value}
                 onChange={onChange}
