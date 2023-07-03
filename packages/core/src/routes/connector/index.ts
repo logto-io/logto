@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import {
@@ -44,9 +45,15 @@ export default function connectorRoutes<T extends AuthedRouter>(
   const {
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
+
+  // Will accept other source of `extraInfo` in the future.
   const { emailServiceProviderConfig } = SystemContext.shared;
-  const buildExtraInfo = (connectorFactoryId: string) =>
-    buildExtraInfoFromEmailServiceData(connectorFactoryId, emailServiceProviderConfig);
+  const buildExtraInfo = (connectorFactoryId: string) => {
+    const extraInfo = {
+      ...buildExtraInfoFromEmailServiceData(connectorFactoryId, emailServiceProviderConfig),
+    };
+    return cleanDeep(extraInfo, { emptyObjects: false });
+  };
 
   router.post(
     '/connectors',
@@ -353,3 +360,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
 }
+/** TODO @Darcy: refactor this file later. */
+/* eslint-enable max-lines */

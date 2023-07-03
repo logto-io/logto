@@ -15,7 +15,7 @@ import {
 } from '@logto/connector-kit';
 import type { ConnectorFactoryResponse, ConnectorResponse, EmailServiceData } from '@logto/schemas';
 import { findPackage } from '@logto/shared';
-import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
+import { conditional, deduplicate, pick, trySafe, type Optional } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -68,7 +68,7 @@ export const transpileConnectorFactory = ({
 export const buildExtraInfoFromEmailServiceData = (
   connectorFactoryId: string,
   emailServiceProviderConfig?: EmailServiceData
-): ConnectorResponse['extraInfo'] => {
+): Optional<Record<string, unknown>> => {
   return conditional(
     connectorFactoryId === ServiceConnector.Email &&
       emailServiceProviderConfig?.fromEmail && { fromEmail: emailServiceProviderConfig.fromEmail }
