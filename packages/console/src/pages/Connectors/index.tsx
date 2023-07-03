@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -10,6 +11,7 @@ import useSWR from 'swr';
 import Plus from '@/assets/icons/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
 import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
+import CreateConnectorForm from '@/components/CreateConnectorForm';
 import ListPage from '@/components/ListPage';
 import { defaultEmailConnectorGroup, defaultSmsConnectorGroup } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
@@ -17,6 +19,7 @@ import Button from '@/ds-components/Button';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
+import useConnectorApi from '@/hooks/use-connector-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
@@ -26,7 +29,6 @@ import ConnectorName from './ConnectorName';
 import ConnectorStatus from './ConnectorStatus';
 import ConnectorStatusField from './ConnectorStatusField';
 import ConnectorTypeColumn from './ConnectorTypeColumn';
-import CreateForm from './CreateForm';
 import Guide from './Guide';
 import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
@@ -63,7 +65,7 @@ function Connectors() {
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
-
+  const { createConnector } = useConnectorApi();
   const { data, error, mutate } = useConnectorGroups();
   const { data: factories, error: factoriesError } = useSWR<
     ConnectorFactoryResponse[],
@@ -201,11 +203,23 @@ function Connectors() {
       }}
       widgets={
         <>
-          <CreateForm
+          <CreateConnectorForm
             isOpen={Boolean(createConnectorType)}
             type={createConnectorType}
-            onClose={(id) => {
+            onClose={async (id) => {
               if (createConnectorType && id) {
+                /**
+                 * Note:
+                 * The "Email Service Connector" is a built-in connector that can be directly created without the need for setup in the guide.
+                 */
+                if (id === ServiceConnector.Email) {
+                  const created = await createConnector({ connectorId: id });
+                  navigate(`/connectors/${ConnectorsTabs.Passwordless}/${created.id}`, {
+                    replace: true,
+                  });
+                  return;
+                }
+
                 navigate(buildGuidePathname(createConnectorType, id), { replace: true });
 
                 return;

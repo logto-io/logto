@@ -18,7 +18,7 @@ export class RequestError extends Error {
   }
 }
 
-type StaticApiProps = {
+export type StaticApiProps = {
   prefixUrl?: URL;
   hideErrorToast?: boolean;
   resourceIndicator?: string;

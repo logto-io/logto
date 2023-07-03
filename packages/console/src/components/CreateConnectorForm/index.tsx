@@ -13,7 +13,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { getConnectorGroups } from '../utils';
+import { getConnectorGroups } from '../../pages/Connectors/utils';
 
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
@@ -26,7 +26,7 @@ type Props = {
   onClose?: (connectorId?: string) => void;
 };
 
-function CreateForm({ onClose, isOpen: isFormOpen, type }: Props) {
+function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const { data: existingConnectors, error: connectorsError } = useSWR<
     ConnectorResponse[],
     RequestError
@@ -186,4 +186,4 @@ function CreateForm({ onClose, isOpen: isFormOpen, type }: Props) {
   );
 }
 
-export default CreateForm;
+export default CreateConnectorForm;
