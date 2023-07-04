@@ -1,7 +1,6 @@
-import { useContext } from 'react';
-
 import AppLoading from '@/components/AppLoading';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import useMeCustomData from '@/hooks/use-me-custom-data';
+import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
 import AutoCreateTenant from './AutoCreateTenant';
@@ -9,19 +8,17 @@ import Redirect from './Redirect';
 import TenantLandingPage from './TenantLandingPage';
 
 export default function Main() {
-  const { tenants } = useContext(TenantsContext);
-  const { isOnboarding, isLoaded } = useUserOnboardingData();
+  const { isLoaded } = useMeCustomData();
+  const { isOnboarding } = useUserOnboardingData();
+  const { defaultTenantId } = useUserDefaultTenantId();
 
   if (!isLoaded) {
     return <AppLoading />;
   }
 
-  /**
-   * If current tenant ID is not set, but there is at least one tenant available,
-   * trigger a redirect to the first tenant.
-   */
-  if (tenants[0]) {
-    return <Redirect />;
+  // If current tenant ID is not set, but the defaultTenantId is available.
+  if (defaultTenantId) {
+    return <Redirect toTenantId={defaultTenantId} />;
   }
 
   // A new user has just signed up and has no tenant, needs to create a new tenant.

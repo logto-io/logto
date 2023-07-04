@@ -41,6 +41,7 @@ type Tenants = {
    */
   currentTenantStatus: CurrentTenantStatus;
   setCurrentTenantStatus: (status: CurrentTenantStatus) => void;
+  /** Navigate to the given tenant ID. */
   navigateTenant: (tenantId: string, options?: NavigateOptions) => void;
 };
 
