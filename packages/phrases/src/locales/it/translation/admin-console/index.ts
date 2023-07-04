@@ -21,6 +21,7 @@ import role_details from './role-details.js';
 import roles from './roles.js';
 import session_expired from './session-expired.js';
 import sign_in_exp from './sign-in-exp/index.js';
+import subscription from './subscription.js';
 import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
 import tenants from './tenants.js';
@@ -67,6 +68,7 @@ const admin_console = {
   domain,
   tenants,
   topbar,
+  subscription,
 };
 
 export default admin_console;
