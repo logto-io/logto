@@ -5,6 +5,7 @@ import { createApplicationQueries } from '#src/queries/application.js';
 import { createApplicationsRolesQueries } from '#src/queries/applications-roles.js';
 import { createConnectorQueries } from '#src/queries/connector.js';
 import { createCustomPhraseQueries } from '#src/queries/custom-phrase.js';
+import { createDailyActiveUsersQueries } from '#src/queries/daily-active-user.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 import { createHooksQueries } from '#src/queries/hooks.js';
 import { createLogQueries } from '#src/queries/log.js';
@@ -39,6 +40,7 @@ export default class Queries {
   verificationStatuses = createVerificationStatusQueries(this.pool);
   hooks = createHooksQueries(this.pool);
   domains = createDomainsQueries(this.pool);
+  dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

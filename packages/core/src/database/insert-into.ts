@@ -19,10 +19,15 @@ const setExcluded = (...fields: IdentifierSqlToken[]) =>
     sql`, `
   );
 
-type OnConflict = {
-  fields: IdentifierSqlToken[];
-  setExcludedFields: IdentifierSqlToken[];
-};
+type OnConflict =
+  | {
+      fields: IdentifierSqlToken[];
+      setExcludedFields: IdentifierSqlToken[];
+      ignore?: false;
+    }
+  | {
+      ignore: true;
+    };
 
 type InsertIntoConfigReturning = {
   returning: true;
@@ -70,12 +75,15 @@ export const buildInsertIntoWithPool =
           insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
           sql`, `
         )})
-        ${conditionalSql(
-          onConflict,
-          ({ fields, setExcludedFields }) => sql`
-            on conflict (${sql.join(fields, sql`, `)}) do update
-            set ${setExcluded(...setExcludedFields)}
-          `
+        ${conditionalSql(onConflict, (config) =>
+          config.ignore
+            ? sql`
+              on conflict do nothing
+            `
+            : sql`
+              on conflict (${sql.join(config.fields, sql`, `)}) do update
+              set ${setExcluded(...config.setExcludedFields)}
+            `
         )}
         ${conditionalSql(returning, () => sql`returning *`)}
       `);
