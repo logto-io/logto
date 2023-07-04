@@ -29,7 +29,7 @@ import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-
 import * as modalStyles from '@/scss/modal.module.scss';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
-import { initFormData } from '@/utils/connector-form';
+import { convertFactoryResponseToForm } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
 
 import { splitMarkdownByTitle } from '../utils';
@@ -50,37 +50,35 @@ function Guide({ connector, onClose }: Props) {
   const { updateConfigs } = useConfigs();
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { type: connectorType, formItems, target, isStandard, configTemplate } = connector ?? {};
+  const { type: connectorType, formItems, isStandard } = connector ?? {};
   const { language } = i18next;
 
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
+
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
+    defaultValues: {
+      jsonConfig: '{}',
+      formConfig: {},
+      syncProfile: SyncProfileMode.OnlyAtRegister,
+    },
   });
+
   const {
     formState: { isSubmitting },
     handleSubmit,
     watch,
     setError,
     reset,
-    setValue,
   } = methods;
 
   useEffect(() => {
-    const formConfig = conditional(formItems && initFormData(formItems));
-    reset({
-      ...(configTemplate ? { jsonConfig: configTemplate } : {}),
-      ...(isSocialConnector && !isStandard && target ? { target } : {}),
-      syncProfile: SyncProfileMode.OnlyAtRegister,
-    });
-    /**
-     * Note:
-     * Set `formConfig` independently.
-     * Since react-hook-form's reset function infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly.
-     */
-    setValue('formConfig', formConfig ?? {}, { shouldDirty: false });
-  }, [formItems, reset, configTemplate, target, isSocialConnector, isStandard, setValue]);
+    if (!connector) {
+      return;
+    }
+    reset(convertFactoryResponseToForm(connector));
+  }, [reset, connector]);
 
   const configParser = useConnectorFormConfigParser();
 
