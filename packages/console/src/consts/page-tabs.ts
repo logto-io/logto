@@ -34,4 +34,5 @@ export enum RoleDetailsTabs {
 export enum TenantSettingsTabs {
   Settings = 'settings',
   Domains = 'domains',
+  Subscription = 'subscription',
 }
