@@ -13,7 +13,6 @@ const key = 'defaultTenantId';
  *
  * - By default, the default tenant ID is empty, which means the first tenant is the default tenant.
  * - If the default tenant ID is not available to the user anymore, it semantically equals to the first tenant ID.
- * - If the user manually navigates to a tenant, the default tenant ID will be set to the target tenant ID.
  */
 const useUserDefaultTenantId = () => {
   const { data, update: updateMeCustomData } = useMeCustomData();
@@ -41,12 +40,7 @@ const useUserDefaultTenantId = () => {
 
   return {
     defaultTenantId,
-    /**
-     * Update the default tenant ID to the current tenant ID if:
-     *
-     * 1. The current tenant ID is not empty.
-     * 2. The default tenant ID does not equal to the current tenant ID.
-     */
+    /** Update the default tenant ID to the current tenant ID. */
     updateIfNeeded,
   };
 };
