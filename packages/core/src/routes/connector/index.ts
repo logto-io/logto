@@ -1,11 +1,17 @@
 /* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
-import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
+import {
+  ServiceConnector,
+  demoConnectorIds,
+  emailServiceBrandingGuard,
+  validateConfig,
+} from '@logto/connector-kit';
 import {
   connectorFactoryResponseGuard,
   Connectors,
   ConnectorType,
   connectorResponseGuard,
+  type JsonObject,
 } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import cleanDeep from 'clean-deep';
@@ -22,6 +28,7 @@ import {
   buildExtraInfoFromEmailServiceData,
 } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
+import { getCloudConnectionEndpoints } from '#src/utils/endpoint.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
@@ -29,6 +36,20 @@ import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 
 const generateConnectorId = buildIdGenerator(12);
+
+const configPruner = (factoryId: string, config: JsonObject): JsonObject => {
+  if (ServiceConnector.Email !== factoryId) {
+    return config;
+  }
+
+  /**
+   * Can not use `pick()` from @silverhand/essentials since the pick returns 'undefined' and
+   * this is value is not accepted by `config` return type JsonObject.
+   */
+  return Object.fromEntries(
+    Object.keys(emailServiceBrandingGuard.shape).map((key) => [key, config[key] ?? null])
+  );
+};
 
 export default function connectorRoutes<T extends AuthedRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -44,6 +65,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
   const { getLogtoConnectorById, getLogtoConnectors } = tenant.connectors;
   const {
     signInExperiences: { removeUnavailableSocialConnectorTargets },
+    logtoConfigs: { getCloudConnectionData },
   } = tenant.libraries;
 
   // Will accept other source of `extraInfo` in the future.
@@ -53,6 +75,15 @@ export default function connectorRoutes<T extends AuthedRouter>(
       ...buildExtraInfoFromEmailServiceData(connectorFactoryId, emailServiceProviderConfig),
     };
     return cleanDeep(extraInfo, { emptyObjects: false });
+  };
+
+  const configPatcher = async (factoryId: string, config?: JsonObject) => {
+    if (!config || ServiceConnector.Email !== factoryId) {
+      return config;
+    }
+    const endpoints = getCloudConnectionEndpoints();
+    const credentials = await getCloudConnectionData();
+    return { ...endpoints, ...credentials, ...config };
   };
 
   router.post(
@@ -71,7 +102,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const {
-        body: { id: proposedId, connectorId, metadata, config, syncProfile },
+        body: { id: proposedId, connectorId, metadata, config: originalConfig, syncProfile },
       } = ctx.guard;
 
       const connectorFactories = await loadConnectorFactories();
@@ -130,6 +161,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         );
       }
 
+      const config = await configPatcher(connectorFactory.metadata.id, originalConfig);
       if (config) {
         const { rawConnector } = await buildRawConnector(connectorFactory);
         validateConfig(config, rawConnector.configGuard);
@@ -164,7 +196,10 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       const connector = await getLogtoConnectorById(insertConnectorId);
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, {
+        extraInfo: buildExtraInfo(connector.metadata.id),
+        configPruner: (config) => configPruner(connectorFactory.metadata.id, config),
+      });
 
       return next();
     }
@@ -200,7 +235,10 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
       ctx.body = await Promise.all(
         filteredConnectors.map(async (connector) =>
-          transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id))
+          transpileLogtoConnector(connector, {
+            extraInfo: buildExtraInfo(connector.metadata.id),
+            configPruner: (config) => configPruner(connector.metadata.id, config),
+          })
         )
       );
 
@@ -224,7 +262,10 @@ export default function connectorRoutes<T extends AuthedRouter>(
       // Hide demo connector
       assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
 
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, {
+        extraInfo: buildExtraInfo(connector.metadata.id),
+        configPruner: (config) => configPruner(connector.metadata.id, config),
+      });
 
       return next();
     }
@@ -287,7 +328,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config, metadata, syncProfile },
+        body: { config: originalConfig, metadata, syncProfile },
       } = ctx.guard;
 
       const { type, validateConfig, metadata: originalMetadata } = await getLogtoConnectorById(id);
@@ -314,6 +355,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         );
       }
 
+      const config = await configPatcher(originalMetadata.id, originalConfig);
       if (config) {
         validateConfig(config);
       }
@@ -324,7 +366,10 @@ export default function connectorRoutes<T extends AuthedRouter>(
         jsonbMode: 'replace',
       });
       const connector = await getLogtoConnectorById(id);
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, {
+        extraInfo: buildExtraInfo(connector.metadata.id),
+        configPruner: (config) => configPruner(connector.metadata.id, config),
+      });
 
       return next();
     }

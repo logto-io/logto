@@ -4,22 +4,36 @@ import {
   type SmsConnector,
   type EmailConnector,
   demoConnectorIds,
+  ServiceConnector,
   VerificationCodeType,
 } from '@logto/connector-kit';
 import { phoneRegEx, emailRegEx } from '@logto/core-kit';
-import { jsonObjectGuard, ConnectorType } from '@logto/schemas';
+import { jsonObjectGuard, ConnectorType, type JsonObject } from '@logto/schemas';
 import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/index.js';
+import { getCloudConnectionEndpoints } from '#src/utils/endpoint.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[router, { libraries }]: RouterInitArgs<T>
 ) {
+  const {
+    logtoConfigs: { getCloudConnectionData },
+  } = libraries;
+  const configPatcher = async (factoryId: string, config?: JsonObject) => {
+    if (!config || ServiceConnector.Email !== factoryId) {
+      return config;
+    }
+    const endpoints = getCloudConnectionEndpoints();
+    const credentials = await getCloudConnectionData();
+    return { ...endpoints, ...credentials, ...config };
+  };
+
   router.post(
     '/connectors/:factoryId/test',
     koaGuard({
@@ -35,7 +49,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
         params: { factoryId },
         body,
       } = ctx.guard;
-      const { phone, email, config } = body;
+      const { phone, email, config: originalConfig } = body;
 
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
@@ -64,6 +78,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
         rawConnector: { sendMessage },
       } = await buildRawConnector<SmsConnector | EmailConnector>(connectorFactory);
 
+      const config = await configPatcher(factoryId, originalConfig);
       await sendMessage(
         {
           to: subject,

@@ -14,7 +14,12 @@ import {
   type SmsConnector,
   ServiceConnector,
 } from '@logto/connector-kit';
-import type { ConnectorFactoryResponse, ConnectorResponse, EmailServiceData } from '@logto/schemas';
+import type {
+  ConnectorFactoryResponse,
+  ConnectorResponse,
+  EmailServiceData,
+  JsonObject,
+} from '@logto/schemas';
 import { findPackage } from '@logto/shared';
 import { conditional, deduplicate, pick, trySafe, type Optional } from '@silverhand/essentials';
 
@@ -30,7 +35,10 @@ export const isPasswordlessLogtoConnector = (
 
 export const transpileLogtoConnector = async (
   connector: LogtoConnector,
-  extraInfo?: ConnectorResponse['extraInfo']
+  payload?: {
+    extraInfo?: ConnectorResponse['extraInfo'];
+    configPruner?: (config: JsonObject) => JsonObject;
+  }
 ): Promise<ConnectorResponse> => {
   const usagePayload = conditional(
     /** Should do the check in advance since only passwordless connectors could have `getUsage` method. */
@@ -44,6 +52,8 @@ export const transpileLogtoConnector = async (
   /** Temporarily block entering Logto email connector as well until this feature is ready for prod. */
   const isDemo = demoConnectorIds.includes(id) || serviceConnectorIds.includes(id);
 
+  const { extraInfo, configPruner } = payload ?? {};
+
   return {
     type,
     ...metadata,
@@ -51,7 +61,7 @@ export const transpileLogtoConnector = async (
     isDemo,
     extraInfo,
     // Hide demo connector config
-    config: isDemo ? {} : config,
+    config: isDemo ? {} : configPruner ? configPruner(config) : config,
     ...usagePayload,
   };
 };
