@@ -1,7 +1,6 @@
 import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
-import type { Optional } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,7 +18,7 @@ import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { SyncProfileMode } from '@/types/connector';
 import type { ConnectorFormType } from '@/types/connector';
-import { initFormData } from '@/utils/connector-form';
+import { convertResponseToForm } from '@/utils/connector-form';
 import { trySubmitSafe } from '@/utils/form';
 
 import EmailServiceConnectorForm from './EmailServiceConnectorForm';
@@ -30,29 +29,22 @@ type Props = {
   onConnectorUpdated: (connector: ConnectorResponse) => void;
 };
 
-const getConnectorTarget = (connectorData: ConnectorResponse): Optional<string> => {
-  return conditional(
-    connectorData.type === ConnectorType.Social &&
-      !connectorData.isStandard &&
-      (connectorData.metadata.target ?? connectorData.target)
-  );
-};
-
 function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
-
-  const formConfig = useMemo(() => {
-    const { formItems, config } = connectorData;
-    return conditional(formItems && initFormData(formItems, config)) ?? {};
-  }, [connectorData]);
+  const formData = useMemo(() => convertResponseToForm(connectorData), [connectorData]);
 
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
     defaultValues: {
-      syncProfile: SyncProfileMode.OnlyAtRegister,
-      target: getConnectorTarget(connectorData),
+      ...formData,
+      /**
+       * Note:
+       * The `formConfig` will be setup in the `useEffect` hook since react-hook-form's `useForm` hook infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly,
+       * this causes we cannot apply the default value of `formConfig` to the form.
+       */
+      formConfig: {},
     },
   });
 
@@ -61,7 +53,6 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     handleSubmit,
     watch,
     reset,
-    setValue,
   } = methods;
 
   const {
@@ -72,27 +63,13 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     isStandard: isStandardConnector,
     metadata: { logoDark },
   } = connectorData;
+
   const isSocialConnector = connectorType === ConnectorType.Social;
   const isEmailServiceConnector = connectorId === ServiceConnector.Email;
-  useEffect(() => {
-    const { metadata, config, syncProfile } = connectorData;
-    const { name, logo, logoDark } = metadata;
 
-    reset({
-      target: getConnectorTarget(connectorData),
-      logo,
-      logoDark: logoDark ?? '',
-      name: name?.en,
-      jsonConfig: JSON.stringify(config, null, 2),
-      syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
-    });
-    /**
-     * Note:
-     * Set `formConfig` independently.
-     * Since react-hook-form's reset function infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly.
-     */
-    setValue('formConfig', formConfig, { shouldDirty: false });
-  }, [connectorData, formConfig, reset, setValue]);
+  useEffect(() => {
+    reset(formData);
+  }, [formData, reset]);
 
   const configParser = useConnectorFormConfigParser();
 
@@ -133,12 +110,6 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         isSubmitting={isSubmitting}
         onDiscard={() => {
           reset();
-          /**
-           * Note:
-           * Reset `formConfig` manually since react-hook-form's `useForm` hook infers `Record<string, unknown>` to `{ [x: string]: {} | undefined }` incorrectly,
-           * this causes we cannot apply the default value of `formConfig` to the form.
-           */
-          setValue('formConfig', formConfig, { shouldDirty: false });
         }}
         onSubmit={onSubmit}
       >

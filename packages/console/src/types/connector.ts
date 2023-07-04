@@ -1,4 +1,5 @@
 import type { ConnectorResponse } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 
 export type ConnectorGroup<T = ConnectorResponse> = Pick<
   ConnectorResponse,
@@ -14,11 +15,11 @@ export enum SyncProfileMode {
 }
 
 export type ConnectorFormType = {
+  name?: string;
+  logo?: string;
+  logoDark?: Nullable<string>;
+  target?: string;
+  syncProfile: SyncProfileMode;
   jsonConfig: string; // Support editing configs by the code editor
   formConfig: Record<string, unknown>; // Support custom connector config form
-  name: string;
-  logo: string;
-  logoDark: string;
-  target: string;
-  syncProfile: SyncProfileMode;
 };

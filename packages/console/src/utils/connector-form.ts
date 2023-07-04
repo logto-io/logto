@@ -1,12 +1,12 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
-import { ConnectorConfigFormItemType } from '@logto/connector-kit';
+import { ConnectorConfigFormItemType, ConnectorType } from '@logto/connector-kit';
+import { type ConnectorFactoryResponse, type ConnectorResponse } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
+import { SyncProfileMode, type ConnectorFormType } from '@/types/connector';
 import { safeParseJson } from '@/utils/json';
 
-export const initFormData = (
-  formItems: ConnectorConfigFormItem[],
-  config?: Record<string, unknown>
-) => {
+const initFormData = (formItems: ConnectorConfigFormItem[], config?: Record<string, unknown>) => {
   const data: Array<[string, unknown]> = formItems.map((item) => {
     const value = config?.[item.key] ?? item.defaultValue;
 
@@ -59,4 +59,37 @@ export const parseFormConfig = (
       })
       .filter((item): item is [string, unknown] => Array.isArray(item))
   );
+};
+
+export const convertResponseToForm = (connector: ConnectorResponse): ConnectorFormType => {
+  const { metadata, type, config, syncProfile, isStandard, formItems, target } = connector;
+  const { name, logo, logoDark } = metadata;
+  const formConfig = conditional(formItems && initFormData(formItems, config)) ?? {};
+
+  return {
+    name: name?.en,
+    logo,
+    logoDark,
+    target: conditional(
+      type === ConnectorType.Social && !isStandard && (metadata.target ?? target)
+    ),
+    syncProfile: syncProfile ? SyncProfileMode.EachSignIn : SyncProfileMode.OnlyAtRegister,
+    jsonConfig: JSON.stringify(config, null, 2),
+    formConfig,
+  };
+};
+
+export const convertFactoryResponseToForm = (
+  connectorFactory: ConnectorFactoryResponse
+): ConnectorFormType => {
+  const { formItems, configTemplate, type, isStandard, target } = connectorFactory;
+  const jsonConfig = configTemplate ?? '{}';
+  const formConfig = conditional(formItems && initFormData(formItems)) ?? {};
+
+  return {
+    target: conditional(type === ConnectorType.Social && !isStandard && target),
+    syncProfile: SyncProfileMode.OnlyAtRegister,
+    jsonConfig,
+    formConfig,
+  };
 };
