@@ -34,13 +34,24 @@ export const adminConsoleDataGuard = z.object({
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;
 
+/* --- Logto tenant cloud connection config --- */
+export const cloudConnectionDataGuard = z.object({
+  appId: z.string(),
+  appSecret: z.string(),
+  resource: z.string(),
+});
+
+export type CloudConnectionData = z.infer<typeof cloudConnectionDataGuard>;
+
 export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
+  CloudConnection = 'cloudConnection',
   /** The URL to redirect when session not found in Sign-in Experience. */
   SessionNotFoundRedirectUrl = 'sessionNotFoundRedirectUrl',
 }
 export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
+  [LogtoTenantConfigKey.CloudConnection]: CloudConnectionData;
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: { url: string };
 };
 
@@ -48,6 +59,7 @@ export const logtoTenantConfigGuard: Readonly<{
   [key in LogtoTenantConfigKey]: ZodType<LogtoTenantConfigType[key]>;
 }> = Object.freeze({
   [LogtoTenantConfigKey.AdminConsole]: adminConsoleDataGuard,
+  [LogtoTenantConfigKey.CloudConnection]: cloudConnectionDataGuard,
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: z.object({ url: z.string() }),
 });
 
