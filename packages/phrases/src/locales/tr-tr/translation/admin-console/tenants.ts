@@ -4,6 +4,8 @@ const tenants = {
   tabs: {
     settings: 'Ayarlar',
     domains: 'Alan adları',
+    subscription: 'Plan ve faturalandırma',
+    billing_history: 'Fatura geçmişi',
   },
   settings: {
     title: 'AYARLAR',
