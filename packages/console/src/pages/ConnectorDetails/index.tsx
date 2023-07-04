@@ -33,6 +33,7 @@ import CreateForm from '../Connectors/CreateForm';
 import ConnectorContent from './ConnectorContent';
 import ConnectorTabs from './ConnectorTabs';
 import ConnectorTypeName from './ConnectorTypeName';
+import EmailUsage from './EmailUsage';
 import * as styles from './index.module.scss';
 
 // TODO: refactor path-related operation utils in both Connectors and ConnectorDetails page
@@ -68,6 +69,7 @@ function ConnectorDetails() {
   const api = useApi();
   const navigate = useNavigate();
   const isSocial = data?.type === ConnectorType.Social;
+
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -148,6 +150,9 @@ function ConnectorDetails() {
               </div>
             </div>
             <div className={styles.operations}>
+              {data.type === ConnectorType.Email && data.usage !== undefined && (
+                <EmailUsage usage={data.usage} />
+              )}
               <Button
                 title="connector_details.check_readme"
                 size="large"
