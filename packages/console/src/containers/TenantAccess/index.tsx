@@ -10,6 +10,7 @@ import { getCallbackUrl } from '@/consts';
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 
 /**
  * The container that ensures the user has access to the current tenant. When the user is
@@ -19,7 +20,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
  * Before the validation is complete, it renders `<AppLoading />`; after the validation is
  * complete:
  *
- * - If the user has access to the current tenant, it renders `<Outlet />`.
+ * - If the user has access to the current tenant, it renders `<Outlet />` and sets the
+ * user's default tenant ID to the current tenant ID.
  * - If the tenant is unavailable to the user, it redirects to the home page.
  * - If the tenant is available to the user but getAccessToken() fails, it redirects to the
  *   sign-in page to fetch a full-scoped token.
@@ -45,6 +47,7 @@ export default function TenantAccess() {
   const { getAccessToken, signIn, isAuthenticated } = useLogto();
   const { currentTenant, currentTenantId, currentTenantStatus, setCurrentTenantStatus } =
     useContext(TenantsContext);
+  const { updateIfNeeded } = useUserDefaultTenantId();
 
   useEffect(() => {
     const validate = async ({ indicator, id: tenantId }: TenantInfo) => {
@@ -80,6 +83,13 @@ export default function TenantAccess() {
     setCurrentTenantStatus,
     signIn,
   ]);
+
+  // Update the user's default tenant ID if the current tenant is validated.
+  useEffect(() => {
+    if (currentTenantStatus === 'validated') {
+      void updateIfNeeded();
+    }
+  }, [currentTenantStatus, updateIfNeeded]);
 
   return currentTenantStatus === 'validated' ? <Outlet /> : <AppLoading />;
 }
