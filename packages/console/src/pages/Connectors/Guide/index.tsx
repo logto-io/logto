@@ -1,6 +1,6 @@
 import { isLanguageTag } from '@logto/language-kit';
 import { ConnectorType } from '@logto/schemas';
-import type { ConnectorFactoryResponse, RequestErrorBody, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorFactoryResponse, RequestErrorBody } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -23,8 +23,7 @@ import CardTitle from '@/ds-components/CardTitle';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import IconButton from '@/ds-components/IconButton';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import useApi from '@/hooks/use-api';
-import useConfigs from '@/hooks/use-configs';
+import useConnectorApi from '@/hooks/use-connector-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
 import * as modalStyles from '@/scss/modal.module.scss';
 import type { ConnectorFormType } from '@/types/connector';
@@ -44,10 +43,9 @@ type Props = {
 };
 
 function Guide({ connector, onClose }: Props) {
-  const api = useApi({ hideErrorToast: true });
+  const { createConnector } = useConnectorApi({ hideErrorToast: true });
   const navigate = useNavigate();
   const callbackConnectorId = useRef(generateStandardId());
-  const { updateConfigs } = useConfigs();
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type: connectorType, formItems, isStandard } = connector ?? {};
@@ -126,13 +124,7 @@ function Guide({ connector, onClose }: Props) {
         : basePayload;
 
       try {
-        const createdConnector = await api
-          .post('api/connectors', {
-            json: payload,
-          })
-          .json<ConnectorResponse>();
-
-        await updateConfigs({ passwordlessConfigured: true });
+        const createdConnector = await createConnector(payload);
 
         onClose();
         toast.success(t('general.saved'));

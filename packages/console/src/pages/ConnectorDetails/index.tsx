@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
 import Reset from '@/assets/icons/reset.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
+import CreateConnectorForm from '@/components/CreateConnectorForm';
 import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
@@ -26,9 +28,8 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useConnectorApi from '@/hooks/use-connector-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
-
-import CreateForm from '../Connectors/CreateForm';
 
 import ConnectorContent from './ConnectorContent';
 import ConnectorTabs from './ConnectorTabs';
@@ -43,6 +44,7 @@ const getConnectorsPathname = (isSocial: boolean) =>
 function ConnectorDetails() {
   const { pathname } = useLocation();
   const { connectorId } = useParams();
+  const { createConnector } = useConnectorApi();
   const { mutate: mutateGlobal } = useSWRConfig();
   const [isDeleted, setIsDeleted] = useState(false);
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
@@ -199,13 +201,25 @@ function ConnectorDetails() {
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
-              <CreateForm
+              <CreateConnectorForm
                 isOpen={isSetupOpen}
                 type={data.type}
-                onClose={(connectorId?: string) => {
+                onClose={async (connectorId?: string) => {
                   setIsSetupOpen(false);
 
                   if (connectorId) {
+                    /**
+                     * Note:
+                     * The "Email Service Connector" is a built-in connector that can be directly created without the need for setup in the guide.
+                     */
+                    if (connectorId === ServiceConnector.Email) {
+                      const created = await createConnector({ connectorId });
+                      navigate(`/connectors/${ConnectorsTabs.Passwordless}/${created.id}`, {
+                        replace: true,
+                      });
+                      return;
+                    }
+
                     navigate(`${getConnectorsPathname(isSocial)}/guide/${connectorId}`);
                   }
                 }}
