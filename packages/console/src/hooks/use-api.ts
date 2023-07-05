@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { getBasename, getManagementApi, requestTimeout } from '@/consts';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { useConfirmModal } from './use-confirm-modal';
@@ -106,7 +106,7 @@ export const useStaticApi = ({
 };
 
 const useApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
 
   return useStaticApi({ ...props, prefixUrl: userEndpoint });
 };

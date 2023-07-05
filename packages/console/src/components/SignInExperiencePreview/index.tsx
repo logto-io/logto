@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import PhoneInfo from '@/assets/images/phone-info.svg';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
@@ -29,7 +29,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { customPhrases } = useUiLanguages();
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const [iframeLoaded, setIframeLoaded] = useState(false);

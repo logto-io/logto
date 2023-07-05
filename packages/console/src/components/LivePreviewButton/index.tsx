@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExternalLinkIcon from '@/assets/icons/external-link.svg';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { Props as ButtonProps, ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
 import { Tooltip } from '@/ds-components/Tip';
@@ -20,7 +20,7 @@ type Props = {
 
 function LivePreviewButton({ size, type, isDisabled }: Props) {
   const { configs, updateConfigs } = useConfigs();
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (

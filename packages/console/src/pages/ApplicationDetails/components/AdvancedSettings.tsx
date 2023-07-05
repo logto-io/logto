@@ -12,7 +12,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import { openIdProviderConfigPath } from '@/consts/oidc';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -30,7 +30,7 @@ type Props = {
 };
 
 function AdvancedSettings({ applicationType, oidcConfig }: Props) {
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const {
     register,
     formState: { errors },

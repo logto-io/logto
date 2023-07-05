@@ -6,7 +6,7 @@ import type { MDXProps } from 'mdx/types';
 import type { LazyExoticComponent } from 'react';
 import { useEffect, useContext, cloneElement, lazy, Suspense, useState } from 'react';
 
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import CodeEditor from '@/ds-components/CodeEditor';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
@@ -56,7 +56,7 @@ function Guide({ app, isCompact, onClose }: Props) {
   const sdks = app && applicationTypeAndSdkTypeMappings[app.type];
   const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
 

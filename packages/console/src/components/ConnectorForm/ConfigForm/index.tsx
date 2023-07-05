@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import CodeEditor from '@/ds-components/CodeEditor';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
@@ -31,7 +31,7 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
     control,
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const callbackUri = new URL(`/callback/${connectorId}`, userEndpoint).toString();
 
