@@ -1,6 +1,6 @@
-import type { AccessTokenResponse, LogtoEmailConfig } from './types.js';
+import type { AccessTokenResponse } from './types.js';
 
-export const mockedConfig: LogtoEmailConfig = {
+export const mockedConfig = {
   appId: 'mfvnO3josReyBf9zhDnlr',
   appSecret: 'lXNWW4wPj0Bq6msjIl6H3',
   tokenEndpoint: 'http://localhost:3002/oidc/token',

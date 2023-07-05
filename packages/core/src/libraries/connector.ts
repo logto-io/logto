@@ -1,6 +1,6 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import type { AllConnector } from '@logto/connector-kit';
-import { validateConfig } from '@logto/connector-kit';
+import { validateConfig, ServiceConnector } from '@logto/connector-kit';
 import { pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,16 +9,26 @@ import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 import type { LogtoConnector, LogtoConnectorWellKnown } from '#src/utils/connectors/types.js';
 
+import { type CloudConnectionLibrary } from './cloud-connection.js';
+
 export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
-export const createConnectorLibrary = (queries: Queries) => {
+export const createConnectorLibrary = (
+  queries: Queries,
+  cloudConnection: CloudConnectionLibrary
+) => {
   const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
+  const { getCloudConnectionData } = cloudConnection;
 
   const getConnectorConfig = async (id: string): Promise<unknown> => {
     const connectors = await findAllConnectors();
     const connector = connectors.find((connector) => connector.id === id);
 
     assertThat(connector, new RequestError({ code: 'entity.not_found', id, status: 404 }));
+
+    if (ServiceConnector.Email === connector.connectorId) {
+      return { ...connector.config, ...(await getCloudConnectionData()) };
+    }
 
     return connector.config;
   };
@@ -113,6 +123,7 @@ export const createConnectorLibrary = (queries: Queries) => {
   };
 
   return {
+    getCloudConnectionData,
     getConnectorConfig,
     getLogtoConnectors,
     getLogtoConnectorsWellKnown,

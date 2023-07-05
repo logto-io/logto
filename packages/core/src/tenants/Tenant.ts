@@ -10,7 +10,9 @@ import type Provider from 'oidc-provider';
 import { type RedisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
 import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
+import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
+import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
@@ -52,7 +54,9 @@ export default class Tenant implements TenantContext {
     public readonly id: string,
     public readonly wellKnownCache: WellKnownCache,
     public readonly queries = new Queries(envSet.pool, wellKnownCache),
-    public readonly connectors = createConnectorLibrary(queries),
+    public readonly logtoConfigs = createLogtoConfigLibrary(queries),
+    public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
+    public readonly connectors = createConnectorLibrary(queries, cloudConnection),
     public readonly libraries = new Libraries(id, queries, connectors)
   ) {
     const isAdminTenant = id === adminTenantId;
@@ -83,6 +87,8 @@ export default class Tenant implements TenantContext {
       id,
       provider,
       queries,
+      logtoConfigs,
+      cloudConnection,
       connectors,
       libraries,
       envSet,
