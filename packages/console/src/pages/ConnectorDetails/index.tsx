@@ -155,23 +155,28 @@ function ConnectorDetails() {
               {data.type === ConnectorType.Email && data.usage !== undefined && (
                 <EmailUsage usage={data.usage} />
               )}
-              <Button
-                title="connector_details.check_readme"
-                size="large"
-                onClick={() => {
-                  setIsReadMeOpen(true);
-                }}
-              />
-              <Drawer
-                title="connectors.title"
-                subtitle="connectors.subtitle"
-                isOpen={isReadMeOpen}
-                onClose={() => {
-                  setIsReadMeOpen(false);
-                }}
-              >
-                <Markdown className={styles.readme}>{data.readme}</Markdown>
-              </Drawer>
+              {/* Note: hide the 'Check README' button for the email service connector since it's provided by Logto and no setup guide is needed */}
+              {data.connectorId !== ServiceConnector.Email && (
+                <>
+                  <Button
+                    title="connector_details.check_readme"
+                    size="large"
+                    onClick={() => {
+                      setIsReadMeOpen(true);
+                    }}
+                  />
+                  <Drawer
+                    title="connectors.title"
+                    subtitle="connectors.subtitle"
+                    isOpen={isReadMeOpen}
+                    onClose={() => {
+                      setIsReadMeOpen(false);
+                    }}
+                  >
+                    <Markdown className={styles.readme}>{data.readme}</Markdown>
+                  </Drawer>
+                </>
+              )}
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
                 title={t('general.more_options')}
