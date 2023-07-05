@@ -12,6 +12,7 @@ import { ApplicationType } from '@logto/schemas';
 
 export * from './connector.js';
 export * from './sign-in-experience.js';
+export * from './cloud-connection.js';
 export * from './user.js';
 export * from './domain.js';
 

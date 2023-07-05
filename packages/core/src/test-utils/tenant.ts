@@ -2,8 +2,12 @@ import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from 'slonik';
 
 import { WellKnownCache } from '#src/caches/well-known.js';
+import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
+import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
+import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -57,6 +61,8 @@ export class MockTenant implements TenantContext {
   public id = 'mock_id';
   public envSet = mockEnvSet;
   public queries: Queries;
+  public logtoConfigs: LogtoConfigLibrary;
+  public cloudConnection: CloudConnectionLibrary;
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
 
@@ -67,7 +73,12 @@ export class MockTenant implements TenantContext {
     librariesOverride?: Partial2<Libraries>
   ) {
     this.queries = new MockQueries(queriesOverride);
-    this.connectors = { ...createConnectorLibrary(this.queries), ...connectorsOverride };
+    this.logtoConfigs = createLogtoConfigLibrary(this.queries);
+    this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
+    this.connectors = {
+      ...createConnectorLibrary(this.queries, this.cloudConnection),
+      ...connectorsOverride,
+    };
     this.libraries = new Libraries(this.id, this.queries, this.connectors);
     this.setPartial('libraries', librariesOverride);
   }

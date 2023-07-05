@@ -6,6 +6,7 @@ import {
   demoConnectorIds,
   VerificationCodeType,
 } from '@logto/connector-kit';
+import { ServiceConnector } from '@logto/connector-kit';
 import { phoneRegEx, emailRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, ConnectorType } from '@logto/schemas';
 import { string, object } from 'zod';
@@ -18,8 +19,10 @@ import { loadConnectorFactories } from '#src/utils/connectors/index.js';
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[router, { cloudConnection }]: RouterInitArgs<T>
 ) {
+  const { getCloudConnectionData } = cloudConnection;
+
   router.post(
     '/connectors/:factoryId/test',
     koaGuard({
@@ -35,7 +38,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
         params: { factoryId },
         body,
       } = ctx.guard;
-      const { phone, email, config } = body;
+      const { phone, email, config: originalConfig } = body;
 
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
@@ -64,6 +67,15 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
         rawConnector: { sendMessage },
       } = await buildRawConnector<SmsConnector | EmailConnector>(connectorFactory);
 
+      /**
+       * Should manually attach cloud connection data to logto email connector since we directly use
+       * this `config` to test the `sendMessage` method.
+       * Logto email connector will no longer save cloud connection data to its `config` after this change.
+       */
+      const config =
+        ServiceConnector.Email === connectorFactory.metadata.id
+          ? { ...(await getCloudConnectionData()), ...originalConfig }
+          : originalConfig;
       await sendMessage(
         {
           to: subject,

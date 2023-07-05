@@ -2,13 +2,15 @@ import { z } from 'zod';
 
 import { emailServiceBrandingGuard } from '@logto/connector-kit';
 
-export const emailServiceBasicConfigGuard = z.object({
-  endpoint: z.string(),
-  tokenEndpoint: z.string(),
-  resource: z.string(),
-  appId: z.string(),
-  appSecret: z.string(),
-});
+export const emailServiceBasicConfigGuard = z
+  .object({
+    endpoint: z.string(),
+    tokenEndpoint: z.string(),
+    resource: z.string(),
+    appId: z.string(),
+    appSecret: z.string(),
+  })
+  .partial();
 
 export type EmailServiceBasicConfig = z.infer<typeof emailServiceBasicConfigGuard>;
 

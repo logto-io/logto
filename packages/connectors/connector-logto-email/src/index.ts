@@ -1,3 +1,4 @@
+import { assert } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
 
 import type {
@@ -7,7 +8,12 @@ import type {
   GetUsageFunction,
   SendMessageFunction,
 } from '@logto/connector-kit';
-import { ConnectorType, validateConfig } from '@logto/connector-kit';
+import {
+  ConnectorType,
+  validateConfig,
+  ConnectorError,
+  ConnectorErrorCodes,
+} from '@logto/connector-kit';
 
 import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';
@@ -33,6 +39,11 @@ const sendMessage =
       appLogo,
     } = config;
     const { to, type, payload } = data;
+
+    assert(
+      endpoint && tokenEndpoint && resource && appId && appSecret,
+      new ConnectorError(ConnectorErrorCodes.InvalidConfig)
+    );
 
     const accessTokenResponse = await grantAccessToken({
       tokenEndpoint,
@@ -66,6 +77,11 @@ const getUsage =
     validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
 
     const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
+
+    assert(
+      endpoint && tokenEndpoint && resource && appId && appSecret,
+      new ConnectorError(ConnectorErrorCodes.InvalidConfig)
+    );
 
     const accessTokenResponse = await grantAccessToken({
       tokenEndpoint,

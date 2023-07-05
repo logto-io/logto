@@ -1,5 +1,6 @@
 import type { Connector } from '@logto/schemas';
 
+import { mockCloudConnectionLibrary } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -17,7 +18,8 @@ const connectors: Connector[] = [
 
 const { createConnectorLibrary } = await import('./connector.js');
 const { getConnectorConfig } = createConnectorLibrary(
-  new MockQueries({ connectors: { findAllConnectors: async () => connectors } })
+  new MockQueries({ connectors: { findAllConnectors: async () => connectors } }),
+  mockCloudConnectionLibrary
 );
 
 it('getConnectorConfig() should return right config', async () => {

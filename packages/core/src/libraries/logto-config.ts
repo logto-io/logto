@@ -11,6 +11,8 @@ import { z, ZodError } from 'zod';
 import type Queries from '#src/tenants/Queries.js';
 import { consoleLog } from '#src/utils/console.js';
 
+export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
+
 export const createLogtoConfigLibrary = ({
   logtoConfigs: { getRowsByKeys, getCloudConnectionData: queryCloudConnectionData },
 }: Pick<Queries, 'logtoConfigs'>) => {
@@ -47,7 +49,7 @@ export const createLogtoConfigLibrary = ({
     const result = cloudConnectionDataGuard.safeParse(value);
 
     if (!result.success) {
-      return;
+      throw new Error('Failed to get cloud connection data!');
     }
 
     return {
