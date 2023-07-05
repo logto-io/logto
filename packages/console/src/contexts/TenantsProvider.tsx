@@ -3,7 +3,6 @@ import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
-import type { NavigateOptions } from 'react-router-dom';
 
 import { isCloud } from '@/consts/env';
 import { getUserTenantId } from '@/consts/tenants';
@@ -42,7 +41,7 @@ type Tenants = {
   currentTenantStatus: CurrentTenantStatus;
   setCurrentTenantStatus: (status: CurrentTenantStatus) => void;
   /** Navigate to the given tenant ID. */
-  navigateTenant: (tenantId: string, options?: NavigateOptions) => void;
+  navigateTenant: (tenantId: string) => void;
 };
 
 const { tenantId, indicator } = defaultManagementApi.resource;
@@ -95,8 +94,11 @@ function TenantsProvider({ children }: Props) {
     // Use `window.open()` to force page reload since we use `basename` for the router
     // which will not re-create the router instance when the URL changes.
     window.open(`/${tenantId}`, '_self');
-    setCurrentTenantId(tenantId);
     setCurrentTenantStatus('pending');
+    // Temporarily disable the current tenant ID change since it will cause some providers
+    // to re-initialize and re-fetch the data, which is unexpected for now.
+    // This will be fixed once we merge all routers into one.
+    // setCurrentTenantId(tenantId);
   }, []);
 
   const currentTenant = useMemo(
