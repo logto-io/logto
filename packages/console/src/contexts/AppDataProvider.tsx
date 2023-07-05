@@ -10,7 +10,7 @@ type Props = {
   children: ReactNode;
 };
 
-type AppEndpoints = {
+type AppData = {
   /**
    * The Logto endpoint for the current tenant.
    *
@@ -19,12 +19,19 @@ type AppEndpoints = {
   userEndpoint?: URL;
 };
 
-export const AppEndpointsContext = createContext<AppEndpoints>({});
+export const AppDataContext = createContext<AppData>({});
 
-function AppEndpointsProvider({ children }: Props) {
-  const [endpoints, setEndpoints] = useState<AppEndpoints>({});
+/** The context provider for the global app data. */
+function AppDataProvider({ children }: Props) {
+  const [userEndpoint, setUserEndpoint] = useState<URL>();
   const { currentTenantId } = useContext(TenantsContext);
-  const memorizedContext = useMemo(() => endpoints, [endpoints]);
+  const memorizedContext = useMemo(
+    () =>
+      ({
+        userEndpoint,
+      } satisfies AppData),
+    [userEndpoint]
+  );
 
   useEffect(() => {
     const getEndpoint = async () => {
@@ -35,15 +42,13 @@ function AppEndpointsProvider({ children }: Props) {
       const { user } = await ky
         .get(new URL(`api/.well-known/endpoints/${currentTenantId}`, adminTenantEndpoint))
         .json<{ user: string }>();
-      setEndpoints({ userEndpoint: new URL(user) });
+      setUserEndpoint(new URL(user));
     };
 
     void getEndpoint();
   }, [currentTenantId]);
 
-  return (
-    <AppEndpointsContext.Provider value={memorizedContext}>{children}</AppEndpointsContext.Provider>
-  );
+  return <AppDataContext.Provider value={memorizedContext}>{children}</AppDataContext.Provider>;
 }
 
-export default AppEndpointsProvider;
+export default AppDataProvider;

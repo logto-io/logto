@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
@@ -8,7 +8,7 @@ import Tag from '@/ds-components/Tag';
 import * as styles from './index.module.scss';
 
 function DefaultDomain() {
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
 
   if (!userEndpoint) {
     return null;

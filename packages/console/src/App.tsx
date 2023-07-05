@@ -22,7 +22,7 @@ import ErrorBoundary from './containers/ErrorBoundary';
 import LogtoErrorBoundary from './containers/LogtoErrorBoundary';
 import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
-import AppEndpointsProvider from './contexts/AppEndpointsProvider';
+import AppDataProvider from './contexts/AppDataProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 import initI18n from './i18n/init';
@@ -83,11 +83,11 @@ function Content() {
                * if it's Cloud, render the tenant app container only when a tenant ID is available (in a tenant context).
                */}
               {!isCloud || currentTenantId ? (
-                <AppEndpointsProvider>
+                <AppDataProvider>
                   <AppConfirmModalProvider>
                     <TenantAppContainer />
                   </AppConfirmModalProvider>
-                </AppEndpointsProvider>
+                </AppDataProvider>
               ) : (
                 <CloudApp />
               )}

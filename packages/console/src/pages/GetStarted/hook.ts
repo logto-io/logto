@@ -21,7 +21,7 @@ import PasswordlessDark from '@/assets/icons/passwordless-dark.svg';
 import Passwordless from '@/assets/icons/passwordless.svg';
 import { discordLink } from '@/consts';
 import { ConnectorsTabs } from '@/consts/page-tabs';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
@@ -40,7 +40,7 @@ type GetStartedMetadata = {
 
 const useGetStartedMetadata = () => {
   const { configs, updateConfigs } = useConfigs();
-  const { userEndpoint } = useContext(AppEndpointsContext);
+  const { userEndpoint } = useContext(AppDataContext);
   const theme = useTheme();
   const isLightMode = theme === Theme.Light;
   const navigate = useNavigate();

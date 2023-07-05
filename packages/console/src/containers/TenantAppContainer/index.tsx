@@ -5,7 +5,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/env';
-import { AppEndpointsContext } from '@/contexts/AppEndpointsProvider';
+import { AppDataContext } from '@/contexts/AppDataProvider';
+import useMeCustomData from '@/hooks/use-me-custom-data';
 import useTrackUserId from '@/hooks/use-track-user-id';
 import { OnboardingRoutes } from '@/onboarding';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
@@ -13,8 +14,9 @@ import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
 /** @deprecated Remove this layer. */
 function TenantAppContainer() {
-  const { userEndpoint } = useContext(AppEndpointsContext);
-  const { isOnboarding, isLoaded } = useUserOnboardingData();
+  const { userEndpoint } = useContext(AppDataContext);
+  const { isLoaded } = useMeCustomData();
+  const { isOnboarding } = useUserOnboardingData();
   const { isAuthenticated } = useLogto();
 
   const router = useMemo(
