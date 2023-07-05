@@ -1,8 +1,8 @@
-import { type AdminConsoleKey } from '@logto/phrases';
+import { type TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  forKey: AdminConsoleKey;
+  forKey: TFuncKey<'translation', 'admin_console'>;
   interpolation?: Record<string, unknown>;
 };
 
