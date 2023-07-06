@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     'コネクタはLogtoに不可欠です。Logtoはコネクタのおかげでエンドユーザーがパスワードレス登録またはサインインを利用し、ソーシャルアカウントでサインインすることができる機能を提供することができます。',
   parameter_configuration: 'パラメーター設定',
-  test_connection: '接続のテスト',
+  test_connection: 'テスト',
   save_error_empty_config: '設定を入力してください',
   send: '送信',
   send_error_invalid_format: '入力が無効です',
@@ -41,7 +41,7 @@ const connector_details = {
     from_email_field: '送信元メールアドレス',
     from_name_field: '送信元名',
     from_name_tip:
-      'メールの送信元名をカスタマイズします。空白の場合、「Verification」がデフォルト名として使用されます。',
+      'メールの送信元名をカスタマイズします。空白の場合、「Verification」がデフォールト名として使用されます。',
     from_name_placeholder: '送信元の名前を入力してください',
     company_address_field: '会社住所',
     company_address_tip:

@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     'Connectors play a critical role in Logto. With their help, Logto enables end-users to use passwordless registration or sign-in and the capabilities of signing in with social accounts.',
   parameter_configuration: 'Parameter configuration',
-  test_connection: 'Test connection',
+  test_connection: 'Test',
   save_error_empty_config: 'Please enter config',
   send: 'Send',
   send_error_invalid_format: 'Invalid input',
@@ -39,7 +39,7 @@ const connector_details = {
       'Built-in email uses default templates for seamless delivery of verification emails. No configuration is required, and you can customize basic brand information.',
     description_action_text: 'View templates',
     from_email_field: 'From email',
-    from_name_field: 'From name',
+    from_name_field: 'Sender name',
     from_name_tip:
       'Customize the sender name for emails. If left empty, “Verification” will be used as the default name.',
     from_name_placeholder: 'Your sender name',

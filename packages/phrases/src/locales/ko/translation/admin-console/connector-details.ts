@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     'Logto에서 연동은 중요한 역할을 해요. 연동 시스템을 통하여, 사용자들에게 비밀번호 없이 회원 가입을 하고 로그인을 할 수 있게 하거나, 소셜 계정을 통하여 로그인을 할 수 있게 도와줘요.',
   parameter_configuration: '매개변수 설정',
-  test_connection: '연결 테스트',
+  test_connection: '테스트',
   save_error_empty_config: '설정을 입력해 주세요.',
   send: '보내기',
   send_error_invalid_format: '유효하지 않은 입력',
@@ -42,15 +42,15 @@ const connector_details = {
     from_name_field: '보내는 사람 이름',
     from_name_tip:
       '이메일의 보내는 사람 이름을 사용자 정의합니다. 비워 두면 기본 이름으로 "Verification"이 사용됩니다.',
-    from_name_placeholder: 'Your sender name',
+    from_name_placeholder: '보내는 사람 이름을 입력해주세요.',
     company_address_field: '회사 주소',
     company_address_tip:
       '이메일 하단에 회사 주소와 우편번호를 표시하면 신뢰성을 높이고 연락처 정보를 제공하며 규정 준수를 보장합니다.',
-    company_address_placeholder: 'Your company address',
+    company_address_placeholder: '당신의 회사 주소를 입력하세요.',
     app_logo_field: '앱 로고',
     app_logo_tip:
       '이메일 상단에 브랜드 로고를 표시합니다. 라이트 모드와 다크 모드에 모두 동일한 이미지를 사용합니다.',
-    urls_not_allowed: 'URLs are not allowed',
+    urls_not_allowed: 'URL은 허용되지 않습니다.',
     test_notes: 'Logto는 "Generic" 템플릿을 사용하여 테스트합니다.',
   },
 };

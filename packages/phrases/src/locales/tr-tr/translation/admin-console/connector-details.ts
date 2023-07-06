@@ -39,7 +39,7 @@ const connector_details = {
       'Yerleşik e-posta, doğrulama e-postalarının sorunsuz teslimi için varsayılan şablonları kullanır. Herhangi bir yapılandırma gerektirmez ve temel marka bilgilerini özelleştirebilirsiniz.',
     description_action_text: 'Şablonları görüntüle',
     from_email_field: 'Kimden e-posta',
-    from_name_field: 'Kimden adı',
+    from_name_field: 'Gönderen adı',
     from_name_tip:
       'E-postalar için gönderen adını özelleştirin. Boş bırakılırsa, varsayılan ad olarak "Doğrulama" kullanılacaktır.',
     from_name_placeholder: 'Gönderen adınızı girin',

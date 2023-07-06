@@ -11,6 +11,7 @@ export const featuredConnectorTargets = [
   'naver',
   'azuread',
   // Email
+  'logto-email',
   'aws-ses',
   'sendgrid-mail',
   'aliyun-dm',
