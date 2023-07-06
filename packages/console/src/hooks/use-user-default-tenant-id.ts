@@ -17,12 +17,13 @@ const key = 'defaultTenantId';
 const useUserDefaultTenantId = () => {
   const { data, update: updateMeCustomData } = useMeCustomData();
   const { tenants, currentTenantId } = useContext(TenantsContext);
+  /** The current stored default tenant ID in the user's `customData`. */
   const storedId = useMemo(
     () => trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]),
     [data]
   );
-  // Ensure update the same tenant ID to the stored ID only once.
-  const [updatedTenantId, setUpdatedTenantId] = useState('');
+  /** The last tenant ID that has been updated in the user's `customData`. */
+  const [updatedTenantId, setUpdatedTenantId] = useState(storedId);
 
   const defaultTenantId = useMemo(() => {
     // Ensure the stored ID is still available to the user.
@@ -35,13 +36,17 @@ const useUserDefaultTenantId = () => {
   }, [storedId, tenants]);
 
   const updateIfNeeded = useCallback(async () => {
-    if (currentTenantId !== storedId && currentTenantId !== updatedTenantId) {
+    // Note storedId is not checked here because it's by design that the default tenant ID
+    // should be updated only when the user manually changes the current tenant. That is,
+    // if the user opens a new tab and go back to the original tab, the default tenant ID
+    // should still be the ID of the new tab.
+    if (currentTenantId !== updatedTenantId) {
       setUpdatedTenantId(currentTenantId);
       await updateMeCustomData({
         [key]: currentTenantId,
       });
     }
-  }, [currentTenantId, storedId, updateMeCustomData, updatedTenantId]);
+  }, [currentTenantId, updateMeCustomData, updatedTenantId]);
 
   return useMemo(
     () => ({
