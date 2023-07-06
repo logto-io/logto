@@ -1,38 +1,19 @@
 import { useLogto } from '@logto/react';
-import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
-import { getCallbackUrl } from '@/consts';
-import Button from '@/ds-components/Button';
+import { getCallbackUrl, getUserTenantId } from '@/consts';
 
-import AppError from '../AppError';
+import AppLoading from '../AppLoading';
 
-import * as styles from './index.module.scss';
-
-type Props = {
-  error: Error;
-};
-
-function SessionExpired({ error }: Props) {
+/** This component shows a loading indicator and tries to sign in again. */
+function SessionExpired() {
   const { signIn } = useLogto();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  return (
-    <AppError
-      title={t('session_expired.title')}
-      errorMessage={t('session_expired.subtitle')}
-      callStack={error.stack}
-    >
-      <Button
-        className={styles.retryButton}
-        size="large"
-        type="outline"
-        title="session_expired.button"
-        onClick={() => {
-          void signIn(getCallbackUrl().href);
-        }}
-      />
-    </AppError>
-  );
+  useEffect(() => {
+    void signIn(getCallbackUrl(getUserTenantId()).href);
+  }, [signIn]);
+
+  return <AppLoading />;
 }
 
 export default SessionExpired;

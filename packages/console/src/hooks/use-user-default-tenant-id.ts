@@ -1,5 +1,5 @@
 import { trySafe } from '@silverhand/essentials';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -17,10 +17,14 @@ const key = 'defaultTenantId';
 const useUserDefaultTenantId = () => {
   const { data, update: updateMeCustomData } = useMeCustomData();
   const { tenants, currentTenantId } = useContext(TenantsContext);
+  const storedId = useMemo(
+    () => trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]),
+    [data]
+  );
+  // Ensure update the same tenant ID to the stored ID only once.
+  const [updatedTenantId, setUpdatedTenantId] = useState('');
 
   const defaultTenantId = useMemo(() => {
-    const storedId = trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]);
-
     // Ensure the stored ID is still available to the user.
     if (storedId && tenants.some(({ id }) => id === storedId)) {
       return storedId;
@@ -28,21 +32,25 @@ const useUserDefaultTenantId = () => {
 
     // Fall back to the first tenant ID.
     return tenants[0]?.id;
-  }, [data, tenants]);
+  }, [storedId, tenants]);
 
   const updateIfNeeded = useCallback(async () => {
-    if (currentTenantId !== defaultTenantId) {
+    if (currentTenantId !== storedId && currentTenantId !== updatedTenantId) {
+      setUpdatedTenantId(currentTenantId);
       await updateMeCustomData({
         [key]: currentTenantId,
       });
     }
-  }, [currentTenantId, defaultTenantId, updateMeCustomData]);
+  }, [currentTenantId, storedId, updateMeCustomData, updatedTenantId]);
 
-  return {
-    defaultTenantId,
-    /** Update the default tenant ID to the current tenant ID. */
-    updateIfNeeded,
-  };
+  return useMemo(
+    () => ({
+      defaultTenantId,
+      /** Update the default tenant ID to the current tenant ID. */
+      updateIfNeeded,
+    }),
+    [defaultTenantId, updateIfNeeded]
+  );
 };
 
 export default useUserDefaultTenantId;

@@ -1,12 +1,12 @@
 import { useLogto } from '@logto/react';
-import type { RequestErrorBody } from '@logto/schemas';
+import { getManagementApiResourceIndicator, type RequestErrorBody } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import ky from 'ky';
 import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { getBasename, getManagementApi, requestTimeout } from '@/consts';
+import { getBasename, requestTimeout } from '@/consts';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
@@ -21,22 +21,13 @@ export class RequestError extends Error {
 export type StaticApiProps = {
   prefixUrl?: URL;
   hideErrorToast?: boolean;
-  resourceIndicator?: string;
+  resourceIndicator: string;
 };
 
-export const useStaticApi = ({
-  prefixUrl,
-  hideErrorToast,
-  resourceIndicator: resourceInput,
-}: StaticApiProps) => {
+export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: StaticApiProps) => {
   const { isAuthenticated, getAccessToken, signOut } = useLogto();
-  const { currentTenantId } = useContext(TenantsContext);
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
-  const resourceIndicator = useMemo(
-    () => resourceInput ?? getManagementApi(currentTenantId).indicator,
-    [currentTenantId, resourceInput]
-  );
 
   const toastError = useCallback(
     async (response: Response) => {
@@ -105,10 +96,15 @@ export const useStaticApi = ({
   return api;
 };
 
-const useApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
+const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> = {}) => {
   const { userEndpoint } = useContext(AppDataContext);
+  const { currentTenantId } = useContext(TenantsContext);
 
-  return useStaticApi({ ...props, prefixUrl: userEndpoint });
+  return useStaticApi({
+    ...props,
+    prefixUrl: userEndpoint,
+    resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
+  });
 };
 
 export default useApi;
