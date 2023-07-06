@@ -1,4 +1,4 @@
-import { adminTenantId } from '@logto/schemas';
+import { adminTenantId, maxFreeTenantLimit } from '@logto/schemas';
 import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useMemo, useRef, useState } from 'react';
@@ -8,7 +8,6 @@ import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
 import Tick from '@/assets/icons/tick.svg';
 import CreateTenantModal from '@/cloud/pages/Main/TenantLandingPage/TenantLandingPageContent/CreateTenantModal';
-import { maxFreeTenantNumbers } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
@@ -31,7 +30,7 @@ export default function TenantSelector() {
   const isCreateButtonDisabled = useMemo(
     () =>
       /** Should not block admin tenant owners from creating more than three tenants */
-      !tenants.some(({ id }) => id === adminTenantId) && tenants.length >= maxFreeTenantNumbers,
+      !tenants.some(({ id }) => id === adminTenantId) && tenants.length >= maxFreeTenantLimit,
     [tenants]
   );
   const anchorRef = useRef<HTMLDivElement>(null);
