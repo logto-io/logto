@@ -3,7 +3,7 @@ import { type ConnectorResponse } from '@logto/schemas';
 import useApi, { type StaticApiProps } from './use-api';
 import useConfigs from './use-configs';
 
-const useConnectorApi = (props: Omit<StaticApiProps, 'prefixUrl'> = {}) => {
+const useConnectorApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> = {}) => {
   const api = useApi(props);
   const { updateConfigs } = useConfigs();
 

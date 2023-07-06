@@ -5,7 +5,6 @@ import { useContext, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { getCallbackUrl } from '@/consts';
 // Used in the docs
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type ProtectedRoutes from '@/containers/ProtectedRoutes';
@@ -50,15 +49,15 @@ export default function TenantAccess() {
   const { updateIfNeeded } = useUserDefaultTenantId();
 
   useEffect(() => {
-    const validate = async ({ indicator, id: tenantId }: TenantInfo) => {
+    const validate = async ({ indicator }: TenantInfo) => {
       // Test fetching an access token for the current Tenant ID.
       // If failed, it means the user finishes the first auth, ands still needs to auth again to
       // fetch the full-scoped (with all available tenants) token.
-      if (await trySafe(getAccessToken(indicator))) {
+      if (await trySafe(async () => getAccessToken(indicator))) {
         setCurrentTenantStatus('validated');
-      } else {
-        void signIn(getCallbackUrl(tenantId).href);
       }
+      // If failed, it will be treated as a session expired error, and will be handled by the
+      // upper `<ErrorBoundary />`.
     };
 
     if (isAuthenticated && currentTenantId && currentTenantStatus === 'pending') {

@@ -57,50 +57,50 @@ class ErrorBoundary extends Component<Props, State> {
     const { children, t } = this.props;
     const { error } = this.state;
 
-    if (error) {
-      // Different strategies for handling errors in callback pages since the callback errors
-      // are likely unexpected and unrecoverable.
-      if (isInCallback()) {
-        if (error instanceof LogtoError && error.data instanceof OidcError) {
-          return (
-            <AppError
-              errorCode={error.data.error}
-              errorMessage={error.data.errorDescription}
-              callStack={error.stack}
-            />
-          );
-        }
+    if (!error) {
+      return children;
+    }
 
+    // Different strategies for handling errors in callback pages since the callback errors
+    // are likely unexpected and unrecoverable.
+    if (isInCallback()) {
+      if (error instanceof LogtoError && error.data instanceof OidcError) {
         return (
-          <AppError errorCode={error.name} errorMessage={error.message} callStack={error.stack} />
+          <AppError
+            errorCode={error.data.error}
+            errorMessage={error.data.errorDescription}
+            callStack={error.stack}
+          />
         );
       }
 
-      // Insecure contexts error is not recoverable
-      if (error instanceof LogtoError && error.code === 'crypto_subtle_unavailable') {
-        return <AppError errorMessage={t('errors.insecure_contexts')} callStack={error.stack} />;
-      }
-
-      // Treat other Logto errors and 401 responses as session expired
-      if (
-        error instanceof LogtoError ||
-        error instanceof LogtoClientError ||
-        (error instanceof HTTPError && error.response.status === 401) ||
-        (error instanceof ResponseError && error.status === 401)
-      ) {
-        return <SessionExpired error={error} />;
-      }
-
-      const callStack = conditional(
-        typeof error === 'object' &&
-          typeof error.stack === 'string' &&
-          error.stack.split('\n').slice(1).join('\n')
+      return (
+        <AppError errorCode={error.name} errorMessage={error.message} callStack={error.stack} />
       );
-
-      return <AppError errorMessage={error.message} callStack={callStack} />;
     }
 
-    return children;
+    // Insecure contexts error is not recoverable
+    if (error instanceof LogtoError && error.code === 'crypto_subtle_unavailable') {
+      return <AppError errorMessage={t('errors.insecure_contexts')} callStack={error.stack} />;
+    }
+
+    // Treat other Logto errors and 401 responses as session expired
+    if (
+      error instanceof LogtoError ||
+      error instanceof LogtoClientError ||
+      (error instanceof HTTPError && error.response.status === 401) ||
+      (error instanceof ResponseError && error.status === 401)
+    ) {
+      return <SessionExpired />;
+    }
+
+    const callStack = conditional(
+      typeof error === 'object' &&
+        typeof error.stack === 'string' &&
+        error.stack.split('\n').slice(1).join('\n')
+    );
+
+    return <AppError errorMessage={error.message} callStack={callStack} />;
   }
 }
 

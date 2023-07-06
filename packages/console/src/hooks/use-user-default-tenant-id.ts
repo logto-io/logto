@@ -1,5 +1,5 @@
 import { trySafe } from '@silverhand/essentials';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -17,10 +17,15 @@ const key = 'defaultTenantId';
 const useUserDefaultTenantId = () => {
   const { data, update: updateMeCustomData } = useMeCustomData();
   const { tenants, currentTenantId } = useContext(TenantsContext);
+  /** The current stored default tenant ID in the user's `customData`. */
+  const storedId = useMemo(
+    () => trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]),
+    [data]
+  );
+  /** The last tenant ID that has been updated in the user's `customData`. */
+  const [updatedTenantId, setUpdatedTenantId] = useState(storedId);
 
   const defaultTenantId = useMemo(() => {
-    const storedId = trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]);
-
     // Ensure the stored ID is still available to the user.
     if (storedId && tenants.some(({ id }) => id === storedId)) {
       return storedId;
@@ -28,21 +33,29 @@ const useUserDefaultTenantId = () => {
 
     // Fall back to the first tenant ID.
     return tenants[0]?.id;
-  }, [data, tenants]);
+  }, [storedId, tenants]);
 
   const updateIfNeeded = useCallback(async () => {
-    if (currentTenantId !== defaultTenantId) {
+    // Note storedId is not checked here because it's by design that the default tenant ID
+    // should be updated only when the user manually changes the current tenant. That is,
+    // if the user opens a new tab and go back to the original tab, the default tenant ID
+    // should still be the ID of the new tab.
+    if (currentTenantId !== updatedTenantId) {
+      setUpdatedTenantId(currentTenantId);
       await updateMeCustomData({
         [key]: currentTenantId,
       });
     }
-  }, [currentTenantId, defaultTenantId, updateMeCustomData]);
+  }, [currentTenantId, updateMeCustomData, updatedTenantId]);
 
-  return {
-    defaultTenantId,
-    /** Update the default tenant ID to the current tenant ID. */
-    updateIfNeeded,
-  };
+  return useMemo(
+    () => ({
+      defaultTenantId,
+      /** Update the default tenant ID to the current tenant ID. */
+      updateIfNeeded,
+    }),
+    [defaultTenantId, updateIfNeeded]
+  );
 };
 
 export default useUserDefaultTenantId;
