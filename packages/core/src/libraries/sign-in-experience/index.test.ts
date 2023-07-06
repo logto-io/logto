@@ -3,11 +3,11 @@ import { builtInLanguages } from '@logto/phrases-ui';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {
-  mockCloudConnectionLibrary,
   socialTarget01,
   socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
+  mockGetCloudConnectionData,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
@@ -38,7 +38,9 @@ const queries = new MockQueries({
   customPhrases,
   signInExperiences,
 });
-const connectorLibrary = createConnectorLibrary(queries, mockCloudConnectionLibrary);
+const connectorLibrary = createConnectorLibrary(queries, {
+  getCloudConnectionData: mockGetCloudConnectionData,
+});
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
