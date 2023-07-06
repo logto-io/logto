@@ -4,6 +4,8 @@ const tenants = {
   tabs: {
     settings: '设置',
     domains: '域名管理',
+    subscription: '套餐与计费',
+    billing_history: '历史账单',
   },
   settings: {
     title: '设置',

@@ -4,6 +4,8 @@ const tenants = {
   tabs: {
     settings: '설정',
     domains: '도메인',
+    subscription: '요금제와 청구',
+    billing_history: '청구 내역',
   },
   settings: {
     title: '설정',

@@ -4,6 +4,8 @@ const tenants = {
   tabs: {
     settings: 'Configurações',
     domains: 'Domínios',
+    subscription: 'Plano e faturamento',
+    billing_history: 'Histórico de faturamento',
   },
   settings: {
     title: 'CONFIGURAÇÕES',
