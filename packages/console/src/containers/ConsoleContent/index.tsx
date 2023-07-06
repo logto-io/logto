@@ -36,6 +36,7 @@ import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
 import SignInExperience from '@/pages/SignInExperience';
 import TenantSettings from '@/pages/TenantSettings';
+import Subscription from '@/pages/TenantSettings/Subscription';
 import TenantBasicSettings from '@/pages/TenantSettings/TenantBasicSettings';
 import TenantDomainSettings from '@/pages/TenantSettings/TenantDomainSettings';
 import UserDetails from '@/pages/UserDetails';
@@ -147,6 +148,7 @@ function ConsoleContent() {
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
+                <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
               </Route>
             )}
           </Routes>

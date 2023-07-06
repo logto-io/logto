@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
+import { isProduction } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -22,6 +23,11 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
+        {!isProduction && (
+          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
+            <DynamicT forKey="tenants.tabs.subscription" />
+          </TabNavItem>
+        )}
       </TabNav>
       <Outlet />
     </div>
