@@ -8,6 +8,7 @@ import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import {
   demoConnectorIds,
+  serviceConnectorIds,
   ConnectorType,
   type EmailConnector,
   type SmsConnector,
@@ -40,7 +41,10 @@ export const transpileLogtoConnector = async (
   );
   const { dbEntry, metadata, type } = connector;
   const { config, connectorId: id } = dbEntry;
-  const isDemo = demoConnectorIds.includes(id);
+  /** Temporarily block entering Logto email connector as well until this feature is ready for prod. */
+  const isDemo =
+    demoConnectorIds.includes(id) ||
+    (EnvSet.values.isProduction && serviceConnectorIds.includes(id));
 
   return {
     type,
@@ -61,7 +65,10 @@ export const transpileConnectorFactory = ({
   return {
     type,
     ...metadata,
-    isDemo: demoConnectorIds.includes(metadata.id),
+    /** Temporarily block entering Logto email connector as well until this feature is ready for prod. */
+    isDemo:
+      demoConnectorIds.includes(metadata.id) ||
+      (EnvSet.values.isProduction && serviceConnectorIds.includes(metadata.id)),
   };
 };
 
