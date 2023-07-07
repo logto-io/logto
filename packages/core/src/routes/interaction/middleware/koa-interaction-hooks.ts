@@ -15,7 +15,7 @@ import type { WithInteractionDetailsContext } from './koa-interaction-details.js
 type AssignInteractionHookResult = (result: InteractionHookResult) => void;
 
 export type WithInteractionHooksContext<
-  ContextT extends IRouterParamContext = IRouterParamContext
+  ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & { assignInteractionHookResult: AssignInteractionHookResult };
 
 /**
@@ -26,7 +26,7 @@ export type WithInteractionHooksContext<
 export default function koaInteractionHooks<
   StateT,
   ContextT extends WithInteractionDetailsContext,
-  ResponseT
+  ResponseT,
 >({
   hooks: { triggerInteractionHooks },
 }: Libraries): MiddlewareType<StateT, WithInteractionHooksContext<ContextT>, ResponseT> {

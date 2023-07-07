@@ -7,13 +7,13 @@ import type { PublicParameters } from './types.js';
 // https://help.aliyun.com/document_detail/29442.html
 const escaper = (string_: string) =>
   encodeURIComponent(string_)
-    .replace(/!/g, '%21')
-    .replace(/"/g, '%22')
-    .replace(/'/g, '%27')
-    .replace(/\(/g, '%28')
-    .replace(/\)/g, '%29')
-    .replace(/\*/g, '%2A')
-    .replace(/\+/g, '%2B');
+    .replaceAll('!', '%21')
+    .replaceAll('"', '%22')
+    .replaceAll("'", '%27')
+    .replaceAll('(', '%28')
+    .replaceAll(')', '%29')
+    .replaceAll('*', '%2A')
+    .replaceAll('+', '%2B');
 
 // Format date string to 'YYYY-MM-DDThh:mm:ssZ' format.
 const formatDateString = (date: Date) => {

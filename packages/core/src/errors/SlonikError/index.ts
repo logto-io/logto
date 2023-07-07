@@ -3,14 +3,17 @@ import type { OmitAutoSetFields, UpdateWhereData } from '@logto/shared';
 import { SlonikError } from 'slonik';
 
 export class DeletionError extends SlonikError {
-  public constructor(public readonly table?: string, public readonly id?: string) {
+  public constructor(
+    public readonly table?: string,
+    public readonly id?: string
+  ) {
     super('Resource not found.');
   }
 }
 
 export class UpdateError<
   CreateSchema extends SchemaLike,
-  Schema extends CreateSchema
+  Schema extends CreateSchema,
 > extends SlonikError {
   public constructor(
     public readonly schema: GeneratedSchema<CreateSchema, Schema>,
@@ -22,7 +25,7 @@ export class UpdateError<
 
 export class InsertionError<
   CreateSchema extends SchemaLike,
-  Schema extends CreateSchema
+  Schema extends CreateSchema,
 > extends SlonikError {
   public constructor(
     public readonly schema: GeneratedSchema<CreateSchema, Schema>,

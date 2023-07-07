@@ -3,11 +3,12 @@ import { conditional, assert } from '@silverhand/essentials';
 
 import type { Field } from './types.js';
 
-export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
+export const normalizeWhitespaces = (string: string): string =>
+  string.replaceAll(/\s+/g, ' ').trim();
 
 // Remove all comments not start with @
 export const removeUnrecognizedComments = (string: string): string =>
-  string.replace(/\/\*(?!\s@)[^*]+\*\//g, '');
+  string.replaceAll(/\/\*(?!\s@)[^*]+\*\//g, '');
 
 const getCountDelta = (value: string): number => {
   if (value === '(') {

@@ -8,7 +8,7 @@ type UseSearchParametersWatcherReturn<T extends Parameters = Parameters> = [
   {
     [K in keyof T]: T[K];
   },
-  (parameters: Partial<T>) => void
+  (parameters: Partial<T>) => void,
 ];
 
 /**

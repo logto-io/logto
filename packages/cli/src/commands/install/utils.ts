@@ -92,7 +92,7 @@ export const validateDatabase = async () => {
       const pgOutput = safeExecSync('postgres --version') ?? '';
       // Filter out all brackets in the output since Homebrew will append `(Homebrew)`.
       const pgArray = pgOutput.split(' ').filter((value) => !value.startsWith('('));
-      const pgCurrent = semver.coerce(pgArray[pgArray.length - 1]);
+      const pgCurrent = semver.coerce(pgArray.at(-1));
 
       return !pgCurrent || pgCurrent.compare(pgRequired) < 0;
     },

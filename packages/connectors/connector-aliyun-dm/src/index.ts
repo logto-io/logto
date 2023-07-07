@@ -53,7 +53,7 @@ const sendMessage =
           Subject: template.subject,
           HtmlBody:
             typeof payload.code === 'string'
-              ? template.content.replace(/{{code}}/g, payload.code)
+              ? template.content.replaceAll('{{code}}', payload.code)
               : template.content,
         },
         accessKeySecret

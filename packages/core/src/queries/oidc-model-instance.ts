@@ -73,7 +73,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
 
   const findPayloadByPayloadField = async <
     T extends ValueExpression,
-    Field extends keyof OidcModelInstancePayload
+    Field extends keyof OidcModelInstancePayload,
   >(
     modelName: string,
     field: Field,

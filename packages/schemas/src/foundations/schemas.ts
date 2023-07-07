@@ -17,7 +17,7 @@ export type Guard<T extends Record<string, unknown>> = ZodObject<{
 
 export type GeneratedSchema<
   CreateSchema extends SchemaLike,
-  Schema extends CreateSchema
+  Schema extends CreateSchema,
 > = keyof Schema extends string
   ? Readonly<{
       table: string;

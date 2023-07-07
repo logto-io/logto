@@ -33,8 +33,8 @@ function Markdown({ className, children }: Props) {
 
     const initialKebabCaseString = text
       // Remove all symbols and punctuations except for dash and underscore. https://javascript.info/regexp-unicode
-      .replace(/\p{S}|\p{Pi}|\p{Pf}|\p{Ps}|\p{Pe}|\p{Po}/gu, '')
-      .replace(/\s+/g, '-')
+      .replaceAll(/\p{S}|\p{Pi}|\p{Pf}|\p{Ps}|\p{Pe}|\p{Po}/gu, '')
+      .replaceAll(/\s+/g, '-')
       .toLowerCase();
 
     return resolveIdCollision(initialKebabCaseString);

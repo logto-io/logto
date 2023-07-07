@@ -110,7 +110,8 @@
   "eslintConfig": {
     "extends": "@silverhand/react",
     "rules": {
-      "jsx-a11y/no-autofocus": "off"
+      "jsx-a11y/no-autofocus": "off",
+      "unicorn/prefer-string-replace-all": "off"
     }
   },
   "stylelint": {

@@ -17,7 +17,7 @@ import type { Column, RowGroup } from './types';
 
 export type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   rowGroups: Array<RowGroup<TFieldValues>>;
   columns: Array<Column<TFieldValues>>;
@@ -39,7 +39,7 @@ export type Props<
 
 function Table<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   rowGroups,
   columns,

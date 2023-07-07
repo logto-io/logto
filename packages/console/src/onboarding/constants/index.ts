@@ -7,7 +7,7 @@ export const reservationLink = buildUrl('https://calendly.com/logto/30min', {
 });
 export const emailUsLink = buildUrl(contactEmailLink, {
   subject: 'Cloud pricing and special offer',
-}).replace(/\+/g, '%20');
+}).replaceAll('+', '%20');
 
 export const aboutCloudPreviewLink = 'https://docs.logto.io/about/cloud-preview?utm_source=console';
 

@@ -23,7 +23,7 @@ export type WithI18nContext<ContextT extends IRouterParamContext = IRouterParamC
 export default function koaI18next<
   StateT,
   ContextT extends IRouterParamContext,
-  ResponseBodyT
+  ResponseBodyT,
 >(): MiddlewareType<StateT, WithI18nContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const languages = detectLanguage(ctx);

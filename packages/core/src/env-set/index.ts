@@ -42,7 +42,10 @@ export class EnvSet {
   #pool: Optional<DatabasePool>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
 
-  constructor(public readonly tenantId: string, public readonly databaseUrl: string) {}
+  constructor(
+    public readonly tenantId: string,
+    public readonly databaseUrl: string
+  ) {}
 
   get pool() {
     if (!this.#pool) {

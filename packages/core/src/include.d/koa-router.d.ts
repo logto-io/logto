@@ -67,7 +67,7 @@ declare module 'koa-router' {
 
     export type RouterContext<
       StateT = unknown,
-      CustomT = Record<string, unknown>
+      CustomT = Record<string, unknown>,
     > = Koa.ParameterizedContext<StateT, CustomT & IRouterParamContext<StateT, CustomT>>;
 
     // For backward compatibility IRouterContext needs to be an interface

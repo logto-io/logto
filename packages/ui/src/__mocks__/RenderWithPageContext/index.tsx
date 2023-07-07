@@ -7,7 +7,7 @@ import PageContextProvider from '@/Providers/PageContextProvider';
 
 const renderWithPageContext = <
   Q extends Queries = typeof queries,
-  Container extends Element | DocumentFragment = HTMLElement
+  Container extends Element | DocumentFragment = HTMLElement,
 >(
   ui: ReactElement,
   memoryRouterProps: Parameters<typeof MemoryRouter>[0] = {},

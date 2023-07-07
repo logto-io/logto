@@ -58,10 +58,7 @@ function Tabs({ className, children }: Props): JSX.Element {
       case 'ArrowLeft': {
         const previousTab = tabReferences.current.indexOf(event.currentTarget) - 1;
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        focusElement =
-          tabReferences.current[previousTab] ??
-          tabReferences.current[tabReferences.current.length - 1] ??
-          null;
+        focusElement = tabReferences.current[previousTab] ?? tabReferences.current.at(-1) ?? null;
         break;
       }
 

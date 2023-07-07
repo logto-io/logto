@@ -24,7 +24,7 @@ const mockedQueries = {
             password: false,
             verify: false,
           },
-        } as SignInExperience)
+        }) as SignInExperience
     ),
   },
   users: {

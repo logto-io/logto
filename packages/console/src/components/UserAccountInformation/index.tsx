@@ -99,7 +99,7 @@ function UserAccountInformation({
           <div className={styles.infoLine}>
             <div>{passwordLabel ?? t('user_details.created_password')}</div>
             <div className={styles.infoContent}>
-              {passwordVisible ? password : password.replace(/./g, '*')}
+              {passwordVisible ? password : password.replaceAll(/./g, '*')}
             </div>
             <div className={styles.operation}>
               <IconButton

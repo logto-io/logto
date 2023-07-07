@@ -68,7 +68,7 @@ export type WithGuardedRequestContext<
   GuardQueryT,
   GuardBodyT,
   GuardParametersT,
-  GuardFilesT
+  GuardFilesT,
 > = ContextT & {
   guard: GuardedRequest<GuardQueryT, GuardBodyT, GuardParametersT, GuardFilesT>;
 };
@@ -79,7 +79,7 @@ export type WithGuardConfig<
   GuardBodyT = unknown,
   GuardParametersT = unknown,
   GuardResponseT = unknown,
-  GuardFilesT = undefined
+  GuardFilesT = undefined,
 > = Type & {
   config: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT, GuardResponseT, GuardFilesT>;
 };
@@ -108,7 +108,7 @@ export default function koaGuard<
   GuardBodyT = undefined,
   GuardParametersT = undefined,
   GuardResponseT = unknown,
-  GuardFilesT = undefined
+  GuardFilesT = undefined,
 >({
   query,
   body,

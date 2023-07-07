@@ -40,12 +40,12 @@ const sendMessage =
       MessagingServiceSid: fromMessagingServiceSID,
       Body:
         typeof payload.code === 'string'
-          ? template.content.replace(/{{code}}/g, payload.code)
+          ? template.content.replaceAll('{{code}}', payload.code)
           : template.content,
     };
 
     try {
-      return await got.post(endpoint.replace(/{{accountSID}}/g, accountSID), {
+      return await got.post(endpoint.replaceAll('{{accountSID}}', accountSID), {
         headers: {
           Authorization:
             'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
