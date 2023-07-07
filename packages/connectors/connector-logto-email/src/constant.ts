@@ -104,9 +104,9 @@ export const scope = ['send:email'];
 
 export const defaultTimeout = 5000;
 
-export const oldEmailEndpoint = '/services/send-email';
-export const newEmailEndpoint = '/services/mails';
+/** @deprecated Will be replaced by `/services/mails` soon. */
+export const demoEmailEndpoint = '/services/send-email';
 export const emailEndpoint =
-  getEnv('NODE_ENV') === 'production' ? oldEmailEndpoint : newEmailEndpoint;
+  getEnv('NODE_ENV') === 'production' ? demoEmailEndpoint : '/services/mails';
 
 export const usageEndpoint = '/services/mails/usage';
