@@ -47,6 +47,7 @@ export default function initOidc(
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
+    dailyActiveUsers: { insertActiveUser },
   } = queries;
   const { findUserScopesForResourceIndicator } = libraries.users;
   const { findApplicationScopesForResourceIndicator } = libraries.applications;
@@ -300,7 +301,7 @@ export default function initOidc(
     },
   });
 
-  addOidcEventListeners(oidc);
+  addOidcEventListeners(oidc, queries);
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

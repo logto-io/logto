@@ -46,7 +46,10 @@ export const convertToPrimitiveOrSql = (
     return JSON.stringify(value);
   }
 
-  if (['_at', 'At'].some((value) => key.endsWith(value)) && typeof value === 'number') {
+  if (
+    (['_at', 'At'].some((value) => key.endsWith(value)) || key === 'date') &&
+    typeof value === 'number'
+  ) {
     return sql`to_timestamp(${value}::double precision / 1000)`;
   }
 
