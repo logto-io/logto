@@ -111,10 +111,13 @@ function SignInExperience() {
   }, [data]);
 
   useEffect(() => {
+    if (isDirty) {
+      return;
+    }
     if (defaultFormData) {
       reset(defaultFormData);
     }
-  }, [reset, defaultFormData]);
+  }, [reset, defaultFormData, isDirty]);
 
   const saveData = async () => {
     setIsSaving(true);
@@ -125,6 +128,7 @@ function SignInExperience() {
           json: signInExperienceParser.toRemoteModel(getValues()),
         })
         .json<SignInExperienceType>();
+      reset(signInExperienceParser.toLocalForm(updatedData));
       void mutate(updatedData);
       setDataToCompare(undefined);
       await updateConfigs({ signInExperienceCustomized: true });
