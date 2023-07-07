@@ -82,8 +82,8 @@
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-1a68662",
-    "@silverhand/eslint-config": "3.0.1",
-    "@silverhand/ts-config": "3.0.0",
+    "@silverhand/eslint-config": "4.0.1",
+    "@silverhand/ts-config": "4.0.0",
     "@types/debug": "^4.1.7",
     "@types/etag": "^1.8.1",
     "@types/jest": "^29.4.0",
