@@ -3078,6 +3078,9 @@ importers:
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
+      '@withtyped/client':
+        specifier: ^0.7.11
+        version: 0.7.11(zod@3.20.2)
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -3190,6 +3193,9 @@ importers:
         specifier: ^3.20.2
         version: 3.20.2
     devDependencies:
+      '@logto/cloud':
+        specifier: 0.2.5-1a68662
+        version: 0.2.5-1a68662(zod@3.20.2)
       '@silverhand/eslint-config':
         specifier: 3.0.1
         version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
@@ -3256,6 +3262,9 @@ importers:
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
+      nock:
+        specifier: ^13.3.1
+        version: 13.3.1
       node-mocks-http:
         specifier: ^1.12.1
         version: 1.12.1
@@ -9791,7 +9800,6 @@ packages:
       '@withtyped/shared': 0.2.1
     transitivePeerDependencies:
       - zod
-    dev: true
 
   /@withtyped/server@0.12.0(zod@3.20.2):
     resolution: {integrity: sha512-u5Qe+gr1kK/5CJi7NKf2iIQkbXlxhPXdDYqc7IeoMn0QHGn1hSkB9G3FB6gtx7kI28LY1gSUii4CJf7vX40PZw==}
@@ -15894,6 +15902,18 @@ packages:
       debug: 4.3.4
       json-stringify-safe: 5.0.1
       lodash.set: 4.3.2
+      propagate: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /nock@13.3.1:
+    resolution: {integrity: sha512-vHnopocZuI93p2ccivFyGuUfzjq2fxNyNurp7816mlT5V5HF4SzXu8lvLrVzBbNqzs+ODooZ6OksuSUNM7Njkw==}
+    engines: {node: '>= 10.13'}
+    dependencies:
+      debug: 4.3.4
+      json-stringify-safe: 5.0.1
+      lodash: 4.17.21
       propagate: 2.0.1
     transitivePeerDependencies:
       - supports-color
