@@ -1,3 +1,5 @@
+import { getEnv } from '@silverhand/essentials';
+
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
@@ -102,6 +104,9 @@ export const scope = ['send:email'];
 
 export const defaultTimeout = 5000;
 
-export const emailEndpoint = '/services/mails';
+/** @deprecated Will be replaced by `/services/mails` soon. */
+export const demoEmailEndpoint = '/services/send-email';
+export const emailEndpoint =
+  getEnv('NODE_ENV') === 'production' ? demoEmailEndpoint : '/services/mails';
 
 export const usageEndpoint = '/services/mails/usage';
