@@ -40,7 +40,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
     const parameters: PublicParameters = {
       number: to,
       sign: senderName,
-      text: template.content.replace(/{{code}}/g, payload.code),
+      text: template.content.replaceAll('{{code}}', payload.code),
     };
 
     const auth = Buffer.from(`${email}:${apiKey}`).toString('base64');

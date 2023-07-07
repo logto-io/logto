@@ -91,7 +91,7 @@ const getLatestUserProfileFromSocial = async (
   { getLogtoConnectorById }: ConnectorLibrary,
   authIdentifiers: Identifier[]
 ) => {
-  const socialIdentifier = filterSocialIdentifiers(authIdentifiers).slice(-1)[0];
+  const socialIdentifier = filterSocialIdentifiers(authIdentifiers).at(-1);
 
   if (!socialIdentifier) {
     return;

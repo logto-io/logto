@@ -39,14 +39,14 @@
   },
   "devDependencies": {
     "@logto/connector-kit": "workspace:^1.1.1",
-    "@silverhand/eslint-config": "3.0.1",
-    "@silverhand/ts-config": "3.0.0",
+    "@silverhand/eslint-config": "4.0.1",
+    "@silverhand/ts-config": "4.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",
-    "eslint": "^8.34.0",
+    "eslint": "^8.44.0",
     "jest": "^29.5.0",
     "lint-staged": "^13.0.0",
-    "prettier": "^2.8.2",
+    "prettier": "^3.0.0",
     "typescript": "^5.0.0"
   },
   "engines": {

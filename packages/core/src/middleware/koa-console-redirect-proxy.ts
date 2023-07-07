@@ -9,7 +9,7 @@ import type Queries from '#src/tenants/Queries.js';
 export default function koaConsoleRedirectProxy<
   StateT,
   ContextT extends IRouterParamContext,
-  ResponseBodyT
+  ResponseBodyT,
 >(queries: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   const { hasActiveUsers } = queries.users;
 

@@ -25,7 +25,7 @@ const importAlterationScript = async (filePath: string): Promise<AlterationScrip
 
 export const getLatestAlterationTimestamp = async () => {
   const files = await getAlterationFiles();
-  const lastFile = files[files.length - 1];
+  const lastFile = files.at(-1);
 
   if (!lastFile) {
     return 0;

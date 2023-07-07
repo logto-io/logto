@@ -155,9 +155,9 @@ export const addConnectorsToPath = async (cwd: string, packageNames: string[]) =
           }
 
           const { filename, name, version } = result[0];
-          const escapedFilename = filename.replace(/\//g, '-').replace(/@/g, '');
+          const escapedFilename = filename.replaceAll('/', '-').replaceAll('@', '');
           const tarPath = path.join(cwd, escapedFilename);
-          const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
+          const packageDirectory = path.join(cwd, name.replaceAll('/', '-'));
 
           await fs.rm(packageDirectory, { force: true, recursive: true });
           await fs.mkdir(packageDirectory, { recursive: true });

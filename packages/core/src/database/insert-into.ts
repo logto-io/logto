@@ -68,9 +68,9 @@ export const buildInsertIntoWithPool =
         rows: [entry],
       } = await pool.query<Schema>(sql`
         insert into ${table} (${sql.join(
-        insertingKeys.map((key) => fields[key]),
-        sql`, `
-      )})
+          insertingKeys.map((key) => fields[key]),
+          sql`, `
+        )})
         values (${sql.join(
           insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
           sql`, `

@@ -30,7 +30,7 @@ type WellKnownCacheType = keyof WellKnownMap;
 type CacheKeyConfig<
   Args extends unknown[],
   Type = WellKnownCacheType,
-  CacheKey = (...args: Args) => string
+  CacheKey = (...args: Args) => string,
 > = [Type] | [Type, CacheKey];
 
 // Cannot use generic type here, but direct type works.
@@ -76,7 +76,10 @@ export class WellKnownCache {
    * @param tenantId The tenant ID this cache is intended for.
    * @param cacheStore The storage to use as the cache.
    */
-  constructor(public tenantId: string, protected cacheStore: CacheStore) {}
+  constructor(
+    public tenantId: string,
+    protected cacheStore: CacheStore
+  ) {}
 
   /**
    * Get value from the inner cache store for the given type and key.

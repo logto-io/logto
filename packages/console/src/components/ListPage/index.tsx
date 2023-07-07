@@ -18,7 +18,7 @@ type CreateButtonProps = {
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   title: CardTitleProps;
   pageMeta?: PageMetaProps;
@@ -31,7 +31,7 @@ type Props<
 
 function ListPage<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   title,
   pageMeta,

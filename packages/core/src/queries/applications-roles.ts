@@ -23,8 +23,8 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
   const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>
     pool.query(sql`
       insert into ${table} (${insertFields.id}, ${insertFields.applicationId}, ${
-      insertFields.roleId
-    }) values
+        insertFields.roleId
+      }) values
       ${sql.join(
         applicationsRoles.map(
           ({ id, applicationId, roleId }) => sql`(${id}, ${applicationId}, ${roleId})`

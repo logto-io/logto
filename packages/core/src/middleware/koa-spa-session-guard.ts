@@ -22,7 +22,7 @@ export const guardedPath = [
 export default function koaSpaSessionGuard<
   StateT,
   ContextT extends IRouterParamContext,
-  ResponseBodyT
+  ResponseBodyT,
 >(provider: Provider, queries: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     const requestPath = ctx.request.path;

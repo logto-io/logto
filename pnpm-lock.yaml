@@ -56,17 +56,17 @@ importers:
         version: 2.5.0
     devDependencies:
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/eslint-config-react':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(postcss@8.4.24)(prettier@2.8.4)(stylelint@15.6.2)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(postcss@8.4.24)(prettier@3.0.0)(stylelint@15.6.2)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -77,8 +77,8 @@ importers:
         specifier: ^18.0.31
         version: 18.0.31
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       history:
         specifier: ^5.3.0
         version: 5.3.0
@@ -89,8 +89,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -189,11 +189,11 @@ importers:
         version: 3.20.2
     devDependencies:
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
@@ -216,8 +216,8 @@ importers:
         specifier: ^17.0.13
         version: 17.0.13
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -225,8 +225,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       sinon:
         specifier: ^15.0.0
         version: 15.0.0
@@ -277,11 +277,11 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -292,8 +292,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -307,8 +307,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -365,11 +365,11 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -380,8 +380,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -395,8 +395,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -444,11 +444,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -459,8 +459,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -474,8 +474,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -523,11 +523,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -538,8 +538,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -553,8 +553,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -608,11 +608,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -623,8 +623,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -638,8 +638,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -693,11 +693,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -708,8 +708,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -723,8 +723,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -775,11 +775,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -790,8 +790,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -805,8 +805,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -854,11 +854,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -869,8 +869,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -884,8 +884,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -933,11 +933,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -948,8 +948,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -963,8 +963,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1012,11 +1012,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1027,8 +1027,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1042,8 +1042,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1094,11 +1094,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1109,8 +1109,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1124,8 +1124,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1173,11 +1173,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1188,8 +1188,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1203,8 +1203,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1252,11 +1252,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1267,8 +1267,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1282,8 +1282,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1331,11 +1331,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1346,8 +1346,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1361,8 +1361,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1410,11 +1410,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1425,8 +1425,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1440,8 +1440,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1489,11 +1489,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1504,8 +1504,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1519,8 +1519,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1568,11 +1568,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1583,8 +1583,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1598,8 +1598,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1647,11 +1647,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1662,8 +1662,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1677,8 +1677,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1726,11 +1726,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1741,8 +1741,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1756,8 +1756,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1805,11 +1805,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1820,8 +1820,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1835,8 +1835,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1884,11 +1884,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1899,8 +1899,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1914,8 +1914,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -1966,11 +1966,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -1981,8 +1981,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -1996,8 +1996,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2054,11 +2054,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2069,8 +2069,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2084,8 +2084,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2139,11 +2139,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2154,8 +2154,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2169,8 +2169,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2218,11 +2218,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2233,8 +2233,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2248,8 +2248,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2297,11 +2297,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2312,8 +2312,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2327,8 +2327,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2379,11 +2379,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2397,8 +2397,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2412,8 +2412,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2461,11 +2461,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2476,8 +2476,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2491,8 +2491,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2540,11 +2540,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2555,8 +2555,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2570,8 +2570,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2619,11 +2619,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2634,8 +2634,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2649,8 +2649,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2698,11 +2698,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(rollup@3.8.0)(typescript@5.0.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -2713,8 +2713,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -2728,8 +2728,8 @@ importers:
         specifier: ^13.2.2
         version: 13.2.2
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       rollup:
         specifier: ^3.8.0
         version: 3.8.0
@@ -2803,20 +2803,20 @@ importers:
         specifier: 2.9.3
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/eslint-config-react':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(postcss@8.4.6)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(postcss@8.4.6)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.0.2)
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.52
         version: 1.3.52
@@ -2890,8 +2890,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       history:
         specifier: ^5.3.0
         version: 5.3.0
@@ -2947,8 +2947,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(postcss@8.4.6)
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       process:
         specifier: ^0.11.10
         version: 0.11.10
@@ -3197,11 +3197,11 @@ importers:
         specifier: 0.2.5-1a68662
         version: 0.2.5-1a68662(zod@3.20.2)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/debug':
         specifier: ^4.1.7
         version: 4.1.7
@@ -3251,8 +3251,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3275,8 +3275,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       sinon:
         specifier: ^15.0.0
         version: 15.0.0
@@ -3317,17 +3317,17 @@ importers:
         specifier: 2.9.3
         version: 2.9.3(@parcel/core@2.9.3)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/eslint-config-react':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(postcss@8.4.14)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(postcss@8.4.14)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/react':
         specifier: ^18.0.31
         version: 18.0.31
@@ -3341,8 +3341,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       i18next:
         specifier: ^22.4.15
         version: 22.4.15
@@ -3359,8 +3359,8 @@ importers:
         specifier: ^8.4.6
         version: 8.4.14
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -3404,14 +3404,14 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../shared
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/expect-puppeteer':
         specifier: ^5.0.3
         version: 5.0.3
@@ -3428,8 +3428,8 @@ importers:
         specifier: ^16.0.0
         version: 16.0.0
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       got:
         specifier: ^13.0.0
         version: 13.0.0
@@ -3449,8 +3449,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       puppeteer:
         specifier: ^20.0.0
         version: 20.0.0(typescript@5.0.2)
@@ -3474,20 +3474,20 @@ importers:
         version: 3.20.2
     devDependencies:
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -3505,23 +3505,23 @@ importers:
         version: 3.20.2
     devDependencies:
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       lint-staged:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -3554,14 +3554,14 @@ importers:
         version: 3.20.2
     devDependencies:
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/inquirer':
         specifier: ^9.0.0
         version: 9.0.3
@@ -3581,8 +3581,8 @@ importers:
         specifier: ^5.0.0
         version: 5.1.2
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3593,8 +3593,8 @@ importers:
         specifier: ^8.0.0
         version: 8.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       roarr:
         specifier: ^7.11.0
         version: 7.11.0
@@ -3630,11 +3630,11 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -3642,8 +3642,8 @@ importers:
         specifier: ^18.11.18
         version: 18.11.18
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3651,8 +3651,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       typescript:
         specifier: ^5.0.0
         version: 5.0.2
@@ -3674,11 +3674,11 @@ importers:
         specifier: ^29.0.3
         version: 29.1.2
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -3686,8 +3686,8 @@ importers:
         specifier: ^18.11.18
         version: 18.11.18
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3695,8 +3695,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       tslib:
         specifier: ^2.4.1
         version: 2.4.1
@@ -3724,17 +3724,17 @@ importers:
         specifier: ^29.0.3
         version: 29.3.1
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/color':
         specifier: ^3.0.3
         version: 3.0.3
@@ -3748,8 +3748,8 @@ importers:
         specifier: ^18.0.31
         version: 18.0.31
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3760,8 +3760,8 @@ importers:
         specifier: ^8.4.6
         version: 8.4.18
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       stylelint:
         specifier: ^15.0.0
         version: 15.0.0
@@ -3782,11 +3782,11 @@ importers:
         specifier: ^29.0.3
         version: 29.3.1
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
@@ -3794,8 +3794,8 @@ importers:
         specifier: ^18.11.18
         version: 18.11.18
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)
@@ -3803,8 +3803,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       tslib:
         specifier: ^2.4.1
         version: 2.4.1
@@ -3860,20 +3860,20 @@ importers:
         specifier: ^9.6.1
         version: 9.6.1(react-dom@18.2.0)(react@18.2.0)
       '@silverhand/eslint-config':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
       '@silverhand/eslint-config-react':
-        specifier: 3.0.1
-        version: 3.0.1(eslint@8.34.0)(postcss@8.4.6)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2)
+        specifier: 4.0.1
+        version: 4.0.1(eslint@8.44.0)(postcss@8.4.6)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.0.2)
       '@silverhand/essentials':
         specifier: ^2.5.0
         version: 2.5.0
       '@silverhand/ts-config':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@silverhand/ts-config-react':
-        specifier: 3.0.0
-        version: 3.0.0(typescript@5.0.2)
+        specifier: 4.0.0
+        version: 4.0.0(typescript@5.0.2)
       '@swc/core':
         specifier: ^1.3.52
         version: 1.3.52
@@ -3917,8 +3917,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       eslint:
-        specifier: ^8.34.0
-        version: 8.34.0
+        specifier: ^8.44.0
+        version: 8.44.0
       i18next:
         specifier: ^22.4.15
         version: 22.4.15
@@ -3965,8 +3965,8 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(postcss@8.4.6)
       prettier:
-        specifier: ^2.8.2
-        version: 2.8.4
+        specifier: ^3.0.0
+        version: 3.0.0
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -4020,6 +4020,11 @@ importers:
         version: 3.20.2
 
 packages:
+
+  /@aashutoshrathi/word-wrap@1.2.6:
+    resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
+    engines: {node: '>=0.10.0'}
+    dev: true
 
   /@ampproject/remapping@2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -6166,14 +6171,6 @@ packages:
       '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
-  /@babel/runtime-corejs3@7.19.4:
-    resolution: {integrity: sha512-HzjQ8+dzdx7dmZy4DQ8KV8aHi/74AjEbBGTFutBmg/pd3dY5/q1sfuOGPTFGEytlQhWoeVXqcK5BwMgIkRkNDQ==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      core-js-pure: 3.25.5
-      regenerator-runtime: 0.13.11
-    dev: true
-
   /@babel/runtime@7.17.9:
     resolution: {integrity: sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==}
     engines: {node: '>=6.9.0'}
@@ -6663,14 +6660,14 @@ packages:
       postcss-selector-parser: 6.0.13
     dev: true
 
-  /@eslint-community/eslint-utils@4.4.0(eslint@8.34.0):
+  /@eslint-community/eslint-utils@4.4.0(eslint@8.44.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
     dependencies:
-      eslint: 8.34.0
-      eslint-visitor-keys: 3.3.0
+      eslint: 8.44.0
+      eslint-visitor-keys: 3.4.1
     dev: true
 
   /@eslint-community/regexpp@4.5.0:
@@ -6678,13 +6675,13 @@ packages:
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: true
 
-  /@eslint/eslintrc@1.4.1:
-    resolution: {integrity: sha512-XXrH9Uarn0stsyldqDYq8r++mROmWRI1xKMXa640Bb//SY1+ECYX6VzT6Lcx5frD0V30XieqJ0oX9I2Xj5aoMA==}
+  /@eslint/eslintrc@2.1.0:
+    resolution: {integrity: sha512-Lj7DECXqIVCqnqjjHMPna4vn6GJcMgul/wuS0je9OZ9gsL0zzDpKPVtcG1HaDVc+9y+qgXneTeUMbCqXJNpH1A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
       debug: 4.3.4
-      espree: 9.4.1
+      espree: 9.6.0
       globals: 13.20.0
       ignore: 5.2.4
       import-fresh: 3.3.0
@@ -6693,6 +6690,11 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@eslint/js@8.44.0:
+    resolution: {integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
   /@fontsource/roboto-mono@5.0.0:
@@ -6709,8 +6711,8 @@ packages:
       '@hapi/hoek': 9.3.0
     dev: true
 
-  /@humanwhocodes/config-array@0.11.8:
-    resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
+  /@humanwhocodes/config-array@0.11.10:
+    resolution: {integrity: sha512-KVVjQmNUepDVGXNuoRRdmmEjruj0KfiGSbS8LVc12LMsWDQzRXJ0qdhN8L8uUigKpfEHRhlaQFY0ib1tnUbNeQ==}
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1
@@ -8596,21 +8598,23 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: true
 
-  /@silverhand/eslint-config-react@3.0.1(eslint@8.34.0)(postcss@8.4.14)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-8roPq3t5qgi4pxYh3It2BhS91LVsp740vhNXVn56RTID0ZdW27LMrV2yp5uTT6kVzLdFYis4nIPlOVFCnv+VKA==}
+  /@silverhand/eslint-config-react@4.0.1(eslint@8.44.0)(postcss@8.4.14)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-Zv3PTB/bi9WrNv41mV71/zeJr8k7cvAixkGMdcUJ9ZH9ePPocZgr/QSo9Cc7EeTKT//9Iapp8gwHydl2Oq4/xg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       stylelint: ^15.0.0
     dependencies:
-      '@silverhand/eslint-config': 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
-      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.31.10)(eslint@8.34.0)
-      eslint-plugin-jsx-a11y: 6.6.1(eslint@8.34.0)
-      eslint-plugin-react: 7.31.10(eslint@8.34.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.34.0)
+      '@silverhand/eslint-config': 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.32.2)(eslint@8.44.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.44.0)
+      eslint-plugin-react: 7.32.2(eslint@8.44.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.44.0)
       stylelint: 15.0.0
       stylelint-config-xo-scss: 0.15.0(postcss@8.4.14)(stylelint@15.0.0)
     transitivePeerDependencies:
+      - '@types/eslint'
       - eslint
+      - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - postcss
       - prettier
@@ -8618,21 +8622,23 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react@3.0.1(eslint@8.34.0)(postcss@8.4.24)(prettier@2.8.4)(stylelint@15.6.2)(typescript@5.0.2):
-    resolution: {integrity: sha512-8roPq3t5qgi4pxYh3It2BhS91LVsp740vhNXVn56RTID0ZdW27LMrV2yp5uTT6kVzLdFYis4nIPlOVFCnv+VKA==}
+  /@silverhand/eslint-config-react@4.0.1(eslint@8.44.0)(postcss@8.4.24)(prettier@3.0.0)(stylelint@15.6.2)(typescript@5.0.2):
+    resolution: {integrity: sha512-Zv3PTB/bi9WrNv41mV71/zeJr8k7cvAixkGMdcUJ9ZH9ePPocZgr/QSo9Cc7EeTKT//9Iapp8gwHydl2Oq4/xg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       stylelint: ^15.0.0
     dependencies:
-      '@silverhand/eslint-config': 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
-      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.31.10)(eslint@8.34.0)
-      eslint-plugin-jsx-a11y: 6.6.1(eslint@8.34.0)
-      eslint-plugin-react: 7.31.10(eslint@8.34.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.34.0)
+      '@silverhand/eslint-config': 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.32.2)(eslint@8.44.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.44.0)
+      eslint-plugin-react: 7.32.2(eslint@8.44.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.44.0)
       stylelint: 15.6.2
       stylelint-config-xo-scss: 0.15.0(postcss@8.4.24)(stylelint@15.6.2)
     transitivePeerDependencies:
+      - '@types/eslint'
       - eslint
+      - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - postcss
       - prettier
@@ -8640,21 +8646,23 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react@3.0.1(eslint@8.34.0)(postcss@8.4.6)(prettier@2.8.4)(stylelint@15.0.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-8roPq3t5qgi4pxYh3It2BhS91LVsp740vhNXVn56RTID0ZdW27LMrV2yp5uTT6kVzLdFYis4nIPlOVFCnv+VKA==}
+  /@silverhand/eslint-config-react@4.0.1(eslint@8.44.0)(postcss@8.4.6)(prettier@3.0.0)(stylelint@15.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-Zv3PTB/bi9WrNv41mV71/zeJr8k7cvAixkGMdcUJ9ZH9ePPocZgr/QSo9Cc7EeTKT//9Iapp8gwHydl2Oq4/xg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       stylelint: ^15.0.0
     dependencies:
-      '@silverhand/eslint-config': 3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2)
-      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.31.10)(eslint@8.34.0)
-      eslint-plugin-jsx-a11y: 6.6.1(eslint@8.34.0)
-      eslint-plugin-react: 7.31.10(eslint@8.34.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.34.0)
+      '@silverhand/eslint-config': 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.32.2)(eslint@8.44.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.44.0)
+      eslint-plugin-react: 7.32.2(eslint@8.44.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.44.0)
       stylelint: 15.0.0
       stylelint-config-xo-scss: 0.15.0(postcss@8.4.6)(stylelint@15.0.0)
     transitivePeerDependencies:
+      - '@types/eslint'
       - eslint
+      - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - postcss
       - prettier
@@ -8662,46 +8670,48 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config@3.0.1(eslint@8.34.0)(prettier@2.8.4)(typescript@5.0.2):
-    resolution: {integrity: sha512-ZjZehXlkjGXJlKQaJvFwSTalCo7dEgcoNTqVJoy2OAq7csCrEW4Q0lA8UHYjzJfDUefSCfwt+dcQfkA/cMrncw==}
+  /@silverhand/eslint-config@4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-abpjghxiFMJ2Iii+dYan8cKp/rZK8rQjtDK45JyciTqggdHbJFRTGoZiEHABaXSwYsF2qcp5YOwHAhTGnyG69A==}
     engines: {node: ^18.12.0}
     peerDependencies:
-      eslint: ^8.34.0
-      prettier: ^2.8.2
+      eslint: ^8.44.0
+      prettier: ^3.0.0
     dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0(eslint@8.34.0)
-      '@typescript-eslint/eslint-plugin': 5.57.0(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2)
-      '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
-      eslint: 8.34.0
-      eslint-config-prettier: 8.8.0(eslint@8.34.0)
-      eslint-config-xo: 0.42.0(eslint@8.34.0)
-      eslint-config-xo-typescript: 0.56.0(@typescript-eslint/eslint-plugin@5.57.0)(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2)
-      eslint-import-resolver-typescript: 3.5.4(eslint-plugin-import@2.27.5)(eslint@8.34.0)
+      '@silverhand/eslint-plugin-fp': 2.5.0(eslint@8.44.0)
+      '@typescript-eslint/eslint-plugin': 5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2)
+      '@typescript-eslint/parser': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
+      eslint: 8.44.0
+      eslint-config-prettier: 8.8.0(eslint@8.44.0)
+      eslint-config-xo: 0.43.1(eslint@8.44.0)
+      eslint-config-xo-typescript: 0.57.0(@typescript-eslint/eslint-plugin@5.61.0)(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.61.0)(eslint-plugin-import@2.27.5)(eslint@8.44.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
-      eslint-plugin-eslint-comments: 3.2.0(eslint@8.34.0)
-      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.57.0)(eslint-import-resolver-typescript@3.5.4)(eslint@8.34.0)
+      eslint-plugin-eslint-comments: 3.2.0(eslint@8.44.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0)
       eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0(eslint@8.34.0)
-      eslint-plugin-prettier: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.34.0)(prettier@2.8.4)
-      eslint-plugin-promise: 6.1.0(eslint@8.34.0)
-      eslint-plugin-sql: 2.1.0(eslint@8.34.0)
-      eslint-plugin-unicorn: 45.0.2(eslint@8.34.0)
-      eslint-plugin-unused-imports: 2.0.0(@typescript-eslint/eslint-plugin@5.57.0)(eslint@8.34.0)
-      prettier: 2.8.4
+      eslint-plugin-node: 11.1.0(eslint@8.44.0)
+      eslint-plugin-prettier: 5.0.0-alpha.2(eslint-config-prettier@8.8.0)(eslint@8.44.0)(prettier@3.0.0)
+      eslint-plugin-promise: 6.1.1(eslint@8.44.0)
+      eslint-plugin-sql: 2.1.0(eslint@8.44.0)
+      eslint-plugin-unicorn: 47.0.0(eslint@8.44.0)
+      eslint-plugin-unused-imports: 2.0.0(@typescript-eslint/eslint-plugin@5.61.0)(eslint@8.44.0)
+      prettier: 3.0.0
     transitivePeerDependencies:
+      - '@types/eslint'
+      - eslint-import-resolver-node
       - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
 
-  /@silverhand/eslint-plugin-fp@2.5.0(eslint@8.34.0):
+  /@silverhand/eslint-plugin-fp@2.5.0(eslint@8.44.0):
     resolution: {integrity: sha512-/oLO2Rs9nkhOk+rmC3PsWDvrDKrOfKuRtbSAwH4Scawn5GqAjo7ZXIZXj7RWa4nxLsCGc3ULvaVs1e1m4n6G/A==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^8.1.0
     dependencies:
       create-eslint-index: 1.0.0
-      eslint: 8.34.0
+      eslint: 8.44.0
       eslint-ast-utils: 1.1.0
       import-modules: 2.1.0
       lodash: 4.17.21
@@ -8715,18 +8725,18 @@ packages:
     resolution: {integrity: sha512-1b5u2BGEa14V3o8XzaE7eL+nuwmQe8c1wqSMcGvq+KAusPPZo9tV4glbfF16Xi/ohv37vUpBGJ2DNf4CfuxBLw==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
 
-  /@silverhand/ts-config-react@3.0.0(typescript@5.0.2):
-    resolution: {integrity: sha512-zQL7kB6ropASS9/p7/g9PEsOIPAwjI20EVER8hShfV1jDURK9zXGDlbAhZbxLNS1n3z2AyPE+0ELEMZ7aIntRA==}
+  /@silverhand/ts-config-react@4.0.0(typescript@5.0.2):
+    resolution: {integrity: sha512-IkZka1iuIBgw0AUbsknghw1vOIs4zOgUxR8jL38Kuk63hmSj687N4BWBb8KhVMhqaG4U/DYkbSEZuwsyHBe68g==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^5.0.0
     dependencies:
-      '@silverhand/ts-config': 3.0.0(typescript@5.0.2)
+      '@silverhand/ts-config': 4.0.0(typescript@5.0.2)
       typescript: 5.0.2
     dev: true
 
-  /@silverhand/ts-config@3.0.0(typescript@5.0.2):
-    resolution: {integrity: sha512-rt4jbxx3JyJ97i/tpMXOSMSk76Ahgt4HycXtlLgbISAlfX1he/VK82Wh4vmUAUu21sV7W9JcK+T2krvV5ILpIA==}
+  /@silverhand/ts-config@4.0.0(typescript@5.0.2):
+    resolution: {integrity: sha512-YIKUDF04QAoMNSfOExWpx6wk2hMhsY9kx0JzZbzOOJQzvcIUWcLYnyS5GaxaKzjSsZvmNETlKHyCpTwIZNfCZg==}
     engines: {node: ^18.12.0}
     peerDependencies:
       typescript: ^5.0.0
@@ -9663,8 +9673,8 @@ packages:
     dev: true
     optional: true
 
-  /@typescript-eslint/eslint-plugin@5.57.0(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-itag0qpN6q2UMM6Xgk6xoHa0D0/P+M17THnr4SVgqn9Rgam5k/He33MA7/D7QoJcdMxHFyX7U9imaBonAX/6qA==}
+  /@typescript-eslint/eslint-plugin@5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-A5l/eUAug103qtkwccSCxn8ZRwT+7RXWkFECdA4Cvl1dOlDUgTpAOfSEElZn2uSUxhdDpnCdetrf0jvU4qrL+g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       '@typescript-eslint/parser': ^5.0.0
@@ -9675,24 +9685,24 @@ packages:
         optional: true
     dependencies:
       '@eslint-community/regexpp': 4.5.0
-      '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
-      '@typescript-eslint/scope-manager': 5.57.0
-      '@typescript-eslint/type-utils': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
-      '@typescript-eslint/utils': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
+      '@typescript-eslint/parser': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
+      '@typescript-eslint/scope-manager': 5.61.0
+      '@typescript-eslint/type-utils': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
+      '@typescript-eslint/utils': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
       debug: 4.3.4
-      eslint: 8.34.0
-      grapheme-splitter: 1.0.4
+      eslint: 8.44.0
+      graphemer: 1.4.0
       ignore: 5.2.4
       natural-compare-lite: 1.4.0
-      semver: 7.3.8
+      semver: 7.5.3
       tsutils: 3.21.0(typescript@5.0.2)
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser@5.57.0(eslint@8.34.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-orrduvpWYkgLCyAdNtR1QIWovcNZlEm6yL8nwH/eTxWLd8gsP+25pdLHYzL2QdkqrieaDwLpytHqycncv0woUQ==}
+  /@typescript-eslint/parser@5.61.0(eslint@8.44.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-yGr4Sgyh8uO6fSi9hw3jAFXNBHbCtKKFMdX2IkT3ZqpKmtAq3lHS4ixB/COFuAIJpwl9/AqF7j72ZDWYKmIfvg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -9701,26 +9711,26 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/scope-manager': 5.57.0
-      '@typescript-eslint/types': 5.57.0
-      '@typescript-eslint/typescript-estree': 5.57.0(typescript@5.0.2)
+      '@typescript-eslint/scope-manager': 5.61.0
+      '@typescript-eslint/types': 5.61.0
+      '@typescript-eslint/typescript-estree': 5.61.0(typescript@5.0.2)
       debug: 4.3.4
-      eslint: 8.34.0
+      eslint: 8.44.0
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/scope-manager@5.57.0:
-    resolution: {integrity: sha512-NANBNOQvllPlizl9LatX8+MHi7bx7WGIWYjPHDmQe5Si/0YEYfxSljJpoTyTWFTgRy3X8gLYSE4xQ2U+aCozSw==}
+  /@typescript-eslint/scope-manager@5.61.0:
+    resolution: {integrity: sha512-W8VoMjoSg7f7nqAROEmTt6LoBpn81AegP7uKhhW5KzYlehs8VV0ZW0fIDVbcZRcaP3aPSW+JZFua+ysQN+m/Nw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      '@typescript-eslint/types': 5.57.0
-      '@typescript-eslint/visitor-keys': 5.57.0
+      '@typescript-eslint/types': 5.61.0
+      '@typescript-eslint/visitor-keys': 5.61.0
     dev: true
 
-  /@typescript-eslint/type-utils@5.57.0(eslint@8.34.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-kxXoq9zOTbvqzLbdNKy1yFrxLC6GDJFE2Yuo3KqSwTmDOFjUGeWSakgoXT864WcK5/NAJkkONCiKb1ddsqhLXQ==}
+  /@typescript-eslint/type-utils@5.61.0(eslint@8.44.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-kk8u//r+oVK2Aj3ph/26XdH0pbAkC2RiSjUYhKD+PExemG4XSjpGFeyZ/QM8lBOa7O8aGOU+/yEbMJgQv/DnCg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: '*'
@@ -9729,23 +9739,23 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/typescript-estree': 5.57.0(typescript@5.0.2)
-      '@typescript-eslint/utils': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
+      '@typescript-eslint/typescript-estree': 5.61.0(typescript@5.0.2)
+      '@typescript-eslint/utils': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
       debug: 4.3.4
-      eslint: 8.34.0
+      eslint: 8.44.0
       tsutils: 3.21.0(typescript@5.0.2)
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/types@5.57.0:
-    resolution: {integrity: sha512-mxsod+aZRSyLT+jiqHw1KK6xrANm19/+VFALVFP5qa/aiJnlP38qpyaTd0fEKhWvQk6YeNZ5LGwI1pDpBRBhtQ==}
+  /@typescript-eslint/types@5.61.0:
+    resolution: {integrity: sha512-ldyueo58KjngXpzloHUog/h9REmHl59G1b3a5Sng1GfBo14BkS3ZbMEb3693gnP1k//97lh7bKsp6/V/0v1veQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@typescript-eslint/typescript-estree@5.57.0(typescript@5.0.2):
-    resolution: {integrity: sha512-LTzQ23TV82KpO8HPnWuxM2V7ieXW8O142I7hQTxWIHDcCEIjtkat6H96PFkYBQqGFLW/G/eVVOB9Z8rcvdY/Vw==}
+  /@typescript-eslint/typescript-estree@5.61.0(typescript@5.0.2):
+    resolution: {integrity: sha512-Fud90PxONnnLZ36oR5ClJBLTLfU4pIWBmnvGwTbEa2cXIqj70AEDEmOmpkFComjBZ/037ueKrOdHuYmSFVD7Rw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       typescript: '*'
@@ -9753,44 +9763,44 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/types': 5.57.0
-      '@typescript-eslint/visitor-keys': 5.57.0
+      '@typescript-eslint/types': 5.61.0
+      '@typescript-eslint/visitor-keys': 5.61.0
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.3.8
+      semver: 7.5.3
       tsutils: 3.21.0(typescript@5.0.2)
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils@5.57.0(eslint@8.34.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-ps/4WohXV7C+LTSgAL5CApxvxbMkl9B9AUZRtnEFonpIxZDIT7wC1xfvuJONMidrkB9scs4zhtRyIwHh4+18kw==}
+  /@typescript-eslint/utils@5.61.0(eslint@8.44.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-mV6O+6VgQmVE6+xzlA91xifndPW9ElFW8vbSF0xCT/czPXVhwDewKila1jOyRwa9AE19zKnrr7Cg5S3pJVrTWQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.34.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.44.0)
       '@types/json-schema': 7.0.11
       '@types/semver': 7.3.12
-      '@typescript-eslint/scope-manager': 5.57.0
-      '@typescript-eslint/types': 5.57.0
-      '@typescript-eslint/typescript-estree': 5.57.0(typescript@5.0.2)
-      eslint: 8.34.0
+      '@typescript-eslint/scope-manager': 5.61.0
+      '@typescript-eslint/types': 5.61.0
+      '@typescript-eslint/typescript-estree': 5.61.0(typescript@5.0.2)
+      eslint: 8.44.0
       eslint-scope: 5.1.1
-      semver: 7.3.8
+      semver: 7.5.3
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /@typescript-eslint/visitor-keys@5.57.0:
-    resolution: {integrity: sha512-ery2g3k0hv5BLiKpPuwYt9KBkAp2ugT6VvyShXdLOkax895EC55sP0Tx5L0fZaQueiK3fBLvHVvEl3jFS5ia+g==}
+  /@typescript-eslint/visitor-keys@5.61.0:
+    resolution: {integrity: sha512-50XQ5VdbWrX06mQXhy93WywSFZZGsv3EOjq+lqp6WC2t+j3mb6A9xYVdrRxafvK88vg9k9u+CT4l6D8PEatjKg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      '@typescript-eslint/types': 5.57.0
-      eslint-visitor-keys: 3.3.0
+      '@typescript-eslint/types': 5.61.0
+      eslint-visitor-keys: 3.4.1
     dev: true
 
   /@withtyped/client@0.7.11(zod@3.20.2):
@@ -9859,17 +9869,23 @@ packages:
       acorn-walk: 8.2.0
     dev: true
 
-  /acorn-jsx@5.3.2(acorn@8.8.2):
+  /acorn-jsx@5.3.2(acorn@8.10.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      acorn: 8.8.2
+      acorn: 8.10.0
     dev: true
 
   /acorn-walk@8.2.0:
     resolution: {integrity: sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==}
     engines: {node: '>=0.4.0'}
+    dev: true
+
+  /acorn@8.10.0:
+    resolution: {integrity: sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
     dev: true
 
   /acorn@8.8.1:
@@ -10027,17 +10043,15 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
-  /aria-query@4.2.2:
-    resolution: {integrity: sha512-o/HelwhuKpTj/frsOsbNLNgnNGVIFsVP/SW2BSF14gVl7kAfMOJ6/8wUAUvG1R1NHKrfG+2sHZTu0yauT1qBrA==}
-    engines: {node: '>=6.0'}
-    dependencies:
-      '@babel/runtime': 7.21.0
-      '@babel/runtime-corejs3': 7.19.4
-    dev: true
-
   /aria-query@5.0.0:
     resolution: {integrity: sha512-V+SM7AbUwJ+EBnB8+DXs0hPZHO0W6pqBcc0dW90OwtVG02PswOu/teuARoLQjdDOH+t9pJgGnW5/Qmouf3gPJg==}
     engines: {node: '>=6.0'}
+    dev: true
+
+  /aria-query@5.3.0:
+    resolution: {integrity: sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==}
+    dependencies:
+      dequal: 2.0.3
     dev: true
 
   /array-ify@1.0.0:
@@ -10078,6 +10092,16 @@ packages:
       define-properties: 1.1.4
       es-abstract: 1.20.4
       es-shim-unscopables: 1.0.0
+    dev: true
+
+  /array.prototype.tosorted@1.1.1:
+    resolution: {integrity: sha512-pZYPXPRl2PqWcsUs6LOMn+1f1532nEoPTYowBtqLwAW+W8vSVhkIGnmOX1t/UQjD6YGI0vcD2B1U7ZFGQH9jnQ==}
+    dependencies:
+      call-bind: 1.0.2
+      define-properties: 1.1.4
+      es-abstract: 1.20.4
+      es-shim-unscopables: 1.0.0
+      get-intrinsic: 1.1.3
     dev: true
 
   /arrify@1.0.1:
@@ -10136,8 +10160,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axe-core@4.4.3:
-    resolution: {integrity: sha512-32+ub6kkdhhWick/UjvEwRchgoetXqTK14INLqbGm5U2TzBkBNF3nQtLYm8ovxSkQWArjEQvftCKryjZaATu3w==}
+  /axe-core@4.7.2:
+    resolution: {integrity: sha512-zIURGIS1E1Q4pcrMjp+nnEh+16G56eG/MUllJH8yEvw7asDo7Ac9uhC9KIH5jzpITueEZolfYglnCGIuSBz39g==}
     engines: {node: '>=4'}
     dev: true
 
@@ -10150,8 +10174,10 @@ packages:
       - debug
     dev: true
 
-  /axobject-query@2.2.0:
-    resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
+  /axobject-query@3.2.1:
+    resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
+    dependencies:
+      dequal: 2.0.3
     dev: true
 
   /babel-jest@29.5.0(@babel/core@7.20.2):
@@ -10932,11 +10958,6 @@ packages:
       yargs: 16.2.0
     dev: true
 
-  /core-js-pure@3.25.5:
-    resolution: {integrity: sha512-oml3M22pHM+igfWHDfdLVq2ShWmjM2V4L+dQEBs0DWVIqEm9WHCwGAlZ6BmyBQGy5sFrJmcx+856D9lVKyGWYg==}
-    requiresBuild: true
-    dev: true
-
   /core-js@3.21.1:
     resolution: {integrity: sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==}
     requiresBuild: true
@@ -11376,6 +11397,11 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
+  /dequal@2.0.3:
+    resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
+    engines: {node: '>=6'}
+    dev: true
+
   /destroy@1.0.4:
     resolution: {integrity: sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=}
 
@@ -11732,16 +11758,16 @@ packages:
       lodash.zip: 4.2.0
     dev: true
 
-  /eslint-config-prettier@8.8.0(eslint@8.34.0):
+  /eslint-config-prettier@8.8.0(eslint@8.44.0):
     resolution: {integrity: sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==}
     hasBin: true
     peerDependencies:
       eslint: '>=7.0.0'
     dependencies:
-      eslint: 8.34.0
+      eslint: 8.44.0
     dev: true
 
-  /eslint-config-xo-react@0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.31.10)(eslint@8.34.0):
+  /eslint-config-xo-react@0.27.0(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.32.2)(eslint@8.44.0):
     resolution: {integrity: sha512-wiV215xQIn71XZyyVfaOXHaFpR1B14IJttwOjMi/eqUK1s+ojJdHr7eHqTLaGUfh6FKgWha1QNwePlIXx7mBUg==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -11749,34 +11775,34 @@ packages:
       eslint-plugin-react: '>=7.29.0'
       eslint-plugin-react-hooks: '>=4.3.0'
     dependencies:
-      eslint: 8.34.0
-      eslint-plugin-react: 7.31.10(eslint@8.34.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.34.0)
+      eslint: 8.44.0
+      eslint-plugin-react: 7.32.2(eslint@8.44.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.44.0)
     dev: true
 
-  /eslint-config-xo-typescript@0.56.0(@typescript-eslint/eslint-plugin@5.57.0)(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2):
-    resolution: {integrity: sha512-JOuV9M6R0BphdWome5SiolbsZFpw5DX83HgUaIUoEZwkk0hDv+fmPoHNc3KwmoON5QEkuBxlIbW0o3PifzPCuw==}
+  /eslint-config-xo-typescript@0.57.0(@typescript-eslint/eslint-plugin@5.61.0)(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2):
+    resolution: {integrity: sha512-u+qcTaADHn2/+hbDqZHRWiAps8JS6BcRsJKAADFxYHIPpYqQeQv9mXuhRe/1+ikfZAIz9hlG1V+Lkj8J7nf34A==}
     engines: {node: '>=12'}
     peerDependencies:
-      '@typescript-eslint/eslint-plugin': '>=5.43.0'
-      '@typescript-eslint/parser': '>=5.43.0'
+      '@typescript-eslint/eslint-plugin': '>=5.57.0'
+      '@typescript-eslint/parser': '>=5.57.0'
       eslint: '>=8.0.0'
       typescript: '>=4.4'
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.57.0(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2)
-      '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
-      eslint: 8.34.0
+      '@typescript-eslint/eslint-plugin': 5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2)
+      '@typescript-eslint/parser': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
+      eslint: 8.44.0
       typescript: 5.0.2
     dev: true
 
-  /eslint-config-xo@0.42.0(eslint@8.34.0):
-    resolution: {integrity: sha512-HIfd+AM6tHFoaZ/NXYDV3Mr/CJrAj/DoP6IOYt1/v+90XtCwVYOfW7LXbRDYDmhQMzT16h7eqPRcex72waRqdA==}
+  /eslint-config-xo@0.43.1(eslint@8.44.0):
+    resolution: {integrity: sha512-azv1L2PysRA0NkZOgbndUpN+581L7wPqkgJOgxxw3hxwXAbJgD6Hqb/SjHRiACifXt/AvxCzE/jIKFAlI7XjvQ==}
     engines: {node: '>=12'}
     peerDependencies:
-      eslint: '>=8.14.0'
+      eslint: '>=8.27.0'
     dependencies:
       confusing-browser-globals: 1.0.11
-      eslint: 8.34.0
+      eslint: 8.44.0
     dev: true
 
   /eslint-import-resolver-node@0.3.7:
@@ -11789,8 +11815,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-import-resolver-typescript@3.5.4(eslint-plugin-import@2.27.5)(eslint@8.34.0):
-    resolution: {integrity: sha512-9xUpnedEmSfG57sN1UvWPiEhfJ8bPt0Wg2XysA7Mlc79iFGhmJtRUg9LxtkK81FhMUui0YuR2E8iUsVhePkh4A==}
+  /eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.61.0)(eslint-plugin-import@2.27.5)(eslint@8.44.0):
+    resolution: {integrity: sha512-TdJqPHs2lW5J9Zpe17DZNQuDnox4xo2o+0tE7Pggain9Rbc19ik8kFtXdxZ250FVx2kF4vlt2RSf4qlUpG7bhw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '*'
@@ -11798,18 +11824,22 @@ packages:
     dependencies:
       debug: 4.3.4
       enhanced-resolve: 5.12.0
-      eslint: 8.34.0
-      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.57.0)(eslint-import-resolver-typescript@3.5.4)(eslint@8.34.0)
+      eslint: 8.44.0
+      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0)
+      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0)
       get-tsconfig: 4.5.0
       globby: 13.1.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
       synckit: 0.8.5
     transitivePeerDependencies:
+      - '@typescript-eslint/parser'
+      - eslint-import-resolver-node
+      - eslint-import-resolver-webpack
       - supports-color
     dev: true
 
-  /eslint-module-utils@2.7.4(@typescript-eslint/parser@5.57.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.4)(eslint@8.34.0):
+  /eslint-module-utils@2.7.4(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0):
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -11830,11 +11860,11 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
+      '@typescript-eslint/parser': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
       debug: 3.2.7(supports-color@5.5.0)
-      eslint: 8.34.0
+      eslint: 8.44.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.4(eslint-plugin-import@2.27.5)(eslint@8.34.0)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.61.0)(eslint-plugin-import@2.27.5)(eslint@8.44.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11847,29 +11877,29 @@ packages:
       pkg-dir: 5.0.0
     dev: true
 
-  /eslint-plugin-es@3.0.1(eslint@8.34.0):
+  /eslint-plugin-es@3.0.1(eslint@8.44.0):
     resolution: {integrity: sha512-GUmAsJaN4Fc7Gbtl8uOBlayo2DqhwWvEzykMHSCZHU3XdJ+NSzzZcVhXh3VxX5icqQ+oQdIEawXX8xkR3mIFmQ==}
     engines: {node: '>=8.10.0'}
     peerDependencies:
       eslint: '>=4.19.1'
     dependencies:
-      eslint: 8.34.0
+      eslint: 8.44.0
       eslint-utils: 2.1.0
       regexpp: 3.2.0
     dev: true
 
-  /eslint-plugin-eslint-comments@3.2.0(eslint@8.34.0):
+  /eslint-plugin-eslint-comments@3.2.0(eslint@8.44.0):
     resolution: {integrity: sha512-0jkOl0hfojIHHmEHgmNdqv4fmh7300NdpA9FFpF7zaoLvB/QeXOGNLIo86oAveJFrfB1p05kC8hpEMHM8DwWVQ==}
     engines: {node: '>=6.5.0'}
     peerDependencies:
       eslint: '>=4.19.1'
     dependencies:
       escape-string-regexp: 1.0.5
-      eslint: 8.34.0
+      eslint: 8.44.0
       ignore: 5.2.4
     dev: true
 
-  /eslint-plugin-import@2.27.5(@typescript-eslint/parser@5.57.0)(eslint-import-resolver-typescript@3.5.4)(eslint@8.34.0):
+  /eslint-plugin-import@2.27.5(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0):
     resolution: {integrity: sha512-LmEt3GVofgiGuiE+ORpnvP+kAm3h6MLZJ4Q5HCyHADofsb4VzXFsRiWj3c0OFiV+3DWFh0qg3v9gcPlfc3zRow==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -11879,15 +11909,15 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.57.0(eslint@8.34.0)(typescript@5.0.2)
+      '@typescript-eslint/parser': 5.61.0(eslint@8.44.0)(typescript@5.0.2)
       array-includes: 3.1.6
       array.prototype.flat: 1.3.1
       array.prototype.flatmap: 1.3.1
       debug: 3.2.7(supports-color@5.5.0)
       doctrine: 2.1.0
-      eslint: 8.34.0
+      eslint: 8.44.0
       eslint-import-resolver-node: 0.3.7
-      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.57.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.4)(eslint@8.34.0)
+      eslint-module-utils: 2.7.4(@typescript-eslint/parser@5.61.0)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.44.0)
       has: 1.0.3
       is-core-module: 2.11.0
       is-glob: 4.0.3
@@ -11902,25 +11932,28 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-jsx-a11y@6.6.1(eslint@8.34.0):
-    resolution: {integrity: sha512-sXgFVNHiWffBq23uiS/JaP6eVR622DqwB4yTzKvGZGcPq6/yZ3WmOZfuBks/vHWo9GaFOqC2ZK4i6+C35knx7Q==}
+  /eslint-plugin-jsx-a11y@6.7.1(eslint@8.44.0):
+    resolution: {integrity: sha512-63Bog4iIethyo8smBklORknVjB0T2dwB8Mr/hIC+fBS0uyHdYYpzM/Ed+YC8VxTjlXHEWFOdmgwcDn1U2L9VCA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
-      '@babel/runtime': 7.19.4
-      aria-query: 4.2.2
+      '@babel/runtime': 7.21.0
+      aria-query: 5.3.0
       array-includes: 3.1.6
+      array.prototype.flatmap: 1.3.1
       ast-types-flow: 0.0.7
-      axe-core: 4.4.3
-      axobject-query: 2.2.0
+      axe-core: 4.7.2
+      axobject-query: 3.2.1
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
-      eslint: 8.34.0
+      eslint: 8.44.0
       has: 1.0.3
       jsx-ast-utils: 3.3.3
       language-tags: 1.0.5
       minimatch: 3.1.2
+      object.entries: 1.1.6
+      object.fromentries: 2.0.6
       semver: 6.3.0
     dev: true
 
@@ -11934,14 +11967,14 @@ packages:
       is-proto-prop: 2.0.0
     dev: true
 
-  /eslint-plugin-node@11.1.0(eslint@8.34.0):
+  /eslint-plugin-node@11.1.0(eslint@8.44.0):
     resolution: {integrity: sha512-oUwtPJ1W0SKD0Tr+wqu92c5xuCeQqB3hSCHasn/ZgjFdA9iDGNkNf2Zi9ztY7X+hNuMib23LNGRm6+uN+KLE3g==}
     engines: {node: '>=8.10.0'}
     peerDependencies:
       eslint: '>=5.16.0'
     dependencies:
-      eslint: 8.34.0
-      eslint-plugin-es: 3.0.1(eslint@8.34.0)
+      eslint: 8.44.0
+      eslint-plugin-es: 3.0.1(eslint@8.44.0)
       eslint-utils: 2.1.0
       ignore: 5.2.4
       minimatch: 3.1.2
@@ -11949,65 +11982,70 @@ packages:
       semver: 6.3.0
     dev: true
 
-  /eslint-plugin-prettier@4.2.1(eslint-config-prettier@8.8.0)(eslint@8.34.0)(prettier@2.8.4):
-    resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
-    engines: {node: '>=12.0.0'}
+  /eslint-plugin-prettier@5.0.0-alpha.2(eslint-config-prettier@8.8.0)(eslint@8.44.0)(prettier@3.0.0):
+    resolution: {integrity: sha512-F6YBCbrRzvZwcINw3crm1+/uX/i+rJYaFErPtwCfUoPLywRfY7pwBtI3yMe5OpIotuaiws8cd29oM80ca6NQSQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      eslint: '>=7.28.0'
+      '@types/eslint': '>=8.0.0'
+      eslint: '>=8.0.0'
       eslint-config-prettier: '*'
-      prettier: '>=2.0.0'
+      prettier: '>=3.0.0'
     peerDependenciesMeta:
+      '@types/eslint':
+        optional: true
       eslint-config-prettier:
         optional: true
     dependencies:
-      eslint: 8.34.0
-      eslint-config-prettier: 8.8.0(eslint@8.34.0)
-      prettier: 2.8.4
+      eslint: 8.44.0
+      eslint-config-prettier: 8.8.0(eslint@8.44.0)
+      prettier: 3.0.0
       prettier-linter-helpers: 1.0.0
+      synckit: 0.8.5
     dev: true
 
-  /eslint-plugin-promise@6.1.0(eslint@8.34.0):
-    resolution: {integrity: sha512-NYCfDZF/KHt27p06nFAttgWuFyIDSUMnNaJBIY1FY9GpBFhdT2vMG64HlFguSgcJeyM5by6Yr5csSOuJm60eXQ==}
+  /eslint-plugin-promise@6.1.1(eslint@8.44.0):
+    resolution: {integrity: sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
     dependencies:
-      eslint: 8.34.0
+      eslint: 8.44.0
     dev: true
 
-  /eslint-plugin-react-hooks@4.6.0(eslint@8.34.0):
+  /eslint-plugin-react-hooks@4.6.0(eslint@8.44.0):
     resolution: {integrity: sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
     dependencies:
-      eslint: 8.34.0
+      eslint: 8.44.0
     dev: true
 
-  /eslint-plugin-react@7.31.10(eslint@8.34.0):
-    resolution: {integrity: sha512-e4N/nc6AAlg4UKW/mXeYWd3R++qUano5/o+t+wnWxIf+bLsOaH3a4q74kX3nDjYym3VBN4HyO9nEn1GcAqgQOA==}
+  /eslint-plugin-react@7.32.2(eslint@8.44.0):
+    resolution: {integrity: sha512-t2fBMa+XzonrrNkyVirzKlvn5RXzzPwRHtMvLAtVZrt8oxgnTQaYbU6SXTOO1mwQgp1y5+toMSKInnzGr0Knqg==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
     dependencies:
       array-includes: 3.1.6
       array.prototype.flatmap: 1.3.1
+      array.prototype.tosorted: 1.1.1
       doctrine: 2.1.0
-      eslint: 8.34.0
+      eslint: 8.44.0
       estraverse: 5.3.0
       jsx-ast-utils: 3.3.3
       minimatch: 3.1.2
-      object.entries: 1.1.5
-      object.fromentries: 2.0.5
-      object.hasown: 1.1.1
+      object.entries: 1.1.6
+      object.fromentries: 2.0.6
+      object.hasown: 1.1.2
       object.values: 1.1.6
       prop-types: 15.8.1
       resolve: 2.0.0-next.4
       semver: 6.3.0
-      string.prototype.matchall: 4.0.7
+      string.prototype.matchall: 4.0.8
     dev: true
 
-  /eslint-plugin-sql@2.1.0(eslint@8.34.0):
+  /eslint-plugin-sql@2.1.0(eslint@8.44.0):
     resolution: {integrity: sha512-UPapPPhK1ADgQDTogpApiSAh6bYjrt2daYkKCdApHm5KPbq9qR4ca4TPyYod06bAnLgswbri6Z9gEPAy0R+B1A==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -12015,7 +12053,7 @@ packages:
     dependencies:
       astring: 1.8.3
       debug: 4.3.4
-      eslint: 8.34.0
+      eslint: 8.44.0
       lodash: 4.17.21
       pg-formatter: 1.3.0
       sql-parse: 0.1.5
@@ -12023,32 +12061,32 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-unicorn@45.0.2(eslint@8.34.0):
-    resolution: {integrity: sha512-Y0WUDXRyGDMcKLiwgL3zSMpHrXI00xmdyixEGIg90gHnj0PcHY4moNv3Ppje/kDivdAy5vUeUr7z211ImPv2gw==}
-    engines: {node: '>=14.18'}
+  /eslint-plugin-unicorn@47.0.0(eslint@8.44.0):
+    resolution: {integrity: sha512-ivB3bKk7fDIeWOUmmMm9o3Ax9zbMz1Bsza/R2qm46ufw4T6VBFBaJIR1uN3pCKSmSXm8/9Nri8V+iUut1NhQGA==}
+    engines: {node: '>=16'}
     peerDependencies:
-      eslint: '>=8.28.0'
+      eslint: '>=8.38.0'
     dependencies:
       '@babel/helper-validator-identifier': 7.19.1
-      '@eslint-community/eslint-utils': 4.4.0(eslint@8.34.0)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.44.0)
       ci-info: 3.8.0
       clean-regexp: 1.0.0
-      eslint: 8.34.0
-      esquery: 1.4.0
+      eslint: 8.44.0
+      esquery: 1.5.0
       indent-string: 4.0.0
-      is-builtin-module: 3.2.0
+      is-builtin-module: 3.2.1
       jsesc: 3.0.2
       lodash: 4.17.21
       pluralize: 8.0.0
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.24
-      regjsparser: 0.9.1
+      regjsparser: 0.10.0
       safe-regex: 2.1.1
-      semver: 7.3.8
+      semver: 7.5.3
       strip-indent: 3.0.0
     dev: true
 
-  /eslint-plugin-unused-imports@2.0.0(@typescript-eslint/eslint-plugin@5.57.0)(eslint@8.34.0):
+  /eslint-plugin-unused-imports@2.0.0(@typescript-eslint/eslint-plugin@5.61.0)(eslint@8.44.0):
     resolution: {integrity: sha512-3APeS/tQlTrFa167ThtP0Zm0vctjr4M44HMpeg1P4bK6wItarumq0Ma82xorMKdFsWpphQBlRPzw/pxiVELX1A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -12058,8 +12096,8 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.57.0(@typescript-eslint/parser@5.57.0)(eslint@8.34.0)(typescript@5.0.2)
-      eslint: 8.34.0
+      '@typescript-eslint/eslint-plugin': 5.61.0(@typescript-eslint/parser@5.61.0)(eslint@8.44.0)(typescript@5.0.2)
+      eslint: 8.44.0
       eslint-rule-composer: 0.3.0
     dev: true
 
@@ -12076,8 +12114,8 @@ packages:
       estraverse: 4.3.0
     dev: true
 
-  /eslint-scope@7.1.1:
-    resolution: {integrity: sha512-QKQM/UXpIiHcLqJ5AOyIW7XZmzjkzQXYE54n1++wb0u9V/abW3l9uQnxX8Z5Xd18xyKIMTUAyQ0k1e8pz6LUrw==}
+  /eslint-scope@7.2.0:
+    resolution: {integrity: sha512-DYj5deGlHBfMt15J7rdtyKNq/Nqlv5KfU4iodrQ019XESsRnwXH9KAE0y3cwtUHDo2ob7CypAnCqefh6vioWRw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       esrecurse: 4.3.0
@@ -12091,38 +12129,26 @@ packages:
       eslint-visitor-keys: 1.3.0
     dev: true
 
-  /eslint-utils@3.0.0(eslint@8.34.0):
-    resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
-    engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
-    peerDependencies:
-      eslint: '>=5'
-    dependencies:
-      eslint: 8.34.0
-      eslint-visitor-keys: 2.1.0
-    dev: true
-
   /eslint-visitor-keys@1.3.0:
     resolution: {integrity: sha512-6J72N8UNa462wa/KFODt/PJ3IU60SDpC3QXC1Hjc1BXXpfL2C9R5+AU7jhe0F6GREqVMh4Juu+NY7xn+6dipUQ==}
     engines: {node: '>=4'}
     dev: true
 
-  /eslint-visitor-keys@2.1.0:
-    resolution: {integrity: sha512-0rSmRBzXgDzIsD6mGdJgevzgezI534Cer5L/vyMX0kHzT/jiB43jRhd9YUlMGYLQy2zprNmoT8qasCGtY+QaKw==}
-    engines: {node: '>=10'}
-    dev: true
-
-  /eslint-visitor-keys@3.3.0:
-    resolution: {integrity: sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==}
+  /eslint-visitor-keys@3.4.1:
+    resolution: {integrity: sha512-pZnmmLwYzf+kWaM/Qgrvpen51upAktaaiI01nsJD/Yr3lMOdNtq0cxkrrg16w64VtisN6okbs7Q8AfGqj4c9fA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint@8.34.0:
-    resolution: {integrity: sha512-1Z8iFsucw+7kSqXNZVslXS8Ioa4u2KM7GPwuKtkTFAqZ/cHMcEaR+1+Br0wLlot49cNxIiZk5wp8EAbPcYZxTg==}
+  /eslint@8.44.0:
+    resolution: {integrity: sha512-0wpHoUbDUHgNCyvFB5aXLiQVfK9B0at6gUvzy83k4kAsQ/u769TQDX6iKC+aO4upIHO9WSaA3QoXYQDHbNwf1A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
-      '@eslint/eslintrc': 1.4.1
-      '@humanwhocodes/config-array': 0.11.8
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.44.0)
+      '@eslint-community/regexpp': 4.5.0
+      '@eslint/eslintrc': 2.1.0
+      '@eslint/js': 8.44.0
+      '@humanwhocodes/config-array': 0.11.10
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
       ajv: 6.12.6
@@ -12131,32 +12157,29 @@ packages:
       debug: 4.3.4
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
-      eslint-scope: 7.1.1
-      eslint-utils: 3.0.0(eslint@8.34.0)
-      eslint-visitor-keys: 3.3.0
-      espree: 9.4.1
-      esquery: 1.4.0
+      eslint-scope: 7.2.0
+      eslint-visitor-keys: 3.4.1
+      espree: 9.6.0
+      esquery: 1.5.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
       file-entry-cache: 6.0.1
       find-up: 5.0.0
       glob-parent: 6.0.2
       globals: 13.20.0
-      grapheme-splitter: 1.0.4
+      graphemer: 1.4.0
       ignore: 5.2.4
       import-fresh: 3.3.0
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
-      js-sdsl: 4.3.0
       js-yaml: 4.1.0
       json-stable-stringify-without-jsonify: 1.0.1
       levn: 0.4.1
       lodash.merge: 4.6.2
       minimatch: 3.1.2
       natural-compare: 1.4.0
-      optionator: 0.9.1
-      regexpp: 3.2.0
+      optionator: 0.9.3
       strip-ansi: 6.0.1
       strip-json-comments: 3.1.1
       text-table: 0.2.0
@@ -12164,13 +12187,13 @@ packages:
       - supports-color
     dev: true
 
-  /espree@9.4.1:
-    resolution: {integrity: sha512-XwctdmTO6SIvCzd9810yyNzIrOrqNYV9Koizx4C/mRhf9uq0o4yHoCEU/670pOxOL/MSraektvSAji79kX90Vg==}
+  /espree@9.6.0:
+    resolution: {integrity: sha512-1FH/IiruXZ84tpUlm0aCUEwMl2Ho5ilqVh0VvQXw+byAz/4SAciyHLlfmL5WYqsvD38oymdUwBss0LtK8m4s/A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      acorn: 8.8.2
-      acorn-jsx: 5.3.2(acorn@8.8.2)
-      eslint-visitor-keys: 3.3.0
+      acorn: 8.10.0
+      acorn-jsx: 5.3.2(acorn@8.10.0)
+      eslint-visitor-keys: 3.4.1
     dev: true
 
   /esprima@4.0.1:
@@ -12179,8 +12202,8 @@ packages:
     hasBin: true
     dev: true
 
-  /esquery@1.4.0:
-    resolution: {integrity: sha512-cCDispWt5vHHtwMY2YrAQ4ibFkAL8RbH5YGBnZBc90MolvvfkkQcJro/aZiAQUlQ3qgrYS6D6v8Gc5G5CQsc9w==}
+  /esquery@1.5.0:
+    resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
     engines: {node: '>=0.10'}
     dependencies:
       estraverse: 5.3.0
@@ -12918,6 +12941,10 @@ packages:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: true
 
+  /graphemer@1.4.0:
+    resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+    dev: true
+
   /gzip-size@7.0.0:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -13529,6 +13556,13 @@ packages:
 
   /is-builtin-module@3.2.0:
     resolution: {integrity: sha512-phDA4oSGt7vl1n5tJvTWooWWAsXLY+2xCnxNqvKhGEzujg+A43wPlPOyDg3C8XQHN+6k/JTQWJ/j0dQh/qr+Hw==}
+    engines: {node: '>=6'}
+    dependencies:
+      builtin-modules: 3.3.0
+    dev: true
+
+  /is-builtin-module@3.2.1:
+    resolution: {integrity: sha512-BSLE3HnV2syZ0FK0iMA/yUGplUeMmNz4AW5fnTunbCIqZi4vG3WjJT9FHMy5D69xmAYBHXQhJdALdpwVxV501A==}
     engines: {node: '>=6'}
     dependencies:
       builtin-modules: 3.3.0
@@ -14417,10 +14451,6 @@ packages:
 
   /js-base64@3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
-    dev: true
-
-  /js-sdsl@4.3.0:
-    resolution: {integrity: sha512-mifzlm2+5nZ+lEcLJMoBK0/IH/bDg8XnJfd/Wq6IP+xoCjLZsTOnV2QpxlVbX9bMnkl5PdEjNtBJ9Cj1NjifhQ==}
     dev: true
 
   /js-tokens@4.0.0:
@@ -16128,8 +16158,8 @@ packages:
       object-keys: 1.1.1
     dev: true
 
-  /object.entries@1.1.5:
-    resolution: {integrity: sha512-TyxmjUoZggd4OrrU1W66FMDG6CuqJxsFvymeyXI51+vQLN67zYfZseptRge703kKQdo4uccgAKebXFcRCzk4+g==}
+  /object.entries@1.1.6:
+    resolution: {integrity: sha512-leTPzo4Zvg3pmbQ3rDK69Rl8GQvIqMWubrkxONG9/ojtFE2rD9fjMKfSI5BxW3osRH1m6VdzmqK8oAY9aT4x5w==}
     engines: {node: '>= 0.4'}
     dependencies:
       call-bind: 1.0.2
@@ -16137,8 +16167,8 @@ packages:
       es-abstract: 1.20.4
     dev: true
 
-  /object.fromentries@2.0.5:
-    resolution: {integrity: sha512-CAyG5mWQRRiBU57Re4FKoTBjXfDoNwdFVH2Y1tS9PqCsfUTymAohOkEMSG3aRNKmv4lV3O7p1et7c187q6bynw==}
+  /object.fromentries@2.0.6:
+    resolution: {integrity: sha512-VciD13dswC4j1Xt5394WR4MzmAQmlgN72phd/riNp9vtD7tp4QQWJ0R4wvclXcafgcYK8veHRed2W6XeGBvcfg==}
     engines: {node: '>= 0.4'}
     dependencies:
       call-bind: 1.0.2
@@ -16146,8 +16176,8 @@ packages:
       es-abstract: 1.20.4
     dev: true
 
-  /object.hasown@1.1.1:
-    resolution: {integrity: sha512-LYLe4tivNQzq4JdaWW6WO3HMZZJWzkkH8fnI6EebWl0VZth2wL2Lovm74ep2/gZzlaTdV62JZHEqHQ2yVn8Q/A==}
+  /object.hasown@1.1.2:
+    resolution: {integrity: sha512-B5UIT3J1W+WuWIU55h0mjlwaqxiE5vYENJXIXZ4VFe05pNYrkKuK0U/6aFcb0pKywYJh7IhfoqUfKVmrJJHZHw==}
     dependencies:
       define-properties: 1.1.4
       es-abstract: 1.20.4
@@ -16258,16 +16288,16 @@ packages:
       word-wrap: 1.2.3
     dev: true
 
-  /optionator@0.9.1:
-    resolution: {integrity: sha512-74RlY5FCnhq4jRxVUPKDaRwrVNXMqsGsiW6AJw4XK8hmtm10wC0ypZBLw5IIp85NZMr91+qd1RvvENwg7jjRFw==}
+  /optionator@0.9.3:
+    resolution: {integrity: sha512-JjCoypp+jKn1ttEFExxhetCKeJt9zhAgAve5FXHixTvFDW/5aEktX9bufBKLRRMdU7bNtpLfcGu94B3cdEJgjg==}
     engines: {node: '>= 0.8.0'}
     dependencies:
+      '@aashutoshrathi/word-wrap': 1.2.6
       deep-is: 0.1.4
       fast-levenshtein: 2.0.6
       levn: 0.4.1
       prelude-ls: 1.2.1
       type-check: 0.4.0
-      word-wrap: 1.2.3
     dev: true
 
   /ora@6.1.2:
@@ -16881,12 +16911,12 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /postcss-sorting@7.0.1(postcss@8.4.21):
+  /postcss-sorting@7.0.1(postcss@8.4.24):
     resolution: {integrity: sha512-iLBFYz6VRYyLJEJsBJ8M3TCqNcckVzz4wFounSc5Oez35ogE/X+aoC5fFu103Ot7NyvjU3/xqIXn93Gp3kJk4g==}
     peerDependencies:
       postcss: ^8.3.9
     dependencies:
-      postcss: 8.4.21
+      postcss: 8.4.24
     dev: true
 
   /postcss-value-parser@3.3.1:
@@ -17049,6 +17079,12 @@ packages:
   /prettier@2.8.4:
     resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
     engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
+
+  /prettier@3.0.0:
+    resolution: {integrity: sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -17798,8 +17834,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /regjsparser@0.9.1:
-    resolution: {integrity: sha512-dQUtn90WanSNl+7mQKcXAgZxvUe7Z0SqXlgzv0za4LwiUhyzBC58yQO3liFoUgu8GiJVInAhJjkj1N0EtQ5nkQ==}
+  /regjsparser@0.10.0:
+    resolution: {integrity: sha512-qx+xQGZVsy55CH0a1hiVwHmqjLryfh7wQyF5HO07XJ9f7dQMY/gPQHhlyDkIzJKC+x2fUCpCcUODUUUFrm7SHA==}
     hasBin: true
     dependencies:
       jsesc: 0.5.0
@@ -18664,8 +18700,8 @@ packages:
       emoji-regex: 9.2.2
       strip-ansi: 7.0.1
 
-  /string.prototype.matchall@4.0.7:
-    resolution: {integrity: sha512-f48okCX7JiwVi1NXCVWcFnZgADDC/n2vePlQ/KUCNqCikLLilQvwjMO8+BHVKvgzH0JB0J9LEPgxOGT02RoETg==}
+  /string.prototype.matchall@4.0.8:
+    resolution: {integrity: sha512-6zOCOcJ+RJAQshcTvXPHoxoQGONa3e/Lqx90wUA+wEzX78sg5Bo+1tQo4N0pohS0erG9qtCqJDjNCQBjeWVxyg==}
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.4
@@ -18860,8 +18896,8 @@ packages:
     peerDependencies:
       stylelint: ^14.0.0 || ^15.0.0
     dependencies:
-      postcss: 8.4.21
-      postcss-sorting: 7.0.1(postcss@8.4.21)
+      postcss: 8.4.24
+      postcss-sorting: 7.0.1(postcss@8.4.24)
       stylelint: 15.0.0
     dev: true
 
@@ -18870,8 +18906,8 @@ packages:
     peerDependencies:
       stylelint: ^14.0.0 || ^15.0.0
     dependencies:
-      postcss: 8.4.21
-      postcss-sorting: 7.0.1(postcss@8.4.21)
+      postcss: 8.4.24
+      postcss-sorting: 7.0.1(postcss@8.4.24)
       stylelint: 15.6.2
     dev: true
 
@@ -18883,7 +18919,7 @@ packages:
       lodash: 4.17.21
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
-      postcss-selector-parser: 6.0.11
+      postcss-selector-parser: 6.0.13
       postcss-value-parser: 4.2.0
       stylelint: 15.0.0
     dev: true
@@ -18896,7 +18932,7 @@ packages:
       lodash: 4.17.21
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
-      postcss-selector-parser: 6.0.11
+      postcss-selector-parser: 6.0.13
       postcss-value-parser: 4.2.0
       stylelint: 15.6.2
     dev: true
@@ -19358,7 +19394,7 @@ packages:
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
       '@types/node': 18.11.18
-      acorn: 8.8.2
+      acorn: 8.10.0
       acorn-walk: 8.2.0
       arg: 4.1.3
       create-require: 1.1.1

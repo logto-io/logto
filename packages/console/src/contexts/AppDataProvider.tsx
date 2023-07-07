@@ -29,7 +29,7 @@ function AppDataProvider({ children }: Props) {
     () =>
       ({
         userEndpoint,
-      } satisfies AppData),
+      }) satisfies AppData,
     [userEndpoint]
   );
 

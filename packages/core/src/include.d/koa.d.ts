@@ -8,7 +8,7 @@ declare module 'koa' {
     StateT = DefaultState,
     ContextT = DefaultContext,
     ResponseBodyT = unknown,
-    NextT = void
+    NextT = void,
   > = KoaMiddleware<ParameterizedContext<StateT, ContextT, ResponseBodyT>, NextT>;
 
   interface Request extends BaseRequest {

@@ -10,7 +10,10 @@ export default class ServerError extends Error {
 }
 
 export class StatusCodeError extends ServerError {
-  constructor(public readonly expect: number | number[], public readonly received: number) {
+  constructor(
+    public readonly expect: number | number[],
+    public readonly received: number
+  ) {
     super(
       `Guard response status failed: Expected ${
         Array.isArray(expect) ? expect.join(', ') : expect

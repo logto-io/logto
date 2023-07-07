@@ -50,7 +50,7 @@ const sendMessage =
       type: template.type,
       value:
         typeof payload.code === 'string'
-          ? template.content.replace(/{{code}}/g, payload.code)
+          ? template.content.replaceAll('{{code}}', payload.code)
           : template.content,
     };
     const { subject } = template;

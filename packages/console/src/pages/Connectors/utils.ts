@@ -4,7 +4,7 @@ import { ConnectorType } from '@logto/schemas';
 import type { ConnectorGroup } from '@/types/connector';
 
 export const getConnectorGroups = <
-  T extends ConnectorResponse | ConnectorFactoryResponse = ConnectorResponse
+  T extends ConnectorResponse | ConnectorFactoryResponse = ConnectorResponse,
 >(
   connectors: T[]
 ) => {
