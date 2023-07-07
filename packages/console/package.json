@@ -90,7 +90,7 @@
     "parcel": "2.9.3",
     "postcss": "^8.4.6",
     "postcss-modules": "^4.3.0",
-    "prettier": "^2.8.2",
+    "prettier": "^3.0.0",
     "process": "^0.11.10",
     "prop-types": "^15.8.1",
     "react": "^18.0.0",
