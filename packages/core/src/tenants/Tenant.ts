@@ -56,7 +56,11 @@ export default class Tenant implements TenantContext {
     public readonly queries = new Queries(envSet.pool, wellKnownCache),
     public readonly logtoConfigs = createLogtoConfigLibrary(queries),
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
-    public readonly connectors = createConnectorLibrary(queries, cloudConnection),
+    public readonly connectors = createConnectorLibrary(
+      queries,
+      cloudConnection,
+      EnvSet.values.isProduction
+    ),
     public readonly libraries = new Libraries(id, queries, connectors)
   ) {
     const isAdminTenant = id === adminTenantId;

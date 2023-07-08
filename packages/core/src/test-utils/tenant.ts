@@ -76,7 +76,8 @@ export class MockTenant implements TenantContext {
     this.logtoConfigs = createLogtoConfigLibrary(this.queries);
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
     this.connectors = {
-      ...createConnectorLibrary(this.queries, this.cloudConnection),
+      // Manually set the third argument `isDevelopment` to `false` since this is not a production environment.
+      ...createConnectorLibrary(this.queries, this.cloudConnection, false),
       ...connectorsOverride,
     };
     this.libraries = new Libraries(this.id, this.queries, this.connectors);

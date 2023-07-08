@@ -1,5 +1,3 @@
-import { getEnv } from '@silverhand/essentials';
-
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
@@ -102,11 +100,9 @@ export const defaultMetadata: ConnectorMetadata = {
 
 export const scope = ['send:email'];
 
-export const defaultTimeout = 5000;
+export const defaultTimeout = 10_000;
 
 export const oldEmailEndpoint = '/services/send-email';
 export const newEmailEndpoint = '/services/mails';
-export const emailEndpoint =
-  getEnv('NODE_ENV') === 'production' ? oldEmailEndpoint : newEmailEndpoint;
 
 export const usageEndpoint = '/services/mails/usage';

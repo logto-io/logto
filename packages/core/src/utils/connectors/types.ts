@@ -9,7 +9,7 @@ export { ConnectorType } from '@logto/schemas';
  */
 export type LogtoConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
-} & { dbEntry: Connector };
+} & { dbEntry: Connector; isDevelopment: boolean };
 
 export const connectorWellKnownGuard = Connectors.guard.pick({
   id: true,

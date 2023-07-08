@@ -2,7 +2,7 @@ import nock from 'nock';
 
 import { VerificationCodeType } from '@logto/connector-kit';
 
-import { emailEndpoint } from './constant.js';
+import { newEmailEndpoint } from './constant.js';
 import { mockedAccessTokenResponse, mockedConfig } from './mock.js';
 
 const { jest } = import.meta;
@@ -17,14 +17,18 @@ describe('sendMessage()', () => {
   });
 
   it('should send message successfully', async () => {
-    nock(mockedConfig.endpoint).post(emailEndpoint).reply(200);
+    nock(mockedConfig.endpoint).post(newEmailEndpoint).reply(200);
     const connector = await createConnector({ getConfig });
     await expect(
-      connector.sendMessage({
-        to: 'wangsijie94@gmail.com',
-        type: VerificationCodeType.SignIn,
-        payload: { code: '1234' },
-      })
+      connector.sendMessage(
+        {
+          to: 'wangsijie94@gmail.com',
+          type: VerificationCodeType.SignIn,
+          payload: { code: '1234' },
+        },
+        undefined,
+        false // Set to `false` since this is not production env.
+      )
     ).resolves.not.toThrow();
   });
 });

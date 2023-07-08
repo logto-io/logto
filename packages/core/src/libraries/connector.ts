@@ -15,7 +15,8 @@ export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
 export const createConnectorLibrary = (
   queries: Queries,
-  cloudConnection: CloudConnectionLibrary
+  cloudConnection: CloudConnectionLibrary,
+  isProduction: boolean
 ) => {
   const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
   const { getCloudConnectionData } = cloudConnection;
@@ -99,6 +100,7 @@ export const createConnectorLibrary = (
               validateConfig(config, rawConnector.configGuard);
             },
             dbEntry: databaseConnector,
+            isDevelopment: isProduction && ServiceConnector.Email === connectorFactory.metadata.id,
           };
         } catch {}
       })

@@ -15,7 +15,13 @@ import {
   ConnectorErrorCodes,
 } from '@logto/connector-kit';
 
-import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
+import {
+  defaultMetadata,
+  defaultTimeout,
+  oldEmailEndpoint,
+  newEmailEndpoint,
+  usageEndpoint,
+} from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';
 import type { LogtoEmailConfig } from './types.js';
 import { logtoEmailConfigGuard } from './types.js';
@@ -24,9 +30,10 @@ export type { EmailServiceBasicConfig } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
-  async (data, inputConfig) => {
+  async (data, inputConfig, isDevelopment) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
+    const emailEndpoint = isDevelopment ? oldEmailEndpoint : newEmailEndpoint;
 
     const {
       endpoint,

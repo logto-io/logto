@@ -11,6 +11,7 @@ import { phoneRegEx, emailRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, ConnectorType } from '@logto/schemas';
 import { string, object } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -84,7 +85,8 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
             code: '000000',
           },
         },
-        config
+        config,
+        ServiceConnector.Email === connectorFactory.metadata.id && EnvSet.values.isProduction
       );
 
       ctx.status = 204;

@@ -83,7 +83,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       })
     );
 
-    const { dbEntry, metadata, sendMessage } = connector;
+    const { dbEntry, metadata, sendMessage, isDevelopment } = connector;
 
     const messageTypeResult = verificationCodeTypeGuard.safeParse(passcode.type);
 
@@ -91,13 +91,17 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
     }
 
-    const response = await sendMessage({
-      to: emailOrPhone,
-      type: messageTypeResult.data,
-      payload: {
-        code: passcode.code,
+    const response = await sendMessage(
+      {
+        to: emailOrPhone,
+        type: messageTypeResult.data,
+        payload: {
+          code: passcode.code,
+        },
       },
-    });
+      undefined,
+      isDevelopment
+    );
 
     return { dbEntry, metadata, response };
   };

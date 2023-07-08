@@ -240,7 +240,11 @@ export const sendMessagePayloadGuard = z.object({
 
 export type SendMessagePayload = z.infer<typeof sendMessagePayloadGuard>;
 
-export type SendMessageFunction = (data: SendMessagePayload, config?: unknown) => Promise<unknown>;
+export type SendMessageFunction = (
+  data: SendMessagePayload,
+  config?: unknown,
+  isDevelopment?: boolean
+) => Promise<unknown>;
 
 export type GetUsageFunction = (startFrom?: Date) => Promise<number>;
 
