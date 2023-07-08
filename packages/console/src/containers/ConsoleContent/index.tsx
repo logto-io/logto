@@ -9,7 +9,7 @@ import {
   WebhookDetailsTabs,
   TenantSettingsTabs,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isProduction } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
 import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermissions';
@@ -148,7 +148,9 @@ function ConsoleContent() {
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
+                {!isProduction && (
+                  <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
+                )}
               </Route>
             )}
           </Routes>
