@@ -4,7 +4,8 @@ import assert from 'node:assert';
 const omit = (object, ...keys) => Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
 const omitArray = (arrayOfObjects, ...keys) => arrayOfObjects.map((value) => omit(value, ...keys));
 
-const schema = 'public';
+const schemas = ['cloud', 'public'];
+const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
 const queryDatabaseManifest = async (database) => {
   const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
@@ -12,15 +13,15 @@ const queryDatabaseManifest = async (database) => {
   const { rows: tables } = await pool.query(/* sql */`
     select *
     from information_schema.tables
-    where table_schema = '${schema}'
-    order by table_name asc;
+    where table_schema in ${schemasArray}
+    order by table_schema, table_name asc;
   `);
 
   const { rows: columns } = await pool.query(/* sql */`
     select *
     from information_schema.columns 
-    where table_schema = '${schema}' 
-    order by table_name, column_name asc;
+    where table_schema in ${schemasArray}
+    order by table_schema, table_name, column_name asc;
   `);
 
   const { rows: enums } = await pool.query(/* sql */`
@@ -45,8 +46,8 @@ const queryDatabaseManifest = async (database) => {
   const { rows: indexes } = await pool.query(/* sql */`
     select *
     from pg_indexes
-    where schemaname='${schema}'
-    order by indexname asc;
+    where schemaname in ${schemasArray}
+    order by schemaname, indexname asc;
   `);
 
   const { rows: funcs } = await pool.query(/* sql */`
@@ -77,15 +78,15 @@ const queryDatabaseManifest = async (database) => {
   const { rows: policies } = await pool.query(/* sql */`select * from pg_policies order by tablename, policyname;`);
   const { rows: columnGrants } = await pool.query(/* sql */`
     select * from information_schema.role_column_grants
-    where table_schema = '${schema}'
+    where table_schema in ${schemasArray}
       and grantee != 'postgres'
-    order by grantee, table_name, column_name, privilege_type;
+    order by table_schema, grantee, table_name, column_name, privilege_type;
   `);
   const { rows: tableGrants } = await pool.query(/* sql */`
     select * from information_schema.role_table_grants
-    where table_schema = '${schema}'
+    where table_schema in ${schemasArray}
       and grantee != 'postgres'
-    order by grantee, table_name, privilege_type;
+    order by table_schema, grantee, table_name, privilege_type;
   `);
 
   // This function removes the last segment of grantee since Logto will use 'logto_tenant_fresh/alteration' for the role name.
@@ -162,8 +163,8 @@ const buildSortByKeys = (keys) => (a, b) => {
 const queryDatabaseData = async (database) => {
   const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
   const result = await Promise.all(manifests[0].tables
-    .map(async ({ table_name }) => {
-      const { rows } = await pool.query(/* sql */`select * from ${table_name};`);
+    .map(async ({ table_schema, table_name }) => {
+      const { rows } = await pool.query(/* sql */`select * from ${table_schema}.${table_name};`);
 
       // check config rows except the value column
       if (['logto_configs', '_logto_configs', 'systems'].includes(table_name)) {
