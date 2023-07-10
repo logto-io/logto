@@ -39,7 +39,8 @@ function LanguageDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
   const { languages } = useUiLanguages();
-  const { selectedLanguage, setIsDirty, setSelectedLanguage } = useContext(LanguageEditorContext);
+  const { selectedLanguage, isDirty, setIsDirty, setSelectedLanguage } =
+    useContext(LanguageEditorContext);
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
   const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
   const isDefaultLanguage = signInExperience?.languageInfo.fallbackLanguage === selectedLanguage;
@@ -79,7 +80,7 @@ function LanguageDetails() {
     reset,
     setValue,
     register,
-    formState: { isSubmitting, isDirty, dirtyFields },
+    formState: { isSubmitting, isDirty: isFormStateDirty, dirtyFields },
   } = useForm<Translation>({
     defaultValues: defaultFormValues,
   });
@@ -90,13 +91,13 @@ function LanguageDetails() {
      * for the `isDirty` state does not work correctly when comparing form data with empty / undefined values.
      * Reference: https://github.com/react-hook-form/react-hook-form/issues/4740
      */
-    setIsDirty(isDirty && Object.keys(dirtyFields).length > 0);
+    setIsDirty(isFormStateDirty && Object.keys(dirtyFields).length > 0);
   }, [
     /**
      * Note: `isDirty` is used to trigger this `useEffect`; for `dirtyFields` object only marks filed dirty at field level.
      * When `dirtyFields` is changed from `{keyA: false}` to `{keyA: true}`, this `useEffect` won't be triggered.
      */
-    isDirty,
+    isFormStateDirty,
     dirtyFields,
     setIsDirty,
   ]);
@@ -131,19 +132,31 @@ function LanguageDetails() {
     await api.delete(`api/custom-phrases/${selectedLanguage}`);
 
     await globalMutate('api/custom-phrases');
-
+    setIsDirty(false);
     setSelectedLanguage(languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en');
-  }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);
+  }, [
+    api,
+    globalMutate,
+    isDefaultLanguage,
+    languages,
+    selectedLanguage,
+    setIsDirty,
+    setSelectedLanguage,
+  ]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData: Translation) => {
       const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
+      reset(updatedCustomPhrase.translation);
       void mutate(updatedCustomPhrase);
       toast.success(t('general.saved'));
     })
   );
 
   useEffect(() => {
+    if (isDirty) {
+      return;
+    }
     reset(defaultFormValues);
   }, [
     /**
@@ -153,6 +166,7 @@ function LanguageDetails() {
     selectedLanguage,
     defaultFormValues,
     reset,
+    isDirty,
   ]);
 
   return (

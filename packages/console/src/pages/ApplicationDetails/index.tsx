@@ -85,8 +85,12 @@ function ApplicationDetails() {
       return;
     }
 
+    if (isDirty) {
+      return;
+    }
+
     reset(data);
-  }, [data, reset]);
+  }, [data, isDirty, reset]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -114,6 +118,7 @@ function ApplicationDetails() {
           },
         })
         .json<Application>();
+      reset(formData);
       void mutate();
       toast.success(t('general.saved'));
     })

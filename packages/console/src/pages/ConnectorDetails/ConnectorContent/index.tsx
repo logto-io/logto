@@ -68,8 +68,14 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   const isEmailServiceConnector = connectorId === ServiceConnector.Email;
 
   useEffect(() => {
+    /**
+     * Note: should not refresh form data when the form is dirty.
+     */
+    if (isDirty) {
+      return;
+    }
     reset(formData);
-  }, [formData, reset]);
+  }, [formData, isDirty, reset]);
 
   const configParser = useConnectorFormConfigParser();
 
@@ -97,6 +103,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           json: body,
         })
         .json<ConnectorResponse>();
+      /**
+       * Note: reset form dirty state before updating the form data.
+       */
+      reset();
       onConnectorUpdated(updatedConnector);
       toast.success(t('general.saved'));
     })

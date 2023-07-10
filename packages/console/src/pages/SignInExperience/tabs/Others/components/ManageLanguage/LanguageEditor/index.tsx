@@ -34,6 +34,7 @@ function LanguageEditorModal({ isOpen, onClose }: Props) {
     setPreSelectedLanguage,
     setPreAddedLanguage,
     setConfirmationState,
+    setIsDirty,
   } = useContext(LanguageEditorContext);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ function LanguageEditorModal({ isOpen, onClose }: Props) {
     }
 
     setConfirmationState('none');
+    setIsDirty(false);
   };
 
   return (
