@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: relative;
+
+  > div:not(:last-child) {
+    margin-bottom: _.unit(4);
+  }
+}
