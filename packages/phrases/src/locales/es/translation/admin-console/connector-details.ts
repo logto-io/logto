@@ -43,13 +43,13 @@ const connector_details = {
     from_name_tip:
       'Personalice el nombre del remitente para los correos electrónicos. Si se deja en blanco, se utilizará "Verificación" como nombre predeterminado.',
     from_name_placeholder: 'Su nombre de remitente',
-    company_address_field: 'Dirección de la empresa',
-    company_address_tip:
-      'Mostrar la dirección de la empresa y el código postal en la parte inferior de los correos electrónicos mejora la autenticidad, proporciona información de contacto y garantiza el cumplimiento.',
-    company_address_placeholder: 'La dirección de su empresa',
+    company_information_field: 'Información de la empresa',
+    company_information_description:
+      'Muestre el nombre de su empresa, dirección o código postal en la parte inferior de los correos electrónicos para mejorar la autenticidad.',
+    company_information_placeholder: 'Información básica de su empresa',
     app_logo_field: 'Logotipo de la aplicación',
     app_logo_tip:
-      'Muestre el logotipo de su marca en la parte superior de los correos electrónicos. Use la misma imagen para el modo claro y oscuro.',
+      'Muestre el logotipo de su marca en la parte superior de los correos electrónicos. Utilice la misma imagen para el modo claro y oscuro.',
     urls_not_allowed: 'Las URL no están permitidas',
     test_notes: 'Logto utiliza la plantilla "Generic" para realizar pruebas.',
   },

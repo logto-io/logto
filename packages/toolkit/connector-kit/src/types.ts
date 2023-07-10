@@ -219,9 +219,12 @@ export const emailServiceBrandingGuard = z
     fromName: z
       .string()
       .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the sender name!'),
-    companyAddress: z
+    companyInformation: z
       .string()
-      .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the company address!'),
+      .refine(
+        (address) => !urlRegEx.test(address),
+        'DO NOT include URL in the company information!'
+      ),
     appLogo: z.string().url(),
   })
   .partial();
