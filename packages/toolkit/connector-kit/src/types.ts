@@ -216,7 +216,7 @@ export const urlRegEx =
 
 export const emailServiceBrandingGuard = z
   .object({
-    fromName: z
+    senderName: z
       .string()
       .refine((address) => !urlRegEx.test(address), 'DO NOT include URL in the sender name!'),
     companyInformation: z

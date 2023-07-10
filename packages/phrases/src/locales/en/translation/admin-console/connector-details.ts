@@ -39,10 +39,10 @@ const connector_details = {
       'Built-in email uses default templates for seamless delivery of verification emails. No configuration is required, and you can customize basic brand information.',
     description_action_text: 'View templates',
     from_email_field: 'From email',
-    from_name_field: 'Sender name',
-    from_name_tip:
-      'Customize the sender name for emails. If left empty, “Verification” will be used as the default name.',
-    from_name_placeholder: 'Your sender name',
+    sender_name_field: 'Sender name',
+    sender_name_tip:
+      'Customize the sender name for emails. If left empty, "Verification" will be used as the default name.',
+    sender_name_placeholder: 'Your sender name',
     company_information_field: 'Company information',
     company_information_description:
       'Display your company name, address, or zip code in the bottom of emails to enhance authenticity.',

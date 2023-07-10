@@ -39,10 +39,10 @@ const connector_details = {
       'El correo electrónico integrado utiliza plantillas predeterminadas para la entrega sin problemas de correos electrónicos de verificación. No se requiere configuración, y puede personalizar la información básica de la marca.',
     description_action_text: 'Ver plantillas',
     from_email_field: 'Correo electrónico de origen',
-    from_name_field: 'Nombre del remitente',
-    from_name_tip:
-      'Personalice el nombre del remitente para los correos electrónicos. Si se deja en blanco, se utilizará "Verificación" como nombre predeterminado.',
-    from_name_placeholder: 'Su nombre de remitente',
+    sender_name_field: 'Nombre del remitente',
+    sender_name_tip:
+      'Personalice el nombre del remitente para los correos electrónicos. Si se deja en blanco, se utilizará "Verification" como nombre predeterminado.',
+    sender_name_placeholder: 'Su nombre de remitente',
     company_information_field: 'Información de la empresa',
     company_information_description:
       'Muestre el nombre de su empresa, dirección o código postal en la parte inferior de los correos electrónicos para mejorar la autenticidad.',

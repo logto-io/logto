@@ -39,10 +39,10 @@ const connector_details = {
       'Der integrierte E-Mail-Versand verwendet Standardvorlagen für eine nahtlose Zustellung von Verifizierungs-E-Mails. Es ist keine Konfiguration erforderlich, und Sie können grundlegende Markeninformationen anpassen.',
     description_action_text: 'Vorlagen anzeigen',
     from_email_field: 'Absender-E-Mail',
-    from_name_field: 'Sendername',
-    from_name_tip:
-      'Passen Sie den Absendernamen für E-Mails an. Wenn es leer gelassen wird, wird "Verifizierung" als Standardname verwendet.',
-    from_name_placeholder: 'Ihr Absendername',
+    sender_name_field: 'Sender name',
+    sender_name_tip:
+      'Passen Sie den Absendernamen für E-Mails an. Wenn es leer gelassen wird, wird "Verification" als Standardname verwendet.',
+    sender_name_placeholder: 'Ihr Absendername',
     company_information_field: 'Firmeninformationen',
     company_information_description:
       'Zeigen Sie den Firmennamen, die Adresse oder die Postleitzahl am Ende der E-Mails an, um die Authentizität zu erhöhen.',

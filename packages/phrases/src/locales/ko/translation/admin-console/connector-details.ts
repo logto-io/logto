@@ -39,10 +39,10 @@ const connector_details = {
       '내장형 이메일은 기본 템플릿을 사용하여 검증 이메일을 원활하게 전달합니다. 구성이 필요하지 않으며, 기본 브랜드 정보를 사용자 정의할 수 있습니다.',
     description_action_text: '템플릿 보기',
     from_email_field: '보내는 이메일',
-    from_name_field: '보내는 사람 이름',
-    from_name_tip:
-      '이메일의 보내는 사람 이름을 사용자 정의합니다. 비워 두면 기본 이름으로 "Verification"이 사용됩니다.',
-    from_name_placeholder: '보내는 사람 이름을 입력해주세요.',
+    sender_name_field: '보내는 사람 이름',
+    sender_name_tip:
+      '이메일의 보내는 사람 이름을 사용자 정의합니다. 비워 두면 기본 이름으로 "Verification" 이 사용됩니다.',
+    sender_name_placeholder: '보내는 사람 이름을 입력해주세요.',
     company_information_field: '회사 정보',
     company_information_description:
       '이메일 하단에 회사 이름, 주소 또는 우편번호를 표시하여 신뢰성을 높입니다.',

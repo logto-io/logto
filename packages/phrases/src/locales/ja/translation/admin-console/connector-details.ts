@@ -39,10 +39,10 @@ const connector_details = {
       '組み込みのメールは、シームレスな認証メールの配信のためにデフォルトのテンプレートを使用します。設定は必要ありません。基本的なブランド情報をカスタマイズできます。',
     description_action_text: 'テンプレートを表示',
     from_email_field: '送信元メールアドレス',
-    from_name_field: '送信元名',
-    from_name_tip:
+    sender_name_field: '送信元名',
+    sender_name_tip:
       'メールの送信元名をカスタマイズします。空白の場合、「Verification」がデフォールト名として使用されます。',
-    from_name_placeholder: '送信元の名前を入力してください',
+    sender_name_placeholder: '送信元の名前を入力してください',
     company_information_field: '企業情報',
     company_information_description:
       'メールの下部に会社名、住所、郵便番号などを表示して、真正性を高めます。',

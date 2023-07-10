@@ -39,10 +39,10 @@ const connector_details = {
       "L'email integrata utilizza modelli predefiniti per la consegna senza soluzione di continuità delle email di verifica. Non è richiesta alcuna configurazione e puoi personalizzare le informazioni di base del marchio.",
     description_action_text: 'Visualizza i modelli',
     from_email_field: 'Email mittente',
-    from_name_field: 'Nome mittente',
-    from_name_tip:
-      'Personalizza il nome del mittente per le email. Se lasciato vuoto, verrà utilizzato "Verifica" come nome predefinito.',
-    from_name_placeholder: 'Il tuo nome mittente',
+    sender_name_field: 'Nome mittente',
+    sender_name_tip:
+      'Personalizza il nome del mittente per le email. Se lasciato vuoto, verrà utilizzato "Verification" come nome predefinito.',
+    sender_name_placeholder: 'Il tuo nome mittente',
     company_information_field: 'Informazioni aziendali',
     company_information_description:
       "Mostra il nome dell'azienda, l'indirizzo o il codice postale in fondo alle email per migliorare l'autenticità.",
