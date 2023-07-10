@@ -1,0 +1,67 @@
+@use '@/scss/underscore' as _;
+
+
+.container {
+  padding: _.unit(3);
+  border-radius: 12px;
+  background-color: var(--color-layer-1);
+  margin-bottom: _.unit(4);
+
+  .table {
+    tbody tr td {
+      border: none;
+      text-align: center;
+
+      &:first-child {
+        border-radius: 6px 0 0 6px;
+      }
+
+      &:last-child {
+        border-radius: 0 6px 6px 0;
+      }
+    }
+
+    .headerTable {
+      background-color: var(--color-layer-light);
+      border-radius: 6px;
+
+      thead tr th {
+        font: var(--font-title-2);
+        text-align: center;
+      }
+    }
+
+    .bodyTableWrapper {
+      border-radius: unset;
+      padding: 0;
+
+      .groupLabel {
+        font: var(--font-title-2);
+        text-align: left;
+      }
+
+      .quotaKeyColumn {
+        padding: _.unit(4) _.unit(6);
+        text-align: left;
+      }
+
+      .colorRow {
+        background-color: var(--color-layer-light);
+      }
+
+      .ticketSupport {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .footnote {
+    margin-top: _.unit(8);
+    text-align: right;
+    font: var(--font-body-3);
+    font-style: italic;
+  }
+}
+

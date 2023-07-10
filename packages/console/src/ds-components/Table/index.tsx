@@ -26,6 +26,7 @@ export type Props<
   isRowHoverEffectDisabled?: boolean;
   isRowClickable?: (row: TFieldValues) => boolean;
   rowClickHandler?: (row: TFieldValues) => void;
+  rowClassName?: (row: TFieldValues, index: number) => string | undefined;
   className?: string;
   headerTableClassName?: string;
   bodyTableWrapperClassName?: string;
@@ -48,6 +49,7 @@ function Table<
   isRowHoverEffectDisabled = false,
   rowClickHandler,
   isRowClickable = () => Boolean(rowClickHandler),
+  rowClassName,
   className,
   headerTableClassName,
   bodyTableWrapperClassName,
@@ -120,7 +122,7 @@ function Table<
                         </td>
                       </tr>
                     )}
-                    {data?.map((row) => {
+                    {data?.map((row, rowIndex) => {
                       const rowClickable = isRowClickable(row);
 
                       const onClick = conditional(
@@ -136,7 +138,8 @@ function Table<
                           key={row[rowIndexKey]}
                           className={classNames(
                             rowClickable && styles.clickable,
-                            !isRowHoverEffectDisabled && styles.hoverEffect
+                            !isRowHoverEffectDisabled && styles.hoverEffect,
+                            rowClassName?.(row, rowIndex)
                           )}
                           onClick={onClick}
                         >
