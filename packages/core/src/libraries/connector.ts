@@ -15,7 +15,7 @@ export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
 export const createConnectorLibrary = (
   queries: Queries,
-  cloudConnection: CloudConnectionLibrary
+  cloudConnection: Pick<CloudConnectionLibrary, 'getCloudConnectionData'>
 ) => {
   const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
   const { getCloudConnectionData } = cloudConnection;
