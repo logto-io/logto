@@ -2,7 +2,7 @@ import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ import EmailServiceConnectorForm from './EmailServiceConnectorForm';
 type Props = {
   isDeleted: boolean;
   connectorData: ConnectorResponse;
-  onConnectorUpdated: (connector: ConnectorResponse) => void;
+  onConnectorUpdated: (connector?: ConnectorResponse) => void;
 };
 
 function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Props) {
@@ -112,6 +112,13 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     })
   );
 
+  const updateUsage = useCallback(() => {
+    if (connectorData.usage === undefined) {
+      return;
+    }
+    onConnectorUpdated({ ...connectorData, usage: connectorData.usage + 1 });
+  }, [connectorData, onConnectorUpdated]);
+
   return (
     <FormProvider {...methods}>
       <DetailsForm
@@ -153,6 +160,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
               connectorFactoryId={connectorId}
               connectorType={connectorType}
               parse={() => configParser(watch(), formItems)}
+              updateUsage={updateUsage}
             />
           </FormCard>
         )}

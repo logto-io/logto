@@ -97,7 +97,7 @@ const getUsage =
       },
       timeout: { request: defaultTimeout },
       searchParams: {
-        startFrom: startFrom?.toISOString(),
+        from: startFrom?.toISOString(),
       },
     });
 
