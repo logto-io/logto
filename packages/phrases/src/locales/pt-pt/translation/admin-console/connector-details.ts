@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     'Os conectores desempenham um papel crítico no Logto. Com a sua ajuda, o Logto permite aos utilizadores finais utilizar o registo ou o início de sessão sem palavra-passe e as capacidades de iniciar sessão com contas sociais.',
   parameter_configuration: 'Configuração de parâmetros',
-  test_connection: 'Testar ligação',
+  test_connection: 'Testar',
   save_error_empty_config: 'Por favor, insira a configuração',
   send: 'Enviar',
   send_error_invalid_format: 'Entrada inválida',
@@ -39,7 +39,7 @@ const connector_details = {
       'O e-mail integrado usa modelos padrão para entrega perfeita de e-mails de verificação. Nenhuma configuração é necessária e você pode personalizar informações básicas da marca.',
     description_action_text: 'Ver modelos',
     from_email_field: 'De e-mail',
-    from_name_field: 'De nome',
+    from_name_field: 'Nome do remetente',
     from_name_tip:
       'Personalize o nome do remetente para e-mails. Se deixado em branco, "Verificação" será usado como nome padrão.',
     from_name_placeholder: 'Seu nome do remetente',

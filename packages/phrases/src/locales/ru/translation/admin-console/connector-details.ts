@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     'Коннекторы играют критическую роль в Logto. С их помощью, Logto позволяет конечным пользователям использовать беспарольную регистрацию или вход и возможности входа с социальными аккаунтами.',
   parameter_configuration: 'Конфигурация параметра',
-  test_connection: 'Тестовое соединение',
+  test_connection: 'Тестирование',
   save_error_empty_config: 'Пожалуйста, введите конфигурацию',
   send: 'Отправить',
   send_error_invalid_format: 'Неверный ввод',

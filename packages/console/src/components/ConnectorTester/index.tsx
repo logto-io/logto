@@ -112,13 +112,9 @@ function ConnectorTester({ connectorFactoryId, connectorType, className, parse }
           />
         </Tooltip>
       </div>
-      <div className={styles.description}>
-        {t(
-          isEmailServiceConnector
-            ? 'connector_details.logto_email.test_notes'
-            : 'connector_details.test_sender_description'
-        )}
-      </div>
+      {!isEmailServiceConnector && (
+        <div className={styles.description}>{t('connector_details.test_sender_description')}</div>
+      )}
       <div className={styles.error}>{inputError?.message}</div>
     </div>
   );

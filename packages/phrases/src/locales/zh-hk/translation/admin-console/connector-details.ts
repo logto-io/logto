@@ -6,7 +6,7 @@ const connector_details = {
   settings_description:
     '連接器在 Logto 中扮演著至關重要的角色。借助它們的幫助，Logto 使終端用戶能夠使用無密碼註冊或登錄的功能以及使用社交帳戶登錄的功能。',
   parameter_configuration: '參數配置',
-  test_connection: '連接測試',
+  test_connection: '測試',
   save_error_empty_config: '請輸入配置內容',
   send: '發送',
   send_error_invalid_format: '無效輸入',

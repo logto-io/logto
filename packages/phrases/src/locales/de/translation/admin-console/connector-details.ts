@@ -7,7 +7,7 @@ const connector_details = {
     'Connectoren spielen eine wichtige Rolle in Logto. Mit ihrer Hilfe ermöglicht Logto Endbenutzern eine passwortlose Registrierung oder Anmeldung sowie die Möglichkeit, sich mit Social Accounts anzumelden.',
   save_error_empty_config: 'Bitte fülle die Konfiguration aus',
   parameter_configuration: 'Parameter-Konfiguration',
-  test_connection: 'Verbindung testen',
+  test_connection: 'Testen',
   send: 'Senden',
   send_error_invalid_format: 'Ungültige Eingabe',
   edit_config_label: 'Gib deine JSON-Konfiguration ein',
@@ -39,7 +39,7 @@ const connector_details = {
       'Der integrierte E-Mail-Versand verwendet Standardvorlagen für eine nahtlose Zustellung von Verifizierungs-E-Mails. Es ist keine Konfiguration erforderlich, und Sie können grundlegende Markeninformationen anpassen.',
     description_action_text: 'Vorlagen anzeigen',
     from_email_field: 'Absender-E-Mail',
-    from_name_field: 'Absender-Name',
+    from_name_field: 'Sendername',
     from_name_tip:
       'Passen Sie den Absendernamen für E-Mails an. Wenn es leer gelassen wird, wird "Verifizierung" als Standardname verwendet.',
     from_name_placeholder: 'Ihr Absendername',
