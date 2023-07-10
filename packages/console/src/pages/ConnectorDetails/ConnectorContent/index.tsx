@@ -106,7 +106,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
       /**
        * Note: reset form dirty state before updating the form data.
        */
-      reset();
+      reset(convertResponseToForm(updatedConnector));
       onConnectorUpdated(updatedConnector);
       toast.success(t('general.saved'));
     })
