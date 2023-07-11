@@ -22,13 +22,20 @@ type Props = {
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
   className?: string;
   parse: () => unknown;
+  updateUsage?: () => void;
 };
 
 type FormData = {
   sendTo: string;
 };
 
-function ConnectorTester({ connectorFactoryId, connectorType, className, parse }: Props) {
+function ConnectorTester({
+  connectorFactoryId,
+  connectorType,
+  className,
+  parse,
+  updateUsage,
+}: Props) {
   const [showTooltip, setShowTooltip] = useState(false);
   const {
     handleSubmit,
@@ -67,6 +74,7 @@ function ConnectorTester({ connectorFactoryId, connectorType, className, parse }
       };
 
       await api.post(`api/connectors/${connectorFactoryId}/test`, { json: data }).json();
+      updateUsage?.();
       setShowTooltip(true);
     })
   );
