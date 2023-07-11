@@ -80,8 +80,8 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
     },
     {
-      key: 'fromName',
-      label: 'From Name',
+      key: 'senderName',
+      label: 'Sender Name',
       type: ConnectorConfigFormItemType.Text,
     },
     {

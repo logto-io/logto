@@ -39,15 +39,15 @@ const connector_details = {
       'O e-mail integrado usa modelos padrão para entrega perfeita de e-mails de verificação. Nenhuma configuração é necessária e você pode personalizar informações básicas da marca.',
     description_action_text: 'Ver modelos',
     from_email_field: 'De e-mail',
-    from_name_field: 'Nome do remetente',
-    from_name_tip:
-      'Personalize o nome do remetente para e-mails. Se deixado em branco, "Verificação" será usado como nome padrão.',
-    from_name_placeholder: 'Seu nome do remetente',
+    sender_name_field: 'Nome do remetente',
+    sender_name_tip:
+      'Personalize o nome do remetente para e-mails. Se deixado em branco, "Verification" será usado como nome padrão.',
+    sender_name_placeholder: 'Seu nome do remetente',
     company_information_field: 'Informação da empresa',
     company_information_description:
       'Exiba o nome da sua empresa, endereço ou código postal no rodapé dos e-mails para aumentar a autenticidade.',
     company_information_placeholder: 'Informação básica da empresa',
-    app_logo_field: 'Logotipo da aplicação',
+    app_logo_field: 'Logotipo do aplicativo',
     app_logo_tip:
       'Exiba o logotipo da sua marca no topo dos e-mails. Utilize a mesma imagem para o modo claro e escuro.',
     urls_not_allowed: 'Os URLs não são permitidos',

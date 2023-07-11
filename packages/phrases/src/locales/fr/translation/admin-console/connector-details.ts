@@ -39,10 +39,10 @@ const connector_details = {
       'L’email intégré utilise des modèles par défaut pour une livraison transparente des emails de vérification. Aucune configuration n’est requise et vous pouvez personnaliser les informations de base de la marque.',
     description_action_text: 'Voir les modèles',
     from_email_field: 'Email de l’expéditeur',
-    from_name_field: "Nom de l'expéditeur",
-    from_name_tip:
-      'Personnalisez le nom de l’expéditeur pour les emails. Si vous le laissez vide, "Vérification" sera utilisé comme nom par défaut.',
-    from_name_placeholder: 'Votre nom d’expéditeur',
+    sender_name_field: "Nom de l'expéditeur",
+    sender_name_tip:
+      'Personnalisez le nom de l’expéditeur pour les emails. Si vous le laissez vide, "Verification" sera utilisé comme nom par défaut.',
+    sender_name_placeholder: 'Votre nom d’expéditeur',
     company_information_field: 'Informations sur la société',
     company_information_description:
       "Affichez le nom de votre entreprise, votre adresse ou votre code postal en bas des emails pour renforcer l'authenticité.",

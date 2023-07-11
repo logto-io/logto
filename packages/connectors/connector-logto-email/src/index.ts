@@ -34,8 +34,8 @@ const sendMessage =
       appId,
       appSecret,
       resource,
-      fromName,
       companyInformation,
+      senderName,
       appLogo,
     } = config;
     const { to, type, payload } = data;
@@ -59,7 +59,7 @@ const sendMessage =
           Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
         },
         json: {
-          data: { to, type, payload: { ...payload, fromName, companyInformation, appLogo } },
+          data: { to, type, payload: { ...payload, senderName, companyInformation, appLogo } },
         },
         timeout: { request: defaultTimeout },
       });

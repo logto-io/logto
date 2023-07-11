@@ -39,10 +39,10 @@ const connector_details = {
       'Wbudowany e-mail używa domyślnych szablonów dla bezproblemowej dostawy wiadomości weryfikacyjnych. Nie wymaga to konfiguracji, a podstawowe informacje o marce można dostosować.',
     description_action_text: 'Wyświetl szablony',
     from_email_field: 'Adres e-mail nadawcy',
-    from_name_field: 'Nazwa nadawcy',
-    from_name_tip:
-      'Dostosuj nazwę nadawcy dla wiadomości e-mail. Jeśli pozostawisz to pole puste, domyślnie użyta zostanie nazwa "Weryfikacja".',
-    from_name_placeholder: 'Nazwa nadawcy',
+    sender_name_field: 'Nazwa nadawcy',
+    sender_name_tip:
+      'Dostosuj nazwę nadawcy dla wiadomości e-mail. Jeśli pozostawisz to pole puste, domyślnie użyta zostanie nazwa "Verification".',
+    sender_name_placeholder: 'Nazwa nadawcy',
     company_information_field: 'Informacje o firmie',
     company_information_description:
       'Wyświetlaj nazwę firmy, adres lub kod pocztowy na dole wiadomości e-mail, aby zwiększyć autentyczność.',
