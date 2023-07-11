@@ -1,4 +1,9 @@
-import useSWR from 'swr';
+import {
+  type GuardedResponse,
+  type GuardedPayload,
+  type EmptyPayloadRoutes,
+} from '@withtyped/client';
+import useSWR, { type SWRResponse } from 'swr';
 
 import { type GetRoutes } from '../types/router';
 
@@ -12,15 +17,18 @@ const normalizeError = (error: unknown) => {
   return error instanceof Error ? error : new Error(String(error));
 };
 
-/**
- * Note: Exclude `/api/services/mails/usage` because it requires a payload.
- * Todo: @xiaoyijun Support non-empty payload routes requests for `useCloudSwr` hook (LOG-6513)
- */
-type EmptyPayloadGetRoutesKey = Exclude<keyof GetRoutes, '/api/services/mails/usage'>;
-
-export const useCloudSwr = <Key extends EmptyPayloadGetRoutesKey>(key: Key) => {
+// The function type signature is mimicked from `ClientRequestHandler`
+// in `@withtyped/client` since TypeScript cannot reuse generic type
+// alias.
+export const useCloudSwr = <T extends keyof GetRoutes>(
+  ...args: T extends EmptyPayloadRoutes<GetRoutes>
+    ? [path: T]
+    : [path: T, payload: GuardedPayload<GetRoutes[T]>]
+): SWRResponse<GuardedResponse<GetRoutes[T]>, Error> => {
   const cloudApi = useCloudApi();
-  const response = useSWR(key, async () => cloudApi.get(key));
+  const response = useSWR<GuardedResponse<GetRoutes[T]>>(args[0], async () =>
+    cloudApi.get(...args)
+  );
 
   // By default, `useSWR()` uses `any` for the error type which is unexpected under our lint rule set.
   return { ...response, error: normalizeError(response.error) };
