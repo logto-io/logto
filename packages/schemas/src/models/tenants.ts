@@ -8,7 +8,8 @@ export enum TenantTag {
   Production = 'production',
 }
 
-export const Tenants = createModel(/* sql */ `
+export const Tenants = createModel(
+  /* Sql */ `
   /* init_order = 0 */
   create table tenants (
     id varchar(21) not null,
@@ -22,7 +23,9 @@ export const Tenants = createModel(/* sql */ `
       unique (db_user)
   );
   /* no_after_each */
-`)
+`,
+  'public'
+)
   .extend('tag', z.nativeEnum(TenantTag))
   .extend('createdAt', { readonly: true });
 
