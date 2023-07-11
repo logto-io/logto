@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       'Personnalisez le nom de l’expéditeur pour les emails. Si vous le laissez vide, "Vérification" sera utilisé comme nom par défaut.',
     from_name_placeholder: 'Votre nom d’expéditeur',
-    company_address_field: 'Adresse de l’entreprise',
-    company_address_tip:
-      'L’affichage de l’adresse de l’entreprise et du code postal en bas des emails améliore l’authenticité, fournit des informations de contact et garantit la conformité.',
-    company_address_placeholder: 'L’adresse de votre entreprise',
+    company_information_field: 'Informations sur la société',
+    company_information_description:
+      "Affichez le nom de votre entreprise, votre adresse ou votre code postal en bas des emails pour renforcer l'authenticité.",
+    company_information_placeholder: 'Les informations de base de votre entreprise',
     app_logo_field: 'Logo de l’application',
     app_logo_tip:
       'Affichez le logo de votre marque en haut des emails. Utilisez la même image pour le mode clair et le mode sombre.',

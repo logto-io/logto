@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       'Dostosuj nazwę nadawcy dla wiadomości e-mail. Jeśli pozostawisz to pole puste, domyślnie użyta zostanie nazwa "Weryfikacja".',
     from_name_placeholder: 'Nazwa nadawcy',
-    company_address_field: 'Adres firmy',
-    company_address_tip:
-      'Wyświetlanie adresu firmy i kodu pocztowego na dole wiadomości e-mail zwiększa autentyczność, zapewnia informacje kontaktowe i zapewnia zgodność.',
-    company_address_placeholder: 'Adres firmy',
+    company_information_field: 'Informacje o firmie',
+    company_information_description:
+      'Wyświetlaj nazwę firmy, adres lub kod pocztowy na dole wiadomości e-mail, aby zwiększyć autentyczność.',
+    company_information_placeholder: 'Podstawowe informacje o Twojej firmie',
     app_logo_field: 'Logo aplikacji',
     app_logo_tip:
       'Wyświetlaj logo marki na górze wiadomości e-mail. Użyj tego samego obrazu zarówno dla trybu jasnego, jak i ciemnego.',

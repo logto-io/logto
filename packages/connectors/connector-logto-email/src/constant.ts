@@ -85,8 +85,8 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
     },
     {
-      key: 'companyAddress',
-      label: 'Company Address',
+      key: 'companyInformation',
+      label: 'Company Information',
       type: ConnectorConfigFormItemType.Text,
     },
     {

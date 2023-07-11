@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       '이메일의 보내는 사람 이름을 사용자 정의합니다. 비워 두면 기본 이름으로 "Verification"이 사용됩니다.',
     from_name_placeholder: '보내는 사람 이름을 입력해주세요.',
-    company_address_field: '회사 주소',
-    company_address_tip:
-      '이메일 하단에 회사 주소와 우편번호를 표시하면 신뢰성을 높이고 연락처 정보를 제공하며 규정 준수를 보장합니다.',
-    company_address_placeholder: '당신의 회사 주소를 입력하세요.',
+    company_information_field: '회사 정보',
+    company_information_description:
+      '이메일 하단에 회사 이름, 주소 또는 우편번호를 표시하여 신뢰성을 높입니다.',
+    company_information_placeholder: '회사의 기본 정보',
     app_logo_field: '앱 로고',
     app_logo_tip:
       '이메일 상단에 브랜드 로고를 표시합니다. 라이트 모드와 다크 모드에 모두 동일한 이미지를 사용합니다.',

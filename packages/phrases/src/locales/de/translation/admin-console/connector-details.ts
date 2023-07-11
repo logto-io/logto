@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       'Passen Sie den Absendernamen für E-Mails an. Wenn es leer gelassen wird, wird "Verifizierung" als Standardname verwendet.',
     from_name_placeholder: 'Ihr Absendername',
-    company_address_field: 'Firmenadresse',
-    company_address_tip:
-      'Die Anzeige der Firmenadresse und der Postleitzahl am Ende von E-Mails verbessert die Authentizität, bietet Kontaktinformationen und stellt die Einhaltung sicher.',
-    company_address_placeholder: 'Ihre Firmenadresse',
+    company_information_field: 'Firmeninformationen',
+    company_information_description:
+      'Zeigen Sie den Firmennamen, die Adresse oder die Postleitzahl am Ende der E-Mails an, um die Authentizität zu erhöhen.',
+    company_information_placeholder: 'Die grundlegenden Informationen Ihres Unternehmens',
     app_logo_field: 'App-Logo',
     app_logo_tip:
       'Zeigen Sie Ihr Markenlogo oben in E-Mails an. Verwenden Sie dasselbe Bild für den hellen und den dunklen Modus.',

@@ -70,17 +70,17 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
           placeholder={t('connector_details.logto_email.from_name_placeholder')}
         />
       </FormField>
-      <FormField
-        title="connector_details.logto_email.company_address_field"
-        tip={<DynamicT forKey="connector_details.logto_email.company_address_tip" />}
-      >
+      <FormField title="connector_details.logto_email.company_information_field">
         <TextInput
-          {...register('formConfig.companyAddress', {
+          {...register('formConfig.companyInformation', {
             validate: (value) => validateInput(conditionalString(value)),
           })}
-          error={fromConfigErrors?.companyAddress?.message}
-          placeholder={t('connector_details.logto_email.company_address_placeholder')}
+          error={fromConfigErrors?.companyInformation?.message}
+          placeholder={t('connector_details.logto_email.company_information_placeholder')}
         />
+        <div className={styles.description}>
+          {t('connector_details.logto_email.company_information_description')}
+        </div>
       </FormField>
       <FormField
         title="connector_details.logto_email.app_logo_field"

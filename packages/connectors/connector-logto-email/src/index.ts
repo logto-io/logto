@@ -35,7 +35,7 @@ const sendMessage =
       appSecret,
       resource,
       fromName,
-      companyAddress,
+      companyInformation,
       appLogo,
     } = config;
     const { to, type, payload } = data;
@@ -58,7 +58,9 @@ const sendMessage =
         headers: {
           Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
         },
-        json: { data: { to, type, payload: { ...payload, fromName, companyAddress, appLogo } } },
+        json: {
+          data: { to, type, payload: { ...payload, fromName, companyInformation, appLogo } },
+        },
         timeout: { request: defaultTimeout },
       });
     } catch (error: unknown) {

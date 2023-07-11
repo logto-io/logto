@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       'メールの送信元名をカスタマイズします。空白の場合、「Verification」がデフォールト名として使用されます。',
     from_name_placeholder: '送信元の名前を入力してください',
-    company_address_field: '会社住所',
-    company_address_tip:
-      'メールの下部に会社住所と郵便番号を表示することで、信頼性を高め、連絡先情報を提供し、コンプライアンスを確保します。',
-    company_address_placeholder: '会社の住所を入力してください',
+    company_information_field: '企業情報',
+    company_information_description:
+      'メールの下部に会社名、住所、郵便番号などを表示して、真正性を高めます。',
+    company_information_placeholder: '会社の基本情報を入力してください',
     app_logo_field: 'アプリのロゴ',
     app_logo_tip:
       'メールの上部にブランドロゴを表示します。ライトモードとダークモードの両方で同じ画像を使用してください。',

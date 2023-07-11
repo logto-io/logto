@@ -43,10 +43,10 @@ const connector_details = {
     from_name_tip:
       'Customize the sender name for emails. If left empty, “Verification” will be used as the default name.',
     from_name_placeholder: 'Your sender name',
-    company_address_field: 'Company address',
-    company_address_tip:
-      'Displaying company address and zip code in the bottom of emails enhances authenticity, provides contact information, and ensures compliance.',
-    company_address_placeholder: 'Your company address',
+    company_information_field: 'Company information',
+    company_information_description:
+      'Display your company name, address, or zip code in the bottom of emails to enhance authenticity.',
+    company_information_placeholder: "Your company's basic information",
     app_logo_field: 'App Logo',
     app_logo_tip:
       'Display your brand logo in the top of emails. Use the same image for both light mode and dark mode.',

@@ -43,14 +43,14 @@ const connector_details = {
     from_name_tip:
       'E-postalar için gönderen adını özelleştirin. Boş bırakılırsa, varsayılan ad olarak "Doğrulama" kullanılacaktır.',
     from_name_placeholder: 'Gönderen adınızı girin',
-    company_address_field: 'Şirket adresi',
-    company_address_tip:
-      'E-postaların altında şirket adresi ve posta kodunu görüntülemek, otantikliği artırır, iletişim bilgileri sağlar ve uyumluluğu sağlar.',
-    company_address_placeholder: 'Şirket adresinizi girin',
+    company_information_field: 'Şirket bilgileri',
+    company_information_description:
+      'E-postaların alt kısmında şirket adınızı, adresinizi veya posta kodunuzu görüntüleyin.',
+    company_information_placeholder: 'Şirketinizin temel bilgileri',
     app_logo_field: 'Uygulama Logosu',
     app_logo_tip:
       'E-postaların üstünde marka logosunu görüntüleyin. Aynı görüntüyü açık mod ve karanlık mod için kullanın.',
-    urls_not_allowed: 'URLs are not allowed',
+    urls_not_allowed: 'URLler izin verilmez',
     test_notes: 'Logto testler için "Generic" şablonunu kullanır.',
   },
 };
