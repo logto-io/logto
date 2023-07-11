@@ -11,6 +11,7 @@ import { boolean, object, string, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -21,7 +22,7 @@ const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
 export default function applicationRoutes<T extends AuthedRouter>(
-  ...[router, { queries, id: tenantId }]: RouterInitArgs<T>
+  ...[router, { queries, id: tenantId, cloudConnection }]: RouterInitArgs<T>
 ) {
   const {
     deleteApplicationById,
@@ -57,6 +58,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
   router.post(
     '/applications',
+    koaQuotaGuard({ key: 'applicationsLimit', cloudConnection, queries }),
     koaGuard({
       body: Applications.createGuard
         .omit({ id: true, createdAt: true })
