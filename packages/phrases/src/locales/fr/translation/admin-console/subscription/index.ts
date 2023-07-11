@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -40,9 +38,9 @@ const subscription = {
     amount_column: 'Montant',
     invoice_created_date_column: 'Date de création de la facture',
   },
-  quota_item_limited,
+
   quota_item,
-  quota_item_unlimited,
+
   downgrade_modal: {
     title: 'Êtes-vous sûr de vouloir passer à un Plan Inférieur?',
     description:

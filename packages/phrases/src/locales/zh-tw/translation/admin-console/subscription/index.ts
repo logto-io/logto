@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -36,9 +34,9 @@ const subscription = {
     amount_column: '金額',
     invoice_created_date_column: '發票創建日期',
   },
-  quota_item_limited,
+
   quota_item,
-  quota_item_unlimited,
+
   downgrade_modal: {
     title: '您確定要降級嗎？',
     description:

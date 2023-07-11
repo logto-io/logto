@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -38,9 +36,7 @@ const subscription = {
     amount_column: '금액',
     invoice_created_date_column: '송장 생성 날짜',
   },
-  quota_item_limited,
   quota_item,
-  quota_item_unlimited,
   downgrade_modal: {
     title: '다운그레이드하시겠습니까?',
     description:

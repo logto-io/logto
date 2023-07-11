@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -38,9 +36,9 @@ const subscription = {
     amount_column: 'Сумма',
     invoice_created_date_column: 'Дата создания счета',
   },
-  quota_item_limited,
+
   quota_item,
-  quota_item_unlimited,
+
   downgrade_modal: {
     title: 'Вы действительно хотите понизить уровень?',
     description:
