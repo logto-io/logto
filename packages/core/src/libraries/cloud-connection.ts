@@ -33,7 +33,7 @@ export class CloudConnectionLibrary {
 
   constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
 
-  async getCloudConnectionData(): Promise<CloudConnection> {
+  public getCloudConnectionData = async (): Promise<CloudConnection> => {
     const { getCloudConnectionData: getCloudServiceM2mCredentials } = this.logtoConfigs;
     const credentials = await getCloudServiceM2mCredentials();
     const { cloudUrlSet, adminUrlSet } = EnvSet.values;
@@ -42,7 +42,7 @@ export class CloudConnectionLibrary {
       tokenEndpoint: appendPath(adminUrlSet.endpoint, 'oidc/token').toString(),
       endpoint: appendPath(cloudUrlSet.endpoint, 'api').toString(),
     };
-  }
+  };
 
   public getAccessToken = async (): Promise<string> => {
     if (this.accessTokenCache) {
