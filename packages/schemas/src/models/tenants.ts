@@ -30,6 +30,6 @@ export type TenantModel = InferModelType<typeof Tenants>;
 
 export type TenantInfo = Pick<TenantModel, 'id' | 'name' | 'tag'> & { indicator: string };
 
-export const tenantInfoGuard: z.ZodType<TenantInfo> = Tenants.guard('model')
+export const tenantInfoGuard = Tenants.guard('model')
   .pick({ id: true, name: true, tag: true })
   .extend({ indicator: z.string() });
