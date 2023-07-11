@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -39,9 +37,9 @@ const subscription = {
     amount_column: 'Valor',
     invoice_created_date_column: 'Data de criação da fatura',
   },
-  quota_item_limited,
+
   quota_item,
-  quota_item_unlimited,
+
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer o downgrade?',
     description:

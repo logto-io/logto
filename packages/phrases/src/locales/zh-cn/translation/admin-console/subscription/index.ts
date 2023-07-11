@@ -1,5 +1,3 @@
-import quota_item_limited from './quota-item-limited.js';
-import quota_item_unlimited from './quota-item-unlimited.js';
 import quota_item from './quota-item.js';
 import quota_table from './quota-table.js';
 
@@ -31,8 +29,7 @@ const subscription = {
   contact_us: '联系我们',
   quota_table,
   quota_item,
-  quota_item_limited,
-  quota_item_unlimited,
+
   billing_history: {
     invoice_column: '发票',
     status_column: '状态',
