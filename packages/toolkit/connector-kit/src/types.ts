@@ -138,19 +138,21 @@ const connectorConfigFormItemGuard = z.discriminatedUnion('type', [
 
 export type ConnectorConfigFormItem = z.infer<typeof connectorConfigFormItemGuard>;
 
-export const connectorMetadataGuard = z.object({
-  id: z.string(),
-  target: z.string(),
-  platform: z.nativeEnum(ConnectorPlatform).nullable(),
-  name: i18nPhrasesGuard,
-  logo: z.string(),
-  logoDark: z.string().nullable(),
-  description: i18nPhrasesGuard,
-  isStandard: z.boolean().optional(),
-  readme: z.string(),
-  configTemplate: z.string().optional(),
-  formItems: connectorConfigFormItemGuard.array().optional(),
-});
+export const connectorMetadataGuard = z
+  .object({
+    id: z.string(),
+    target: z.string(),
+    platform: z.nativeEnum(ConnectorPlatform).nullable(),
+    name: i18nPhrasesGuard,
+    logo: z.string(),
+    logoDark: z.string().nullable(),
+    description: i18nPhrasesGuard,
+    isStandard: z.boolean().optional(),
+    readme: z.string(),
+    configTemplate: z.string().optional(),
+    formItems: connectorConfigFormItemGuard.array().optional(),
+  })
+  .catchall(z.unknown());
 
 export const configurableConnectorMetadataGuard = connectorMetadataGuard
   .pick({

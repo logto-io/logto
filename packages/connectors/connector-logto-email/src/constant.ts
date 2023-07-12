@@ -95,6 +95,11 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
     },
   ],
+  /**
+   * This is the email address that will be used as the sender of the email, should align with
+   * the `fromEmail` of emailServiceProvider stored in cloud.systems table.
+   */
+  fromEmail: 'no-reply@logto.email',
 };
 
 export const scope = ['send:email'];

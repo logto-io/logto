@@ -1,6 +1,11 @@
 /* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
-import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
+import {
+  demoConnectorIds,
+  validateConfig,
+  ServiceConnector,
+  type ConnectorMetadata,
+} from '@logto/connector-kit';
 import {
   connectorFactoryResponseGuard,
   Connectors,
@@ -8,18 +13,17 @@ import {
   connectorResponseGuard,
 } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   loadConnectorFactories,
   transpileConnectorFactory,
   transpileLogtoConnector,
-  buildExtraInfoFromEmailServiceData,
 } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
@@ -29,6 +33,20 @@ import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 
 const generateConnectorId = buildIdGenerator(12);
+
+const getFromEmailFromMetadata = (metadata: ConnectorMetadata) => {
+  const result = object({ fromEmail: string() }).safeParse(metadata);
+  return conditional(result.success && result.data.fromEmail);
+};
+
+// Will accept other source of `extraInfo` in the future.
+const buildExtraInfo = (metadata: ConnectorMetadata) => {
+  const fromEmail = getFromEmailFromMetadata(metadata);
+  const extraInfo = {
+    ...conditional(fromEmail && metadata.id === ServiceConnector.Email && { fromEmail }),
+  };
+  return cleanDeep(extraInfo, { emptyObjects: false });
+};
 
 export default function connectorRoutes<T extends AuthedRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -45,15 +63,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
   const {
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
-
-  // Will accept other source of `extraInfo` in the future.
-  const { emailServiceProviderConfig } = SystemContext.shared;
-  const buildExtraInfo = (connectorFactoryId: string) => {
-    const extraInfo = {
-      ...buildExtraInfoFromEmailServiceData(connectorFactoryId, emailServiceProviderConfig),
-    };
-    return cleanDeep(extraInfo, { emptyObjects: false });
-  };
 
   router.post(
     '/connectors',
@@ -164,7 +173,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       const connector = await getLogtoConnectorById(insertConnectorId);
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata));
 
       return next();
     }
@@ -200,7 +209,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
       ctx.body = await Promise.all(
         filteredConnectors.map(async (connector) =>
-          transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id))
+          transpileLogtoConnector(connector, buildExtraInfo(connector.metadata))
         )
       );
 
@@ -224,7 +233,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
       // Hide demo connector
       assertThat(!demoConnectorIds.includes(connector.metadata.id), 'connector.not_found');
 
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata));
 
       return next();
     }
@@ -324,7 +333,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         jsonbMode: 'replace',
       });
       const connector = await getLogtoConnectorById(id);
-      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata.id));
+      ctx.body = await transpileLogtoConnector(connector, buildExtraInfo(connector.metadata));
 
       return next();
     }
