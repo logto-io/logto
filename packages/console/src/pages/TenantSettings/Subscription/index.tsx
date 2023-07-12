@@ -1,34 +1,54 @@
 import { withAppInsights } from '@logto/app-insights/react';
 
 import PageMeta from '@/components/PageMeta';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
+import useCurrentSubscriptionUsage from '@/hooks/use-current-subscription-usage';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 
 import Skeleton from '../components/Skeleton';
 
+import CurrentPlan from './CurrentPlan';
 import PlanQuotaTable from './PlanQuotaTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
+import * as styles from './index.module.scss';
 
 function Subscription() {
-  const { data: subscriptionPlans, isLoading: isLoadingPlans } = useSubscriptionPlans();
-  const { data: currentSubscription, isLoading: isLoadingSubscription } = useCurrentSubscription();
+  const { data: subscriptionPlans, error: fetchPlansError } = useSubscriptionPlans();
+  const { data: currentSubscription, error: fetchSubscriptionError } = useCurrentSubscription();
+  const { data: subscriptionUsage, error: fetchSubscriptionUsageError } =
+    useCurrentSubscriptionUsage();
 
-  if (isLoadingPlans || isLoadingSubscription) {
+  const isLoadingPlans = !subscriptionPlans && !fetchPlansError;
+  const isLoadingSubscription = !currentSubscription && !fetchSubscriptionError;
+  const isLoadingSubscriptionUsage = !subscriptionUsage && !fetchSubscriptionUsageError;
+
+  if (isLoadingPlans || isLoadingSubscription || isLoadingSubscriptionUsage) {
     return <Skeleton />;
   }
 
-  if (!subscriptionPlans) {
+  if (!subscriptionPlans || !currentSubscription || !subscriptionUsage) {
+    return null;
+  }
+
+  const currentSubscriptionPlan = subscriptionPlans.find(
+    (plan) => plan.id === currentSubscription.planId
+  );
+
+  if (!currentSubscriptionPlan) {
     return null;
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
+      <CurrentPlan
+        subscription={currentSubscription}
+        subscriptionPlan={currentSubscriptionPlan}
+        subscriptionUsage={subscriptionUsage}
+      />
       <PlanQuotaTable subscriptionPlans={subscriptionPlans} />
       <SwitchPlanActionBar
-        // Todo @xiaoyijun remove this fallback since we'll have a default subscription later
-        currentSubscriptionPlanId={currentSubscription?.planId ?? ReservedPlanId.free}
+        currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={subscriptionPlans}
       />
     </div>

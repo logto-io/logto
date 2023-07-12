@@ -11,10 +11,12 @@ import { addSupportQuotaToPlan } from '@/utils/subscription';
 
 const useSubscriptionPlans = () => {
   const cloudApi = useCloudApi();
-  const { data: subscriptionPlansResponse, error } = useSWRImmutable<
-    SubscriptionPlanResponse[],
-    Error
-  >(isCloud && '/api/subscription-plans', async () => cloudApi.get('/api/subscription-plans'));
+  const useSwrResponse = useSWRImmutable<SubscriptionPlanResponse[], Error>(
+    isCloud && '/api/subscription-plans',
+    async () => cloudApi.get('/api/subscription-plans')
+  );
+
+  const { data: subscriptionPlansResponse } = useSwrResponse;
 
   const subscriptionPlans: Optional<SubscriptionPlan[]> = useMemo(() => {
     if (!subscriptionPlansResponse) {
@@ -49,9 +51,8 @@ const useSubscriptionPlans = () => {
   }, [subscriptionPlansResponse]);
 
   return {
+    ...useSwrResponse,
     data: subscriptionPlans,
-    error,
-    isLoading: !subscriptionPlans && !error,
   };
 };
 

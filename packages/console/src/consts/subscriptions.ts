@@ -6,7 +6,7 @@ import {
   SubscriptionPlanTableGroupKey,
 } from '@/types/subscriptions';
 
-export enum ReservedPlanId {
+enum ReservedPlanId {
   free = 'free',
   hobby = 'hobby',
   pro = 'pro',

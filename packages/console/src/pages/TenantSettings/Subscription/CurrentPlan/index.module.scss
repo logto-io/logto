@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.planInfo {
+  margin-bottom: _.unit(6);
+
+  .name {
+    font: var(--font-title-1);
+  }
+}
+
+.notification {
+  margin-top: _.unit(6);
+}
