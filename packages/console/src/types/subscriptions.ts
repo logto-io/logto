@@ -7,7 +7,7 @@ export enum ReservedPlanName {
   Enterprise = 'Enterprise',
 }
 
-type SubscriptionPlanQuota = SubscriptionPlanResponse['quota'] & {
+export type SubscriptionPlanQuota = SubscriptionPlanResponse['quota'] & {
   communitySupportEnabled: boolean;
   ticketSupportResponseTime: number;
 };

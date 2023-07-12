@@ -5,6 +5,7 @@ import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 
 import Skeleton from '../components/Skeleton';
 
+import NotEligibleDowngradeModal from './NotEligibleDowngradeModal';
 import PlanQuotaTable from './PlanQuotaTable';
 
 function Subscription() {
@@ -23,6 +24,9 @@ function Subscription() {
     <div>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
       <PlanQuotaTable subscriptionPlans={subscriptionPlans} />
+      {subscriptionPlans[0] && (
+        <NotEligibleDowngradeModal targetSubscriptionPlan={subscriptionPlans[0]} />
+      )}
     </div>
   );
 }

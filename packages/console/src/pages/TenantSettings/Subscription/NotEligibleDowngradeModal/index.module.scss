@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.description {
+  font: var(--font-body-2);
+}
+
+.list {
+  background-color: var(--color-layer-2);
+  border-radius: 12px;
+  padding: _.unit(4);
+  list-style-position: inside;
+
+  > li:not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
