@@ -1,3 +1,4 @@
+import { type Optional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
 import { communitySupportEnabledMap, ticketSupportResponseTimeMap } from '@/consts/subscriptions';
@@ -8,26 +9,28 @@ import { useCloudSwr } from '../cloud/hooks/use-cloud-swr';
 const useSubscriptionPlans = () => {
   const { data: subscriptionPlansResponse, error } = useCloudSwr('/api/subscription-plans');
 
-  const subscriptionPlans: SubscriptionPlan[] = useMemo(
-    () =>
-      subscriptionPlansResponse?.map((plan) => {
-        const { name, quota } = plan;
+  const subscriptionPlans: Optional<SubscriptionPlan[]> = useMemo(() => {
+    if (!subscriptionPlansResponse) {
+      return;
+    }
 
-        return {
-          ...plan,
-          quota: {
-            ...quota,
-            communitySupportEnabled: communitySupportEnabledMap[name] ?? false, // Fallback to not supported
-            ticketSupportResponseTime: ticketSupportResponseTimeMap[name] ?? 0, // Fallback to not supported
-          },
-        };
-      }) ?? [],
-    [subscriptionPlansResponse]
-  );
+    return subscriptionPlansResponse.map((plan) => {
+      const { name, quota } = plan;
+
+      return {
+        ...plan,
+        quota: {
+          ...quota,
+          communitySupportEnabled: communitySupportEnabledMap[name] ?? false, // Fallback to not supported
+          ticketSupportResponseTime: ticketSupportResponseTimeMap[name] ?? 0, // Fallback to not supported
+        },
+      };
+    });
+  }, [subscriptionPlansResponse]);
 
   return {
-    isLoading: !subscriptionPlansResponse && !error,
     data: subscriptionPlans,
+    error,
   };
 };
 

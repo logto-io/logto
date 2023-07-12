@@ -6,10 +6,11 @@ import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
+import Skeleton from '../components/Skeleton';
+
 import AddDomainForm from './AddDomainForm';
 import CustomDomain from './CustomDomain';
 import DefaultDomain from './DefaultDomain';
-import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
