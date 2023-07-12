@@ -1,4 +1,3 @@
-import { verificationCodeTypeGuard } from '@logto/connector-kit';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -70,33 +69,12 @@ export enum EmailServiceProvider {
   SendGrid = 'SendGrid',
 }
 
-/**
- * `General` is now used as a fallback scenario.
- * This will be extended in the future since we will send different emails for
- * different purposes (such as webhook that inform users of suspicious account activities).
- */
-export enum OtherEmailTemplate {
-  General = 'General',
-}
-
-export const otherEmailTemplateGuard = z.nativeEnum(OtherEmailTemplate);
-
-const emailServiceBasicConfig = {
-  fromName: z.string(),
-  fromEmail: z.string(),
-  templates: z.record(
-    verificationCodeTypeGuard.or(otherEmailTemplateGuard),
-    z.object({
-      subject: z.string(),
-      content: z.string(),
-    })
-  ),
-};
-
 export const sendgridEmailServiceDataGuard = z.object({
   provider: z.literal(EmailServiceProvider.SendGrid),
   apiKey: z.string(),
-  ...emailServiceBasicConfig,
+  templateId: z.string(),
+  fromName: z.string(),
+  fromEmail: z.string(),
 });
 
 export type SendgridEmailServiceData = z.infer<typeof sendgridEmailServiceDataGuard>;
