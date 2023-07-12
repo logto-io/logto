@@ -6,6 +6,7 @@ import { type SubscriptionPlan } from '@/types/subscriptions';
 import { isDowngradePlan } from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
+import NotEligibleDowngradeModalContent from '../NotEligibleDowngradeModalContent';
 
 import * as styles from './index.module.scss';
 
@@ -17,7 +18,17 @@ type Props = {
 function SwitchPlanActionBar({ currentSubscriptionPlanId, subscriptionPlans }: Props) {
   const { show } = useConfirmModal();
 
-  const handleDowngrade = async (targetPlanId: string) => {
+  const handleDownGrade = async (targetPlan: SubscriptionPlan) => {
+    // Todo @xiaoyijun handle downgrade
+    await show({
+      ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
+      title: 'subscription.downgrade_modal.not_eligible',
+      confirmButtonText: 'general.got_it',
+      confirmButtonType: 'primary',
+    });
+  };
+
+  const onDowngradeClick = async (targetPlanId: string) => {
     const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
     const targetPlan = subscriptionPlans.find(({ id }) => id === targetPlanId);
     if (!currentPlan || !targetPlan) {
@@ -34,7 +45,7 @@ function SwitchPlanActionBar({ currentSubscriptionPlanId, subscriptionPlans }: P
     });
 
     if (result) {
-      // Todo @xiaoyijun handle downgrade
+      await handleDownGrade(targetPlan);
     }
   };
 
@@ -59,7 +70,7 @@ function SwitchPlanActionBar({ currentSubscriptionPlanId, subscriptionPlans }: P
               disabled={isCurrentPlan}
               onClick={async () => {
                 if (isDowngrade) {
-                  await handleDowngrade(planId);
+                  await onDowngradeClick(planId);
                   // eslint-disable-next-line no-useless-return
                   return;
                 }

@@ -1,4 +1,5 @@
 import { diff } from 'deep-object-diff';
+import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
@@ -18,6 +19,16 @@ function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
   const { quota: currentQuota, name: currentPlanName } = currentPlan;
   const { quota: targetQuota, name: targetPlanName } = targetPlan;
 
+  const currentQuotaDiff = useMemo(
+    () => diff(targetQuota, currentQuota),
+    [currentQuota, targetQuota]
+  );
+
+  const targetQuotaDiff = useMemo(
+    () => diff(currentQuota, targetQuota),
+    [currentQuota, targetQuota]
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.description}>
@@ -31,12 +42,8 @@ function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
         </Trans>
       </div>
       <div className={styles.content}>
-        <PlanQuotaDiffList planName={currentPlanName} quotaDiff={diff(targetQuota, currentQuota)} />
-        <PlanQuotaDiffList
-          isTarget
-          planName={targetPlanName}
-          quotaDiff={diff(currentQuota, targetQuota)}
-        />
+        <PlanQuotaDiffList planName={currentPlanName} quotaDiff={currentQuotaDiff} />
+        <PlanQuotaDiffList isTarget planName={targetPlanName} quotaDiff={targetQuotaDiff} />
       </div>
     </div>
   );

@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  > :not(:first-child) {
+    margin: _.unit(6) 0 0;
+  }
+}
+
+.description {
+  font: var(--font-body-2);
+}
+
+.list {
+  background-color: var(--color-layer-2);
+  border-radius: 12px;
+  padding: _.unit(4);
+  list-style-position: inside;
+
+  > li:not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
+
+.buttonLink {
+  text-decoration: none;
+}

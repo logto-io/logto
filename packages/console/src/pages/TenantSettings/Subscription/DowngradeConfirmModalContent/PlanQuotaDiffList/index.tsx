@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
@@ -13,11 +14,13 @@ type Props = {
 };
 
 function PlanQuotaDiffList({ planName, quotaDiff, isTarget = false }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console.subscription.downgrade_modal',
+  });
 
   // Todo: @xiaoyijun LOG-6540 order keys
   // eslint-disable-next-line no-restricted-syntax
-  const entries = Object.entries(quotaDiff) as Array<
+  const entries = useMemo(() => Object.entries(quotaDiff), [quotaDiff]) as Array<
     [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
   >;
 
@@ -29,9 +32,7 @@ function PlanQuotaDiffList({ planName, quotaDiff, isTarget = false }: Props) {
             name: <PlanName name={planName} />,
           }}
         >
-          {t(
-            isTarget ? 'subscription.downgrade_modal.after' : 'subscription.downgrade_modal.before'
-          )}
+          {t(isTarget ? 'after' : 'before')}
         </Trans>
       </div>
       <ul className={styles.list}>
@@ -40,7 +41,7 @@ function PlanQuotaDiffList({ planName, quotaDiff, isTarget = false }: Props) {
             key={quotaKey}
             quotaKey={quotaKey}
             quotaValue={quotaValue}
-            isChangeStateVisible={isTarget}
+            hasIcon={isTarget}
           />
         ))}
       </ul>
