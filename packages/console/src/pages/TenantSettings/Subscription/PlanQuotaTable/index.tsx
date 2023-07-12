@@ -2,25 +2,27 @@ import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
 import Success from '@/assets/icons/success.svg';
+import PlanName from '@/components/PlanName';
 import { enterprisePlanTableData, planTableGroupKeyMap } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import Table from '@/ds-components/Table';
 import { type RowGroup, type Column } from '@/ds-components/Table/types';
-import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import {
   type SubscriptionPlanTableRow,
   type SubscriptionPlanTableGroupKey,
+  type SubscriptionPlan,
 } from '@/types/subscriptions';
 
-import PlanName from './PlanName';
 import PlanQuotaGroupKeyLabel from './PlanQuotaGroupKeyLabel';
 import PlanQuotaKeyLabel from './PlanQuotaKeyLabel';
 import * as styles from './index.module.scss';
 import { constructPlanTableDataArray } from './utils';
 
-function PlanQuotaTable() {
-  const { data: subscriptionPlans, isLoading } = useSubscriptionPlans();
+type Props = {
+  subscriptionPlans: SubscriptionPlan[];
+};
 
+function PlanQuotaTable({ subscriptionPlans }: Props) {
   const quotaTableRowGroups: Array<RowGroup<SubscriptionPlanTableRow>> = useMemo(() => {
     const tableDataArray = [
       ...constructPlanTableDataArray(subscriptionPlans),
@@ -64,7 +66,6 @@ function PlanQuotaTable() {
     <div className={styles.container}>
       <Table
         isRowHoverEffectDisabled
-        isLoading={isLoading}
         rowGroups={quotaTableRowGroups}
         rowIndexKey="quotaKey"
         rowClassName={(_, index) => conditional(index % 2 !== 0 && styles.colorRow)}
