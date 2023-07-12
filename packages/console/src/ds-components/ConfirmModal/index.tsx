@@ -8,6 +8,7 @@ import Button from '@/ds-components/Button';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import ModalLayout from '../ModalLayout';
+import type { Props as ModalLayoutProps } from '../ModalLayout';
 
 import * as styles from './index.module.scss';
 
@@ -21,6 +22,7 @@ export type ConfirmModalProps = {
   isOpen: boolean;
   isConfirmButtonDisabled?: boolean;
   isLoading?: boolean;
+  size?: ModalLayoutProps['size'];
   onCancel?: () => void;
   onConfirm?: () => void;
 };
@@ -35,6 +37,7 @@ function ConfirmModal({
   isOpen,
   isConfirmButtonDisabled = false,
   isLoading = false,
+  size,
   onCancel,
   onConfirm,
 }: ConfirmModalProps) {
@@ -63,6 +66,7 @@ function ConfirmModal({
           </>
         }
         className={classNames(styles.content, className)}
+        size={size}
         onClose={onCancel}
       >
         {children}

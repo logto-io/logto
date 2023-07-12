@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  > :not(:first-child) {
+    margin: _.unit(6) 0 0;
+  }
+}
+
+.description {
+  font: var(--font-body-2);
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  gap: _.unit(3);
+}
