@@ -115,6 +115,10 @@ test('connector set-up flow', async () => {
     currentConnectors.find((connector) => connector.connectorId === mockAlternativeEmailConnectorId)
       ?.config
   ).toEqual(mockAlternativeEmailConnectorConfig);
+  // Can reset the connector config to empty object `{}` (when it is valid).
+  await expect(updateConnectorConfig(id, { config: {} })).resolves.not.toThrow();
+  const alternativeEmailConnector = await getConnector(id);
+  expect(alternativeEmailConnector.config).toEqual({});
 
   /*
    * Delete (i.e. disable) a connector
