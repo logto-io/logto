@@ -27,7 +27,6 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
  * `undefined` => Contact
  */
 const enterprisePlanTable: SubscriptionPlanTable = {
-  tenantLimit: null,
   basePrice: undefined,
   mauUnitPrice: undefined,
   mauLimit: undefined,
@@ -58,7 +57,7 @@ export const enterprisePlanTableData: SubscriptionPlanTableData = {
 };
 
 export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.freeze({
-  [SubscriptionPlanTableGroupKey.base]: ['tenantLimit', 'basePrice', 'mauUnitPrice', 'mauLimit'],
+  [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauUnitPrice', 'mauLimit'],
   [SubscriptionPlanTableGroupKey.applications]: ['applicationsLimit', 'machineToMachineLimit'],
   [SubscriptionPlanTableGroupKey.resources]: ['resourcesLimit', 'scopesPerResourceLimit'],
   [SubscriptionPlanTableGroupKey.branding]: ['customDomainEnabled'],

@@ -6,7 +6,7 @@ export const constructPlanTableDataArray = (
   plans: SubscriptionPlan[]
 ): SubscriptionPlanTableData[] =>
   plans.map((plan) => {
-    const { id, name, products, quota } = plan;
+    const { id, name, stripeProducts, quota } = plan;
 
     return {
       id,
@@ -14,9 +14,9 @@ export const constructPlanTableDataArray = (
       table: {
         ...quota,
         basePrice: conditional(
-          products.find((product) => product.type === 'flat')?.price.unitAmountDecimal
+          stripeProducts.find((product) => product.type === 'flat')?.price.unitAmountDecimal
         ),
-        mauUnitPrice: products
+        mauUnitPrice: stripeProducts
           .filter(({ type }) => type !== 'flat')
           .map(({ price: { unitAmountDecimal } }) => conditionalString(unitAmountDecimal)),
       },

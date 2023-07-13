@@ -113,11 +113,9 @@ function PlanQuotaTable({ subscriptionPlans }: Props) {
 
                 // For mau unit price
                 if (Array.isArray(quotaValue)) {
-                  if (quotaValue.length === 0) {
-                    return <DynamicT forKey="subscription.quota_table.contact" />;
-                  }
-
-                  return (
+                  return quotaValue.length === 0 ? (
+                    '-'
+                  ) : (
                     <div>
                       {quotaValue.map((value) => (
                         <div key={value}>
@@ -132,7 +130,7 @@ function PlanQuotaTable({ subscriptionPlans }: Props) {
                 }
 
                 if (typeof quotaValue === 'boolean') {
-                  return quotaValue ? <Success /> : '- ';
+                  return quotaValue ? <Success /> : '-';
                 }
 
                 // Note: handle number type

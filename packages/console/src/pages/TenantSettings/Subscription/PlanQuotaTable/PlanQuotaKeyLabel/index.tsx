@@ -9,7 +9,6 @@ const planQuotaKeyPhraseMap: {
     'admin_console.subscription.quota_table'
   >;
 } = {
-  tenantLimit: 'quota.tenant_limit',
   mauLimit: 'quota.mau_limit',
   applicationsLimit: 'application.total',
   machineToMachineLimit: 'application.m2m',

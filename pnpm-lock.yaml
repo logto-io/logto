@@ -2755,8 +2755,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-cbbfdc2
-        version: 0.2.5-cbbfdc2(zod@3.20.2)
+        specifier: 0.2.5-4f1d80b
+        version: 0.2.5-4f1d80b(zod@3.20.2)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -2857,8 +2857,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.7.17
-        version: 0.7.17(zod@3.20.2)
+        specifier: ^0.7.19
+        version: 0.7.19(zod@3.20.2)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -7185,6 +7185,16 @@ packages:
       jose: 4.14.4
     dev: true
 
+  /@logto/cloud@0.2.5-4f1d80b(zod@3.20.2):
+    resolution: {integrity: sha512-AF0YnJiXDMS3HQ2ugZcwJRBkspvNtlXk992IwTNFZxbZdinpPoVmPnDnHuekACcQY5bFRgHjMB2/o/GKkdLpWg==}
+    engines: {node: ^18.12.0}
+    dependencies:
+      '@silverhand/essentials': 2.7.0
+      '@withtyped/server': 0.12.7(zod@3.20.2)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
   /@logto/cloud@0.2.5-cbbfdc2(zod@3.20.2):
     resolution: {integrity: sha512-qul8lxkbAczEHJSyramQJW3BaNAdJQHlryIzTAHpcWpNGZogP3aacJuF0neBnnn8mJqAWy1rIGAGnb4d16fEFQ==}
     engines: {node: ^18.12.0}
@@ -9816,6 +9826,16 @@ packages:
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
+    dev: false
+
+  /@withtyped/client@0.7.19(zod@3.20.2):
+    resolution: {integrity: sha512-cHmqCIsEMonrE9kDbu8YAPWWPHmy6imUGbUWQ2PGaPLTJagbgH3ABsxgnLiM0lm0LeuZFd3BHh+JYKRDUmS8cw==}
+    dependencies:
+      '@withtyped/server': 0.12.7(zod@3.20.2)
+      '@withtyped/shared': 0.2.2
+    transitivePeerDependencies:
+      - zod
+    dev: true
 
   /@withtyped/server@0.12.5(zod@3.20.2):
     resolution: {integrity: sha512-mKDPGCJzh0xna4Vi2zVsHg/ZfMNQHDV3+jvsral2PJdRzI8qU7au7I/ytU6Vr6BU1fFESkNrIuUpCmyfBAwX7g==}
@@ -9834,7 +9854,6 @@ packages:
       '@silverhand/essentials': 2.7.0
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
-    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}

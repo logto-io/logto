@@ -1,12 +1,8 @@
 import type router from '@logto/cloud/routes';
-import { type RouterRoutes } from '@withtyped/client';
-import { type z, type ZodType } from 'zod';
+import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 export type GetRoutes = RouterRoutes<typeof router>['get'];
 
-type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: ZodType }> =
-  z.infer<NonNullable<T['response']>>;
-
-export type SubscriptionPlanResponse = RouteResponseType<
+export type SubscriptionPlanResponse = GuardedResponse<
   GetRoutes['/api/subscription-plans']
 >[number];
