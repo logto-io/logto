@@ -42,5 +42,3 @@ export const getCallbackUrl = (tenantId?: string) =>
   );
 
 export const getSignOutRedirectPathname = () => (isCloud ? '/' : ossConsolePath);
-
-export const maxFreeTenantNumbers = 3;
