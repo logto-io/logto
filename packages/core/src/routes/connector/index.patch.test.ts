@@ -179,6 +179,34 @@ describe('connector data routes', () => {
       );
     });
 
+    it('successfully reset connector config', async () => {
+      getLogtoConnectors.mockResolvedValue([
+        {
+          dbEntry: mockConnector,
+          metadata: { ...mockMetadata, isStandard: true },
+          type: ConnectorType.Social,
+          ...mockLogtoConnector,
+        },
+      ]);
+      updateConnector.mockResolvedValueOnce({
+        ...mockConnector,
+        config: {},
+      });
+      const response = await connectorRequest.patch('/connectors/id').send({
+        config: {},
+      });
+      expect(response).toHaveProperty('statusCode', 200);
+      expect(updateConnector).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 'id' },
+          set: {
+            config: {},
+          },
+          jsonbMode: 'replace',
+        })
+      );
+    });
+
     it('successfully updates connector config and metadata', async () => {
       getLogtoConnectors.mockResolvedValue([
         {
@@ -235,9 +263,6 @@ describe('connector data routes', () => {
         ...mockConnector,
         metadata: {
           target: 'connector',
-          name: { en: '' },
-          logo: '',
-          logoDark: '',
         },
       });
       const response = await connectorRequest.patch('/connectors/id').send({

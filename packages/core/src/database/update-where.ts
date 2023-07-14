@@ -32,7 +32,7 @@ export const buildUpdateWhereWithPool =
     const connectKeyValueWithEqualSign = (data: Partial<Schema>, jsonbMode: 'replace' | 'merge') =>
       Object.entries<SchemaValue>(data)
         .map(([key, value]) => {
-          if (!isKeyOfSchema(key)) {
+          if (!isKeyOfSchema(key) || value === undefined) {
             return;
           }
 

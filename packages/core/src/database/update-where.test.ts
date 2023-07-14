@@ -69,12 +69,20 @@ describe('buildUpdateWhere()', () => {
     ).resolves.toStrictEqual({ id: 'foo', customClientMetadata: '{"idTokenTtl":3600}' });
   });
 
-  it('throws an error when `undefined` found in values', async () => {
+  it('should skip the keys whose value is `undefined`', async () => {
+    const user: CreateUser = {
+      id: 'foo',
+      username: '456',
+    };
     const pool = createTestPool(
-      'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
+      'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3\nreturning *',
+      (_, [username, id]) => ({
+        id: String(id),
+        username: String(username),
+      })
     );
 
-    const updateWhere = buildUpdateWhereWithPool(pool)(Users);
+    const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
 
     await expect(
       updateWhere({
@@ -82,7 +90,7 @@ describe('buildUpdateWhere()', () => {
         where: { id: 'foo', username: '456' },
         jsonbMode: 'merge',
       })
-    ).rejects.toMatchError(new Error(`Cannot convert id to primitive`));
+    ).resolves.toStrictEqual({ ...user, username: '123' });
   });
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {

@@ -5,8 +5,10 @@ import {
   Connectors,
   ConnectorType,
   connectorResponseGuard,
+  type JsonObject,
 } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
@@ -308,7 +310,17 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       await updateConnector({
-        set: cleanDeep({ config, metadata, syncProfile }),
+        set: {
+          /**
+           * `JsonObject` has all non-undefined values, and `cleanDeep` method with default settings
+           * drops all keys with undefined values, the return type of `Partial<JsonObject>` is still `JsonObject`.
+           * The type inference failed to infer this, manually assign type `JsonObject`.
+           */
+          // eslint-disable-next-line no-restricted-syntax
+          config: conditional(config && (cleanDeep(config) as JsonObject)),
+          metadata: conditional(metadata && cleanDeep(metadata)),
+          syncProfile,
+        },
         where: { id },
         jsonbMode: 'replace',
       });
