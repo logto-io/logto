@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & {
   onChange: (value: string) => void;
-  allowedMimeTypes: UserAssetsServiceStatus['allowUploadMimeTypes'];
+  allowedMimeTypes?: UserAssetsServiceStatus['allowUploadMimeTypes'];
 };
 
 function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: Props) {
@@ -22,7 +22,7 @@ function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: 
 
   const limitDescription = t('components.uploader.image_limit', {
     size: maxImageSizeLimit / 1024,
-    extensions: convertToFileExtensionArray(allowedMimeTypes),
+    extensions: convertToFileExtensionArray(allowedImageMimeTypes),
   });
 
   const [uploadError, setUploadError] = useState<string>();

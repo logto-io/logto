@@ -31,7 +31,6 @@ function LogoAndFaviconUploader() {
                 name={name}
                 value={value ?? ''}
                 actionDescription={t('sign_in_exp.branding.logo_image')}
-                allowedMimeTypes={allowedImageMimeTypes}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
@@ -50,7 +49,6 @@ function LogoAndFaviconUploader() {
                 name={name}
                 value={value ?? ''}
                 actionDescription={t('sign_in_exp.branding.favicon')}
-                allowedMimeTypes={allowedImageMimeTypes}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadFaviconError}
                 onDelete={() => {
