@@ -2,21 +2,13 @@ import type { AllowedUploadMimeType } from '@logto/schemas';
 
 import Delete from '@/assets/icons/delete.svg';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
+import useImageMimeTypes, { maxImageSizeLimit } from '@/hooks/use-image-mime-types';
 
 import IconButton from '../../IconButton';
 import FileUploader from '../FileUploader';
 import type { Props as FileUploaderProps } from '../FileUploader';
 
 import * as styles from './index.module.scss';
-
-export const maxImageSizeLimit = 500 * 1024; // 500 KB
-
-export const allowedImageMimeTypes: AllowedUploadMimeType[] = [
-  'image/svg+xml',
-  'image/png',
-  'image/jpeg',
-  'image/vnd.microsoft.icon',
-];
 
 export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   allowedMimeTypes?: AllowedUploadMimeType[];
@@ -25,7 +17,14 @@ export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
   onDelete: () => void;
 };
 
-function ImageUploader({ name, value, onDelete, allowedMimeTypes, ...rest }: Props) {
+function ImageUploader({
+  name,
+  value,
+  onDelete,
+  allowedMimeTypes: imageMimeTypes,
+  ...rest
+}: Props) {
+  const { allowedMimeTypes } = useImageMimeTypes(imageMimeTypes);
   return value ? (
     <div className={styles.imageUploader}>
       <ImageWithErrorFallback
@@ -49,11 +48,7 @@ function ImageUploader({ name, value, onDelete, allowedMimeTypes, ...rest }: Pro
       </IconButton>
     </div>
   ) : (
-    <FileUploader
-      allowedMimeTypes={allowedMimeTypes?.length ? allowedMimeTypes : allowedImageMimeTypes}
-      maxSize={maxImageSizeLimit}
-      {...rest}
-    />
+    <FileUploader allowedMimeTypes={allowedMimeTypes} maxSize={maxImageSizeLimit} {...rest} />
   );
 }
 

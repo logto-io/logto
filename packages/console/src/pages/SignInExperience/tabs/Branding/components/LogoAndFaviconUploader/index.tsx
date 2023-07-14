@@ -3,12 +3,9 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ImageUploader, {
-  allowedImageMimeTypes,
-  maxImageSizeLimit,
-} from '@/ds-components/Uploader/ImageUploader';
+import ImageUploader from '@/ds-components/Uploader/ImageUploader';
+import useImageMimeTypes from '@/hooks/use-image-mime-types';
 import type { SignInExperienceForm } from '@/pages/SignInExperience/types';
-import { convertToFileExtensionArray } from '@/utils/uploader';
 
 import * as styles from './index.module.scss';
 
@@ -18,6 +15,7 @@ function LogoAndFaviconUploader() {
   const [uploadFaviconError, setUploadFaviconError] = useState<string>();
 
   const { control } = useFormContext<SignInExperienceForm>();
+  const { description } = useImageMimeTypes();
 
   return (
     <div className={styles.container}>
@@ -69,12 +67,7 @@ function LogoAndFaviconUploader() {
           {t('sign_in_exp.branding.favicon_error', { error: uploadFaviconError })}
         </div>
       )}
-      <div className={styles.description}>
-        {t('components.uploader.image_limit', {
-          size: maxImageSizeLimit / 1024,
-          extensions: convertToFileExtensionArray(allowedImageMimeTypes),
-        })}
-      </div>
+      <div className={styles.description}>{description}</div>
     </div>
   );
 }
