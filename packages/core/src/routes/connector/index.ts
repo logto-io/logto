@@ -1,11 +1,5 @@
-/* eslint-disable max-lines */
 import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
-import {
-  demoConnectorIds,
-  validateConfig,
-  ServiceConnector,
-  type ConnectorMetadata,
-} from '@logto/connector-kit';
+import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import {
   connectorFactoryResponseGuard,
   Connectors,
@@ -13,13 +7,13 @@ import {
   connectorResponseGuard,
 } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
 import {
   loadConnectorFactories,
   transpileConnectorFactory,
@@ -33,20 +27,6 @@ import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 
 const generateConnectorId = buildIdGenerator(12);
-
-const getFromEmailFromMetadata = (metadata: ConnectorMetadata) => {
-  const result = object({ fromEmail: string() }).safeParse(metadata);
-  return conditional(result.success && result.data.fromEmail);
-};
-
-// Will accept other source of `extraInfo` in the future.
-const buildExtraInfo = (metadata: ConnectorMetadata) => {
-  const fromEmail = getFromEmailFromMetadata(metadata);
-  const extraInfo = {
-    ...conditional(fromEmail && metadata.id === ServiceConnector.Email && { fromEmail }),
-  };
-  return cleanDeep(extraInfo, { emptyObjects: false });
-};
 
 export default function connectorRoutes<T extends AuthedRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -369,5 +349,3 @@ export default function connectorRoutes<T extends AuthedRouter>(
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
 }
-/** TODO @Darcy: refactor this file later. */
-/* eslint-enable max-lines */
