@@ -1,3 +1,4 @@
+import type { UserAssetsServiceStatus } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,14 +12,17 @@ import * as styles from './index.module.scss';
 
 type Props = Pick<ImageUploaderProps, 'name' | 'value' | 'actionDescription'> & {
   onChange: (value: string) => void;
+  allowedMimeTypes: UserAssetsServiceStatus['allowUploadMimeTypes'];
 };
 
-function ImageUploaderField({ onChange, ...rest }: Props) {
+function ImageUploaderField({ onChange, allowedMimeTypes: mimeTypes, ...rest }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const allowedMimeTypes = mimeTypes?.length ? mimeTypes : allowedImageMimeTypes;
 
   const limitDescription = t('components.uploader.image_limit', {
     size: maxImageSizeLimit / 1024,
-    extensions: convertToFileExtensionArray(allowedImageMimeTypes),
+    extensions: convertToFileExtensionArray(allowedMimeTypes),
   });
 
   const [uploadError, setUploadError] = useState<string>();
@@ -26,6 +30,7 @@ function ImageUploaderField({ onChange, ...rest }: Props) {
   return (
     <div>
       <ImageUploader
+        allowedMimeTypes={allowedMimeTypes}
         onCompleted={onChange}
         onUploadErrorChange={setUploadError}
         onDelete={() => {

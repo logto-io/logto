@@ -18,13 +18,13 @@ export const allowedImageMimeTypes: AllowedUploadMimeType[] = [
   'image/vnd.microsoft.icon',
 ];
 
-export type Props = Omit<FileUploaderProps, 'maxSize' | 'allowedMimeTypes'> & {
+export type Props = Omit<FileUploaderProps, 'maxSize'> & {
   name: string;
   value: string;
   onDelete: () => void;
 };
 
-function ImageUploader({ name, value, onDelete, ...rest }: Props) {
+function ImageUploader({ name, value, onDelete, allowedMimeTypes, ...rest }: Props) {
   return value ? (
     <div className={styles.imageUploader}>
       <ImageWithErrorFallback
@@ -48,7 +48,7 @@ function ImageUploader({ name, value, onDelete, ...rest }: Props) {
       </IconButton>
     </div>
   ) : (
-    <FileUploader allowedMimeTypes={allowedImageMimeTypes} maxSize={maxImageSizeLimit} {...rest} />
+    <FileUploader allowedMimeTypes={allowedMimeTypes} maxSize={maxImageSizeLimit} {...rest} />
   );
 }
 

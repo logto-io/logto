@@ -94,6 +94,7 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
             render={({ field: { onChange, value, name } }) => (
               <ImageUploaderField
                 name={name}
+                allowedMimeTypes={['image/png', 'image/jpeg']} // Only allow `png`, `jpg` and `jpeg` files.
                 value={conditionalString(value)}
                 onChange={onChange}
               />
