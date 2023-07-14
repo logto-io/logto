@@ -20,8 +20,6 @@ import { grantAccessToken } from './grant-access-token.js';
 import type { LogtoEmailConfig } from './types.js';
 import { logtoEmailConfigGuard } from './types.js';
 
-export type { EmailServiceBasicConfig } from './types.js';
-
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {

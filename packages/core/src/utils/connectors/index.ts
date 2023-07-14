@@ -12,11 +12,10 @@ import {
   ConnectorType,
   type EmailConnector,
   type SmsConnector,
-  ServiceConnector,
 } from '@logto/connector-kit';
-import type { ConnectorFactoryResponse, ConnectorResponse, EmailServiceData } from '@logto/schemas';
+import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
 import { findPackage } from '@logto/shared';
-import { conditional, deduplicate, pick, trySafe, type Optional } from '@silverhand/essentials';
+import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -74,20 +73,6 @@ export const transpileConnectorFactory = ({
     /** Temporarily block entering Logto email connector as well until this feature is ready for prod. */
     isDemo: isDemoConnector(metadata.id),
   };
-};
-
-/**
- * `extraInfo` is only used to expose email service vendors `fromEmail` setup to Logto email connector.
- * Can extend this method in the future for other use cases.
- */
-export const buildExtraInfoFromEmailServiceData = (
-  connectorFactoryId: string,
-  emailServiceProviderConfig?: EmailServiceData
-): Optional<Record<string, unknown>> => {
-  return conditional(
-    connectorFactoryId === ServiceConnector.Email &&
-      emailServiceProviderConfig?.fromEmail && { fromEmail: emailServiceProviderConfig.fromEmail }
-  );
 };
 
 const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
