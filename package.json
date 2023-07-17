@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.25.0",
-    "@commitlint/cli": "^17.0.0",
-    "@commitlint/config-conventional": "^17.0.0",
-    "@commitlint/types": "^17.0.0",
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "@commitlint/types": "^17.4.4",
     "@types/pg": "^8.6.6",
     "husky": "^8.0.0",
     "pg": "^8.8.0",
