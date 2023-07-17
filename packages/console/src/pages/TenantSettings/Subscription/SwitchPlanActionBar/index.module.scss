@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  background-color: var(--color-layer-1);
+  box-shadow: var(--shadow-2);
+  border-radius: 12px 12px 0 0;
+  position: sticky;
+  width: 100%;
+  bottom: 0;
+  padding: _.unit(4) _.unit(3) _.unit(4) _.unit(4);
+  display: flex;
+  justify-content: space-between;
+
+  > * {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.buttonLink {
+  text-decoration: none;
+}

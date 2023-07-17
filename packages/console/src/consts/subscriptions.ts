@@ -6,6 +6,18 @@ import {
   SubscriptionPlanTableGroupKey,
 } from '@/types/subscriptions';
 
+export enum ReservedPlanId {
+  free = 'free',
+  hobby = 'hobby',
+  pro = 'pro',
+}
+
+export const reservedPlanIdOrder: string[] = [
+  ReservedPlanId.free,
+  ReservedPlanId.hobby,
+  ReservedPlanId.pro,
+];
+
 export const communitySupportEnabledMap: Record<string, boolean | undefined> = {
   [ReservedPlanName.Free]: true,
   [ReservedPlanName.Hobby]: true,

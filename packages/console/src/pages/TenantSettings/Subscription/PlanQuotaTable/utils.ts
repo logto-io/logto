@@ -13,9 +13,10 @@ export const constructPlanTableDataArray = (
       name,
       table: {
         ...quota,
-        basePrice: conditional(
-          stripeProducts.find((product) => product.type === 'flat')?.price.unitAmountDecimal
-        ),
+        basePrice:
+          conditional(
+            stripeProducts.find((product) => product.type === 'flat')?.price.unitAmountDecimal
+          ) ?? '0',
         mauUnitPrice: stripeProducts
           .filter(({ type }) => type !== 'flat')
           .map(({ price: { unitAmountDecimal } }) => conditionalString(unitAmountDecimal)),
