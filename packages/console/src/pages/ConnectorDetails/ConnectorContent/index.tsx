@@ -53,6 +53,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     handleSubmit,
     watch,
     reset,
+    trigger,
   } = methods;
 
   const {
@@ -76,6 +77,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     }
     reset(formData);
   }, [formData, isDirty, reset]);
+
+  const validateConfigForm = useCallback(async () => {
+    return trigger(undefined, { shouldFocus: true });
+  }, [trigger]);
 
   const configParser = useConnectorFormConfigParser();
 
@@ -159,6 +164,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             <ConnectorTester
               connectorFactoryId={connectorId}
               connectorType={connectorType}
+              validateConfigForm={validateConfigForm}
               parse={() => configParser(watch(), formItems)}
               updateUsage={updateUsage}
             />

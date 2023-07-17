@@ -21,6 +21,7 @@ type Props = {
   connectorFactoryId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
   className?: string;
+  validateConfigForm: () => Promise<boolean>;
   parse: () => unknown;
   updateUsage?: () => void;
 };
@@ -33,6 +34,7 @@ function ConnectorTester({
   connectorFactoryId,
   connectorType,
   className,
+  validateConfigForm,
   parse,
   updateUsage,
 }: Props) {
@@ -66,6 +68,11 @@ function ConnectorTester({
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
+      const isConfigFormValid = await validateConfigForm();
+      if (!isConfigFormValid) {
+        return;
+      }
+
       const { sendTo } = formData;
 
       const data = {

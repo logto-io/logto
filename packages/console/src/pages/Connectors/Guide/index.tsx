@@ -5,7 +5,7 @@ import { generateStandardId } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { HTTPError } from 'ky';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -66,6 +66,7 @@ function Guide({ connector, onClose }: Props) {
   const {
     formState: { isSubmitting },
     handleSubmit,
+    trigger,
     watch,
     setError,
     reset,
@@ -83,6 +84,10 @@ function Guide({ connector, onClose }: Props) {
   useEffect(() => {
     setConflictConnectorName(undefined);
   }, [connector]);
+
+  const validateConfigForm = useCallback(async () => {
+    return trigger(undefined, { shouldFocus: true });
+  }, [trigger]);
 
   if (!connector) {
     return null;
@@ -220,6 +225,7 @@ function Guide({ connector, onClose }: Props) {
                     <ConnectorTester
                       connectorFactoryId={connectorId}
                       connectorType={connectorType}
+                      validateConfigForm={validateConfigForm}
                       parse={() => configParser(watch(), formItems)}
                     />
                   </div>
