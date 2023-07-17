@@ -20,6 +20,8 @@ export enum CloudScope {
   SendEmail = 'send:email',
   /** The user can see and manage affiliates, including create, update, and delete. */
   ManageAffiliate = 'manage:affiliate',
+  /** The user can create new affiliates and logs. */
+  CreateAffiliate = 'create:affiliate',
 }
 
 export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
