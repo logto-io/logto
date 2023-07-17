@@ -10,7 +10,7 @@ import IconButton from '../IconButton';
 
 import * as styles from './index.module.scss';
 
-type Props = {
+export type Props = {
   children: ReactNode;
   footer?: ReactNode;
   onClose?: () => void;

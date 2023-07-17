@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  margin-left: _.unit(4);
+
+  &.withChangeState {
+    list-style-type: none;
+    margin-left: unset;
+  }
+
+  .itemContent {
+    display: flex;
+    align-items: center;
+    gap: _.unit(2);
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    &.notCapable {
+      text-decoration: line-through;
+
+      .icon {
+        color: var(--color-error-hover);
+      }
+    }
+  }
+}
