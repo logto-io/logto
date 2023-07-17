@@ -8,3 +8,5 @@ export type SubscriptionPlanResponse = GuardedResponse<
 >[number];
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
+
+export type SubscriptionUsage = GuardedResponse<GetRoutes['/api/tenants/:tenantId/usage']>;
