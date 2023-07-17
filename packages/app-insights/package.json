@@ -59,7 +59,7 @@
   "dependencies": {
     "@microsoft/applicationinsights-clickanalytics-js": "^2.8.12",
     "@microsoft/applicationinsights-react-js": "^3.4.2",
-    "@microsoft/applicationinsights-web": "^2.8.12",
+    "@microsoft/applicationinsights-web": "^3.0.0",
     "@silverhand/essentials": "^2.5.0",
     "applicationinsights": "^2.5.0"
   },
