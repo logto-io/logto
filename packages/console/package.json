@@ -103,7 +103,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.9",
     "react-hot-toast": "^2.2.0",
-    "react-i18next": "^12.3.1",
+    "react-i18next": "^13.0.0",
     "react-markdown": "^8.0.0",
     "react-modal": "^3.15.1",
     "react-paginate": "^8.1.3",
