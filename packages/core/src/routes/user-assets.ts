@@ -17,7 +17,6 @@ import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { uploadFileGuard } from '#src/utils/storage/consts.js';
 import { buildUploadFile } from '#src/utils/storage/index.js';
-import { fileNameUrlEncoder } from '#src/utils/storage/utils.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -77,13 +76,13 @@ export default function userAssetsRoutes<T extends AuthedRouter>(...[router]: Ro
       )}/${generateStandardId(8)}/${file.originalFilename}`;
 
       try {
-        const { url: rawUrl } = await uploadFile(await readFile(file.filepath), objectKey, {
+        const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
           contentType: file.mimetype,
           publicUrl: storageProviderConfig.publicUrl,
         });
 
         const result: UserAssets = {
-          url: fileNameUrlEncoder(rawUrl),
+          url,
         };
 
         ctx.body = result;
