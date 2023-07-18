@@ -8,6 +8,7 @@ import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
+import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
@@ -25,6 +26,7 @@ type Props = {
 function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: subscriptionPlans } = useSubscriptionPlans();
+  const { subscribe } = useSubscribe();
   const cloudApi = useCloudApi();
   if (!subscriptionPlans || !tenantData) {
     return null;
@@ -42,7 +44,8 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         toast.error(error instanceof Error ? error.message : String(error));
       }
     }
-    // Todo @xiaoyijun implement checkout
+
+    void subscribe({ planId, tenantData });
   };
 
   return (

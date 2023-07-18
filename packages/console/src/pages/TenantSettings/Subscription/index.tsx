@@ -14,7 +14,11 @@ import * as styles from './index.module.scss';
 
 function Subscription() {
   const { data: subscriptionPlans, error: fetchPlansError } = useSubscriptionPlans();
-  const { data: currentSubscription, error: fetchSubscriptionError } = useCurrentSubscription();
+  const {
+    data: currentSubscription,
+    error: fetchSubscriptionError,
+    mutate: mutateSubscription,
+  } = useCurrentSubscription();
   const { data: subscriptionUsage, error: fetchSubscriptionUsageError } =
     useCurrentSubscriptionUsage();
 
@@ -50,6 +54,7 @@ function Subscription() {
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={subscriptionPlans}
+        onSubscriptionUpdated={mutateSubscription}
       />
     </div>
   );

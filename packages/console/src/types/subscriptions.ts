@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 
 export enum ReservedPlanName {
@@ -48,3 +50,12 @@ type SubscriptionPlanTableValue = SubscriptionPlanTable[keyof SubscriptionPlanTa
 export type SubscriptionPlanTableRow = Record<string, SubscriptionPlanTableValue> & {
   quotaKey: keyof SubscriptionPlanTable;
 };
+
+export const localCheckoutSessionGuard = z.object({
+  state: z.string(),
+  sessionId: z.string(),
+  callbackPage: z.string().optional(),
+  isDowngrade: z.boolean().optional(),
+});
+
+export type LocalCheckoutSession = z.infer<typeof localCheckoutSessionGuard>;
