@@ -37,21 +37,22 @@ const subscription = {
     amount_column: 'Kwota',
     invoice_created_date_column: 'Data utworzenia faktury',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Czy na pewno chcesz zdegradować?',
     description:
-      'Jeśli zdecydujesz się przełączyć na <targetName/>, pamiętaj, że nie będziesz już mieć dostępu do przyznanych wcześniej limitów i funkcji w <currentName/>.',
+      'Jeśli zdecydujesz się przełączyć na <targetName/>, pamiętaj, że nie będziesz już mieć dostępu do przyznanych wcześniej limitów i funkcji w <currentName/>. ',
     before: 'Przed: <name/>',
     after: 'Po: <name />',
     downgrade: 'Zdegradować',
     not_eligible: 'Nie spełniasz wymogów do zdegradowania',
     not_eligible_description:
-      'Upewnij się, że spełniasz następujące kryteria przed dokonaniem degradacji do <name/>.',
+      'Upewnij się, że spełniasz następujące kryteria przed dokonaniem degradacji do <name/>. ',
     a_maximum_of: 'Maksymalnie <item/>',
+    help_tip: 'Potrzebujesz pomocy przy zdegradowaniu? <a>Skontaktuj się z nami</a>.',
   },
+  upgrade_success: 'Pomyślnie uaktualniono do <name/>',
+  downgrade_success: 'Pomyślnie zdegradowano do <name/>',
 };
 
 export default subscription;

@@ -36,9 +36,7 @@ const subscription = {
     amount_column: 'Сумма',
     invoice_created_date_column: 'Дата создания счета',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Вы действительно хотите понизить уровень?',
     description:
@@ -50,7 +48,10 @@ const subscription = {
     not_eligible_description:
       'Убедитесь, что вы соответствуете следующим критериям, прежде чем понизить до <name/>.',
     a_maximum_of: 'Максимум <item/>',
+    help_tip: 'Нужна помощь в понижении уровня? <a>Свяжитесь с нами</a>.',
   },
+  upgrade_success: 'Успешно повышен до <name/>',
+  downgrade_success: 'Успешно понижен до <name/>',
 };
 
 export default subscription;

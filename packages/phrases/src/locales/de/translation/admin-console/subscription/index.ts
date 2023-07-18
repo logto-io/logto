@@ -36,9 +36,7 @@ const subscription = {
     amount_column: 'Betrag',
     invoice_created_date_column: 'Rechnungsdatum',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Sind Sie sicher, dass Sie herabstufen möchten?',
     description:
@@ -50,7 +48,10 @@ const subscription = {
     not_eligible_description:
       'Stellen Sie sicher, dass Sie die folgenden Kriterien erfüllen, bevor Sie auf <name/> herabstufen.',
     a_maximum_of: 'Maximal <item/>',
+    help_tip: 'Benötigen Sie Hilfe beim Herabstufen? <a>Kontaktieren Sie uns</a>.',
   },
+  upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
+  downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
 };
 
 export default subscription;
