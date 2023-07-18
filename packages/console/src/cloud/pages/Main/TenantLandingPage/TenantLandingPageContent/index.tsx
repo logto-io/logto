@@ -6,12 +6,12 @@ import { useContext, useState } from 'react';
 import Plus from '@/assets/icons/plus.svg';
 import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
+import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import useTheme from '@/hooks/use-theme';
 
-import CreateTenantModal from './CreateTenantModal';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -52,6 +52,7 @@ function TenantLandingPageContent({ className }: Props) {
         />
       </div>
       <CreateTenantModal
+        skipPlanSelection
         isOpen={isCreateModalOpen}
         onClose={async (tenant?: TenantInfo) => {
           if (tenant) {

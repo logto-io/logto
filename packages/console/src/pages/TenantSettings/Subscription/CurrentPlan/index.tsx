@@ -25,7 +25,9 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         <div className={styles.name}>
           <PlanName name={name} />
         </div>
-        <PlanDescription planName={name} />
+        <div className={styles.description}>
+          <PlanDescription planName={name} />
+        </div>
       </div>
       <FormField title="subscription.plan_usage">
         <PlanUsage

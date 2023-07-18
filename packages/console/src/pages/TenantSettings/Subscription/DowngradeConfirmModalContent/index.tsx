@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import PlanName from '@/components/PlanName';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
-import PlanQuotaDiffList from './PlanQuotaDiffList';
+import PlanQuotaDiffCard from './PlanQuotaDiffCard';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -42,8 +42,8 @@ function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
         </Trans>
       </div>
       <div className={styles.content}>
-        <PlanQuotaDiffList planName={currentPlanName} quotaDiff={currentQuotaDiff} />
-        <PlanQuotaDiffList isTarget planName={targetPlanName} quotaDiff={targetQuotaDiff} />
+        <PlanQuotaDiffCard planName={currentPlanName} quotaDiff={currentQuotaDiff} />
+        <PlanQuotaDiffCard isTarget planName={targetPlanName} quotaDiff={targetQuotaDiff} />
       </div>
     </div>
   );
