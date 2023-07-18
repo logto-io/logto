@@ -12,6 +12,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
+import FreePlanNotification from './FreePlanNotification';
 import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
 import * as styles from './index.module.scss';
@@ -68,28 +69,32 @@ function GetStarted() {
         </div>
       </div>
       {isLoading && <Skeleton />}
-      {!isLoading &&
-        data.map(({ id, title, subtitle, icon: CardIcon, isComplete, buttonText, onClick }) => (
-          <Card key={id} className={styles.card}>
-            {!isComplete && <CardIcon className={styles.icon} />}
-            {isComplete && <CompleteIndicator className={styles.icon} />}
-            <div className={styles.wrapper}>
-              <div className={styles.title}>
-                <DynamicT forKey={title} />
+      {!isLoading && (
+        <>
+          <FreePlanNotification />
+          {data.map(({ id, title, subtitle, icon: CardIcon, isComplete, buttonText, onClick }) => (
+            <Card key={id} className={styles.card}>
+              {!isComplete && <CardIcon className={styles.icon} />}
+              {isComplete && <CompleteIndicator className={styles.icon} />}
+              <div className={styles.wrapper}>
+                <div className={styles.title}>
+                  <DynamicT forKey={title} />
+                </div>
+                <div className={styles.subtitle}>
+                  <DynamicT forKey={subtitle} />
+                </div>
               </div>
-              <div className={styles.subtitle}>
-                <DynamicT forKey={subtitle} />
-              </div>
-            </div>
-            <Button
-              className={styles.button}
-              type="outline"
-              size="large"
-              title={buttonText}
-              onClick={onClick}
-            />
-          </Card>
-        ))}
+              <Button
+                className={styles.button}
+                type="outline"
+                size="large"
+                title={buttonText}
+                onClick={onClick}
+              />
+            </Card>
+          ))}
+        </>
+      )}
       <ConfirmModal
         isOpen={showConfirmModal}
         confirmButtonType="primary"
