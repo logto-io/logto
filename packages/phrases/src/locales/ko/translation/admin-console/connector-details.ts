@@ -33,10 +33,11 @@ const connector_details = {
   logto_email: {
     total_email_sent: '전체 이메일 발송: {{value, number}}',
     total_email_sent_tip:
-      'Logto는 안전하고 안정적인 내장형 이메일에 SendGrid를 사용합니다. 완전히 무료로 사용할 수 있습니다.',
+      'Logto에서 안전하고 안정적인 내장형 이메일을 위해 SendGrid를 사용합니다. 완전 무료로 사용할 수 있습니다. <a>자세히 알아보기</a>',
     email_template_title: '이메일 템플릿',
     template_description:
       '내장형 이메일은 기본 템플릿을 사용하여 검증 이메일을 원활하게 전달합니다. 구성이 필요하지 않으며, 기본 브랜드 정보를 사용자 정의할 수 있습니다.',
+    template_description_link_text: '템플릿 보기',
     description_action_text: '템플릿 보기',
     from_email_field: '보내는 이메일',
     sender_name_field: '보내는 사람 이름',

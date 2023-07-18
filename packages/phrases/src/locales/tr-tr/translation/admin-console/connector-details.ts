@@ -33,10 +33,11 @@ const connector_details = {
   logto_email: {
     total_email_sent: 'Toplam e-posta gönderildi: {{value, number}}',
     total_email_sent_tip:
-      'Logto, güvenli ve stabil yerleşik e-posta için SendGrid kullanır. Tamamen ücretsizdir.',
+      'Logto dahili e-posta için güvenli ve stabil SendGrid kullanır. Tamamen ücretsizdir. <a>Daha fazla bilgi edinin</a>',
     email_template_title: 'E-posta Şablonu',
     template_description:
       'Yerleşik e-posta, doğrulama e-postalarının sorunsuz teslimi için varsayılan şablonları kullanır. Herhangi bir yapılandırma gerektirmez ve temel marka bilgilerini özelleştirebilirsiniz.',
+    template_description_link_text: 'Şablonları görüntüle',
     description_action_text: 'Şablonları görüntüle',
     from_email_field: 'Kimden e-posta',
     sender_name_field: 'Gönderen adı',

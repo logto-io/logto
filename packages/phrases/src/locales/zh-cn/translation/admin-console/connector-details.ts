@@ -31,10 +31,12 @@ const connector_details = {
   deletion_description: '你将删除此连接器。此操作不可撤销，再次添加需重新配置。',
   logto_email: {
     total_email_sent: '已发送邮件总数: {{value, number}}',
-    total_email_sent_tip: 'Logto 使用 SendGrid 提供安全稳定的内置电子邮件服务，完全免费。',
+    total_email_sent_tip:
+      'Logto 使用 SendGrid 进行安全稳定的内置电子邮件功能。此功能完全免费使用。<a>了解更多</a>',
     email_template_title: '电子邮件模板',
     template_description:
       '内置电子邮件使用默认模板，无需配置即可无缝发送验证电子邮件。您可以自定义基本品牌信息。',
+    template_description_link_text: '查看模板',
     description_action_text: '查看模板',
     from_email_field: '发件人电子邮件',
     sender_name_field: '发件人姓名',

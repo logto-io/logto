@@ -1,6 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
@@ -18,8 +17,6 @@ type Props = {
 };
 
 function FormCard({ title, tag, description, learnMoreLink, learnMoreLinkText, children }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <FormCardLayout
       introduction={
@@ -35,7 +32,7 @@ function FormCard({ title, tag, description, learnMoreLink, learnMoreLinkText, c
                 <>
                   {' '}
                   <TextLink href={learnMoreLink} target="_blank" rel="noopener">
-                    {t(learnMoreLinkText ?? 'general.learn_more')}
+                    <DynamicT forKey={learnMoreLinkText ?? 'general.learn_more'} />
                   </TextLink>
                 </>
               )}
