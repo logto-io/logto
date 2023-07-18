@@ -2,8 +2,9 @@
 
 .item {
   margin-left: _.unit(4);
+  font: var(--font-body-2);
 
-  &.withChangeState {
+  &.withIcon {
     list-style-type: none;
     margin-left: unset;
   }
@@ -16,14 +17,18 @@
     .icon {
       width: 16px;
       height: 16px;
+
+      &.notCapable {
+        color: var(--color-error);
+      }
+
+      &.capable {
+        color: var(--color-on-success-container);
+      }
     }
 
-    &.notCapable {
+    .lineThrough {
       text-decoration: line-through;
-
-      .icon {
-        color: var(--color-error-hover);
-      }
     }
   }
 }

@@ -3,8 +3,6 @@ import { type TFuncKey } from 'i18next';
 import DynamicT from '@/ds-components/DynamicT';
 import { ReservedPlanName } from '@/types/subscriptions';
 
-import * as styles from './index.module.scss';
-
 const registeredPlanDescriptionPhrasesMap: Record<
   string,
   TFuncKey<'translation', 'admin_console.subscription'> | undefined
@@ -23,11 +21,7 @@ function PlanDescription({ planName }: Props) {
     return null;
   }
 
-  return (
-    <div className={styles.description}>
-      <DynamicT forKey={`subscription.${description}`} />
-    </div>
-  );
+  return <DynamicT forKey={`subscription.${description}`} />;
 }
 
 export default PlanDescription;
