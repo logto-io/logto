@@ -37,9 +37,7 @@ const subscription = {
     amount_column: '金額',
     invoice_created_date_column: '請求書作成日',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'ダウングレードしますか？',
     description:
@@ -51,7 +49,10 @@ const subscription = {
     not_eligible_description:
       '<name/>にダウングレードする前に、以下の基準を満たしていることを確認してください。',
     a_maximum_of: '最大 <item/>',
+    help_tip: 'ダウングレードのヘルプが必要ですか？ <a>お問い合わせ</a>。',
   },
+  upgrade_success: '正常に<name/>にアップグレードされました',
+  downgrade_success: '正常に<name/>にダウングレードされました',
 };
 
 export default subscription;

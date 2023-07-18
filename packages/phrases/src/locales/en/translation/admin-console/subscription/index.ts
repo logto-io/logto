@@ -48,7 +48,10 @@ const subscription = {
     not_eligible_description:
       'Make sure you meet the following criteria before downgrading to the <name/>.',
     a_maximum_of: 'A maximum of <item/>',
+    help_tip: 'Need help downgrading? <a>Contact us</a>.',
   },
+  upgrade_success: 'Successfully upgraded to <name/>',
+  downgrade_success: 'Successfully downgraded to <name/>',
 };
 
 export default subscription;

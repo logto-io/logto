@@ -48,7 +48,10 @@ const subscription = {
     not_eligible_description:
       '<name />으로 다운그레이드하기 전에 다음 기준을 충족하는지 확인하세요.',
     a_maximum_of: '<item /> 최대',
+    help_tip: '다운그레이드 도움이 필요하신가요? <a>문의하기</a>.',
   },
+  upgrade_success: '성공적으로 <name/>으로 업그레이드되었습니다.',
+  downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',
 };
 
 export default subscription;

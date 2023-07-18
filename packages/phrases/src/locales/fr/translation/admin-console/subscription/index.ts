@@ -52,7 +52,10 @@ const subscription = {
     not_eligible_description:
       'Veuillez vous assurer de répondre aux critères suivants avant de passer au <name/>. ',
     a_maximum_of: 'Un maximum de <item/>',
+    help_tip: "Besoin d'aide pour rétrograder ? <a>Contactez-nous</a>.",
   },
+  upgrade_success: 'Passé avec succès à <name/>',
+  downgrade_success: 'Rétrogradé avec succès à <name/>',
 };
 
 export default subscription;

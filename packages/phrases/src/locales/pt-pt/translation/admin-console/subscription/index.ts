@@ -37,9 +37,7 @@ const subscription = {
     amount_column: 'Valor',
     invoice_created_date_column: 'Data de criação da fatura',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer o downgrade?',
     description:
@@ -51,7 +49,10 @@ const subscription = {
     not_eligible_description:
       'Verifique se você atende aos seguintes critérios antes de fazer o downgrade para o <name/>.',
     a_maximum_of: 'No máximo <item/>',
+    help_tip: 'Precisa de ajuda para fazer o downgrade? <a>Entre em contato conosco</a>.',
   },
+  upgrade_success: 'Atualizou com sucesso para <name/>',
+  downgrade_success: 'Downgrade concluído com sucesso para <name/>',
 };
 
 export default subscription;

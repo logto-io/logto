@@ -34,9 +34,7 @@ const subscription = {
     amount_column: '金額',
     invoice_created_date_column: '發票創建日期',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: '確定要降級嗎？',
     description:
@@ -47,7 +45,10 @@ const subscription = {
     not_eligible: '您不符合降級的資格',
     not_eligible_description: '在降級到<name/>之前，請確保符合以下標準。',
     a_maximum_of: '最多：<item/>',
+    help_tip: '需要協助降級嗎？<a>聯繫我們</a>。',
   },
+  upgrade_success: '升級成功至<name/>',
+  downgrade_success: '成功降級至<name/>',
 };
 
 export default subscription;
