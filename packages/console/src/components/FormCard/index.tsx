@@ -13,10 +13,11 @@ type Props = {
   tag?: ReactNode;
   description?: AdminConsoleKey;
   learnMoreLink?: string;
+  learnMoreLinkText?: AdminConsoleKey;
   children: ReactNode;
 };
 
-function FormCard({ title, tag, description, learnMoreLink, children }: Props) {
+function FormCard({ title, tag, description, learnMoreLink, learnMoreLinkText, children }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -34,7 +35,7 @@ function FormCard({ title, tag, description, learnMoreLink, children }: Props) {
                 <>
                   {' '}
                   <TextLink href={learnMoreLink} target="_blank" rel="noopener">
-                    {t('general.learn_more')}
+                    {t(learnMoreLinkText ?? 'general.learn_more')}
                   </TextLink>
                 </>
               )}

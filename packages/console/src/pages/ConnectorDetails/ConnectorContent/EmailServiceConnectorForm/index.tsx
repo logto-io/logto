@@ -9,6 +9,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { type ConnectorFormType } from '@/types/connector';
 import { uriValidator } from '@/utils/validator';
@@ -33,6 +34,7 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const parsedExtraInfo = extraInfoGuard.safeParse(extraInfo ?? {});
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const {
     control,
@@ -51,6 +53,10 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
     <FormCard
       title="connector_details.logto_email.email_template_title"
       description="connector_details.logto_email.template_description"
+      learnMoreLink={getDocumentationUrl(
+        '/docs/recipes/configure-connectors/email-connector/configure-logto-email-service/#unified-email-templates'
+      )}
+      learnMoreLinkText="connector_details.logto_email.template_description_link_text"
     >
       <FormField title="connector_details.logto_email.from_email_field">
         <TextInput
