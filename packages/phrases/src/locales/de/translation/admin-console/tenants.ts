@@ -48,6 +48,19 @@ const tenants = {
       'Um Ihr Projekt mit Logto zu konfigurieren, erstellen Sie bitte einen neuen Mandanten. Wenn Sie sich abmelden oder Ihr Konto löschen möchten, klicken Sie einfach auf die Avatar-Taste in der oberen rechten Ecke.',
     create_tenant_button: 'Mandanten erstellen',
   },
+  status: {
+    mau_exceeded: 'MAU überschritten',
+    suspended: 'Gesperrt',
+    overdue: 'Überfällig',
+  },
+  tenant_suspended_page: {
+    title: 'Mieter gesperrt. Kontaktieren Sie uns, um den Zugriff wiederherzustellen.',
+    description_1:
+      'Es tut uns leid, Ihnen mitteilen zu müssen, dass Ihr Mieterkonto vorübergehend gesperrt wurde, da es unsachgemäß genutzt wurde. Dies umfasst die Überschreitung der MAU-Grenzen, überfällige Zahlungen oder andere unbefugte Aktionen.',
+    description_2:
+      'Wenn Sie weitere Informationen wünschen, Bedenken haben oder die volle Funktionalität wiederherstellen und Ihre Mieter entsperren möchten, zögern Sie nicht, uns umgehend zu kontaktieren.',
+    contact_us: 'Kontaktieren Sie uns',
+  },
 };
 
 export default tenants;
