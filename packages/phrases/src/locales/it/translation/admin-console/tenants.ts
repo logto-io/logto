@@ -49,6 +49,19 @@ const tenants = {
       'Per iniziare a configurare il tuo progetto con Logto, crea un nuovo tenant. Se hai bisogno di uscire o eliminare il tuo account, clicca sul pulsante avatar in alto a destra.',
     create_tenant_button: 'Crea tenant',
   },
+  status: {
+    mau_exceeded: 'MAU Superato',
+    suspended: 'Sospeso',
+    overdue: 'Scaduto',
+  },
+  tenant_suspended_page: {
+    title: "Tenant sospeso. Contattaci per ripristinare l'accesso.",
+    description_1:
+      'Ci dispiace molto informarti che il tuo account tenant è stato temporaneamente sospeso a causa di un utilizzo improprio, inclusi superamenti dei limiti di MAU, pagamenti in ritardo o altre azioni non autorizzate.',
+    description_2:
+      'Se necessiti ulteriori chiarimenti, hai qualche preoccupazione o desideri ripristinare la funzionalità completa e sbloccare i tuoi tenant, ti preghiamo di contattarci immediatamente.',
+    contact_us: 'Contattaci',
+  },
 };
 
 export default tenants;

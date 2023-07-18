@@ -48,6 +48,19 @@ const tenants = {
       'Aby rozpocząć konfigurowanie projektu z Logto, utwórz nowego najemcę. Jeśli musisz się wylogować lub usunąć swoje konto, wystarczy kliknąć przycisk awatara w prawym górnym rogu.',
     create_tenant_button: 'Utwórz najemcę',
   },
+  status: {
+    mau_exceeded: 'Przekroczono limit MAU',
+    suspended: 'Zawieszony',
+    overdue: 'Opóźnienie w płatnościach',
+  },
+  tenant_suspended_page: {
+    title: 'Konto najemcy zawieszone. Skontaktuj się z nami, aby przywrócić dostęp.',
+    description_1:
+      'Z głębokim żalem informujemy, że twoje konto najemcy zostało tymczasowo zawieszone z powodu nieprawidłowego korzystania, w tym przekroczenia limitów MAU, opóźnionych płatności lub innych nieautoryzowanych działań.',
+    description_2:
+      'Jeśli potrzebujesz dalszych wyjaśnień, masz jakiekolwiek obawy lub chcesz przywrócić pełną funkcjonalność i odblokować swoje najemce, nie wahaj się skontaktować z nami natychmiast.',
+    contact_us: 'Skontaktuj się z nami',
+  },
 };
 
 export default tenants;

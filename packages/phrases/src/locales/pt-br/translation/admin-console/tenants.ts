@@ -48,6 +48,19 @@ const tenants = {
       'Para começar a configurar seu projeto com o Logto, crie um novo inquilino. Se você precisar fazer logout ou excluir sua conta, basta clicar no botão de avatar no canto superior direito.',
     create_tenant_button: 'Criar inquilino',
   },
+  status: {
+    mau_exceeded: 'MAU Excedido',
+    suspended: 'Suspenso',
+    overdue: 'Atrasado',
+  },
+  tenant_suspended_page: {
+    title: 'Locatário suspenso. Entre em contato para restaurar o acesso.',
+    description_1:
+      'Lamentamos profundamente informar que sua conta de locatário foi temporariamente suspensa devido a uso impróprio, incluindo exceder os limites de MAU, pagamentos atrasados ou outras ações não autorizadas.',
+    description_2:
+      'Se você precisa de mais esclarecimentos, tem alguma preocupação ou deseja restaurar a funcionalidade total e desbloquear seus locatários, não hesite em entrar em contato conosco imediatamente.',
+    contact_us: 'Entre em contato',
+  },
 };
 
 export default tenants;

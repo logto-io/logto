@@ -48,6 +48,19 @@ const tenants = {
       'To start configuring your project with Logto, please create a new tenant. If you need to log out or delete your account, just click on the avatar button in the top right corner.',
     create_tenant_button: 'Create tenant',
   },
+  status: {
+    mau_exceeded: 'MAU Exceeded',
+    suspended: 'Suspended',
+    overdue: 'Overdue',
+  },
+  tenant_suspended_page: {
+    title: 'Tenant suspended. Contact us to restore access.',
+    description_1:
+      'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
+    description_2:
+      'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
+    contact_us: 'Contact Us',
+  },
 };
 
 export default tenants;
