@@ -15,7 +15,7 @@ import useApi from '@/hooks/use-api';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
-import { isOverQuota } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   resourceId: string;
@@ -50,7 +50,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceOverQuota = isOverQuota({
+  const isScopesPerResourceReachLimit = hasReachedQuotaLimit({
     quotaKey: 'scopesPerResourceLimit',
     plan: currentPlan,
     usage: totalResourceCount,
@@ -71,7 +71,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
         subtitle="api_resource_details.permission.create_subtitle"
         learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions"
         footer={
-          isScopesPerResourceOverQuota && currentPlan ? (
+          isScopesPerResourceReachLimit && currentPlan ? (
             <QuotaGuardFooter>
               <Trans
                 components={{

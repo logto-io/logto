@@ -16,7 +16,7 @@ import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
-import { isOverQuota } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type FormData = {
   name: string;
@@ -44,7 +44,7 @@ function CreateForm({ onClose }: Props) {
   const resourceCount =
     allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0;
 
-  const isResourcesOverQuota = isOverQuota({
+  const isResourcesReachLimit = hasReachedQuotaLimit({
     quotaKey: 'resourcesLimit',
     plan: currentPlan,
     usage: resourceCount,
@@ -68,7 +68,7 @@ function CreateForm({ onClose }: Props) {
       title="api_resources.create"
       subtitle="api_resources.subtitle"
       footer={
-        isResourcesOverQuota && currentPlan ? (
+        isResourcesReachLimit && currentPlan ? (
           <QuotaGuardFooter>
             <Trans
               components={{

@@ -114,9 +114,10 @@ function RolePermissions() {
           {t('role_details.permission.deletion_description')}
         </ConfirmModal>
       )}
-      {isAssignPermissionsModalOpen && (
+      {isAssignPermissionsModalOpen && totalCount !== undefined && (
         <AssignPermissionsModal
           roleId={roleId}
+          totalRoleScopeCount={totalCount}
           onClose={(success) => {
             if (success) {
               void mutate();

@@ -13,7 +13,7 @@ import { ReservedPlanId } from '@/consts/subscriptions';
 import Button from '@/ds-components/Button';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import { type ConnectorGroup } from '@/types/connector';
-import { isOverQuota } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   isCreatingSocialConnector: boolean;
@@ -49,13 +49,13 @@ function Footer({
     [existingConnectors]
   );
 
-  const isStandardConnectorsOverQuota = isOverQuota({
+  const isStandardConnectorsReachLimit = hasReachedQuotaLimit({
     quotaKey: 'standardConnectorsLimit',
     plan: currentPlan,
     usage: standardConnectorCount,
   });
 
-  const isSocialConnectorsOverQuota = isOverQuota({
+  const isSocialConnectorsReachLimit = hasReachedQuotaLimit({
     quotaKey: 'socialConnectorsLimit',
     plan: currentPlan,
     usage: socialConnectorCount,
@@ -64,7 +64,7 @@ function Footer({
   if (isCreatingSocialConnector && currentPlan && selectedConnectorGroup) {
     const { id: planId, name: planName, quota } = currentPlan;
 
-    if (isStandardConnectorsOverQuota && selectedConnectorGroup.isStandard) {
+    if (isStandardConnectorsReachLimit && selectedConnectorGroup.isStandard) {
       return (
         <QuotaGuardFooter>
           <Trans
@@ -86,7 +86,7 @@ function Footer({
       );
     }
 
-    if (isSocialConnectorsOverQuota && !selectedConnectorGroup.isStandard) {
+    if (isSocialConnectorsReachLimit && !selectedConnectorGroup.isStandard) {
       return (
         <QuotaGuardFooter>
           <Trans

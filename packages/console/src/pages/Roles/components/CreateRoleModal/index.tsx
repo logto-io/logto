@@ -12,10 +12,11 @@ import type { Props as CreateRoleFormProps } from '../CreateRoleForm';
 import CreateRoleForm from '../CreateRoleForm';
 
 type Props = {
+  totalRoleCount: number;
   onClose: () => void;
 };
 
-function CreateRoleModal({ onClose }: Props) {
+function CreateRoleModal({ totalRoleCount, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
 
@@ -49,7 +50,7 @@ function CreateRoleModal({ onClose }: Props) {
           }}
         />
       ) : (
-        <CreateRoleForm onClose={onCreateFormClose} />
+        <CreateRoleForm totalRoleCount={totalRoleCount} onClose={onCreateFormClose} />
       )}
     </ReactModal>
   );
