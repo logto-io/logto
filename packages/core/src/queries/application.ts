@@ -28,11 +28,20 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     id: string,
     set: Partial<OmitAutoSetFields<CreateApplication>>
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
-  const countNonM2MApplications = async () => {
+  const countNonM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
       where ${fields.type} != ${ApplicationType.MachineToMachine}
+    `);
+
+    return Number(count);
+  };
+  const countM2mApplications = async () => {
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.type} = ${ApplicationType.MachineToMachine}
     `);
 
     return Number(count);
@@ -56,7 +65,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     insertApplication,
     updateApplication,
     updateApplicationById,
-    countNonM2MApplications,
+    countNonM2mApplications,
+    countM2mApplications,
     deleteApplicationById,
   };
 };
