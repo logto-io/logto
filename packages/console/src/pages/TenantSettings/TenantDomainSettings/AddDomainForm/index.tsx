@@ -17,10 +17,11 @@ type FormData = {
 };
 
 type Props = {
+  isCustomDomainEnabled: boolean;
   onCustomDomainAdded: (domain: Domain) => void;
 };
 
-function AddDomainForm({ onCustomDomainAdded }: Props) {
+function AddDomainForm({ isCustomDomainEnabled, onCustomDomainAdded }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -47,6 +48,7 @@ function AddDomainForm({ onCustomDomainAdded }: Props) {
   return (
     <div className={styles.addDomain}>
       <TextInput
+        readOnly={!isCustomDomainEnabled}
         className={styles.textInput}
         placeholder={t('domain.custom.custom_domain_placeholder')}
         error={errors.domain?.message}
@@ -64,7 +66,7 @@ function AddDomainForm({ onCustomDomainAdded }: Props) {
         type="primary"
         title="domain.custom.add_domain"
         isLoading={isSubmitting}
-        disabled={domainInput.length === 0}
+        disabled={domainInput.length === 0 || !isCustomDomainEnabled}
         onClick={onSubmit}
       />
     </div>
