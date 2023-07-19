@@ -87,6 +87,7 @@ const connectors = {
   drawer_title: 'Connector Kılavuzu',
   drawer_subtitle: 'Connectorı entegre etmek için yönergeleri izleyin',
   unknown: 'Bilinmeyen connector',
+  standard_connectors: 'Standart connectorlar',
 };
 
 export default connectors;

@@ -22,7 +22,7 @@ const connectors = {
       'Fora de uso significa que sua experiência de login não usou esse método de login. <a>{{link}}</a> para adicionar este método de login. ',
     go_to_sie: 'Vá para a experiência de login',
   },
-  placeholder_title: 'Social connector',
+  placeholder_title: 'Conector social',
   placeholder_description:
     'Logto tem fornecido muitos conectores de login social amplamente utilizados enquanto você pode criar o seu próprio com padrões padrão.',
   save_and_done: 'Salvar e completar',
@@ -43,7 +43,7 @@ const connectors = {
     test_connection: 'Teste de conexão',
     name: 'Nome do botão de login social',
     name_placeholder: 'Insira o nome do botão de login social',
-    name_tip: 'O nome do botão do conector será exibido como "Continue com {{Nome do Conector}}".',
+    name_tip: 'O nome do botão do conector será exibido como "Continuar com {{Nome do Conector}}".',
     logo: 'URL do logo para o botão de login social',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip: 'A imagem do logotipo também será exibida no botão do conector.',
@@ -86,6 +86,7 @@ const connectors = {
   drawer_title: 'Guia do Conector',
   drawer_subtitle: 'Siga as instruções para integrar seu conector',
   unknown: 'Conector desconhecido',
+  standard_connectors: 'Conectores padrão',
 };
 
 export default connectors;

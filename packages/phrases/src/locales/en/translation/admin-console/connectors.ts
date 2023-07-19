@@ -87,6 +87,7 @@ const connectors = {
   drawer_title: 'Connector Guide',
   drawer_subtitle: 'Follow the instructions to integrate your connector',
   unknown: 'Unknown Connector',
+  standard_connectors: 'Standard connectors',
 };
 
 export default connectors;
