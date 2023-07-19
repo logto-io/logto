@@ -1,6 +1,6 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
-import { LogtoProvider } from '@logto/react';
+import { LogtoProvider, useLogto } from '@logto/react';
 import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
@@ -13,23 +13,61 @@ import './scss/overlayscrollbars.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 
-import CloudApp from '@/cloud/App';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import CloudAppRoutes from '@/cloud/AppRoutes';
+import AppLoading from '@/components/AppLoading';
+import { isCloud } from '@/consts/env';
 import { cloudApi, getManagementApi, meApi } from '@/consts/resources';
+import useMeCustomData from '@/hooks/use-me-custom-data';
+import useTrackUserId from '@/hooks/use-track-user-id';
+import { OnboardingRoutes } from '@/onboarding';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
+import { ConsoleRoutes } from '@/pages/ConsoleRoutes';
 
 import { adminTenantEndpoint, mainTitle } from './consts';
-import { isCloud } from './consts/env';
 import ErrorBoundary from './containers/ErrorBoundary';
 import LogtoErrorBoundary from './containers/LogtoErrorBoundary';
-import TenantAppContainer from './containers/TenantAppContainer';
 import AppConfirmModalProvider from './contexts/AppConfirmModalProvider';
-import AppDataProvider from './contexts/AppDataProvider';
+import AppDataProvider, { AppDataContext } from './contexts/AppDataProvider';
 import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 import initI18n from './i18n/init';
 
 void initI18n();
 
-function Content() {
+/**
+ * The main entry of the project. It provides two fundamental context providers:
+ *
+ * - `RouterProvider`: the sole router provider of the project.
+ * - `TenantsProvider`: manages the tenants data, requires the `RouterProvider` to
+ * get the current tenant ID from the URL.
+ */
+function App() {
+  const router = createBrowserRouter([
+    {
+      path: '*',
+      element: (
+        <TenantsProvider>
+          <Providers />
+        </TenantsProvider>
+      ),
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
+}
+
+export default App;
+
+/**
+ * This component serves as a container for all the providers and boundary components.
+ *
+ * Since `TenantsContext` requires the `TenantsProvider` to be mounted, and the initialization
+ * of `LogtoProvider` requires the `TenantsContext` to be available, we have to put them into
+ * different components.
+ */
+function Providers() {
   const { tenants, currentTenantId } = useContext(TenantsContext);
 
   const resources = useMemo(
@@ -85,11 +123,11 @@ function Content() {
               {!isCloud || currentTenantId ? (
                 <AppDataProvider>
                   <AppConfirmModalProvider>
-                    <TenantAppContainer />
+                    <AppRoutes />
                   </AppConfirmModalProvider>
                 </AppDataProvider>
               ) : (
-                <CloudApp />
+                <CloudAppRoutes />
               )}
             </LogtoErrorBoundary>
           </ErrorBoundary>
@@ -99,12 +137,21 @@ function Content() {
   );
 }
 
-function App() {
-  return (
-    <TenantsProvider>
-      <Content />
-    </TenantsProvider>
-  );
-}
+/** Renders different routes based on the user's onboarding status. */
+function AppRoutes() {
+  const { userEndpoint } = useContext(AppDataContext);
+  const { isLoaded } = useMeCustomData();
+  const { isOnboarding } = useUserOnboardingData();
+  const { isAuthenticated } = useLogto();
 
-export default App;
+  useTrackUserId();
+
+  // Authenticated user should loading onboarding data before rendering the app.
+  // This looks weird and it will be refactored soon by merging the onboarding
+  // routes with the console routes.
+  if (!userEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
+    return <AppLoading />;
+  }
+
+  return isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />;
+}

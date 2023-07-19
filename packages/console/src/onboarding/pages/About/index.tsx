@@ -3,7 +3,6 @@ import { conditional } from '@silverhand/essentials';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import Case from '@/assets/icons/case.svg';
 import PageMeta from '@/components/PageMeta';
@@ -11,6 +10,7 @@ import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
@@ -26,7 +26,7 @@ import { titleOptions, companySizeOptions, reasonOptions } from './options';
 
 function About() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   const {
     data: { questionnaire },

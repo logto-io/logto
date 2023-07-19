@@ -2,7 +2,6 @@ import type { Log } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
@@ -12,6 +11,7 @@ import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
 import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
@@ -28,7 +28,6 @@ type Props = {
 
 function AuditLogTable({ userId, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname } = useLocation();
   const pageSize = defaultPageSize;
   const [{ page, event, applicationId }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -46,7 +45,7 @@ function AuditLogTable({ userId, className }: Props) {
 
   const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
   const isLoading = !data && !error;
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const [logs, totalCount] = data ?? [];
   const isUserColumnVisible = !userId;
 
@@ -96,7 +95,7 @@ function AuditLogTable({ userId, className }: Props) {
       rowIndexKey="id"
       columns={columns}
       rowClickHandler={({ id }) => {
-        navigate(`${pathname}/${id}`);
+        navigate(id);
       }}
       filter={
         <div className={styles.filter}>

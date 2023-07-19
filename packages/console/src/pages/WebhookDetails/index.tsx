@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -24,6 +24,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
@@ -36,7 +37,7 @@ function WebhookDetails() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const isPageHasTable = pathname.endsWith(WebhookDetailsTabs.RecentRequests);
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { id } = useParams();
   const { data, error, mutate } = useSWR<HookResponse, RequestError>(
     id && buildUrl(`api/hooks/${id}`, { includeExecutionStats: String(true) })

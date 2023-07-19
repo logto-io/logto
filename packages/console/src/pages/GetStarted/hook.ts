@@ -1,7 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import CheckPreviewDark from '@/assets/icons/check-demo-dark.svg';
 import CheckPreview from '@/assets/icons/check-demo.svg';
@@ -24,6 +23,7 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import useConfigs from '@/hooks/use-configs';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 
@@ -43,7 +43,7 @@ const useGetStartedMetadata = () => {
   const { userEndpoint } = useContext(AppDataContext);
   const theme = useTheme();
   const isLightMode = theme === Theme.Light;
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { isBusinessPlan } = useUserOnboardingData();
   const { getDocumentationUrl } = useDocumentationUrl();
 

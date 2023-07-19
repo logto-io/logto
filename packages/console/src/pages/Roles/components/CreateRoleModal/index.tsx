@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
 
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import AssignUsersModal from '@/pages/RoleDetails/RoleUsers/components/AssignUsersModal';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -18,7 +18,7 @@ type Props = {
 
 function CreateRoleModal({ totalRoleCount, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   const [createdRole, setCreatedRole] = useState<Role>();
 

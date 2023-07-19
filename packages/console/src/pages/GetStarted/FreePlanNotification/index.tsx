@@ -1,5 +1,4 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import FreePlanNotificationImage from '@/assets/images/free-plan-notification-image.svg';
 import PlanName from '@/components/PlanName';
@@ -7,6 +6,7 @@ import { isCloud, isProduction } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import Button from '@/ds-components/Button';
 import useCurrentSubscription from '@/hooks/use-current-subscription';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { ReservedPlanName } from '@/types/subscriptions';
 
 import * as styles from './index.module.scss';
@@ -14,7 +14,7 @@ import * as styles from './index.module.scss';
 function FreePlanNotification() {
   const { data: currentSubscription, error } = useCurrentSubscription();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.get_started' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const isLoadingSubscription = !currentSubscription && !error;
 
   if (

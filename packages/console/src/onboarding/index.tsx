@@ -3,7 +3,7 @@ import { TrackOnce } from '@logto/app-insights/react';
 import { Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Route, Navigate, Outlet, useLocation, Routes } from 'react-router-dom';
+import { Route, Navigate, Outlet, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import AppBoundary from '@/containers/AppBoundary';
@@ -12,6 +12,7 @@ import TenantAccess from '@/containers/TenantAccess';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import NotFound from '@/pages/NotFound';
 
 import { gtagAwTrackingId, gtagSignUpConversionId, logtoProductionHostname } from './constants';
@@ -35,7 +36,7 @@ const shouldReportToGtag = window.location.hostname.endsWith('.' + logtoProducti
 function Layout() {
   const swrOptions = useSwrOptions();
   const { setThemeOverride } = useContext(AppThemeContext);
-  const location = useLocation();
+  const { match, getTo } = useTenantPathname();
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -71,8 +72,8 @@ function Layout() {
   } = useUserOnboardingData();
 
   // Redirect to the welcome page if the user has not started the onboarding process.
-  if (!questionnaire && location.pathname !== welcomePathname) {
-    return <Navigate replace to={welcomePathname} />;
+  if (!questionnaire && !match(welcomePathname)) {
+    return <Navigate replace to={getTo(welcomePathname)} />;
   }
 
   return (
@@ -102,12 +103,12 @@ function Layout() {
 export function OnboardingRoutes() {
   return (
     <Routes>
-      <Route element={<ProtectedRoutes />}>
+      <Route path="/:tenantId" element={<ProtectedRoutes />}>
         <Route element={<TenantAccess />}>
           <Route element={<Layout />}>
-            <Route path="/" element={<Navigate replace to={welcomePathname} />} />
-            <Route path={`/${OnboardingRoute.Onboarding}`} element={<AppContent />}>
-              <Route index element={<Navigate replace to={welcomePathname} />} />
+            <Route index element={<Navigate replace to={OnboardingRoute.Onboarding} />} />
+            <Route path={OnboardingRoute.Onboarding} element={<AppContent />}>
+              <Route index element={<Navigate replace to={OnboardingPage.Welcome} />} />
               <Route path={OnboardingPage.Welcome} element={<Welcome />} />
               <Route path={OnboardingPage.AboutUser} element={<About />} />
               <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />

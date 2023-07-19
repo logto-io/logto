@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useContext, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 import useSWR from 'swr';
 
@@ -13,6 +13,7 @@ import PlanName from '@/components/PlanName';
 import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { clearLocalCheckoutSession, getLocalCheckoutSession } from '@/utils/checkout';
 
 const consoleHomePage = '/';
@@ -21,7 +22,7 @@ const subscriptionCheckingTimeout = 10 * 1000;
 
 function CheckoutSuccessCallback() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const cloudApi = useCloudApi();
   const { currentTenantId, navigateTenant } = useContext(TenantsContext);
   const { search } = useLocation();

@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Tools from '@/assets/icons/tools.svg';
@@ -18,6 +17,7 @@ import TextInput from '@/ds-components/TextInput';
 import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
@@ -40,7 +40,7 @@ import { parser } from './utils';
 
 function SignInExperience() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const {
     data: signInExperience,
     error,

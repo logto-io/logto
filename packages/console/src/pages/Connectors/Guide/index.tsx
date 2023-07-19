@@ -10,7 +10,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
 
 import Close from '@/assets/icons/close.svg';
 import BasicForm from '@/components/ConnectorForm/BasicForm';
@@ -25,6 +24,7 @@ import IconButton from '@/ds-components/IconButton';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useConnectorApi from '@/hooks/use-connector-api';
 import { useConnectorFormConfigParser } from '@/hooks/use-connector-form-config-parser';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 import type { ConnectorFormType } from '@/types/connector';
 import { SyncProfileMode } from '@/types/connector';
@@ -44,7 +44,7 @@ type Props = {
 
 function Guide({ connector, onClose }: Props) {
   const { createConnector } = useConnectorApi({ hideErrorToast: true });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const callbackConnectorId = useRef(generateStandardId());
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

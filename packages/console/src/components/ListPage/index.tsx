@@ -25,6 +25,7 @@ type Props<
   createButton?: CreateButtonProps;
   subHeader?: ReactNode;
   table: TableProps<TFieldValues, TName>;
+  /** @deprecated Need refactor. */
   widgets: ReactNode;
   className?: string;
 };

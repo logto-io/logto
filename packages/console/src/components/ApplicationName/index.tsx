@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import useTenantPathname from '@/hooks/use-tenant-pathname';
+
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,12 +18,13 @@ function ApplicationName({ applicationId, isLink = false }: Props) {
 
   const { data } = useSWR<Application>(!isAdminConsole && `api/applications/${applicationId}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getTo } = useTenantPathname();
 
   const name = (isAdminConsole ? <>Admin Console ({t('system_app')})</> : data?.name) ?? '-';
 
   if (isLink && !isAdminConsole) {
     return (
-      <Link className={styles.link} to={`/applications/${applicationId}`}>
+      <Link className={styles.link} to={getTo(`/applications/${applicationId}`)}>
         {name}
       </Link>
     );

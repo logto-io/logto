@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactElement, ReactNode } from 'react';
+import { type To } from 'react-router-dom';
 
 import Back from '@/assets/icons/back.svg';
 import type DangerousRaw from '@/ds-components/DangerousRaw';
@@ -14,7 +15,7 @@ import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  backLink: string;
+  backLink: To;
   backLinkTitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   isLoading?: boolean;
   error?: RequestError;

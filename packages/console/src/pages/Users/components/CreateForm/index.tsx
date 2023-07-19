@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import UserAccountInformation from '@/components/UserAccountInformation';
 import Button from '@/ds-components/Button';
@@ -13,6 +13,7 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { generateRandomPassword } from '@/utils/password';
@@ -35,7 +36,7 @@ type Props = {
 function CreateForm({ onClose, onCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { search } = useLocation();
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const [createdUserInfo, setCreatedUserInfo] = useState<CreatedUserInfo>();
   const [missingIdentifierError, setMissingIdentifierError] = useState<string>();
 

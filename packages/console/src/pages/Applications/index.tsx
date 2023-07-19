@@ -3,7 +3,7 @@ import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
@@ -13,6 +13,7 @@ import { defaultPageSize } from '@/consts';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { buildUrl } from '@/utils/url';
 
@@ -34,9 +35,9 @@ const buildNavigatePathPostAppCreation = ({ type, id }: Application) => {
 };
 
 function Applications() {
-  const navigate = useNavigate();
-  const { pathname, search } = useLocation();
-  const isShowingCreationForm = pathname === createApplicationPathname;
+  const { search } = useLocation();
+  const { match, navigate } = useTenantPathname();
+  const isCreating = match(createApplicationPathname);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [defaultCreateType, setDefaultCreateType] = useState<ApplicationType>();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -121,13 +122,12 @@ function Applications() {
       }}
       widgets={
         <CreateForm
-          isOpen={isShowingCreationForm}
           defaultCreateType={defaultCreateType}
+          isOpen={isCreating}
           onClose={async (newApp) => {
             setDefaultCreateType(undefined);
             if (newApp) {
               navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
-
               return;
             }
             navigate({

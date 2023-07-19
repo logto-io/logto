@@ -1,7 +1,7 @@
 import { type Log, HookEvent } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 import { z } from 'zod';
 
@@ -14,6 +14,7 @@ import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
 import { type WebhookDetailsOutletContext } from '../types';
@@ -27,8 +28,7 @@ const hooLogEventOptions = Object.values(HookEvent).map((event) => ({
 
 function WebhookLogs() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const {
     hook: { id },
   } = useOutletContext<WebhookDetailsOutletContext>();
@@ -56,7 +56,7 @@ function WebhookLogs() {
       rowGroups={[{ key: 'logs', data: logs }]}
       rowIndexKey="id"
       rowClickHandler={({ id }) => {
-        navigate(`${pathname}/${id}`);
+        navigate(id);
       }}
       filter={
         <div className={styles.filter}>

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -25,6 +25,7 @@ import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -52,7 +53,7 @@ function UserDetails() {
   const { isSuspended: isSuspendedUser = false } = data ?? {};
   const isLoading = !data && !error;
   const api = useApi();
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   const userSubtitle = data && getUserSubtitle(data);
 

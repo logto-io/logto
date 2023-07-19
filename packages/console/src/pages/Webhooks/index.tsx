@@ -3,7 +3,7 @@ import { type HookEvent, type Hook, Theme, type HookResponse } from '@logto/sche
 import { conditional } from '@silverhand/essentials';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -21,6 +21,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import { type RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
@@ -36,8 +37,8 @@ const buildDetailsPathname = (id: string) => `${webhooksPathname}/${id}`;
 
 function Webhooks() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname, search } = useLocation();
-  const isCreateNew = pathname === createWebhookPathname;
+  const { search } = useLocation();
+  const { navigate, match } = useTenantPathname();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -50,9 +51,10 @@ function Webhooks() {
   );
   const isLoading = !data && !error;
   const [webhooks, totalCount] = data ?? [];
-  const navigate = useNavigate();
+
   const theme = useTheme();
   const WebhookIcon = theme === Theme.Light ? Webhook : WebhookDark;
+  const isCreating = match(createWebhookPathname);
 
   return (
     <ListPage
@@ -160,7 +162,7 @@ function Webhooks() {
       widgets={
         totalCount !== undefined && (
           <CreateFormModal
-            isOpen={isCreateNew}
+            isOpen={isCreating}
             totalWebhookCount={totalCount}
             onClose={(createdHook?: Hook) => {
               if (createdHook) {

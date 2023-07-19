@@ -1,9 +1,7 @@
 import { useLogto } from '@logto/react';
-import { useContext, useMemo } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { useContext } from 'react';
 
 import AppLoading from '@/components/AppLoading';
-import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import useMeCustomData from '@/hooks/use-me-custom-data';
@@ -19,31 +17,6 @@ function TenantAppContainer() {
   const { isOnboarding } = useUserOnboardingData();
   const { isAuthenticated } = useLogto();
 
-  const router = useMemo(
-    () =>
-      createBrowserRouter(
-        [
-          {
-            path: '*',
-            // Only authenticated user can access onboarding routes.
-            // This looks weird and it will be refactored soon by merging the onboarding
-            // routes with the console routes.
-            Component: isAuthenticated && isOnboarding ? OnboardingRoutes : ConsoleRoutes,
-          },
-        ],
-        // Currently we use `window.open()` to navigate between tenants so the `useMemo` hook
-        // can have no dependency and the router will be created anyway. Consider integrating the
-        // tenant ID into the router and remove basename here if we want to use `history.pushState()`
-        // to navigate.
-        //
-        // Caveat: To use `history.pushState()`, we'd better to create a browser router in the upper
-        // level of the component tree to make the tenant ID a part of the URL. Otherwise, we need
-        // to handle `popstate` event to update the tenant ID when the user navigates back.
-        { basename: getBasename() }
-      ),
-    [isAuthenticated, isOnboarding]
-  );
-
   useTrackUserId();
 
   // Authenticated user should loading onboarding data before rendering the app.
@@ -53,7 +26,7 @@ function TenantAppContainer() {
     return <AppLoading />;
   }
 
-  return <RouterProvider router={router} />;
+  return isAuthenticated && isOnboarding ? <OnboardingRoutes /> : <ConsoleRoutes />;
 }
 
 export default TenantAppContainer;

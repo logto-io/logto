@@ -1,12 +1,13 @@
 import { emailRegEx } from '@logto/core-kit';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
 import Button from '@/ds-components/Button';
 import TextInput from '@/ds-components/TextInput';
 import { useStaticApi } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
@@ -18,7 +19,7 @@ type EmailForm = {
 
 function LinkEmailModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { state } = useLocation();
   const {
     register,

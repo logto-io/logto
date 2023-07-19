@@ -3,13 +3,13 @@ import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import WelcomeImage from '@/assets/images/sign-in-experience-welcome.svg';
 import PageMeta from '@/components/PageMeta';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
@@ -25,7 +25,7 @@ import { deploymentTypeOptions, projectOptions } from './options';
 
 function Welcome() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   const {
     data: { questionnaire },

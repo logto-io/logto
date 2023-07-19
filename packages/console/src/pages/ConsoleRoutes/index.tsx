@@ -6,7 +6,7 @@ import { SWRConfig } from 'swr';
 import { isCloud, isProduction } from '@/consts/env';
 import { checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import AppBoundary from '@/containers/AppBoundary';
-import AppContent from '@/containers/AppContent';
+import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
@@ -35,7 +35,7 @@ function Layout() {
 export function ConsoleRoutes() {
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route path="/:tenantId" element={<Layout />}>
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />
         <Route element={<ProtectedRoutes />}>
@@ -45,6 +45,7 @@ export function ConsoleRoutes() {
               <Route path={checkoutSuccessCallbackPath} element={<CheckoutSuccessCallback />} />
             )}
             <Route element={<AppContent />}>
+              <Route index element={<RedirectToFirstItem />} />
               <Route path="*" element={<ConsoleContent />} />
             </Route>
           </Route>
