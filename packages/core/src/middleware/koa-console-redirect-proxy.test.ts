@@ -21,7 +21,7 @@ describe('koaConsoleRedirectProxy()', () => {
     jest.clearAllMocks();
   });
 
-  it("should not call next() if ctx.path is '/' or '/welcome' and should redirect with 'ossConsolePath/welcome if hasUser is false'", async () => {
+  it("should redirect with 'ossConsolePath/welcome if ctx.path is '/' or '/welcome' AND hasUser is false'", async () => {
     const ctx = createContextWithRouteParameters({
       url: '/',
     });
@@ -31,7 +31,7 @@ describe('koaConsoleRedirectProxy()', () => {
     expect(next).not.toHaveBeenCalled();
     expect(ctx.redirect).toHaveBeenCalledWith(`${ossConsolePath}/welcome`);
   });
-  it("should not call next() if ctx.path is '/' or '/welcome' and should redirect with 'ossConsolePath' if hasUser is true", async () => {
+  it("should redirect with 'ossConsolePath/welcome if ctx.path is '/' or '/welcome' AND hasUser is true", async () => {
     const ctx = createContextWithRouteParameters({
       url: '/',
     });
@@ -41,7 +41,7 @@ describe('koaConsoleRedirectProxy()', () => {
     expect(next).not.toHaveBeenCalled();
     expect(ctx.redirect).toHaveBeenCalledWith(`${ossConsolePath}`);
   });
-  it("should call next() if ctx.path is '/some_path' or '/welcome' and should not redirect if hasUser is false", async () => {
+  it("should not redirect if ctx.path is '/some_path' AND hasUser is false", async () => {
     const ctx = createContextWithRouteParameters({
       url: '/some_path',
     });
