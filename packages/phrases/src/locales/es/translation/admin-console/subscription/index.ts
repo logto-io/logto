@@ -50,7 +50,12 @@ const subscription = {
     not_eligible_description:
       'Asegúrese de cumplir con los siguientes criterios antes de degradar a <name/>.',
     a_maximum_of: 'Un máximo de <item/>',
+    help_tip: 'Necesitas ayuda para degradar? <a>Contáctenos</a>.',
   },
+  upgrade_success: 'Actualizado con éxito a <name/>',
+  downgrade_success: 'Degradado con éxito a <name/>',
+  subscription_check_timeout:
+    'La comprobación de suscripción expiró. Por favor, actualiza más tarde.',
 };
 
 export default subscription;

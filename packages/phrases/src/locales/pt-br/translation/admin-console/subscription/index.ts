@@ -24,7 +24,7 @@ const subscription = {
     'Você atingiu o limite de cota. Para evitar problemas, faça upgrade do plano.',
   upgrade_pro: 'Upgrade Pro',
   payment_error:
-    'Detectado um problema de pagamento. Não é possível processar $ {{price, número}} para o ciclo anterior. Atualize o pagamento para evitar a suspensão do serviço Logto.',
+    'Detectado um problema de pagamento. Não é possível processar $ {{price, number}} para o ciclo anterior. Atualize o pagamento para evitar a suspensão do serviço Logto.',
   downgrade: 'Downgrade',
   current: 'Atual',
   buy_now: 'Comprar agora',
@@ -50,7 +50,12 @@ const subscription = {
     not_eligible_description:
       'Certifique-se de atender aos seguintes critérios antes de fazer downgrade para o <name/>.',
     a_maximum_of: 'Um máximo de <item/>',
+    help_tip: 'Precisa de ajuda para fazer o downgrade? <a>Contate-nos</a>.',
   },
+  upgrade_success: 'Atualizado com sucesso para <name/>',
+  downgrade_success: 'Downgrade realizado com sucesso para <name/>',
+  subscription_check_timeout:
+    'A verificação de assinatura expirou. Por favor, atualize mais tarde.',
 };
 
 export default subscription;

@@ -2,10 +2,12 @@ import { conditional } from '@silverhand/essentials';
 import { Trans, useTranslation } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
+import {
+  quotaItemLimitedPhrasesMap,
+  quotaItemNotEligiblePhrasesMap,
+} from '@/consts/quota-item-phrases';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
-
-import { quotaItemLimitedPhrasesMap, quotaItemNotEligiblePhrasesMap } from '../quota-item-phrases';
 
 import * as styles from './index.module.scss';
 

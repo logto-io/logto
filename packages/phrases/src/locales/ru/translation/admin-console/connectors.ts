@@ -87,6 +87,7 @@ const connectors = {
   drawer_title: 'Руководство Коннектора',
   drawer_subtitle: 'Следуйте инструкциям, чтобы интегрировать свой коннектор',
   unknown: 'Неизвестный коннектор',
+  standard_connectors: 'стандартные разъемы',
 };
 
 export default connectors;

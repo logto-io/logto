@@ -1,24 +1,25 @@
-import { ConnectorType } from '@logto/schemas';
-import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
-import classNames from 'classnames';
+import {
+  ConnectorType,
+  type ConnectorFactoryResponse,
+  type ConnectorResponse,
+} from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import ConnectorLogo from '@/components/ConnectorLogo';
-import UnnamedTrans from '@/components/UnnamedTrans';
 import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
-import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
+import ConnectorRadioGroup from './ConnectorRadioGroup';
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
-import { getConnectorOrder } from './utils';
+import { compareConnectors, getConnectorRadioGroupSize, getModalTitle } from './utils';
 
 type Props = {
   isOpen: boolean;
@@ -60,12 +61,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       }))
       .filter(({ connectors }) => !connectors.every(({ added }) => added))
       .slice()
-      .sort((connectorA, connectorB) => {
-        const orderA = getConnectorOrder(connectorA.target, connectorA.isStandard);
-        const orderB = getConnectorOrder(connectorB.target, connectorB.isStandard);
-
-        return orderA - orderB;
-      });
+      .sort(compareConnectors);
   }, [factories, type, existingConnectors]);
 
   const activeGroup = useMemo(
@@ -73,41 +69,11 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
     [activeGroupId, groups]
   );
 
-  const cardTitle = useMemo(() => {
-    if (type === ConnectorType.Email) {
-      return 'connectors.setup_title.email';
-    }
-
-    if (type === ConnectorType.Sms) {
-      return 'connectors.setup_title.sms';
-    }
-
-    return 'connectors.setup_title.social';
-  }, [type]);
-
-  const modalSize = useMemo(() => {
-    /**
-     * Note:
-     * Fix the size to large, since now we have little passwordless connectors.
-     */
-    if (type !== ConnectorType.Social) {
-      return 'large';
-    }
-
-    if (groups.length <= 2) {
-      return 'medium';
-    }
-
-    if (groups.length === 3) {
-      return 'large';
-    }
-
-    return 'xlarge';
-  }, [groups.length, type]);
-
-  if (!isFormOpen) {
-    return null;
-  }
+  const cardTitle = useMemo(() => getModalTitle(type), [type]);
+  const radioGroupSize = useMemo(
+    () => getConnectorRadioGroupSize(groups.length, type),
+    [groups.length, type]
+  );
 
   const handleGroupChange = (groupId: string) => {
     setActiveGroupId(groupId);
@@ -122,6 +88,17 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
 
     setActiveFactoryId(firstAvailableConnector?.id);
   };
+
+  const defaultGroups = useMemo(
+    () => (type === ConnectorType.Social ? groups.filter((group) => !group.isStandard) : groups),
+    [groups, type]
+  );
+
+  const standardGroups = useMemo(() => groups.filter((group) => group.isStandard), [groups]);
+
+  if (!isFormOpen) {
+    return null;
+  }
 
   return (
     <Modal
@@ -145,35 +122,32 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
             }}
           />
         }
-        className={styles.body}
-        size={modalSize}
+        size={radioGroupSize}
         onClose={onClose}
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-        <RadioGroup
+        <ConnectorRadioGroup
           name="group"
+          groups={defaultGroups}
           value={activeGroupId}
-          type="card"
-          className={classNames(styles.connectorGroup, styles[modalSize])}
+          size={radioGroupSize}
           onChange={handleGroupChange}
-        >
-          {groups.map(({ id, name, logo, logoDark, description }) => (
-            <Radio key={id} value={id}>
-              <div className={styles.connector}>
-                <ConnectorLogo data={{ logo, logoDark }} />
-                <div className={styles.content}>
-                  <div className={classNames(styles.name)}>
-                    <UnnamedTrans resource={name} />
-                  </div>
-                  <div className={styles.description}>
-                    <UnnamedTrans resource={description} />
-                  </div>
-                </div>
-              </div>
-            </Radio>
-          ))}
-        </RadioGroup>
+        />
+        {standardGroups.length > 0 && (
+          <>
+            <div className={styles.standardLabel}>
+              <DynamicT forKey="connectors.standard_connectors" />
+            </div>
+            <ConnectorRadioGroup
+              name="group"
+              groups={standardGroups}
+              value={activeGroupId}
+              size={radioGroupSize}
+              onChange={handleGroupChange}
+            />
+          </>
+        )}
         {activeGroup && (
           <PlatformSelector
             connectorGroup={activeGroup}

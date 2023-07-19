@@ -87,6 +87,7 @@ const connectors = {
   drawer_title: 'Poradnik łącznika',
   drawer_subtitle: 'Postępuj zgodnie z instrukcjami, aby zintegrować swój łącznik',
   unknown: 'Nieznany Łącznik',
+  standard_connectors: 'Standardowe łączniki',
 };
 
 export default connectors;

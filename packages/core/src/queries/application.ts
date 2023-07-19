@@ -1,5 +1,5 @@
 import type { CreateApplication } from '@logto/schemas';
-import { Applications } from '@logto/schemas';
+import { ApplicationType, Applications } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -28,6 +28,15 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     id: string,
     set: Partial<OmitAutoSetFields<CreateApplication>>
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
+  const countNonM2MApplications = async () => {
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.type} != ${ApplicationType.MachineToMachine}
+    `);
+
+    return Number(count);
+  };
 
   const deleteApplicationById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
@@ -47,6 +56,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     insertApplication,
     updateApplication,
     updateApplicationById,
+    countNonM2MApplications,
     deleteApplicationById,
   };
 };

@@ -9,6 +9,7 @@
   padding: _.unit(6);
   margin: 0 _.unit(6);
   box-shadow: var(--shadow-3);
+  overflow: hidden;
 
   .header {
     display: flex;

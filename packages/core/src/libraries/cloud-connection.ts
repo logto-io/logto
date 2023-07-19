@@ -87,7 +87,8 @@ export class CloudConnectionLibrary {
       const { endpoint } = await this.getCloudConnectionData();
 
       this.client = new Client<typeof router>({
-        baseUrl: endpoint,
+        // TODO @sijie @darcy remove the 'api' appending in getCloudConnectionData()
+        baseUrl: endpoint.replace('/api', ''),
         headers: async () => {
           return { Authorization: `Bearer ${await this.getAccessToken()}` };
         },

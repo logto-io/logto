@@ -3,7 +3,7 @@ import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/ds-components/Button';
@@ -45,6 +45,7 @@ function ConnectorTester({
       isSubmitting,
     },
   } = useForm<FormData>();
+  const { trigger } = useFormContext();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const isSms = connectorType === ConnectorType.Sms;
@@ -66,6 +67,11 @@ function ConnectorTester({
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
+      const isConfigFormValid = await trigger(undefined, { shouldFocus: true });
+      if (!isConfigFormValid) {
+        return;
+      }
+
       const { sendTo } = formData;
 
       const data = {

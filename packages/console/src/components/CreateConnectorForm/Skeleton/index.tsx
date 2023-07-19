@@ -1,17 +1,18 @@
 import classNames from 'classnames';
 
-import * as layout from '../index.module.scss';
+import * as radioStyles from '../ConnectorRadioGroup/ConnectorRadio/index.module.scss';
+import * as radioGroupStyles from '../ConnectorRadioGroup/index.module.scss';
 
 import * as styles from './index.module.scss';
 
 function Skeleton() {
   return (
-    <div className={layout.connectorGroup}>
+    <div className={radioGroupStyles.connectorGroup}>
       {Array.from({ length: 8 }).map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <div key={index} className={classNames(layout.connector, styles.connector)}>
+        <div key={index} className={classNames(radioStyles.connector, styles.connector)}>
           <div className={styles.logo} />
-          <div className={layout.content}>
+          <div className={radioStyles.content}>
             <div className={styles.name} />
             <div>
               <div className={styles.description} />

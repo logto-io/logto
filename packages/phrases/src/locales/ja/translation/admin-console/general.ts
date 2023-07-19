@@ -53,6 +53,7 @@ const general = {
   unnamed: '名前がありません',
   view: '表示',
   hide: '非表示',
+  unknown_error: '不明なエラーが発生しました。後で再試行してください。',
 };
 
 export default general;

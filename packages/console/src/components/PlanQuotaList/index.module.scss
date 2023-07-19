@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.list {
+  margin-block: 0;
+  padding-inline: 0;
+
+  > li {
+    &:not(:first-child) {
+      margin-top: _.unit(3);
+    }
+  }
+}

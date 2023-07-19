@@ -45,6 +45,19 @@ const tenants = {
       '要開始使用Logto配置您的項目，請創建一個新租戶。如果您需要登出或刪除您的帳戶，只需點擊右上角的頭像按鈕。',
     create_tenant_button: '創建租戶',
   },
+  status: {
+    mau_exceeded: '超過MAU限制',
+    suspended: '暫停',
+    overdue: '逾期',
+  },
+  tenant_suspended_page: {
+    title: '租戶暫停。聯繫我們以恢復存取。',
+    description_1:
+      '很抱歉通知您，由於不當使用，包括超過 MAU 限制、逾期付款或其他未經授權的操作，您的租戶帳戶已被暫時停用。',
+    description_2:
+      '如果您需要進一步的說明、有任何疑慮或希望恢復全部功能並解鎖您的租戶，請立即聯絡我們。',
+    contact_us: '聯絡我們',
+  },
 };
 
 export default tenants;
