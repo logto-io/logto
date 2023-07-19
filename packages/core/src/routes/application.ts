@@ -38,10 +38,16 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
   router.get(
     '/applications',
-    koaPagination(),
+    koaPagination({ isOptional: true }),
     koaGuard({ response: z.array(Applications.guard), status: 200 }),
     async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
+      const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
+
+      if (paginationDisabled) {
+        ctx.body = await findAllApplications();
+
+        return next();
+      }
 
       const [{ count }, applications] = await Promise.all([
         findTotalNumberOfApplications(),
