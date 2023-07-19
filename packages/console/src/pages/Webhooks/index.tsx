@@ -158,19 +158,22 @@ function Webhooks() {
         },
       }}
       widgets={
-        <CreateFormModal
-          isOpen={isCreateNew}
-          onClose={(createdHook?: Hook) => {
-            if (createdHook) {
-              void mutate();
-              toast.success(t('webhooks.webhook_created', { name: createdHook.name }));
-              navigate(buildDetailsPathname(createdHook.id), { replace: true });
-              return;
-            }
+        totalCount !== undefined && (
+          <CreateFormModal
+            isOpen={isCreateNew}
+            totalWebhookCount={totalCount}
+            onClose={(createdHook?: Hook) => {
+              if (createdHook) {
+                void mutate();
+                toast.success(t('webhooks.webhook_created', { name: createdHook.name }));
+                navigate(buildDetailsPathname(createdHook.id), { replace: true });
+                return;
+              }
 
-            navigate({ pathname: webhooksPathname, search });
-          }}
-        />
+              navigate({ pathname: webhooksPathname, search });
+            }}
+          />
+        )
       }
     />
   );

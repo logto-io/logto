@@ -7,10 +7,11 @@ import CreateForm from './CreateForm';
 
 type Props = {
   isOpen: boolean;
+  totalWebhookCount: number;
   onClose: (createdHook?: Hook) => void;
 };
 
-function CreateFormModal({ isOpen, onClose }: Props) {
+function CreateFormModal({ isOpen, totalWebhookCount, onClose }: Props) {
   return (
     <Modal
       shouldCloseOnOverlayClick
@@ -22,7 +23,7 @@ function CreateFormModal({ isOpen, onClose }: Props) {
         onClose();
       }}
     >
-      <CreateForm onClose={onClose} />
+      <CreateForm totalWebhookCount={totalWebhookCount} onClose={onClose} />
     </Modal>
   );
 }
