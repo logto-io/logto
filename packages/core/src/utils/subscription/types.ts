@@ -9,4 +9,7 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 
 export type SubscriptionPlan = RouteResponseType<GetRoutes['/api/subscription-plans']>[number];
 
-export type FeatureQuota = Omit<SubscriptionPlan['quota'], 'tenantLimit' | 'mauLimit'>;
+export type FeatureQuota = Omit<
+  SubscriptionPlan['quota'],
+  'tenantLimit' | 'mauLimit' | 'auditLogsRetentionDays'
+>;

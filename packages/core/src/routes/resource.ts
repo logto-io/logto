@@ -16,7 +16,13 @@ const resourceId = buildIdGenerator(21);
 const scopeId = resourceId;
 
 export default function resourceRoutes<T extends AuthedRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      queries,
+      libraries: { quota, resources },
+    },
+  ]: RouterInitArgs<T>
 ) {
   const {
     resources: {
@@ -38,7 +44,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       updateScopeById,
     },
   } = queries;
-  const { attachScopesToResources } = libraries.resources;
+  const { attachScopesToResources } = resources;
 
   router.get(
     '/resources',
@@ -77,7 +83,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.post(
     '/resources',
-    koaQuotaGuard({ key: 'resourcesLimit', quota: libraries.quota }),
+    koaQuotaGuard({ key: 'resourcesLimit', quota }),
     koaGuard({
       // Intentionally omit `isDefault` since it'll affect other rows.
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.
@@ -241,6 +247,8 @@ export default function resourceRoutes<T extends AuthedRouter>(
         params: { resourceId },
         body,
       } = ctx.guard;
+
+      await quota.guardKey('scopesPerResourceLimit', resourceId);
 
       assertThat(!/\s/.test(body.name), 'scope.name_with_space');
 

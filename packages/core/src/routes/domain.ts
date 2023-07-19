@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -15,6 +16,7 @@ export default function domainRoutes<T extends AuthedRouter>(
     domains: { findAllDomains, findDomainById },
   } = queries;
   const {
+    quota,
     domains: { syncDomainStatus, addDomain, deleteDomain },
   } = libraries;
 
@@ -54,6 +56,7 @@ export default function domainRoutes<T extends AuthedRouter>(
 
   router.post(
     '/domains',
+    koaQuotaGuard({ key: 'customDomainEnabled', quota }),
     koaGuard({
       body: Domains.createGuard.pick({ domain: true }),
       response: domainResponseGuard,

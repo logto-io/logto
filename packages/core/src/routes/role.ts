@@ -7,6 +7,7 @@ import { object, string, z, number } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
@@ -14,7 +15,13 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function roleRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      queries,
+      libraries: { quota },
+    },
+  ]: RouterInitArgs<T>
 ) {
   const {
     rolesScopes: { insertRolesScopes },
@@ -112,6 +119,7 @@ export default function roleRoutes<T extends AuthedRouter>(
 
   router.post(
     '/roles',
+    koaQuotaGuard({ key: 'rolesLimit', quota }),
     koaGuard({
       body: Roles.createGuard
         .omit({ id: true })

@@ -17,6 +17,7 @@ import {
   mockNanoIdForHook,
   mockTenantIdForHook,
 } from '#src/__mocks__/hook.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -85,6 +86,7 @@ const mockLibraries = {
     attachExecutionStatsToHook,
     testHook,
   },
+  quota: createMockQuotaLibrary(),
 };
 
 const tenantContext = new MockTenant(undefined, mockQueries, undefined, mockLibraries);

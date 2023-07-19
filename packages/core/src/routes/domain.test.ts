@@ -2,6 +2,7 @@ import { type Domain } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockDomain, mockDomainResponse } from '#src/__mocks__/domain.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -33,6 +34,7 @@ const mockLibraries = {
     addDomain,
     deleteDomain,
   },
+  quota: createMockQuotaLibrary(),
 };
 
 const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);

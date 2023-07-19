@@ -13,7 +13,13 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function roleScopeRoutes<T extends AuthedRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      queries,
+      libraries: { quota },
+    },
+  ]: RouterInitArgs<T>
 ) {
   const {
     resources: { findResourcesByIds },
@@ -106,6 +112,9 @@ export default function roleScopeRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       await findRoleById(id);
+
+      await quota.guardKey('scopesPerRoleLimit', id);
+
       const rolesScopes = await findRolesScopesByRoleId(id);
 
       for (const scopeId of scopeIds) {

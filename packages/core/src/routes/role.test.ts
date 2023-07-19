@@ -3,6 +3,7 @@ import { pickDefault } from '@logto/shared/esm';
 
 import { mockRole, mockScope, mockUser, mockResource } from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -71,14 +72,19 @@ const {
 
 const roleRoutes = await pickDefault(import('./role.js'));
 
-const tenantContext = new MockTenant(undefined, {
-  usersRoles,
-  users,
-  rolesScopes,
-  resources,
-  scopes,
-  roles,
-});
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    usersRoles,
+    users,
+    rolesScopes,
+    resources,
+    scopes,
+    roles,
+  },
+  undefined,
+  { quota: createMockQuotaLibrary() }
+);
 
 describe('role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });

@@ -1,34 +1,35 @@
-import { buildRawConnector } from '@logto/cli/lib/connector/index.js';
+import { type ConnectorFactory, buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
-import {
-  connectorFactoryResponseGuard,
-  Connectors,
-  ConnectorType,
-  connectorResponseGuard,
-  type JsonObject,
-} from '@logto/schemas';
+import { Connectors, ConnectorType, connectorResponseGuard, type JsonObject } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
-import {
-  loadConnectorFactories,
-  transpileConnectorFactory,
-  transpileLogtoConnector,
-} from '#src/utils/connectors/index.js';
+import { loadConnectorFactories, transpileLogtoConnector } from '#src/utils/connectors/index.js';
 import { checkSocialConnectorTargetAndPlatformUniqueness } from '#src/utils/connectors/platform.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
+import connectorFactoryRoutes from './factory.js';
 
 const generateConnectorId = buildIdGenerator(12);
+
+const guardConnectorsQuota = async (factory: ConnectorFactory, quota: QuotaLibrary) => {
+  if (factory.metadata.isStandard) {
+    await quota.guardKey('standardConnectorsLimit');
+  }
+  if (factory.type === ConnectorType.Social) {
+    await quota.guardKey('socialConnectorsLimit');
+  }
+};
 
 export default function connectorRoutes<T extends AuthedRouter>(
   ...[router, tenant]: RouterInitArgs<T>
@@ -43,6 +44,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
   } = tenant.queries.connectors;
   const { getLogtoConnectorById, getLogtoConnectors } = tenant.connectors;
   const {
+    quota,
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
 
@@ -77,6 +79,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
           status: 422,
         });
       }
+
+      await guardConnectorsQuota(connectorFactory, quota);
 
       assertThat(
         connectorFactory.metadata.isStandard !== true || Boolean(metadata?.target),
@@ -221,50 +225,6 @@ export default function connectorRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.get(
-    '/connector-factories',
-    koaGuard({
-      response: connectorFactoryResponseGuard.array(),
-      status: [200],
-    }),
-    async (ctx, next) => {
-      const connectorFactories = await loadConnectorFactories();
-      ctx.body = connectorFactories.map((connectorFactory) =>
-        transpileConnectorFactory(connectorFactory)
-      );
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/connector-factories/:id',
-    koaGuard({
-      params: object({ id: string().min(1) }),
-      response: connectorFactoryResponseGuard,
-      status: [200, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-      } = ctx.guard;
-      const connectorFactories = await loadConnectorFactories();
-
-      const connectorFactory = connectorFactories.find((factory) => factory.metadata.id === id);
-      assertThat(
-        connectorFactory,
-        new RequestError({
-          code: 'entity.not_found',
-          status: 404,
-        })
-      );
-
-      ctx.body = transpileConnectorFactory(connectorFactory);
-
-      return next();
-    }
-  );
-
   router.patch(
     '/connectors/:id',
     koaGuard({
@@ -360,4 +320,5 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
   connectorConfigTestingRoutes(router, tenant);
   connectorAuthorizationUriRoutes(router, tenant);
+  connectorFactoryRoutes(router, tenant);
 }
