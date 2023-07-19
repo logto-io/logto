@@ -53,6 +53,7 @@ const general = {
   unnamed: 'Без имени',
   view: 'Просмотр',
   hide: 'Скрыть',
+  unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
 };
 
 export default general;

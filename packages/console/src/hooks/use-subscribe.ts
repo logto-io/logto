@@ -1,6 +1,7 @@
 import { appendPath } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
@@ -18,6 +19,7 @@ type SubscribeProps = {
 
 const useSubscribe = () => {
   const cloudApi = useCloudApi();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const subscribe = async ({
     planId,
@@ -48,8 +50,7 @@ const useSubscribe = () => {
     });
 
     if (!redirectUri) {
-      // Note: This should never happen in theory
-      toast.error('Something went wrong, please try again later');
+      toast.error(t('general.unknown_error'));
       return;
     }
 

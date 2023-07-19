@@ -53,6 +53,8 @@ const subscription = {
   },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',
+  subscription_check_timeout:
+    'サブスクリプションのチェックがタイムアウトしました。後でもう一度更新してください。',
 };
 
 export default subscription;

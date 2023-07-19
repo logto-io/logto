@@ -35,8 +35,7 @@ function CheckoutSuccessCallback() {
     autoStart: true,
     expiryTimestamp: dayjs().add(subscriptionCheckingTimeout, 'millisecond').toDate(),
     onExpire: () => {
-      // Todo @xiaoyijun align with the designer for the fallback message
-      toast.error('Subscription status check timed out. Please try refreshing the page later.');
+      toast.error(t('subscription_check_timeout'));
       clearLocalCheckoutSession();
       navigate(consoleHomePage, { replace: true });
     },

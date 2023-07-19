@@ -54,6 +54,7 @@ const general = {
   unnamed: 'Unbenannt',
   view: 'Anzeigen',
   hide: 'Verbergen',
+  unknown_error: 'Unbekannter Fehler, bitte versuchen Sie es später erneut.',
 };
 
 export default general;

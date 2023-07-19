@@ -53,6 +53,8 @@ const subscription = {
   },
   upgrade_success: 'Atualizou com sucesso para <name/>',
   downgrade_success: 'Downgrade concluído com sucesso para <name/>',
+  subscription_check_timeout:
+    'A verificação de subscrição expirou. Por favor, atualize mais tarde.',
 };
 
 export default subscription;
