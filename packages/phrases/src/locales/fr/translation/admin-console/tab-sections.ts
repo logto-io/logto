@@ -1,7 +1,7 @@
 const tab_sections = {
   overview: "Vue d'ensemble",
-  resource_management: 'Gestion des ressources',
-  user_management: 'Gestion des utilisateurs',
+  resources: 'Ressources',
+  users: 'Utilisateurs',
   access_control: "Contrôle d'accès",
   help_and_support: 'Aide et support',
   tenant: 'Locataire',
