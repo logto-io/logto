@@ -53,6 +53,7 @@ const general = {
   unnamed: 'Unnamed',
   view: 'View',
   hide: 'Hide',
+  unknown_error: 'Unknown error, please try again later.',
 };
 
 export default general;

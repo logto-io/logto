@@ -45,6 +45,19 @@ const tenants = {
       '要开始使用 Logto 配置项目，请创建一个新租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
     create_tenant_button: '创建租户',
   },
+  status: {
+    mau_exceeded: '超出MAU限制',
+    suspended: '已暂停',
+    overdue: '逾期',
+  },
+  tenant_suspended_page: {
+    title: '租户已暂停，请联系我们以恢复访问。',
+    description_1:
+      '我们非常遗憾地通知您，由于不当使用，包括超出MAU限制、逾期付款或其他未经授权的操作，您的租户帐户已被临时停用。',
+    description_2:
+      '如果您需要进一步澄清、有任何疑虑或希望恢复全部功能并解锁您的租户，请立即联系我们。',
+    contact_us: '联系我们',
+  },
 };
 
 export default tenants;

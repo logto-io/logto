@@ -37,9 +37,7 @@ const subscription = {
     amount_column: 'Importo',
     invoice_created_date_column: 'Data di creazione fattura',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Sei sicuro di voler effettuare il degrado?',
     description:
@@ -51,7 +49,12 @@ const subscription = {
     not_eligible_description:
       'Assicurati di soddisfare i seguenti criteri prima di degradare a <name/>.',
     a_maximum_of: 'Un massimo di <item/>',
+    help_tip: 'Hai bisogno di aiuto per il degrado? <a>Contattaci</a>.',
   },
+  upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
+  downgrade_success: 'Degrado effettuato con successo a <name/>',
+  subscription_check_timeout:
+    "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
 };
 
 export default subscription;

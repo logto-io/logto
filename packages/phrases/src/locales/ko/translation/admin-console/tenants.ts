@@ -48,6 +48,19 @@ const tenants = {
       'Logto 를 사용하여 프로젝트를 구성하려면 새 테넌트를 만드세요. 로그아웃하거나 계정을 삭제하려면 오른쪽 상단 모서리에있는 아바타 버튼을 클릭하세요.',
     create_tenant_button: '테넌트 만들기',
   },
+  status: {
+    mau_exceeded: 'MAU 초과',
+    suspended: '정지됨',
+    overdue: '만료',
+  },
+  tenant_suspended_page: {
+    title: '테넌트 정지. 접근을 복구하려면 문의하세요.',
+    description_1:
+      '매우 유감스럽게도 테넌트 계정이 일시적으로 정지되었으며, MAU 한도 초과, 연체된 결제 또는 다른 무단 조치 등 부적절한 사용으로 인한 것입니다.',
+    description_2:
+      '자세한 설명이 필요한 경우, 우려 사항이 있거나 기능을 완전히 복원하고 테넌트를 차단 해제하려면 바로 연락 주시기 바랍니다.',
+    contact_us: '문의하기',
+  },
 };
 
 export default tenants;

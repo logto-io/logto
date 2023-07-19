@@ -86,6 +86,7 @@ const connectors = {
   drawer_title: 'コネクターガイド',
   drawer_subtitle: 'インテグレーションの手順に従ってください',
   unknown: '不明なコネクタ',
+  standard_connectors: '標準コネクタ',
 };
 
 export default connectors;

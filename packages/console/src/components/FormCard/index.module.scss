@@ -3,6 +3,8 @@
 .title {
   @include _.section-head-1;
   color: var(--color-neutral-variant-60);
+  display: flex;
+  align-items: center;
 }
 
 .description {

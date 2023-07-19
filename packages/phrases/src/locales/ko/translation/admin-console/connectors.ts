@@ -83,6 +83,7 @@ const connectors = {
   drawer_title: '연동 가이드',
   drawer_subtitle: '연동하기 위해 가이드를 따라 주세요.',
   unknown: '알 수 없는 연동',
+  standard_connectors: '기본 커넥터',
 };
 
 export default connectors;

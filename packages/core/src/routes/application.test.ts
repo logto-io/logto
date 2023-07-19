@@ -58,7 +58,7 @@ describe('application route', () => {
     const response = await applicationRequest.get('/applications');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockApplication]);
-    expect(response.header).toHaveProperty('total-number', '10');
+    expect(response.header).not.toHaveProperty('total-number');
   });
 
   it('POST /applications', async () => {

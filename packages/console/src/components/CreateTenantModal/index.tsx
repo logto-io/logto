@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 import { TenantTag, type TenantInfo } from '@logto/schemas/models';
+import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,7 @@ import Modal from 'react-modal';
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { isProduction } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -17,11 +19,15 @@ import TextInput from '@/ds-components/TextInput';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import SelectTenantPlanModal from './SelectTenantPlanModal';
 import * as styles from './index.module.scss';
+import { type CreateTenantData } from './type';
 
 type Props = {
   isOpen: boolean;
   onClose: (tenant?: TenantInfo) => void;
+  // eslint-disable-next-line react/boolean-prop-naming
+  skipPlanSelection?: boolean;
 };
 
 const tagOptions: Array<{ title: AdminConsoleKey; value: TenantTag }> = [
@@ -39,12 +45,14 @@ const tagOptions: Array<{ title: AdminConsoleKey; value: TenantTag }> = [
   },
 ];
 
-function CreateTenantModal({ isOpen, onClose }: Props) {
+function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
-  const methods = useForm<Pick<TenantInfo, 'name' | 'tag'>>({
+  const methods = useForm<CreateTenantData>({
     defaultValues: { tag: TenantTag.Development },
   });
+
   const {
     reset,
     control,
@@ -55,7 +63,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const cloudApi = useCloudApi();
 
-  const onSubmit = handleSubmit(async (data) => {
+  const createTenant = async (data: CreateTenantData) => {
     try {
       const { name, tag } = data;
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
@@ -64,7 +72,15 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : String(error));
     }
-  });
+  };
+
+  /**
+   * Note: create tenant directly if it's from landing page,
+   * since we want the user to get into the console as soon as possible
+   */
+  const shouldSkipPlanSelection = skipPlanSelection || isProduction;
+
+  const onCreateClick = handleSubmit(shouldSkipPlanSelection ? createTenant : setTenantData);
 
   return (
     <Modal
@@ -90,7 +106,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             title="tenants.create_modal.create_button"
             size="large"
             type="primary"
-            onClick={onSubmit}
+            onClick={onCreateClick}
           />
         }
         onClose={onClose}
@@ -122,6 +138,18 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
             </div>
           </FormField>
         </FormProvider>
+        <SelectTenantPlanModal
+          tenantData={tenantData}
+          onClose={(tenant) => {
+            setTenantData(undefined);
+            if (tenant) {
+              /**
+               * Note: only close the create tenant modal when tenant is created successfully
+               */
+              onClose(tenant);
+            }
+          }}
+        />
       </ModalLayout>
     </Modal>
   );

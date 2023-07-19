@@ -10,12 +10,13 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: AdminConsoleKey;
+  tag?: ReactNode;
   description?: AdminConsoleKey;
   learnMoreLink?: string;
   children: ReactNode;
 };
 
-function FormCard({ title, description, learnMoreLink, children }: Props) {
+function FormCard({ title, tag, description, learnMoreLink, children }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -24,6 +25,7 @@ function FormCard({ title, description, learnMoreLink, children }: Props) {
         <>
           <div className={styles.title}>
             <DynamicT forKey={title} />
+            {tag}
           </div>
           {description && (
             <div className={styles.description}>

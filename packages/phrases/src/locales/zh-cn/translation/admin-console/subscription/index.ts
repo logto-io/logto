@@ -46,7 +46,11 @@ const subscription = {
     not_eligible: '您不符合降级条件',
     not_eligible_description: '在降级到 <name/> 之前，请确保满足以下条件。',
     a_maximum_of: '最多<item/>个',
+    help_tip: '需要帮助降级？<a>联系我们</a>。',
   },
+  upgrade_success: '成功升级到 <name/>',
+  downgrade_success: '成功降级到 <name/>',
+  subscription_check_timeout: '订阅检查超时，请稍后刷新。',
 };
 
 export default subscription;

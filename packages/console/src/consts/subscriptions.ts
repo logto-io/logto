@@ -6,7 +6,7 @@ import {
   SubscriptionPlanTableGroupKey,
 } from '@/types/subscriptions';
 
-enum ReservedPlanId {
+export enum ReservedPlanId {
   free = 'free',
   hobby = 'hobby',
   pro = 'pro',
@@ -84,3 +84,7 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],
 }) satisfies SubscriptionPlanTableGroupKeyMap;
+
+export const checkoutStateQueryKey = 'checkout-state';
+
+export const checkoutSuccessCallbackPath = 'checkout-success';

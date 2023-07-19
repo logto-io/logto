@@ -1,8 +1,8 @@
 const tenants = {
-  title: '设置',
+  title: '設置',
   description: '高效管理租戶設置並自訂您的域名。',
   tabs: {
-    settings: '设置',
+    settings: '設定',
     domains: '網域',
     subscription: '方案與計費',
     billing_history: '帳單記錄',
@@ -11,7 +11,7 @@ const tenants = {
     title: '設定',
     tenant_id: '租户ID',
     tenant_name: '租户名称',
-    environment_tag: '环境标识',
+    environment_tag: '環境標識',
     environment_tag_description: '標籤不會改變服務。它們只是協助您區分不同的環境。',
     environment_tag_development: '開發',
     environment_tag_staging: '預備',
@@ -44,6 +44,19 @@ const tenants = {
     description:
       '要開始使用 Logto 配置您的項目，請創建一個新的租戶。如果您需要退出或刪除您的帳戶，只需單擊右上角的頭像按鈕。',
     create_tenant_button: '創建租戶',
+  },
+  status: {
+    mau_exceeded: '超出 MAU 限制',
+    suspended: '已暫停',
+    overdue: '逾期未付款',
+  },
+  tenant_suspended_page: {
+    title: '租戶已暫停。請聯繫我們恢復訪問。',
+    description_1:
+      '很遺憾地通知您，由於不當使用（包括超出 MAU 限制、逾期付款或其他未經授權的操作等），您的租戶帳戶已被暫時停用。',
+    description_2:
+      '如果您需要進一步了解，有任何疑慮或希望恢復完整功能並解鎖您的租戶，請立即與我們聯繫。',
+    contact_us: '聯繫我們',
   },
 };
 

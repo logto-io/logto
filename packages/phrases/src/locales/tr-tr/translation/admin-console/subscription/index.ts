@@ -37,9 +37,7 @@ const subscription = {
     amount_column: 'Miktar',
     invoice_created_date_column: 'Fatura oluşturma tarihi',
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Emin misiniz, düşürmek istediğinize?',
     description:
@@ -51,7 +49,12 @@ const subscription = {
     not_eligible_description:
       "Aşağıdaki kriterleri karşıladığınızdan emin olun <name/>'ye düşürmeden önce.",
     a_maximum_of: 'En fazla <item/>',
+    help_tip: 'Düşürme için yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
   },
+  upgrade_success: 'Successfully upgraded to <name/>',
+  downgrade_success: 'Successfully downgraded to <name/>',
+  subscription_check_timeout:
+    'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
 };
 
 export default subscription;

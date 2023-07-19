@@ -15,6 +15,7 @@ import scope from './scope.js';
 import session from './session.js';
 import sign_in_experiences from './sign-in-experiences.js';
 import storage from './storage.js';
+import subscription from './subscription.js';
 import swagger from './swagger.js';
 import user from './user.js';
 import verification_code from './verification-code.js';
@@ -40,6 +41,7 @@ const errors = {
   resource,
   hook,
   domain,
+  subscription,
 };
 
 export default errors;

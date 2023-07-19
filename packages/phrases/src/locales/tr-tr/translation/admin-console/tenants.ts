@@ -48,6 +48,19 @@ const tenants = {
       'Logto ile projenizi yapılandırmaya başlamak için lütfen yeni bir kiracı oluşturun. Hesabınızdan çıkış yapmanız veya hesabınızı silmeniz gerekiyorsa, sağ üst köşedeki avatar düğmesine tıklayın.',
     create_tenant_button: 'Kiracı oluştur',
   },
+  status: {
+    mau_exceeded: 'MAU Sınırı Aşıldı',
+    suspended: 'Askıya Alındı',
+    overdue: 'Geçmişte',
+  },
+  tenant_suspended_page: {
+    title: 'Kiracı Askıya Alındı. Erişimi geri yüklemek için bizimle iletişime geçin.',
+    description_1:
+      'Üzülerek bildirmekten üzüntü duyuyoruz, kiracı hesabınız şu anda geçici olarak askıya alınmıştır. Bunun nedeni, MAU sınırlarını aşmak, gecikmiş ödemeler veya diğer izinsiz işlemler gibi yanlış kullanımdır.',
+    description_2:
+      'Daha fazla açıklama, endişeleriniz veya işlevselliği tamamen geri yüklemek ve kiracılarınızı engellemek isterseniz, lütfen derhal bizimle iletişime geçmekten çekinmeyin.',
+    contact_us: 'Bizimle İletişime Geçin',
+  },
 };
 
 export default tenants;
