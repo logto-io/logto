@@ -105,9 +105,10 @@ function ApiResourcePermissions() {
           },
         }}
       />
-      {isCreateFormOpen && (
+      {isCreateFormOpen && totalCount !== undefined && (
         <CreatePermissionModal
           resourceId={resourceId}
+          totalResourceCount={totalCount}
           onClose={(scope) => {
             if (scope) {
               toast.success(

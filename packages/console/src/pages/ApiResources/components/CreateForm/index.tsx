@@ -1,14 +1,22 @@
-import type { Resource } from '@logto/schemas';
+import { isManagementApi, type Resource } from '@logto/schemas';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import PlanName from '@/components/PlanName';
+import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { type ApiResource } from '@/consts';
+import { isProduction } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
+import { isOverQuota } from '@/utils/quota';
 
 type FormData = {
   name: string;
@@ -20,12 +28,27 @@ type Props = {
 };
 
 function CreateForm({ onClose }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  /**
+   * Todo: @xiaoyijun remove this condition on subscription features ready.
+   */
+  const { data: allResources } = useSWR<ApiResource[]>(!isProduction && 'api/resources');
+
   const {
     handleSubmit,
     register,
     formState: { isSubmitting },
   } = useForm<FormData>();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const resourceCount =
+    allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0;
+
+  const isResourcesOverQuota = isOverQuota({
+    quotaKey: 'resourcesLimit',
+    plan: currentPlan,
+    usage: resourceCount,
+  });
 
   const api = useApi();
 
@@ -45,14 +68,29 @@ function CreateForm({ onClose }: Props) {
       title="api_resources.create"
       subtitle="api_resources.subtitle"
       footer={
-        <Button
-          isLoading={isSubmitting}
-          htmlType="submit"
-          title="api_resources.create"
-          size="large"
-          type="primary"
-          onClick={onSubmit}
-        />
+        isResourcesOverQuota && currentPlan ? (
+          <QuotaGuardFooter>
+            <Trans
+              components={{
+                a: <ContactUsPhraseLink />,
+                planName: <PlanName name={currentPlan.name} />,
+              }}
+            >
+              {t('upsell.paywall.resources', {
+                count: currentPlan.quota.resourcesLimit,
+              })}
+            </Trans>
+          </QuotaGuardFooter>
+        ) : (
+          <Button
+            isLoading={isSubmitting}
+            htmlType="submit"
+            title="api_resources.create"
+            size="large"
+            type="primary"
+            onClick={onSubmit}
+          />
+        )
       }
       onClose={onClose}
     >
