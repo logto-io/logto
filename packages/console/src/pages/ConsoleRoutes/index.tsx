@@ -3,6 +3,8 @@ import { TrackOnce } from '@logto/app-insights/react';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
+import { isCloud, isProduction } from '@/consts/env';
+import { checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
@@ -13,6 +15,7 @@ import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import Welcome from '@/pages/Welcome';
 
+import CheckoutSuccessCallback from '../CheckoutSuccessCallback';
 import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
 
 function Layout() {
@@ -38,6 +41,9 @@ export function ConsoleRoutes() {
         <Route element={<ProtectedRoutes />}>
           <Route path="handle-social" element={<HandleSocialCallback />} />
           <Route element={<TenantAccess />}>
+            {!isProduction && isCloud && (
+              <Route path={checkoutSuccessCallbackPath} element={<CheckoutSuccessCallback />} />
+            )}
             <Route element={<AppContent />}>
               <Route path="*" element={<ConsoleContent />} />
             </Route>

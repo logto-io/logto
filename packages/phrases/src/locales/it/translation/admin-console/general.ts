@@ -54,6 +54,7 @@ const general = {
   unnamed: 'Senza nome',
   view: 'Vista',
   hide: 'Nascondi',
+  unknown_error: 'Errore sconosciuto, riprova più tardi.',
 };
 
 export default general;

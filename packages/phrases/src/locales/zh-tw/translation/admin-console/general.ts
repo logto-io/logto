@@ -53,6 +53,7 @@ const general = {
   unnamed: '未命名',
   view: '查看',
   hide: '隱藏',
+  unknown_error: '未知錯誤，請稍後重試。',
 };
 
 export default general;

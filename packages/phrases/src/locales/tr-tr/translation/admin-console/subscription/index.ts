@@ -53,6 +53,8 @@ const subscription = {
   },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',
+  subscription_check_timeout:
+    'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
 };
 
 export default subscription;

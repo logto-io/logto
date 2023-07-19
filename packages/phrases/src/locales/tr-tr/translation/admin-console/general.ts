@@ -54,6 +54,7 @@ const general = {
   unnamed: 'İsimsiz',
   view: 'Görünüm',
   hide: 'Gizle',
+  unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
 };
 
 export default general;

@@ -53,6 +53,7 @@ const subscription = {
   },
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',
+  subscription_check_timeout: 'Czas sprawdzenia subskrypcji wygasł. Proszę odświeżyć później.',
 };
 
 export default subscription;

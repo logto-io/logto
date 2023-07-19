@@ -53,6 +53,7 @@ const general = {
   unnamed: 'Sem nome',
   view: 'Ver',
   hide: 'Esconder',
+  unknown_error: 'Erro desconhecido, por favor tente novamente mais tarde.',
 };
 
 export default general;

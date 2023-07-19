@@ -52,6 +52,7 @@ const subscription = {
   },
   upgrade_success: 'Успешно повышен до <name/>',
   downgrade_success: 'Успешно понижен до <name/>',
+  subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
 };
 
 export default subscription;
