@@ -88,6 +88,7 @@ const connectors = {
   drawer_title: 'Guia do conector',
   drawer_subtitle: 'Siga as instruções para integrar o conector',
   unknown: 'Conector desconhecido',
+  standard_connectors: 'Conectores padrão',
 };
 
 export default connectors;

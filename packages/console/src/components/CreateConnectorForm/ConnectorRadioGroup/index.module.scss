@@ -1,0 +1,40 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
+
+.connectorGroup {
+  gap: _.unit(4);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  @media screen and (max-width: dim.$modal-layout-grid-large) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (max-width: dim.$modal-layout-grid-medium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: dim.$modal-layout-grid-small) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  &.medium {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media screen and (max-width: dim.$modal-layout-grid-small) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  &.large {
+    grid-template-columns: repeat(3, 1fr);
+
+    @media screen and (max-width: dim.$modal-layout-grid-medium) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: dim.$modal-layout-grid-small) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+}

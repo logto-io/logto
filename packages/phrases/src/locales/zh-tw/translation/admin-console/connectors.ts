@@ -78,6 +78,7 @@ const connectors = {
   drawer_title: '連接器配置指南',
   drawer_subtitle: '參考以下步驟完善或修改你的連接器設置',
   unknown: '未知連接器',
+  standard_connectors: '標準連接器',
 };
 
 export default connectors;
