@@ -54,6 +54,7 @@ const general = {
   view: '查看',
   hide: '隐藏',
   unknown_error: '未知错误，请稍后重试。',
+  select: '选择',
 };
 
 export default general;

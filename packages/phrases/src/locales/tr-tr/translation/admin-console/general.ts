@@ -55,6 +55,7 @@ const general = {
   view: 'Görünüm',
   hide: 'Gizle',
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
+  select: 'Seç',
 };
 
 export default general;

@@ -55,6 +55,7 @@ const general = {
   view: 'Vue',
   hide: 'Cacher',
   unknown_error: 'Erreur inconnue, veuillez réessayer ultérieurement.',
+  select: 'Sélectionner',
 };
 
 export default general;

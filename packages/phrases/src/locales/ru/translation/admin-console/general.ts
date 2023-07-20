@@ -54,6 +54,7 @@ const general = {
   view: 'Просмотр',
   hide: 'Скрыть',
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
+  select: 'Выбрать',
 };
 
 export default general;

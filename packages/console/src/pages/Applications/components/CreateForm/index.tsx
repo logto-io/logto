@@ -1,11 +1,12 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useEffect } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import Button from '@/ds-components/Button';
+import { isProduction } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
@@ -18,6 +19,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import TypeDescription from '../TypeDescription';
 
+import Footer from './Footer';
 import * as styles from './index.module.scss';
 
 type FormData = {
@@ -28,20 +30,34 @@ type FormData = {
 
 type Props = {
   isOpen: boolean;
+  defaultCreateType?: ApplicationType;
   onClose?: (createdApp?: Application) => void;
 };
 
-function CreateForm({ isOpen, onClose }: Props) {
+function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
   const { updateConfigs } = useConfigs();
   const {
     handleSubmit,
     control,
     register,
+    resetField,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
+
   const {
     field: { onChange, value, name, ref },
-  } = useController({ name: 'type', control, rules: { required: true } });
+  } = useController({
+    name: 'type',
+    control,
+    rules: { required: true },
+  });
+
+  useEffect(() => {
+    if (defaultCreateType) {
+      resetField('type', { defaultValue: defaultCreateType });
+    }
+  }, [defaultCreateType, resetField]);
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
 
@@ -80,16 +96,7 @@ function CreateForm({ isOpen, onClose }: Props) {
         title="applications.create"
         subtitle="applications.subtitle"
         size="large"
-        footer={
-          <Button
-            isLoading={isSubmitting}
-            htmlType="submit"
-            title="applications.create"
-            size="large"
-            type="primary"
-            onClick={onSubmit}
-          />
-        }
+        footer={<Footer selectedType={value} isLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >
         <form>
@@ -102,13 +109,24 @@ function CreateForm({ isOpen, onClose }: Props) {
               type="card"
               onChange={onChange}
             >
-              {Object.values(ApplicationType).map((value) => (
-                <Radio key={value} value={value}>
+              {Object.values(ApplicationType).map((type) => (
+                <Radio
+                  key={type}
+                  value={type}
+                  /**
+                   * Todo: @xiaoyijun remove this condition on subscription features ready.
+                   */
+                  hasCheckIconForCard={isProduction || type !== ApplicationType.MachineToMachine}
+                >
                   <TypeDescription
-                    type={value}
-                    title={t(`${applicationTypeI18nKey[value]}.title`)}
-                    subtitle={t(`${applicationTypeI18nKey[value]}.subtitle`)}
-                    description={t(`${applicationTypeI18nKey[value]}.description`)}
+                    type={type}
+                    title={t(`${applicationTypeI18nKey[type]}.title`)}
+                    subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
+                    description={t(`${applicationTypeI18nKey[type]}.description`)}
+                    /**
+                     * Todo: @xiaoyijun remove this condition on subscription features ready.
+                     */
+                    hasProTag={!isProduction && type === ApplicationType.MachineToMachine}
                   />
                 </Radio>
               ))}

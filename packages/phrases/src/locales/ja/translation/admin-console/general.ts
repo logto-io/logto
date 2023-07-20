@@ -54,6 +54,7 @@ const general = {
   view: '表示',
   hide: '非表示',
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
+  select: '選択する',
 };
 
 export default general;
