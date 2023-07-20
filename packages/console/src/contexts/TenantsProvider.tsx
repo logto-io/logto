@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 
 import { isCloud } from '@/consts/env';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { getUserTenantId } from '@/consts/tenants';
 
 /**
@@ -52,7 +53,13 @@ const { tenantId, indicator } = defaultManagementApi.resource;
  */
 const initialTenants = Object.freeze(
   conditionalArray(
-    !isCloud && { id: tenantId, name: `tenant_${tenantId}`, tag: TenantTag.Development, indicator }
+    !isCloud && {
+      id: tenantId,
+      name: `tenant_${tenantId}`,
+      tag: TenantTag.Development,
+      indicator,
+      planId: ReservedPlanId.free,
+    }
   )
 );
 
