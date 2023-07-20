@@ -10,7 +10,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
-import { isOverQuota } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 import { type BasicWebhookFormType } from '../../types';
 import BasicWebhookForm from '../BasicWebhookForm';
@@ -31,7 +31,7 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
   const { data: currentPlan } = useCurrentSubscriptionPlan();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const shouldBlockCreation = isOverQuota({
+  const shouldBlockCreation = hasReachedQuotaLimit({
     quotaKey: 'hooksLimit',
     usage: totalWebhookCount,
     plan: currentPlan,

@@ -1,13 +1,13 @@
 import { isCloud, isProduction } from '@/consts/env';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
 
-type IsOverQuotaParameters = {
+type HasReachedQuotaLimitParameters = {
   quotaKey: keyof SubscriptionPlanQuota;
   usage: number;
   plan?: SubscriptionPlan;
 };
 
-export const isOverQuota = ({ quotaKey, usage, plan }: IsOverQuotaParameters) => {
+export const hasReachedQuotaLimit = ({ quotaKey, usage, plan }: HasReachedQuotaLimitParameters) => {
   /**
    * Todo: @xiaoyijun remove this condition on subscription features ready.
    */

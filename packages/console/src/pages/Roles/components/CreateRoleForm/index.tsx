@@ -2,8 +2,11 @@ import type { Role, ScopeResponse } from '@logto/schemas';
 import { internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import PlanName from '@/components/PlanName';
+import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -11,9 +14,12 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 export type Props = {
+  totalRoleCount: number;
   onClose: (createdRole?: Role) => void;
 };
 
@@ -25,17 +31,20 @@ type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
   scopeIds?: string[];
 };
 
-function CreateRoleForm({ onClose }: Props) {
+function CreateRoleForm({ totalRoleCount, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { data: currentPlan } = useCurrentSubscriptionPlan();
   const {
     control,
     handleSubmit,
     register,
+    watch,
     formState: { isSubmitting, errors },
   } = useForm<CreateRoleFormData>();
 
   const api = useApi();
   const { updateConfigs } = useConfigs();
+  const roleScopes = watch('scopes', []);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async ({ name, description, scopes }) => {
@@ -55,6 +64,24 @@ function CreateRoleForm({ onClose }: Props) {
     })
   );
 
+  const isRolesReachLimit = hasReachedQuotaLimit({
+    quotaKey: 'rolesLimit',
+    plan: currentPlan,
+    usage: totalRoleCount,
+  });
+
+  const isScopesPerReachLimit = hasReachedQuotaLimit({
+    quotaKey: 'scopesPerRoleLimit',
+    plan: currentPlan,
+    /**
+     * If usage is equal to the limit, it means the current role has reached the maximum allowed scope.
+     * Therefore, we should not assign any more scopes at this point.
+     * However, the currently selected scopes haven't been assigned yet, so we subtract 1
+     * to allow the assignment when the scope count is equal to the limit.
+     */
+    usage: roleScopes.length - 1,
+  });
+
   return (
     <ModalLayout
       title="roles.create_role_title"
@@ -62,14 +89,44 @@ function CreateRoleForm({ onClose }: Props) {
       learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
       size="large"
       footer={
-        <Button
-          isLoading={isSubmitting}
-          htmlType="submit"
-          title="roles.create_role_button"
-          size="large"
-          type="primary"
-          onClick={onSubmit}
-        />
+        <>
+          {isRolesReachLimit && currentPlan && (
+            <QuotaGuardFooter>
+              <Trans
+                components={{
+                  a: <ContactUsPhraseLink />,
+                  planName: <PlanName name={currentPlan.name} />,
+                }}
+              >
+                {t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit })}
+              </Trans>
+            </QuotaGuardFooter>
+          )}
+          {isScopesPerReachLimit && currentPlan && !isRolesReachLimit && (
+            <QuotaGuardFooter>
+              <Trans
+                components={{
+                  a: <ContactUsPhraseLink />,
+                  planName: <PlanName name={currentPlan.name} />,
+                }}
+              >
+                {t('upsell.paywall.scopes_per_role', {
+                  count: currentPlan.quota.scopesPerRoleLimit ?? 0,
+                })}
+              </Trans>
+            </QuotaGuardFooter>
+          )}
+          {!isRolesReachLimit && !isScopesPerReachLimit && (
+            <Button
+              isLoading={isSubmitting}
+              htmlType="submit"
+              title="roles.create_role_button"
+              size="large"
+              type="primary"
+              onClick={onSubmit}
+            />
+          )}
+        </>
       }
       onClose={onClose}
     >

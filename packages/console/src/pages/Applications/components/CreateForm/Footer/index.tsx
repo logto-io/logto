@@ -10,7 +10,7 @@ import { isProduction } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import Button from '@/ds-components/Button';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
-import { isOverQuota } from '@/utils/quota';
+import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   selectedType?: ApplicationType;
@@ -34,13 +34,13 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
 
   const nonM2mApplicationCount = allApplications ? allApplications.length - m2mAppCount : 0;
 
-  const isM2mAppsOverQuota = isOverQuota({
+  const isM2mAppsReachLimit = hasReachedQuotaLimit({
     quotaKey: 'machineToMachineLimit',
     plan: currentPlan,
     usage: m2mAppCount,
   });
 
-  const isNonM2mAppsOverQuota = isOverQuota({
+  const isNonM2mAppsReachLimit = hasReachedQuotaLimit({
     quotaKey: 'applicationsLimit',
     plan: currentPlan,
     usage: nonM2mApplicationCount,
@@ -49,7 +49,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
   if (currentPlan && selectedType) {
     const { id: planId, name: planName, quota } = currentPlan;
 
-    if (selectedType === ApplicationType.MachineToMachine && isM2mAppsOverQuota) {
+    if (selectedType === ApplicationType.MachineToMachine && isM2mAppsReachLimit) {
       return (
         <QuotaGuardFooter>
           {quota.machineToMachineLimit === 0 && planId === ReservedPlanId.free ? (
@@ -74,7 +74,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
       );
     }
 
-    if (selectedType !== ApplicationType.MachineToMachine && isNonM2mAppsOverQuota) {
+    if (selectedType !== ApplicationType.MachineToMachine && isNonM2mAppsReachLimit) {
       return (
         <QuotaGuardFooter>
           <Trans
