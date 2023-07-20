@@ -30,8 +30,8 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
   const countRoles = async (
     search: Search = defaultUserSearch,
     { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
-  ) =>
-    pool.one<{ count: number }>(sql`
+  ) => {
+    const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
       where (not starts_with(${fields.name}, ${internalRolePrefix}))
@@ -46,6 +46,9 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
       )}
       ${buildRoleConditions(search)}
     `);
+
+    return { count: Number(count) };
+  };
 
   const findRoles = async (
     search: Search,

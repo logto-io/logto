@@ -12,6 +12,7 @@ import {
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
@@ -65,7 +66,9 @@ const tenantContext = new MockTenant(
       return connector;
     },
   },
-  {}
+  {
+    quota: createMockQuotaLibrary(),
+  }
 );
 
 const connectorDataRoutes = await pickDefault(import('./index.js'));

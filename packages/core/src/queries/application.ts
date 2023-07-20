@@ -35,7 +35,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
       where ${fields.type} != ${ApplicationType.MachineToMachine}
     `);
 
-    return Number(count);
+    return { count: Number(count) };
   };
   const countM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
@@ -44,7 +44,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
       where ${fields.type} = ${ApplicationType.MachineToMachine}
     `);
 
-    return Number(count);
+    return { count: Number(count) };
   };
 
   const deleteApplicationById = async (id: string) => {

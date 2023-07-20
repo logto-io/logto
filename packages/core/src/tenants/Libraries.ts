@@ -25,7 +25,7 @@ export default class Libraries {
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
-  quota = createQuotaLibrary(this.queries, this.cloudConnection);
+  quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
 
   constructor(
     public readonly tenantId: string,

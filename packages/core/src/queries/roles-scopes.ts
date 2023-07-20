@@ -18,6 +18,16 @@ export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
       )}
     `);
 
+  const countRolesScopesByRoleId = async (roleId: string) => {
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.roleId}=${roleId}
+    `);
+
+    return { count: Number(count) };
+  };
+
   const findRolesScopesByRoleId = async (roleId: string) =>
     pool.any<RolesScope>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
@@ -45,5 +55,11 @@ export const createRolesScopesQueries = (pool: CommonQueryMethods) => {
     }
   };
 
-  return { insertRolesScopes, findRolesScopesByRoleId, findRolesScopesByRoleIds, deleteRolesScope };
+  return {
+    insertRolesScopes,
+    findRolesScopesByRoleId,
+    findRolesScopesByRoleIds,
+    deleteRolesScope,
+    countRolesScopesByRoleId,
+  };
 };

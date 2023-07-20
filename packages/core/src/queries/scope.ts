@@ -15,7 +15,11 @@ import { buildConditionsFromSearch } from '#src/utils/search.js';
 const { table, fields } = convertToIdentifiers(Scopes, true);
 const resources = convertToIdentifiers(Resources, true);
 
-const buildResourceConditions = (search: Search) => {
+const buildResourceConditions = (search?: Search) => {
+  if (!search) {
+    return sql``;
+  }
+
   const hasSearch = search.matches.length > 0;
   const searchFields = [Scopes.fields.id, Scopes.fields.name, Scopes.fields.description];
 
@@ -56,13 +60,16 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(offset, (value) => sql`offset ${value}`)}
     `);
 
-  const countScopesByResourceId = async (resourceId: string, search: Search) =>
-    pool.one<{ count: number }>(sql`
+  const countScopesByResourceId = async (resourceId: string, search?: Search) => {
+    const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
       where ${fields.resourceId}=${resourceId}
       ${buildResourceConditions(search)}
     `);
+
+    return { count: Number(count) };
+  };
 
   const countScopesByScopeIds = async (scopeIds: string[], search: Search) =>
     pool.one<{ count: number }>(sql`
