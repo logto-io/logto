@@ -5,15 +5,13 @@ import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import 'overlayscrollbars/overlayscrollbars.css';
 import './scss/normalized.scss';
 import './scss/overlayscrollbars.scss';
-
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';

@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 
 import Arrow from '@/assets/icons/arrow-left.svg';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';
@@ -22,7 +22,7 @@ type Props = PropsWithChildren<{
 
 function MainFlowLikeModal({ title, subtitle, subtitleProps, children, onClose, onGoBack }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
+  const navigate = useNavigate();
 
   return (
     <ReactModal shouldCloseOnEsc isOpen className={modalStyles.fullScreen} onRequestClose={onClose}>

@@ -37,7 +37,8 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
       const fallbackErrorMessage = t('errors.unknown_server_error');
 
       try {
-        const data = await response.json<RequestErrorBody>();
+        // Clone the response to avoid "Response body is already used".
+        const data = await response.clone().json<RequestErrorBody>();
 
         // Inform and redirect un-authorized users to sign in page.
         if (data.code === 'auth.forbidden') {
