@@ -7,15 +7,17 @@ import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import Button from '@/ds-components/Button';
+import { isProduction } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
+import ProTag from '../ProTag';
 
 import ConnectorRadioGroup from './ConnectorRadioGroup';
+import Footer from './Footer';
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
 import * as styles from './index.module.scss';
@@ -39,6 +41,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
+  const isCreatingSocialConnector = type === ConnectorType.Social;
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
@@ -90,8 +93,8 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   };
 
   const defaultGroups = useMemo(
-    () => (type === ConnectorType.Social ? groups.filter((group) => !group.isStandard) : groups),
-    [groups, type]
+    () => (isCreatingSocialConnector ? groups.filter((group) => !group.isStandard) : groups),
+    [groups, isCreatingSocialConnector]
   );
 
   const standardGroups = useMemo(() => groups.filter((group) => group.isStandard), [groups]);
@@ -113,14 +116,17 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       <ModalLayout
         title={cardTitle}
         footer={
-          <Button
-            title="general.next"
-            type="primary"
-            disabled={!activeFactoryId}
-            onClick={() => {
-              onClose?.(activeFactoryId);
-            }}
-          />
+          existingConnectors && (
+            <Footer
+              isCreatingSocialConnector={isCreatingSocialConnector}
+              existingConnectors={existingConnectors}
+              selectedConnectorGroup={activeGroup}
+              isCreateButtonDisabled={!activeFactoryId}
+              onClickCreateButton={() => {
+                onClose?.(activeFactoryId);
+              }}
+            />
+          )
         }
         size={radioGroupSize}
         onClose={onClose}
@@ -138,6 +144,8 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
+              {/* Todo: @xiaoyijun remove this condition on subscription features ready. */}
+              {!isProduction && <ProTag />}
             </div>
             <ConnectorRadioGroup
               name="group"
