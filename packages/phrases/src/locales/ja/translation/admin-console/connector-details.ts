@@ -33,7 +33,7 @@ const connector_details = {
   logto_email: {
     total_email_sent: '総送信数: {{value, number}}',
     total_email_sent_tip:
-      'Logtoはセキュアかつ安定した組み込みメールのためにSendGridを利用しています。完全に無料です。<a>詳細を見る</a>',
+      'Logto はセキュアかつ安定した組み込みメールのために SendGrid を利用しています。完全に無料です。<a>詳細を見る</a>',
     email_template_title: 'メールテンプレート',
     template_description:
       '組み込みのメールは、シームレスな認証メールの配信のためにデフォルトのテンプレートを使用します。設定は必要ありません。基本的なブランド情報をカスタマイズできます。',
