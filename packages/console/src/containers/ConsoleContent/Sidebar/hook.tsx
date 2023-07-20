@@ -64,7 +64,7 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
-      title: 'resource_management',
+      title: 'resources',
       items: [
         {
           Icon: Box,
@@ -85,7 +85,7 @@ export const useSidebarMenuItems = (): {
       ],
     },
     {
-      title: 'user_management',
+      title: 'users',
       items: [
         {
           Icon: UserProfile,
