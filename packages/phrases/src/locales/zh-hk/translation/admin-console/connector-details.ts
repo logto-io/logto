@@ -31,10 +31,12 @@ const connector_details = {
   deletion_description: '你將刪除此連接器。此操作不可撤銷，再次添加需重新配置。',
   logto_email: {
     total_email_sent: '總發送郵件數：{{value, number}}',
-    total_email_sent_tip: 'Logto 使用 SendGrid 進行安全穩定的內置郵件。完全免費使用。',
+    total_email_sent_tip:
+      'Logto 使用 SendGrid 進行安全穩定的內建電子郵件。完全免費使用。<a>了解更多</a>',
     email_template_title: '郵件模板',
     template_description:
-      '內置郵件使用默認模板實現無縫交付驗證郵件。無需配置，您可以自定義基本品牌信息。',
+      '內建郵件使用默認模板實現無縫交付驗證郵件。無需配置，您可以自定義基本品牌信息。',
+    template_description_link_text: '查看模板',
     description_action_text: '查看模板',
     from_email_field: '發件人郵箱',
     sender_name_field: '發件人姓名',

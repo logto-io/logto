@@ -33,10 +33,11 @@ const connector_details = {
   logto_email: {
     total_email_sent: 'Total de emails enviados: {{value, number}}',
     total_email_sent_tip:
-      'O Logto utiliza o SendGrid para e-mails integrados seguros e estáveis. É completamente gratuito para usar.',
+      'Logto utiliza o SendGrid para e-mail interno seguro e estável. É completamente gratuito para usar. <a>Saiba mais</a>',
     email_template_title: 'Modelo de e-mail',
     template_description:
       'O e-mail integrado usa modelos padrão para entrega perfeita de e-mails de verificação. Nenhuma configuração é necessária e você pode personalizar informações básicas da marca.',
+    template_description_link_text: 'Ver modelos',
     description_action_text: 'Ver modelos',
     from_email_field: 'De e-mail',
     sender_name_field: 'Nome do remetente',
