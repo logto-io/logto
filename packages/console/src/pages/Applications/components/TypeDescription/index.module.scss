@@ -1,6 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -33,5 +34,11 @@
       flex: 2;
       font: var(--font-body-3);
     }
+  }
+
+  .proTag {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }

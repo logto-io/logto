@@ -32,6 +32,7 @@ export type Props = {
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
   icon?: ReactNode;
+  hasCheckIconForCard?: boolean;
 };
 
 function Radio({
@@ -47,6 +48,7 @@ function Radio({
   isDisabled,
   disabledLabel,
   icon,
+  hasCheckIconForCard = true,
 }: Props) {
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -79,7 +81,7 @@ function Radio({
     >
       <div className={styles.content}>
         <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
-        {type === 'card' && (
+        {type === 'card' && hasCheckIconForCard && (
           <div className={styles.indicator}>
             <Check />
           </div>

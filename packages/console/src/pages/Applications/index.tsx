@@ -1,6 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -37,7 +38,7 @@ function Applications() {
   const { pathname, search } = useLocation();
   const isShowingCreationForm = pathname === createApplicationPathname;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+  const [defaultCreateType, setDefaultCreateType] = useState<ApplicationType>();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -51,10 +52,6 @@ function Applications() {
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
-
-  const mutateApplicationList = async (newApp: Application) => {
-    await mutate([[newApp, ...(applications ?? [])], (totalCount ?? 0) + 1]);
-  };
 
   return (
     <ListPage
@@ -100,9 +97,12 @@ function Applications() {
         ],
         placeholder: (
           <ApplicationsPlaceholder
-            onCreate={async (newApp) => {
-              await mutateApplicationList(newApp);
-              navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
+            onSelect={async (createType) => {
+              setDefaultCreateType(createType);
+              navigate({
+                pathname: createApplicationPathname,
+                search,
+              });
             }}
           />
         ),
@@ -122,7 +122,9 @@ function Applications() {
       widgets={
         <CreateForm
           isOpen={isShowingCreationForm}
+          defaultCreateType={defaultCreateType}
           onClose={async (newApp) => {
+            setDefaultCreateType(undefined);
             if (newApp) {
               navigate(buildNavigatePathPostAppCreation(newApp), { replace: true });
 
