@@ -37,8 +37,7 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         />
       </FormField>
       <FormField title="subscription.next_bill">
-        {/* Todo @xiaoyijun retrieve cost from subscription usage on the feature is ready in the backend */}
-        <NextBillInfo cost={1000} />
+        <NextBillInfo cost={subscriptionUsage.cost} />
       </FormField>
       <MauLimitExceedNotification
         activeUsers={subscriptionUsage.activeUsers}
