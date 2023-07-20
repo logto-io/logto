@@ -36,6 +36,12 @@ const subscription = {
     status_column: 'Durum',
     amount_column: 'Miktar',
     invoice_created_date_column: 'Fatura oluşturma tarihi',
+    invoice_status: {
+      void: 'İptal Edildi',
+      paid: 'Ödendi',
+      open: 'Açık',
+      uncollectible: 'Gecikmiş',
+    },
   },
   quota_item,
   downgrade_modal: {

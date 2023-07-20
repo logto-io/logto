@@ -36,6 +36,12 @@ const subscription = {
     status_column: 'ステータス',
     amount_column: '金額',
     invoice_created_date_column: '請求書作成日',
+    invoice_status: {
+      void: 'キャンセル済み',
+      paid: '支払済み',
+      open: '未処理',
+      uncollectible: '延滞',
+    },
   },
   quota_item,
   downgrade_modal: {

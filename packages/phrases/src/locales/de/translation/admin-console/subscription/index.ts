@@ -35,6 +35,12 @@ const subscription = {
     status_column: 'Status',
     amount_column: 'Betrag',
     invoice_created_date_column: 'Rechnungsdatum',
+    invoice_status: {
+      void: 'Storniert',
+      paid: 'Bezahlt',
+      open: 'Offen',
+      uncollectible: 'Überfällig',
+    },
   },
   quota_item,
   downgrade_modal: {

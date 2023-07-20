@@ -35,6 +35,12 @@ const subscription = {
     status_column: 'Статус',
     amount_column: 'Сумма',
     invoice_created_date_column: 'Дата создания счета',
+    invoice_status: {
+      void: 'Отменено',
+      paid: 'Оплачено',
+      open: 'Открыто',
+      uncollectible: 'Просрочено',
+    },
   },
   quota_item,
   downgrade_modal: {

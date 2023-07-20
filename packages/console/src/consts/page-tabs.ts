@@ -35,4 +35,5 @@ export enum TenantSettingsTabs {
   Settings = 'settings',
   Domains = 'domains',
   Subscription = 'subscription',
+  BillingHistory = 'billing-history',
 }

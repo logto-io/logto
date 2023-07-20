@@ -33,6 +33,12 @@ const subscription = {
     status_column: '狀態',
     amount_column: '金額',
     invoice_created_date_column: '發票創建日期',
+    invoice_status: {
+      void: '已取消',
+      paid: '已付款',
+      open: '未完成',
+      uncollectible: '逾期未付款',
+    },
   },
   quota_item,
   downgrade_modal: {

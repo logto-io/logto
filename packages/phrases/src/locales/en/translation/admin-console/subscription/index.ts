@@ -35,6 +35,12 @@ const subscription = {
     status_column: 'Status',
     amount_column: 'Amount',
     invoice_created_date_column: 'Invoice created date',
+    invoice_status: {
+      void: 'Canceled',
+      paid: 'Paid',
+      open: 'Open',
+      uncollectible: 'Overdue',
+    },
   },
   quota_item,
   downgrade_modal: {

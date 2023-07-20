@@ -35,6 +35,12 @@ const subscription = {
     status_column: '상태',
     amount_column: '금액',
     invoice_created_date_column: '송장 생성 날짜',
+    invoice_status: {
+      void: '취소됨',
+      paid: '지불 완료',
+      open: '미결제',
+      uncollectible: '연체',
+    },
   },
   quota_item,
   downgrade_modal: {

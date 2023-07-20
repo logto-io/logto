@@ -36,6 +36,12 @@ const subscription = {
     status_column: 'Stato',
     amount_column: 'Importo',
     invoice_created_date_column: 'Data di creazione fattura',
+    invoice_status: {
+      void: 'Annullata',
+      paid: 'Pagata',
+      open: 'Aperta',
+      uncollectible: 'Scaduta',
+    },
   },
   quota_item,
   downgrade_modal: {

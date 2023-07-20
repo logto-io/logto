@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import {
   communitySupportEnabledMap,
@@ -27,3 +29,15 @@ const getSubscriptionPlanOrderById = (id: string) => {
 
 export const isDowngradePlan = (fromPlanId: string, toPlanId: string) =>
   getSubscriptionPlanOrderById(fromPlanId) > getSubscriptionPlanOrderById(toPlanId);
+
+type FormatPeriodOptions = {
+  periodStart: Date;
+  periodEnd: Date;
+  displayYear?: boolean;
+};
+export const formatPeriod = ({ periodStart, periodEnd, displayYear }: FormatPeriodOptions) => {
+  const format = displayYear ? 'MMM D, YYYY' : 'MMM D';
+  const formattedStart = dayjs(periodStart).format(format);
+  const formattedEnd = dayjs(periodEnd).format(format);
+  return `${formattedStart} - ${formattedEnd}`;
+};
