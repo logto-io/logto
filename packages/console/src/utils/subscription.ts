@@ -6,6 +6,7 @@ import {
   reservedPlanIdOrder,
   ticketSupportResponseTimeMap,
 } from '@/consts/subscriptions';
+import { type Invoice } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
   const { name, quota } = subscriptionPlanResponse;
@@ -35,9 +36,19 @@ type FormatPeriodOptions = {
   periodEnd: Date;
   displayYear?: boolean;
 };
+
 export const formatPeriod = ({ periodStart, periodEnd, displayYear }: FormatPeriodOptions) => {
   const format = displayYear ? 'MMM D, YYYY' : 'MMM D';
   const formattedStart = dayjs(periodStart).format(format);
   const formattedEnd = dayjs(periodEnd).format(format);
   return `${formattedStart} - ${formattedEnd}`;
 };
+
+export const getLatestUnpaidInvoice = (invoices: Invoice[]) =>
+  invoices
+    .slice()
+    .sort(
+      (invoiceA, invoiceB) =>
+        new Date(invoiceB.createdAt).getTime() - new Date(invoiceA.createdAt).getTime()
+    )
+    .find(({ status }) => status === 'uncollectible');

@@ -1,0 +1,60 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
+  margin: _.unit(1);
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+  justify-content: space-between;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    margin-right: _.unit(4);
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: _.unit(2);
+
+      .name {
+        font: var(--font-body-2);
+        @include _.text-ellipsis;
+      }
+
+      .statusTag {
+        background-color: var(--color-on-error-container);
+        color: var(--color-white);
+        font: var(--font-label-3);
+      }
+    }
+
+    .planName {
+      margin-top: _.unit(0.5);
+      font: var(--font-body-3);
+      color: var(--color-text-secondary);
+    }
+  }
+
+
+  .checkIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: transparent;
+
+    &.visible {
+      color: var(--color-primary-40);
+    }
+  }
+}
