@@ -3,7 +3,8 @@ import { useRef } from 'react';
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud } from '@/consts/env';
+import MauExceededModal from '@/components/MauExceededModal';
+import { isCloud, isProduction } from '@/consts/env';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -36,6 +37,8 @@ export default function AppContent() {
         <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
       </div>
       {isCloud && <Broadcast />}
+      {/* Todo: @xiaoyijun remove this condition on subscription features ready. */}
+      {!isProduction && isCloud && <MauExceededModal />}
     </>
   );
 }
