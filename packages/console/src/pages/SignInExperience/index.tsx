@@ -12,7 +12,6 @@ import useSWR from 'swr';
 import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { getBasename } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { SignInExperiencePage } from '@/consts/page-tabs';
 import CardTitle from '@/ds-components/CardTitle';
@@ -21,6 +20,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { trySubmitSafe } from '@/utils/form';
@@ -75,6 +75,7 @@ function SignInExperience() {
     isLoading: isLoadingConfig,
     mutate: mutateConfigs,
   } = useConfigs();
+  const { getPathname } = useTenantPathname();
 
   const shouldDisplayWelcome = !isCloud && !configs?.signInExperienceCustomized;
 
@@ -253,7 +254,7 @@ function SignInExperience() {
       )}
       <UnsavedChangesAlertModal
         hasUnsavedChanges={isDirty}
-        parentPath={`${getBasename()}/sign-in-experience`}
+        parentPath={getPathname('/sign-in-experience')}
       />
     </PageWrapper>
   );

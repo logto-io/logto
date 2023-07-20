@@ -1,4 +1,4 @@
-import { defaultManagementApi } from '@logto/schemas';
+import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
 import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
@@ -85,7 +85,10 @@ function TenantsProvider({ children }: Props) {
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
   const matched = useMatch('/:tenantId/*');
   const navigate = useNavigate();
-  const currentTenantId = useMemo(() => matched?.params.tenantId ?? '', [matched]);
+  const currentTenantId = useMemo(
+    () => (isCloud ? matched?.params.tenantId ?? '' : defaultTenantId),
+    [matched]
+  );
   const [currentTenantStatus, setCurrentTenantStatus] = useState<CurrentTenantStatus>('pending');
 
   const navigateTenant = useCallback(

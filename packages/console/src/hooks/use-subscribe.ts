@@ -1,13 +1,13 @@
-import { appendPath } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
-import { getBasename } from '@/consts';
 import { checkoutStateQueryKey, checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import { createLocalCheckoutSession } from '@/utils/checkout';
+
+import useTenantPathname from './use-tenant-pathname';
 
 type SubscribeProps = {
   planId: string;
@@ -20,6 +20,7 @@ type SubscribeProps = {
 const useSubscribe = () => {
   const cloudApi = useCloudApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getUrl } = useTenantPathname();
 
   const subscribe = async ({
     planId,
@@ -34,8 +35,7 @@ const useSubscribe = () => {
       [checkoutStateQueryKey]: state,
     });
 
-    const successCallbackUrl = appendPath(
-      new URL(getBasename(), window.location.origin),
+    const successCallbackUrl = getUrl(
       `${checkoutSuccessCallbackPath}?${successSearchParam.toString()}`
     ).href;
 

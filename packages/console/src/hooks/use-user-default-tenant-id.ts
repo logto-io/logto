@@ -1,7 +1,9 @@
+import { defaultTenantId as ossDefaultTenantId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { z } from 'zod';
 
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import useMeCustomData from './use-me-custom-data';
@@ -26,6 +28,11 @@ const useUserDefaultTenantId = () => {
   const [updatedTenantId, setUpdatedTenantId] = useState(storedId);
 
   const defaultTenantId = useMemo(() => {
+    // Directly return the default tenant ID for OSS because it's single tenant.
+    if (!isCloud) {
+      return ossDefaultTenantId;
+    }
+
     // Ensure the stored ID is still available to the user.
     if (storedId && tenants.some(({ id }) => id === storedId)) {
       return storedId;
@@ -36,6 +43,11 @@ const useUserDefaultTenantId = () => {
   }, [storedId, tenants]);
 
   const updateIfNeeded = useCallback(async () => {
+    // No need for updating for OSS because it's single tenant.
+    if (!isCloud) {
+      return;
+    }
+
     // Note storedId is not checked here because it's by design that the default tenant ID
     // should be updated only when the user manually changes the current tenant. That is,
     // if the user opens a new tab and go back to the original tab, the default tenant ID

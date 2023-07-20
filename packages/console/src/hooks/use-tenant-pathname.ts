@@ -1,13 +1,17 @@
-import { joinPath } from '@silverhand/essentials';
-import { useCallback, useMemo } from 'react';
+import { ossConsolePath } from '@logto/schemas';
+import { appendPath, joinPath } from '@silverhand/essentials';
+import { useCallback, useContext, useMemo } from 'react';
 import {
   type NavigateOptions,
   type To,
   matchPath,
   useLocation,
   useNavigate,
-  useParams,
+  useHref,
 } from 'react-router-dom';
+
+import { isCloud } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 
 type TenantPathname = {
   /**
@@ -27,10 +31,21 @@ type TenantPathname = {
    * @param exact Whether to match exactly, defaults to `false`
    */
   match: (pathname: string, exact?: boolean) => boolean;
-  /** Returns the `to` object with the current tenant ID prepended. */
+  /**
+   * Returns the pathname with the current tenant ID prepended if the pathname
+   * is an absolute pathname; otherwise, returns the pathname directly.
+   */
+  getPathname: (pathname: string) => string;
+  /**
+   * Returns the `to` object with the current tenant ID prepended if the
+   * pathname is an absolute pathname; otherwise, returns the `to` object
+   * or the string directly.
+   */
   getTo: (to: To) => To;
   /** Navigate to the given pathname in the current tenant. */
   navigate: (to: To, options?: NavigateOptions) => void;
+  /** Returns the full URL with the current tenant ID prepended. */
+  getUrl: (pathname: string) => URL;
 };
 
 /**
@@ -41,9 +56,13 @@ type TenantPathname = {
  */
 function useTenantPathname(): TenantPathname {
   const location = useLocation();
-  // TODO: should use TenantsContext instead
-  const { tenantId } = useParams();
+  const { currentTenantId } = useContext(TenantsContext);
+  const tenantSegment = useMemo(
+    () => (isCloud ? currentTenantId : ossConsolePath.slice(1)),
+    [currentTenantId]
+  );
   const navigate = useNavigate();
+  const href = useHref('/');
 
   const match = useCallback(
     (pathname: string, exact = false) =>
@@ -55,16 +74,16 @@ function useTenantPathname(): TenantPathname {
   const getPathname = useCallback(
     (pathname: string) => {
       if (pathname.startsWith('/')) {
-        return joinPath(tenantId ?? '', pathname);
+        return joinPath(tenantSegment, pathname);
       }
       // Directly return the pathname if it's a relative pathname
       return pathname;
     },
-    [tenantId]
+    [tenantSegment]
   );
 
   const getTo = useCallback(
-    (to: To) => {
+    (to: To): To => {
       if (typeof to === 'string') {
         return getPathname(to);
       }
@@ -73,15 +92,24 @@ function useTenantPathname(): TenantPathname {
     [getPathname]
   );
 
+  const getUrl = useCallback(
+    (pathname = '/') => {
+      return appendPath(new URL(href), tenantSegment, pathname);
+    },
+    [href, tenantSegment]
+  );
+
   const data = useMemo(
     () => ({
       match,
       navigate: (to: To, options?: NavigateOptions) => {
         navigate(getTo(to), options);
       },
+      getPathname,
       getTo,
+      getUrl,
     }),
-    [match, getTo, navigate]
+    [match, getPathname, getTo, navigate, getUrl]
   );
   return data;
 }
