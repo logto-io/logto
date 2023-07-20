@@ -1,4 +1,3 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -12,6 +11,7 @@ import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
+import type { TenantInfo } from '@/types/tenant';
 
 import { type CreateTenantData } from '../type';
 

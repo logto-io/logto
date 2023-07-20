@@ -1,5 +1,4 @@
 import { Theme } from '@logto/schemas';
-import type { TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useState } from 'react';
 
@@ -11,6 +10,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import useTheme from '@/hooks/use-theme';
+import type { TenantInfo } from '@/types/tenant';
 
 import * as styles from './index.module.scss';
 

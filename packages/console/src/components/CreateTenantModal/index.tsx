@@ -1,6 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
-import { TenantTag, type TenantInfo } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -18,6 +18,7 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
+import type { TenantInfo } from '@/types/tenant';
 
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import * as styles from './index.module.scss';

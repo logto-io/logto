@@ -1,5 +1,4 @@
 import { useLogto } from '@logto/react';
-import { type TenantInfo } from '@logto/schemas/lib/models/tenants.js';
 import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -10,6 +9,7 @@ import AppLoading from '@/components/AppLoading';
 import type ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
+import type { TenantInfo } from '@/types/tenant';
 
 /**
  * The container that ensures the user has access to the current tenant. When the user is

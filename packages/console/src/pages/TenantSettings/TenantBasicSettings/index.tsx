@@ -1,4 +1,4 @@
-import { type TenantInfo, TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import type { TenantInfo } from '@/types/tenant';
 
 import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';

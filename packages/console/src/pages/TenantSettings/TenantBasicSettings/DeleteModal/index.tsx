@@ -1,4 +1,3 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
@@ -6,6 +5,7 @@ import { contactEmailLink } from '@/consts';
 import { tenantTagMap } from '@/containers/AppContent/components/Topbar/TenantSelector/TenantEnvTag';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TextLink from '@/ds-components/TextLink';
+import type { TenantInfo } from '@/types/tenant';
 
 import * as styles from './index.module.scss';
 

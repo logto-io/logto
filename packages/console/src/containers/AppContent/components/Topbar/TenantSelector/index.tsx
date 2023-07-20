@@ -1,5 +1,4 @@
 import { adminTenantId, maxFreeTenantLimit } from '@logto/schemas';
-import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +11,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import type { TenantInfo } from '@/types/tenant';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantEnvTag from './TenantEnvTag';

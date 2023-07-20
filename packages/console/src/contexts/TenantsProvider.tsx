@@ -1,12 +1,12 @@
 import { defaultManagementApi } from '@logto/schemas';
-import { type TenantInfo, TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 
 import { isCloud } from '@/consts/env';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { getUserTenantId } from '@/consts/tenants';
+import type { TenantInfo } from '@/types/tenant';
 
 /**
  * The current tenant status of access validation. When it's `validated`, it indicates that a
@@ -58,7 +58,6 @@ const initialTenants = Object.freeze(
       name: `tenant_${tenantId}`,
       tag: TenantTag.Development,
       indicator,
-      planId: ReservedPlanId.free,
     }
   )
 );
