@@ -9,4 +9,3 @@ const tab_sections = {
 };
 
 export default tab_sections;
-
