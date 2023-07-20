@@ -1,4 +1,5 @@
 const entity = {
+  invalid_input: 'Неверный ввод. Список значений не должен быть пустым.',
   create_failed: 'Не удалось создать {{name}}.',
   not_exists: '{{name}} не существует.',
   not_exists_with_id: '{{name}} с ID `{{id}}` не существует.',

@@ -12,7 +12,7 @@ import {
   logtoCookieKey,
   type LogtoUiCookie,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
 import Provider, { errors, type ResourceServer } from 'oidc-provider';
@@ -216,7 +216,10 @@ export default function initOidc(
     claims: userClaims,
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
-      const user = await findUserById(sub);
+      // The user may be deleted after the token is issued
+      const user = await tryThat(findUserById(sub), () => {
+        throw new errors.InvalidGrant('User not found');
+      });
 
       return {
         accountId: sub,

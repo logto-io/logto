@@ -1,4 +1,5 @@
 const entity = {
+  invalid_input: 'Invalid input. Value list must not be empty.',
   create_failed: 'Failed to create {{name}}.',
   not_exists: 'The {{name}} does not exist.',
   not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
