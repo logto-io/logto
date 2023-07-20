@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      'Hai raggiunto il limite di {{count, number}} applicazioni di <planName/>. Per soddisfare le esigenze del tuo team, passa a un piano a pagamento. Per qualsiasi assistenza, sentiti libero di <a>contattarci</a>.',
+      'Limite di {{count, number}} applicazione di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
     applications_other:
-      'Hai raggiunto il limite di {{count, number}} applicazioni di <planName/>. Per soddisfare le esigenze del tuo team, passa a un piano a pagamento. Per qualsiasi assistenza, sentiti libero di <a>contattarci</a>.',
+      'Limite di {{count, number}} applicazioni di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
     machine_to_machine_feature:
-      "Aggiorna a un piano a pagamento per creare un'applicazione macchina-macchina, insieme all'accesso a tutte le funzionalità premium. Per qualsiasi assistenza, sentiti libero di <a>contattarci</a>.",
+      'Aggiorna a un piano a pagamento per creare applicazioni machine-to-machine e accedere a tutte le funzionalità premium. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
     machine_to_machine:
-      'Hai raggiunto il limite di {{count, number}} applicazioni macchina-macchina di <planName/>. Per soddisfare le esigenze del tuo team, passa a un piano a pagamento. Per qualsiasi assistenza, sentiti libero di <a>contattarci</a>.',
+      'Limite di {{count, number}} applicazione machine-to-machine di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
     machine_to_machine_other:
-      'Hai raggiunto il limite di {{count, number}} applicazioni macchina-macchina di <planName/>. Per soddisfare le esigenze del tuo team, passa a un piano a pagamento. Per qualsiasi assistenza, sentiti libero di <a>contattarci</a>.',
+      'Limite di {{count, number}} applicazioni machine-to-machine di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
     resources:
       'Hai raggiunto il limite di {{count, number}} risorse API di <planName/>. Aggiorna il piano per soddisfare le esigenze del tuo team. <a>Contattaci</a> per qualsiasi assistenza.',
     resources_other:

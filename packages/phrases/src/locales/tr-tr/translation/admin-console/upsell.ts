@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      '{{count, number}} <planName/> uygulaması sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için ücretli bir plana geçin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+      '<planName/> limitine ulaşılan {{count, number}} başvuru. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
     applications_other:
-      '{{count, number}} <planName/> uygulaması sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için ücretli bir plana geçin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+      '<planName/> limitine ulaşılan {{count, number}} başvurular. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
     machine_to_machine_feature:
-      'Makine-Makine uygulaması oluşturmak için ücretli bir plana geçin ve tüm premium özelliklere erişim sağlayın. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+      'Makine-makine uygulaması oluşturmak ve tüm premium özelliklere erişim sağlamak için ücretli bir plana yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
     machine_to_machine:
-      '{{count, number}} <planName/> makine-makine uygulaması sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için ücretli bir plana geçin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+      '<planName/> limitine ulaşılan {{count, number}} makine-makine başvurusu. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
     machine_to_machine_other:
-      '{{count, number}} <planName/> makine-makine uygulaması sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için ücretli bir plana geçin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+      '<planName/> limitine ulaşılan {{count, number}} makine-makine başvuruları. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
     resources:
       '{{count, number}} <planName/> API kaynağı sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
     resources_other:

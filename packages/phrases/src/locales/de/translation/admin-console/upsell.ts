@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      'Sie haben das Limit von {{count, number}} <planName/>-Anwendungen erreicht. Um den Anforderungen Ihres Teams gerecht zu werden, upgraden Sie auf einen kostenpflichtigen Plan. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>.',
+      '{{count, number}} Anwendung von <planName/> erreicht. Plan upgraden, um den Bedürfnissen Ihres Teams gerecht zu werden. Für Unterstützung können Sie uns gerne <a>kontaktieren</a>.',
     applications_other:
-      'Sie haben das Limit von {{count, number}} <planName/>-Anwendungen erreicht. Um den Anforderungen Ihres Teams gerecht zu werden, upgraden Sie auf einen kostenpflichtigen Plan. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>.',
+      '{{count, number}} Anwendungen von <planName/> erreicht. Plan upgraden, um den Bedürfnissen Ihres Teams gerecht zu werden. Für Unterstützung können Sie uns gerne <a>kontaktieren</a>.',
     machine_to_machine_feature:
-      'Upgraden Sie auf einen kostenpflichtigen Plan, um eine Maschine-zu-Maschine-Anwendung zu erstellen und Zugriff auf alle Premium-Funktionen zu erhalten. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>.',
+      'Upgraden Sie auf einen kostenpflichtigen Tarif, um eine Maschinen-zu-Maschinen-Anwendung zu erstellen und Zugriff auf alle Premium-Funktionen zu erhalten. Für Unterstützung können Sie uns gerne <a>kontaktieren</a>.',
     machine_to_machine:
-      'Sie haben das Limit von {{count, number}} <planName/>-Maschine-zu-Maschine-Anwendungen erreicht. Um den Anforderungen Ihres Teams gerecht zu werden, upgraden Sie auf einen kostenpflichtigen Plan. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>.',
+      '{{count, number}} Maschine-zu-Maschine-Anwendung von <planName/> erreicht. Plan upgraden, um den Bedürfnissen Ihres Teams gerecht zu werden. Für Unterstützung können Sie uns gerne <a>kontaktieren</a>.',
     machine_to_machine_other:
-      'Sie haben das Limit von {{count, number}} <planName/>-Maschine-zu-Maschine-Anwendungen erreicht. Um den Anforderungen Ihres Teams gerecht zu werden, upgraden Sie auf einen kostenpflichtigen Plan. Bei Fragen stehen wir Ihnen gerne zur Verfügung. <a>Kontaktieren Sie uns</a>.',
+      '{{count, number}} Maschine-zu-Maschine-Anwendungen von <planName/> erreicht. Plan upgraden, um den Bedürfnissen Ihres Teams gerecht zu werden. Für Unterstützung können Sie uns gerne <a>kontaktieren</a>.',
     resources:
       'Sie haben das Limit von {{count, number}} <planName/>-API-Ressourcen erreicht. Upgraden Sie Ihren Plan, um den Anforderungen Ihres Teams gerecht zu werden. <a>Kontaktieren Sie uns</a> bei Bedarf.',
     resources_other:

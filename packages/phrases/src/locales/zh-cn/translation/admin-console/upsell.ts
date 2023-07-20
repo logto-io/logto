@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      '已达到<planName/>的{{count, number}}个应用程序限制。为满足您团队的需求，请升级到付费计划。如需任何帮助，请随时<a>联系我们</a>。',
+      '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
     applications_other:
-      '已达到<planName/>的{{count, number}}个应用程序限制。为满足您团队的需求，请升级到付费计划。如需任何帮助，请随时<a>联系我们</a>。',
+      '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
     machine_to_machine_feature:
-      '升级到付费计划以创建机器对机器应用程序，同时获得所有高级功能。如需任何帮助，请随时<a>联系我们</a>。',
+      '升级到付费计划以创建机器对机器应用，并获得所有高级功能的访问权限。如需帮助，请随时<a>联系我们</a>。',
     machine_to_machine:
-      '已达到<planName/>的{{count, number}}个机器对机器应用程序限制。为满足您团队的需求，请升级到付费计划。如需任何帮助，请随时<a>联系我们</a>。',
+      '已达到 <planName/> 的{{count, number}}个机器对机器应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
     machine_to_machine_other:
-      '已达到<planName/>的{{count, number}}个机器对机器应用程序限制。为满足您团队的需求，请升级到付费计划。如需任何帮助，请随时<a>联系我们</a>。',
+      '已达到 <planName/> 的{{count, number}}个机器对机器应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
     resources:
       '已达到<planName/>的{{count, number}}个 API 资源限制。升级计划以满足您团队的需求。<a>联系我们</a>寻求帮助。',
     resources_other:

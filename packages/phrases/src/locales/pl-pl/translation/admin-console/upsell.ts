@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      'Osiągnięto limit {{count, number}} aplikacji w planie <planName/>. Aby sprostać potrzebom twojego zespołu, ulepsz do płatnego planu. W razie potrzeby, skontaktuj się z nami <a>tutaj</a>.',
+      'Osiągnięto limit {{count, number}} aplikacji dla <planName/>. Zaktualizuj plan, aby sprostać potrzebom zespołu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
     applications_other:
-      'Osiągnięto limit {{count, number}} aplikacji w planie <planName/>. Aby sprostać potrzebom twojego zespołu, ulepsz do płatnego planu. W razie potrzeby, skontaktuj się z nami <a>tutaj</a>.',
+      'Osiągnięto limit {{count, number}} aplikacji dla <planName/>. Zaktualizuj plan, aby sprostać potrzebom zespołu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
     machine_to_machine_feature:
-      'Ulepsz do płatnego planu, aby tworzyć aplikacje między maszynami, razem z dostępem do wszystkich funkcji premium. W razie potrzeby, skontaktuj się z nami <a>tutaj</a>.',
+      'Zaktualizuj plan na płatny, aby tworzyć aplikacje maszynowe i uzyskać dostęp do wszystkich funkcji premium. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
     machine_to_machine:
-      'Osiągnięto limit {{count, number}} aplikacji między maszynami w planie <planName/>. Aby sprostać potrzebom twojego zespołu, ulepsz do płatnego planu. W razie potrzeby, skontaktuj się z nami <a>tutaj</a>.',
+      'Osiągnięto limit {{count, number}} aplikacji maszynowych dla <planName/>. Zaktualizuj plan, aby sprostać potrzebom zespołu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
     machine_to_machine_other:
-      'Osiągnięto limit {{count, number}} aplikacji między maszynami w planie <planName/>. Aby sprostać potrzebom twojego zespołu, ulepsz do płatnego planu. W razie potrzeby, skontaktuj się z nami <a>tutaj</a>.',
+      'Osiągnięto limit {{count, number}} aplikacji maszynowych dla <planName/>. Zaktualizuj plan, aby sprostać potrzebom zespołu. W razie potrzeby pomocy, proszę <a>skontaktuj się z nami</a>.',
     resources:
       'Osiągnięto limit {{count, number}} zasobów API w planie <planName/>. Ulepsz plan, aby sprostać potrzebom twojego zespołu. Skontaktuj się z nami <a>tutaj</a>, jeśli potrzebujesz pomocy.',
     resources_other:

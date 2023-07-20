@@ -33,7 +33,6 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
   );
 
   const nonM2mApplicationCount = allApplications ? allApplications.length - m2mAppCount : 0;
-  console.log(nonM2mApplicationCount);
 
   const isM2mAppsOverQuota = isOverQuota({
     quotaKey: 'machineToMachineLimit',

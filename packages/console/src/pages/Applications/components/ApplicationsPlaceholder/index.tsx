@@ -36,7 +36,7 @@ function ApplicationsPlaceholder({ onSelect }: Props) {
             />
             <Button
               className={styles.createButton}
-              title="general.create"
+              title="general.select"
               onClick={() => {
                 onSelect(type);
               }}

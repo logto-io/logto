@@ -26,15 +26,15 @@ const upsell = {
   },
   paywall: {
     applications:
-      '{{count, number}} application of <planName/> limit reached. To meet your team’s needs, upgrade to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+      '{{count, number}} application of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
     applications_other:
-      '{{count, number}} applications of <planName/> limit reached. To meet your team’s needs, upgrade to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+      '{{count, number}} applications of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
     machine_to_machine_feature:
       'Upgrade to a paid plan to create machine-to-machine application, along with access to all the premium features. For any assistance, feel free to <a>contact us</a>.',
     machine_to_machine:
-      '{{count, number}} machine-to-machine application of <planName/> limit reached. To meet your team’s needs, upgrade to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+      '{{count, number}} machine-to-machine application of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
     machine_to_machine_other:
-      '{{count, number}} machine-to-machine applications of <planName/> limit reached. To meet your team’s needs, upgrade to a paid plan. For any assistance, feel free to <a>contact us</a>.',
+      '{{count, number}} machine-to-machine applications of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
     resources:
       '{{count, number}} API resource of <planName/> limit reached. Upgrade plan to meet your team’s needs. <a>Contact us</a> for any assistant.',
     resources_other:
