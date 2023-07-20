@@ -53,7 +53,7 @@ export default function TenantAccess() {
       // Test fetching an access token for the current Tenant ID.
       // If failed, it means the user finishes the first auth, ands still needs to auth again to
       // fetch the full-scoped (with all available tenants) token.
-      if (await trySafe(async () => getAccessToken(indicator))) {
+      if (await trySafe(getAccessToken(indicator))) {
         setCurrentTenantStatus('validated');
       }
       // If failed, it will be treated as a session expired error, and will be handled by the

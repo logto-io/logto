@@ -7,6 +7,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
 import { searchKeys, getCallbackUrl } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { saveRedirect } from '@/utils/storage';
 
 /**
  * The container for all protected routes. It renders `<AppLoading />` when the user is not
@@ -35,6 +36,7 @@ export default function ProtectedRoutes() {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
+      saveRedirect();
       const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
       void signIn(getCallbackUrl(currentTenantId).href, conditional(isSignUpMode && 'signUp'));
     }

@@ -18,7 +18,7 @@ function Welcome() {
   const theme = useTheme();
 
   useEffect(() => {
-    // If Authenticated, navigate to the Admin Console root page. directly
+    // If authenticated, navigate to the console root page directly
     if (isAuthenticated) {
       navigate('/');
     }
