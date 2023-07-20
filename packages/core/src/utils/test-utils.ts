@@ -94,6 +94,7 @@ export const createContextWithRouteParameters = (
 
   return {
     ...ctx,
+    path: ctx.path,
     URL: ctx.URL,
     params: {},
     router: new Router(),
