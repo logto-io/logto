@@ -3,6 +3,7 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
 import { mockResource, mockScope } from '#src/__mocks__/index.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -52,6 +53,7 @@ const libraries = {
         scopes: [],
       })),
   },
+  quota: createMockQuotaLibrary(),
 };
 
 mockEsm('@logto/shared', () => ({

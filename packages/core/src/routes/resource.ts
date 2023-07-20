@@ -6,6 +6,7 @@ import { boolean, object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -76,6 +77,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
   router.post(
     '/resources',
+    koaQuotaGuard({ key: 'resourcesLimit', quota: libraries.quota }),
     koaGuard({
       // Intentionally omit `isDefault` since it'll affect other rows.
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.

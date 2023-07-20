@@ -3,6 +3,7 @@ import { ApplicationType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
@@ -17,30 +18,35 @@ await mockEsmWithActual('@logto/shared', () => ({
   generateStandardId: () => 'randomId',
 }));
 
-const tenantContext = new MockTenant(undefined, {
-  applications: {
-    findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
-    findAllApplications: jest.fn(async () => [mockApplication]),
-    findApplicationById,
-    deleteApplicationById,
-    insertApplication: jest.fn(
-      async (body: CreateApplication): Promise<Application> => ({
-        ...mockApplication,
-        ...body,
-        oidcClientMetadata: {
-          ...mockApplication.oidcClientMetadata,
-          ...body.oidcClientMetadata,
-        },
-      })
-    ),
-    updateApplicationById: jest.fn(
-      async (_, data: Partial<CreateApplication>): Promise<Application> => ({
-        ...mockApplication,
-        ...data,
-      })
-    ),
+const tenantContext = new MockTenant(
+  undefined,
+  {
+    applications: {
+      findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
+      findAllApplications: jest.fn(async () => [mockApplication]),
+      findApplicationById,
+      deleteApplicationById,
+      insertApplication: jest.fn(
+        async (body: CreateApplication): Promise<Application> => ({
+          ...mockApplication,
+          ...body,
+          oidcClientMetadata: {
+            ...mockApplication.oidcClientMetadata,
+            ...body.oidcClientMetadata,
+          },
+        })
+      ),
+      updateApplicationById: jest.fn(
+        async (_, data: Partial<CreateApplication>): Promise<Application> => ({
+          ...mockApplication,
+          ...data,
+        })
+      ),
+    },
   },
-});
+  undefined,
+  { quota: createMockQuotaLibrary() }
+);
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
