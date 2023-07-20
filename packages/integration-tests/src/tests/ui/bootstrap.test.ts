@@ -1,3 +1,4 @@
+import { appendPath } from '@silverhand/essentials';
 import { setDefaultOptions } from 'expect-puppeteer';
 
 import {
@@ -62,8 +63,10 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
 
-  it('can sign in to admin console', async () => {
-    await page.goto(logtoConsoleUrl.href);
+  it('can sign in to admin console again', async () => {
+    const initialHref = appendPath(logtoConsoleUrl, 'console', 'applications').href;
+    // Should be able to redirect back after sign-in
+    await page.goto(initialHref);
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     await expect(page).toFillForm('form', {
       identifier: consoleUsername,
@@ -72,7 +75,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     await expect(page).toClick('button[name=submit]');
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-    expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
+    expect(page.url()).toBe(initialHref);
 
     await expect(page).toClick('div[class$=topbar] > div:last-child');
 
