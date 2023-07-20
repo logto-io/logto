@@ -3,15 +3,16 @@ import {
   type ConnectorResponse,
   type ConnectorFactoryResponse,
 } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { ReservedPlanId } from '@/consts/subscriptions';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { type ConnectorGroup } from '@/types/connector';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
@@ -30,8 +31,9 @@ function Footer({
   isCreateButtonDisabled,
   onClickCreateButton,
 }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
 
   const standardConnectorCount = useMemo(
     () =>
