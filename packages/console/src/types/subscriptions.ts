@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type SubscriptionPlanResponse } from '@/cloud/types/router';
+import { type InvoicesResponse, type SubscriptionPlanResponse } from '@/cloud/types/router';
 
 export enum ReservedPlanName {
   Free = 'Free',
@@ -59,3 +59,5 @@ export const localCheckoutSessionGuard = z.object({
 });
 
 export type LocalCheckoutSession = z.infer<typeof localCheckoutSessionGuard>;
+
+export type InvoiceStatus = InvoicesResponse['invoices'][number]['status'];

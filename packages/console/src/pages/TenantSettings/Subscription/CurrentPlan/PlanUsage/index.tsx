@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan } from '@/types/subscriptions';
+import { formatPeriod } from '@/utils/subscription';
 
 import * as styles from './index.module.scss';
 
@@ -12,12 +13,6 @@ type Props = {
   subscriptionUsage: SubscriptionUsage;
   currentSubscription: Subscription;
   currentPlan: SubscriptionPlan;
-};
-
-const formatPeriod = (start: Date, end: Date) => {
-  const formattedStart = dayjs(start).format('MMM D');
-  const formattedEnd = dayjs(end).format('MMM D');
-  return `${formattedStart} - ${formattedEnd}`;
 };
 
 function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Props) {
@@ -45,7 +40,10 @@ function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Prop
         <DynamicT
           forKey="subscription.plan_cycle"
           interpolation={{
-            period: formatPeriod(currentPeriodStart, currentPeriodEnd),
+            period: formatPeriod({
+              periodStart: currentPeriodStart,
+              periodEnd: currentPeriodEnd,
+            }),
             renewDate: dayjs(currentPeriodEnd).add(1, 'day').format('MMM D, YYYY'),
           }}
         />

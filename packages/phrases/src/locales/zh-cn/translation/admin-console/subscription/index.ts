@@ -35,6 +35,12 @@ const subscription = {
     status_column: '状态',
     amount_column: '金额',
     invoice_created_date_column: '发票创建日期',
+    invoice_status: {
+      void: '已取消',
+      paid: '已支付',
+      open: '未完成',
+      uncollectible: '逾期未付',
+    },
   },
   downgrade_modal: {
     title: '确认要降级吗？',

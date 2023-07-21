@@ -37,6 +37,12 @@ const subscription = {
     status_column: 'Statut',
     amount_column: 'Montant',
     invoice_created_date_column: 'Date de création de la facture',
+    invoice_status: {
+      void: 'Annulée',
+      paid: 'Payée',
+      open: 'Ouverte',
+      uncollectible: 'En souffrance',
+    },
   },
 
   quota_item,

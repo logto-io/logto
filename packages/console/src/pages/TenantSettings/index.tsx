@@ -24,9 +24,14 @@ function TenantSettings() {
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
         {!isProduction && (
-          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
-            <DynamicT forKey="tenants.tabs.subscription" />
-          </TabNavItem>
+          <>
+            <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
+              <DynamicT forKey="tenants.tabs.subscription" />
+            </TabNavItem>
+            <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.BillingHistory}`}>
+              <DynamicT forKey="tenants.tabs.billing_history" />
+            </TabNavItem>
+          </>
         )}
       </TabNav>
       <Outlet />

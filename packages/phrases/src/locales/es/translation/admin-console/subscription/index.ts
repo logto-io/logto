@@ -38,6 +38,12 @@ const subscription = {
     status_column: 'estado',
     amount_column: 'monto',
     invoice_created_date_column: 'Fecha de creación de la factura',
+    invoice_status: {
+      void: 'Cancelada',
+      paid: 'Pagada',
+      open: 'Abierta',
+      uncollectible: 'Vencida',
+    },
   },
   downgrade_modal: {
     title: '¿Está seguro de que desea degradar?',
