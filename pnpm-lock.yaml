@@ -3547,8 +3547,8 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.12.7
-        version: 0.12.7(zod@3.20.2)
+        specifier: ^0.12.8
+        version: 0.12.8(zod@3.20.2)
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -9864,6 +9864,16 @@ packages:
       '@silverhand/essentials': 2.7.0
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
+
+  /@withtyped/server@0.12.8(zod@3.20.2):
+    resolution: {integrity: sha512-fv9feTOKJhtlaoYM/Kbs2gSTcIXlmu4OMUFwGmK5jqdbVNIOkDBIPxtcC5ZEwevWFgOcd5OqBW+FvbjiaF27Fw==}
+    peerDependencies:
+      zod: ^3.19.1
+    dependencies:
+      '@silverhand/essentials': 2.7.0
+      '@withtyped/shared': 0.2.2
+      zod: 3.20.2
+    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
