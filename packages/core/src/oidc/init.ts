@@ -218,7 +218,7 @@ export default function initOidc(
     findAccount: async (_ctx, sub) => {
       // The user may be deleted after the token is issued
       const user = await tryThat(findUserById(sub), () => {
-        throw new errors.InvalidGrant('User not found');
+        throw new errors.InvalidGrant('user not found');
       });
 
       return {

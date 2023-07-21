@@ -72,6 +72,11 @@ describe('admin console user management', () => {
     expect(updatedUser).toMatchObject(newUserData);
   });
 
+  it('should respond 422 when no update data provided', async () => {
+    const user = await createUserByAdmin();
+    await expect(updateUser(user.id, {})).rejects.toMatchObject(createResponseWithCode(422));
+  });
+
   it('should fail when update userinfo with conflict identifiers', async () => {
     const [username, email, phone] = [generateUsername(), generateEmail(), generatePhone()];
     await createUserByAdmin(username, undefined, email, phone);
