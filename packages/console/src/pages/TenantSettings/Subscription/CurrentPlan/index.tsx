@@ -2,12 +2,12 @@ import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router'
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
+import PlanUsage from '@/components/PlanUsage';
 import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import MauLimitExceedNotification from './MauLimitExceededNotification';
 import NextBillInfo from './NextBillInfo';
-import PlanUsage from './PlanUsage';
 import * as styles from './index.module.scss';
 
 type Props = {

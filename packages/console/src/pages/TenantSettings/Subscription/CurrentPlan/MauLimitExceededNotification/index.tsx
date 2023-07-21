@@ -1,5 +1,11 @@
+import { useContext } from 'react';
+
+import { subscriptionPage } from '@/consts/pages';
+import { ReservedPlanId } from '@/consts/subscriptions';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
+import useSubscribe from '@/hooks/use-subscribe';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 type Props = {
@@ -9,11 +15,13 @@ type Props = {
 };
 
 function MauLimitExceededNotification({ activeUsers, currentPlan, className }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
+  const { subscribe } = useSubscribe();
   const {
     quota: { mauLimit },
   } = currentPlan;
   if (
-    !mauLimit || // Unlimited
+    mauLimit === null || // Unlimited
     activeUsers < mauLimit
   ) {
     return null;
@@ -25,7 +33,11 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
       action="subscription.upgrade_pro"
       className={className}
       onClick={() => {
-        // Todo @xiaoyijun Implement buy plan
+        void subscribe({
+          planId: ReservedPlanId.pro,
+          tenantId: currentTenantId,
+          callbackPage: subscriptionPage,
+        });
       }}
     >
       <DynamicT forKey="subscription.overfill_quota_warning" />

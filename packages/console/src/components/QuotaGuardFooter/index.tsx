@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '@/ds-components/Button';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import * as styles from './index.module.scss';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 function QuotaGuardFooter({ children }: Props) {
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   return (
     <div className={styles.container}>
       <div className={styles.description}>{children}</div>

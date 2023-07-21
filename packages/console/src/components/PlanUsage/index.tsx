@@ -28,10 +28,10 @@ function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Prop
     <div className={styles.container}>
       <div className={styles.usage}>
         {`${activeUsers} / `}
-        {mauLimit ? (
-          mauLimit.toLocaleString()
-        ) : (
+        {mauLimit === null ? (
           <DynamicT forKey="subscription.quota_table.unlimited" />
+        ) : (
+          mauLimit.toLocaleString()
         )}
         {' MAU'}
         {usagePercent && `(${(usagePercent * 100).toFixed(2)}%)`}
