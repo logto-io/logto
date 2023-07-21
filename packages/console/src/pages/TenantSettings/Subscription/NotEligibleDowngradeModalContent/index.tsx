@@ -1,6 +1,7 @@
 import { conditional } from '@silverhand/essentials';
 import { Trans, useTranslation } from 'react-i18next';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import {
   quotaItemLimitedPhrasesMap,
@@ -78,6 +79,13 @@ function NotEligibleDowngradeModalContent({ targetPlan }: Props) {
           );
         })}
       </ul>
+      <Trans
+        components={{
+          a: <ContactUsPhraseLink />,
+        }}
+      >
+        {t('subscription.downgrade_modal.help_tip')}
+      </Trans>
     </div>
   );
 }
