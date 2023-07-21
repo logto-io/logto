@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Fatura ödemesi gecikti',
     notification:
-      'Ups! Kiracı {{name}} faturasının ödemesi son döngüde başarısız oldu. Logto hizmetinin askıya alınmasını önlemek için faturayı hemen ödeyin.',
-    unpaid_bills_last_cycle: 'Son döngüde ödenmemiş faturalar',
+      'Oops! Kiracı <span>{{name}}</span> faturasının ödemesi başarısız oldu. Logto hizmetinin askıya alınmaması için faturayı zamanında ödeyin.',
+    unpaid_bills: 'Ödenmemiş faturalar',
     update_payment: 'Ödemeyi Güncelle',
   },
 };

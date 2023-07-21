@@ -23,6 +23,7 @@ const subscription = {
   overfill_quota_warning:
     'クォータ制限に到達しました。問題を防ぐために、プランをアップグレードしてください。',
   upgrade_pro: 'プロプランにアップグレード',
+  update_payment: '支払いを更新する',
   payment_error:
     // eslint-disable-next-line no-template-curly-in-string
     '支払いに問題が発生しました。前回のサイクルで ${{price, number}} を処理できませんでした。Logtoのサービス停止を回避するために支払いを更新してください。',

@@ -23,6 +23,7 @@ const subscription = {
   overfill_quota_warning:
     'Osiągnąłeś limit swojej puli. Aby uniknąć problemów, zaktualizuj swój plan.',
   upgrade_pro: 'Uaktualnij do Pro',
+  update_payment: 'Zaktualizuj płatność',
   payment_error:
     // eslint-disable-next-line no-template-curly-in-string
     'Wykryto problem z płatnością. Nie można przetworzyć ${{price, number}} za poprzedni cykl. Zaktualizuj płatność, aby uniknąć zawieszenia usługi Logto.',

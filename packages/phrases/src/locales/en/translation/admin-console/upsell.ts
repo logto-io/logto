@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Bill payment overdue',
     notification:
-      'Oops! Payment for tenant {{name}} bill failed last cycle. Please pay the bill promptly to avoid suspension of Logto service.',
-    unpaid_bills_last_cycle: 'Unpaid bills last cycle',
+      'Oops! Payment for tenant <span>{{name}}</span> bill failed. Please pay the bill promptly to avoid suspension of Logto service.',
+    unpaid_bills: 'Unpaid bills',
     update_payment: 'Update Payment',
   },
 };

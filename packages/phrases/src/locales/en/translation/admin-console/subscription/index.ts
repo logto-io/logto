@@ -22,6 +22,7 @@ const subscription = {
   overfill_quota_warning:
     'You have reached your quota limit. To prevent any issues, upgrade the plan.',
   upgrade_pro: 'Upgrade Pro',
+  update_payment: 'Update payment',
   payment_error:
     // eslint-disable-next-line no-template-curly-in-string
     'Payment issue detected. Unable to process ${{price, number}} for previous cycle. Update payment to avoid Logto service suspension.',

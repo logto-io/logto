@@ -1,4 +1,5 @@
 import { type SubscriptionUsage, type Subscription } from '@/cloud/types/router';
+import BillInfo from '@/components/BillInfo';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
@@ -7,7 +8,7 @@ import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import MauLimitExceedNotification from './MauLimitExceededNotification';
-import NextBillInfo from './NextBillInfo';
+import PaymentOverdueNotification from './PaymentOverdueNotification';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -37,13 +38,17 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         />
       </FormField>
       <FormField title="subscription.next_bill">
-        <NextBillInfo cost={subscriptionUsage.cost} />
+        <BillInfo
+          cost={subscriptionUsage.cost}
+          isManagePaymentVisible={Boolean(subscriptionUsage.cost)}
+        />
       </FormField>
       <MauLimitExceedNotification
         activeUsers={subscriptionUsage.activeUsers}
         currentPlan={subscriptionPlan}
         className={styles.notification}
       />
+      <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
   );
 }

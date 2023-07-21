@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Pagamento della fattura in ritardo',
     notification:
-      "Oops! Il pagamento della fattura del tenant {{name}} è fallito l'ultimo ciclo. Effettua il pagamento della fattura tempestivamente per evitare la sospensione del servizio Logto.",
-    unpaid_bills_last_cycle: "Fatture non pagate l'ultimo ciclo",
+      "Oops! Il pagamento della fattura dell'affittuario <span>{{name}}</span> è fallito. Si prega di pagare tempestivamente la fattura per evitare la sospensione del servizio Logto.",
+    unpaid_bills: 'Fatture non pagate',
     update_payment: 'Aggiorna pagamento',
   },
 };

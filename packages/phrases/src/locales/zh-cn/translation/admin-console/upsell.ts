@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: '账单逾期未付',
     notification:
-      '糟糕！上一周期租户 {{name}} 的账单支付失败。请立即支付账单，以避免 Logto 服务的暂停。',
-    unpaid_bills_last_cycle: '上一周期未支付账单',
+      '糟糕！租户<span>{{name}}</span>的账单支付失败。请尽快支付账单，以避免Logto服务中止。',
+    unpaid_bills: '未付账单',
     update_payment: '更新支付',
   },
 };

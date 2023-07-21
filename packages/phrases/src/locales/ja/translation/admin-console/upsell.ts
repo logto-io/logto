@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: '請求書の支払いが期限切れです',
     notification:
-      'おっと！テナント{{name}}の請求書の支払いが前回のサイクルで失敗しました。サービスの停止を回避するために、迅速に請求書をお支払いください。',
-    unpaid_bills_last_cycle: '前回のサイクルの未払い請求書',
+      'おっと！テナント<span>{{name}}</span>の請求書の支払いが失敗しました。Logtoサービスの停止を避けるために、すみやかに請求書をお支払いください。',
+    unpaid_bills: '未払いの請求書',
     update_payment: '支払いを更新',
   },
 };

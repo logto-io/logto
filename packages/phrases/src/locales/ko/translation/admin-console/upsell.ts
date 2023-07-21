@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: '청구서 지불 연체',
     notification:
-      '이런! 지난 사이클에 테넌트 {{name}}의 청구서 지불이 실패했습니다. 로그토 서비스 중단을 피하기 위해 청구서를 신속히 지불하세요.',
-    unpaid_bills_last_cycle: '지난 사이클 미납 청구서',
+      '이런! 테넌트 <span>{{name}}</span>의 청구서 결제에 실패했습니다. Logto 서비스 중단을 피하기 위해 즉시 청구서를 지불하십시오.',
+    unpaid_bills: '미납 청구서',
     update_payment: '지불 업데이트',
   },
 };

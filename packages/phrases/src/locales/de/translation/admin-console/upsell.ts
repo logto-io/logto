@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Zahlungsrückstand für Rechnung',
     notification:
-      'Hoppla! Die Zahlung für die Rechnung des Tenants {{name}} ist im letzten Abrechnungszeitraum fehlgeschlagen. Bitte zahlen Sie die Rechnung umgehend, um die Aussetzung des Logto-Dienstes zu vermeiden.',
-    unpaid_bills_last_cycle: 'Unbezahlte Rechnungen im letzten Abrechnungszeitraum',
+      'Hoppla! Die Zahlung für die Rechnung des Mieters <span>{{name}}</span> ist fehlgeschlagen. Bitte zahlen Sie die Rechnung umgehend, um eine Sperrung des Logto-Dienstes zu vermeiden.',
+    unpaid_bills: 'Ausstehende Rechnungen',
     update_payment: 'Zahlung aktualisieren',
   },
 };
