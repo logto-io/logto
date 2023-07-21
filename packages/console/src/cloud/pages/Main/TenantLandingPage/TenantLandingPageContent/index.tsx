@@ -1,11 +1,11 @@
 import { Theme } from '@logto/schemas';
-import type { TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useContext, useState } from 'react';
 
 import Plus from '@/assets/icons/plus.svg';
 import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
+import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';

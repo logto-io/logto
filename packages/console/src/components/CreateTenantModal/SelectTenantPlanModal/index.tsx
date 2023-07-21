@@ -1,9 +1,9 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';

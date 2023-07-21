@@ -1,11 +1,13 @@
 import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
-import { type TenantInfo, TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
+import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
+import { ReservedPlanId } from '@/consts/subscriptions';
 
 /**
  * The routes don't start with a tenant ID.
@@ -65,7 +67,13 @@ const { tenantId, indicator } = defaultManagementApi.resource;
  */
 const initialTenants = Object.freeze(
   conditionalArray(
-    !isCloud && { id: tenantId, name: `tenant_${tenantId}`, tag: TenantTag.Development, indicator }
+    !isCloud && {
+      id: tenantId,
+      name: `tenant_${tenantId}`,
+      tag: TenantTag.Development,
+      indicator,
+      planId: `${ReservedPlanId.free}`, // `planId` is string type.
+    }
   )
 );
 

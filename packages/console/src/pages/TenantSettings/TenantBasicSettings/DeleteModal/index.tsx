@@ -1,7 +1,7 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
+import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
 import { contactEmailLink } from '@/consts';
 import { tenantTagMap } from '@/containers/AppContent/components/Topbar/TenantSelector/TenantEnvTag';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
