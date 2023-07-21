@@ -1,5 +1,5 @@
 import { type Application, ApplicationType } from '@logto/schemas';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -8,8 +8,9 @@ import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { isProduction } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
@@ -19,8 +20,9 @@ type Props = {
 };
 
 function Footer({ selectedType, isLoading, onClickCreate }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
-  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   /**
    * Todo: @xiaoyijun remove this condition on subscription features ready.
    */

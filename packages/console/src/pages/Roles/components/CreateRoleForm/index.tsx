@@ -1,6 +1,7 @@
 import type { Role, ScopeResponse } from '@logto/schemas';
 import { internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -8,13 +9,14 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
@@ -32,8 +34,9 @@ type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
 };
 
 function CreateRoleForm({ totalRoleCount, onClose }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const {
     control,
     handleSubmit,

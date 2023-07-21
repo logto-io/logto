@@ -1,5 +1,6 @@
 import { noSpaceRegEx } from '@logto/core-kit';
 import type { Scope } from '@logto/schemas';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -7,12 +8,13 @@ import ReactModal from 'react-modal';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
@@ -26,8 +28,9 @@ type Props = {
 type CreatePermissionFormData = Pick<Scope, 'name' | 'description'>;
 
 function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const {
     handleSubmit,
     register,

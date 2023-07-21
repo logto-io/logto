@@ -1,9 +1,11 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { useContext } from 'react';
 
 import PageMeta from '@/components/PageMeta';
-import useCurrentSubscription from '@/hooks/use-current-subscription';
-import useCurrentSubscriptionUsage from '@/hooks/use-current-subscription-usage';
+import { TenantsContext } from '@/contexts/TenantsProvider';
+import useSubscription from '@/hooks/use-subscription';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
+import useSubscriptionUsage from '@/hooks/use-subscription-usage';
 
 import Skeleton from '../components/Skeleton';
 
@@ -13,14 +15,15 @@ import SwitchPlanActionBar from './SwitchPlanActionBar';
 import * as styles from './index.module.scss';
 
 function Subscription() {
+  const { currentTenantId } = useContext(TenantsContext);
   const { data: subscriptionPlans, error: fetchPlansError } = useSubscriptionPlans();
   const {
     data: currentSubscription,
     error: fetchSubscriptionError,
     mutate: mutateSubscription,
-  } = useCurrentSubscription();
+  } = useSubscription(currentTenantId);
   const { data: subscriptionUsage, error: fetchSubscriptionUsageError } =
-    useCurrentSubscriptionUsage();
+    useSubscriptionUsage(currentTenantId);
 
   const isLoadingPlans = !subscriptionPlans && !fetchPlansError;
   const isLoadingSubscription = !currentSubscription && !fetchSubscriptionError;

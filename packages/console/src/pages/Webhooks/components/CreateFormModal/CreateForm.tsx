@@ -1,14 +1,16 @@
 import { type Hook, type CreateHook, type HookEvent, type HookConfig } from '@logto/schemas';
+import { useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
@@ -28,7 +30,8 @@ type CreateHookPayload = Pick<CreateHook, 'name'> & {
 };
 
 function CreateForm({ totalWebhookCount, onClose }: Props) {
-  const { data: currentPlan } = useCurrentSubscriptionPlan();
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const shouldBlockCreation = hasReachedQuotaLimit({

@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
@@ -6,12 +7,13 @@ import PageMeta from '@/components/PageMeta';
 import ProTag from '@/components/ProTag';
 import { contactEmailLink } from '@/consts';
 import { isProduction } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
-import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Skeleton from '../components/Skeleton';
@@ -22,8 +24,9 @@ import DefaultDomain from './DefaultDomain';
 import * as styles from './index.module.scss';
 
 function TenantDomainSettings() {
+  const { currentTenantId } = useContext(TenantsContext);
   const { data: customDomain, isLoading: isLoadingCustomDomain, mutate } = useCustomDomain(true);
-  const { data: currentPlan, error: fetchCurrentPlanError } = useCurrentSubscriptionPlan();
+  const { data: currentPlan, error: fetchCurrentPlanError } = useSubscriptionPlan(currentTenantId);
   const isLoadingCurrentPlan = !currentPlan && !fetchCurrentPlanError;
   const { getDocumentationUrl } = useDocumentationUrl();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
