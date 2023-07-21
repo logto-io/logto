@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
-import Tick from '@/assets/icons/tick.svg';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
-import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
+import Dropdown from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import TenantDropdownItem from './TenantDropdownItem';
 import TenantEnvTag from './TenantEnvTag';
 import * as styles from './index.module.scss';
 
@@ -70,21 +70,16 @@ export default function TenantSelector() {
         }}
       >
         <OverlayScrollbar className={styles.scrollableContent}>
-          {tenants.map(({ id, name, tag }) => (
-            <DropdownItem
-              key={id}
-              className={styles.dropdownItem}
+          {tenants.map((tenantData) => (
+            <TenantDropdownItem
+              key={tenantData.id}
+              tenantData={tenantData}
+              isSelected={tenantData.id === currentTenantId}
               onClick={() => {
-                navigateTenant(id);
+                navigateTenant(tenantData.id);
                 setShowDropdown(false);
               }}
-            >
-              <div className={styles.dropdownName}>{name}</div>
-              <TenantEnvTag className={styles.dropdownTag} tag={tag} />
-              <Tick
-                className={classNames(styles.checkIcon, id === currentTenantId && styles.visible)}
-              />
-            </DropdownItem>
+            />
           ))}
         </OverlayScrollbar>
         <Divider />

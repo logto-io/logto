@@ -71,46 +71,6 @@ $dropdown-item-height: 40px;
   }
 }
 
-.dropdownItem {
-  display: flex;
-  align-items: center;
-  padding: _.unit(2.5) _.unit(3) _.unit(2.5) _.unit(4);
-  margin: _.unit(1);
-  border-radius: 6px;
-  transition: background-color 0.2s ease-in-out;
-
-  &:hover {
-    background: var(--color-hover);
-  }
-
-  &:not(:disabled) {
-    cursor: pointer;
-  }
-
-  .dropdownName {
-    font: var(--font-body-2);
-    margin-right: _.unit(2);
-    @include _.text-ellipsis;
-  }
-
-  .dropdownTag {
-    font: var(--font-body-3);
-    margin-right: _.unit(4);
-  }
-
-  .checkIcon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    color: transparent;
-    margin-left: auto;
-
-    &.visible {
-      color: var(--color-primary-40);
-    }
-  }
-}
-
 .createTenantButton {
   all: unset;
   /**

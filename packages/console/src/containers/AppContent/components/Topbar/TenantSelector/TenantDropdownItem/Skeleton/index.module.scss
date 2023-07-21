@@ -1,0 +1,8 @@
+@use '@/scss/underscore' as _;
+
+.skeleton {
+  @include _.shimmering-animation;
+  width: 48px;
+  height: 16px;
+  border-radius: 6px;
+}
