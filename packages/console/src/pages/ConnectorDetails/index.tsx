@@ -5,7 +5,7 @@ import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -30,6 +30,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorApi from '@/hooks/use-connector-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import ConnectorContent from './ConnectorContent';
 import ConnectorTabs from './ConnectorTabs';
@@ -73,7 +74,7 @@ function ConnectorDetails() {
     (!data && !error) || (data?.isStandard && !connectorFactory && !fetchConnectorFactoryError);
 
   const api = useApi();
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const isSocial = data?.type === ConnectorType.Social;
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);

@@ -2,7 +2,7 @@ import { withAppInsights } from '@logto/app-insights/react';
 import type { RoleResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -17,6 +17,7 @@ import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import AssignedUsers from './components/AssignedUsers';
@@ -31,9 +32,9 @@ const pageSize = defaultPageSize;
 
 function Roles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { pathname, search } = useLocation();
-  const navigate = useNavigate();
-  const isOnCreatePage = pathname === createRolePathname;
+  const { search } = useLocation();
+  const { navigate, match } = useTenantPathname();
+  const isCreating = match(createRolePathname);
   const { getDocumentationUrl } = useDocumentationUrl();
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
@@ -145,7 +146,7 @@ function Roles() {
         onRetry: async () => mutate(undefined, true),
       }}
       widgets={
-        isOnCreatePage &&
+        isCreating &&
         totalCount !== undefined && (
           <CreateRoleModal
             totalRoleCount={totalCount}

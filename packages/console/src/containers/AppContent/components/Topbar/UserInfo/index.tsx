@@ -4,7 +4,6 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import Globe from '@/assets/icons/globe.svg';
 import Palette from '@/assets/icons/palette.svg';
@@ -18,6 +17,7 @@ import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import Spacer from '@/ds-components/Spacer';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import useCurrentUser from '@/hooks/use-current-user';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { DynamicAppearanceMode } from '@/types/appearance-mode';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -28,7 +28,7 @@ import * as styles from './index.module.scss';
 
 function UserInfo() {
   const { signOut } = useLogto();
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { user, isLoading: isLoadingUser } = useCurrentUser();
   const anchorRef = useRef<HTMLDivElement>(null);

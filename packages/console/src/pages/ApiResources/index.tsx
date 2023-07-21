@@ -4,7 +4,7 @@ import { Theme } from '@logto/schemas';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
@@ -18,6 +18,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { buildUrl } from '@/utils/url';
@@ -32,8 +33,7 @@ const buildDetailsPathname = (id: string) =>
   `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
 function ApiResources() {
-  const { pathname, search } = useLocation();
-  const isCreateNew = pathname.endsWith('/create');
+  const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -48,11 +48,12 @@ function ApiResources() {
   const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(url);
 
   const isLoading = !data && !error;
-  const navigate = useNavigate();
+  const { navigate, match } = useTenantPathname();
   const theme = useTheme();
   const [apiResources, totalCount] = data ?? [];
 
   const ResourceIcon = theme === Theme.Light ? ApiResource : ApiResourceDark;
+  const isCreating = match(createApiResourcePathname);
 
   return (
     <ListPage
@@ -113,7 +114,7 @@ function ApiResources() {
       widgets={
         <Modal
           shouldCloseOnEsc
-          isOpen={isCreateNew}
+          isOpen={isCreating}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
           onRequestClose={() => {

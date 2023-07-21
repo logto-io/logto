@@ -2,7 +2,7 @@ import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
 import ArrowConnection from '@/assets/icons/arrow-connection.svg';
@@ -12,6 +12,7 @@ import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentUser from '@/hooks/use-current-user';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { handleError, parseLocationState } from '../../utils';
@@ -29,7 +30,7 @@ const getTimeout = () => {
 
 function VerificationCodeModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { show: showModal } = useConfirmModal();
   const { state } = useLocation();
   const { reload } = useCurrentUser();

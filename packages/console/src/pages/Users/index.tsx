@@ -2,7 +2,7 @@ import { withAppInsights } from '@logto/app-insights/react';
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -20,6 +20,7 @@ import Search from '@/ds-components/Search';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
@@ -33,8 +34,7 @@ const createUserPathname = `${usersPathname}/create`;
 const buildDetailsPathname = (id: string) => `${usersPathname}/${id}/${UserDetailsTabs.Settings}`;
 
 function Users() {
-  const { pathname, search } = useLocation();
-  const isCreateNew = pathname === createUserPathname;
+  const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
@@ -50,8 +50,9 @@ function Users() {
 
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(url);
   const isLoading = !data && !error;
-  const navigate = useNavigate();
+  const { navigate, match } = useTenantPathname();
   const [users, totalCount] = data ?? [];
+  const isCreating = match(createUserPathname);
 
   return (
     <ListPage
@@ -157,7 +158,7 @@ function Users() {
         onRetry: async () => mutate(undefined, true),
       }}
       widgets={
-        isCreateNew && (
+        isCreating && (
           <CreateForm
             onClose={() => {
               navigate({

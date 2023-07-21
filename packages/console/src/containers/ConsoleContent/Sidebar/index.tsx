@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
 
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 
 import Item from './components/Item';
 import Section from './components/Section';
@@ -13,8 +13,8 @@ function Sidebar() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tab_sections',
   });
-  const location = useLocation();
   const { sections } = useSidebarMenuItems();
+  const { match } = useMatchTenantPath();
 
   return (
     <OverlayScrollbar className={styles.sidebar}>
@@ -27,7 +27,7 @@ function Sidebar() {
                   key={title}
                   titleKey={title}
                   icon={<Icon />}
-                  isActive={location.pathname.startsWith(getPath(title))}
+                  isActive={match(getPath(title))}
                   modal={modal}
                   externalLink={externalLink}
                 />

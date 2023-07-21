@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './TabNavItem.module.scss';
@@ -26,14 +27,14 @@ type Props =
 
 function TabNavItem({ children, href, isActive, errorCount = 0, onClick }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const location = useLocation();
-  const selected = href ? location.pathname === href : isActive;
+  const { match, getTo } = useMatchTenantPath();
+  const selected = href ? match(href) : isActive;
 
   return (
     <div className={styles.item}>
       <div className={classNames(styles.link, selected && styles.selected)}>
         {href ? (
-          <Link to={href}>{children}</Link>
+          <Link to={getTo(href)}>{children}</Link>
         ) : (
           // eslint-disable-next-line jsx-a11y/anchor-is-valid
           <a role="tab" tabIndex={0} onKeyDown={onKeyDownHandler(onClick)} onClick={onClick}>

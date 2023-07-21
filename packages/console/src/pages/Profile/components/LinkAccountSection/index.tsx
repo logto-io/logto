@@ -7,16 +7,16 @@ import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import MailIcon from '@/assets/icons/mail.svg';
 import FormCard from '@/components/FormCard';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
-import { adminTenantEndpoint, getBasename, meApi, storageKeys } from '@/consts';
+import { adminTenantEndpoint, meApi, storageKeys } from '@/consts';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
 import { popupWindow } from '../../utils';
@@ -34,7 +34,7 @@ type Props = {
 
 function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate, getUrl } = useTenantPathname();
   const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
@@ -96,10 +96,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
               name: 'profile.link',
               handler: async () => {
                 const authUri = await getSocialAuthorizationUri(id);
-                const callback = new URL(
-                  `${getBasename()}/handle-social`,
-                  window.location.origin
-                ).toString();
+                const callback = getUrl('handle-social').href;
 
                 const queries = new URLSearchParams({
                   redirectTo: authUri,

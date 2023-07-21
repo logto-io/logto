@@ -5,8 +5,9 @@ import ky from 'ky';
 import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useHref } from 'react-router-dom';
 
-import { getBasename, requestTimeout } from '@/consts';
+import { requestTimeout } from '@/consts';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
@@ -31,13 +32,15 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
   const { isAuthenticated, getAccessToken, signOut } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
+  const href = useHref('/');
 
   const toastError = useCallback(
     async (response: Response) => {
       const fallbackErrorMessage = t('errors.unknown_server_error');
 
       try {
-        const data = await response.json<RequestErrorBody>();
+        // Clone the response to avoid "Response body is already used".
+        const data = await response.clone().json<RequestErrorBody>();
 
         // Inform and redirect un-authorized users to sign in page.
         if (data.code === 'auth.forbidden') {
@@ -47,8 +50,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
             cancelButtonText: 'general.got_it',
           });
 
-          await signOut(new URL(getBasename(), window.location.origin).toString());
-
+          await signOut(href);
           return;
         }
 
@@ -57,7 +59,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
         toast.error(fallbackErrorMessage);
       }
     },
-    [show, signOut, t]
+    [show, signOut, t, href]
   );
 
   const api = useMemo(

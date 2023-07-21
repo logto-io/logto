@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Failed from '@/assets/icons/failed.svg';
 import Success from '@/assets/icons/success.svg';
 import { logEventTitle } from '@/consts/logs';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import * as styles from './index.module.scss';
 
@@ -15,6 +16,7 @@ type Props = {
 
 function EventName({ eventKey, isSuccess, to }: Props) {
   const title = logEventTitle[eventKey] ?? eventKey;
+  const { getTo } = useTenantPathname();
 
   return (
     <div className={styles.eventName}>
@@ -24,7 +26,7 @@ function EventName({ eventKey, isSuccess, to }: Props) {
       {to && (
         <Link
           className={styles.title}
-          to={to}
+          to={getTo(to)}
           onClick={(event) => {
             event.stopPropagation();
           }}

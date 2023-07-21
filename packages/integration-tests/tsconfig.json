@@ -10,7 +10,7 @@
         "src/*"
       ]
     },
-    "types": ["jest", "jest-puppeteer"],
+    "types": ["jest", "jest-puppeteer", "expect-puppeteer"],
   },
   "include": ["src"]
 }

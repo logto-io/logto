@@ -3,6 +3,7 @@ import { type TenantInfo } from '@logto/schemas/lib/models/tenants.js';
 import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useSWRConfig } from 'swr';
 
 import AppLoading from '@/components/AppLoading';
 // Used in the docs
@@ -47,6 +48,19 @@ export default function TenantAccess() {
   const { currentTenant, currentTenantId, currentTenantStatus, setCurrentTenantStatus } =
     useContext(TenantsContext);
   const { updateIfNeeded } = useUserDefaultTenantId();
+  const { mutate } = useSWRConfig();
+
+  // Clean the cache when the current tenant ID changes. This is required because the
+  // SWR cache key is not tenant-aware.
+  useEffect(() => {
+    /**
+     * The official cache clean method, see {@link https://github.com/vercel/swr/issues/1887#issuecomment-1171269211 | this comment}.
+     *
+     * We need to exclude the `me` key because it's not tenant-aware. If don't, we
+     * need to manually revalidate the `me` key to make console work again.
+     */
+    void mutate((key) => key !== 'me', undefined, false);
+  }, [mutate, currentTenantId]);
 
   useEffect(() => {
     const validate = async ({ indicator }: TenantInfo) => {

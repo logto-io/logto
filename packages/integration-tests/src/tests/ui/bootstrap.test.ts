@@ -1,5 +1,4 @@
 import { appendPath } from '@silverhand/essentials';
-import { setDefaultOptions } from 'expect-puppeteer';
 
 import {
   consolePassword,
@@ -15,7 +14,6 @@ import { appendPathname } from '#src/utils.js';
 // Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
 // for convenient expect methods
 describe('smoke testing for console admin account creation and sign-in', () => {
-  setDefaultOptions({ timeout: 2000 });
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
 
   it('can open with app element and navigate to welcome page', async () => {

@@ -2,7 +2,6 @@ import { withAppInsights } from '@logto/app-insights/react';
 import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import useSWRImmutable from 'swr/immutable';
 
 import FormCard from '@/components/FormCard';
@@ -15,6 +14,7 @@ import type { RequestError } from '@/hooks/use-api';
 import { useStaticApi } from '@/hooks/use-api';
 import useCurrentUser from '@/hooks/use-current-user';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
@@ -28,7 +28,7 @@ import * as styles from './index.module.scss';
 
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
   const fetcher = useSwrFetcher<ConnectorResponse[]>(api);
   const { data: connectors, error: fetchConnectorsError } = useSWRImmutable<

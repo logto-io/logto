@@ -1,4 +1,4 @@
-import { defaultTenantId, ossConsolePath } from '@logto/schemas';
+import { ossConsolePath } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 
 import { adminEndpoint, isCloud } from './env';
@@ -17,22 +17,6 @@ const getAdminTenantEndpoint = () => {
 export const adminTenantEndpoint = getAdminTenantEndpoint();
 
 export const mainTitle = isCloud ? 'Logto Cloud' : 'Logto Console';
-
-export const getUserTenantId = () => {
-  if (isCloud) {
-    const segment = window.location.pathname.split('/')[1];
-
-    if (!segment || segment === 'callback' || segment.endsWith('-callback')) {
-      return '';
-    }
-
-    return segment;
-  }
-
-  return defaultTenantId;
-};
-
-export const getBasename = () => (isCloud ? '/' + getUserTenantId() : ossConsolePath);
 
 export const getCallbackUrl = (tenantId?: string) =>
   new URL(

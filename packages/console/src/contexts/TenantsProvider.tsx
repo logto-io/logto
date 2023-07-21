@@ -1,11 +1,11 @@
-import { defaultManagementApi } from '@logto/schemas';
+import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
 import { type TenantInfo, TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
+import { useMatch, useNavigate } from 'react-router-dom';
 
 import { isCloud } from '@/consts/env';
-import { getUserTenantId } from '@/consts/tenants';
 
 /**
  * The current tenant status of access validation. When it's `validated`, it indicates that a
@@ -26,11 +26,7 @@ type Tenants = {
   removeTenant: (tenantId: string) => void;
   /** Update a tenant by ID if it exists in the current tenants data. */
   updateTenant: (tenantId: string, data: Partial<TenantInfo>) => void;
-  /**
-   * The current tenant ID that the URL is pointing to. It is navigated programmatically
-   * since there's [no easy way](https://stackoverflow.com/questions/34999976/detect-changes-on-the-url)
-   * to listen to the URL change without polling.
-   */
+  /** The current tenant ID parsed from the URL. */
   currentTenantId: string;
   currentTenant?: TenantInfo;
   /**
@@ -87,19 +83,22 @@ function TenantsProvider({ children }: Props) {
   const [tenants, setTenants] = useState(initialTenants);
   /** @see {@link initialTenants} */
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
-  const [currentTenantId, setCurrentTenantId] = useState(getUserTenantId());
+  const matched = useMatch('/:tenantId/*');
+  const navigate = useNavigate();
+  const currentTenantId = useMemo(
+    () => (isCloud ? matched?.params.tenantId ?? '' : defaultTenantId),
+    [matched]
+  );
   const [currentTenantStatus, setCurrentTenantStatus] = useState<CurrentTenantStatus>('pending');
 
-  const navigateTenant = useCallback((tenantId: string) => {
-    // Use `window.open()` to force page reload since we use `basename` for the router
-    // which will not re-create the router instance when the URL changes.
-    window.open(`/${tenantId}`, '_self');
-    setCurrentTenantStatus('pending');
-    // Temporarily disable the current tenant ID change since it will cause some providers
-    // to re-initialize and re-fetch the data, which is unexpected for now.
-    // This will be fixed once we merge all routers into one.
-    // setCurrentTenantId(tenantId);
-  }, []);
+  const navigateTenant = useCallback(
+    (tenantId: string) => {
+      navigate(`/${tenantId}`);
+
+      setCurrentTenantStatus('pending');
+    },
+    [navigate]
+  );
 
   const currentTenant = useMemo(
     () => tenants.find((tenant) => tenant.id === currentTenantId),

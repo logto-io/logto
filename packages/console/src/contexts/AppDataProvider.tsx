@@ -24,6 +24,7 @@ export const AppDataContext = createContext<AppData>({});
 /** The context provider for the global app data. */
 function AppDataProvider({ children }: Props) {
   const [userEndpoint, setUserEndpoint] = useState<URL>();
+  const [isLoading, setIsLoading] = useState(false);
   const { currentTenantId } = useContext(TenantsContext);
   const memorizedContext = useMemo(
     () =>
@@ -35,18 +36,19 @@ function AppDataProvider({ children }: Props) {
 
   useEffect(() => {
     const getEndpoint = async () => {
-      if (!currentTenantId) {
-        return;
-      }
-
+      setIsLoading(true);
       const { user } = await ky
         .get(new URL(`api/.well-known/endpoints/${currentTenantId}`, adminTenantEndpoint))
         .json<{ user: string }>();
       setUserEndpoint(new URL(user));
     };
 
+    if (!currentTenantId || isLoading || userEndpoint) {
+      return;
+    }
+
     void getEndpoint();
-  }, [currentTenantId]);
+  }, [currentTenantId, isLoading, userEndpoint]);
 
   return <AppDataContext.Provider value={memorizedContext}>{children}</AppDataContext.Provider>;
 }

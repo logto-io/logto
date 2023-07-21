@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import ArrowConnection from '@/assets/icons/arrow-connection.svg';
 import PasswordHideIcon from '@/assets/icons/password-hide.svg';
@@ -12,6 +12,7 @@ import IconButton from '@/ds-components/IconButton';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import { useStaticApi } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { handleError, parseLocationState } from '../../utils';
@@ -24,7 +25,7 @@ type FormFields = {
 
 function VerifyPasswordModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { state } = useLocation();
   const {
     register,

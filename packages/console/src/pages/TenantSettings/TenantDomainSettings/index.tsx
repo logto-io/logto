@@ -1,6 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
@@ -13,6 +12,7 @@ import TextLink from '@/ds-components/TextLink';
 import useCurrentSubscriptionPlan from '@/hooks/use-current-subscription-plan';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import Skeleton from '../components/Skeleton';
 
@@ -27,7 +27,7 @@ function TenantDomainSettings() {
   const isLoadingCurrentPlan = !currentPlan && !fetchCurrentPlanError;
   const { getDocumentationUrl } = useDocumentationUrl();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
 
   if (isLoadingCustomDomain || isLoadingCurrentPlan) {
     return <Skeleton />;

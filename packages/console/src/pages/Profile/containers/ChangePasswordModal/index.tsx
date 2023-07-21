@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import ClearInput from '@/assets/icons/clear-input.svg';
 import { adminTenantEndpoint, meApi } from '@/consts';
@@ -14,6 +13,7 @@ import IconButton from '@/ds-components/IconButton';
 import TextInput from '@/ds-components/TextInput';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import MainFlowLikeModal from '../../components/MainFlowLikeModal';
 import { handleError } from '../../utils';
@@ -32,7 +32,7 @@ const defaultValues: FormFields = {
 
 function ChangePasswordModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { show: showModal } = useConfirmModal();
   const {
     watch,

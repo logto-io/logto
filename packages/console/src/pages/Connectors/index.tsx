@@ -5,7 +5,7 @@ import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -22,6 +22,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useConnectorApi from '@/hooks/use-connector-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
 
 import ConnectorDeleteButton from './ConnectorDeleteButton';
@@ -61,7 +62,7 @@ const parseToConnectorType = (value?: string): ConnectorType | undefined =>
 function Connectors() {
   const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();

@@ -1,7 +1,6 @@
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import ConnectorLogo from '@/components/ConnectorLogo';
 import ItemPreview from '@/components/ItemPreview';
@@ -13,6 +12,7 @@ import {
 } from '@/consts/connectors';
 import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import type { ConnectorGroup } from '@/types/connector';
 
@@ -28,7 +28,7 @@ function ConnectorName({ connectorGroup, isDemo = false }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { type, connectors } = connectorGroup;
   const connector = connectors[0];
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const hasNonUniversalConnector = connectors.some(
     ({ platform }) => platform !== ConnectorPlatform.Universal
   );

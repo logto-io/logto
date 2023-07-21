@@ -1,7 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import CompleteIndicator from '@/assets/icons/task-complete.svg';
 import PageMeta from '@/components/PageMeta';
@@ -10,6 +9,7 @@ import Card from '@/ds-components/Card';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import Spacer from '@/ds-components/Spacer';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import FreePlanNotification from './FreePlanNotification';
@@ -19,7 +19,7 @@ import * as styles from './index.module.scss';
 
 function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const navigate = useNavigate();
+  const { navigate } = useTenantPathname();
   const { data, isLoading } = useGetStartedMetadata();
   const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);

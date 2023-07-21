@@ -1,6 +1,6 @@
-import { conditional } from '@silverhand/essentials';
-import { useEffect, useRef } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { conditional, joinPath } from '@silverhand/essentials';
+import { useRef } from 'react';
+import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
 import { isCloud } from '@/consts/env';
@@ -16,24 +16,14 @@ import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
 
-function AppContent() {
+export default function AppContent() {
   const { isLoading: isPreferencesLoading } = useUserPreferences();
   const { isLoading: isConfigsLoading } = useConfigs();
 
   const isLoading = isPreferencesLoading || isConfigsLoading;
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { firstItem } = useSidebarMenuItems();
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
-
-  useEffect(() => {
-    // Navigate to the first menu item after configs are loaded.
-    if (!isLoading && location.pathname === '/') {
-      navigate(getPath(firstItem?.title ?? ''), { replace: true });
-    }
-  }, [firstItem?.title, isLoading, location.pathname, navigate]);
 
   if (isLoading) {
     return <AppLoading />;
@@ -50,4 +40,17 @@ function AppContent() {
   );
 }
 
-export default AppContent;
+export function RedirectToFirstItem() {
+  const { tenantId } = useParams();
+  const { firstItem } = useSidebarMenuItems();
+
+  if (!firstItem) {
+    throw new Error('First sidebar item not found');
+  }
+
+  if (!tenantId) {
+    throw new Error('Tenant ID not found');
+  }
+
+  return <Navigate replace to={joinPath(tenantId, getPath(firstItem.title))} />;
+}
