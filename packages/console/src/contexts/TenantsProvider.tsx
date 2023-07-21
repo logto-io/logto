@@ -8,6 +8,23 @@ import { useMatch, useNavigate } from 'react-router-dom';
 import { isCloud } from '@/consts/env';
 
 /**
+ * The routes don't start with a tenant ID.
+ *
+ * @remarks
+ * It's important to keep this single source of truth for all anonymous routes
+ * because we need to check if the current route is anonymous or not to decide
+ * if the current tenant ID is available.
+ *
+ * This should be more clear once we refactor the file structure and the routes.
+ */
+export enum GlobalAnonymousRoute {
+  Callback = '/callback',
+  SocialDemoCallback = '/social-demo-callback',
+}
+
+const anonymousRoutes: Readonly<string[]> = Object.freeze(Object.values(GlobalAnonymousRoute));
+
+/**
  * The current tenant status of access validation. When it's `validated`, it indicates that a
  * valid Access Token for the current tenant is available.
  */
@@ -83,12 +100,19 @@ function TenantsProvider({ children }: Props) {
   const [tenants, setTenants] = useState(initialTenants);
   /** @see {@link initialTenants} */
   const [isInitComplete, setIsInitComplete] = useState(!isCloud);
-  const matched = useMatch('/:tenantId/*');
+  const match = useMatch('/:tenantId/*');
   const navigate = useNavigate();
-  const currentTenantId = useMemo(
-    () => (isCloud ? matched?.params.tenantId ?? '' : defaultTenantId),
-    [matched]
-  );
+  const currentTenantId = useMemo(() => {
+    if (!isCloud) {
+      return defaultTenantId;
+    }
+
+    if (!match || anonymousRoutes.includes(match.pathname)) {
+      return '';
+    }
+
+    return match.params.tenantId ?? '';
+  }, [match]);
   const [currentTenantStatus, setCurrentTenantStatus] = useState<CurrentTenantStatus>('pending');
 
   const navigateTenant = useCallback(
