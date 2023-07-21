@@ -1,5 +1,6 @@
 import { assert } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
+import { z } from 'zod';
 
 import type {
   CreateConnector,
@@ -13,6 +14,7 @@ import {
   validateConfig,
   ConnectorError,
   ConnectorErrorCodes,
+  parseJson,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
@@ -101,7 +103,7 @@ const getUsage =
       },
     });
 
-    return Number(httpResponse.body);
+    return z.object({ count: z.number() }).parse(parseJson(httpResponse.body)).count;
   };
 
 const createLogtoEmailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
