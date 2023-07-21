@@ -144,7 +144,7 @@ function AppRoutes() {
 
   useTrackUserId();
 
-  // Authenticated user should loading onboarding data before rendering the app.
+  // Authenticated user should load onboarding data before rendering the app.
   // This looks weird and it will be refactored soon by merging the onboarding
   // routes with the console routes.
   if (!userEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
