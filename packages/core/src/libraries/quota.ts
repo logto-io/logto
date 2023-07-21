@@ -78,8 +78,8 @@ export const createQuotaLibrary = (
   const guardKey = async (key: keyof FeatureQuota, queryKey?: string) => {
     const { isCloud, isIntegrationTest, isProduction } = EnvSet.values;
 
-    // Cloud only feature, skip in non-cloud production environments
-    if (isProduction && !isCloud) {
+    // Cloud only feature, skip in non-cloud environments
+    if (!isCloud) {
       return;
     }
 
