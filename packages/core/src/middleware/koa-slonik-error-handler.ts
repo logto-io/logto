@@ -1,27 +1,6 @@
-/**
- * Slonik Error Types:
- *
- *  BackendTerminatedError,
- *  CheckIntegrityConstraintViolationError,
- *  ConnectionError,
- *  DataIntegrityError,
- *  ForeignKeyIntegrityConstraintViolationError,
- *  IntegrityConstraintViolationError,
- *  InvalidConfigurationError,
- *  NotFoundError,
- *  NotNullIntegrityConstraintViolationError,
- *  StatementCancelledError,
- *  StatementTimeoutError,
- *  UnexpectedStateError,
- *  UniqueIntegrityConstraintViolationError,
- *  TupleMovedToAnotherPartitionError
- *
- * (reference)[https://github.com/gajus/slonik#error-handling]
- */
-
 import type { SchemaLike } from '@logto/schemas';
 import type { Middleware } from 'koa';
-import { SlonikError, NotFoundError } from 'slonik';
+import { SlonikError, NotFoundError, InvalidInputError } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
@@ -33,6 +12,13 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
     } catch (error: unknown) {
       if (!(error instanceof SlonikError)) {
         throw error;
+      }
+
+      if (error instanceof InvalidInputError) {
+        throw new RequestError({
+          code: 'entity.invalid_input',
+          status: 422,
+        });
       }
 
       if (error instanceof InsertionError) {
