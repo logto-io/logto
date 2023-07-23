@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { toast } from 'react-hot-toast';
 
 import { subscriptionPage } from '@/consts/pages';
 import { ReservedPlanId } from '@/consts/subscriptions';
@@ -32,12 +33,16 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
       severity="error"
       action="subscription.upgrade_pro"
       className={className}
-      onClick={() => {
-        void subscribe({
-          planId: ReservedPlanId.pro,
-          tenantId: currentTenantId,
-          callbackPage: subscriptionPage,
-        });
+      onClick={async () => {
+        try {
+          await subscribe({
+            planId: ReservedPlanId.pro,
+            tenantId: currentTenantId,
+            callbackPage: subscriptionPage,
+          });
+        } catch (error: unknown) {
+          toast.error(error instanceof Error ? error.message : String(error));
+        }
       }}
     >
       <DynamicT forKey="subscription.overfill_quota_warning" />

@@ -1,5 +1,6 @@
 import { type Optional } from '@silverhand/essentials';
 import { useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 import useSWRImmutable from 'swr/immutable';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -16,7 +17,12 @@ const useSubscriptionPlans = () => {
      * Todo: @xiaoyijun remove this condition on subscription features ready.
      */
     !isProduction && isCloud && '/api/subscription-plans',
-    async () => cloudApi.get('/api/subscription-plans')
+    async () => cloudApi.get('/api/subscription-plans'),
+    {
+      onError: (error: unknown) => {
+        toast.error(error instanceof Error ? error.message : String(error));
+      },
+    }
   );
 
   const { data: subscriptionPlansResponse } = useSwrResponse;

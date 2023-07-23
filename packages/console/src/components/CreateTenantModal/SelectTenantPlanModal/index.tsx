@@ -34,18 +34,19 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
 
   const handleSelectPlan = async (plan: SubscriptionPlan) => {
     const { id: planId } = plan;
-    if (planId === ReservedPlanId.free) {
-      try {
+    try {
+      if (planId === ReservedPlanId.free) {
         const { name, tag } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
 
         onClose(newTenant);
-      } catch (error: unknown) {
-        toast.error(error instanceof Error ? error.message : String(error));
+        return;
       }
-    }
 
-    void subscribe({ planId, tenantData });
+      await subscribe({ planId, tenantData });
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : String(error));
+    }
   };
 
   return (
