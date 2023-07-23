@@ -93,9 +93,7 @@ function useTenantPathname(): TenantPathname {
   );
 
   const getUrl = useCallback(
-    (pathname = '/') => {
-      return appendPath(new URL(href), tenantSegment, pathname);
-    },
+    (pathname = '/') => appendPath(new URL(window.location.origin), href, tenantSegment, pathname),
     [href, tenantSegment]
   );
 
