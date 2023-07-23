@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Opłata za fakturę zaległa',
     notification:
-      'Ups! Opłata za fakturę dla najemcy {{name}} nie została opłacona w ostatnim cyklu. Proszę natychmiast uiścić opłatę, aby uniknąć zawieszenia usługi Logto.',
-    unpaid_bills_last_cycle: 'Niezapłacone faktury z ostatniego cyklu',
+      'Ups! Płatność za fakturę najemcy <span>{{name}}</span> nie powiodła się. Proszę zapłacić fakturę w odpowiednim terminie, aby uniknąć zawieszenia usługi Logto.',
+    unpaid_bills: 'Nieuregulowane faktury',
     update_payment: 'Zaktualizuj płatność',
   },
 };

@@ -21,6 +21,7 @@ const subscription = {
   manage_payment: '管理付款',
   overfill_quota_warning: '您已达到配额限制。为防止任何问题，请升级计划。',
   upgrade_pro: '升级专业计划',
+  update_payment: '更新付款信息',
   payment_error:
     '检测到付款问题。无法处理前一周期的{{price, number}}美元。更新付款以避免 Logto 服务中断。',
   downgrade: '降级',

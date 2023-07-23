@@ -22,6 +22,7 @@ const subscription = {
   overfill_quota_warning:
     'Вы достигли лимита вашего квоты. Чтобы избежать возможных проблем, повысьте план.',
   upgrade_pro: 'Повысить уровень до Pro',
+  update_payment: 'Обновить платеж',
   payment_error:
     // eslint-disable-next-line no-template-curly-in-string
     'Обнаружена ошибка платежа. Невозможно обработать сумму ${{price, number}} за предыдущий цикл. Обновите платежную информацию, чтобы избежать блокировки сервиса Logto.',

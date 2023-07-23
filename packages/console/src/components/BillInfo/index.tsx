@@ -11,17 +11,17 @@ import * as styles from './index.module.scss';
 
 type Props = {
   cost: number;
+  isManagePaymentVisible?: boolean;
 };
 
-function NextBillInfo({ cost }: Props) {
+function BillInfo({ cost, isManagePaymentVisible }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={styles.container}>
       <div className={styles.billInfo}>
         <div className={styles.price}>
-          <span>{`$${cost.toLocaleString()}`}</span>
-          {}
+          <span>{`$${(cost / 100).toLocaleString()}`}</span>
           {cost > 0 && (
             <ToggleTip content={<DynamicT forKey="subscription.next_bill_tip" />}>
               <IconButton size="small">
@@ -46,7 +46,7 @@ function NextBillInfo({ cost }: Props) {
           </Trans>
         </div>
       </div>
-      {cost > 0 && (
+      {isManagePaymentVisible && (
         <Button
           title="subscription.manage_payment"
           onClick={() => {
@@ -58,4 +58,4 @@ function NextBillInfo({ cost }: Props) {
   );
 }
 
-export default NextBillInfo;
+export default BillInfo;

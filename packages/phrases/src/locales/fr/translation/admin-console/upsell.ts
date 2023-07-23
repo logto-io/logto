@@ -81,8 +81,8 @@ const upsell = {
   payment_overdue_modal: {
     title: 'Paiement de facture en retard',
     notification:
-      'Oups ! Le paiement de la facture du locataire {{name}} a échoué lors du dernier cycle. Veuillez payer la facture rapidement pour éviter la suspension du service Logto.',
-    unpaid_bills_last_cycle: 'Factures impayées du dernier cycle',
+      'Oups ! Le paiement de la facture du locataire <span>{{name}}</span> a échoué. Veuillez payer la facture rapidement pour éviter la suspension du service Logto.',
+    unpaid_bills: 'Factures impayées',
     update_payment: 'Mettre à jour le paiement',
   },
 };

@@ -23,6 +23,7 @@ const subscription = {
   overfill_quota_warning:
     'Você atingiu o limite da sua cota. Para evitar problemas, faça upgrade do plano.',
   upgrade_pro: 'Atualizar para Pro',
+  update_payment: 'Atualizar pagamento',
   payment_error:
     // eslint-disable-next-line no-template-curly-in-string
     'Problema de pagamento detectado. Não é possível processar ${{price, number}} para o ciclo anterior. Atualize o pagamento para evitar a suspensão do serviço Logto.',
