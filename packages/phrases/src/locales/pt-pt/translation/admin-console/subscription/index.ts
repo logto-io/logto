@@ -52,11 +52,17 @@ const subscription = {
     before: 'Antes: <name/>',
     after: 'Depois: <name />',
     downgrade: 'Downgrade',
-    not_eligible: 'Você não é elegível para fazer o downgrade',
-    not_eligible_description:
-      'Verifique se você atende aos seguintes critérios antes de fazer o downgrade para o <name/>.',
-    a_maximum_of: 'No máximo <item/>',
-    help_tip: 'Precisa de ajuda para fazer o downgrade? <a>Entre em contato conosco</a>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Não é possível fazer downgrade',
+    downgrade_description:
+      'Certifique-se de cumprir os seguintes critérios antes de efetuar o downgrade para o plano <name/>.',
+    downgrade_help_tip: 'Precisa de ajuda com o downgrade? <a>Contacte-nos</a>.',
+    upgrade_title: 'Não é possível fazer upgrade',
+    upgrade_description:
+      'Atualmente está a utilizar mais do que o permitido pelo plano <name/>. Antes de considerar o upgrade para o plano <name/>, certifique-se de cumprir os seguintes critérios.',
+    upgrade_help_tip: 'Precisa de ajuda com o upgrade? <a>Contacte-nos</a>.',
+    a_maximum_of: 'Um máximo de <item/>',
   },
   upgrade_success: 'Atualizou com sucesso para <name/>',
   downgrade_success: 'Downgrade concluído com sucesso para <name/>',

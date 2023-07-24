@@ -1,9 +1,8 @@
-import { ResponseError } from '@withtyped/client';
 import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { responseErrorBodyGuard, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import PlanName from '@/components/PlanName';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
@@ -13,11 +12,11 @@ import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
+import NotEligibleSwitchPlanModalContent from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
 import { type SubscriptionPlan } from '@/types/subscriptions';
-import { isDowngradePlan } from '@/utils/subscription';
+import { isDowngradePlan, isExceededQuotaLimitError } from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
-import NotEligibleDowngradeModalContent from '../NotEligibleDowngradeModalContent';
 
 import * as styles from './index.module.scss';
 
@@ -37,64 +36,62 @@ function SwitchPlanActionBar({
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
 
-  const handleDownGrade = async (targetPlan: SubscriptionPlan) => {
-    const { id: planId, name } = targetPlan;
-    try {
-      if (planId === ReservedPlanId.free) {
-        await cancelSubscription(currentTenantId);
-        onSubscriptionUpdated();
-        toast.success(
-          <Trans components={{ name: <PlanName name={name} /> }}>{t('downgrade_success')}</Trans>
-        );
-        return;
-      }
-
-      await subscribe({
-        tenantId: currentTenantId,
-        planId,
-        isDowngrade: true,
-        callbackPage: subscriptionPage,
-      });
-    } catch (error: unknown) {
-      /**
-       * Note: this is a temporary solution to handle the case when the user tries to downgrade but the quota limit is exceeded.
-       * Need a better solution to handle this case by sharing the error type between the console and cloud. - LOG-6608
-       */
-      if (error instanceof ResponseError) {
-        const parsed = responseErrorBodyGuard.safeParse(await error.response.json());
-        if (parsed.success && parsed.data.message.includes('Exceeded quota limit')) {
-          await show({
-            ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
-            title: 'subscription.downgrade_modal.not_eligible',
-            confirmButtonText: 'general.got_it',
-            confirmButtonType: 'primary',
-          });
-        }
-        return;
-      }
-
-      void toastResponseError(error);
-    }
-  };
-
-  const onDowngradeClick = async (targetPlanId: string) => {
+  const handleSubscribe = async (targetPlanId: string, isDowngrade: boolean) => {
     const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
     const targetPlan = subscriptionPlans.find(({ id }) => id === targetPlanId);
     if (!currentPlan || !targetPlan) {
       return;
     }
 
-    const [result] = await show({
-      ModalContent: () => (
-        <DowngradeConfirmModalContent currentPlan={currentPlan} targetPlan={targetPlan} />
-      ),
-      title: 'subscription.downgrade_modal.title',
-      confirmButtonText: 'subscription.downgrade_modal.downgrade',
-      size: 'large',
-    });
+    if (isDowngrade) {
+      const [result] = await show({
+        ModalContent: () => (
+          <DowngradeConfirmModalContent currentPlan={currentPlan} targetPlan={targetPlan} />
+        ),
+        title: 'subscription.downgrade_modal.title',
+        confirmButtonText: 'subscription.downgrade_modal.downgrade',
+        size: 'large',
+      });
 
-    if (result) {
-      await handleDownGrade(targetPlan);
+      if (!result) {
+        return;
+      }
+    }
+
+    try {
+      if (targetPlanId === ReservedPlanId.free) {
+        await cancelSubscription(currentTenantId);
+        onSubscriptionUpdated();
+        toast.success(
+          <Trans components={{ name: <PlanName name={targetPlan.name} /> }}>
+            {t('downgrade_success')}
+          </Trans>
+        );
+        return;
+      }
+
+      await subscribe({
+        tenantId: currentTenantId,
+        planId: targetPlanId,
+        isDowngrade,
+        callbackPage: subscriptionPage,
+      });
+    } catch (error: unknown) {
+      if (await isExceededQuotaLimitError(error)) {
+        await show({
+          ModalContent: () => (
+            <NotEligibleSwitchPlanModalContent targetPlan={targetPlan} isDowngrade={isDowngrade} />
+          ),
+          title: isDowngrade
+            ? 'subscription.not_eligible_modal.downgrade_title'
+            : 'subscription.not_eligible_modal.upgrade_title',
+          confirmButtonText: 'general.got_it',
+          confirmButtonType: 'primary',
+        });
+        return;
+      }
+
+      void toastResponseError(error);
     }
   };
 
@@ -117,22 +114,8 @@ function SwitchPlanActionBar({
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentPlan}
-              onClick={async () => {
-                if (isDowngrade) {
-                  await onDowngradeClick(planId);
-
-                  return;
-                }
-
-                try {
-                  await subscribe({
-                    tenantId: currentTenantId,
-                    planId,
-                    callbackPage: subscriptionPage,
-                  });
-                } catch (error: unknown) {
-                  void toastResponseError(error);
-                }
+              onClick={() => {
+                void handleSubscribe(planId, isDowngrade);
               }}
             />
           </div>

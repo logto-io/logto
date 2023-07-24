@@ -51,11 +51,16 @@ const subscription = {
     before: '이전: <name />',
     after: '이후: <name />',
     downgrade: '다운그레이드',
-    not_eligible: '다운그레이드할 수 없습니다.',
-    not_eligible_description:
-      '<name />으로 다운그레이드하기 전에 다음 기준을 충족하는지 확인하세요.',
-    a_maximum_of: '<item /> 최대',
-    help_tip: '다운그레이드 도움이 필요하신가요? <a>문의하기</a>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: '다운그레이드할 수 없습니다',
+    downgrade_description: '<name/>로 다운그레이드하기 전에 다음 기준을 충족하는지 확인하세요.',
+    downgrade_help_tip: '다운그레이드 도움이 필요하세요? <a>문의하세요</a>.',
+    upgrade_title: '업그레이드할 수 없습니다',
+    upgrade_description:
+      '<name />이(가) 허용하는 양을 현재 사용 중입니다. <name />로 업그레이드를 고려하기 전에 다음 기준을 충족하는지 확인하세요.',
+    upgrade_help_tip: '업그레이드 도움이 필요하세요? <a>문의하세요</a>.',
+    a_maximum_of: '<item/> 최대 한도',
   },
   upgrade_success: '성공적으로 <name/>으로 업그레이드되었습니다.',
   downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',

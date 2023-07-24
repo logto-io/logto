@@ -52,11 +52,17 @@ const subscription = {
     before: 'Przed: <name/>',
     after: 'Po: <name />',
     downgrade: 'Zdegradować',
-    not_eligible: 'Nie spełniasz wymogów do zdegradowania',
-    not_eligible_description:
-      'Upewnij się, że spełniasz następujące kryteria przed dokonaniem degradacji do <name/>. ',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Nie spełniasz warunków do zmniejszenia',
+    downgrade_description:
+      'Upewnij się, że spełniasz następujące kryteria przed zmniejszeniem do <name/>.',
+    downgrade_help_tip: 'Potrzebna pomoc przy zmniejszaniu? <a>Skontaktuj się z nami</a>.',
+    upgrade_title: 'Nie spełniasz warunków do zwiększenia',
+    upgrade_description:
+      'Obecnie używasz więcej niż to, co pozwala <name />. Przed rozważeniem zwiększenia do <name/>, upewnij się, że spełniasz następujące kryteria.',
+    upgrade_help_tip: 'Potrzebna pomoc przy zwiększaniu? <a>Skontaktuj się z nami</a>.',
     a_maximum_of: 'Maksymalnie <item/>',
-    help_tip: 'Potrzebujesz pomocy przy zdegradowaniu? <a>Skontaktuj się z nami</a>.',
   },
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',

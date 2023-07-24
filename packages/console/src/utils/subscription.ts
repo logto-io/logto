@@ -1,5 +1,7 @@
+import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
 
+import { responseErrorBodyGuard } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import {
   communitySupportEnabledMap,
@@ -52,3 +54,21 @@ export const getLatestUnpaidInvoice = (invoices: Invoice[]) =>
         new Date(invoiceB.createdAt).getTime() - new Date(invoiceA.createdAt).getTime()
     )
     .find(({ status }) => status === 'uncollectible');
+
+/**
+ * Note: this is a temporary solution to handle the case when the user tries to downgrade but the quota limit is exceeded.
+ * Need a better solution to handle this case by sharing the error type between the console and cloud. - LOG-6608
+ */
+export const isExceededQuotaLimitError = async (error: unknown) => {
+  if (!(error instanceof ResponseError)) {
+    return false;
+  }
+
+  try {
+    const responseBody = await error.response.json();
+    const { message } = responseErrorBodyGuard.parse(responseBody);
+    return message.includes('Exceeded quota limit');
+  } catch {
+    return false;
+  }
+};

@@ -53,11 +53,17 @@ const subscription = {
     before: 'Antes: <name/>',
     after: 'Después: <name/>',
     downgrade: 'Degradar',
-    not_eligible: 'No cumple con los requisitos para degradar',
-    not_eligible_description:
-      'Asegúrese de cumplir con los siguientes criterios antes de degradar a <name/>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'No es posible el cambio a un plan inferior',
+    downgrade_description:
+      'Asegúrese de cumplir con los siguientes criterios antes de cambiar al plan <name/>.',
+    downgrade_help_tip: '¿Necesitas ayuda para cambiar de plan? <a>Contáctenos</a>.',
+    upgrade_title: 'No es posible el cambio a un plan superior',
+    upgrade_description:
+      'Actualmente está utilizando más de lo permitido por el plan <name />. Asegúrese de cumplir con los siguientes criterios antes de considerar el cambio al plan <name/>.',
+    upgrade_help_tip: '¿Necesitas ayuda para cambiar de plan? <a>Contáctenos</a>.',
     a_maximum_of: 'Un máximo de <item/>',
-    help_tip: 'Necesitas ayuda para degradar? <a>Contáctenos</a>.',
   },
   upgrade_success: 'Actualizado con éxito a <name/>',
   downgrade_success: 'Degradado con éxito a <name/>',

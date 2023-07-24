@@ -51,11 +51,17 @@ const subscription = {
     before: 'Before: <name/>',
     after: 'After: <name />',
     downgrade: 'Downgrade',
-    not_eligible: 'You are not eligible for downgrade',
-    not_eligible_description:
+  },
+  not_eligible_modal: {
+    downgrade_title: 'You are not eligible for downgrade',
+    downgrade_description:
       'Make sure you meet the following criteria before downgrading to the <name/>.',
+    downgrade_help_tip: 'Need help downgrading? <a>Contact us</a>.',
+    upgrade_title: 'You are not eligible for upgrade',
+    upgrade_description:
+      'You’re currently using more than what the <name /> allows. Before you consider upgrading to the <name />, make sure you meet the following criteria before upgrading.',
+    upgrade_help_tip: 'Need help upgrading? <a>Contact us</a>.',
     a_maximum_of: 'A maximum of <item/>',
-    help_tip: 'Need help downgrading? <a>Contact us</a>.',
   },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',
