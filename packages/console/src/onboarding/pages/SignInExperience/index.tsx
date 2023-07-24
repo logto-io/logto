@@ -1,7 +1,8 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { SignInExperience as SignInExperienceType } from '@logto/schemas';
+import { ConnectorType, ServiceConnector } from '@logto/connector-kit';
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback, useEffect, useMemo } from 'react';
+import type { SignInExperience as SignInExperienceType, ConnectorResponse } from '@logto/schemas';
+import { useCallback, useEffect, useMemo, useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,7 @@ import useSWR from 'swr';
 
 import Tools from '@/assets/icons/tools.svg';
 import PageMeta from '@/components/PageMeta';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import ColorPicker from '@/ds-components/ColorPicker';
 import FormField from '@/ds-components/FormField';
@@ -21,6 +23,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
+import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import type { OnboardingSieConfig } from '@/onboarding/types';
 import { Authentication, OnboardingPage } from '@/onboarding/types';
@@ -51,6 +54,13 @@ function SignInExperience() {
   const isLoading = isSignInExperienceDataLoading || isUserAssetsServiceLoading;
   const api = useApi();
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
+  const { update } = useUserOnboardingData();
+  const { navigateTenant, currentTenantId } = useContext(TenantsContext);
+
+  const enterAdminConsole = async () => {
+    await update({ isOnboardingDone: true });
+    navigateTenant(currentTenantId);
+  };
 
   const {
     reset,
@@ -60,7 +70,7 @@ function SignInExperience() {
     handleSubmit,
     getValues,
     setValue,
-    formState: { isSubmitting, isDirty, errors },
+    formState: { isSubmitting, errors },
   } = useForm<OnboardingSieConfig>({ defaultValues: defaultOnboardingSieConfig });
 
   const updateAuthenticationConfig = useCallback(() => {
@@ -90,6 +100,21 @@ function SignInExperience() {
     trySubmitSafe(async (formData: OnboardingSieConfig) => {
       if (!signInExperience) {
         return;
+      }
+
+      /**
+       * If choose `Email` as `identifier`, we will create email service connector for the tenant (when there is no existing email connector).
+       * Should create this connector before updating the sign-in experience, otherwise the sign-in experience can not be updated.
+       */
+      if (formData.identifier === SignInIdentifier.Email) {
+        const connectors = await api.get('api/connectors').json<ConnectorResponse[]>();
+        if (!connectors.some(({ type }) => type === ConnectorType.Email)) {
+          await api.post('api/connectors', {
+            json: {
+              connectorId: ServiceConnector.Email,
+            },
+          });
+        }
       }
 
       const updatedData = await api
@@ -211,11 +236,7 @@ function SignInExperience() {
               />
             </FormField>
           </div>
-          <Preview
-            className={styles.preview}
-            signInExperience={previewSieConfig}
-            isLivePreviewDisabled={isDirty}
-          />
+          <Preview className={styles.preview} signInExperience={previewSieConfig} />
         </div>
       </OverlayScrollbar>
       <ActionBar step={2}>
@@ -237,11 +258,7 @@ function SignInExperience() {
             title="cloud.sie.finish_and_done"
             disabled={isSubmitting}
             onClick={async () => {
-              await handleSubmit(
-                submit(() => {
-                  navigate(getOnboardingPage(OnboardingPage.Congrats));
-                })
-              )();
+              await handleSubmit(submit(enterAdminConsole))();
             }}
           />
         </div>

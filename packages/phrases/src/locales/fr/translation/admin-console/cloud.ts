@@ -3,7 +3,7 @@ const cloud = {
     onboarding: 'Intégration',
   },
   welcome: {
-    page_title: 'Welcome',
+    page_title: 'Bienvenue',
     title: 'Bienvenue dans Logto Cloud ! Nous aimerions en savoir un peu plus sur vous.',
     description:
       'Personnalisons votre expérience Logto en vous connaissant mieux. Vos informations sont en sécurité avec nous.',
@@ -43,31 +43,7 @@ const cloud = {
       others: 'Autres',
     },
   },
-  congrats: {
-    page_title: 'Gagnez des crédits tôt',
-    title: 'Bonne nouvelle! Vous êtes éligible pour gagner des crédits anticipés de Logto Cloud!',
-    description:
-      "Ne manquez pas l'occasion de profiter d'un abonnement gratuit de <strong>60 jours</strong> pour Logto Cloud après son lancement officiel! Contactez l'équipe Logto dès maintenant pour en savoir plus.",
-    check_out_button: "Découvrez l'aperçu en direct",
-    email_us_title: 'Envoyez-nous un e-mail pour une offre spéciale et des détails de prix',
-    email_us_description: "Obtenez des tarifs exclusifs pour économiser de l'argent",
-    email_us_button: 'Envoyer un e-mail',
-    join_description:
-      "Rejoignez notre <a>{{link}}</a> public pour vous connecter et discuter avec d'autres développeurs.",
-    discord_link: 'canal Discord',
-    enter_admin_console: 'Accédez à Logto Cloud Preview',
-  },
-  gift: {
-    title:
-      'Utilisez Logto Cloud gratuitement pendant 60 jours. Joignez-vous aux pionniers dès maintenant!',
-    description: 'Réservez une session individuelle avec notre équipe pour un crédit préalable.',
-    reserve_title: "Réservez votre temps avec l'équipe Logto",
-    reserve_description: "Le crédit n'est éligible qu'après évaluation.",
-    book_button: 'Réserver',
-    email_us_title: 'Envoyez-nous un e-mail',
-    email_us_description: 'Contactez-nous pour une offre spéciale et des détails de prix.',
-    email_us_button: 'Envoyer',
-  },
+
   sie: {
     page_title: "Personnalisez l'expérience de connexion",
     title: "Personnalisons d'abord votre expérience de connexion en toute simplicité",
@@ -104,7 +80,6 @@ const cloud = {
         "Veuillez éviter d'utiliser le connecteur de démonstration à des fins de production. Lorsque vous avez terminé les tests, veuillez supprimer le connecteur de démonstration et mettre en place votre propre connecteur avec vos informations d'identification.",
     },
   },
-  broadcast: '📣 Vous êtes dans Logto Cloud (aperçu)',
   socialCallback: {
     title: 'Connexion réussie',
     description:

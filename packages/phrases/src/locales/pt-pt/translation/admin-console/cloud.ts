@@ -41,30 +41,7 @@ const cloud = {
       others: 'Outros',
     },
   },
-  congrats: {
-    page_title: 'Ganhe créditos antecipados',
-    title: 'Ótima notícia! Você qualifica para ganhar crédito antecipado na Logto Cloud!',
-    description:
-      'Não perca a oportunidade de aproveitar uma assinatura gratuita de <strong>60 dias</strong> na Logto Cloud após o lançamento oficial! Entre em contato agora com a equipe Logto para saber mais.',
-    check_out_button: 'Confira a visualização ao vivo',
-    email_us_title: 'Envie-nos um e-mail para uma oferta especial e detalhes de preços',
-    email_us_description: 'Obtenha preços exclusivos para economizar dinheiro',
-    email_us_button: 'Enviar e-mail',
-    join_description:
-      'Junte-se ao nosso <a>{{link}}</a> público para se conectar e conversar com outros desenvolvedores.',
-    discord_link: 'canal no discord',
-    enter_admin_console: 'Entrar na pré-visualização da Logto Cloud',
-  },
-  gift: {
-    title: 'Use a Logto Cloud gratuitamente por 60 dias. Junte-se aos pioneiros agora!',
-    description: 'Agende uma sessão individual com nossa equipe para obter crédito antecipado.',
-    reserve_title: 'Agende seu horário com a equipe Logto',
-    reserve_description: 'Crédito é elegível apenas uma vez na avaliação.',
-    book_button: 'Agendar',
-    email_us_title: 'Envie-nos um email',
-    email_us_description: 'Entre em contato conosco para uma oferta especial e detalhes de preços.',
-    email_us_button: 'Enviar',
-  },
+
   sie: {
     page_title: 'Personalize a experiência de login',
     title: 'Vamos personalizar a sua experiência de login com facilidade',
@@ -101,7 +78,6 @@ const cloud = {
         'Evite usar o conector de demonstração para fins de produção. Depois de concluído o teste, exclua gentilmente o conector de demonstração e configure o seu próprio conector com suas credenciais.',
     },
   },
-  broadcast: '📣 Você está na Logto Cloud (Visualização)',
   socialCallback: {
     title: 'Você entrou com sucesso',
     description:

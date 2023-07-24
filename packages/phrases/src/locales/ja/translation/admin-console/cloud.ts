@@ -41,30 +41,7 @@ const cloud = {
       others: 'その他',
     },
   },
-  congrats: {
-    page_title: '早期クレジットを獲得',
-    title: '素晴らしい！あなたはLogto Cloudの早期クレジットを獲得する資格があります！',
-    description:
-      'Logto Cloudの正式開始後、無料で60日間のサブスクリプションを楽しむチャンスを逃さないでください！ 詳しくは今すぐLogtoチームにお問い合わせください。',
-    check_out_button: 'ライブプレビューをチェックアウト',
-    email_us_title: '特別オファーや価格詳細のためにメールを送信してください',
-    email_us_description: 'お金を節約するために独占的な価格を手に入れる',
-    email_us_button: 'メールを送信する',
-    join_description:
-      '他の開発者と接続してチャットできるパブリック<a>{{link}}</a>に参加してください。',
-    discord_link: 'discordチャンネル',
-    enter_admin_console: 'Logto Cloud Previewに入る',
-  },
-  gift: {
-    title: '早期クレジット獲得で60日間無料利用可能',
-    description: '早期クレジットのためにLogtoチームとの一対一のセッションを予約してください。',
-    reserve_title: 'Logtoチームとの会議を予約',
-    reserve_description: 'クレジットは審査後にのみ有効になります。',
-    book_button: '予約する',
-    email_us_title: 'メールでお問い合わせ',
-    email_us_description: '特別オファーや価格の詳細についてお問い合わせください。',
-    email_us_button: '送信する',
-  },
+
   sie: {
     page_title: 'サインインエクスペリエンスのカスタマイズ',
     title: 'まずは簡単にサインインエクスペリエンスをカスタマイズしましょう',
@@ -101,7 +78,6 @@ const cloud = {
         '本番目的でのデモコネクタの使用は避けてください。テストを完了したら、デモコネクタを削除し、自分のクレデンシャルを使用して独自のコネクタを設定してください。',
     },
   },
-  broadcast: '📣Logto Cloud（Preview）に入っています',
   socialCallback: {
     title: 'ログインが成功しました',
     description:

@@ -3,19 +3,24 @@ const contact = {
   description:
     'For help requests or product feedback, please contact us through the following methods.',
   discord: {
-    title: 'Join Discord Community',
-    description: 'Join our public channel to chat with other developers',
+    title: 'Join Discord community',
+    description: 'Connect with other developers to find solutions',
     button: 'Join',
   },
   github: {
-    title: 'Join GitHub Discussions',
-    description: 'Ask questions, and share ideas on GitHub',
+    title: 'Communicate on GitHub',
+    description: 'Create an issue and submit at GitHub',
     button: 'Open',
   },
   email: {
     title: 'Contact support via email',
     description: 'Send us an email for further information and help',
     button: 'Send',
+  },
+  reserve: {
+    title: 'Reserve your time with Logto team',
+    description: 'Quickly book a session for a live chat',
+    button: 'Book',
   },
 };
 
