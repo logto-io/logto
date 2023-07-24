@@ -1,11 +1,14 @@
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import { ToggleTip } from '@/ds-components/Tip';
+import useSubscribe from '@/hooks/use-subscribe';
 
 import * as styles from './index.module.scss';
 
@@ -15,6 +18,9 @@ type Props = {
 };
 
 function BillInfo({ cost, isManagePaymentVisible }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
+  const { visitManagePaymentPage } = useSubscribe();
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -50,7 +56,7 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
         <Button
           title="subscription.manage_payment"
           onClick={() => {
-            // Todo @xiaoyijun Management payment
+            void visitManagePaymentPage(currentTenantId);
           }}
         />
       )}
