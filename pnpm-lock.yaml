@@ -2755,8 +2755,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-2087c06
-        version: 0.2.5-2087c06(zod@3.20.2)
+        specifier: 0.2.5-70aa370
+        version: 0.2.5-70aa370(zod@3.20.2)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -2857,8 +2857,8 @@ importers:
         specifier: ^15.5.1
         version: 15.5.1
       '@withtyped/client':
-        specifier: ^0.7.19
-        version: 0.7.19(zod@3.20.2)
+        specifier: ^0.7.21
+        version: 0.7.21(zod@3.20.2)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -7210,8 +7210,8 @@ packages:
       jose: 4.14.4
     dev: true
 
-  /@logto/cloud@0.2.5-2087c06(zod@3.20.2):
-    resolution: {integrity: sha512-v/zisil/t8XrlFxlVic+0O6T2J3FUzB5FDC1w3OYNzhXNbSpmbqlt5vyN9RIwXUGgAKjdhKQjoACpV7HpPFZcQ==}
+  /@logto/cloud@0.2.5-4d5e389(zod@3.20.2):
+    resolution: {integrity: sha512-vRJZGc0WvjE1rFJ0DNLaOHkhpe4TMdui/pvcTwGb/bDKzw/NM+4HtUoZj1a1DZ8Qqn24ex1WkTjxY8XGd3EruQ==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.7.0
@@ -7220,12 +7220,12 @@ packages:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-4d5e389(zod@3.20.2):
-    resolution: {integrity: sha512-vRJZGc0WvjE1rFJ0DNLaOHkhpe4TMdui/pvcTwGb/bDKzw/NM+4HtUoZj1a1DZ8Qqn24ex1WkTjxY8XGd3EruQ==}
+  /@logto/cloud@0.2.5-70aa370(zod@3.20.2):
+    resolution: {integrity: sha512-V5fIsbotJ8+L6Q+R9PnLjspvuccDKpukpLz/uHRUv4SYDo8U5MAcC680T2TGiROtMjWqnb0vd6WHuqXZ9XWTcw==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.7.0
-      '@withtyped/server': 0.12.7(zod@3.20.2)
+      '@withtyped/server': 0.12.8(zod@3.20.2)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -9855,6 +9855,16 @@ packages:
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
+    dev: false
+
+  /@withtyped/client@0.7.21(zod@3.20.2):
+    resolution: {integrity: sha512-N9dvH5nqIwaT7YxaIm83RRQf9AEjxwJ4ugJviZJSxtWy8zLul2/odEMc6epieylFVa6CcLg82yJmRSlqPtJiTw==}
+    dependencies:
+      '@withtyped/server': 0.12.8(zod@3.20.2)
+      '@withtyped/shared': 0.2.2
+    transitivePeerDependencies:
+      - zod
+    dev: true
 
   /@withtyped/server@0.12.7(zod@3.20.2):
     resolution: {integrity: sha512-NNT78ZZmSZiEosxI3iW/kVx1KEG5vetvpEXNl0Gy58OlOnI8l/7h8Q//JZJ268xWOKyaNI4KrngTRtL5uvZu9Q==}
@@ -9873,7 +9883,6 @@ packages:
       '@silverhand/essentials': 2.7.0
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
-    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
