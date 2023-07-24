@@ -88,11 +88,6 @@ export const createQuotaLibrary = (
       return;
     }
 
-    // TODO @sijie: remove this when pricing is ready
-    if (isProduction) {
-      return;
-    }
-
     const plan = await getTenantSubscriptionPlan(cloudConnection);
     const limit = plan.quota[key];
 
