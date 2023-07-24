@@ -1,5 +1,4 @@
 import { type ClickAnalyticsPlugin } from '@microsoft/applicationinsights-clickanalytics-js';
-import { type IClickAnalyticsConfiguration } from '@microsoft/applicationinsights-clickanalytics-js/types/Interfaces/Datamodel.js';
 import type { ReactPlugin, withAITracking } from '@microsoft/applicationinsights-react-js';
 import type { ApplicationInsights, ITelemetryPlugin } from '@microsoft/applicationinsights-web';
 import { conditional, conditionalArray, type Optional } from '@silverhand/essentials';
@@ -7,7 +6,16 @@ import { type ComponentType } from 'react';
 
 export type SetupConfig = {
   connectionString?: string;
-  clickPlugin?: IClickAnalyticsConfiguration;
+  /**
+   * The config object for the ClickAnalytics plugin. If this is provided, the plugin will be
+   * automatically loaded when calling `.setup()`.
+   *
+   * Wait for {@link https://github.com/microsoft/ApplicationInsights-JS/issues/2106 | microsoft/ApplicationInsights-JS#2106}
+   * to be resolved to use a stronger type.
+   *
+   * @see {@link https://github.com/microsoft/ApplicationInsights-JS/tree/master/extensions/applicationinsights-clickanalytics-js#configuration | ClickAnalytics configuration}
+   */
+  clickPlugin?: Record<string, unknown>;
   cookieDomain?: string;
 };
 
