@@ -8,7 +8,6 @@ import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
 import {
   demoConnectorIds,
-  serviceConnectorIds,
   ConnectorType,
   type EmailConnector,
   type SmsConnector,
@@ -27,13 +26,7 @@ export const isPasswordlessLogtoConnector = (
 ): connector is LogtoConnector<EmailConnector | SmsConnector> =>
   connector.type !== ConnectorType.Social;
 
-/**
- * Treat Logto service connectors as demo connectors in production since they are not available
- * for public use yet.
- */
-const isDemoConnector = (connectorId: string) =>
-  demoConnectorIds.includes(connectorId) ||
-  (EnvSet.values.isProduction && serviceConnectorIds.includes(connectorId));
+const isDemoConnector = (connectorId: string) => demoConnectorIds.includes(connectorId);
 
 export const transpileLogtoConnector = async (
   connector: LogtoConnector,
@@ -70,7 +63,6 @@ export const transpileConnectorFactory = ({
   return {
     type,
     ...metadata,
-    /** Temporarily block entering Logto email connector as well until this feature is ready for prod. */
     isDemo: isDemoConnector(metadata.id),
   };
 };
