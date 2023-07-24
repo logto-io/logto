@@ -4,25 +4,14 @@ const cloud = {
   },
   welcome: {
     page_title: '환영합니다',
-    title: '환영합니다. 당신 만의 Logto Cloud Preview를 만들어 보세요',
+    title: 'Logto Cloud 에 오신 것을 환영합니다! 조금 더 알고 싶어요.',
     description:
-      '오픈 소스 사용자든 클라우드 사용자든, 쇼케이스를 둘러보고 Logto의 모든 가치를 경험해 보세요. 클라우드 미리 보기는 Logto Cloud의 미리 보기 버전으로도 제공돼요.',
-    project_field: 'Logto를 아래의 목적으로 사용해요',
+      '당신에 대해 더 잘 파악하여 Logto 경험을 특별하게 만들어 드릴게요. 정보는 저희가 안전하게 관리해요.',
+    project_field: 'Logto 를 아래의 목적으로 사용해요',
     project_options: {
       personal: '개인 프로젝트',
       company: '기업 프로젝트',
     },
-    deployment_type_field: '오픈 소스와 클라우드 중 어느 쪽을 선호하시나요?',
-    deployment_type_options: {
-      open_source: '오픈 소스',
-      cloud: '클라우드',
-    },
-  },
-  about: {
-    page_title: '본인에 대해 간략히 소개하기',
-    title: '당신에 관하여',
-    description:
-      '당신에 대해 더 잘 파악하여 Logto 경험을 특별하게 만들어 드릴게요. 정보는 저희가 안전하게 관리해요.',
     title_field: '당신의 직함',
     title_options: {
       developer: '개발자',

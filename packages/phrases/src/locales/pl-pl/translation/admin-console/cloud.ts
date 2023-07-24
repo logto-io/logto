@@ -3,26 +3,15 @@ const cloud = {
     onboarding: 'Wdrażanie',
   },
   welcome: {
-    page_title: 'Witaj',
-    title: 'Witaj i stwórz własny podgląd chmury Logto',
+    page_title: 'Witamy',
+    title: 'Witaj w chmurze Logto! Chcielibyśmy dowiedzieć się trochę o Tobie.',
     description:
-      'Nie ważne czy jesteś użytkownikiem open-source czy chmury, przejdź przez prezentacje i doświadcz pełnej wartości Logto. Podgląd chmury serwuje również jako wstępna wersja chmury Logto.',
+      'Stwórz indywidualne wrażenia z Logto dzięki naszej wiedzy na temat Ciebie. Twoje informacje są bezpieczne u nas.',
     project_field: 'Używam Logto do',
     project_options: {
       personal: 'Projektu osobistego',
       company: 'Projektu firmowego',
     },
-    deployment_type_field: 'Wolisz open-source czy chmurę?',
-    deployment_type_options: {
-      open_source: 'Open-Source',
-      cloud: 'Chmura',
-    },
-  },
-  about: {
-    page_title: 'Trochę o Tobie',
-    title: 'Trochę o Tobie',
-    description:
-      'Stwórz indywidualne wrażenia z Logto dzięki naszej wiedzy na temat Ciebie. Twoje informacje są bezpieczne u nas.',
     title_field: 'Twój tytuł',
     title_options: {
       developer: 'Developer',

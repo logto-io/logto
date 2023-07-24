@@ -4,25 +4,14 @@ const cloud = {
   },
   welcome: {
     page_title: 'Bem-vindo',
-    title: 'Bem-vindo e vamos criar a sua própria visualização da Logto Cloud',
+    title: 'Bem-vindo ao Logto Cloud! Gostaríamos de aprender um pouco sobre você.',
     description:
-      'Seja um usuário de código aberto ou de nuvem, faça um passeio pela demonstração e experimente o valor total da Logto. A pré-visualização da nuvem também serve como uma versão preliminar da Logto Cloud.',
+      'Vamos tornar a experiência da Logto única para você conhecendo você melhor. Suas informações estão seguras conosco.',
     project_field: 'Estou usando a Logto para',
     project_options: {
       personal: 'Projeto pessoal',
       company: 'Projeto da empresa',
     },
-    deployment_type_field: 'Prefere código aberto ou nuvem?',
-    deployment_type_options: {
-      open_source: 'Código aberto',
-      cloud: 'Nuvem',
-    },
-  },
-  about: {
-    page_title: 'Um pouco sobre você',
-    title: 'Um pouco sobre você',
-    description:
-      'Vamos tornar a experiência da Logto única para você conhecendo você melhor. Suas informações estão seguras conosco.',
     title_field: 'O seu título',
     title_options: {
       developer: 'Desenvolvedor/a',
@@ -119,7 +108,7 @@ const cloud = {
       'Você entrou com sucesso usando sua conta social. Para garantir uma integração perfeita e acesso a todos os recursos do Logto, recomendamos que você prossiga para configurar seu próprio conector social.',
   },
   tenant: {
-    create_tenant: 'Create tenant',
+    create_tenant: 'Criar novo inquilino',
   },
 };
 

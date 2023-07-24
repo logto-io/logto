@@ -218,7 +218,7 @@ function SignInExperience() {
           />
         </div>
       </OverlayScrollbar>
-      <ActionBar step={3}>
+      <ActionBar step={2}>
         <div className={styles.continueActions}>
           <Button
             type="outline"
@@ -249,7 +249,7 @@ function SignInExperience() {
           title="general.back"
           disabled={isSubmitting}
           onClick={() => {
-            navigate(getOnboardingPage(OnboardingPage.AboutUser));
+            navigate(getOnboardingPage(OnboardingPage.Welcome));
           }}
         />
       </ActionBar>
