@@ -1,7 +1,6 @@
 import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
-import { isProduction } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -29,10 +28,7 @@ function ApplicationsPlaceholder({ onSelect }: Props) {
               title={t(`${applicationTypeI18nKey[type]}.title`)}
               subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
               description={t(`${applicationTypeI18nKey[type]}.description`)}
-              /**
-               * Todo: @xiaoyijun remove this condition on subscription features ready.
-               */
-              hasProTag={!isProduction && type === ApplicationType.MachineToMachine}
+              hasProTag={type === ApplicationType.MachineToMachine}
             />
             <Button
               className={styles.createButton}

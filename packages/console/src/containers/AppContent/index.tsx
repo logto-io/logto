@@ -5,7 +5,7 @@ import { Navigate, Outlet, useParams } from 'react-router-dom';
 import AppLoading from '@/components/AppLoading';
 import MauExceededModal from '@/components/MauExceededModal';
 import PaymentOverdueModal from '@/components/PaymentOverdueModal';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -37,10 +37,9 @@ export default function AppContent() {
         <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
         <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
       </div>
-      {isCloud && <Broadcast />}
-      {/* Todo: @xiaoyijun remove this condition on subscription features ready. */}
-      {!isProduction && isCloud && (
+      {isCloud && (
         <>
+          <Broadcast />
           <MauExceededModal />
           <PaymentOverdueModal />
         </>

@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import Tick from '@/assets/icons/tick.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
-import { isProduction } from '@/consts/env';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
@@ -29,13 +28,11 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
         <div className={styles.meta}>
           <div className={styles.name}>{name}</div>
           <TenantEnvTag tag={tag} />
-          {!isProduction && <TenantStatusTag tenantId={id} className={styles.statusTag} />}
+          <TenantStatusTag tenantId={id} className={styles.statusTag} />
         </div>
-        {!isProduction && (
-          <div className={styles.planName}>
-            {tenantPlan ? <PlanName name={tenantPlan.name} /> : <Skeleton />}
-          </div>
-        )}
+        <div className={styles.planName}>
+          {tenantPlan ? <PlanName name={tenantPlan.name} /> : <Skeleton />}
+        </div>
       </div>
       <Tick className={classNames(styles.checkIcon, isSelected && styles.visible)} />
     </DropdownItem>

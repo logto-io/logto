@@ -6,7 +6,6 @@ import useSWR from 'swr';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isProduction } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -23,10 +22,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  /**
-   * Todo: @xiaoyijun remove this condition on subscription features ready.
-   */
-  const { data: allApplications } = useSWR<Application[]>(!isProduction && 'api/applications');
+  const { data: allApplications } = useSWR<Application[]>('api/applications');
 
   const m2mAppCount = useMemo(
     () =>

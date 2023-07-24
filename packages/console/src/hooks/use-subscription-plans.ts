@@ -4,7 +4,7 @@ import useSWRImmutable from 'swr/immutable';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { reservedPlanIdOrder } from '@/consts/subscriptions';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { addSupportQuotaToPlan } from '@/utils/subscription';
@@ -12,10 +12,7 @@ import { addSupportQuotaToPlan } from '@/utils/subscription';
 const useSubscriptionPlans = () => {
   const cloudApi = useCloudApi();
   const useSwrResponse = useSWRImmutable<SubscriptionPlanResponse[], Error>(
-    /**
-     * Todo: @xiaoyijun remove this condition on subscription features ready.
-     */
-    !isProduction && isCloud && '/api/subscription-plans',
+    isCloud && '/api/subscription-plans',
     async () => cloudApi.get('/api/subscription-plans')
   );
 

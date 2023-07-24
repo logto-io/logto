@@ -11,7 +11,6 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
-import { isProduction } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -77,9 +76,7 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
    * Note: create tenant directly if it's from landing page,
    * since we want the user to get into the console as soon as possible
    */
-  const shouldSkipPlanSelection = skipPlanSelection || isProduction;
-
-  const onCreateClick = handleSubmit(shouldSkipPlanSelection ? createTenant : setTenantData);
+  const onCreateClick = handleSubmit(skipPlanSelection ? createTenant : setTenantData);
 
   return (
     <Modal

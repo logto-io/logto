@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FreePlanNotificationImage from '@/assets/images/free-plan-notification-image.svg';
 import PlanName from '@/components/PlanName';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -21,10 +21,6 @@ function FreePlanNotification() {
   const isLoadingSubscription = !currentSubscription && !error;
 
   if (
-    /**
-     * Todo: @xiaoyijun remove this condition on subscription features ready.
-     */
-    isProduction ||
     !isCloud ||
     isLoadingSubscription ||
     !currentSubscription ||

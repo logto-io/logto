@@ -7,7 +7,6 @@ import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import { isProduction } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
@@ -144,8 +143,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              {/* Todo: @xiaoyijun remove this condition on subscription features ready. */}
-              {!isProduction && <ProTag />}
+              <ProTag />
             </div>
             <ConnectorRadioGroup
               name="group"
