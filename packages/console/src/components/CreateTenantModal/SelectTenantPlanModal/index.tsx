@@ -1,9 +1,9 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantResponse } from '@/cloud/types/router';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -20,7 +20,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   tenantData?: CreateTenantData;
-  onClose: (tenant?: TenantInfo) => void;
+  onClose: (tenant?: TenantResponse) => void;
 };
 
 function SelectTenantPlanModal({ tenantData, onClose }: Props) {

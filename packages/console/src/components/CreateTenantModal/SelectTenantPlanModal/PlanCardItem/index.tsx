@@ -1,4 +1,4 @@
-import { maxFreeTenantLimit } from '@logto/schemas';
+import { maxFreeTenantLimit, adminTenantId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -51,8 +51,13 @@ function PlanCardItem({ plan, onSelect }: Props) {
 
   const isFreePlan = planId === ReservedPlanId.free;
 
-  // Todo: @xiaoyijun filter our all free tenants
-  const isFreeTenantExceeded = tenants.length >= maxFreeTenantLimit;
+  const isFreeTenantExceeded = useMemo(
+    () =>
+      /** Should not block admin tenant owners from creating more than three tenants */
+      !tenants.some(({ id }) => id === adminTenantId) &&
+      tenants.filter(({ planId }) => planId === ReservedPlanId.free).length >= maxFreeTenantLimit,
+    [tenants]
+  );
 
   return (
     <div className={styles.container}>

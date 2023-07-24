@@ -1,6 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
-import { TenantTag, type TenantInfo } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -10,6 +10,7 @@ import Modal from 'react-modal';
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantResponse } from '@/cloud/types/router';
 import { isProduction } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -25,7 +26,7 @@ import { type CreateTenantData } from './type';
 
 type Props = {
   isOpen: boolean;
-  onClose: (tenant?: TenantInfo) => void;
+  onClose: (tenant?: TenantResponse) => void;
   // eslint-disable-next-line react/boolean-prop-naming
   skipPlanSelection?: boolean;
 };

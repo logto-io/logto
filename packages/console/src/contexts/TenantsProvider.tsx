@@ -1,11 +1,13 @@
 import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
-import { type TenantInfo, TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
+import { type TenantResponse } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
+import { ReservedPlanId } from '@/consts/subscriptions';
 
 /**
  * The routes don't start with a tenant ID.
@@ -32,20 +34,20 @@ type CurrentTenantStatus = 'pending' | 'validating' | 'validated';
 
 /** @see {@link TenantsProvider} for why `useSWR()` is not applicable for this context. */
 type Tenants = {
-  tenants: readonly TenantInfo[];
+  tenants: readonly TenantResponse[];
   /** Indicates if the tenants data is ready for the first render. */
   isInitComplete: boolean;
   /** Reset tenants to the given value. It will overwrite the current tenants data and set `isInitComplete` to `true`. */
-  resetTenants: (tenants: TenantInfo[]) => void;
+  resetTenants: (tenants: TenantResponse[]) => void;
   /** Prepend a new tenant to the current tenants data. */
-  prependTenant: (tenant: TenantInfo) => void;
+  prependTenant: (tenant: TenantResponse) => void;
   /** Remove a tenant by ID from the current tenants data. */
   removeTenant: (tenantId: string) => void;
   /** Update a tenant by ID if it exists in the current tenants data. */
-  updateTenant: (tenantId: string, data: Partial<TenantInfo>) => void;
+  updateTenant: (tenantId: string, data: Partial<TenantResponse>) => void;
   /** The current tenant ID parsed from the URL. */
   currentTenantId: string;
-  currentTenant?: TenantInfo;
+  currentTenant?: TenantResponse;
   /**
    * Indicates if the Access Token has been validated for use. Will be reset to `pending` when the current tenant changes.
    *
@@ -65,7 +67,13 @@ const { tenantId, indicator } = defaultManagementApi.resource;
  */
 const initialTenants = Object.freeze(
   conditionalArray(
-    !isCloud && { id: tenantId, name: `tenant_${tenantId}`, tag: TenantTag.Development, indicator }
+    !isCloud && {
+      id: tenantId,
+      name: `tenant_${tenantId}`,
+      tag: TenantTag.Development,
+      indicator,
+      planId: `${ReservedPlanId.free}`, // `planId` is string type.
+    }
   )
 );
 
@@ -132,18 +140,18 @@ function TenantsProvider({ children }: Props) {
   const memorizedContext = useMemo(
     () => ({
       tenants,
-      resetTenants: (tenants: TenantInfo[]) => {
+      resetTenants: (tenants: TenantResponse[]) => {
         setTenants(tenants);
         setCurrentTenantStatus('pending');
         setIsInitComplete(true);
       },
-      prependTenant: (tenant: TenantInfo) => {
+      prependTenant: (tenant: TenantResponse) => {
         setTenants((tenants) => [tenant, ...tenants]);
       },
       removeTenant: (tenantId: string) => {
         setTenants((tenants) => tenants.filter((tenant) => tenant.id !== tenantId));
       },
-      updateTenant: (tenantId: string, data: Partial<TenantInfo>) => {
+      updateTenant: (tenantId: string, data: Partial<TenantResponse>) => {
         setTenants((tenants) =>
           tenants.map((tenant) => (tenant.id === tenantId ? { ...tenant, ...data } : tenant))
         );
