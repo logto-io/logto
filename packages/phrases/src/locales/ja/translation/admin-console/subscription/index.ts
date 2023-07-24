@@ -52,11 +52,17 @@ const subscription = {
     before: '前: <name/>',
     after: '後: <name/>',
     downgrade: 'ダウングレード',
-    not_eligible: 'ダウングレードできません',
-    not_eligible_description:
-      '<name/>にダウングレードする前に、以下の基準を満たしていることを確認してください。',
-    a_maximum_of: '最大 <item/>',
-    help_tip: 'ダウングレードのヘルプが必要ですか？ <a>お問い合わせ</a>。',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'ダウングレードの対象外です',
+    downgrade_description:
+      '<name/>へダウングレードする前に、以下の条件を満たしていることを確認してください。',
+    downgrade_help_tip: 'ダウングレードのヘルプが必要ですか？<a>お問い合わせください</a>。',
+    upgrade_title: 'アップグレードの対象外です',
+    upgrade_description:
+      '<name />が許可する量を超えて使用しています。 <name />へのアップグレードを検討する前に、以下の条件を満たしていることを確認してください。',
+    upgrade_help_tip: 'アップグレードのヘルプが必要ですか？<a>お問い合わせください</a>。',
+    a_maximum_of: '<item/>の最大数',
   },
   upgrade_success: '正常に<name/>にアップグレードされました',
   downgrade_success: '正常に<name/>にダウングレードされました',

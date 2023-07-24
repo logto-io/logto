@@ -43,9 +43,7 @@ const subscription = {
       uncollectible: 'Vencida',
     },
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Tem certeza de que deseja fazer downgrade?',
     description:
@@ -53,11 +51,17 @@ const subscription = {
     before: 'Antes: <name/>',
     after: 'Depois: <name />',
     downgrade: 'Downgrade',
-    not_eligible: 'Não é elegível para downgrade',
-    not_eligible_description:
-      'Certifique-se de atender aos seguintes critérios antes de fazer downgrade para o <name/>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Você não é elegível para fazer downgrade',
+    downgrade_description:
+      'Certifique-se de atender aos seguintes critérios antes de fazer o downgrade para o plano <name/>.',
+    downgrade_help_tip: 'Precisa de ajuda com o downgrade? <a>Contate-nos</a>.',
+    upgrade_title: 'Você não é elegível para fazer upgrade',
+    upgrade_description:
+      'Atualmente, você está usando mais do que o permitido pelo plano <name/>. Antes de considerar o upgrade para o plano <name/>, certifique-se de atender aos seguintes critérios.',
+    upgrade_help_tip: 'Precisa de ajuda com o upgrade? <a>Contate-nos</a>.',
     a_maximum_of: 'Um máximo de <item/>',
-    help_tip: 'Precisa de ajuda para fazer o downgrade? <a>Contate-nos</a>.',
   },
   upgrade_success: 'Atualizado com sucesso para <name/>',
   downgrade_success: 'Downgrade realizado com sucesso para <name/>',

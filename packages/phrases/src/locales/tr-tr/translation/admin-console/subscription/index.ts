@@ -52,11 +52,19 @@ const subscription = {
     before: 'Önce: <name/>',
     after: 'Sonra: <name />',
     downgrade: 'Düşür',
-    not_eligible: 'Düşürme için uygun değilsiniz',
-    not_eligible_description:
-      "Aşağıdaki kriterleri karşıladığınızdan emin olun <name/>'ye düşürmeden önce.",
-    a_maximum_of: 'En fazla <item/>',
-    help_tip: 'Düşürme için yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Düşürme için uygun değilsiniz',
+    downgrade_description:
+      '<name/> planına düşürmeden önce aşağıdaki kriterleri sağladığınızdan emin olun.',
+    downgrade_help_tip:
+      'Düşürme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
+    upgrade_title: 'Yükseltme için uygun değilsiniz',
+    upgrade_description:
+      'Şu anda <name /> izin verilen miktarın üzerinde kullanıyorsunuz. <name /> planına yükseltmeyi düşünmeden önce aşağıdaki kriterleri sağladığınızdan emin olun.',
+    upgrade_help_tip:
+      'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
+    a_maximum_of: '<item/> için maksimum',
   },
   upgrade_success: 'Successfully upgraded to <name/>',
   downgrade_success: 'Successfully downgraded to <name/>',

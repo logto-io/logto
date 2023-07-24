@@ -20,10 +20,13 @@ const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
 
 type Props = {
   targetPlan: SubscriptionPlan;
+  isDowngrade?: boolean;
 };
 
-function NotEligibleDowngradeModalContent({ targetPlan }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: Props) {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console.subscription.not_eligible_modal',
+  });
 
   const { name, quota } = targetPlan;
 
@@ -40,7 +43,7 @@ function NotEligibleDowngradeModalContent({ targetPlan }: Props) {
             name: <PlanName name={name} />,
           }}
         >
-          {t('subscription.downgrade_modal.not_eligible_description')}
+          {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
         </Trans>
       </div>
       <ul className={styles.list}>
@@ -68,7 +71,7 @@ function NotEligibleDowngradeModalContent({ targetPlan }: Props) {
                     ),
                   }}
                 >
-                  {t('subscription.downgrade_modal.a_maximum_of')}
+                  {t('a_maximum_of')}
                 </Trans>
               ) : (
                 <DynamicT
@@ -84,10 +87,10 @@ function NotEligibleDowngradeModalContent({ targetPlan }: Props) {
           a: <ContactUsPhraseLink />,
         }}
       >
-        {t('subscription.downgrade_modal.help_tip')}
+        {t(isDowngrade ? 'downgrade_help_tip' : 'upgrade_help_tip')}
       </Trans>
     </div>
   );
 }
 
-export default NotEligibleDowngradeModalContent;
+export default NotEligibleSwitchPlanModalContent;

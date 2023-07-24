@@ -52,11 +52,17 @@ const subscription = {
     before: 'Prima: <name/>',
     after: 'Dopo: <name />',
     downgrade: 'Degrado',
-    not_eligible: 'Non sei idoneo al degrado',
-    not_eligible_description:
-      'Assicurati di soddisfare i seguenti criteri prima di degradare a <name/>.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Non sei idoneo per il downgrade',
+    downgrade_description:
+      'Assicurati di soddisfare i seguenti criteri prima di eseguire il downgrade al piano <name/>.',
+    downgrade_help_tip: 'Hai bisogno di aiuto per il downgrade? <a>Contattaci</a>.',
+    upgrade_title: "Non sei idoneo per l'upgrade",
+    upgrade_description:
+      "Attualmente stai utilizzando più di quanto consentito dal piano <name />. Prima di considerare l'upgrade al piano <name/>, assicurati di soddisfare i seguenti criteri.",
+    upgrade_help_tip: "Hai bisogno di aiuto per l'upgrade? <a>Contattaci</a>.",
     a_maximum_of: 'Un massimo di <item/>',
-    help_tip: 'Hai bisogno di aiuto per il degrado? <a>Contattaci</a>.',
   },
   upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
   downgrade_success: 'Degrado effettuato con successo a <name/>',

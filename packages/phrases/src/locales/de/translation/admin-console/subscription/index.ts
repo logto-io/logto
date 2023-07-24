@@ -51,11 +51,17 @@ const subscription = {
     before: 'Vorher: <name/>',
     after: 'Nachher: <name />',
     downgrade: 'Herabstufen',
-    not_eligible: 'Sie sind nicht berechtigt für eine Herabstufung',
-    not_eligible_description:
-      'Stellen Sie sicher, dass Sie die folgenden Kriterien erfüllen, bevor Sie auf <name/> herabstufen.',
+  },
+  not_eligible_modal: {
+    downgrade_title: 'Downgrade nicht möglich',
+    downgrade_description:
+      'Stellen Sie sicher, dass Sie die folgenden Kriterien erfüllen, bevor Sie auf <name/> downgraden.',
+    downgrade_help_tip: 'Hilfe beim Downgrade benötigt? <a>Kontaktieren Sie uns</a>.',
+    upgrade_title: 'Upgrade nicht möglich',
+    upgrade_description:
+      'Sie verwenden derzeit mehr als das von <name /> zugelassene Kontingent. Stellen Sie sicher, dass Sie die folgenden Kriterien erfüllen, bevor Sie auf <name/> upgraden.',
+    upgrade_help_tip: 'Hilfe beim Upgrade benötigt? <a>Kontaktieren Sie uns</a>.',
     a_maximum_of: 'Maximal <item/>',
-    help_tip: 'Benötigen Sie Hilfe beim Herabstufen? <a>Kontaktieren Sie uns</a>.',
   },
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',

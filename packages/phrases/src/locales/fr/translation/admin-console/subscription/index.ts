@@ -45,9 +45,7 @@ const subscription = {
       uncollectible: 'En souffrance',
     },
   },
-
   quota_item,
-
   downgrade_modal: {
     title: 'Êtes-vous sûr de vouloir passer à un Plan Inférieur?',
     description:
@@ -55,11 +53,17 @@ const subscription = {
     before: 'Avant: <name/>',
     after: 'Après: <name />',
     downgrade: 'Passer à un Plan Inférieur',
-    not_eligible: "Vous n'êtes pas éligible pour passer à un Plan Inférieur",
-    not_eligible_description:
-      'Veuillez vous assurer de répondre aux critères suivants avant de passer au <name/>. ',
+  },
+  not_eligible_modal: {
+    downgrade_title: "Vous n'êtes pas éligible pour une rétrogradation",
+    downgrade_description:
+      'Assurez-vous de remplir les critères suivants avant de rétrograder vers le plan <name/>.',
+    downgrade_help_tip: "Besoin d'aide pour rétrograder ? <a>Contactez-nous</a>.",
+    upgrade_title: "Vous n'êtes pas éligible pour une mise à niveau",
+    upgrade_description:
+      'Vous utilisez actuellement plus que ce que permet le plan <name />. Avant de considérer une mise à niveau vers le plan <name/>, assurez-vous de remplir les critères suivants.',
+    upgrade_help_tip: "Besoin d'aide pour la mise à niveau ? <a>Contactez-nous</a>.",
     a_maximum_of: 'Un maximum de <item/>',
-    help_tip: "Besoin d'aide pour rétrograder ? <a>Contactez-nous</a>.",
   },
   upgrade_success: 'Passé avec succès à <name/>',
   downgrade_success: 'Rétrogradé avec succès à <name/>',
