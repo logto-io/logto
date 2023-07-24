@@ -2755,8 +2755,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-70aa370
-        version: 0.2.5-70aa370(zod@3.20.2)
+        specifier: 0.2.5-8065345
+        version: 0.2.5-8065345(zod@3.20.2)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -7220,8 +7220,8 @@ packages:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-70aa370(zod@3.20.2):
-    resolution: {integrity: sha512-V5fIsbotJ8+L6Q+R9PnLjspvuccDKpukpLz/uHRUv4SYDo8U5MAcC680T2TGiROtMjWqnb0vd6WHuqXZ9XWTcw==}
+  /@logto/cloud@0.2.5-8065345(zod@3.20.2):
+    resolution: {integrity: sha512-qZWtGd2InkSddNPt3lKO0Ti/UZtQvzul5R7uJbnZgl0xiIpoMYEiHVI9gXQ8O+V47qtPpkS3ykTb2zj4K4Sk+w==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.7.0
@@ -16235,6 +16235,7 @@ packages:
   /node-gyp-build-optional-packages@5.0.7:
     resolution: {integrity: sha512-YlCCc6Wffkx0kHkmam79GKvDQ6x+QZkMjFGrIMxgFNILFvGSbCp2fCBC55pGTT9gVaz8Na5CLmxt/urtzRv36w==}
     hasBin: true
+    requiresBuild: true
     dev: true
     optional: true
 

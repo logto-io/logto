@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
 import { checkoutStateQueryKey, checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import { createLocalCheckoutSession } from '@/utils/checkout';
@@ -72,9 +72,27 @@ const useSubscribe = () => {
     });
   };
 
+  const visitManagePaymentPage = async (tenantId: string) => {
+    try {
+      const { redirectUri } = await cloudApi.post('/api/tenants/:tenantId/stripe-customer-portal', {
+        params: {
+          tenantId,
+        },
+        body: {
+          callbackUrl: window.location.href,
+        },
+      });
+
+      window.location.assign(redirectUri);
+    } catch (error: unknown) {
+      void toastResponseError(error);
+    }
+  };
+
   return {
     subscribe,
     cancelSubscription,
+    visitManagePaymentPage,
   };
 };
 

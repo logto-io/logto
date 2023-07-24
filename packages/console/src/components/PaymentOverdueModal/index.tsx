@@ -10,6 +10,7 @@ import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useInvoices from '@/hooks/use-invoices';
+import useSubscribe from '@/hooks/use-subscribe';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { getLatestUnpaidInvoice } from '@/utils/subscription';
 
@@ -21,6 +22,7 @@ function PaymentOverdueModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
   const { data: invoices, error } = useInvoices(currentTenantId);
+  const { visitManagePaymentPage } = useSubscribe();
   const isLoadingInvoices = !invoices && !error;
 
   const latestUnpaidInvoice = useMemo(() => {
@@ -68,7 +70,7 @@ function PaymentOverdueModal() {
               type="primary"
               title="upsell.payment_overdue_modal.update_payment"
               onClick={() => {
-                // Todo: @xiaoyijun Update payment
+                void visitManagePaymentPage(currentTenantId);
               }}
             />
           </>
