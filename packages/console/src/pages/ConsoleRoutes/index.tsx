@@ -1,6 +1,7 @@
 import { Component, GeneralEvent } from '@logto/app-insights/custom-event';
 import { TrackOnce } from '@logto/app-insights/react';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { ossConsolePath } from '@logto/schemas';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { isCloud, isProduction } from '@/consts/env';
@@ -35,6 +36,12 @@ function Layout() {
 export function ConsoleRoutes() {
   return (
     <Routes>
+      {/**
+       * OSS doesn't have a tenant concept nor root path handling component, but it may
+       * navigate to the root path in frontend. In this case, we redirect it to the OSS
+       * console path to trigger the console routes.
+       */}
+      {!isCloud && <Route path="/" element={<Navigate to={ossConsolePath} />} />}
       <Route path="/:tenantId" element={<Layout />}>
         <Route path="callback" element={<Callback />} />
         <Route path="welcome" element={<Welcome />} />

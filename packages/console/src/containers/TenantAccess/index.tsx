@@ -59,7 +59,7 @@ export default function TenantAccess() {
      * We need to exclude the `me` key because it's not tenant-aware. If don't, we
      * need to manually revalidate the `me` key to make console work again.
      */
-    void mutate((key) => key !== 'me', undefined, false);
+    void mutate((key) => key !== 'me', undefined, { rollbackOnError: false, throwOnError: false });
   }, [mutate, currentTenantId]);
 
   useEffect(() => {

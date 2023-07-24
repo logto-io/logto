@@ -19,7 +19,7 @@ function Callback() {
       return;
     }
 
-    navigate(getTo('/'), { replace: true });
+    navigate('/', { replace: true });
   });
 
   return <AppLoading />;

@@ -23,9 +23,8 @@ function Congrats() {
   const { update } = useUserOnboardingData();
   const { navigateTenant, currentTenantId } = useContext(TenantsContext);
 
-  const enterAdminConsole = () => {
-    void update({ isOnboardingDone: true });
-    // Note: navigate to the admin console page directly instead of using the router
+  const enterAdminConsole = async () => {
+    await update({ isOnboardingDone: true });
     navigateTenant(currentTenantId);
   };
 
