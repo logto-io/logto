@@ -6,7 +6,6 @@ import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import ProTag from '@/components/ProTag';
 import { contactEmailLink } from '@/consts';
-import { isProduction } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -37,10 +36,6 @@ function TenantDomainSettings() {
   }
 
   const customDomainEnabled =
-    /**
-     * Todo: @xiaoyijun remove this condition on subscription features ready.
-     */
-    isProduction ||
     Boolean(currentPlan?.quota.customDomainEnabled) ||
     /**
      * Note: this is for tenants which already have a custom domain before we have subscription features.
@@ -52,7 +47,7 @@ function TenantDomainSettings() {
       <PageMeta titleKey={['tenants.tabs.domains', 'tenants.title']} />
       <FormCard
         title="domain.custom.custom_domain"
-        tag={!isProduction && <ProTag />}
+        tag={<ProTag />}
         description="domain.custom.custom_domain_description"
         learnMoreLink={getDocumentationUrl('docs/recipes/custom-domain')}
       >
@@ -65,7 +60,7 @@ function TenantDomainSettings() {
               onCustomDomainAdded={mutate}
             />
           )}
-          {!isProduction && !customDomain && !customDomainEnabled && (
+          {!customDomain && !customDomainEnabled && (
             <InlineNotification
               hasIcon={false}
               severity="info"

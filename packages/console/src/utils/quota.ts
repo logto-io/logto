@@ -1,4 +1,4 @@
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
 
 type HasReachedQuotaLimitParameters = {
@@ -8,15 +8,8 @@ type HasReachedQuotaLimitParameters = {
 };
 
 export const hasReachedQuotaLimit = ({ quotaKey, usage, plan }: HasReachedQuotaLimitParameters) => {
-  /**
-   * Todo: @xiaoyijun remove this condition on subscription features ready.
-   */
-  if (isProduction || !isCloud) {
-    return false;
-  }
-
   // If the plan is not loaded, guarded by backend APIs
-  if (!plan) {
+  if (!isCloud || !plan) {
     return false;
   }
 

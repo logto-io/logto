@@ -6,7 +6,6 @@ import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import { isProduction } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
@@ -113,20 +112,14 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
                 <Radio
                   key={type}
                   value={type}
-                  /**
-                   * Todo: @xiaoyijun remove this condition on subscription features ready.
-                   */
-                  hasCheckIconForCard={isProduction || type !== ApplicationType.MachineToMachine}
+                  hasCheckIconForCard={type !== ApplicationType.MachineToMachine}
                 >
                   <TypeDescription
                     type={type}
                     title={t(`${applicationTypeI18nKey[type]}.title`)}
                     subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
                     description={t(`${applicationTypeI18nKey[type]}.description`)}
-                    /**
-                     * Todo: @xiaoyijun remove this condition on subscription features ready.
-                     */
-                    hasProTag={!isProduction && type === ApplicationType.MachineToMachine}
+                    hasProTag={type === ApplicationType.MachineToMachine}
                   />
                 </Radio>
               ))}

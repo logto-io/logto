@@ -4,7 +4,7 @@ import { ossConsolePath } from '@logto/schemas';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
@@ -48,7 +48,7 @@ export function ConsoleRoutes() {
         <Route element={<ProtectedRoutes />}>
           <Route path="handle-social" element={<HandleSocialCallback />} />
           <Route element={<TenantAccess />}>
-            {!isProduction && isCloud && (
+            {isCloud && (
               <Route path={checkoutSuccessCallbackPath} element={<CheckoutSuccessCallback />} />
             )}
             <Route element={<AppContent />}>
