@@ -12,7 +12,7 @@ const cloud = {
       personal: 'Kişisel proje',
       company: 'Şirket projesi',
     },
-    title_field: 'Unvanın',
+    title_field: 'Uygun başlığı seçin',
     title_options: {
       developer: 'Geliştirici',
       team_lead: 'Takım Lideri',

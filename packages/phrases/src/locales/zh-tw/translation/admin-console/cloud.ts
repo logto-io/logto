@@ -11,7 +11,7 @@ const cloud = {
       personal: '個人專案',
       company: '公司專案',
     },
-    title_field: '你的頭銜',
+    title_field: '選擇適用的職稱',
     title_options: {
       developer: '開發人員',
       team_lead: '團隊負責人',

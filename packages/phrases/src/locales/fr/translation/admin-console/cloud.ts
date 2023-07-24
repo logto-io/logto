@@ -3,7 +3,7 @@ const cloud = {
     onboarding: 'Intégration',
   },
   welcome: {
-    page_title: 'Welcome',
+    page_title: 'Bienvenue',
     title: 'Bienvenue dans Logto Cloud ! Nous aimerions en savoir un peu plus sur vous.',
     description:
       'Personnalisons votre expérience Logto en vous connaissant mieux. Vos informations sont en sécurité avec nous.',
@@ -12,7 +12,7 @@ const cloud = {
       personal: 'Projet personnel',
       company: "Projet d'entreprise",
     },
-    title_field: 'Votre titre',
+    title_field: 'Sélectionnez le(s) titre(s) applicable(s)',
     title_options: {
       developer: 'Développeur',
       team_lead: "Chef d'équipe",

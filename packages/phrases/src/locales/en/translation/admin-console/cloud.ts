@@ -12,7 +12,7 @@ const cloud = {
       personal: 'Personal project',
       company: 'Company project',
     },
-    title_field: 'Your title',
+    title_field: 'Select applicable title(s)',
     title_options: {
       developer: 'Developer',
       team_lead: 'Team Lead',
