@@ -19,7 +19,6 @@ import { gtagAwTrackingId, gtagSignUpConversionId, logtoProductionHostname } fro
 import AppContent from './containers/AppContent';
 import useUserOnboardingData from './hooks/use-user-onboarding-data';
 import * as styles from './index.module.scss';
-import About from './pages/About';
 import Congrats from './pages/Congrats';
 import SignInExperience from './pages/SignInExperience';
 import Welcome from './pages/Welcome';
@@ -110,7 +109,6 @@ export function OnboardingRoutes() {
             <Route path={OnboardingRoute.Onboarding} element={<AppContent />}>
               <Route index element={<Navigate replace to={OnboardingPage.Welcome} />} />
               <Route path={OnboardingPage.Welcome} element={<Welcome />} />
-              <Route path={OnboardingPage.AboutUser} element={<About />} />
               <Route path={OnboardingPage.SignInExperience} element={<SignInExperience />} />
               <Route path={OnboardingPage.Congrats} element={<Congrats />} />
             </Route>

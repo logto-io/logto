@@ -4,24 +4,13 @@ const cloud = {
   },
   welcome: {
     page_title: '欢迎',
-    title: '欢迎来到 Logto Cloud（预览版），让我们一起创建独属于你的体验',
-    description:
-      '无论你是开源用户还是云用户，都可以在展示中了解 Logto 的全部价值。Cloud 预览版也是 Logto Cloud 的初步版本。',
+    title: '欢迎来到 Logto Cloud！我们很想了解你。',
+    description: '通过更好地了解你，我们可以使你的 Logto 体验更加个性化。你的信息是安全的。',
     project_field: '我使用 Logto 是为了',
     project_options: {
       personal: '个人项目',
       company: '公司项目',
     },
-    deployment_type_field: '你偏爱开源还是云？',
-    deployment_type_options: {
-      open_source: '开源',
-      cloud: '云',
-    },
-  },
-  about: {
-    page_title: '关于你',
-    title: '关于你的一些信息',
-    description: '通过更好地了解你，我们可以使你的 Logto 体验更加个性化。你的信息是安全的。',
     title_field: '你的头衔',
     title_options: {
       developer: '开发人员',

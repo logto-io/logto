@@ -7,6 +7,7 @@ export enum OnboardingRoute {
 
 export enum OnboardingPage {
   Welcome = 'welcome',
+  /** @deprecated Merged `about-user` to `welcome` page. */
   AboutUser = 'about-user',
   SignInExperience = 'sign-in-experience',
   Congrats = 'congrats',
@@ -17,7 +18,8 @@ export enum Project {
   Company = 'company',
 }
 
-export enum DeploymentType {
+/** @deprecated Open-source options was for cloud preview use, no longer needed. Use default `Cloud` value for placeholder. */
+enum DeploymentType {
   OpenSource = 'open-source',
   Cloud = 'cloud',
 }
@@ -50,7 +52,8 @@ export enum Reason {
 
 const questionnaireGuard = z.object({
   project: z.nativeEnum(Project),
-  deploymentType: z.nativeEnum(DeploymentType),
+  /** @deprecated Open-source options was for cloud preview use, no longer needed. Use default `Cloud` value for placeholder. */
+  deploymentType: z.nativeEnum(DeploymentType).optional().default(DeploymentType.Cloud),
   titles: z.array(z.nativeEnum(Title)).optional(),
   companyName: z.string().optional(),
   companySize: z.nativeEnum(CompanySize).optional(),

@@ -9,7 +9,7 @@ type Props = {
   children: ReactNode;
 };
 
-const totalSteps = 3;
+const totalSteps = 2;
 
 function ActionBar({ step, children }: Props) {
   return (

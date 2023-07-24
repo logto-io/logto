@@ -3,26 +3,15 @@ const cloud = {
     onboarding: 'Başlatma',
   },
   welcome: {
-    page_title: 'Hoşgeldiniz',
-    title: 'Hoşgeldiniz ve kendi Logto Cloud Önizlemenizi oluşturalım',
+    page_title: 'Hoş geldiniz',
+    title: "Logto Cloud'a hoş geldiniz! Sizi biraz tanımak istiyoruz.",
     description:
-      "Açık kaynak veya bulut kullanıcısı olsanız da, sergi turuna çıkın ve Logto'nun tam değerini deneyimleyin. Cloud önizlemesi ayrıca Logto Cloud'un ön sürümü olarak da hizmet verir.",
+      'Sizi daha iyi tanıyarak Logto deneyiminizi size özel hale getirelim. Bilgileriniz bizimle güvende.',
     project_field: "Logto'yu kullanıyorum çünkü",
     project_options: {
       personal: 'Kişisel proje',
       company: 'Şirket projesi',
     },
-    deployment_type_field: 'Açık kaynak veya bulut tercih eder misiniz?',
-    deployment_type_options: {
-      open_source: 'Açık Kaynak',
-      cloud: 'Bulut',
-    },
-  },
-  about: {
-    page_title: 'Biraz sen hakkında',
-    title: 'Senin hakkında biraz bilgi',
-    description:
-      'Sizi daha iyi tanıyarak Logto deneyiminizi size özel hale getirelim. Bilgileriniz bizimle güvende.',
     title_field: 'Unvanın',
     title_options: {
       developer: 'Geliştirici',
