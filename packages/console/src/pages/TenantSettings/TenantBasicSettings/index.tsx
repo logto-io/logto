@@ -27,7 +27,7 @@ const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
 
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useCloudApi();
+  const api = useCloudApi({ hideErrorToast: true });
   const { currentTenant, currentTenantId, updateTenant, removeTenant, navigateTenant } =
     useContext(TenantsContext);
   const [error, setError] = useState<Error>();

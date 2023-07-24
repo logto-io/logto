@@ -23,7 +23,7 @@ const subscriptionCheckingTimeout = 10 * 1000;
 function CheckoutSuccessCallback() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription' });
   const { navigate } = useTenantPathname();
-  const cloudApi = useCloudApi();
+  const cloudApi = useCloudApi({ hideErrorToast: true });
   const { currentTenantId, navigateTenant } = useContext(TenantsContext);
   const { search } = useLocation();
   const checkoutState = new URLSearchParams(search).get(checkoutStateQueryKey);
