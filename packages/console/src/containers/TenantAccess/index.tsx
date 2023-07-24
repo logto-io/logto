@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 
-import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
+import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 // Used in the docs
 // eslint-disable-next-line unused-imports/no-unused-imports
@@ -63,7 +63,7 @@ export default function TenantAccess() {
   }, [mutate, currentTenantId]);
 
   useEffect(() => {
-    const validate = async ({ indicator }: TenantInfo) => {
+    const validate = async ({ indicator }: TenantResponse) => {
       // Test fetching an access token for the current Tenant ID.
       // If failed, it means the user finishes the first auth, ands still needs to auth again to
       // fetch the full-scoped (with all available tenants) token.

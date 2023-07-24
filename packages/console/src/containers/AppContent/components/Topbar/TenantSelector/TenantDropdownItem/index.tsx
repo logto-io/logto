@@ -1,7 +1,7 @@
-import { type TenantInfo } from '@logto/schemas/models';
 import classNames from 'classnames';
 
 import Tick from '@/assets/icons/tick.svg';
+import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import { isProduction } from '@/consts/env';
 import { DropdownItem } from '@/ds-components/Dropdown';
@@ -14,7 +14,7 @@ import TenantStatusTag from './TenantStatusTag';
 import * as styles from './index.module.scss';
 
 type Props = {
-  tenantData: TenantInfo;
+  tenantData: TenantResponse;
   isSelected: boolean;
   onClick: () => void;
 };

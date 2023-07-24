@@ -5,7 +5,7 @@ import { useContext, useState } from 'react';
 import Plus from '@/assets/icons/plus.svg';
 import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark.svg';
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
-import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
+import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -54,7 +54,7 @@ function TenantLandingPageContent({ className }: Props) {
       <CreateTenantModal
         skipPlanSelection
         isOpen={isCreateModalOpen}
-        onClose={async (tenant?: TenantInfo) => {
+        onClose={async (tenant?: TenantResponse) => {
           if (tenant) {
             prependTenant(tenant);
             navigateTenant(tenant.id);

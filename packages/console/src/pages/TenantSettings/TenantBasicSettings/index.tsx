@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
+import { type TenantResponse } from '@/cloud/types/router';
 import AppError from '@/components/AppError';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
@@ -19,7 +19,7 @@ import ProfileForm from './ProfileForm';
 import * as styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
-const tenantProfileToForm = (tenant?: TenantInfo): TenantSettingsForm => {
+const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
   return {
     profile: { name: tenant?.name ?? 'My project', tag: tenant?.tag ?? TenantTag.Development },
   };

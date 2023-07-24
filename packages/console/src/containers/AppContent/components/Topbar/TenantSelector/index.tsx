@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
-import { type TenantResponse as TenantInfo } from '@/cloud/types/router';
+import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
@@ -91,7 +91,7 @@ export default function TenantSelector() {
       </Dropdown>
       <CreateTenantModal
         isOpen={showCreateTenantModal}
-        onClose={async (tenant?: TenantInfo) => {
+        onClose={async (tenant?: TenantResponse) => {
           if (tenant) {
             prependTenant(tenant);
             navigateTenant(tenant.id);
