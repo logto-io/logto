@@ -54,13 +54,19 @@ function SwitchPlanActionBar({
         callbackPage: subscriptionPage,
       });
     } catch (error: unknown) {
-      // Todo @xiaoyijun check if the error is not eligible downgrade error or not
-      await show({
-        ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
-        title: 'subscription.downgrade_modal.not_eligible',
-        confirmButtonText: 'general.got_it',
-        confirmButtonType: 'primary',
-      });
+      /**
+       * Note: this is a temporary solution to handle the case when the user tries to downgrade but the quota limit is exceeded.
+       * Need a better solution to handle this case by sharing the error type between the console and cloud. - LOG-6608
+       */
+      if (error instanceof Error && error.message.includes('Exceeded quota limit')) {
+        await show({
+          ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
+          title: 'subscription.downgrade_modal.not_eligible',
+          confirmButtonText: 'general.got_it',
+          confirmButtonType: 'primary',
+        });
+        return;
+      }
 
       toast.error(error instanceof Error ? error.message : String(error));
     }
@@ -106,17 +112,22 @@ function SwitchPlanActionBar({
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentPlan}
-              onClick={() => {
+              onClick={async () => {
                 if (isDowngrade) {
-                  void onDowngradeClick(planId);
+                  await onDowngradeClick(planId);
 
                   return;
                 }
-                void subscribe({
-                  tenantId: currentTenantId,
-                  planId,
-                  callbackPage: subscriptionPage,
-                });
+
+                try {
+                  await subscribe({
+                    tenantId: currentTenantId,
+                    planId,
+                    callbackPage: subscriptionPage,
+                  });
+                } catch (error: unknown) {
+                  toast.error(error instanceof Error ? error.message : String(error));
+                }
               }}
             />
           </div>

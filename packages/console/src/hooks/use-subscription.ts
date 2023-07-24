@@ -1,3 +1,4 @@
+import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -14,7 +15,12 @@ const useSubscription = (tenantId: string) => {
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription', {
         params: { tenantId },
-      })
+      }),
+    {
+      onError: (error: unknown) => {
+        toast.error(error instanceof Error ? error.message : String(error));
+      },
+    }
   );
 };
 
