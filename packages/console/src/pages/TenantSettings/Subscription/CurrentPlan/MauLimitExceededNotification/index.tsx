@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { toast } from 'react-hot-toast';
 
+import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { subscriptionPage } from '@/consts/pages';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -41,7 +41,7 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
             callbackPage: subscriptionPage,
           });
         } catch (error: unknown) {
-          toast.error(error instanceof Error ? error.message : String(error));
+          void toastResponseError(error);
         }
       }}
     >

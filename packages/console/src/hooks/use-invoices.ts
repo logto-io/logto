@@ -1,4 +1,3 @@
-import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -12,12 +11,7 @@ const useInvoices = (tenantId: string) => {
      * Todo: @xiaoyijun remove this condition on subscription features ready.
      */
     !isProduction && isCloud && `/api/tenants/${tenantId}/invoices`,
-    async () => cloudApi.get('/api/tenants/:tenantId/invoices', { params: { tenantId } }),
-    {
-      onError: (error: unknown) => {
-        toast.error(error instanceof Error ? error.message : String(error));
-      },
-    }
+    async () => cloudApi.get('/api/tenants/:tenantId/invoices', { params: { tenantId } })
   );
 
   const { data: invoicesResponse } = swrResponse;

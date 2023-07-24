@@ -18,7 +18,7 @@ type SubscribeProps = {
 };
 
 const useSubscribe = () => {
-  const cloudApi = useCloudApi();
+  const cloudApi = useCloudApi({ hideErrorToast: true });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getUrl } = useTenantPathname();
 

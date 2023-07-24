@@ -1,7 +1,9 @@
+import { ResponseError } from '@withtyped/client';
 import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { responseErrorBodyGuard, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import PlanName from '@/components/PlanName';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
@@ -58,17 +60,20 @@ function SwitchPlanActionBar({
        * Note: this is a temporary solution to handle the case when the user tries to downgrade but the quota limit is exceeded.
        * Need a better solution to handle this case by sharing the error type between the console and cloud. - LOG-6608
        */
-      if (error instanceof Error && error.message.includes('Exceeded quota limit')) {
-        await show({
-          ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
-          title: 'subscription.downgrade_modal.not_eligible',
-          confirmButtonText: 'general.got_it',
-          confirmButtonType: 'primary',
-        });
+      if (error instanceof ResponseError) {
+        const parsed = responseErrorBodyGuard.safeParse(await error.response.json());
+        if (parsed.success && parsed.data.message.includes('Exceeded quota limit')) {
+          await show({
+            ModalContent: () => <NotEligibleDowngradeModalContent targetPlan={targetPlan} />,
+            title: 'subscription.downgrade_modal.not_eligible',
+            confirmButtonText: 'general.got_it',
+            confirmButtonType: 'primary',
+          });
+        }
         return;
       }
 
-      toast.error(error instanceof Error ? error.message : String(error));
+      void toastResponseError(error);
     }
   };
 
@@ -126,7 +131,7 @@ function SwitchPlanActionBar({
                     callbackPage: subscriptionPage,
                   });
                 } catch (error: unknown) {
-                  toast.error(error instanceof Error ? error.message : String(error));
+                  void toastResponseError(error);
                 }
               }}
             />

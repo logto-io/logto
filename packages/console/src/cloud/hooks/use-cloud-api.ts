@@ -1,11 +1,34 @@
 import type router from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
-import Client from '@withtyped/client';
+import { conditional } from '@silverhand/essentials';
+import Client, { ResponseError } from '@withtyped/client';
 import { useMemo } from 'react';
+import { toast } from 'react-hot-toast';
+import { z } from 'zod';
 
 import { cloudApi } from '@/consts';
 
-export const useCloudApi = (): Client<typeof router> => {
+export const responseErrorBodyGuard = z.object({
+  message: z.string(),
+});
+
+export const toastResponseError = async (error: unknown) => {
+  if (error instanceof ResponseError) {
+    const parsed = responseErrorBodyGuard.safeParse(await error.response.json());
+    toast.error(parsed.success ? parsed.data.message : error.message);
+    return;
+  }
+
+  toast(error instanceof Error ? error.message : String(error));
+};
+
+type UseCloudApiProps = {
+  hideErrorToast?: boolean;
+};
+
+export const useCloudApi = ({ hideErrorToast = false }: UseCloudApiProps = {}): Client<
+  typeof router
+> => {
   const { isAuthenticated, getAccessToken } = useLogto();
   const api = useMemo(
     () =>
@@ -16,8 +39,11 @@ export const useCloudApi = (): Client<typeof router> => {
             return { Authorization: `Bearer ${(await getAccessToken(cloudApi.indicator)) ?? ''}` };
           }
         },
+        before: {
+          ...conditional(!hideErrorToast && { error: toastResponseError }),
+        },
       }),
-    [getAccessToken, isAuthenticated]
+    [getAccessToken, hideErrorToast, isAuthenticated]
   );
 
   return api;

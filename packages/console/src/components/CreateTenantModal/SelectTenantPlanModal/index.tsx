@@ -1,8 +1,7 @@
-import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -27,7 +26,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const { subscribe } = useSubscribe();
-  const cloudApi = useCloudApi();
+  const cloudApi = useCloudApi({ hideErrorToast: true });
   if (!subscriptionPlans || !tenantData) {
     return null;
   }
@@ -45,7 +44,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
 
       await subscribe({ planId, tenantData });
     } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : String(error));
+      void toastResponseError(error);
     }
   };
 

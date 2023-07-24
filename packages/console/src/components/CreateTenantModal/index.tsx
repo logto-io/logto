@@ -1,9 +1,9 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 import { TenantTag } from '@logto/schemas/models';
+import { trySafe } from '@silverhand/essentials';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -65,14 +65,12 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
   const cloudApi = useCloudApi();
 
   const createTenant = async (data: CreateTenantData) => {
-    try {
+    void trySafe(async () => {
       const { name, tag } = data;
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
       reset();
       onClose(newTenant);
-    } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : String(error));
-    }
+    });
   };
 
   /**
