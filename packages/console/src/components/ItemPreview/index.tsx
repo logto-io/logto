@@ -14,9 +14,10 @@ type Props = {
   to?: To;
   size?: 'default' | 'compact';
   suffix?: ReactNode;
+  toTarget?: HTMLAnchorElement['target'];
 };
 
-function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix }: Props) {
+function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTarget }: Props) {
   const { getTo } = useTenantPathname();
 
   return (
@@ -28,6 +29,7 @@ function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix }: Pr
             <Link
               className={styles.title}
               to={getTo(to)}
+              target={toTarget}
               onClick={(event) => {
                 event.stopPropagation();
               }}
