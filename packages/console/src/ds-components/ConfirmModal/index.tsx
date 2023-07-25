@@ -22,6 +22,7 @@ export type ConfirmModalProps = {
   isOpen: boolean;
   isConfirmButtonDisabled?: boolean;
   isLoading?: boolean;
+  isCancelButtonVisible?: boolean;
   size?: ModalLayoutProps['size'];
   onCancel?: () => void;
   onConfirm?: () => void;
@@ -37,6 +38,7 @@ function ConfirmModal({
   isOpen,
   isConfirmButtonDisabled = false,
   isLoading = false,
+  isCancelButtonVisible = true,
   size,
   onCancel,
   onConfirm,
@@ -53,7 +55,9 @@ function ConfirmModal({
         title={title}
         footer={
           <>
-            {onCancel && <Button title={cancelButtonText} onClick={onCancel} />}
+            {isCancelButtonVisible && onCancel && (
+              <Button title={cancelButtonText} onClick={onCancel} />
+            )}
             {onConfirm && (
               <Button
                 type={confirmButtonType}

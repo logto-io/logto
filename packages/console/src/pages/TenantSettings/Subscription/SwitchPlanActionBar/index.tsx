@@ -87,6 +87,7 @@ function SwitchPlanActionBar({
             : 'subscription.not_eligible_modal.upgrade_title',
           confirmButtonText: 'general.got_it',
           confirmButtonType: 'primary',
+          isCancelButtonVisible: false,
         });
         return;
       }
