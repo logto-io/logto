@@ -1,7 +1,7 @@
 import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
 
-import { responseErrorBodyGuard } from '@/cloud/hooks/use-cloud-api';
+import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import {
   communitySupportEnabledMap,
@@ -64,11 +64,7 @@ export const isExceededQuotaLimitError = async (error: unknown) => {
     return false;
   }
 
-  try {
-    const responseBody = await error.response.json();
-    const { message } = responseErrorBodyGuard.parse(responseBody);
-    return message.includes('Exceeded quota limit');
-  } catch {
-    return false;
-  }
+  const { message } = (await tryReadResponseErrorBody(error)) ?? {};
+
+  return Boolean(message?.includes('Exceeded quota limit'));
 };
