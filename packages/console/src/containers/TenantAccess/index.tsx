@@ -56,10 +56,17 @@ export default function TenantAccess() {
     /**
      * The official cache clean method, see {@link https://github.com/vercel/swr/issues/1887#issuecomment-1171269211 | this comment}.
      *
-     * We need to exclude the `me` key because it's not tenant-aware. If don't, we
-     * need to manually revalidate the `me` key to make console work again.
+     * Exceptions:
+     * - Exclude the `me` key because it's not tenant-aware. If don't, we need to manually
+     * revalidate the `me` key to make console work again.
+     * - Exclude keys that include `/.well-known/` because they are usually static and
+     * should not be revalidated.
      */
-    void mutate((key) => key !== 'me', undefined, { rollbackOnError: false, throwOnError: false });
+    void mutate(
+      (key) => typeof key !== 'string' || (key !== 'me' && !key.includes('/.well-known/')),
+      undefined,
+      { rollbackOnError: false, throwOnError: false }
+    );
   }, [mutate, currentTenantId]);
 
   useEffect(() => {
