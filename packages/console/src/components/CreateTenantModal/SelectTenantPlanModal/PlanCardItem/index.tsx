@@ -120,6 +120,9 @@ function PlanCardItem({ plan, onSelect }: Props) {
           onClick={onSelect}
         />
       </div>
+      {planId === ReservedPlanId.pro && (
+        <div className={styles.mostPopularTag}>{t('most_popular')}</div>
+      )}
     </div>
   );
 }
