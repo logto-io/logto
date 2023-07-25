@@ -18,6 +18,9 @@ export const addOidcEventListeners = (provider: Provider, queries: Queries) => {
   provider.addListener('access_token.issued', async (token) => {
     return accessTokenIssuedListener(token, queries);
   });
+  provider.addListener('access_token.saved', async (token) => {
+    return accessTokenIssuedListener(token, queries);
+  });
   provider.addListener('interaction.started', interactionStartedListener);
   provider.addListener('interaction.ended', interactionEndedListener);
   provider.addListener('server_error', (_, error) => {
