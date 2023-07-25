@@ -31,9 +31,9 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
     control,
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
-  const callbackUri = new URL(`/callback/${connectorId}`, userEndpoint).toString();
+  const callbackUri = new URL(`/callback/${connectorId}`, tenantEndpoint).toString();
 
   return (
     <div className={className}>
@@ -51,13 +51,13 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
                 : callbackUri
             }
           />
-          {customDomain?.status === DomainStatus.Active && userEndpoint && (
+          {customDomain?.status === DomainStatus.Active && tenantEndpoint && (
             <div className={styles.description}>
               <DynamicT
                 forKey="domain.custom_social_callback_url_note"
                 interpolation={{
                   custom: customDomain.domain,
-                  default: new URL(userEndpoint).host,
+                  default: new URL(tenantEndpoint).host,
                 }}
               />
             </div>

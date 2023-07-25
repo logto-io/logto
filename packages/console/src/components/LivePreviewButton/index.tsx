@@ -20,7 +20,7 @@ type Props = {
 
 function LivePreviewButton({ size, type, isDisabled }: Props) {
   const { configs, updateConfigs } = useConfigs();
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -43,7 +43,7 @@ function LivePreviewButton({ size, type, isDisabled }: Props) {
             void updateConfigs({ livePreviewChecked: true });
           }
 
-          window.open(new URL('/demo-app', userEndpoint), '_blank');
+          window.open(new URL('/demo-app', tenantEndpoint), '_blank');
         }}
       />
     </Tooltip>
