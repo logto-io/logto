@@ -4,10 +4,9 @@ const upsell = {
   compare_plans: 'Pläne vergleichen',
   contact_us: 'Kontaktieren Sie uns',
   get_started: {
-    title: 'Starten Sie Ihre nahtlose Identitätsreise mit einem <planName/>!',
+    title: 'Starten Sie Ihre nahtlose Identitätsreise mit einem kostenlosen Plan!',
     description:
-      'Mit <planName/> können Sie Logto auf Ihren Nebenprojekten oder bei Tests ausprobieren. Um die volle Leistungsfähigkeit von Logto für Ihr Team zu nutzen, upgraden Sie, um unbegrenzten Zugriff auf Premium-Funktionen zu erhalten: unbegrenzte MAU-Nutzung, Maschine-zu-Maschine-Integration, nahtlose RBAC-Verwaltung, Langzeit-Audit-Logs und vieles mehr.',
-    view_plans: 'Pläne anzeigen',
+      'Der kostenlose Plan eignet sich perfekt, um Logto in Ihren eigenen Projekten oder Tests auszuprobieren. Um die volle Leistungsfähigkeit von Logto für Ihr Team zu nutzen, können Sie ein Upgrade durchführen, um uneingeschränkten Zugriff auf Premium-Funktionen zu erhalten: unbegrenzte MAU-Nutzung, Maschine-zu-Maschine-Integration, RBAC-Verwaltung, Langzeit-Audit-Protokolle, usw. <a>Alle Pläne anzeigen</a>',
   },
   create_tenant: {
     title: 'Wählen Sie Ihren Tenant-Plan aus',

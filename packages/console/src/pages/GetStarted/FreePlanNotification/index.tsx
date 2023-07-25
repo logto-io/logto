@@ -2,14 +2,13 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FreePlanNotificationImage from '@/assets/images/free-plan-notification-image.svg';
-import PlanName from '@/components/PlanName';
 import { isCloud } from '@/consts/env';
+import { subscriptionPage } from '@/consts/pages';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import Button from '@/ds-components/Button';
+import TextLink from '@/ds-components/TextLink';
 import useSubscription from '@/hooks/use-subscription';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import { ReservedPlanName } from '@/types/subscriptions';
 
 import * as styles from './index.module.scss';
 
@@ -33,34 +32,17 @@ function FreePlanNotification() {
     <div className={styles.container}>
       <FreePlanNotificationImage className={styles.image} />
       <div>
-        <div className={styles.title}>
-          <Trans
-            components={{
-              planName: <PlanName name={ReservedPlanName.Free} />,
-            }}
-          >
-            {t('title')}
-          </Trans>
-        </div>
+        <div className={styles.title}>{t('title')}</div>
         <div className={styles.description}>
           <Trans
             components={{
-              planName: <PlanName name={ReservedPlanName.Free} />,
+              a: <TextLink to={subscriptionPage} className={styles.textLink} />,
             }}
           >
             {t('description')}
           </Trans>
         </div>
       </div>
-      <Button
-        title="upsell.get_started.view_plans"
-        type="outline"
-        className={styles.button}
-        size="large"
-        onClick={() => {
-          navigate('/tenant-settings/subscription');
-        }}
-      />
     </div>
   );
 }

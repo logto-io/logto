@@ -4,10 +4,9 @@ const upsell = {
   compare_plans: 'Porównaj plany',
   contact_us: 'Skontaktuj się z nami',
   get_started: {
-    title: 'Rozpocznij swoją płynną podróż z Logto z planem <planName/>!',
+    title: 'Rozpocznij swój płynny proces identyfikacji dzięki darmowemu planowi!',
     description:
-      '<planName/> jest idealny do wypróbowania Logto w twoich projektach pobocznych lub próbach. Aby w pełni wykorzystać możliwości Logto dla twojego zespołu, ulepsz go, aby uzyskać nieograniczony dostęp do funkcji premium: nieograniczone użytkowanie MAU, integracja między maszynami, płynne zarządzanie RBAC, długoterminowe dzienniki audytowe i wiele innych.',
-    view_plans: 'Zobacz plany',
+      'Darmowy plan doskonale sprawdzi się do przetestowania Logto na twoich projektach czy testach. Aby w pełni wykorzystać możliwości Logto dla twojego zespołu, zaktualizuj plan i uzyskaj nieograniczony dostęp do funkcji premium: nielimitowanej liczby MAU, integracji maszynowej, zarządzania RBAC, długoterminowych dzienników audytu itd. <a>Zobacz wszystkie plany</a>',
   },
   create_tenant: {
     title: 'Wybierz swój plan najemcy',

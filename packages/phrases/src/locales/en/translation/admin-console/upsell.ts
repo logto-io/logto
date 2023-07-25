@@ -4,10 +4,9 @@ const upsell = {
   compare_plans: 'Compare plans',
   contact_us: 'Contact Us',
   get_started: {
-    title: 'Begin your seamless identity journey with a <planName/>!',
+    title: 'Begin your seamless identity journey with a free plan!',
     description:
-      '<planName/> is perfect for trying out Logto on your side projects or trials. To fully leverage Logto’s capabilities for your team, upgrade to gain unlimited access to premium features: unlimited MAU usage, Machine-to-Machine integration, seamless RBAC management, long-term audit logs, and more.',
-    view_plans: 'View Plans',
+      'Free plan is perfect for trying out Logto on your side projects or trials. To fully leverage Logto’s capabilities for your team, upgrade to gain unlimited access to premium features: unlimited MAU usage, Machine-to-Machine integration, RBAC management, long-term audit logs, etc. <a>View all plans</a>',
   },
   create_tenant: {
     title: 'Select your tenant plan',

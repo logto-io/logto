@@ -4,10 +4,9 @@ const upsell = {
   compare_plans: '比较计划',
   contact_us: '联系我们',
   get_started: {
-    title: '开始您无缝的身份管理之旅，选择<planName/>！',
+    title: '通过免费计划开始您无缝的身份之旅！',
     description:
-      '<planName/>非常适合您的个人项目或试用。要充分利用 Logto 团队的功能，请升级并获得无限制访问高级功能：无限 MAU 使用、机器对机器集成、无缝 RBAC 管理、长期审计日志等等。',
-    view_plans: '查看计划',
+      '免费计划非常适合在您的边项目或试用中尝试Logto。为了充分利用Logto团队的功能，升级并获得对高级功能的无限访问：无限MAU使用、机器对机器集成、RBAC管理、长期审计日志等。 <a>查看所有计划</a>',
   },
   create_tenant: {
     title: '选择您的租户计划',
