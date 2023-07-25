@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: 'Usuń swoje uprawnienia roli',
   },
   hooks_limit: {
-    name: 'Haki',
-    limited: '{{count, number}} hak',
-    limited_other: '{{count, number}} haki',
-    unlimited: 'Nieograniczone haki',
-    not_eligible: 'Usuń swoje haki',
+    name: 'Webhooks',
+    limited: '{{count, number}} webhook',
+    limited_other: '{{count, number}} webhooki',
+    unlimited: 'Nieograniczona liczba webhooków',
+    not_eligible: 'Usuń swoje webhooki',
   },
   audit_logs_retention_days: {
     name: 'Przechowywanie dzienników audytowych',

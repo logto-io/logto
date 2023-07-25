@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: 'Удалите свои разрешения роли',
   },
   hooks_limit: {
-    name: 'Хуки',
-    limited: '{{count, number}} хук',
-    limited_other: '{{count, number}} хуков',
-    unlimited: 'Неограниченное количество хуков',
-    not_eligible: 'Удалите свои хуки',
+    name: 'Webhooks',
+    limited: '{{count, number}} webhook',
+    limited_other: '{{count, number}} webhooks',
+    unlimited: 'Неограниченное количество вебхуков',
+    not_eligible: 'Удалите ваши вебхуки',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

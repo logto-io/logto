@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: 'Remover as tuas permissões de função',
   },
   hooks_limit: {
-    name: 'Hooks',
-    limited: '{{count, number}} hook',
-    limited_other: '{{count, number}} hooks',
-    unlimited: 'Hooks ilimitados',
-    not_eligible: 'Remover os teus hooks',
+    name: 'Webhooks',
+    limited: '{{count, number}} webhook',
+    limited_other: '{{count, number}} webhooks',
+    unlimited: 'Webhooks ilimitados',
+    not_eligible: 'Remova os seus webhooks',
   },
   audit_logs_retention_days: {
     name: 'Conservação de registos de auditoria',
