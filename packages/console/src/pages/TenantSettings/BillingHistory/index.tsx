@@ -41,6 +41,7 @@ function BillingHistory() {
                   title={formatPeriod({ periodStart, periodEnd, displayYear: true })}
                   subtitle={conditional(planName && <PlanName name={planName} />)}
                   to={conditional(hostedInvoiceUrl)}
+                  toTarget="_blank"
                 />
               );
             },
@@ -69,6 +70,12 @@ function BillingHistory() {
         ]}
         isLoading={isLoadingInvoices}
         placeholder={<EmptyDataPlaceholder />}
+        rowClickHandler={({ hostedInvoiceUrl }) => {
+          if (!hostedInvoiceUrl) {
+            return;
+          }
+          window.open(hostedInvoiceUrl, '_blank');
+        }}
       />
     </div>
   );
