@@ -18,7 +18,7 @@ type Props = {
 };
 
 function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Props) {
-  const { name } = subscriptionPlan;
+  const { id, name } = subscriptionPlan;
 
   return (
     <FormCard title="subscription.current_plan" description="subscription.current_plan_description">
@@ -27,7 +27,7 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
           <PlanName name={name} />
         </div>
         <div className={styles.description}>
-          <PlanDescription planName={name} />
+          <PlanDescription planId={id} />
         </div>
       </div>
       <FormField title="subscription.plan_usage">
