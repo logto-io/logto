@@ -1,6 +1,6 @@
 import type router from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
-import { conditional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 import Client, { ResponseError } from '@withtyped/client';
 import { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -8,15 +8,24 @@ import { z } from 'zod';
 
 import { cloudApi } from '@/consts';
 
-export const responseErrorBodyGuard = z.object({
+const responseErrorBodyGuard = z.object({
   message: z.string(),
 });
 
+export const tryReadResponseErrorBody = async (error: ResponseError) =>
+  trySafe(async () => {
+    // Clone the response to avoid blocking later usage since the response body can only be read once
+    const responseBody = await error.response.clone().json();
+    return responseErrorBodyGuard.parse(responseBody);
+  });
+
 export const toastResponseError = async (error: unknown) => {
   if (error instanceof ResponseError) {
-    const parsed = responseErrorBodyGuard.safeParse(await error.response.json());
-    toast.error(parsed.success ? parsed.data.message : error.message);
-    return;
+    const responseBody = await tryReadResponseErrorBody(error);
+    if (responseBody) {
+      toast.error(responseBody.message);
+      return;
+    }
   }
 
   toast(error instanceof Error ? error.message : String(error));
