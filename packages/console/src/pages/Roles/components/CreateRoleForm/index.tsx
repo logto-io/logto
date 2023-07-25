@@ -101,7 +101,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                   planName: <PlanName name={currentPlan.name} />,
                 }}
               >
-                {t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit })}
+                {t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
               </Trans>
             </QuotaGuardFooter>
           )}

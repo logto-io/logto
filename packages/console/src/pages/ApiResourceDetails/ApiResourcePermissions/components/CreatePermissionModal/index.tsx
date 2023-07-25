@@ -83,7 +83,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
                 }}
               >
                 {t('upsell.paywall.scopes_per_resource', {
-                  count: currentPlan.quota.scopesPerResourceLimit,
+                  count: currentPlan.quota.scopesPerResourceLimit ?? 0,
                 })}
               </Trans>
             </QuotaGuardFooter>

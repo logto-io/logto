@@ -77,7 +77,7 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
                 planName: <PlanName name={currentPlan.name} />,
               }}
             >
-              {t('upsell.paywall.hooks', { count: currentPlan.quota.hooksLimit })}
+              {t('upsell.paywall.hooks', { count: currentPlan.quota.hooksLimit ?? 0 })}
             </Trans>
           </QuotaGuardFooter>
         ) : (
