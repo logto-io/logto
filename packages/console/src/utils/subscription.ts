@@ -3,11 +3,8 @@ import dayjs from 'dayjs';
 
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
-import {
-  communitySupportEnabledMap,
-  reservedPlanIdOrder,
-  ticketSupportResponseTimeMap,
-} from '@/consts/subscriptions';
+import { communitySupportEnabledMap, ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
+import { reservedPlanIdOrder } from '@/consts/subscriptions';
 import { type Invoice } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {

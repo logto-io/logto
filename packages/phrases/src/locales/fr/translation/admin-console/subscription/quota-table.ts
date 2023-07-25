@@ -1,62 +1,71 @@
 const quota_table = {
   quota: {
     title: 'Quota',
-    tenant_limit: 'Limite du locataire',
+    tenant_limit: 'Limite de locataire',
     base_price: 'Prix de base',
     mau_unit_price: '* Prix unitaire MAU',
     mau_limit: 'Limite MAU',
   },
   application: {
     title: 'Applications',
-    total: 'Total',
-    m2m: 'Machine à machine',
+    total: 'Total des applications',
+    m2m: 'Machine-à-machine',
   },
   resource: {
-    title: 'API resources',
+    title: 'Ressources API',
     resource_count: 'Nombre de ressources',
     scopes_per_resource: 'Autorisations par ressource',
   },
   branding: {
-    title: 'Branding',
+    title: 'Interface utilisateur et branding',
     custom_domain: 'Domaine personnalisé',
+    custom_css: 'CSS personnalisé',
+    app_logo_and_favicon: "Logo et favicon de l'application",
+    dark_mode: 'Mode sombre',
+    i18n: 'Internationalisation',
   },
   user_authn: {
-    title: 'Authentification utilisateur',
-    omni_sign_in: 'Connexion omni',
-    built_in_email_connector: 'Connecteur de messagerie intégré',
+    title: 'Authentification des utilisateurs',
+    omni_sign_in: 'Connexion omnicanale',
+    password: 'Mot de passe',
+    passwordless: 'Sans mot de passe - Email et SMS',
+    email_connector: 'Connecteur email',
+    sms_connector: 'Connecteur SMS',
     social_connectors: 'Connecteurs sociaux',
     standard_connectors: 'Connecteurs standards',
+    built_in_email_connector: 'Connecteur email intégré',
   },
-  roles: {
-    title: 'Rôles',
+  user_management: {
+    title: 'Gestion des utilisateurs',
+    user_management: 'Gestion des utilisateurs',
     roles: 'Rôles',
     scopes_per_role: 'Autorisations par rôle',
   },
   audit_logs: {
-    title: 'Journaux d’audit',
+    title: "Journaux d'audit",
     retention: 'Conservation',
   },
   hooks: {
-    title: 'Hooks',
-    amount: 'Montant',
+    title: 'Webhooks',
+    hooks: 'Webhooks',
   },
   support: {
     title: 'Support',
     community: 'Communauté',
-    customer_ticket: 'Ticket client',
+    customer_ticket: 'Ticket de support',
     premium: 'Premium',
   },
   mau_unit_price_footnote:
-    '* Nos prix unitaires peuvent varier en fonction des ressources réellement consommées, et Logto se réserve le droit d’expliquer tout changement de prix unitaire.',
+    '* Vos utilisateurs actifs mensuels (MAU) sont répartis en 3 niveaux en fonction de la fréquence à laquelle ils se connectent pendant le cycle de facturation. Chaque niveau a un prix différent par unité MAU.',
   unlimited: 'Illimité',
   contact: 'Contact',
   // eslint-disable-next-line no-template-curly-in-string
-  monthly_price: '${{value, number}}/mois',
+  monthly_price: '${{value, number}}/mo',
   // eslint-disable-next-line no-template-curly-in-string
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} jour',
   days_other: '{{count, number}} jours',
-  add_on: 'Complément',
+  add_on: 'Module complémentaire',
 };
 
 export default quota_table;

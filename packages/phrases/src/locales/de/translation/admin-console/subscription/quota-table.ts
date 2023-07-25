@@ -1,53 +1,62 @@
 const quota_table = {
   quota: {
-    title: 'Quota',
-    tenant_limit: 'Mietergrenze',
+    title: 'Kontingent',
+    tenant_limit: 'Tenant-Limit',
     base_price: 'Grundpreis',
     mau_unit_price: '* MAU-Einheitspreis',
-    mau_limit: 'MAU-Grenze',
+    mau_limit: 'MAU-Limit',
   },
   application: {
     title: 'Anwendungen',
-    total: 'Insgesamt',
-    m2m: 'Maschine zu Maschine',
+    total: 'Gesamtzahl der Anwendungen',
+    m2m: 'Maschine-zu-Maschine',
   },
   resource: {
     title: 'API-Ressourcen',
-    resource_count: 'Anzahl der Ressourcen',
+    resource_count: 'Ressourcenanzahl',
     scopes_per_resource: 'Berechtigungen pro Ressource',
   },
   branding: {
-    title: 'Branding',
+    title: 'Benutzeroberfläche und Branding',
     custom_domain: 'Benutzerdefinierte Domain',
+    custom_css: 'Benutzerdefiniertes CSS',
+    app_logo_and_favicon: 'App-Logo und Favicon',
+    dark_mode: 'Dunkler Modus',
+    i18n: 'Internationalisierung',
   },
   user_authn: {
     title: 'Benutzerauthentifizierung',
     omni_sign_in: 'Omni-Anmeldung',
-    built_in_email_connector: 'Eingebauter E-Mail-Connector',
-    social_connectors: 'Soziale Connectoren',
-    standard_connectors: 'Standard-Connectoren',
+    password: 'Passwort',
+    passwordless: 'Passwortlos - E-Mail und SMS',
+    email_connector: 'E-Mail-Connector',
+    sms_connector: 'SMS-Connector',
+    social_connectors: 'Social-Connectors',
+    standard_connectors: 'Standard-Connectors',
+    built_in_email_connector: 'Integrierter E-Mail-Connector',
   },
-  roles: {
-    title: 'Rollen',
+  user_management: {
+    title: 'Benutzerverwaltung',
+    user_management: 'Benutzerverwaltung',
     roles: 'Rollen',
     scopes_per_role: 'Berechtigungen pro Rolle',
   },
   audit_logs: {
     title: 'Prüfprotokolle',
-    retention: 'Aufbewahrung',
+    retention: 'Aufbewahrungsdauer',
   },
   hooks: {
-    title: 'Hooks',
-    amount: 'Menge',
+    title: 'Webhooks',
+    hooks: 'Webhooks',
   },
   support: {
     title: 'Support',
     community: 'Community',
-    customer_ticket: 'Kundenticket',
+    customer_ticket: 'Support-Ticket',
     premium: 'Premium',
   },
   mau_unit_price_footnote:
-    '* Unsere Einheitspreise können je nach tatsächlichem Ressourcenverbrauch variieren und Logto behält sich das Recht vor, Änderungen der Einheitspreise zu erläutern.',
+    '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
   // eslint-disable-next-line no-template-curly-in-string
@@ -56,7 +65,7 @@ const quota_table = {
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
-  add_on: 'Zusatz',
+  add_on: 'Zusatzleistung',
 };
 
 export default quota_table;

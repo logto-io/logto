@@ -9,7 +9,10 @@ export enum ReservedPlanName {
   Enterprise = 'Enterprise',
 }
 
-export type SubscriptionPlanQuota = SubscriptionPlanResponse['quota'] & {
+export type SubscriptionPlanQuota = Omit<
+  SubscriptionPlanResponse['quota'],
+  'builtInEmailConnectorEnabled'
+> & {
   communitySupportEnabled: boolean;
   ticketSupportResponseTime: number;
 };
@@ -20,8 +23,21 @@ export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {
 
 export type SubscriptionPlanTable = Partial<
   SubscriptionPlanQuota & {
+    // Base quota
     basePrice: string;
     mauUnitPrice: string[];
+    // UI and branding
+    customCssEnabled: boolean;
+    appLogoAndFaviconEnabled: boolean;
+    darkModeEnabled: boolean;
+    i18nEnabled: boolean;
+    // User authn
+    passwordSignInEnabled: boolean;
+    passwordlessSignInEnabled: boolean;
+    emailConnectorsEnabled: boolean;
+    smsConnectorsEnabled: boolean;
+    // User management
+    userManagementEnabled: boolean;
   }
 >;
 
