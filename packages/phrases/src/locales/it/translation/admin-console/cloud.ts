@@ -41,31 +41,7 @@ const cloud = {
       others: 'Altro',
     },
   },
-  congrats: {
-    page_title: 'Guadagna crediti in anticipo',
-    title: 'Fantastiche notizie! Sei qualificato per guadagnare i primi crediti di Logto Cloud!',
-    description:
-      "Non perdere l'occasione di usufruire di una sottoscrizione gratuita di Logto Cloud per  <strong>60 giorni</strong> dopo il lancio ufficiale! Contatta subito il team di Logto per saperne di più.",
-    check_out_button: 'Guarda la anteprima dal vivo',
-    email_us_title: 'Scrivici una email per offerta speciale e dettagli di prezzo',
-    email_us_description: 'Ottieni prezzi esclusivi per risparmiare denaro',
-    email_us_button: 'Invia email',
-    join_description:
-      'Entra nel nostro <a>{{link}}</a> pubblico per connetterti e chattare con altri sviluppatori.',
-    discord_link: 'canale discord',
-    enter_admin_console: 'Entra in Logto Cloud Preview',
-  },
-  gift: {
-    title: 'Utilizza Logto Cloud gratuitamente per 60 giorni. Unisciti ai primi.',
-    description:
-      'Prenota una sessione individuale con il nostro team per ottenere crediti anticipati.',
-    reserve_title: 'Prenota il tuo tempo con il team Logto',
-    reserve_description: 'Il credito è disponibile solo previa valutazione.',
-    book_button: 'Prenota',
-    email_us_title: 'Scrivici una email',
-    email_us_description: 'Contattaci per una offerta speciale e dettagli di prezzo.',
-    email_us_button: 'Invia',
-  },
+
   sie: {
     page_title: "Personalizza l'esperienza di accesso",
     title: 'Personalizziamo insieme la tua esperienza di accesso',
@@ -102,14 +78,13 @@ const cloud = {
         'Si prega di evitare di utilizzare il connettore demo per scopi di produzione. Una volta completati i test, cancellare gentilmente il connettore demo e configurare il proprio connettore con le proprie credenziali.',
     },
   },
-  broadcast: '📣 Sei in Logto Cloud (Preview)',
   socialCallback: {
     title: 'Accesso effettuato con successo',
     description:
       "Hai effettuato l'accesso con successo utilizzando il tuo account social. Per garantire integrazione senza problemi e accesso a tutte le funzionalità di Logto, ti consigliamo di procedere alla configurazione del tuo connettore social.",
   },
   tenant: {
-    create_tenant: 'Create tenant',
+    create_tenant: 'Crea tenant',
   },
 };
 

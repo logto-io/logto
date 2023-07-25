@@ -3,7 +3,6 @@ import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 
-import LivePreviewButton from '@/components/LivePreviewButton';
 import SignInExperiencePreview from '@/components/SignInExperiencePreview';
 import { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 
@@ -13,19 +12,15 @@ import * as styles from './index.module.scss';
 
 type Props = {
   signInExperience?: SignInExperience;
-  isLivePreviewDisabled?: boolean;
   className?: string;
 };
 
-function Preview({ signInExperience, isLivePreviewDisabled = false, className }: Props) {
+function Preview({ signInExperience, className }: Props) {
   const [currentTab, setCurrentTab] = useState(PreviewPlatform.DesktopWeb);
 
   return (
     <div className={classNames(styles.container, className)}>
-      <div className={styles.topBar}>
-        <PlatformTabs currentTab={currentTab} onSelect={setCurrentTab} />
-        <LivePreviewButton type="violet" isDisabled={isLivePreviewDisabled} />
-      </div>
+      <PlatformTabs currentTab={currentTab} onSelect={setCurrentTab} />
       <SignInExperiencePreview
         platform={currentTab}
         mode={Theme.Light}

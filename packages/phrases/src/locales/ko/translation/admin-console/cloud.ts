@@ -41,29 +41,7 @@ const cloud = {
       others: '기타',
     },
   },
-  congrats: {
-    page_title: '조기 선물 획득하기',
-    title: '좋은 소식입니다! Logto Cloud 조기 크레딧을 받을 자격이 있습니다!',
-    description:
-      '공식 출시 후 Logto Cloud를 <strong>60일</strong> 동안 무료로 구독할 수 있는 기회를 놓치지 마세요! 지금 Logto 팀에 문의하여 자세히 알아보세요.',
-    check_out_button: 'Live Preview 확인하기',
-    email_us_title: '특별 제안과 가격 세부 정보를 위해 이메일을 보내주세요',
-    email_us_description: '돈을 절약하기 위해 독점적인 가격을 받아보세요',
-    email_us_button: '이메일을 보내기',
-    join_description: '공식 <a>{{link}}</a>에 참여하여 다른 개발자들과 연결하고 채팅하세요.',
-    discord_link: '디스코드 채널',
-    enter_admin_console: 'Logto Cloud Preview 참여하기',
-  },
-  gift: {
-    title: '60일 동안 Logto Cloud를 무료로 사용해 보세요. 지금 선발 주자가 되어 보세요!',
-    description: '팀과의 일대일 세션을 예약하여 조기 크레딧을 받으세요.',
-    reserve_title: 'Logto 팀과의 시간을 예약하세요',
-    reserve_description: '크레딧은 평가 시 한 번만 받을 수 있습니다.',
-    book_button: '예약하기',
-    email_us_title: '우리에게 이메일을 보내세요',
-    email_us_description: '특별 제안과 가격 상세 정보를 위해 저희에게 연락해주세요.',
-    email_us_button: '보내기',
-  },
+
   sie: {
     page_title: '로그인 환경 변경하기',
     title: '먼저 로그인 환경을 간편하게 사용자화해 보세요.',
@@ -95,16 +73,15 @@ const cloud = {
     connectors: {
       unlocked_later: '나중에 잠금 해제',
       unlocked_later_tip:
-        '등록 절차를 완료하고 제품에 가입하면 더 많은 소셜 로그인 방법에 액세스할 수 있어요.',
+        '등록 절차를 완료하고 제품에 가입하면 더 많은 소셜 로그인 방법에 액세스할 수 있습니다.',
       notice:
         '데모 연동을 실제 운영 목적으로 사용하지 마세요. 테스트를 완료한 후에는 데모 연동을 삭제하고 자격 증명을 사용하여 고유한 연동을 설정하세요.',
     },
   },
-  broadcast: '📣 Logto Cloud(미리보기)에 가입하셨어요',
   socialCallback: {
     title: '성공적으로 로그인했어요',
     description:
-      '소셜 계정을 사용하여 로그인에 성공했어요. Logto의 모든 기능을 원활하게 통합하고 접근하려면 당신의 소셜 연동을 구성하는 것이 좋아요.',
+      '소셜 계정을 사용하여 로그인에 성공했어요. Logto의 모든 기능을 원활하게 통합하고 접근하려면 당신의 소셜 연동을 구성하는 것이 좋습니다.',
   },
   tenant: {
     create_tenant: '테넌트 생성하기',

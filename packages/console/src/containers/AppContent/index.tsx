@@ -9,7 +9,6 @@ import { isCloud } from '@/consts/env';
 import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import Broadcast from '@/onboarding/components/Broadcast';
 
 import { getPath } from '../ConsoleContent/Sidebar';
 import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
@@ -39,7 +38,6 @@ export default function AppContent() {
       </div>
       {isCloud && (
         <>
-          <Broadcast />
           <MauExceededModal />
           <PaymentOverdueModal />
         </>

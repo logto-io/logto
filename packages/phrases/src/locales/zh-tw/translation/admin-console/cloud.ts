@@ -40,29 +40,7 @@ const cloud = {
       others: '其他',
     },
   },
-  congrats: {
-    page_title: '獲得早鳥驚喜',
-    title: '好消息！你有資格獲得 Logto Cloud 的早鳥驚喜。',
-    description:
-      '別錯過：立即聯繫 Logto 團隊，了解更多信息，獲得 Logto Cloud 正式版 <strong>60 天</strong> 的免費試用機會！',
-    check_out_button: '查看實時預覽',
-    email_us_title: 'Email 我們以獲得特別優惠和價格詳情',
-    email_us_description: '獲取獨家定價以節省更多',
-    email_us_button: '發送電子郵件',
-    join_description: '加入我們的公開 <a>{{link}}</a>，與其他開發人員連接和聊天。',
-    discord_link: 'Discord 頻道',
-    enter_admin_console: '進入 Logto Cloud 預覽',
-  },
-  gift: {
-    title: '免費使用 Logto Cloud 60 天，立即成為尝鮮會員！',
-    description: '預定與我們團隊的一對一會話，以獲取早鳥驚喜。',
-    reserve_title: '與 Logto 團隊預定時間',
-    reserve_description: '評估後僅有一次領取資格。',
-    book_button: '預定',
-    email_us_title: '寄送電子郵件給我們',
-    email_us_description: '聯絡我們以獲得特別優惠及價格詳情。',
-    email_us_button: '寄送',
-  },
+
   sie: {
     page_title: '定制登錄體驗',
     title: '讓我們輕鬆定制你的登錄體驗',
@@ -97,7 +75,6 @@ const cloud = {
         '請勿將演示連接器用於生產目的。完成測試後，請刪除演示連接器並使用你的憑證設置自己的連接器。',
     },
   },
-  broadcast: '📣 你正在使用 Logto Cloud（預覽版）',
   socialCallback: {
     title: '你已成功登錄',
     description:

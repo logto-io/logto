@@ -41,31 +41,7 @@ const cloud = {
       others: 'Inne',
     },
   },
-  congrats: {
-    page_title: 'Zarób wczesne kredyty',
-    title: 'Wspaniała wiadomość! Kwalifikujesz się do zyskania wczesnego kredytu na chmurę Logto!',
-    description:
-      'Nie przegap szansy na bezpłatną <strong>60-dniową</strong> subskrypcję na chmurę Logto po jej oficjalnym uruchomieniu! Skontaktuj się z zespołem Logto, aby dowiedzieć się więcej.',
-    check_out_button: 'Zobacz podgląd na żywo',
-    email_us_title:
-      'Napisz do nas maila w celu uzyskania oferty specjalnej i szczegółów dotyczących ceny',
-    email_us_description: 'Uzyskaj wyłączną ofertę cenową na oszczędność pieniędzy',
-    email_us_button: 'Wyślij e-mail',
-    join_description:
-      'Dołącz do naszej publicznej <a>{{link}}</a>, aby połączyć się i rozmawiać z innymi deweloperami.',
-    discord_link: 'kanał discord',
-    enter_admin_console: 'Wejdź do podglądu chmury Logto',
-  },
-  gift: {
-    title: 'Używaj Logto Cloud za darmo przez 60 dni. Dołącz do pionierów już teraz!',
-    description: 'Zarezerwuj spotkanie z naszym zespołem i zdobądź wczesny kredyt.',
-    reserve_title: 'Zarezerwuj swój czas z zespołem Logto',
-    reserve_description: 'Kredyt przysługuje tylko raz po ocenie.',
-    book_button: 'Rezerwuj',
-    email_us_title: 'Napisz do nas',
-    email_us_description: 'Skontaktuj się z nami, aby otrzymać ofertę specjalną i szczegóły cen.',
-    email_us_button: 'Wyślij',
-  },
+
   sie: {
     page_title: 'Dostosuj doświadczenie logowania',
     title: 'Najpierw dostosuj swoje doświadczenie logowania',
@@ -102,7 +78,6 @@ const cloud = {
         'Prosimy, unikaj korzystania z demo konektora do celów produkcyjnych. Po zakończeniu testów, uprzejmie usuń demokonwerter i skonfiguruj swój własny konektor z własnymi poświadczeniami.',
     },
   },
-  broadcast: '📣 Jesteś w Logto Cloud (Podgląd)',
   socialCallback: {
     title: 'Zalogowałeś się pomyślnie',
     description:

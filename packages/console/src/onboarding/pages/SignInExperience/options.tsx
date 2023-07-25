@@ -4,7 +4,6 @@ import Envelop from '@/assets/icons/envelop.svg';
 import Keyboard from '@/assets/icons/keyboard.svg';
 import Label from '@/assets/icons/label.svg';
 import Lock from '@/assets/icons/lock.svg';
-import Mobile from '@/assets/icons/mobile.svg';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import type {
   MultiCardSelectorOption,
@@ -24,11 +23,6 @@ export const identifierOptions: CardSelectorOption[] = [
     icon: <Envelop />,
     title: 'sign_in_exp.sign_up_and_sign_in.identifiers_email',
     value: SignInIdentifier.Email,
-  },
-  {
-    icon: <Mobile />,
-    title: 'sign_in_exp.sign_up_and_sign_in.identifiers_phone',
-    value: SignInIdentifier.Phone,
   },
   {
     icon: <Label />,

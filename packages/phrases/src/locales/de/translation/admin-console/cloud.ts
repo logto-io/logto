@@ -41,34 +41,7 @@ const cloud = {
       others: 'Andere',
     },
   },
-  congrats: {
-    page_title: 'Frühe Credits verdienen',
-    title:
-      'Großartige Neuigkeiten! Du bist berechtigt, frühzeitige Logto Cloud-Credits zu verdienen!',
-    description:
-      'Verpassen Sie nicht die Chance, nach dem offiziellen Start einen kostenlosen <strong>60-Tage-Abonnement</strong> von Logto Cloud zu genießen! Kontaktieren Sie jetzt das Logto-Team, um mehr zu erfahren.',
-    check_out_button: 'Live-Vorschau ansehen',
-    reserve_title: 'Reservieren Sie Ihre Zeit beim Logto-Team',
-    reserve_description: 'Das Guthaben ist nur einmal nach Validierung berechtigt.',
-    book_button: 'Jetzt buchen',
-    email_us_title: 'Schreiben Sie uns eine E-Mail für ein spezielles Angebot und Preise',
-    email_us_description: 'Erhalten Sie exklusive Preise, um Geld zu sparen',
-    email_us_button: 'E-Mail senden',
-    join_description:
-      'Treten Sie unserem öffentlichen <a>{{link}}</a> bei, um sich mit anderen Entwicklern zu verbinden und zu chatten.',
-    discord_link: 'Discord-Kanal',
-    enter_admin_console: 'Logto Cloud Preview betreten',
-  },
-  gift: {
-    title: 'Nutzen Sie Logto Cloud 60 Tage lang kostenlos. Treten Sie jetzt den Vorreitern bei!',
-    description: 'Buchen Sie eine Einzelsitzung mit unserem Team für frühes Guthaben.',
-    reserve_title: 'Reservieren Sie Ihre Zeit beim Logto-Team',
-    reserve_description: 'Das Guthaben ist nur einmal nach Bewertung berechtigt.',
-    book_button: 'Buch',
-    email_us_title: 'Senden Sie uns eine E-Mail',
-    email_us_description: 'Kontaktieren Sie uns für ein spezielles Angebot und Preisdetails.',
-    email_us_button: 'Senden',
-  },
+
   sie: {
     page_title: 'Meldeeinrichtung anpassen',
     title: 'Passen Sie zuerst Ihre Anmeldungserfahrung mit Leichtigkeit an',
@@ -105,7 +78,6 @@ const cloud = {
         'Bitte verwenden Sie den Demo-Connector nicht für Produktionszwecke. Sobald Sie mit dem Testen fertig sind, löschen Sie bitte den Demo-Connector und richten Sie Ihren eigenen Connector mit Ihren Anmeldeinformationen ein.',
     },
   },
-  broadcast: '📣 Sie befinden sich in Logto Cloud (Preview)',
   socialCallback: {
     title: 'Sie haben sich erfolgreich angemeldet',
     description:
