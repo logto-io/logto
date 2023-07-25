@@ -1,6 +1,7 @@
 import ky from 'ky';
 import type { ReactNode } from 'react';
-import { useContext, useMemo, useEffect, createContext, useState } from 'react';
+import { useContext, useMemo, createContext } from 'react';
+import useSWRImmutable from 'swr/immutable';
 
 import { adminTenantEndpoint } from '@/consts';
 
@@ -23,9 +24,18 @@ export const AppDataContext = createContext<AppData>({});
 
 /** The context provider for the global app data. */
 function AppDataProvider({ children }: Props) {
-  const [userEndpoint, setUserEndpoint] = useState<URL>();
-  const [isLoading, setIsLoading] = useState(false);
   const { currentTenantId } = useContext(TenantsContext);
+
+  const { data: userEndpoint } = useSWRImmutable(
+    `api/.well-known/endpoints/${currentTenantId}`,
+    async (pathname) => {
+      const { user } = await ky
+        .get(new URL(pathname, adminTenantEndpoint))
+        .json<{ user: string }>();
+      return new URL(user);
+    }
+  );
+
   const memorizedContext = useMemo(
     () =>
       ({
@@ -33,22 +43,6 @@ function AppDataProvider({ children }: Props) {
       }) satisfies AppData,
     [userEndpoint]
   );
-
-  useEffect(() => {
-    const getEndpoint = async () => {
-      setIsLoading(true);
-      const { user } = await ky
-        .get(new URL(`api/.well-known/endpoints/${currentTenantId}`, adminTenantEndpoint))
-        .json<{ user: string }>();
-      setUserEndpoint(new URL(user));
-    };
-
-    if (!currentTenantId || isLoading || userEndpoint) {
-      return;
-    }
-
-    void getEndpoint();
-  }, [currentTenantId, isLoading, userEndpoint]);
 
   return <AppDataContext.Provider value={memorizedContext}>{children}</AppDataContext.Provider>;
 }
