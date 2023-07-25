@@ -4,10 +4,9 @@ const upsell = {
   compare_plans: 'Planları Karşılaştır',
   contact_us: 'Bizimle İletişime Geçin',
   get_started: {
-    title: 'Dikişsiz kimlik yolculuğunuza bir <planName/> ile başlayın!',
+    title: 'Ücretsiz bir planla sorunsuz kimlik yolculuğunuza başlayın!',
     description:
-      "<planName/>, yan projelerinizde veya denemelerinizde Logto'yu denemek için mükemmeldir. Ekibiniz için Logto'nun yeteneklerinden tam olarak yararlanmak için sınırsız erişim sağlamak için yükseltin: sınırsız MAU kullanımı, Makine-Makine entegrasyonu, sorunsuz RBAC yönetimi, uzun süreli denetim günlükleri ve daha fazlası.",
-    view_plans: 'Planları Görüntüle',
+      "Ücretsiz plan, Logto'yu yan projelerinizde veya denemelerinizde denemek için mükemmeldir. Ekibiniz için Logto'nun yeteneklerini tam anlamıyla kullanmak için sınırsız erişim elde etmek için yükseltme yaparak premium özelliklere sahip olun: sınırsız MAU kullanımı, Makine-Makine entegrasyonu, RBAC yönetimi, uzun süreli denetim günlükleri vb. <a>Tüm planları görüntüle</a>",
   },
   create_tenant: {
     title: 'Kiracı planınızı seçin',

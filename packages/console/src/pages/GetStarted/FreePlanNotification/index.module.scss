@@ -24,10 +24,9 @@
     font: var(--font-body-2);
     color: var(--color-text-secondary);
     margin-top: _.unit(1);
-  }
 
-  .button {
-    flex-shrink: 0;
-    background-color: transparent;
+    .textLink {
+      text-underline-offset: 3px;
+    }
   }
 }
