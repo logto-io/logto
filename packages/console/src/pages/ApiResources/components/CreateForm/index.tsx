@@ -76,7 +76,7 @@ function CreateForm({ onClose }: Props) {
               }}
             >
               {t('upsell.paywall.resources', {
-                count: currentPlan.quota.resourcesLimit,
+                count: currentPlan.quota.resourcesLimit ?? 0,
               })}
             </Trans>
           </QuotaGuardFooter>

@@ -80,7 +80,7 @@ function Footer({
               : t(
                   planId === ReservedPlanId.pro ? 'standard_connectors_pro' : 'standard_connectors',
                   {
-                    count: quota.standardConnectorsLimit,
+                    count: quota.standardConnectorsLimit ?? 0,
                   }
                 )}
           </Trans>

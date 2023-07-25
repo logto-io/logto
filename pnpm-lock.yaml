@@ -2755,8 +2755,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-8065345
-        version: 0.2.5-8065345(zod@3.20.2)
+        specifier: 0.2.5-1795c3d
+        version: 0.2.5-1795c3d(zod@3.20.2)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -7224,22 +7224,22 @@ packages:
       jose: 4.14.4
     dev: true
 
+  /@logto/cloud@0.2.5-1795c3d(zod@3.20.2):
+    resolution: {integrity: sha512-zxy9zr5swOxbzYJNYtKXofj2tSIS9565d+1pT6RSbmx3Hn+JG6uzsb75PZXW9vlmmm7p1sGZeTQ+xVzKNFPsMg==}
+    engines: {node: ^18.12.0}
+    dependencies:
+      '@silverhand/essentials': 2.7.0
+      '@withtyped/server': 0.12.8(zod@3.20.2)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
   /@logto/cloud@0.2.5-4d5e389(zod@3.20.2):
     resolution: {integrity: sha512-vRJZGc0WvjE1rFJ0DNLaOHkhpe4TMdui/pvcTwGb/bDKzw/NM+4HtUoZj1a1DZ8Qqn24ex1WkTjxY8XGd3EruQ==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.7.0
       '@withtyped/server': 0.12.7(zod@3.20.2)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
-  /@logto/cloud@0.2.5-8065345(zod@3.20.2):
-    resolution: {integrity: sha512-qZWtGd2InkSddNPt3lKO0Ti/UZtQvzul5R7uJbnZgl0xiIpoMYEiHVI9gXQ8O+V47qtPpkS3ykTb2zj4K4Sk+w==}
-    engines: {node: ^18.12.0}
-    dependencies:
-      '@silverhand/essentials': 2.7.0
-      '@withtyped/server': 0.12.8(zod@3.20.2)
     transitivePeerDependencies:
       - zod
     dev: true

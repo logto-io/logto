@@ -65,7 +65,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
                 planName: <PlanName name={planName} />,
               }}
             >
-              {t('machine_to_machine', { count: quota.machineToMachineLimit })}
+              {t('machine_to_machine', { count: quota.machineToMachineLimit ?? 0 })}
             </Trans>
           )}
         </QuotaGuardFooter>
@@ -81,7 +81,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
               planName: <PlanName name={planName} />,
             }}
           >
-            {t('applications', { count: quota.applicationsLimit })}
+            {t('applications', { count: quota.applicationsLimit ?? 0 })}
           </Trans>
         </QuotaGuardFooter>
       );
