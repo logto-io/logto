@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -35,6 +35,7 @@ function SwitchPlanActionBar({
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubscribe = async (targetPlanId: string, isDowngrade: boolean) => {
     const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
@@ -59,6 +60,7 @@ function SwitchPlanActionBar({
     }
 
     try {
+      setIsLoading(true);
       if (targetPlanId === ReservedPlanId.free) {
         await cancelSubscription(currentTenantId);
         onSubscriptionUpdated();
@@ -76,7 +78,10 @@ function SwitchPlanActionBar({
         isDowngrade,
         callbackPage: subscriptionPage,
       });
+
+      setIsLoading(false);
     } catch (error: unknown) {
+      setIsLoading(false);
       if (await isExceededQuotaLimitError(error)) {
         await show({
           ModalContent: () => (
@@ -115,6 +120,7 @@ function SwitchPlanActionBar({
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentPlan}
+              isLoading={!isCurrentPlan && isLoading}
               onClick={() => {
                 void handleSubscribe(planId, isDowngrade);
               }}

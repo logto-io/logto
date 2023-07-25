@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { subscriptionPage } from '@/consts/pages';
@@ -24,6 +24,7 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
   const { subscribe } = useSubscribe();
   const { show } = useConfirmModal();
   const { data: subscriptionPlans } = useSubscriptionPlans();
+  const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
     () => subscriptionPlans?.find(({ id }) => id === ReservedPlanId.pro),
     [subscriptionPlans]
@@ -46,14 +47,19 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
       severity="error"
       action="subscription.upgrade_pro"
       className={className}
+      isActionLoading={isLoading}
       onClick={async () => {
         try {
+          setIsLoading(true);
           await subscribe({
             planId: proPlan.id,
             tenantId: currentTenantId,
             callbackPage: subscriptionPage,
           });
+          setIsLoading(false);
         } catch (error: unknown) {
+          setIsLoading(false);
+
           if (await isExceededQuotaLimitError(error)) {
             await show({
               ModalContent: () => <NotEligibleSwitchPlanModalContent targetPlan={proPlan} />,

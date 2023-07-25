@@ -23,6 +23,7 @@ function PaymentOverdueModal() {
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
   const { data: invoices, error } = useInvoices(currentTenantId);
   const { visitManagePaymentPage } = useSubscribe();
+  const [isActionLoading, setIsActionLoading] = useState(false);
   const isLoadingInvoices = !invoices && !error;
 
   const latestUnpaidInvoice = useMemo(() => {
@@ -69,8 +70,11 @@ function PaymentOverdueModal() {
             <Button
               type="primary"
               title="upsell.payment_overdue_modal.update_payment"
-              onClick={() => {
-                void visitManagePaymentPage(currentTenantId);
+              isLoading={isActionLoading}
+              onClick={async () => {
+                setIsActionLoading(true);
+                await visitManagePaymentPage(currentTenantId);
+                setIsActionLoading(false);
               }}
             />
           </>
