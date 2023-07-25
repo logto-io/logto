@@ -12,7 +12,7 @@ const cloud = {
       personal: '個人プロジェクト',
       company: '会社プロジェクト',
     },
-    title_field: 'あなたのタイトル',
+    title_field: '適用可能なタイトルを選択してください',
     title_options: {
       developer: '開発者',
       team_lead: 'チームリード',

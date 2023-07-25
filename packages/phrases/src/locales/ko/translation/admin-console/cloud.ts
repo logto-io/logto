@@ -12,7 +12,7 @@ const cloud = {
       personal: '개인 프로젝트',
       company: '기업 프로젝트',
     },
-    title_field: '당신의 직함',
+    title_field: '해당 제목을 선택하세요',
     title_options: {
       developer: '개발자',
       team_lead: '팀 리더',

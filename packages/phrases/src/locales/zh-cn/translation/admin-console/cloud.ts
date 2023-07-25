@@ -11,7 +11,7 @@ const cloud = {
       personal: '个人项目',
       company: '公司项目',
     },
-    title_field: '你的头衔',
+    title_field: '选择适用的职位',
     title_options: {
       developer: '开发人员',
       team_lead: '团队负责人',
