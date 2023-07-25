@@ -31,15 +31,15 @@ export const constructPlanTableDataArray = (
         mauUnitPrice: stripeProducts
           .filter(({ type }) => type !== 'flat')
           .map(({ price: { unitAmountDecimal } }) => conditionalString(unitAmountDecimal)),
-        customCssEnabled: customCssEnabledMap[name],
-        appLogoAndFaviconEnabled: appLogoAndFaviconEnabledMap[name],
-        darkModeEnabled: darkModeEnabledMap[name],
-        i18nEnabled: i18nEnabledMap[name],
-        passwordSignInEnabled: passwordSignInEnabledMap[name],
-        passwordlessSignInEnabled: passwordlessSignInEnabledMap[name],
-        emailConnectorsEnabled: emailConnectorsEnabledMap[name],
-        smsConnectorsEnabled: smsConnectorsEnabledMap[name],
-        userManagementEnabled: userManagementEnabledMap[name],
+        customCssEnabled: customCssEnabledMap[id],
+        appLogoAndFaviconEnabled: appLogoAndFaviconEnabledMap[id],
+        darkModeEnabled: darkModeEnabledMap[id],
+        i18nEnabled: i18nEnabledMap[id],
+        passwordSignInEnabled: passwordSignInEnabledMap[id],
+        passwordlessSignInEnabled: passwordlessSignInEnabledMap[id],
+        emailConnectorsEnabled: emailConnectorsEnabledMap[id],
+        smsConnectorsEnabled: smsConnectorsEnabledMap[id],
+        userManagementEnabled: userManagementEnabledMap[id],
       },
     };
   });

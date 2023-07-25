@@ -8,14 +8,14 @@ import { reservedPlanIdOrder } from '@/consts/subscriptions';
 import { type Invoice } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
-  const { name, quota } = subscriptionPlanResponse;
+  const { id, quota } = subscriptionPlanResponse;
 
   return {
     ...subscriptionPlanResponse,
     quota: {
       ...quota,
-      communitySupportEnabled: communitySupportEnabledMap[name] ?? false, // Fallback to not supported
-      ticketSupportResponseTime: ticketSupportResponseTimeMap[name] ?? 0, // Fallback to not supported
+      communitySupportEnabled: communitySupportEnabledMap[id] ?? false, // Fallback to not supported
+      ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
     },
   };
 };

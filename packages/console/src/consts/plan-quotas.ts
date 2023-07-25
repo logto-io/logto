@@ -1,86 +1,79 @@
 import {
-  ReservedPlanName,
   type SubscriptionPlanTable,
   type SubscriptionPlanTableData,
   type SubscriptionPlanTableGroupKeyMap,
   SubscriptionPlanTableGroupKey,
+  ReservedPlanName,
 } from '@/types/subscriptions';
 
-export const customCssEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+import { ReservedPlanId } from './subscriptions';
+
+type EnabledFeatureMap = Record<string, boolean | undefined>;
+
+export const customCssEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const appLogoAndFaviconEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const appLogoAndFaviconEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const darkModeEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const darkModeEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const i18nEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const i18nEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const passwordSignInEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const passwordSignInEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const passwordlessSignInEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const passwordlessSignInEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const emailConnectorsEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const emailConnectorsEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const smsConnectorsEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const smsConnectorsEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const userManagementEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const userManagementEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
-export const communitySupportEnabledMap: Record<string, boolean | undefined> = {
-  [ReservedPlanName.Free]: true,
-  [ReservedPlanName.Hobby]: true,
-  [ReservedPlanName.Pro]: true,
-  [ReservedPlanName.Enterprise]: true,
+export const communitySupportEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: true,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
 };
 
 export const ticketSupportResponseTimeMap: Record<string, number | undefined> = {
-  [ReservedPlanName.Free]: 0,
-  [ReservedPlanName.Hobby]: 72,
-  [ReservedPlanName.Pro]: 48,
-  [ReservedPlanName.Enterprise]: undefined,
+  [ReservedPlanId.free]: 0,
+  [ReservedPlanId.hobby]: 72,
+  [ReservedPlanId.pro]: 48,
 };
 
 /**
@@ -98,24 +91,24 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   resourcesLimit: undefined,
   scopesPerResourceLimit: undefined,
   customDomainEnabled: true,
-  customCssEnabled: customCssEnabledMap[ReservedPlanName.Enterprise],
-  appLogoAndFaviconEnabled: appLogoAndFaviconEnabledMap[ReservedPlanName.Enterprise],
-  darkModeEnabled: darkModeEnabledMap[ReservedPlanName.Enterprise],
-  i18nEnabled: i18nEnabledMap[ReservedPlanName.Enterprise],
+  customCssEnabled: true,
+  appLogoAndFaviconEnabled: true,
+  darkModeEnabled: true,
+  i18nEnabled: true,
   omniSignInEnabled: true,
-  passwordSignInEnabled: passwordSignInEnabledMap[ReservedPlanName.Enterprise],
-  passwordlessSignInEnabled: passwordlessSignInEnabledMap[ReservedPlanName.Enterprise],
-  emailConnectorsEnabled: emailConnectorsEnabledMap[ReservedPlanName.Enterprise],
-  smsConnectorsEnabled: smsConnectorsEnabledMap[ReservedPlanName.Enterprise],
+  passwordSignInEnabled: true,
+  passwordlessSignInEnabled: true,
+  emailConnectorsEnabled: true,
+  smsConnectorsEnabled: true,
   socialConnectorsLimit: undefined,
   standardConnectorsLimit: undefined,
-  userManagementEnabled: userManagementEnabledMap[ReservedPlanName.Enterprise],
+  userManagementEnabled: true,
   rolesLimit: undefined,
   scopesPerRoleLimit: undefined,
   auditLogsRetentionDays: undefined,
   hooksLimit: undefined,
-  communitySupportEnabled: communitySupportEnabledMap[ReservedPlanName.Enterprise],
-  ticketSupportResponseTime: ticketSupportResponseTimeMap[ReservedPlanName.Enterprise],
+  communitySupportEnabled: true,
+  ticketSupportResponseTime: undefined,
 };
 
 /**
