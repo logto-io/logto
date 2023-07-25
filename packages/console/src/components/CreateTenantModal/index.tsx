@@ -49,8 +49,10 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
+
+  const defaultValues = { tag: TenantTag.Development };
   const methods = useForm<CreateTenantData>({
-    defaultValues: { tag: TenantTag.Development },
+    defaultValues,
   });
 
   const {
@@ -67,7 +69,6 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
     void trySafe(async () => {
       const { name, tag } = data;
       const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
-      reset();
       onClose(newTenant);
     });
   };
@@ -85,6 +86,9 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
+      onAfterClose={() => {
+        reset(defaultValues);
+      }}
       onRequestClose={() => {
         onClose();
       }}
