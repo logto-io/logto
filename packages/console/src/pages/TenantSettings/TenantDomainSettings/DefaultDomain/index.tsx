@@ -8,15 +8,15 @@ import Tag from '@/ds-components/Tag';
 import * as styles from './index.module.scss';
 
 function DefaultDomain() {
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
 
-  if (!userEndpoint) {
+  if (!tenantEndpoint) {
     return null;
   }
 
   return (
     <div className={styles.container}>
-      <CopyToClipboard className={styles.domain} value={userEndpoint.host} variant="text" />
+      <CopyToClipboard className={styles.domain} value={tenantEndpoint.host} variant="text" />
       <Tag status="success" type="state" variant="plain">
         <DynamicT forKey="domain.status.in_used" />
       </Tag>

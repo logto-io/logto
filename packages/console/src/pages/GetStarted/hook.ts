@@ -40,7 +40,7 @@ type GetStartedMetadata = {
 
 const useGetStartedMetadata = () => {
   const { configs, updateConfigs } = useConfigs();
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const theme = useTheme();
   const isLightMode = theme === Theme.Light;
   const { navigate } = useTenantPathname();
@@ -58,7 +58,7 @@ const useGetStartedMetadata = () => {
         isComplete: configs?.livePreviewChecked,
         onClick: async () => {
           void updateConfigs({ livePreviewChecked: true });
-          window.open(new URL('/demo-app', userEndpoint), '_blank');
+          window.open(new URL('/demo-app', tenantEndpoint), '_blank');
         },
       },
       {
@@ -103,7 +103,7 @@ const useGetStartedMetadata = () => {
       isLightMode,
       navigate,
       updateConfigs,
-      userEndpoint,
+      tenantEndpoint,
     ]
   );
 

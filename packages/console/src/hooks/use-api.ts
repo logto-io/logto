@@ -102,12 +102,12 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
 };
 
 const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> = {}) => {
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const { currentTenantId } = useContext(TenantsContext);
 
   return useStaticApi({
     ...props,
-    prefixUrl: userEndpoint,
+    prefixUrl: tenantEndpoint,
     resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
   });
 };

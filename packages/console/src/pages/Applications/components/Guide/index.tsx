@@ -56,7 +56,7 @@ function Guide({ app, isCompact, onClose }: Props) {
   const sdks = app && applicationTypeAndSdkTypeMappings[app.type];
   const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
 
@@ -112,16 +112,16 @@ function Guide({ app, isCompact, onClose }: Props) {
           }}
         >
           <Suspense fallback={<StepsSkeleton />}>
-            {GuideComponent && userEndpoint && (
+            {GuideComponent && tenantEndpoint && (
               <GuideComponent
                 appId={appId}
                 appSecret={appSecret}
                 endpoint={
                   isCustomDomainActive
-                    ? applyDomain(userEndpoint.toString(), customDomain.domain)
-                    : userEndpoint
+                    ? applyDomain(tenantEndpoint.toString(), customDomain.domain)
+                    : tenantEndpoint
                 }
-                alternativeEndpoint={conditional(isCustomDomainActive && userEndpoint)}
+                alternativeEndpoint={conditional(isCustomDomainActive && tenantEndpoint)}
                 redirectUris={oidcClientMetadata.redirectUris}
                 postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
                 activeStepIndex={activeStepIndex}

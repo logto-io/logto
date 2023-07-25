@@ -137,7 +137,7 @@ function Providers() {
 
 /** Renders different routes based on the user's onboarding status. */
 function AppRoutes() {
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const { isLoaded } = useMeCustomData();
   const { isOnboarding } = useUserOnboardingData();
   const { isAuthenticated } = useLogto();
@@ -147,7 +147,7 @@ function AppRoutes() {
   // Authenticated user should load onboarding data before rendering the app.
   // This looks weird and it will be refactored soon by merging the onboarding
   // routes with the console routes.
-  if (!userEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
+  if (!tenantEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
     return <AppLoading />;
   }
 

@@ -30,7 +30,7 @@ type Props = {
 };
 
 function AdvancedSettings({ applicationType, oidcConfig }: Props) {
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const {
     register,
     formState: { errors },
@@ -55,11 +55,11 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
       description="application_details.advanced_settings_description"
       learnMoreLink="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint"
     >
-      {userEndpoint && (
+      {tenantEndpoint && (
         <FormField title="application_details.config_endpoint">
           <CopyToClipboard
             className={styles.textField}
-            value={tryApplyCustomDomain(appendPath(userEndpoint, openIdProviderConfigPath).href)}
+            value={tryApplyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
             variant="border"
           />
         </FormField>
@@ -102,13 +102,13 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
           variant="border"
         />
       </FormField>
-      {customDomain?.status === DomainStatus.Active && userEndpoint && (
+      {customDomain?.status === DomainStatus.Active && tenantEndpoint && (
         <div className={styles.customEndpointNotes}>
           <DynamicT
             forKey="domain.custom_endpoint_note"
             interpolation={{
               custom: customDomain.domain,
-              default: new URL(userEndpoint).host,
+              default: new URL(tenantEndpoint).host,
             }}
           />
         </div>

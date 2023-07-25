@@ -17,7 +17,7 @@ type AppData = {
    *
    * Always use this value as the base URL when referring to the Logto URL of the current user's tenant.
    */
-  userEndpoint?: URL;
+  tenantEndpoint?: URL;
 };
 
 export const AppDataContext = createContext<AppData>({});
@@ -26,7 +26,7 @@ export const AppDataContext = createContext<AppData>({});
 function AppDataProvider({ children }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
 
-  const { data: userEndpoint } = useSWRImmutable(
+  const { data: tenantEndpoint } = useSWRImmutable(
     `api/.well-known/endpoints/${currentTenantId}`,
     async (pathname) => {
       const { user } = await ky
@@ -39,9 +39,9 @@ function AppDataProvider({ children }: Props) {
   const memorizedContext = useMemo(
     () =>
       ({
-        userEndpoint,
+        tenantEndpoint,
       }) satisfies AppData,
-    [userEndpoint]
+    [tenantEndpoint]
   );
 
   return <AppDataContext.Provider value={memorizedContext}>{children}</AppDataContext.Provider>;

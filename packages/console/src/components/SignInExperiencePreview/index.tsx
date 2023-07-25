@@ -29,7 +29,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { customPhrases } = useUiLanguages();
-  const { userEndpoint } = useContext(AppDataContext);
+  const { tenantEndpoint } = useContext(AppDataContext);
   const previewRef = useRef<HTMLIFrameElement>(null);
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -76,9 +76,9 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
 
     previewRef.current?.contentWindow?.postMessage(
       { sender: 'ac_preview', config: configForUiPage },
-      userEndpoint?.origin ?? ''
+      tenantEndpoint?.origin ?? ''
     );
-  }, [userEndpoint?.origin, configForUiPage, customPhrases]);
+  }, [tenantEndpoint?.origin, configForUiPage, customPhrases]);
 
   const iframeOnLoadEventHandler = useCallback(() => {
     setIframeLoaded(true);
@@ -102,7 +102,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
     postPreviewMessage();
   }, [iframeLoaded, postPreviewMessage]);
 
-  if (!userEndpoint) {
+  if (!tenantEndpoint) {
     return null;
   }
 
@@ -131,7 +131,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
             ref={previewRef}
             // Allow all sandbox rules
             sandbox={undefined}
-            src={new URL('/sign-in?preview=true', userEndpoint).toString()}
+            src={new URL('/sign-in?preview=true', tenantEndpoint).toString()}
             tabIndex={-1}
             title={t('sign_in_exp.preview.title')}
           />
