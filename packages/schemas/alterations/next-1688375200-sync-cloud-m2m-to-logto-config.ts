@@ -39,7 +39,7 @@ type CloudConnectionConfig = {
 
 const alteration: AlterationScript = {
   up: async (pool) => {
-    const rows = await pool.many<Application>(
+    const { rows } = await pool.query<Application>(
       sql`select * from applications where type = ${ApplicationType.MachineToMachine} and tenant_id = ${adminTenantId} and name = ${cloudServiceApplicationName}`
     );
 
