@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: '역할 권한을 제거하십시오',
   },
   hooks_limit: {
-    name: '훅',
-    limited: '{{count, number}} 훅',
-    limited_other: '{{count, number}} 훅',
-    unlimited: '제한 없는 훅',
-    not_eligible: '훅을 제거하십시오',
+    name: 'Webhooks',
+    limited: '{{count, number}}개의 Webhook',
+    limited_other: '{{count, number}}개의 Webhooks',
+    unlimited: '무제한 Webhooks',
+    not_eligible: '웹훅을 삭제하세요',
   },
   audit_logs_retention_days: {
     name: '감사 로그 보존 기간',

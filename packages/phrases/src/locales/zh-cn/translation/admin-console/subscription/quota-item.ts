@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: '移除你的角色权限',
   },
   hooks_limit: {
-    name: 'Hooks',
-    limited: '{{count, number}} 个 Hook',
-    limited_other: '{{count, number}} 个 Hook',
-    unlimited: '无限制 Hook',
-    not_eligible: '移除你的 Hook',
+    name: 'Webhooks',
+    limited: '{{count, number}}个 Webhook',
+    limited_other: '{{count, number}}个 Webhooks',
+    unlimited: '无限制的 Webhooks',
+    not_eligible: '移除您的 Webhooks',
   },
   audit_logs_retention_days: {
     name: '审计日志保留',

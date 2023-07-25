@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: 'ロールの権限を削除してください',
   },
   hooks_limit: {
-    name: 'フック',
-    limited: '{{count, number}} フック',
-    limited_other: '{{count, number}} フック',
-    unlimited: '無制限のフック',
-    not_eligible: 'フックを削除してください',
+    name: 'Webhooks',
+    limited: '{{count, number}}個のWebhook',
+    limited_other: '{{count, number}}個のWebhooks',
+    unlimited: '無制限のWebhooks',
+    not_eligible: 'Webhookを削除してください',
   },
   audit_logs_retention_days: {
     name: '監査ログの保持期間',

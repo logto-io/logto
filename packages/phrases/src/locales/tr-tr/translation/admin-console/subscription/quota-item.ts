@@ -87,11 +87,11 @@ const quota_item = {
     not_eligible: 'Rol izinlerinizi kaldirin',
   },
   hooks_limit: {
-    name: 'Hooks',
-    limited: '{{count, number}} hook',
-    limited_other: '{{count, number}} hooks',
-    unlimited: 'Sınırsız hooks',
-    not_eligible: 'Hookslarınızı kaldirin',
+    name: 'Webhooks',
+    limited: '{{count, number}} webhook',
+    limited_other: '{{count, number}} webhooks',
+    unlimited: 'Sınırsız webhooklar',
+    not_eligible: 'Webhooklarınızı kaldırın',
   },
   audit_logs_retention_days: {
     name: 'Denetim günlükleri saklama süresi',
