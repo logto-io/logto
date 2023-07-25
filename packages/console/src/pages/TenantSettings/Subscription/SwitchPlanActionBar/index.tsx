@@ -69,6 +69,7 @@ function SwitchPlanActionBar({
             {t('downgrade_success')}
           </Trans>
         );
+        setIsLoading(false);
         return;
       }
 
