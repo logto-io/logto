@@ -1,6 +1,7 @@
 import type { HookExecutionStats, Log } from '@logto/schemas';
-import { token, Logs } from '@logto/schemas';
+import { token, hook, Logs } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
@@ -16,27 +17,41 @@ type LogCondition = {
   userId?: string;
   hookId?: string;
   startTimeExclusive?: number;
+  includeWebhookLogs?: boolean;
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logKey, applicationId, userId, hookId, startTimeExclusive }) => {
-    const subConditions = [
-      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
-      conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
-      conditionalSql(
-        applicationId,
-        (applicationId) => sql`${fields.payload}->>'applicationId'=${applicationId}`
-      ),
-      conditionalSql(hookId, (hookId) => sql`${fields.payload}->>'hookId'=${hookId}`),
-      conditionalSql(
-        startTimeExclusive,
-        (startTimeExclusive) =>
-          sql`${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)`
-      ),
-    ].filter(({ sql }) => sql);
+  conditionalSql(
+    logCondition,
+    ({ logKey, applicationId, userId, hookId, startTimeExclusive, includeWebhookLogs }) => {
+      const subConditions = conditionalArray(
+        conditional(
+          !includeWebhookLogs && sql`${fields.key} not like ${`${hook.Type.TriggerHook}.%`}`
+        ),
+        /**
+         * Should check whether `includeWebhookLogs` will cause `logKey` to be meaningless.
+         */
+        conditional(
+          logKey &&
+            (includeWebhookLogs ?? !logKey.startsWith(`${hook.Type.TriggerHook}.`)) &&
+            sql`${fields.key}=${logKey}`
+        ),
+        conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
+        conditionalSql(
+          applicationId,
+          (applicationId) => sql`${fields.payload}->>'applicationId'=${applicationId}`
+        ),
+        conditionalSql(hookId, (hookId) => sql`${fields.payload}->>'hookId'=${hookId}`),
+        conditionalSql(
+          startTimeExclusive,
+          (startTimeExclusive) =>
+            sql`${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)`
+        )
+      ).filter(({ sql }) => sql);
 
-    return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
-  });
+      return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
+    }
+  );
 
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);

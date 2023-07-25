@@ -42,8 +42,18 @@ describe('logRoutes', () => {
       await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countLogs).toHaveBeenCalledWith({ userId, applicationId, logKey });
-      expect(findLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logKey });
+      expect(countLogs).toHaveBeenCalledWith({
+        userId,
+        applicationId,
+        logKey,
+        includeWebhookLogs: false,
+      });
+      expect(findLogs).toHaveBeenCalledWith(5, 0, {
+        userId,
+        applicationId,
+        logKey,
+        includeWebhookLogs: false,
+      });
     });
 
     it('should return correct response', async () => {

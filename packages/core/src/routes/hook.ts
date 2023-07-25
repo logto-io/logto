@@ -117,8 +117,13 @@ export default function hookRoutes<T extends AuthedRouter>(
       const startTimeExclusive = subDays(new Date(), 1).getTime();
 
       const [{ count }, logs] = await Promise.all([
-        countLogs({ logKey, hookId: id, startTimeExclusive }),
-        findLogs(limit, offset, { logKey, hookId: id, startTimeExclusive }),
+        countLogs({ logKey, hookId: id, startTimeExclusive, includeWebhookLogs: true }),
+        findLogs(limit, offset, {
+          logKey,
+          hookId: id,
+          startTimeExclusive,
+          includeWebhookLogs: true,
+        }),
       ]);
 
       ctx.pagination.totalCount = count;

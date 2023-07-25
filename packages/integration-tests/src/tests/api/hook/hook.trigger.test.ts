@@ -87,7 +87,9 @@ describe('trigger hooks', () => {
     await signInWithPassword({ username, password });
 
     // Check hook trigger log
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
+    const logs = await getLogs(
+      new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+    );
     expect(
       logs.some(
         ({ payload: { hookId, result, error } }) =>
@@ -128,7 +130,9 @@ describe('trigger hooks', () => {
     const userId = await registerNewUser(username, password);
 
     // Check hook trigger log
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
+    const logs = await getLogs(
+      new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+    );
     expect(
       logs.some(
         ({ payload: { hookId, result, error } }) =>
@@ -222,7 +226,9 @@ describe('trigger hooks', () => {
     // Wait for the hook to be trigged
     await waitFor(1000);
 
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
+    const logs = await getLogs(
+      new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+    );
     const relatedLogs = logs.filter(
       ({ payload: { hookId, result } }) =>
         hookId === resetPasswordHook.id && result === LogResult.Success

@@ -155,8 +155,18 @@ describe('hook routes', () => {
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
     );
-    expect(countLogs).toHaveBeenCalledWith({ hookId, logKey, startTimeExclusive });
-    expect(findLogs).toHaveBeenCalledWith(5, 0, { hookId, logKey, startTimeExclusive });
+    expect(countLogs).toHaveBeenCalledWith({
+      hookId,
+      logKey,
+      startTimeExclusive,
+      includeWebhookLogs: true,
+    });
+    expect(findLogs).toHaveBeenCalledWith(5, 0, {
+      hookId,
+      logKey,
+      startTimeExclusive,
+      includeWebhookLogs: true,
+    });
 
     jest.useRealTimers();
   });
