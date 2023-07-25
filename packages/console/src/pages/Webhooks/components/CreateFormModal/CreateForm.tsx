@@ -91,6 +91,7 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
           />
         )
       }
+      size="large"
       onClose={onClose}
     >
       <FormProvider {...formMethods}>
