@@ -1,7 +1,10 @@
 import { ApplicationType } from '@logto/schemas';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import TypeDescription from '../TypeDescription';
@@ -14,6 +17,9 @@ type Props = {
 
 function ApplicationsPlaceholder({ onSelect }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isMachineToMachineDisabled = !currentPlan?.quota.machineToMachineLimit;
 
   return (
     <div className={styles.placeholder}>
@@ -28,7 +34,7 @@ function ApplicationsPlaceholder({ onSelect }: Props) {
               title={t(`${applicationTypeI18nKey[type]}.title`)}
               subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
               description={t(`${applicationTypeI18nKey[type]}.description`)}
-              hasProTag={type === ApplicationType.MachineToMachine}
+              hasProTag={type === ApplicationType.MachineToMachine && isMachineToMachineDisabled}
             />
             <Button
               className={styles.createButton}

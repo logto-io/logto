@@ -3,13 +3,15 @@ import {
   type ConnectorFactoryResponse,
   type ConnectorResponse,
 } from '@logto/schemas';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
@@ -41,6 +43,9 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();
   const isCreatingSocialConnector = type === ConnectorType.Social;
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isStandardConnectorDisabled = !currentPlan?.quota.standardConnectorsLimit;
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
@@ -143,7 +148,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              <ProTag />
+              {isStandardConnectorDisabled && <ProTag />}
             </div>
             <ConnectorRadioGroup
               name="group"
