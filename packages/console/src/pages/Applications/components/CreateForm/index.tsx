@@ -1,17 +1,19 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
@@ -34,6 +36,9 @@ type Props = {
 };
 
 function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isMachineToMachineDisabled = !currentPlan?.quota.machineToMachineLimit;
   const { updateConfigs } = useConfigs();
   const {
     handleSubmit,
@@ -119,7 +124,9 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
                     title={t(`${applicationTypeI18nKey[type]}.title`)}
                     subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
                     description={t(`${applicationTypeI18nKey[type]}.description`)}
-                    hasProTag={type === ApplicationType.MachineToMachine}
+                    hasProTag={
+                      type === ApplicationType.MachineToMachine && isMachineToMachineDisabled
+                    }
                   />
                 </Radio>
               ))}
