@@ -1,6 +1,6 @@
 const quota_table = {
   quota: {
-    title: '배정량',
+    title: '할당량',
     tenant_limit: '테넌트 제한',
     base_price: '기본 가격',
     mau_unit_price: '* MAU 단가',
@@ -8,48 +8,57 @@ const quota_table = {
   },
   application: {
     title: '애플리케이션',
-    total: '총계',
-    m2m: '기계 간 통신',
+    total: '총 애플리케이션 수',
+    m2m: '머신 투 머신',
   },
   resource: {
-    title: 'API 자원',
-    resource_count: '자원 개수',
-    scopes_per_resource: '자원 당 권한',
+    title: 'API 리소스',
+    resource_count: '리소스 수',
+    scopes_per_resource: '리소스 당 권한',
   },
   branding: {
-    title: '브랜딩',
+    title: 'UI 및 브랜딩',
     custom_domain: '사용자 정의 도메인',
+    custom_css: '사용자 정의 CSS',
+    app_logo_and_favicon: '앱 로고와 파비콘',
+    dark_mode: '다크 모드',
+    i18n: '국제화',
   },
   user_authn: {
     title: '사용자 인증',
-    omni_sign_in: '옴니 로그인',
-    built_in_email_connector: '내장 이메일 커넥터',
+    omni_sign_in: '옴니 사인인',
+    password: '비밀번호',
+    passwordless: '비밀번호 없음 - 이메일과 SMS',
+    email_connector: '이메일 커넥터',
+    sms_connector: 'SMS 커넥터',
     social_connectors: '소셜 커넥터',
     standard_connectors: '표준 커넥터',
+    built_in_email_connector: '내장 이메일 커넥터',
   },
-  roles: {
-    title: '역할',
+  user_management: {
+    title: '사용자 관리',
+    user_management: '사용자 관리',
     roles: '역할',
     scopes_per_role: '역할 당 권한',
   },
   audit_logs: {
     title: '감사 로그',
-    retention: '유지 기간',
+    retention: '보존 기간',
   },
   hooks: {
-    title: '후크',
-    amount: '수량',
+    title: 'Webhooks',
+    hooks: 'Webhooks',
   },
   support: {
     title: '지원',
     community: '커뮤니티',
-    customer_ticket: '고객 문의',
+    customer_ticket: '지원 티켓',
     premium: '프리미엄',
   },
   mau_unit_price_footnote:
-    '* 실제 사용된 리소스에 따라 단가가 달라질 수 있으며, Logto는 단가 변경에 대한 설명을 예약합니다.',
+    '* 월간 활성 사용자(MAU)는 청구 주기 동안 로그인 빈도에 따라 3단계로 나뉩니다. 각 단계마다 달리 책정되는 MAU 단가가 있습니다.',
   unlimited: '무제한',
-  contact: '연락',
+  contact: '문의',
   // eslint-disable-next-line no-template-curly-in-string
   monthly_price: '${{value, number}}/월',
   // eslint-disable-next-line no-template-curly-in-string

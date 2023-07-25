@@ -1,5 +1,16 @@
 import { conditional, conditionalString } from '@silverhand/essentials';
 
+import {
+  appLogoAndFaviconEnabledMap,
+  customCssEnabledMap,
+  darkModeEnabledMap,
+  emailConnectorsEnabledMap,
+  i18nEnabledMap,
+  passwordSignInEnabledMap,
+  passwordlessSignInEnabledMap,
+  smsConnectorsEnabledMap,
+  userManagementEnabledMap,
+} from '@/consts/plan-quotas';
 import { type SubscriptionPlanTableData, type SubscriptionPlan } from '@/types/subscriptions';
 
 export const constructPlanTableDataArray = (
@@ -20,6 +31,15 @@ export const constructPlanTableDataArray = (
         mauUnitPrice: stripeProducts
           .filter(({ type }) => type !== 'flat')
           .map(({ price: { unitAmountDecimal } }) => conditionalString(unitAmountDecimal)),
+        customCssEnabled: customCssEnabledMap[id],
+        appLogoAndFaviconEnabled: appLogoAndFaviconEnabledMap[id],
+        darkModeEnabled: darkModeEnabledMap[id],
+        i18nEnabled: i18nEnabledMap[id],
+        passwordSignInEnabled: passwordSignInEnabledMap[id],
+        passwordlessSignInEnabled: passwordlessSignInEnabledMap[id],
+        emailConnectorsEnabled: emailConnectorsEnabledMap[id],
+        smsConnectorsEnabled: smsConnectorsEnabledMap[id],
+        userManagementEnabled: userManagementEnabledMap[id],
       },
     };
   });

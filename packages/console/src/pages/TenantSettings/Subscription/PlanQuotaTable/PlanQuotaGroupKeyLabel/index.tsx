@@ -14,7 +14,7 @@ const planQuotaGroupKeyPhraseMap: {
   [SubscriptionPlanTableGroupKey.resources]: 'resource.title',
   [SubscriptionPlanTableGroupKey.branding]: 'branding.title',
   [SubscriptionPlanTableGroupKey.userAuthentication]: 'user_authn.title',
-  [SubscriptionPlanTableGroupKey.roles]: 'roles.title',
+  [SubscriptionPlanTableGroupKey.roles]: 'user_management.title',
   [SubscriptionPlanTableGroupKey.hooks]: 'hooks.title',
   [SubscriptionPlanTableGroupKey.auditLogs]: 'audit_logs.title',
   [SubscriptionPlanTableGroupKey.support]: 'support.title',

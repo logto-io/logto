@@ -1,53 +1,62 @@
 const quota_table = {
   quota: {
     title: 'Kota',
-    tenant_limit: 'Kiracı sınırlaması',
+    tenant_limit: 'Kiracı limiti',
     base_price: 'Temel fiyat',
-    mau_unit_price: '* MAU birim fiyatı',
-    mau_limit: 'MAU sınırlaması',
+    mau_unit_price: '* Aylık Etkin Kullanıcı (MAU) birim fiyatı',
+    mau_limit: 'MAU limiti',
   },
   application: {
     title: 'Uygulamalar',
-    total: 'Toplam',
-    m2m: 'Makineye Makine',
+    total: 'Toplam uygulama sayısı',
+    m2m: 'Makine-makine uygulamaları',
   },
   resource: {
-    title: 'API kaynakları',
+    title: 'API Kaynakları',
     resource_count: 'Kaynak sayısı',
-    scopes_per_resource: 'Kaynak başına izin',
+    scopes_per_resource: 'Kaynak başına izinler',
   },
   branding: {
-    title: 'Markalama',
-    custom_domain: 'Özel Alan Adı',
+    title: 'Kullanıcı Arayüzü ve Markalama',
+    custom_domain: 'Özel alan adı',
+    custom_css: 'Özel CSS',
+    app_logo_and_favicon: 'Uygulama logoları ve favicon',
+    dark_mode: 'Karanlık mod',
+    i18n: 'Uluslararasılaştırma',
   },
   user_authn: {
-    title: 'Kullanıcı yetkilendirmesi',
-    omni_sign_in: 'Omni girişi',
-    built_in_email_connector: 'Dahili e-posta bağlayıcısı',
+    title: 'Kullanıcı Kimlik Doğrulama',
+    omni_sign_in: 'Çoklu oturum açma',
+    password: 'Parola',
+    passwordless: 'Parolasız - E-posta ve SMS',
+    email_connector: 'E-posta bağlayıcı',
+    sms_connector: 'SMS bağlayıcı',
     social_connectors: 'Sosyal bağlayıcılar',
     standard_connectors: 'Standart bağlayıcılar',
+    built_in_email_connector: 'Dahili e-posta bağlayıcısı',
   },
-  roles: {
-    title: 'Roller',
+  user_management: {
+    title: 'Kullanıcı Yönetimi',
+    user_management: 'Kullanıcı Yönetimi',
     roles: 'Roller',
-    scopes_per_role: 'Rol başına izin',
+    scopes_per_role: 'Rol başına izinler',
   },
   audit_logs: {
-    title: 'Denetim günlükleri',
+    title: 'Denetim Günlükleri',
     retention: 'Saklama',
   },
   hooks: {
-    title: 'Hooks',
-    amount: 'Miktar',
+    title: 'Web Kancaları',
+    hooks: 'Web Kancaları',
   },
   support: {
     title: 'Destek',
     community: 'Topluluk',
-    customer_ticket: 'Müşteri bileti',
+    customer_ticket: 'Müşteri destek bileti',
     premium: 'Premium',
   },
   mau_unit_price_footnote:
-    '* Gerçek kaynakların tüketimine bağlı olarak birim fiyatlarımız değişebilir ve Logto, birim fiyatlardaki değişikliklerin açıklamasını yapma hakkını saklı tutar.',
+    '* Aylık etkin kullanıcılarınız (MAU), faturalandırma dönemi boyunca ne sıklıkla oturum açtıklarına göre 3 düzeye ayrılır. Her düzeyin farklı bir MAU birim fiyatı vardır.',
   unlimited: 'Sınırsız',
   contact: 'İletişim',
   // eslint-disable-next-line no-template-curly-in-string
@@ -56,7 +65,7 @@ const quota_table = {
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} gün',
   days_other: '{{count, number}} gün',
-  add_on: 'Ek fonksiyon',
+  add_on: 'Ek Hizmet',
 };
 
 export default quota_table;
