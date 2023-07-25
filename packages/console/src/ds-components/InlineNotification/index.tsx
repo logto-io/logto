@@ -20,6 +20,7 @@ type Props = {
   onClick?: () => void;
   variant?: 'plain' | 'shadow';
   hasIcon?: boolean;
+  isActionLoading?: boolean;
   className?: string;
 };
 
@@ -31,6 +32,7 @@ function InlineNotification({
   severity = 'info',
   variant = 'plain',
   hasIcon = true,
+  isActionLoading = false,
   className,
 }: Props) {
   return (
@@ -57,7 +59,13 @@ function InlineNotification({
       )}
       {action && onClick && (
         <div className={styles.action}>
-          <Button title={action} type="text" size="small" onClick={onClick} />
+          <Button
+            title={action}
+            type="text"
+            size="small"
+            isLoading={isActionLoading}
+            onClick={onClick}
+          />
         </div>
       )}
     </div>

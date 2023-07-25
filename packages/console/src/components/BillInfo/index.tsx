@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Tip from '@/assets/icons/tip.svg';
@@ -20,6 +20,7 @@ type Props = {
 function BillInfo({ cost, isManagePaymentVisible }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { visitManagePaymentPage } = useSubscribe();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -55,8 +56,11 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
       {isManagePaymentVisible && (
         <Button
           title="subscription.manage_payment"
-          onClick={() => {
-            void visitManagePaymentPage(currentTenantId);
+          isLoading={isLoading}
+          onClick={async () => {
+            setIsLoading(true);
+            await visitManagePaymentPage(currentTenantId);
+            setIsLoading(false);
           }}
         />
       )}

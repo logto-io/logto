@@ -2,7 +2,6 @@ import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { HTMLProps, ReactElement, ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { Ring as Spinner } from '@/ds-components/Spinner';
 
@@ -54,9 +53,9 @@ function Button({
   onClick,
   trailingIcon,
   to,
+  disabled,
   ...rest
 }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [showSpinner, setShowSpinner] = useState(false);
   const timerRef = useRef<number>();
 
@@ -87,6 +86,7 @@ function Button({
       )}
       type={htmlType}
       title={to}
+      disabled={isLoading || disabled}
       onClick={(event) => {
         if (isLoading) {
           return false;

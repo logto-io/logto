@@ -1,5 +1,5 @@
 import { conditional } from '@silverhand/essentials';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -15,6 +15,7 @@ type Props = {
 function PaymentOverdueNotification({ className }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { visitManagePaymentPage } = useSubscribe();
+  const [isActionLoading, setIsActionLoading] = useState(false);
   const { data: invoices, error } = useInvoices(currentTenantId);
   const isLoadingInvoices = !invoices && !error;
   const latestUnpaidInvoice = useMemo(
@@ -31,8 +32,11 @@ function PaymentOverdueNotification({ className }: Props) {
       severity="error"
       action="subscription.update_payment"
       className={className}
-      onClick={() => {
-        void visitManagePaymentPage(currentTenantId);
+      isActionLoading={isActionLoading}
+      onClick={async () => {
+        setIsActionLoading(true);
+        await visitManagePaymentPage(currentTenantId);
+        setIsActionLoading(false);
       }}
     >
       <DynamicT
