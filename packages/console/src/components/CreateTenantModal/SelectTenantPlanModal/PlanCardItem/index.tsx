@@ -78,7 +78,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
           </div>
         </div>
         <div className={styles.description}>
-          <PlanDescription planName={planName} />
+          <PlanDescription planId={planId} />
         </div>
       </div>
       <div className={styles.content}>
