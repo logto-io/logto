@@ -121,7 +121,7 @@ function PlanQuotaTable({ subscriptionPlans }: Props) {
                         <div key={value}>
                           <DynamicT
                             forKey="subscription.quota_table.mau_price"
-                            interpolation={{ value: Number(value) / 100 }}
+                            interpolation={{ value: (Number(value) / 100).toFixed(3) }}
                           />
                         </div>
                       ))}

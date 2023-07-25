@@ -44,7 +44,9 @@ function PlanCardItem({ plan, onSelect }: Props) {
   const tierPrices = useMemo(() => {
     const prices = stripeProducts
       .filter(({ type }) => type !== 'flat')
-      .map(({ price: { unitAmountDecimal } }) => `$${Number(unitAmountDecimal) / 100}`);
+      .map(
+        ({ price: { unitAmountDecimal } }) => `$${(Number(unitAmountDecimal) / 100).toFixed(3)}`
+      );
 
     return prices.length > 0 ? prices.join(' ') : '$0.00';
   }, [stripeProducts]);
