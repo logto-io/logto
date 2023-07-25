@@ -4,7 +4,7 @@ import { getUtcStartOfToday } from '#src/oidc/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export const accessTokenIssuedListener = async (
-  accessToken: { accountId: string },
+  accessToken: { accountId?: string },
   queries: Queries
 ) => {
   const { accountId } = accessToken;
