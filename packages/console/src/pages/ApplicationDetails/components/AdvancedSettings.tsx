@@ -121,7 +121,7 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
           />
         </FormField>
       )}
-      {[ApplicationType.Traditional, ApplicationType.Native].includes(applicationType) && (
+      {applicationType !== ApplicationType.MachineToMachine && (
         <>
           <FormField title="application_details.rotate_refresh_token">
             <Switch
