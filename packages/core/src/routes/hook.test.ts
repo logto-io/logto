@@ -61,13 +61,13 @@ const mockExecutionStats = {
 };
 
 const logs = {
-  countLogs: jest.fn().mockResolvedValue({
+  countWebhookLogs: jest.fn().mockResolvedValue({
     count: 1,
   }),
-  findLogs: jest.fn().mockResolvedValue([mockLog]),
+  findWebhookLogs: jest.fn().mockResolvedValue([mockLog]),
 };
 
-const { countLogs, findLogs } = logs;
+const { countWebhookLogs, findWebhookLogs } = logs;
 
 const mockQueries = {
   hooks,
@@ -142,7 +142,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {
+  it('GET /hooks/:id/recent-logs should call countWebhookLogs and findWebhookLogs with correct parameters', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     const hookId = 'foo';
@@ -155,17 +155,15 @@ describe('hook routes', () => {
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
     );
-    expect(countLogs).toHaveBeenCalledWith({
+    expect(countWebhookLogs).toHaveBeenCalledWith({
       hookId,
       logKey,
       startTimeExclusive,
-      includeWebhookLogs: true,
     });
-    expect(findLogs).toHaveBeenCalledWith(5, 0, {
+    expect(findWebhookLogs).toHaveBeenCalledWith(5, 0, {
       hookId,
       logKey,
       startTimeExclusive,
-      includeWebhookLogs: true,
     });
 
     jest.useRealTimers();

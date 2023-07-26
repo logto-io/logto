@@ -28,7 +28,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       updateHookById,
       deleteHookById,
     },
-    logs: { countLogs, findLogs },
+    logs: { countWebhookLogs, findWebhookLogs },
   } = queries;
 
   const {
@@ -117,12 +117,11 @@ export default function hookRoutes<T extends AuthedRouter>(
       const startTimeExclusive = subDays(new Date(), 1).getTime();
 
       const [{ count }, logs] = await Promise.all([
-        countLogs({ logKey, hookId: id, startTimeExclusive, includeWebhookLogs: true }),
-        findLogs(limit, offset, {
+        countWebhookLogs({ logKey, hookId: id, startTimeExclusive }),
+        findWebhookLogs(limit, offset, {
           logKey,
           hookId: id,
           startTimeExclusive,
-          includeWebhookLogs: true,
         }),
       ]);
 

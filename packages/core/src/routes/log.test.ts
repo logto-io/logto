@@ -12,13 +12,13 @@ const mockLog: Log = { tenantId: 'fake_tenant', id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
 const logs = {
-  countLogs: jest.fn().mockResolvedValue({
+  countAuditLogs: jest.fn().mockResolvedValue({
     count: mockLogs.length,
   }),
-  findLogs: jest.fn().mockResolvedValue(mockLogs),
+  findAuditLogs: jest.fn().mockResolvedValue(mockLogs),
   findLogById: jest.fn().mockResolvedValue(mockLog),
 };
-const { countLogs, findLogs, findLogById } = logs;
+const { countAuditLogs, findAuditLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -32,7 +32,7 @@ describe('logRoutes', () => {
   });
 
   describe('GET /logs', () => {
-    it('should call countLogs and findLogs with correct parameters', async () => {
+    it('should call countAuditLogs and findAuditLogs with correct parameters', async () => {
       const userId = 'userIdValue';
       const applicationId = 'foo';
       const logKey = 'SignInUsernamePassword';
@@ -42,17 +42,15 @@ describe('logRoutes', () => {
       await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countLogs).toHaveBeenCalledWith({
+      expect(countAuditLogs).toHaveBeenCalledWith({
         userId,
         applicationId,
         logKey,
-        includeWebhookLogs: false,
       });
-      expect(findLogs).toHaveBeenCalledWith(5, 0, {
+      expect(findAuditLogs).toHaveBeenCalledWith(5, 0, {
         userId,
         applicationId,
         logKey,
-        includeWebhookLogs: false,
       });
     });
 
