@@ -1,7 +1,9 @@
 import classNames from 'classnames';
 import { useMemo } from 'react';
 
+import { planQuotaItemOrder } from '@/consts/plan-quotas';
 import { type SubscriptionPlanQuota } from '@/types/subscriptions';
+import { sortBy } from '@/utils/sort';
 
 import QuotaItem from './QuotaItem';
 import * as styles from './index.module.scss';
@@ -16,7 +18,6 @@ type Props = {
 
 function PlanQuotaList({ quota, featuredQuotaKeys, isDiff, hasIcon, className }: Props) {
   const items = useMemo(() => {
-    // Todo: @xiaoyijun LOG-6540 order keys
     // eslint-disable-next-line no-restricted-syntax
     const entries = Object.entries(quota) as Array<
       [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
@@ -26,7 +27,11 @@ function PlanQuotaList({ quota, featuredQuotaKeys, isDiff, hasIcon, className }:
       ? entries.filter(([key]) => featuredQuotaKeys.includes(key))
       : entries;
 
-    return featuredEntries;
+    return featuredEntries
+      .slice()
+      .sort(([preQuotaKey], [nextQuotaKey]) =>
+        sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
+      );
   }, [quota, featuredQuotaKeys]);
 
   return (

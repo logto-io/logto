@@ -149,3 +149,5 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],
 }) satisfies SubscriptionPlanTableGroupKeyMap;
+
+export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();

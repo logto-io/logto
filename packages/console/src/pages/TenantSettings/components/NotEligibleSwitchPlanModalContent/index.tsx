@@ -1,14 +1,17 @@
 import { conditional } from '@silverhand/essentials';
+import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
+import { planQuotaItemOrder } from '@/consts/plan-quotas';
 import {
   quotaItemLimitedPhrasesMap,
   quotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
+import { sortBy } from '@/utils/sort';
 
 import * as styles from './index.module.scss';
 
@@ -30,10 +33,17 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
 
   const { name, quota } = targetPlan;
 
-  // eslint-disable-next-line no-restricted-syntax
-  const entries = Object.entries(quota) as Array<
-    [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
-  >;
+  const orderedEntries = useMemo(() => {
+    // eslint-disable-next-line no-restricted-syntax
+    const entries = Object.entries(quota) as Array<
+      [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
+    >;
+    return entries
+      .slice()
+      .sort(([preQuotaKey], [nextQuotaKey]) =>
+        sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
+      );
+  }, [quota]);
 
   return (
     <div className={styles.container}>
@@ -47,7 +57,7 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
         </Trans>
       </div>
       <ul className={styles.list}>
-        {entries.map(([quotaKey, quotaValue]) => {
+        {orderedEntries.map(([quotaKey, quotaValue]) => {
           if (
             excludedQuotaKeys.has(quotaKey) ||
             quotaValue === null || // Unlimited items

@@ -7,6 +7,7 @@ import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 import { reservedPlanIdOrder } from '@/consts/subscriptions';
 import { type SubscriptionPlan } from '@/types/subscriptions';
+import { sortBy } from '@/utils/sort';
 import { addSupportQuotaToPlan } from '@/utils/subscription';
 
 const useSubscriptionPlans = () => {
@@ -26,28 +27,9 @@ const useSubscriptionPlans = () => {
     return subscriptionPlansResponse
       .map((plan) => addSupportQuotaToPlan(plan))
       .slice()
-      .sort(({ id: previousId }, { id: nextId }) => {
-        const previousIndex = reservedPlanIdOrder.indexOf(previousId);
-        const nextIndex = reservedPlanIdOrder.indexOf(nextId);
-
-        if (previousIndex === -1 && nextIndex === -1) {
-          // Note: If both plan ids not present in `reservedPlanIdOrder`, sort them in default order
-          return 0;
-        }
-
-        if (previousIndex === -1) {
-          // Note: If only the previous plan has an id not present in `reservedPlanIdOrder`, move it to the end
-          return 1;
-        }
-
-        if (nextIndex === -1) {
-          // Note: If only the next plan has an id not present in `reservedPlanIdOrder`, move it to the end
-          return -1;
-        }
-
-        // Note: Compare them based on the index in the `reservedPlanIdOrder` array
-        return previousIndex - nextIndex;
-      });
+      .sort(({ id: previousId }, { id: nextId }) =>
+        sortBy(reservedPlanIdOrder)(previousId, nextId)
+      );
   }, [subscriptionPlansResponse]);
 
   return {
