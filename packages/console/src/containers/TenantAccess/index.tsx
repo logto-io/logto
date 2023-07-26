@@ -12,6 +12,10 @@ import type ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 
+const tenantSubscriptionKeyRegex = /^\/api\/tenants\/[^/]+\/subscription$/;
+const tenantUsageKeyRegex = /^\/api\/tenants\/[^/]+\/usage$/;
+const tenantInvoicesKeyRegex = /^\/api\/tenants\/[^/]+\/invoices$/;
+
 /**
  * The container that ensures the user has access to the current tenant. When the user is
  * authenticated, it will run the validation by fetching an Access Token for the current
@@ -59,11 +63,19 @@ export default function TenantAccess() {
      * Exceptions:
      * - Exclude the `me` key because it's not tenant-aware. If don't, we need to manually
      * revalidate the `me` key to make console work again.
-     * - Exclude keys that include `/.well-known/` because they are usually static and
+     * - Exclude `/api/subscription-plans` and keys that include `/.well-known/` because they are usually static and
      * should not be revalidated.
+     * - Exclude `/api/tenants/:tenantId/subscription` and `/api/tenants/:tenantId/usage` because we want to keep related caches for all tenants
      */
     void mutate(
-      (key) => typeof key !== 'string' || (key !== 'me' && !key.includes('/.well-known/')),
+      (key) =>
+        typeof key !== 'string' ||
+        (key !== 'me' &&
+          !key.includes('/.well-known/') &&
+          !key.includes('/api/subscription-plans') &&
+          !tenantSubscriptionKeyRegex.test(key) &&
+          !tenantUsageKeyRegex.test(key) &&
+          !tenantInvoicesKeyRegex.test(key)),
       undefined,
       { rollbackOnError: false, throwOnError: false }
     );
