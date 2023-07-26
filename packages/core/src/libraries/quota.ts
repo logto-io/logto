@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/connector-kit';
+import { ConnectorType, DemoConnector } from '@logto/connector-kit';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -55,12 +55,16 @@ export const createQuotaLibrary = (
     },
     socialConnectorsLimit: async () => {
       const connectors = await getLogtoConnectors();
-      const count = connectors.filter(({ type }) => type === ConnectorType.Social).length;
+      const count = connectors.filter(
+        ({ type, metadata: { id } }) => type === ConnectorType.Social && id !== DemoConnector.Social
+      ).length;
       return { count };
     },
     standardConnectorsLimit: async () => {
       const connectors = await getLogtoConnectors();
-      const count = connectors.filter(({ metadata: { isStandard } }) => isStandard).length;
+      const count = connectors.filter(
+        ({ metadata: { isStandard, id } }) => isStandard && id !== DemoConnector.Social
+      ).length;
       return { count };
     },
     customDomainEnabled: notNumber,
