@@ -12,7 +12,7 @@ const subscription = {
   enterprise: 'Kurumsal',
   current_plan: 'Mevcut Plan',
   current_plan_description:
-    'Bu mevcut planınızdır. Plan kullanımını, bir sonraki faturanızı görüntüleyebilir ve dilerseniz daha yüksek bir seviye plana yükseltebilirsiniz.',
+    'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',
   plan_usage: 'Plan kullanımı',
   plan_cycle: 'Plan döngüsü: {{period}}. Kullanım {{renewDate}} tarihinde yenilenir.',
   next_bill: 'Bir sonraki faturanız',

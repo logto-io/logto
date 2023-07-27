@@ -11,7 +11,7 @@ const subscription = {
   enterprise: '企業',
   current_plan: '當前計劃',
   current_plan_description:
-    '這是您的當前計劃。您可以查看計劃使用情況，下一個帳單和升級到更高級別計劃。',
+    '以下是您目前的計劃。您可以輕鬆查看計劃使用情況，檢查即將到來的帳單，並根據需要進行變更。',
   plan_usage: '計劃使用情況',
   plan_cycle: '計劃週期：{{period}}。使用情況將在{{renewDate}}重新啟動。',
   next_bill: '您的下個帳單',

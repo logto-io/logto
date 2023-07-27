@@ -11,7 +11,7 @@ const subscription = {
   enterprise: 'Enterprise',
   current_plan: 'Current Plan',
   current_plan_description:
-    'This is your current plan. You can view the plan usage, your next bill and upgrade to a higher tier plan if you like.',
+    'Here’s your current plan. You can easily see your plan usage, check your upcoming bill, and make changes to your plan as needed.',
   plan_usage: 'Plan usage',
   plan_cycle: 'Plan cycle: {{period}}. Usage renews on {{renewDate}}.',
   next_bill: 'Your next bill',

@@ -12,7 +12,7 @@ const subscription = {
   enterprise: 'エンタープライズ',
   current_plan: '現在のプラン',
   current_plan_description:
-    'これはあなたの現在のプランです。プランの使用状況を確認し、次の請求書を表示し、必要であればより高いティアのプランにアップグレードすることができます。',
+    '現在のプランはこちらです。プランの使用状況を簡単に確認したり、次回の請求を確認したり、必要に応じてプランを変更したりできます。',
   plan_usage: '利用状況',
   plan_cycle: 'プランサイクル: {{period}}。更新日: {{renewDate}}。',
   next_bill: '次の請求書',

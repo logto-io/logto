@@ -12,7 +12,7 @@ const subscription = {
   enterprise: 'Empresa',
   current_plan: 'Plano Atual',
   current_plan_description:
-    'Este é o seu plano atual. Você pode visualizar o uso do plano, sua próxima fatura e fazer upgrade para um plano de nível superior, se desejar.',
+    'Aqui está o seu plano atual. Você pode facilmente ver o uso do seu plano, verificar a sua próxima fatura e fazer alterações no plano, conforme necessário.',
   plan_usage: 'Uso do plano',
   plan_cycle: 'Ciclo do plano: {{period}}. O uso é renovado em {{renewDate}}.',
   next_bill: 'Sua próxima fatura',

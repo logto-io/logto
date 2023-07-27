@@ -11,7 +11,7 @@ const subscription = {
   enterprise: '기업용',
   current_plan: '현재 요금제',
   current_plan_description:
-    '이것은 현재 요금제입니다. 요금제 사용, 다음 청구서 및 더 높은 티어 요금제로 업그레이드할 수 있습니다.',
+    '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
   plan_usage: '요금제 사용량',
   plan_cycle: 'Plan cycle: {{period}}. 사용량은 {{renewDate}}에 갱신됩니다.',
   next_bill: '다음 청구서',
