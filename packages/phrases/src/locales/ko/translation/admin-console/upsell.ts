@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'MAU 단가',
     view_all_features: '모든 기능 보기',
     select_plan: '<name/> 선택',
-    upgrade_to: '<name/>으로 업그레이드',
     free_tenants_limit: '최대 {{count, number}}개 무료 테넌트',
     free_tenants_limit_other: '최대 {{count, number}}개 무료 테넌트',
     most_popular: '가장 인기 있는 플랜',

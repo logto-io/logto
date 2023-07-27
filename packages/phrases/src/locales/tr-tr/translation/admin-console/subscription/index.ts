@@ -29,7 +29,7 @@ const subscription = {
     'Ödeme hatası tespit edildi. Önceki döngü için ${{price, number}} işlenemedi. Logto hizmeti askıya alınmasını önlemek için ödemeleri güncelleyin.',
   downgrade: 'Düşür',
   current: 'Mevcut',
-  buy_now: 'Şimdi satın al',
+  upgrade: 'Yükselt',
   contact_us: 'Bizimle iletişime geçin',
   quota_table,
   billing_history: {

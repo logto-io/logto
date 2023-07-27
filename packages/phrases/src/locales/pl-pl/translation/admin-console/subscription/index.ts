@@ -29,7 +29,7 @@ const subscription = {
     'Wykryto problem z płatnością. Nie można przetworzyć ${{price, number}} za poprzedni cykl. Zaktualizuj płatność, aby uniknąć zawieszenia usługi Logto.',
   downgrade: 'Zdegradować',
   current: 'Obecnie',
-  buy_now: 'Kup teraz',
+  upgrade: 'Aktualizacja',
   contact_us: 'Skontaktuj się z nami',
   quota_table,
   billing_history: {

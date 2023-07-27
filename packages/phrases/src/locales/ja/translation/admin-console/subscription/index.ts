@@ -29,7 +29,7 @@ const subscription = {
     '支払いに問題が発生しました。前回のサイクルで ${{price, number}} を処理できませんでした。Logtoのサービス停止を回避するために支払いを更新してください。',
   downgrade: 'ダウングレード',
   current: '現在',
-  buy_now: '今すぐ購入',
+  upgrade: 'アップグレード',
   contact_us: 'お問い合わせ',
   quota_table,
   billing_history: {

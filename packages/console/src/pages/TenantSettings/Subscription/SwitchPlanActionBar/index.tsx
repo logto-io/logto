@@ -117,7 +117,7 @@ function SwitchPlanActionBar({
                   ? 'subscription.current'
                   : isDowngrade
                   ? 'subscription.downgrade'
-                  : 'subscription.buy_now'
+                  : 'subscription.upgrade'
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentPlan}

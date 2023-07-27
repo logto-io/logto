@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'MAU 单价',
     view_all_features: '查看所有功能',
     select_plan: '选择<name/>',
-    upgrade_to: '升级至<name/>',
     free_tenants_limit: '最多{{count, number}}个免费租户',
     free_tenants_limit_other: '最多{{count, number}}个免费租户',
     most_popular: '最受欢迎',

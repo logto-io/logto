@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'Preço unitário do MAU',
     view_all_features: 'Ver todas as funcionalidades',
     select_plan: 'Selecionar <name/>',
-    upgrade_to: 'Atualizar para <name/>',
     free_tenants_limit: 'Até {{count, number}} inquilino gratuito',
     free_tenants_limit_other: 'Até {{count, number}} inquilinos gratuitos',
     most_popular: 'Mais popular',

@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'MAU birim fiyatı',
     view_all_features: 'Tüm özellikleri görüntüle',
     select_plan: "<name/>'ı Seçin",
-    upgrade_to: "<name/>'a Yükseltin",
     free_tenants_limit: 'En fazla {{count, number}} ücretsiz kiracı',
     free_tenants_limit_other: 'En fazla {{count, number}} ücretsiz kiracı',
     most_popular: 'En Popüler',

@@ -30,7 +30,7 @@ const subscription = {
     'Problème de paiement détecté. Impossible de traiter ${{price, number}} pour le cycle précédent. Mettez à jour le paiement pour éviter la suspension du service Logto.',
   downgrade: 'Passer à un Plan Inférieur',
   current: 'Actuel',
-  buy_now: 'Acheter maintenant',
+  upgrade: 'Mettre à niveau',
   contact_us: 'Contactez-nous',
   quota_table,
   billing_history: {

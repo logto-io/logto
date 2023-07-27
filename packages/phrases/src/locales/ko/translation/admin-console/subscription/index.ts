@@ -28,7 +28,7 @@ const subscription = {
     '결제 문제가 발생했습니다. 이전 주기에 ${{price, number}}을(를) 처리할 수 없습니다. Logto 서비스 중단을 피하기 위해 결제를 업데이트하세요.',
   downgrade: '다운그레이드',
   current: '현재',
-  buy_now: '지금 구매',
+  upgrade: '업그레이드',
   contact_us: '문의하기',
   quota_table,
   billing_history: {

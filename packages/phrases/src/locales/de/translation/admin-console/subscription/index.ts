@@ -28,7 +28,7 @@ const subscription = {
     'Es wurde ein Zahlungsproblem festgestellt. Der Betrag von ${{price, number}} für den vorherigen Zyklus kann nicht verarbeitet werden. Aktualisieren Sie die Zahlung, um eine Aussetzung des Logto-Dienstes zu vermeiden.',
   downgrade: 'Herabstufen',
   current: 'Aktuell',
-  buy_now: 'Jetzt kaufen',
+  upgrade: 'Upgrade',
   contact_us: 'Kontaktieren Sie uns',
   quota_table,
   billing_history: {
