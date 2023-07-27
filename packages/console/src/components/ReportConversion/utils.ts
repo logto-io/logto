@@ -12,19 +12,20 @@ export const linkedInConversionId = '13374828';
  */
 export const shouldReport = window.location.hostname.endsWith('.' + logtoProductionHostname);
 
-/** This function is updated from the Google Tag official code snippet. */
+/* eslint-disable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
+
+/** This function is edited from the Google Tag official code snippet. */
 export function gtag(..._: unknown[]) {
   if (!window.dataLayer) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
     window.dataLayer = [];
   }
 
   // We cannot use rest params here since gtag has some internal logic about `arguments` for data transpiling
-  // eslint-disable-next-line @silverhand/fp/no-mutating-methods, prefer-rest-params
+  // eslint-disable-next-line prefer-rest-params
   window.dataLayer.push(arguments);
 }
 
-/* eslint-disable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
+/** This function is edited from the LinkedIn Tag official code snippet. */
 export function lintrk(..._: unknown[]) {
   // Init LinkedIn tag if needed
   if (!window._linkedin_data_partner_ids) {
@@ -39,4 +40,5 @@ export function lintrk(..._: unknown[]) {
   // eslint-disable-next-line prefer-rest-params
   window.lintrk.q.push(arguments);
 }
+
 /* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
