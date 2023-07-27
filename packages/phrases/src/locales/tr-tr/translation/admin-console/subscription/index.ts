@@ -59,9 +59,10 @@ const subscription = {
       '<name/> planına düşürmeden önce aşağıdaki kriterleri sağladığınızdan emin olun.',
     downgrade_help_tip:
       'Düşürme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
-    upgrade_title: 'Yükseltme için uygun değilsiniz',
+    upgrade_title: 'Saygıdeğer erken benimseyenlerimiz için dostane hatırlatma',
     upgrade_description:
-      'Şu anda <name /> izin verilen miktarın üzerinde kullanıyorsunuz. <name /> planına yükseltmeyi düşünmeden önce aşağıdaki kriterleri sağladığınızdan emin olun.',
+      "Şu anda <name /> tarafından izin verilenden daha fazlasını kullanıyorsunuz. Logto artık resmi olarak kullanılabilir durumda ve her plana özel özellikler sunuyor. <name />'e yükseltmeyi düşünmeden önce, yükseltme öncesinde aşağıdaki kriterleri karşıladığınızdan emin olun.",
+    upgrade_pro_tip: " Ya da Pro Plan'a geçmeyi düşünün.",
     upgrade_help_tip:
       'Yükseltme konusunda yardıma mı ihtiyacınız var? <a>Bizimle iletişime geçin</a>.',
     a_maximum_of: '<item/> için maksimum',

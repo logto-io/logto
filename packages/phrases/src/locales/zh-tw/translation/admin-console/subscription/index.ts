@@ -54,9 +54,10 @@ const subscription = {
     downgrade_title: '您不符合降級條件',
     downgrade_description: '降級到<name/>前，請確保符合以下條件。',
     downgrade_help_tip: '需要降級幫助？<a>聯絡我們</a>。',
-    upgrade_title: '您不符合升級條件',
+    upgrade_title: '致尊敬的早期採用者的友善提醒',
     upgrade_description:
-      '您目前使用的內容超過了<name />允許的範圍。在考慮升級到<name/>之前，請確保符合以下條件。',
+      '您目前的使用量超過了 <name /> 允許的範圍。Logto 現已正式發布，包括針對每個計劃量身定制的功能。在考慮升級到 <name /> 之前，請確保您符合以下升級條件。',
+    upgrade_pro_tip: ' 或者考慮升級到專業版計劃。',
     upgrade_help_tip: '需要升級幫助？<a>聯絡我們</a>。',
     a_maximum_of: '最多<item/>',
   },

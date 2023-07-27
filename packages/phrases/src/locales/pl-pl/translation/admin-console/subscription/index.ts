@@ -58,9 +58,10 @@ const subscription = {
     downgrade_description:
       'Upewnij się, że spełniasz następujące kryteria przed zmniejszeniem do <name/>.',
     downgrade_help_tip: 'Potrzebna pomoc przy zmniejszaniu? <a>Skontaktuj się z nami</a>.',
-    upgrade_title: 'Nie spełniasz warunków do zwiększenia',
+    upgrade_title: 'Przyjazne przypomnienie dla naszych szanowanych wczesnych użytkowników',
     upgrade_description:
-      'Obecnie używasz więcej niż to, co pozwala <name />. Przed rozważeniem zwiększenia do <name/>, upewnij się, że spełniasz następujące kryteria.',
+      'Obecnie używasz więcej niż to, co pozwala <name />. Logto jest teraz oficjalne, z funkcjami dostosowanymi do każdego planu. Zanim rozważysz aktualizację do <name />, upewnij się, że spełniasz poniższe kryteria przed dokonaniem aktualizacji.',
+    upgrade_pro_tip: ' Lub rozważ aktualizację do Planu Pro.',
     upgrade_help_tip: 'Potrzebna pomoc przy zwiększaniu? <a>Skontaktuj się z nami</a>.',
     a_maximum_of: 'Maksymalnie <item/>',
   },
