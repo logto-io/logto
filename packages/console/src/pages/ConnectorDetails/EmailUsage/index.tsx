@@ -16,6 +16,7 @@ import * as styles from './index.module.scss';
 type Props = {
   usage: number;
 };
+
 function EmailUsage({ usage }: Props) {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
