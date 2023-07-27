@@ -64,3 +64,16 @@ export const getAccessTokenPayload = (accessToken: string): Record<string, unkno
 
 export const appendPathname = (pathname: string, baseUrl: URL) =>
   new URL(path.join(baseUrl.pathname, pathname), baseUrl);
+
+/**
+ * Run an action and simultaneously wait for navigation to complete. This is
+ * useful for actions that trigger navigation, such as clicking a link or
+ * submitting a form.
+ */
+export const expectNavigation = async <T>(action: Promise<T>): Promise<T> => {
+  const [result] = await Promise.all([
+    action,
+    page.waitForNavigation({ waitUntil: 'networkidle0' }),
+  ]);
+  return result;
+};

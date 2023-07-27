@@ -1,6 +1,6 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
-import { appendPathname } from '#src/utils.js';
+import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
 
@@ -22,8 +22,7 @@ describe('webhooks', () => {
   });
 
   it('navigates to webhooks page on clicking sidebar menu', async () => {
-    await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href));
 
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
@@ -52,8 +51,7 @@ describe('webhooks', () => {
   });
 
   it('fails to create webhook if no event is provided', async () => {
-    await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href));
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFill('input[name=name]', 'hook_name');
@@ -65,8 +63,7 @@ describe('webhooks', () => {
   });
 
   it('fails to create webhook if endpoint url is not an HTTPS url', async () => {
-    await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href));
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toClick('span[class$=label]', { text: 'Create new account' });
