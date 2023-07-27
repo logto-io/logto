@@ -68,7 +68,7 @@ function PlanQuotaTable({ subscriptionPlans }: Props) {
         isRowHoverEffectDisabled
         rowGroups={quotaTableRowGroups}
         rowIndexKey="quotaKey"
-        rowClassName={(_, index) => conditional(index % 2 !== 0 && styles.colorRow)}
+        rowClassName={(_, index) => conditional(index % 2 === 0 && styles.colorRow)}
         className={styles.table}
         headerTableClassName={styles.headerTable}
         bodyTableWrapperClassName={styles.bodyTableWrapper}
