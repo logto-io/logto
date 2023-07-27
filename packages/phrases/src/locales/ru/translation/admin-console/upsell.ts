@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'Стоимость единицы MAU',
     view_all_features: 'Просмотреть все функции',
     select_plan: 'Выбрать <name/>',
-    upgrade_to: 'Повысить до <name/>',
     free_tenants_limit: 'До {{count, number}} бесплатного арендатора',
     free_tenants_limit_other: 'До {{count, number}} бесплатных арендаторов',
     most_popular: 'Самый популярный',

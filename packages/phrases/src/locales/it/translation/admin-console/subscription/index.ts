@@ -29,7 +29,7 @@ const subscription = {
     'Rilevato un problema di pagamento. Impossibile elaborare ${{price, number}} per il ciclo precedente. Aggiorna il pagamento per evitare la sospensione del servizio Logto.',
   downgrade: 'Degrado',
   current: 'Attuale',
-  buy_now: 'Acquista ora',
+  upgrade: 'Aggiornamento',
   contact_us: 'Contattaci',
   quota_table,
   billing_history: {

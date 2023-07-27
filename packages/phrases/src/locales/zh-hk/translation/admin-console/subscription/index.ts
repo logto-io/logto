@@ -26,7 +26,7 @@ const subscription = {
     '檢測到付款問題。無法處理前一個週期的$ {{price, number}}。更新付款以避免Logto服務暫停。',
   downgrade: '降級',
   current: '當前',
-  buy_now: '立即購買',
+  upgrade: '升級',
   contact_us: '聯繫我們',
   quota_table,
   billing_history: {

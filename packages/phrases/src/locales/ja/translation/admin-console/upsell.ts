@@ -17,7 +17,6 @@ const upsell = {
     mau_unit_price: 'MAU単価',
     view_all_features: 'すべての機能を見る',
     select_plan: '<name/>を選択',
-    upgrade_to: '<name/>にアップグレード',
     free_tenants_limit: '最大{{count, number}}テナント無料',
     free_tenants_limit_other: '最大{{count, number}}テナント無料',
     most_popular: '最も人気',

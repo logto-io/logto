@@ -26,11 +26,10 @@ const subscription = {
     '检测到付款问题。无法处理前一周期的{{price, number}}美元。更新付款以避免 Logto 服务中断。',
   downgrade: '降级',
   current: '当前',
-  buy_now: '立即购买',
+  upgrade: '升级',
   contact_us: '联系我们',
   quota_table,
   quota_item,
-
   billing_history: {
     invoice_column: '发票',
     status_column: '状态',
