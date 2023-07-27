@@ -11,7 +11,7 @@ const subscription = {
   enterprise: 'Unternehmen',
   current_plan: 'Aktueller Plan',
   current_plan_description:
-    'Dies ist Ihr aktueller Plan. Sie können die Plan-Nutzung einsehen, Ihre nächste Rechnung überprüfen und auf einen höheren Tarif upgraden, wenn Sie möchten.',
+    'Hier ist dein aktueller Tarif. Du kannst einfach deinen Tarifverbrauch einsehen, deine anstehende Rechnung überprüfen und bei Bedarf Änderungen an deinem Tarif vornehmen.',
   plan_usage: 'Plan-Nutzung',
   plan_cycle: 'Plan-Zyklus: {{period}}. Die Nutzung wird am {{renewDate}} erneuert.',
   next_bill: 'Ihre nächste Rechnung',

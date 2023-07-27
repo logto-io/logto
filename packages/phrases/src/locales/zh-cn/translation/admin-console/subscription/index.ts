@@ -11,7 +11,7 @@ const subscription = {
   enterprise: '企业',
   current_plan: '当前计划',
   current_plan_description:
-    '这是您的当前计划。您可以查看计划使用情况，您的下一个账单，并在需要时升级到更高级别的计划。',
+    '以下是您当前的计划。您可以轻松查看计划使用情况，检查即将到来的账单，并根据需要对计划进行更改。',
   plan_usage: '计划使用情况',
   plan_cycle: '计划周期：{{period}}，使用情况将于{{renewDate}}续订。',
   next_bill: '您的下一个账单',
