@@ -74,7 +74,7 @@ jobs:
         uses: ikalnytskyi/action-setup-postgres@v4
 
       - name: Setup Redis
-        uses: supercharge/redis-github-action@1.5.0
+        uses: supercharge/redis-github-action@1.6.0
         with:
           redis-version: 6
 
