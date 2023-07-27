@@ -5,7 +5,7 @@ import {
   consoleUsername,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
-import { appendPathname } from '#src/utils.js';
+import { appendPathname, expectNavigation } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -17,23 +17,20 @@ describe('smoke testing for console admin account creation and sign-in', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
 
   it('can open with app element and navigate to welcome page', async () => {
-    await page.goto(logtoConsoleUrl.href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(logtoConsoleUrl.href));
 
     await expect(page).toMatchElement('#app');
     expect(page.url()).toBe(new URL('console/welcome', logtoConsoleUrl).href);
   });
 
   it('can register a new admin account and automatically sign in', async () => {
-    await expect(page).toClick('button', { text: 'Create account' });
+    await expectNavigation(expect(page).toClick('button', { text: 'Create account' }));
 
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
     await expect(page).toFill('input[name=identifier]', consoleUsername);
-    await expect(page).toClick('button[name=submit]');
+    await expectNavigation(expect(page).toClick('button[name=submit]'));
 
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
     expect(page.url()).toBe(appendPathname('/register/password', logtoConsoleUrl).href);
 
     await expect(page).toFillForm('form', {
@@ -41,8 +38,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
       confirmPassword: consolePassword,
     });
 
-    await expect(page).toClick('button[name=submit]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(expect(page).toClick('button[name=submit]'));
 
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
   });
@@ -53,10 +49,11 @@ describe('smoke testing for console admin account creation and sign-in', () => {
     // Try awaiting for 500ms before clicking sign-out button
     await page.waitForTimeout(500);
 
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
+    await expectNavigation(
+      expect(page).toClick(
+        '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownItem]:last-child'
+      )
     );
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     expect(page.url()).toBe(new URL('sign-in', logtoConsoleUrl).href);
   });
@@ -64,14 +61,12 @@ describe('smoke testing for console admin account creation and sign-in', () => {
   it('can sign in to admin console again', async () => {
     const initialHref = appendPath(logtoConsoleUrl, 'console', 'applications').href;
     // Should be able to redirect back after sign-in
-    await page.goto(initialHref);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(initialHref));
     await expect(page).toFillForm('form', {
       identifier: consoleUsername,
       password: consolePassword,
     });
-    await expect(page).toClick('button[name=submit]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(expect(page).toClick('button[name=submit]'));
 
     expect(page.url()).toBe(initialHref);
 

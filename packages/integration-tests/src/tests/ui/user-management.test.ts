@@ -2,6 +2,7 @@ import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import { goToAdminConsole } from '#src/ui-helpers/index.js';
 import {
   appendPathname,
+  expectNavigation,
   formatPhoneNumberToInternational,
   generateEmail,
   generateName,
@@ -19,8 +20,7 @@ describe('user management', () => {
   });
 
   it('navigates to user management page on clicking sidebar menu', async () => {
-    await page.goto(appendPathname('/console/users', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/users', logtoConsoleUrl).href));
 
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
@@ -73,8 +73,7 @@ describe('user management', () => {
   });
 
   it('fails to create user if no identifier is provided', async () => {
-    await page.goto(appendPathname('/console/users', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/users', logtoConsoleUrl).href));
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toClick('button[type=submit]');
@@ -84,8 +83,7 @@ describe('user management', () => {
   });
 
   it('fails to create user if any of the identifiers are existed', async () => {
-    await page.goto(appendPathname('/console/users', logtoConsoleUrl).href);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await expectNavigation(page.goto(appendPathname('/console/users', logtoConsoleUrl).href));
 
     // Conflicted email
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
