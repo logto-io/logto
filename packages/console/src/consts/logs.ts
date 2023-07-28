@@ -1,17 +1,8 @@
-import type { LogKey } from '@logto/schemas';
+import type { AuditLogKey } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
-/**
- * Filter out webhook logs from the audit log list.
- * Hence should not allow user to check webhook logs by selecting their event/log types.
- */
-type AuditLogKeys = Exclude<
-  LogKey,
-  'TriggerHook.PostRegister' | 'TriggerHook.PostSignIn' | 'TriggerHook.PostResetPassword'
->;
-
 export const logEventTitle: Record<string, Optional<string>> &
-  Record<AuditLogKeys, Optional<string>> = Object.freeze({
+  Record<AuditLogKey, Optional<string>> = Object.freeze({
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
   'ExchangeTokenBy.RefreshToken': 'Exchange token by Refresh Token',

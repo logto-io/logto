@@ -9,6 +9,9 @@ export * as hook from './hook.js';
 /** Fallback for empty or unrecognized log keys. */
 export const LogKeyUnknown = 'Unknown';
 
+export type AuditLogKey = typeof LogKeyUnknown | interaction.LogKey | token.LogKey;
+export type WebhookLogKey = hook.LogKey;
+
 /**
  * The union type of all available log keys.
  * Note duplicate keys are allowed but should be avoided.
@@ -16,4 +19,4 @@ export const LogKeyUnknown = 'Unknown';
  * @see {@link interaction.LogKey} for interaction log keys.
  * @see {@link token.LogKey} for token log keys.
  **/
-export type LogKey = typeof LogKeyUnknown | interaction.LogKey | token.LogKey | hook.LogKey;
+export type LogKey = AuditLogKey | WebhookLogKey;
