@@ -16,12 +16,20 @@ const useConnectorInUse = () => {
 
       const { type, target } = connector;
 
-      if (type === ConnectorType.Social) {
+      const isSocial = type === ConnectorType.Social;
+      const isBlockchain = type === ConnectorType.Blockchain;
+      const isEmail = type === ConnectorType.Email;
+
+      if (isSocial) {
         return data.socialSignInConnectorTargets.includes(target);
       }
 
+      if (isBlockchain) {
+        return data.blockchainSignInConnectorTargets.includes(target);
+      }
+
       const relatedIdentifier =
-        type === ConnectorType.Email ? SignInIdentifier.Email : SignInIdentifier.Phone;
+        isEmail ? SignInIdentifier.Email : SignInIdentifier.Phone;
 
       const usedInSignUp =
         data.signUp.identifiers.includes(relatedIdentifier) && data.signUp.verify;

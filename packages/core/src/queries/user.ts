@@ -50,6 +50,15 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
+  const findUserByAddress = async (target: string, address: string) =>
+    pool.maybeOne<User>(
+      sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        where ${fields.identities}::json#>>'{${sql.identifier([target])},address}' = ${address}
+      `
+    );
+
   const hasUser = async (username: string, excludeUserId?: string) =>
     pool.exists(sql`
       select ${fields.id}
@@ -225,6 +234,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUserByPhone,
     findUserById,
     findUserByIdentity,
+    findUserByAddress,
     hasUser,
     hasUserWithId,
     hasUserWithEmail,

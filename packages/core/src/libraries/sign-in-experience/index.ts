@@ -77,9 +77,23 @@ export const createSignInExperienceLibrary = (
       ];
     }, []);
 
+    const blockchainConnectors = signInExperience.blockchainSignInConnectorTargets.reduce<
+      Array<ConnectorMetadata & { id: string }>
+    >((previous, connectorTarget) => {
+      const connectors = logtoConnectors.filter(
+        ({ metadata: { target } }) => target === connectorTarget
+      );
+
+      return [
+        ...previous,
+        ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
+      ];
+    }, []);
+
     return {
       ...signInExperience,
       socialConnectors,
+      blockchainConnectors,
       forgotPassword,
     };
   };

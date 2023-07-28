@@ -105,10 +105,16 @@ export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
 /* === Users === */
 export const roleNamesGuard = z.string().array();
 
-const identityGuard = z.object({
-  userId: z.string(),
-  details: z.object({}).optional(), // Connector's userinfo details, schemaless
-});
+const identityGuard = z
+  .object({
+    userId: z.string(),
+    details: z.object({}).optional(), // Connector's userinfo details, schemaless
+  })
+  .or(
+    z.object({
+      address: z.string(),
+    })
+  );
 export const identitiesGuard = z.record(identityGuard);
 
 export type Identity = z.infer<typeof identityGuard>;

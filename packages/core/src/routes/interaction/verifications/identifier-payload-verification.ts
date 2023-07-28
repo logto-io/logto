@@ -3,6 +3,7 @@ import type {
   IdentifierPayload,
   SocialConnectorPayload,
   VerifyVerificationCodePayload,
+  BlockchainConnectorPayload,
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -20,12 +21,15 @@ import type {
   Identifier,
   AccountIdIdentifier,
   SocialVerifiedIdentifierPayload,
+  BlockchainIdentifier,
 } from '../types/index.js';
+import { verifyBlockchainIdentity } from '../utils/blockchain-verification.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import {
   isVerificationCodeIdentifier,
   isPasswordIdentifier,
   isSocialIdentifier,
+  isBlockchainIdentifier,
 } from '../utils/index.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
 import { verifyIdentifierByVerificationCode } from '../utils/verification-code-validation.js';
@@ -79,6 +83,16 @@ const verifySocialIdentifier = async (
   const userInfo = await verifySocialIdentity(identifier, ctx, tenant);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
+};
+
+const verifyBlockchainIdentifier = async (
+  identifier: BlockchainConnectorPayload,
+  ctx: WithLogContext,
+  tenant: TenantContext
+): Promise<BlockchainIdentifier> => {
+  const userInfo = await verifyBlockchainIdentity(identifier, ctx, tenant);
+
+  return { key: 'blockchain', connectorId: identifier.connectorId, address: userInfo.address };
 };
 
 const verifySocialVerifiedIdentifier = async (
@@ -140,6 +154,10 @@ export default async function identifierPayloadVerification(
 
   if (isVerificationCodeIdentifier(identifierPayload)) {
     return verifyVerificationCodeIdentifier(event, identifierPayload, ctx, tenant);
+  }
+
+  if (isBlockchainIdentifier(identifierPayload)) {
+    return verifyBlockchainIdentifier(identifierPayload, ctx, tenant);
   }
 
   if (isSocialIdentifier(identifierPayload)) {

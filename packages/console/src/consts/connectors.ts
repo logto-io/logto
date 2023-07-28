@@ -13,6 +13,7 @@ export const connectorTitlePlaceHolder = Object.freeze({
   [ConnectorType.Sms]: 'connectors.type.sms',
   [ConnectorType.Email]: 'connectors.type.email',
   [ConnectorType.Social]: 'connectors.type.social',
+  [ConnectorType.Blockchain]: 'connectors.type.blockchain',
 }) satisfies TitlePlaceHolder;
 
 type ConnectorPlatformLabel = {

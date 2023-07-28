@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.blockchainLinkList {
+  @include _.flex-column;
+}
+
+.blockchainLinkButton {
+  margin-bottom: _.unit(4);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.expandIcon {
+  > svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}

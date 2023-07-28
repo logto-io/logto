@@ -47,7 +47,9 @@ const verifyProfileIdentifiers = (
   if (connectorId) {
     assertThat(
       identifiers.some(
-        (identifier) => identifier.key === 'social' && identifier.connectorId === connectorId
+        (identifier) =>
+          (identifier.key === 'social' || identifier.key === 'blockchain') &&
+          identifier.connectorId === connectorId
       ),
       new RequestError({
         code: 'session.connector_session_not_found',

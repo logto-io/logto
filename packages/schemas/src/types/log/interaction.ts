@@ -16,6 +16,7 @@ export enum Method {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
+  Blockchain = 'Blockchain',
 }
 
 export enum Action {
@@ -75,10 +76,11 @@ export type LogKey =
       | Action.Update // PATCH profile
       | Action.Create // PUT profile
       | Action.Delete}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode | Method.Social}.${
-      | Action.Create
-      | Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${
+      | Method.VerificationCode
+      | Method.Social
+      | Method.Blockchain}.${Action.Create | Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Exclude<
       Method,
-      Method.VerificationCode | Method.Social
+      Method.VerificationCode | Method.Social | Method.Blockchain
     >}.${Action.Submit}`;

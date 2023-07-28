@@ -36,7 +36,7 @@ function BasicForm({
   const {
     control,
     register,
-    formState: { errors },
+    formState: { errors, ...state },
   } = useFormContext<ConnectorFormType>();
   const [darkVisible, setDarkVisible] = useState(Boolean(isDarkDefaultVisible));
 
@@ -124,6 +124,8 @@ function BasicForm({
           </Trans>
         )}
       >
+        ok
+        {JSON.stringify([errors.target, state.defaultValues?.target])}
         <TextInput
           placeholder={t('connectors.guide.target_placeholder')}
           error={Boolean(errors.target)}

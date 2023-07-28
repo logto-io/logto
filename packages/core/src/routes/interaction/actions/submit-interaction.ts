@@ -29,11 +29,17 @@ import type {
   SocialIdentifier,
   VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
+  BlockchainIdentifier,
 } from '../types/index.js';
 import { clearInteractionStorage, categorizeIdentifiers } from '../utils/interaction.js';
 
 const filterSocialIdentifiers = (identifiers: Identifier[]): SocialIdentifier[] =>
   identifiers.filter((identifier): identifier is SocialIdentifier => identifier.key === 'social');
+
+const filterBlockchainIdentifiers = (identifiers: Identifier[]): BlockchainIdentifier[] =>
+  identifiers.filter(
+    (identifier): identifier is BlockchainIdentifier => identifier.key === 'blockchain'
+  );
 
 const getNewSocialProfile = async (
   { getLogtoConnectorById }: ConnectorLibrary,
@@ -87,6 +93,49 @@ const getNewSocialProfile = async (
   };
 };
 
+const getNewBlockchainProfile = async (
+  { getLogtoConnectorById }: ConnectorLibrary,
+  {
+    user,
+    connectorId,
+    identifiers,
+  }: {
+    user?: User;
+    connectorId: string;
+    identifiers: BlockchainIdentifier[];
+  }
+) => {
+  // TODO: @simeng refactor me. This step should be verified by the previous profile verification cycle Already.
+  const blockchainIdentifier = identifiers.find(
+    (identifier) => identifier.connectorId === connectorId
+  );
+
+  if (!blockchainIdentifier) {
+    return;
+  }
+
+  const {
+    metadata: { target },
+    dbEntry: { syncProfile },
+  } = await getLogtoConnectorById(connectorId);
+
+  const { address } = blockchainIdentifier;
+
+  const identities = { ...user?.identities, [target]: { address } };
+
+  // Sync the name, avatar, email and phone for new user
+  if (!user) {
+    return {
+      identities,
+    };
+  }
+
+  // Sync the user name and avatar if the connector has syncProfile enabled
+  return {
+    identities,
+  };
+};
+
 const getLatestUserProfileFromSocial = async (
   { getLogtoConnectorById }: ConnectorLibrary,
   authIdentifiers: Identifier[]
@@ -122,7 +171,7 @@ const parseNewUserProfile = async (
 ) => {
   const { phone, username, email, connectorId, password } = profile;
 
-  const [passwordProfile, socialProfile] = await Promise.all([
+  const [passwordProfile, socialProfile, blockchainProfile] = await Promise.all([
     conditional(password && (await encryptUserPassword(password))),
     conditional(
       connectorId &&
@@ -132,10 +181,19 @@ const parseNewUserProfile = async (
           user,
         }))
     ),
+    conditional(
+      connectorId &&
+        (await getNewBlockchainProfile(connectorLibrary, {
+          connectorId,
+          identifiers: filterBlockchainIdentifiers(profileIdentifiers),
+          user,
+        }))
+    ),
   ]);
 
   return {
-    ...socialProfile, // SocialProfile should be applied first
+    ...blockchainProfile, // BlockchainProfile should be applied first
+    ...socialProfile, // SocialProfile should be applied second
     ...passwordProfile,
     ...conditional(phone && { primaryPhone: phone }),
     ...conditional(username && { username }),

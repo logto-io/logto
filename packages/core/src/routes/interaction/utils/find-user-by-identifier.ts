@@ -6,8 +6,13 @@ export default async function findUserByIdentifier(
   { queries, connectors }: TenantContext,
   identity: UserIdentity
 ) {
-  const { findUserByEmail, findUserByUsername, findUserByPhone, findUserByIdentity } =
-    queries.users;
+  const {
+    findUserByEmail,
+    findUserByUsername,
+    findUserByPhone,
+    findUserByIdentity,
+    findUserByAddress,
+  } = queries.users;
   const { getLogtoConnectorById } = connectors;
 
   if ('username' in identity) {
@@ -23,6 +28,14 @@ export default async function findUserByIdentifier(
   }
 
   if ('connectorId' in identity) {
+    if ('address' in identity) {
+      const {
+        metadata: { target },
+      } = await getLogtoConnectorById(identity.connectorId);
+
+      return findUserByAddress(target, identity.address);
+    }
+
     const {
       metadata: { target },
     } = await getLogtoConnectorById(identity.connectorId);

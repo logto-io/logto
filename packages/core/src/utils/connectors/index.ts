@@ -75,6 +75,14 @@ const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory
     const duplicatedConnectorFactoryIds = deduplicatedConnectorFactoryIds.filter(
       (deduplicateId) => connectorFactoryIds.filter((id) => id === deduplicateId).length > 1
     );
+    const allDupes = connectorFactories.filter(
+      (item) => item.metadata.id === duplicatedConnectorFactoryIds[0]
+    );
+
+    // AllDupes.forEach((dupe, i) => {
+    //   console.log('\n\nDUPE\n\n', dupe, i);
+    // });
+
     throw new RequestError({
       code: 'connector.more_than_one_connector_factory',
       status: 422,

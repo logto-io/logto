@@ -8,6 +8,7 @@ import type {
   SocialConnectorPayload,
   SocialEmailPayload,
   SocialPhonePayload,
+  BlockchainConnectorPayload,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -16,8 +17,17 @@ import api from './api';
 const interactionPrefix = '/api/interaction';
 const verificationPath = `verification`;
 
-type Response = {
+type RedirectResponse = {
   redirectTo: string;
+};
+
+type NonceResponse = {
+  nonce: string;
+};
+
+type BlockchainVerifyPayload = {
+  signature: string;
+  address: string;
 };
 
 export type PasswordSignInPayload = { [K in SignInIdentifier]?: string } & { password: string };
@@ -30,7 +40,7 @@ export const signInWithPasswordIdentifier = async (payload: PasswordSignInPayloa
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const registerWithUsernamePassword = async (username: string, password?: string) => {
@@ -44,7 +54,7 @@ export const registerWithUsernamePassword = async (username: string, password?: 
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const setUserPassword = async (password: string) => {
@@ -54,7 +64,7 @@ export const setUserPassword = async (password: string) => {
     },
   });
 
-  const result = await api.post(`${interactionPrefix}/submit`).json<Response | undefined>();
+  const result = await api.post(`${interactionPrefix}/submit`).json<RedirectResponse | undefined>();
 
   // Reset password does not have any response body
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -82,7 +92,7 @@ export const signInWithVerificationCodeIdentifier = async (
     json: payload,
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const addProfileWithVerificationCodeIdentifier = async (
@@ -98,7 +108,7 @@ export const addProfileWithVerificationCodeIdentifier = async (
     json: identifier,
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const verifyForgotPasswordVerificationCodeIdentifier = async (
@@ -108,7 +118,7 @@ export const verifyForgotPasswordVerificationCodeIdentifier = async (
     json: payload,
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const signInWithVerifiedIdentifier = async () => {
@@ -120,7 +130,7 @@ export const signInWithVerifiedIdentifier = async () => {
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const registerWithVerifiedIdentifier = async (payload: SendVerificationCodePayload) => {
@@ -134,13 +144,13 @@ export const registerWithVerifiedIdentifier = async (payload: SendVerificationCo
     json: payload,
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const addProfile = async (payload: { username: string } | { password: string }) => {
   await api.patch(`${interactionPrefix}/profile`, { json: payload });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const getSocialAuthorizationUrl = async (
@@ -158,7 +168,37 @@ export const getSocialAuthorizationUrl = async (
         redirectUri,
       },
     })
-    .json<Response>();
+    .json<RedirectResponse>();
+};
+
+export const getBlockchainNonce = async (connectorId: string, state: string) => {
+  await api.put(`${interactionPrefix}`, { json: { event: InteractionEvent.SignIn } });
+
+  return api
+    .post(`${interactionPrefix}/${verificationPath}/blockchain-nonce`, {
+      json: {
+        connectorId,
+        state,
+      },
+    })
+    .json<NonceResponse>();
+};
+
+export const postBlockchainSignature = async (
+  { address, signature }: BlockchainVerifyPayload,
+  connectorId: string,
+  state: string
+) => {
+  return api
+    .post(`${interactionPrefix}/${verificationPath}/blockchain-verify`, {
+      json: {
+        address,
+        signature,
+        connectorId,
+        state,
+      },
+    })
+    .json<RedirectResponse>();
 };
 
 export const signInWithSocial = async (payload: SocialConnectorPayload) => {
@@ -166,7 +206,15 @@ export const signInWithSocial = async (payload: SocialConnectorPayload) => {
     json: payload,
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
+};
+
+export const signInWithBlockchain = async (payload: BlockchainConnectorPayload) => {
+  await api.patch(`${interactionPrefix}/identifiers`, {
+    json: payload,
+  });
+
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const registerWithVerifiedSocial = async (connectorId: string) => {
@@ -182,7 +230,7 @@ export const registerWithVerifiedSocial = async (connectorId: string) => {
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const bindSocialRelatedUser = async (payload: SocialEmailPayload | SocialPhonePayload) => {
@@ -202,7 +250,7 @@ export const bindSocialRelatedUser = async (payload: SocialEmailPayload | Social
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };
 
 export const linkWithSocial = async (connectorId: string) => {
@@ -220,5 +268,5 @@ export const linkWithSocial = async (connectorId: string) => {
     },
   });
 
-  return api.post(`${interactionPrefix}/submit`).json<Response>();
+  return api.post(`${interactionPrefix}/submit`).json<RedirectResponse>();
 };

@@ -40,6 +40,8 @@ function Markdown({ className, children }: Props) {
     return resolveIdCollision(initialKebabCaseString);
   };
 
+  const body =  children.replace(/\[(.*)\]\((.*)\)/g, '$1')
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -76,7 +78,7 @@ function Markdown({ className, children }: Props) {
         h6: ({ children }) => <h6 id={generateTocId(String(children))}>{children}</h6>,
       }}
     >
-      {children}
+      {body}
     </ReactMarkdown>
   );
 }

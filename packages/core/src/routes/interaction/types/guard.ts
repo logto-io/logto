@@ -10,6 +10,20 @@ export const socialAuthorizationUrlPayloadGuard = z.object({
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
 
+// Blockchain Generate Nonce Route Payload Guard
+export const blockchainGenerateNoncePayloadGuard = z.object({
+  connectorId: z.string(),
+  state: z.string(),
+});
+
+// Blockchain Verify Signature Route Payload Guard
+export const blockchainVerifySignaturePayloadGuard = z.object({
+  address: z.string(),
+  signature: z.string(),
+  connectorId: z.string(),
+  state: z.string(),
+});
+
 // Identifier Guard
 export const accountIdIdentifierGuard = z.object({
   key: z.literal('accountId'),
@@ -32,11 +46,18 @@ export const socialIdentifierGuard = z.object({
   userInfo: socialUserInfoGuard,
 });
 
+export const blockchainIdentifierGuard = z.object({
+  key: z.literal('blockchain'),
+  connectorId: z.string(),
+  address: z.string(),
+});
+
 export const identifierGuard = z.discriminatedUnion('key', [
   accountIdIdentifierGuard,
   verifiedEmailIdentifierGuard,
   verifiedPhoneIdentifierGuard,
   socialIdentifierGuard,
+  blockchainIdentifierGuard,
 ]);
 
 export const anonymousInteractionResultGuard = z.object({

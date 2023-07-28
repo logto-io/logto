@@ -19,7 +19,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   connectorFactoryId: string;
-  connectorType: Exclude<ConnectorType, ConnectorType.Social>;
+  connectorType: Exclude<ConnectorType, ConnectorType.Social | ConnectorType.Blockchain>;
   className?: string;
   parse: () => unknown;
   updateUsage?: () => void;

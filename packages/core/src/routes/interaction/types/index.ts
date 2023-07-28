@@ -20,6 +20,7 @@ import type {
   verifiedRegisterInteractionResultGuard,
   verifiedSignInteractionResultGuard,
   verifiedForgotPasswordInteractionResultGuard,
+  blockchainIdentifierGuard,
 } from './guard.js';
 
 /* Payload Types */
@@ -41,6 +42,7 @@ export type VerifiedEmailIdentifier = z.infer<typeof verifiedEmailIdentifierGuar
 export type VerifiedPhoneIdentifier = z.infer<typeof verifiedPhoneIdentifierGuard>;
 
 export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
+export type BlockchainIdentifier = z.infer<typeof blockchainIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
 
@@ -92,4 +94,5 @@ export type UserIdentity =
   | { username: string }
   | { email: string }
   | { phone: string }
-  | { connectorId: string; userInfo: SocialUserInfo };
+  | { connectorId: string; userInfo: SocialUserInfo }
+  | { connectorId: string; address: string };

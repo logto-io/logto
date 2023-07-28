@@ -179,7 +179,8 @@ export default function initOidc(
 
         const appendParameters = (path: string) => {
           // `notification` is for showing a text banner on the homepage
-          return isDemoApp ? path + `?notification=demo_app.notification&no_cache` : path;
+          // return isDemoApp ? path + `?notification=demo_app.notification&no_cache` : path;
+          return path;
         };
 
         switch (prompt.name) {

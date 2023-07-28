@@ -51,8 +51,12 @@ function Guide({ connector, onClose }: Props) {
   const { type: connectorType, formItems, isStandard } = connector ?? {};
   const { language } = i18next;
 
-  const isSocialConnector =
-    connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
+  const isBlockchainConnector = connectorType === ConnectorType.Blockchain;
+  const isEmailConnector = connectorType === ConnectorType.Email;
+  const isSmsConnector = connectorType === ConnectorType.Sms;
+
+  const isSocialConnector = !isSmsConnector && !isEmailConnector && !isBlockchainConnector;
+  const isTestable = isEmailConnector || isSmsConnector;
 
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',
@@ -211,7 +215,8 @@ function Guide({ connector, onClose }: Props) {
                     formItems={formItems}
                   />
                 </div>
-                {!isSocialConnector && (
+
+                {isTestable && (
                   <div className={styles.block}>
                     <div className={styles.blockTitle}>
                       <div className={styles.number}>2</div>
@@ -224,6 +229,7 @@ function Guide({ connector, onClose }: Props) {
                     />
                   </div>
                 )}
+
                 <div className={styles.footer}>
                   <Button
                     title="connectors.save_and_done"

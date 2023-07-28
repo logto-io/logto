@@ -33,13 +33,21 @@ import ConnectorTypeColumn from './ConnectorTypeColumn';
 import Guide from './Guide';
 import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
+import { ConnectorGroup } from '@/types/connector';
 
 const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
 const socialPathname = `${basePathname}/${ConnectorsTabs.Social}`;
+const blockchainPathname = `${basePathname}/${ConnectorsTabs.Blockchain}`;
 
-const buildTabPathname = (connectorType: ConnectorType) =>
-  connectorType === ConnectorType.Social ? socialPathname : passwordlessPathname;
+const buildTabPathname = (connectorType: ConnectorType) => {
+  const tabPathMap = {
+    [ConnectorType.Social]: socialPathname,
+    [ConnectorType.Blockchain]: blockchainPathname,
+    [ConnectorType.Passwordless]: passwordlessPathname,
+  };
+  return tabPathMap[connectorType] || tabPathMap[ConnectorType.Passwordless];
+};
 
 const buildCreatePathname = (connectorType: ConnectorType) => {
   const tabPath = buildTabPathname(connectorType);
@@ -63,7 +71,6 @@ function Connectors() {
   const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
   const { navigate } = useTenantPathname();
-  const isSocial = tab === ConnectorsTabs.Social;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const { createConnector } = useConnectorApi();
@@ -86,11 +93,38 @@ function Connectors() {
   }, [data]);
 
   const socialConnectors = useMemo(
-    () => data?.filter(({ type }) => type === ConnectorType.Social),
+    () => (data || []).filter(({ type }) => type === ConnectorType.Social),
     [data]
   );
 
-  const connectors = isSocial ? socialConnectors : passwordlessConnectors;
+  const blockchainConnectors = useMemo(
+    () => (data || []).filter(({ type }) => type === ConnectorType.Blockchain),
+    [data]
+  );
+
+  const connectorTabMap: Record<ConnectorsTabs, Array<ConnectorGroup>> = {
+    [ConnectorsTabs.Social]: socialConnectors,
+    [ConnectorsTabs.Blockchain]: blockchainConnectors,
+    [ConnectorsTabs.Passwordless]: passwordlessConnectors,
+  };
+  const connectorTypeTabMap: Record<ConnectorsTabs, [ConnectorType, ...ConnectorType[]]> = {
+    [ConnectorsTabs.Social]: [ConnectorType.Social],
+    [ConnectorsTabs.Blockchain]: [ConnectorType.Blockchain],
+    [ConnectorsTabs.Passwordless]: [ConnectorType.Email, ConnectorType.Sms],
+  };
+  const documentationUrlMap = {
+    [ConnectorsTabs.Social]: '/docs/recipes/configure-connectors/configure-social-connector',
+    [ConnectorsTabs.Blockchain]:
+      '/docs/recipes/configure-connectors/configure-blockchain-connector',
+  };
+
+  const isSocial = tab === ConnectorsTabs.Social;
+  const isBlockchain = tab === ConnectorsTabs.Blockchain;
+  const isCreatable = isSocial || isBlockchain;
+
+  const connectors =
+    connectorTabMap[tab as ConnectorsTabs] || connectorTabMap[ConnectorsTabs.Passwordless];
+  const type = connectorTypeTabMap[tab as ConnectorsTabs];
 
   const hasDemoConnector = connectors?.some(({ isDemo }) => isDemo);
 
@@ -99,6 +133,29 @@ function Connectors() {
       return factories.find(({ id }) => id === factoryId);
     }
   }, [factoryId, factories]);
+
+  const createButtonTitle = useMemo(() => {
+    if (type[0] === ConnectorType.Blockchain) {
+      return 'connectors.create.blockchain';
+    }
+
+    return 'connectors.create.social';
+  }, [type]);
+
+  const placeholderTitle = useMemo(() => {
+    if (type[0] === ConnectorType.Blockchain) {
+      return 'connectors.placeholder_title.blockchain';
+    }
+
+    return 'connectors.placeholder_title.social';
+  }, [type]);
+
+  const placeholderDescription = useMemo(() => {
+    if (type[0] === ConnectorType.Blockchain) {
+      return 'connectors.placeholder_description.blockchain';
+    }
+    return 'connectors.placeholder_description.social';
+  }, [type]);
 
   return (
     <ListPage
@@ -109,10 +166,10 @@ function Connectors() {
       }}
       pageMeta={{ titleKey: 'connectors.page_title' }}
       createButton={conditional(
-        isSocial && {
-          title: 'connectors.create',
+        isCreatable && {
+          title: createButtonTitle,
           onClick: () => {
-            navigate(buildCreatePathname(ConnectorType.Social));
+            navigate(buildCreatePathname(type[0]));
           },
         }
       )}
@@ -122,6 +179,7 @@ function Connectors() {
           <TabNav className={styles.tabs}>
             <TabNavItem href={passwordlessPathname}>{t('connectors.tab_email_sms')}</TabNavItem>
             <TabNavItem href={socialPathname}>{t('connectors.tab_social')}</TabNavItem>
+            <TabNavItem href={blockchainPathname}>{t('connectors.tab_blockchain')}</TabNavItem>
           </TabNav>
           {hasDemoConnector && <DemoConnectorNotice />}
         </>
@@ -177,23 +235,21 @@ function Connectors() {
         isLoading,
         errorMessage: error?.body?.message ?? error?.message,
         placeholder: conditional(
-          isSocial && (
+          isCreatable && (
             <TablePlaceholder
               image={<SocialConnectorEmpty />}
               imageDark={<SocialConnectorEmptyDark />}
-              title="connectors.placeholder_title"
-              description="connectors.placeholder_description"
-              learnMoreLink={getDocumentationUrl(
-                '/docs/recipes/configure-connectors/configure-social-connector'
-              )}
+              title={placeholderTitle}
+              description={placeholderDescription}
+              learnMoreLink={getDocumentationUrl(documentationUrlMap[tab])}
               action={
                 <Button
-                  title="connectors.create"
+                  title={createButtonTitle}
                   type="primary"
                   size="large"
                   icon={<Plus />}
                   onClick={() => {
-                    navigate(buildCreatePathname(ConnectorType.Social));
+                    navigate(buildCreatePathname(type[0]));
                   }}
                 />
               }

@@ -34,6 +34,13 @@ export const phonePasswordPayloadGuard = z.object({
 });
 export type PhonePasswordPayload = z.infer<typeof phonePasswordPayloadGuard>;
 
+export const blockchainConnectorPayloadGuard = z.object({
+  connectorId: z.string(),
+  address: z.string(),
+  signature: z.string(),
+});
+export type BlockchainConnectorPayload = z.infer<typeof blockchainConnectorPayloadGuard>;
+
 export const socialConnectorPayloadGuard = z.object({
   connectorId: z.string(),
   connectorData: jsonObjectGuard,
@@ -71,6 +78,7 @@ export const identifierPayloadGuard = z.union([
   phonePasswordPayloadGuard,
   emailVerificationCodePayloadGuard,
   phoneVerificationCodePayloadGuard,
+  blockchainConnectorPayloadGuard,
   socialConnectorPayloadGuard,
   socialEmailPayloadGuard,
   socialPhonePayloadGuard,
@@ -84,7 +92,8 @@ export type IdentifierPayload =
   | PhoneVerificationCodePayload
   | SocialConnectorPayload
   | SocialPhonePayload
-  | SocialEmailPayload;
+  | SocialEmailPayload
+  | BlockchainConnectorPayload;
 
 export const profileGuard = z.object({
   username: z.string().regex(usernameRegEx).optional(),

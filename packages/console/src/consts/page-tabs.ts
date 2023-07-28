@@ -6,6 +6,7 @@ export enum ApiResourceDetailsTabs {
 export enum ConnectorsTabs {
   Passwordless = 'passwordless',
   Social = 'social',
+  Blockchain = 'blockchain',
 }
 
 export enum WebhookDetailsTabs {

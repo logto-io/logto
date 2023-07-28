@@ -46,6 +46,7 @@ export const createDefaultSignInExperience = (
       ],
     },
     socialSignInConnectorTargets: [],
+    blockchainSignInConnectorTargets: [],
     signInMode: SignInMode.SignInAndRegister,
     customCss: null,
     customContent: {},

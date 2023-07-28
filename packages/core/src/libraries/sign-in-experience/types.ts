@@ -11,11 +11,13 @@ type ConnectorMetadataWithId = ConnectorMetadata & { id: string };
 
 export type FullSignInExperience = SignInExperience & {
   socialConnectors: ConnectorMetadataWithId[];
+  blockchainConnectors: ConnectorMetadataWithId[];
   forgotPassword: ForgotPassword;
 };
 
 export const guardFullSignInExperience: z.ZodType<FullSignInExperience> =
   SignInExperiences.guard.extend({
     socialConnectors: connectorMetadataGuard.extend({ id: z.string() }).array(),
+    blockchainConnectors: connectorMetadataGuard.extend({ id: z.string() }).array(),
     forgotPassword: z.object({ phone: z.boolean(), email: z.boolean() }),
   });

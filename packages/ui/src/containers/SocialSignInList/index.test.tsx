@@ -1,6 +1,6 @@
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { socialConnectors } from '@/__mocks__/logto';
+import { socialConnectors } from '@/__mocks__/connectors';
 
 import SocialSignInList from '.';
 

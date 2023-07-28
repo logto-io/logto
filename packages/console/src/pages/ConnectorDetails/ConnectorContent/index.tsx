@@ -65,7 +65,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   } = connectorData;
 
   const isSocialConnector = connectorType === ConnectorType.Social;
-  const isEmailServiceConnector = connectorId === ServiceConnector.Email;
+  const isBlockchainConnector = connectorType === ConnectorType.Blockchain;
+  const isEmailConnector = connectorId === ServiceConnector.Email;
+  const isSmsConnector = connectorId === ServiceConnector.Sms;
+  const isTestable = isEmailConnector && isSmsConnector;
 
   useEffect(() => {
     /**
@@ -139,7 +142,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             <BasicForm isStandard={isStandardConnector} isDarkDefaultVisible={Boolean(logoDark)} />
           </FormCard>
         )}
-        {isEmailServiceConnector ? (
+        {isEmailConnector ? (
           <EmailServiceConnectorForm extraInfo={connectorData.extraInfo} />
         ) : (
           <FormCard
@@ -154,7 +157,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             <ConfigForm formItems={formItems} connectorId={id} connectorType={connectorType} />
           </FormCard>
         )}
-        {!isSocialConnector && (
+        {isTestable && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester
               connectorFactoryId={connectorId}

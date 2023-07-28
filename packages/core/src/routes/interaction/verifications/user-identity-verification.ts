@@ -12,6 +12,7 @@ import type {
   ForgotPasswordInteractionResult,
   AccountVerifiedInteractionResult,
   Identifier,
+  BlockchainIdentifier,
 } from '../types/index.js';
 import findUserByIdentifier from '../utils/find-user-by-identifier.js';
 import { categorizeIdentifiers } from '../utils/interaction.js';
@@ -66,9 +67,35 @@ const identifyUserBySocialIdentifier = async (
   return id;
 };
 
+const identifyUserByBlockchainIdentifier = async (
+  tenant: TenantContext,
+  identifier: BlockchainIdentifier
+) => {
+  const { connectorId, address } = identifier;
+
+  const user = await findUserByIdentifier(tenant, { connectorId, address });
+
+  if (!user) {
+    throw new RequestError({
+      code: 'user.identity_not_exist',
+      status: 422,
+    });
+  }
+
+  const { id, isSuspended } = user;
+
+  assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+
+  return id;
+};
+
 const identifyUser = async (tenant: TenantContext, identifier: Identifier) => {
   if (identifier.key === 'social') {
     return identifyUserBySocialIdentifier(tenant, identifier);
+  }
+
+  if (identifier.key === 'blockchain') {
+    return identifyUserByBlockchainIdentifier(tenant, identifier);
   }
 
   if (identifier.key === 'accountId') {

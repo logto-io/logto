@@ -7,14 +7,21 @@ type Props = {
   type: ConnectorType;
 };
 
+ // TODO: update locales, replace any with TFuncKey<'translations', 'admin_console'>
+const textMap: Record<ConnectorType, any> = {
+  [ConnectorType.Email]: 'connector_details.type_email',
+  [ConnectorType.Sms]: 'connector_details.type_sms',
+  [ConnectorType.Social]: 'connector_details.type_social',
+  [ConnectorType.Blockchain]: 'connector_details.type_blockchain',
+}
+
+
 function ConnectorTypeName({ type }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+  
   return (
     <Tag>
-      {type === ConnectorType.Email && t('connector_details.type_email')}
-      {type === ConnectorType.Sms && t('connector_details.type_sms')}
-      {type === ConnectorType.Social && t('connector_details.type_social')}
+      {t(textMap[type])}
     </Tag>
   );
 }

@@ -6,6 +6,7 @@ import {
   profileGuard,
   requestVerificationCodePayloadGuard,
 } from '@logto/schemas';
+import { verifyMessage } from 'ethers';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -24,7 +25,11 @@ import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
-import { socialAuthorizationUrlPayloadGuard } from './types/guard.js';
+import {
+  blockchainGenerateNoncePayloadGuard,
+  blockchainVerifySignaturePayloadGuard,
+  socialAuthorizationUrlPayloadGuard,
+} from './types/guard.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
@@ -325,6 +330,56 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const redirectTo = await createSocialAuthorizationUrl(ctx, tenant, payload);
 
       ctx.body = { redirectTo };
+
+      return next();
+    }
+  );
+
+  // Create blockchain nonce interaction verification
+  router.post(
+    `${interactionPrefix}/${verificationPath}/blockchain-nonce`,
+    koaGuard({ body: blockchainGenerateNoncePayloadGuard }),
+    koaInteractionSie(queries),
+    async (ctx, next) => {
+      // Check interaction exists
+      const { event } = getInteractionStorage(ctx.interactionDetails.result);
+      const log = ctx.createLog(`Interaction.${event}.Identifier.Blockchain.Create`);
+
+      const { body: payload } = ctx.guard;
+
+      log.append(payload);
+
+      // TODO: @lbennett use real nonce
+      const nonce = 'wow';
+
+      ctx.body = { nonce };
+
+      return next();
+    }
+  );
+
+  // Create blockchain nonce interaction verification
+  router.post(
+    `${interactionPrefix}/${verificationPath}/blockchain-verify`,
+    koaGuard({ body: blockchainVerifySignaturePayloadGuard }),
+    async (ctx, next) => {
+      // Check interaction exists
+      const { event } = getInteractionStorage(ctx.interactionDetails.result);
+      const log = ctx.createLog(`Interaction.${event}.Identifier.Blockchain.Create`);
+
+      const { body: payload } = ctx.guard;
+
+      log.append(payload);
+
+      // TODO: @lbennett use real nonce
+      const recovered = verifyMessage('wow', payload.signature);
+
+      if (recovered === payload.address) {
+        ctx.status = 204;
+        ctx.body = { redirectTo: 'http://localhost:3001/sign-in' };
+      } else {
+        ctx.status = 401;
+      }
 
       return next();
     }

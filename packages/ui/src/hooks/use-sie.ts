@@ -17,6 +17,7 @@ export const useSieMethods = () => {
         ({ password, verificationCode }) => password || verificationCode
       ) ?? [],
     socialConnectors: experienceSettings?.socialConnectors ?? [],
+    blockchainConnectors: experienceSettings?.blockchainConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
   };

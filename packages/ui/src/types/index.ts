@@ -18,8 +18,12 @@ export type Platform = 'web' | 'mobile';
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
 
 // Omit socialSignInConnectorTargets since it is being translated into socialConnectors
-export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConnectorTargets'> & {
+export type SignInExperienceResponse = Omit<
+  SignInExperience,
+  'socialSignInConnectorTargets' | 'blockchainSignInConnectorTargets'
+> & {
   socialConnectors: ConnectorMetadata[];
+  blockchainConnectors: ConnectorMetadata[];
   notification?: string;
   forgotPassword: {
     phone: boolean;

@@ -3,11 +3,14 @@ import { isLanguageTag } from '@logto/language-kit';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { type BlockchainConnector } from './blockchain.js';
+
 // MARK: Foundation
 export enum ConnectorType {
   Email = 'Email',
   Sms = 'Sms',
   Social = 'Social',
+  Blockchain = 'Blockchain',
 }
 
 export enum ConnectorPlatform {
@@ -200,7 +203,7 @@ export type CreateConnector<T extends AllConnector> = (options: {
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
-export type AllConnector = SmsConnector | EmailConnector | SocialConnector;
+export type AllConnector = SmsConnector | EmailConnector | SocialConnector | BlockchainConnector;
 
 // MARK: SMS + Email connector
 export type SmsConnector = BaseConnector<ConnectorType.Sms> & {

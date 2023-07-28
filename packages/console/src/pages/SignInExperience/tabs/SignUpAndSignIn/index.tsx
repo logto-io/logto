@@ -6,6 +6,7 @@ import * as styles from '../index.module.scss';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import SocialSignInForm from './SocialSignInForm';
+import BlockchainSignInForm from './BlockchainSignInForm';
 
 type Props = {
   isActive: boolean;
@@ -20,6 +21,7 @@ function SignUpAndSignIn({ isActive }: Props) {
       <SignUpForm />
       <SignInForm />
       <SocialSignInForm />
+      <BlockchainSignInForm />
     </TabWrapper>
   );
 }

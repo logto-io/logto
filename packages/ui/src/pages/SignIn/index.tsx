@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
+import BlockchainSignInList from '@/containers/BlockchainSignInList';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -15,7 +16,8 @@ import Main from './Main';
 import * as styles from './index.module.scss';
 
 const SignIn = () => {
-  const { signInMethods, signUpMethods, socialConnectors, signInMode } = useSieMethods();
+  const { signInMethods, signUpMethods, socialConnectors, blockchainConnectors, signInMode } =
+    useSieMethods();
   const { t } = useTranslation();
 
   if (!signInMode) {
@@ -28,7 +30,11 @@ const SignIn = () => {
 
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
-      <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
+      <Main
+        signInMethods={signInMethods}
+        socialConnectors={socialConnectors}
+        blockchainConnectors={blockchainConnectors}
+      />
       {
         // Create Account footer
         signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (
@@ -38,12 +44,25 @@ const SignIn = () => {
           </div>
         )
       }
+
       {
         // Social sign-in methods
         signInMethods.length > 0 && socialConnectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
             <SocialSignInList socialConnectors={socialConnectors} className={styles.main} />
+          </>
+        )
+      }
+      {
+        // Blockchain sign-in methods
+        signInMethods.length > 0 && blockchainConnectors.length > 0 && (
+          <>
+            <Divider label="description.or" className={styles.divider} />
+            <BlockchainSignInList
+              blockchainConnectors={blockchainConnectors}
+              className={styles.main}
+            />
           </>
         )
       }

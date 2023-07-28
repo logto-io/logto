@@ -24,6 +24,7 @@ const connector_details = {
   type_email: 'E-Mail Connector',
   type_sms: 'SMS Connector',
   type_social: 'Social Connector',
+  type_blockchain: 'Blockchain Connector',
   in_used_social_deletion_description:
     'Dieser Connector wird in Ihrem Anmeldeerlebnis verwendet. Durch das Löschen wird das Anmeldeerlebnis in den Anmeldeerlebniseinstellungen gelöscht. Wenn Sie ihn wieder hinzufügen möchten, müssen Sie ihn erneut konfigurieren.',
   in_used_passwordless_deletion_description:

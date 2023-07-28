@@ -5,6 +5,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
 import type { PreviewConfig, SignInExperienceResponse } from '@/types';
+import { filterPreviewBlockchainConnectors } from '@/utils/blockchain-connectors';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
 const usePreview = () => {
@@ -42,7 +43,7 @@ const usePreview = () => {
     }
 
     const {
-      signInExperience: { socialConnectors, ...rest },
+      signInExperience: { socialConnectors, blockchainConnectors, ...rest },
       isNative,
     } = previewConfig;
 
@@ -51,6 +52,10 @@ const usePreview = () => {
       socialConnectors: filterPreviewSocialConnectors(
         isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,
         socialConnectors
+      ),
+      blockchainConnectors: filterPreviewBlockchainConnectors(
+        isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,
+        blockchainConnectors
       ),
     };
 

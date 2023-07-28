@@ -3,6 +3,7 @@ import type {
   User,
   IdentifierPayload,
   VerifyVerificationCodePayload,
+  BlockchainConnectorPayload,
 } from '@logto/schemas';
 
 import type { PasswordIdentifierPayload } from '../types/index.js';
@@ -19,6 +20,11 @@ export const isSocialIdentifier = (
   identifier: IdentifierPayload
 ): identifier is SocialConnectorPayload =>
   'connectorId' in identifier && 'connectorData' in identifier;
+
+export const isBlockchainIdentifier = (
+  identifier: IdentifierPayload
+): identifier is BlockchainConnectorPayload =>
+  'connectorId' in identifier && 'address' in identifier && 'signature' in identifier;
 
 // Social identities can take place the role of password
 export const isUserPasswordSet = ({
