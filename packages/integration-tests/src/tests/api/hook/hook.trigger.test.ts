@@ -90,14 +90,12 @@ describe('trigger hooks', () => {
     // Check hook trigger log
     const logs = await getWebhookRecentLogs(
       createdHook.id,
-      new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+      new URLSearchParams({ logKey, page_size: '100' })
     );
     expect(
       logs.some(
-        ({ payload: { hookId, result, error } }) =>
-          hookId === createdHook.id &&
-          result === LogResult.Error &&
-          error === 'RequestError: Invalid URL'
+        ({ payload: { result, error } }) =>
+          result === LogResult.Error && error === 'RequestError: Invalid URL'
       )
     ).toBeTruthy();
 
@@ -140,14 +138,12 @@ describe('trigger hooks', () => {
       // eslint-disable-next-line no-await-in-loop
       const logs = await getWebhookRecentLogs(
         hook.id,
-        new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+        new URLSearchParams({ logKey, page_size: '100' })
       );
       expect(
         logs.some(
-          ({ payload: { hookId, result, error } }) =>
-            hookId === hook.id &&
-            result === expectedResult &&
-            (!expectedError || error === expectedError)
+          ({ payload: { result, error } }) =>
+            result === expectedResult && (!expectedError || error === expectedError)
         )
       ).toBeTruthy();
     }
@@ -228,16 +224,15 @@ describe('trigger hooks', () => {
     // Wait for the hook to be trigged
     await waitFor(1000);
 
-    const logs = await getWebhookRecentLogs(
+    const relatedLogs = await getWebhookRecentLogs(
       resetPasswordHook.id,
-      new URLSearchParams({ logKey, page_size: '100', includeWebhookLogs: 'true' })
+      new URLSearchParams({ logKey, page_size: '100' })
     );
-    const relatedLogs = logs.filter(
-      ({ payload: { hookId, result } }) =>
-        hookId === resetPasswordHook.id && result === LogResult.Success
+    const succeedLogs = relatedLogs.filter(
+      ({ payload: { result } }) => result === LogResult.Success
     );
 
-    expect(relatedLogs).toHaveLength(2);
+    expect(succeedLogs).toHaveLength(2);
 
     await authedAdminApi.delete(`hooks/${resetPasswordHook.id}`);
     await deleteUser(user.id);
