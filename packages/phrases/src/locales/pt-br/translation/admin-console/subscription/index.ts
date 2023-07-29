@@ -57,9 +57,10 @@ const subscription = {
     downgrade_description:
       'Certifique-se de atender aos seguintes critérios antes de fazer o downgrade para o plano <name/>.',
     downgrade_help_tip: 'Precisa de ajuda com o downgrade? <a>Contate-nos</a>.',
-    upgrade_title: 'Você não é elegível para fazer upgrade',
+    upgrade_title: 'Lembrete amigável para nossos honrados early adopters',
     upgrade_description:
-      'Atualmente, você está usando mais do que o permitido pelo plano <name/>. Antes de considerar o upgrade para o plano <name/>, certifique-se de atender aos seguintes critérios.',
+      'Você está usando atualmente mais do que o permitido pelo <name />. O Logto agora é oficial, incluindo recursos adaptados a cada plano. Antes de considerar a atualização para o <name />, verifique se você atende aos seguintes critérios antes de fazer o upgrade.',
+    upgrade_pro_tip: ' Ou considere fazer o upgrade para o Plano Pro.',
     upgrade_help_tip: 'Precisa de ajuda com o upgrade? <a>Contate-nos</a>.',
     a_maximum_of: 'Um máximo de <item/>',
   },

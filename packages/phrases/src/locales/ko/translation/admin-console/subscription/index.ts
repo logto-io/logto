@@ -56,9 +56,10 @@ const subscription = {
     downgrade_title: '다운그레이드할 수 없습니다',
     downgrade_description: '<name/>로 다운그레이드하기 전에 다음 기준을 충족하는지 확인하세요.',
     downgrade_help_tip: '다운그레이드 도움이 필요하세요? <a>문의하세요</a>.',
-    upgrade_title: '업그레이드할 수 없습니다',
+    upgrade_title: '우리의 존경받는 초기 사용자를 위한 친절한 리마인더',
     upgrade_description:
-      '<name />이(가) 허용하는 양을 현재 사용 중입니다. <name />로 업그레이드를 고려하기 전에 다음 기준을 충족하는지 확인하세요.',
+      '현재 <name />이 허용하는 양보다 더 많이 사용하고 있습니다. 로그토는 이제 공식적으로 출시되었으며 각 플랜에 맞게 설계된 기능을 제공합니다. <name />로 업그레이드를 고려하기 전에, 업그레이드하기 전에 다음 기준을 충족하는지 확인하세요.',
+    upgrade_pro_tip: ' 또는 프로 플랜으로 업그레이드를 고려하세요.',
     upgrade_help_tip: '업그레이드 도움이 필요하세요? <a>문의하세요</a>.',
     a_maximum_of: '<item/> 최대 한도',
   },

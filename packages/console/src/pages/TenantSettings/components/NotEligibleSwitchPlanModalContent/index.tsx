@@ -9,6 +9,7 @@ import {
   quotaItemLimitedPhrasesMap,
   quotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
@@ -31,7 +32,7 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
     keyPrefix: 'admin_console.subscription.not_eligible_modal',
   });
 
-  const { name, quota } = targetPlan;
+  const { id, name, quota } = targetPlan;
 
   const orderedEntries = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
@@ -55,6 +56,7 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
         </Trans>
+        {!isDowngrade && id === ReservedPlanId.hobby && t('upgrade_pro_tip')}
       </div>
       <ul className={styles.list}>
         {orderedEntries.map(([quotaKey, quotaValue]) => {
