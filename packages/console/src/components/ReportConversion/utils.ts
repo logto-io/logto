@@ -67,7 +67,7 @@ export const hashEmail = async (email?: string) => {
   return [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
 };
 
-export const redditAdAccountId = 't2_gpknww2';
+export const redditPixelId = 't2_ggt11omdo';
 
 /** Report Reddit conversion events. */
 export function rdt(..._: unknown[]) {

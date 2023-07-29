@@ -11,7 +11,7 @@ import {
   gtag,
   gtagSignUpConversionId,
   rdt,
-  redditAdAccountId,
+  redditPixelId,
   hashEmail,
 } from './utils';
 
@@ -29,7 +29,7 @@ export default function ReportConversion() {
    */
   useEffect(() => {
     const report = async () => {
-      rdt('init', redditAdAccountId, {
+      rdt('init', redditPixelId, {
         optOut: false,
         useDecimalCurrencyValues: true,
         email: await hashEmail(user?.primaryEmail ?? undefined),
