@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
-import { storeCallbackLink } from '@/utils/social-connectors';
+import { storeCallbackLink } from '@/utils/connectors/social-connectors';
 
 import useToast from './use-toast';
 

@@ -8,7 +8,7 @@ import {
   postBlockchainSignature,
   signInWithBlockchain,
 } from '@/apis/interaction';
-import { generateState, storeState } from '@/utils/social-connectors';
+import { generateState, storeState } from '@/utils/connectors/social-connectors';
 
 import useApi from './use-api';
 import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
@@ -95,7 +95,7 @@ const useBlockchain = (connectorId?: string) => {
       const { id: connectorId } = connector;
 
       const state = generateState();
-      storeState(state, connectorId);
+      storeState(connectorId, state);
 
       const [nonceError, nonceResult] = await getNonce(connectorId, state);
 

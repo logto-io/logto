@@ -5,8 +5,8 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
 import type { PreviewConfig, SignInExperienceResponse } from '@/types';
-import { filterPreviewBlockchainConnectors } from '@/utils/blockchain-connectors';
-import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
+import { filterPreviewBlockchainConnectors } from '@/utils/connectors/blockchain-connectors';
+import { filterPreviewSocialConnectors } from '@/utils/connectors/social-connectors';
 
 const usePreview = () => {
   const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();

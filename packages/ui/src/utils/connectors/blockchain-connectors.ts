@@ -2,39 +2,25 @@ import type { ConnectorMetadata } from '@logto/schemas';
 import { ConnectorPlatform } from '@logto/schemas';
 
 import { SearchParameters } from '@/types';
-import { generateRandomString } from '@/utils';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
-/**
- * Social Connector State Utility Methods
- */
-
-const storageStateKeyPrefix = 'social_auth_state';
-
-export const generateState = () => {
-  const uuid = generateRandomString();
-
-  return uuid;
-};
-
-export const storeState = (state: string, connectorId: string) => {
-  sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
-};
-
-export const stateValidation = (state: string, connectorId: string) => {
-  const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
-  const stateStorage = sessionStorage.getItem(storageKey);
-  sessionStorage.removeItem(storageKey);
-
-  return stateStorage === state;
-};
+import { stateUtils } from './connectors';
 
 /**
- * Native Social Redirect Utility Methods
+ * Blockchain Connector State Utility Methods
  */
-export const storageCallbackLinkKeyPrefix = 'social_callback_data';
 
-export const buildSocialLandingUri = (path: string, redirectTo: string) => {
+const storageStateKeyPrefix = 'blockchain_auth_state';
+export const { generateState, storeState, stateValidation } = stateUtils(storageStateKeyPrefix);
+
+/**
+ * Native Blockchain Redirect Utility Methods
+ */
+export const storageCallbackLinkKeyPrefix = 'blockchain_callback_data';
+export const { storeState: storeCallbackLink, getState: getCallbackLinkFromStorage } =
+  stateUtils(storageStateKeyPrefix);
+
+export const buildBlockchainLandingUri = (path: string, redirectTo: string) => {
   const { origin } = window.location;
   const url = new URL(`${origin}${path}`);
   url.searchParams.set(SearchParameters.RedirectTo, redirectTo);
@@ -48,19 +34,11 @@ export const buildSocialLandingUri = (path: string, redirectTo: string) => {
   return url;
 };
 
-export const storeCallbackLink = (connectorId: string, callbackLink: string) => {
-  sessionStorage.setItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`, callbackLink);
-};
-
-export const getCallbackLinkFromStorage = (connectorId: string) => {
-  return sessionStorage.getItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
-};
-
 /**
- * Social Connectors Filter Utility Methods
+ * Blockchain Connectors Filter Utility Methods
  */
-export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) => {
-  if (!socialConnectors) {
+export const filterBlockchainConnectors = (blockchainConnectors?: ConnectorMetadata[]) => {
+  if (!blockchainConnectors) {
     return [];
   }
 
@@ -74,7 +52,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
    **/
 
   if (!isNativeWebview()) {
-    for (const connector of socialConnectors) {
+    for (const connector of blockchainConnectors) {
       const { platform, target } = connector;
 
       if (platform === 'Native') {
@@ -99,11 +77,11 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
   const { supportedConnector, getPostMessage, callbackLink } = getLogtoNativeSdk() ?? {};
 
   if (!getPostMessage) {
-    // Invalid Native SDK bridge injections, not able to sign in with any social connectors.
+    // Invalid Native SDK bridge injections, not able to sign in with any blockchain connectors.
     return [];
   }
 
-  for (const connector of socialConnectors) {
+  for (const connector of blockchainConnectors) {
     const { platform, target } = connector;
 
     if (platform === 'Web') {
@@ -141,13 +119,13 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) =
 };
 
 /**
- * Social Connectors Filter Utility Methods used in preview mode only
+ * Blockchain Connectors Filter Utility Methods used in preview mode only
  */
-export const filterPreviewSocialConnectors = (
+export const filterPreviewBlockchainConnectors = (
   platform: ConnectorPlatform.Native | ConnectorPlatform.Web,
-  socialConnectors?: ConnectorMetadata[]
+  blockchainConnectors?: ConnectorMetadata[]
 ) => {
-  if (!socialConnectors) {
+  if (!blockchainConnectors) {
     return [];
   }
 
@@ -161,7 +139,7 @@ export const filterPreviewSocialConnectors = (
    **/
 
   if (platform === ConnectorPlatform.Web) {
-    for (const connector of socialConnectors) {
+    for (const connector of blockchainConnectors) {
       const { platform, target } = connector;
 
       if (platform === 'Native') {
@@ -184,7 +162,7 @@ export const filterPreviewSocialConnectors = (
    * Native platform has higher priority.
    **/
 
-  for (const connector of socialConnectors) {
+  for (const connector of blockchainConnectors) {
     const { platform, target } = connector;
 
     if (platform === 'Web') {
@@ -199,5 +177,3 @@ export const filterPreviewSocialConnectors = (
 
   return Array.from(connectorMap.values());
 };
-
-export const isAppleConnector = (target?: string) => target === 'apple';

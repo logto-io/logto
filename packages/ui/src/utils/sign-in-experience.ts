@@ -8,8 +8,8 @@ import i18next from 'i18next';
 
 import { getSignInExperience } from '@/apis/settings';
 import type { SignInExperienceResponse } from '@/types';
-import { filterBlockchainConnectors } from '@/utils/blockchain-connectors';
-import { filterSocialConnectors } from '@/utils/social-connectors';
+import { filterBlockchainConnectors } from '@/utils/connectors/blockchain-connectors';
+import { filterSocialConnectors } from '@/utils/connectors/social-connectors';
 
 const parseSignInExperienceResponse = (
   response: SignInExperienceResponse

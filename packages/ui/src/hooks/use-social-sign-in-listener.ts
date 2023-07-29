@@ -8,7 +8,7 @@ import { validate } from 'superstruct';
 import { signInWithSocial } from '@/apis/interaction';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { stateValidation } from '@/utils/social-connectors';
+import { stateValidation } from '@/utils/connectors/social-connectors';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
@@ -131,7 +131,7 @@ const useSocialSignInListener = (connectorId?: string) => {
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    if (!state || !stateValidation(state, connectorId)) {
+    if (!state || !stateValidation(connectorId, state)) {
       setToast(t('error.invalid_connector_auth'));
 
       return;

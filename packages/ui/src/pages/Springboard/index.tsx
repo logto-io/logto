@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import LoadingLayer from '@/components/LoadingLayer';
-import { storeCallbackLink, storeState } from '@/utils/social-connectors';
+import { storeCallbackLink, storeState } from '@/utils/connectors/social-connectors';
 
 const Springboard = () => {
   const [searchParameters] = useSearchParams();
@@ -18,7 +18,7 @@ const Springboard = () => {
     }
 
     if (state && connectorId) {
-      storeState(state, connectorId);
+      storeState(connectorId, state);
     }
 
     if (redirectTo) {

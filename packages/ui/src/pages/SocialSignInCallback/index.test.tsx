@@ -27,7 +27,7 @@ const mockUseSearchParameters = useSearchParams as jest.Mock;
 describe('SocialCallbackPage with code', () => {
   it('callback validation and signIn with social', async () => {
     const state = generateState();
-    storeState(state, 'github');
+    storeState('github', state);
 
     mockUseSearchParameters.mockReturnValue([
       new URLSearchParams(`state=${state}&code=foo`),

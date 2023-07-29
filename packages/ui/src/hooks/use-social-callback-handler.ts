@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
+import { getCallbackLinkFromStorage } from '@/utils/connectors/social-connectors';
 
 const useSocialCallbackHandler = () => {
   const navigate = useNavigate();
