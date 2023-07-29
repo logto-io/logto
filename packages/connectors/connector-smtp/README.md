@@ -12,7 +12,6 @@ The official Logto connector for SMTP.
     - [Configure with Aliyun direct mail account](#configure-with-aliyun-direct-mail-account)
     - [Test SMTP connector](#test-smtp-connector)
     - [Config types](#config-types)
-  - [References](#references)
 
 ## Get started
 
@@ -91,11 +90,3 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 You can also configure [OAuth2 Auth Options](https://nodemailer.com/smtp/oauth2/) and other advanced configurations. See [here](https://nodemailer.com/smtp/) for more details.
 
 We gave an example config with all configurable parameters in the text box to help you to set up own configuration. (You are responsible to the configuration, some values are for demonstration purpose and may not fit your use case.)
-
-## References
-
-- [Gmail - Send email from a printer, scanner, or app](https://support.google.com/a/answer/176600)
-- [SendGrid - Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api)
-- [Aliyun Direct Mail - Send emails using SMTP](https://www.alibabacloud.com/help/en/directmail/latest/send-emails-using-smtp)
-- [Aliyun Direct Mail - SMTP Reference](https://www.alibabacloud.com/help/en/directmail/latest/smtp-reference)
-- [Nodemailer - SMTP Transport](https://nodemailer.com/smtp/)
