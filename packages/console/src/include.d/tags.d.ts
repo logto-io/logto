@@ -6,4 +6,8 @@ declare interface Window {
   lintrk?: {
     q: unknown[];
   };
+  // Reddit
+  rdt?: {
+    callQueue: unknown[];
+  };
 }

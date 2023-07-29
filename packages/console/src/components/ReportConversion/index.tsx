@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 
+import useCurrentUser from '@/hooks/use-current-user';
+
 import {
   shouldReport,
   lintrk,
@@ -8,6 +10,9 @@ import {
   linkedInConversionId,
   gtag,
   gtagSignUpConversionId,
+  rdt,
+  redditPixelId,
+  hashEmail,
 } from './utils';
 
 /**
@@ -15,6 +20,28 @@ import {
  * Insight Tag, then reports a sign-up conversion to them.
  */
 export default function ReportConversion() {
+  const { user, isLoading } = useCurrentUser();
+
+  /**
+   * Initiate Reddit Pixel and report a sign-up conversion to it when user is loaded.
+   * Use user email to prevent duplicate conversion, and it is hashed before sending
+   * to protect user privacy.
+   */
+  useEffect(() => {
+    const report = async () => {
+      rdt('init', redditPixelId, {
+        optOut: false,
+        useDecimalCurrencyValues: true,
+        email: await hashEmail(user?.primaryEmail ?? undefined),
+      });
+      rdt('track', 'SignUp');
+    };
+
+    if (shouldReport && !isLoading) {
+      void report();
+    }
+  }, [user, isLoading]);
+
   /**
    * This `useEffect()` initiates Google Tag and report a sign-up conversion to it.
    * It may run multiple times (e.g. a user visit multiple times to finish the onboarding process,
@@ -49,6 +76,7 @@ export default function ReportConversion() {
           src={`https://www.googletagmanager.com/gtag/js?id=${gtagAwTrackingId}`}
         />
         <script async src="https://snap.licdn.com/li.lms-analytics/insight.min.js" />
+        <script async src="https://www.redditstatic.com/ads/pixel.js" />
       </Helmet>
     );
   }
