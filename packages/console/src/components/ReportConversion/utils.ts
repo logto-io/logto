@@ -12,7 +12,7 @@ export const linkedInConversionId = '13374828';
  */
 export const shouldReport = window.location.hostname.endsWith('.' + logtoProductionHostname);
 
-/* eslint-disable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
+/* eslint-disable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods, prefer-rest-params */
 
 /** This function is edited from the Google Tag official code snippet. */
 export function gtag(..._: unknown[]) {
@@ -21,7 +21,7 @@ export function gtag(..._: unknown[]) {
   }
 
   // We cannot use rest params here since gtag has some internal logic about `arguments` for data transpiling
-  // eslint-disable-next-line prefer-rest-params
+
   window.dataLayer.push(arguments);
 }
 
@@ -37,8 +37,45 @@ export function lintrk(..._: unknown[]) {
     window.lintrk = { q: [] };
   }
 
-  // eslint-disable-next-line prefer-rest-params
   window.lintrk.q.push(arguments);
 }
 
-/* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
+/**
+ * This function will do the following things:
+ *
+ * 1. Canonicalize the given email by Reddit's rule: lowercase, trim,
+ * remove dots, remove everything after the first '+'.
+ * 2. Hash the canonicalized email by SHA256.
+ */
+export const hashEmail = async (email?: string) => {
+  if (!email) {
+    return;
+  }
+
+  const splitEmail = email.toLocaleLowerCase().trim().split('@');
+  const [localPart, domain] = splitEmail;
+
+  if (!localPart || !domain || splitEmail.length > 2) {
+    return;
+  }
+
+  // eslint-disable-next-line unicorn/prefer-string-replace-all
+  const canonicalizedEmail = `${localPart.replace(/\./g, '').replace(/\+.*/, '')}@${domain}`;
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonicalizedEmail));
+
+  // https://stackoverflow.com/questions/40031688/javascript-arraybuffer-to-hex
+  return [...new Uint8Array(hash)].map((value) => value.toString(16).padStart(2, '0')).join('');
+};
+
+export const redditAdAccountId = 't2_gpknww2';
+
+/** Report Reddit conversion events. */
+export function rdt(..._: unknown[]) {
+  if (!window.rdt) {
+    window.rdt = { callQueue: [] };
+  }
+
+  window.rdt.callQueue.push(arguments);
+}
+
+/* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods, prefer-rest-params */
