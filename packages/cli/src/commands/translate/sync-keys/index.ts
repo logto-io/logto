@@ -1,14 +1,18 @@
-import { execSync } from 'node:child_process';
+import { exec } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { promisify } from 'node:util';
 
 import { isLanguageTag } from '@logto/language-kit';
+import ora from 'ora';
 import { type CommandModule } from 'yargs';
 
 import { consoleLog } from '../../../utils.js';
 import { inquireInstancePath } from '../../connector/utils.js';
 
 import { praseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
+
+const execPromise = promisify(exec);
 
 const syncKeys: CommandModule<
   { path?: string },
@@ -44,26 +48,34 @@ const syncKeys: CommandModule<
     const localesPath = path.join(phrasesPath, 'src/locales');
     const entrypoint = path.join(localesPath, baselineTag.toLowerCase(), 'index.ts');
     const baseline = praseLocaleFiles(entrypoint);
-    const targetLocales = targetTag === 'all' ? fs.readdirSync(localesPath) : [targetTag];
+    const targetLocales =
+      targetTag === 'all' ? fs.readdirSync(localesPath) : [targetTag.toLowerCase()];
 
+    /* eslint-disable no-await-in-loop */
     for (const target of targetLocales) {
-      const targetDirectory = path.join(localesPath, target.toLowerCase());
-      const targetEntrypoint = path.join(targetDirectory, 'index.ts');
-
-      if (fs.existsSync(targetEntrypoint)) {
-        const targetObject = praseLocaleFiles(targetEntrypoint)[0];
-        syncPhraseKeysAndFileStructure(baseline, targetObject, targetDirectory);
-      } else {
-        consoleLog.warn(`Cannot find ${target} entrypoint, creating one`);
-        fs.mkdirSync(targetDirectory);
-        syncPhraseKeysAndFileStructure(baseline, {}, targetDirectory);
+      if (target === baselineTag) {
+        continue;
       }
 
-      execSync(`pnpm exec eslint --ext .ts ${path.relative(phrasesPath, targetDirectory)} --fix`, {
-        cwd: phrasesPath,
-        stdio: 'inherit',
-      });
+      const spinner = ora({
+        text: `Syncing object keys and file structure from ${baselineTag} to ${target}`,
+      }).start();
+      const targetDirectory = path.join(localesPath, target);
+
+      await syncPhraseKeysAndFileStructure(baseline, target, targetDirectory);
+
+      spinner.succeed(`Synced object keys and file structure from ${baselineTag} to ${target}`);
     }
+    /* eslint-enable no-await-in-loop */
+
+    const spinner = ora({
+      text: 'Running `eslint --fix` for locales',
+    }).start();
+    await execPromise(
+      `pnpm exec eslint --ext .ts ${path.relative(phrasesPath, localesPath)} --fix`,
+      { cwd: phrasesPath }
+    );
+    spinner.succeed('Ran `eslint --fix` for locales');
   },
 };
 

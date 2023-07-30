@@ -1,6 +1,8 @@
-import fs from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { trySafe } from '@silverhand/essentials';
 import ts from 'typescript';
 
 import { consoleLog } from '../../../utils.js';
@@ -59,7 +61,7 @@ type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
  *
  */
 export const praseLocaleFiles = (filePath: string): ParsedTuple => {
-  const content = fs.readFileSync(filePath, 'utf8');
+  const content = readFileSync(filePath, 'utf8');
   const ast = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
   const importIdentifierPath = new Map<string, string>();
 
@@ -82,8 +84,6 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
         if (ts.isShorthandPropertyAssignment(property)) {
           const key = property.name.getText();
           const importPath = importIdentifierPath.get(key);
-
-          consoleLog.warn(key, importPath);
 
           if (!importPath) {
             consoleLog.fatal(`Cannot find import path for ${key} in ${filePath}`);
@@ -131,7 +131,21 @@ const getIdentifier = (filePath: string) => {
   );
 };
 
-const traverseNode = (
+/**
+ * Recursively traverse the nested object of phrases and the file structure of
+ * the baseline language, and generate the target language directory with the
+ * same file structure.
+ *
+ * Values of the nested object will be replaced with the values of the target
+ * language if the key exists; otherwise, the value of the baseline language
+ * will be used.
+ *
+ * @param baseline The baseline language tuple
+ * @param targetObject The target language nested object
+ * @param targetFilePath The target language entrypoint file path
+ */
+/* eslint-disable no-await-in-loop */
+const traverseNode = async (
   baseline: ParsedTuple,
   targetObject: NestedPhraseObject,
   targetFilePath: string
@@ -139,16 +153,16 @@ const traverseNode = (
   const [, baselineStructure] = baseline;
   const targetDirectory = path.dirname(targetFilePath);
 
-  fs.mkdirSync(targetDirectory, { recursive: true });
-  fs.writeFileSync(targetFilePath, '', { flag: 'w+' });
+  await fs.mkdir(targetDirectory, { recursive: true });
+  await fs.writeFile(targetFilePath, '', { flag: 'w+' });
 
+  // Write imports first
   const baselineEntries = Object.entries(baselineStructure);
-
   for (const [key, value] of baselineEntries
     .slice()
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))) {
     const importPath = path.join(targetDirectory, value.filePath);
-    fs.appendFileSync(
+    await fs.appendFile(
       targetFilePath,
       `import ${key} from './${path
         .relative(targetDirectory, importPath)
@@ -156,14 +170,18 @@ const traverseNode = (
     );
   }
 
+  // Add a newline between imports and the object
   if (baselineEntries.length > 0) {
-    fs.appendFileSync(targetFilePath, '\n');
+    await fs.appendFile(targetFilePath, '\n');
   }
 
+  // Write the object
   const identifier = getIdentifier(targetFilePath);
-  fs.appendFileSync(targetFilePath, `const ${identifier} = {\n`);
+  await fs.appendFile(targetFilePath, `const ${identifier} = {\n`);
 
-  const traverseObject = (
+  // Recursively traverse the nested object of phrases and the file structure
+  // of the baseline language
+  const traverseObject = async (
     baseline: ParsedTuple,
     targetObject: NestedPhraseObject,
     tabSize: number
@@ -174,42 +192,76 @@ const traverseNode = (
       const existingValue = targetObject[key];
 
       if (typeof value === 'string') {
-        const targetValue = typeof existingValue === 'string' ? existingValue : value;
-
-        fs.appendFileSync(targetFilePath, `${' '.repeat(tabSize)}${key}: ${targetValue},\n`);
+        // If the key exists in the target language and the value is a string, use
+        // the value of the target language; otherwise, use the value of the
+        // baseline language and add a comment to indicate that the phrase is
+        // untranslated to help identify missing translations.
+        await (typeof existingValue === 'string'
+          ? fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: ${existingValue},\n`)
+          : fs.appendFile(
+              targetFilePath,
+              `${' '.repeat(tabSize)}${key}: '${value}', // UNTRANSLATED\n`
+            ));
       } else {
         const keyStructure = baselineStructure[key];
 
+        // If the key has a file structure, treat it as an import; otherwise,
+        // treat it as a nested object.
         if (keyStructure) {
-          fs.appendFileSync(targetFilePath, `${' '.repeat(tabSize)}${key},\n`);
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key},\n`);
 
-          traverseNode(
+          await traverseNode(
             [value, keyStructure.structure],
             typeof existingValue === 'object' ? existingValue : {},
             path.join(targetDirectory, keyStructure.filePath)
           );
+
+          throw new Error('Should not reach here');
         } else {
-          fs.appendFileSync(targetFilePath, `${' '.repeat(tabSize)}${key}: {\n`);
-          traverseObject([value, {}], {}, tabSize + 2);
-          fs.appendFileSync(targetFilePath, `${' '.repeat(tabSize)}}\n`);
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: {\n`);
+          await traverseObject([value, {}], {}, tabSize + 2);
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}}\n`);
         }
       }
     }
   };
 
-  traverseObject(baseline, targetObject, 2);
+  await traverseObject(baseline, targetObject, 2);
 
-  fs.appendFileSync(targetFilePath, '};\n\n');
-  fs.appendFileSync(targetFilePath, `export default ${identifier};\n`);
+  await fs.appendFile(targetFilePath, '};\n\n');
+  await fs.appendFile(targetFilePath, `export default ${identifier};\n`);
 };
+/* eslint-enable no-await-in-loop */
 
-export const syncPhraseKeysAndFileStructure = (
+export const syncPhraseKeysAndFileStructure = async (
   baseline: ParsedTuple,
-  target: NestedPhraseObject,
+  targetLocale: string,
   targetDirectory: string
 ) => {
-  fs.renameSync(targetDirectory, targetDirectory + '.bak');
-  fs.mkdirSync(targetDirectory);
+  const targetEntrypoint = path.join(targetDirectory, 'index.ts');
+  const isTargetLocaleExist = existsSync(targetEntrypoint);
+  const targetObject = isTargetLocaleExist ? praseLocaleFiles(targetEntrypoint)[0] : {};
+  const backupDirectory = targetDirectory + '.bak';
 
-  traverseNode(baseline, target, path.join(targetDirectory, 'index.ts'));
+  if (isTargetLocaleExist) {
+    await fs.rename(targetDirectory, backupDirectory);
+  } else {
+    consoleLog.warn(`Cannot find ${targetLocale} entrypoint, creating one`);
+  }
+
+  await trySafe(
+    traverseNode(baseline, targetObject, path.join(targetDirectory, 'index.ts')),
+    (error) => {
+      consoleLog.plain();
+      consoleLog.error(error);
+      consoleLog.plain();
+      consoleLog.fatal(
+        `Failed to sync keys for ${targetLocale}, the backup is at ${backupDirectory} for recovery`
+      );
+    }
+  );
+
+  if (isTargetLocaleExist) {
+    await fs.rm(backupDirectory, { recursive: true });
+  }
 };
