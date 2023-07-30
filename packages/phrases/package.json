@@ -48,7 +48,10 @@
     "typescript": "^5.0.0"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "rules": {
+      "no-template-curly-in-string": "off"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

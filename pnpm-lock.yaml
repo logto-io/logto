@@ -181,6 +181,9 @@ importers:
       tar:
         specifier: ^6.1.11
         version: 6.1.11
+      typescript:
+        specifier: ^5.0.0
+        version: 5.0.2
       yargs:
         specifier: ^17.6.0
         version: 17.6.0
@@ -230,9 +233,6 @@ importers:
       sinon:
         specifier: ^15.0.0
         version: 15.0.0
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-alipay-native:
     dependencies:
