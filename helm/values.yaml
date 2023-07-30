@@ -9,16 +9,49 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-database:
-  enabled: true
-  type: postgres
-  password: ""
+common:
+  tls:
+    enabled: false
+    secretName: ""
+  env:
+    nodeEnv: ""
+    db_url: postgres://postgres:p0stgr3s@postgres:5432/logto
+    adminDisableLocalhost: false
+    trustProxyHeader: true
 
-env:
-  trustProxyHeader: true
-  db_url: ""
+core:
   endpoint: ""
-  adminEndpoint: ""
+  port: 3001
+  service:
+    type: ClusterIP
+    port: 3001
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: logto.io
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+
+admin:
+  endpoint: ""
+  port: 3002
+  service:
+    type: ClusterIP
+    port: 3002
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: admin.logto.io
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
 
 serviceAccount:
   create: true
@@ -31,36 +64,14 @@ podSecurityContext: {}
 
 securityContext: {}
 
-service:
-  type: ClusterIP
-  port:
-    http: 3001
-    api: 3002
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: logto.io
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-
 resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

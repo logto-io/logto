@@ -49,21 +49,25 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 3001
+            - name: core
+              containerPort: {{ .Values.core.port }}
               protocol: TCP
-            - name: api
-              containerPort: 3002
+            - name: admin
+              containerPort: {{ .Values.admin.port }}
               protocol: TCP
           env:
             - name: TRUST_PROXY_HEADER
-              {{- if .Values.env.trustProxyHeader }}
+              {{- if .Values.common.env.trustProxyHeader }}
               value: "1"
               {{- end }}
+            - name: NODE_ENV
+              value: {{ .Values.common.env.nodeEnv }}
             - name: ENDPOINT
-              value: {{ .Values.env.endpoint }}
+              value: {{ .Values.core.endpoint }}
             - name: ADMIN_ENDPOINT
-              value: {{ .Values.env.adminEndpoint }}
+              value: {{ .Values.admin.endpoint }}
+            - name: DB_URL
+              value: {{ .Values.common.env.db_url }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
