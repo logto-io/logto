@@ -12,6 +12,7 @@
     "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests --filter \"!./packages/connectors/connector-*\" dev",
     "start": "cd packages/core && NODE_ENV=production node .",
     "cli": "logto",
+    "changeset": "changeset",
     "alteration": "logto db alt",
     "connectors:build": "pnpm -r --filter \"./packages/connectors/connector-*\" build",
     "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
@@ -22,7 +23,7 @@
     "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.25.0",
+    "@changesets/cli": "^2.26.2",
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
     "@commitlint/types": "^17.4.4",

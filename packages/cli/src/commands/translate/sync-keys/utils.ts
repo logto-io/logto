@@ -8,7 +8,7 @@ import ts from 'typescript';
 import { consoleLog } from '../../../utils.js';
 
 type FileStructure = {
-  [key: string]: { filePath: string; structure: FileStructure };
+  [key: string]: { filePath?: string; structure: FileStructure };
 };
 
 type NestedPhraseObject = {
@@ -70,6 +70,64 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
     nestedObject: NestedPhraseObject,
     fileStructure: FileStructure
   ) => {
+    /**
+     * Handle property assignment in object literal expression:
+     *
+     * - Shorthand property assignments (e.g. `{ errors }`) are treated as import
+     * - Property assignments will be categorized per its initializer:
+     *   - Object literal expressions (e.g. `{ errors: { page_not_found: 'Page not found' } }`)
+     *     will be treated as nested object
+     *   - String literals (e.g. `{ page_title: 'Applications' }`) or no substitution template
+     *     literals (e.g. `{ page_title: `Applications` }`) will be treated as string
+     *   - Others are not supported, and will exit with error
+     */
+    const handleProperty = (property: ts.ObjectLiteralElementLike) => {
+      // Treat shorthand property assignment as import
+      if (ts.isShorthandPropertyAssignment(property)) {
+        const key = property.name.getText();
+        const importPath = importIdentifierPath.get(key);
+
+        if (!importPath) {
+          consoleLog.fatal(`Cannot find import path for ${key} in ${filePath}`);
+        }
+
+        const resolvedPath = path.resolve(path.dirname(filePath), importPath);
+
+        // Recursively parse the nested object from the imported file
+        const [phrases, structure] = praseLocaleFiles(resolvedPath);
+
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        nestedObject[key] = phrases;
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        fileStructure[key] = {
+          filePath: importPath,
+          structure,
+        };
+      }
+
+      if (ts.isPropertyAssignment(property)) {
+        const key = property.name.getText();
+
+        // Nested object, recursively parse it
+        if (ts.isObjectLiteralExpression(property.initializer)) {
+          const [phrases, structure] = traverseNode(property.initializer, {}, {});
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          nestedObject[key] = phrases;
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          fileStructure[key] = { structure };
+        } else if (
+          ts.isStringLiteral(property.initializer) ||
+          ts.isNoSubstitutionTemplateLiteral(property.initializer)
+        ) {
+          const value = property.initializer.getText();
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          nestedObject[key] = value;
+        } else {
+          consoleLog.fatal('Unsupported property:', property);
+        }
+      }
+    };
+
     if (ts.isImportDeclaration(node)) {
       const importPath = node.moduleSpecifier.getText().slice(1, -1).replace('.js', '.ts');
       const importIdentifier = node.importClause?.getText();
@@ -80,36 +138,7 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
       }
     } else if (ts.isObjectLiteralExpression(node)) {
       for (const property of node.properties) {
-        // Treat shorthand property assignment as import
-        if (ts.isShorthandPropertyAssignment(property)) {
-          const key = property.name.getText();
-          const importPath = importIdentifierPath.get(key);
-
-          if (!importPath) {
-            consoleLog.fatal(`Cannot find import path for ${key} in ${filePath}`);
-          }
-
-          const resolvedPath = path.resolve(path.dirname(filePath), importPath);
-
-          // Recursively parse the nested object from the imported file
-          const [phrases, structure] = praseLocaleFiles(resolvedPath);
-
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          nestedObject[key] = phrases;
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          fileStructure[key] = {
-            filePath: importPath,
-            structure,
-          };
-        }
-
-        if (ts.isPropertyAssignment(property)) {
-          const key = property.name.getText();
-          const value = property.initializer.getText();
-
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          nestedObject[key] = value;
-        }
+        handleProperty(property);
       }
     } else {
       node.forEachChild((child) => {
@@ -131,6 +160,27 @@ const getIdentifier = (filePath: string) => {
   );
 };
 
+/** Traverse the file structure and return an array of imports in the current file. */
+const getCurrentFileImports = (fileStructure: FileStructure) => {
+  const imports = new Set<[string, string]>();
+
+  for (const [key, value] of Object.entries(fileStructure)) {
+    // If the key has a file path, treat it as an import and stop traversing
+    // since it's pointing to another file
+    if (value.filePath) {
+      imports.add([key, value.filePath]);
+    }
+    // Otherwise, recursively traverse the nested object
+    else {
+      for (const importEntry of getCurrentFileImports(value.structure)) {
+        imports.add(importEntry);
+      }
+    }
+  }
+
+  return [...imports];
+};
+
 /**
  * Recursively traverse the nested object of phrases and the file structure of
  * the baseline language, and generate the target language directory with the
@@ -143,12 +193,14 @@ const getIdentifier = (filePath: string) => {
  * @param baseline The baseline language tuple
  * @param targetObject The target language nested object
  * @param targetFilePath The target language entrypoint file path
+ * @param isRoot Whether the target file is the root entrypoint
  */
 /* eslint-disable no-await-in-loop */
 const traverseNode = async (
   baseline: ParsedTuple,
   targetObject: NestedPhraseObject,
-  targetFilePath: string
+  targetFilePath: string,
+  isRoot = false
 ) => {
   const [, baselineStructure] = baseline;
   const targetDirectory = path.dirname(targetFilePath);
@@ -156,12 +208,16 @@ const traverseNode = async (
   await fs.mkdir(targetDirectory, { recursive: true });
   await fs.writeFile(targetFilePath, '', { flag: 'w+' });
 
+  if (isRoot) {
+    await fs.appendFile(targetFilePath, "import type { LocalePhrase } from '../../types.js';\n\n");
+  }
+
   // Write imports first
-  const baselineEntries = Object.entries(baselineStructure);
+  const baselineEntries = getCurrentFileImports(baselineStructure);
   for (const [key, value] of baselineEntries
     .slice()
     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))) {
-    const importPath = path.join(targetDirectory, value.filePath);
+    const importPath = path.join(targetDirectory, value);
     await fs.appendFile(
       targetFilePath,
       `import ${key} from './${path
@@ -200,14 +256,15 @@ const traverseNode = async (
           ? fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: ${existingValue},\n`)
           : fs.appendFile(
               targetFilePath,
-              `${' '.repeat(tabSize)}${key}: '${value}', // UNTRANSLATED\n`
+              `${' '.repeat(tabSize)}${key}: ${value}, // UNTRANSLATED\n`
             ));
-      } else {
+      }
+      // Not a string, treat it as a nested object or an import
+      else {
         const keyStructure = baselineStructure[key];
 
-        // If the key has a file structure, treat it as an import; otherwise,
-        // treat it as a nested object.
-        if (keyStructure) {
+        // If the key has a file structure, treat it as an import
+        if (keyStructure?.filePath) {
           await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key},\n`);
 
           await traverseNode(
@@ -215,12 +272,16 @@ const traverseNode = async (
             typeof existingValue === 'object' ? existingValue : {},
             path.join(targetDirectory, keyStructure.filePath)
           );
-
-          throw new Error('Should not reach here');
-        } else {
+        }
+        // Otherwise, treat it as a nested object.
+        else {
           await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: {\n`);
-          await traverseObject([value, {}], {}, tabSize + 2);
-          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}}\n`);
+          await traverseObject(
+            [value, keyStructure?.structure ?? {}],
+            typeof existingValue === 'object' ? existingValue : {},
+            tabSize + 2
+          );
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}},\n`);
         }
       }
     }
@@ -228,8 +289,10 @@ const traverseNode = async (
 
   await traverseObject(baseline, targetObject, 2);
 
-  await fs.appendFile(targetFilePath, '};\n\n');
-  await fs.appendFile(targetFilePath, `export default ${identifier};\n`);
+  await (isRoot
+    ? fs.appendFile(targetFilePath, '} satisfies LocalePhrase;\n\n')
+    : fs.appendFile(targetFilePath, '};\n\n'));
+  await fs.appendFile(targetFilePath, `export default Object.freeze(${identifier});\n`);
 };
 /* eslint-enable no-await-in-loop */
 
@@ -250,7 +313,7 @@ export const syncPhraseKeysAndFileStructure = async (
   }
 
   await trySafe(
-    traverseNode(baseline, targetObject, path.join(targetDirectory, 'index.ts')),
+    traverseNode(baseline, targetObject, path.join(targetDirectory, 'index.ts'), true),
     (error) => {
       consoleLog.plain();
       consoleLog.error(error);
