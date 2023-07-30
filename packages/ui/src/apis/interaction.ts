@@ -184,23 +184,6 @@ export const getBlockchainNonce = async (connectorId: string, state: string) => 
     .json<NonceResponse>();
 };
 
-export const postBlockchainSignature = async (
-  { address, signature }: BlockchainVerifyPayload,
-  connectorId: string,
-  state: string
-) => {
-  return api
-    .post(`${interactionPrefix}/${verificationPath}/blockchain-verify`, {
-      json: {
-        address,
-        signature,
-        connectorId,
-        state,
-      },
-    })
-    .json<RedirectResponse>();
-};
-
 export const signInWithSocial = async (payload: SocialConnectorPayload) => {
   await api.patch(`${interactionPrefix}/identifiers`, {
     json: payload,

@@ -1,13 +1,8 @@
 import { type ConnectorMetadata, type RequestErrorBody, SignInMode } from '@logto/schemas';
-import { BrowserProvider } from 'ethers';
 import { useCallback, useContext, useMemo } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
-import {
-  getBlockchainNonce,
-  postBlockchainSignature,
-  signInWithBlockchain,
-} from '@/apis/interaction';
+import { getBlockchainNonce, signInWithBlockchain } from '@/apis/interaction';
 import { generateState, storeState } from '@/utils/connectors/social-connectors';
 
 import useApi from './use-api';
@@ -23,7 +18,6 @@ const useBlockchain = (connectorId?: string) => {
 
   const handleError = useErrorHandler();
   const getNonce = useApi(getBlockchainNonce);
-  const postSignature = useApi(postBlockchainSignature);
 
   // Const nativeSignInHandler = useCallback((redirectTo: string, connector: ConnectorMetadata) => {
   //   const { id: connectorId, platform } = connector;
@@ -92,7 +86,7 @@ const useBlockchain = (connectorId?: string) => {
 
   const invokeBlockchainSignInHandler = useCallback(
     async (connector: ConnectorMetadata) => {
-      const { id: connectorId } = connector;
+      const { id: connectorId, name } = connector;
 
       const state = generateState();
       storeState(connectorId, state);
@@ -106,24 +100,14 @@ const useBlockchain = (connectorId?: string) => {
       }
 
       if (!nonceResult?.nonce) {
+        // TODO: @lbennett handle error
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, no-restricted-syntax, @typescript-eslint/no-explicit-any
-      const provider = new BrowserProvider((window as any).ethereum);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
+      // TODO: @lbennett looking at how to use connector provided client code
+      const { signMessage } = await import('../../../connectors/connector-metamask/src/client');
 
-      const signature = await signer.signMessage(nonceResult.nonce);
-
-      await postSignature(
-        {
-          address,
-          signature,
-        },
-        connectorId,
-        state
-      );
+      const { address, signature } = await signMessage(nonceResult.nonce);
 
       const [error, result] = await asyncSignInWithBlockchain({
         connectorId,
@@ -144,7 +128,6 @@ const useBlockchain = (connectorId?: string) => {
     },
     [
       getNonce,
-      postSignature,
       asyncSignInWithBlockchain,
       signInWithSocialErrorHandlers,
       handleError /* nativeSignInHandler */,

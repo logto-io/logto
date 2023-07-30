@@ -3,10 +3,10 @@ import type {
   GenerateNonce,
   GetConnectorConfig,
   BlockchainConnector,
-  Verify,
-  BlockchainUserInfo,
+  VerifyMessage,
 } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/connector-kit';
+import { verifyMessage as ethersVerify } from 'ethers';
 
 import { defaultMetadata } from './constant.js';
 import { metaMaskConfigGuard } from './types.js';
@@ -14,16 +14,14 @@ import { metaMaskConfigGuard } from './types.js';
 // TODO: @lbennett use these instead of default
 const generateNonce = (getConfig: GetConnectorConfig): GenerateNonce => {
   return async (): Promise<string> => {
-    return 'my-nonce';
+    return 'wow!';
   };
 };
 
 // TODO: @lbennett use these istead of default
-const verify = (getConfig: GetConnectorConfig): Verify => {
-  return async (): Promise<BlockchainUserInfo> => {
-    return {
-      address: 'my-wallet-address',
-    };
+const verifyMessage = (getConfig: GetConnectorConfig): VerifyMessage => {
+  return async (message: string, signature: string): Promise<string> => {
+    return ethersVerify(message, signature);
   };
 };
 
@@ -33,7 +31,8 @@ const createMetaMaskConnector: CreateConnector<BlockchainConnector> = async ({ g
     type: ConnectorType.Blockchain,
     configGuard: metaMaskConfigGuard,
     generateNonce: generateNonce(getConfig),
-    verify: verify(getConfig),
+    verifyMessage: verifyMessage(getConfig),
+    // SignMessage,
   };
 };
 

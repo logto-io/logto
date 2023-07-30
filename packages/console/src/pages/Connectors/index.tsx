@@ -75,6 +75,11 @@ const isConnectorTab = (value: string): value is ConnectorsTabs =>
 const parseToConnectorTab = (value?: string): ConnectorsTabs | undefined =>
   conditional(value && isConnectorTab(value) && value);
 
+const documentationUrlMap = {
+  [ConnectorsTabs.Social]: '/docs/recipes/configure-connectors/configure-social-connector',
+  [ConnectorsTabs.Blockchain]: '/docs/recipes/configure-connectors/configure-blockchain-connector',
+};
+
 function Connectors() {
   const { tab, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
@@ -116,18 +121,12 @@ function Connectors() {
     [ConnectorsTabs.Blockchain]: blockchainConnectors,
     [ConnectorsTabs.Passwordless]: passwordlessConnectors,
   };
-  const documentationUrlMap = {
-    [ConnectorsTabs.Social]: '/docs/recipes/configure-connectors/configure-social-connector',
-    [ConnectorsTabs.Blockchain]:
-      '/docs/recipes/configure-connectors/configure-blockchain-connector',
-  };
 
   const isSocial = tab === ConnectorsTabs.Social;
   const isBlockchain = tab === ConnectorsTabs.Blockchain;
   const isCreatable = isSocial || isBlockchain;
 
   const connectors = connectorTabMap[createConnectorTab];
-  console.log('CREATE CONNECTOR TAB', createConnectorTab, 'ORIGINAL', tab);
 
   const hasDemoConnector = connectors.some(({ isDemo }) => isDemo);
 

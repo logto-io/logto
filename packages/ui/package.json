@@ -55,7 +55,6 @@
     "color": "^4.2.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.44.0",
-    "ethers": "^6.6.7",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
     "identity-obj-proxy": "^3.0.0",

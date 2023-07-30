@@ -1,22 +1,20 @@
 import { z } from 'zod';
 
-import {
-  type ConnectorType,
-  type BaseConnector,
-  type SetSession,
-  type GetSession,
-} from './types.js';
+import { type ConnectorType, type BaseConnector } from './types.js';
 
-export type GenerateNonce = (payload: unknown, setSession: SetSession) => Promise<string>;
+export type GenerateNonce = () => Promise<string>;
 
-export type Verify = (
-  data: string,
-  getSession: GetSession
-) => Promise<BlockchainUserInfo & Record<string, string | boolean | number | undefined>>;
+export type SignMessage = (message: string) => Promise<{ address: string; signature: string }>;
+
+export type VerifyMessage = (message: string, signature: string) => Promise<string>;
 
 export type BlockchainConnector = BaseConnector<ConnectorType.Blockchain> & {
   generateNonce: GenerateNonce;
-  verify: Verify;
+  verifyMessage: VerifyMessage;
+};
+
+export type BlockchainConnectorClient = BaseConnector<ConnectorType.Blockchain> & {
+  signMessage: SignMessage;
 };
 
 export const blockchainUserInfoGuard = z.object({
