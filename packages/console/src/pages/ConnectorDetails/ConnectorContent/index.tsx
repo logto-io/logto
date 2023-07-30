@@ -1,4 +1,4 @@
-import { ServiceConnector } from '@logto/connector-kit';
+import { isTestableConnectorType } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -65,10 +65,8 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
   } = connectorData;
 
   const isSocialConnector = connectorType === ConnectorType.Social;
-  const isBlockchainConnector = connectorType === ConnectorType.Blockchain;
-  const isEmailConnector = connectorId === ServiceConnector.Email;
-  const isSmsConnector = connectorId === ServiceConnector.Sms;
-  const isTestable = isEmailConnector && isSmsConnector;
+  const isEmailConnector = connectorType === ConnectorType.Email;
+  const isTestable = isTestableConnectorType(connectorType);
 
   useEffect(() => {
     /**
@@ -96,7 +94,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
         : { config };
       const standardConnectorPayload = {
         ...payload,
-        metadata: { name: { en: name }, logo, logoDark, target },
+        metadata: { type: connectorData.type, name: { en: name }, logo, logoDark, target },
       };
       // Should not update `target` for neither passwordless connectors nor non-standard social connectors.
       const body = isStandard ? standardConnectorPayload : { ...payload, target: undefined };
@@ -157,6 +155,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
             <ConfigForm formItems={formItems} connectorId={id} connectorType={connectorType} />
           </FormCard>
         )}
+
         {isTestable && (
           <FormCard title="connector_details.test_connection">
             <ConnectorTester

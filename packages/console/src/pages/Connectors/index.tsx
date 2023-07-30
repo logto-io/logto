@@ -1,5 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { ServiceConnector } from '@logto/connector-kit';
+import { type AdminConsoleKey } from '@logto/phrases';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -24,6 +25,7 @@ import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import DemoConnectorNotice from '@/onboarding/components/DemoConnectorNotice';
+import { type ConnectorGroup } from '@/types/connector';
 
 import ConnectorDeleteButton from './ConnectorDeleteButton';
 import ConnectorName from './ConnectorName';
@@ -33,7 +35,6 @@ import ConnectorTypeColumn from './ConnectorTypeColumn';
 import Guide from './Guide';
 import SignInExperienceSetupNotice from './SignInExperienceSetupNotice';
 import * as styles from './index.module.scss';
-import { ConnectorGroup } from '@/types/connector';
 
 const basePathname = '/connectors';
 const passwordlessPathname = `${basePathname}/${ConnectorsTabs.Passwordless}`;
@@ -44,9 +45,10 @@ const buildTabPathname = (connectorType: ConnectorType) => {
   const tabPathMap = {
     [ConnectorType.Social]: socialPathname,
     [ConnectorType.Blockchain]: blockchainPathname,
-    [ConnectorType.Passwordless]: passwordlessPathname,
+    [ConnectorType.Email]: passwordlessPathname,
+    [ConnectorType.Sms]: passwordlessPathname,
   };
-  return tabPathMap[connectorType] || tabPathMap[ConnectorType.Passwordless];
+  return tabPathMap[connectorType] || tabPathMap[ConnectorType.Email];
 };
 
 const buildCreatePathname = (connectorType: ConnectorType) => {
@@ -67,9 +69,16 @@ const isConnectorType = (value: string): value is ConnectorType =>
 const parseToConnectorType = (value?: string): ConnectorType | undefined =>
   conditional(value && isConnectorType(value) && value);
 
+const isConnectorTab = (value: string): value is ConnectorsTabs =>
+  Object.values<string>(ConnectorsTabs).includes(value);
+
+const parseToConnectorTab = (value?: string): ConnectorsTabs | undefined =>
+  conditional(value && isConnectorTab(value) && value);
+
 function Connectors() {
-  const { tab = ConnectorsTabs.Passwordless, createType, factoryId } = useParams();
+  const { tab, createType, factoryId } = useParams();
   const createConnectorType = parseToConnectorType(createType);
+  const createConnectorTab = parseToConnectorTab(tab) ?? ConnectorsTabs.Passwordless;
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -93,24 +102,19 @@ function Connectors() {
   }, [data]);
 
   const socialConnectors = useMemo(
-    () => (data || []).filter(({ type }) => type === ConnectorType.Social),
+    () => data?.filter(({ type }) => type === ConnectorType.Social) ?? [],
     [data]
   );
 
   const blockchainConnectors = useMemo(
-    () => (data || []).filter(({ type }) => type === ConnectorType.Blockchain),
+    () => data?.filter(({ type }) => type === ConnectorType.Blockchain) ?? [],
     [data]
   );
 
-  const connectorTabMap: Record<ConnectorsTabs, Array<ConnectorGroup>> = {
+  const connectorTabMap: Record<ConnectorsTabs, ConnectorGroup[]> = {
     [ConnectorsTabs.Social]: socialConnectors,
     [ConnectorsTabs.Blockchain]: blockchainConnectors,
     [ConnectorsTabs.Passwordless]: passwordlessConnectors,
-  };
-  const connectorTypeTabMap: Record<ConnectorsTabs, [ConnectorType, ...ConnectorType[]]> = {
-    [ConnectorsTabs.Social]: [ConnectorType.Social],
-    [ConnectorsTabs.Blockchain]: [ConnectorType.Blockchain],
-    [ConnectorsTabs.Passwordless]: [ConnectorType.Email, ConnectorType.Sms],
   };
   const documentationUrlMap = {
     [ConnectorsTabs.Social]: '/docs/recipes/configure-connectors/configure-social-connector',
@@ -122,11 +126,10 @@ function Connectors() {
   const isBlockchain = tab === ConnectorsTabs.Blockchain;
   const isCreatable = isSocial || isBlockchain;
 
-  const connectors =
-    connectorTabMap[tab as ConnectorsTabs] || connectorTabMap[ConnectorsTabs.Passwordless];
-  const type = connectorTypeTabMap[tab as ConnectorsTabs];
+  const connectors = connectorTabMap[createConnectorTab];
+  console.log('CREATE CONNECTOR TAB', createConnectorTab, 'ORIGINAL', tab);
 
-  const hasDemoConnector = connectors?.some(({ isDemo }) => isDemo);
+  const hasDemoConnector = connectors.some(({ isDemo }) => isDemo);
 
   const connectorToShowInGuide = useMemo(() => {
     if (factories && factoryId) {
@@ -134,28 +137,28 @@ function Connectors() {
     }
   }, [factoryId, factories]);
 
-  const createButtonTitle = useMemo(() => {
-    if (type[0] === ConnectorType.Blockchain) {
-      return 'connectors.create.blockchain';
+  const createButtonTitle = useMemo((): AdminConsoleKey => {
+    if (createConnectorType === ConnectorType.Blockchain) {
+      return 'connectors.create';
     }
 
-    return 'connectors.create.social';
-  }, [type]);
+    return 'connectors.create';
+  }, [createConnectorType]);
 
-  const placeholderTitle = useMemo(() => {
-    if (type[0] === ConnectorType.Blockchain) {
-      return 'connectors.placeholder_title.blockchain';
+  const placeholderTitle = useMemo((): AdminConsoleKey => {
+    if (createConnectorType === ConnectorType.Blockchain) {
+      return 'connectors.placeholder_title';
     }
 
-    return 'connectors.placeholder_title.social';
-  }, [type]);
+    return 'connectors.placeholder_title';
+  }, [createConnectorType]);
 
-  const placeholderDescription = useMemo(() => {
-    if (type[0] === ConnectorType.Blockchain) {
-      return 'connectors.placeholder_description.blockchain';
+  const placeholderDescription = useMemo((): AdminConsoleKey => {
+    if (createConnectorType === ConnectorType.Blockchain) {
+      return 'connectors.placeholder_description';
     }
-    return 'connectors.placeholder_description.social';
-  }, [type]);
+    return 'connectors.placeholder_description';
+  }, [createConnectorType]);
 
   return (
     <ListPage
@@ -169,7 +172,9 @@ function Connectors() {
         isCreatable && {
           title: createButtonTitle,
           onClick: () => {
-            navigate(buildCreatePathname(type[0]));
+            if (createConnectorType) {
+              navigate(buildCreatePathname(createConnectorType));
+            }
           },
         }
       )}
@@ -179,7 +184,7 @@ function Connectors() {
           <TabNav className={styles.tabs}>
             <TabNavItem href={passwordlessPathname}>{t('connectors.tab_email_sms')}</TabNavItem>
             <TabNavItem href={socialPathname}>{t('connectors.tab_social')}</TabNavItem>
-            <TabNavItem href={blockchainPathname}>{t('connectors.tab_blockchain')}</TabNavItem>
+            <TabNavItem href={blockchainPathname}>{t('connectors.tab_social')}</TabNavItem>
           </TabNav>
           {hasDemoConnector && <DemoConnectorNotice />}
         </>
@@ -249,7 +254,9 @@ function Connectors() {
                   size="large"
                   icon={<Plus />}
                   onClick={() => {
-                    navigate(buildCreatePathname(type[0]));
+                    if (createConnectorType) {
+                      navigate(buildCreatePathname(createConnectorType));
+                    }
                   }}
                 />
               }
@@ -281,13 +288,13 @@ function Connectors() {
 
                 return;
               }
-              navigate(`${basePathname}/${tab}`);
+              navigate(`${basePathname}/${createConnectorTab}`);
             }}
           />
           <Guide
             connector={connectorToShowInGuide}
             onClose={() => {
-              navigate(`${basePathname}/${tab}`);
+              navigate(`${basePathname}/${createConnectorTab}`);
             }}
           />
         </>

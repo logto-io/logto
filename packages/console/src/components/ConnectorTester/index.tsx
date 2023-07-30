@@ -1,4 +1,4 @@
-import { ServiceConnector } from '@logto/connector-kit';
+import { ServiceConnector, type TestableConnectorType } from '@logto/connector-kit';
 import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -19,7 +19,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   connectorFactoryId: string;
-  connectorType: Exclude<ConnectorType, ConnectorType.Social | ConnectorType.Blockchain>;
+  connectorType: TestableConnectorType;
   className?: string;
   parse: () => unknown;
   updateUsage?: () => void;

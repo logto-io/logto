@@ -1,3 +1,4 @@
+import { isPluggableConnectorType } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
@@ -54,7 +55,7 @@ function SocialConnectorEditBox({ value, onChange }: Props) {
     .filter((item): item is ConnectorGroup => Boolean(item));
 
   const connectorOptions = connectorData.filter(
-    ({ target, type }) => !value.includes(target) && type === ConnectorType.Social
+    ({ target, type }) => !value.includes(target) && isPluggableConnectorType(type)
   );
 
   return (

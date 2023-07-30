@@ -53,7 +53,7 @@ describe('<SignIn />', () => {
 
       // Social
       expect(queryAllByText('action.sign_in_with')).toHaveLength(
-        mockSignInExperienceSettings.socialConnectors.length
+        mockSignInExperienceSettings.connectors.length
       );
     });
   });
@@ -84,7 +84,7 @@ describe('<SignIn />', () => {
     );
 
     expect(container.querySelectorAll('button')).toHaveLength(
-      mockSignInExperienceSettings.socialConnectors.length
+      mockSignInExperienceSettings.connectors.length
     );
 
     expect(queryByText('description.terms_of_use')).not.toBeNull();

@@ -39,17 +39,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
       return;
     }
 
-    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
-    >(
-      (previous, connectorTarget) => [
-        ...previous,
-        ...allConnectors.filter(({ target }) => target === connectorTarget),
-      ],
-      []
-    );
-
-    const blockchainConnectors = signInExperience.blockchainSignInConnectorTargets.reduce<
+    const connectors = signInExperience.signInConnectorTargets.reduce<
       Array<ConnectorMetadata & { id: string }>
     >(
       (previous, connectorTarget) => [
@@ -66,8 +56,7 @@ function SignInExperiencePreview({ platform, mode, language = 'en', signInExperi
     return {
       signInExperience: {
         ...signInExperience,
-        socialConnectors,
-        blockchainConnectors,
+        connectors,
         forgotPassword: {
           email: hasEmailConnector,
           sms: hasSmsConnector,

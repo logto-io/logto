@@ -79,10 +79,7 @@ export const hasSignUpAndSignInConfigChanged = (
   return (
     !hasSignUpSettingsChanged(before.signUp, after.signUp) &&
     !hasSignInMethodsChanged(before.signIn.methods, after.signIn.methods) &&
-    !hasSocialTargetsChanged(
-      before.socialSignInConnectorTargets,
-      after.socialSignInConnectorTargets
-    )
+    !hasSocialTargetsChanged(before.signInConnectorTargets, after.signInConnectorTargets)
   );
 };
 

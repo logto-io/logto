@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
-import SocialSignInList from '@/containers/SocialSignInList';
+import ConnectorSignInList from '@/containers/ConnectorSignInList';
 import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -15,7 +15,7 @@ import IdentifierRegisterForm from './IdentifierRegisterForm';
 import * as styles from './index.module.scss';
 
 const Register = () => {
-  const { signUpMethods, socialConnectors, signInMode, signInMethods } = useSieMethods();
+  const { signUpMethods, connectors, signInMode, signInMethods } = useSieMethods();
   const { t } = useTranslation();
 
   if (!signInMode) {
@@ -31,10 +31,10 @@ const Register = () => {
       {signUpMethods.length > 0 && (
         <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
       )}
-      {signUpMethods.length === 0 && socialConnectors.length > 0 && (
+      {signUpMethods.length === 0 && connectors.length > 0 && (
         <>
           <TermsAndPrivacy className={styles.terms} />
-          <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
+          <ConnectorSignInList className={styles.main} connectors={connectors} />
         </>
       )}
       {
@@ -47,10 +47,10 @@ const Register = () => {
       }
       {
         // Social sign-in methods
-        signUpMethods.length > 0 && socialConnectors.length > 0 && (
+        signUpMethods.length > 0 && connectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
-            <SocialSignInList socialConnectors={socialConnectors} className={styles.main} />
+            <ConnectorSignInList connectors={connectors} className={styles.main} />
           </>
         )
       }

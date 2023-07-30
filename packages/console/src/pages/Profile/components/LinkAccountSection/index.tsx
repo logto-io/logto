@@ -1,7 +1,12 @@
 import type { SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import { Theme } from '@logto/schemas';
-import type { UserInfo, ConnectorResponse } from '@logto/schemas';
+import {
+  type Identity,
+  type SocialIdentity,
+  Theme,
+  type UserInfo,
+  type ConnectorResponse,
+} from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
@@ -31,6 +36,9 @@ type Props = {
   connectors?: ConnectorResponse[];
   onUpdate: () => void;
 };
+
+const isSocialIdentity = (input: Identity): input is SocialIdentity =>
+  'details' in input || 'userId' in input;
 
 function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -62,7 +70,10 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
 
     return connectors.map(({ id, name, logo, logoDark, target }) => {
       const logoSrc = theme === Theme.Dark && logoDark ? logoDark : logo;
-      const relatedUserDetails = user.identities[target]?.details;
+      const identity = user.identities[target];
+      const relatedUserDetails = conditional(
+        identity && isSocialIdentity(identity) && identity.details
+      );
 
       const socialUserInfo = socialUserInfoGuard.safeParse(relatedUserDetails);
       const hasLinked = socialUserInfo.success;

@@ -1,7 +1,8 @@
-import type { SignIn, ConnectorMetadata } from '@logto/schemas';
+import type { SignIn } from '@logto/schemas';
 
-import BlockchainSignInList from '@/containers/BlockchainSignInList';
-import SocialSignInList from '@/containers/SocialSignInList';
+import ConnectorSignInList, {
+  type ConnectorMetadataWithId,
+} from '@/containers/ConnectorSignInList';
 
 import IdentifierSignInForm from './IdentifierSignInForm';
 import PasswordSignInForm from './PasswordSignInForm';
@@ -9,19 +10,12 @@ import * as styles from './index.module.scss';
 
 type Props = {
   signInMethods: SignIn['methods'];
-  socialConnectors: ConnectorMetadata[];
-  blockchainConnectors: ConnectorMetadata[];
+  connectors: ConnectorMetadataWithId[];
 };
 
-const Main = ({ signInMethods, socialConnectors, blockchainConnectors }: Props) => {
-  if (signInMethods.length === 0 && blockchainConnectors.length > 0) {
-    return (
-      <BlockchainSignInList className={styles.main} blockchainConnectors={blockchainConnectors} />
-    );
-  }
-
-  if (signInMethods.length === 0 && socialConnectors.length > 0) {
-    return <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />;
+const Main = ({ signInMethods, connectors }: Props) => {
+  if (signInMethods.length === 0 && connectors.length > 0) {
+    return <ConnectorSignInList className={styles.main} connectors={connectors} />;
   }
 
   const isPasswordOnly =

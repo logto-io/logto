@@ -30,7 +30,7 @@ describe('sign-in-experience query', () => {
     languageInfo: JSON.stringify(mockSignInExperience.languageInfo),
     signIn: JSON.stringify(mockSignInExperience.signIn),
     signUp: JSON.stringify(mockSignInExperience.signUp),
-    socialSignInConnectorTargets: JSON.stringify(mockSignInExperience.socialSignInConnectorTargets),
+    socialSignInConnectorTargets: JSON.stringify(mockSignInExperience.signInConnectorTargets),
     customContent: JSON.stringify(mockSignInExperience.customContent),
   };
 

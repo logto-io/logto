@@ -13,6 +13,30 @@ export enum ConnectorType {
   Blockchain = 'Blockchain',
 }
 
+// TODO: @lbennett open issue with suggestions to make all connectors testable
+export type TestableConnectorType = ConnectorType.Email | ConnectorType.Sms;
+const testableConnectors: Record<ConnectorType, boolean> = {
+  [ConnectorType.Email]: true,
+  [ConnectorType.Sms]: true,
+  [ConnectorType.Social]: false,
+  [ConnectorType.Blockchain]: false,
+};
+export const isTestableConnectorType = (type: ConnectorType): type is TestableConnectorType => {
+  return testableConnectors[type];
+};
+
+// TODO: @lbennett open issue with suggestions to bring Email and Sms in line with Pluggable logic, removing the need to have it
+export type PluggableConnectorType = ConnectorType.Social | ConnectorType.Blockchain;
+const pluggableConnectors: Record<ConnectorType, boolean> = {
+  [ConnectorType.Email]: false,
+  [ConnectorType.Sms]: false,
+  [ConnectorType.Social]: true,
+  [ConnectorType.Blockchain]: true,
+};
+export const isPluggableConnectorType = (type: ConnectorType): type is PluggableConnectorType => {
+  return pluggableConnectors[type];
+};
+
 export enum ConnectorPlatform {
   Native = 'Native',
   Universal = 'Universal',

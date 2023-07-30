@@ -5,7 +5,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { SearchParameters } from '@/types';
 import { queryStringify } from '@/utils';
-import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
+import { getCallbackLinkFromStorage } from '@/utils/connectors/social-connectors';
 
 import SocialLanding from '.';
 

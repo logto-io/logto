@@ -105,18 +105,20 @@ export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
 /* === Users === */
 export const roleNamesGuard = z.string().array();
 
-const identityGuard = z
-  .object({
-    userId: z.string(),
-    details: z.object({}).optional(), // Connector's userinfo details, schemaless
-  })
-  .or(
-    z.object({
-      address: z.string(),
-    })
-  );
+const socialIdentityGuard = z.object({
+  userId: z.string(),
+  details: z.object({}).optional(), // Connector's userinfo details, schemaless
+});
+
+const blockchainIdentityGuard = z.object({
+  address: z.string(),
+});
+
+const identityGuard = socialIdentityGuard.or(blockchainIdentityGuard);
 export const identitiesGuard = z.record(identityGuard);
 
+export type BlockchainIdentity = z.infer<typeof blockchainIdentityGuard>;
+export type SocialIdentity = z.infer<typeof socialIdentityGuard>;
 export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 

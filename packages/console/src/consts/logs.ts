@@ -13,6 +13,8 @@ export const logEventTitle: Record<string, Optional<string>> & Record<LogKey, Op
       'Submit forgot-password identifier with password',
     'Interaction.ForgotPassword.Identifier.Social.Create': undefined,
     'Interaction.ForgotPassword.Identifier.Social.Submit': undefined,
+    'Interaction.ForgotPassword.Identifier.Blockchain.Create': undefined,
+    'Interaction.ForgotPassword.Identifier.Blockchain.Submit': undefined,
     'Interaction.ForgotPassword.Identifier.VerificationCode.Create':
       'Create and send forgot-password verification code',
     'Interaction.ForgotPassword.Identifier.VerificationCode.Submit':
@@ -25,6 +27,8 @@ export const logEventTitle: Record<string, Optional<string>> & Record<LogKey, Op
     'Interaction.Register.Identifier.Password.Submit': undefined,
     'Interaction.Register.Identifier.Social.Create': undefined,
     'Interaction.Register.Identifier.Social.Submit': undefined,
+    'Interaction.Register.Identifier.Blockchain.Create': undefined,
+    'Interaction.Register.Identifier.Blockchain.Submit': undefined,
     'Interaction.Register.Identifier.VerificationCode.Create':
       'Create and send register identifier with verification code',
     'Interaction.Register.Identifier.VerificationCode.Submit':
@@ -37,6 +41,9 @@ export const logEventTitle: Record<string, Optional<string>> & Record<LogKey, Op
     'Interaction.SignIn.Identifier.Password.Submit': 'Submit sign-in identifier with password',
     'Interaction.SignIn.Identifier.Social.Create': 'Create social sign-in authorization-url',
     'Interaction.SignIn.Identifier.Social.Submit': 'Authenticate and submit social identifier',
+    'Interaction.SignIn.Identifier.Blockchain.Create': 'Create blockchain sign-in',
+    'Interaction.SignIn.Identifier.Blockchain.Submit':
+      'Authenticate and submit blockchain identifier',
     'Interaction.SignIn.Identifier.VerificationCode.Create':
       'Create and send sign-in verification code',
     'Interaction.SignIn.Identifier.VerificationCode.Submit':

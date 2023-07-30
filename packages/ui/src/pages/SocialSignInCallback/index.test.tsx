@@ -4,7 +4,7 @@ import { Route, Routes, useSearchParams } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { signInWithSocial } from '@/apis/interaction';
-import { generateState, storeState } from '@/utils/social-connectors';
+import { generateState, storeState } from '@/utils/connectors/social-connectors';
 
 import SocialCallback from '.';
 

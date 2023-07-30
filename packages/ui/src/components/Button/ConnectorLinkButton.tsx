@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
-import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
+import * as connectorLinkButtonStyles from './ConnectorLinkButton.module.scss';
 import * as styles from './index.module.scss';
 
 export type Props = {
@@ -13,7 +13,7 @@ export type Props = {
   onClick?: () => void;
 };
 
-const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }: Props) => {
+const ConnectorLinkButton = ({ isDisabled, className, target, name, logo, onClick }: Props) => {
   const {
     t,
     i18n: { language },
@@ -28,7 +28,7 @@ const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }
         styles.button,
         styles.secondary,
         styles.large,
-        socialLinkButtonStyles.socialButton,
+        connectorLinkButtonStyles.socialButton,
         isDisabled && styles.disabled,
         className
       )}
@@ -39,17 +39,17 @@ const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }
         <img
           src={logo}
           alt={target}
-          className={socialLinkButtonStyles.icon}
+          className={connectorLinkButtonStyles.icon}
           crossOrigin="anonymous"
         />
       )}
-      <div className={socialLinkButtonStyles.name}>
-        <div className={socialLinkButtonStyles.placeHolder} />
+      <div className={connectorLinkButtonStyles.name}>
+        <div className={connectorLinkButtonStyles.placeHolder} />
         <span>{t('action.sign_in_with', { name: localName })}</span>
-        <div className={socialLinkButtonStyles.placeHolder} />
+        <div className={connectorLinkButtonStyles.placeHolder} />
       </div>
     </button>
   );
 };
 
-export default SocialLinkButton;
+export default ConnectorLinkButton;

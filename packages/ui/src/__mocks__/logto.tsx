@@ -3,7 +3,7 @@ import { SignInIdentifier, SignInMode } from '@logto/schemas';
 
 import type { SignInExperienceResponse } from '@/types';
 
-import { socialConnectors, blockchainConnectors } from './connectors';
+import { connectors } from './connectors';
 
 export const appLogo = 'https://avatars.githubusercontent.com/u/88327661?s=200&v=4';
 export const appHeadline = 'Build user identity in a modern way';
@@ -54,8 +54,7 @@ export const mockSignInExperience: SignInExperience = {
   signIn: {
     methods: [usernameSignInMethod, emailSignInMethod, phoneSignInMethod],
   },
-  socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
-  blockchainSignInConnectorTargets: [],
+  signInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
   customContent: {},
@@ -75,8 +74,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     password: true,
     verify: true,
   },
-  socialConnectors,
-  blockchainConnectors,
+  connectors,
   signInMode: SignInMode.SignInAndRegister,
   forgotPassword: {
     email: true,

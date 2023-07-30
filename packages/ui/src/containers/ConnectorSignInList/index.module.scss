@@ -1,10 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.blockchainLinkList {
+.connectorLinkList {
   @include _.flex-column;
 }
 
-.blockchainLinkButton {
+.connectorLinkButton {
   margin-bottom: _.unit(4);
 
   &:last-child {

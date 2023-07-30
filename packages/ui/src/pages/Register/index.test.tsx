@@ -40,7 +40,7 @@ describe('<Register />', () => {
 
     // Social
     expect(queryAllByText('action.sign_in_with')).toHaveLength(
-      mockSignInExperienceSettings.socialConnectors.length
+      mockSignInExperienceSettings.connectors.length
     );
   });
 
@@ -50,7 +50,7 @@ describe('<Register />', () => {
     });
 
     expect(queryAllByText('action.sign_in_with')).toHaveLength(
-      mockSignInExperienceSettings.socialConnectors.length
+      mockSignInExperienceSettings.connectors.length
     );
 
     expect(container.querySelector('input[name="identifier"]')).toBeNull();

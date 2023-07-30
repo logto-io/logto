@@ -1,23 +1,21 @@
-import type { ConnectorMetadata } from '@logto/schemas';
-import { ConnectorPlatform } from '@logto/schemas';
+import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
+import { type ConnectorMetadataWithId } from '@/containers/ConnectorSignInList';
 import { SearchParameters } from '@/types';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
-import {
-  filterSocialConnectors,
-  filterPreviewSocialConnectors,
-  buildSocialLandingUri,
-} from './social-connectors';
+import { filterConnectors } from './connectors';
+import { filterPreviewConnectors } from './preview';
+import { buildSocialLandingUri } from './social-connectors';
 
 const mockConnectors = [
-  { platform: 'Web', target: 'facebook' },
-  { platform: 'Web', target: 'google' },
-  { platform: 'Universal', target: 'facebook' },
-  { platform: 'Universal', target: 'wechat' },
-  { platform: 'Native', target: 'wechat' },
-  { platform: 'Native', target: 'alipay' },
-] as ConnectorMetadata[];
+  { platform: 'Web', target: 'facebook', id: 'facebook', type: ConnectorType.Social },
+  { platform: 'Web', target: 'google', id: 'google', type: ConnectorType.Social },
+  { platform: 'Universal', target: 'facebook', id: 'google', type: ConnectorType.Social },
+  { platform: 'Universal', target: 'wechat', id: 'wechat', type: ConnectorType.Social },
+  { platform: 'Native', target: 'wechat', id: 'wechat', type: ConnectorType.Social },
+  { platform: 'Native', target: 'alipay', id: 'alipay', type: ConnectorType.Social },
+] as ConnectorMetadataWithId[];
 
 jest.mock('@/utils/native-sdk', () => ({
   isNativeWebview: jest.fn(),
@@ -27,19 +25,19 @@ jest.mock('@/utils/native-sdk', () => ({
 const getLogtoNativeSdkMock = getLogtoNativeSdk as jest.Mock;
 const isNativeWebviewMock = isNativeWebview as jest.Mock;
 
-describe('filterSocialConnectors', () => {
+describe('filterConnectors', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
   it('undefined input should return empty list', () => {
-    expect(filterSocialConnectors()).toEqual([]);
+    expect(filterConnectors()).toEqual([]);
   });
 
   it('filter Web Connectors', () => {
     isNativeWebviewMock.mockImplementation(() => false);
-    expect(filterSocialConnectors(mockConnectors)).toEqual([
+    expect(filterConnectors(mockConnectors)).toEqual([
       { platform: 'Web', target: 'facebook' },
       { platform: 'Web', target: 'google' },
       { platform: 'Universal', target: 'wechat' },
@@ -55,7 +53,7 @@ describe('filterSocialConnectors', () => {
       },
     }));
 
-    expect(filterSocialConnectors(mockConnectors)).toEqual([]);
+    expect(filterConnectors(mockConnectors)).toEqual([]);
   });
 
   it('filter Native & Universal  Connectors', () => {
@@ -69,7 +67,7 @@ describe('filterSocialConnectors', () => {
       callbackLink: 'logto://callback',
     }));
 
-    expect(filterSocialConnectors(mockConnectors)).toEqual([
+    expect(filterConnectors(mockConnectors)).toEqual([
       { platform: 'Universal', target: 'facebook' },
       { platform: 'Native', target: 'wechat' },
     ]);
@@ -85,9 +83,7 @@ describe('filterSocialConnectors', () => {
       getPostMessage: jest.fn(),
     }));
 
-    expect(filterSocialConnectors(mockConnectors)).toEqual([
-      { platform: 'Native', target: 'wechat' },
-    ]);
+    expect(filterConnectors(mockConnectors)).toEqual([{ platform: 'Native', target: 'wechat' }]);
   });
 
   it('filter Native Connectors', () => {
@@ -101,25 +97,23 @@ describe('filterSocialConnectors', () => {
       getPostMessage: jest.fn(),
     }));
 
-    expect(filterSocialConnectors(mockConnectors)).toEqual([
-      { platform: 'Native', target: 'wechat' },
-    ]);
+    expect(filterConnectors(mockConnectors)).toEqual([{ platform: 'Native', target: 'wechat' }]);
   });
 });
 
-describe('filterPreviewSocialConnectors', () => {
+describe('filterPreviewConnectors', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
   it('undefined input should return empty list', () => {
-    expect(filterPreviewSocialConnectors(ConnectorPlatform.Native)).toEqual([]);
-    expect(filterPreviewSocialConnectors(ConnectorPlatform.Web)).toEqual([]);
+    expect(filterPreviewConnectors(ConnectorPlatform.Native)).toEqual([]);
+    expect(filterPreviewConnectors(ConnectorPlatform.Web)).toEqual([]);
   });
 
   it('filter Web Connectors', () => {
-    expect(filterPreviewSocialConnectors(ConnectorPlatform.Web, mockConnectors)).toEqual([
+    expect(filterPreviewConnectors(ConnectorPlatform.Web, mockConnectors)).toEqual([
       { platform: 'Web', target: 'facebook' },
       { platform: 'Web', target: 'google' },
       { platform: 'Universal', target: 'wechat' },
@@ -127,7 +121,7 @@ describe('filterPreviewSocialConnectors', () => {
   });
 
   it('filter Native Connectors', () => {
-    expect(filterPreviewSocialConnectors(ConnectorPlatform.Native, mockConnectors)).toEqual([
+    expect(filterPreviewConnectors(ConnectorPlatform.Native, mockConnectors)).toEqual([
       { platform: 'Universal', target: 'facebook' },
       { platform: 'Native', target: 'wechat' },
       { platform: 'Native', target: 'alipay' },

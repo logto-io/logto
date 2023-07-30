@@ -1,5 +1,5 @@
 import { builtInLanguages } from '@logto/phrases-ui';
-import type { ConnectorMetadata, LanguageInfo } from '@logto/schemas';
+import type { LanguageInfo } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 
@@ -8,7 +8,7 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type FullSignInExperience } from './types.js';
+import { type ConnectorMetadataWithId, type FullSignInExperience } from './types.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
@@ -44,10 +44,10 @@ export const createSignInExperienceLibrary = (
         .map(({ metadata: { target } }) => target)
     );
 
-    const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
+    const { signInConnectorTargets } = await findDefaultSignInExperience();
 
     await updateDefaultSignInExperience({
-      socialSignInConnectorTargets: socialSignInConnectorTargets.filter((target) =>
+      signInConnectorTargets: signInConnectorTargets.filter((target) =>
         availableSocialConnectorTargets.includes(target)
       ),
     });
@@ -64,36 +64,25 @@ export const createSignInExperienceLibrary = (
       email: logtoConnectors.some(({ type }) => type === ConnectorType.Email),
     };
 
-    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
-    >((previous, connectorTarget) => {
-      const connectors = logtoConnectors.filter(
-        ({ metadata: { target } }) => target === connectorTarget
-      );
+    const connectors = signInExperience.signInConnectorTargets.reduce<ConnectorMetadataWithId[]>(
+      (previous, connectorTarget) => {
+        const connectors = logtoConnectors.filter(
+          ({ metadata: { target } }) => target === connectorTarget
+        );
 
-      return [
-        ...previous,
-        ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-      ];
-    }, []);
-
-    const blockchainConnectors = signInExperience.blockchainSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
-    >((previous, connectorTarget) => {
-      const connectors = logtoConnectors.filter(
-        ({ metadata: { target } }) => target === connectorTarget
-      );
-
-      return [
-        ...previous,
-        ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
-      ];
-    }, []);
+        return [
+          ...previous,
+          ...connectors.map(({ metadata, type, dbEntry: { id } }) => {
+            return { ...metadata, id, type };
+          }),
+        ];
+      },
+      []
+    );
 
     return {
       ...signInExperience,
-      socialConnectors,
-      blockchainConnectors,
+      connectors,
       forgotPassword,
     };
   };

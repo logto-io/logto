@@ -6,6 +6,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
+import { type LogtoConnector } from '#src/utils/connectors/types.js';
 
 import { mockConnector, mockMetadata, mockLogtoConnector } from '../__mocks__/connector.js';
 
@@ -20,7 +21,7 @@ const { verifyBearerTokenFromRequest } = await mockEsmWithActual(
 );
 const validateSamlAssertion = jest.fn();
 
-const mockSamlLogtoConnector = {
+const mockSamlLogtoConnector: LogtoConnector = {
   dbEntry: { ...mockConnector, connectorId: 'saml', id: 'saml_connector' },
   metadata: { ...mockMetadata, isStandard: true, id: 'saml', target: 'saml' },
   type: ConnectorType.Social,
@@ -29,7 +30,7 @@ const mockSamlLogtoConnector = {
 };
 
 const socialsLibraries = {
-  getConnector: jest.fn(async (connectorId: string) => {
+  getConnector: jest.fn(async (connectorId: string): Promise<LogtoConnector> => {
     if (connectorId !== 'saml_connector') {
       throw new RequestError({
         code: 'entity.not_found',

@@ -2,19 +2,20 @@ import { ConnectorType } from '@logto/schemas';
 
 import {
   mockMetadata0,
-  mockMetadata1,
   mockConnector0,
-  mockConnector1,
   mockLogtoConnector,
   mockLogtoConnectorList,
+  mockConnector1,
+  mockMetadata1,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import { checkSocialConnectorTargetAndPlatformUniqueness } from './platform.js';
+import { type LogtoConnector } from './types.js';
 
 describe('check social connector target and platform uniqueness', () => {
   it('throws if more than one same-platform social connectors sharing the same `target`', () => {
-    const mockConnectors = [
+    const mockConnectors: LogtoConnector[] = [
       {
         dbEntry: mockConnector0,
         metadata: { ...mockMetadata0, target: 'target' },

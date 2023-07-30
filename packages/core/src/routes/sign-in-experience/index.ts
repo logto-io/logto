@@ -53,7 +53,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, ...rest },
+        body: { signInConnectorTargets, ...rest },
       } = ctx.guard;
       const { languageInfo, signUp, signIn } = rest;
 
@@ -64,10 +64,11 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
       const connectors = await getLogtoConnectors();
 
       // Remove unavailable connectors
-      const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
+      const filteredSocialSignInConnectorTargets = signInConnectorTargets?.filter((target) =>
         connectors.some(
           (connector) =>
-            connector.metadata.target === target && connector.type === ConnectorType.Social
+            connector.metadata.target === target &&
+            (connector.type === ConnectorType.Social || connector.type === ConnectorType.Blockchain)
         )
       );
 
@@ -88,7 +89,9 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
           connectors
             .filter((connector) => {
               return (
-                connector.type === ConnectorType.Social &&
+                // TODO: @lbennett combine ConnectorType.Social and Blockchain into a union for these cases, think of a name for general connector
+                (connector.type === ConnectorType.Social ||
+                  connector.type === ConnectorType.Blockchain) &&
                 connector.metadata.id === DemoConnector.Social &&
                 !filteredSocialSignInConnectorTargets.includes(connector.metadata.target)
               );
@@ -101,7 +104,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         filteredSocialSignInConnectorTargets
           ? {
               ...rest,
-              socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
+              signInConnectorTargets: filteredSocialSignInConnectorTargets,
             }
           : rest
       );

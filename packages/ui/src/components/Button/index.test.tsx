@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import { mockSocialConnectorData } from '@/__mocks__/connectors';
 
 import Button from '.';
-import SocialLinkButton from './SocialLinkButton';
+import SocialLinkButton from './ConnectorLinkButton';
 
 describe('Button Component', () => {
   const onClick = jest.fn();

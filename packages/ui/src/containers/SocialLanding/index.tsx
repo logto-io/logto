@@ -15,7 +15,7 @@ type Props = {
 
 const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {
   const { experienceSettings, theme } = useContext(PageContext);
-  const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
+  const connector = experienceSettings?.connectors.find(({ id }) => id === connectorId);
 
   return (
     <div className={classNames(styles.container, className)}>

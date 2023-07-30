@@ -13,7 +13,7 @@ const signInExperienceToOnboardSieConfig = (
     branding: { logoUrl: logo },
     signIn: { methods: signInMethods },
     signUp: { identifiers: signUpIdentifiers },
-    socialSignInConnectorTargets,
+    signInConnectorTargets,
   } = signInExperience;
 
   const identifier =
@@ -35,7 +35,7 @@ const signInExperienceToOnboardSieConfig = (
     color: primaryColor,
     identifier,
     authentications,
-    socialTargets: socialSignInConnectorTargets,
+    socialTargets: signInConnectorTargets,
   };
 };
 
@@ -84,7 +84,7 @@ const onboardSieConfigToSignInExperience = (
         },
       ],
     },
-    socialSignInConnectorTargets: socialTargets ?? [],
+    signInConnectorTargets: socialTargets ?? [],
   };
 
   return signInExperience;

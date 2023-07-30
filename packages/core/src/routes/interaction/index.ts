@@ -1,12 +1,5 @@
 import type { LogtoErrorCode } from '@logto/phrases';
-import {
-  InteractionEvent,
-  eventGuard,
-  identifierPayloadGuard,
-  profileGuard,
-  requestVerificationCodePayloadGuard,
-} from '@logto/schemas';
-import { verifyMessage } from 'ethers';
+import { InteractionEvent, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -19,17 +12,15 @@ import assertThat from '#src/utils/assert-that.js';
 import type { AnonymousRouter, RouterInitArgs } from '../types.js';
 
 import submitInteraction from './actions/submit-interaction.js';
+import blockchainRoutes from './blockchain.js';
 import consentRoutes from './consent.js';
-import { interactionPrefix, verificationPath } from './const.js';
+import { interactionPrefix } from './const.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
-import {
-  blockchainGenerateNoncePayloadGuard,
-  blockchainVerifySignaturePayloadGuard,
-  socialAuthorizationUrlPayloadGuard,
-} from './types/guard.js';
+import passwordlessRoutes from './passwordless.js';
+import socialRoutes from './social.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
@@ -41,8 +32,6 @@ import {
   verifyIdentifierSettings,
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
-import { createSocialAuthorizationUrl } from './utils/social-verification.js';
-import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
 import {
   verifyIdentifierPayload,
   verifyIdentifier,
@@ -314,100 +303,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // Create social authorization url interaction verification
-  router.post(
-    `${interactionPrefix}/${verificationPath}/social-authorization-uri`,
-    koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
-    async (ctx, next) => {
-      // Check interaction exists
-      const { event } = getInteractionStorage(ctx.interactionDetails.result);
-      const log = ctx.createLog(`Interaction.${event}.Identifier.Social.Create`);
-
-      const { body: payload } = ctx.guard;
-
-      log.append(payload);
-
-      const redirectTo = await createSocialAuthorizationUrl(ctx, tenant, payload);
-
-      ctx.body = { redirectTo };
-
-      return next();
-    }
-  );
-
-  // Create blockchain nonce interaction verification
-  router.post(
-    `${interactionPrefix}/${verificationPath}/blockchain-nonce`,
-    koaGuard({ body: blockchainGenerateNoncePayloadGuard }),
-    koaInteractionSie(queries),
-    async (ctx, next) => {
-      // Check interaction exists
-      const { event } = getInteractionStorage(ctx.interactionDetails.result);
-      const log = ctx.createLog(`Interaction.${event}.Identifier.Blockchain.Create`);
-
-      const { body: payload } = ctx.guard;
-
-      log.append(payload);
-
-      // TODO: @lbennett use real nonce
-      const nonce = 'wow';
-
-      ctx.body = { nonce };
-
-      return next();
-    }
-  );
-
-  // Create blockchain nonce interaction verification
-  router.post(
-    `${interactionPrefix}/${verificationPath}/blockchain-verify`,
-    koaGuard({ body: blockchainVerifySignaturePayloadGuard }),
-    async (ctx, next) => {
-      // Check interaction exists
-      const { event } = getInteractionStorage(ctx.interactionDetails.result);
-      const log = ctx.createLog(`Interaction.${event}.Identifier.Blockchain.Create`);
-
-      const { body: payload } = ctx.guard;
-
-      log.append(payload);
-
-      // TODO: @lbennett use real nonce
-      const recovered = verifyMessage('wow', payload.signature);
-
-      if (recovered === payload.address) {
-        ctx.status = 204;
-        ctx.body = { redirectTo: 'http://localhost:3001/sign-in' };
-      } else {
-        ctx.status = 401;
-      }
-
-      return next();
-    }
-  );
-
-  // Create passwordless interaction verification-code
-  router.post(
-    `${interactionPrefix}/${verificationPath}/verification-code`,
-    koaGuard({
-      body: requestVerificationCodePayloadGuard,
-    }),
-    async (ctx, next) => {
-      const { interactionDetails, guard, createLog } = ctx;
-      // Check interaction exists
-      const { event } = getInteractionStorage(interactionDetails.result);
-
-      await sendVerificationCodeToIdentifier(
-        { event, ...guard.body },
-        interactionDetails.jti,
-        createLog,
-        libraries.passcodes
-      );
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
   consentRoutes(router, tenant);
+  passwordlessRoutes(router, tenant);
+  socialRoutes(router, tenant);
+  blockchainRoutes(router, tenant);
 }

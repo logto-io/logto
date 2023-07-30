@@ -26,7 +26,7 @@ function SocialSignInForm() {
         <Controller
           control={control}
           defaultValue={[]}
-          name="socialSignInConnectorTargets"
+          name="signInConnectorTargets"
           render={({ field: { value, onChange } }) => {
             return <SocialConnectorEditBox value={value} onChange={onChange} />;
           }}

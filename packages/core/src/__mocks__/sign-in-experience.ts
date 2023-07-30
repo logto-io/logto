@@ -87,7 +87,7 @@ export const mockSignInExperience: SignInExperience = {
       },
     ],
   },
-  socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
+  signInConnectorTargets: ['github', 'facebook', 'wechat'],
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
   customContent: {},

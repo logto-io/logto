@@ -153,7 +153,7 @@ const useBlockchain = (connectorId?: string) => {
 
   return {
     theme,
-    blockchainConnectors: experienceSettings?.blockchainConnectors ?? [],
+    connectors: experienceSettings?.connectors ?? [],
     invokeBlockchainSignIn: invokeBlockchainSignInHandler,
   };
 };

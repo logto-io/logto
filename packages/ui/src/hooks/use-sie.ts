@@ -16,8 +16,7 @@ export const useSieMethods = () => {
         // Filter out empty settings
         ({ password, verificationCode }) => password || verificationCode
       ) ?? [],
-    socialConnectors: experienceSettings?.socialConnectors ?? [],
-    blockchainConnectors: experienceSettings?.blockchainConnectors ?? [],
+    connectors: experienceSettings?.connectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
   };

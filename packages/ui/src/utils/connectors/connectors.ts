@@ -1,34 +1,87 @@
-import { generateRandomString } from '..';
+import { type ConnectorMetadataWithId } from '@/containers/ConnectorSignInList';
 
-export type StorageStateKeyPrefix = `${'social' | 'blockchain'}_auth_state`;
+import { getLogtoNativeSdk, isNativeWebview } from '../native-sdk';
 
-export const generateState = () => {
-  const uuid = generateRandomString();
+/**
+ * Connectors Filter Utility Methods
+ */
+export const filterConnectors = (connectors?: ConnectorMetadataWithId[]) => {
+  if (!connectors) {
+    return [];
+  }
 
-  return uuid;
-};
+  const connectorMap = new Map<string, ConnectorMetadataWithId>();
 
-export const stateUtils = (storageStateKeyPrefix: string) => {
-  const storeState = (connectorId: string, state: string) => {
-    sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
-  };
+  /**
+   * Browser Environment
+   * Accepts both web and universal platform connectors.
+   * Insert universal connectors only if there is no web platform connector provided with the same target.
+   * Web platform has higher priority.
+   **/
 
-  const getState = (connectorId: string) => {
-    return sessionStorage.getItem(`${storageStateKeyPrefix}:${connectorId}`);
-  };
+  if (!isNativeWebview()) {
+    for (const connector of connectors) {
+      const { platform, target } = connector;
 
-  const stateValidation = (connectorId: string, state: string) => {
-    const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
-    const stateStorage = sessionStorage.getItem(storageKey);
-    sessionStorage.removeItem(storageKey);
+      if (platform === 'Native') {
+        continue;
+      }
 
-    return stateStorage === state;
-  };
+      if (platform === 'Web' || !connectorMap.get(target)) {
+        connectorMap.set(target, connector);
+        continue;
+      }
+    }
 
-  return {
-    generateState,
-    storeState,
-    getState,
-    stateValidation,
-  };
+    return Array.from(connectorMap.values());
+  }
+
+  /**
+   * Native Webview Environment
+   * Accepts both native and universal platform connectors.
+   * Native platform has higher priority.
+   **/
+
+  const { supportedConnector, getPostMessage, callbackLink } = getLogtoNativeSdk() ?? {};
+
+  if (!getPostMessage) {
+    // Invalid Native SDK bridge injections, not able to sign in with any connector.
+    return [];
+  }
+
+  for (const connector of connectors) {
+    const { platform, target } = connector;
+
+    if (platform === 'Web') {
+      continue;
+    }
+
+    // Native SupportedConnector Settings is required
+    if (!supportedConnector) {
+      continue;
+    }
+
+    // Native supported nativeTargets flag is required
+    if (platform === 'Native' && supportedConnector.nativeTargets.includes(target)) {
+      connectorMap.set(target, connector);
+      continue;
+    }
+
+    /**
+     *  Native supportedConnector.universal flag is required
+     *  Native callback link settings is required
+     *  Only if there is no native platform connector provided with the same target.
+     **/
+    if (
+      platform === 'Universal' &&
+      supportedConnector.universal &&
+      callbackLink &&
+      !connectorMap.get(target)
+    ) {
+      connectorMap.set(target, connector);
+      continue;
+    }
+  }
+
+  return Array.from(connectorMap.values());
 };

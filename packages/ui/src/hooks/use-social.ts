@@ -71,7 +71,7 @@ const useSocial = () => {
 
   return {
     theme,
-    socialConnectors: experienceSettings?.socialConnectors ?? [],
+    connectors: experienceSettings?.connectors ?? [],
     invokeSocialSignIn: invokeSocialSignInHandler,
   };
 };

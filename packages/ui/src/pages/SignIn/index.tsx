@@ -5,8 +5,7 @@ import { Navigate } from 'react-router-dom';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
-import BlockchainSignInList from '@/containers/BlockchainSignInList';
-import SocialSignInList from '@/containers/SocialSignInList';
+import ConnectorSignInList from '@/containers/ConnectorSignInList';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -16,8 +15,7 @@ import Main from './Main';
 import * as styles from './index.module.scss';
 
 const SignIn = () => {
-  const { signInMethods, signUpMethods, socialConnectors, blockchainConnectors, signInMode } =
-    useSieMethods();
+  const { signInMethods, signUpMethods, connectors, signInMode } = useSieMethods();
   const { t } = useTranslation();
 
   if (!signInMode) {
@@ -30,11 +28,7 @@ const SignIn = () => {
 
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
-      <Main
-        signInMethods={signInMethods}
-        socialConnectors={socialConnectors}
-        blockchainConnectors={blockchainConnectors}
-      />
+      <Main signInMethods={signInMethods} connectors={connectors} />
       {
         // Create Account footer
         signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (
@@ -47,22 +41,10 @@ const SignIn = () => {
 
       {
         // Social sign-in methods
-        signInMethods.length > 0 && socialConnectors.length > 0 && (
+        signInMethods.length > 0 && connectors.length > 0 && (
           <>
             <Divider label="description.or" className={styles.divider} />
-            <SocialSignInList socialConnectors={socialConnectors} className={styles.main} />
-          </>
-        )
-      }
-      {
-        // Blockchain sign-in methods
-        signInMethods.length > 0 && blockchainConnectors.length > 0 && (
-          <>
-            <Divider label="description.or" className={styles.divider} />
-            <BlockchainSignInList
-              blockchainConnectors={blockchainConnectors}
-              className={styles.main}
-            />
+            <ConnectorSignInList connectors={connectors} className={styles.main} />
           </>
         )
       }

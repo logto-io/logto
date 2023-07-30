@@ -174,3 +174,5 @@ export const mockSocialConnectorData = {
   readme: '',
   configTemplate: '',
 };
+
+export const connectors = [...socialConnectors, ...blockchainConnectors];

@@ -20,8 +20,8 @@ function SignUpAndSignInDiffSection({ before, after, isAfter = false }: Props) {
         isAfter={isAfter}
       />
       <SocialTargetsDiffSection
-        before={before.socialSignInConnectorTargets}
-        after={after.socialSignInConnectorTargets}
+        before={before.signInConnectorTargets}
+        after={after.signInConnectorTargets}
         isAfter={isAfter}
       />
     </>

@@ -52,4 +52,5 @@ export const noConnectorWarningPhrase = Object.freeze({
   [ConnectorType.Email]: 'sign_in_exp.setup_warning.no_connector_email',
   [ConnectorType.Sms]: 'sign_in_exp.setup_warning.no_connector_sms',
   [ConnectorType.Social]: 'sign_in_exp.setup_warning.no_connector_social',
+  [ConnectorType.Blockchain]: 'sign_in_exp.setup_warning.no_connector_social',
 }) satisfies NoConnectorWarningPhrase;

@@ -1,4 +1,4 @@
-import type { Identities, ConnectorResponse } from '@logto/schemas';
+import type { Identities, ConnectorResponse, BlockchainIdentity, Identity } from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -31,6 +31,8 @@ type DisplayConnector = {
 function ConnectorName({ name }: { name: DisplayConnector['name'] }) {
   return typeof name === 'string' ? <span>{name}</span> : <UnnamedTrans resource={name} />;
 }
+
+const isBlockchainIdentity = (input: Identity): input is BlockchainIdentity => 'address' in input;
 
 function UserSocialIdentities({ userId, identities, onDelete }: Props) {
   const api = useApi();
@@ -71,9 +73,15 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
 
     return Object.keys(identities).map((key): DisplayConnector => {
       const { logo, name } = connectorGroups.find((group) => group.target === key) ?? {};
-      const socialUserId = identities[key]?.userId;
 
-      return { logo, name: name ?? t('connectors.unknown'), target: key, userId: socialUserId };
+      const identity = identities[key];
+
+      const userData =
+        identity && isBlockchainIdentity(identity)
+          ? { address: identity.address }
+          : { userId: identity?.userId };
+
+      return { logo, name: name ?? t('connectors.unknown'), target: key, ...userData };
     });
   }, [connectorGroups, identities, t]);
 

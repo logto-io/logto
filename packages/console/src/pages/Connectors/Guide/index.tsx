@@ -1,3 +1,4 @@
+import { isTestableConnectorType } from '@logto/connector-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, RequestErrorBody } from '@logto/schemas';
@@ -56,7 +57,7 @@ function Guide({ connector, onClose }: Props) {
   const isSmsConnector = connectorType === ConnectorType.Sms;
 
   const isSocialConnector = !isSmsConnector && !isEmailConnector && !isBlockchainConnector;
-  const isTestable = isEmailConnector || isSmsConnector;
+  const isTestable = connectorType && isTestableConnectorType(connectorType);
 
   const methods = useForm<ConnectorFormType>({
     reValidateMode: 'onBlur',

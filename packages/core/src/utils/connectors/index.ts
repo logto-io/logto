@@ -45,8 +45,8 @@ export const transpileLogtoConnector = async (
   const isDemo = isDemoConnector(id);
 
   return {
-    type,
     ...metadata,
+    type,
     ...pick(dbEntry, 'id', 'connectorId', 'syncProfile', 'metadata'),
     isDemo,
     extraInfo,
@@ -61,8 +61,8 @@ export const transpileConnectorFactory = ({
   type,
 }: ConnectorFactory): ConnectorFactoryResponse => {
   return {
-    type,
     ...metadata,
+    type,
     isDemo: isDemoConnector(metadata.id),
   };
 };
@@ -79,6 +79,7 @@ const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory
       (item) => item.metadata.id === duplicatedConnectorFactoryIds[0]
     );
 
+    // TODO: @lbennett remove
     // AllDupes.forEach((dupe, i) => {
     //   console.log('\n\nDUPE\n\n', dupe, i);
     // });
