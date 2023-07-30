@@ -4,7 +4,7 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -116,17 +116,23 @@ function Connectors() {
     [data]
   );
 
-  const connectorTabMap: Record<ConnectorsTabs, ConnectorGroup[]> = {
+  const connectorTabConnectors: Record<ConnectorsTabs, ConnectorGroup[]> = {
     [ConnectorsTabs.Social]: socialConnectors,
     [ConnectorsTabs.Blockchain]: blockchainConnectors,
     [ConnectorsTabs.Passwordless]: passwordlessConnectors,
+  };
+
+  const connectorTabTypes: Record<ConnectorsTabs, ConnectorType | undefined> = {
+    [ConnectorsTabs.Social]: ConnectorType.Social,
+    [ConnectorsTabs.Blockchain]: ConnectorType.Blockchain,
+    [ConnectorsTabs.Passwordless]: undefined,
   };
 
   const isSocial = tab === ConnectorsTabs.Social;
   const isBlockchain = tab === ConnectorsTabs.Blockchain;
   const isCreatable = isSocial || isBlockchain;
 
-  const connectors = connectorTabMap[createConnectorTab];
+  const connectors = connectorTabConnectors[createConnectorTab];
 
   const hasDemoConnector = connectors.some(({ isDemo }) => isDemo);
 
@@ -137,27 +143,35 @@ function Connectors() {
   }, [factoryId, factories]);
 
   const createButtonTitle = useMemo((): AdminConsoleKey => {
-    if (createConnectorType === ConnectorType.Blockchain) {
+    if (isBlockchain) {
       return 'connectors.create';
     }
 
     return 'connectors.create';
-  }, [createConnectorType]);
+  }, [isBlockchain]);
 
   const placeholderTitle = useMemo((): AdminConsoleKey => {
-    if (createConnectorType === ConnectorType.Blockchain) {
+    if (isBlockchain) {
       return 'connectors.placeholder_title';
     }
 
     return 'connectors.placeholder_title';
-  }, [createConnectorType]);
+  }, [isBlockchain]);
 
   const placeholderDescription = useMemo((): AdminConsoleKey => {
-    if (createConnectorType === ConnectorType.Blockchain) {
+    if (isBlockchain) {
       return 'connectors.placeholder_description';
     }
     return 'connectors.placeholder_description';
-  }, [createConnectorType]);
+  }, [isBlockchain]);
+
+  const navigateCreateConnector = useCallback(() => {
+    const openType = connectorTabTypes[createConnectorTab];
+    console.log('tab', { tab, createType, openType });
+    if (openType) {
+      navigate(buildCreatePathname(openType));
+    }
+  }, [createConnectorTab]);
 
   return (
     <ListPage
@@ -171,9 +185,7 @@ function Connectors() {
         isCreatable && {
           title: createButtonTitle,
           onClick: () => {
-            if (createConnectorType) {
-              navigate(buildCreatePathname(createConnectorType));
-            }
+            navigateCreateConnector();
           },
         }
       )}
@@ -253,9 +265,7 @@ function Connectors() {
                   size="large"
                   icon={<Plus />}
                   onClick={() => {
-                    if (createConnectorType) {
-                      navigate(buildCreatePathname(createConnectorType));
-                    }
+                    navigateCreateConnector();
                   }}
                 />
               }
