@@ -18,6 +18,7 @@ export default function blockchainRoutes<T extends IRouterParamContext>(
   { queries, connectors }: TenantContext
 ) {
   // Create blockchain nonce interaction verification
+  // TODO: @lbennett remove, SSR?
   router.post(
     `${interactionPrefix}/${verificationPath}/blockchain-nonce`,
     koaGuard({ body: blockchainGenerateNoncePayloadGuard }),

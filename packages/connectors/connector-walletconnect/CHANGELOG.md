@@ -1,0 +1,1 @@
+# @logto/connector-walletconnect

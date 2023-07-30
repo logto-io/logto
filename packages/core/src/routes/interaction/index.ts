@@ -155,6 +155,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const identifierPayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
+
       const interactionStorage = getInteractionStorage(interactionDetails.result);
 
       const log = createLog(`Interaction.${interactionStorage.event}.Update`);

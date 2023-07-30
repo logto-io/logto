@@ -1,3 +1,4 @@
+import { type FC } from 'react';
 import { z } from 'zod';
 
 import { type ConnectorType, type BaseConnector } from './types.js';
@@ -22,3 +23,12 @@ export const blockchainUserInfoGuard = z.object({
 });
 
 export type BlockchainUserInfo = z.infer<typeof blockchainUserInfoGuard>;
+
+export type ConnectorSignInButtonProperties = {
+  onClick: () => void;
+};
+
+export type BlockchainConnectorSignInButtonProperties = {
+  children: FC<ConnectorSignInButtonProperties>;
+  onSigned: (payload: { address: string; signature: string }) => void;
+};

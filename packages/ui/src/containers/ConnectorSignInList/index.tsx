@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { type FC } from 'react';
 
 import ConnectorLinkButton from '@/components/Button/ConnectorLinkButton';
-import useBlockchain from '@/hooks/use-blockchain';
+import { useBlockchain } from '@/hooks/use-blockchain';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSocial from '@/hooks/use-social';
 import { getLogoUrl } from '@/utils/logo';
@@ -42,21 +42,28 @@ const SocialSignInListItem = ({ connector, ...props }: ItemProps) => {
   );
 };
 
-const BlockchainSignInListItem = ({ connector, ...props }: ItemProps) => {
+const BlockchainSignInListItem = ({ connector }: ItemProps) => {
   const { name, logo: logoUrl, logoDark: darkLogoUrl, target, id } = connector;
-  const { invokeBlockchainSignIn, theme } = useBlockchain(id);
+  const { ClientSignInButton, theme, invokeBlockchainSignIn } = useBlockchain(id);
 
   return (
-    <ConnectorLinkButton
-      className={styles.connectorLinkButton}
-      name={name}
-      logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
-      target={target}
-      onClick={() => {
-        void invokeBlockchainSignIn(connector);
+    <ClientSignInButton
+      onSigned={(payload) => {
+        invokeBlockchainSignIn(connector, payload);
       }}
-      {...props}
-    />
+    >
+      {(props) => {
+        return (
+          <ConnectorLinkButton
+            className={styles.connectorLinkButton}
+            name={name}
+            logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
+            target={target}
+            {...props}
+          />
+        );
+      }}
+    </ClientSignInButton>
   );
 };
 

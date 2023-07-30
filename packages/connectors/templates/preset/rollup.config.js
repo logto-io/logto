@@ -9,9 +9,11 @@ import { summary } from 'rollup-plugin-summary';
  */
 const configs = [
   {
-    input: ['src/index.ts'],
+    input: ['src/index.ts', 'src/ClientSignInButton.tsx'],
     output: [{ dir: 'lib' }],
-    external: ['zod', 'got', '@logto/connector-kit'],
+    // TODO: @lbennett update preset sync to respect connect-specific externals
+    // TODO: @lbennett provide reusable client connector config
+    external: ['zod', 'got', '@logto/connector-kit', 'react', 'react-dom', 'node', 'crypto'],
     plugins: [
       typescript({ tsconfig: 'tsconfig.build.json' }),
       nodeResolve({ exportConditions: ['node'] }),

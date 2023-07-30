@@ -4,6 +4,7 @@
     "moduleResolution": "nodenext",
     "module": "esnext",
     "outDir": "lib",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "jsx": "react-jsx"
   }
 }

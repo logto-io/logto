@@ -37,7 +37,9 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.5.0"
+    "@silverhand/essentials": "^2.5.0",
+    "@types/react": "^18.0.31",
+    "react": "^18.0.0"
   },
   "optionalDependencies": {
     "zod": "^3.20.2"

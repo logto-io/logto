@@ -24,7 +24,8 @@ export const verifyBlockchainIdentity = async (
   const log = ctx.createLog('Interaction.SignIn.Identifier.Blockchain.Submit');
   log.append({ connectorId, address, signature });
 
-  const recovered = await connector.verifyMessage('wow!', signature);
+  // TODO: @lbennett use real nonce
+  const recovered = await connector.verifyMessage('wow', signature);
 
   if (recovered !== address) {
     throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);

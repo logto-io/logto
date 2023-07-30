@@ -118,5 +118,4 @@
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
-
 }

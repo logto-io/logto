@@ -37,7 +37,10 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const adminOrigins = isCloud ? cloudUrlSet.origins : adminUrlSet.origins;
   const coreOrigins = urlSet.origins;
   const developmentOrigins = conditionalArray(!isProduction && 'ws:');
-  const appInsightsOrigins = ['https://*.applicationinsights.azure.com'];
+  const appInsightsOrigins = [
+    'https://*.applicationinsights.azure.com',
+    'https://*.walletconnect.com',
+  ];
 
   /**
    * Default Applied rules:

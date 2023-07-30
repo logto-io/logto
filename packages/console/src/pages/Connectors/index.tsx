@@ -167,7 +167,6 @@ function Connectors() {
 
   const navigateCreateConnector = useCallback(() => {
     const openType = connectorTabTypes[createConnectorTab];
-    console.log('tab', { tab, createType, openType });
     if (openType) {
       navigate(buildCreatePathname(openType));
     }

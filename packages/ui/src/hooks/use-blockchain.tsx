@@ -1,5 +1,18 @@
+import {
+  type ConnectorSignInButtonProperties,
+  type BlockchainConnectorSignInButtonProperties,
+} from '@logto/connector-kit';
 import { type ConnectorMetadata, type RequestErrorBody, SignInMode } from '@logto/schemas';
-import { useCallback, useContext, useMemo } from 'react';
+import {
+  type FC,
+  lazy,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type LazyExoticComponent,
+} from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getBlockchainNonce, signInWithBlockchain } from '@/apis/interaction';
@@ -13,8 +26,62 @@ import useSocialRegister from './use-social-register';
 import useTerms from './use-terms';
 import useToast from './use-toast';
 
-const useBlockchain = (connectorId?: string) => {
+const signMessage = async (message: string) => ({ address: message, signature: message });
+
+export type ClientSignInButtonProps = {
+  children: FC<ConnectorSignInButtonProperties>;
+};
+
+export const EmptyProvider = ({
+  children: Children,
+}: BlockchainConnectorSignInButtonProperties) => {
+  return (
+    <Children
+      onClick={() => {
+        return 0;
+      }}
+    />
+  );
+};
+
+const clientConnectors = {
+  metamask: lazy(
+    async () => import(`../../../connectors/connector-metamask/lib/ClientSignInButton`)
+  ),
+  walletconnect: lazy(
+    async () => import(`../../../connectors/connector-walletconnect/lib/ClientSignInButton`)
+  ),
+};
+
+const useClientConnector = (connectorId?: string) => {
+  const [clientSignInButton, setClientSignInButton] = useState<
+    LazyExoticComponent<FC<BlockchainConnectorSignInButtonProperties>> | undefined
+  >();
+
+  useEffect(() => {
+    const loadClientConnector = async () => {
+      if (!connectorId) {
+        return;
+      }
+
+      const clientDirectoryName = connectorId === '5m05sjh7jakr' ? 'metamask' : 'walletconnect';
+      const clientConnector = clientConnectors[clientDirectoryName];
+
+      setClientSignInButton(clientConnector);
+    };
+
+    // TODO: @lbennet handle error cant load connector
+    void loadClientConnector();
+  }, [connectorId]);
+
+  return {
+    ClientSignInButton: clientSignInButton ?? EmptyProvider,
+  };
+};
+
+export const useBlockchain = (connectorId?: string) => {
   const { experienceSettings, theme } = useContext(PageContext);
+  const { ClientSignInButton } = useClientConnector(connectorId);
 
   const handleError = useErrorHandler();
   const getNonce = useApi(getBlockchainNonce);
@@ -84,8 +151,12 @@ const useBlockchain = (connectorId?: string) => {
     ]
   );
 
+  const onSigned = (result: { address: string; signature: string }) => {
+    return { address: 'addrcool', signature: 'sigcool' };
+  };
+
   const invokeBlockchainSignInHandler = useCallback(
-    async (connector: ConnectorMetadata) => {
+    async (connector: ConnectorMetadata, payload: { address: string; signature: string }) => {
       const { id: connectorId, name } = connector;
 
       const state = generateState();
@@ -104,15 +175,11 @@ const useBlockchain = (connectorId?: string) => {
         return;
       }
 
-      // TODO: @lbennett looking at how to use connector provided client code
-      const { signMessage } = await import('../../../connectors/connector-metamask/src/client');
-
-      const { address, signature } = await signMessage(nonceResult.nonce);
+      // Const { address, signature } = await clientConnector?.signMessage(nonceResult.nonce);
 
       const [error, result] = await asyncSignInWithBlockchain({
+        ...payload,
         connectorId,
-        address,
-        signature,
       });
 
       if (error) {
@@ -138,7 +205,7 @@ const useBlockchain = (connectorId?: string) => {
     theme,
     connectors: experienceSettings?.connectors ?? [],
     invokeBlockchainSignIn: invokeBlockchainSignInHandler,
+    ClientSignInButton,
+    onSigned,
   };
 };
-
-export default useBlockchain;
