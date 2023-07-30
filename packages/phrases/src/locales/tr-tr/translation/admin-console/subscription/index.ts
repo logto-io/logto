@@ -25,7 +25,6 @@ const subscription = {
   upgrade_pro: "Pro'ya yükselt",
   update_payment: 'Ödemeyi Güncelle',
   payment_error:
-    // eslint-disable-next-line no-template-curly-in-string
     'Ödeme hatası tespit edildi. Önceki döngü için ${{price, number}} işlenemedi. Logto hizmeti askıya alınmasını önlemek için ödemeleri güncelleyin.',
   downgrade: 'Düşür',
   current: 'Mevcut',

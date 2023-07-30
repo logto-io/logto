@@ -24,7 +24,6 @@ const subscription = {
   upgrade_pro: '프로 업그레이드',
   update_payment: '결제 정보 업데이트',
   payment_error:
-    // eslint-disable-next-line no-template-curly-in-string
     '결제 문제가 발생했습니다. 이전 주기에 ${{price, number}}을(를) 처리할 수 없습니다. Logto 서비스 중단을 피하기 위해 결제를 업데이트하세요.',
   downgrade: '다운그레이드',
   current: '현재',

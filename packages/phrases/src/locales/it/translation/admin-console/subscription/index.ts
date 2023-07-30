@@ -25,7 +25,6 @@ const subscription = {
   upgrade_pro: "Esegui l'upgrade a Pro",
   update_payment: 'Aggiorna pagamento',
   payment_error:
-    // eslint-disable-next-line no-template-curly-in-string
     'Rilevato un problema di pagamento. Impossibile elaborare ${{price, number}} per il ciclo precedente. Aggiorna il pagamento per evitare la sospensione del servizio Logto.',
   downgrade: 'Degrado',
   current: 'Attuale',

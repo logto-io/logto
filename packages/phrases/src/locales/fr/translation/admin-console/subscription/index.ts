@@ -26,7 +26,6 @@ const subscription = {
   upgrade_pro: 'Passer au Plan Professionnel',
   update_payment: 'Mettre à jour le paiement',
   payment_error:
-    // eslint-disable-next-line no-template-curly-in-string
     'Problème de paiement détecté. Impossible de traiter ${{price, number}} pour le cycle précédent. Mettez à jour le paiement pour éviter la suspension du service Logto.',
   downgrade: 'Passer à un Plan Inférieur',
   current: 'Actuel',

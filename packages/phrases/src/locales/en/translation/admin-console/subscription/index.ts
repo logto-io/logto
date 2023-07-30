@@ -24,7 +24,6 @@ const subscription = {
   upgrade_pro: 'Upgrade Pro',
   update_payment: 'Update payment',
   payment_error:
-    // eslint-disable-next-line no-template-curly-in-string
     'Payment issue detected. Unable to process ${{price, number}} for previous cycle. Update payment to avoid Logto service suspension.',
   downgrade: 'Downgrade',
   current: 'Current',

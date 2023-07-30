@@ -59,9 +59,9 @@ const quota_table = {
     '* Aylık etkin kullanıcılarınız (MAU), faturalandırma dönemi boyunca ne sıklıkla oturum açtıklarına göre 3 düzeye ayrılır. Her düzeyin farklı bir MAU birim fiyatı vardır.',
   unlimited: 'Sınırsız',
   contact: 'İletişim',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/ay',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} gün',
   days_other: '{{count, number}} gün',

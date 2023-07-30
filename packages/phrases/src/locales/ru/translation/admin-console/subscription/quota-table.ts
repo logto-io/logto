@@ -59,9 +59,9 @@ const quota_table = {
     '* Ваши активные пользователи в месяц (MAU) разделены на 3 уровня в зависимости от того, как часто они входят в систему в течение биллингового периода. Каждый уровень имеет свою стоимость за единицу MAU.',
   unlimited: 'Неограниченно',
   contact: 'Связаться',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/мес.',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} день',
   days_other: '{{count, number}} дней',

@@ -59,9 +59,9 @@ const quota_table = {
     '* Vos utilisateurs actifs mensuels (MAU) sont répartis en 3 niveaux en fonction de la fréquence à laquelle ils se connectent pendant le cycle de facturation. Chaque niveau a un prix différent par unité MAU.',
   unlimited: 'Illimité',
   contact: 'Contact',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/mo',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} jour',
   days_other: '{{count, number}} jours',

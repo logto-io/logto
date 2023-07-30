@@ -59,9 +59,9 @@ const quota_table = {
     '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/mo',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
