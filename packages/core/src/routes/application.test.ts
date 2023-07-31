@@ -52,7 +52,12 @@ const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
 
 const customClientMetadata = {
-  corsAllowedOrigins: ['http://localhost:5000', 'http://localhost:5001', 'https://silverhand.com'],
+  corsAllowedOrigins: [
+    'http://localhost:5000',
+    'http://localhost:5001',
+    'https://silverhand.com',
+    'capacitor://localhost',
+  ],
   idTokenTtl: 999_999,
   refreshTokenTtl: 100_000_000,
 };

@@ -47,7 +47,7 @@ const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
 
 const mapToUriOriginFormatArrays = (value?: string[]) =>
-  value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
+  value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
 
 function ApplicationDetails() {
   const { id } = useParams();
