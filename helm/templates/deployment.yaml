@@ -56,10 +56,10 @@ spec:
               containerPort: {{ .Values.admin.port }}
               protocol: TCP
           env:
+            {{- if .Values.common.env.trustProxyHeader }}
             - name: TRUST_PROXY_HEADER
-              {{- if .Values.common.env.trustProxyHeader }}
               value: "1"
-              {{- end }}
+            {{- end }}
             - name: NODE_ENV
               value: {{ .Values.common.env.nodeEnv }}
             - name: ENDPOINT
@@ -68,14 +68,35 @@ spec:
               value: {{ .Values.admin.endpoint }}
             - name: DB_URL
               value: {{ .Values.common.env.db_url }}
+            {{- if .Values.common.tls.enabled }}
+            - name: TLS_CERT_FILE
+              value: /etc/tls/tls.crt
+            - name: TLS_KEY_FILE
+              value: /etc/tls/tls.key
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            {{- if .Values.common.tls.enabled }}
+            - name: tls-secret
+              mountPath: /etc/tls
+              subPath: tls.crt
+              readOnly: true
+            - name: tls-secret
+              mountPath: /etc/tls
+              subPath: tls.key
+              readOnly: true
+            {{- end }}
             - name: connectors
               mountPath: /etc/logto/packages/core/connectors
       volumes:
         - name: connectors
           emptyDir: {}
+        {{- if .Values.common.tls.enabled }}
+        - name: tls-secret
+          secret:
+            secretName: {{ .Values.common.tls.secretName }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

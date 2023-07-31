@@ -15,7 +15,7 @@ common:
     secretName: ""
   env:
     nodeEnv: ""
-    db_url: postgres://postgres:p0stgr3s@postgres:5432/logto
+    db_url: ""
     adminDisableLocalhost: false
     trustProxyHeader: true
 
