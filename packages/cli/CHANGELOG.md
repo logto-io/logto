@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- fde330a8b: add `translate sync-keys` command
+
+  This command is helpful for syncing keys from one language to another. Run `logto translate sync-keys --help` for details.
+
+### Patch Changes
+
+- Updated dependencies [5ccdd7f31]
+  - @logto/schemas@1.7.0
+
 ## 1.6.0
 
 ### Patch Changes

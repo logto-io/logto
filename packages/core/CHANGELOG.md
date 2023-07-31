@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- 5ccdd7f31: Record daily active users
+
+### Patch Changes
+
+- Updated dependencies [16d83dd2f]
+- Updated dependencies [5ccdd7f31]
+- Updated dependencies [fde330a8b]
+  - @logto/console@1.5.1
+  - @logto/schemas@1.7.0
+  - @logto/cli@1.7.0
+
 ## 1.6.0
 
 ### Minor Changes

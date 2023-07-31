@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.7.0
+
+### Patch Changes
+
+- Updated dependencies [fde330a8b]
+  - @logto/cli@1.7.0
+
 ## 1.6.0
 
 ### Patch Changes

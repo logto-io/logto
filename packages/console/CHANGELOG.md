@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.5.1
+
+### Patch Changes
+
+- 16d83dd2f: Allow editing refresh token TTL for non-M2M applications (include SPA type)
+
 ## 1.5.0
 
 ### Minor Changes
