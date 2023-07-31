@@ -3,7 +3,7 @@
 .tag {
   @include _.section-head-2;
   display: inline-block;
-  background-color: var(--color-primary-50);
+  background-color: var(--color-specific-tag-upsell);
   border-radius: 10px;
   padding: 0 _.unit(1) 0 _.unit(1.5);
   color: var(--color-white);
