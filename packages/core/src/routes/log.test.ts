@@ -1,4 +1,4 @@
-import { LogResult } from '@logto/schemas';
+import { LogResult, token, interaction, LogKeyUnknown } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
@@ -12,13 +12,13 @@ const mockLog: Log = { tenantId: 'fake_tenant', id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
 const logs = {
-  countAuditLogs: jest.fn().mockResolvedValue({
+  countLogs: jest.fn().mockResolvedValue({
     count: mockLogs.length,
   }),
-  findAuditLogs: jest.fn().mockResolvedValue(mockLogs),
+  findLogs: jest.fn().mockResolvedValue(mockLogs),
   findLogById: jest.fn().mockResolvedValue(mockLog),
 };
-const { countAuditLogs, findAuditLogs, findLogById } = logs;
+const { countLogs, findLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -32,7 +32,7 @@ describe('logRoutes', () => {
   });
 
   describe('GET /logs', () => {
-    it('should call countAuditLogs and findAuditLogs with correct parameters', async () => {
+    it('should call countLogs and findLogs with correct parameters', async () => {
       const userId = 'userIdValue';
       const applicationId = 'foo';
       const logKey = 'SignInUsernamePassword';
@@ -42,15 +42,25 @@ describe('logRoutes', () => {
       await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countAuditLogs).toHaveBeenCalledWith({
-        userId,
-        applicationId,
+      expect(countLogs).toHaveBeenCalledWith({
+        payload: { userId, applicationId },
         logKey,
+        includeKeyPrefix: [
+          token.Type.ExchangeTokenBy,
+          token.Type.RevokeToken,
+          interaction.prefix,
+          LogKeyUnknown,
+        ],
       });
-      expect(findAuditLogs).toHaveBeenCalledWith(5, 0, {
-        userId,
-        applicationId,
+      expect(findLogs).toHaveBeenCalledWith(5, 0, {
+        payload: { userId, applicationId },
         logKey,
+        includeKeyPrefix: [
+          token.Type.ExchangeTokenBy,
+          token.Type.RevokeToken,
+          interaction.prefix,
+          LogKeyUnknown,
+        ],
       });
     });
 

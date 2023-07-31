@@ -6,6 +6,7 @@ import {
   type CreateHook,
   LogResult,
   type Log,
+  hook,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
@@ -61,13 +62,13 @@ const mockExecutionStats = {
 };
 
 const logs = {
-  countWebhookLogs: jest.fn().mockResolvedValue({
+  countLogs: jest.fn().mockResolvedValue({
     count: 1,
   }),
-  findWebhookLogs: jest.fn().mockResolvedValue([mockLog]),
+  findLogs: jest.fn().mockResolvedValue([mockLog]),
 };
 
-const { countWebhookLogs, findWebhookLogs } = logs;
+const { countLogs, findLogs } = logs;
 
 const mockQueries = {
   hooks,
@@ -142,7 +143,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('GET /hooks/:id/recent-logs should call countWebhookLogs and findWebhookLogs with correct parameters', async () => {
+  it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {
     jest.useFakeTimers().setSystemTime(100_000);
 
     const hookId = 'foo';
@@ -155,15 +156,17 @@ describe('hook routes', () => {
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
     );
-    expect(countWebhookLogs).toHaveBeenCalledWith({
-      hookId,
+    expect(countLogs).toHaveBeenCalledWith({
+      payload: { hookId },
       logKey,
       startTimeExclusive,
+      includeKeyPrefix: [hook.Type.TriggerHook],
     });
-    expect(findWebhookLogs).toHaveBeenCalledWith(5, 0, {
-      hookId,
+    expect(findLogs).toHaveBeenCalledWith(5, 0, {
+      payload: { hookId },
       logKey,
       startTimeExclusive,
+      includeKeyPrefix: [hook.Type.TriggerHook],
     });
 
     jest.useRealTimers();

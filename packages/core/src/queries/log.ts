@@ -1,57 +1,56 @@
-import type { HookExecutionStats, Log } from '@logto/schemas';
-import { token, hook, Logs } from '@logto/schemas';
+import {
+  token,
+  type hook,
+  Logs,
+  type HookExecutionStats,
+  type Log,
+  type interaction,
+  type LogKeyUnknown,
+} from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
-import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
+import type { CommonQueryMethods } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
-type AuditLogCondition = {
-  logKey?: string;
-  applicationId?: string;
-  userId?: string;
-};
+export type AllowedKeyPrefix = hook.Type | token.Type | interaction.Prefix | typeof LogKeyUnknown;
 
-type WebhookLogCondition = {
+type LogCondition = {
   logKey?: string;
-  hookId?: string;
+  payload?: { applicationId?: string; userId?: string; hookId?: string };
   startTimeExclusive?: number;
+  includeKeyPrefix?: AllowedKeyPrefix[];
 };
 
-const buildAuditLogConditionSql = (logCondition: AuditLogCondition) =>
-  conditionalSql(logCondition, ({ logKey, applicationId, userId }) => {
-    const subConditions = conditionalArray(
-      sql`${fields.key} not like ${`${hook.Type.TriggerHook}.%`}`,
-      conditional(
-        logKey && !logKey.startsWith(`${hook.Type.TriggerHook}.`) && sql`${fields.key}=${logKey}`
-      ),
-      conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
+const buildLogConditionSql = (logCondition: LogCondition) =>
+  conditionalSql(logCondition, ({ logKey, payload, startTimeExclusive, includeKeyPrefix = [] }) => {
+    const keyPrefixFilter = conditional(
+      includeKeyPrefix.length > 0 &&
+        includeKeyPrefix.map((prefix) => sql`${fields.key} like ${`${prefix}%`}`)
+    );
+    const subConditions = [
       conditionalSql(
-        applicationId,
-        (applicationId) => sql`${fields.payload}->>'applicationId'=${applicationId}`
-      )
-    ).filter(({ sql }) => sql);
-
-    return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
-  });
-
-const buildWebhookLogConditionSql = (logCondition: WebhookLogCondition) =>
-  conditionalSql(logCondition, ({ logKey, hookId, startTimeExclusive }) => {
-    const subConditions = conditionalArray(
-      sql`${fields.key} like ${`${hook.Type.TriggerHook}.%`}`,
-      conditional(logKey?.startsWith(`${hook.Type.TriggerHook}.`) && sql`${fields.key}=${logKey}`),
-      conditionalSql(hookId, (hookId) => sql`${fields.payload}->>'hookId'=${hookId}`),
+        keyPrefixFilter,
+        (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
+      ),
+      ...conditionalArray(
+        payload &&
+          Object.entries(payload).map(([key, value]) =>
+            value ? sql`${fields.payload}->>${key}=${value}` : sql``
+          )
+      ),
+      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       conditionalSql(
         startTimeExclusive,
         (startTimeExclusive) =>
           sql`${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)`
-      )
-    ).filter(({ sql }) => sql);
+      ),
+    ].filter(({ sql }) => sql);
 
     return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
   });
@@ -59,39 +58,18 @@ const buildWebhookLogConditionSql = (logCondition: WebhookLogCondition) =>
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);
 
-  const countAuditLogs = async (condition: AuditLogCondition) =>
+  const countLogs = async (condition: LogCondition) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
-      ${buildAuditLogConditionSql(condition)}
+      ${buildLogConditionSql(condition)}
     `);
 
-  const findAuditLogs = async (limit: number, offset: number, logCondition: AuditLogCondition) =>
+  const findLogs = async (limit: number, offset: number, logCondition: LogCondition) =>
     pool.any<Log>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      ${buildAuditLogConditionSql(logCondition)}
-      order by ${fields.createdAt} desc
-      limit ${limit}
-      offset ${offset}
-    `);
-
-  const countWebhookLogs = async (condition: WebhookLogCondition) =>
-    pool.one<{ count: number }>(sql`
-      select count(*)
-      from ${table}
-      ${buildWebhookLogConditionSql(condition)}
-    `);
-
-  const findWebhookLogs = async (
-    limit: number,
-    offset: number,
-    logCondition: WebhookLogCondition
-  ) =>
-    pool.any<Log>(sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
-      from ${table}
-      ${buildWebhookLogConditionSql(logCondition)}
+      ${buildLogConditionSql(logCondition)}
       order by ${fields.createdAt} desc
       limit ${limit}
       offset ${offset}
@@ -139,10 +117,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   return {
     insertLog,
-    countAuditLogs,
-    findAuditLogs,
-    countWebhookLogs,
-    findWebhookLogs,
+    countLogs,
+    findLogs,
     findLogById,
     getDailyActiveUserCountsByTimeInterval,
     countActiveUsersByTimeInterval,

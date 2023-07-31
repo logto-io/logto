@@ -134,7 +134,7 @@ describe('trigger hooks', () => {
       [hook1, LogResult.Error, 'RequestError: Invalid URL'],
       [hook2, LogResult.Success, undefined],
       [hook3, LogResult.Success, undefined],
-    ] as Array<[Hook, LogResult, Optional<string>]>) {
+    ] satisfies Array<[Hook, LogResult, Optional<string>]>) {
       // eslint-disable-next-line no-await-in-loop
       const logs = await getWebhookRecentLogs(
         hook.id,

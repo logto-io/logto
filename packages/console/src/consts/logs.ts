@@ -1,7 +1,7 @@
-import type { AuditLogKey } from '@logto/schemas';
+import type { AuditLogKey, LogKey, WebhookLogKey } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
-export const logEventTitle: Record<string, Optional<string>> &
+export const auditLogEventTitle: Record<string, Optional<string>> &
   Record<AuditLogKey, Optional<string>> = Object.freeze({
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
@@ -49,3 +49,16 @@ export const logEventTitle: Record<string, Optional<string>> &
   RevokeToken: undefined,
   Unknown: undefined,
 });
+
+// `webhookLogEventTitle` and `logEventTitle` are not used yet, keep them just in case.
+const webhookLogEventTitle: Record<string, Optional<string>> &
+  Record<WebhookLogKey, Optional<string>> = Object.freeze({
+  'TriggerHook.PostRegister': undefined,
+  'TriggerHook.PostResetPassword': undefined,
+  'TriggerHook.PostSignIn': undefined,
+});
+
+export const logEventTitle: Record<string, Optional<string>> & Record<LogKey, Optional<string>> = {
+  ...auditLogEventTitle,
+  ...webhookLogEventTitle,
+};

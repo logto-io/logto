@@ -1,15 +1,16 @@
-import { Logs } from '@logto/schemas';
+import { Logs, interaction, token, LogKeyUnknown } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { type AllowedKeyPrefix } from '#src/queries/log.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
 export default function logRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  const { countAuditLogs, findLogById, findAuditLogs } = queries.logs;
+  const { findLogById, countLogs, findLogs } = queries.logs;
 
   router.get(
     '/logs',
@@ -29,17 +30,24 @@ export default function logRoutes<T extends AuthedRouter>(
         query: { userId, applicationId, logKey },
       } = ctx.guard;
 
+      const includeKeyPrefix: AllowedKeyPrefix[] = [
+        token.Type.ExchangeTokenBy,
+        token.Type.RevokeToken,
+        interaction.prefix,
+        LogKeyUnknown,
+      ];
+
       // TODO: @Gao refactor like user search
       const [{ count }, logs] = await Promise.all([
-        countAuditLogs({
+        countLogs({
           logKey,
-          applicationId,
-          userId,
+          payload: { applicationId, userId },
+          includeKeyPrefix,
         }),
-        findAuditLogs(limit, offset, {
+        findLogs(limit, offset, {
           logKey,
-          userId,
-          applicationId,
+          payload: { userId, applicationId },
+          includeKeyPrefix,
         }),
       ]);
 
