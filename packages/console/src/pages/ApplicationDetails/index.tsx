@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -51,8 +51,9 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 function ApplicationDetails() {
   const { id } = useParams();
-  const { pathname } = useLocation();
-  const isGuideView = !!id && pathname === `/applications/${id}/guide`;
+  const { navigate, match } = useTenantPathname();
+  const isGuideView = id && match(`/applications/${id}/guide`);
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
     id && `api/applications/${id}`
@@ -69,7 +70,6 @@ function ApplicationDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
-  const { navigate } = useTenantPathname();
   const formMethods = useForm<Application & { isAdmin: boolean }>({
     defaultValues: { customClientMetadata: customClientMetadataDefault },
   });
