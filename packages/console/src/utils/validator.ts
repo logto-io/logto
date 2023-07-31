@@ -9,14 +9,6 @@ export const uriValidator = (value: string) => {
   return true;
 };
 
-export const uriOriginValidator = (value: string) => {
-  try {
-    return new URL(value).origin === value;
-  } catch {
-    return false;
-  }
-};
-
 export const jsonValidator = (value: string) => {
   try {
     JSON.parse(value);
