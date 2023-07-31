@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- 5ccdd7f31: Record daily active users
+
 ## 1.6.0
 
 ### Minor Changes
