@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { trySafe } from '@silverhand/essentials';
+import { tryThat } from '@silverhand/essentials';
 import ts from 'typescript';
 
 import { consoleLog } from '../../../utils.js';
@@ -312,7 +312,7 @@ export const syncPhraseKeysAndFileStructure = async (
     consoleLog.warn(`Cannot find ${targetLocale} entrypoint, creating one`);
   }
 
-  await trySafe(
+  await tryThat(
     traverseNode(baseline, targetObject, path.join(targetDirectory, 'index.ts'), true),
     (error) => {
       consoleLog.plain();
