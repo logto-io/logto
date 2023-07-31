@@ -59,9 +59,9 @@ const quota_table = {
     '* 月間アクティブユーザー（MAU）は、請求サイクル中のログイン頻度に基づいて3つの階層に分かれます。各階層ごとに異なるMAU単価が適用されます。',
   unlimited: '無制限',
   contact: 'お問い合わせ',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/mo',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}}日',
   days_other: '{{count, number}}日',

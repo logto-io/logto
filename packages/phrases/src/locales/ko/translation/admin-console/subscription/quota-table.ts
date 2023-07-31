@@ -59,9 +59,9 @@ const quota_table = {
     '* 월간 활성 사용자(MAU)는 청구 주기 동안 로그인 빈도에 따라 3단계로 나뉩니다. 각 단계마다 달리 책정되는 MAU 단가가 있습니다.',
   unlimited: '무제한',
   contact: '문의',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/월',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} 일',
   days_other: '{{count, number}} 일',

@@ -59,9 +59,9 @@ const quota_table = {
     '* 您的每月活跃用户（MAU）根据在结算周期内登录的频率分为3个层级。每个层级的MAU单价不同。',
   unlimited: '无限制',
   contact: '联系',
-  // eslint-disable-next-line no-template-curly-in-string
+
   monthly_price: '${{value, number}}/月',
-  // eslint-disable-next-line no-template-curly-in-string
+
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}}天',
   days_other: '{{count, number}}天',

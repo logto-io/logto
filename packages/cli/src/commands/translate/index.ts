@@ -3,6 +3,7 @@ import type { CommandModule } from 'yargs';
 
 import create from './create.js';
 import listTags from './list-tags.js';
+import syncKeys from './sync-keys/index.js';
 import sync from './sync.js';
 
 const translate: CommandModule = {
@@ -18,6 +19,7 @@ const translate: CommandModule = {
       .command(create)
       .command(listTags)
       .command(sync)
+      .command(syncKeys)
       .demandCommand(1),
   handler: noop,
 };
