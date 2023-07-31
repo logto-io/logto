@@ -51,12 +51,9 @@ function ConnectorDetails() {
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  /**
-   * TODO: Can add `keepPreviousData` option to useSWR to avoid the flash on `Skeleton`
-   * component when manually trigger `mutate` function. This change is available in `swr@v2.0` or above.
-   */
   const { data, error, mutate } = useSWR<ConnectorResponse, RequestError>(
-    connectorId && `api/connectors/${connectorId}`
+    connectorId && `api/connectors/${connectorId}`,
+    { keepPreviousData: true }
   );
   const {
     data: connectorFactory,

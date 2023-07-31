@@ -116,7 +116,7 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
     if (connectorData.usage === undefined) {
       return;
     }
-    onConnectorUpdated({ ...connectorData, usage: connectorData.usage + 1 });
+    onConnectorUpdated();
   }, [connectorData, onConnectorUpdated]);
 
   return (
