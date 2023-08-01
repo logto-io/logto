@@ -88,7 +88,7 @@ export enum CustomClientMetadataKey {
 }
 
 export const customClientMetadataGuard = z.object({
-  [CustomClientMetadataKey.CorsAllowedOrigins]: z.string().url().array().optional(),
+  [CustomClientMetadataKey.CorsAllowedOrigins]: z.string().min(1).array().optional(),
   [CustomClientMetadataKey.IdTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.RefreshTokenTtl]: z.number().optional(),
   [CustomClientMetadataKey.RefreshTokenTtlInDays]: z.number().int().min(1).max(90).optional(),

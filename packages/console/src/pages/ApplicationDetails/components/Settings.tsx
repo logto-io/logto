@@ -15,7 +15,6 @@ import {
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import { uriOriginValidator } from '@/utils/validator';
 
 import * as styles from '../index.module.scss';
 
@@ -160,14 +159,6 @@ function Settings({ data }: Props) {
           name="customClientMetadata.corsAllowedOrigins"
           control={control}
           defaultValue={[]}
-          rules={{
-            validate: createValidatorForRhf({
-              pattern: {
-                verify: (value) => !value || uriOriginValidator(value),
-                message: t('errors.invalid_origin_format'),
-              },
-            }),
-          }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInputField
               title="application_details.cors_allowed_origins"
