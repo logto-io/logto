@@ -6,7 +6,7 @@ import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
-import { defaultPageSize } from '@/consts';
+import { auditLogEventTitle, defaultPageSize } from '@/consts';
 import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
@@ -20,6 +20,11 @@ import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';
 import * as styles from './index.module.scss';
+
+const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, title]) => ({
+  value,
+  title: title ?? value,
+}));
 
 type Props = {
   userId?: string;
@@ -103,6 +108,7 @@ function AuditLogTable({ userId, className }: Props) {
           <div className={styles.eventSelector}>
             <EventSelector
               value={event}
+              options={auditLogEventOptions}
               onChange={(event) => {
                 updateSearchParameters({ event, page: undefined });
               }}

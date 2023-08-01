@@ -3,7 +3,7 @@ import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { putInteraction } from '#src/api/interaction.js';
-import { getLogs } from '#src/api/logs.js';
+import { getAuditLogs } from '#src/api/logs.js';
 import MockClient from '#src/client/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
@@ -26,7 +26,7 @@ describe('audit logs for interaction', () => {
     console.debug('Testing interaction', interactionId);
 
     // Expect interaction create log
-    const createLogs = await getLogs(
+    const createLogs = await getAuditLogs(
       new URLSearchParams({ logKey: `${interaction.prefix}.${interaction.Action.Create}` })
     );
     expect(createLogs.some((value) => value.payload.interactionId === interactionId)).toBeTruthy();
@@ -43,7 +43,7 @@ describe('audit logs for interaction', () => {
     await client.processSession(response.redirectTo);
 
     // Expect interaction end log
-    const endLogs = await getLogs(
+    const endLogs = await getAuditLogs(
       new URLSearchParams({ logKey: `${interaction.prefix}.${interaction.Action.End}` })
     );
     expect(endLogs.some((value) => value.payload.interactionId === interactionId)).toBeTruthy();

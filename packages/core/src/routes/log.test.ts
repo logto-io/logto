@@ -1,4 +1,4 @@
-import { LogResult } from '@logto/schemas';
+import { LogResult, token, interaction, LogKeyUnknown } from '@logto/schemas';
 import type { Log } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
@@ -42,8 +42,26 @@ describe('logRoutes', () => {
       await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countLogs).toHaveBeenCalledWith({ userId, applicationId, logKey });
-      expect(findLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logKey });
+      expect(countLogs).toHaveBeenCalledWith({
+        payload: { userId, applicationId },
+        logKey,
+        includeKeyPrefix: [
+          token.Type.ExchangeTokenBy,
+          token.Type.RevokeToken,
+          interaction.prefix,
+          LogKeyUnknown,
+        ],
+      });
+      expect(findLogs).toHaveBeenCalledWith(5, 0, {
+        payload: { userId, applicationId },
+        logKey,
+        includeKeyPrefix: [
+          token.Type.ExchangeTokenBy,
+          token.Type.RevokeToken,
+          interaction.prefix,
+          LogKeyUnknown,
+        ],
+      });
     });
 
     it('should return correct response', async () => {

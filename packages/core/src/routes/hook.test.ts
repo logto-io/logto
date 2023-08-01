@@ -6,6 +6,7 @@ import {
   type CreateHook,
   LogResult,
   type Log,
+  hook,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
@@ -155,8 +156,18 @@ describe('hook routes', () => {
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
     );
-    expect(countLogs).toHaveBeenCalledWith({ hookId, logKey, startTimeExclusive });
-    expect(findLogs).toHaveBeenCalledWith(5, 0, { hookId, logKey, startTimeExclusive });
+    expect(countLogs).toHaveBeenCalledWith({
+      payload: { hookId },
+      logKey,
+      startTimeExclusive,
+      includeKeyPrefix: [hook.Type.TriggerHook],
+    });
+    expect(findLogs).toHaveBeenCalledWith(5, 0, {
+      payload: { hookId },
+      logKey,
+      startTimeExclusive,
+      includeKeyPrefix: [hook.Type.TriggerHook],
+    });
 
     jest.useRealTimers();
   });

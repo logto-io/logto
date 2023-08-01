@@ -1,33 +1,50 @@
-import type { HookExecutionStats, Log } from '@logto/schemas';
-import { token, Logs } from '@logto/schemas';
+import {
+  token,
+  type hook,
+  Logs,
+  type HookExecutionStats,
+  type Log,
+  type interaction,
+  type LogKeyUnknown,
+} from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
-import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
+import type { CommonQueryMethods } from 'slonik';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
+export type AllowedKeyPrefix = hook.Type | token.Type | interaction.Prefix | typeof LogKeyUnknown;
+
 type LogCondition = {
   logKey?: string;
-  applicationId?: string;
-  userId?: string;
-  hookId?: string;
+  payload?: { applicationId?: string; userId?: string; hookId?: string };
   startTimeExclusive?: number;
+  includeKeyPrefix?: AllowedKeyPrefix[];
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logKey, applicationId, userId, hookId, startTimeExclusive }) => {
+  conditionalSql(logCondition, ({ logKey, payload, startTimeExclusive, includeKeyPrefix = [] }) => {
+    const keyPrefixFilter = conditional(
+      includeKeyPrefix.length > 0 &&
+        includeKeyPrefix.map((prefix) => sql`${fields.key} like ${`${prefix}%`}`)
+    );
     const subConditions = [
-      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
-      conditionalSql(userId, (userId) => sql`${fields.payload}->>'userId'=${userId}`),
       conditionalSql(
-        applicationId,
-        (applicationId) => sql`${fields.payload}->>'applicationId'=${applicationId}`
+        keyPrefixFilter,
+        (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
       ),
-      conditionalSql(hookId, (hookId) => sql`${fields.payload}->>'hookId'=${hookId}`),
+      ...conditionalArray(
+        payload &&
+          Object.entries(payload).map(([key, value]) =>
+            value ? sql`${fields.payload}->>${key}=${value}` : sql``
+          )
+      ),
+      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       conditionalSql(
         startTimeExclusive,
         (startTimeExclusive) =>

@@ -1,15 +1,15 @@
-import { getLog, getLogs } from '#src/api/index.js';
+import { getLog, getAuditLogs } from '#src/api/index.js';
 import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 
 describe('logs', () => {
   it('should get logs successfully', async () => {
-    const logs = await getLogs();
+    const logs = await getAuditLogs();
 
     expect(logs.length).toBeGreaterThan(0);
   });
 
   it('should get log detail successfully', async () => {
-    const logs = await getLogs();
+    const logs = await getAuditLogs();
     const logId = logs[0]?.id;
 
     expect(logId).not.toBeUndefined();

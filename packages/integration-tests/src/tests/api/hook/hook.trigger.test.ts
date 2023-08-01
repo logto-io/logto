@@ -10,10 +10,11 @@ import {
   type Log,
   ConnectorType,
 } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { authedAdminApi } from '#src/api/api.js';
-import { getLogs } from '#src/api/logs.js';
+import { getWebhookRecentLogs } from '#src/api/logs.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
@@ -87,13 +88,14 @@ describe('trigger hooks', () => {
     await signInWithPassword({ username, password });
 
     // Check hook trigger log
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
+    const logs = await getWebhookRecentLogs(
+      createdHook.id,
+      new URLSearchParams({ logKey, page_size: '100' })
+    );
     expect(
       logs.some(
-        ({ payload: { hookId, result, error } }) =>
-          hookId === createdHook.id &&
-          result === LogResult.Error &&
-          error === 'RequestError: Invalid URL'
+        ({ payload: { result, error } }) =>
+          result === LogResult.Error && error === 'RequestError: Invalid URL'
       )
     ).toBeTruthy();
 
@@ -128,23 +130,23 @@ describe('trigger hooks', () => {
     const userId = await registerNewUser(username, password);
 
     // Check hook trigger log
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
-    expect(
-      logs.some(
-        ({ payload: { hookId, result, error } }) =>
-          hookId === hook1.id && result === LogResult.Error && error === 'RequestError: Invalid URL'
-      )
-    ).toBeTruthy();
-    expect(
-      logs.some(
-        ({ payload: { hookId, result } }) => hookId === hook2.id && result === LogResult.Success
-      )
-    ).toBeTruthy();
-    expect(
-      logs.some(
-        ({ payload: { hookId, result } }) => hookId === hook3.id && result === LogResult.Success
-      )
-    ).toBeTruthy();
+    for (const [hook, expectedResult, expectedError] of [
+      [hook1, LogResult.Error, 'RequestError: Invalid URL'],
+      [hook2, LogResult.Success, undefined],
+      [hook3, LogResult.Success, undefined],
+    ] satisfies Array<[Hook, LogResult, Optional<string>]>) {
+      // eslint-disable-next-line no-await-in-loop
+      const logs = await getWebhookRecentLogs(
+        hook.id,
+        new URLSearchParams({ logKey, page_size: '100' })
+      );
+      expect(
+        logs.some(
+          ({ payload: { result, error } }) =>
+            result === expectedResult && (!expectedError || error === expectedError)
+        )
+      ).toBeTruthy();
+    }
 
     // Clean up
     await Promise.all([
@@ -222,13 +224,15 @@ describe('trigger hooks', () => {
     // Wait for the hook to be trigged
     await waitFor(1000);
 
-    const logs = await getLogs(new URLSearchParams({ logKey, page_size: '100' }));
-    const relatedLogs = logs.filter(
-      ({ payload: { hookId, result } }) =>
-        hookId === resetPasswordHook.id && result === LogResult.Success
+    const relatedLogs = await getWebhookRecentLogs(
+      resetPasswordHook.id,
+      new URLSearchParams({ logKey, page_size: '100' })
+    );
+    const succeedLogs = relatedLogs.filter(
+      ({ payload: { result } }) => result === LogResult.Success
     );
 
-    expect(relatedLogs).toHaveLength(2);
+    expect(succeedLogs).toHaveLength(2);
 
     await authedAdminApi.delete(`hooks/${resetPasswordHook.id}`);
     await deleteUser(user.id);

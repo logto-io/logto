@@ -1,4 +1,11 @@
-import { Hooks, Logs, hookConfigGuard, hookEventsGuard, hookResponseGuard } from '@logto/schemas';
+import {
+  Hooks,
+  Logs,
+  hookConfigGuard,
+  hookEventsGuard,
+  hookResponseGuard,
+  hook,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
@@ -8,6 +15,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
+import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -114,11 +122,22 @@ export default function hookRoutes<T extends AuthedRouter>(
         query: { logKey },
       } = ctx.guard;
 
+      const includeKeyPrefix: AllowedKeyPrefix[] = [hook.Type.TriggerHook];
       const startTimeExclusive = subDays(new Date(), 1).getTime();
 
       const [{ count }, logs] = await Promise.all([
-        countLogs({ logKey, hookId: id, startTimeExclusive }),
-        findLogs(limit, offset, { logKey, hookId: id, startTimeExclusive }),
+        countLogs({
+          logKey,
+          payload: { hookId: id },
+          startTimeExclusive,
+          includeKeyPrefix,
+        }),
+        findLogs(limit, offset, {
+          logKey,
+          payload: { hookId: id },
+          startTimeExclusive,
+          includeKeyPrefix,
+        }),
       ]);
 
       ctx.pagination.totalCount = count;
