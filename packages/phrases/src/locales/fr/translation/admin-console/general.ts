@@ -56,6 +56,7 @@ const general = {
   hide: 'Cacher',
   unknown_error: 'Erreur inconnue, veuillez réessayer ultérieurement.',
   select: 'Sélectionner',
+  contact_us_action: 'Nous contacter',
 };
 
 export default general;

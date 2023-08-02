@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: '升级计划',
   compare_plans: '比较计划',
-  contact_us: '联系我们',
   get_started: {
     title: '通过免费计划开始您无缝的身份之旅！',
     description:

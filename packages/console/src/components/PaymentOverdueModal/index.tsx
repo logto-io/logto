@@ -65,7 +65,7 @@ function PaymentOverdueModal() {
         footer={
           <>
             <a href={contactEmailLink} target="_blank" className={styles.linkButton} rel="noopener">
-              <Button title="upsell.contact_us" />
+              <Button title="general.contact_us_action" />
             </a>
             <Button
               type="primary"

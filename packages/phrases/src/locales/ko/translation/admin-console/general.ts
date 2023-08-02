@@ -55,6 +55,7 @@ const general = {
   hide: '숨기기',
   unknown_error: '알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요.',
   select: '선택',
+  contact_us_action: '문의하기',
 };
 
 export default general;

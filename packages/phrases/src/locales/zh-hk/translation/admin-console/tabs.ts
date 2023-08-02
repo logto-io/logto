@@ -10,7 +10,6 @@ const tabs = {
   audit_logs: '審計日誌',
   roles: '角色',
   docs: '文檔',
-  contact_us: '聯繫我們',
   tenant_settings: '設置',
 };
 

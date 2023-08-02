@@ -30,7 +30,6 @@ const subscription = {
   downgrade: 'Passer à un Plan Inférieur',
   current: 'Actuel',
   upgrade: 'Mettre à niveau',
-  contact_us: 'Contactez-nous',
   quota_table,
   billing_history: {
     invoice_column: 'Factures',

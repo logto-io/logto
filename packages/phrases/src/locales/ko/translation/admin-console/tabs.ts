@@ -10,7 +10,6 @@ const tabs = {
   audit_logs: '감사 기록',
   roles: '역할',
   docs: '문서',
-  contact_us: '연락처',
   tenant_settings: '설정',
 };
 

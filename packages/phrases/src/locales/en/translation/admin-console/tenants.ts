@@ -59,7 +59,6 @@ const tenants = {
       'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
     description_2:
       'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
-    contact_us: 'Contact Us',
   },
 };
 

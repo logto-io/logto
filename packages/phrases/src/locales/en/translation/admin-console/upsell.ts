@@ -1,8 +1,7 @@
 const upsell = {
   pro_tag: 'PRO',
-  upgrade_plan: 'Upgrade plan',
+  upgrade_plan: 'Upgrade Plan',
   compare_plans: 'Compare plans',
-  contact_us: 'Contact Us',
   get_started: {
     title: 'Begin your seamless identity journey with a free plan!',
     description:

@@ -29,7 +29,6 @@ const subscription = {
   downgrade: 'Düşür',
   current: 'Mevcut',
   upgrade: 'Yükselt',
-  contact_us: 'Bizimle iletişime geçin',
   quota_table,
   billing_history: {
     invoice_column: 'Faturalar',

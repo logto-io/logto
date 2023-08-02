@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: '플랜 업그레이드',
   compare_plans: '플랜 비교',
-  contact_us: '문의하기',
   get_started: {
     title: '무료 플랜으로 원활한 신원 확인 여정을 시작하세요!',
     description:
