@@ -9,10 +9,6 @@ const subscription = {
   pro_plan: '专业计划',
   pro_plan_description: '适用于企业付费无忧。',
   enterprise: '企业',
-  free_plan_title: '免费计划',
-  hobby_plan_title: '爱好计划',
-  pro_plan_title: '专业计划',
-  enterprise_title: '企业',
   current_plan: '当前计划',
   current_plan_description:
     '以下是您当前的计划。您可以轻松查看计划使用情况，检查即将到来的账单，并根据需要对计划进行更改。',

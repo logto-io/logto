@@ -10,10 +10,6 @@ const subscription = {
   pro_plan: 'Pro Plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
   enterprise: 'Kurumsal',
-  free_plan_title: 'Ücretsiz Plan',
-  hobby_plan_title: 'Hobi Planı',
-  pro_plan_title: 'Pro Planı',
-  enterprise_title: 'Kurumsal',
   current_plan: 'Mevcut Plan',
   current_plan_description:
     'İşte mevcut planınız. Plan kullanımınızı kolayca görebilir, önümüzdeki faturanızı kontrol edebilir ve ihtiyaç duydukça planınızda değişiklikler yapabilirsiniz.',

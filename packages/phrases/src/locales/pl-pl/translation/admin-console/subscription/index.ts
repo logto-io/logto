@@ -10,10 +10,6 @@ const subscription = {
   pro_plan: 'Plan Pro',
   pro_plan_description: 'Dla firm, ciesz się bezstresową obsługą Logto.',
   enterprise: 'Enterprise',
-  free_plan_title: 'Plan Darmowy',
-  hobby_plan_title: 'Plan Hobby',
-  pro_plan_title: 'Plan Pro',
-  enterprise_title: 'Enterprise',
   current_plan: 'Obecny plan',
   current_plan_description:
     'Oto Twój obecny plan. Łatwo możesz sprawdzić wykorzystanie swojego planu, sprawdzić nadchodzący rachunek i dokonać zmian w planie, jeśli jest to konieczne.',

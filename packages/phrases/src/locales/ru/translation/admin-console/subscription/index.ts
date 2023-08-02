@@ -8,11 +8,7 @@ const subscription = {
   hobby_plan_description: 'Для отдельных разработчиков или сред разработки.',
   pro_plan: 'Про план',
   pro_plan_description: 'Позволяет бизнесу использовать Logto без забот.',
-  enterprise: 'Предприятие',
-  free_plan_title: 'Бесплатный план',
-  hobby_plan_title: 'Хобби-план',
-  pro_plan_title: 'Профессиональный план',
-  enterprise_title: 'Предприятие',
+  enterprise: 'Enterprise',
   current_plan: 'Текущий план',
   current_plan_description:
     'Вот ваш текущий тарифный план. Вы можете легко просмотреть использование вашего тарифа, проверить предстоящий счет и вносить изменения в тариф по мере необходимости.',

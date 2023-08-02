@@ -9,10 +9,6 @@ const subscription = {
   pro_plan: '프로 요금제',
   pro_plan_description: 'Logto와 함께 걱정 없이 비즈니스 혜택을 받으세요.',
   enterprise: '기업용',
-  free_plan_title: '무료 플랜',
-  hobby_plan_title: '취미 플랜',
-  pro_plan_title: '프로 플랜',
-  enterprise_title: '기업용',
   current_plan: '현재 요금제',
   current_plan_description:
     '현재 사용중인 요금제 정보입니다. 요금제 사용 내역을 쉽게 확인하고, 다가오는 청구서를 확인하며 필요에 따라 요금제를 변경할 수 있습니다.',
