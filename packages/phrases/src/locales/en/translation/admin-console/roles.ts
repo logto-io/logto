@@ -21,4 +21,4 @@ const roles = {
     'Roles are a grouping of permissions that can be assigned to users. Be sure to add permission first before create roles.',
 };
 
-export default roles;
+export default Object.freeze(roles);

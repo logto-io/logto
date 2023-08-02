@@ -4,4 +4,4 @@ const swagger = {
     'Type Zod non supporté pour les paramètres. Veuillez vérifier la configuration du garde-route.',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

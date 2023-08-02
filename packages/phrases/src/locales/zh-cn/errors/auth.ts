@@ -8,4 +8,4 @@ const auth = {
   require_re_authentication: '需要重新认证以进行受保护操作。',
 };
 
-export default auth;
+export default Object.freeze(auth);

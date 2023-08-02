@@ -3,4 +3,4 @@ const secondary = {
     'Уже есть аккаунт? Войдите, чтобы привязать {{methods, list(type: disjunction;)}}.',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

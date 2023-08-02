@@ -80,4 +80,4 @@ const profile = {
     'Os usuários não poderão fazer login com a conta <span></span> se você deslinká-la. Tem certeza de que deseja prosseguir?',
 };
 
-export default profile;
+export default Object.freeze(profile);

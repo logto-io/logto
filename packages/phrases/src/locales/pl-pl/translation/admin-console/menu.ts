@@ -10,4 +10,4 @@ const menu = {
   sign_out: 'Wyloguj się',
 };
 
-export default menu;
+export default Object.freeze(menu);

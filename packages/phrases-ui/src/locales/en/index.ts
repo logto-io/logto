@@ -5,7 +5,7 @@ import error from './error.js';
 import input from './input.js';
 import secondary from './secondary.js';
 
-const en = Object.freeze({
+const en = {
   translation: {
     input,
     secondary,
@@ -14,6 +14,6 @@ const en = Object.freeze({
     error,
     demo_app,
   },
-});
+};
 
-export default en;
+export default Object.freeze(en);

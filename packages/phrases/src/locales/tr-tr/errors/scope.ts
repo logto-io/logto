@@ -3,4 +3,4 @@ const scope = {
   name_with_space: 'Kapsam adı boşluk içeremez.',
 };
 
-export default scope;
+export default Object.freeze(scope);

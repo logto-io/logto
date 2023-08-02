@@ -25,4 +25,4 @@ const errors = {
   number_should_be_between_inclusive: '숫자는 {{min}} 이상 {{max}} 이하이어야 합니다.',
 };
 
-export default errors;
+export default Object.freeze(errors);

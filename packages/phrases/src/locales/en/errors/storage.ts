@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'Failed to upload file to the storage provider.',
 };
 
-export default storage;
+export default Object.freeze(storage);

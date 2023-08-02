@@ -21,4 +21,4 @@ const roles = {
     'ロールは、ユーザーに割り当てられる権限のグループです。ロールを作成する前に、まず権限を追加してください。',
 };
 
-export default roles;
+export default Object.freeze(roles);

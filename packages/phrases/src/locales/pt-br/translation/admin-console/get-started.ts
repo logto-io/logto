@@ -30,4 +30,4 @@ const get_started = {
     'Controle seu recurso por meio de autorização de função escalável para diversos casos de uso.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

@@ -29,4 +29,4 @@ const get_started = {
     'Control your resource through scalable role authorization for diverse use cases.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

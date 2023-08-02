@@ -8,4 +8,4 @@ const verification_code = {
   exceed_max_try: '인증 코드 재시도 한도에 도달했어요. 새 인증 코드를 요청해 주세요.',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

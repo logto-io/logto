@@ -10,9 +10,9 @@ const error = {
   invalid_email: 'Электронная почта указана неправильно',
   invalid_phone: 'Номер телефона указан неправильно',
   password_min_length: 'Пароль должен быть минимум {{min}} символов',
-  passwords_do_not_match: 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.',
   invalid_password:
     'Пароль должен содержать минимум {{min}} символов, включая буквы, цифры и символы.',
+  passwords_do_not_match: 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.',
   invalid_passcode: 'Неправильный код подтверждения',
   invalid_connector_auth: 'Авторизация недействительна',
   invalid_connector_request: 'Данные коннектора недействительны.',
@@ -21,4 +21,4 @@ const error = {
   timeout: 'Время ожидания истекло. Пожалуйста, повторите попытку позднее.',
 };
 
-export default error;
+export default Object.freeze(error);

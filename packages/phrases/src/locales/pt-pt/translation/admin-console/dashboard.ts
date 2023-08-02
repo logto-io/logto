@@ -20,4 +20,4 @@ const dashboard = {
     'O número de utilizadores únicos que efetuaram login nas suas aplicações nos últimos 30 dias',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

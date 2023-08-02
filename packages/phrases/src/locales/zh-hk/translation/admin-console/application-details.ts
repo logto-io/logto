@@ -55,4 +55,4 @@ const application_details = {
   redirect_uri_required: '至少需要輸入一個重定向 URL。',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

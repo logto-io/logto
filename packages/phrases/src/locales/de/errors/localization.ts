@@ -4,4 +4,4 @@ const localization = {
   invalid_translation_structure: 'Ungültige Übersetzungsstruktur. Bitte überprüfe deine Eingabe.',
 };
 
-export default localization;
+export default Object.freeze(localization);

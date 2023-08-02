@@ -4,4 +4,4 @@ const storage = {
   upload_error: '파일을 저장소 공급자에 업로드하지 못했습니다.',
 };
 
-export default storage;
+export default Object.freeze(storage);

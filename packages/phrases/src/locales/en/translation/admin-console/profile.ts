@@ -80,4 +80,4 @@ const profile = {
     'Users will not be able to sign in with the <span></span> account if you unlink it. Are you sure to proceed?',
 };
 
-export default profile;
+export default Object.freeze(profile);

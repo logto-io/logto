@@ -80,4 +80,4 @@ const profile = {
     'Użytkownicy nie będą mogli się zalogować z kontem <span></span>, jeśli je odłączysz. Czy na pewno chcesz kontynuować?',
 };
 
-export default profile;
+export default Object.freeze(profile);

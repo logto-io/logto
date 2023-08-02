@@ -13,4 +13,4 @@ const tabs = {
   tenant_settings: '설정',
 };
 
-export default tabs;
+export default Object.freeze(tabs);

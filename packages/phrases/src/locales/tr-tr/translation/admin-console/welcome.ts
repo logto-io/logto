@@ -5,4 +5,4 @@ const welcome = {
   create_account: 'Hesap Oluştur',
 };
 
-export default welcome;
+export default Object.freeze(welcome);

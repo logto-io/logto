@@ -4,4 +4,4 @@ const storage = {
   upload_error: '无法将文件上传到存储提供程序。',
 };
 
-export default storage;
+export default Object.freeze(storage);

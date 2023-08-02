@@ -5,4 +5,4 @@ const localization = {
     'Nieprawidłowe schematy danych. Sprawdź swoje dane wejściowe i spróbuj ponownie.',
 };
 
-export default localization;
+export default Object.freeze(localization);

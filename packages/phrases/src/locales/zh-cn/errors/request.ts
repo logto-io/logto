@@ -3,4 +3,4 @@ const request = {
   general: '发生请求错误。',
 };
 
-export default request;
+export default Object.freeze(request);

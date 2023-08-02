@@ -22,4 +22,4 @@ const session = {
     'Etkileşim oturumu bulunamadı. Lütfen geri gidin ve oturumu yeniden başlatın.',
 };
 
-export default session;
+export default Object.freeze(session);

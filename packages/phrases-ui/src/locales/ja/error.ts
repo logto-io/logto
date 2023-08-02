@@ -21,4 +21,4 @@ const error = {
   timeout: 'リクエストタイムアウト。後でもう一度お試しください。',
 };
 
-export default error;
+export default Object.freeze(error);

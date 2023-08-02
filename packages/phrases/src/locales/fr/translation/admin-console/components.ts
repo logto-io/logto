@@ -13,4 +13,4 @@ const components = {
   },
 };
 
-export default components;
+export default Object.freeze(components);

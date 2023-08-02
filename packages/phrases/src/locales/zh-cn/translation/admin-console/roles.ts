@@ -19,4 +19,4 @@ const roles = {
   placeholder_description: '角色是可以分配给用户的权限分组。在创建角色之前，请确保先添加权限。',
 };
 
-export default roles;
+export default Object.freeze(roles);

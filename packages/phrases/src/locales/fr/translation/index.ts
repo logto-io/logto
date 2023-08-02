@@ -8,4 +8,4 @@ const translation = {
   oidc,
 };
 
-export default translation;
+export default Object.freeze(translation);

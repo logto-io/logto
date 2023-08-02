@@ -57,4 +57,4 @@ const description = {
   verify_phone: '휴대전화번호 인증',
 };
 
-export default description;
+export default Object.freeze(description);

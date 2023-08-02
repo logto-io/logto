@@ -17,4 +17,4 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
 };
 
-export default sign_in_experiences;
+export default Object.freeze(sign_in_experiences);

@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'Abonelik planınızı almak için başarısız oldu.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

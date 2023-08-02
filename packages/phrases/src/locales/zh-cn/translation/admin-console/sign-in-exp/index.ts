@@ -48,6 +48,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       '输入 CSS 代码，修改颜色、字体、组件样式、布局，定制你的登录、注册、忘记密码等页面。充分发挥创造力，让你的用户界面脱颖而出。',
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       '尚未设置 SMS 短信连接器。在完成该配置前，用户将无法通过此登录方式登录。<a>{{link}}</a>连接器。',
@@ -77,8 +79,6 @@ const sign_in_exp = {
     desktop: '桌面网页',
     mobile: '移动设备',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

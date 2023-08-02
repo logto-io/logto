@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'テナントのサブスクリプションプランを取得できませんでした。',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

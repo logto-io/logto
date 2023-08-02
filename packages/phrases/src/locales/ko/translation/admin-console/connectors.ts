@@ -86,4 +86,4 @@ const connectors = {
   standard_connectors: '기본 커넥터',
 };
 
-export default connectors;
+export default Object.freeze(connectors);

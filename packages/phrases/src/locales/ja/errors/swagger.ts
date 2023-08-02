@@ -4,4 +4,4 @@ const swagger = {
     'パラメータにサポートされていないZodタイプがあります。ルートガード構成を確認してください。',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

@@ -51,4 +51,4 @@ const applications = {
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',
 };
 
-export default applications;
+export default Object.freeze(applications);

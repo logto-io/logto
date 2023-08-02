@@ -10,4 +10,4 @@ const menu = {
   sign_out: 'Çıkış Yap',
 };
 
-export default menu;
+export default Object.freeze(menu);

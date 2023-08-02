@@ -1,7 +1,6 @@
 import others from './others.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
-// TRANSLATED
 const sign_in_exp = {
   page_title: 'Anmeldeoberfläche',
   title: 'Anmeldeoberfläche',
@@ -9,7 +8,6 @@ const sign_in_exp = {
     'Passe die Benutzeroberfläche für die Anmeldung an deine Marke an und zeige eine Vorschau in Echtzeit an',
   tabs: {
     branding: 'Branding',
-    methods: 'Anmeldemethoden',
     sign_up_and_sign_in: 'Anmeldung und Registrierung',
     others: 'Andere',
   },
@@ -53,6 +51,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       'Gib dein benutzerdefiniertes CSS ein, um den Stil von allem genau nach deinen Vorgaben zu gestalten. Gib deiner Kreativität Ausdruck und hebe dein UI hervor.',
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       'Es wurde noch kein SMS-Konnektor eingerichtet. Bevor die Konfiguration abgeschlossen werden kann, können sich Benutzer nicht mit dieser Methode anmelden. <a>{{link}}</a> in "Connectors"',
@@ -83,8 +83,6 @@ const sign_in_exp = {
     desktop: 'Desktop',
     mobile: 'Mobilgerät',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

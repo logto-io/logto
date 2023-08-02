@@ -4,4 +4,4 @@ const session_expired = {
   button: '重新登录',
 };
 
-export default session_expired;
+export default Object.freeze(session_expired);

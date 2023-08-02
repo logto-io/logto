@@ -74,4 +74,4 @@ const user_details = {
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden z identyfikatorów logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

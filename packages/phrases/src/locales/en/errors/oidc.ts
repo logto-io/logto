@@ -17,4 +17,4 @@ const oidc = {
   provider_error: 'OIDC Internal Error: {{message}}.',
 };
 
-export default oidc;
+export default Object.freeze(oidc);

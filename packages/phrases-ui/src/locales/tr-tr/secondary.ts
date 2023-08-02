@@ -3,4 +3,4 @@ const secondary = {
     'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

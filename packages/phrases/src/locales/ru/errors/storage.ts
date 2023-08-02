@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'Не удалось загрузить файл в провайдер хранилища.',
 };
 
-export default storage;
+export default Object.freeze(storage);

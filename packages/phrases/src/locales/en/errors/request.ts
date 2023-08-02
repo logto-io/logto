@@ -3,4 +3,4 @@ const request = {
   general: 'Request error occurred.',
 };
 
-export default request;
+export default Object.freeze(request);

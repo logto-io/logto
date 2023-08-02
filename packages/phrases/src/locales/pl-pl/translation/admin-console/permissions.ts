@@ -9,4 +9,4 @@ const permissions = {
     'Uprawnienie odnosi się do autoryzacji dostępu do zasobu (nazywamy go zasobem API).',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

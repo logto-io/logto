@@ -3,4 +3,4 @@ const topbar = {
   help: 'Pomoc',
 };
 
-export default topbar;
+export default Object.freeze(topbar);

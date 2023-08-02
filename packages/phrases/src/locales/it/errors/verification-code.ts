@@ -10,4 +10,4 @@ const verification_code = {
     'Superata la limitazione dei tentativi di codice di verifica. Si prega di richiedere un nuovo codice di verifica.',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

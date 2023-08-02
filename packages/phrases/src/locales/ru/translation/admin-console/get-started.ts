@@ -33,4 +33,4 @@ const get_started = {
     'Управляйте своими ресурсами через масштабируемую авторизацию ролей для разнообразных случаев использования.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

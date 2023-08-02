@@ -38,4 +38,4 @@ const connector = {
     'Nie można nadpisać "metadata" tego łącznika, który nie należy do standardu.',
 };
 
-export default connector;
+export default Object.freeze(connector);

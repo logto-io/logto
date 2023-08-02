@@ -30,8 +30,6 @@ const subscription = {
   current: 'Actual',
   upgrade: 'Actualizar',
   quota_table,
-  quota_item,
-
   billing_history: {
     invoice_column: 'factura',
     status_column: 'estado',
@@ -44,6 +42,7 @@ const subscription = {
       uncollectible: 'Vencida',
     },
   },
+  quota_item,
   downgrade_modal: {
     title: '¿Está seguro de que desea degradar?',
     description:
@@ -70,4 +69,4 @@ const subscription = {
     'La comprobación de suscripción expiró. Por favor, actualiza más tarde.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

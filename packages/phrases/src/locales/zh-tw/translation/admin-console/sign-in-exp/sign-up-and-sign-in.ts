@@ -48,4 +48,4 @@ const sign_up_and_sign_in = {
   },
 };
 
-export default sign_up_and_sign_in;
+export default Object.freeze(sign_up_and_sign_in);

@@ -29,4 +29,4 @@ const user = {
   role_exists: '角色 ID {{roleId}} 已添加到此用戶',
 };
 
-export default user;
+export default Object.freeze(user);

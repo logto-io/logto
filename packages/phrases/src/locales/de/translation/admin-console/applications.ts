@@ -51,4 +51,4 @@ const applications = {
     'Logto verwendet eine Anwendungs-Entität für OIDC, um Aufgaben wie die Identifizierung Ihrer Apps, die Verwaltung der Anmeldung und die Erstellung von Prüfprotokollen zu erleichtern.',
 };
 
-export default applications;
+export default Object.freeze(applications);

@@ -38,4 +38,4 @@ const connector = {
     'Les "metadata" de ce connecteur ne peuvent pas être modifiés.',
 };
 
-export default connector;
+export default Object.freeze(connector);

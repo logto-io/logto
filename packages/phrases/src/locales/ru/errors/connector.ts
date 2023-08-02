@@ -36,4 +36,4 @@ const connector = {
     'Метаданные этого коннектора не могут быть перезаписаны.',
 };
 
-export default connector;
+export default Object.freeze(connector);

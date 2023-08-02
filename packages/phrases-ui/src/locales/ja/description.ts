@@ -62,4 +62,4 @@ const description = {
   verify_phone: '電話番号を確認する',
 };
 
-export default description;
+export default Object.freeze(description);

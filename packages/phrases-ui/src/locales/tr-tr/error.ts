@@ -9,9 +9,9 @@ const error = {
   invalid_email: 'E-posta adresi geçersiz',
   invalid_phone: 'Telefon numarası geçersiz',
   password_min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
-  passwords_do_not_match: 'Şifreler eşleşmiyor',
   invalid_password:
     'Şifre en az {{min}} karakter gerektirir ve harf, sayı ve sembol karışımı içerir.',
+  passwords_do_not_match: 'Şifreler eşleşmiyor',
   invalid_passcode: 'Doğrulama kodu geçersiz',
   invalid_connector_auth: 'Yetki geçersiz',
   invalid_connector_request: 'Bağlayıcı veri geçersiz',
@@ -20,4 +20,4 @@ const error = {
   timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
 };
 
-export default error;
+export default Object.freeze(error);

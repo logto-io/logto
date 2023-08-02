@@ -65,4 +65,4 @@ const subscription = {
   subscription_check_timeout: '訂閱檢查已逾時，請稍後重新刷新。',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

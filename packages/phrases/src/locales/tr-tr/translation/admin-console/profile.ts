@@ -81,4 +81,4 @@ const profile = {
     'Bağlantıyı keserseniz, kullanıcılar <span></span> hesabıyla giriş yapamazlar. Devam etmek istediğinizden emin misiniz?',
 };
 
-export default profile;
+export default Object.freeze(profile);

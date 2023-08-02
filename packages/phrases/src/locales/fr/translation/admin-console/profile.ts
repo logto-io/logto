@@ -81,4 +81,4 @@ const profile = {
     'Les utilisateurs ne pourront plus se connecter avec le compte <span></span> si vous le détachez. Êtes-vous sûr de vouloir continuer ?',
 };
 
-export default profile;
+export default Object.freeze(profile);

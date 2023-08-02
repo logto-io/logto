@@ -25,4 +25,4 @@ const session = {
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
 };
 
-export default session;
+export default Object.freeze(session);

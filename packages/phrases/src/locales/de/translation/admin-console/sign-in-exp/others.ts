@@ -39,13 +39,10 @@ const others = {
   },
   advanced_options: {
     title: 'ERWEITERTE OPTIONEN',
-    enable_create_account: 'Aktiviere Registrierung',
-    enable_create_account_description:
-      'Aktiviere oder deaktiviere Konto Registrierung. Wenn diese Funktion deaktiviert ist, können deine Kunden keine Konten über die Anmeldeoberfläche erstellen, aber du kannst immer noch Benutzer in der Admin Konsole hinzufügen.',
     enable_user_registration: 'Benutzerregistrierung aktivieren',
     enable_user_registration_description:
       'Aktiviere oder deaktiviere die Benutzerregistrierung. Sobald sie deaktiviert ist, können Benutzer immer noch in der Admin-Konsole hinzugefügt werden, aber Benutzer können keine Konten mehr über die Anmeldeoberfläche erstellen.',
   },
 };
 
-export default others;
+export default Object.freeze(others);

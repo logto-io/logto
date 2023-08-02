@@ -2,4 +2,4 @@ const log = {
   invalid_type: 'El tipo de registro es inválido.',
 };
 
-export default log;
+export default Object.freeze(log);

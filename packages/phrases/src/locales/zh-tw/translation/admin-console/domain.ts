@@ -47,4 +47,4 @@ const domain = {
     '您可以自定義此 URI 的域名以匹配您的應用程序端點。選擇“{{custom}}”或“{{default}}”。',
 };
 
-export default domain;
+export default Object.freeze(domain);

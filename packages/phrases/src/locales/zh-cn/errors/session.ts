@@ -17,4 +17,4 @@ const session = {
   interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
 };
 
-export default session;
+export default Object.freeze(session);

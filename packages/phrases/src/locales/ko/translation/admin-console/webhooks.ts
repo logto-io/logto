@@ -39,4 +39,4 @@ const webhooks = {
   webhook_created: 'Webhook {{name}}가 성공적으로 생성되었습니다.',
 };
 
-export default webhooks;
+export default Object.freeze(webhooks);

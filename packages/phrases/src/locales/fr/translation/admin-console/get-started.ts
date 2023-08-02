@@ -34,4 +34,4 @@ const get_started = {
     "Contrôlez vos ressources par l autorisation de rôle évolutive pour divers cas d'utilisation.",
 };
 
-export default get_started;
+export default Object.freeze(get_started);

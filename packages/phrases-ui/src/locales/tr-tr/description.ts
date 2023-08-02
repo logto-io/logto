@@ -60,4 +60,4 @@ const description = {
   verify_phone: 'Telefon numaranızın doğrulanması',
 };
 
-export default description;
+export default Object.freeze(description);

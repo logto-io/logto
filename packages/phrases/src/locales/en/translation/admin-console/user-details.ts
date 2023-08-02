@@ -75,4 +75,4 @@ const user_details = {
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

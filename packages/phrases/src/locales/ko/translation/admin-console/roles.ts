@@ -21,4 +21,4 @@ const roles = {
     '역할은 사용자에게 할당할 수 있는 권한의 모임이에요. 역할을 만들기 전에 먼저 권한을 추가해야 해요.',
 };
 
-export default roles;
+export default Object.freeze(roles);

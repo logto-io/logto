@@ -21,4 +21,4 @@ const session = {
   interaction_not_found: 'Сессия взаимодействия не найдена. Вернитесь и начните сессию заново.',
 };
 
-export default session;
+export default Object.freeze(session);

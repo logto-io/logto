@@ -77,4 +77,4 @@ const user_details = {
     "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",
 };
 
-export default user_details;
+export default Object.freeze(user_details);

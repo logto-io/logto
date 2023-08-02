@@ -9,4 +9,4 @@ const permissions = {
     '権限はリソース（APIリソースと呼んでいます）にアクセスするための承認を指します。',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

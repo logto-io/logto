@@ -44,9 +44,9 @@ const applications = {
       'Agora siga as etapas abaixo para concluir as configurações da aplicação. Selecione o tipo de SDK para continuar.',
     description_by_sdk: 'Este guia de início rápido demonstra como integrar o Logto em {{sdk}}',
   },
-  placeholder_title: 'Selecione um tipo de aplicação para continuar', // TRANSLATED
+  placeholder_title: 'Selecione um tipo de aplicação para continuar',
   placeholder_description:
-    'O Logto usa uma entidade de aplicativo para OIDC para ajudar em tarefas como identificar seus aplicativos, gerenciar o registro e criar registros de auditoria.', // TRANSLATED
+    'O Logto usa uma entidade de aplicativo para OIDC para ajudar em tarefas como identificar seus aplicativos, gerenciar o registro e criar registros de auditoria.',
 };
 
-export default applications;
+export default Object.freeze(applications);

@@ -48,4 +48,4 @@ const applications = {
     'Logto는 OIDC용 애플리케이션 엔티티를 사용하여 앱 식별, 로그인 관리 및 감사 로그 생성과 같은 작업을 지원합니다.',
 };
 
-export default applications;
+export default Object.freeze(applications);

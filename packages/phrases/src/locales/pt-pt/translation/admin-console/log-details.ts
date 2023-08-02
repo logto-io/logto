@@ -15,4 +15,4 @@ const log_details = {
   raw_data: 'Dados não tratados',
 };
 
-export default log_details;
+export default Object.freeze(log_details);

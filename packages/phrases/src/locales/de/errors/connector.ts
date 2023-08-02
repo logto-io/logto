@@ -39,4 +39,5 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector:
     "Die 'Metadaten' dieses Connectors können nicht überschrieben werden.",
 };
-export default connector;
+
+export default Object.freeze(connector);

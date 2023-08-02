@@ -5,4 +5,4 @@ const session_expired = {
   button: 'Yeniden Giriş Yap',
 };
 
-export default session_expired;
+export default Object.freeze(session_expired);

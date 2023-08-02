@@ -20,4 +20,4 @@ const error = {
   timeout: 'Request timeout. Please try again later.',
 };
 
-export default error;
+export default Object.freeze(error);

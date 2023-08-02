@@ -68,4 +68,4 @@ const subscription = {
   subscription_check_timeout: 'Czas sprawdzenia subskrypcji wygasł. Proszę odświeżyć później.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

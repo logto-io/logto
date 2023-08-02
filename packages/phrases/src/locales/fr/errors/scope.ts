@@ -3,4 +3,4 @@ const scope = {
   name_with_space: "Le nom de la portée ne peut pas contenir d'espace.",
 };
 
-export default scope;
+export default Object.freeze(scope);

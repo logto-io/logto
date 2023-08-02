@@ -82,4 +82,4 @@ const profile = {
     'Los usuarios no podrán iniciar sesión con la cuenta <span></span> si la desvincula. ¿Estás seguro de que quieres continuar?',
 };
 
-export default profile;
+export default Object.freeze(profile);

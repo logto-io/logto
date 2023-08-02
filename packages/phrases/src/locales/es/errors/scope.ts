@@ -3,4 +3,4 @@ const scope = {
   name_with_space: 'El nombre del ámbito no puede contener espacios.',
 };
 
-export default scope;
+export default Object.freeze(scope);

@@ -8,4 +8,4 @@ const permissions = {
   placeholder_description: '권한은 리소스(API 리소스라고 함)에 액세스할 수 있는 권한을 의미해요.',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

@@ -6,4 +6,4 @@ const entity = {
   not_found: '该资源不存在。',
 };
 
-export default entity;
+export default Object.freeze(entity);

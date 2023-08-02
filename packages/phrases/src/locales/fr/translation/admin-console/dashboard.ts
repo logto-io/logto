@@ -21,4 +21,4 @@ const dashboard = {
     "Le nombre d'utilisateurs uniques ayant échangé des jetons sur vos applications au cours des 30 derniers jours.",
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

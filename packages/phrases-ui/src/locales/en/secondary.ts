@@ -3,4 +3,4 @@ const secondary = {
     'Already had an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

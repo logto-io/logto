@@ -3,4 +3,4 @@ const password = {
   pepper_not_found: '비밀번호 Pepper를 찾을 수 없어요. Core 환경설정을 확인해 주세요.',
 };
 
-export default password;
+export default Object.freeze(password);

@@ -84,4 +84,4 @@ const upsell = {
   },
 };
 
-export default upsell;
+export default Object.freeze(upsell);

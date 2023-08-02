@@ -79,4 +79,4 @@ const profile = {
     'リンクを解除すると、ユーザーは<span></span>アカウントでサインインできなくなります。本当に進めますか？',
 };
 
-export default profile;
+export default Object.freeze(profile);

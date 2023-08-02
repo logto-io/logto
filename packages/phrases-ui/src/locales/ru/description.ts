@@ -63,4 +63,4 @@ const description = {
   verify_phone: 'Подтвердите свой номер телефона',
 };
 
-export default description;
+export default Object.freeze(description);

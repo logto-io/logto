@@ -4,4 +4,4 @@ const localization = {
   invalid_translation_structure: "Schemi di dati non validi. Controlla l'input e riprova.",
 };
 
-export default localization;
+export default Object.freeze(localization);

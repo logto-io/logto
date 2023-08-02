@@ -24,4 +24,4 @@ const session = {
     'No se encuentra la sesión de interacción. Vuelva atrás y vuelva a iniciar la sesión.',
 };
 
-export default session;
+export default Object.freeze(session);

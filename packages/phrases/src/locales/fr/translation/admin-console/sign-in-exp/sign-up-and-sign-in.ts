@@ -57,4 +57,5 @@ const sign_up_and_sign_in = {
       'Ceci est essentiel car vous avez sélectionné {{identifier}} comme identificateur requis.',
   },
 };
-export default sign_up_and_sign_in;
+
+export default Object.freeze(sign_up_and_sign_in);

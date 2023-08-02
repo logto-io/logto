@@ -59,13 +59,11 @@ const quota_table = {
     '* 您的每月活躍使用者（MAU）將根據在結算週期內登錄的頻率分為3個層級。每個層級都有不同的MAU單價。',
   unlimited: '無限制',
   contact: '聯絡',
-
   monthly_price: '${{value, number}}/月',
-
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}}天',
   days_other: '{{count, number}}天',
   add_on: '附加功能',
 };
 
-export default quota_table;
+export default Object.freeze(quota_table);

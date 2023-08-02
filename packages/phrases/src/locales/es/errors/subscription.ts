@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'No se pudo obtener el plan de suscripción para el inquilino.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

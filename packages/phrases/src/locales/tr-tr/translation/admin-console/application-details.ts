@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: 'En az 1 yönlendirme URIı girmelisiniz',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

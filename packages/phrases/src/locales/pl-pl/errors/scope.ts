@@ -3,4 +3,4 @@ const scope = {
   name_with_space: 'Nazwa zakresu nie może zawierać spacji.',
 };
 
-export default scope;
+export default Object.freeze(scope);

@@ -9,4 +9,4 @@ const auth = {
   require_re_authentication: 'Wymagane ponowne uwierzytelnienie, aby wykonać chronione działanie.',
 };
 
-export default auth;
+export default Object.freeze(auth);

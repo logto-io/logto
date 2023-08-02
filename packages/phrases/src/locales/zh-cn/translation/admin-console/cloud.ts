@@ -40,7 +40,6 @@ const cloud = {
       others: '其他',
     },
   },
-
   sie: {
     page_title: '定制登录体验',
     title: '让我们轻松定制你的登录体验',
@@ -85,4 +84,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

@@ -48,6 +48,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       '輸入 CSS 代碼，修改顏色、字體、組件樣式、佈局，定制您的登錄、註冊、忘記密碼等頁面。充分發揮創造力，讓您的用戶界面脫穎而出。',
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       '尚未設置 SMS 短信連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',
@@ -77,8 +79,6 @@ const sign_in_exp = {
     desktop: '桌面網頁',
     mobile: '移動設備',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

@@ -5,4 +5,4 @@ const welcome = {
   create_account: 'Crea account',
 };
 
-export default welcome;
+export default Object.freeze(welcome);

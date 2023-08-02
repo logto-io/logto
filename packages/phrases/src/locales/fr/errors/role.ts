@@ -8,4 +8,4 @@ const role = {
     'Vous essayez peut-être de mettre à jour ou de supprimer un rôle interne, ce qui est interdit par Logto. Si vous créez un nouveau rôle, essayez un autre nom qui ne commence pas par "#internal:".',
 };
 
-export default role;
+export default Object.freeze(role);

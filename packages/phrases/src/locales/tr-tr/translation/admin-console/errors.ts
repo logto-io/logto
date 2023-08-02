@@ -27,4 +27,4 @@ const errors = {
     'Sayı {{min}} ve {{max}} arasında (her ikisi de dahil) olmalıdır.',
 };
 
-export default errors;
+export default Object.freeze(errors);

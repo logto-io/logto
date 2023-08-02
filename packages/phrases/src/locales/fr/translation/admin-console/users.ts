@@ -24,4 +24,4 @@ const users = {
     "Chaque utilisateur a un profil contenant toutes les informations sur l'utilisateur. Il est composé de données de base, d'identités sociales et de données personnalisées.",
 };
 
-export default users;
+export default Object.freeze(users);

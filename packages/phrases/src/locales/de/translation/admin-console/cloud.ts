@@ -41,7 +41,6 @@ const cloud = {
       others: 'Andere',
     },
   },
-
   sie: {
     page_title: 'Meldeeinrichtung anpassen',
     title: 'Passen Sie zuerst Ihre Anmeldungserfahrung mit Leichtigkeit an',
@@ -88,4 +87,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

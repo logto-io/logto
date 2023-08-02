@@ -3,4 +3,4 @@ const hook = {
   send_test_payload_failed: "Échec de l'envoi de la charge utile de test : {{message}}",
 };
 
-export default hook;
+export default Object.freeze(hook);

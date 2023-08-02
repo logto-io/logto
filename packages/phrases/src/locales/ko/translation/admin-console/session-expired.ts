@@ -4,4 +4,4 @@ const session_expired = {
   button: '다시 로그인하기',
 };
 
-export default session_expired;
+export default Object.freeze(session_expired);

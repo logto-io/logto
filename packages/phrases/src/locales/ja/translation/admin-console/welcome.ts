@@ -5,4 +5,4 @@ const welcome = {
   create_account: 'アカウントを作成する',
 };
 
-export default welcome;
+export default Object.freeze(welcome);

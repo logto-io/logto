@@ -7,4 +7,4 @@ const input = {
   search_region_code: 'Procurar código de região',
 };
 
-export default input;
+export default Object.freeze(input);

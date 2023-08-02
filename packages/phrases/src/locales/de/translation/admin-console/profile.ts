@@ -1,4 +1,4 @@
-const profil = {
+const profile = {
   page_title: 'Account-Einstellungen',
   title: 'Account-Einstellungen',
   description:
@@ -80,4 +80,5 @@ const profil = {
   unlink_reminder:
     'Benutzer können sich nicht mehr mit dem <span></span>-Konto anmelden, wenn Sie es trennen. Möchten Sie fortfahren?',
 };
-export default profil;
+
+export default Object.freeze(profile);

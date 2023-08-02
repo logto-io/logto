@@ -1,4 +1,4 @@
-const detalles_aplicacion = {
+const application_details = {
   page_title: 'Detalles de la aplicación',
   back_to_applications: 'Volver a Aplicaciones',
   check_guide: 'Revisar Guía',
@@ -12,7 +12,7 @@ const detalles_aplicacion = {
   application_name_placeholder: 'Mi App',
   description: 'Descripción',
   description_placeholder: 'Ingresa la descripción de tu aplicación',
-  config_endpoint: 'Endpoint de configuración del proveedor OpenID', // Endpoint de configuración del proveedor OpenID
+  config_endpoint: 'Endpoint de configuración del proveedor OpenID',
   authorization_endpoint: 'Endpoint de Autorización',
   authorization_endpoint_tip:
     'El endpoint para la autenticación y autorización. Se utiliza para OpenID Connect <a>Autenticación</a>.',
@@ -58,4 +58,4 @@ const detalles_aplicacion = {
   redirect_uri_required: 'Debes ingresar al menos un URI de Redireccionamiento',
 };
 
-export default detalles_aplicacion;
+export default Object.freeze(application_details);

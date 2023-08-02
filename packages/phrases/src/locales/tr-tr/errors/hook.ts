@@ -3,4 +3,4 @@ const hook = {
   send_test_payload_failed: 'Test yükü gönderilemedi: {{message}}',
 };
 
-export default hook;
+export default Object.freeze(hook);

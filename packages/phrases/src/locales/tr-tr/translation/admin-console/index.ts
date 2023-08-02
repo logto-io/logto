@@ -73,4 +73,4 @@ const admin_console = {
   upsell,
 };
 
-export default admin_console;
+export default Object.freeze(admin_console);

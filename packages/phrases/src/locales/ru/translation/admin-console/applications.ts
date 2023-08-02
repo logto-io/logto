@@ -50,4 +50,4 @@ const applications = {
     'Logto использует сущность приложения для OIDC для выполнения задач, таких как идентификация ваших приложений, управление входом в систему и создание журналов аудита.',
 };
 
-export default applications;
+export default Object.freeze(applications);

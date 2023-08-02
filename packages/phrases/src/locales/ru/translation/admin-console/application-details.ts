@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: 'Вы должны ввести по крайней мере один URI перенаправления',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

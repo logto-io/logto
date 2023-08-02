@@ -7,4 +7,4 @@ const role = {
     '你可能正在嘗試更新或刪除 Logto 禁止的內部角色。如果你要創建新角色，請嘗試使用不以“#internal:”開頭的名稱。',
 };
 
-export default role;
+export default Object.freeze(role);

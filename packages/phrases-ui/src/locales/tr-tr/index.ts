@@ -1,4 +1,4 @@
-import { type LocalePhrase } from '../../types.js';
+import type { LocalePhrase } from '../../types.js';
 
 import action from './action.js';
 import demo_app from './demo-app.js';
@@ -7,7 +7,7 @@ import error from './error.js';
 import input from './input.js';
 import secondary from './secondary.js';
 
-const trTR: LocalePhrase = Object.freeze({
+const tr_tr = {
   translation: {
     input,
     secondary,
@@ -16,6 +16,6 @@ const trTR: LocalePhrase = Object.freeze({
     error,
     demo_app,
   },
-});
+} satisfies LocalePhrase;
 
-export default trTR;
+export default Object.freeze(tr_tr);

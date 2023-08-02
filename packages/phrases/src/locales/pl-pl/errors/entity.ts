@@ -6,4 +6,4 @@ const entity = {
   not_found: 'Zasób nie istnieje.',
 };
 
-export default entity;
+export default Object.freeze(entity);

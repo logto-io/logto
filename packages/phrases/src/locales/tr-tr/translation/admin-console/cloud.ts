@@ -41,7 +41,6 @@ const cloud = {
       others: 'Diğerleri',
     },
   },
-
   sie: {
     page_title: 'Oturum açma deneyimini özelleştirin',
     title: 'Öncelikle giriş deneyiminizi kolaylıkla özelleştirin',
@@ -88,4 +87,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

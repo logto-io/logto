@@ -5,8 +5,8 @@ const connector = {
   invalid_metadata: '連接器 metadata 參數錯誤',
   invalid_config_guard: '連接器配置 guard 錯誤',
   unexpected_type: '連接器類型錯誤',
-  insufficient_request_parameters: '請求參數缺失',
   invalid_request_parameters: '請求參數錯誤',
+  insufficient_request_parameters: '請求參數缺失',
   invalid_config: '連接器配置錯誤',
   invalid_response: '連接器錯誤響應',
   template_not_found: '無法從連接器配置中找到對應的模板',
@@ -30,4 +30,4 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector: '不可覆蓋該連接器的 metadata 參數。',
 };
 
-export default connector;
+export default Object.freeze(connector);

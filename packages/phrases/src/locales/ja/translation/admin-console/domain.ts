@@ -52,4 +52,4 @@ const domain = {
     'このURIのドメイン名をアプリケーションのエンドポイントに合わせてカスタマイズできます。 "{{custom}}" または "{{default}}" のいずれかを選択してください。',
 };
 
-export default domain;
+export default Object.freeze(domain);

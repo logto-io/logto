@@ -41,4 +41,4 @@ const webhooks = {
   webhook_created: 'Webhook {{name}} został pomyślnie utworzony.',
 };
 
-export default webhooks;
+export default Object.freeze(webhooks);

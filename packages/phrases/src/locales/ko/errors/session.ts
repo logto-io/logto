@@ -20,4 +20,4 @@ const session = {
   interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
 };
 
-export default session;
+export default Object.freeze(session);

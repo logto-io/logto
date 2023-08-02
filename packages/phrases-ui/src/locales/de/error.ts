@@ -9,9 +9,9 @@ const error = {
   invalid_email: 'Die Email ist ungültig',
   invalid_phone: 'Die Telefonnummer ist ungültig',
   password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',
-  passwords_do_not_match: 'Passwörter stimmen nicht überein',
   invalid_password:
     'Passwort erfordert mindestens {{min}} Zeichen und enthält eine Kombination aus Buchstaben, Zahlen und Symbolen.',
+  passwords_do_not_match: 'Passwörter stimmen nicht überein',
   invalid_passcode: 'Der Bestätigungscode ist ungültig',
   invalid_connector_auth: 'Die Autorisierung ist ungültig',
   invalid_connector_request: 'Connector Daten sind ungültig',
@@ -20,4 +20,4 @@ const error = {
   timeout: 'Zeitüberschreitung. Bitte melde dich erneut an.',
 };
 
-export default error;
+export default Object.freeze(error);

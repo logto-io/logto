@@ -5,4 +5,4 @@ const session_expired = {
   button: 'Erneut anmelden',
 };
 
-export default session_expired;
+export default Object.freeze(session_expired);

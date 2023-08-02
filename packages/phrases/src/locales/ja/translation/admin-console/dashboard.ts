@@ -16,4 +16,4 @@ const dashboard = {
   monthly_active_users_tip: 'アプリで過去30日間にトークンを交換したユニークユーザーの数',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

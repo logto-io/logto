@@ -8,4 +8,4 @@ const permissions = {
   placeholder_description: '權限是指訪問資源的授權（我們稱其為 API 資源）。',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

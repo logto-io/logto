@@ -21,4 +21,4 @@ const roles = {
     'As funções são um agrupamento de permissões que podem ser atribuídas a usuários. Certifique-se de adicionar as permissões antes de criar funções.',
 };
 
-export default roles;
+export default Object.freeze(roles);

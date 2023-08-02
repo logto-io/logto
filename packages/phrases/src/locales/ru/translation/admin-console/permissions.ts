@@ -9,4 +9,4 @@ const permissions = {
     'Разрешение относится к авторизации доступа к ресурсу (мы называем это ресурсом API).',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

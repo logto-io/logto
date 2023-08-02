@@ -115,4 +115,4 @@ const quota_item = {
   },
 };
 
-export default quota_item;
+export default Object.freeze(quota_item);

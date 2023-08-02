@@ -78,4 +78,4 @@ const profile = {
     '연결을 해제하면 사용자들이 <span></span> 계정으로 로그인하지 못할 거예요. 정말로 진행할까요?',
 };
 
-export default profile;
+export default Object.freeze(profile);

@@ -50,6 +50,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       'Insira o seu CSS personalizado para personalizar os estilos de qualquer elemento para as suas especificações exatas. Expresse a sua criatividade e faça a sua interface destacar-se.',
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       'Ainda não foi configurado nenhum conector SMS. Antes de concluir a configuração, os utilizadores não poderão iniciar sessão com este método. <a>{{link}}</a> em "Conectores"',
@@ -80,8 +82,6 @@ const sign_in_exp = {
     desktop: 'Ambiente de trabalho',
     mobile: 'Móvel',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

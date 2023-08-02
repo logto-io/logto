@@ -77,4 +77,4 @@ const user_details = {
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

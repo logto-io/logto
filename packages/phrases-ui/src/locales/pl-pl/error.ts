@@ -21,4 +21,4 @@ const error = {
   timeout: 'Czas żądania upłynął. Proszę spróbuj ponownie później.',
 };
 
-export default error;
+export default Object.freeze(error);

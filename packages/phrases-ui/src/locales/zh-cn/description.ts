@@ -53,4 +53,4 @@ const description = {
   verify_phone: '验证你的手机号',
 };
 
-export default description;
+export default Object.freeze(description);

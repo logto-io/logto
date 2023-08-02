@@ -30,4 +30,4 @@ const user = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este usuário',
 };
 
-export default user;
+export default Object.freeze(user);

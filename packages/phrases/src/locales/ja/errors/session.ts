@@ -21,4 +21,4 @@ const session = {
     'インタラクションセッションが見つかりません。戻ってセッションを開始してください。',
 };
 
-export default session;
+export default Object.freeze(session);

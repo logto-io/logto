@@ -9,4 +9,4 @@ const permissions = {
     'Permiso se refiere a la autorización para acceder a un recurso (lo llamamos recurso de API).',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

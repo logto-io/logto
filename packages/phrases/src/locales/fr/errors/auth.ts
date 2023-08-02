@@ -10,4 +10,4 @@ const auth = {
     'La ré-authentification est requise pour effectuer une action protégée.',
 };
 
-export default auth;
+export default Object.freeze(auth);

@@ -19,4 +19,4 @@ const dashboard = {
     'Liczba unikalnych użytkowników wymieniających tokeny na Twojej aplikacji w ciągu ostatnich 30 dni',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

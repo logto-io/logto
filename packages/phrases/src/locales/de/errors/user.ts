@@ -34,4 +34,4 @@ const user = {
   role_exists: 'Die Rollen-ID {{roleId}} wurde diesem Benutzer bereits hinzugefügt.',
 };
 
-export default user;
+export default Object.freeze(user);

@@ -81,4 +81,4 @@ const connectors = {
   standard_connectors: '标准连接器',
 };
 
-export default connectors;
+export default Object.freeze(connectors);

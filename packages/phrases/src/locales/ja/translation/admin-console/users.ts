@@ -25,4 +25,4 @@ const users = {
     '各ユーザーには、基本データ、ソーシャルアイデンティティ、およびカスタムデータが含まれるプロフィールがあります。',
 };
 
-export default users;
+export default Object.freeze(users);

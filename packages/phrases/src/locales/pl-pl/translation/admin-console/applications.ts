@@ -50,4 +50,4 @@ const applications = {
     'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
 };
 
-export default applications;
+export default Object.freeze(applications);
