@@ -1,6 +1,6 @@
 import { VerificationCodeType } from '@logto/connector-kit';
 
-import { mailgunConfigGuard } from './types';
+import { mailgunConfigGuard } from './types.js';
 
 describe('Mailgun config guard', () => {
   it('should pass with valid config', () => {
