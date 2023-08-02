@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'プロ',
   upgrade_plan: 'プランをアップグレード',
   compare_plans: 'プラン比較',
-  contact_us: 'お問い合わせ',
   get_started: {
     title: '無料プランでスムーズなアイデンティティの旅を始めましょう！',
     description:

@@ -27,7 +27,6 @@ const subscription = {
   downgrade: '降級',
   current: '當前',
   upgrade: '升級',
-  contact_us: '聯繫我們',
   quota_table,
   billing_history: {
     invoice_column: '發票',

@@ -29,7 +29,6 @@ const subscription = {
   downgrade: 'Downgrade',
   current: 'Atual',
   upgrade: 'Atualização',
-  contact_us: 'Contate-nos',
   quota_table,
   billing_history: {
     invoice_column: 'Faturas',

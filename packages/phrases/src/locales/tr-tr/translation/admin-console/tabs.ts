@@ -10,7 +10,6 @@ const tabs = {
   audit_logs: 'Denetim Kayıtları',
   roles: 'Roller',
   docs: 'Dökümanlar',
-  contact_us: 'Bize Ulaşın',
   tenant_settings: 'Ayarlar',
 };
 

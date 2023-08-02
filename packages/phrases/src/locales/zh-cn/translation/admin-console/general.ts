@@ -55,6 +55,7 @@ const general = {
   hide: '隐藏',
   unknown_error: '未知错误，请稍后重试。',
   select: '选择',
+  contact_us_action: '联系我们',
 };
 
 export default general;

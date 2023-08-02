@@ -56,6 +56,7 @@ const general = {
   hide: 'Nascondi',
   unknown_error: 'Errore sconosciuto, riprova più tardi.',
   select: 'Seleziona',
+  contact_us_action: 'Contattaci',
 };
 
 export default general;

@@ -56,6 +56,7 @@ const general = {
   hide: 'Gizle',
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
   select: 'Seç',
+  contact_us_action: 'Bizimle İletişime Geçin',
 };
 
 export default general;

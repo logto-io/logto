@@ -29,7 +29,6 @@ const subscription = {
   downgrade: 'ダウングレード',
   current: '現在',
   upgrade: 'アップグレード',
-  contact_us: 'お問い合わせ',
   quota_table,
   billing_history: {
     invoice_column: '請求書',

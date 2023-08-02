@@ -10,7 +10,6 @@ const tabs = {
   audit_logs: 'Registos de auditoria',
   roles: 'Papéis',
   docs: 'Documentação',
-  contact_us: 'Contate-nos',
   tenant_settings: 'Definições',
 };
 

@@ -55,6 +55,7 @@ const general = {
   hide: 'Скрыть',
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
   select: 'Выбрать',
+  contact_us_action: 'Свяжитесь с нами',
 };
 
 export default general;

@@ -10,7 +10,6 @@ const tabs = {
   audit_logs: '稽核日誌',
   roles: '角色',
   docs: '文件',
-  contact_us: '聯絡我們',
   tenant_settings: '設定',
 };
 

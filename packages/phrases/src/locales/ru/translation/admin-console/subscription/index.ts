@@ -28,7 +28,6 @@ const subscription = {
   downgrade: 'Понизить уровень',
   current: 'Текущий',
   upgrade: 'Обновить',
-  contact_us: 'Свяжитесь с нами',
   quota_table,
   billing_history: {
     invoice_column: 'Счета',

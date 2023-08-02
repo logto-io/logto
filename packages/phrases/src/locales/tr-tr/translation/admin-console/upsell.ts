@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: 'Planı Yükselt',
   compare_plans: 'Planları Karşılaştır',
-  contact_us: 'Bizimle İletişime Geçin',
   get_started: {
     title: 'Ücretsiz bir planla sorunsuz kimlik yolculuğunuza başlayın!',
     description:

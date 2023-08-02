@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: 'Aggiorna piano',
   compare_plans: 'Confronta i piani',
-  contact_us: 'Contattaci',
   get_started: {
     title: 'Inizia il tuo percorso di identità senza interruzioni con un piano gratuito!',
     description:

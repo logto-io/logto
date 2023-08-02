@@ -55,6 +55,7 @@ const general = {
   hide: '非表示',
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
   select: '選択する',
+  contact_us_action: 'お問い合わせ',
 };
 
 export default general;

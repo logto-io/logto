@@ -28,7 +28,6 @@ const subscription = {
   downgrade: '다운그레이드',
   current: '현재',
   upgrade: '업그레이드',
-  contact_us: '문의하기',
   quota_table,
   billing_history: {
     invoice_column: '송장',

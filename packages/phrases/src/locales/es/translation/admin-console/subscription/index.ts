@@ -29,7 +29,6 @@ const subscription = {
   downgrade: 'Degradar',
   current: 'Actual',
   upgrade: 'Actualizar',
-  contact_us: 'Contáctenos',
   quota_table,
   quota_item,
 

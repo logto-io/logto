@@ -27,7 +27,6 @@ const subscription = {
   downgrade: '降级',
   current: '当前',
   upgrade: '升级',
-  contact_us: '联系我们',
   quota_table,
   quota_item,
   billing_history: {

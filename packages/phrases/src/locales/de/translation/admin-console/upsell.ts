@@ -2,7 +2,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: 'Upgrade-Plan',
   compare_plans: 'Pläne vergleichen',
-  contact_us: 'Kontaktieren Sie uns',
   get_started: {
     title: 'Starten Sie Ihre nahtlose Identitätsreise mit einem kostenlosen Plan!',
     description:

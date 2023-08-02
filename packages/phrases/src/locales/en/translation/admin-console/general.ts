@@ -54,7 +54,8 @@ const general = {
   view: 'View',
   hide: 'Hide',
   unknown_error: 'Unknown error, please try again later.',
-  select: 'Select', // UNTRANSLATED
+  select: 'Select',
+  contact_us_action: 'Contact Us',
 };
 
 export default general;
