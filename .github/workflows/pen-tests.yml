@@ -3,7 +3,6 @@ name: Pen Tests
 on:
   # Be careful when using the workflow_run trigger
   # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/7
-  workflow_dispatch:
   workflow_run:
     workflows: ["Release"]
     branches:
@@ -38,6 +37,7 @@ jobs:
           target: http://localhost:3001
           cmd_options: "-a"
           fail_action: true
+          docker_name: owasp/zap2docker-stable
           allow_issue_writing: false
           rules_file_name: ".zap/rules.tsv"
 

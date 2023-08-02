@@ -1,2 +1,8 @@
-90043 IGNORE (Cloud Metadata Potentially Exposed)
+90043 INFO (Cloud Metadata Potentially Exposed)
+10055 INFO (CSP: Wildcard Directive)
+10063 INFO (Permissions Policy Header Not Set)
+10096 INFO (Timestamp Disclosure - Unix)
+40039 INFO (Web Cache Deception)
+
+
 
