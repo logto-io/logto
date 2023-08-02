@@ -15,13 +15,7 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
-import type {
-  SendGridMailConfig,
-  EmailData,
-  Personalization,
-  Content,
-  PublicParameters,
-} from './types.js';
+import type { EmailData, Personalization, Content, PublicParameters } from './types.js';
 import { sendGridMailConfigGuard } from './types.js';
 
 const sendMessage =
@@ -29,7 +23,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<SendGridMailConfig>(config, sendGridMailConfigGuard);
+    validateConfig(config, sendGridMailConfigGuard);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -87,7 +81,7 @@ const sendMessage =
         throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
-      throw error;
+      throw new ConnectorError(ConnectorErrorCodes.General, error);
     }
   };
 

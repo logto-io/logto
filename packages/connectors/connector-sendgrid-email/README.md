@@ -1,10 +1,10 @@
-# SendGrid mail connector
+# SendGrid email connector
 
 The official Logto connector for SendGrid email service.
 
 **Table of contents**
 
-- [SendGrid mail connector](#sendgrid-mail-connector)
+- [SendGrid email connector](#sendgrid-email-connector)
   - [Get started](#get-started)
   - [Register SendGrid account](#register-sendgrid-account)
   - [Verify senders](#verify-senders)

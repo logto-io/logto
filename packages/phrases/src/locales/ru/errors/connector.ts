@@ -10,6 +10,7 @@ const connector = {
   invalid_config: 'Конфигурация коннектора недействительна.',
   invalid_response: 'Ответ коннектора недействителен.',
   template_not_found: 'Невозможно найти правильный шаблон в конфигурации коннектора.',
+  template_not_supported: 'The connector does not support this template type.', // UNTRANSLATED
   rate_limit_exceeded: 'Превышен лимит запросов. Пожалуйста, попробуйте позже.',
   not_implemented: '{{method}}: еще не реализован.',
   social_invalid_access_token: 'Токен доступа коннектора недействителен.',

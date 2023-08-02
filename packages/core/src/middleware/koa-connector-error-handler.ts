@@ -19,7 +19,8 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
       const { code, data } = error;
 
       const errorDescriptionGuard = z.object({ errorDescription: z.string() });
-      const message = trySafe(() => errorDescriptionGuard.parse(data))?.errorDescription;
+      const message =
+        trySafe(() => errorDescriptionGuard.parse(data))?.errorDescription ?? JSON.stringify(data);
 
       switch (code) {
         case ConnectorErrorCodes.InvalidMetadata:

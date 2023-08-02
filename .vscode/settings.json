@@ -39,6 +39,8 @@
     "stylelint",
     "timestamptz",
     "topbar",
-    "withtyped"
+    "withtyped",
+    "sendgrid",
+    "mailgun",
   ]
 }

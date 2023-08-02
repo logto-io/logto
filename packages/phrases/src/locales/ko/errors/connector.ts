@@ -10,6 +10,7 @@ const connector = {
   invalid_config: '연동 설정이 유효하지 않아요.',
   invalid_response: '연동 응답이 유효하지 않아요.',
   template_not_found: '연동 예제 설정을 찾을 수 없어요.',
+  template_not_supported: 'The connector does not support this template type.', // UNTRANSLATED
   rate_limit_exceeded: '트리거 주기 제한. 나중에 다시 시도하세요.',
   not_implemented: '{{method}}은 아직 구현되지 않았어요.',
   social_invalid_access_token: '연동 서비스의 Access 토큰이 유효하지 않아요.',

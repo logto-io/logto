@@ -48,7 +48,10 @@ export enum ConnectorErrorCodes {
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',
   InvalidResponse = 'invalid_response',
+  /** The template is not found for the given type. */
   TemplateNotFound = 'template_not_found',
+  /** The template type is not supported by the connector. */
+  TemplateNotSupported = 'template_not_supported',
   RateLimitExceeded = 'rate_limit_exceeded',
   NotImplemented = 'not_implemented',
   SocialAuthCodeInvalid = 'social_auth_code_invalid',
@@ -62,7 +65,7 @@ export class ConnectorError extends Error {
   public data: unknown;
 
   constructor(code: ConnectorErrorCodes, data?: unknown) {
-    const message = typeof data === 'string' ? data : 'Connector error occurred.';
+    const message = `ConnectorError: ${data ? JSON.stringify(data) : code}`;
     super(message);
     this.code = code;
     this.data = typeof data === 'string' ? { message: data } : data;
@@ -233,6 +236,19 @@ export const emailServiceBrandingGuard = z
 
 export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 
+export type SendMessagePayload = {
+  to: string;
+  type: VerificationCodeType;
+  payload: {
+    /**
+     * The dynamic verification code to send.
+     *
+     * @example '123456'
+     */
+    code: string;
+  } & EmailServiceBranding;
+};
+
 export const sendMessagePayloadGuard = z.object({
   to: z.string(),
   type: verificationCodeTypeGuard,
@@ -241,9 +257,7 @@ export const sendMessagePayloadGuard = z.object({
       code: z.string(),
     })
     .merge(emailServiceBrandingGuard),
-});
-
-export type SendMessagePayload = z.infer<typeof sendMessagePayloadGuard>;
+}) satisfies z.ZodType<SendMessagePayload>;
 
 export type SendMessageFunction = (data: SendMessagePayload, config?: unknown) => Promise<unknown>;
 

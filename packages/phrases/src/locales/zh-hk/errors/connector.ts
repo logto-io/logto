@@ -10,6 +10,7 @@ const connector = {
   invalid_config: '連接器配置錯誤',
   invalid_response: '連接器錯誤響應',
   template_not_found: '無法從連接器配置中找到對應的模板',
+  template_not_supported: 'The connector does not support this template type.', // UNTRANSLATED
   rate_limit_exceeded: '觸發速率限制。請稍後再試。',
   not_implemented: '方法 {{method}} 尚未實現',
   social_invalid_access_token: '當前連接器的 access_token 無效',
