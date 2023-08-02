@@ -1,6 +1,5 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
-import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -49,10 +48,11 @@ function ConfigFormFields({ formItems }: Props) {
   }, [formItems, values]);
 
   const renderFormItem = (item: ConnectorConfigFormItem) => {
-    const error = conditional(
-      formConfigErrors &&
-        (formConfigErrors[item.key]?.message ?? Boolean(formConfigErrors[item.key]))
-    );
+    const errorMessage = formConfigErrors?.[item.key]?.message;
+    const error =
+      typeof errorMessage === 'string' && errorMessage.length > 0
+        ? errorMessage
+        : Boolean(formConfigErrors?.[item.key]);
 
     const buildCommonProperties = () => ({
       ...register(`formConfig.${item.key}`, {
