@@ -3,23 +3,33 @@ import { type TFuncKey } from 'i18next';
 import DynamicT from '@/ds-components/DynamicT';
 import { ReservedPlanName } from '@/types/subscriptions';
 
-const registeredPlanNamePhraseMap: Record<
+const planNamePhraseMap: Record<
   string,
   TFuncKey<'translation', 'admin_console.subscription'> | undefined
 > = {
-  quotaKey: undefined,
   [ReservedPlanName.Free]: 'free_plan',
   [ReservedPlanName.Hobby]: 'hobby_plan',
   [ReservedPlanName.Pro]: 'pro_plan',
   [ReservedPlanName.Enterprise]: 'enterprise',
 };
 
-type Props = {
-  name: string;
+const planNameTitlePhraseMap: Record<
+  string,
+  TFuncKey<'translation', 'admin_console.subscription'> | undefined
+> = {
+  [ReservedPlanName.Free]: 'free_plan_title',
+  [ReservedPlanName.Hobby]: 'hobby_plan_title',
+  [ReservedPlanName.Pro]: 'pro_plan_title',
+  [ReservedPlanName.Enterprise]: 'enterprise_title',
 };
 
-function PlanName({ name }: Props) {
-  const planNamePhrase = registeredPlanNamePhraseMap[name];
+type Props = {
+  name: string;
+  isTitleCase?: boolean;
+};
+
+function PlanName({ name, isTitleCase = false }: Props) {
+  const planNamePhrase = isTitleCase ? planNameTitlePhraseMap[name] : planNamePhraseMap[name];
 
   /**
    * Note: fallback to the plan name if the phrase is not registered.
@@ -28,7 +38,11 @@ function PlanName({ name }: Props) {
     return <span>{name}</span>;
   }
 
-  return <DynamicT forKey={`subscription.${planNamePhrase}`} />;
+  return (
+    <span>
+      <DynamicT forKey={`subscription.${planNamePhrase}`} />
+    </span>
+  );
 }
 
 export default PlanName;

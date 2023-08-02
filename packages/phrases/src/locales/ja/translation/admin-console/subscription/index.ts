@@ -11,6 +11,10 @@ const subscription = {
   pro_plan_description: 'ビジネスが安心してLogtoを利用できるプランです。',
   enterprise: 'エンタープライズ',
   current_plan: '現在のプラン',
+  free_plan_title: '無料プラン',
+  hobby_plan_title: '趣味プラン',
+  pro_plan_title: 'プロプラン',
+  enterprise_title: 'エンタープライズ',
   current_plan_description:
     '現在のプランはこちらです。プランの使用状況を簡単に確認したり、次回の請求を確認したり、必要に応じてプランを変更したりできます。',
   plan_usage: '利用状況',
