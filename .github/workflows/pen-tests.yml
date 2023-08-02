@@ -37,7 +37,6 @@ jobs:
           target: http://localhost:3001
           cmd_options: "-a"
           fail_action: true
-          docker_name: owasp/zap2docker-stable
           allow_issue_writing: false
           rules_file_name: ".zap/rules.conf"
 
