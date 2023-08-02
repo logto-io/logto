@@ -56,7 +56,8 @@ export const createQuotaLibrary = (
     socialConnectorsLimit: async () => {
       const connectors = await getLogtoConnectors();
       const count = connectors.filter(
-        ({ type, metadata: { id } }) => type === ConnectorType.Social && id !== DemoConnector.Social
+        ({ type, metadata: { id, isStandard } }) =>
+          type === ConnectorType.Social && !isStandard && id !== DemoConnector.Social
       ).length;
       return { count };
     },
