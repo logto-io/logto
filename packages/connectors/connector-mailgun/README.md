@@ -31,7 +31,7 @@ The official Logto connector for Mailgun email service.
 
 The "Deliveries" section allows you to configure the content of the emails to be sent in different scenarios. It is a JSON key-value map where the key is the usage type and the value is an object containing the content config for the email to be sent.
 
-```jsonc
+```json
 {
   "<usage-type>": {
     // ...
@@ -75,7 +75,7 @@ To use Mailgun template, fill out the following fields:
 
 The following is an example of the deliveries config:
 
-```jsonc
+```json
 {
   "Register": {
     "subject": "{{code}} is your verification code",

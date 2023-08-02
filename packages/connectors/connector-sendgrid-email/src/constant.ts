@@ -8,10 +8,8 @@ export const defaultMetadata: ConnectorMetadata = {
   target: 'sendgrid-mail',
   platform: null,
   name: {
-    en: 'SendGrid Mail Service',
-    'zh-CN': 'SendGrid 邮件服务',
-    'tr-TR': 'SendGrid EMail Servisi',
-    ko: 'SendGrid 메일 서비스',
+    en: 'SendGrid Email',
+    'zh-CN': 'SendGrid 邮件',
   },
   logo: './logo.svg',
   logoDark: null,

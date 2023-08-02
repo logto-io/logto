@@ -10,6 +10,8 @@ import type {
 } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
+import { consoleLog } from '../utils.js';
+
 import { notImplemented } from './consts.js';
 import type { ConnectorFactory } from './types.js';
 
@@ -29,10 +31,18 @@ export function validateConnectorModule(
   }
 }
 
+const supportedImageTypes = Object.freeze({
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+});
+
+const isSupportedImageType = (extension: string): extension is keyof typeof supportedImageTypes =>
+  Object.keys(supportedImageTypes).includes(extension);
+
 export const readUrl = async (
   url: string,
   baseUrl: string,
-  type: 'text' | 'svg'
+  type: 'text' | 'image'
 ): Promise<string> => {
   if (!url) {
     return url;
@@ -46,10 +56,20 @@ export const readUrl = async (
     return url;
   }
 
-  if (type === 'svg') {
-    const data = await readFile(path.join(baseUrl, url));
+  if (type === 'image') {
+    const filePath = path.join(baseUrl, url);
+    const extension = path.extname(filePath);
 
-    return `data:image/svg+xml;base64,${data.toString('base64')}`;
+    if (!isSupportedImageType(extension)) {
+      consoleLog.warn(
+        `[readUrl] unexpected image type: ${filePath}, only support ".svg" and ".png". Falling back to empty string.`
+      );
+      return '';
+    }
+
+    const data = await readFile(filePath);
+
+    return `data:${supportedImageTypes[extension]};base64,${data.toString('base64')}`;
   }
 
   return readFile(path.join(baseUrl, url), 'utf8');
@@ -61,8 +81,8 @@ export const parseMetadata = async (
 ): Promise<AllConnector['metadata']> => {
   return {
     ...metadata,
-    logo: await readUrl(metadata.logo, packagePath, 'svg'),
-    logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'svg')),
+    logo: await readUrl(metadata.logo, packagePath, 'image'),
+    logoDark: metadata.logoDark && (await readUrl(metadata.logoDark, packagePath, 'image')),
     readme: await readUrl(metadata.readme, packagePath, 'text'),
     configTemplate:
       metadata.configTemplate && (await readUrl(metadata.configTemplate, packagePath, 'text')),

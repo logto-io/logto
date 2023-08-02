@@ -10,7 +10,7 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Mailgun',
   },
-  logo: './logo.svg',
+  logo: './logo.png',
   logoDark: null,
   description: {
     en: 'Mailgun is an email delivery service for sending, receiving, and tracking emails.',

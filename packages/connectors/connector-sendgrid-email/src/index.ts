@@ -15,15 +15,21 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
-import type { EmailData, Personalization, Content, PublicParameters } from './types.js';
 import { sendGridMailConfigGuard } from './types.js';
+import type {
+  EmailData,
+  Personalization,
+  Content,
+  PublicParameters,
+  SendGridMailConfig,
+} from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig(config, sendGridMailConfigGuard);
+    validateConfig<SendGridMailConfig>(config, sendGridMailConfigGuard);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
