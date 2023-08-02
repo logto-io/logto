@@ -39,6 +39,6 @@ jobs:
           fail_action: true
           docker_name: owasp/zap2docker-stable
           allow_issue_writing: false
-          rules_file_name: ".zap/rules.tsv"
+          rules_file_name: ".zap/rules.conf"
 
       # TODO: send slack message on failure
