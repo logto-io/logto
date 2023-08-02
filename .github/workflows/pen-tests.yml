@@ -3,11 +3,12 @@ name: Pen Tests
 on:
   # Be careful when using the workflow_run trigger
   # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/7
+  workflow_dispatch:
   workflow_run:
-    workflows: [ "Release" ]
+    workflows: ["Release"]
     branches:
       - master
-    types: 
+    types:
       - completed
 
 concurrency:
@@ -20,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Docker Compose up
         run: |
           curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml |\
@@ -32,8 +36,9 @@ jobs:
         uses: zaproxy/action-full-scan@v0.5.1
         with:
           target: http://localhost:3001
-          cmd_options: '-a'
+          cmd_options: "-a"
           fail_action: true
           allow_issue_writing: false
+          rules_file_name: ".zap/rules.tsv"
 
       # TODO: send slack message on failure
