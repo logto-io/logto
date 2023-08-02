@@ -2,4 +2,4 @@ const log = {
   invalid_type: 'The log type is invalid.',
 };
 
-export default log;
+export default Object.freeze(log);

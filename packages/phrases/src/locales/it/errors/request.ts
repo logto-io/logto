@@ -3,4 +3,4 @@ const request = {
   general: 'Si è verificato un errore nella richiesta.',
 };
 
-export default request;
+export default Object.freeze(request);

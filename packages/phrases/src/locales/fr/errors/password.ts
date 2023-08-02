@@ -4,4 +4,4 @@ const password = {
     'Mot de passe pepper non trouvé. Veuillez vérifier votre environnement de base.',
 };
 
-export default password;
+export default Object.freeze(password);

@@ -6,4 +6,4 @@ const guard = {
   mime_type_not_allowed: '不允許使用此 MIME 類型。',
 };
 
-export default guard;
+export default Object.freeze(guard);

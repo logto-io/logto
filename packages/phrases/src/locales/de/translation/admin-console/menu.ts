@@ -10,4 +10,4 @@ const menu = {
   sign_out: 'Abmelden',
 };
 
-export default menu;
+export default Object.freeze(menu);

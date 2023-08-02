@@ -3,4 +3,4 @@ const secondary = {
     '既にアカウントを持っていますか？{{methods, list(type: disjunction;)}}をソーシャルアイデンティティにリンクするためにサインインしてください。',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

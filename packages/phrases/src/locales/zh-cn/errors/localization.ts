@@ -3,4 +3,4 @@ const localization = {
   invalid_translation_structure: '无效的数据格式，请检查你的输入并重试。',
 };
 
-export default localization;
+export default Object.freeze(localization);

@@ -59,13 +59,11 @@ const quota_table = {
     '* Aylık etkin kullanıcılarınız (MAU), faturalandırma dönemi boyunca ne sıklıkla oturum açtıklarına göre 3 düzeye ayrılır. Her düzeyin farklı bir MAU birim fiyatı vardır.',
   unlimited: 'Sınırsız',
   contact: 'İletişim',
-
   monthly_price: '${{value, number}}/ay',
-
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} gün',
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
 };
 
-export default quota_table;
+export default Object.freeze(quota_table);

@@ -1,9 +1,9 @@
 import errors from './errors/index.js';
 import translation from './translation/index.js';
 
-const en = Object.freeze({
+const en = {
   translation,
   errors,
-});
+};
 
-export default en;
+export default Object.freeze(en);

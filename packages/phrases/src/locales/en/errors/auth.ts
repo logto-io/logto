@@ -8,4 +8,4 @@ const auth = {
   require_re_authentication: 'Re-authentication is required to perform a protected action.',
 };
 
-export default auth;
+export default Object.freeze(auth);

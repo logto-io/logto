@@ -41,7 +41,6 @@ const cloud = {
       others: 'その他',
     },
   },
-
   sie: {
     page_title: 'サインインエクスペリエンスのカスタマイズ',
     title: 'まずは簡単にサインインエクスペリエンスをカスタマイズしましょう',
@@ -88,4 +87,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

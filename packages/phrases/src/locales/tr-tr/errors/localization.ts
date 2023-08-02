@@ -5,4 +5,4 @@ const localization = {
     'Geçersiz veri şemaları. Lütfen girdilerinizi kontrol edin ve tekrar deneyin.',
 };
 
-export default localization;
+export default Object.freeze(localization);

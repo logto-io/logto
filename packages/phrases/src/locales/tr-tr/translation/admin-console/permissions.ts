@@ -9,4 +9,4 @@ const permissions = {
     'İzin, bir kaynağa erişmek için yetki verme durumunu ifade eder (biz buna API kaynağı diyoruz).',
 };
 
-export default permissions;
+export default Object.freeze(permissions);

@@ -8,4 +8,4 @@ const verification_code = {
   exceed_max_try: '超過最大驗證次數，請嘗試請求新的驗證碼。',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

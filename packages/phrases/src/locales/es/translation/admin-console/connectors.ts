@@ -91,4 +91,4 @@ const connectors = {
   standard_connectors: 'Conectores estándar',
 };
 
-export default connectors;
+export default Object.freeze(connectors);

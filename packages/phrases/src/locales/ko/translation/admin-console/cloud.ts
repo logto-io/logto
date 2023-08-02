@@ -41,7 +41,6 @@ const cloud = {
       others: '기타',
     },
   },
-
   sie: {
     page_title: '로그인 환경 변경하기',
     title: '먼저 로그인 환경을 간편하게 사용자화해 보세요.',
@@ -88,4 +87,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

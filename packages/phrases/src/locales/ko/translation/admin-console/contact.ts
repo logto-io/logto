@@ -23,4 +23,4 @@ const contact = {
   },
 };
 
-export default contact;
+export default Object.freeze(contact);

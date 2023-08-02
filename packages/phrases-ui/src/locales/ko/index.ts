@@ -1,4 +1,4 @@
-import { type LocalePhrase } from '../../types.js';
+import type { LocalePhrase } from '../../types.js';
 
 import action from './action.js';
 import demo_app from './demo-app.js';
@@ -7,7 +7,7 @@ import error from './error.js';
 import input from './input.js';
 import secondary from './secondary.js';
 
-const ko: LocalePhrase = Object.freeze({
+const ko = {
   translation: {
     input,
     secondary,
@@ -16,6 +16,6 @@ const ko: LocalePhrase = Object.freeze({
     error,
     demo_app,
   },
-});
+} satisfies LocalePhrase;
 
-export default ko;
+export default Object.freeze(ko);

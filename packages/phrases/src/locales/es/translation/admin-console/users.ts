@@ -4,9 +4,9 @@ const users = {
   subtitle:
     'Administrar identidades de usuario, incluyendo la creación de usuarios, la edición de información de usuario, la visualización de registros de usuario, la restablecimiento de contraseña y la eliminación de usuarios',
   create: 'Agregar usuario',
-  user_name: 'Usuario',
   create_subtitle: 'Proporcione al menos uno de los siguientes campos para continuar.',
   error_missing_identifier: 'Debe proporcionar al menos un identificador para crear un usuario.',
+  user_name: 'Usuario',
   application_name: 'De la aplicación',
   latest_sign_in: 'Último inicio de sesión',
   create_form_username: 'Nombre de usuario',
@@ -24,4 +24,4 @@ const users = {
     'Cada usuario tiene un perfil que contiene toda su información. Consta de datos básicos, identidades sociales y datos personalizados.',
 };
 
-export default users;
+export default Object.freeze(users);

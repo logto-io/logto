@@ -3,4 +3,4 @@ const secondary = {
     '¿Ya tienes una cuenta? Inicia sesión para vincular {{methods, list(type: disjunction;)}} con tu identidad social.',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

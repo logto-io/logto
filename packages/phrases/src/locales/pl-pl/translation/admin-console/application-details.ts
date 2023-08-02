@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: 'Musisz wpisać co najmniej jeden adres URL przekierowania',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

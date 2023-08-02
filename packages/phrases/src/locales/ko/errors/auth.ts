@@ -9,4 +9,4 @@ const auth = {
   require_re_authentication: '보호된 작업을 수행하려면 재인증이 필요해요.',
 };
 
-export default auth;
+export default Object.freeze(auth);

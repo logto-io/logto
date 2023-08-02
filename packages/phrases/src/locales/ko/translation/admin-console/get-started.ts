@@ -27,4 +27,4 @@ const get_started = {
   add_rbac_subtitle: '다양한 사용 사례에 맞게 확장 가능한 역할 부여를 통해 리소스를 제어하세요.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

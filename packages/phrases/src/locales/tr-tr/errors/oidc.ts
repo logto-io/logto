@@ -17,4 +17,4 @@ const oidc = {
   provider_error: 'Dahili OIDC Hatası: {{message}}.',
 };
 
-export default oidc;
+export default Object.freeze(oidc);

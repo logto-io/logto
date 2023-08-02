@@ -30,4 +30,4 @@ const get_started = {
     '多様なユースケースに対応するスケーラブルなロール承認により、リソースを制御します。',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

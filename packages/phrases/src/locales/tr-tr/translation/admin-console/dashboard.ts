@@ -19,4 +19,4 @@ const dashboard = {
     'Son 30 günde uygulamalarınızda token değişiminde bulunan özgün kullanıcı sayısı',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

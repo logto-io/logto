@@ -7,4 +7,4 @@ const domain = {
   hostname_already_exists: 'Ce domaine existe déjà sur notre serveur.',
 };
 
-export default domain;
+export default Object.freeze(domain);

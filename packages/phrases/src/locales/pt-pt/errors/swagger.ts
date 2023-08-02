@@ -4,4 +4,4 @@ const swagger = {
     'Tipo Zod não suportado para os parâmetros. Verifique a configuração do protetor de rota.',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

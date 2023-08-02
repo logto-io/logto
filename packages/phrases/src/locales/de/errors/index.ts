@@ -44,4 +44,4 @@ const errors = {
   subscription,
 };
 
-export default errors;
+export default Object.freeze(errors);

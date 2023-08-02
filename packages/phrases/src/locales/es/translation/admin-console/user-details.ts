@@ -77,4 +77,4 @@ const user_details = {
     'El usuario necesita tener al menos uno de los identificadores de inicio de sesión (nombre de usuario, correo electrónico, número de teléfono o red social) para iniciar sesión. ¿Estás seguro/a de que quieres continuar?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

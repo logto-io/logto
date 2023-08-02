@@ -10,4 +10,4 @@ const verification_code = {
     'Die Begrenzung für die Anzahl der Bestätigungscode-Wiederholungen wurde überschritten. Bitte fordern Sie einen neuen Bestätigungscode an.',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

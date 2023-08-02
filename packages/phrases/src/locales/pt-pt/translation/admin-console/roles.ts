@@ -21,4 +21,4 @@ const roles = {
     'Os papéis são um agrupamento de permissões que podem ser atribuídas a usuários. Certifique-se de adicionar permissões antes de criar papéis.',
 };
 
-export default roles;
+export default Object.freeze(roles);

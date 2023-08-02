@@ -5,4 +5,4 @@ const localization = {
     'Неверная структура данных. Пожалуйста, проверьте ввод и повторите попытку.',
 };
 
-export default localization;
+export default Object.freeze(localization);

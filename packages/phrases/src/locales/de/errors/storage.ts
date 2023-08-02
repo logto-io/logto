@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'Das Hochladen der Datei zum Storage-Anbieter ist fehlgeschlagen.',
 };
 
-export default storage;
+export default Object.freeze(storage);

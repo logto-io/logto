@@ -29,4 +29,4 @@ const user = {
   role_exists: '역할 ID {{roleId}}은/는 이미 이 사용자에게 할당되어 있어요.',
 };
 
-export default user;
+export default Object.freeze(user);

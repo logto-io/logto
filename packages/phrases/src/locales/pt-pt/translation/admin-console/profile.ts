@@ -81,4 +81,4 @@ const profile = {
     'Os usuários não poderão entrar com a conta <span></span> se você a desligar. Tem a certeza de que deseja prosseguir?',
 };
 
-export default profile;
+export default Object.freeze(profile);

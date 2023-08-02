@@ -18,4 +18,4 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
 };
 
-export default sign_in_experiences;
+export default Object.freeze(sign_in_experiences);

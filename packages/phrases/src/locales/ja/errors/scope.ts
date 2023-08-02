@@ -3,4 +3,4 @@ const scope = {
   name_with_space: 'スコープの名前にはスペースを含めることはできません。',
 };
 
-export default scope;
+export default Object.freeze(scope);

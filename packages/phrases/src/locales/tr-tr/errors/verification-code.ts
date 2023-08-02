@@ -8,4 +8,4 @@ const verification_code = {
   exceed_max_try: 'Doğrulama kodu deneme sınırı aşıldı. Lütfen yeni bir doğrulama kodu isteyin.',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

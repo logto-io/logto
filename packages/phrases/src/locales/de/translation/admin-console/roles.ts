@@ -21,4 +21,4 @@ const roles = {
     'Rollen sind eine Gruppierung von Berechtigungen, die Benutzern zugewiesen werden können. Stellen Sie sicher, dass Sie zuerst Berechtigungen hinzufügen, bevor Sie Rollen erstellen.',
 };
 
-export default roles;
+export default Object.freeze(roles);

@@ -58,4 +58,4 @@ const general = {
   contact_us_action: 'Skontaktuj się z nami',
 };
 
-export default general;
+export default Object.freeze(general);

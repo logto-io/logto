@@ -53,4 +53,4 @@ const domain = {
     'Bu URI\'nin alan adını uygulamanızın uç noktasıyla eşleştirmek için özelleştirebilirsiniz. "{{custom}}" veya "{{default}}" seçeneklerinden birini seçin.',
 };
 
-export default domain;
+export default Object.freeze(domain);

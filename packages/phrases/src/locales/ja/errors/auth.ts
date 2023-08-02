@@ -9,4 +9,4 @@ const auth = {
   require_re_authentication: '保護されたアクションを実行するには再認証が必要です。',
 };
 
-export default auth;
+export default Object.freeze(auth);

@@ -3,4 +3,4 @@ const localization = {
   invalid_translation_structure: '유효하지 않은 데이터 스키마예요. 입력된 값을 다시 확인해 주세요.',
 };
 
-export default localization;
+export default Object.freeze(localization);

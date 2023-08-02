@@ -46,4 +46,4 @@ const applications = {
     'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
 };
 
-export default applications;
+export default Object.freeze(applications);

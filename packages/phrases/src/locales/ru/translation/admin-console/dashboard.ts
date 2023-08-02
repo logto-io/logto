@@ -21,4 +21,4 @@ const dashboard = {
     'Количество уникальных пользователей, обменивающих токены в вашем приложении за последние 30 дней',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

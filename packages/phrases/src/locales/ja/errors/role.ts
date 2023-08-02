@@ -8,4 +8,4 @@ const role = {
     'Logtoによって許可されていない内部ロールの更新または削除を試みている可能性があります。新しいロールを作成する場合は、「#internal：」で始まる別の名前を試してください。',
 };
 
-export default role;
+export default Object.freeze(role);

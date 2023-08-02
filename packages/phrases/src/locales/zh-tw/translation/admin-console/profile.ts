@@ -74,4 +74,4 @@ const profile = {
   unlink_reminder: '解綁後，用戶將無法使用該 <span></span> 賬號進行登錄。確定要解綁嗎？',
 };
 
-export default profile;
+export default Object.freeze(profile);

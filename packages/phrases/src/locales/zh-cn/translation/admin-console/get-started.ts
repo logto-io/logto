@@ -25,4 +25,4 @@ const get_started = {
   add_rbac_subtitle: '通过可扩展的角色授权控制你的资源，以适应各种用例。',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

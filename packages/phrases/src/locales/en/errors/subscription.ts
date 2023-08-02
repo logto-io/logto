@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'Unable to get subscription plan for tenant.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

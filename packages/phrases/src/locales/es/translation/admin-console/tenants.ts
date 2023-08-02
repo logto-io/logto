@@ -62,4 +62,4 @@ const tenants = {
   },
 };
 
-export default tenants;
+export default Object.freeze(tenants);

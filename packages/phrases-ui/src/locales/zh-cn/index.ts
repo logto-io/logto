@@ -1,4 +1,4 @@
-import { type LocalePhrase } from '../../types.js';
+import type { LocalePhrase } from '../../types.js';
 
 import action from './action.js';
 import demo_app from './demo-app.js';
@@ -7,7 +7,7 @@ import error from './error.js';
 import input from './input.js';
 import secondary from './secondary.js';
 
-const zhCN: LocalePhrase = Object.freeze({
+const zh_cn = {
   translation: {
     input,
     secondary,
@@ -16,6 +16,6 @@ const zhCN: LocalePhrase = Object.freeze({
     error,
     demo_app,
   },
-});
+} satisfies LocalePhrase;
 
-export default zhCN;
+export default Object.freeze(zh_cn);

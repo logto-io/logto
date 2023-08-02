@@ -52,4 +52,4 @@ const domain = {
     '이 URI의 도메인 이름을 애플리케이션 엔드포인트와 일치하도록 사용자 정의할 수 있습니다. "{{custom}}" 또는 "{{default}}" 중 하나를 선택하세요.',
 };
 
-export default domain;
+export default Object.freeze(domain);

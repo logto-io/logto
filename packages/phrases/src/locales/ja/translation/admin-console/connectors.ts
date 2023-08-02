@@ -89,4 +89,4 @@ const connectors = {
   standard_connectors: '標準コネクタ',
 };
 
-export default connectors;
+export default Object.freeze(connectors);

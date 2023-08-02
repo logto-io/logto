@@ -5,4 +5,4 @@ const session_expired = {
   button: 'Войти снова',
 };
 
-export default session_expired;
+export default Object.freeze(session_expired);

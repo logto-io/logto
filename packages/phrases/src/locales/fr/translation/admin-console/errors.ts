@@ -27,4 +27,4 @@ const errors = {
     'Le nombre doit être compris entre {{min}} et {{max}} (inclusivement).',
 };
 
-export default errors;
+export default Object.freeze(errors);

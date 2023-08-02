@@ -66,4 +66,4 @@ const subscription = {
   subscription_check_timeout: '구독 확인이 타임아웃되었습니다. 나중에 다시 확인해주세요.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

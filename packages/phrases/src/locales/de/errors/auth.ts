@@ -10,4 +10,4 @@ const auth = {
     'Zur Durchführung einer geschützten Aktion ist eine erneute Authentifizierung erforderlich.',
 };
 
-export default auth;
+export default Object.freeze(auth);

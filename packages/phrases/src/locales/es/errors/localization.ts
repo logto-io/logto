@@ -5,4 +5,4 @@ const localization = {
     'Estructuras de datos no válidas. Por favor, verifica tu entrada e intenta de nuevo.',
 };
 
-export default localization;
+export default Object.freeze(localization);

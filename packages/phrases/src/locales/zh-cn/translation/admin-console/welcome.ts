@@ -5,4 +5,4 @@ const welcome = {
   create_account: '创建帐号',
 };
 
-export default welcome;
+export default Object.freeze(welcome);

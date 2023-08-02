@@ -19,9 +19,9 @@ const connector = {
   social_auth_code_invalid: 'Erişim tokenı alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
   more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
   more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
-  db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
   more_than_one_connector_factory:
     'Birden fazla bağlayıcı fabrikası bulundu ({{connectorIds}} ID numarasıyla), gereksiz olanları kaldırabilirsiniz.',
+  db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',
   not_found_with_connector_id: 'Belirtilen standart bağlayıcı kimliğiyle bağlayıcı bulunamadı.',
   multiple_instances_not_supported:
     'Seçilen standart bağlayıcı ile birden fazla örnek oluşturulamaz.',
@@ -35,4 +35,4 @@ const connector = {
     "Bu bağlayıcının 'metadata'sı üzerine yazılamaz.",
 };
 
-export default connector;
+export default Object.freeze(connector);

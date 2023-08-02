@@ -15,4 +15,4 @@ const api_resources = {
   api_resource_created: '{{name}} API 리소스가 성공적으로 생성되었어요.',
 };
 
-export default api_resources;
+export default Object.freeze(api_resources);

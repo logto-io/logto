@@ -24,4 +24,4 @@ const errors = {
   number_should_be_between_inclusive: '数值必须在{{min}}和{{max}}之间（包括{{min}}和{{max}}）。',
 };
 
-export default errors;
+export default Object.freeze(errors);

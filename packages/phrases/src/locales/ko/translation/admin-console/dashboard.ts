@@ -16,4 +16,4 @@ const dashboard = {
   monthly_active_users_tip: '최근 30일 동안 앱을 통하여 Token을 가져간 사용자 수',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

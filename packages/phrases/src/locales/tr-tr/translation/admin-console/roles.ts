@@ -21,4 +21,4 @@ const roles = {
     'Roller, kullanıcılara atanabilecek izinlerin gruplandırmasıdır. Rolleri oluşturmadan önce izin eklediğinizden emin olun.',
 };
 
-export default roles;
+export default Object.freeze(roles);

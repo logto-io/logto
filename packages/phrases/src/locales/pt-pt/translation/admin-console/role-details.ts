@@ -47,4 +47,4 @@ const role_details = {
   },
 };
 
-export default role_details;
+export default Object.freeze(role_details);

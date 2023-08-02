@@ -27,4 +27,4 @@ const errors = {
     '{{min}}から{{max}}（両方含む）までの数値である必要があります。',
 };
 
-export default errors;
+export default Object.freeze(errors);

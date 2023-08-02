@@ -4,4 +4,4 @@ const swagger = {
     '지원되지 않는 Zod 종류예요. Route Guard 설정을 확인해 주세요.',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

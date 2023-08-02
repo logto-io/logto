@@ -75,4 +75,4 @@ const user_details = {
     'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

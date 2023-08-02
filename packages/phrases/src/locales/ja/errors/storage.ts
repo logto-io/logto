@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'ファイルのアップロードに失敗しました。',
 };
 
-export default storage;
+export default Object.freeze(storage);

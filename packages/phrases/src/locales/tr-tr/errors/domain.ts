@@ -7,4 +7,4 @@ const domain = {
   hostname_already_exists: 'Bu alan adı sunucumuzda zaten mevcut.',
 };
 
-export default domain;
+export default Object.freeze(domain);

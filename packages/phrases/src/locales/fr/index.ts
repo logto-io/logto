@@ -3,9 +3,9 @@ import type { LocalePhrase } from '../../types.js';
 import errors from './errors/index.js';
 import translation from './translation/index.js';
 
-const fr: LocalePhrase = Object.freeze({
+const fr = {
   translation,
   errors,
-});
+} satisfies LocalePhrase;
 
-export default fr;
+export default Object.freeze(fr);

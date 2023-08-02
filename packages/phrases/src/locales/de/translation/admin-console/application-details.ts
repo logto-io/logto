@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: 'Gib mindestens eine Umleitungs-URI an',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

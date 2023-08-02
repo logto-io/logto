@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'Fehler beim Abrufen des Abonnementplans für den Mandanten.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

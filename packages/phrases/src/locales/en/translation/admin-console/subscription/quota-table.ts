@@ -59,13 +59,11 @@ const quota_table = {
     '* Your monthly active users (MAU) are divided into 3 tiers based on how often they log in during the billing cycle. Each tier has a different price per MAU unit.',
   unlimited: 'Unlimited',
   contact: 'Contact',
-
   monthly_price: '${{value, number}}/mo',
-
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} day',
   days_other: '{{count, number}} days',
   add_on: 'Add-on',
 };
 
-export default quota_table;
+export default Object.freeze(quota_table);

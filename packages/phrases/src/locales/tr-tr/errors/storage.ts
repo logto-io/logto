@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'Dosya yüklenemedi.',
 };
 
-export default storage;
+export default Object.freeze(storage);

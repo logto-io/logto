@@ -10,4 +10,4 @@ const logs = {
   filter_by: 'Filtrer par',
 };
 
-export default logs;
+export default Object.freeze(logs);

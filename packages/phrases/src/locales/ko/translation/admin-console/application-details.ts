@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: '반드시 최소 하나의 Redirect URI를 입력해야 해요.',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

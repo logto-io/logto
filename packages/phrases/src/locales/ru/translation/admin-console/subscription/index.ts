@@ -67,4 +67,4 @@ const subscription = {
   subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

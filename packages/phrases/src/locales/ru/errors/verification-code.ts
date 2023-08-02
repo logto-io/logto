@@ -9,4 +9,4 @@ const verification_code = {
     'Превышено ограничение на количество попыток ввода кода верификации. Пожалуйста, запросите новый код верификации.',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

@@ -3,4 +3,4 @@ const request = {
   general: 'Es ist ein Fehler bei der Anfrage aufgetreten.',
 };
 
-export default request;
+export default Object.freeze(request);

@@ -49,4 +49,4 @@ const webhook_details = {
   },
 };
 
-export default webhook_details;
+export default Object.freeze(webhook_details);

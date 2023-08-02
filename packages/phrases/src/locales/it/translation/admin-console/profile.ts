@@ -80,4 +80,4 @@ const profile = {
     "Gli utenti non potranno più accedere tramite l'account <span></span> se lo scolleghi. Sicuro di procedere?",
 };
 
-export default profile;
+export default Object.freeze(profile);

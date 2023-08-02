@@ -34,4 +34,4 @@ const connector = {
     "This connector's 'metadata' cannot be overwritten.",
 };
 
-export default connector;
+export default Object.freeze(connector);

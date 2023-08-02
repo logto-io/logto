@@ -29,4 +29,4 @@ const get_started = {
     'Farklı kullanım durumları için ölçeklenebilir rol yetkilendirmesi ile kaynaklarınızı kontrol edin.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

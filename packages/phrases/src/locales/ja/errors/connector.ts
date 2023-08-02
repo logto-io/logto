@@ -34,4 +34,4 @@ const connector = {
     'このコネクタの「メタデータ」は上書きできません。',
 };
 
-export default connector;
+export default Object.freeze(connector);

@@ -20,4 +20,4 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '認証ファクタを1つ以上選択する必要があります。',
 };
 
-export default sign_in_experiences;
+export default Object.freeze(sign_in_experiences);

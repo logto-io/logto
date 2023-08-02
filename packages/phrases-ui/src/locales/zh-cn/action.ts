@@ -5,8 +5,8 @@ const action = {
   create_account_without_linking: '注册新的账号',
   create: '注册',
   enter_passcode: '输入验证码',
-  cancel: '取消',
   confirm: '确认',
+  cancel: '取消',
   save_password: '保存密码',
   bind: '绑定到 {{address}}',
   bind_and_continue: '绑定并继续',
@@ -26,4 +26,4 @@ const action = {
   show_password: '显示密码',
 };
 
-export default action;
+export default Object.freeze(action);

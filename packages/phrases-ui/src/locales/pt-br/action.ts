@@ -26,4 +26,4 @@ const action = {
   show_password: 'Mostrar senha',
 };
 
-export default action;
+export default Object.freeze(action);

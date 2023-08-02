@@ -3,4 +3,4 @@ const topbar = {
   help: '도움말',
 };
 
-export default topbar;
+export default Object.freeze(topbar);

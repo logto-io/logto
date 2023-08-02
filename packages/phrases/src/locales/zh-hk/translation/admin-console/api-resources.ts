@@ -9,10 +9,10 @@ const api_resources = {
   api_identifier_placeholder: 'https://your-api-identifier/',
   api_identifier_tip:
     '對於 API 資源的唯一標識符。它必須是一個絕對 URI 並沒有 fragment (#) 組件。等價於 OAuth 2.0 中的 <a>resource parameter</a>。',
-  api_resource_created: ' API 資源 {{name}} 已成功創建。',
   default_api: '預設的 API',
   default_api_label:
     '一个租户只能设置零或一个默认 API。当指定默认 API 时，可以在身份验证请求中省略资源参数，还可以使用该 API 作为默认受众方进行令牌交换，从而发放 JWT。<a>了解更多</a>',
+  api_resource_created: ' API 資源 {{name}} 已成功創建。',
 };
 
-export default api_resources;
+export default Object.freeze(api_resources);

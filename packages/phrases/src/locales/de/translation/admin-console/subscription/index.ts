@@ -67,4 +67,4 @@ const subscription = {
   subscription_check_timeout: 'Abo-Überprüfung ist abgelaufen. Bitte später aktualisieren.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

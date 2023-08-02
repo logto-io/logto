@@ -5,4 +5,4 @@ const localization = {
     'Esquemas de dados inválidos. Verifique sua entrada e tente novamente.',
 };
 
-export default localization;
+export default Object.freeze(localization);

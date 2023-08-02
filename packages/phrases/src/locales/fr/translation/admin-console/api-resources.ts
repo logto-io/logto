@@ -15,4 +15,4 @@ const api_resources = {
   api_resource_created: 'La ressource API {{name}} a été créée avec succès.',
 };
 
-export default api_resources;
+export default Object.freeze(api_resources);

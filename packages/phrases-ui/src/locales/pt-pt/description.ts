@@ -59,4 +59,4 @@ const description = {
   verify_phone: 'Verifique o seu número de telefone',
 };
 
-export default description;
+export default Object.freeze(description);

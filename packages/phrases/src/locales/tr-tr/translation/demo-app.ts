@@ -10,4 +10,4 @@ const demo_app = {
   add_social_connector: 'Sosyal Bağlantı Ekle',
 };
 
-export default demo_app;
+export default Object.freeze(demo_app);

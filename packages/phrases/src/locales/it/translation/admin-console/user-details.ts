@@ -77,4 +77,4 @@ const user_details = {
     "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
 };
 
-export default user_details;
+export default Object.freeze(user_details);

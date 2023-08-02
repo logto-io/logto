@@ -4,4 +4,4 @@ const swagger = {
     'Nieobsługiwany typ Zod dla parametrów. Sprawdź konfigurację straży routy.',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

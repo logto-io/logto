@@ -44,7 +44,7 @@ const domain = {
   default: {
     default_domain: 'Default domain',
     default_domain_description:
-      'Logto offers a pre-configured default domain, ready to use without any additional setup. This default domain serves as a backup option even if you enabled a custom domain.', // UNTRANSLATED
+      'Logto offers a pre-configured default domain, ready to use without any additional setup. This default domain serves as a backup option even if you enabled a custom domain.',
     default_domain_field: 'Logto default domain',
   },
   custom_endpoint_note:
@@ -53,4 +53,4 @@ const domain = {
     'You can customize the domain name of this URI to match your application’s endpoint. Choose either "{{custom}}" or "{{default}}".',
 };
 
-export default domain;
+export default Object.freeze(domain);

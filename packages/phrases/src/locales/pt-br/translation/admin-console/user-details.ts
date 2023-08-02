@@ -75,4 +75,4 @@ const user_details = {
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

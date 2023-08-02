@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: 'Не удалось получить план подписки для арендатора.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

@@ -51,6 +51,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       'Digite seu CSS personalizado para personalizar os estilos de qualquer coisa de acordo com suas especificações exatas. Expresse sua criatividade e faça sua IU se destacar.',
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       'Nenhum conector SMS configurado ainda. Até terminar de configurar seu conector SMS, seus usuários não poderão fazer login. <a>{{link}}</a> em "Conectores"',
@@ -81,8 +83,6 @@ const sign_in_exp = {
     desktop: 'Área de trabalho',
     mobile: 'Móvel',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

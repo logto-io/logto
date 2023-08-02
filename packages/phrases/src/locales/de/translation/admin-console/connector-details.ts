@@ -5,9 +5,9 @@ const connector_details = {
   settings: 'Allgemeine Einstellungen',
   settings_description:
     'Connectoren spielen eine wichtige Rolle in Logto. Mit ihrer Hilfe ermöglicht Logto Endbenutzern eine passwortlose Registrierung oder Anmeldung sowie die Möglichkeit, sich mit Social Accounts anzumelden.',
-  save_error_empty_config: 'Bitte fülle die Konfiguration aus',
   parameter_configuration: 'Parameter-Konfiguration',
   test_connection: 'Testen',
+  save_error_empty_config: 'Bitte fülle die Konfiguration aus',
   send: 'Senden',
   send_error_invalid_format: 'Ungültige Eingabe',
   edit_config_label: 'Gib deine JSON-Konfiguration ein',
@@ -56,4 +56,4 @@ const connector_details = {
   },
 };
 
-export default connector_details;
+export default Object.freeze(connector_details);

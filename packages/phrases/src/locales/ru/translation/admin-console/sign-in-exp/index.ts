@@ -86,4 +86,4 @@ const sign_in_exp = {
   },
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

@@ -15,4 +15,4 @@ const log_details = {
   raw_data: 'Rohe Daten',
 };
 
-export default log_details;
+export default Object.freeze(log_details);

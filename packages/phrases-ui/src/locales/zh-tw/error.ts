@@ -9,8 +9,8 @@ const error = {
   invalid_email: '無效的郵箱',
   invalid_phone: '無效的手機號',
   password_min_length: '密碼最少需要 {{min}} 個字符',
-  passwords_do_not_match: '兩次輸入的密碼不一致，請重試。',
   invalid_password: '密碼至少需要 {{min}} 個字符，並包含字母、數字和符號的組合。',
+  passwords_do_not_match: '兩次輸入的密碼不一致，請重試。',
   invalid_passcode: '無效的驗證碼',
   invalid_connector_auth: '登錄失敗',
   invalid_connector_request: '無效的登錄請求',
@@ -19,4 +19,4 @@ const error = {
   timeout: '請求超時，請稍後重試。',
 };
 
-export default error;
+export default Object.freeze(error);

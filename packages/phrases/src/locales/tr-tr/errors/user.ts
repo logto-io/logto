@@ -30,4 +30,4 @@ const user = {
   role_exists: '{{roleId}} rol kimliği bu kullanıcıya zaten eklenmiştir.',
 };
 
-export default user;
+export default Object.freeze(user);

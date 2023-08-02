@@ -51,4 +51,4 @@ const applications = {
     'O Logto usa uma entidade de aplicativo para OIDC para ajudar nas tarefas, como identificar seus aplicativos, gerenciar o login e criar logs de auditoria.',
 };
 
-export default applications;
+export default Object.freeze(applications);

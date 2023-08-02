@@ -2,4 +2,4 @@ const log = {
   invalid_type: 'Typ dziennika jest nieprawidłowy.',
 };
 
-export default log;
+export default Object.freeze(log);

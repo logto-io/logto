@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: '임차인에 대한 구독 플랜을 가져올 수 없습니다.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

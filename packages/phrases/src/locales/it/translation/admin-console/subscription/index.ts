@@ -69,4 +69,4 @@ const subscription = {
     "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
 };
 
-export default subscription;
+export default Object.freeze(subscription);

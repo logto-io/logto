@@ -3,4 +3,4 @@ const scope = {
   name_with_space: '作用域名稱不能包含任何空格。',
 };
 
-export default scope;
+export default Object.freeze(scope);

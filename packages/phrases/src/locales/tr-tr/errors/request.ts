@@ -3,4 +3,4 @@ const request = {
   general: 'İstek hatası oluştu.',
 };
 
-export default request;
+export default Object.freeze(request);

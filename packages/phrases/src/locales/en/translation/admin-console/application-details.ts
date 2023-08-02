@@ -58,4 +58,4 @@ const application_details = {
   redirect_uri_required: 'You must enter at least one redirect URI',
 };
 
-export default application_details;
+export default Object.freeze(application_details);

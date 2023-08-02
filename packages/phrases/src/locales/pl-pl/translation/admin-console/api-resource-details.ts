@@ -31,4 +31,4 @@ const api_resource_details = {
   },
 };
 
-export default api_resource_details;
+export default Object.freeze(api_resource_details);

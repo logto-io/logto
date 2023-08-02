@@ -9,4 +9,4 @@ const verification_code = {
     '検証コードのリトライ上限を超えました。新しい検証コードをリクエストしてください。',
 };
 
-export default verification_code;
+export default Object.freeze(verification_code);

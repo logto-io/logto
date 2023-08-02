@@ -15,4 +15,4 @@ const api_resources = {
   api_resource_created: 'APIリソース{{name}}が正常に作成されました',
 };
 
-export default api_resources;
+export default Object.freeze(api_resources);

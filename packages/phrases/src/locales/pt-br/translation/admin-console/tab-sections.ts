@@ -8,4 +8,4 @@ const tab_sections = {
   automation: 'Automação',
 };
 
-export default tab_sections;
+export default Object.freeze(tab_sections);

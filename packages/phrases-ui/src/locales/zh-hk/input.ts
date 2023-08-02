@@ -7,4 +7,4 @@ const input = {
   search_region_code: '搜索區域碼',
 };
 
-export default input;
+export default Object.freeze(input);

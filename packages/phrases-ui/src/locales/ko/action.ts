@@ -26,4 +26,4 @@ const action = {
   show_password: '비밀번호 보기',
 };
 
-export default action;
+export default Object.freeze(action);

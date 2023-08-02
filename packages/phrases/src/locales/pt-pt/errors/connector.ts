@@ -37,4 +37,4 @@ const connector = {
     'Os metadados deste conector não podem ser sobrescritos.',
 };
 
-export default connector;
+export default Object.freeze(connector);

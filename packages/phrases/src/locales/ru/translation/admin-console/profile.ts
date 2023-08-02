@@ -81,4 +81,4 @@ const profile = {
     'Пользователи не смогут войти в аккаунт с помощью <span></span> , если вы его отсоедините. Вы уверены, что хотите продолжить?',
 };
 
-export default profile;
+export default Object.freeze(profile);

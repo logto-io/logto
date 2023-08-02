@@ -53,4 +53,4 @@ const domain = {
     'Puede personalizar el nombre de dominio de esta URI para que coincida con el punto final de su aplicación. Elija "{{custom}}" o "{{default}}".',
 };
 
-export default domain;
+export default Object.freeze(domain);

@@ -20,4 +20,4 @@ const error = {
   timeout: 'Timeout della richiesta. Si prega di riprovare più tardi.',
 };
 
-export default error;
+export default Object.freeze(error);

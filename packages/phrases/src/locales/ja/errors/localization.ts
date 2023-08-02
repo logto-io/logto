@@ -5,4 +5,4 @@ const localization = {
     'データスキーマが無効です。入力を確認して、もう一度お試しください。',
 };
 
-export default localization;
+export default Object.freeze(localization);

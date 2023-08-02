@@ -9,4 +9,4 @@ const logs = {
   filter_by: '过滤',
 };
 
-export default logs;
+export default Object.freeze(logs);

@@ -13,4 +13,4 @@ const sign_in_experiences = {
   at_least_one_authentication_factor: '至少要揀一個登錄要素',
 };
 
-export default sign_in_experiences;
+export default Object.freeze(sign_in_experiences);

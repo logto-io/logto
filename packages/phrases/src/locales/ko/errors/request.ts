@@ -3,4 +3,4 @@ const request = {
   general: '요청 중에 오류가 발생했어요.',
 };
 
-export default request;
+export default Object.freeze(request);

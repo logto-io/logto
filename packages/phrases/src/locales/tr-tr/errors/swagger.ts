@@ -5,4 +5,4 @@ const swagger = {
     'Parametreler için desteklenmeyen Zod tipi. Lütfen yönlendirici koruma yapılandırmasını kontrol ediniz.',
 };
 
-export default swagger;
+export default Object.freeze(swagger);

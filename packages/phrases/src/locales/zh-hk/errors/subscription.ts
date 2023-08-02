@@ -3,4 +3,4 @@ const subscription = {
   get_plan_failed: '無法取得租戶的訂閱計劃。',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

@@ -29,8 +29,8 @@ const others = {
     custom_values: 'Özel değerler',
     clear_all_tip: 'Tüm değerleri temizle',
     unsaved_description: 'Sayfadan kaydedilmeyen değişiklikler kaybolabilir.',
-    deletion_title: 'Eklenen dili silmek istediğinizden emin misiniz?',
     deletion_tip: 'Dili sil',
+    deletion_title: 'Eklenen dili silmek istediğinizden emin misiniz?',
     deletion_description: 'Silmeden sonra, kullanıcılar artık o dille tarama yapamazlar.',
     default_language_deletion_title: 'Varsayılan dil silinemez.',
     default_language_deletion_description:
@@ -44,4 +44,4 @@ const others = {
   },
 };
 
-export default others;
+export default Object.freeze(others);

@@ -28,7 +28,6 @@ const subscription = {
   current: '当前',
   upgrade: '升级',
   quota_table,
-  quota_item,
   billing_history: {
     invoice_column: '发票',
     status_column: '状态',
@@ -41,6 +40,7 @@ const subscription = {
       uncollectible: '逾期未付',
     },
   },
+  quota_item,
   downgrade_modal: {
     title: '确认要降级吗？',
     description:
@@ -65,4 +65,4 @@ const subscription = {
   subscription_check_timeout: '订阅检查超时，请稍后刷新。',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

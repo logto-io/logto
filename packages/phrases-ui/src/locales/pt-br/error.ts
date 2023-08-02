@@ -9,9 +9,9 @@ const error = {
   invalid_email: 'O e-mail é inválido',
   invalid_phone: 'O número de telefone é inválido',
   password_min_length: 'A senha requer um mínimo de {{min}} caracteres',
-  passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
   invalid_password:
     'A senha requer um mínimo de {{min}} caracteres e contém uma mistura de letras, números e símbolos.',
+  passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
   invalid_passcode: 'O código de verificação é inválido',
   invalid_connector_auth: 'A autorização é inválida',
   invalid_connector_request: 'Os dados do conector são inválidos',
@@ -20,4 +20,4 @@ const error = {
   timeout: 'Tempo limite excedido. Por favor, tente novamente mais tarde.',
 };
 
-export default error;
+export default Object.freeze(error);

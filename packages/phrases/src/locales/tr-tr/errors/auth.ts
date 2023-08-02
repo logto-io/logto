@@ -9,4 +9,4 @@ const auth = {
     'Korumalı bir işlem gerçekleştirmek için yeniden doğrulama gereklidir.',
 };
 
-export default auth;
+export default Object.freeze(auth);

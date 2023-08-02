@@ -75,4 +75,4 @@ const user_details = {
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

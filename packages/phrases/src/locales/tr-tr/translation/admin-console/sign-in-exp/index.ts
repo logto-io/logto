@@ -51,6 +51,8 @@ const sign_in_exp = {
     css_code_editor_content_placeholder:
       "Tam olarak istediğiniz gibi o herhangi bir şeyin stilini kişiselleştirmek için özel CSS'nizi girin. Yaratıcılığınızı ifade edin ve UI'ınızın dikkat çekmesini sağlayın.",
   },
+  sign_up_and_sign_in,
+  others,
   setup_warning: {
     no_connector_sms:
       'Henüz SMS konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
@@ -81,8 +83,6 @@ const sign_in_exp = {
     desktop: 'Masaüstü',
     mobile: 'Mobil',
   },
-  others,
-  sign_up_and_sign_in,
 };
 
-export default sign_in_exp;
+export default Object.freeze(sign_in_exp);

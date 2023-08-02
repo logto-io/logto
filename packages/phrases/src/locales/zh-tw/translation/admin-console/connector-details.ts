@@ -52,4 +52,4 @@ const connector_details = {
   },
 };
 
-export default connector_details;
+export default Object.freeze(connector_details);

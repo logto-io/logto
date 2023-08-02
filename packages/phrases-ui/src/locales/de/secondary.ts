@@ -3,4 +3,4 @@ const secondary = {
     'Besitzt du schon ein Konto? Melde dich an, um {{methods, list(type: disjunction;)}} mit deiner Identität zu verbinden.',
 };
 
-export default secondary;
+export default Object.freeze(secondary);

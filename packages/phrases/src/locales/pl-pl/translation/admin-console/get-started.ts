@@ -31,4 +31,4 @@ const get_started = {
     'Kontroluj swoje zasoby poprzez skalowalną autoryzację ról dla różnorodnych przypadków użycia.',
 };
 
-export default get_started;
+export default Object.freeze(get_started);

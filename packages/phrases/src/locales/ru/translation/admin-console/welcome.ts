@@ -5,4 +5,4 @@ const welcome = {
   create_account: 'Создать учетную запись',
 };
 
-export default welcome;
+export default Object.freeze(welcome);

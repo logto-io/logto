@@ -53,4 +53,4 @@ const domain = {
     'Pode personalizar o nome de domínio deste URI para corresponder ao endpoint da sua aplicação. Escolha "{{custom}}" ou "{{default}}".',
 };
 
-export default domain;
+export default Object.freeze(domain);

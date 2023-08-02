@@ -3,4 +3,4 @@ const scope = {
   name_with_space: '범위 이름에 공백을 포함할 수 없어요.',
 };
 
-export default scope;
+export default Object.freeze(scope);

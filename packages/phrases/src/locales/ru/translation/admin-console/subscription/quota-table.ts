@@ -59,13 +59,11 @@ const quota_table = {
     '* Ваши активные пользователи в месяц (MAU) разделены на 3 уровня в зависимости от того, как часто они входят в систему в течение биллингового периода. Каждый уровень имеет свою стоимость за единицу MAU.',
   unlimited: 'Неограниченно',
   contact: 'Связаться',
-
   monthly_price: '${{value, number}}/мес.',
-
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} день',
   days_other: '{{count, number}} дней',
   add_on: 'Дополнительно',
 };
 
-export default quota_table;
+export default Object.freeze(quota_table);

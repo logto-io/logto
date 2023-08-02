@@ -21,4 +21,4 @@ const error = {
   timeout: 'Tiempo de espera de solicitud agotado. Por favor intente de nuevo más tarde.',
 };
 
-export default error;
+export default Object.freeze(error);

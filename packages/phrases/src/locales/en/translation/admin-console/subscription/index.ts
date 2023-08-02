@@ -67,4 +67,4 @@ const subscription = {
   subscription_check_timeout: 'Subscription check timed out. Please refresh later.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

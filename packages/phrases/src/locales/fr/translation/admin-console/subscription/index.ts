@@ -70,4 +70,4 @@ const subscription = {
     "La vérification d'abonnement a expiré. Veuillez actualiser ultérieurement.",
 };
 
-export default subscription;
+export default Object.freeze(subscription);

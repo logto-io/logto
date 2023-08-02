@@ -21,4 +21,4 @@ const error = {
   timeout: 'Tempo limite de sessão. Volte e faça login novamente.',
 };
 
-export default error;
+export default Object.freeze(error);

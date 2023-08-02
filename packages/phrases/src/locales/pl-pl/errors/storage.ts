@@ -4,4 +4,4 @@ const storage = {
   upload_error: 'Nie udało się przesłać pliku do dostawcy magazynu.',
 };
 
-export default storage;
+export default Object.freeze(storage);

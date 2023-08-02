@@ -30,4 +30,4 @@ const user = {
   role_exists: "L'ID ruolo {{roleId}} è già stato aggiunto a questo utente",
 };
 
-export default user;
+export default Object.freeze(user);

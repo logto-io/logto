@@ -26,4 +26,4 @@ const action = {
   show_password: 'パスワードを表示する',
 };
 
-export default action;
+export default Object.freeze(action);

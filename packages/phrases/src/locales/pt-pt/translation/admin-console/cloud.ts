@@ -41,7 +41,6 @@ const cloud = {
       others: 'Outros',
     },
   },
-
   sie: {
     page_title: 'Personalize a experiência de login',
     title: 'Vamos personalizar a sua experiência de login com facilidade',
@@ -88,4 +87,4 @@ const cloud = {
   },
 };
 
-export default cloud;
+export default Object.freeze(cloud);

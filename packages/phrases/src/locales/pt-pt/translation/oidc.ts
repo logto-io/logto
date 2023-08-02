@@ -1,5 +1,5 @@
 const oidc = {
-  logout_success: 'Sessão terminada com sucesso.', // TRANSLATED
+  logout_success: 'Sessão terminada com sucesso.',
 };
 
-export default oidc;
+export default Object.freeze(oidc);

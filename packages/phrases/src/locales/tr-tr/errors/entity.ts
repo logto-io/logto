@@ -6,4 +6,4 @@ const entity = {
   not_found: 'Kaynak mevcut değil.',
 };
 
-export default entity;
+export default Object.freeze(entity);

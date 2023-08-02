@@ -46,4 +46,4 @@ const others = {
   },
 };
 
-export default others;
+export default Object.freeze(others);

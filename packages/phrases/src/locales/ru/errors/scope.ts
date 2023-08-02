@@ -3,4 +3,4 @@ const scope = {
   name_with_space: 'Имя области не может содержать пробелы.',
 };
 
-export default scope;
+export default Object.freeze(scope);

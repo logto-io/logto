@@ -69,4 +69,4 @@ const subscription = {
     'サブスクリプションのチェックがタイムアウトしました。後でもう一度更新してください。',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

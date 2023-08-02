@@ -16,4 +16,4 @@ const dashboard = {
   monthly_active_users_tip: '最近 30 日在你的应用上交换过 token 的独立用户数',
 };
 
-export default dashboard;
+export default Object.freeze(dashboard);

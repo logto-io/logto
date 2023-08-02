@@ -15,4 +15,4 @@ const log_details = {
   raw_data: 'Datos sin procesar',
 };
 
-export default log_details;
+export default Object.freeze(log_details);

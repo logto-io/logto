@@ -31,4 +31,4 @@ const connector = {
   cannot_overwrite_metadata_for_non_standard_connector: '이 연동의 메타데이터를 덮어쓸 수 없어요.',
 };
 
-export default connector;
+export default Object.freeze(connector);

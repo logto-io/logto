@@ -30,4 +30,4 @@ const user = {
   role_exists: 'このユーザーには既に役割ID {{roleId}}が追加されています。',
 };
 
-export default user;
+export default Object.freeze(user);

@@ -15,4 +15,4 @@ const log_details = {
   raw_data: 'Surowe dane',
 };
 
-export default log_details;
+export default Object.freeze(log_details);

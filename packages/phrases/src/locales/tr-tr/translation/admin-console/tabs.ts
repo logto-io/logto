@@ -13,4 +13,4 @@ const tabs = {
   tenant_settings: 'Ayarlar',
 };
 
-export default tabs;
+export default Object.freeze(tabs);

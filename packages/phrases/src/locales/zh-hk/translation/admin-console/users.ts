@@ -23,4 +23,4 @@ const users = {
     '每個用戶都有一個包含所有用戶信息的個人資料。它由基本數據、社交身份和自定義數據組成。',
 };
 
-export default users;
+export default Object.freeze(users);

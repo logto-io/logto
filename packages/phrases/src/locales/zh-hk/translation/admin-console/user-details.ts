@@ -71,4 +71,4 @@ const user_details = {
     '用戶需要至少擁有一個登錄標識（用戶名、電子郵件、電話號碼或社交帳號）才能登錄。確定要繼續嗎？',
 };
 
-export default user_details;
+export default Object.freeze(user_details);

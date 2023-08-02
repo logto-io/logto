@@ -71,4 +71,4 @@ const subscription = {
     'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
 };
 
-export default subscription;
+export default Object.freeze(subscription);

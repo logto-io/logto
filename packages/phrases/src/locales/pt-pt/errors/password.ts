@@ -3,4 +3,4 @@ const password = {
   pepper_not_found: 'pepper da Password não encontrada. Por favor, verifique os envs.',
 };
 
-export default password;
+export default Object.freeze(password);

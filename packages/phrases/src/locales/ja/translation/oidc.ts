@@ -2,4 +2,4 @@ const oidc = {
   logout_success: '正常にログアウトしました。',
 };
 
-export default oidc;
+export default Object.freeze(oidc);

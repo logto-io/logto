@@ -25,4 +25,4 @@ const users = {
     'Her kullanıcının temel verileri, sosyal kimlikleri ve özel verilerini içeren bir profil vardır.',
 };
 
-export default users;
+export default Object.freeze(users);
