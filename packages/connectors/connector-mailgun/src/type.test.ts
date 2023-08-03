@@ -48,7 +48,7 @@ describe('Mailgun config guard', () => {
     expect(() => mailgunConfigGuard.parse(validConfig)).not.toThrow();
   });
 
-  it('should fail with invalid config', () => {
+  it('should fail with invalid delivery config', () => {
     const invalidConfig = {
       domain: 'example.com',
       apiKey: 'key',
@@ -60,6 +60,23 @@ describe('Mailgun config guard', () => {
         },
       },
     };
+    expect(() => mailgunConfigGuard.parse(invalidConfig)).toThrow();
+  });
+
+  it('should fail with invalid endpoint', () => {
+    const invalidConfig = {
+      endpoint: 'https://api.mailgun1.net',
+      domain: 'example.com',
+      apiKey: 'key',
+      from: 'from',
+      deliveries: {
+        [VerificationCodeType.ForgotPassword]: {
+          html: 'html',
+          subject: 'subject',
+        },
+      },
+    };
+
     expect(() => mailgunConfigGuard.parse(invalidConfig)).toThrow();
   });
 });

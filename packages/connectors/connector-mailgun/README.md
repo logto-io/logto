@@ -21,6 +21,7 @@ The official Logto connector for Mailgun email service.
 
 ## Basic configuration
 
+- Fill out the `endpoint` field when you are using a different Mailgun API endpoint, for example, EU region should be `https://api.eu.mailgun.net`. The default value is `https://api.mailgun.net`.
 - Fill out the `domain` field with the domain you have registered in your Mailgun account. This value can be found in the **Domains** section of the Mailgun dashboard. The domain should be in the format `example.com`, without the `https://` or `http://` prefix.
 - Fill out the `apiKey` field with the API key you have generated in your Mailgun account.
 - Fill out the `from` field with the email address you want to send emails from. This email address must be registered in your Mailgun account. The email address should be in the format `Sender Name <sender@example.com>`.
