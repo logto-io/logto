@@ -43,7 +43,7 @@ type Props = {
 };
 
 function Guide({ connector, onClose }: Props) {
-  const { createConnector } = useConnectorApi({ hideErrorToast: true });
+  const { createConnector } = useConnectorApi();
   const { navigate } = useTenantPathname();
   const callbackConnectorId = useRef(generateStandardId());
   const [conflictConnectorName, setConflictConnectorName] = useState<Record<string, string>>();
