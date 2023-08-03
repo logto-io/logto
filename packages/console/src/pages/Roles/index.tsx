@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import Plus from '@/assets/icons/plus.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
+import HoverableTextWrapper from '@/components/HoverableTextWrapper';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
@@ -85,7 +86,7 @@ function Roles() {
             title: t('roles.role_description'),
             dataIndex: 'description',
             colSpan: 6,
-            render: ({ description }) => <div className={styles.description}>{description}</div>,
+            render: ({ description }) => <HoverableTextWrapper>{description}</HoverableTextWrapper>,
           },
           {
             title: <span>{t('roles.assigned_users')}</span>,

@@ -7,6 +7,8 @@ import Delete from '@/assets/icons/delete.svg';
 import Plus from '@/assets/icons/plus.svg';
 import PermissionsEmptyDark from '@/assets/images/permissions-empty-dark.svg';
 import PermissionsEmpty from '@/assets/images/permissions-empty.svg';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import HoverableTextWrapper from '@/components/HoverableTextWrapper';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -19,8 +21,6 @@ import type { Column } from '@/ds-components/Table/types';
 import TextLink from '@/ds-components/TextLink';
 import { Tooltip } from '@/ds-components/Tip';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-
-import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 
 import * as styles from './index.module.scss';
 
@@ -75,7 +75,7 @@ function PermissionsTable({
     title: t('permissions.description_column'),
     dataIndex: 'description',
     colSpan: isApiColumnVisible ? 5 : 9,
-    render: ({ description }) => <div className={styles.description}>{description}</div>,
+    render: ({ description }) => <HoverableTextWrapper>{description}</HoverableTextWrapper>,
   };
 
   const apiColumn: Column<ScopeResponse> = {

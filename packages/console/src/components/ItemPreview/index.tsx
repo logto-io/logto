@@ -1,9 +1,12 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import type { To } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
+import { Tooltip } from '@/ds-components/Tip';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import useTextOverflow from '@/hooks/use-text-overflow';
 
 import * as styles from './index.module.scss';
 
@@ -19,6 +22,10 @@ type Props = {
 
 function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTarget }: Props) {
   const { getTo } = useTenantPathname();
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const { isTextOverflow: isLinkOverflow } = useTextOverflow(linkRef);
+  const { isTextOverflow } = useTextOverflow(linkRef);
 
   return (
     <div className={classNames(styles.item, styles[size])}>
@@ -26,18 +33,33 @@ function ItemPreview({ title, subtitle, icon, to, size = 'default', suffix, toTa
       <div className={styles.content}>
         <div className={styles.meta}>
           {to && (
-            <Link
-              className={styles.title}
-              to={getTo(to)}
-              target={toTarget}
-              onClick={(event) => {
-                event.stopPropagation();
-              }}
+            <Tooltip
+              content={conditional(isLinkOverflow && title)}
+              anchorClassName={styles.tooltipAnchor}
             >
-              {title}
-            </Link>
+              <Link
+                ref={linkRef}
+                className={styles.title}
+                to={getTo(to)}
+                target={toTarget}
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+              >
+                {title}
+              </Link>
+            </Tooltip>
           )}
-          {!to && <div className={styles.title}>{title}</div>}
+          {!to && (
+            <Tooltip
+              content={conditional(isTextOverflow && title)}
+              anchorClassName={styles.tooltipAnchor}
+            >
+              <div ref={titleRef} className={styles.title}>
+                {title}
+              </div>
+            </Tooltip>
+          )}
           {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
         </div>
         {suffix}

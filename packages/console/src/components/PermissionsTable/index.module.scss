@@ -29,10 +29,6 @@
     @include _.text-ellipsis;
   }
 
-  .description {
-    @include _.text-ellipsis;
-  }
-
   .link {
     display: block;
     @include _.text-ellipsis;

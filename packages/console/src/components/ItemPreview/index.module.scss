@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
+  overflow: hidden;
 
   > div:not(:first-child) {
     margin-left: _.unit(3);
@@ -14,8 +15,6 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    // Note: add an offset to visually center the element.
-    margin-top: _.unit(-1);
 
     > div:not(:last-child) {
       margin-right: _.unit(2);
@@ -23,6 +22,10 @@
 
     .meta {
       overflow: hidden;
+
+      .tooltipAnchor {
+        max-width: 100%;
+      }
 
       .title {
         display: block;

@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.tooltipAnchor {
+  max-width: 100%;
+}
+
+.text {
+  @include _.text-ellipsis;
+}
