@@ -34,7 +34,7 @@ function PlanUsage({ subscriptionUsage, currentSubscription, currentPlan }: Prop
           mauLimit.toLocaleString()
         )}
         {' MAU'}
-        {usagePercent && `(${(usagePercent * 100).toFixed(2)}%)`}
+        {usagePercent && ` (${(usagePercent * 100).toFixed(2)}%)`}
       </div>
       <div className={styles.planCycle}>
         <DynamicT
