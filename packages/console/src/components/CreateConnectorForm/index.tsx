@@ -11,6 +11,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import type { RequestError } from '@/hooks/use-api';
+import useConnectorFactories from '@/hooks/use-connector-factories';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -35,10 +36,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
     ConnectorResponse[],
     RequestError
   >('api/connectors');
-  const { data: factories, error: factoriesError } = useSWR<
-    ConnectorFactoryResponse[],
-    RequestError
-  >('api/connector-factories');
+  const { data: factories, error: factoriesError } = useConnectorFactories();
   const isLoading = !factories && !existingConnectors && !connectorsError && !factoriesError;
   const [activeGroupId, setActiveGroupId] = useState<string>();
   const [activeFactoryId, setActiveFactoryId] = useState<string>();

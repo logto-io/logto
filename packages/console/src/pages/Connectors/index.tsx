@@ -1,12 +1,10 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
-import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
 import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
@@ -18,8 +16,8 @@ import { ConnectorsTabs } from '@/consts/page-tabs';
 import Button from '@/ds-components/Button';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
-import type { RequestError } from '@/hooks/use-api';
 import useConnectorApi from '@/hooks/use-connector-api';
+import useConnectorFactories from '@/hooks/use-connector-factories';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -68,10 +66,7 @@ function Connectors() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { createConnector } = useConnectorApi();
   const { data, error, mutate } = useConnectorGroups();
-  const { data: factories, error: factoriesError } = useSWR<
-    ConnectorFactoryResponse[],
-    RequestError
-  >('api/connector-factories');
+  const { data: factories, error: factoriesError } = useConnectorFactories();
 
   const isLoading = !data && !factories && !error && !factoriesError;
 

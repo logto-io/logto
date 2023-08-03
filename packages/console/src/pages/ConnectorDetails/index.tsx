@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
@@ -59,7 +60,7 @@ function ConnectorDetails() {
     data: connectorFactory,
     error: fetchConnectorFactoryError,
     mutate: mutateConnectorFactory,
-  } = useSWR<ConnectorFactoryResponse, RequestError>(
+  } = useSWRImmutable<ConnectorFactoryResponse, RequestError>(
     data?.isStandard && `api/connector-factories/${data.connectorId}`
   );
 

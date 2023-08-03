@@ -1,6 +1,6 @@
 import type { ConnectorFactoryResponse } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorTitlePlaceHolder } from '@/consts/connectors';
@@ -21,7 +21,7 @@ function ConnectorTypeColumn({ connectorGroup: { type, connectors } }: Props) {
 
   const firstStandardConnector = standardConnectors[0];
 
-  const { data: connectorFactory } = useSWR<ConnectorFactoryResponse>(
+  const { data: connectorFactory } = useSWRImmutable<ConnectorFactoryResponse>(
     firstStandardConnector && `api/connector-factories/${firstStandardConnector.connectorId}`
   );
 
