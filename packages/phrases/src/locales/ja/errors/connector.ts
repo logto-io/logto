@@ -10,7 +10,7 @@ const connector = {
   invalid_config: 'コネクタの設定が無効です。',
   invalid_response: 'コネクタのレスポンスが無効です。',
   template_not_found: 'コネクタ構成から正しいテンプレートを見つけることができませんでした。',
-  template_not_supported: 'The connector does not support this template type.', // UNTRANSLATED
+  template_not_supported: 'コネクタはこのテンプレートタイプをサポートしていません。',
   rate_limit_exceeded: 'トリガーレート制限。後でもう一度お試しください。',
   not_implemented: '{{method}}：まだ実装されていません。',
   social_invalid_access_token: 'コネクタのアクセストークンが無効です。',

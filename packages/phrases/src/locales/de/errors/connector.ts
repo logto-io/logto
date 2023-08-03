@@ -12,7 +12,7 @@ const connector = {
   invalid_response: 'Die Antwort des Connectors ist ungültig.',
   template_not_found:
     'Die richtige Vorlage in der Connector-Konfiguration konnte nicht gefunden werden.',
-  template_not_supported: 'The connector does not support this template type.', // UNTRANSLATED
+  template_not_supported: 'Der Connector unterstützt diesen Vorlagentyp nicht.',
   rate_limit_exceeded: 'Auslöser-Rate-Limit. Bitte versuchen Sie es später erneut.',
   not_implemented: '{{method}}: wurde noch nicht implementiert.',
   social_invalid_access_token: 'Der Access Token des Connectors ist ungültig.',
