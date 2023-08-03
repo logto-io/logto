@@ -237,29 +237,31 @@ export const emailServiceBrandingGuard = z
 export type EmailServiceBranding = z.infer<typeof emailServiceBrandingGuard>;
 
 export type SendMessagePayload = {
-  to: string;
-  type: VerificationCodeType;
-  payload: {
-    /**
-     * The dynamic verification code to send.
-     *
-     * @example '123456'
-     */
-    code: string;
-  } & EmailServiceBranding;
+  /**
+   * The dynamic verification code to send.
+   *
+   * @example '123456'
+   */
+  code: string;
 };
 
 export const sendMessagePayloadGuard = z.object({
-  to: z.string(),
-  type: verificationCodeTypeGuard,
-  payload: z
-    .object({
-      code: z.string(),
-    })
-    .merge(emailServiceBrandingGuard),
+  code: z.string(),
 }) satisfies z.ZodType<SendMessagePayload>;
 
-export type SendMessageFunction = (data: SendMessagePayload, config?: unknown) => Promise<unknown>;
+export type SendMessageData = {
+  to: string;
+  type: VerificationCodeType;
+  payload: SendMessagePayload;
+};
+
+export const sendMessageDataGuard = z.object({
+  to: z.string(),
+  type: verificationCodeTypeGuard,
+  payload: sendMessagePayloadGuard,
+}) satisfies z.ZodType<SendMessageData>;
+
+export type SendMessageFunction = (data: SendMessageData, config?: unknown) => Promise<unknown>;
 
 export type GetUsageFunction = (startFrom?: Date) => Promise<number>;
 
