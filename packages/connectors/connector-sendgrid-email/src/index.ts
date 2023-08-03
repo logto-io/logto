@@ -16,20 +16,14 @@ import {
 
 import { defaultMetadata, endpoint } from './constant.js';
 import { sendGridMailConfigGuard } from './types.js';
-import type {
-  EmailData,
-  Personalization,
-  Content,
-  PublicParameters,
-  SendGridMailConfig,
-} from './types.js';
+import type { EmailData, Personalization, Content, PublicParameters } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<SendGridMailConfig>(config, sendGridMailConfigGuard);
+    validateConfig(config, sendGridMailConfigGuard);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

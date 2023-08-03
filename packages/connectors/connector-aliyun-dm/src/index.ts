@@ -17,7 +17,6 @@ import {
 
 import { defaultMetadata } from './constant.js';
 import { singleSendMail } from './single-send-mail.js';
-import type { AliyunDmConfig } from './types.js';
 import {
   aliyunDmConfigGuard,
   sendEmailResponseGuard,
@@ -29,7 +28,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<AliyunDmConfig>(config, aliyunDmConfigGuard);
+    validateConfig(config, aliyunDmConfigGuard);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

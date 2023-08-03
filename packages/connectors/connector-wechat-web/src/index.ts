@@ -47,7 +47,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<WechatConfig>(config, wechatConfigGuard);
+    validateConfig(config, wechatConfigGuard);
 
     const { appId, scope } = config;
 
@@ -93,7 +93,7 @@ const getUserInfo =
   async (data) => {
     const { code } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<WechatConfig>(config, wechatConfigGuard);
+    validateConfig(config, wechatConfigGuard);
     const { accessToken, openid } = await getAccessToken(code, config);
 
     try {

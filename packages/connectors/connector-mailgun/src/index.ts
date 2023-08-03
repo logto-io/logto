@@ -15,12 +15,7 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
-import {
-  type DeliveryConfig,
-  mailgunConfigGuard,
-  supportTemplateGuard,
-  type MailgunConfig,
-} from './types.js';
+import { type DeliveryConfig, mailgunConfigGuard, supportTemplateGuard } from './types.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
@@ -52,7 +47,7 @@ const getDataFromDeliveryConfig = (
 const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
   return async ({ to, type: typeInput, payload: { code } }, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<MailgunConfig>(config, mailgunConfigGuard);
+    validateConfig(config, mailgunConfigGuard);
 
     const { domain, apiKey, from, deliveries } = config;
     const type = supportTemplateGuard.safeParse(typeInput);

@@ -19,7 +19,6 @@ import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { defaultMetadata } from './constant.js';
-import type { OidcConfig } from './types.js';
 import { idTokenProfileStandardClaimsGuard, oidcConfigGuard } from './types.js';
 import { getIdToken } from './utils.js';
 
@@ -29,7 +28,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<OidcConfig>(config, oidcConfigGuard);
+    validateConfig(config, oidcConfigGuard);
     const parsedConfig = oidcConfigGuard.parse(config);
 
     const nonce = generateNonce();
@@ -62,7 +61,7 @@ const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<OidcConfig>(config, oidcConfigGuard);
+    validateConfig(config, oidcConfigGuard);
     const parsedConfig = oidcConfigGuard.parse(config);
 
     assert(

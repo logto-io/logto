@@ -16,7 +16,6 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
-import type { AwsSesConfig } from './types.js';
 import { awsSesConfigGuard } from './types.js';
 import { makeClient, makeCommand, makeEmailContent } from './utils.js';
 
@@ -25,7 +24,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<AwsSesConfig>(config, awsSesConfigGuard);
+    validateConfig(config, awsSesConfigGuard);
     const { accessKeyId, accessKeySecret, region, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

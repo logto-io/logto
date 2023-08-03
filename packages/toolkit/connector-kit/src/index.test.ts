@@ -9,7 +9,7 @@ describe('connector-kit', () => {
       type TestingType = z.infer<typeof testingTypeGuard>;
       const testingConfig = { foo: 'foo', bar: 1, baz: true };
       expect(() => {
-        validateConfig<TestingType>(testingConfig, testingTypeGuard);
+        validateConfig(testingConfig, testingTypeGuard);
       }).not.toThrow();
     });
 
@@ -18,7 +18,7 @@ describe('connector-kit', () => {
       type TestingType = z.infer<typeof testingTypeGuard>;
       const testingConfig = { foo: 'foo', bar: 1 };
       expect(() => {
-        validateConfig<TestingType>(testingConfig, testingTypeGuard);
+        validateConfig(testingConfig, testingTypeGuard);
       }).toThrow();
     });
   });

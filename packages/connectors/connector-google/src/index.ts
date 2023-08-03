@@ -40,7 +40,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<GoogleConfig>(config, googleConfigGuard);
+    validateConfig(config, googleConfigGuard);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -91,7 +91,7 @@ const getUserInfo =
   async (data) => {
     const { code, redirectUri } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<GoogleConfig>(config, googleConfigGuard);
+    validateConfig(config, googleConfigGuard);
     const { accessToken } = await getAccessToken(config, { code, redirectUri });
 
     try {

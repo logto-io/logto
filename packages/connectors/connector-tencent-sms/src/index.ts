@@ -16,7 +16,6 @@ import {
 
 import { defaultMetadata } from './constant.js';
 import { isSmsErrorResponse, sendSmsRequest } from './http.js';
-import type { TencentSmsConfig } from './schema.js';
 import { SmsConfigGuard, tencentErrorResponse } from './schema.js';
 
 function safeGetArray<T>(value: Array<T | undefined>, index: number): T {
@@ -34,7 +33,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
   return async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<TencentSmsConfig>(config, SmsConfigGuard);
+    validateConfig(config, SmsConfigGuard);
     const { accessKeyId, accessKeySecret, signName, templates, sdkAppId, region } = config;
     const template = templates.find(({ usageType }) => usageType === type);
 

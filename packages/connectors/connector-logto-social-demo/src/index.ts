@@ -7,14 +7,13 @@ import type {
 import { validateConfig, ConnectorType } from '@logto/connector-kit';
 
 import { defaultMetadata, getProviderConfigs } from './constant.js';
-import type { SocialDemoConfig } from './types.js';
 import { socialDemoConfigGuard } from './types.js';
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<SocialDemoConfig>(config, socialDemoConfigGuard);
+    validateConfig(config, socialDemoConfigGuard);
 
     const { provider, clientId, redirectUri } = config;
 

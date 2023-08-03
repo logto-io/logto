@@ -40,7 +40,7 @@ const getAuthorizationUri =
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
 
-    validateConfig<AzureADConfig>(config, azureADConfigGuard);
+    validateConfig(config, azureADConfigGuard);
     const { clientId, clientSecret, cloudInstance, tenantId } = config;
 
     const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
@@ -106,7 +106,7 @@ const getUserInfo =
 
     // Temporarily keep this as this is a refactor, which should not change the logics.
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<AzureADConfig>(config, azureADConfigGuard);
+    validateConfig(config, azureADConfigGuard);
 
     const { accessToken } = await getAccessToken(config, code, redirectUri);
 

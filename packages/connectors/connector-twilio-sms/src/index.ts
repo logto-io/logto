@@ -15,7 +15,7 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
-import type { TwilioSmsConfig, PublicParameters } from './types.js';
+import type { PublicParameters } from './types.js';
 import { twilioSmsConfigGuard } from './types.js';
 
 const sendMessage =
@@ -23,7 +23,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<TwilioSmsConfig>(config, twilioSmsConfigGuard);
+    validateConfig(config, twilioSmsConfigGuard);
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
