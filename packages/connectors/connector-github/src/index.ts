@@ -38,7 +38,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<GithubConfig>(config, githubConfigGuard);
+    validateConfig(config, githubConfigGuard);
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
@@ -107,7 +107,7 @@ const getUserInfo =
   async (data) => {
     const { code } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<GithubConfig>(config, githubConfigGuard);
+    validateConfig(config, githubConfigGuard);
     const { accessToken } = await getAccessToken(config, { code });
 
     try {

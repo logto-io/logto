@@ -52,7 +52,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<AlipayNativeConfig>(config, alipayNativeConfigGuard);
+    validateConfig(config, alipayNativeConfigGuard);
 
     const { appId } = config;
 
@@ -105,7 +105,7 @@ const getUserInfo =
     const { auth_code } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
 
-    validateConfig<AlipayNativeConfig>(config, alipayNativeConfigGuard);
+    validateConfig(config, alipayNativeConfigGuard);
 
     const { accessToken } = await getAccessToken(auth_code, config);
 

@@ -42,7 +42,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<FacebookConfig>(config, facebookConfigGuard);
+    validateConfig(config, facebookConfigGuard);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -60,7 +60,7 @@ export const getAccessToken = async (
   codeObject: { code: string; redirectUri: string }
 ) => {
   const { code, redirectUri } = codeObject;
-  validateConfig<FacebookConfig>(config, facebookConfigGuard);
+  validateConfig(config, facebookConfigGuard);
 
   const { clientId: client_id, clientSecret: client_secret } = config;
 
@@ -92,7 +92,7 @@ const getUserInfo =
   async (data) => {
     const { code, redirectUri } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<FacebookConfig>(config, facebookConfigGuard);
+    validateConfig(config, facebookConfigGuard);
     const { accessToken } = await getAccessToken(config, { code, redirectUri });
 
     try {

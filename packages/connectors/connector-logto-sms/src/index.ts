@@ -10,14 +10,13 @@ import { ConnectorType, validateConfig } from '@logto/connector-kit';
 
 import { defaultMetadata, defaultTimeout, smsEndpoint } from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';
-import type { LogtoSmsConfig } from './types.js';
 import { logtoSmsConfigGuard } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<LogtoSmsConfig>(config, logtoSmsConfigGuard);
+    validateConfig(config, logtoSmsConfigGuard);
 
     const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
 

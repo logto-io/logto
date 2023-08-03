@@ -16,7 +16,6 @@ import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import { defaultMetadata } from './constant.js';
-import type { SmtpConfig } from './types.js';
 import { ContextType, smtpConfigGuard } from './types.js';
 
 const sendMessage =
@@ -24,7 +23,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<SmtpConfig>(config, smtpConfigGuard);
+    validateConfig(config, smtpConfigGuard);
     const template = config.templates.find((template) => template.usageType === type);
 
     assert(

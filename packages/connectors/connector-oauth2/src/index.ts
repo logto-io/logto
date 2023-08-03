@@ -16,7 +16,6 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, defaultTimeout } from './constant.js';
-import type { OauthConfig } from './types.js';
 import { oauthConfigGuard } from './types.js';
 import { userProfileMapping, getAccessToken } from './utils.js';
 
@@ -27,7 +26,7 @@ const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<OauthConfig>(config, oauthConfigGuard);
+    validateConfig(config, oauthConfigGuard);
     const parsedConfig = oauthConfigGuard.parse(config);
 
     const { customConfig, ...rest } = parsedConfig;
@@ -52,7 +51,7 @@ const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<OauthConfig>(config, oauthConfigGuard);
+    validateConfig(config, oauthConfigGuard);
     const parsedConfig = oauthConfigGuard.parse(config);
 
     const { redirectUri } = await getSession();

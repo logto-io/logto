@@ -15,7 +15,7 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
-import type { PublicParameters, SmsAeroConfig } from './types.js';
+import type { PublicParameters } from './types.js';
 import { smsAeroConfigGuard } from './types.js';
 
 function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
@@ -23,7 +23,7 @@ function sendMessage(getConfig: GetConnectorConfig): SendMessageFunction {
     const { to, type, payload } = data;
 
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<SmsAeroConfig>(config, smsAeroConfigGuard);
+    validateConfig(config, smsAeroConfigGuard);
 
     const { email, apiKey, senderName, templates } = config;
 

@@ -22,7 +22,6 @@ import {
   defaultMetadata,
   userInfoEndpoint,
 } from './constant.js';
-import type { FeishuConfig } from './types.js';
 import {
   feishuAccessTokenResponse,
   feishuAuthCodeGuard,
@@ -49,7 +48,7 @@ export function buildAuthorizationUri(
 export function getAuthorizationUri(getConfig: GetConnectorConfig): GetAuthorizationUri {
   return async function ({ state, redirectUri }) {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<FeishuConfig>(config, feishuConfigGuard);
+    validateConfig(config, feishuConfigGuard);
 
     const { appId } = config;
 
@@ -127,7 +126,7 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
   return async function (data) {
     const { code, redirectUri } = await authorizationCallbackHandler(data);
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<FeishuConfig>(config, feishuConfigGuard);
+    validateConfig(config, feishuConfigGuard);
 
     const { accessToken } = await getAccessToken(code, config.appId, config.appSecret, redirectUri);
 

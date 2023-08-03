@@ -19,14 +19,13 @@ import {
 
 import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
 import { grantAccessToken } from './grant-access-token.js';
-import type { LogtoEmailConfig } from './types.js';
 import { logtoEmailConfigGuard } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
+    validateConfig(config, logtoEmailConfigGuard);
 
     const {
       endpoint,
@@ -76,7 +75,7 @@ const getUsage =
   (getConfig: GetConnectorConfig): GetUsageFunction =>
   async (startFrom?: Date) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<LogtoEmailConfig>(config, logtoEmailConfigGuard);
+    validateConfig(config, logtoEmailConfigGuard);
 
     const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
 

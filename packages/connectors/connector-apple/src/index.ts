@@ -17,7 +17,6 @@ import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant.js';
-import type { AppleConfig } from './types.js';
 import { appleConfigGuard, dataGuard } from './types.js';
 
 const generateNonce = () => generateStandardId();
@@ -27,7 +26,7 @@ const getAuthorizationUri =
   async ({ state, redirectUri }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
 
-    validateConfig<AppleConfig>(config, appleConfigGuard);
+    validateConfig(config, appleConfigGuard);
 
     const nonce = generateNonce();
 
@@ -63,7 +62,7 @@ const getUserInfo =
     }
 
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<AppleConfig>(config, appleConfigGuard);
+    validateConfig(config, appleConfigGuard);
 
     const { clientId } = config;
 

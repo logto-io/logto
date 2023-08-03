@@ -17,7 +17,7 @@ import {
 
 import { defaultMetadata } from './constant.js';
 import { sendSms } from './single-send-text.js';
-import type { AliyunSmsConfig, Template } from './types.js';
+import type { Template } from './types.js';
 import { aliyunSmsConfigGuard, sendSmsResponseGuard } from './types.js';
 
 const isChinaNumber = (to: string) => /^(\+86|0086|86)?\d{11}$/.test(to);
@@ -35,7 +35,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<AliyunSmsConfig>(config, aliyunSmsConfigGuard);
+    validateConfig(config, aliyunSmsConfigGuard);
     const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);
 

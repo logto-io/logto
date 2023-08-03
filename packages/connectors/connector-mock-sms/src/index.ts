@@ -16,7 +16,6 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
-import type { MockSmsConfig } from './types.js';
 import { mockSmsConfigGuard } from './types.js';
 
 const sendMessage =
@@ -24,7 +23,7 @@ const sendMessage =
   async (data, inputConfig) => {
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig<MockSmsConfig>(config, mockSmsConfigGuard);
+    validateConfig(config, mockSmsConfigGuard);
     const { templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

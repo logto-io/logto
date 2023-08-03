@@ -19,14 +19,13 @@ import * as saml from 'samlify';
 
 import { defaultMetadata } from './constant.js';
 import { samlConfigGuard } from './types.js';
-import type { SamlConfig } from './types.js';
 import { samlAssertionHandler, getUserInfoFromRawUserProfile } from './utils.js';
 
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri, connectorId, connectorFactoryId, jti }, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<SamlConfig>(config, samlConfigGuard);
+    validateConfig(config, samlConfigGuard);
     const {
       entityID,
       x509Certificate,
@@ -99,7 +98,7 @@ export const validateSamlAssertion =
   (getConfig: GetConnectorConfig): ValidateSamlAssertion =>
   async (assertion, getSession, setSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<SamlConfig>(config, samlConfigGuard);
+    validateConfig(config, samlConfigGuard);
     const parsedConfig = samlConfigGuard.parse(config);
 
     const connectorSession = await getSession();
@@ -137,7 +136,7 @@ const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (_data, getSession) => {
     const config = await getConfig(defaultMetadata.id);
-    validateConfig<SamlConfig>(config, samlConfigGuard);
+    validateConfig(config, samlConfigGuard);
     const parsedConfig = samlConfigGuard.parse(config);
     const { profileMap } = parsedConfig;
 
