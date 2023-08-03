@@ -18,11 +18,18 @@ export const defaultMetadata: ConnectorMetadata = {
   readme: './README.md',
   formItems: [
     {
+      key: 'endpoint',
+      label: 'Mailgun endpoint',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      placeholder: 'https://api.mailgun.net',
+    },
+    {
       key: 'domain',
       label: 'Domain',
       type: ConnectorConfigFormItemType.Text,
       required: true,
-      placeholder: 'https://your-mailgun-domain.com',
+      placeholder: 'your-mailgun-domain.com',
     },
     {
       key: 'apiKey',

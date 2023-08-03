@@ -53,6 +53,8 @@ const templateConfigGuard = z.union([
 ]) satisfies z.ZodType<DeliveryConfig>;
 
 export type MailgunConfig = {
+  /** Mailgun endpoint. For EU region, use `https://api.eu.mailgun.net`. */
+  endpoint?: string;
   /** Mailgun domain. */
   domain: string;
   /** Mailgun API key. */
@@ -67,6 +69,7 @@ export type MailgunConfig = {
 };
 
 export const mailgunConfigGuard = z.object({
+  endpoint: z.string().url().endsWith('.mailgun.net').optional(),
   domain: z.string(),
   apiKey: z.string(),
   from: z.string(),

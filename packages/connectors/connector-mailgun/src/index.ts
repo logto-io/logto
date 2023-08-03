@@ -49,7 +49,7 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mailgunConfigGuard);
 
-    const { domain, apiKey, from, deliveries } = config;
+    const { endpoint, domain, apiKey, from, deliveries } = config;
     const type = supportTemplateGuard.safeParse(typeInput);
 
     if (!type.success) {
@@ -63,15 +63,18 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
     }
 
     try {
-      return await got.post(`https://api.mailgun.net/v3/${domain}/messages`, {
-        username: 'api',
-        password: apiKey,
-        form: {
-          from,
-          to,
-          ...removeUndefinedKeys(getDataFromDeliveryConfig(template, code)),
-        },
-      });
+      return await got.post(
+        new URL(`/v3/${domain}/messages`, endpoint ?? 'https://api.mailgun.net').toString(),
+        {
+          username: 'api',
+          password: apiKey,
+          form: {
+            from,
+            to,
+            ...removeUndefinedKeys(getDataFromDeliveryConfig(template, code)),
+          },
+        }
+      );
     } catch (error) {
       if (error instanceof HTTPError) {
         const {

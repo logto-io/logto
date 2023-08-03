@@ -25,8 +25,11 @@ const baseConfig: Partial<MailgunConfig> = {
  *
  * @param expectation - The expected request body.
  */
-const nockMessages = (expectation: Record<string, string | string[] | undefined>) =>
-  nock('https://api.mailgun.net')
+const nockMessages = (
+  expectation: Record<string, string | string[] | undefined>,
+  endpoint = 'https://api.mailgun.net'
+) =>
+  nock(endpoint)
     .post(`/v3/${domain}/messages`)
     .basicAuth({ user: 'api', pass: apiKey })
     .reply((_, body, callback) => {
@@ -86,6 +89,39 @@ describe('Maligun connector', () => {
 
     getConfig.mockResolvedValue({
       ...baseConfig,
+      deliveries: {
+        [VerificationCodeType.Generic]: {
+          template: 'template',
+          variables: { foo: 'bar' },
+          subject: 'Verification code is {{code}}',
+        },
+      },
+    });
+
+    await connector.sendMessage({
+      to: 'bar@example.com',
+      type: VerificationCodeType.Generic,
+      payload: {
+        code: '123456',
+      },
+    });
+  });
+
+  it('should send email with template and EU endpoint', async () => {
+    nockMessages(
+      {
+        from: 'foo@example.com',
+        to: 'bar@example.com',
+        subject: 'Verification code is 123456',
+        template: 'template',
+        'h:X-Mailgun-Variables': JSON.stringify({ foo: 'bar', code: '123456' }),
+      },
+      'https://api.eu.mailgun.net'
+    );
+
+    getConfig.mockResolvedValue({
+      ...baseConfig,
+      endpoint: 'https://api.eu.mailgun.net',
       deliveries: {
         [VerificationCodeType.Generic]: {
           template: 'template',
