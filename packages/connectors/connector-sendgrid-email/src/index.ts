@@ -15,14 +15,14 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
+import { sendGridMailConfigGuard } from './types.js';
 import type {
-  SendGridMailConfig,
   EmailData,
   Personalization,
   Content,
   PublicParameters,
+  SendGridMailConfig,
 } from './types.js';
-import { sendGridMailConfigGuard } from './types.js';
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
@@ -87,7 +87,7 @@ const sendMessage =
         throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
-      throw error;
+      throw new ConnectorError(ConnectorErrorCodes.General, error);
     }
   };
 

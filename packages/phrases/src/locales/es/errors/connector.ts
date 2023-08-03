@@ -11,6 +11,7 @@ const connector = {
   invalid_response: 'La respuesta del conector es inválida.',
   template_not_found:
     'No se puede encontrar la plantilla correcta en la configuración del conector.',
+  template_not_supported: 'El conector no admite este tipo de plantilla.',
   rate_limit_exceeded: 'Límite de frecuencia activado. Por favor, inténtalo de nuevo más tarde.',
   not_implemented: '{{method}}: aún no se ha implementado.',
   social_invalid_access_token: 'El token de acceso del conector es inválido.',

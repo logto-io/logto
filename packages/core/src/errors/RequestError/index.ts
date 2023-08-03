@@ -29,7 +29,13 @@ export default class RequestError extends Error {
       expose = true,
       ...interpolation
     } = typeof input === 'string' ? { code: input } : input;
-    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, interpolation);
+    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, {
+      ...interpolation,
+      interpolation: {
+        // Disable i18next escape value since it's for API response, we can show HTML tags.
+        escapeValue: false,
+      },
+    });
 
     super(message);
 

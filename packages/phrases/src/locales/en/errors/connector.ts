@@ -10,6 +10,7 @@ const connector = {
   invalid_config: "The connector's config is invalid.",
   invalid_response: "The connector's response is invalid.",
   template_not_found: 'Unable to find correct template in connector config.',
+  template_not_supported: 'The connector does not support this template type.',
   rate_limit_exceeded: 'Trigger rate limit. Please try again later.',
   not_implemented: '{{method}}: has not been implemented yet.',
   social_invalid_access_token: "The connector's access token is invalid.",
