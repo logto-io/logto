@@ -8,6 +8,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import BasicWebhookForm from '@/pages/Webhooks/components/BasicWebhookForm';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -25,6 +26,7 @@ function WebhookSettings() {
   const formMethods = useForm<WebhookDetailsFormType>({
     defaultValues: webhookFormData,
   });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const api = useApi();
 
   const {
@@ -56,6 +58,7 @@ function WebhookSettings() {
           <FormCard
             title="webhook_details.settings.settings"
             description="webhook_details.settings.settings_description"
+            learnMoreLink={getDocumentationUrl('/docs/recipes/webhooks')}
           >
             <BasicWebhookForm />
             <SigningKeyField
