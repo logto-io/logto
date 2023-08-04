@@ -54,7 +54,7 @@ export const removeVerificationCode = async (): Promise<void> => {
 
 type ExpectedErrorInfo = {
   code: string;
-  statusCode?: number;
+  statusCode: number;
   messageIncludes?: string;
 };
 
@@ -86,9 +86,7 @@ export const expectRequestError = (error: unknown, expected: ExpectedErrorInfo) 
 
   expect(body.code).toEqual(code);
 
-  if (statusCode !== undefined) {
-    expect(error.response?.statusCode).toEqual(statusCode);
-  }
+  expect(error.response?.statusCode).toEqual(statusCode);
 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();

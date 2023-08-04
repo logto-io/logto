@@ -2,18 +2,19 @@ import { got } from 'got';
 
 import { logtoConsoleUrl, logtoUrl } from '#src/constants.js';
 import {
-  createResponseWithCode,
   createUserWithAllRolesAndSignInToClient,
   deleteUser,
   resourceDefault,
   resourceMe,
 } from '#src/helpers/admin-tenant.js';
+import { expectRejects } from '#src/helpers/index.js';
 
 describe('me', () => {
   it('should only be available in admin tenant', async () => {
-    await expect(got.get(new URL('/me/custom-data', logtoConsoleUrl))).rejects.toMatchObject(
-      createResponseWithCode(401)
-    );
+    await expectRejects(got.get(new URL('/me/custom-data', logtoConsoleUrl)), {
+      code: 'auth.authorization_header_missing',
+      statusCode: 401,
+    });
 
     // Redirect to UI
     const response = await got.get(new URL('/me/custom-data', logtoUrl));
@@ -24,11 +25,15 @@ describe('me', () => {
   it('should only recognize the access token with correct resource and scope', async () => {
     const { id, client } = await createUserWithAllRolesAndSignInToClient();
 
-    await expect(
+    await expectRejects(
       got.get(logtoConsoleUrl + '/me/custom-data', {
         headers: { authorization: `Bearer ${await client.getAccessToken(resourceDefault)}` },
-      })
-    ).rejects.toMatchObject(createResponseWithCode(401));
+      }),
+      {
+        code: 'auth.unauthorized',
+        statusCode: 401,
+      }
+    );
 
     await expect(
       got.get(logtoConsoleUrl + '/me/custom-data', {

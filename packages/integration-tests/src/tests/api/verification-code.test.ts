@@ -2,13 +2,12 @@ import { VerificationCodeType } from '@logto/connector-kit';
 import { ConnectorType, type RequestVerificationCodePayload } from '@logto/schemas';
 
 import { requestVerificationCode, verifyVerificationCode } from '#src/api/verification-code.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
-import { readVerificationCode, removeVerificationCode } from '#src/helpers/index.js';
+import { expectRejects, readVerificationCode, removeVerificationCode } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 
 describe('Generic verification code through management API', () => {
@@ -55,9 +54,10 @@ describe('Generic verification code through management API', () => {
   });
 
   it('should fail to create a verification code on server side when the email and phone are not provided', async () => {
-    await expect(requestVerificationCode({ username: 'any_string' })).rejects.toMatchObject(
-      createResponseWithCode(400)
-    );
+    await expectRejects(requestVerificationCode({ username: 'any_string' }), {
+      code: 'guard.invalid_input',
+      statusCode: 400,
+    });
 
     await expect(readVerificationCode()).rejects.toThrow();
   });
@@ -65,9 +65,10 @@ describe('Generic verification code through management API', () => {
   it('should fail to send a verification code on server side when no email connector has been set', async () => {
     const emailForTestSendCode = 'test_send@email.com';
     await clearConnectorsByTypes([ConnectorType.Email]);
-    await expect(requestVerificationCode({ email: emailForTestSendCode })).rejects.toMatchObject(
-      createResponseWithCode(400)
-    );
+    await expectRejects(requestVerificationCode({ email: emailForTestSendCode }), {
+      code: 'connector.not_found',
+      statusCode: 400,
+    });
 
     await expect(
       verifyVerificationCode({ email: emailForTestSendCode, verificationCode: 'any_string' })
@@ -88,9 +89,10 @@ describe('Generic verification code through management API', () => {
   it('should fail to send a verification code on server side when no SMS connector has not been set', async () => {
     const phoneForTestSendCode = '1233212321';
     await clearConnectorsByTypes([ConnectorType.Sms]);
-    await expect(requestVerificationCode({ phone: phoneForTestSendCode })).rejects.toMatchObject(
-      createResponseWithCode(400)
-    );
+    await expectRejects(requestVerificationCode({ phone: phoneForTestSendCode }), {
+      code: 'connector.not_found',
+      statusCode: 400,
+    });
 
     await expect(
       verifyVerificationCode({ phone: phoneForTestSendCode, verificationCode: 'any_string' })
@@ -131,9 +133,10 @@ describe('Generic verification code through management API', () => {
   it('should throw when the code is not valid', async () => {
     await requestVerificationCode({ phone: mockPhone });
     await readVerificationCode();
-    await expect(
-      verifyVerificationCode({ phone: mockPhone, verificationCode: '666' })
-    ).rejects.toMatchObject(createResponseWithCode(400));
+    await expectRejects(verifyVerificationCode({ phone: mockPhone, verificationCode: '666' }), {
+      code: 'verification_code.code_mismatch',
+      statusCode: 400,
+    });
   });
 
   it('should throw when the phone number is not matched', async () => {
@@ -142,9 +145,10 @@ describe('Generic verification code through management API', () => {
     await requestVerificationCode({ phone: phoneToGetCode });
     const { code, phone } = await readVerificationCode();
     expect(phoneToGetCode).toEqual(phone);
-    await expect(
-      verifyVerificationCode({ phone: phoneToVerify, verificationCode: code })
-    ).rejects.toMatchObject(createResponseWithCode(400));
+    await expectRejects(verifyVerificationCode({ phone: phoneToVerify, verificationCode: code }), {
+      code: 'verification_code.not_found',
+      statusCode: 400,
+    });
   });
 
   it('should throw when the email is not matched', async () => {
@@ -153,8 +157,9 @@ describe('Generic verification code through management API', () => {
     await requestVerificationCode({ email: emailToGetCode });
     const { code, address } = await readVerificationCode();
     expect(emailToGetCode).toEqual(address);
-    await expect(
-      verifyVerificationCode({ email: emailToVerify, verificationCode: code })
-    ).rejects.toMatchObject(createResponseWithCode(400));
+    await expectRejects(verifyVerificationCode({ email: emailToVerify, verificationCode: code }), {
+      code: 'verification_code.not_found',
+      statusCode: 400,
+    });
   });
 });

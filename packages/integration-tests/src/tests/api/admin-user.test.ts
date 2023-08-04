@@ -17,8 +17,7 @@ import {
   postUserIdentity,
   verifyUserPassword,
 } from '#src/api/index.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
-import { createUserByAdmin } from '#src/helpers/index.js';
+import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { createNewSocialUserWithUsernameAndPassword } from '#src/helpers/interactions.js';
 import { generateUsername, generateEmail, generatePhone, generatePassword } from '#src/utils.js';
 
@@ -38,19 +37,25 @@ describe('admin console user management', () => {
       generatePhone(),
     ];
     await createUserByAdmin(username, password, email, phone);
-    await expect(createUserByAdmin(username, password)).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
-    await expect(createUserByAdmin(undefined, undefined, email)).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
-    await expect(createUserByAdmin(undefined, undefined, undefined, phone)).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
+    await expectRejects(createUserByAdmin(username, password), {
+      code: 'user.username_already_in_use',
+      statusCode: 422,
+    });
+    await expectRejects(createUserByAdmin(undefined, undefined, email), {
+      code: 'user.email_already_in_use',
+      statusCode: 422,
+    });
+    await expectRejects(createUserByAdmin(undefined, undefined, undefined, phone), {
+      code: 'user.phone_already_in_use',
+      statusCode: 422,
+    });
   });
 
   it('should fail when get user by invalid id', async () => {
-    await expect(getUser('invalid-user-id')).rejects.toMatchObject(createResponseWithCode(404));
+    await expectRejects(getUser('invalid-user-id'), {
+      code: 'entity.not_found',
+      statusCode: 404,
+    });
   });
 
   it('should update userinfo successfully', async () => {
@@ -74,7 +79,10 @@ describe('admin console user management', () => {
 
   it('should respond 422 when no update data provided', async () => {
     const user = await createUserByAdmin();
-    await expect(updateUser(user.id, {})).rejects.toMatchObject(createResponseWithCode(422));
+    await expectRejects(updateUser(user.id, {}), {
+      code: 'entity.invalid_input',
+      statusCode: 422,
+    });
   });
 
   it('should fail when update userinfo with conflict identifiers', async () => {
@@ -82,15 +90,20 @@ describe('admin console user management', () => {
     await createUserByAdmin(username, undefined, email, phone);
     const anotherUser = await createUserByAdmin();
 
-    await expect(updateUser(anotherUser.id, { username })).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
-    await expect(updateUser(anotherUser.id, { primaryEmail: email })).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
-    await expect(updateUser(anotherUser.id, { primaryPhone: phone })).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
+    await expectRejects(updateUser(anotherUser.id, { username }), {
+      code: 'user.username_already_in_use',
+      statusCode: 422,
+    });
+
+    await expectRejects(updateUser(anotherUser.id, { primaryEmail: email }), {
+      code: 'user.email_already_in_use',
+      statusCode: 422,
+    });
+
+    await expectRejects(updateUser(anotherUser.id, { primaryPhone: phone }), {
+      code: 'user.phone_already_in_use',
+      statusCode: 422,
+    });
   });
 
   it('should delete user successfully', async () => {
@@ -171,22 +184,23 @@ describe('admin console user management', () => {
   it('should return 204 if password is correct', async () => {
     const user = await createUserByAdmin(undefined, 'new_password');
     expect(await verifyUserPassword(user.id, 'new_password')).toHaveProperty('statusCode', 204);
-    void deleteUser(user.id);
+    await deleteUser(user.id);
   });
 
   it('should return 422 if password is incorrect', async () => {
     const user = await createUserByAdmin(undefined, 'new_password');
-    await expect(verifyUserPassword(user.id, 'wrong_password')).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
-    void deleteUser(user.id);
+    await expectRejects(verifyUserPassword(user.id, 'wrong_password'), {
+      code: 'session.invalid_credentials',
+      statusCode: 422,
+    });
+    await deleteUser(user.id);
   });
 
   it('should return 400 if password is empty', async () => {
     const user = await createUserByAdmin();
-    await expect(verifyUserPassword(user.id, '')).rejects.toMatchObject(
-      createResponseWithCode(400)
-    );
-    void deleteUser(user.id);
+    await expectRejects(verifyUserPassword(user.id, ''), {
+      code: 'guard.invalid_input',
+      statusCode: 400,
+    });
   });
 });

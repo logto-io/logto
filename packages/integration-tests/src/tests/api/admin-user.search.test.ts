@@ -225,6 +225,7 @@ describe('admin console user search params', () => {
       ),
       expectRejects(getUsers<User[]>([['search.email', '%gmail%']]), {
         code: 'request.invalid_input',
+        statusCode: 400,
         messageIncludes: 'is not valid',
       }),
       expectRejects(

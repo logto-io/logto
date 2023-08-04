@@ -1,9 +1,8 @@
 import { HookEvent, type Hook } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
-import { createMockServer } from '#src/helpers/index.js';
+import { createMockServer, expectRejects } from '#src/helpers/index.js';
 
 const responseSuccessPort = 9999;
 const responseSuccessEndpoint = `http://localhost:${responseSuccessPort}`;
@@ -46,21 +45,29 @@ describe('hook testing', () => {
 
   it('should return 404 if the hook to test does not exist', async () => {
     const invalidHookId = 'invalid_id';
-    await expect(
+    await expectRejects(
       authedAdminApi.post(`hooks/${invalidHookId}/test`, {
         json: { events: [HookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
-      })
-    ).rejects.toMatchObject(createResponseWithCode(404));
+      }),
+      {
+        code: 'entity.not_exists_with_id',
+        statusCode: 404,
+      }
+    );
   });
 
   it('should return 422 if the hook endpoint is not working', async () => {
     const payload = getHookCreationPayload(HookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
-    await expect(
+    await expectRejects(
       authedAdminApi.post(`hooks/${created.id}/test`, {
         json: { events: [HookEvent.PostSignIn], config: { url: 'not_work_url' } },
-      })
-    ).rejects.toMatchObject(createResponseWithCode(422));
+      }),
+      {
+        code: 'hook.send_test_payload_failed',
+        statusCode: 422,
+      }
+    );
 
     // Clean Up
     await authedAdminApi.delete(`hooks/${created.id}`);
