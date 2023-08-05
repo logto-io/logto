@@ -3161,8 +3161,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/client':
-        specifier: ^0.7.19
-        version: 0.7.19(zod@3.20.2)
+        specifier: ^0.7.21
+        version: 0.7.21(zod@3.20.2)
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -10032,15 +10032,6 @@ packages:
       eslint-visitor-keys: 3.4.1
     dev: true
 
-  /@withtyped/client@0.7.19(zod@3.20.2):
-    resolution: {integrity: sha512-cHmqCIsEMonrE9kDbu8YAPWWPHmy6imUGbUWQ2PGaPLTJagbgH3ABsxgnLiM0lm0LeuZFd3BHh+JYKRDUmS8cw==}
-    dependencies:
-      '@withtyped/server': 0.12.7(zod@3.20.2)
-      '@withtyped/shared': 0.2.2
-    transitivePeerDependencies:
-      - zod
-    dev: false
-
   /@withtyped/client@0.7.21(zod@3.20.2):
     resolution: {integrity: sha512-N9dvH5nqIwaT7YxaIm83RRQf9AEjxwJ4ugJviZJSxtWy8zLul2/odEMc6epieylFVa6CcLg82yJmRSlqPtJiTw==}
     dependencies:
@@ -10048,17 +10039,6 @@ packages:
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
-    dev: true
-
-  /@withtyped/server@0.12.7(zod@3.20.2):
-    resolution: {integrity: sha512-NNT78ZZmSZiEosxI3iW/kVx1KEG5vetvpEXNl0Gy58OlOnI8l/7h8Q//JZJ268xWOKyaNI4KrngTRtL5uvZu9Q==}
-    peerDependencies:
-      zod: ^3.19.1
-    dependencies:
-      '@silverhand/essentials': 2.7.0
-      '@withtyped/shared': 0.2.2
-      zod: 3.20.2
-    dev: false
 
   /@withtyped/server@0.12.8(zod@3.20.2):
     resolution: {integrity: sha512-fv9feTOKJhtlaoYM/Kbs2gSTcIXlmu4OMUFwGmK5jqdbVNIOkDBIPxtcC5ZEwevWFgOcd5OqBW+FvbjiaF27Fw==}

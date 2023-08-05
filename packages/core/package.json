@@ -41,7 +41,7 @@
     "@logto/shared": "workspace:^2.0.0",
     "@logto/ui": "workspace:*",
     "@silverhand/essentials": "^2.5.0",
-    "@withtyped/client": "^0.7.19",
+    "@withtyped/client": "^0.7.21",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
