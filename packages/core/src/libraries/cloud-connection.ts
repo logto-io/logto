@@ -27,6 +27,7 @@ const accessTokenResponseGuard = z.object({
 const scopes: string[] = [];
 const accessTokenExpirationMargin = 60;
 
+/** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
   private client?: Client<typeof router>;
   private accessTokenCache?: { expiresAt: number; accessToken: string };
@@ -44,6 +45,16 @@ export class CloudConnectionLibrary {
     };
   };
 
+  /**
+   * Get the access token for the Cloud service in the following steps:
+   *
+   * 1. If the access token is cached and not expired, return it.
+   * 2. Otherwise, get a new access token from the Cloud service via client
+   * credentials flow and cache it.
+   * 3. If the request fails, throw an error.
+   *
+   * @returns The access token for the Cloud service.
+   */
   public getAccessToken = async (): Promise<string> => {
     if (this.accessTokenCache) {
       const { expiresAt, accessToken } = this.accessTokenCache;
@@ -82,6 +93,10 @@ export class CloudConnectionLibrary {
     return result.data.access_token;
   };
 
+  /**
+   * Get a withtyped client for the Cloud service. It is typed with the router
+   * defined in @logto/cloud/routes.
+   */
   public getClient = async (): Promise<Client<typeof router>> => {
     if (!this.client) {
       const { endpoint } = await this.getCloudConnectionData();
