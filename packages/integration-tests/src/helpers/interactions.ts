@@ -78,7 +78,10 @@ export const createNewSocialUserWithUsernameAndPassword = async (connectorId: st
     connectorData: { state, redirectUri, code, userId: socialUserId },
   });
 
-  await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+  await expectRejects(client.submitInteraction(), {
+    code: 'user.identity_not_exist',
+    statusCode: 422,
+  });
   await client.successSend(patchInteractionIdentifiers, { username, password });
   await client.successSend(putInteractionProfile, { connectorId });
 

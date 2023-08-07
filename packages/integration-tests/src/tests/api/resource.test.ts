@@ -9,7 +9,7 @@ import {
   deleteResource,
   setDefaultResource,
 } from '#src/api/index.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
+import { expectRejects } from '#src/helpers/index.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
 
 describe('admin console api resources', () => {
@@ -47,9 +47,10 @@ describe('admin console api resources', () => {
 
     // Create second resource with same indicator should throw
     const resourceName2 = generateResourceName();
-    await expect(createResource(resourceName2, resourceIndicator)).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
+    await expectRejects(createResource(resourceName2, resourceIndicator), {
+      code: 'resource.resource_identifier_in_use',
+      statusCode: 422,
+    });
   });
 
   it('should get resource list successfully', async () => {

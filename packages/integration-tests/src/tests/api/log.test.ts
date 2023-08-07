@@ -1,5 +1,5 @@
 import { getLog, getAuditLogs } from '#src/api/index.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
+import { expectRejects } from '#src/helpers/index.js';
 
 describe('logs', () => {
   it('should get logs successfully', async () => {
@@ -20,6 +20,9 @@ describe('logs', () => {
   });
 
   it('should throw on getting non-exist log detail', async () => {
-    await expect(getLog('non-exist-log-id')).rejects.toMatchObject(createResponseWithCode(404));
+    await expectRejects(getLog('non-exist-log-id'), {
+      code: 'entity.not_exists_with_id',
+      statusCode: 404,
+    });
   });
 });

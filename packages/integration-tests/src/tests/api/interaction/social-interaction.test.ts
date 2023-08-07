@@ -63,7 +63,10 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });
@@ -116,7 +119,10 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId, email: socialEmail },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });
@@ -149,7 +155,10 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId, phone: socialPhone },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });
@@ -192,7 +201,10 @@ describe('Social Identifier Interactions', () => {
         },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(patchInteractionIdentifiers, {
         connectorId,
@@ -253,12 +265,18 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });
 
-      await expectRejects(client.submitInteraction(), 'user.missing_profile');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_profile',
+        statusCode: 422,
+      });
 
       await client.successSend(patchInteractionProfile, { username: generateUsername() });
 
@@ -291,7 +309,10 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId, email: generateEmail() },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });
@@ -325,7 +346,10 @@ describe('Social Identifier Interactions', () => {
         connectorData: { state, redirectUri, code, userId: socialUserId, phone: generatePhone() },
       });
 
-      await expectRejects(client.submitInteraction(), 'user.identity_not_exist');
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.identity_not_exist',
+        statusCode: 422,
+      });
 
       await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
       await client.successSend(putInteractionProfile, { connectorId });

@@ -2,8 +2,7 @@ import { HTTPError } from 'got';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
-import { createUserByAdmin } from '#src/helpers/index.js';
+import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 
 describe('admin console user management (roles)', () => {
   it('should get empty list successfully', async () => {
@@ -27,9 +26,10 @@ describe('admin console user management (roles)', () => {
     const role = await createRole();
 
     await assignRolesToUser(user.id, [role.id]);
-    await expect(assignRolesToUser(user.id, [role.id])).rejects.toMatchObject(
-      createResponseWithCode(422)
-    );
+    await expectRejects(assignRolesToUser(user.id, [role.id]), {
+      code: 'user.role_exists',
+      statusCode: 422,
+    });
   });
 
   it('should delete role from user successfully', async () => {

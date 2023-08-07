@@ -27,10 +27,6 @@ import { generatePassword, generateUsername } from '#src/utils.js';
 export const resourceDefault = getManagementApiResourceIndicator(defaultTenantId);
 export const resourceMe = getManagementApiResourceIndicator(adminTenantId, 'me');
 
-export const createResponseWithCode = (statusCode: number) => ({
-  response: { statusCode },
-});
-
 const createUserWithRoles = async (roleNames: string[]) => {
   const username = generateUsername();
   const password = generatePassword();

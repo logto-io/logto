@@ -62,11 +62,17 @@ describe('reset password', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.new_password_required_in_profile',
+      statusCode: 422,
+    });
 
     await client.successSend(putInteractionProfile, { password: userProfile.password });
 
-    await expectRejects(client.submitInteraction(), 'user.same_password');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.same_password',
+      statusCode: 422,
+    });
 
     const newPasswordRecord = generatePassword();
 
@@ -115,11 +121,17 @@ describe('reset password', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.new_password_required_in_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.new_password_required_in_profile',
+      statusCode: 422,
+    });
 
     await client.successSend(putInteractionProfile, { password: userProfile.password });
 
-    await expectRejects(client.submitInteraction(), 'user.same_password');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.same_password',
+      statusCode: 422,
+    });
 
     const newPasswordRecord = generatePassword();
 

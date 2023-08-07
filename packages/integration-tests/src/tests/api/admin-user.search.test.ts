@@ -178,8 +178,7 @@ describe('admin console user search params', () => {
         ['search.primaryEmail', 'jerry_swift_jr_2@geek.best'],
         ['search.primaryEmail', 'jerry_swift_jr_jr@gmail.com'],
       ]),
-      'request.invalid_input',
-      '`exact`'
+      { code: 'request.invalid_input', statusCode: 400, messageIncludes: '`exact`' }
     );
   });
 
@@ -189,8 +188,11 @@ describe('admin console user search params', () => {
         ['search.primaryEmail', ''],
         ['search', 'tom'],
       ]),
-      'request.invalid_input',
-      'cannot be empty'
+      {
+        code: 'request.invalid_input',
+        statusCode: 400,
+        messageIncludes: 'cannot be empty',
+      }
     );
   });
 
@@ -200,8 +202,11 @@ describe('admin console user search params', () => {
         ['search.primaryEmail', '%gmail%'],
         ['mode.primaryEmail', 'similar_to'],
       ]),
-      'request.invalid_input',
-      'case-insensitive'
+      {
+        code: 'request.invalid_input',
+        statusCode: 400,
+        messageIncludes: 'case-insensitive',
+      }
     );
   });
 
@@ -212,21 +217,27 @@ describe('admin console user search params', () => {
           ['search.primaryEmail', '%gmail%'],
           ['mode.primaryEmail', 'similar to'],
         ]),
-        'request.invalid_input',
-        'is not valid'
+        {
+          code: 'request.invalid_input',
+          statusCode: 400,
+          messageIncludes: 'is not valid',
+        }
       ),
-      expectRejects(
-        getUsers<User[]>([['search.email', '%gmail%']]),
-        'request.invalid_input',
-        'is not valid'
-      ),
+      expectRejects(getUsers<User[]>([['search.email', '%gmail%']]), {
+        code: 'request.invalid_input',
+        statusCode: 400,
+        messageIncludes: 'is not valid',
+      }),
       expectRejects(
         getUsers<User[]>([
           ['search.primaryEmail', '%gmail%'],
           ['joint', 'and1'],
         ]),
-        'request.invalid_input',
-        'is not valid'
+        {
+          code: 'request.invalid_input',
+          statusCode: 400,
+          messageIncludes: 'is not valid',
+        }
       ),
     ]);
   });

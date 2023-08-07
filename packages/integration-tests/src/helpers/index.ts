@@ -52,15 +52,17 @@ export const removeVerificationCode = async (): Promise<void> => {
   }
 };
 
-export const expectRejects = async (
-  promise: Promise<unknown>,
-  code: string,
-  messageIncludes?: string
-) => {
+type ExpectedErrorInfo = {
+  code: string;
+  statusCode: number;
+  messageIncludes?: string;
+};
+
+export const expectRejects = async (promise: Promise<unknown>, expected: ExpectedErrorInfo) => {
   try {
     await promise;
   } catch (error: unknown) {
-    expectRequestError(error, code, messageIncludes);
+    expectRequestError(error, expected);
 
     return;
   }
@@ -68,7 +70,9 @@ export const expectRejects = async (
   fail();
 };
 
-export const expectRequestError = (error: unknown, code: string, messageIncludes?: string) => {
+export const expectRequestError = (error: unknown, expected: ExpectedErrorInfo) => {
+  const { code, statusCode, messageIncludes } = expected;
+
   if (!(error instanceof RequestError)) {
     fail('Error should be an instance of RequestError');
   }
@@ -81,6 +85,8 @@ export const expectRequestError = (error: unknown, code: string, messageIncludes
   };
 
   expect(body.code).toEqual(code);
+
+  expect(error.response?.statusCode).toEqual(statusCode);
 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();

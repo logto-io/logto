@@ -22,7 +22,7 @@ import {
   listConnectorFactories,
   getConnectorFactory,
 } from '#src/api/connector.js';
-import { createResponseWithCode } from '#src/helpers/admin-tenant.js';
+import { expectRejects } from '#src/helpers/index.js';
 
 const connectorIdMap = new Map<string, string>();
 
@@ -158,32 +158,39 @@ test('connector set-up flow', async () => {
 
 test('create connector with non-exist connectorId', async () => {
   await cleanUpConnectorTable();
-  await expect(postConnector({ connectorId: 'non-exist-id' })).rejects.toMatchObject(
-    createResponseWithCode(422)
-  );
+  await expectRejects(postConnector({ connectorId: 'non-exist-id' }), {
+    code: 'connector.not_found_with_connector_id',
+    statusCode: 422,
+  });
 });
 
 test('create non standard social connector with target', async () => {
   await cleanUpConnectorTable();
-  await expect(
-    postConnector({ connectorId: mockSocialConnectorId, metadata: { target: 'target' } })
-  ).rejects.toMatchObject(createResponseWithCode(400));
+  await expectRejects(
+    postConnector({ connectorId: mockSocialConnectorId, metadata: { target: 'target' } }),
+    {
+      code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
+      statusCode: 400,
+    }
+  );
 });
 
 test('create duplicated social connector', async () => {
   await cleanUpConnectorTable();
   await postConnector({ connectorId: mockSocialConnectorId });
-  await expect(postConnector({ connectorId: mockSocialConnectorId })).rejects.toMatchObject(
-    createResponseWithCode(422)
-  );
+  await expectRejects(postConnector({ connectorId: mockSocialConnectorId }), {
+    code: 'connector.multiple_instances_not_supported',
+    statusCode: 422,
+  });
 });
 
 test('override metadata for non-standard social connector', async () => {
   await cleanUpConnectorTable();
   const { id } = await postConnector({ connectorId: mockSocialConnectorId });
-  await expect(updateConnectorConfig(id, {}, { target: 'target' })).rejects.toMatchObject(
-    createResponseWithCode(400)
-  );
+  await expectRejects(updateConnectorConfig(id, {}, { target: 'target' }), {
+    code: 'connector.cannot_overwrite_metadata_for_non_standard_connector',
+    statusCode: 400,
+  });
 });
 
 test('send SMS/email test message', async () => {

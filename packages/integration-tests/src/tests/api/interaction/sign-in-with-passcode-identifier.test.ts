@@ -124,7 +124,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.user_not_exist');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.user_not_exist',
+      statusCode: 404,
+    });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
     await client.successSend(putInteractionProfile, { email: newEmail });
@@ -163,7 +166,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.user_not_exist');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.user_not_exist',
+      statusCode: 404,
+    });
 
     await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
     await client.successSend(putInteractionProfile, { phone: newPhone });
@@ -205,7 +211,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.missing_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_profile',
+      statusCode: 422,
+    });
 
     // Fulfill user profile
     await client.successSend(putInteractionProfile, {
@@ -264,7 +273,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.missing_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_profile',
+      statusCode: 422,
+    });
 
     // Fulfill user profile with existing password
     await client.successSend(putInteractionProfile, {
@@ -272,7 +284,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       password,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.password_exists_in_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.password_exists_in_profile',
+      statusCode: 400,
+    });
 
     await client.successSend(putInteractionProfile, {
       username,
@@ -315,7 +330,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       verificationCode: code,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.missing_profile');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_profile',
+      statusCode: 422,
+    });
 
     // Fulfill user profile with existing password
     await client.successSend(putInteractionProfile, {
@@ -323,7 +341,10 @@ describe('Sign-In flow using verification-code identifiers', () => {
       password,
     });
 
-    await expectRejects(client.submitInteraction(), 'user.username_already_in_use');
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.username_already_in_use',
+      statusCode: 422,
+    });
 
     await client.successSend(putInteractionProfile, {
       username,
