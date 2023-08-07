@@ -20,7 +20,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 
-describe('Sign-In flow using password identifiers', () => {
+describe('Sign-in flow using password identifiers', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await clearConnectorsByTypes([ConnectorType.Sms, ConnectorType.Email]);
