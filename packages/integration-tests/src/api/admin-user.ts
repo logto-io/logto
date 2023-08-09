@@ -29,6 +29,9 @@ export const updateUser = async (userId: string, payload: Partial<User>) =>
     })
     .json<User>();
 
+export const suspendUser = async (userId: string, isSuspended: boolean) =>
+  authedAdminApi.patch(`users/${userId}/is-suspended`, { json: { isSuspended } }).json<User>();
+
 export const deleteUser = async (userId: string) => authedAdminApi.delete(`users/${userId}`);
 
 export const updateUserPassword = async (userId: string, password: string) =>

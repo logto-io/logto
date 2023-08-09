@@ -20,13 +20,14 @@ import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-exp
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 import { generateEmail, generatePhone } from '#src/utils.js';
 
-describe('Sign-In flow using verification-code identifiers', () => {
+describe('Sign-in flow using verification-code identifiers', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
     await enableAllVerificationCodeSignInMethods();
   });
+
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
