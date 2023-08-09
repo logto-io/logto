@@ -64,6 +64,7 @@ const quota_table = {
   days_one: '{{count, number}} 일',
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
+  tier: '레벨{{value, number}}: ',
 };
 
 export default Object.freeze(quota_table);

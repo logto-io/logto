@@ -64,6 +64,7 @@ const quota_table = {
   days_one: '{{count, number}} gün',
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
+  tier: 'Seviye{{value, number}}: ',
 };
 
 export default Object.freeze(quota_table);

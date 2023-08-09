@@ -64,6 +64,7 @@ const quota_table = {
   days_one: '{{count, number}} dzień',
   days_other: '{{count, number}} dni',
   add_on: 'Dodatkowy',
+  tier: 'Poziom{{value, number}}: ',
 };
 
 export default Object.freeze(quota_table);
