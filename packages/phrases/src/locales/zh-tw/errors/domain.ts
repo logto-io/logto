@@ -5,6 +5,7 @@ const domain = {
   cloudflare_response_error: '從 Cloudflare 收到意外回應',
   limit_to_one_domain: '您只能擁有一個自訂網域。',
   hostname_already_exists: '此網域名稱已經存在我們的伺服器中。',
+  cloudflare_not_found: '無法找到 Cloudflare 中的主機名',
 };
 
 export default Object.freeze(domain);

@@ -6,6 +6,7 @@ const domain = {
   cloudflare_response_error: 'Vom Cloudflare wurde eine unerwartete Antwort erhalten.',
   limit_to_one_domain: 'Sie können nur eine benutzerdefinierte Domain haben.',
   hostname_already_exists: 'Diese Domain existiert bereits auf unserem Server.',
+  cloudflare_not_found: 'Hostname in Cloudflare nicht gefunden',
 };
 
 export default Object.freeze(domain);

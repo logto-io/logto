@@ -5,6 +5,7 @@ const domain = {
   cloudflare_response_error: 'Cloudflare’dan beklenmeyen bir yanıt alındı.',
   limit_to_one_domain: 'Sadece bir özel alan adınız olabilir.',
   hostname_already_exists: 'Bu alan adı sunucumuzda zaten mevcut.',
+  cloudflare_not_found: "Cloudflare'da alan adı bulunamadı.",
 };
 
 export default Object.freeze(domain);
