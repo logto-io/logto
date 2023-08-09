@@ -1,15 +1,9 @@
-import { ConnectorType } from '@logto/connector-kit';
 import { InteractionEvent, SignInMode } from '@logto/schemas';
 
 import { suspendUser } from '#src/api/admin-user.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initClient } from '#src/helpers/client.js';
-import {
-  clearConnectorsByTypes,
-  setSmsConnector,
-  setEmailConnector,
-} from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
@@ -17,17 +11,6 @@ import { generateName, generatePassword } from '#src/utils.js';
 
 describe('Sign-in flow sad path using password identifiers', () => {
   beforeAll(async () => {
-    await enableAllPasswordSignInMethods();
-    await clearConnectorsByTypes([ConnectorType.Sms, ConnectorType.Email]);
-    await setSmsConnector();
-    await setEmailConnector();
-  });
-
-  afterAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Sms, ConnectorType.Email]);
-  });
-
-  afterEach(async () => {
     await enableAllPasswordSignInMethods();
   });
 
@@ -82,6 +65,9 @@ describe('Sign-in flow sad path using password identifiers', () => {
         statusCode: 403,
       }
     );
+
+    // Reset
+    await enableAllPasswordSignInMethods();
   });
 
   it('Should fail to sign-in with password if related identifiers are not enabled', async () => {
@@ -135,6 +121,9 @@ describe('Sign-in flow sad path using password identifiers', () => {
         statusCode: 422,
       }
     );
+
+    // Reset
+    await enableAllPasswordSignInMethods();
   });
 
   it('Should fail to sign-in with username and password if username is not existed', async () => {
