@@ -15,8 +15,7 @@ export const createUserByAdmin = async (
   password?: string,
   primaryEmail?: string,
   primaryPhone?: string,
-  name?: string,
-  isAdmin = false
+  name?: string
 ) => {
   return createUser({
     username: username ?? generateUsername(),
@@ -24,7 +23,6 @@ export const createUserByAdmin = async (
     name: name ?? username ?? 'John',
     primaryEmail,
     primaryPhone,
-    isAdmin,
   });
 };
 

@@ -1,5 +1,7 @@
+import { type User } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
+import { authedAdminTenantApi } from '#src/api/api.js';
 import {
   consolePassword,
   consoleUsername,
@@ -15,6 +17,42 @@ import { appendPathname, expectNavigation } from '#src/utils.js';
 // for convenient expect methods
 describe('smoke testing for console admin account creation and sign-in', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
+
+  it('should not navigate to welcome page if admin tenant user table is not empty', async () => {
+    // Create a admin user
+    const { id } = await authedAdminTenantApi
+      .post('users', {
+        json: { username: 'test_admin_user' },
+      })
+      .json<User>();
+
+    await expectNavigation(page.goto(logtoConsoleUrl.href));
+
+    await expect(page).toMatchElement('#app');
+    expect(page.url()).not.toBe(new URL('console/welcome', logtoConsoleUrl).href);
+
+    // Clean up
+    await authedAdminTenantApi.delete(`users/${id}`);
+  });
+
+  it('should navigate to welcome page if all admin user are suspended', async () => {
+    // Create a admin user
+    const { id } = await authedAdminTenantApi
+      .post('users', {
+        json: { username: 'test_admin_user' },
+      })
+      .json<User>();
+
+    await authedAdminTenantApi.patch(`users/${id}/is-suspended`, { json: { isSuspended: true } });
+
+    await expectNavigation(page.goto(logtoConsoleUrl.href));
+
+    await expect(page).toMatchElement('#app');
+    expect(page.url()).toBe(new URL('console/welcome', logtoConsoleUrl).href);
+
+    // Clean up
+    await authedAdminTenantApi.delete(`users/${id}`);
+  });
 
   it('can open with app element and navigate to welcome page', async () => {
     await expectNavigation(page.goto(logtoConsoleUrl.href));
