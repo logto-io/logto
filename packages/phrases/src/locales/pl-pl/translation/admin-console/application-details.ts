@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://twoja.strona.com',
   cors_allowed_origins_tip:
     'Domyślnie dozwolone będą wszystkie źródła z adresów URL przekierowania. Zazwyczaj nie wymaga to żadnych działań. Zobacz dokumentację <a>MDN</a> dla szczegółowych informacji.',
-  id_token_expiration: 'Ważność ID Token',
-  refresh_token_expiration: 'Ważność Tokena odświeżania',
   token_endpoint: 'Endpoint Tokena',
   user_info_endpoint: 'Endpoint Informacji o użytkowniku',
   enable_admin_access: 'Włącz dostęp administratora',

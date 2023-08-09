@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'デフォルトでは、リダイレクトURIのすべてのオリジンが許可されます。通常、このフィールドでは何も行動を必要としません。これについての詳細情報は<a>MDN doc</a>を参照してください。',
-  id_token_expiration: 'IDトークンの有効期限',
-  refresh_token_expiration: 'リフレッシュトークンの有効期限',
   token_endpoint: 'トークンエンドポイント',
   user_info_endpoint: 'ユーザー情報エンドポイント',
   enable_admin_access: '管理者アクセスを有効にする',

@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://ваш.вебсайт.com',
   cors_allowed_origins_tip:
     'По умолчанию разрешены все источники URI перенаправления. Обычно для этого поля не требуется никаких действий. См. <a> Документацию MDN </a> для получения подробной информации.',
-  id_token_expiration: 'Истечение срока действия токена ID',
-  refresh_token_expiration: 'Истечение срока действия обновления токена',
   token_endpoint: 'Конечная точка токена',
   user_info_endpoint: 'Конечная точка информации о пользователе',
   enable_admin_access: 'Включить доступ администратора',

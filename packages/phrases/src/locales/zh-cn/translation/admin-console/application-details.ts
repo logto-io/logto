@@ -33,8 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有重定向 URI 的来源将默认被允许。通常不需要对此字段进行操作。参见 <a>MDN 文档</a> 以了解更多。',
-  id_token_expiration: 'ID Token 过期时间',
-  refresh_token_expiration: 'Refresh Token 过期时间',
   token_endpoint: 'Token Endpoint',
   user_info_endpoint: '用户信息端点',
   enable_admin_access: '启用管理访问',

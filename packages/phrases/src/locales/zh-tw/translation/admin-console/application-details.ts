@@ -33,8 +33,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有重新導向 URI 的來源都將默認被允許。通常不需要對此欄位進行操作。參見 <a>MDN 文件</a> 以了解更多。',
-  id_token_expiration: 'ID Token 過期時間',
-  refresh_token_expiration: 'Refresh Token 過期時間',
   token_endpoint: 'Token Endpoint',
   user_info_endpoint: '用戶信息端點',
   enable_admin_access: '啟用管理訪問',

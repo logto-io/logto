@@ -5,7 +5,7 @@ const domain = {
   cloudflare_response_error: 'Cloudflare 로부터 예상치 못한 응답을 받았습니다.',
   limit_to_one_domain: '하나의 맞춤 도메인만 사용할 수 있습니다.',
   hostname_already_exists: '이 도메인은 이미 서버에 존재합니다.',
-  cloudflare_not_found: 'Cloudflare에서 호스트 이름을 찾을 수 없습니다.', // UNTRANSLATED
+  cloudflare_not_found: 'Cloudflare에서 호스트 이름을 찾을 수 없습니다.',
 };
 
 export default Object.freeze(domain);
