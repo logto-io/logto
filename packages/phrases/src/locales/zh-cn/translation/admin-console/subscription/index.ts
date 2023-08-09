@@ -5,7 +5,7 @@ const subscription = {
   free_plan: '免费计划',
   free_plan_description: '适用于边项目和初始 Logto 试用，无需信用卡。',
   hobby_plan: '爱好计划',
-  hobby_plan_description: '适用于个人开发者或开发环境。',
+  hobby_plan_description: '适用于个人开发者或小型工程团队。',
   pro_plan: '专业计划',
   pro_plan_description: '适用于企业付费无忧。',
   enterprise: '企业',

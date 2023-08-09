@@ -30,6 +30,12 @@ export const constructPlanTableDataArray = (
           ) ?? '0',
         mauUnitPrice: stripeProducts
           .filter(({ type }) => type !== 'flat')
+          .slice()
+          .sort((productA, productB) => {
+            const { price: unitAmountDecimalA } = productA;
+            const { price: unitAmountDecimalB } = productB;
+            return Number(unitAmountDecimalA) - Number(unitAmountDecimalB);
+          })
           .map(({ price: { unitAmountDecimal } }) => conditionalString(unitAmountDecimal)),
         customCssEnabled: customCssEnabledMap[id],
         appLogoAndFaviconEnabled: appLogoAndFaviconEnabledMap[id],

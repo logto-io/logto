@@ -5,7 +5,7 @@ const subscription = {
   free_plan: 'Free plan',
   free_plan_description: 'For side projects and initial Logto trials. No credit card.',
   hobby_plan: 'Hobby plan',
-  hobby_plan_description: 'For individual developers or development environments.',
+  hobby_plan_description: 'For individual developers or small engineering teams.',
   pro_plan: 'Pro plan',
   pro_plan_description: 'For businesses benefit worry-free with Logto.',
   enterprise: 'Enterprise',

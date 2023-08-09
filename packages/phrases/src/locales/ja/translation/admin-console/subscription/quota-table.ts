@@ -64,6 +64,7 @@ const quota_table = {
   days_one: '{{count, number}}日',
   days_other: '{{count, number}}日',
   add_on: 'アドオン',
+  tier: 'レベル{{value, number}}: ',
 };
 
 export default Object.freeze(quota_table);

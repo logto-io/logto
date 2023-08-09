@@ -117,8 +117,12 @@ function PlanQuotaTable({ subscriptionPlans }: Props) {
                     '-'
                   ) : (
                     <div>
-                      {quotaValue.map((value) => (
+                      {quotaValue.map((value, index) => (
                         <div key={value}>
+                          <DynamicT
+                            forKey="subscription.quota_table.tier"
+                            interpolation={{ value: index + 1 }}
+                          />
                           <DynamicT
                             forKey="subscription.quota_table.mau_price"
                             interpolation={{ value: (Number(value) / 100).toFixed(3) }}

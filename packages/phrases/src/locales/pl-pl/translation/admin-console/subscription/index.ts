@@ -6,7 +6,7 @@ const subscription = {
   free_plan_description:
     'Dla projektów pobocznych i początkowych prób Logto. Brak wymaganej karty kredytowej.',
   hobby_plan: 'Plan hobbystyczny',
-  hobby_plan_description: 'Dla indywidualnych programistów lub środowisk deweloperskich.',
+  hobby_plan_description: 'Dla indywidualnych programistów lub małych zespołów inżynierskich.',
   pro_plan: 'Plan Pro',
   pro_plan_description: 'Dla firm, ciesz się bezstresową obsługą Logto.',
   enterprise: 'Enterprise',

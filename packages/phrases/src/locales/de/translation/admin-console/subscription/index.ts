@@ -5,7 +5,7 @@ const subscription = {
   free_plan: 'Kostenloser Plan',
   free_plan_description: 'Für Nebenprojekte und erste Logto-Tests. Keine Kreditkarte erforderlich.',
   hobby_plan: 'Hobby Plan',
-  hobby_plan_description: 'Für einzelne Entwickler oder Entwicklungsumgebungen.',
+  hobby_plan_description: 'Für einzelne Entwickler oder kleine Ingenieurteams.',
   pro_plan: 'Pro Plan',
   pro_plan_description: 'Für Unternehmen, die sorgenfrei von Logto profitieren möchten.',
   enterprise: 'Unternehmen',
@@ -65,6 +65,7 @@ const subscription = {
   upgrade_success: 'Erfolgreich auf <name/> hochgestuft',
   downgrade_success: 'Erfolgreich auf <name/> herabgestuft',
   subscription_check_timeout: 'Abo-Überprüfung ist abgelaufen. Bitte später aktualisieren.',
+  tier: 'Stufe{{value, number}}:',
 };
 
 export default Object.freeze(subscription);
