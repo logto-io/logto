@@ -5,6 +5,7 @@ const domain = {
   cloudflare_response_error: 'Получен неожиданный ответ от Cloudflare.',
   limit_to_one_domain: 'Вы можете использовать только один пользовательский домен.',
   hostname_already_exists: 'Этот домен уже существует на нашем сервере.',
+  cloudflare_not_found: 'Не удается найти имя хоста в Cloudflare',
 };
 
 export default Object.freeze(domain);

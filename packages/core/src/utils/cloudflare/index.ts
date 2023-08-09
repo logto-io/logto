@@ -24,6 +24,10 @@ const handleResponse: HandleResponse = <T>(response: Response<string>, guard?: Z
       throw new RequestError('domain.hostname_already_exists');
     }
 
+    if (response.statusCode === 404) {
+      throw new RequestError('domain.cloudflare_not_found');
+    }
+
     throw new RequestError(
       {
         code: 'domain.cloudflare_unknown_error',
