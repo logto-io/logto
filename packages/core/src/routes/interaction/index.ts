@@ -68,6 +68,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         identifier: identifierPayloadGuard.optional(),
         profile: profileGuard.optional(),
       }),
+      status: [204, 400, 401, 403, 422],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {
@@ -108,17 +109,24 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   );
 
   // Delete Interaction
-  router.delete(interactionPrefix, async (ctx, next) => {
-    const error: LogtoErrorCode = 'oidc.aborted';
-    await assignInteractionResults(ctx, provider, { error });
+  router.delete(
+    interactionPrefix,
+    koaGuard({
+      status: [204, 400],
+    }),
+    async (ctx, next) => {
+      const error: LogtoErrorCode = 'oidc.aborted';
+      await assignInteractionResults(ctx, provider, { error });
 
-    return next();
-  });
+      ctx.status = 204;
+      return next();
+    }
+  );
 
   // Update Interaction Event
   router.put(
     `${interactionPrefix}/event`,
-    koaGuard({ body: z.object({ event: eventGuard }) }),
+    koaGuard({ body: z.object({ event: eventGuard }), status: [204, 400, 403, 404] }),
     koaInteractionSie(queries),
     async (ctx, next) => {
       const { event } = ctx.guard.body;
@@ -156,6 +164,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     `${interactionPrefix}/identifiers`,
     koaGuard({
       body: identifierPayloadGuard,
+      status: [204, 400, 401, 404, 422],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {
@@ -193,6 +202,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     `${interactionPrefix}/profile`,
     koaGuard({
       body: profileGuard,
+      status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {
@@ -230,6 +240,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     `${interactionPrefix}/profile`,
     koaGuard({
       body: profileGuard,
+      status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {
@@ -265,25 +276,32 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   );
 
   // Delete Interaction Profile
-  router.delete(`${interactionPrefix}/profile`, async (ctx, next) => {
-    const { interactionDetails, createLog } = ctx;
-    const interactionStorage = getInteractionStorage(interactionDetails.result);
+  router.delete(
+    `${interactionPrefix}/profile`,
+    koaGuard({
+      status: [204, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { interactionDetails, createLog } = ctx;
+      const interactionStorage = getInteractionStorage(interactionDetails.result);
 
-    const log = createLog(`Interaction.${interactionStorage.event}.Profile.Delete`);
-    log.append({ interactionStorage });
+      const log = createLog(`Interaction.${interactionStorage.event}.Profile.Delete`);
+      log.append({ interactionStorage });
 
-    const { profile, ...rest } = interactionStorage;
+      const { profile, ...rest } = interactionStorage;
 
-    await storeInteractionResult(rest, ctx, provider);
+      await storeInteractionResult(rest, ctx, provider);
 
-    ctx.status = 204;
+      ctx.status = 204;
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   // Submit Interaction
   router.post(
     `${interactionPrefix}/submit`,
+    // KoaGuard({ status: [200, 204, 400, 401, 404, 422] }),
     koaInteractionSie(queries),
     koaInteractionHooks(libraries),
     async (ctx, next) => {
@@ -312,7 +330,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   // Create social authorization url interaction verification
   router.post(
     `${interactionPrefix}/${verificationPath}/social-authorization-uri`,
-    koaGuard({ body: socialAuthorizationUrlPayloadGuard }),
+    koaGuard({
+      body: socialAuthorizationUrlPayloadGuard,
+      status: [200, 400, 404],
+      response: z.object({
+        redirectTo: z.string(),
+      }),
+    }),
     async (ctx, next) => {
       // Check interaction exists
       const { event } = getInteractionStorage(ctx.interactionDetails.result);
@@ -335,6 +359,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     `${interactionPrefix}/${verificationPath}/verification-code`,
     koaGuard({
       body: requestVerificationCodePayloadGuard,
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;

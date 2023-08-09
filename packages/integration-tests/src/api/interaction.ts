@@ -27,6 +27,14 @@ export const putInteraction = async (cookie: string, payload: InteractionPayload
     })
     .json();
 
+export const deleteInteraction = async (cookie: string) =>
+  api
+    .delete('interaction', {
+      headers: { cookie },
+      followRedirect: false,
+    })
+    .json();
+
 export const putInteractionEvent = async (cookie: string, payload: { event: InteractionEvent }) =>
   api
     .put('interaction/event', { headers: { cookie }, json: payload, followRedirect: false })
