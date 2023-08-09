@@ -55,6 +55,11 @@ spec:
             - name: admin
               containerPort: {{ .Values.admin.port }}
               protocol: TCP
+          command:
+            - /bin/sh
+          args:
+            - '-c'
+            - 'npm run cli db seed -- --swe && npm start'
           env:
             {{- if .Values.common.env.trustProxyHeader }}
             - name: TRUST_PROXY_HEADER
@@ -67,7 +72,7 @@ spec:
             - name: ADMIN_ENDPOINT
               value: {{ .Values.admin.endpoint }}
             - name: DB_URL
-              value: {{ .Values.common.env.db_url }}
+              value: {{ .Values.common.env.dbURL }}
             {{- if .Values.common.tls.enabled }}
             - name: TLS_CERT_FILE
               value: /etc/tls/tls.crt

@@ -15,7 +15,7 @@ common:
     secretName: ""
   env:
     nodeEnv: ""
-    db_url: ""
+    dbURL: ""
     adminDisableLocalhost: false
     trustProxyHeader: true
 
@@ -34,6 +34,10 @@ core:
         paths:
           - path: /
             pathType: Prefix
+#    tls:
+#      - hosts:
+#          - logto.io
+#        secretName: logto-tls
     tls: []
 
 admin:
