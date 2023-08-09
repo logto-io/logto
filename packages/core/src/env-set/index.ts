@@ -29,15 +29,15 @@ export class EnvSet {
   /** The value set for global configurations.  */
   static values = new GlobalValues();
 
-  static get isTest() {
-    return this.values.isTest;
-  }
-
   static get dbUrl() {
     return this.values.dbUrl;
   }
 
-  static sharedPool = createPoolByEnv(this.dbUrl, this.isTest, this.values.databasePoolSize);
+  static sharedPool = createPoolByEnv(
+    this.dbUrl,
+    EnvSet.values.isUnitTest,
+    this.values.databasePoolSize
+  );
 
   #pool: Optional<DatabasePool>;
   #oidc: Optional<Awaited<ReturnType<typeof loadOidcValues>>>;
@@ -66,7 +66,7 @@ export class EnvSet {
   async load() {
     const pool = await createPoolByEnv(
       this.databaseUrl,
-      EnvSet.isTest,
+      EnvSet.values.isUnitTest,
       EnvSet.values.databasePoolSize
     );
 
