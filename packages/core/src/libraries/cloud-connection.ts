@@ -1,5 +1,5 @@
 import type router from '@logto/cloud/routes';
-import { cloudConnectionDataGuard } from '@logto/schemas';
+import { cloudConnectionDataGuard, CloudScope } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import Client from '@withtyped/client';
 import { got } from 'got';
@@ -24,7 +24,11 @@ const accessTokenResponseGuard = z.object({
   scope: z.string().optional(),
 });
 
-const scopes: string[] = [];
+/**
+ * The scope here can be empty and still work, because the cloud API requests made using this client do not rely on scope verification.
+ * The `CloudScope.SendEmail` is added for now because it needs to call the cloud email service API.
+ */
+const scopes: string[] = [CloudScope.SendEmail];
 const accessTokenExpirationMargin = 60;
 
 /** The library for connecting to Logto Cloud service. */

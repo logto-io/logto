@@ -1,30 +1,56 @@
+import { got } from 'got';
 import nock from 'nock';
 
 import { VerificationCodeType } from '@logto/connector-kit';
 
-import { emailEndpoint } from './constant.js';
-import { mockedAccessTokenResponse, mockedConfig } from './mock.js';
+import { emailEndpoint, usageEndpoint } from './constant.js';
+import createConnector from './index.js';
 
 const { jest } = import.meta;
 
-const getConfig = jest.fn().mockResolvedValue(mockedConfig);
+const endpoint = 'http://localhost:3003';
 
-const { default: createConnector } = await import('./index.js');
+const api = got.extend({ prefixUrl: endpoint });
+const dropLeadingSlash = (path: string) => path.replace(/^\//, '');
+const buildUrl = (path: string, endpoint: string) => new URL(`${endpoint}/api${path}`);
+
+const getConfig = jest.fn().mockResolvedValue({});
+const getCloudServiceClient = jest.fn().mockResolvedValue({
+  post: async (path: string, payload: { body: unknown }) => {
+    return api(dropLeadingSlash(path), {
+      method: 'POST',
+      json: payload.body,
+    });
+  },
+  get: async (path: string, payload: { search: Record<string, string> }) => {
+    return api(dropLeadingSlash(path), {
+      method: 'GET',
+      searchParams: payload.search,
+    }).json<{ count: number }>();
+  },
+});
 
 describe('sendMessage()', () => {
-  beforeAll(() => {
-    nock(mockedConfig.tokenEndpoint).post('').reply(200, JSON.stringify(mockedAccessTokenResponse));
-  });
-
   it('should send message successfully', async () => {
-    nock(mockedConfig.endpoint).post(emailEndpoint).reply(200);
-    const connector = await createConnector({ getConfig });
+    const url = buildUrl(emailEndpoint, endpoint);
+    nock(url.origin).post(url.pathname).reply(204);
+    const { sendMessage } = await createConnector({ getConfig, getCloudServiceClient });
     await expect(
-      connector.sendMessage({
+      sendMessage({
         to: 'wangsijie94@gmail.com',
         type: VerificationCodeType.SignIn,
         payload: { code: '1234' },
       })
     ).resolves.not.toThrow();
+  });
+
+  it('should get usage successfully', async () => {
+    const date = new Date();
+    const url = buildUrl(usageEndpoint, endpoint);
+    nock(url.origin).get(url.pathname).query({ from: date.toISOString() }).reply(200, { count: 1 });
+    const connector = await createConnector({ getConfig, getCloudServiceClient });
+    expect(connector.getUsage).toBeDefined();
+    const usage = await connector.getUsage!(date);
+    expect(usage).toEqual(1);
   });
 });

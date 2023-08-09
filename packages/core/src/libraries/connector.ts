@@ -1,7 +1,7 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import type { AllConnector } from '@logto/connector-kit';
 import { validateConfig, ServiceConnector } from '@logto/connector-kit';
-import { pick, trySafe } from '@silverhand/essentials';
+import { conditional, pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -15,20 +15,16 @@ export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
 export const createConnectorLibrary = (
   queries: Queries,
-  cloudConnection: Pick<CloudConnectionLibrary, 'getCloudConnectionData'>
+  cloudConnection: Pick<CloudConnectionLibrary, 'getClient'>
 ) => {
   const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
-  const { getCloudConnectionData } = cloudConnection;
+  const { getClient } = cloudConnection;
 
   const getConnectorConfig = async (id: string): Promise<unknown> => {
     const connectors = await findAllConnectors();
     const connector = connectors.find((connector) => connector.id === id);
 
     assertThat(connector, new RequestError({ code: 'entity.not_found', id, status: 404 }));
-
-    if (ServiceConnector.Email === connector.connectorId) {
-      return { ...connector.config, ...(await getCloudConnectionData()) };
-    }
 
     return connector.config;
   };
@@ -81,7 +77,8 @@ export const createConnectorLibrary = (
         try {
           const { rawConnector, rawMetadata } = await buildRawConnector(
             connectorFactory,
-            async () => getConnectorConfig(id)
+            async () => getConnectorConfig(id),
+            conditional(connectorFactory.metadata.id === ServiceConnector.Email && getClient)
           );
 
           const connector: AllConnector = {
@@ -123,7 +120,6 @@ export const createConnectorLibrary = (
   };
 
   return {
-    getCloudConnectionData,
     getConnectorConfig,
     getLogtoConnectors,
     getLogtoConnectorsWellKnown,

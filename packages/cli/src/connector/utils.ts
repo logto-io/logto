@@ -7,6 +7,7 @@ import type {
   BaseConnector,
   ConnectorMetadata,
   GetConnectorConfig,
+  GetCloudServiceClient,
 } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
 
@@ -91,11 +92,13 @@ export const parseMetadata = async (
 
 export const buildRawConnector = async <T extends AllConnector = AllConnector>(
   connectorFactory: ConnectorFactory<T>,
-  getConnectorConfig?: GetConnectorConfig
+  getConnectorConfig?: GetConnectorConfig,
+  getCloudServiceClient?: GetCloudServiceClient
 ): Promise<{ rawConnector: T; rawMetadata: ConnectorMetadata }> => {
   const { createConnector, path: packagePath } = connectorFactory;
   const rawConnector = await createConnector({
     getConfig: getConnectorConfig ?? notImplemented,
+    getCloudServiceClient,
   });
   validateConnectorModule(rawConnector);
   const rawMetadata = await parseMetadata(rawConnector.metadata, packagePath);
