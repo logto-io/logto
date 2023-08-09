@@ -121,54 +121,65 @@ function AdvancedSettings({ applicationType, oidcConfig }: Props) {
           />
         </FormField>
       )}
-      {applicationType !== ApplicationType.MachineToMachine && (
-        <>
-          <FormField title="application_details.rotate_refresh_token">
-            <Switch
-              label={
-                <Trans
-                  components={{
-                    a: (
-                      <TextLink
-                        href="https://docs.logto.io/docs/references/applications/#rotate-refresh-token"
-                        target="_blank"
-                      />
-                    ),
-                  }}
-                >
-                  {t('application_details.rotate_refresh_token_label')}
-                </Trans>
-              }
-              {...register('customClientMetadata.rotateRefreshToken')}
-            />
-          </FormField>
-          <FormField
-            title="application_details.refresh_token_ttl"
-            tip={t('application_details.refresh_token_ttl_tip')}
-          >
-            <TextInput
-              {...register('customClientMetadata.refreshTokenTtlInDays', {
-                min: {
-                  value: minTtl,
-                  message: ttlErrorMessage,
-                },
-                max: {
-                  value: maxTtl,
-                  message: ttlErrorMessage,
-                },
-                valueAsNumber: true,
-                validate: (value) =>
-                  value === undefined ||
-                  Number.isInteger(value) ||
-                  t('errors.should_be_an_integer'),
-              })}
-              placeholder="14"
-              // Confirm if we need a customized message here
-              error={errors.customClientMetadata?.refreshTokenTtlInDays?.message}
-            />
-          </FormField>
-        </>
-      )}
+      {/**
+        * Public clients (authentication method is none) are not allowed to disable refresh token
+        * rotation, so we don't show the option here.
+        * 
+        * @see rotateRefreshToken() in `packages/core/src/oidc/default.ts` for more details.
+        */}
+      {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(applicationType) && (
+        <FormField title="application_details.rotate_refresh_token">
+          <Switch
+            label={
+              <Trans
+                components={{
+                  a: (
+                    <TextLink
+                      href="https://docs.logto.io/docs/references/applications/#rotate-refresh-token"
+                      target="_blank"
+                    />
+                  ),
+                }}
+              >
+                {t('application_details.rotate_refresh_token_label')}
+              </Trans>
+            }
+            {...register('customClientMetadata.rotateRefreshToken')}
+          />
+        </FormField>)}
+      {/**
+        * Web public applications (i.e. SPA) with refresh token rotation enabled are not allowed
+        * to set refresh token TTL, so we don't show the option here.
+        * 
+        * @see refreshTokenTtl() in `packages/core/src/oidc/default.ts` for more details.
+        */}
+      {applicationType !== ApplicationType.SPA &&
+        <FormField
+          title="application_details.refresh_token_ttl"
+          tip={t('application_details.refresh_token_ttl_tip')}
+        >
+          <TextInput
+            {...register('customClientMetadata.refreshTokenTtlInDays', {
+              min: {
+                value: minTtl,
+                message: ttlErrorMessage,
+              },
+              max: {
+                value: maxTtl,
+                message: ttlErrorMessage,
+              },
+              valueAsNumber: true,
+              validate: (value) =>
+                value === undefined ||
+                Number.isInteger(value) ||
+                t('errors.should_be_an_integer'),
+            })}
+            placeholder="14"
+            // Confirm if we need a customized message here
+            error={errors.customClientMetadata?.refreshTokenTtlInDays?.message}
+          />
+        </FormField>
+      }
       {applicationType === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Switch
