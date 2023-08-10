@@ -8,10 +8,9 @@ type CreateUserPayload = Partial<{
   username: string;
   password: string;
   name: string;
-  isAdmin: boolean;
 }>;
 
-export const createUser = async (payload: CreateUserPayload) =>
+export const createUser = async (payload: CreateUserPayload = {}) =>
   authedAdminApi
     .post('users', {
       json: payload,

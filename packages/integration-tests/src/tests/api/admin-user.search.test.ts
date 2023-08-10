@@ -49,14 +49,7 @@ describe('admin console user search params', () => {
         const primaryPhone =
           phonePrefix[index % phonePrefix.length]! + index.toString().padStart(5, '0');
 
-        return createUserByAdmin(
-          prefix + username,
-          undefined,
-          primaryEmail,
-          primaryPhone,
-          name,
-          index < 3
-        );
+        return createUserByAdmin(prefix + username, undefined, primaryEmail, primaryPhone, name);
       })
     );
   });
