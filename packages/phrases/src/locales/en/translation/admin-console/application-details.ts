@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'By default, all the origins of Redirect URIs will be allowed. Usually no action is required for this field. See the <a>MDN doc</a> for detailed info.',
-  id_token_expiration: 'ID Token expiration',
-  refresh_token_expiration: 'Refresh Token expiration',
   token_endpoint: 'Token Endpoint',
   user_info_endpoint: 'Userinfo Endpoint',
   enable_admin_access: 'Enable admin access',

@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://votre.site.com',
   cors_allowed_origins_tip:
     "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. Consultez la documentation <a>MDN</a> pour des informations détaillées.",
-  id_token_expiration: "Expiration de l'ID du jeton",
-  refresh_token_expiration: 'Expiration de rafraîchissement du jeton',
   token_endpoint: "Point d'extrémité du jeton",
   user_info_endpoint: "Point d'extrémité Utilisateur",
   enable_admin_access: "Activer l'accès administrateur",

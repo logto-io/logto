@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://il-tuo-sito-web.com',
   cors_allowed_origins_tip:
     'Per impostazione predefinita, saranno consentite tutte le origini degli URI di reindirizzamento. Di solito non è richiesta alcuna azione per questo campo. Vedi la documentazione MDN per informazioni dettagliate.',
-  id_token_expiration: 'Scadenza token ID',
-  refresh_token_expiration: 'Scadenza token di aggiornamento',
   token_endpoint: 'Endpoint del token',
   user_info_endpoint: 'Endpoint delle informazioni utente',
   enable_admin_access: "Abilita l'accesso amministratore",

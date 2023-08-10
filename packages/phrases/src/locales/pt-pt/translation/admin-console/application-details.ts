@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://seusite.com',
   cors_allowed_origins_tip:
     'Por padrão, todas as origens de redirecionamento são permitidas. Recomenda-se restringi-las. Consulte a <a>documentação MDN</a> para obter informações detalhadas.',
-  id_token_expiration: 'Expiração do token de ID',
-  refresh_token_expiration: 'Expiração do token de atualização',
   token_endpoint: 'Endpoint do token',
   user_info_endpoint: 'Endpoint do Userinfo',
   enable_admin_access: 'Ativar o acesso de administrador',

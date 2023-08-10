@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://tu.pagina.com',
   cors_allowed_origins_tip:
     'Por defecto, se permitirán todos los orígenes de los URIs de Redireccionamiento. Normalmente no es necesario hacer nada en este campo. Consulta la <a>documentación de MDN</a> para obtener información detallada.',
-  id_token_expiration: 'Vencimiento del Token ID',
-  refresh_token_expiration: 'Vencimiento del Token de Refresco',
   token_endpoint: 'Endpoint del Token',
   user_info_endpoint: 'Endpoint del Usuario',
   enable_admin_access: 'Habilitar acceso de administrador',

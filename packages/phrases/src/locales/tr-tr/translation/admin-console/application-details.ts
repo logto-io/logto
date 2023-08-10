@@ -35,8 +35,6 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://siteniz.com',
   cors_allowed_origins_tip:
     'Varsayılan olarak, Yönlendirme URIlerinin tüm originlerine izin verilir. Genellikle bu alan için herhangi bir işlem gerekmez. Ayrıntılı bilgi için <a>MDN doc</a> sayfasına bakın.',
-  id_token_expiration: 'ID Token sona erme süresi',
-  refresh_token_expiration: 'Refresh Token sona erme süresi',
   token_endpoint: 'Token bitiş noktası',
   user_info_endpoint: 'Userinfo bitiş noktası',
   enable_admin_access: 'Yönetici erişimini etkinleştir',
