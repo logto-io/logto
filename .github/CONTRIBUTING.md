@@ -73,10 +73,10 @@ You'll need these installed to proceed:
 Clone the repo https://github.com/logto-io/logto in the way you like, then execute the command below in the project root:
 
 ```bash
-pnpm i
+pnpm i && pnpm prepack
 ```
 
-It may take a while to install dependencies.
+`pnpm i` installs dependencies, which might take some time, and `pnpm prepack` builds the necessary workspace dependencies, enabling editors such as VSCode to locate their declarations.
 
 ### Set up database
 
