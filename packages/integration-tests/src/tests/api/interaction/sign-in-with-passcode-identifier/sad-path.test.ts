@@ -31,10 +31,6 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  afterEach(async () => {
-    await enableAllVerificationCodeSignInMethods();
-  });
-
   it('Should fail to sign in with passcode if sign-in mode is register only', async () => {
     await updateSignInExperience({ signInMode: SignInMode.Register });
     const client = await initClient();
@@ -48,6 +44,9 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
         statusCode: 403,
       }
     );
+
+    // Reset
+    await enableAllVerificationCodeSignInMethods();
   });
 
   it('Should fail to sign in if related identifiers are not enabled', async () => {
@@ -101,6 +100,9 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
         statusCode: 422,
       }
     );
+
+    // Reset
+    await enableAllVerificationCodeSignInMethods();
   });
 
   it('Should fail to update sign in email identifier if verification code is incorrect or mismatch', async () => {
