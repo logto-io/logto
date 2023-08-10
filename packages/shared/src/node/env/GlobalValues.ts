@@ -5,8 +5,8 @@ import { throwErrorWithDsnMessage } from './throw-errors.js';
 
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
-  public readonly isTest = getEnv('NODE_ENV') === 'test';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
+  public readonly isUnitTest = getEnv('NODE_ENV') === 'test';
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;
