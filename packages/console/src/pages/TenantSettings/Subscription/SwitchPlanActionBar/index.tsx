@@ -35,9 +35,13 @@ function SwitchPlanActionBar({
   const { currentTenantId } = useContext(TenantsContext);
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentLoadingPlanId, setCurrentLoadingPlanId] = useState<string>();
 
   const handleSubscribe = async (targetPlanId: string, isDowngrade: boolean) => {
+    if (currentLoadingPlanId) {
+      return;
+    }
+
     const currentPlan = subscriptionPlans.find(({ id }) => id === currentSubscriptionPlanId);
     const targetPlan = subscriptionPlans.find(({ id }) => id === targetPlanId);
     if (!currentPlan || !targetPlan) {
@@ -60,7 +64,7 @@ function SwitchPlanActionBar({
     }
 
     try {
-      setIsLoading(true);
+      setCurrentLoadingPlanId(targetPlanId);
       if (targetPlanId === ReservedPlanId.free) {
         await cancelSubscription(currentTenantId);
         onSubscriptionUpdated();
@@ -69,7 +73,7 @@ function SwitchPlanActionBar({
             {t('downgrade_success')}
           </Trans>
         );
-        setIsLoading(false);
+
         return;
       }
 
@@ -79,10 +83,8 @@ function SwitchPlanActionBar({
         isDowngrade,
         callbackPage: subscriptionPage,
       });
-
-      setIsLoading(false);
     } catch (error: unknown) {
-      setIsLoading(false);
+      setCurrentLoadingPlanId(undefined);
       if (await isExceededQuotaLimitError(error)) {
         await show({
           ModalContent: () => (
@@ -99,6 +101,8 @@ function SwitchPlanActionBar({
       }
 
       void toastResponseError(error);
+    } finally {
+      setCurrentLoadingPlanId(undefined);
     }
   };
 
@@ -121,7 +125,7 @@ function SwitchPlanActionBar({
               }
               type={isDowngrade ? 'default' : 'primary'}
               disabled={isCurrentPlan}
-              isLoading={!isCurrentPlan && isLoading}
+              isLoading={!isCurrentPlan && currentLoadingPlanId === planId}
               onClick={() => {
                 void handleSubscribe(planId, isDowngrade);
               }}
