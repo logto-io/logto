@@ -103,12 +103,10 @@ export const createDomainLibrary = (queries: Queries) => {
       try {
         await deleteCustomHostname(hostnameProviderConfig, domain.cloudflareData.id);
       } catch (error: unknown) {
-        if (error instanceof RequestError && error.code === 'domain.cloudflare_not_found') {
-          // Ignore not found error, since we are deleting the domain anyway
-          return;
+        // Ignore not found error, since we are deleting the domain anyway
+        if (!(error instanceof RequestError) || error.code !== 'domain.cloudflare_not_found') {
+          throw error;
         }
-
-        throw error;
       }
     }
 
