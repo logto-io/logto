@@ -37,12 +37,14 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.5.0"
+    "@silverhand/essentials": "^2.5.0",
+    "@withtyped/client": "^0.7.21"
   },
   "optionalDependencies": {
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@logto/cloud": "0.2.5-33a6965",
     "@jest/types": "^29.0.3",
     "@silverhand/eslint-config": "4.0.1",
     "@silverhand/ts-config": "4.0.0",

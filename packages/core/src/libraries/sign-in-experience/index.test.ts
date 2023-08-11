@@ -7,7 +7,6 @@ import {
   socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
-  mockGetCloudConnectionData,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
@@ -39,7 +38,7 @@ const queries = new MockQueries({
   signInExperiences,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
-  getCloudConnectionData: mockGetCloudConnectionData,
+  getClient: jest.fn(),
 });
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 

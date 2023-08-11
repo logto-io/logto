@@ -1,10 +1,10 @@
-import { assert } from '@silverhand/essentials';
-import { HTTPError, got } from 'got';
-import { z } from 'zod';
+import { assert, conditional } from '@silverhand/essentials';
+import { HTTPError } from 'got';
 
 import type {
   CreateConnector,
   EmailConnector,
+  GetCloudServiceClient,
   GetConnectorConfig,
   GetUsageFunction,
   SendMessageFunction,
@@ -14,53 +14,28 @@ import {
   validateConfig,
   ConnectorError,
   ConnectorErrorCodes,
-  parseJson,
 } from '@logto/connector-kit';
 
-import { defaultMetadata, defaultTimeout, emailEndpoint, usageEndpoint } from './constant.js';
-import { grantAccessToken } from './grant-access-token.js';
+import { defaultMetadata, emailEndpoint, usageEndpoint } from './constant.js';
 import { logtoEmailConfigGuard } from './types.js';
 
 const sendMessage =
-  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  (getConfig: GetConnectorConfig, getClient?: GetCloudServiceClient): SendMessageFunction =>
   async (data, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, logtoEmailConfigGuard);
 
-    const {
-      endpoint,
-      tokenEndpoint,
-      appId,
-      appSecret,
-      resource,
-      companyInformation,
-      senderName,
-      appLogo,
-    } = config;
+    const { companyInformation, senderName, appLogo } = config;
     const { to, type, payload } = data;
 
-    assert(
-      endpoint && tokenEndpoint && resource && appId && appSecret,
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig)
-    );
-
-    const accessTokenResponse = await grantAccessToken({
-      tokenEndpoint,
-      resource,
-      appId,
-      appSecret,
-    });
+    assert(getClient, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+    const client = await getClient();
 
     try {
-      await got.post({
-        url: `${endpoint}${emailEndpoint}`,
-        headers: {
-          Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
-        },
-        json: {
+      await client.post(`/api${emailEndpoint}`, {
+        body: {
           data: { to, type, payload: { ...payload, senderName, companyInformation, appLogo } },
         },
-        timeout: { request: defaultTimeout },
       });
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
@@ -72,46 +47,30 @@ const sendMessage =
   };
 
 const getUsage =
-  (getConfig: GetConnectorConfig): GetUsageFunction =>
+  (getConfig: GetConnectorConfig, getClient?: GetCloudServiceClient): GetUsageFunction =>
   async (startFrom?: Date) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, logtoEmailConfigGuard);
 
-    const { endpoint, tokenEndpoint, appId, appSecret, resource } = config;
+    assert(getClient, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+    const client = await getClient();
 
-    assert(
-      endpoint && tokenEndpoint && resource && appId && appSecret,
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig)
-    );
-
-    const accessTokenResponse = await grantAccessToken({
-      tokenEndpoint,
-      resource,
-      appId,
-      appSecret,
+    const { count } = await client.get(`/api${usageEndpoint}`, {
+      search: conditional(startFrom && { from: startFrom.toISOString() }) ?? {},
     });
-
-    const httpResponse = await got.get({
-      url: `${endpoint}${usageEndpoint}`,
-      headers: {
-        Authorization: `${accessTokenResponse.token_type} ${accessTokenResponse.access_token}`,
-      },
-      timeout: { request: defaultTimeout },
-      searchParams: {
-        from: startFrom?.toISOString(),
-      },
-    });
-
-    return z.object({ count: z.number() }).parse(parseJson(httpResponse.body)).count;
+    return count;
   };
 
-const createLogtoEmailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createLogtoEmailConnector: CreateConnector<EmailConnector> = async ({
+  getConfig,
+  getCloudServiceClient: getClient,
+}) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
     configGuard: logtoEmailConfigGuard,
-    sendMessage: sendMessage(getConfig),
-    getUsage: getUsage(getConfig),
+    sendMessage: sendMessage(getConfig, getClient),
+    getUsage: getUsage(getConfig, getClient),
   };
 };
 

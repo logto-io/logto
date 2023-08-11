@@ -1,8 +1,9 @@
 import type { Connector } from '@logto/schemas';
 
-import { mockGetCloudConnectionData } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
+
+const { jest } = import.meta;
 
 const connectors: Connector[] = [
   {
@@ -19,7 +20,7 @@ const connectors: Connector[] = [
 const { createConnectorLibrary } = await import('./connector.js');
 const { getConnectorConfig } = createConnectorLibrary(
   new MockQueries({ connectors: { findAllConnectors: async () => connectors } }),
-  { getCloudConnectionData: mockGetCloudConnectionData }
+  { getClient: jest.fn() }
 );
 
 it('getConnectorConfig() should return right config', async () => {
