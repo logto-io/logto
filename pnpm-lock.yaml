@@ -3034,6 +3034,9 @@ importers:
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
+      property-information:
+        specifier: ^6.2.0
+        version: 6.2.0
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -3068,8 +3071,8 @@ importers:
         specifier: ^12.3.1
         version: 12.3.1(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
       react-markdown:
-        specifier: ^8.0.0
-        version: 8.0.0(@types/react@18.0.31)(react@18.2.0)
+        specifier: ^8.0.7
+        version: 8.0.7(@types/react@18.0.31)(react@18.2.0)
       react-modal:
         specifier: ^3.15.1
         version: 3.15.1(react-dom@18.2.0)(react@18.2.0)
@@ -17500,8 +17503,8 @@ packages:
       xtend: 4.0.2
     dev: true
 
-  /property-information@6.1.1:
-    resolution: {integrity: sha512-hrzC564QIl0r0vy4l6MvRLhafmUowhO/O3KgVSoXIbbA2Sz4j8HGpJc6T2cubRVwMwpdiG/vKGfhT4IixmKN9w==}
+  /property-information@6.2.0:
+    resolution: {integrity: sha512-kma4U7AFCTwpqq5twzC1YVIDXSqg6qQK6JN0smOw8fgRy1OkMi0CYSzFmsy6dnqSenamAtj0CyXMUJ1Mf6oROg==}
     dev: true
 
   /proto-props@2.0.0:
@@ -17835,25 +17838,26 @@ packages:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
 
-  /react-markdown@8.0.0(@types/react@18.0.31)(react@18.2.0):
-    resolution: {integrity: sha512-qbrWpLny6Ef2xHqnYqtot948LXP+4FtC+MWIuaN1kvSnowM+r1qEeEHpSaU0TDBOisQuj+Qe6eFY15cNL3gLAw==}
+  /react-markdown@8.0.7(@types/react@18.0.31)(react@18.2.0):
+    resolution: {integrity: sha512-bvWbzG4MtOU62XqBx3Xx+zB2raaFFsq4mYiAzfjXJMEz2sixgeAfraA3tvzULF02ZdOMUOKTBFFaZJDDrq+BJQ==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16 || ^18.0.0'
     dependencies:
       '@types/hast': 2.3.4
+      '@types/prop-types': 15.7.4
       '@types/react': 18.0.31
       '@types/unist': 2.0.6
       comma-separated-tokens: 2.0.2
       hast-util-whitespace: 2.0.0
       prop-types: 15.8.1
-      property-information: 6.1.1
+      property-information: 6.2.0
       react: 18.2.0
-      react-is: 17.0.2
+      react-is: 18.2.0
       remark-parse: 10.0.1
       remark-rehype: 10.1.0
       space-separated-tokens: 2.0.1
-      style-to-object: 0.3.0
+      style-to-object: 0.4.2
       unified: 10.1.2
       unist-util-visit: 4.1.0
       vfile: 5.3.2
@@ -19209,6 +19213,12 @@ packages:
 
   /style-to-object@0.3.0:
     resolution: {integrity: sha512-CzFnRRXhzWIdItT3OmF8SQfWyahHhjq3HwcMNCNLn+N7klOOqPjMeG/4JSu77D7ypZdGvSzvkrbyeTMizz2VrA==}
+    dependencies:
+      inline-style-parser: 0.1.1
+    dev: true
+
+  /style-to-object@0.4.2:
+    resolution: {integrity: sha512-1JGpfPB3lo42ZX8cuPrheZbfQ6kqPPnPHlKMyeRYtfKD+0jG+QsXgXN57O/dvJlzlB2elI6dGmrPnl5VPQFPaA==}
     dependencies:
       inline-style-parser: 0.1.1
     dev: true
