@@ -8,8 +8,6 @@ import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useSubscriptionUsage from '@/hooks/use-subscription-usage';
 import { getLatestUnpaidInvoice } from '@/utils/subscription';
 
-import Skeleton from './Skeleton';
-
 type Props = {
   tenantId: string;
   className?: string;
@@ -30,7 +28,7 @@ function TenantStatusTag({ tenantId, className }: Props) {
   );
 
   if (isLoadingUsage || isLoadingInvoice || isLoadingSubscription) {
-    return <Skeleton />;
+    return null;
   }
 
   /**

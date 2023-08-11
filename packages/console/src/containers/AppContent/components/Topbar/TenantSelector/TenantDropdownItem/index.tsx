@@ -8,7 +8,6 @@ import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 import TenantEnvTag from '../TenantEnvTag';
 
-import Skeleton from './Skeleton';
 import TenantStatusTag from './TenantStatusTag';
 import * as styles from './index.module.scss';
 
@@ -30,9 +29,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           <TenantEnvTag tag={tag} />
           <TenantStatusTag tenantId={id} className={styles.statusTag} />
         </div>
-        <div className={styles.planName}>
-          {tenantPlan ? <PlanName name={tenantPlan.name} /> : <Skeleton />}
-        </div>
+        <div className={styles.planName}>{tenantPlan && <PlanName name={tenantPlan.name} />}</div>
       </div>
       <Tick className={classNames(styles.checkIcon, isSelected && styles.visible)} />
     </DropdownItem>
