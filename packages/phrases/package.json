@@ -43,7 +43,7 @@
     "@silverhand/eslint-config": "4.0.1",
     "@silverhand/ts-config": "4.0.0",
     "eslint": "^8.44.0",
-    "lint-staged": "^13.0.0",
+    "lint-staged": "^14.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.0.0"
   },
