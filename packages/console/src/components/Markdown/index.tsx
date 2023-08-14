@@ -4,6 +4,15 @@ import classNames from 'classnames';
 import { memo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+/**
+ * Workaround for the markdown crash issue in the parcel dev build. It seems parcel does
+ * something clever in dev mode and messing up the `hastToReact` module. Manually adding
+ * the `property-information` import somehow keeps the reference and makes dev build work.
+ * @see https://github.com/remarkjs/react-markdown/issues/747
+ * @see https://github.com/parcel-bundler/parcel/discussions/9113
+ */
+// eslint-disable-next-line import/no-unassigned-import
+import 'property-information';
 
 import CodeEditor from '@/ds-components/CodeEditor';
 
