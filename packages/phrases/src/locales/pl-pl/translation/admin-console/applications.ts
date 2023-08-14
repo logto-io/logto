@@ -1,53 +1,56 @@
 const applications = {
-  page_title: 'Applications',
-  title: 'Applications',
+  page_title: 'Aplikacje',
+  title: 'Aplikacje',
   subtitle:
-    'Set up Logto authentication for your native, single page, machine to machine, or traditional application',
-  create: 'Create Application',
-  application_name: 'Application name',
-  application_name_placeholder: 'My App',
-  application_description: 'Application description',
-  application_description_placeholder: 'Enter your application description',
-  select_application_type: 'Select an application type',
-  no_application_type_selected: 'You haven’t selected any application type yet',
+    'Skonfiguruj uwierzytelnianie Logto dla Twojej aplikacji natywnej, jednostronicowej, komunikującej się bezpośrednio z zasobami lub tradycyjnej',
+  create: 'Utwórz aplikację',
+  application_name: 'Nazwa aplikacji',
+  application_name_placeholder: 'Moja aplikacja',
+  application_description: 'Opis aplikacji',
+  application_description_placeholder: 'Wprowadź opis swojej aplikacji',
+  select_application_type: 'Wybierz typ aplikacji',
+  no_application_type_selected: 'Nie wybrałeś jeszcze żadnego typu aplikacji',
   application_created:
-    'The application {{name}} has been successfully created.\nNow finish your application settings.',
-  app_id: 'App ID',
+    'Aplikacja {{name}} została pomyślnie utworzona.\nTeraz zakończ konfigurację aplikacji.',
+  app_id: 'ID aplikacji',
   type: {
     native: {
-      title: 'Native App',
-      subtitle: 'An app that runs in a native environment',
-      description: 'E.g., iOS app, Android app',
+      title: 'Aplikacja natywna',
+      subtitle: 'Aplikacja uruchamiana w środowisku natywnym',
+      description: 'Na przykład aplikacja na iOS, aplikacja na Androida',
     },
     spa: {
-      title: 'Single Page App',
-      subtitle: 'An app that runs in a web browser and dynamically updates data in place',
-      description: 'E.g., React DOM app, Vue app',
+      title: 'Aplikacja jednostronicowa',
+      subtitle:
+        'Aplikacja uruchamiana w przeglądarce internetowej i dynamicznie aktualizująca dane na miejscu',
+      description: 'Na przykład aplikacja React DOM, aplikacja Vue',
     },
     traditional: {
-      title: 'Traditional Web',
-      subtitle: 'An app that renders and updates pages by the web server alone',
-      description: 'E.g., Next.js, PHP',
+      title: 'Tradycyjna strona internetowa',
+      subtitle: 'Aplikacja, która renderuje i aktualizuje strony tylko przez serwer internetowy',
+      description: 'Na przykład Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Machine-to-Machine',
-      subtitle: 'An app (usually a service) that directly talks to resources',
-      description: 'E.g., Backend service',
+      title: 'Komunikacja maszyna do maszyny',
+      subtitle: 'Aplikacja (zazwyczaj usługa), która bezpośrednio komunikuje się z zasobami',
+      description: 'Na przykład usługa backendowa',
     },
   },
   guide: {
-    get_sample_file: 'Get Sample',
+    get_sample_file: 'Pobierz przykład',
     header_description:
-      'Follow a step by step guide to integrate your application or click the right button to get our sample project',
-    title: 'The application has been successfully created',
+      'Postępuj zgodnie z przewodnikiem krok po kroku, aby zintegrować swoją aplikację lub kliknij prawy przycisk, aby pobrać nasz przykładowy projekt',
+    title: 'Aplikacja została pomyślnie utworzona',
     subtitle:
-      'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
+      'Teraz postępuj zgodnie z poniższymi krokami, aby zakończyć konfigurację aplikacji. Wybierz typ SDK, aby kontynuować.',
     description_by_sdk:
-      'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
+      'Ten przewodnik po szybkim rozpoczęciu demonstruje, jak zintegrować Logto z aplikacją {{sdk}}',
+    finish_and_done: 'Zakończ i zrobione',
+    request_additional_sdk: 'Zażądaj dodatkowego SDK',
   },
-  placeholder_title: 'Select an application type to continue',
+  placeholder_title: 'Wybierz typ aplikacji, aby kontynuować',
   placeholder_description:
-    'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',
+    'Logto używa jednostki aplikacji dla OIDC, aby pomóc w takich zadaniach jak identyfikowanie Twoich aplikacji, zarządzanie logowaniem i tworzenie dzienników audytu.',
 };
 
 export default Object.freeze(applications);

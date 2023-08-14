@@ -1,3 +1,4 @@
+import Box from '@/assets/icons/box.svg';
 import Close from '@/assets/icons/close.svg';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -44,7 +45,8 @@ function GuideHeaderV2({ appName, isCompact = false, onClose }: Props) {
           <Button
             className={styles.requestSdkButton}
             type="outline"
-            title={<DangerousRaw>Request additional SDK</DangerousRaw>}
+            icon={<Box />}
+            title="applications.guide.request_additional_sdk"
           />
         </>
       )}

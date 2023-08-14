@@ -1,3 +1,7 @@
+// This script generates the `index.ts` file for all the guides.
+// It should be run from the `packages/console/src/assets/docs/guides` (current) directory.
+// For conventions and specifications, see the `README.md` file in this directory.
+
 import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 

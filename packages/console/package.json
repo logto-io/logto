@@ -158,7 +158,7 @@
           "*.d.ts",
           "**/assets/docs/guides/types.ts",
           "**/assets/docs/guides/**/index.ts",
-          "**/mdx-components/*/index.tsx"
+          "**/mdx-components*/*/index.tsx"
         ],
         "rules": {
           "import/no-unused-modules": "off"

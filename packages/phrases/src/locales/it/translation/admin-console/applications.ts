@@ -44,6 +44,8 @@ const applications = {
     subtitle:
       'Ora segui i passi di seguito per completare le impostazioni della tua app. Seleziona il tipo di SDK per continuare.',
     description_by_sdk: "Questa guida rapida illustra come integrare Logto in un'app {{sdk}}",
+    finish_and_done: 'Completato e fatto',
+    request_additional_sdk: 'Richiedi SDK aggiuntivo',
   },
   placeholder_title: 'Seleziona un tipo di applicazione per continuare',
   placeholder_description:

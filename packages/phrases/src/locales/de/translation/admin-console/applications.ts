@@ -45,6 +45,8 @@ const applications = {
       'Folge nun den folgenden Schritten, um deine App-Einstellungen abzuschließen. Bitte wähle den SDK-Typ aus, um fortzufahren.',
     description_by_sdk:
       'Diese Schnellstart-Anleitung zeigt, wie man Logto in die {{sdk}} App integriert',
+    finish_and_done: 'Fertig und erledigt',
+    request_additional_sdk: 'Zusätzliches SDK anfordern',
   },
   placeholder_title: 'Wähle einen Anwendungstyp, um fortzufahren',
   placeholder_description:
