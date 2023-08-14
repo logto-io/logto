@@ -3632,8 +3632,8 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../shared
       '@withtyped/server':
-        specifier: ^0.12.8
-        version: 0.12.8(zod@3.20.2)
+        specifier: ^0.12.9
+        version: 0.12.9(zod@3.20.2)
       zod:
         specifier: ^3.20.2
         version: 3.20.2
@@ -7311,7 +7311,7 @@ packages:
     resolution: {integrity: sha512-7I2ELo5UWIJsFCYK/gX465l0+QhXTdyYWkgb2CcdPu5KbaPBNpASedm+fEV2NREYe2svbNODFhog6UMA/xGQnQ==}
     dependencies:
       '@logto/js': 2.1.1
-      '@silverhand/essentials': 2.7.0
+      '@silverhand/essentials': 2.8.2
       camelcase-keys: 7.0.2
       jose: 4.14.4
     dev: true
@@ -8959,6 +8959,10 @@ packages:
     resolution: {integrity: sha512-F5Qo5ZNnERUURK/9F1ZIi4FBDM22aeD59Zv0VtkgIhUL9tYK9svA2Jz88NNdYBwqCPrh8ExZlpFNi+pNmXKNlQ==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
 
+  /@silverhand/essentials@2.8.2:
+    resolution: {integrity: sha512-mrXzAQ6ZGyLoKQpfEOr/LmbQL7FIurVsBaymnsQyKNV56bFYCv5M+2irsAKROtmLMgSunAU/10XiDIaEYW9tbA==}
+    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
+
   /@silverhand/ts-config-react@4.0.0(typescript@5.0.2):
     resolution: {integrity: sha512-IkZka1iuIBgw0AUbsknghw1vOIs4zOgUxR8jL38Kuk63hmSj687N4BWBb8KhVMhqaG4U/DYkbSEZuwsyHBe68g==}
     engines: {node: ^18.12.0}
@@ -10054,9 +10058,19 @@ packages:
     peerDependencies:
       zod: ^3.19.1
     dependencies:
-      '@silverhand/essentials': 2.7.0
+      '@silverhand/essentials': 2.8.2
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
+
+  /@withtyped/server@0.12.9(zod@3.20.2):
+    resolution: {integrity: sha512-K5zoV9D+WpawbghtlJKF1KOshKkBjq+gYzNRWuZk13YmFWFLcmZn+QCblNP55z9IGdcHWpTRknqb1APuicdzgA==}
+    peerDependencies:
+      zod: ^3.19.1
+    dependencies:
+      '@silverhand/essentials': 2.8.2
+      '@withtyped/shared': 0.2.2
+      zod: 3.20.2
+    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
