@@ -149,4 +149,14 @@ describe('deleteDomain()', () => {
     expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(deleteDomainById).toBeCalledTimes(1);
   });
+
+  it('should delete local record even if the record is not found in remote', async () => {
+    findDomainById.mockResolvedValueOnce(mockDomainWithCloudflareData);
+    deleteCustomHostname.mockRejectedValueOnce(
+      new RequestError({ code: 'domain.cloudflare_not_found' })
+    );
+    await expect(deleteDomain(mockDomain.id)).resolves.not.toThrow();
+    expect(clearCustomDomainCache).toBeCalledTimes(1);
+    expect(deleteDomainById).toBeCalledTimes(1);
+  });
 });
