@@ -3,8 +3,13 @@ import { promisify } from 'node:util';
 
 import { generateStandardId } from '@logto/shared';
 
-export const generateOidcPrivateKey = async (type: 'rsa' | 'ec' = 'ec') => {
-  if (type === 'rsa') {
+export enum PrivateKeyType {
+  RSA = 'rsa',
+  EC = 'ec',
+}
+
+export const generateOidcPrivateKey = async (type: PrivateKeyType = PrivateKeyType.EC) => {
+  if (type === PrivateKeyType.RSA) {
     const { privateKey } = await promisify(generateKeyPair)('rsa', {
       modulusLength: 4096,
       publicKeyEncoding: {
@@ -21,7 +26,7 @@ export const generateOidcPrivateKey = async (type: 'rsa' | 'ec' = 'ec') => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (type === 'ec') {
+  if (type === PrivateKeyType.EC) {
     const { privateKey } = await promisify(generateKeyPair)('ec', {
       // https://security.stackexchange.com/questions/78621/which-elliptic-curve-should-i-use
       namedCurve: 'secp384r1',

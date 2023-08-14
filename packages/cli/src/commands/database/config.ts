@@ -13,7 +13,7 @@ import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { consoleLog } from '../../utils.js';
 
-import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
+import { PrivateKeyType, generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
@@ -41,7 +41,13 @@ const validRotateKeys = Object.freeze([
   LogtoOidcConfigKey.CookieKeys,
 ] as const);
 
+const validPrivateKeyTypes = Object.freeze([PrivateKeyType.RSA, PrivateKeyType.EC] as const);
+
 type ValidateRotateKeyFunction = (key: string) => asserts key is (typeof validRotateKeys)[number];
+
+type ValidatePrivateKeyTypeFunction = (
+  key: string
+) => asserts key is (typeof validPrivateKeyTypes)[number];
 
 const validateRotateKey: ValidateRotateKeyFunction = (key) => {
   // Using `.includes()` will result a type error
@@ -49,6 +55,18 @@ const validateRotateKey: ValidateRotateKeyFunction = (key) => {
   if (!validRotateKeys.some((element) => element === key)) {
     consoleLog.fatal(
       `Invalid config key ${chalk.red(key)} found, expected one of ${validKeysDisplay}`
+    );
+  }
+};
+
+const validatePrivateKeyType: ValidatePrivateKeyTypeFunction = (key) => {
+  // Using `.includes()` will result a type error
+  // eslint-disable-next-line unicorn/prefer-includes
+  if (!validPrivateKeyTypes.some((element) => element === key)) {
+    consoleLog.fatal(
+      `Invalid private key type ${chalk.red(
+        key
+      )} found, expected one of ${validPrivateKeyTypes.join(', ')}`
     );
   }
 };
@@ -131,7 +149,7 @@ const setConfig: CommandModule<unknown, { key: string; value: string; tenantId: 
   },
 };
 
-const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = {
+const rotateConfig: CommandModule<unknown, { key: string; tenantId: string; type: string }> = {
   command: 'rotate <key>',
   describe:
     'Generate a new private or secret key for the given config key and prepend to the key array',
@@ -146,9 +164,17 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = 
         describe: 'The tenant to operate',
         type: 'string',
         default: defaultTenantId,
+      })
+      .option('type', {
+        describe: `The key type for ${
+          LogtoOidcConfigKey.PrivateKeys
+        }, one of ${validPrivateKeyTypes.join(', ')}`,
+        type: 'string',
+        default: 'ec',
       }),
-  handler: async ({ key, tenantId }) => {
+  handler: async ({ key, tenantId, type }) => {
     validateRotateKey(key);
+    validatePrivateKeyType(type);
 
     const pool = await createPoolFromConfig();
     const { rows } = await getRowsByKeys(pool, tenantId, [key]);
@@ -164,7 +190,7 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string }> = 
       // No need for default. It's already exhaustive
       switch (key) {
         case LogtoOidcConfigKey.PrivateKeys: {
-          return [await generateOidcPrivateKey(), ...original];
+          return [await generateOidcPrivateKey(type), ...original];
         }
 
         case LogtoOidcConfigKey.CookieKeys: {
