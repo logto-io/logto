@@ -1,7 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import { useState, useEffect, useCallback } from 'react';
 
-const useScroll = (contentRef: Nullable<HTMLDivElement>) => {
+const useScroll = (contentRef: Nullable<HTMLElement>) => {
   const [scrollTop, setScrollTop] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 

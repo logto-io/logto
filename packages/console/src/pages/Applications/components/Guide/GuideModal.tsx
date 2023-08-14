@@ -1,7 +1,10 @@
 import type { Application } from '@logto/schemas';
 import Modal from 'react-modal';
 
+import { isProduction } from '@/consts/env';
 import * as modalStyles from '@/scss/modal.module.scss';
+
+import GuideV2 from '../GuideV2';
 
 import Guide from '.';
 
@@ -26,7 +29,12 @@ function GuideModal({ app, onClose }: Props) {
       className={modalStyles.fullScreen}
       onRequestClose={closeModal}
     >
-      <Guide app={app} onClose={closeModal} />
+      {/* Switch to v2 once migration is complete. */}
+      {isProduction ? (
+        <Guide app={app} onClose={closeModal} />
+      ) : (
+        <GuideV2 app={app} onClose={closeModal} />
+      )}
     </Modal>
   );
 }
