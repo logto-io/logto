@@ -18,6 +18,7 @@ export const Tenants = createModel(
     name varchar(128) not null default 'My Project',
     tag varchar(64) not null default '${TenantTag.Development}',
     created_at timestamptz not null default(now()),
+    is_suspended boolean not null default false,
     primary key (id),
     constraint tenants__db_user
       unique (db_user)
