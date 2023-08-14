@@ -21,11 +21,11 @@ const metadata = directories
     }
 
     // Add `.png` later
-    const logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
+    const Logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
 
     return {
       name: directory,
-      logo,
+      Logo,
     };
   })
   .filter(Boolean);

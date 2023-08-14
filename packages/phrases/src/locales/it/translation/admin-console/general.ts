@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Segnaposto',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'Salta',
   next: 'Avanti',
   back: 'Indietro',

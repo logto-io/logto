@@ -46,7 +46,10 @@ const applications = {
     description_by_sdk:
       'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
     finish_and_done: 'Bitir ve tamamlandı',
-    request_additional_sdk: 'Ek SDK talep et',
+    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
+    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
+    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
+    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:

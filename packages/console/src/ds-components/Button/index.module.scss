@@ -12,6 +12,7 @@
   white-space: nowrap;
   user-select: none;
   position: relative;
+  text-decoration: none;
 
   &.withIcon {
     display: inline-flex;
@@ -192,7 +193,7 @@
   }
 
   &.outline {
-    background: var(--color-layer-1);
+    background-color: inherit;
     border-color: var(--color-text-link);
     border-width: 1px;
     border-style: solid;

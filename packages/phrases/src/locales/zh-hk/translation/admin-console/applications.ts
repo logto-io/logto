@@ -41,7 +41,10 @@ const applications = {
     subtitle: '參考以下步驟完成你的應用設置。首先，選擇你要使用的 SDK 類型：',
     description_by_sdk: '本教程向你演示如何在 {{sdk}} 應用中集成 Logto 登錄功能',
     finish_and_done: '完成並結束',
-    request_additional_sdk: '請求額外的 SDK',
+    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
+    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
+    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
+    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
   },
   placeholder_title: '選擇應用程序類型以繼續',
   placeholder_description:

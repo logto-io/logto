@@ -50,9 +50,7 @@ function Button({
   className,
   isLoading = false,
   loadingDelay = 500,
-  onClick,
   trailingIcon,
-  to,
   disabled,
   ...rest
 }: Props) {
@@ -85,14 +83,7 @@ function Button({
         className
       )}
       type={htmlType}
-      title={to}
       disabled={isLoading || disabled}
-      onClick={(event) => {
-        if (isLoading) {
-          return false;
-        }
-        onClick?.(event);
-      }}
       {...rest}
     >
       {showSpinner && <Spinner className={styles.spinner} />}
@@ -111,3 +102,45 @@ function Button({
 }
 
 export default Button;
+
+type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title'> & {
+  /**
+   * If the link will be opened in a new tab. This prop will override the `target`
+   * and `rel` attributes.
+   *
+   * - When it's `true`, the `rel` attribute will be set to `noopener noreferrer`.
+   * - When it's `noopener`, the `rel` attribute will be set to `noopener`.
+   */
+  targetBlank?: boolean | 'noopener';
+  type?: ButtonType;
+  size?: 'small' | 'medium' | 'large';
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+};
+
+export function LinkButton({
+  title,
+  type = 'default',
+  size = 'medium',
+  className,
+  targetBlank,
+  ...rest
+}: LinkProps) {
+  return (
+    <a
+      className={classNames(styles.button, styles[type], styles[size], className)}
+      {...rest}
+      {...(Boolean(targetBlank) && {
+        rel: typeof targetBlank === 'string' ? targetBlank : 'noopener noreferrer',
+        target: '_blank',
+      })}
+    >
+      {typeof title === 'string' ? (
+        <span>
+          <DynamicT forKey={title} />
+        </span>
+      ) : (
+        title
+      )}
+    </a>
+  );
+}

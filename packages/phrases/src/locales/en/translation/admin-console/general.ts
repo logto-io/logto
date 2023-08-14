@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Placeholder',
+  submit: 'Submit',
   skip: 'Skip',
   next: 'Next',
   back: 'Back',

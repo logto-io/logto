@@ -31,12 +31,20 @@ export type GuideMetadata = {
   target: ApplicationType | 'API';
   /** The programming language of the guide. If it doesn't apply, set it to `agnostic`. */
   language: ProgrammingLanguage;
+  /** The related sample information of the guide. */
+  sample?: {
+    /** The GitHub repository of the `logto-io` organization that the sample is in. */
+    repo: string;
+    /** The path to the sample directory in the repository. */
+    path: string;
+  };
 };
 
 /** The guide instance to build in the console. */
 export type Guide = {
+  /** The unique identifier of the guide. */
   id: string;
-  logo?: LazyExoticComponent<FunctionComponent>;
+  Logo?: LazyExoticComponent<FunctionComponent>;
   Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };

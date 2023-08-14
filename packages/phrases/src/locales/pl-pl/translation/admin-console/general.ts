@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Miejsce na tekst',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'Pomiń',
   next: 'Dalej',
   back: 'Wstecz',

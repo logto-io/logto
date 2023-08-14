@@ -1,5 +1,6 @@
 const general = {
   placeholder: '플레이스홀더',
+  submit: 'Submit', // UNTRANSLATED
   skip: '건너뛰기',
   next: '다음',
   back: '뒤로',

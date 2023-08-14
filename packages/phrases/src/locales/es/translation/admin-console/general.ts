@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Marcador de posición',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'Omitir',
   next: 'Siguiente',
   back: 'Atrás',

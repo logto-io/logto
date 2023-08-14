@@ -7,6 +7,10 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   description: 'React is a JavaScript library for building user interfaces.',
   target: ApplicationType.SPA,
   language: 'javascript',
+  sample: {
+    repo: 'js',
+    path: 'packages/react-sample',
+  },
 });
 
 export default metadata;

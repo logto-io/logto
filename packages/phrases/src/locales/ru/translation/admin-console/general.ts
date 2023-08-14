@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Заполнитель',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'Пропустить',
   next: 'Следующий',
   back: 'Назад',

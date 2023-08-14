@@ -1,11 +1,15 @@
+import { useCallback, useState } from 'react';
+
 import Box from '@/assets/icons/box.svg';
 import Close from '@/assets/icons/close.svg';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
+import RequestGuide from './RequestGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -15,6 +19,11 @@ type Props = {
 };
 
 function GuideHeaderV2({ appName, isCompact = false, onClose }: Props) {
+  const [isRequestGuideOpen, setIsRequestGuideOpen] = useState(false);
+  const onRequestGuideClose = useCallback(() => {
+    setIsRequestGuideOpen(false);
+  }, []);
+
   return (
     <div className={styles.header}>
       {isCompact && (
@@ -46,10 +55,14 @@ function GuideHeaderV2({ appName, isCompact = false, onClose }: Props) {
             className={styles.requestSdkButton}
             type="outline"
             icon={<Box />}
-            title="applications.guide.request_additional_sdk"
+            title="applications.guide.cannot_find_guide"
+            onClick={() => {
+              setIsRequestGuideOpen(true);
+            }}
           />
         </>
       )}
+      {isCloud && <RequestGuide isOpen={isRequestGuideOpen} onClose={onRequestGuideClose} />}
     </div>
   );
 }

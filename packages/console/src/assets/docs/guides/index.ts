@@ -8,7 +8,7 @@ import { type Guide } from './types';
 const guides: Readonly<Guide[]> = Object.freeze([
   {
     id: 'spa-react',
-    logo: lazy(async () => import('./spa-react/logo.svg')),
+    Logo: lazy(async () => import('./spa-react/logo.svg')),
     Component: lazy(async () => import('./spa-react/README.mdx')),
     metadata: spaReact,
   },

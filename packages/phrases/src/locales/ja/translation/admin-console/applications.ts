@@ -45,7 +45,10 @@ const applications = {
     description_by_sdk:
       'このクイックスタートガイドでは、{{sdk}}アプリにLogtoを統合する方法を説明します。',
     finish_and_done: '完了',
-    request_additional_sdk: '追加SDKをリクエストする',
+    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
+    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
+    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
+    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:

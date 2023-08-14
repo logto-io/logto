@@ -44,7 +44,10 @@ const applications = {
       'Agora siga as etapas abaixo para concluir as configurações da aplicação. Selecione o tipo de SDK para continuar.',
     description_by_sdk: 'Este guia de início rápido demonstra como integrar o Logto em {{sdk}}',
     finish_and_done: 'Finalizar e concluir',
-    request_additional_sdk: 'Solicitar SDK adicional',
+    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
+    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
+    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
+    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
   },
   placeholder_title: 'Selecione um tipo de aplicação para continuar',
   placeholder_description:
