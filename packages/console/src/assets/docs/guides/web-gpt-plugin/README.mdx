@@ -1,0 +1,72 @@
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+import UriInputField from '@/mdx-components-v2/UriInputField';
+
+import AlwaysIssueRefreshToken from './components/AlwaysIssueRefreshToken';
+import AiPluginJson from './components/AiPluginJson';
+import ClientBasics from './components/ClientBasics';
+import chatgptPluginLogin from './assets/chatgpt-plugin-login.png';
+import chatgptPluginOauthCredentials from './assets/chatgpt-plugin-oauth-credentials.png';
+import logtoSignInExperience from './assets/logto-sign-in-experience.png';
+
+<Steps>
+
+<Step
+  title="Prerequisites"
+>
+
+[ChatGPT plugins](https://openai.com/blog/chatgpt-plugins) are tools designed specifically for language models, and help ChatGPT access up-to-date information, run computations, or use third-party services.
+
+To get started, make sure you have a ChatGPT account with developer access for plugins. While ChatGPT plugins are available to all Plus members, you'll still need to join the waitlist to get the developer access.
+
+Go through the [Chat Plugins introduction](https://platform.openai.com/docs/plugins/introduction) to have a basic understanding of how plugins work, you can stop at the "Authentication" section.
+
+</Step>
+
+<Step title="Fill out the redirect URI">
+
+Once your plugin is registered, replace the `[your-plugin-id]` below with the acutal ID. For example, if your plugin ID is `foo123`, the value should be `https://chat.openai.com/aip/foo123/oauth/callback`.
+
+<UriInputField name="redirectUris" defaultValue="https://chat.openai.com/aip/[your-plugin-id]/oauth/callback" />
+
+Remember to click Save. To help ChatGPT maintain the authentication state, you can switch on the "Always issue Refresh Token" option below.
+
+<AlwaysIssueRefreshToken />
+
+</Step>
+
+<Step title="Configure your plugin">
+
+When setting up your plugin with ChatGPT, you will need to provide your OAuth Client ID and Client Secret.
+
+<img alt="ChatGPT plugin OAuth credentials" src={chatgptPluginOauthCredentials} width="560" />
+
+These correspond to the “App ID” and “App Secret” below (you can copy and paste):
+
+<ClientBasics />
+
+For the auth section in the `ai-plugin.json`, use the following template:
+
+<AiPluginJson />
+
+Remember to replace the `verification_tokens.openai` value with the actual one.
+
+> The `profile` scope is a placeholder the ensure the `scope` parameter is not empty, since ChatGPT will add the parameter to the auth request even if it's not specified in the `ai-plugin.json` file which may cause unexpected behavior.
+
+</Step>
+
+<Step title="Test the authentication flow">
+
+The ChatGPT UI will automatically prompt you to install the plugin. Once successful, you will see a dialog with a button that says "Log in with [your plugin name]."
+
+<img alt="ChatGPT plugin login" src={chatgptPluginLogin} width="560" />
+
+Click on the button, and you will be directed to the Logto sign-in experience.
+
+<img alt="Logto sign-in experience" src={logtoSignInExperience} width="560" />
+
+If everything is configured correctly, once you complete the sign-in or registration process in Logto, you will be redirected back to ChatGPT. From now on, every request sent by ChatGPT to your plugin server will carry the Authorization header, allowing you to decode and verify the token in your API.
+
+</Step>
+
+</Steps>

@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.basic {
+  display: flex;
+  gap: _.unit(4);
+
+  .item {
+    margin: 0;
+  }
+}

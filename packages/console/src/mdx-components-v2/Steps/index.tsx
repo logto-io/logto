@@ -1,6 +1,6 @@
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { useRef, type ReactElement, useEffect, useState } from 'react';
+import React, { useRef, type ReactElement, useEffect, useState, useMemo } from 'react';
 
 import useScroll from '@/hooks/use-scroll';
 
@@ -11,7 +11,7 @@ import type Step from '../Step';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: Array<ReactElement<StepProps, typeof Step>>;
+  children: Array<ReactElement<StepProps, typeof Step>> | ReactElement<StepProps, typeof Step>;
 };
 
 /** Find the first scrollable element in the parent chain. */
@@ -29,11 +29,15 @@ const findScrollableElement = (element: Nullable<HTMLElement>): Nullable<HTMLEle
   return findScrollableElement(element.parentElement);
 };
 
-export default function Steps({ children }: Props) {
+export default function Steps({ children: reactChildren }: Props) {
   const contentRef = useRef<HTMLDivElement>(null);
   const stepReferences = useRef<Array<Nullable<HTMLElement>>>([]);
   const { scrollTop } = useScroll(findScrollableElement(contentRef.current));
   const [activeIndex, setActiveIndex] = useState(-1);
+  const children = useMemo(
+    () => (Array.isArray(reactChildren) ? reactChildren : [reactChildren]),
+    [reactChildren]
+  );
 
   useEffect(() => {
     // Make sure the step references length matches the number of children.

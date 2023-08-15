@@ -1,5 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type { KeyboardEvent } from 'react';
 import { useContext, useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -26,9 +27,11 @@ import * as styles from './index.module.scss';
 
 type Props = {
   name: 'redirectUris' | 'postLogoutRedirectUris';
+  /** The default value of the input field when there's no data. */
+  defaultValue?: string;
 };
 
-function UriInputField({ name }: Props) {
+function UriInputField({ name, defaultValue }: Props) {
   const methods = useForm<Partial<GuideForm>>();
   const {
     control,
@@ -76,13 +79,17 @@ function UriInputField({ name }: Props) {
     }
   };
 
+  const defaultValueArray = data?.oidcClientMetadata[name].length
+    ? data.oidcClientMetadata[name]
+    : conditional(defaultValue && [defaultValue]);
+
   return (
     <FormProvider {...methods}>
       <form>
         <Controller
           name={name}
           control={control}
-          defaultValue={data?.oidcClientMetadata[name]}
+          defaultValue={defaultValueArray}
           rules={{
             validate: createValidatorForRhf({
               required: t(
