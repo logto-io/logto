@@ -8,28 +8,28 @@ import Step from '@/mdx-components-v2/Step';
 <Steps>
 
 <Step
-  title="Install Logto SDK"
+  title="Add Logto SDK as a dependency"
   subtitle="Please select your favorite package manager"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
 
 ```bash
-npm i @logto/react
+npm i @logto/vue
 ```
 
 </TabItem>
 <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @logto/react
+yarn add @logto/vue
 ```
 
 </TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @logto/react
+pnpm add @logto/vue
 ```
 
 </TabItem>
@@ -41,22 +41,26 @@ pnpm add @logto/react
   subtitle="1 step"
 >
 
-Import and use `LogtoProvider` to provide a Logto context:
+<InlineNotification>
+  We only support Vue 3 Composition API at this point. Will add support to Vue Options API and
+  possibly Vue 2 in future releases.
+</InlineNotification>
+
+Import and use `createLogto` to install Logto plugin:
 
 <pre>
-  <code className="language-tsx">
-    {`import { LogtoProvider, LogtoConfig } from '@logto/react';
+  <code className="language-ts">
+    {`import { createLogto, LogtoConfig } from '@logto/vue';
 
 const config: LogtoConfig = {
   endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
   appId: '${props.app.id}',
 };
 
-const App = () => (
-  <LogtoProvider config={config}>
-    <YourAppContent />
-  </LogtoProvider>
-);`}
+const app = createApp(App);
+
+app.use(createLogto, config);
+app.mount("#app");`}
   </code>
 </pre>
 
@@ -79,29 +83,32 @@ First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 ### Implement a sign-in button
 
-We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
+We provide two composables `useHandleSignInCallback()` and `useLogto()`, which can help you easily manage the authentication flow.
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
 <pre>
-  <code className="language-tsx">
-    {`import { useLogto } from '@logto/react';
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-const SignIn = () => {
   const { signIn, isAuthenticated } = useLogto();
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
+</script>`}
 
-  if (isAuthenticated) {
-    return <div>Signed in</div>;
-  }
-
-  return (
-    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')}>
-      Sign In
-    </button>
-  );
-};`}
-  </code>
+</code>
 </pre>
+
+```html
+<template>
+  <div v-if="isAuthenticated">
+    <div>Signed in</div>
+  </div>
+  <div v-else>
+    <button @click="onClickSignIn">Sign In</button>
+  </div>
+</template>
+```
 
 ### Handle redirect
 
@@ -109,26 +116,36 @@ We're almost there! In the last step, we use `http://localhost:3000/callback` as
 
 First let's create a callback component:
 
-```tsx
-import { useHandleSignInCallback } from '@logto/react';
-
-const Callback = () => {
+```html
+<!-- CallbackView.vue -->
+<script setup lang="ts">
+  import { useHandleSignInCallback } from '@logto/vue';
   const { isLoading } = useHandleSignInCallback(() => {
     // Navigate to root path when finished
   });
+</script>
+```
 
-  // When it's working in progress
-  if (isLoading) {
-    return <div>Redirecting...</div>;
-  }
-};
+```html
+<template>
+  <!-- When it's working in progress -->
+  <p v-if="isLoading">Redirecting...</p>
+</template>
 ```
 
 Finally insert the code below to create a `/callback` route which does NOT require authentication:
 
-```tsx
-// Assuming react-router
-<Route path="/callback" element={<Callback />} />
+```ts
+// Assuming vue-router
+const router = createRouter({
+  routes: [
+    {
+      path: '/callback',
+      name: 'callback',
+      component: CallbackView,
+    },
+  ],
+});
 ```
 
 </Step>
@@ -147,20 +164,22 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 ### Implement a sign-out button
 
 <pre>
-  <code className="language-tsx">
-    {`const SignOut = () => {
-  const { signOut } = useLogto();
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-  return (
-    <button onClick={() => signOut('${
-      props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
-    }')}>
-      Sign out
-    </button>
-  );
-};`}
-  </code>
+  const { signOut } = useLogto();
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
+</script>`}
+
+</code>
 </pre>
+
+```html
+<template>
+  <button @click="onClickSignOut">Sign Out</button>
+</template>
+```
 
 </Step>
 

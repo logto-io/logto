@@ -8,28 +8,28 @@ import Step from '@/mdx-components-v2/Step';
 <Steps>
 
 <Step
-  title="Install Logto SDK"
+  title="Add Logto SDK as a dependency"
   subtitle="Please select your favorite package manager"
 >
 <Tabs>
 <TabItem value="npm" label="npm">
 
 ```bash
-npm i @logto/react
+npm i @logto/browser
 ```
 
 </TabItem>
 <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @logto/react
+yarn add @logto/browser
 ```
 
 </TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @logto/react
+pnpm add @logto/browser
 ```
 
 </TabItem>
@@ -41,22 +41,16 @@ pnpm add @logto/react
   subtitle="1 step"
 >
 
-Import and use `LogtoProvider` to provide a Logto context:
+Import and init `LogtoClient` by passing config:
 
 <pre>
-  <code className="language-tsx">
-    {`import { LogtoProvider, LogtoConfig } from '@logto/react';
+  <code className="language-ts">
+    {`import LogtoClient from '@logto/browser';
 
-const config: LogtoConfig = {
+const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
   appId: '${props.app.id}',
-};
-
-const App = () => (
-  <LogtoProvider config={config}>
-    <YourAppContent />
-  </LogtoProvider>
-);`}
+});`}
   </code>
 </pre>
 
@@ -79,27 +73,15 @@ First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 ### Implement a sign-in button
 
-We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
-
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
 <pre>
-  <code className="language-tsx">
-    {`import { useLogto } from '@logto/react';
-
-const SignIn = () => {
-  const { signIn, isAuthenticated } = useLogto();
-
-  if (isAuthenticated) {
-    return <div>Signed in</div>;
-  }
-
-  return (
-    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')}>
-      Sign In
-    </button>
-  );
-};`}
+  <code className="language-html">
+    {`<button onclick="logtoClient.signIn('${
+      props.redirectUris[0] ?? 'http://localhost:3000/callback'
+    }')">
+  Sign In
+</button>`}
   </code>
 </pre>
 
@@ -107,29 +89,18 @@ const SignIn = () => {
 
 We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
 
-First let's create a callback component:
+Insert the code below in your `/callback` route:
 
-```tsx
-import { useHandleSignInCallback } from '@logto/react';
-
-const Callback = () => {
-  const { isLoading } = useHandleSignInCallback(() => {
-    // Navigate to root path when finished
-  });
-
-  // When it's working in progress
-  if (isLoading) {
-    return <div>Redirecting...</div>;
-  }
-};
+```ts
+try {
+  await logtoClient.handleSignInCallback(window.location.href);
+  console.log(await logtoClient.isAuthenticated()); // true
+} catch {
+  // Handle error
+}
 ```
 
-Finally insert the code below to create a `/callback` route which does NOT require authentication:
-
-```tsx
-// Assuming react-router
-<Route path="/callback" element={<Callback />} />
-```
+Now you can test the sign-in flow.
 
 </Step>
 
@@ -142,23 +113,22 @@ Calling `.signOut()` will clear all the Logto data in memory and localStorage if
 
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
-<UriInputField name="postLogoutRedirectUris" />
+<UriInputField
+  appId={props.app.id}
+  isSingle={!props.isCompact}
+  name="postLogoutRedirectUris"
+  title="application_details.post_sign_out_redirect_uri"
+/>
 
 ### Implement a sign-out button
 
 <pre>
-  <code className="language-tsx">
-    {`const SignOut = () => {
-  const { signOut } = useLogto();
-
-  return (
-    <button onClick={() => signOut('${
+  <code className="language-html">
+    {`<button onclick="logtoClient.signOut('${
       props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'
-    }')}>
-      Sign out
-    </button>
-  );
-};`}
+    }')">
+  Sign Out
+</button>`}
   </code>
 </pre>
 

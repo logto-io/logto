@@ -1,4 +1,4 @@
-import UriInputField from '@mdx/components/UriInputField';
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -92,12 +92,7 @@ app.use(session({ secret: '${buildIdGenerator(32)()}', cookie: { maxAge: 14 * 24
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="redirectUris"
-  title="application_details.redirect_uri"
-/>
+<UriInputField name="redirectUris" />
 
 ### Prepare Logto routes
 

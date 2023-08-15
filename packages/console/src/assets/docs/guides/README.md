@@ -19,9 +19,17 @@ The `README.mdx` file contains the actual guide content. The `assets` directory 
 
 ### Create the guide directory
 
-The guide directory should be named `[target]-name`, where `[target]` is the target of the guide in kebab-case (see `types.ts` for a list of all targets) and `name` is the name of the guide. The name should be kebab-cased and should not contain any special characters.
+The guide directory should be named `[target]-name`, where `[target]` is the target of the guide in kebab-case and `name` is the name of the guide. The name should be kebab-cased and should not contain any special characters.
 
-For example, a guide for the `MachineToMachine` target with the name `General` should be placed in the directory `machine-to-machine-general`; a guide for the `SPA` target with the name `React` should be placed in the directory `spa-react`.
+Currently we have the following targets:
+
+- `spa`: Single-page application
+- `web`: Web application
+- `native`: Native application
+- `m2m`: Machine-to-machine
+- `api`: API resource
+
+For example, a guide for the `MachineToMachine` target with the name `General` should be placed in the directory `m2m-general`; a guide for the `SPA` target with the name `React` should be placed in the directory `spa-react`.
 
 > **Note**
 > The directory name will be the unique identifier of the guide.

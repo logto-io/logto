@@ -1,0 +1,113 @@
+import UriInputField from '@/mdx-components-v2/UriInputField';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+
+<Steps>
+
+<Step
+  title="Integrate Logto Android SDK"
+  subtitle="Add Logto SDK as a dependency"
+>
+
+<InlineNotification>The minimum supported Android API is level 24</InlineNotification>
+
+Add the `mavenCentral()` repository to your Gradle project build file:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+Add Logto Android SDK to your dependencies:
+
+```kotlin
+dependencies {
+    implementation("io.logto.sdk:android:1.0.0")
+}
+```
+
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+>
+
+<pre>
+  <code className="language-kotlin">
+    {`import io.logto.sdk.android.LogtoClient
+import io.logto.sdk.android.type.LogtoConfig
+
+class MainActivity : AppCompatActivity() {
+    val logtoConfig = LogtoConfig(
+        endpoint = "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+        appId = "${props.app.id}",
+        scopes = null,
+        resources = null,
+        usingPersistStorage = true,
+    )
+
+    val logtoClient = LogtoClient(logtoConfig, application)
+}`}
+  </code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="2 steps"
+>
+
+### Configure Redirect URI
+
+First, let’s configure your redirect URI. E.g. `io.logto.android://io.logto.sample/callback`
+
+<UriInputField name="redirectUris" />
+
+Go back to your IDE/editor, use the following code to implement sign-in:
+
+<pre>
+  <code className="language-kotlin">
+    {`logtoClient.signIn(this, "${
+      props.redirectUris[0] ?? '<your-redirect-uri>'
+    }") { logtoException: LogtoException? ->
+    // User signed in successfully if \`logtoException\` is null.
+}`}
+  </code>
+</pre>
+
+After signing in successfully, `logtoClient.isAuthenticated` will be `true`.
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+>
+
+Calling `.signOut(completion)` will always clear local credentials even if errors occurred.
+
+```kotlin
+logtoClient.signOut { logtoException: LogtoException? ->
+    // Local credentials are cleared regardless of whether `logtoException` is null.
+}
+```
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>
+
+</Steps>
