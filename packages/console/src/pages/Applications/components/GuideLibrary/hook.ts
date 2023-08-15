@@ -83,4 +83,5 @@ const useAppGuideMetadata = (): [
   return [getFilteredMetadata, getStructuredMetadata];
 };
 
+// eslint-disable-next-line import/no-unused-modules
 export default useAppGuideMetadata;
