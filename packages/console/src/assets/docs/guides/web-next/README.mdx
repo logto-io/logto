@@ -1,4 +1,4 @@
-import UriInputField from '@mdx/components/UriInputField';
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -75,12 +75,7 @@ export const logtoClient = new LogtoClient({
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="redirectUris"
-  title="application_details.redirect_uri"
-/>
+<UriInputField name="redirectUris" />
 
 ### Prepare API routes
 
@@ -228,12 +223,7 @@ Calling `/api/logto/sign-out` will clear all the Logto data in memory and cookie
 
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `/api/logto/sign-out`.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="postLogoutRedirectUris"
-  title="application_details.post_sign_out_redirect_uri"
-/>
+<UriInputField name="postLogoutRedirectUris" />
 
 ### Implement a sign-out button
 

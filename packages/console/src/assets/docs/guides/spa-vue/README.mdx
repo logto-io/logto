@@ -1,4 +1,4 @@
-import UriInputField from '@mdx/components/UriInputField';
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -79,12 +79,7 @@ app.mount("#app");`}
 
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="redirectUris"
-  title="application_details.redirect_uri"
-/>
+<UriInputField name="redirectUris" />
 
 ### Implement a sign-in button
 
@@ -164,12 +159,7 @@ Calling `.signOut()` will clear all the Logto data in memory and localStorage if
 
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="postLogoutRedirectUris"
-  title="application_details.post_sign_out_redirect_uri"
-/>
+<UriInputField name="postLogoutRedirectUris" />
 
 ### Implement a sign-out button
 

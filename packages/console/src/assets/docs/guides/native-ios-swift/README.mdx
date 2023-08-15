@@ -1,4 +1,4 @@
-import UriInputField from '@mdx/components/UriInputField';
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -79,12 +79,7 @@ let config = try? LogtoConfig(
 
 First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="redirectUris"
-  title="application_details.redirect_uri"
-/>
+<UriInputField name="redirectUris" />
 
 <InlineNotification>
   The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a{' '}

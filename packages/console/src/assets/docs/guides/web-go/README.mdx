@@ -1,4 +1,4 @@
-import UriInputField from '@mdx/components/UriInputField';
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Steps from '@/mdx-components-v2/Steps';
 import Step from '@/mdx-components-v2/Step';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -210,12 +210,7 @@ func main() {
 Add `http://localhost:8080/sign-in-callback` to the Redirect URI field.  
 This allows Logto to redirect the user to the `/sign-in-callback` route of your application after signing in.
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="redirectUris"
-  title="application_details.redirect_uri"
-/>
+<UriInputField name="redirectUris" />
 
 ### Add a route for handling sign-in requests
 
@@ -305,12 +300,7 @@ func main() {
 
 Add `http://localhost:8080` to the Post Sign-out Redirect URI filed:
 
-<UriInputField
-  appId={props.app.id}
-  isSingle={!props.isCompact}
-  name="postLogoutUris"
-  title="application_details.post_sign_out_redirect_uri"
-/>
+<UriInputField name="postLogoutUris" />
 
 This configuration enables the user to return to the home page after signing out.
 
