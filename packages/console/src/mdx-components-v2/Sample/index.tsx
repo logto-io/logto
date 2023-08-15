@@ -21,13 +21,13 @@ export default function Sample() {
   }
 
   return (
-    <aside className={styles.wrapper}>
+    <aside className={styles.sample}>
       {Logo && (
         <div className={styles.logo}>
           <Logo />
         </div>
       )}
-      <hgroup className={styles.hgroup}>
+      <hgroup>
         <header>Want to see a sample?</header>
         <p>Check out our repository for a sample application that uses this guide.</p>
       </hgroup>

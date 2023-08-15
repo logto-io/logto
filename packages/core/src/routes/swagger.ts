@@ -1,3 +1,4 @@
+import { httpCodeToMessage } from '@logto/core-kit';
 import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
@@ -12,7 +13,6 @@ import assertThat from '#src/utils/assert-that.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from './types.js';
-import { httpCodeToMessage } from '@logto/core-kit';
 
 type RouteObject = {
   path: string;
