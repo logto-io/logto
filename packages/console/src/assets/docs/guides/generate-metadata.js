@@ -47,7 +47,8 @@ await fs.appendFile(filename, '\n');
 await fs.appendFile(filename, 'const guides: Readonly<Guide[]> = Object.freeze([');
 
 for (const { name, logo } of metadata) {
-  fs.appendFile(
+  // eslint-disable-next-line no-await-in-loop
+  await fs.appendFile(
     filename,
     `
   {
