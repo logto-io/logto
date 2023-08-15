@@ -1,0 +1,78 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  gap: _.unit(7);
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  padding: _.unit(8) 0 _.unit(8) _.unit(11);
+  flex-shrink: 0;
+  overflow-y: auto;
+
+  label {
+    font: var(--font-label-2);
+    color: var(--color-text);
+  }
+
+  .searchInput {
+    svg {
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .checkboxGroup {
+    gap: _.unit(4);
+  }
+}
+
+.groups {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: _.unit(8);
+  overflow-y: auto;
+
+  > div {
+    flex: unset;
+  }
+}
+
+.guideGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: _.unit(8) _.unit(8) 0 0;
+  container-type: inline-size;
+
+  label {
+    @include _.section-head-1;
+    margin-bottom: _.unit(4);
+  }
+
+  .grid {
+    display: grid;
+    gap: _.unit(4) _.unit(3);
+  }
+
+  @container (max-width: 680px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @container (min-width: 681px) and (max-width: 1080px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @container (min-width: 1081px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

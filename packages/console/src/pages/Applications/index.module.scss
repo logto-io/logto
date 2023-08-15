@@ -7,3 +7,20 @@
 .applicationName {
   width: 360px;
 }
+
+.guideLibraryContainer {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-layer-1);
+  border-radius: 12px;
+  padding: _.unit(6) 0;
+  margin: _.unit(4) 0;
+
+  .title {
+    text-align: center;
+  }
+
+  .library {
+    padding: 0 _.unit(6);
+  }
+}

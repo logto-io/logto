@@ -34,7 +34,9 @@
   position: absolute;
   inset: auto 0 0 0;
   padding: _.unit(4);
-  background-color: var(--color-bg-float);
+  background-color: var(--color-layer-1);
+  box-shadow: var(--shadow-2-reversed);
+  z-index: 1;
 
   .layout {
     margin: 0 auto;

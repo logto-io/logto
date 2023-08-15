@@ -50,9 +50,9 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
 
 function ApplicationDetails() {
-  const { id } = useParams();
+  const { id, guideId } = useParams();
   const { navigate, match } = useTenantPathname();
-  const isGuideView = id && match(`/applications/${id}/guide`);
+  const isGuideView = id && guideId && match(`/applications/${id}/guide/${guideId}`);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
@@ -243,6 +243,7 @@ function ApplicationDetails() {
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
       {isGuideView && (
         <GuideModal
+          guideId={guideId}
           app={data}
           onClose={(id) => {
             navigate(`/applications/${id}`);

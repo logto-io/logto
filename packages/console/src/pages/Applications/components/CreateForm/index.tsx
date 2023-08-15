@@ -1,7 +1,7 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -30,12 +30,11 @@ type FormData = {
 };
 
 type Props = {
-  isOpen: boolean;
   defaultCreateType?: ApplicationType;
   onClose?: (createdApp?: Application) => void;
 };
 
-function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
+function CreateForm({ defaultCreateType, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const isMachineToMachineDisabled = !currentPlan?.quota.machineToMachineLimit;
@@ -44,7 +43,6 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
     handleSubmit,
     control,
     register,
-    resetField,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
@@ -56,18 +54,8 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
     rules: { required: true },
   });
 
-  useEffect(() => {
-    if (defaultCreateType) {
-      resetField('type', { defaultValue: defaultCreateType });
-    }
-  }, [defaultCreateType, resetField]);
-
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
-
-  if (!isOpen) {
-    return null;
-  }
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
@@ -89,7 +77,7 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
   return (
     <Modal
       shouldCloseOnEsc
-      isOpen={isOpen}
+      isOpen
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
       onRequestClose={() => {
@@ -104,37 +92,40 @@ function CreateForm({ isOpen, defaultCreateType, onClose }: Props) {
         onClose={onClose}
       >
         <form>
-          <FormField title="applications.select_application_type">
-            <RadioGroup
-              ref={ref}
-              className={styles.radioGroup}
-              name={name}
-              value={value}
-              type="card"
-              onChange={onChange}
-            >
-              {Object.values(ApplicationType).map((type) => (
-                <Radio
-                  key={type}
-                  value={type}
-                  hasCheckIconForCard={type !== ApplicationType.MachineToMachine}
-                >
-                  <TypeDescription
-                    type={type}
-                    title={t(`${applicationTypeI18nKey[type]}.title`)}
-                    subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
-                    description={t(`${applicationTypeI18nKey[type]}.description`)}
-                    hasProTag={
-                      type === ApplicationType.MachineToMachine && isMachineToMachineDisabled
-                    }
-                  />
-                </Radio>
-              ))}
-            </RadioGroup>
-            {errors.type?.type === 'required' && (
-              <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
-            )}
-          </FormField>
+          {defaultCreateType && <input hidden {...register('type')} value={defaultCreateType} />}
+          {!defaultCreateType && (
+            <FormField title="applications.select_application_type">
+              <RadioGroup
+                ref={ref}
+                className={styles.radioGroup}
+                name={name}
+                value={value}
+                type="card"
+                onChange={onChange}
+              >
+                {Object.values(ApplicationType).map((type) => (
+                  <Radio
+                    key={type}
+                    value={type}
+                    hasCheckIconForCard={type !== ApplicationType.MachineToMachine}
+                  >
+                    <TypeDescription
+                      type={type}
+                      title={t(`${applicationTypeI18nKey[type]}.title`)}
+                      subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
+                      description={t(`${applicationTypeI18nKey[type]}.description`)}
+                      hasProTag={
+                        type === ApplicationType.MachineToMachine && isMachineToMachineDisabled
+                      }
+                    />
+                  </Radio>
+                ))}
+              </RadioGroup>
+              {errors.type?.type === 'required' && (
+                <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
+              )}
+            </FormField>
+          )}
           <FormField isRequired title="applications.application_name">
             <TextInput
               {...register('name', { required: true })}

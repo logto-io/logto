@@ -9,11 +9,12 @@ import GuideV2 from '../GuideV2';
 import Guide from '.';
 
 type Props = {
+  guideId: string;
   app?: Application;
   onClose: (id: string) => void;
 };
 
-function GuideModal({ app, onClose }: Props) {
+function GuideModal({ guideId, app, onClose }: Props) {
   if (!app) {
     return null;
   }
@@ -33,7 +34,7 @@ function GuideModal({ app, onClose }: Props) {
       {isProduction ? (
         <Guide app={app} onClose={closeModal} />
       ) : (
-        <GuideV2 app={app} onClose={closeModal} />
+        <GuideV2 guideId={guideId} app={app} onClose={closeModal} />
       )}
     </Modal>
   );

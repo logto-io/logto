@@ -37,14 +37,30 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial', // UNTRANSLATED
+    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
+    start_building: 'Start Building', // UNTRANSLATED
+    categories: {
+      featured: 'Popular and for you', // UNTRANSLATED
+      Traditional: 'Traditional web app', // UNTRANSLATED
+      SPA: 'Single page app', // UNTRANSLATED
+      Native: 'Native', // UNTRANSLATED
+      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+    },
+    filter: {
+      title: 'Filter framework', // UNTRANSLATED
+      placeholder: 'Search for framework', // UNTRANSLATED
+    },
     get_sample_file: 'Obter amostra',
-    header_description:
-      'Siga um guia passo a passo para integrar seu aplicativo ou clique no botão direito para obter nosso projeto de amostra',
     title: 'O aplicativo foi criado com sucesso',
     subtitle:
       'Agora siga as etapas abaixo para concluir as configurações do aplicativo. Selecione o tipo de SDK para continuar.',
     description_by_sdk:
       'Este guia de início rápido demonstra como integrar o Logto ao aplicativo {{sdk}}',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
+    create_without_framework: 'Create app without framework', // UNTRANSLATED
     finish_and_done: 'Concluído',
     cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
     describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED

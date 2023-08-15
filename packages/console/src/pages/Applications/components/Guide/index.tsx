@@ -27,6 +27,7 @@ type Props = {
   onClose: () => void;
 };
 
+/** @deprecated */
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
   ios: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios.mdx')),
   android: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/android.mdx')),
@@ -77,12 +78,7 @@ function Guide({ app, isCompact, onClose }: Props) {
 
   return (
     <div className={styles.container}>
-      <GuideHeader
-        appName={appName}
-        selectedSdk={selectedSdk}
-        isCompact={isCompact}
-        onClose={onClose}
-      />
+      <GuideHeader isCompact={isCompact} onClose={onClose} />
       <div className={styles.content}>
         {cloneElement(<SdkSelector sdks={sdks} selectedSdk={selectedSdk} />, {
           className: styles.banner,

@@ -70,7 +70,7 @@ function ConsoleContent() {
             <Route path="applications">
               <Route index element={<Applications />} />
               <Route path="create" element={<Applications />} />
-              <Route path=":id/guide" element={<ApplicationDetails />} />
+              <Route path=":id/guide/:guideId" element={<ApplicationDetails />} />
               <Route path=":id" element={<ApplicationDetails />} />
             </Route>
             <Route path="api-resources">

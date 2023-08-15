@@ -26,7 +26,7 @@ type Props<
   subHeader?: ReactNode;
   table: TableProps<TFieldValues, TName>;
   /** @deprecated Need refactor. */
-  widgets: ReactNode;
+  widgets?: ReactNode;
   className?: string;
 };
 

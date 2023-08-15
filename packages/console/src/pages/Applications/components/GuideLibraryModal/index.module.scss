@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-base);
+  height: 100vh;
+
+  .content {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .actionBar {
+    display: flex;
+    align-items: center;
+    inset: auto 0 0 0;
+    padding: _.unit(4) _.unit(8);
+    background-color: var(--color-layer-1);
+    box-shadow: var(--shadow-2-reversed);
+    z-index: 1;
+
+    .text {
+      font: var(--font-body-2);
+      color: var(--color-text);
+      margin-left: _.unit(62.5);
+      margin-right: _.unit(4);
+      @include _.multi-line-ellipsis(2);
+    }
+
+    .button {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
+}

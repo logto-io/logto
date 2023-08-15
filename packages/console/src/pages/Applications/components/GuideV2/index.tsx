@@ -19,7 +19,7 @@ import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 
-import GuideHeaderV2 from '../GuideHeaderV2';
+import GuideHeader from '../GuideHeader';
 import StepsSkeleton from '../StepsSkeleton';
 
 import * as styles from './index.module.scss';
@@ -39,16 +39,17 @@ type GuideContextType = {
 export const GuideContext = createContext<GuideContextType>({} as GuideContextType);
 
 type Props = {
+  guideId: string;
   app?: Application;
   isCompact?: boolean;
   onClose: () => void;
 };
 
-function GuideV2({ app, isCompact, onClose }: Props) {
+function GuideV2({ guideId, app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
-  const guide = guides.find(({ id }) => id === 'web-gpt-plugin');
+  const guide = guides.find(({ id }) => id === guideId);
 
   if (!app || !guide) {
     throw new Error('Invalid app or guide');
@@ -73,7 +74,7 @@ function GuideV2({ app, isCompact, onClose }: Props) {
 
   return (
     <div className={styles.container}>
-      <GuideHeaderV2 appName={app.name} isCompact={isCompact} onClose={onClose} />
+      <GuideHeader isCompact={isCompact} onClose={onClose} />
       <div className={styles.content}>
         <GuideContext.Provider value={memorizedContext}>
           <MDXProvider
@@ -102,7 +103,7 @@ function GuideV2({ app, isCompact, onClose }: Props) {
         </GuideContext.Provider>
         <nav className={styles.actionBar}>
           <div className={styles.layout}>
-            <Button size="large" title="cloud.sie.finish_and_done" type="primary" />
+            <Button size="large" title="applications.guide.finish_and_done" type="primary" />
           </div>
         </nav>
       </div>
