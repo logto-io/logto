@@ -7,9 +7,6 @@ import InlineNotification from '@/ds-components/InlineNotification';
 
 <Step
   title="Add Logto SDK as a dependency"
-  index={0}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(1)}
 >
 <InlineNotification>
   The following demonstration is built upon the <a href="https://gin-gonic.com">Gin Web Framework</a>.  
@@ -49,9 +46,6 @@ func main() {
 <Step
   title="Use sessions to store user authentication information"
   subtitle="2 steps"
-  index={1}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(2)}
 >
 
 In traditional web applications, the user authentication information will be stored in the user session.
@@ -151,9 +145,6 @@ sessionStorage := &SessionStorage{session: session}
 <Step
   title="Init LogtoClient"
   subtitle="2 steps"
-  index={2}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(3)}
 >
 
 ### Create LogtConfig
@@ -166,8 +157,8 @@ func main() {
 
 	logtoConfig := &client.LogtoConfig{
 		Endpoint:           "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-		AppId:              "${props.appId}",
-		AppSecret:          "${props.appSecret}",
+		AppId:              "${props.app.id}",
+		AppSecret:          "${props.app.secret}",
 	}
 
 	// ...
@@ -212,9 +203,6 @@ func main() {
 <Step
   title="Sign in"
   subtitle="3 steps"
-  index={3}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(4)}
 >
 
 ### Configure Redirect URI
@@ -223,7 +211,7 @@ Add `http://localhost:8080/sign-in-callback` to the Redirect URI field.
 This allows Logto to redirect the user to the `/sign-in-callback` route of your application after signing in.
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="redirectUris"
   title="application_details.redirect_uri"
@@ -311,9 +299,6 @@ func main() {
 <Step
   title="Sign out"
   subtitle="2 steps"
-  index={4}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(5)}
 >
 
 ### Configure Post Sign-out Redirect URI
@@ -321,7 +306,7 @@ func main() {
 Add `http://localhost:8080` to the Post Sign-out Redirect URI filed:
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="postLogoutUris"
   title="application_details.post_sign_out_redirect_uri"
@@ -379,11 +364,6 @@ After the user makes a signing-out request, Logto will clear all user authentica
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={5}
-  activeIndex={props.activeStepIndex}
-  buttonText="general.done"
-  buttonType="primary"
-  onButtonClick={props.onComplete}
 >
 
 - [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)

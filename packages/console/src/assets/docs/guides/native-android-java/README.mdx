@@ -8,9 +8,6 @@ import Step from '@/mdx-components-v2/Step';
 <Step
   title="Integrate Logto Android SDK"
   subtitle="Add Logto SDK as a dependency"
-  index={0}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(1)}
 >
 
 <InlineNotification>The minimum supported Android API is level 24</InlineNotification>
@@ -36,9 +33,6 @@ dependencies {
 <Step
   title="Init LogtoClient"
   subtitle="1 step"
-  index={1}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(2)}
 >
 
 <pre>
@@ -56,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         LogtoConfig logtoConfig = new LogtoConfig(
             "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-            "${props.appId}",
+            "${props.app.id}",
             null,
             null,
             true
@@ -73,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
 <Step
   title="Sign in"
   subtitle="2 steps"
-  index={2}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(3)}
 >
 
 ### Configure Redirect URI
@@ -83,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 First, let’s configure your redirect URI. E.g. `io.logto.android://io.logto.sample/callback`
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="redirectUris"
   title="application_details.redirect_uri"
@@ -108,9 +99,6 @@ After signing in successfully, `logtoClient.isAuthenticated` will be `true`.
 <Step
   title="Sign out"
   subtitle="1 step"
-  index={3}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(4)}
 >
 
 Calling `.signOut(completion)` will always clear local credentials even if errors occurred.
@@ -126,11 +114,6 @@ logtoClient.signOut(logtoException -> {
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={4}
-  activeIndex={props.activeStepIndex}
-  buttonText="general.done"
-  buttonType="primary"
-  onButtonClick={props.onComplete}
 >
 
 - [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)

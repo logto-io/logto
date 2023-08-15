@@ -10,9 +10,6 @@ import Step from '@/mdx-components-v2/Step';
 <Step
   title="Add Logto SDK as a dependency"
   subtitle="Please select your favorite package manager"
-  index={0}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(1)}
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -42,9 +39,6 @@ pnpm add @logto/browser
 <Step
   title="Init LogtoClient"
   subtitle="1 step"
-  index={1}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(2)}
 >
 
 Import and init `LogtoClient` by passing config:
@@ -55,7 +49,7 @@ Import and init `LogtoClient` by passing config:
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-  appId: '${props.appId}',
+  appId: '${props.app.id}',
 });`}
   </code>
 </pre>
@@ -65,9 +59,6 @@ const logtoClient = new LogtoClient({
 <Step
   title="Sign in"
   subtitle="3 steps"
-  index={2}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(3)}
 >
 
 <InlineNotification>
@@ -79,7 +70,7 @@ const logtoClient = new LogtoClient({
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="redirectUris"
   title="application_details.redirect_uri"
@@ -121,9 +112,6 @@ Now you can test the sign-in flow.
 <Step
   title="Sign out"
   subtitle="1 step"
-  index={3}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(4)}
 >
 
 Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
@@ -131,7 +119,7 @@ Calling `.signOut()` will clear all the Logto data in memory and localStorage if
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="postLogoutRedirectUris"
   title="application_details.post_sign_out_redirect_uri"
@@ -154,11 +142,6 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={4}
-  activeIndex={props.activeStepIndex}
-  buttonText="general.done"
-  buttonType="primary"
-  onButtonClick={props.onComplete}
 >
 
 - [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)

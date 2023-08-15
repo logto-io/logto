@@ -10,9 +10,6 @@ import Step from '@/mdx-components-v2/Step';
 <Step
   title="Integrate Logto Swift SDK"
   subtitle="Add Logto SDK as a dependency"
-  index={0}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(1)}
 >
 
 Use the following URL to add Logto SDK as a dependency in Swift Package Manager.
@@ -45,9 +42,6 @@ CocoaPods [does not support local dependency](https://github.com/CocoaPods/Cocoa
 <Step
   title="Init LogtoClient"
   subtitle="1 step"
-  index={1}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(2)}
 >
 
 <pre>
@@ -57,7 +51,7 @@ import LogtoClient
 
 let config = try? LogtoConfig(
   endpoint: "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-  appId: "${props.appId}"
+  appId: "${props.app.id}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}
   </code>
@@ -79,9 +73,6 @@ let config = try? LogtoConfig(
 <Step
   title="Sign in"
   subtitle="2 steps"
-  index={2}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(3)}
 >
 
 ### Configure Redirect URI
@@ -89,7 +80,7 @@ let config = try? LogtoConfig(
 First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="redirectUris"
   title="application_details.redirect_uri"
@@ -123,9 +114,6 @@ Go back to Xcode, use the following code to implement sign-in:
 <Step
   title="Sign out"
   subtitle="1 step"
-  index={3}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(4)}
 >
 
 Calling `.signOut()` will clean all the Logto data in Keychain, if they exist.
@@ -139,11 +127,6 @@ await client.signOut()
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={4}
-  activeIndex={props.activeStepIndex}
-  buttonText="general.done"
-  buttonType="primary"
-  onButtonClick={props.onComplete}
 >
 
 - [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)

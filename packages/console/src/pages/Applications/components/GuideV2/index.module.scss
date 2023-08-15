@@ -14,10 +14,14 @@
     overflow-y: auto;
     padding: _.unit(6) _.unit(6) max(10vh, 120px);
 
-    .banner {
-      display: flex;
-      align-items: center;
-      margin-bottom: _.unit(6);
+    section p {
+      font: var(--font-body-2);
+      margin: _.unit(4) 0;
+    }
+
+    section ul > li {
+      margin-block: _.unit(2);
+      padding-inline-start: _.unit(1);
     }
   }
 }
