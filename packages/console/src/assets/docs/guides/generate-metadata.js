@@ -21,11 +21,11 @@ const metadata = directories
     }
 
     // Add `.png` later
-    const Logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
+    const logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
 
     return {
       name: directory,
-      Logo,
+      logo,
     };
   })
   .filter(Boolean);
@@ -52,7 +52,7 @@ for (const { name, logo } of metadata) {
     `
   {
     id: '${name}',
-    logo: ${logo ? `lazy(async () => import('./${name}/${logo}'))` : 'undefined'},
+    Logo: ${logo ? `lazy(async () => import('./${name}/${logo}'))` : 'undefined'},
     Component: lazy(async () => import('./${name}/README.mdx')),
     metadata: ${camelCase(name)},
   },
