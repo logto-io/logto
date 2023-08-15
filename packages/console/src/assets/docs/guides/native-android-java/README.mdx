@@ -1,0 +1,143 @@
+import UriInputField from '@mdx/components/UriInputField';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+
+<Steps>
+
+<Step
+  title="Integrate Logto Android SDK"
+  subtitle="Add Logto SDK as a dependency"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+<InlineNotification>The minimum supported Android API is level 24</InlineNotification>
+
+Add the `mavenCentral()` repository to your Gradle project build file:
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+Add Logto Android SDK to your dependencies:
+
+```groovy
+dependencies {
+    implementation 'io.logto.sdk:android:1.0.0'
+}
+```
+
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<pre>
+  <code className="language-java">
+    {`import io.logto.sdk.android.LogtoClient;
+import io.logto.sdk.android.type.LogtoConfig;
+
+public class MainActivity extends AppCompatActivity {
+    private LogtoClient logtoClient;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        LogtoConfig logtoConfig = new LogtoConfig(
+            "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+            "${props.appId}",
+            null,
+            null,
+            true
+        );
+
+        logtoClient = new LogtoClient(logtoConfig, getApplication());
+    }
+}`}
+  </code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="2 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### Configure Redirect URI
+
+First, let’s configure your redirect URI. E.g. `io.logto.android://io.logto.sample/callback`
+
+<UriInputField
+  appId={props.appId}
+  isSingle={!props.isCompact}
+  name="redirectUris"
+  title="application_details.redirect_uri"
+/>
+
+Go back to your IDE/editor, use the following code to implement sign-in:
+
+<pre>
+  <code className="language-java">
+    {`logtoClient.signIn(this, "${
+      props.redirectUris[0] ?? '<your-redirect-uri>'
+    }", logtoException -> {
+    // User signed in successfully if \`logtoException\` is null.
+});`}
+  </code>
+</pre>
+
+After signing in successfully, `logtoClient.isAuthenticated` will be `true`.
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+Calling `.signOut(completion)` will always clear local credentials even if errors occurred.
+
+```java
+logtoClient.signOut(logtoException -> {
+    // Local credentials are cleared regardless of whether `logtoException` is null.
+});
+```
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>
+
+</Steps>
