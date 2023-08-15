@@ -1,12 +1,20 @@
+import { ConnectorType } from '@logto/connector-kit';
+
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
 import {
+  expectToClickDetailsPageOption,
   expectUnsavedChangesAlert,
   goToAdminConsole,
   trySaveChanges,
-  waitForSuccessToast,
+  waitForToaster,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
+import {
+  expectToConfirmConnectorDeletion,
+  expectToSelectConnector,
+  waitForConnectorCreationGuide,
+} from './helpers.js';
 import {
   socialConnectorTestCases,
   type SocialConnectorCase,
@@ -71,44 +79,15 @@ describe('social connectors', () => {
         text: 'Add Social Connector',
       });
 
-      await expect(page).toMatchElement(
-        '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
-        {
-          text: 'Add Social Connector',
-        }
-      );
-
-      if (groupFactoryId) {
-        // Platform selector
-        await page.click(
-          `.ReactModalPortal div[role=radio]:has(input[name=group][value=${groupFactoryId}])`
-        );
-
-        await page.waitForSelector(
-          '.ReactModalPortal div[class$=platforms] div[class$=radioGroup]'
-        );
-
-        await page.click(
-          `.ReactModalPortal div[class$=platforms] div[role=radio]:has(input[name=connector][value=${factoryId}])`
-        );
-      } else {
-        await page.click(
-          `.ReactModalPortal div[role=radio]:has(input[name=group][value=${factoryId}])`
-        );
-      }
-
-      await expect(page).toClick('.ReactModalPortal div[class$=footer] button:not(disabled) span', {
-        text: 'Next',
+      await expectToSelectConnector(page, {
+        groupFactoryId,
+        factoryId,
+        connectorType: ConnectorType.Social,
       });
 
-      await expect(page).toMatchElement('.ReactModalPortal div[class$=titleEllipsis] span', {
-        text: name,
-      });
+      await waitForConnectorCreationGuide(page, name);
 
-      await expect(page).toMatchElement('.ReactModalPortal div[class$=subtitle] span', {
-        text: 'A step by step guide to configure your connector',
-      });
-
+      // Save with empty form
       await expect(page).toClick(
         '.ReactModalPortal form div[class$=footer] button[type=submit] span',
         {
@@ -131,7 +110,7 @@ describe('social connectors', () => {
         }
       );
 
-      await waitForSuccessToast(page, 'Saved');
+      await waitForToaster(page, { text: 'Saved' });
 
       await expect(page).toMatchElement('div[class$=header] div[class$=name] span', {
         text: name,
@@ -151,47 +130,12 @@ describe('social connectors', () => {
 
       await trySaveChanges(page);
 
-      await waitForSuccessToast(page, 'Saved');
+      await waitForToaster(page, { text: 'Saved' });
 
       // Delete connector
-      await expect(page).toClick(
-        'div[class$=header] div[class$=operations] button[class$=withIcon]:has(span[class$=icon] > svg[class$=moreIcon])'
-      );
+      await expectToClickDetailsPageOption(page, 'Delete');
 
-      await expect(page).toMatchElement(
-        '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
-        {
-          text: 'MORE OPTIONS',
-        }
-      );
-
-      // Wait for the dropdown menu to be rendered in the correct position
-      await page.waitForTimeout(500);
-
-      await expect(page).toClick(
-        '.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]',
-        { text: 'Delete' }
-      );
-
-      await page.waitForSelector(
-        '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
-        {
-          hidden: true,
-        }
-      );
-
-      await expect(page).toMatchElement(
-        '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
-        {
-          text: 'Reminder',
-        }
-      );
-
-      await expect(page).toClick('.ReactModalPortal div[class$=footer] button span', {
-        text: 'Delete',
-      });
-
-      await waitForSuccessToast(page, 'The connector has been successfully deleted');
+      await expectToConfirmConnectorDeletion(page);
 
       expect(page.url()).toBe(new URL(`console/connectors/social`, logtoConsoleUrl).href);
     }

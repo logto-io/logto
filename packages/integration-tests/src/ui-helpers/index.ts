@@ -20,13 +20,19 @@ export const goToAdminConsole = async () => {
   }
 };
 
-export const waitForSuccessToast = async (page: Page, text: string) => {
-  const successToastHandle = await page.waitForSelector('div[class*=toast][class*=success]');
-  await expect(successToastHandle).toMatchElement('div[class$=message]', {
+type WaitToasterOptions = {
+  text?: string | RegExp;
+  isError?: boolean;
+};
+
+export const waitForToaster = async (page: Page, { text, isError }: WaitToasterOptions) => {
+  const toastStyleClass = isError ? 'error' : 'success';
+  const toastHandle = await page.waitForSelector(`div[class*=toast][class*=${toastStyleClass}]`);
+  await expect(toastHandle).toMatchElement('div[class$=message]', {
     text,
   });
-  // Wait the success toast to disappear so that the next time we call this function we will match the brand new toast
-  await page.waitForSelector('div[class*=toast][class*=success]', {
+  // Wait the toast to disappear so that the next time we call this function we will match the brand new toast
+  await page.waitForSelector(`div[class*=toast][class*=${toastStyleClass}]`, {
     hidden: true,
   });
 };
@@ -48,4 +54,54 @@ export const trySaveChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
   await page.waitForTimeout(500);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save Changes' });
+};
+
+export const expectToClickDetailsPageOption = async (page: Page, optionText: string) => {
+  await expect(page).toClick(
+    'div[class$=header] button[class$=withIcon]:last-of-type span[class$=icon]:has(svg)'
+  );
+
+  await expect(page).toMatchElement(
+    '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
+    {
+      text: 'MORE OPTIONS',
+    }
+  );
+
+  // Wait for the dropdown menu to be rendered in the correct position
+  await page.waitForTimeout(500);
+
+  await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
+    text: optionText,
+  });
+
+  await page.waitForSelector(
+    '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
+    {
+      hidden: true,
+    }
+  );
+};
+
+type ExpectConfirmModalAndActOptions = {
+  title?: string | RegExp;
+  actionText?: string | RegExp;
+};
+
+export const expectConfirmModalAndAct = async (
+  page: Page,
+  { title, actionText }: ExpectConfirmModalAndActOptions
+) => {
+  await expect(page).toMatchElement(
+    '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
+    {
+      text: title,
+    }
+  );
+
+  if (actionText) {
+    await expect(page).toClick('.ReactModalPortal div[class$=footer] button span', {
+      text: actionText,
+    });
+  }
 };
