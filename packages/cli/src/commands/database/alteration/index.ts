@@ -12,7 +12,11 @@ import {
 import { consoleLog } from '../../../utils.js';
 
 import type { AlterationFile } from './type.js';
-import { getAlterationFiles, getTimestampFromFilename } from './utils.js';
+import {
+  getAlterationFiles,
+  getTimestampFromFilename,
+  chooseRevertAlterationsByTimestamp,
+} from './utils.js';
 import { chooseAlterationsByVersion, chooseRevertAlterationsByVersion } from './version.js';
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
@@ -87,6 +91,21 @@ const deployAlteration = async (
   consoleLog.info(`Run alteration ${filename} \`${action}()\` function succeeded`);
 };
 
+const revertAlterations = async (alterations: AlterationFile[], pool: DatabasePool) => {
+  consoleLog.info(
+    `Found ${alterations.length} alteration${conditionalString(
+      alterations.length > 1 && 's'
+    )} to revert`
+  );
+
+  // The await inside the loop is intended, alterations should run in order
+  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+  for (const alteration of alterations.slice().reverse()) {
+    // eslint-disable-next-line no-await-in-loop
+    await deployAlteration(pool, alteration, 'down');
+  }
+};
+
 const alteration: CommandModule<unknown, { action: string; target?: string }> = {
   command: ['alteration <action> [target]', 'alt', 'alter'],
   describe: 'Perform database alteration',
@@ -101,56 +120,64 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
         describe: 'The target Logto version for alteration',
         type: 'string',
       }),
+
   handler: async ({ action, target }) => {
-    if (action === 'list') {
-      const files = await getAlterationFiles();
+    switch (action) {
+      case 'list': {
+        const files = await getAlterationFiles();
 
-      for (const file of files) {
-        consoleLog.plain(file.filename);
+        for (const file of files) {
+          consoleLog.plain(file.filename);
+        }
+
+        break;
       }
-    } else if (action === 'deploy') {
-      const pool = await createPoolFromConfig();
-      const alterations = await chooseAlterationsByVersion(
-        await getAvailableAlterations(pool),
-        target
-      );
+      case 'deploy': {
+        const pool = await createPoolFromConfig();
+        const alterations = await chooseAlterationsByVersion(
+          await getAvailableAlterations(pool),
+          target
+        );
 
-      consoleLog.info(
-        `Found ${alterations.length} alteration${conditionalString(
-          alterations.length > 1 && 's'
-        )} to deploy`
-      );
+        consoleLog.info(
+          `Found ${alterations.length} alteration${conditionalString(
+            alterations.length > 1 && 's'
+          )} to deploy`
+        );
 
-      // The await inside the loop is intended, alterations should run in order
-      for (const alteration of alterations) {
-        // eslint-disable-next-line no-await-in-loop
-        await deployAlteration(pool, alteration);
+        // The await inside the loop is intended, alterations should run in order
+        for (const alteration of alterations) {
+          // eslint-disable-next-line no-await-in-loop
+          await deployAlteration(pool, alteration);
+        }
+
+        await pool.end();
+
+        break;
       }
+      case 'rollback':
+      case 'r': {
+        const pool = await createPoolFromConfig();
+        const alterations = await chooseRevertAlterationsByVersion(
+          await getAvailableAlterations(pool, 'lte'),
+          target ?? ''
+        );
 
-      await pool.end();
-    } else if (['rollback', 'r'].includes(action)) {
-      const pool = await createPoolFromConfig();
-      const alterations = await chooseRevertAlterationsByVersion(
-        await getAvailableAlterations(pool, 'lte'),
-        target ?? ''
-      );
-
-      consoleLog.info(
-        `Found ${alterations.length} alteration${conditionalString(
-          alterations.length > 1 && 's'
-        )} to revert`
-      );
-
-      // The await inside the loop is intended, alterations should run in order
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      for (const alteration of alterations.slice().reverse()) {
-        // eslint-disable-next-line no-await-in-loop
-        await deployAlteration(pool, alteration, 'down');
+        await revertAlterations(alterations, pool);
+        await pool.end();
+        break;
       }
+      case 'rollback-to-timestamp': {
+        const pool = await createPoolFromConfig();
+        const alterations = await chooseRevertAlterationsByTimestamp(target ?? '');
 
-      await pool.end();
-    } else {
-      consoleLog.fatal('Unsupported action');
+        await revertAlterations(alterations, pool);
+        await pool.end();
+        break;
+      }
+      default: {
+        consoleLog.fatal('Unsupported action');
+      }
     }
   },
 };
