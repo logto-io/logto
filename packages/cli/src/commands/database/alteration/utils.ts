@@ -55,3 +55,14 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
     .sort((file1, file2) => getTimestampFromFilename(file1) - getTimestampFromFilename(file2))
     .map((filename) => ({ path: path.join(localAlterationDirectory, filename), filename }));
 };
+
+export const chooseRevertAlterationsByTimestamp = async (target: string) => {
+  const files = await getAlterationFiles();
+  const targetTimestamp = Number(target);
+
+  if (Number.isNaN(targetTimestamp)) {
+    return [];
+  }
+
+  return files.filter(({ filename }) => getTimestampFromFilename(filename) > targetTimestamp);
+};
