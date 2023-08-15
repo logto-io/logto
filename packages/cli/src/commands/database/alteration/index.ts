@@ -167,7 +167,7 @@ const alteration: CommandModule<unknown, { action: string; target?: string }> = 
         await pool.end();
         break;
       }
-      case 'rollback-to': {
+      case 'rollback-to-timestamp': {
         const pool = await createPoolFromConfig();
         const alterations = await chooseRevertAlterationsByTimestamp(target ?? '');
 
