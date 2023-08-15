@@ -42,6 +42,8 @@ const applications = {
     title: '어플리케이션이 생성되었어요.',
     subtitle: '앱 설정을 마치기 위해 아래 단계를 따라주세요. SDK 종류를 선택해 주세요.',
     description_by_sdk: '아래 과정을 따라서 Logto를 {{sdk}} 앱과 빠르게 연동해 보세요.',
+    finish_and_done: '끝내기',
+    request_additional_sdk: '추가 SDK 요청',
   },
   placeholder_title: '애플리케이션 유형을 선택하여 계속하세요',
   placeholder_description:

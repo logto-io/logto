@@ -44,6 +44,8 @@ const applications = {
       '以下の手順に従ってアプリの設定を完了してください。SDKタイプを選択して続行してください。',
     description_by_sdk:
       'このクイックスタートガイドでは、{{sdk}}アプリにLogtoを統合する方法を説明します。',
+    finish_and_done: '完了',
+    request_additional_sdk: '追加SDKをリクエストする',
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:

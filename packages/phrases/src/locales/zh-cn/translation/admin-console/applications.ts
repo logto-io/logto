@@ -1,7 +1,7 @@
 const applications = {
   page_title: '全部应用',
   title: '全部应用',
-  subtitle: '创建一个移动、单页、machine to machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
+  subtitle: '创建一个移动、单页、machine-to-machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
   create: '创建应用',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
@@ -40,6 +40,8 @@ const applications = {
     title: '应用创建成功',
     subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',
     description_by_sdk: '本教程向你演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
+    finish_and_done: '完成并结束',
+    request_additional_sdk: '请求额外的 SDK',
   },
   placeholder_title: '选择应用程序类型以继续',
   placeholder_description:

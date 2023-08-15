@@ -178,6 +178,20 @@
   --color-guide-dropdown-border: var(--color-border);
   --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
   --color-specific-tag-upsell: var(--color-primary-50);
+
+  // Background
+  --color-bg-body-base: var(--color-neutral-95);
+  --color-bg-body: var(--color-neutral-100);
+  --color-bg-layer-1: var(--color-static-white);
+  --color-bg-layer-2: var(--color-neutral-95);
+  --color-bg-body-overlay: var(--color-neutral-100);
+  --color-bg-float-base: var(--color-neutral-variant-90);
+  --color-bg-float: var(--color-neutral-100);
+  --color-bg-float-overlay: var(--color-neutral-100);
+  --color-bg-mask: rgba(0, 0, 0, 40%); // 4% --color-neutral-0
+  --color-bg-toast: var(--color-neutral-20);
+  --color-bg-state-unselected: var(--color-neutral-90);
+  --color-bg-state-disabled: rgba(25, 28, 29, 8%); // 8% --color-neutral-10
 }
 
 @mixin dark {
@@ -360,4 +374,21 @@
   --color-guide-dropdown-border: var(--color-neutral-variant-70);
   --color-skeleton-shimmer-rgb: 42, 44, 50; // rgb of Layer-1
   --color-specific-tag-upsell: var(--color-primary-70);
+
+  // Background
+  --color-bg-body-base: var(--color-neutral-100);
+  --color-bg-body: var(--color-surface);
+  --color-bg-body-overlay: var(--color-surface-2);
+  --color-bg-layer-1:
+    linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
+  --color-bg-layer-2: var(--color-surface-4);
+  --color-bg-float-base: var(--color-neutral-100);
+  --color-bg-float: var(--color-surface-3);
+  --color-bg-float-overlay: var(--color-surface-4);
+  --color-bg-mask: rgba(0, 0, 0, 60%); // 60% --color-neutral-100;
+  --color-bg-toast: var(--color-neutral-80);
+  --color-bg-state-unselected: var(--color-neutral-90);
+  --color-bg-state-disabled: rgba(247, 248, 248, 8%); // 8% --color-neutral-10
 }

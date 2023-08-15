@@ -45,6 +45,8 @@ const applications = {
       'Şimdi uygulama ayarlarınızı tamamlamak için aşağıdaki adımları izleyiniz. Lütfen devam etmek için SDK türünü seçiniz.',
     description_by_sdk:
       'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
+    finish_and_done: 'Bitir ve tamamlandı',
+    request_additional_sdk: 'Ek SDK talep et',
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:

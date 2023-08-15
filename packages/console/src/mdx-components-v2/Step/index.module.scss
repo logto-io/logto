@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  border-radius: 16px;
+  background: var(--color-layer-1);
+  padding: _.unit(5) _.unit(6);
+  width: 100%;
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: _.unit(4);
+    margin-bottom: _.unit(6);
+  }
+}

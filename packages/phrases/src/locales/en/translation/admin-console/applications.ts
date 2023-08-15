@@ -44,6 +44,8 @@ const applications = {
       'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
     description_by_sdk:
       'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
+    finish_and_done: 'Finish and done',
+    request_additional_sdk: 'Request additional SDK',
   },
   placeholder_title: 'Select an application type to continue',
   placeholder_description:
