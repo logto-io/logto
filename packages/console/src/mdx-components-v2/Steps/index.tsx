@@ -4,6 +4,7 @@ import React, { useRef, type ReactElement, useEffect, useState } from 'react';
 
 import useScroll from '@/hooks/use-scroll';
 
+import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';
 import type Step from '../Step';
 
@@ -76,6 +77,7 @@ export default function Steps({ children }: Props) {
         </nav>
       </div>
       <div ref={contentRef} className={styles.content}>
+        <Sample />
         {children.map((component, index) =>
           React.cloneElement(component, {
             key: component.props.title,

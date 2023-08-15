@@ -1,3 +1,4 @@
+import { httpCodeToMessage } from '@logto/core-kit';
 import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
@@ -9,7 +10,6 @@ import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { fallbackDefaultPageSize, isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
-import { codeToMessage } from '#src/utils/http.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from './types.js';
@@ -109,7 +109,7 @@ const buildOperation = (
     deduplicate(
       conditionalArray(status ?? 200, hasInputGuard && 400, isAuthGuarded && [401, 403])
     ).map<[number, OpenAPIV3.ResponseObject]>((status) => {
-      const description = codeToMessage[status];
+      const description = httpCodeToMessage[status];
 
       if (!description) {
         throw new Error(`Invalid status code ${status}.`);

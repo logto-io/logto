@@ -1,4 +1,4 @@
-export const codeToMessage: Record<number, string> = Object.freeze({
+export const httpCodeToMessage: Record<number, string> = Object.freeze({
   200: 'OK',
   201: 'Created',
   202: 'Accepted',

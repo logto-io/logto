@@ -8,7 +8,7 @@ import Step from '@/mdx-components-v2/Step';
 <Steps>
 
 <Step
-  title="Add Logto SDK as a dependency"
+  title="Install Logto SDK"
   subtitle="Please select your favorite package manager"
 >
 <Tabs>
@@ -49,7 +49,7 @@ Import and use `LogtoProvider` to provide a Logto context:
 
 const config: LogtoConfig = {
   endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-  appId: '${props.appId}',
+  appId: '${props.app.id}',
 };
 
 const App = () => (
@@ -76,7 +76,7 @@ const App = () => (
 First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="redirectUris"
   title="application_details.redirect_uri"
@@ -148,7 +148,7 @@ Calling `.signOut()` will clear all the Logto data in memory and localStorage if
 After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
 <UriInputField
-  appId={props.appId}
+  appId={props.app.id}
   isSingle={!props.isCompact}
   name="postLogoutRedirectUris"
   title="application_details.post_sign_out_redirect_uri"

@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'プレースホルダー',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'スキップ',
   next: '次へ',
   back: '戻る',

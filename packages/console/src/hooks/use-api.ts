@@ -1,3 +1,4 @@
+import { httpCodeToMessage } from '@logto/core-kit';
 import { useLogto } from '@logto/react';
 import { getManagementApiResourceIndicator, type RequestErrorBody } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
@@ -56,7 +57,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
 
         toast.error([data.message, data.details].join('\n') || fallbackErrorMessage);
       } catch {
-        toast.error(fallbackErrorMessage);
+        toast.error(httpCodeToMessage[response.status] ?? fallbackErrorMessage);
       }
     },
     [show, signOut, t, href]

@@ -1,5 +1,6 @@
 const general = {
   placeholder: 'Placeholder',
+  submit: 'Submit', // UNTRANSLATED
   skip: 'Pular',
   next: 'Próximo',
   back: 'Back',

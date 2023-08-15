@@ -33,6 +33,7 @@ const useMeCustomData = () => {
     error,
     isLoading,
     isLoaded: !isLoading && !error,
+    /** Patch (shallow merge) the custom data of the current user. */
     update,
   };
 };
