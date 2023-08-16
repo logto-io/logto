@@ -37,14 +37,30 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial', // UNTRANSLATED
+    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
+    start_building: 'Start Building', // UNTRANSLATED
+    categories: {
+      featured: 'Popular and for you', // UNTRANSLATED
+      Traditional: 'Traditional web app', // UNTRANSLATED
+      SPA: 'Single page app', // UNTRANSLATED
+      Native: 'Native', // UNTRANSLATED
+      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+    },
+    filter: {
+      title: 'Filter framework', // UNTRANSLATED
+      placeholder: 'Search for framework', // UNTRANSLATED
+    },
     get_sample_file: 'Pobierz przykład',
-    header_description:
-      'Postępuj zgodnie z przewodnikiem krok po kroku, aby zintegrować swoją aplikację lub kliknij prawy przycisk, aby pobrać nasz przykładowy projekt',
     title: 'Aplikacja została pomyślnie utworzona',
     subtitle:
       'Teraz postępuj zgodnie z poniższymi krokami, aby zakończyć konfigurację aplikacji. Wybierz typ SDK, aby kontynuować.',
     description_by_sdk:
       'Ten przewodnik po szybkim rozpoczęciu demonstruje, jak zintegrować Logto z aplikacją {{sdk}}',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
+    create_without_framework: 'Create app without framework', // UNTRANSLATED
     finish_and_done: 'Zakończ i zrobione',
     cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
     describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED

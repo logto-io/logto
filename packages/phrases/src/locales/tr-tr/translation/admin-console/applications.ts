@@ -37,14 +37,30 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial', // UNTRANSLATED
+    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
+    start_building: 'Start Building', // UNTRANSLATED
+    categories: {
+      featured: 'Popular and for you', // UNTRANSLATED
+      Traditional: 'Traditional web app', // UNTRANSLATED
+      SPA: 'Single page app', // UNTRANSLATED
+      Native: 'Native', // UNTRANSLATED
+      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+    },
+    filter: {
+      title: 'Filter framework', // UNTRANSLATED
+      placeholder: 'Search for framework', // UNTRANSLATED
+    },
     get_sample_file: 'Örnek Gör',
-    header_description:
-      'Uygulamanızı entegre etmek için adım adım kılavuzu izleyin veya örnek projemizi almak için sağ düğmeye tıklayınız',
     title: 'Uygulama başarıyla oluşturuldu',
     subtitle:
       'Şimdi uygulama ayarlarınızı tamamlamak için aşağıdaki adımları izleyiniz. Lütfen devam etmek için SDK türünü seçiniz.',
     description_by_sdk:
       'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
+    create_without_framework: 'Create app without framework', // UNTRANSLATED
     finish_and_done: 'Bitir ve tamamlandı',
     cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
     describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED

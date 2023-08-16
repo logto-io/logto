@@ -36,14 +36,30 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial', // UNTRANSLATED
+    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
+    start_building: 'Start Building', // UNTRANSLATED
+    categories: {
+      featured: 'Popular and for you', // UNTRANSLATED
+      Traditional: 'Traditional web app', // UNTRANSLATED
+      SPA: 'Single page app', // UNTRANSLATED
+      Native: 'Native', // UNTRANSLATED
+      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+    },
+    filter: {
+      title: 'Filter framework', // UNTRANSLATED
+      placeholder: 'Search for framework', // UNTRANSLATED
+    },
     get_sample_file: 'サンプルを取得する',
-    header_description:
-      'アプリケーションを統合するためのステップバイステップガイドに従うか、サンプルプロジェクトを取得するための適切なボタンをクリックしてください。',
     title: 'アプリケーションが正常に作成されました',
     subtitle:
       '以下の手順に従ってアプリの設定を完了してください。SDKタイプを選択して続行してください。',
     description_by_sdk:
       'このクイックスタートガイドでは、{{sdk}}アプリにLogtoを統合する方法を説明します。',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
+    create_without_framework: 'Create app without framework', // UNTRANSLATED
     finish_and_done: '完了',
     cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
     describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED

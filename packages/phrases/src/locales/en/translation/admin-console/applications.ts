@@ -36,14 +36,30 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial',
+    modal_header_title: 'Start with SDK and guides',
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.',
+    start_building: 'Start Building',
+    categories: {
+      featured: 'Popular and for you',
+      Traditional: 'Traditional web app',
+      SPA: 'Single page app',
+      Native: 'Native',
+      MachineToMachine: 'Machine-to-machine',
+    },
+    filter: {
+      title: 'Filter framework',
+      placeholder: 'Search for framework',
+    },
     get_sample_file: 'Get Sample',
-    header_description:
-      'Follow a step by step guide to integrate your application or click the right button to get our sample project',
     title: 'The application has been successfully created',
     subtitle:
       'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
     description_by_sdk:
       'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide',
+    create_without_framework: 'Create app without framework',
     finish_and_done: 'Finish and done',
     cannot_find_guide: "Can't find your guide?",
     describe_guide_looking_for: 'Describe the guide you are looking for',

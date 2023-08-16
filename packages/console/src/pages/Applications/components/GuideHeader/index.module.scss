@@ -3,9 +3,10 @@
 .header {
   display: flex;
   align-items: center;
-  background-color: var(--color-layer-1);
+  background-color: var(--color-base);
   height: 64px;
   padding: 0 _.unit(6);
+  flex-shrink: 0;
 
   .separator {
     @include _.vertical-bar;
@@ -31,7 +32,7 @@
     }
   }
 
-  .getSampleButton {
-    margin: 0 _.unit(15) 0 _.unit(6);
+  .requestSdkButton {
+    margin-right: _.unit(2);
   }
 }

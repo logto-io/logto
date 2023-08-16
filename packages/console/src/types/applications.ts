@@ -34,7 +34,6 @@ export const applicationTypeAndSdkTypeMappings = Object.freeze({
  * All application guide categories, including all 4 existing application types,
  * plus the "featured" category.
  */
-/* eslint-disable import/no-unused-modules */
 export const allAppGuideCategories = Object.freeze([
   'featured',
   'Traditional',
@@ -50,4 +49,3 @@ export type AppGuideCategory = (typeof allAppGuideCategories)[number];
  * E.g. `{'featured': [...], 'Traditional': [...], 'SPA': [...], 'Native': [...]}`
  */
 export type StructuredAppGuideMetadata = Record<AppGuideCategory, readonly Guide[]>;
-/* eslint-enable import/no-unused-modules */

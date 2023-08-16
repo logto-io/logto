@@ -36,12 +36,28 @@ const applications = {
     },
   },
   guide: {
+    header_title: 'Select a framework or tutorial', // UNTRANSLATED
+    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
+    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
+    start_building: 'Start Building', // UNTRANSLATED
+    categories: {
+      featured: 'Popular and for you', // UNTRANSLATED
+      Traditional: 'Traditional web app', // UNTRANSLATED
+      SPA: 'Single page app', // UNTRANSLATED
+      Native: 'Native', // UNTRANSLATED
+      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+    },
+    filter: {
+      title: 'Filter framework', // UNTRANSLATED
+      placeholder: 'Search for framework', // UNTRANSLATED
+    },
     get_sample_file: '예제 찾기',
-    header_description:
-      '단계별 가이드에 따라 어플리케이션을 연동하거나, 오른쪽 버튼을 클릭하여 샘플 프로젝트를 받아 보세요.',
     title: '어플리케이션이 생성되었어요.',
     subtitle: '앱 설정을 마치기 위해 아래 단계를 따라주세요. SDK 종류를 선택해 주세요.',
     description_by_sdk: '아래 과정을 따라서 Logto를 {{sdk}} 앱과 빠르게 연동해 보세요.',
+    do_not_need_tutorial:
+      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
+    create_without_framework: 'Create app without framework', // UNTRANSLATED
     finish_and_done: '끝내기',
     cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
     describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
