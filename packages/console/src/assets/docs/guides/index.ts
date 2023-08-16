@@ -13,7 +13,6 @@ import spaRemix from './spa-remix/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import { type Guide } from './types';
-import webChatgpt from './web-chatgpt/index';
 import webCsharp from './web-csharp/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
@@ -85,12 +84,6 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-vue/logo.svg')),
     Component: lazy(async () => import('./spa-vue/README.mdx')),
     metadata: spaVue,
-  },
-  {
-    id: 'web-chatgpt',
-    Logo: lazy(async () => import('./web-chatgpt/logo.svg')),
-    Component: lazy(async () => import('./web-chatgpt/README.mdx')),
-    metadata: webChatgpt,
   },
   {
     id: 'web-csharp',
