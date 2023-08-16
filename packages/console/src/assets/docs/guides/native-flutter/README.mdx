@@ -1,3 +1,4 @@
+import UriInputField from '@/mdx-components-v2/UriInputField';
 import Steps from '@/mdx-components-v2/Steps';
 import Step from '@/mdx-components-v2/Step';
 import Tabs from '@mdx/components/Tabs';
@@ -128,26 +129,31 @@ In order to capture the callback url from Logto's sign-in web page, you will nee
 </Step>
 <Step title="Init LogtoClient" subtitle="1 step">
 
-```dart
-import 'package:logto_dart_sdk/logto_dart_sdk.dart';
-import 'package:http/http.dart' as http;
+<pre>
+  <code className="language-dart">
+    {`
+      import 'package:logto_dart_sdk/logto_dart_sdk.dart';
+      import 'package:http/http.dart' as http;
 
-late LogtoClient logtoClient;
+      late LogtoClient logtoClient;
 
-// LogtoConfig
-final logtoConfig = const LogtoConfig(
-  endpoint: "<your-logto-endpoint>", // E.g. http://cloud.logto.io/<your-tenant-id>
-  appId: "<your-app-id>"
-  ...
-);
+      // LogtoConfig
+      final logtoConfig = const LogtoConfig(
+        endpoint: '${props.endpoint}',${
+          props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''
+        }
+        appId: '${props.app.id}',
+      );
 
-void init() async {
-  logtoClient = LogtoClient(
-    config: logtoConfig,
-    httpClient: http.Client(), // Optional http client
-  );
-}
-```
+      void init() async {
+        logtoClient = LogtoClient(
+          config: logtoConfig,
+          httpClient: http.Client(), // Optional http client
+        );
+      }
+    `}
+  </code>
+</pre>
 
 </Step>
 <Step title="Sign In" subtitle="2 steps">
@@ -169,11 +175,15 @@ Let's switch to the Application details page of Logto Admin Console. Add a Redir
   Admin Console.
 </InlineNotification>
 
-```dart
-void signIn() async {
-  await logtoClient.signIn(redirectUri);
-}
-```
+<pre>
+  <code className="language-dart">
+    {`
+      void signIn() async {
+        await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
+      }
+    `}
+  </code>
+</pre>
 
 </Step>
 
