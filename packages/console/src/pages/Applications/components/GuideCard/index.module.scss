@@ -34,9 +34,16 @@
     gap: _.unit(1);
   }
 
+  .flexRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .name {
     font: var(--font-label-2);
     color: var(--color-text);
+    margin-right: _.unit(1);
   }
 
   .description {
