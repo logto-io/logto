@@ -21,6 +21,7 @@ import webGptPlugin from './web-gpt-plugin/index';
 import webJava from './web-java/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
+import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
 
@@ -104,17 +105,16 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webExpress,
   },
   {
-    id: 'web-gpt-plugin',
-    Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
-    Component: lazy(async () => import('./web-gpt-plugin/README.mdx')),
-    metadata: webGptPlugin,
-  },
-
-  {
     id: 'web-go',
     Logo: lazy(async () => import('./web-go/logo.svg')),
     Component: lazy(async () => import('./web-go/README.mdx')),
     metadata: webGo,
+  },
+  {
+    id: 'web-gpt-plugin',
+    Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
+    Component: lazy(async () => import('./web-gpt-plugin/README.mdx')),
+    metadata: webGptPlugin,
   },
   {
     id: 'web-java',
@@ -133,6 +133,12 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-next-app-router/logo.svg')),
     Component: lazy(async () => import('./web-next-app-router/README.mdx')),
     metadata: webNextAppRouter,
+  },
+  {
+    id: 'web-outline',
+    Logo: lazy(async () => import('./web-outline/logo.svg')),
+    Component: lazy(async () => import('./web-outline/README.mdx')),
+    metadata: webOutline,
   },
   {
     id: 'web-php',
