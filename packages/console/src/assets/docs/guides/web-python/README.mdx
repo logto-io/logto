@@ -1,1 +1,222 @@
-## Replace this with actual guide
+import UriInputField from '@/mdx-components-v2/UriInputField';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import { buildIdGenerator } from '@logto/shared/universal';
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+
+<Steps>
+
+<Step title="Get started">
+
+This tutorial will show you how to integrate Logto into your Python web application.
+
+<ul>
+  <li>The example uses Flask, but the concepts are the same for other frameworks.</li>
+  <li>This tutorial assumes your website is hosted on <code>{props.sampleUrls.origin}</code>.</li>
+  <li>Logto SDK leverages coroutines, remember to use <code>await</code> when calling async functions.</li>
+</ul>
+
+```bash
+pip install logto # or `poetry add logto` or whatever you use
+```
+
+</Step>
+
+<Step title="Init LogtoClient">
+
+Insert the following code into your python file:
+
+<pre>
+  <code className="language-python">
+{`from logto import LogtoClient, LogtoConfig
+
+client = LogtoClient(
+    LogtoConfig(
+        endpoint= "${props.endpoint}",${props.alternativeEndpoint ? ' // or "${props.alternativeEndpoint}"' : ''}
+        appId="${props.app.id}",
+        appSecret="${props.app.secret}",
+    )
+)`}
+  </code>
+</pre>
+
+Also replace the default memory storage with a persistent storage, for example:
+
+```python
+from logto import LogtoClient, LogtoConfig, Storage
+from flask import session
+
+class SessionStorage(Storage):
+    def get(self, key: str) -> str | None:
+        return session.get(key, None)
+
+    def set(self, key: str, value: str | None) -> None:
+        session[key] = value
+
+    def delete(self, key: str) -> None:
+        session.pop(key, None)
+
+client = LogtoClient(
+    LogtoConfig(...),
+    storage=SessionStorage(),
+)
+```
+
+</Step>
+
+<Step title="Implement the sign-in route">
+
+<p>
+First, let’s enter your redirect URI. E.g. <code>{props.sampleUrls.callback}</code>. This is where Logto will redirect users after they sign in.
+</p>
+
+<UriInputField name="redirectUris" />
+
+<pre>
+  <code className="language-python">
+{`@app.route("/sign-in")
+async def sign_in():
+    # Get the sign-in URL and redirect the user to it
+    return redirect(await client.signIn(
+        redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
+    ))`}
+  </code>
+</pre>
+
+If you want to show the sign-up page on the first screen, you can set `interactionMode` to `signUp`:
+
+<pre>
+  <code className="language-python">
+{`@app.route("/sign-in")
+async def sign_in():
+    # Get the sign-in URL and redirect the user to it
+    return redirect(await client.signIn(
+        redirectUri="${props.redirectUris[0] || props.sampleUrls.callback}",
+        interactionMode="signUp", # Show the sign-up page on the first screen
+    ))`}
+  </code>
+</pre>
+
+Now, whenever your users visit `/sign-in`, it will start a new sign-in attempt and redirect the user to the Logto sign-in page.
+
+</Step>
+
+<Step title="Implement the callback route">
+
+After the user signs in, Logto will redirect the user to the callback URL you set in the Logto Console. In this example, we use `/callback` as the callback URL:
+
+<pre>
+  <code className="language-python">
+{`@app.route("/callback")
+async def callback():
+    try:
+        await client.handleSignInCallback(request.url) # Handle a lot of stuff
+        return redirect("/") # Redirect the user to the home page after a successful sign-in
+    except Exception as e:
+        # Change this to your error handling logic
+        return "Error: " + str(e)
+`}
+  </code>
+</pre>
+
+</Step>
+
+<Step title="Implement the home page">
+
+Here we implement a simple home page for demonstration:
+
+- If the user is not signed in, show a sign-in button;
+- If the user is signed in, show some basic information about the user.
+
+```python
+@app.route("/")
+async def home():
+    if client.isAuthenticated() is False:
+        return "Not authenticated <a href='/sign-in'>Sign in</a>"
+
+    return (
+        # Get local ID token claims
+        client.getIdTokenClaims().model_dump_json(exclude_unset=True)
+        + "<br>"
+        # Fetch user info from Logto userinfo endpoint
+        (await client.fetchUserInfo()).model_dump_json(exclude_unset=True)
+        + "<br><a href='/sign-out'>Sign out</a>"
+    )
+```
+
+Our data models are based on [pydantic](https://docs.pydantic.dev/), so you can use `model_dump_json` to dump the data model to JSON.
+
+Adding `exclude_unset=True` will exclude unset fields from the JSON output, which makes the output more precise.
+
+For example, if we didn't request the `email` scope when signing in, and the `email` field will be excluded from the JSON output. However, if we requested the `email` scope, but the user doesn't have an email address, the `email` field will be included in the JSON output with a `null` value.
+
+To learn more about scopes and claims, see [Scopes and claims](https://github.com/logto-io/python/blob/master/docs/tutorial.md#scopes-and-claims).
+
+</Step>
+
+<Step title="Implement the sign-out route">
+
+To clean up the Python session and Logto session, a sign-out route can be implemented as follows:
+
+<pre>
+  <code className="language-python">
+{`@app.route("/sign-out")
+async def sign_out():
+    return redirect(
+        # Redirect the user to the home page after a successful sign-out
+        await client.signOut(postLogoutRedirectUri="${props.sampleUrls.origin}")
+    )
+`}
+  </code>
+</pre>
+
+`postLogoutRedirectUri` is optional, and if not provided, the user will be redirected to a Logto default page after a successful sign-out (without redirecting back to your application).
+
+> The name `postLogoutRedirectUri` is from the [OpenID Connect RP-Initiated Logout](https://openid.net/specs/openid-connect-rpinitiated-1_0.html) specification. Although Logto uses "sign-out" instead of "logout", the concept is the same.
+
+</Step>
+
+<Step title="Checkpoint: Test your application">
+
+Now, you can test your application:
+
+<ol>
+  <li>Visit <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
+  <li>Click the "Sign in" button, and you should be redirected to the Logto sign-in page.</li>
+  <li>After you sign in, you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see your user info and a "Sign out" button.</li>
+  <li>Click the "Sign out" button, and you should be redirected back to <code>{props.sampleUrls.origin}</code>, and you should see a "Not authenticated" message with a "Sign in" button.</li>
+</ol>
+
+</Step>
+
+<Step title="Protect your routes">
+
+Now, you have a working sign-in flow, but your routes are still unprotected. Per the framework you use, you can create a decorator such as `@authenticated` to protect your routes. For example:
+
+```python
+def authenticated(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        if client.isAuthenticated() is False:
+            return redirect("/sign-in") # Or directly call `client.signIn`
+        return await func(*args, **kwargs)
+
+    return wrapper
+```
+
+Then, you can use the decorator to protect your routes:
+
+```python
+@app.route("/protected")
+@authenticated
+async def protected():
+    return "Protected page"
+```
+
+You can also create a middleware to achieve the same goal.
+
+</Step>
+
+</Steps>

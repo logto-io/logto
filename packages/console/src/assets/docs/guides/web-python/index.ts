@@ -4,9 +4,12 @@ import { type GuideMetadata } from '../types';
 
 const metadata: Readonly<GuideMetadata> = Object.freeze({
   name: 'Python',
-  description:
-    'Python is a programming language that lets you work quickly and integrate systems more effectively.',
+  description: 'Integrate Logto into your Python web app, such as Django and Flask.',
   target: ApplicationType.Traditional,
+  sample: {
+    repo: 'python',
+    path: 'samples',
+  },
 });
 
 export default metadata;

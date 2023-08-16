@@ -33,6 +33,10 @@ type GuideContextType = {
   redirectUris: string[];
   postLogoutRedirectUris: string[];
   isCompact: boolean;
+  sampleUrls: {
+    origin: string;
+    callback: string;
+  };
 };
 
 // eslint-disable-next-line no-restricted-syntax
@@ -68,6 +72,10 @@ function GuideV2({ guideId, app, isCompact, onClose }: Props) {
         redirectUris: app.oidcClientMetadata.redirectUris,
         postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
         isCompact: Boolean(isCompact),
+        sampleUrls: {
+          origin: 'http://localhost:3001/',
+          callback: 'http://localhost:3001/callback',
+        },
       }) satisfies GuideContextType,
     [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
   );
