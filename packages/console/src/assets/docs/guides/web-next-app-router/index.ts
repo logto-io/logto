@@ -9,7 +9,7 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   target: ApplicationType.Traditional,
   sample: {
     repo: 'js',
-    path: 'packages/next-sample',
+    path: 'packages/next-app-dir-sample',
   },
 });
 
