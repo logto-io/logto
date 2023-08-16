@@ -8,6 +8,7 @@ import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';
 import type Step from '../Step';
 
+import FurtherReadings from './FurtherReadings';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -34,9 +35,16 @@ export default function Steps({ children: reactChildren }: Props) {
   const stepReferences = useRef<Array<Nullable<HTMLElement>>>([]);
   const { scrollTop } = useScroll(findScrollableElement(contentRef.current));
   const [activeIndex, setActiveIndex] = useState(-1);
-  const children = useMemo(
-    () => (Array.isArray(reactChildren) ? reactChildren : [reactChildren]),
-    [reactChildren]
+  const furtherReadings = useMemo(
+    () => <FurtherReadings title="Further readings" subtitle="4 articles" />,
+    []
+  );
+  const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(
+    () =>
+      Array.isArray(reactChildren)
+        ? reactChildren.concat(furtherReadings)
+        : [reactChildren, furtherReadings],
+    [furtherReadings, reactChildren]
   );
 
   useEffect(() => {

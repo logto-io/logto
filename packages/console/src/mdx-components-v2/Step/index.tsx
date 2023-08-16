@@ -7,7 +7,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import * as styles from './index.module.scss';
 
 export type Props = {
-  index: number;
+  index?: number;
   title: string;
   subtitle?: string;
   children: ReactNode;
@@ -17,7 +17,7 @@ function Step({ title, subtitle, index, children }: Props, ref?: Ref<HTMLDivElem
   return (
     <section ref={ref} className={styles.wrapper}>
       <header>
-        <Index index={index + 1} />
+        <Index index={(index ?? 0) + 1} />
         <CardTitle
           size="medium"
           title={<DangerousRaw>{title}</DangerousRaw>}
