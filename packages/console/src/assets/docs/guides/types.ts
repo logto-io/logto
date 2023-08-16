@@ -25,13 +25,15 @@ export type GuideMetadata = {
     /** The path to the sample directory in the repository. */
     path: string;
   };
+  /** Whether the guide is displayed in featured group. */
+  isFeatured?: boolean;
 };
 
 /** The guide instance to build in the console. */
 export type Guide = {
   /** The unique identifier of the guide. */
   id: string;
-  Logo?: LazyExoticComponent<FunctionComponent>;
+  Logo: LazyExoticComponent<SvgComponent>;
   Component: LazyExoticComponent<FunctionComponent<MDXProps>>;
   metadata: Readonly<GuideMetadata>;
 };
