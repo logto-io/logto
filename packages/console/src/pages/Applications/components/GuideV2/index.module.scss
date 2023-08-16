@@ -19,7 +19,9 @@
       margin: _.unit(4) 0;
     }
 
-    section ul > li {
+    section ul > li,
+    section ol > li {
+      font: var(--font-body-2);
       margin-block: _.unit(2);
       padding-inline-start: _.unit(1);
     }

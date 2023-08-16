@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
@@ -11,7 +10,6 @@ export default function ClientBasics() {
   const {
     app: { id, secret },
   } = useContext(GuideContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={styles.basic}>
