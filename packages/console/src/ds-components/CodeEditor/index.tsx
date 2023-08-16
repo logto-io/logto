@@ -87,7 +87,7 @@ function CodeEditor({
       <div className={classNames(styles.container, className)}>
         {isShowingPlaceholder && <div className={styles.placeholder}>{placeholder}</div>}
         <CopyToClipboard value={value ?? ''} variant="icon" className={styles.copy} />
-        <div ref={editorRef} className={styles.editor}>
+        <div ref={editorRef} className={classNames(styles.editor, isReadonly && styles.readonly)}>
           {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
       in order to support user interactions, such as code editing, copy-pasting, etc. */}
           <textarea
