@@ -1,1 +1,110 @@
-## Replace this with actual guide
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+import ApplicationCredentials from '@/mdx-components-v2/ApplicationCredentials';
+import EnableAdminAccessSrc from './assets/enable-admin-access.png';
+import AppIdentifierSrc from './assets/api-identifier.png';
+
+<Steps>
+<Step title="Intro">
+Machine to Machine (M2M) is a common practice to authenticate if you have an app that needs to directly talks to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
+
+Usually, an M2M app doesn't need user interactions, i.e., it has no UI.
+
+</Step>
+<Step title="Locate the app ID and app secret" subtitle="1 step">
+Get your App ID and App Secret.
+
+<ApplicationCredentials id={props.app.id} secret={props.app.secret} />
+
+</Step>
+<Step title="Locate the API Resource" subtitle="2 steps">
+
+### Accessing Logto Management API
+
+If you want to use this app for accessing [Management API](https://docs.logto.io/docs/references/core/#management-api), remember to turn on "Enable admin access" in the Advanced settings tab.
+
+<img alt="API identifier" src={EnableAdminAccessSrc} width="600px" />
+
+### Find the API identifier
+
+In the API Resource tab, find the API identifier that the app needs to access. If you haven't added the API Resource in Logto or don't know what API Resource is, see [API Resource](https://docs.logto.io/docs/references/resources).
+
+<img alt="API identifier" src={AppIdentifierSrc} width="600px" style={{ paddingBottom: '12px' }} />
+
+</Step>
+<Step title="Compose and send request" subtitle="1 step">
+
+### Compose them into a request (all mandatory):
+
+<ul>
+  <li>
+    Use Token Endpoint <code>{`${props.endpoint}/oidc/token`}</code> as the request endpoint, and
+    use POST as the method.
+  </li>
+  <li>
+    Set header <code>Content-Type: application/x-www-form-urlencoded</code>
+  </li>
+  <li>
+    Use{' '}
+    <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication">
+      Basic authentication
+    </a>
+    , where username is the App ID, and password is the App Secret.
+  </li>
+  <li>Carry the body data</li>
+</ul>
+
+```json
+{
+  "grant_type": "client_credentials",
+  "resource": "https://shopping.api", // Replace with your API identifier
+  "scope": "scope_1 scope_2" // Replace with your desired scope(s) if you're using RBAC
+}
+```
+
+If you are using cURL:
+
+<pre>
+  <code className="language-bash">
+    {`curl --location
+--request POST '${props.endpoint}/oidc/token'
+--header 'Authorization: Basic eW91ci1hcHAtaWQ6eW91ci1hcHAtc2VjcmV0'
+--header 'Content-Type: application/x-www-form-urlencoded'
+--data-urlencode 'grant_type=client_credentials'
+--data-urlencode 'resource=https://shopping.api'
+--data-urlencode 'scope=scope_1 scope_2'
+`}
+  </code>
+</pre>
+
+### Token Response
+
+A successful response body would be like:
+
+```json
+{
+  "access_token": "eyJhbG...2g", // Use this token for accessing the resource
+  "expires_in": 3600, // Token expiration in seconds
+  "token_type": "Bearer" // Auth type for your request when using the Access Token
+}
+```
+
+</Step>
+<Step title="Access resource using Access Token" subtitle="1 step">
+
+You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the Access Token in the Authorization field of HTTP headers with the Bearer format (`Bearer YOUR_TOKEN`).
+
+For example, if you have requested an Access Token with the resource `https://api.logto.io`, to get all applications in Logto:
+
+<pre>
+  <code className="language-bash">
+    {`curl --location
+--request GET '${props.endpoint}/api/applications'
+--header 'Authorization: Bearer eyJhbG...2g' # Access Token
+`}
+  </code>
+</pre>
+
+</Step>
+</Steps>
