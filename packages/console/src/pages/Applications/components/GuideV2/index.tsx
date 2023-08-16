@@ -129,7 +129,12 @@ function GuideV2({ guideId, app, isCompact, onClose }: Props) {
         </GuideContext.Provider>
         <nav className={styles.actionBar}>
           <div className={styles.layout}>
-            <Button size="large" title="applications.guide.finish_and_done" type="primary" />
+            <Button
+              size="large"
+              title="applications.guide.finish_and_done"
+              type="primary"
+              onClick={onClose}
+            />
           </div>
         </nav>
       </div>
