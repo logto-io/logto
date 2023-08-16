@@ -1,0 +1,72 @@
+import UriInputField from '@/mdx-components-v2/UriInputField';
+import Steps from '@/mdx-components-v2/Steps';
+import Step from '@/mdx-components-v2/Step';
+
+import logtoSignInExperience from './assets/logto-sign-in-experience.png';
+import outlineHome from './assets/outline-home.png';
+import outlineSignIn from './assets/outline-sign-in.png';
+import EnvironmentVariables from './components/EnvironmentVariables';
+
+<Steps>
+
+<Step title="Prerequisites">
+
+[Outline](https://github.com/outline/outline) serves as a knowledge base for growing teams. To get started, you need an Outline hosting environment with access to environment variables.
+
+Follow the steps outlined in the [Outline hosting guide](https://docs.getoutline.com/s/hosting/) until you reach the authentication configuration step. We'll leverage the Outline support of [OIDC-compatible authentication providers](https://docs.getoutline.com/s/hosting/doc/oidc-8CPBm6uC0I) in this guide.
+
+</Step>
+
+<Step title="Configure redirect URI">
+
+Add a redirect URI by replacing the origin to your outline host origin.
+
+<UriInputField name="redirectUris" defaultValue="[your-outline-origin]/auth/oidc.callback" />
+
+For example, if your Outline is hosted at `https://outline.example.com`, the redirect URI should be `https://outline.example.com/auth/oidc.callback`.
+
+Don't forget to click the **Save** button.
+
+</Step>
+
+<Step title="Set the outline environment variables">
+
+Refer to the following table for the necessary configuration details:
+
+<EnvironmentVariables />
+
+Here's another table containing additional variables:
+
+| Outline Environment Variable | Description                    |
+| ---------------------------- | ------------------------------ |
+| OIDC_USERNAME_CLAIM          | Set to `username`                |
+| OIDC_DISPLAY_NAME            | Optional - customize as needed |
+| OIDC_SCOPES                  | Keep default; no need to set   |
+
+</Step>
+
+<Step title="Set up email sign-in in Logto">
+
+Since Outline requires user email to be provided, you need to configure email sign-in or a social sign-in that provides trustworthy email address, such as Google sign-in.
+
+See [Passwordless sign-in by adding connectors](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors/) to learn more about configuring passwordless sign-in in Logto.
+
+</Step>
+
+<Step title="Checkpoint: Test Logto and Outline integration">
+
+Start the Outline instance and access its endpoint. You should see a button in the center labeled "Continue with OpenID Connect"; it can be customized by setting the `OIDC_DISPLAY_NAME` environment variable.
+
+<img alt="Outline sign-in page" src={outlineSignIn} width="360" />
+
+Click on the button, and you will be directed to the Logto sign-in experience.
+
+<img alt="Logto sign-in experience" src={logtoSignInExperience} width="360" />
+
+If everything has been configured correctly, once you complete the sign-in or registration process in Logto, you will be redirected back to Outline. You can then see your personal information displayed in the bottom left corner of the page.
+
+<img alt="Outline home" src={outlineHome} width="660" />
+
+</Step>
+
+</Steps>

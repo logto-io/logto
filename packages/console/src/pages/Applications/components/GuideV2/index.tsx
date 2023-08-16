@@ -39,8 +39,19 @@ type GuideContextType = {
   };
 };
 
-// eslint-disable-next-line no-restricted-syntax
-export const GuideContext = createContext<GuideContextType>({} as GuideContextType);
+export const GuideContext = createContext<GuideContextType>({
+  // The following `as` is for context initialization, they won't be used in production except for
+  // HMR.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
+  metadata: {} as GuideMetadata,
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
+  app: {} as Application,
+  endpoint: '',
+  redirectUris: [],
+  postLogoutRedirectUris: [],
+  isCompact: false,
+  sampleUrls: { origin: '', callback: '' },
+});
 
 type Props = {
   guideId: string;

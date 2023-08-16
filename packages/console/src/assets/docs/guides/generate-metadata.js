@@ -56,8 +56,7 @@ for (const { name, logo } of metadata) {
     Logo: ${logo ? `lazy(async () => import('./${name}/${logo}'))` : 'undefined'},
     Component: lazy(async () => import('./${name}/README.mdx')),
     metadata: ${camelCase(name)},
-  },
-`
+  },`
   );
 }
 
