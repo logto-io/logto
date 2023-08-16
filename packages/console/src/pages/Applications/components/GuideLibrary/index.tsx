@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { type Guide } from '@/assets/docs/guides/types';
 import SearchIcon from '@/assets/icons/search.svg';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -12,42 +11,18 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 
 import CreateForm from '../CreateForm';
-import GuideCard, { type SelectedGuide } from '../GuideCard';
+import { type SelectedGuide } from '../GuideCard';
+import GuideGroup from '../GuideGroup';
 
 import useAppGuideMetadata from './hook';
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  hasFilter?: boolean;
   hasCardBorder?: boolean;
 };
 
-type GuideGroupProps = {
-  categoryName?: string;
-  guides?: readonly Guide[];
-  hasCardBorder?: boolean;
-  onClickGuide: (data: SelectedGuide) => void;
-};
-
-function GuideGroup({ categoryName, guides, hasCardBorder, onClickGuide }: GuideGroupProps) {
-  if (!guides?.length) {
-    return null;
-  }
-
-  return (
-    <div className={styles.guideGroup}>
-      {categoryName && <label>{categoryName}</label>}
-      <div className={styles.grid}>
-        {guides.map((guide) => (
-          <GuideCard key={guide.id} hasBorder={hasCardBorder} data={guide} onClick={onClickGuide} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function GuideLibrary({ className, hasFilter, hasCardBorder }: Props) {
+function GuideLibrary({ className, hasCardBorder }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
   const { navigate } = useTenantPathname();
   const [keyword, setKeyword] = useState<string>('');
@@ -85,36 +60,35 @@ function GuideLibrary({ className, hasFilter, hasCardBorder }: Props) {
 
   return (
     <div className={classNames(styles.container, className)}>
-      {hasFilter && (
-        <div className={styles.filters}>
-          <label>{t('filter.title')}</label>
-          <TextInput
-            className={styles.searchInput}
-            icon={<SearchIcon />}
-            placeholder={t('filter.placeholder')}
-            value={keyword}
-            onChange={(event) => {
-              setKeyword(event.currentTarget.value);
-            }}
-          />
-          <CheckboxGroup
-            className={styles.checkboxGroup}
-            options={allAppGuideCategories.map((category) => ({
-              title: `applications.guide.categories.${category}`,
-              value: category,
-            }))}
-            value={filterCategories}
-            onChange={(value) => {
-              const sortedValue = allAppGuideCategories.filter((category) =>
-                value.includes(category)
-              );
-              setFilterCategories(sortedValue);
-            }}
-          />
-        </div>
-      )}
+      <div className={styles.filters}>
+        <label>{t('filter.title')}</label>
+        <TextInput
+          className={styles.searchInput}
+          icon={<SearchIcon />}
+          placeholder={t('filter.placeholder')}
+          value={keyword}
+          onChange={(event) => {
+            setKeyword(event.currentTarget.value);
+          }}
+        />
+        <CheckboxGroup
+          className={styles.checkboxGroup}
+          options={allAppGuideCategories.map((category) => ({
+            title: `applications.guide.categories.${category}`,
+            value: category,
+          }))}
+          value={filterCategories}
+          onChange={(value) => {
+            const sortedValue = allAppGuideCategories.filter((category) =>
+              value.includes(category)
+            );
+            setFilterCategories(sortedValue);
+          }}
+        />
+      </div>
       {keyword && (
         <GuideGroup
+          className={styles.guideGroup}
           hasCardBorder={hasCardBorder}
           guides={filteredMetadata}
           onClickGuide={onClickGuide}
@@ -127,6 +101,7 @@ function GuideLibrary({ className, hasFilter, hasCardBorder }: Props) {
               structuredMetadata[category].length > 0 && (
                 <GuideGroup
                   key={category}
+                  className={styles.guideGroup}
                   hasCardBorder={hasCardBorder}
                   categoryName={t(`categories.${category}`)}
                   guides={structuredMetadata[category]}

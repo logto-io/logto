@@ -1,135 +1,141 @@
 import { DomainStatus, type Application } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
-import { conditional, type Optional } from '@silverhand/essentials';
-import i18next from 'i18next';
-import type { MDXProps } from 'mdx/types';
-import type { LazyExoticComponent } from 'react';
-import { useEffect, useContext, cloneElement, lazy, Suspense, useState } from 'react';
+import { conditional } from '@silverhand/essentials';
+import classNames from 'classnames';
+import {
+  useContext,
+  Suspense,
+  createContext,
+  useMemo,
+  type LazyExoticComponent,
+  type ComponentType,
+} from 'react';
 
+import guides from '@/assets/docs/guides';
+import { type GuideMetadata } from '@/assets/docs/guides/types';
 import { AppDataContext } from '@/contexts/AppDataProvider';
+import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
-import type { SupportedSdk } from '@/types/applications';
-import { applicationTypeAndSdkTypeMappings } from '@/types/applications';
-import { applyDomain } from '@/utils/domain';
 
 import GuideHeader from '../GuideHeader';
-import SdkSelector from '../SdkSelector';
 import StepsSkeleton from '../StepsSkeleton';
 
 import * as styles from './index.module.scss';
 
+type GuideContextType = {
+  metadata: Readonly<GuideMetadata>;
+  Logo?: LazyExoticComponent<ComponentType>;
+  app: Application;
+  endpoint: string;
+  alternativeEndpoint?: string;
+  redirectUris: string[];
+  postLogoutRedirectUris: string[];
+  isCompact: boolean;
+  sampleUrls: {
+    origin: string;
+    callback: string;
+  };
+};
+
+export const GuideContext = createContext<GuideContextType>({
+  // The following `as` is for context initialization, they won't be used in production except for
+  // HMR.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
+  metadata: {} as GuideMetadata,
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
+  app: {} as Application,
+  endpoint: '',
+  redirectUris: [],
+  postLogoutRedirectUris: [],
+  isCompact: false,
+  sampleUrls: { origin: '', callback: '' },
+});
+
 type Props = {
+  className?: string;
+  guideId: string;
   app?: Application;
   isCompact?: boolean;
   onClose: () => void;
 };
 
-/** @deprecated */
-const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
-  ios: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios.mdx')),
-  android: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/android.mdx')),
-  react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
-  vue: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue.mdx')),
-  vanilla: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla.mdx')),
-  express: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/express.mdx')),
-  next: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next.mdx')),
-  go: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go.mdx')),
-  'ios_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios_zh-cn.mdx')),
-  'android_zh-cn': lazy(
-    async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
-  ),
-  'react_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react_zh-cn.mdx')),
-  'vue_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue_zh-cn.mdx')),
-  'vanilla_zh-cn': lazy(
-    async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla_zh-cn.mdx')
-  ),
-  'express_zh-cn': lazy(
-    async () => import('@/assets/docs/tutorial/integrate-sdk/express_zh-cn.mdx')
-  ),
-  'next_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next_zh-cn.mdx')),
-  'go_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go_zh-cn.mdx')),
-};
-
-function Guide({ app, isCompact, onClose }: Props) {
-  const sdks = app && applicationTypeAndSdkTypeMappings[app.type];
-  const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>();
-  const [activeStepIndex, setActiveStepIndex] = useState(-1);
+function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
+  const guide = guides.find(({ id }) => id === guideId);
 
-  useEffect(() => {
-    if (sdks?.length) {
-      setSelectedSdk(sdks[0]);
-    }
-  }, [sdks]);
-
-  if (!app || !sdks || !selectedSdk) {
-    return null;
+  if (!app || !guide) {
+    throw new Error('Invalid app or guide');
   }
 
-  const { id: appId, secret: appSecret, name: appName, oidcClientMetadata } = app;
-  const locale = i18next.language;
-  const guideI18nKey = `${selectedSdk}_${locale}`.toLowerCase();
-  const GuideComponent = Guides[guideI18nKey] ?? Guides[selectedSdk.toLowerCase()];
+  const GuideComponent = guide.Component;
+
+  const memorizedContext = useMemo(
+    () =>
+      ({
+        metadata: guide.metadata,
+        Logo: guide.Logo,
+        app,
+        endpoint: tenantEndpoint?.toString() ?? '',
+        alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
+        redirectUris: app.oidcClientMetadata.redirectUris,
+        postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
+        isCompact: Boolean(isCompact),
+        sampleUrls: {
+          origin: 'http://localhost:3001/',
+          callback: 'http://localhost:3001/callback',
+        },
+      }) satisfies GuideContextType,
+    [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
+  );
 
   return (
-    <div className={styles.container}>
-      <GuideHeader isCompact={isCompact} onClose={onClose} />
+    <div className={classNames(styles.container, className)}>
+      {!isCompact && <GuideHeader onClose={onClose} />}
       <div className={styles.content}>
-        {cloneElement(<SdkSelector sdks={sdks} selectedSdk={selectedSdk} />, {
-          className: styles.banner,
-          isCompact,
-          onChange: setSelectedSdk,
-          onToggle: () => {
-            setActiveStepIndex(0);
-          },
-        })}
-        <MDXProvider
-          components={{
-            code: ({ className, children }) => {
-              const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
+        <GuideContext.Provider value={memorizedContext}>
+          <MDXProvider
+            components={{
+              code: ({ className, children }) => {
+                const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
-              return language ? (
-                <CodeEditor isReadonly language={language} value={String(children).trimEnd()} />
-              ) : (
-                <code>{String(children).trimEnd()}</code>
-              );
-            },
-            a: ({ children, ...props }) => (
-              <TextLink {...props} target="_blank" rel="noopener noreferrer">
-                {children}
-              </TextLink>
-            ),
-            details: DetailsSummary,
-          }}
-        >
-          <Suspense fallback={<StepsSkeleton />}>
-            {GuideComponent && tenantEndpoint && (
-              <GuideComponent
-                appId={appId}
-                appSecret={appSecret}
-                endpoint={
-                  isCustomDomainActive
-                    ? applyDomain(tenantEndpoint.toString(), customDomain.domain)
-                    : tenantEndpoint
-                }
-                alternativeEndpoint={conditional(isCustomDomainActive && tenantEndpoint)}
-                redirectUris={oidcClientMetadata.redirectUris}
-                postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
-                activeStepIndex={activeStepIndex}
-                isCompact={isCompact}
-                onNext={(nextIndex: number) => {
-                  setActiveStepIndex(nextIndex);
-                }}
-                onComplete={onClose}
-              />
-            )}
-          </Suspense>
-        </MDXProvider>
+                return language ? (
+                  <CodeEditor
+                    isReadonly
+                    // We need to transform `ts` to `typescript` for prismjs, and
+                    // it's weird since it worked in the original Guide component.
+                    // To be investigated.
+                    language={language === 'ts' ? 'typescript' : language}
+                    value={String(children).trimEnd()}
+                  />
+                ) : (
+                  <code>{String(children).trimEnd()}</code>
+                );
+              },
+              a: ({ children, ...props }) => (
+                <TextLink {...props} target="_blank" rel="noopener noreferrer">
+                  {children}
+                </TextLink>
+              ),
+              details: DetailsSummary,
+            }}
+          >
+            <Suspense fallback={<StepsSkeleton />}>
+              {tenantEndpoint && <GuideComponent {...memorizedContext} />}
+            </Suspense>
+          </MDXProvider>
+        </GuideContext.Provider>
+        {!isCompact && (
+          <nav className={styles.actionBar}>
+            <div className={styles.layout}>
+              <Button size="large" title="applications.guide.finish_and_done" type="primary" />
+            </div>
+          </nav>
+        )}
       </div>
     </div>
   );

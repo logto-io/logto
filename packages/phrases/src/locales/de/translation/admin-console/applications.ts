@@ -52,6 +52,8 @@ const applications = {
       title: 'Filter framework', // UNTRANSLATED
       placeholder: 'Search for framework', // UNTRANSLATED
     },
+    select_a_framework: 'Select a framework', // UNTRANSLATED
+    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
     get_sample_file: 'Zum Beispielprojekt',
     title: 'Die Anwendung wurde erfolgreich erstellt',
     subtitle:

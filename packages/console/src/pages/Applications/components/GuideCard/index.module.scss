@@ -12,6 +12,10 @@
   max-width: 460px;
   justify-content: space-between;
 
+  &.compact {
+    cursor: pointer;
+  }
+
   &.hasBorder {
     border-color: var(--color-divider);
   }
