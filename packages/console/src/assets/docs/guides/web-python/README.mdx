@@ -26,7 +26,7 @@ pip install logto # or `poetry add logto` or whatever you use
 
 <Step title="Init LogtoClient">
 
-Insert the following code into your python file:
+Insert the following code into your Python file:
 
 <pre>
   <code className="language-python">
@@ -34,7 +34,7 @@ Insert the following code into your python file:
 
 client = LogtoClient(
     LogtoConfig(
-        endpoint= "${props.endpoint}",${props.alternativeEndpoint ? ' // or "${props.alternativeEndpoint}"' : ''}
+        endpoint="${props.endpoint}",${props.alternativeEndpoint ? ' # or "${props.alternativeEndpoint}"' : ''}
         appId="${props.app.id}",
         appSecret="${props.app.secret}",
     )
@@ -152,7 +152,7 @@ Adding `exclude_unset=True` will exclude unset fields from the JSON output, whic
 
 For example, if we didn't request the `email` scope when signing in, and the `email` field will be excluded from the JSON output. However, if we requested the `email` scope, but the user doesn't have an email address, the `email` field will be included in the JSON output with a `null` value.
 
-To learn more about scopes and claims, see [Scopes and claims](https://github.com/logto-io/python/blob/master/docs/tutorial.md#scopes-and-claims).
+To learn more about scopes and claims, see [Scopes and claims](https://github.com/logto-io/python/blob/HEAD/docs/tutorial.md#scopes-and-claims).
 
 </Step>
 
