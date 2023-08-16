@@ -17,6 +17,7 @@ import webChatgpt from './web-chatgpt/index';
 import webCsharp from './web-csharp/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
+import webGptPlugin from './web-gpt-plugin/index';
 import webJava from './web-java/index';
 import webNext from './web-next/index';
 import webNextAppRouter from './web-next-app-router/index';
@@ -102,6 +103,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Component: lazy(async () => import('./web-express/README.mdx')),
     metadata: webExpress,
   },
+  {
+    id: 'web-gpt-plugin',
+    Logo: lazy(async () => import('./web-gpt-plugin/logo.svg')),
+    Component: lazy(async () => import('./web-gpt-plugin/README.mdx')),
+    metadata: webGptPlugin,
+  },
+
   {
     id: 'web-go',
     Logo: lazy(async () => import('./web-go/logo.svg')),

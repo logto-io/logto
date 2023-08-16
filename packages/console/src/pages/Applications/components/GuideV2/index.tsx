@@ -48,7 +48,7 @@ function GuideV2({ app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { data: customDomain } = useCustomDomain();
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
-  const guide = guides.find(({ id }) => id === 'spa-react');
+  const guide = guides.find(({ id }) => id === 'web-gpt-plugin');
 
   if (!app || !guide) {
     throw new Error('Invalid app or guide');
