@@ -66,6 +66,11 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
       CloudScope.SendSms,
       'Allow sending SMS. This scope is only available to M2M application.'
     ),
+    buildScope(CloudScope.CreateAffiliate, 'Allow creating new affiliates and logs.'),
+    buildScope(
+      CloudScope.ManageAffiliate,
+      'Allow managing affiliates, including create, update, and delete.'
+    ),
   ]);
 };
 

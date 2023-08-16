@@ -3124,6 +3124,9 @@ importers:
       '@koa/cors':
         specifier: ^4.0.0
         version: 4.0.0
+      '@logto/affiliate':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@logto/app-insights':
         specifier: workspace:^1.3.1
         version: link:../app-insights
@@ -7289,6 +7292,14 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@logto/affiliate@0.1.0:
+    resolution: {integrity: sha512-yDWSZMI2Qo/xoYU92tnwSP/gnSvq8+CLK5DqD/4brO42QJa7xjt7eA+HSyuMmSUrKffY2nP3riU81gs+nR8DkA==}
+    engines: {node: ^18.12.0}
+    dependencies:
+      '@silverhand/essentials': 2.8.2
+      tiny-cookie: 2.4.1
+    dev: false
 
   /@logto/browser@2.1.0:
     resolution: {integrity: sha512-4XsXlCC0uZHcfazV09/4YKo4koqvSzQlkPUAToTp/WHpb6h2XDOJh5/hi55LXL4zp0PCcgpErKRxFCtgXCc6WQ==}
@@ -19705,7 +19716,6 @@ packages:
 
   /tiny-cookie@2.4.1:
     resolution: {integrity: sha512-h8ueaMyvUd/9ZfRqCfa1t+0tXqfVFhdK8WpLHz8VXMqsiaj3Sqg64AOCH/xevLQGZk0ZV+/75ouITdkvp3taVA==}
-    dev: true
 
   /tiny-glob@0.2.9:
     resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
