@@ -7,7 +7,6 @@ import { GuideContext } from '@/pages/Applications/components/GuideV2';
 
 import * as styles from './index.module.scss';
 
-// eslint-disable-next-line import/no-unused-modules
 export default function ClientBasics() {
   const {
     app: { id, secret },

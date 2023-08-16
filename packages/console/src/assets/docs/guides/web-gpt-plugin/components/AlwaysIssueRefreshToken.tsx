@@ -7,8 +7,6 @@ import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
 import { GuideContext } from '@/pages/Applications/components/GuideV2';
 
-// Used in the guide
-// eslint-disable-next-line import/no-unused-modules
 export default function AlwaysIssueRefreshToken() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {

@@ -5,7 +5,6 @@ import { openIdProviderConfigPath } from '@/consts/oidc';
 import CodeEditor from '@/ds-components/CodeEditor';
 import { type RequestError } from '@/hooks/use-api';
 
-// eslint-disable-next-line import/no-unused-modules
 export default function AiPluginJson() {
   const { data } = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
   const authorizationEndpoint = data?.authorization_endpoint ?? '[LOADING]';

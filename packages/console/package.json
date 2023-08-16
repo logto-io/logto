@@ -158,7 +158,8 @@
         "files": [
           "*.d.ts",
           "**/assets/docs/guides/types.ts",
-          "**/assets/docs/guides/**/index.ts",
+          "**/assets/docs/guides/*/index.ts",
+          "**/assets/docs/guides/*/components/**/*.tsx",
           "**/mdx-components*/*/index.tsx"
         ],
         "rules": {
