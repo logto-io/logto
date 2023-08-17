@@ -11,8 +11,7 @@ const applications = {
   application_description_placeholder: 'Enter your application description',
   select_application_type: 'Select an application type',
   no_application_type_selected: 'You haven’t selected any application type yet',
-  application_created:
-    'The application {{name}} has been successfully created.\nNow finish your application settings.',
+  application_created: 'Application created successfully.',
   app_id: 'App ID',
   type: {
     native: {
