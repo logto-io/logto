@@ -24,9 +24,10 @@ import * as styles from './index.module.scss';
 type Props = {
   className?: string;
   hasCardBorder?: boolean;
+  hasFilters?: boolean;
 };
 
-function GuideLibrary({ className, hasCardBorder }: Props) {
+function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
   const { navigate } = useTenantPathname();
   const [keyword, setKeyword] = useState<string>('');
@@ -68,35 +69,37 @@ function GuideLibrary({ className, hasCardBorder }: Props) {
 
   return (
     <div className={classNames(styles.container, className)}>
-      <div className={styles.filters}>
-        <label>{t('filter.title')}</label>
-        <TextInput
-          className={styles.searchInput}
-          icon={<SearchIcon />}
-          placeholder={t('filter.placeholder')}
-          value={keyword}
-          onChange={(event) => {
-            setKeyword(event.currentTarget.value);
-          }}
-        />
-        <div className={styles.checkboxGroupContainer}>
-          <CheckboxGroup
-            className={styles.checkboxGroup}
-            options={allAppGuideCategories.map((category) => ({
-              title: `applications.guide.categories.${category}`,
-              value: category,
-            }))}
-            value={filterCategories}
-            onChange={(value) => {
-              const sortedValue = allAppGuideCategories.filter((category) =>
-                value.includes(category)
-              );
-              setFilterCategories(sortedValue);
+      {hasFilters && (
+        <div className={styles.filters}>
+          <label>{t('filter.title')}</label>
+          <TextInput
+            className={styles.searchInput}
+            icon={<SearchIcon />}
+            placeholder={t('filter.placeholder')}
+            value={keyword}
+            onChange={(event) => {
+              setKeyword(event.currentTarget.value);
             }}
           />
-          {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
+          <div className={styles.checkboxGroupContainer}>
+            <CheckboxGroup
+              className={styles.checkboxGroup}
+              options={allAppGuideCategories.map((category) => ({
+                title: `applications.guide.categories.${category}`,
+                value: category,
+              }))}
+              value={filterCategories}
+              onChange={(value) => {
+                const sortedValue = allAppGuideCategories.filter((category) =>
+                  value.includes(category)
+                );
+                setFilterCategories(sortedValue);
+              }}
+            />
+            {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
+          </div>
         </div>
-      </div>
+      )}
       {keyword && (
         <GuideGroup
           className={styles.guideGroup}
