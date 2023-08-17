@@ -1,10 +1,14 @@
+import { type Ref, forwardRef } from 'react';
+
 import TextLink from '@/ds-components/TextLink';
 
-import Step, { type Props } from '../Step';
+import Step, { type Props as StepProps } from '../Step';
 
-export default function FurtherReadings(props: Omit<Props, 'children'>) {
+type Props = Omit<StepProps, 'children'>;
+
+function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
   return (
-    <Step {...props}>
+    <Step ref={ref} {...props}>
       <ul>
         <li>
           <TextLink
@@ -46,3 +50,5 @@ export default function FurtherReadings(props: Omit<Props, 'children'>) {
     </Step>
   );
 }
+
+export default forwardRef<HTMLDivElement, Props>(FurtherReadings);
