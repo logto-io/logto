@@ -79,8 +79,9 @@ function UriInputField({ name, defaultValue }: Props) {
     }
   };
 
-  const defaultValueArray = data?.oidcClientMetadata[name].length
-    ? data.oidcClientMetadata[name]
+  const clientMetadata = data?.oidcClientMetadata[name];
+  const defaultValueArray = clientMetadata?.length
+    ? clientMetadata
     : conditional(defaultValue && [defaultValue]);
 
   return (
