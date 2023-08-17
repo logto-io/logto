@@ -200,6 +200,17 @@ describe('role routes', () => {
         });
       expect(response.status).toEqual(422);
     });
+
+  it('POST /roles/:id/users', async () => {
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
+    findFirstUsersRolesByRoleIdAndUserIds.mockResolvedValueOnce(null);
+    const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/users`).send({
+      userIds: [mockUser.id],
+    });
+    expect(response.status).toEqual(201);
+    expect(insertUsersRoles).toHaveBeenCalledWith([
+      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
+    ]);
   });
 
   it('DELETE /roles/:id/users/:userId', async () => {
