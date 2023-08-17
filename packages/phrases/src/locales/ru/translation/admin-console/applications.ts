@@ -3,6 +3,7 @@ const applications = {
   title: 'Заявки',
   subtitle:
     'Настроить аутентификацию Logto для вашего нативного, одностраничного, машина-машина или традиционного приложения.',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: 'Создать заявку',
   application_name: 'Название приложения',
   application_name_placeholder: 'Мое приложение',

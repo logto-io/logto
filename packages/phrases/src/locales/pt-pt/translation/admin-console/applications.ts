@@ -3,6 +3,7 @@ const applications = {
   title: 'Aplicações',
   subtitle:
     'Configure um aplicativo móvel, de página única, machine to machine ou tradicional para usar o Logto para autenticação',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: 'Criar aplicação',
   application_name: 'Nome da aplicação',
   application_name_placeholder: 'Ex: Site Empresa',

@@ -3,6 +3,7 @@ const applications = {
   title: 'Aplikacje',
   subtitle:
     'Skonfiguruj uwierzytelnianie Logto dla Twojej aplikacji natywnej, jednostronicowej, komunikującej się bezpośrednio z zasobami lub tradycyjnej',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: 'Utwórz aplikację',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',

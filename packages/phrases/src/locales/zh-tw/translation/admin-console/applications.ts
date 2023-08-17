@@ -2,6 +2,7 @@ const applications = {
   page_title: '全部應用',
   title: '全部應用',
   subtitle: '創建一個移動、單頁、machine to machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: '創建應用',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',

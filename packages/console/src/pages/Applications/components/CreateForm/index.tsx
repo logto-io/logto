@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
@@ -31,10 +32,11 @@ type FormData = {
 
 type Props = {
   defaultCreateType?: ApplicationType;
+  defaultCreateFrameworkName?: string;
   onClose?: (createdApp?: Application) => void;
 };
 
-function CreateForm({ defaultCreateType, onClose }: Props) {
+function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const isMachineToMachineDisabled = !currentPlan?.quota.machineToMachineLimit;
@@ -86,13 +88,21 @@ function CreateForm({ defaultCreateType, onClose }: Props) {
     >
       <ModalLayout
         title="applications.create"
-        subtitle="applications.subtitle"
+        subtitle={
+          defaultCreateFrameworkName ? (
+            <DynamicT
+              forKey="applications.subtitle_with_app_type"
+              interpolation={{ name: defaultCreateFrameworkName }}
+            />
+          ) : (
+            'applications.subtitle'
+          )
+        }
         size="large"
         footer={<Footer selectedType={value} isLoading={isSubmitting} onClickCreate={onSubmit} />}
         onClose={onClose}
       >
         <form>
-          {defaultCreateType && <input hidden {...register('type')} value={defaultCreateType} />}
           {!defaultCreateType && (
             <FormField title="applications.select_application_type">
               <RadioGroup
@@ -139,6 +149,7 @@ function CreateForm({ defaultCreateType, onClose }: Props) {
               placeholder={t('applications.application_description_placeholder')}
             />
           </FormField>
+          {defaultCreateType && <input hidden {...register('type')} value={defaultCreateType} />}
         </form>
       </ModalLayout>
     </Modal>
