@@ -59,10 +59,12 @@
       overflow: hidden;
     }
 
-    textarea,
-    pre {
-      display: flex;
-      min-height: 80px;
+    &:not(.readonly) {
+      textarea,
+      pre {
+        display: flex;
+        min-height: 80px;
+      }
     }
   }
 
