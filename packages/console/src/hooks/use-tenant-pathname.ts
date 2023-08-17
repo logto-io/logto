@@ -73,7 +73,7 @@ function useTenantPathname(): TenantPathname {
   /** Returns the pathname with the current tenant ID prepended. */
   const getPathname = useCallback(
     (pathname: string) => {
-      if (pathname.startsWith('/')) {
+      if (pathname.startsWith('/') && !pathname.startsWith(`/${tenantSegment}`)) {
         return joinPath(tenantSegment, pathname);
       }
       // Directly return the pathname if it's a relative pathname
