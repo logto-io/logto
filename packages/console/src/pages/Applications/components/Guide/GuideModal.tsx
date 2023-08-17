@@ -1,4 +1,4 @@
-import type { Application } from '@logto/schemas';
+import type { ApplicationResponse } from '@logto/schemas';
 import Modal from 'react-modal';
 
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -7,7 +7,7 @@ import GuideV2 from '../GuideV2';
 
 type Props = {
   guideId: string;
-  app?: Application;
+  app?: ApplicationResponse;
   onClose: (id: string) => void;
 };
 

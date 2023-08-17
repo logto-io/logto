@@ -1,17 +1,17 @@
+import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
+import { GuideContext } from '@/pages/Applications/components/GuideV2';
 
 import * as styles from './index.module.scss';
 
-type Props = {
-  id: string;
-  secret: string;
-};
-
-function ApplicationCredentials({ id, secret }: Props) {
+function ApplicationCredentials() {
+  const {
+    app: { id, secret },
+  } = useContext(GuideContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (

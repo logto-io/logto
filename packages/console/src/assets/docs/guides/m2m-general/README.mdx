@@ -2,29 +2,33 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components-v2/Steps';
 import Step from '@/mdx-components-v2/Step';
 import ApplicationCredentials from '@/mdx-components-v2/ApplicationCredentials';
+import EnableAdminAccess from './components/EnableAdminAccess';
 import EnableAdminAccessSrc from './assets/enable-admin-access.png';
 import AppIdentifierSrc from './assets/api-identifier.png';
 
 <Steps>
 <Step title="Intro">
-Machine to Machine (M2M) is a common practice to authenticate if you have an app that needs to directly talks to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
+Machine-to-machine (M2M) is a common practice to authenticate if you have an app that needs to directly talks to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
 
 Usually, an M2M app doesn't need user interactions, i.e., it has no UI.
 
 </Step>
-<Step title="Locate the app ID and app secret" subtitle="1 step">
+<Step title="Locate the app ID and app secret">
 Get your App ID and App Secret.
 
-<ApplicationCredentials id={props.app.id} secret={props.app.secret} />
+<ApplicationCredentials />
 
 </Step>
-<Step title="Locate the API Resource" subtitle="2 steps">
+<Step title="Enable admin access" subtitle="(optional)">
 
 ### Accessing Logto Management API
 
-If you want to use this app for accessing [Management API](https://docs.logto.io/docs/references/core/#management-api), remember to turn on "Enable admin access" in the Advanced settings tab.
+If you want to use this m2m app for accessing Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to turn on "admin access" for you application.
 
-<img alt="API identifier" src={EnableAdminAccessSrc} width="600px" />
+<EnableAdminAccess />
+
+</Step>
+<Step title="Locate the API Resource">
 
 ### Find the API identifier
 
@@ -33,7 +37,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
 <img alt="API identifier" src={AppIdentifierSrc} width="600px" style={{ paddingBottom: '12px' }} />
 
 </Step>
-<Step title="Compose and send request" subtitle="1 step">
+<Step title="Compose and send request">
 
 ### Compose them into a request (all mandatory):
 
@@ -55,7 +59,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
   <li>Carry the body data</li>
 </ul>
 
-```json
+```jsonc
 {
   "grant_type": "client_credentials",
   "resource": "https://shopping.api", // Replace with your API identifier
@@ -68,21 +72,21 @@ If you are using cURL:
 <pre>
   <code className="language-bash">
     {`curl --location
---request POST '${props.endpoint}/oidc/token'
---header 'Authorization: Basic eW91ci1hcHAtaWQ6eW91ci1hcHAtc2VjcmV0'
---header 'Content-Type: application/x-www-form-urlencoded'
---data-urlencode 'grant_type=client_credentials'
---data-urlencode 'resource=https://shopping.api'
---data-urlencode 'scope=scope_1 scope_2'
+  --request POST '${props.endpoint}/oidc/token'
+  --header 'Authorization: Basic eW91ci1hcHAtaWQ6eW91ci1hcHAtc2VjcmV0'
+  --header 'Content-Type: application/x-www-form-urlencoded'
+  --data-urlencode 'grant_type=client_credentials'
+  --data-urlencode 'resource=https://shopping.api'
+  --data-urlencode 'scope=scope_1 scope_2'
 `}
   </code>
 </pre>
 
-### Token Response
+### Token response
 
 A successful response body would be like:
 
-```json
+```jsonc
 {
   "access_token": "eyJhbG...2g", // Use this token for accessing the resource
   "expires_in": 3600, // Token expiration in seconds
@@ -91,7 +95,7 @@ A successful response body would be like:
 ```
 
 </Step>
-<Step title="Access resource using Access Token" subtitle="1 step">
+<Step title="Access resource using Access Token">
 
 You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the Access Token in the Authorization field of HTTP headers with the Bearer format (`Bearer YOUR_TOKEN`).
 
@@ -100,8 +104,8 @@ For example, if you have requested an Access Token with the resource `https://ap
 <pre>
   <code className="language-bash">
     {`curl --location
---request GET '${props.endpoint}/api/applications'
---header 'Authorization: Bearer eyJhbG...2g' # Access Token
+  --request GET '${props.endpoint}/api/applications'
+  --header 'Authorization: Bearer eyJhbG...2g' # Access Token
 `}
   </code>
 </pre>

@@ -1,4 +1,4 @@
-import { DomainStatus, type Application } from '@logto/schemas';
+import { DomainStatus, type ApplicationResponse } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
 import { conditional } from '@silverhand/essentials';
 import {
@@ -27,7 +27,7 @@ import * as styles from './index.module.scss';
 type GuideContextType = {
   metadata: Readonly<GuideMetadata>;
   Logo?: LazyExoticComponent<ComponentType>;
-  app: Application;
+  app: ApplicationResponse;
   endpoint: string;
   alternativeEndpoint?: string;
   redirectUris: string[];
@@ -45,7 +45,7 @@ export const GuideContext = createContext<GuideContextType>({
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
   metadata: {} as GuideMetadata,
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
-  app: {} as Application,
+  app: {} as ApplicationResponse,
   endpoint: '',
   redirectUris: [],
   postLogoutRedirectUris: [],
@@ -55,7 +55,7 @@ export const GuideContext = createContext<GuideContextType>({
 
 type Props = {
   guideId: string;
-  app?: Application;
+  app?: ApplicationResponse;
   isCompact?: boolean;
   onClose: () => void;
 };
