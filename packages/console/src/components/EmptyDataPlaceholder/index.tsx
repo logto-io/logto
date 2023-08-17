@@ -11,15 +11,16 @@ import * as styles from './index.module.scss';
 type Props = {
   title?: string;
   size?: 'large' | 'medium' | 'small';
+  className?: string;
 };
 
-function EmptyDataPlaceholder({ title, size = 'medium' }: Props) {
+function EmptyDataPlaceholder({ title, size = 'medium', className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
   const EmptyImage = theme === Theme.Light ? Empty : EmptyDark;
 
   return (
-    <div className={classNames(styles.empty, styles[size])}>
+    <div className={classNames(styles.empty, styles[size], className)}>
       <EmptyImage className={styles.image} />
       <div className={styles.title}>{title ?? t('errors.empty')}</div>
     </div>
