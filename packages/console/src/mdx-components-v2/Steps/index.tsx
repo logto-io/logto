@@ -4,6 +4,7 @@ import React, { useRef, type ReactElement, useEffect, useState, useMemo, useCont
 
 import useScroll from '@/hooks/use-scroll';
 import { GuideContext } from '@/pages/Applications/components/Guide';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';
@@ -76,6 +77,13 @@ export default function Steps({ children: reactChildren }: Props) {
     setActiveIndex(reversedActiveIndex === -1 ? -1 : children.length - reversedActiveIndex - 1);
   }, [children.length, scrollTop]);
 
+  const navigateToStep = (index: number) => {
+    const stepRef = stepReferences.current[index];
+    if (stepRef) {
+      stepRef.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className={classNames(styles.wrapper, isCompact && styles.fullWidth)}>
       {!isCompact && (
@@ -84,7 +92,15 @@ export default function Steps({ children: reactChildren }: Props) {
             {children.map((component, index) => (
               <div
                 key={component.props.title}
+                role="button"
+                tabIndex={0}
                 className={classNames(styles.stepper, index === activeIndex && styles.active)}
+                onKeyDown={onKeyDownHandler(() => {
+                  navigateToStep(index);
+                })}
+                onClick={() => {
+                  navigateToStep(index);
+                }}
               >
                 {index + 1}. {component.props.title}
               </div>

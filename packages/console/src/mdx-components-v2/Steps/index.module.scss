@@ -40,8 +40,14 @@
   border-radius: 12px;
   border: 1px solid var(--color-surface-5);
   padding: _.unit(3) _.unit(4);
+  user-select: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-surface-5);
+  }
 
   &.active {
-    background: var(--color-surface-1);
+    background: var(--color-focused-variant);
   }
 }
