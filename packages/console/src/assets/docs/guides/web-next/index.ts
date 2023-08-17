@@ -5,7 +5,7 @@ import { type GuideMetadata } from '../types';
 const metadata: Readonly<GuideMetadata> = Object.freeze({
   name: 'Next.js',
   description:
-    'Next.js is a React framework for production - it makes building fullstack React apps and sites a breeze and ships with built-in SSR.',
+    'Next.js is a React framework for production - it makes building fullstack React apps a breeze and ships with built-in SSR.',
   target: ApplicationType.Traditional,
   sample: {
     repo: 'js',
