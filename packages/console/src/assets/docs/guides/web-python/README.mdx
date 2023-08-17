@@ -158,7 +158,11 @@ To learn more about scopes and claims, see [Scopes and claims](https://github.co
 
 <Step title="Implement the sign-out route">
 
-To clean up the Python session and Logto session, a sign-out route can be implemented as follows:
+To clean up the Python session and Logto session, we can designate a post sign-out redierct URI. This is where Logto will redirect users after they sign out.
+
+<UriInputField name="postLogoutRedirectUris" />
+
+And a sign-out route can be implemented as follows:
 
 <pre>
   <code className="language-python">
@@ -166,7 +170,7 @@ To clean up the Python session and Logto session, a sign-out route can be implem
 async def sign_out():
     return redirect(
         # Redirect the user to the home page after a successful sign-out
-        await client.signOut(postLogoutRedirectUri="${props.sampleUrls.origin}")
+        await client.signOut(postLogoutRedirectUri="${props.postLogoutRedirectUris[0] || props.sampleUrls.origin}")
     )
 `}
   </code>
