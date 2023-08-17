@@ -6,6 +6,7 @@ import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -39,7 +40,7 @@ type Props = {
 function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isMachineToMachineDisabled = !currentPlan?.quota.machineToMachineLimit;
+  const isMachineToMachineDisabled = isCloud && !currentPlan?.quota.machineToMachineLimit;
   const { updateConfigs } = useConfigs();
   const {
     handleSubmit,
