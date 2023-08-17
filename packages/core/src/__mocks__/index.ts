@@ -8,7 +8,7 @@ import type {
   Scope,
   UsersRole,
 } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
+import { RoleType, ApplicationType } from '@logto/schemas';
 
 export * from './connector.js';
 export * from './sign-in-experience.js';
@@ -58,18 +58,20 @@ export const mockScopeWithResource = {
   resource: mockResource,
 };
 
-export const mockRole: Role = {
+export const mockAdminUserRole: Role = {
   tenantId: 'fake_tenant',
   id: 'role_id',
   name: 'admin',
   description: 'admin',
+  type: RoleType.User,
 };
 
-export const mockRole2: Role = {
+export const mockAdminUserRole2: Role = {
   tenantId: 'fake_tenant',
   id: 'role_id2',
   name: 'admin2',
   description: 'admin2',
+  type: RoleType.User,
 };
 
 export const mockAdminConsoleData: AdminConsoleData = {

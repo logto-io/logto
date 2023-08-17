@@ -1,6 +1,11 @@
 import type { SchemaLike } from '@logto/schemas';
 import type { Middleware } from 'koa';
-import { SlonikError, NotFoundError, InvalidInputError } from 'slonik';
+import {
+  SlonikError,
+  NotFoundError,
+  InvalidInputError,
+  CheckIntegrityConstraintViolationError,
+} from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikError/index.js';
@@ -17,6 +22,13 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       if (error instanceof InvalidInputError) {
         throw new RequestError({
           code: 'entity.invalid_input',
+          status: 422,
+        });
+      }
+
+      if (error instanceof CheckIntegrityConstraintViolationError) {
+        throw new RequestError({
+          code: 'entity.db_constraint_violated',
           status: 422,
         });
       }

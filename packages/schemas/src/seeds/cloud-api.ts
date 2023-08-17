@@ -1,6 +1,7 @@
 import { generateStandardId } from '@logto/shared/universal';
 
-import type { CreateScope, Role } from '../index.js';
+import { RoleType } from '../db-entries/index.js';
+import type { CreateScope, Role } from '../db-entries/index.js';
 import { AdminTenantRole } from '../types/index.js';
 
 import type { UpdateAdminData } from './management-api.js';
@@ -80,4 +81,5 @@ export const createTenantApplicationRole = (): Readonly<Role> => ({
   name: AdminTenantRole.TenantApplication,
   description:
     'The role for M2M applications that represent a user tenant and send requests to Logto Cloud.',
+  type: RoleType.MachineToMachine,
 });

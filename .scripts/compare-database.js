@@ -113,6 +113,11 @@ const queryDatabaseManifest = async (database) => {
     constraints: omitArray(
       constraints,
       'oid',
+      /** 
+       * See https://www.postgresql.org/docs/current/catalog-pg-constraint.html, better to use `pg_get_constraintdef()`
+       * to extract the definition of check constraint, so this can be omitted since conbin changes with the status of the computing resources.
+       */
+      'conbin',
       'connamespace',
       'conrelid',
       'contypid',

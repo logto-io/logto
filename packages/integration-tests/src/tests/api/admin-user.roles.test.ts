@@ -14,7 +14,7 @@ describe('admin console user management (roles)', () => {
 
   it('should assign role to user and get list successfully', async () => {
     const user = await createUserByAdmin();
-    const role = await createRole();
+    const role = await createRole({});
 
     await assignRolesToUser(user.id, [role.id]);
     const roles = await getUserRoles(user.id);
@@ -23,7 +23,7 @@ describe('admin console user management (roles)', () => {
 
   it('should fail when assign duplicated role to user', async () => {
     const user = await createUserByAdmin();
-    const role = await createRole();
+    const role = await createRole({});
 
     await assignRolesToUser(user.id, [role.id]);
     await expectRejects(assignRolesToUser(user.id, [role.id]), {
@@ -34,7 +34,7 @@ describe('admin console user management (roles)', () => {
 
   it('should delete role from user successfully', async () => {
     const user = await createUserByAdmin();
-    const role = await createRole();
+    const role = await createRole({});
 
     await assignRolesToUser(user.id, [role.id]);
     await deleteRoleFromUser(user.id, role.id);
@@ -45,7 +45,7 @@ describe('admin console user management (roles)', () => {
 
   it('should delete non-exist-role from user failed', async () => {
     const user = await createUserByAdmin();
-    const role = await createRole();
+    const role = await createRole({});
 
     const response = await deleteRoleFromUser(user.id, role.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);

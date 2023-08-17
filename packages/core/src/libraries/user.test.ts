@@ -1,6 +1,6 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
-import { mockResource, mockRole, mockScope } from '#src/__mocks__/index.js';
+import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -11,7 +11,7 @@ const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 const hasUserWithId = jest.fn();
 const queries = new MockQueries({
   users: { hasUserWithId },
-  roles: { findRolesByRoleIds: async () => [mockRole] },
+  roles: { findRolesByRoleIds: async () => [mockAdminUserRole] },
   scopes: { findScopesByIdsAndResourceIndicator: async () => [mockScope] },
   usersRoles: { findUsersRolesByUserId: async () => [] },
   rolesScopes: { findRolesScopesByRoleIds: async () => [] },
@@ -81,6 +81,6 @@ describe('findUserRoles()', () => {
   const { findUserRoles } = createUserLibrary(queries);
 
   it('returns user roles', async () => {
-    await expect(findUserRoles(mockUser.id)).resolves.toEqual([mockRole]);
+    await expect(findUserRoles(mockUser.id)).resolves.toEqual([mockAdminUserRole]);
   });
 });

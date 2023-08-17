@@ -1,12 +1,12 @@
 import path from 'node:path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import { defaultManagementApi, InteractionEvent } from '@logto/schemas';
+import { defaultManagementApi, InteractionEvent, RoleType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import fetch from 'node-fetch';
 
 import { putInteraction } from '#src/api/index.js';
-import { assignUsersToRole } from '#src/api/role.js';
+import { assignUsersToRole, createRole } from '#src/api/role.js';
 import MockClient, { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
 import { processSession } from '#src/helpers/client.js';
@@ -22,7 +22,13 @@ describe('get access token', () => {
   beforeAll(async () => {
     await createUserByAdmin(guestUsername, password);
     const user = await createUserByAdmin(username, password);
-    await assignUsersToRole([user.id], defaultManagementApi.role.id);
+    const { scopes } = defaultManagementApi;
+    const defaultManagementApiUserRole = await createRole({
+      name: 'management-api-user-role',
+      type: RoleType.User,
+      scopeIds: scopes.map(({ id }) => id),
+    });
+    await assignUsersToRole([user.id], defaultManagementApiUserRole.id);
     await enableAllPasswordSignInMethods();
   });
 

@@ -109,7 +109,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ roleIds: string().min(1).array() }),
-      status: [200, 404],
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {

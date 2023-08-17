@@ -1,4 +1,5 @@
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
@@ -44,7 +45,13 @@ const mockedQueries = {
   roles: {
     findRolesByRoleNames: jest.fn(
       async (): Promise<Role[]> => [
-        { tenantId: 'fake_tenant', id: 'role_id', name: 'admin', description: 'none' },
+        {
+          tenantId: 'fake_tenant',
+          id: 'role_id',
+          name: 'admin',
+          description: 'none',
+          type: RoleType.User,
+        },
       ]
     ),
   },
