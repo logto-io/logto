@@ -1,13 +1,17 @@
 import { type Application } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type Guide } from '@/assets/docs/guides/types';
 import SearchIcon from '@/assets/icons/search.svg';
+import ProTag from '@/components/ProTag';
+import { isCloud } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 
@@ -56,6 +60,10 @@ function GuideLibrary({ className, hasFilter, hasCardBorder }: Props) {
   const [getFilteredMetadata, getStructuredMetadata] = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
+
   const structuredMetadata = useMemo(
     () => getStructuredMetadata({ categories: filterCategories }),
     [getStructuredMetadata, filterCategories]
@@ -97,20 +105,23 @@ function GuideLibrary({ className, hasFilter, hasCardBorder }: Props) {
               setKeyword(event.currentTarget.value);
             }}
           />
-          <CheckboxGroup
-            className={styles.checkboxGroup}
-            options={allAppGuideCategories.map((category) => ({
-              title: `applications.guide.categories.${category}`,
-              value: category,
-            }))}
-            value={filterCategories}
-            onChange={(value) => {
-              const sortedValue = allAppGuideCategories.filter((category) =>
-                value.includes(category)
-              );
-              setFilterCategories(sortedValue);
-            }}
-          />
+          <div className={styles.checkboxGroupContainer}>
+            <CheckboxGroup
+              className={styles.checkboxGroup}
+              options={allAppGuideCategories.map((category) => ({
+                title: `applications.guide.categories.${category}`,
+                value: category,
+              }))}
+              value={filterCategories}
+              onChange={(value) => {
+                const sortedValue = allAppGuideCategories.filter((category) =>
+                  value.includes(category)
+                );
+                setFilterCategories(sortedValue);
+              }}
+            />
+            {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
+          </div>
         </div>
       )}
       {keyword && (

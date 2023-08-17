@@ -1,10 +1,16 @@
+import classNames from 'classnames';
+
 import DynamicT from '@/ds-components/DynamicT';
 
 import * as styles from './index.module.scss';
 
-function ProTag() {
+type Props = {
+  className?: string;
+};
+
+function ProTag({ className }: Props) {
   return (
-    <div className={styles.tag}>
+    <div className={classNames(styles.tag, className)}>
       <DynamicT forKey="upsell.pro_tag" />
     </div>
   );

@@ -24,8 +24,19 @@
     }
   }
 
+  .checkboxGroupContainer {
+    position: relative;
+  }
+
   .checkboxGroup {
     gap: _.unit(4);
+  }
+
+  .proTag {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    z-index: 1;
   }
 }
 
