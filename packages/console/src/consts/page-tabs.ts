@@ -1,3 +1,8 @@
+export enum ApplicationDetailsTabs {
+  Settings = 'settings',
+  AdvancedSettings = 'advanced-settings',
+}
+
 export enum ApiResourceDetailsTabs {
   Settings = 'settings',
   Permissions = 'permissions',

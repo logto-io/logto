@@ -16,6 +16,7 @@ const application_details = {
   authorization_endpoint: '인증 Endpoint',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 End-Point예요. OpenID Connect <a>인증</a>에서 사용되던 값이에요.',
+  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
   application_id: '앱 ID',
   application_id_tip:
     '일반적으로 Logto에서 생성되는 고유한 응용 프로그램 식별자예요. OpenID Connect에서 "<a>client_id</a>"의 약자이기도 해요.',

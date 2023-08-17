@@ -8,6 +8,7 @@ import {
   RoleDetailsTabs,
   WebhookDetailsTabs,
   TenantSettingsTabs,
+  ApplicationDetailsTabs,
 } from '@/consts';
 import { isCloud } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -16,6 +17,8 @@ import ApiResourcePermissions from '@/pages/ApiResourceDetails/ApiResourcePermis
 import ApiResourceSettings from '@/pages/ApiResourceDetails/ApiResourceSettings';
 import ApiResources from '@/pages/ApiResources';
 import ApplicationDetails from '@/pages/ApplicationDetails';
+import AdvancedSettings from '@/pages/ApplicationDetails/components/AdvancedSettings';
+import Settings from '@/pages/ApplicationDetails/components/Settings';
 import Applications from '@/pages/Applications';
 import AuditLogDetails from '@/pages/AuditLogDetails';
 import AuditLogs from '@/pages/AuditLogs';
@@ -71,7 +74,14 @@ function ConsoleContent() {
               <Route index element={<Applications />} />
               <Route path="create" element={<Applications />} />
               <Route path=":id/guide/:guideId" element={<ApplicationDetails />} />
-              <Route path=":id" element={<ApplicationDetails />} />
+              <Route path=":id" element={<ApplicationDetails />}>
+                <Route index element={<Navigate replace to={ApplicationDetailsTabs.Settings} />} />
+                <Route path={ApplicationDetailsTabs.Settings} element={<Settings />} />
+                <Route
+                  path={ApplicationDetailsTabs.AdvancedSettings}
+                  element={<AdvancedSettings />}
+                />
+              </Route>
             </Route>
             <Route path="api-resources">
               <Route index element={<ApiResources />} />

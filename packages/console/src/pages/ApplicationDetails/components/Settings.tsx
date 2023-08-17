@@ -1,10 +1,13 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
+import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
@@ -17,12 +20,12 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import * as styles from '../index.module.scss';
+import { type ApplicationDetailsOutletContext } from '../types';
 
-type Props = {
-  data: Application;
-};
+function Settings() {
+  const { tenantEndpoint } = useContext(AppDataContext);
+  const { app: data } = useOutletContext<ApplicationDetailsOutletContext>();
 
-function Settings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   const {
@@ -54,31 +57,20 @@ function Settings({ data }: Props) {
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>
+      {tenantEndpoint && (
+        <FormField title="application_details.logto_endpoint">
+          <CopyToClipboard
+            value={tenantEndpoint.href}
+            variant="border"
+            className={styles.textField}
+          />
+        </FormField>
+      )}
       <FormField title="application_details.description">
         <TextInput
           {...register('description')}
           placeholder={t('application_details.description_placeholder')}
         />
-      </FormField>
-      <FormField
-        title="application_details.application_id"
-        tip={(closeTipHandler) => (
-          <Trans
-            components={{
-              a: (
-                <TextLink
-                  href="https://openid.net/specs/openid-connect-core-1_0.html"
-                  target="_blank"
-                  onClick={closeTipHandler}
-                />
-              ),
-            }}
-          >
-            {t('application_details.application_id_tip')}
-          </Trans>
-        )}
-      >
-        <CopyToClipboard value={id} variant="border" className={styles.textField} />
       </FormField>
       {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(
         applicationType

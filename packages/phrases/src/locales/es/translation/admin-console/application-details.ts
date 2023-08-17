@@ -16,6 +16,7 @@ const application_details = {
   authorization_endpoint: 'Endpoint de Autorización',
   authorization_endpoint_tip:
     'El endpoint para la autenticación y autorización. Se utiliza para OpenID Connect <a>Autenticación</a>.',
+  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
   application_id: 'ID de Aplicación',
   application_id_tip:
     'El identificador de aplicación único normalmente generado por Logto. También se conoce como “<a>client_id</a>” en OpenID Connect.',
