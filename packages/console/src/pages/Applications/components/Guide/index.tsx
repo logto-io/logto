@@ -12,6 +12,7 @@ import CodeEditor from '@/ds-components/CodeEditor';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
+import NotFound from '@/pages/NotFound';
 
 import GuideHeader from '../GuideHeader';
 import StepsSkeleton from '../StepsSkeleton';
@@ -50,7 +51,7 @@ export const GuideContext = createContext<GuideContextType>({
 type Props = {
   className?: string;
   guideId: string;
-  app?: ApplicationResponse;
+  app: ApplicationResponse;
   isCompact?: boolean;
   onClose: () => void;
 };
@@ -61,28 +62,26 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
   const guide = guides.find(({ id }) => id === guideId);
 
-  if (!app || !guide) {
-    throw new Error('Invalid app or guide');
-  }
-
-  const GuideComponent = guide.Component;
+  const GuideComponent = guide?.Component;
 
   const memorizedContext = useMemo(
     () =>
-      ({
-        metadata: guide.metadata,
-        Logo: guide.Logo,
-        app,
-        endpoint: tenantEndpoint?.toString() ?? '',
-        alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
-        redirectUris: app.oidcClientMetadata.redirectUris,
-        postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
-        isCompact: Boolean(isCompact),
-        sampleUrls: {
-          origin: 'http://localhost:3001/',
-          callback: 'http://localhost:3001/callback',
-        },
-      }) satisfies GuideContextType,
+      conditional(
+        !!guide && {
+          metadata: guide.metadata,
+          Logo: guide.Logo,
+          app,
+          endpoint: tenantEndpoint?.toString() ?? '',
+          alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
+          redirectUris: app.oidcClientMetadata.redirectUris,
+          postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
+          isCompact: Boolean(isCompact),
+          sampleUrls: {
+            origin: 'http://localhost:3001/',
+            callback: 'http://localhost:3001/callback',
+          },
+        }
+      ) satisfies GuideContextType | undefined,
     [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
   );
 
@@ -90,39 +89,43 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
     <div className={classNames(styles.container, className)}>
       {!isCompact && <GuideHeader onClose={onClose} />}
       <div className={styles.content}>
-        <GuideContext.Provider value={memorizedContext}>
-          <MDXProvider
-            components={{
-              code: ({ className, children }) => {
-                const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
+        {memorizedContext ? (
+          <GuideContext.Provider value={memorizedContext}>
+            <MDXProvider
+              components={{
+                code: ({ className, children }) => {
+                  const [, language] = /language-(\w+)/.exec(String(className ?? '')) ?? [];
 
-                return language ? (
-                  <CodeEditor
-                    isReadonly
-                    // We need to transform `ts` to `typescript` for prismjs, and
-                    // it's weird since it worked in the original Guide component.
-                    // To be investigated.
-                    language={language === 'ts' ? 'typescript' : language}
-                    value={String(children).trimEnd()}
-                  />
-                ) : (
-                  <code>{String(children).trimEnd()}</code>
-                );
-              },
-              a: ({ children, ...props }) => (
-                <TextLink {...props} target="_blank" rel="noopener noreferrer">
-                  {children}
-                </TextLink>
-              ),
-              details: DetailsSummary,
-            }}
-          >
-            <Suspense fallback={<StepsSkeleton />}>
-              {tenantEndpoint && <GuideComponent {...memorizedContext} />}
-            </Suspense>
-          </MDXProvider>
-        </GuideContext.Provider>
-        {!isCompact && (
+                  return language ? (
+                    <CodeEditor
+                      isReadonly
+                      // We need to transform `ts` to `typescript` for prismjs, and
+                      // it's weird since it worked in the original Guide component.
+                      // To be investigated.
+                      language={language === 'ts' ? 'typescript' : language}
+                      value={String(children).trimEnd()}
+                    />
+                  ) : (
+                    <code>{String(children).trimEnd()}</code>
+                  );
+                },
+                a: ({ children, ...props }) => (
+                  <TextLink {...props} target="_blank" rel="noopener noreferrer">
+                    {children}
+                  </TextLink>
+                ),
+                details: DetailsSummary,
+              }}
+            >
+              <Suspense fallback={<StepsSkeleton />}>
+                {tenantEndpoint && GuideComponent && <GuideComponent {...memorizedContext} />}
+              </Suspense>
+            </MDXProvider>
+          </GuideContext.Provider>
+        ) : (
+          <NotFound className={styles.notFound} />
+        )}
+        {!isCompact && memorizedContext && (
           <nav className={styles.actionBar}>
             <div className={styles.layout}>
               <Button
