@@ -4,7 +4,7 @@ import { type GuideMetadata } from '../types';
 
 const metadata: Readonly<GuideMetadata> = Object.freeze({
   name: 'PHP',
-  description: 'PHP is the best language in the world.',
+  description: 'Integrate Logto into your PHP web app, such as Lavarel.',
   target: ApplicationType.Traditional,
 });
 
