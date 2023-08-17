@@ -27,10 +27,6 @@ type Props = {
   isCompact?: boolean;
 };
 
-function LogoSkeleton() {
-  return <div className={styles.logoSkeleton} />;
-}
-
 function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
   const { navigate } = useTenantPathname();
   const { currentTenantId } = useContext(TenantsContext);
@@ -68,7 +64,7 @@ function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
       })}
     >
       <div className={styles.header}>
-        <Suspense fallback={<LogoSkeleton />}>
+        <Suspense fallback={<div className={styles.logoSkeleton} />}>
           <Logo className={styles.logo} />
         </Suspense>
         <div className={styles.infoWrapper}>
@@ -79,17 +75,21 @@ function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
           <div className={styles.description}>{description}</div>
         </div>
       </div>
-      <Button
-        title={isSubscriptionRequired ? 'upsell.upgrade_plan' : 'applications.guide.start_building'}
-        size="small"
-        onClick={() => {
-          if (isSubscriptionRequired) {
-            navigate(subscriptionPage);
-          } else {
-            onClick({ id, target, name });
+      {!isCompact && (
+        <Button
+          title={
+            isSubscriptionRequired ? 'upsell.upgrade_plan' : 'applications.guide.start_building'
           }
-        }}
-      />
+          size="small"
+          onClick={() => {
+            if (isSubscriptionRequired) {
+              navigate(subscriptionPage);
+            } else {
+              onClick({ id, target, name });
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
