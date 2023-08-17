@@ -30,7 +30,7 @@ function GuideLibraryModal({ isOpen, onClose }: Props) {
     >
       <div className={styles.container}>
         <GuideHeader onClose={onClose} />
-        <GuideLibrary className={styles.content} />
+        <GuideLibrary hasFilters className={styles.content} />
         <nav className={styles.actionBar}>
           <span className={styles.text}>{t('do_not_need_tutorial')}</span>
           <Button
