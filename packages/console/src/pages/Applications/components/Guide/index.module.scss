@@ -12,21 +12,64 @@
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    padding: _.unit(6) _.unit(6) _.unit(20);
+    padding: _.unit(6) _.unit(6) max(10vh, 120px);
 
-    > * {
-      max-width: 858px;
-      width: 100%;
+    section p {
+      font: var(--font-body-2);
+      margin: _.unit(4) 0;
     }
 
-    .banner {
-      display: flex;
-      align-items: center;
-      margin-bottom: _.unit(6);
+    section ul > li,
+    section ol > li {
+      font: var(--font-body-2);
+      margin-block: _.unit(2);
+      padding-inline-start: _.unit(1);
+    }
+
+    section table {
+      border-spacing: 0;
+      border: 1px solid var(--color-border);
+      font: var(--font-body-2);
+
+      tr {
+        width: 100%;
+      }
+
+      td,
+      th {
+        padding: _.unit(2) _.unit(4);
+      }
+
+      thead {
+        font: var(--font-title-3);
+      }
+
+      tbody td {
+        border-top: 1px solid var(--color-border);
+      }
     }
   }
 }
 
 .markdownContent {
   margin-top: _.unit(6);
+}
+
+.actionBar {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: _.unit(4);
+  background-color: var(--color-layer-1);
+  box-shadow: var(--shadow-2-reversed);
+  z-index: 1;
+
+  .layout {
+    margin: 0 auto;
+    max-width: 858px;
+
+    > button {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
 }

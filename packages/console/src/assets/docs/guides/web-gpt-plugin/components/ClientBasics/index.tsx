@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 import * as styles from './index.module.scss';
 

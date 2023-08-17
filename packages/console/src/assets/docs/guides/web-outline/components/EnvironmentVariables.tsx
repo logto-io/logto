@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { type RequestError } from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 export default function EnvironmentVariables() {
   const {

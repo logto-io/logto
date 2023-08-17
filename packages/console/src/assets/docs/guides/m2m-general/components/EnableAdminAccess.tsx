@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 export default function EnableAdminAccess() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

@@ -18,7 +18,7 @@ import {
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 import type { GuideForm } from '@/types/guide';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';

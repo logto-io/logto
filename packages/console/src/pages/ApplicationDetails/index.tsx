@@ -3,7 +3,6 @@ import {
   type Application,
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
-  ApplicationType,
   customClientMetadataDefault,
 } from '@logto/schemas';
 import { useEffect, useState } from 'react';
@@ -36,10 +35,10 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
-import Guide from '../Applications/components/Guide';
 import GuideModal from '../Applications/components/Guide/GuideModal';
 
 import AdvancedSettings from './components/AdvancedSettings';
+import GuideDrawer from './components/GuideDrawer';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
 
@@ -172,24 +171,15 @@ function ApplicationDetails() {
               </div>
             </div>
             <div className={styles.operations}>
-              {/* TODO: @Charles figure out a better way to check guide availability */}
               <Button
                 title="application_details.check_guide"
                 size="large"
                 onClick={() => {
-                  if (data.type === ApplicationType.MachineToMachine) {
-                    window.open(
-                      getDocumentationUrl('/docs/recipes/integrate-logto/machine-to-machine'),
-                      '_blank'
-                    );
-
-                    return;
-                  }
                   setIsReadmeOpen(true);
                 }}
               />
               <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
-                <Guide isCompact app={data} onClose={onCloseDrawer} />
+                <GuideDrawer app={data} onClose={onCloseDrawer} />
               </Drawer>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}

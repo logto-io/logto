@@ -1,8 +1,9 @@
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { useRef, type ReactElement, useEffect, useState, useMemo } from 'react';
+import React, { useRef, type ReactElement, useEffect, useState, useMemo, useContext } from 'react';
 
 import useScroll from '@/hooks/use-scroll';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';
@@ -46,6 +47,7 @@ export default function Steps({ children: reactChildren }: Props) {
         : [reactChildren, furtherReadings],
     [furtherReadings, reactChildren]
   );
+  const { isCompact } = useContext(GuideContext);
 
   useEffect(() => {
     // Make sure the step references length matches the number of children.
@@ -75,19 +77,21 @@ export default function Steps({ children: reactChildren }: Props) {
   }, [children.length, scrollTop]);
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.navigationAnchor}>
-        <nav className={styles.navigation}>
-          {children.map((component, index) => (
-            <div
-              key={component.props.title}
-              className={classNames(styles.stepper, index === activeIndex && styles.active)}
-            >
-              {index + 1}. {component.props.title}
-            </div>
-          ))}
-        </nav>
-      </div>
+    <div className={classNames(styles.wrapper, isCompact && styles.fullWidth)}>
+      {!isCompact && (
+        <div className={styles.navigationAnchor}>
+          <nav className={styles.navigation}>
+            {children.map((component, index) => (
+              <div
+                key={component.props.title}
+                className={classNames(styles.stepper, index === activeIndex && styles.active)}
+              >
+                {index + 1}. {component.props.title}
+              </div>
+            ))}
+          </nav>
+        </div>
+      )}
       <div ref={contentRef} className={styles.content}>
         <Sample />
         {children.map((component, index) =>

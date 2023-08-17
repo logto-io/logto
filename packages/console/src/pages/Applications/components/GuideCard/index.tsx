@@ -10,25 +10,28 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 
 export type SelectedGuide = {
-  target: GuideMetadata['target'];
   id: Guide['id'];
+  target: GuideMetadata['target'];
+  name: GuideMetadata['name'];
 };
 
 type Props = {
   data: Guide;
   onClick: (data: SelectedGuide) => void;
   hasBorder?: boolean;
+  isCompact?: boolean;
 };
 
 function LogoSkeleton() {
   return <div className={styles.logoSkeleton} />;
 }
 
-function GuideCard({ data, onClick, hasBorder }: Props) {
+function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
   const { navigate } = useTenantPathname();
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
@@ -42,8 +45,28 @@ function GuideCard({ data, onClick, hasBorder }: Props) {
     metadata: { target, name, description },
   } = data;
 
+  const onClickCard = () => {
+    if (!isCompact) {
+      return;
+    }
+
+    onClick({ id, target, name });
+  };
+
   return (
-    <div className={classNames(styles.card, hasBorder && styles.hasBorder)}>
+    <div
+      className={classNames(
+        styles.card,
+        hasBorder && styles.hasBorder,
+        isCompact && styles.compact
+      )}
+      {...(isCompact && {
+        tabIndex: 0,
+        role: 'button',
+        onKeyDown: onKeyDownHandler(onClickCard),
+        onClick: onClickCard,
+      })}
+    >
       <div className={styles.header}>
         <Suspense fallback={<LogoSkeleton />}>
           <Logo className={styles.logo} />
@@ -63,7 +86,7 @@ function GuideCard({ data, onClick, hasBorder }: Props) {
           if (isSubscriptionRequired) {
             navigate(subscriptionPage);
           } else {
-            onClick({ target, id });
+            onClick({ id, target, name });
           }
         }}
       />

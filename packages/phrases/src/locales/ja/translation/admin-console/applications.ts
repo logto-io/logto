@@ -51,6 +51,8 @@ const applications = {
       title: 'Filter framework', // UNTRANSLATED
       placeholder: 'Search for framework', // UNTRANSLATED
     },
+    select_a_framework: 'Select a framework', // UNTRANSLATED
+    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
     get_sample_file: 'サンプルを取得する',
     title: 'アプリケーションが正常に作成されました',
     subtitle:
