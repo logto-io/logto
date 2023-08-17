@@ -29,7 +29,7 @@ We use [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
 
 ### Config Android version:
 
-In [project]/android/app/build.gradle set minSdkVersion to >= 18.
+In `[project]/android/app/build.gradle` set minSdkVersion to >= 18.
 
 ```gradle
 android {
@@ -45,14 +45,14 @@ android {
 
 <InlineNotification>
 
-By default Android backups data on Google Drive. It can cause exception java.security.InvalidKeyException:Failed to unwrap key. You will need to:
+By default Android backups data on Google Drive. It can cause exception `java.security.InvalidKeyException:Failed` to unwrap key. You will need to:
 
-    - disable autobackup,
-    - or exclude sharedprefs FlutterSecureStorage used by the plugin
+- Disable `autobackup`;
+- Exclude `sharedprefs` FlutterSecureStorage used by the plugin;
 
 </InlineNotification>
 
-1. To disable auto backup, go to your app manifest file and set the boolean value android:allowBackup:
+1. To disable `autobackup`, go to your app manifest file and set the boolean value `android:allowBackup`:
 
    ```xml
    <manifest ... >
@@ -68,9 +68,9 @@ By default Android backups data on Google Drive. It can cause exception java.sec
 
    ```
 
-2. Exclude sharedprefs FlutterSecureStorage.
+2. Exclude `sharedprefs` FlutterSecureStorage.
 
-   If you need to enable the android:fullBackupContent for your app. Set up a backup rule to [exclude](https://developer.android.com/guide/topics/data/autobackup#IncludingFiles) the prefs used by the plugin:
+   If you need to enable the `android:fullBackupContent` for your app. Set up a backup rule to [exclude](https://developer.android.com/guide/topics/data/autobackup#IncludingFiles) the prefs used by the plugin:
 
    ```xml
    <application ...
@@ -101,15 +101,15 @@ Please check [flutter_secure_storage](https://pub.dev/packages/flutter_secure_st
 
 <InlineNotification>
 
-Under the hood, this plugin uses ASWebAuthenticationSession on iOS 12+ and macOS 10.15+,
-SFAuthenticationSession on iOS 11, Chrome Custom Tabs on Android and opens a new window on Web.
+Under the hood, this plugin uses `ASWebAuthenticationSession` on iOS 12+ and macOS 10.15+,
+`SFAuthenticationSession` on iOS 11, Chrome Custom Tabs on Android and opens a new window on Web.
 You can build it with iOS 8+, but it is currently only supported by iOS 11 or higher.
 
 </InlineNotification>
 
 Andorid:
 
-In order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the AndroidManifest.xml.
+In order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
 
 ```xml
 <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="false">
@@ -132,26 +132,26 @@ In order to capture the callback url from Logto's sign-in web page, you will nee
 <pre>
   <code className="language-dart">
     {`
-      import 'package:logto_dart_sdk/logto_dart_sdk.dart';
-      import 'package:http/http.dart' as http;
+import 'package:logto_dart_sdk/logto_dart_sdk.dart';
+import 'package:http/http.dart' as http;
 
-      late LogtoClient logtoClient;
+late LogtoClient logtoClient;
 
-      // LogtoConfig
-      final logtoConfig = const LogtoConfig(
-        endpoint: '${props.endpoint}',${
-          props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''
-        }
-        appId: '${props.app.id}',
-      );
+// LogtoConfig
+final logtoConfig = const LogtoConfig(
+  endpoint: '${props.endpoint}',${
+    props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''
+  }
+  appId: '${props.app.id}',
+);
 
-      void init() async {
-        logtoClient = LogtoClient(
-          config: logtoConfig,
-          httpClient: http.Client(), // Optional http client
-        );
-      }
-    `}
+void init() async {
+  logtoClient = LogtoClient(
+    config: logtoConfig,
+    httpClient: http.Client(), // Optional http client
+  );
+}
+`}
   </code>
 </pre>
 
@@ -172,17 +172,17 @@ Let's switch to the Application details page of Logto Admin Console. Add a Redir
 
 <pre>
   <code className="language-dart">
-    {`
-      void signIn() async {
-        await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
-      }
-    `}
+    {`void signIn() async {
+  await logtoClient.signIn('${props.redirectUris[0] ?? 'io.logto://callback'}');
+}
+  `}
   </code>
 </pre>
 
 </Step>
 
 <Step title="Sign Out" subtitle="1 step">
+
 Calling `.signOut()` will clean all the Logto data in the secret storage, if it has.
 
 ```dart
@@ -190,19 +190,6 @@ void signOut() async {
   await logtoClient.signOut();
 }
 ```
-
-</Step>
-
-<Step
-  title="Further readings"
-  subtitle="5 articles"
->
-
-- [Customize sign-in experience](https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience)
-- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in)
-- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in)
-- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
-- [Integrate Logto Dart SDK](https://docs.logto.io/docs/recipes/integrate-logto/flutter/)
 
 </Step>
 
