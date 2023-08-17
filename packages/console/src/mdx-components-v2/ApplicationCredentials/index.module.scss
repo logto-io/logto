@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.textField {
+  @include _.form-text-field;
+}
+
+.container {
+  padding: _.unit(6) 0;
+}
