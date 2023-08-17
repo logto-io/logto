@@ -20,52 +20,31 @@ const configTemplate1: OnboardingSieConfig = {
 };
 
 const configTemplate2: OnboardingSieConfig = {
-  logo: `${assetsUrl}/kvCN1Z2a/logo2.png`,
-  color: '#F47346',
-  identifier: SignInIdentifier.Phone,
-  authentications: [Authentication.Password, Authentication.VerificationCode],
-};
-
-const configTemplate3: OnboardingSieConfig = {
   logo: `${assetsUrl}/IcI0snBP/logo3.png`,
   color: '#FF5449',
   identifier: SignInIdentifier.Username,
   authentications: [Authentication.Password],
 };
 
-const configTemplate4: OnboardingSieConfig = {
+const configTemplate3: OnboardingSieConfig = {
   logo: `${assetsUrl}/7UQyvuFc/logo4.png`,
   color: '#CA4E96',
   identifier: SignInIdentifier.Email,
   authentications: [Authentication.Password],
 };
 
-const configTemplate5: OnboardingSieConfig = {
+const configTemplate4: OnboardingSieConfig = {
   logo: `${assetsUrl}/zB2merH1/logo5.png`,
   color: '#F07EFF',
   identifier: SignInIdentifier.Email,
   authentications: [Authentication.VerificationCode],
 };
 
-const configTemplate6: OnboardingSieConfig = {
-  logo: `${assetsUrl}/CX51jxXS/logo6.png`,
-  color: '#9E65F8',
-  identifier: SignInIdentifier.Phone,
-  authentications: [Authentication.VerificationCode],
-};
-
-const configTemplate7: OnboardingSieConfig = {
+const configTemplate5: OnboardingSieConfig = {
   logo: `${assetsUrl}/uLoMzrlz/logo7.png`,
   color: '#FF5449',
   identifier: SignInIdentifier.Email,
   authentications: [Authentication.Password, Authentication.VerificationCode],
-};
-
-const configTemplate8: OnboardingSieConfig = {
-  logo: `${assetsUrl}/dIz8UHEh/logo8.png`,
-  color: '#5D34F2',
-  identifier: SignInIdentifier.Phone,
-  authentications: [Authentication.VerificationCode],
 };
 
 const sieConfigTemplates: OnboardingSieConfig[] = [
@@ -74,9 +53,6 @@ const sieConfigTemplates: OnboardingSieConfig[] = [
   configTemplate3,
   configTemplate4,
   configTemplate5,
-  configTemplate6,
-  configTemplate7,
-  configTemplate8,
 ];
 
 export const randomSieConfigTemplate = (
