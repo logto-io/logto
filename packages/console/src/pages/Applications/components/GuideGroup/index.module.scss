@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.guideGroup {
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+
+  label {
+    @include _.section-head-1;
+    margin-bottom: _.unit(4);
+  }
+
+  .grid {
+    display: grid;
+    gap: _.unit(4) _.unit(3);
+  }
+
+  @container (max-width: 680px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @container (min-width: 681px) and (max-width: 1080px) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @container (min-width: 1081px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

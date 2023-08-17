@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React, { useRef, type ReactElement, useEffect, useState, useMemo, useContext } from 'react';
 
 import useScroll from '@/hooks/use-scroll';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 import Sample from '../Sample';
 import { type Props as StepProps } from '../Step';

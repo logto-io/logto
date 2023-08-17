@@ -49,6 +49,8 @@ const applications = {
       title: 'Filter framework', // UNTRANSLATED
       placeholder: 'Search for framework', // UNTRANSLATED
     },
+    select_a_framework: 'Select a framework', // UNTRANSLATED
+    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
     get_sample_file: '获取示例',
     title: '应用创建成功',
     subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',

@@ -5,7 +5,7 @@ import { githubOrgLink } from '@/consts';
 import { LinkButton } from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import Spacer from '@/ds-components/Spacer';
-import { GuideContext } from '@/pages/Applications/components/GuideV2';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 
 import * as styles from './index.module.scss';
 

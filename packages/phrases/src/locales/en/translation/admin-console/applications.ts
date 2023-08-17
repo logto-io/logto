@@ -51,6 +51,8 @@ const applications = {
       title: 'Filter framework',
       placeholder: 'Search for framework',
     },
+    select_a_framework: 'Select a framework',
+    checkout_tutorial: 'Checkout {{name}} tutorial',
     get_sample_file: 'Get Sample',
     title: 'The application has been successfully created',
     subtitle:
