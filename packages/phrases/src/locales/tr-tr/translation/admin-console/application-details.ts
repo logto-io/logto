@@ -16,6 +16,7 @@ const application_details = {
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
+  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
   application_id: 'Uygulama IDsi',
   application_id_tip:
     'Logto tarafından normalde oluşturulan benzersiz uygulama tanımlayıcısıdır. Ayrıca OpenID Connect "client_id" anlamına gelir.',

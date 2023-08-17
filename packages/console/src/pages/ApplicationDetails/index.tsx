@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -20,6 +20,7 @@ import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { ApplicationDetailsTabs } from '@/consts';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
@@ -30,17 +31,15 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
 import GuideModal from '../Applications/components/Guide/GuideModal';
 
-import AdvancedSettings from './components/AdvancedSettings';
 import GuideDrawer from './components/GuideDrawer';
-import Settings from './components/Settings';
 import * as styles from './index.module.scss';
+import { type ApplicationDetailsOutletContext } from './types';
 
 const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
@@ -72,7 +71,6 @@ function ApplicationDetails() {
   const formMethods = useForm<Application & { isAdmin: boolean }>({
     defaultValues: { customClientMetadata: customClientMetadataDefault },
   });
-  const { getDocumentationUrl } = useDocumentationUrl();
 
   const {
     handleSubmit,
@@ -215,7 +213,14 @@ function ApplicationDetails() {
             </div>
           </Card>
           <TabNav>
-            <TabNavItem href={`/applications/${data.id}`}>{t('general.settings_nav')}</TabNavItem>
+            <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Settings}`}>
+              {t('application_details.settings')}
+            </TabNavItem>
+            <TabNavItem
+              href={`/applications/${data.id}/${ApplicationDetailsTabs.AdvancedSettings}`}
+            >
+              {t('application_details.advanced_settings')}
+            </TabNavItem>
           </TabNav>
           <FormProvider {...formMethods}>
             <DetailsForm
@@ -224,8 +229,14 @@ function ApplicationDetails() {
               onDiscard={reset}
               onSubmit={onSubmit}
             >
-              <Settings data={data} />
-              <AdvancedSettings applicationType={data.type} oidcConfig={oidcConfig} />
+              <Outlet
+                context={
+                  {
+                    app: data,
+                    oidcConfig,
+                  } satisfies ApplicationDetailsOutletContext
+                }
+              />
             </DetailsForm>
           </FormProvider>
         </>

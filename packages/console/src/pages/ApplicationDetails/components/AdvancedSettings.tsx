@@ -1,6 +1,5 @@
 import {
   type Application,
-  type SnakeCaseOidcConfig,
   ApplicationType,
   customClientMetadataGuard,
   DomainStatus,
@@ -9,6 +8,7 @@ import { appendPath } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import FormCard from '@/components/FormCard';
 import { openIdProviderConfigPath } from '@/consts/oidc';
@@ -23,13 +23,13 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import { applyDomain } from '@/utils/domain';
 
 import * as styles from '../index.module.scss';
+import { type ApplicationDetailsOutletContext } from '../types';
 
-type Props = {
-  applicationType: ApplicationType;
-  oidcConfig: SnakeCaseOidcConfig;
-};
-
-function AdvancedSettings({ applicationType, oidcConfig }: Props) {
+function AdvancedSettings() {
+  const {
+    app: { type: applicationType },
+    oidcConfig,
+  } = useOutletContext<ApplicationDetailsOutletContext>();
   const { tenantEndpoint } = useContext(AppDataContext);
   const {
     register,
