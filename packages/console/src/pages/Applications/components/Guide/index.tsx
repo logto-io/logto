@@ -2,14 +2,7 @@ import { DomainStatus, type ApplicationResponse } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import {
-  useContext,
-  Suspense,
-  createContext,
-  useMemo,
-  type LazyExoticComponent,
-  type ComponentType,
-} from 'react';
+import { useContext, Suspense, createContext, useMemo, type LazyExoticComponent } from 'react';
 
 import guides from '@/assets/docs/guides';
 import { type GuideMetadata } from '@/assets/docs/guides/types';
@@ -27,7 +20,7 @@ import * as styles from './index.module.scss';
 
 type GuideContextType = {
   metadata: Readonly<GuideMetadata>;
-  Logo?: LazyExoticComponent<ComponentType>;
+  Logo?: LazyExoticComponent<SvgComponent>;
   app: ApplicationResponse;
   endpoint: string;
   alternativeEndpoint?: string;
