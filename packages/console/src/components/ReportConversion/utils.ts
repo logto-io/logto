@@ -1,3 +1,5 @@
+import { trySafe } from '@silverhand/essentials';
+
 export const gtagAwTrackingId = 'AW-11124811245';
 /** This ID indicates a user has truly signed up for Logto Cloud. */
 export const gtagSignUpConversionId = `AW-11192640559/ZuqUCLvNpasYEK_IiNkp`;
@@ -16,13 +18,14 @@ export const shouldReport = window.location.hostname.endsWith('.' + logtoProduct
 
 /** This function is edited from the Google Tag official code snippet. */
 export function gtag(..._: unknown[]) {
-  if (!window.dataLayer) {
-    window.dataLayer = [];
-  }
+  trySafe(() => {
+    // We cannot use rest params here since gtag has some internal logic about `arguments` for data transpiling
+    if (!window.dataLayer) {
+      window.dataLayer = [];
+    }
 
-  // We cannot use rest params here since gtag has some internal logic about `arguments` for data transpiling
-
-  window.dataLayer.push(arguments);
+    window.dataLayer.push(arguments);
+  });
 }
 
 /** This function is edited from the LinkedIn Tag official code snippet. */
@@ -33,11 +36,13 @@ export function lintrk(..._: unknown[]) {
     window._linkedin_data_partner_ids.push(linkedInPartnerId);
   }
 
-  if (!window.lintrk) {
-    window.lintrk = { q: [] };
-  }
+  trySafe(() => {
+    if (!window.lintrk) {
+      window.lintrk = { q: [] };
+    }
 
-  window.lintrk.q.push(arguments);
+    window.lintrk.q.push(arguments);
+  });
 }
 
 /**
@@ -71,11 +76,13 @@ export const redditPixelId = 't2_ggt11omdo';
 
 /** Report Reddit conversion events. */
 export function rdt(..._: unknown[]) {
-  if (!window.rdt) {
-    window.rdt = { callQueue: [] };
-  }
+  trySafe(() => {
+    if (!window.rdt) {
+      window.rdt = { callQueue: [] };
+    }
 
-  window.rdt.callQueue.push(arguments);
+    window.rdt.callQueue.push(arguments);
+  });
 }
 
 /* eslint-enable @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods, prefer-rest-params */
