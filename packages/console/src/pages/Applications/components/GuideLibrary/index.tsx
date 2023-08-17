@@ -126,7 +126,11 @@ function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
         </OverlayScrollbar>
       )}
       {selectedGuide?.target !== 'API' && showCreateForm && (
-        <CreateForm defaultCreateType={selectedGuide?.target} onClose={onCloseCreateForm} />
+        <CreateForm
+          defaultCreateType={selectedGuide?.target}
+          defaultCreateFrameworkName={selectedGuide?.name}
+          onClose={onCloseCreateForm}
+        />
       )}
     </div>
   );

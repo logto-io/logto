@@ -3,6 +3,7 @@ const applications = {
   title: 'アプリケーション ',
   subtitle:
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションにLogto認証を設定する',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: 'アプリケーションを作成する',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',

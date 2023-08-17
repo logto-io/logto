@@ -3,6 +3,7 @@ const applications = {
   title: 'Applications',
   subtitle:
     'Set up Logto authentication for your native, single page, machine to machine, or traditional application',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
   create: 'Create Application',
   application_name: 'Application name',
   application_name_placeholder: 'My App',

@@ -3,6 +3,7 @@ const applications = {
   title: 'Uygulamalar',
   subtitle:
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
   create: 'Uygulama oluştur',
   application_name: 'Uygulama adı',
   application_name_placeholder: 'Uygulamam',
