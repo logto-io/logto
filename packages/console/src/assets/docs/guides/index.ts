@@ -9,7 +9,6 @@ import nativeCapacitor from './native-capacitor/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
 import spaReact from './spa-react/index';
-import spaRemix from './spa-remix/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import { type Guide } from './types';
@@ -24,6 +23,7 @@ import webNextAppRouter from './web-next-app-router/index';
 import webOutline from './web-outline/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
+import webRemix from './web-remix/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -67,12 +67,6 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./spa-react/logo.svg')),
     Component: lazy(async () => import('./spa-react/README.mdx')),
     metadata: spaReact,
-  },
-  {
-    id: 'spa-remix',
-    Logo: lazy(async () => import('./spa-remix/logo.svg')),
-    Component: lazy(async () => import('./spa-remix/README.mdx')),
-    metadata: spaRemix,
   },
   {
     id: 'spa-vanilla',
@@ -151,6 +145,12 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-python/logo.svg')),
     Component: lazy(async () => import('./web-python/README.mdx')),
     metadata: webPython,
+  },
+  {
+    id: 'web-remix',
+    Logo: lazy(async () => import('./web-remix/logo.svg')),
+    Component: lazy(async () => import('./web-remix/README.mdx')),
+    metadata: webRemix,
   },
 ]);
 
