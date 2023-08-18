@@ -1,8 +1,8 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, trySaveChanges } from '#src/ui-helpers/index.js';
+import { expectToClickNavTab, goToAdminConsole, trySaveChanges } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
-import { waitForFormCard } from '../helpers.js';
+import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
 
 import {
   expectToDeletePasswordlessConnector,
@@ -20,7 +20,6 @@ import {
   expectToClickSignUpAuthnOption,
   expectToClickSignInMethodAuthnOption,
   expectToResetSignUpAndSignInConfig,
-  expectToSaveSignUpAndSignInConfig,
 } from './helpers.js';
 
 describe('sign-in experience(sad path): sign-up and sign-in', () => {
@@ -39,9 +38,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
   });
 
   it('navigate to sign-up and sign-in tab', async () => {
-    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-      text: 'Sign-up and Sign-in',
-    });
+    await expectToClickNavTab(page, 'Sign-up and Sign-in');
 
     await waitForFormCard(page, 'SIGN UP');
     await waitForFormCard(page, 'SIGN IN');
@@ -202,7 +199,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         // Disable password settings for sign-up settings
         await expectToClickSignUpAuthnOption(page, 'Create your password');
 
-        await expectToSaveSignUpAndSignInConfig(page);
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
       });
 
       it('should fail to add phone number sign-in method', async () => {
@@ -267,8 +264,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectToSelectSignUpIdentifier(page, 'Phone number');
         // Disable password settings for sign-up settings
         await expectToClickSignUpAuthnOption(page, 'Create your password');
-
-        await expectToSaveSignUpAndSignInConfig(page);
+        await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
       });
 
       it('should fail to add email sign-in method', async () => {

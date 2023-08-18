@@ -1,8 +1,8 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole } from '#src/ui-helpers/index.js';
+import { expectToClickNavTab, goToAdminConsole } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
-import { waitForFormCard } from '../helpers.js';
+import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
 
 import {
   expectToDeletePasswordlessConnector,
@@ -21,7 +21,6 @@ import {
   expectToRemoveSignInMethod,
   expectToRemoveSocialSignInConnector,
   expectToResetSignUpAndSignInConfig,
-  expectToSaveSignUpAndSignInConfig,
   expectToSelectSignUpIdentifier,
   expectToSwapSignInMethodAuthnOption,
 } from './helpers.js';
@@ -57,9 +56,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
   });
 
   it('navigate to sign-up and sign-in tab', async () => {
-    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-      text: 'Sign-up and Sign-in',
-    });
+    await expectToClickNavTab(page, 'Sign-up and Sign-in');
 
     await waitForFormCard(page, 'SIGN UP');
     await waitForFormCard(page, 'SIGN IN');
@@ -82,7 +79,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * Sign-in method
        * - Email address: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update email sign-in method', async () => {
@@ -94,7 +91,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -105,7 +102,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         option: 'Password',
       });
       await expectToSwapSignInMethodAuthnOption(page, 'Email address');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('add username sign-in method', async () => {
@@ -115,7 +112,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('add & update phone number sign-in method', async () => {
@@ -126,7 +123,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        * - Phone number: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -138,7 +135,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -146,7 +143,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Phone number: verification code
        */
       await expectToRemoveSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -157,7 +154,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -175,7 +172,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * Sign-in method
        * - Email address: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update email sign-in method', async () => {
@@ -185,7 +182,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        */
       // Sign-in method: Email address + verification code + password
       await expectToSwapSignInMethodAuthnOption(page, 'Email address');
-      await expectToSaveSignUpAndSignInConfig(page, { needToConfirmChanges: false });
+      await expectToSaveSignInExperience(page);
 
       /**
        * Sign-in method
@@ -195,7 +192,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('add phone number & username as sign-in method', async () => {
@@ -205,7 +202,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Phone number: password + verification code
        */
       await expectToAddSignInMethod(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -216,7 +213,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -225,7 +222,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -237,7 +234,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -257,7 +254,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * Sign-in method
        * - Phone number: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update sign-in methods', async () => {
@@ -266,7 +263,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Phone number: verification code + password
        */
       await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page, { needToConfirmChanges: false });
+      await expectToSaveSignInExperience(page);
 
       /**
        * Sign-in method
@@ -276,7 +273,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -284,7 +281,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Email address: password + verification code
        */
       await expectToAddSignInMethod(page, 'Email address');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -295,7 +292,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -304,7 +301,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -322,7 +319,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * Sign-in method
        * - Phone number: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update sign-in methods', async () => {
@@ -331,7 +328,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Phone number: verification code + password
        */
       await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page, { needToConfirmChanges: false });
+      await expectToSaveSignInExperience(page);
 
       /**
        * Sign-in method
@@ -341,7 +338,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -349,7 +346,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -369,7 +366,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Email address: password + verification code
        * - Phone number: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update sign-in method configs', async () => {
@@ -380,7 +377,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        */
       await expectToSwapSignInMethodAuthnOption(page, 'Email address');
       await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page, { needToConfirmChanges: false });
+      await expectToSaveSignInExperience(page);
 
       /**
        * Sign-in method
@@ -391,7 +388,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -402,7 +399,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -411,7 +408,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -430,7 +427,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Email address: password + verification code
        * - Phone number: password + verification code
        */
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update sign-in method configs', async () => {
@@ -441,7 +438,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        */
       await expectToSwapSignInMethodAuthnOption(page, 'Email address');
       await expectToSwapSignInMethodAuthnOption(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page, { needToConfirmChanges: false });
+      await expectToSaveSignInExperience(page);
 
       /**
        * Sign-in method
@@ -452,7 +449,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -463,7 +460,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -472,7 +469,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
   });
 
@@ -484,7 +481,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     it('select not applicable as sign-up identifier', async () => {
       await expectToSelectSignUpIdentifier(page, 'Not applicable');
       await expectToRemoveSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('update sign-in methods', async () => {
@@ -493,7 +490,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Email address: password + verification code
        */
       await expectToAddSignInMethod(page, 'Email address', false);
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -503,7 +500,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -517,7 +514,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Email address',
         option: 'Password',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -525,7 +522,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Phone number: password verification code
        */
       await expectToAddSignInMethod(page, 'Phone number');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -536,7 +533,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
         method: 'Phone number',
         option: 'Verification code',
       });
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       /**
        * Sign-in method
@@ -545,16 +542,36 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
        * - Username: password
        */
       await expectToAddSignInMethod(page, 'Username');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
     });
 
     it('add social sign-in connector', async () => {
       await expectToAddSocialSignInConnector(page, 'Apple');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
 
       // Reset
       await expectToRemoveSocialSignInConnector(page, 'Apple');
-      await expectToSaveSignUpAndSignInConfig(page);
+      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+    });
+  });
+
+  describe('disable user registration', () => {
+    it('navigate to others tab', async () => {
+      await expectToClickNavTab(page, 'Others');
+
+      await waitForFormCard(page, 'TERMS');
+      await waitForFormCard(page, 'LANGUAGES');
+      await waitForFormCard(page, 'ADVANCED OPTIONS');
+    });
+
+    it('disable user registration', async () => {
+      const switchSelector = 'label[class$=switch]:has(input[name=createAccountEnabled])';
+      await expect(page).toClick(switchSelector);
+      await expectToSaveSignInExperience(page);
+
+      // Reset
+      await expect(page).toClick(switchSelector);
+      await expectToSaveSignInExperience(page);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { type Page } from 'puppeteer';
 
-import { expectConfirmModalAndAct, trySaveChanges, waitForToaster } from '#src/ui-helpers/index.js';
+import { expectToSaveSignInExperience } from '../helpers.js';
 
 export const expectToSelectSignUpIdentifier = async (page: Page, identifier: string) => {
   const signUpIdentifierField = await expect(page).toMatchElement(
@@ -121,31 +121,6 @@ export const expectToRemoveSignInMethod = async (page: Page, method: string) => 
   await page.waitForTimeout(500);
 };
 
-type ExpectToSaveSignUpAndSignInConfigOptions = {
-  needToConfirmChanges?: boolean;
-};
-
-export const expectToSaveSignUpAndSignInConfig = async (
-  page: Page,
-  options?: ExpectToSaveSignUpAndSignInConfigOptions
-) => {
-  const { needToConfirmChanges = true } = options ?? {};
-
-  await trySaveChanges(page);
-
-  if (needToConfirmChanges) {
-    // Confirm changes
-    await expectConfirmModalAndAct(page, {
-      title: 'Reminder',
-      actionText: 'Confirm',
-    });
-  }
-
-  await waitForToaster(page, {
-    text: 'Saved',
-  });
-};
-
 export const expectSignInMethodError = async (page: Page, method: string) => {
   await expect(page).toMatchElement(
     'div[class$=signInMethodItem] div[class$=error] div[class$=identifier]',
@@ -197,7 +172,7 @@ export const expectToResetSignUpAndSignInConfig = async (page: Page, needSave = 
   await expectToRemoveSignInMethod(page, 'Email address');
   await expectToRemoveSignInMethod(page, 'Phone number');
   if (needSave) {
-    await expectToSaveSignUpAndSignInConfig(page);
+    await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
   }
 };
 

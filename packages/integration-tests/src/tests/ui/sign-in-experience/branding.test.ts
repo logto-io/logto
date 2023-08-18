@@ -1,8 +1,8 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, trySaveChanges, waitForToaster } from '#src/ui-helpers/index.js';
+import { goToAdminConsole } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
-import { waitForFormCard, expectToSelectColor } from './helpers.js';
+import { waitForFormCard, expectToSelectColor, expectToSaveSignInExperience } from './helpers.js';
 
 const defaultPrimaryColor = '#6139F6';
 const testPrimaryColor = '#5B4D8E';
@@ -69,11 +69,7 @@ describe('sign-in experience: branding', () => {
     // Fill in the custom CSS
     await expect(page).toFill('div[class$=editor] textarea', 'body { background-color: #5B4D8E; }');
 
-    await trySaveChanges(page);
-
-    await waitForToaster(page, {
-      text: 'Saved',
-    });
+    await expectToSaveSignInExperience(page);
   });
 
   it('reset branding config', async () => {
@@ -92,21 +88,13 @@ describe('sign-in experience: branding', () => {
     // Fill in the custom CSS
     await expect(page).toFill('div[class$=editor] textarea', '');
 
-    await trySaveChanges(page);
-
-    await waitForToaster(page, {
-      text: 'Saved',
-    });
+    await expectToSaveSignInExperience(page);
 
     // Disable dark mode
     await expect(page).toClick(
       'form div[class$=field] label[class$=switch]:has(input[name="color.isDarkModeEnabled"])'
     );
 
-    await trySaveChanges(page);
-
-    await waitForToaster(page, {
-      text: 'Saved',
-    });
+    await expectToSaveSignInExperience(page);
   });
 });
