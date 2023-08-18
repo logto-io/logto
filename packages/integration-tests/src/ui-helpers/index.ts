@@ -105,3 +105,9 @@ export const expectConfirmModalAndAct = async (
     });
   }
 };
+
+export const expectToClickNavTab = async (page: Page, tab: string) => {
+  await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
+    text: tab,
+  });
+};
