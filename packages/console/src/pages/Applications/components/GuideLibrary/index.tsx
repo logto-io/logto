@@ -4,6 +4,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ProTag from '@/components/ProTag';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -100,14 +101,17 @@ function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
           </div>
         </div>
       )}
-      {keyword && (
-        <GuideGroup
-          className={styles.guideGroup}
-          hasCardBorder={hasCardBorder}
-          guides={filteredMetadata}
-          onClickGuide={onClickGuide}
-        />
-      )}
+      {keyword &&
+        (filteredMetadata?.length ? (
+          <GuideGroup
+            className={styles.guideGroup}
+            hasCardBorder={hasCardBorder}
+            guides={filteredMetadata}
+            onClickGuide={onClickGuide}
+          />
+        ) : (
+          <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
+        ))}
       {!keyword && (
         <OverlayScrollbar className={styles.groups}>
           {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(

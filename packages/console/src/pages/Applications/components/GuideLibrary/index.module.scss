@@ -56,3 +56,10 @@
   flex: 1;
   margin: _.unit(8) _.unit(8) 0 0;
 }
+
+.emptyPlaceholder {
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 70%;
+}
