@@ -11,8 +11,7 @@ const applications = {
   application_description_placeholder: '어플리케이션 설명을 적어주세요.',
   select_application_type: '어플리케이션 종류 선택',
   no_application_type_selected: '어플리케이션 종류를 선택하지 않았어요.',
-  application_created:
-    '{{name}} 어플리케이션이 성공적으로 생성되었어요.\n이제 어플리케이션 설정을 마무리해 주세요.',
+  application_created: '어플리케이션이 성공적으로 생성되었어요.',
   app_id: '앱 ID',
   type: {
     native: {

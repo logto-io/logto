@@ -3,6 +3,7 @@ import { ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useController, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -67,6 +68,7 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
       }
 
       const createdApp = await api.post('api/applications', { json: data }).json<Application>();
+      toast.success(t('applications.application_created'));
       void updateConfigs({
         applicationCreated: true,
         ...conditional(
