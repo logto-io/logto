@@ -56,3 +56,19 @@ export const expectToSaveSignInExperience = async (
     text: 'Saved',
   });
 };
+
+export const expectToSelectPreviewLanguage = async (page: Page, language: string) => {
+  // Click on the language selector
+  await expect(page).toClick('div[class$=preview] div[class*=select][class*=language]');
+
+  // Wait for the dropdown menu to render in the correct position
+  await page.waitForTimeout(500);
+
+  await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
+    text: language,
+  });
+
+  await page.waitForSelector('.ReactModalPortal div[class$=dropdownContainer]', {
+    hidden: true,
+  });
+};
