@@ -55,6 +55,14 @@
   margin-top: _.unit(6);
 }
 
+.notFound {
+  width: 100%;
+
+  svg {
+    margin-top: 10%;
+  }
+}
+
 .actionBar {
   position: absolute;
   inset: auto 0 0 0;
