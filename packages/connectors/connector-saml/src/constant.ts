@@ -14,7 +14,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     type: ConnectorConfigFormItemType.Text,
     label: 'IdP Single Sign-On URL',
     key: 'signInEndpoint',
-    required: true,
+    required: false,
   },
   {
     type: ConnectorConfigFormItemType.MultilineText,

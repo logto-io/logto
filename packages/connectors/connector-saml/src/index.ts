@@ -148,7 +148,7 @@ const getUserInfo =
     );
     const { extractedRawProfile } = await getSession();
 
-    const extractedRawProfileGuard = z.record(z.string());
+    const extractedRawProfileGuard = z.record(z.string().or(z.array(z.string())));
     const rawProfileParseResult = extractedRawProfileGuard.safeParse(extractedRawProfile);
 
     if (!rawProfileParseResult.success) {

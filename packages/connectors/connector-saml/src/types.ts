@@ -45,7 +45,7 @@ export type ProfileMap = z.infer<typeof profileMapGuard>;
 export const samlConfigGuard = z
   .object({
     entityID: z.string(),
-    signInEndpoint: z.string(),
+    signInEndpoint: z.string().optional(),
     x509Certificate: z.string(),
     idpMetadataXml: z.string(),
     assertionConsumerServiceUrl: z.string(),
