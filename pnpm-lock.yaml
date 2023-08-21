@@ -1541,7 +1541,7 @@ importers:
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.5.0
-        version: 2.5.0
+        version: 2.7.0
       got:
         specifier: ^13.0.0
         version: 13.0.0
@@ -1596,7 +1596,7 @@ importers:
         version: 13.0.0
       nock:
         specifier: ^13.2.2
-        version: 13.2.2
+        version: 13.3.1
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3167,8 +3167,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/client':
-        specifier: ^0.7.21
-        version: 0.7.21(zod@3.20.2)
+        specifier: ^0.7.22
+        version: 0.7.22(zod@3.20.2)
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -3282,8 +3282,8 @@ importers:
         version: 3.20.2
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-33a6965
-        version: 0.2.5-33a6965(zod@3.20.2)
+        specifier: 0.2.5-a3e852f
+        version: 0.2.5-a3e852f(zod@3.20.2)
       '@silverhand/eslint-config':
         specifier: 4.0.1
         version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
@@ -3754,8 +3754,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       '@withtyped/client':
-        specifier: ^0.7.21
-        version: 0.7.21(zod@3.20.2)
+        specifier: ^0.7.22
+        version: 0.7.22(zod@3.20.2)
     optionalDependencies:
       zod:
         specifier: ^3.20.2
@@ -3765,8 +3765,8 @@ importers:
         specifier: ^29.0.3
         version: 29.1.2
       '@logto/cloud':
-        specifier: 0.2.5-33a6965
-        version: 0.2.5-33a6965(zod@3.20.2)
+        specifier: 0.2.5-a3e852f
+        version: 0.2.5-a3e852f(zod@3.20.2)
       '@silverhand/eslint-config':
         specifier: 4.0.1
         version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
@@ -7189,8 +7189,8 @@ packages:
     engines: {node: '>=6.0.0'}
     dev: true
 
-  /@jridgewell/source-map@0.3.5:
-    resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
+  /@jridgewell/source-map@0.3.3:
+    resolution: {integrity: sha512-b+fsZXeLYi9fEULmfBrhxn4IrPlINf8fiNarzTof004v3lFdntdwa9PF7vFJqm3mg7s+ScJMxXaE3Acp1irZcg==}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.2
       '@jridgewell/trace-mapping': 0.3.18
@@ -7305,7 +7305,7 @@ packages:
     resolution: {integrity: sha512-4XsXlCC0uZHcfazV09/4YKo4koqvSzQlkPUAToTp/WHpb6h2XDOJh5/hi55LXL4zp0PCcgpErKRxFCtgXCc6WQ==}
     dependencies:
       '@logto/client': 2.2.0
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       js-base64: 3.7.5
     dev: true
 
@@ -7313,7 +7313,7 @@ packages:
     resolution: {integrity: sha512-vw8xDW8k38/58Q1r592z/9JdsmUh4+LMmoVm/Nu7LbWKlT32eD3H9hZDkFK9XEHpriifhI0hP7asGWEmhrEUuQ==}
     dependencies:
       '@logto/js': 2.1.1
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       camelcase-keys: 7.0.2
       jose: 4.14.4
     dev: true
@@ -7331,18 +7331,18 @@ packages:
     resolution: {integrity: sha512-zxy9zr5swOxbzYJNYtKXofj2tSIS9565d+1pT6RSbmx3Hn+JG6uzsb75PZXW9vlmmm7p1sGZeTQ+xVzKNFPsMg==}
     engines: {node: ^18.12.0}
     dependencies:
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       '@withtyped/server': 0.12.8(zod@3.20.2)
     transitivePeerDependencies:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-33a6965(zod@3.20.2):
-    resolution: {integrity: sha512-Jawe/nWJmjBDDhNfcxOsQfWsLaUifV5az1mNwn23xwVM/6L/YAkwOj+dWi12lqQ+Vk6MLUPzycXvZLV28tVxQg==}
+  /@logto/cloud@0.2.5-a3e852f(zod@3.20.2):
+    resolution: {integrity: sha512-dIrEUW7gi477HQpNsq/HT1gdvPK2ZmVuV73u2rH9LXGEIFIVGqmmIaaK3IcOPG110jKCBhTzF0+hKsW9Y3Pjmw==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.8.2
-      '@withtyped/server': 0.12.8(zod@3.20.2)
+      '@withtyped/server': 0.12.9(zod@3.20.2)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -7350,7 +7350,7 @@ packages:
   /@logto/js@2.1.1:
     resolution: {integrity: sha512-PHikheavVK+l4ivgtzi14p184hEPgXjqQEAom1Gme1MZoopx+WlwxvHSEQBsmyvVqRtI0oiojhoU5tgYi1FKJw==}
     dependencies:
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       camelcase-keys: 7.0.2
       jose: 4.14.2
     dev: true
@@ -7359,7 +7359,7 @@ packages:
     resolution: {integrity: sha512-joSzzAqaRKeEquRenoFrIXXkNxkJci5zSkk4afywz1P8tTcTysnV4eXaBmwXNpmDfQdtHBwRdSACZPLgeF8JiQ==}
     dependencies:
       '@logto/client': 2.1.0
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       js-base64: 3.7.5
       node-fetch: 2.6.7
     transitivePeerDependencies:
@@ -7372,7 +7372,7 @@ packages:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
       '@logto/browser': 2.1.0
-      '@silverhand/essentials': 2.8.2
+      '@silverhand/essentials': 2.7.0
       react: 18.2.0
     dev: true
 
@@ -8745,7 +8745,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.3(rollup@3.8.0)
+      '@rollup/pluginutils': 5.0.2(rollup@3.8.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
@@ -8763,7 +8763,7 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.3(rollup@3.8.0)
+      '@rollup/pluginutils': 5.0.2(rollup@3.8.0)
       rollup: 3.8.0
     dev: true
 
@@ -8776,12 +8776,12 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.3(rollup@3.8.0)
+      '@rollup/pluginutils': 5.0.2(rollup@3.8.0)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
-      is-builtin-module: 3.2.1
+      is-builtin-module: 3.2.0
       is-module: 1.0.0
-      resolve: 1.22.2
+      resolve: 1.22.1
       rollup: 3.8.0
     dev: true
 
@@ -8798,14 +8798,14 @@ packages:
       tslib:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.3(rollup@3.8.0)
-      resolve: 1.22.2
+      '@rollup/pluginutils': 5.0.2(rollup@3.8.0)
+      resolve: 1.22.1
       rollup: 3.8.0
       typescript: 5.0.2
     dev: true
 
-  /@rollup/pluginutils@5.0.3(rollup@3.8.0):
-    resolution: {integrity: sha512-hfllNN4a80rwNQ9QCxhxuHCGHMAvabXqxNdaChUSSadMre7t4iEUI6fFAhBOn/eIYTgYVhBv7vCLsAJ4u3lf3g==}
+  /@rollup/pluginutils@5.0.2(rollup@3.8.0):
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0
@@ -8965,6 +8965,10 @@ packages:
   /@silverhand/essentials@2.5.0:
     resolution: {integrity: sha512-8GgVFAmbo6S0EgsjYXH4aH8a69O7SzEtPFPDpVZmJuGEt8e3ODVx0F2V4rXyC3/SzFbcb2md2gRbA+Z6aTad6g==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^7}
+
+  /@silverhand/essentials@2.7.0:
+    resolution: {integrity: sha512-F5Qo5ZNnERUURK/9F1ZIi4FBDM22aeD59Zv0VtkgIhUL9tYK9svA2Jz88NNdYBwqCPrh8ExZlpFNi+pNmXKNlQ==}
+    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
 
   /@silverhand/essentials@2.8.2:
     resolution: {integrity: sha512-mrXzAQ6ZGyLoKQpfEOr/LmbQL7FIurVsBaymnsQyKNV56bFYCv5M+2irsAKROtmLMgSunAU/10XiDIaEYW9tbA==}
@@ -10059,6 +10063,16 @@ packages:
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
+    dev: true
+
+  /@withtyped/client@0.7.22(zod@3.20.2):
+    resolution: {integrity: sha512-emNtcO0jc0dFWhvL7eUIRYzhTfn+JqgIvCmXb8ZUFOR8wdSSGrr9VDlm+wgQD06DEBBpmqtTHMMHTNXJdUC/Qw==}
+    dependencies:
+      '@withtyped/server': 0.12.9(zod@3.20.2)
+      '@withtyped/shared': 0.2.2
+    transitivePeerDependencies:
+      - zod
+    dev: false
 
   /@withtyped/server@0.12.8(zod@3.20.2):
     resolution: {integrity: sha512-fv9feTOKJhtlaoYM/Kbs2gSTcIXlmu4OMUFwGmK5jqdbVNIOkDBIPxtcC5ZEwevWFgOcd5OqBW+FvbjiaF27Fw==}
@@ -10068,6 +10082,7 @@ packages:
       '@silverhand/essentials': 2.8.2
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
+    dev: true
 
   /@withtyped/server@0.12.9(zod@3.20.2):
     resolution: {integrity: sha512-K5zoV9D+WpawbghtlJKF1KOshKkBjq+gYzNRWuZk13YmFWFLcmZn+QCblNP55z9IGdcHWpTRknqb1APuicdzgA==}
@@ -10077,7 +10092,6 @@ packages:
       '@silverhand/essentials': 2.8.2
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
-    dev: false
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
@@ -12759,8 +12773,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /filesize@10.0.12:
-    resolution: {integrity: sha512-6RS9gDchbn+qWmtV2uSjo5vmKizgfCQeb5jKmqx8HyzA3MoLqqyQxN+QcjkGBJt7FjJ9qFce67Auyya5rRRbpw==}
+  /filesize@10.0.7:
+    resolution: {integrity: sha512-iMRG7Qo9nayLoU3PNCiLizYtsy4W1ClrapeCwEgtiQelOAOuRJiw4QaLI+sSr8xr901dgHv+EYP2bCusGZgoiA==}
     engines: {node: '>= 10.4.0'}
     dev: true
 
@@ -13854,6 +13868,13 @@ packages:
   /is-buffer@2.0.5:
     resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
     engines: {node: '>=4'}
+    dev: true
+
+  /is-builtin-module@3.2.0:
+    resolution: {integrity: sha512-phDA4oSGt7vl1n5tJvTWooWWAsXLY+2xCnxNqvKhGEzujg+A43wPlPOyDg3C8XQHN+6k/JTQWJ/j0dQh/qr+Hw==}
+    engines: {node: '>=6'}
+    dependencies:
+      builtin-modules: 3.3.0
     dev: true
 
   /is-builtin-module@3.2.1:
@@ -18374,6 +18395,15 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /resolve@1.22.1:
+    resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}
+    hasBin: true
+    dependencies:
+      is-core-module: 2.12.1
+      path-parse: 1.0.7
+      supports-preserve-symlinks-flag: 1.0.0
+    dev: true
+
   /resolve@1.22.2:
     resolution: {integrity: sha512-Sb+mjNHOULsBv818T40qSPeRiuWLyaGMa5ewydRLFimneixmVy2zdivRl+AF6jaYPC8ERxGDmFSiqui6SfPd+g==}
     hasBin: true
@@ -18464,10 +18494,10 @@ packages:
     dependencies:
       brotli-size: 4.0.0
       cli-table3: 0.6.3
-      filesize: 10.0.12
+      filesize: 10.0.7
       gzip-size: 7.0.0
       rollup: 3.8.0
-      terser: 5.19.2
+      terser: 5.17.7
     dev: true
 
   /rollup@3.8.0:
@@ -19636,12 +19666,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /terser@5.19.2:
-    resolution: {integrity: sha512-qC5+dmecKJA4cpYxRa5aVkKehYsQKc+AHeKl0Oe62aYjBL8ZA33tTljktDHJSaxxMnbI5ZYw+o/S2DxxLu8OfA==}
+  /terser@5.17.7:
+    resolution: {integrity: sha512-/bi0Zm2C6VAexlGgLlVxA0P2lru/sdLyfCVaRMfKVo9nWxbmz7f/sD8VPybPeSUJaJcwmCJis9pBIhcVcG1QcQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      '@jridgewell/source-map': 0.3.5
+      '@jridgewell/source-map': 0.3.3
       acorn: 8.10.0
       commander: 2.20.3
       source-map-support: 0.5.21

@@ -42,7 +42,7 @@
     "@logto/shared": "workspace:^2.0.0",
     "@logto/ui": "workspace:*",
     "@silverhand/essentials": "^2.5.0",
-    "@withtyped/client": "^0.7.21",
+    "@withtyped/client": "^0.7.22",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",
     "date-fns": "^2.29.3",
@@ -82,7 +82,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-33a6965",
+    "@logto/cloud": "0.2.5-a3e852f",
     "@silverhand/eslint-config": "4.0.1",
     "@silverhand/ts-config": "4.0.0",
     "@types/debug": "^4.1.7",
