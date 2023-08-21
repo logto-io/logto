@@ -1,4 +1,5 @@
 import type { Role } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockAdminUserRole, mockScope, mockUser, mockResource } from '#src/__mocks__/index.js';
@@ -60,14 +61,12 @@ const usersRoles = {
   insertUsersRoles: jest.fn(),
   countUsersRolesByRoleId: jest.fn(),
   findUsersRolesByRoleId: jest.fn(),
-  findFirstUsersRolesByRoleIdAndUserIds: jest.fn(),
   deleteUsersRolesByUserIdAndRoleId: jest.fn(),
 };
 const {
   insertUsersRoles,
   findUsersRolesByRoleId,
   deleteUsersRolesByUserIdAndRoleId,
-  findFirstUsersRolesByRoleIdAndUserIds,
   countUsersRolesByRoleId,
 } = usersRoles;
 
@@ -178,16 +177,29 @@ describe('role routes', () => {
     expect(response.body[0]).toHaveProperty('id', mockUser.id);
   });
 
-  it('POST /roles/:id/users', async () => {
-    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
-    findFirstUsersRolesByRoleIdAndUserIds.mockResolvedValueOnce(null);
-    const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/users`).send({
-      userIds: [mockUser.id],
+  describe('POST /roles/:id/users', () => {
+    it('Succeed', async () => {
+      findRoleById.mockResolvedValueOnce(mockAdminUserRole);
+      findUsersRolesByRoleId.mockResolvedValueOnce([]);
+      const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/users`).send({
+        userIds: [mockUser.id],
+      });
+      expect(response.status).toEqual(201);
+      expect(insertUsersRoles).toHaveBeenCalledWith([
+        { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
+      ]);
     });
-    expect(response.status).toEqual(201);
-    expect(insertUsersRoles).toHaveBeenCalledWith([
-      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
-    ]);
+
+    it('Should throw error when trying to assign machine to machine role to users', async () => {
+      const mockMachineToMachineRole = { ...mockAdminUserRole, type: RoleType.MachineToMachine };
+      findRoleById.mockResolvedValueOnce(mockMachineToMachineRole);
+      const response = await roleRequester
+        .post(`/roles/${mockMachineToMachineRole.id}/users`)
+        .send({
+          userIds: [mockUser.id],
+        });
+      expect(response.status).toEqual(422);
+    });
   });
 
   it('DELETE /roles/:id/users/:userId', async () => {

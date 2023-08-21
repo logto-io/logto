@@ -27,6 +27,7 @@ const user = {
   user_not_exist: '未找到与 {{identifier}} 相关联的用户。',
   missing_profile: '请于登录时提供必要的用户补充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用户',
+  invalid_role_type: '无效的角色类型，无法将机器到机器角色分配给用户。',
 };
 
 export default Object.freeze(user);

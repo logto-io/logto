@@ -27,6 +27,7 @@ const user = {
   user_not_exist: '未找到與 {{identifier}} 相關聯的使用者。',
   missing_profile: '請於登錄時提供必要的使用者補充資訊。',
   role_exists: '角色 ID {{roleId}} 已添加到此使用者',
+  invalid_role_type: '無法設置機械到機械角色給使用者。',
 };
 
 export default Object.freeze(user);

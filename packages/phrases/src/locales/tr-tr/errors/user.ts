@@ -28,6 +28,7 @@ const user = {
   user_not_exist: '{{identifier}} kimliğine sahip kullanıcı mevcut değil.',
   missing_profile: 'Oturum açmadan önce ek bilgi sağlamanız gerekiyor.',
   role_exists: '{{roleId}} rol kimliği bu kullanıcıya zaten eklenmiştir.',
+  invalid_role_type: 'Geçersiz rol türü, makine-makine rolü kullanıcıya atanamaz.',
 };
 
 export default Object.freeze(user);

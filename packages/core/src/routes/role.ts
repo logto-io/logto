@@ -1,5 +1,11 @@
 import type { RoleResponse } from '@logto/schemas';
-import { userInfoSelectFields, userProfileResponseGuard, Roles, Users } from '@logto/schemas';
+import {
+  userInfoSelectFields,
+  userProfileResponseGuard,
+  Roles,
+  RoleType,
+  Users,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { pick, tryThat } from '@silverhand/essentials';
 import { object, string, z, number } from 'zod';
@@ -39,7 +45,6 @@ export default function roleRoutes<T extends AuthedRouter>(
     usersRoles: {
       countUsersRolesByRoleId,
       deleteUsersRolesByUserIdAndRoleId,
-      findFirstUsersRolesByRoleIdAndUserIds,
       findUsersRolesByRoleId,
       findUsersRolesByUserId,
       insertUsersRoles,
@@ -282,21 +287,22 @@ export default function roleRoutes<T extends AuthedRouter>(
         body: { userIds },
       } = ctx.guard;
 
-      await findRoleById(id);
-      const existingRecord = await findFirstUsersRolesByRoleIdAndUserIds(id, userIds);
-
-      if (existingRecord) {
-        throw new RequestError({
-          code: 'role.user_exists',
-          status: 422,
-          userId: existingRecord.userId,
-        });
-      }
-
-      await Promise.all(userIds.map(async (userId) => findUserById(userId)));
-      await insertUsersRoles(
-        userIds.map((userId) => ({ id: generateStandardId(), roleId: id, userId }))
+      const role = await findRoleById(id);
+      assertThat(
+        role.type === RoleType.User,
+        new RequestError({ code: 'user.invalid_role_type', status: 422, roleId: role.id })
       );
+
+      const usersRoles = await findUsersRolesByRoleId(id);
+      const existingUserIds = new Set(usersRoles.map(({ userId }) => userId));
+      const userIdsToAdd = userIds.filter((id) => !existingUserIds.has(id)); // Skip existing user ids.
+
+      if (userIdsToAdd.length > 0) {
+        await Promise.all(userIdsToAdd.map(async (userId) => findUserById(userId)));
+        await insertUsersRoles(
+          userIdsToAdd.map((userId) => ({ id: generateStandardId(), roleId: id, userId }))
+        );
+      }
       ctx.status = 201;
 
       return next();
