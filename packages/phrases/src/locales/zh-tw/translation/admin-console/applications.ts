@@ -1,8 +1,8 @@
 const applications = {
   page_title: '全部應用',
   title: '全部應用',
-  subtitle: '創建一個移動、單頁、machine to machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle: '創建一個移動、單頁、machine-to-machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
+  subtitle_with_app_type: '設置 {{name}} 應用程序的 Logto 身份驗證',
   create: '創建應用',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',
@@ -29,41 +29,40 @@ const applications = {
       description: '例如 Next.js, PHP',
     },
     machine_to_machine: {
-      title: '機器對機器',
+      title: 'Machine-to-Machine',
       subtitle: '直接與資源對話的應用程序（通常是服務）',
       description: '例如，後端服務',
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: '選擇框架或教程',
+    modal_header_title: '從 SDK 和指南開始',
+    header_subtitle: '使用我們預建的 SDK 和教程來快速啟動您的應用程序開發流程。',
+    start_building: '開始構建',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: '推薦熱門應用',
+      Traditional: '傳統網頁應用',
+      SPA: '單頁應用',
+      Native: '原生應用',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: '過濾框架',
+      placeholder: '搜索框架',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
+    select_a_framework: '選擇一個框架',
+    checkout_tutorial: '查看 {{name}} 教程',
     get_sample_file: '獲取示例',
     title: '應用創建成功',
-    subtitle: '參考以下步驟完成你的應用設置。首先，選擇你要使用的 SDK 類型：',
-    description_by_sdk: '本教程向你演示如何在 {{sdk}} 應用中集成 Logto 登入功能',
-    do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+    subtitle: '參考以下步驟完成您的應用設置。首先，選擇要使用的 SDK 類型：',
+    description_by_sdk: '本教程將向您展示如何在 {{sdk}} 應用中集成 Logto 登錄功能',
+    do_not_need_tutorial: '如果您不需要教程，可以繼續進行不帶框架指南的操作',
+    create_without_framework: '無框架創建應用',
     finish_and_done: '完成並結束',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: '找不到指南？',
+    describe_guide_looking_for: '描述您正在尋找的指南',
+    describe_guide_looking_for_placeholder: '例如，我想將 Logto 集成到我的 Angular 應用中',
+    request_guide_successfully: '您的請求已成功提交。謝謝！',
   },
   placeholder_title: '選擇應用程序類型以繼續',
   placeholder_description:

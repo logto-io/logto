@@ -3,7 +3,7 @@ const applications = {
   title: 'Anwendungen',
   subtitle:
     'Richte eine native, single page, machine to machine oder herkömmliche Anwendung ein, die Logto zur Authentifizierung nutzt.',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle_with_app_type: 'Richte Logto-Authentifizierung für deine {{name}}-Anwendung ein',
   create: 'Anwendung erstellen',
   application_name: 'Anwendungsname',
   application_name_placeholder: 'Meine App',
@@ -37,37 +37,39 @@ const applications = {
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: 'Wähle ein Framework oder Tutorial',
+    modal_header_title: 'Starte mit SDK und Anleitungen',
+    header_subtitle:
+      'Starte deinen App-Entwicklungsprozess mit unserem vorgefertigten SDK und Tutorials.',
+    start_building: 'Starte mit dem Aufbau',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: 'Beliebt und für dich',
+      Traditional: 'Herkömmliche Webanwendung',
+      SPA: 'Single page app',
+      Native: 'Native',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: 'Framework filtern',
+      placeholder: 'Suche nach Framework',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
-    get_sample_file: 'Zum Beispielprojekt',
+    select_a_framework: 'Wähle ein Framework',
+    checkout_tutorial: 'Anleitung zu {{name}} ansehen',
+    get_sample_file: 'Beispielprojekt erhalten',
     title: 'Die Anwendung wurde erfolgreich erstellt',
     subtitle:
       'Folge nun den folgenden Schritten, um deine App-Einstellungen abzuschließen. Bitte wähle den SDK-Typ aus, um fortzufahren.',
     description_by_sdk:
-      'Diese Schnellstart-Anleitung zeigt, wie man Logto in die {{sdk}} App integriert',
+      'Diese Schnellstart-Anleitung zeigt, wie man Logto in die {{sdk}}-App integriert.',
     do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+      'Wenn du kein Tutorial benötigst, kannst du ohne Framework-Anleitung fortfahren.',
+    create_without_framework: 'App ohne Framework erstellen',
     finish_and_done: 'Fertig und erledigt',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: 'Findest du deine Anleitung nicht?',
+    describe_guide_looking_for: 'Beschreibe die Anleitung, nach der du suchst',
+    describe_guide_looking_for_placeholder:
+      'z.B. Ich möchte Logto in meine Angular-App integrieren.',
+    request_guide_successfully: 'Deine Anfrage wurde erfolgreich abgesendet. Danke!',
   },
   placeholder_title: 'Wähle einen Anwendungstyp, um fortzufahren',
   placeholder_description:

@@ -16,7 +16,7 @@ const application_details = {
   authorization_endpoint: '認可エンドポイント',
   authorization_endpoint_tip:
     '認証と認可を実行するエンドポイントです。OpenID Connectの<a>認証</a>に使用されます。',
-  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
+  logto_endpoint: 'Logto エンドポイント',
   application_id: 'アプリID',
   application_id_tip:
     '通常Logtoによって生成される一意のアプリケーション識別子です。OpenID Connectでは「<a>client_id</a>」とも呼ばれます。',

@@ -16,7 +16,7 @@ const application_details = {
   authorization_endpoint: '인증 Endpoint',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 End-Point예요. OpenID Connect <a>인증</a>에서 사용되던 값이에요.',
-  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
+  logto_endpoint: 'Logto endpoint',
   application_id: '앱 ID',
   application_id_tip:
     '일반적으로 Logto에서 생성되는 고유한 응용 프로그램 식별자예요. OpenID Connect에서 "<a>client_id</a>"의 약자이기도 해요.',
@@ -43,18 +43,18 @@ const application_details = {
     '관리 API에 대한 접근을 활성화, 비활성화할 수 있어요. 활성화한다면, 이 어플리케이션에서 Access 토큰을 통해 관리 API를 사용할 수 있어요.',
   always_issue_refresh_token: '항상 Refresh Token을 발급하세요',
   always_issue_refresh_token_label:
-    '다음 구성을 활성화하면 Logto가 인증 요청에 `prompt=consent`가 제시되었는지 여부와 상관없이 항상 Refresh Token을 발급할 수 있게 됩니다. 그러나 OpenID Connect와 호환되지 않으며 문제가 발생할 수 있으므로 필요하지 않은 경우에는 이러한 방법을 권장하지 않습니다. ',
+    '다음 구성을 활성화하면 Logto 가 인증 요청에 `prompt=consent` 가 제시되었는지 여부와 상관없이 항상 Refresh Token 을 발급할 수 있게 됩니다. 그러나 OpenID Connect 와 호환되지 않으며 문제가 발생할 수 있으므로 필요하지 않은 경우에는 이러한 방법을 권장하지 않습니다. ',
   refresh_token_ttl: 'Refresh Token Time to Live (TTL) (일)',
   refresh_token_ttl_tip:
-    'Refresh Token이 새로운 엑세스 토큰을 요청할 수 있는 기간입니다. 토큰 요청이 이루어지면 Refresh Token의 TTL이 이 값으로 연장됩니다.',
+    'Refresh Token이 새로운 엑세스 토큰을 요청할 수 있는 기간입니다. 토큰 요청이 이루어지면 Refresh Token 의 TTL 이 이 값으로 연장됩니다.',
   rotate_refresh_token: 'Refresh Token 회전',
   rotate_refresh_token_label:
-    '활성화하면, 원래의 TTL 중 70%가 지난 후 또는 특정 조건이 충족되면 Refresh Token 요청에 대해 새로운 Refresh Token을 발행합니다. <a>자세히 보기</a>',
+    '활성화하면, 원래의 TTL 중 70% 가 지난 후 또는 특정 조건이 충족되면 Refresh Token 요청에 대해 새로운 Refresh Token 을 발행합니다. <a>자세히 보기</a>',
   delete_description:
     '이 행동은 취소될 수 없어요. 어플리케이션을 영원히 삭제할 거에요. 삭제를 진행하기 위해 <span>{{name}}</span> 를 입력해주세요.',
   enter_your_application_name: '어플리케이션 이름을 입력해 주세요.',
   application_deleted: '{{name}} 어플리케이션이 성공적으로 삭제되었어요.',
-  redirect_uri_required: '반드시 최소 하나의 Redirect URI를 입력해야 해요.',
+  redirect_uri_required: '반드시 최소 하나의 Redirect URI 를 입력해야 해요.',
 };
 
 export default Object.freeze(application_details);

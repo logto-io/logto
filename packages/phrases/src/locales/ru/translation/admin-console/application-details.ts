@@ -16,7 +16,7 @@ const application_details = {
   authorization_endpoint: 'Конечная точка авторизации',
   authorization_endpoint_tip:
     'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a> OpenID Connect </a>.',
-  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
+  logto_endpoint: 'Logto endpoint',
   application_id: 'ID приложения',
   application_id_tip:
     'Уникальный идентификатор приложения, обычно генерируемый Logto. Он также означает «<a> client_id </a>» в OpenID Connect.',

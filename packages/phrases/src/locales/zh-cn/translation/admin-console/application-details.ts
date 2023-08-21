@@ -14,7 +14,7 @@ const application_details = {
   config_endpoint: 'OpenID Provider 配置端点',
   authorization_endpoint: '授权端点',
   authorization_endpoint_tip: '进行鉴权与授权的端点。用于 OpenID Connect 中的 <a>鉴权</a> 流程。',
-  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
+  logto_endpoint: 'Logto endpoint',
   application_id: '应用 ID',
   application_id_tip:
     '应用的唯一标识，通常由 Logto 生成。等价于 OpenID Connect 中的 <a>client_id</a>。',

@@ -1,6 +1,6 @@
 const general = {
   placeholder: 'Yer tutucu',
-  submit: 'Submit', // UNTRANSLATED
+  submit: 'Gönder',
   skip: 'Atla',
   next: 'Sonraki',
   back: 'Geri',

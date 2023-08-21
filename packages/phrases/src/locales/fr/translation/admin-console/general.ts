@@ -1,6 +1,6 @@
 const general = {
   placeholder: 'Emplacement',
-  submit: 'Submit', // UNTRANSLATED
+  submit: 'Soumettre',
   skip: 'Passer',
   next: 'Suivant',
   back: 'Retourner',
