@@ -3,7 +3,7 @@ const applications = {
   title: '어플리케이션',
   subtitle:
     '인증에 Logto를 사용할 모바일, 단일 페이지, Machine-to-Machine 또는 기존 어플리케이션을 설정할 수 있어요.',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
   create: '어플리케이션 생성',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
@@ -12,7 +12,7 @@ const applications = {
   select_application_type: '어플리케이션 종류 선택',
   no_application_type_selected: '어플리케이션 종류를 선택하지 않았어요.',
   application_created: '어플리케이션이 성공적으로 생성되었어요.',
-  app_id: '앱 ID',
+  app_id: 'App ID',
   type: {
     native: {
       title: 'Native App',
@@ -36,35 +36,35 @@ const applications = {
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: '프레임워크 또는 자습서 선택',
+    modal_header_title: 'SDK와 가이드로 시작',
+    header_subtitle: '미리 작성된 SDK 및 자습서로 앱 개발 과정을 빠르게 시작하세요.',
+    start_building: '빌드 시작',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: '인기 있는 가이드',
+      Traditional: 'Traditional web app',
+      SPA: 'Single page app',
+      Native: 'Native',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: '프레임워크 필터',
+      placeholder: '프레임워크 검색',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
+    select_a_framework: '프레임워크 선택',
+    checkout_tutorial: '{{name}} 자습서 확인',
     get_sample_file: '예제 찾기',
     title: '어플리케이션이 생성되었어요.',
     subtitle: '앱 설정을 마치기 위해 아래 단계를 따라주세요. SDK 종류를 선택해 주세요.',
     description_by_sdk: '아래 과정을 따라서 Logto를 {{sdk}} 앱과 빠르게 연동해 보세요.',
     do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+      '튜토리얼이 필요하지 않은 경우, 프레임워크 가이드 없이 진행할 수 있습니다.',
+    create_without_framework: '프레임워크 없이 앱 생성하기',
     finish_and_done: '끝내기',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: '가이드를 찾을 수 없나요?',
+    describe_guide_looking_for: '찾고 있는 가이드에 대해 설명해주세요.',
+    describe_guide_looking_for_placeholder: '예) Angular 앱에 Logto를 통합하고 싶습니다.',
+    request_guide_successfully: '요청이 성공적으로 제출되었습니다. 감사합니다!',
   },
   placeholder_title: '애플리케이션 유형을 선택하여 계속하세요',
   placeholder_description:

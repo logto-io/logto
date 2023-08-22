@@ -14,7 +14,7 @@ const application_details = {
   config_endpoint: 'OpenID Provider 配置端點',
   authorization_endpoint: '授權端點',
   authorization_endpoint_tip: '進行驗證和授權的端點。用於 OpenID Connect 中的<a> 驗證 </a> 流程。',
-  logto_endpoint: 'Logto endpoint', // UNTRANSLATED
+  logto_endpoint: 'Logto endpoint',
   application_id: '應用程式 ID',
   application_id_tip:
     '應用程式的唯一標識，通常由 Logto 生成。等價於 OpenID Connect 中的<a> client_id </a>。',
@@ -41,7 +41,7 @@ const application_details = {
     '啟用或禁用對管理 API 的訪問。啟用後，你可以使用訪問權杖代表該應用程式調用管理 API。',
   always_issue_refresh_token: '始終發放 Refresh Token',
   always_issue_refresh_token_label:
-    '啟用此配置將允許 Logto 始麼發行 Refresh Token，無論是否在驗證請求中呈現 `prompt=consent`。但是，除非必要，否則不建議這樣做，因為它不兼容 OpenID Connect，可能會引起問題。',
+    '啟用此配置將允許 Logto 發行 Refresh Token，無論是否在驗證請求中呈現 `prompt=consent`。但是，除非必要，否則不建議這樣做，因為它不兼容 OpenID Connect，可能會引起問題。',
   refresh_token_ttl: 'Refresh Token 的有效期（天）',
   refresh_token_ttl_tip:
     'Refresh Token 可用來在其過期之前請求新的訪問權杖的持續時間。訪問令牌將將缺省的 TTL 延長到此值。',

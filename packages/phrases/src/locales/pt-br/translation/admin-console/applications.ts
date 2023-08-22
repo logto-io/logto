@@ -3,7 +3,7 @@ const applications = {
   title: 'Aplicativos',
   subtitle:
     'Configure um aplicativo móvel, single page, machine to machine ou tradicional para usar o Logto para autenticação',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle_with_app_type: 'Configure a autenticação Logto para o seu aplicativo {{name}}',
   create: 'Criar aplicativo',
   application_name: 'Nome do Aplicativo',
   application_name_placeholder: 'Meu aplicativo',
@@ -12,7 +12,7 @@ const applications = {
   select_application_type: 'Selecione um tipo de aplicativo',
   no_application_type_selected: 'Você ainda não selecionou nenhum tipo de aplicativo',
   application_created: 'O aplicativo foi criado com sucesso.',
-  app_id: 'ID do aplicativo',
+  app_id: 'App ID',
   type: {
     native: {
       title: 'Aplicativo Nativo',
@@ -31,29 +31,30 @@ const applications = {
       description: 'Ex: aplicativo Next.js, PHP',
     },
     machine_to_machine: {
-      title: 'Máquina-a-Máquina',
+      title: 'Machine-to-Machine',
       subtitle: 'Um aplicativo (geralmente um serviço) que fala diretamente com os recursos',
       description: 'Ex: serviço de backend',
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: 'Selecione um framework ou tutorial',
+    modal_header_title: 'Comece com o SDK e guias',
+    header_subtitle:
+      'Inicie o processo de desenvolvimento do seu aplicativo com nosso SDK pré-construído e tutoriais.',
+    start_building: 'Começar Construção',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: 'Popular e para você',
+      Traditional: 'Aplicação web tradicional',
+      SPA: 'Aplicação de página única',
+      Native: 'Nativo',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: 'Filtrar framework',
+      placeholder: 'Pesquisar framework',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
+    select_a_framework: 'Selecione um framework',
+    checkout_tutorial: 'Visualizar tutorial de {{name}}',
     get_sample_file: 'Obter amostra',
     title: 'O aplicativo foi criado com sucesso',
     subtitle:
@@ -61,13 +62,14 @@ const applications = {
     description_by_sdk:
       'Este guia de início rápido demonstra como integrar o Logto ao aplicativo {{sdk}}',
     do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+      'Se você não precisa de um tutorial, você pode continuar sem um guia de framework',
+    create_without_framework: 'Criar aplicativo sem framework',
     finish_and_done: 'Concluído',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: 'Não consegue encontrar seu guia?',
+    describe_guide_looking_for: 'Descreva o guia que você está procurando',
+    describe_guide_looking_for_placeholder:
+      'Ex.: Quero integrar o Logto no meu aplicativo Angular.',
+    request_guide_successfully: 'Sua solicitação foi enviada com sucesso. Obrigado!',
   },
   placeholder_title: 'Selecione um tipo de aplicativo para continuar',
   placeholder_description:

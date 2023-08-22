@@ -3,7 +3,7 @@ const applications = {
   title: 'アプリケーション ',
   subtitle:
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションにLogto認証を設定する',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle_with_app_type: 'あなたの {{name}} アプリケーションに Logto 認証を設定する',
   create: 'アプリケーションを作成する',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',
@@ -12,7 +12,7 @@ const applications = {
   select_application_type: 'アプリケーションタイプを選択してください',
   no_application_type_selected: 'まだアプリケーションタイプが選択されていません',
   application_created: 'アプリケーションが正常に作成されました。',
-  app_id: 'アプリID',
+  app_id: 'App ID',
   type: {
     native: {
       title: 'ネイティブアプリ',
@@ -36,37 +36,38 @@ const applications = {
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: 'フレームワークまたはチュートリアルを選択',
+    modal_header_title: 'SDK とガイドを利用して開始',
+    header_subtitle:
+      'プリビルドされた SDK とチュートリアルでアプリ開発プロセスをスタートさせましょう。',
+    start_building: '作成を開始する',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: 'おすすめ',
+      Traditional: '従来の Web アプリ',
+      SPA: 'シングルページアプリ',
+      Native: 'ネイティブ',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: 'フレームワークをフィルタリング',
+      placeholder: 'フレームワークを検索',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
-    get_sample_file: 'サンプルを取得する',
+    select_a_framework: 'フレームワークを選択',
+    checkout_tutorial: '{{name}} のチュートリアルを確認する',
+    get_sample_file: 'サンプルファイルを取得する',
     title: 'アプリケーションが正常に作成されました',
     subtitle:
-      '以下の手順に従ってアプリの設定を完了してください。SDKタイプを選択して続行してください。',
+      '以下の手順に従ってアプリの設定を完了してください。SDK タイプを選択して続行してください。',
     description_by_sdk:
-      'このクイックスタートガイドでは、{{sdk}}アプリにLogtoを統合する方法を説明します。',
+      'このクイックスタートガイドでは、{{sdk}} アプリに Logto を統合する方法を説明します。',
     do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+      'チュートリアルを必要としない場合は、フレームワークガイドなしで続行できます。',
+    create_without_framework: 'フレームワークなしでアプリを作成',
     finish_and_done: '完了',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: 'ガイドが見つかりませんか？',
+    describe_guide_looking_for: 'お探しのガイドの内容を説明してください',
+    describe_guide_looking_for_placeholder: '例： Angular アプリに Logto を統合したい。',
+    request_guide_successfully: 'リクエストが正常に送信されました。ありがとうございます！',
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
   placeholder_description:

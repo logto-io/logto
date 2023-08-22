@@ -2,7 +2,7 @@ const applications = {
   page_title: '全部应用',
   title: '全部应用',
   subtitle: '创建一个移动、单页、machine-to-machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
-  subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application', // UNTRANSLATED
+  subtitle_with_app_type: '为你的 {{name}} 应用程序设置 Logto 身份验证',
   create: '创建应用',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
@@ -29,41 +29,40 @@ const applications = {
       description: '例如 Next.js, PHP',
     },
     machine_to_machine: {
-      title: '机器对机器',
+      title: 'Machine-to-Machine',
       subtitle: '直接与资源对话的应用程序（通常是服务）',
       description: '例如，后端服务',
     },
   },
   guide: {
-    header_title: 'Select a framework or tutorial', // UNTRANSLATED
-    modal_header_title: 'Start with SDK and guides', // UNTRANSLATED
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.', // UNTRANSLATED
-    start_building: 'Start Building', // UNTRANSLATED
+    header_title: '选择一个框架或教程',
+    modal_header_title: '从 SDK 和指南入手',
+    header_subtitle: '使用我们预先构建的 SDK 和教程，快速启动你的应用开发流程。',
+    start_building: '开始构建',
     categories: {
-      featured: 'Popular and for you', // UNTRANSLATED
-      Traditional: 'Traditional web app', // UNTRANSLATED
-      SPA: 'Single page app', // UNTRANSLATED
-      Native: 'Native', // UNTRANSLATED
-      MachineToMachine: 'Machine-to-machine', // UNTRANSLATED
+      featured: '推荐热门应用',
+      Traditional: '传统网页应用',
+      SPA: '单页应用',
+      Native: '原生',
+      MachineToMachine: 'Machine-to-machine',
     },
     filter: {
-      title: 'Filter framework', // UNTRANSLATED
-      placeholder: 'Search for framework', // UNTRANSLATED
+      title: '筛选框架',
+      placeholder: '搜索框架',
     },
-    select_a_framework: 'Select a framework', // UNTRANSLATED
-    checkout_tutorial: 'Checkout {{name}} tutorial', // UNTRANSLATED
+    select_a_framework: '选择一个框架',
+    checkout_tutorial: '查看 {{name}} 教程',
     get_sample_file: '获取示例',
     title: '应用创建成功',
     subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',
     description_by_sdk: '本教程向你演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
-    do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide', // UNTRANSLATED
-    create_without_framework: 'Create app without framework', // UNTRANSLATED
+    do_not_need_tutorial: '如果你不需要教程，可以继续没有框架指南',
+    create_without_framework: '无框架创建应用',
     finish_and_done: '完成并结束',
-    cannot_find_guide: "Can't find your guide?", // UNTRANSLATED
-    describe_guide_looking_for: 'Describe the guide you are looking for', // UNTRANSLATED
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.', // UNTRANSLATED
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!', // UNTRANSLATED
+    cannot_find_guide: '找不到你要的指南?',
+    describe_guide_looking_for: '描述你要寻找的指南',
+    describe_guide_looking_for_placeholder: '例如，我想将 Logto 集成到我的 Angular 应用中。',
+    request_guide_successfully: '你的请求已成功提交。谢谢！',
   },
   placeholder_title: '选择应用程序类型以继续',
   placeholder_description:

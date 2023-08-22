@@ -1,6 +1,6 @@
 const general = {
   placeholder: '占位符',
-  submit: 'Submit', // UNTRANSLATED
+  submit: '提交',
   skip: '跳過',
   next: '下一步',
   back: '上一步',
