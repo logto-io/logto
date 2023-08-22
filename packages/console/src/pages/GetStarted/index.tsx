@@ -1,16 +1,11 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CompleteIndicator from '@/assets/icons/task-complete.svg';
 import PageMeta from '@/components/PageMeta';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
-import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
-import Spacer from '@/ds-components/Spacer';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
-import useUserPreferences from '@/hooks/use-user-preferences';
 
 import FreePlanNotification from './FreePlanNotification';
 import Skeleton from './components/Skeleton';
@@ -19,34 +14,7 @@ import * as styles from './index.module.scss';
 
 function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const { data, isLoading } = useGetStartedMetadata();
-  const { update } = useUserPreferences();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  const hideGetStarted = async () => {
-    if (isUpdating) {
-      return;
-    }
-    setIsUpdating(true);
-
-    try {
-      await update({ getStartedHidden: true });
-      // Navigate to next menu item
-      navigate('/dashboard');
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const showConfirmModalHandler = () => {
-    setShowConfirmModal(true);
-  };
-
-  const hideConfirmModalHandler = () => {
-    setShowConfirmModal(false);
-  };
 
   return (
     <div className={styles.container}>
@@ -55,17 +23,6 @@ function GetStarted() {
         <div className={styles.title}>{t('get_started.title')}</div>
         <div className={styles.subtitle}>
           <span>{t('get_started.subtitle_part1')}</span>
-          <Spacer />
-          <span>
-            {t('get_started.subtitle_part2')}
-            <Button
-              title="get_started.hide_this"
-              type="text"
-              size="small"
-              className={styles.hideButton}
-              onClick={showConfirmModalHandler}
-            />
-          </span>
         </div>
       </div>
       {isLoading && <Skeleton />}
@@ -95,16 +52,6 @@ function GetStarted() {
           ))}
         </>
       )}
-      <ConfirmModal
-        isOpen={showConfirmModal}
-        confirmButtonType="primary"
-        confirmButtonText="get_started.hide_this"
-        isLoading={isUpdating}
-        onConfirm={hideGetStarted}
-        onCancel={hideConfirmModalHandler}
-      >
-        {t('get_started.confirm_message')}
-      </ConfirmModal>
     </div>
   );
 }

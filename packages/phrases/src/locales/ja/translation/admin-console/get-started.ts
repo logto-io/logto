@@ -4,9 +4,6 @@ const get_started = {
   progress_dropdown_title: 'できることは何かあるかな？',
   title: 'あなたの成功を手助けする探索',
   subtitle_part1: 'すばやくLogtoの価値を得るには、いくつかのことができます',
-  subtitle_part2: '私はプロであり、すべてのステップを完了しました。 ',
-  hide_this: 'これを隠す',
-  confirm_message: 'このページを隠すことを確認しますか？この操作は取り消せません。',
   check_preview_title: 'ライブプレビューを確認してください',
   check_preview_subtitle:
     'Logtoのサインインエクスペリエンスを今すぐ試して、どのように機能するかを確認してください',

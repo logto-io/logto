@@ -4,10 +4,6 @@ const get_started = {
   progress_dropdown_title: 'Alcune cose che puoi fare...',
   title: 'Esplora per avere successo',
   subtitle_part1: 'Alcune cose che puoi fare per ottenere rapidamente il valore di Logto',
-  subtitle_part2: 'Sono un professionista e ho completato tutti i passaggi.',
-  hide_this: 'Nascondi questo',
-  confirm_message:
-    'Sei sicuro di voler nascondere questa pagina? Questa azione non può essere annullata.',
   check_preview_title: "Controlla l'anteprima dal vivo",
   check_preview_subtitle: 'Prova subito Logto sign-in per vedere come funziona',
   integration_title: 'Crea ed integra la tua applicazione',

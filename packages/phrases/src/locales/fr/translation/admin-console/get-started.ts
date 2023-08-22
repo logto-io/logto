@@ -5,10 +5,6 @@ const get_started = {
   title: 'Quelque chose à explorer pour vous aider à réussir',
   subtitle_part1:
     'Voici quelques mesures que vous pouvez prendre pour tirer rapidement profit de Logto',
-  subtitle_part2: "J'en ai fini avec cette installation. ",
-  hide_this: 'Cacher cela',
-  confirm_message:
-    'Êtes-vous sûr de vouloir masquer cette page ? Cette action ne peut être annulée.',
   check_preview_title: "Vérifiez l'aperçu en direct",
   check_preview_subtitle:
     "Essayez maintenant l'expérience de connexion Logto pour voir comment elle fonctionne.",

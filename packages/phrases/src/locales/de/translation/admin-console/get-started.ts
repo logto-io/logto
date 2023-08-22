@@ -4,8 +4,6 @@ const get_started = {
   progress_dropdown_title: 'Was du machen kannst...',
   title: 'Etwas zum Erkunden, um dir zu helfen, erfolgreich zu sein',
   subtitle_part1: 'Ein paar Dinge, die du tun kannst, um schnell von Logto zu profitieren',
-  subtitle_part2: 'Ich bin fertig mit der Einrichtung.',
-  hide_this: 'Ausblenden',
   confirm_message:
     'Bist du sicher, dass du diese Seite ausblenden willst? Diese Aktion kann nicht rückgängig gemacht werden.',
   check_preview_title: 'Live-Vorschau prüfen',
