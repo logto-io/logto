@@ -2,9 +2,9 @@ import type { CreateUsersRole, UsersRole } from '@logto/schemas';
 import { UsersRoles } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import { sql, CheckIntegrityConstraintViolationError } from 'slonik';
 
-import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { DeletionError, InsertionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(UsersRoles);
 
@@ -42,14 +42,22 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
     `);
 
-  const insertUsersRoles = async (usersRoles: CreateUsersRole[]) =>
-    pool.query(sql`
-      insert into ${table} (${fields.id}, ${fields.userId}, ${fields.roleId}) values
-      ${sql.join(
-        usersRoles.map(({ id, userId, roleId }) => sql`(${id}, ${userId}, ${roleId})`),
-        sql`, `
-      )}
-    `);
+  const insertUsersRoles = async (usersRoles: CreateUsersRole[]) => {
+    try {
+      await pool.query(sql`
+        insert into ${table} (${fields.id}, ${fields.userId}, ${fields.roleId}) values
+        ${sql.join(
+          usersRoles.map(({ id, userId, roleId }) => sql`(${id}, ${userId}, ${roleId})`),
+          sql`, `
+        )}
+      `);
+    } catch (error: unknown) {
+      if (error instanceof CheckIntegrityConstraintViolationError) {
+        throw new InsertionError(UsersRoles);
+      }
+      throw error;
+    }
+  };
 
   const deleteUsersRolesByUserIdAndRoleId = async (userId: string, roleId: string) => {
     const { rowCount } = await pool.query(sql`

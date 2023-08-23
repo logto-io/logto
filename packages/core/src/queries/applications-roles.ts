@@ -2,9 +2,9 @@ import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/sche
 import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
-import { sql } from 'slonik';
+import { sql, CheckIntegrityConstraintViolationError } from 'slonik';
 
-import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { DeletionError, InsertionError } from '#src/errors/SlonikError/index.js';
 
 const { table, fields } = convertToIdentifiers(ApplicationsRoles, true);
 const { fields: insertFields } = convertToIdentifiers(ApplicationsRoles);
@@ -20,18 +20,26 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
       where ${fields.applicationId}=${applicationId}
     `);
 
-  const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>
-    pool.query(sql`
-      insert into ${table} (${insertFields.id}, ${insertFields.applicationId}, ${
-        insertFields.roleId
-      }) values
-      ${sql.join(
-        applicationsRoles.map(
-          ({ id, applicationId, roleId }) => sql`(${id}, ${applicationId}, ${roleId})`
-        ),
-        sql`, `
-      )}
-    `);
+  const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) => {
+    try {
+      await pool.query(sql`
+        insert into ${table} (${insertFields.id}, ${insertFields.applicationId}, ${
+          insertFields.roleId
+        }) values
+        ${sql.join(
+          applicationsRoles.map(
+            ({ id, applicationId, roleId }) => sql`(${id}, ${applicationId}, ${roleId})`
+          ),
+          sql`, `
+        )}
+      `);
+    } catch (error: unknown) {
+      if (error instanceof CheckIntegrityConstraintViolationError) {
+        throw new InsertionError(ApplicationsRoles);
+      }
+      throw error;
+    }
+  };
 
   const deleteApplicationRole = async (applicationId: string, roleId: string) => {
     const { rowCount } = await pool.query(sql`
