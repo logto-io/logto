@@ -1,6 +1,6 @@
 import PageMeta from '@/components/PageMeta';
+import TabWrapper from '@/ds-components/TabWrapper';
 
-import TabWrapper from '../../components/TabWrapper';
 import * as styles from '../index.module.scss';
 
 import AuthenticationForm from './AuthenticationForm';
