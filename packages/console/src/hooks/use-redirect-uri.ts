@@ -11,7 +11,7 @@ import { isCloud } from '@/consts/env';
  */
 const useRedirectUri = (flow: 'signIn' | 'signOut' = 'signIn') => {
   const path = useHref(
-    flow === 'signOut' ? '/' : conditionalArray(!isCloud && ossConsolePath, '/callback').join('/')
+    conditionalArray(!isCloud && ossConsolePath, flow === 'signIn' && '/callback').join('')
   );
 
   return new URL(path, window.location.origin);
