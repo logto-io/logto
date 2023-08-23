@@ -11,12 +11,12 @@ import Profile from '@/assets/icons/profile.svg';
 import SignOut from '@/assets/icons/sign-out.svg';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
-import { getSignOutRedirectPathname } from '@/consts';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import Spacer from '@/ds-components/Spacer';
 import { Ring as Spinner } from '@/ds-components/Spinner';
 import useCurrentUser from '@/hooks/use-current-user';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import { DynamicAppearanceMode } from '@/types/appearance-mode';
@@ -33,6 +33,7 @@ function UserInfo() {
   const { user, isLoading: isLoadingUser } = useCurrentUser();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const postSignOutRedirectUri = useRedirectUri('signOut');
 
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -128,7 +129,7 @@ function UserInfo() {
               return;
             }
             setIsLoading(true);
-            void signOut(new URL(getSignOutRedirectPathname(), window.location.origin).toString());
+            void signOut(postSignOutRedirectUri.href);
           }}
         >
           {t('menu.sign_out')}

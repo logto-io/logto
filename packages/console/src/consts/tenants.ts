@@ -1,6 +1,3 @@
-import { ossConsolePath } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
-
 import { adminEndpoint, isCloud } from './env';
 
 const getAdminTenantEndpoint = () => {
@@ -17,12 +14,3 @@ const getAdminTenantEndpoint = () => {
 export const adminTenantEndpoint = getAdminTenantEndpoint();
 
 export const mainTitle = isCloud ? 'Logto Cloud' : 'Logto Console';
-
-export const getCallbackUrl = (tenantId?: string) =>
-  new URL(
-    // Only Cloud has tenantId in callback URL
-    '/' + conditionalArray(isCloud ? tenantId : 'console', 'callback').join('/'),
-    window.location.origin
-  );
-
-export const getSignOutRedirectPathname = () => (isCloud ? '/' : ossConsolePath);

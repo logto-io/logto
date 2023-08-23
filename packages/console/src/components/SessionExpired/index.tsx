@@ -1,8 +1,7 @@
 import { useLogto } from '@logto/react';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { getCallbackUrl } from '@/consts';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 import { saveRedirect } from '@/utils/storage';
 
 import AppLoading from '../AppLoading';
@@ -10,14 +9,14 @@ import AppLoading from '../AppLoading';
 /** This component shows a loading indicator and tries to sign in again. */
 function SessionExpired() {
   const { signIn, isLoading } = useLogto();
-  const { currentTenantId } = useContext(TenantsContext);
+  const redirectUri = useRedirectUri();
 
   useEffect(() => {
     if (!isLoading) {
       saveRedirect();
-      void signIn(getCallbackUrl(currentTenantId).href);
+      void signIn(redirectUri.href);
     }
-  }, [signIn, isLoading, currentTenantId]);
+  }, [signIn, isLoading, redirectUri]);
 
   return <AppLoading />;
 }
