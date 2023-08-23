@@ -5,8 +5,9 @@ import { Outlet, useSearchParams } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import AppLoading from '@/components/AppLoading';
-import { searchKeys, getCallbackUrl } from '@/consts';
+import { searchKeys } from '@/consts';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 import { saveRedirect } from '@/utils/storage';
 
 /**
@@ -32,15 +33,16 @@ export default function ProtectedRoutes() {
   const api = useCloudApi();
   const [searchParameters] = useSearchParams();
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { currentTenantId, isInitComplete, resetTenants } = useContext(TenantsContext);
+  const { isInitComplete, resetTenants } = useContext(TenantsContext);
+  const redirectUri = useRedirectUri();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       saveRedirect();
       const isSignUpMode = yes(searchParameters.get(searchKeys.signUp));
-      void signIn(getCallbackUrl(currentTenantId).href, conditional(isSignUpMode && 'signUp'));
+      void signIn(redirectUri.href, conditional(isSignUpMode && 'signUp'));
     }
-  }, [currentTenantId, isAuthenticated, isLoading, searchParameters, signIn]);
+  }, [redirectUri, isAuthenticated, isLoading, searchParameters, signIn]);
 
   useEffect(() => {
     if (isAuthenticated && !isInitComplete) {

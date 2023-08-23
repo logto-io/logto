@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Logo from '@/assets/images/logo.svg';
-import { getCallbackUrl } from '@/consts';
 import Button from '@/ds-components/Button';
+import useRedirectUri from '@/hooks/use-redirect-uri';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
@@ -16,6 +16,7 @@ function Welcome() {
   const { navigate } = useTenantPathname();
   const { isAuthenticated, signIn } = useLogto();
   const theme = useTheme();
+  const redirectUri = useRedirectUri();
 
   useEffect(() => {
     // If authenticated, navigate to the console root page directly
@@ -40,7 +41,7 @@ function Welcome() {
             type="branding"
             title="welcome.create_account"
             onClick={() => {
-              void signIn(getCallbackUrl().href);
+              void signIn(redirectUri.href);
             }}
           />
         </div>
