@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
-import { Outlet, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -28,6 +28,7 @@ import Card from '@/ds-components/Card';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
+import TabWrapper from '@/ds-components/TabWrapper';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
@@ -37,9 +38,10 @@ import { trySubmitSafe } from '@/utils/form';
 
 import GuideModal from '../Applications/components/Guide/GuideModal';
 
+import AdvancedSettings from './components/AdvancedSettings';
 import GuideDrawer from './components/GuideDrawer';
+import Settings from './components/Settings';
 import * as styles from './index.module.scss';
-import { type ApplicationDetailsOutletContext } from './types';
 
 const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
@@ -48,7 +50,8 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
 
 function ApplicationDetails() {
-  const { id, guideId } = useParams();
+  const { id, guideId, tab } = useParams();
+  console.log(tab);
   const { navigate, match } = useTenantPathname();
   const isGuideView = id && guideId && match(`/applications/${id}/guide/${guideId}`);
 
@@ -229,14 +232,12 @@ function ApplicationDetails() {
               onDiscard={reset}
               onSubmit={onSubmit}
             >
-              <Outlet
-                context={
-                  {
-                    app: data,
-                    oidcConfig,
-                  } satisfies ApplicationDetailsOutletContext
-                }
-              />
+              <TabWrapper isActive={tab === ApplicationDetailsTabs.Settings}>
+                <Settings data={data} />
+              </TabWrapper>
+              <TabWrapper isActive={tab === ApplicationDetailsTabs.AdvancedSettings}>
+                <AdvancedSettings app={data} oidcConfig={oidcConfig} />
+              </TabWrapper>
             </DetailsForm>
           </FormProvider>
         </>

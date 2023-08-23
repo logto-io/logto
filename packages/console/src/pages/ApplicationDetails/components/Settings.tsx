@@ -3,7 +3,6 @@ import { ApplicationType, validateRedirectUrl } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
@@ -20,11 +19,13 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import * as styles from '../index.module.scss';
-import { type ApplicationDetailsOutletContext } from '../types';
 
-function Settings() {
+type Props = {
+  data: Application;
+};
+
+function Settings({ data }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { app: data } = useOutletContext<ApplicationDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -34,7 +35,7 @@ function Settings() {
     formState: { errors },
   } = useFormContext<Application>();
 
-  const { id, secret, type: applicationType } = data;
+  const { secret, type: applicationType } = data;
 
   const isNativeApp = applicationType === ApplicationType.Native;
   const uriPatternRules: MultiTextInputRule = {

@@ -3,12 +3,12 @@ import {
   ApplicationType,
   customClientMetadataGuard,
   DomainStatus,
+  type SnakeCaseOidcConfig,
 } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 
 import FormCard from '@/components/FormCard';
 import { openIdProviderConfigPath } from '@/consts/oidc';
@@ -23,13 +23,13 @@ import useCustomDomain from '@/hooks/use-custom-domain';
 import { applyDomain } from '@/utils/domain';
 
 import * as styles from '../index.module.scss';
-import { type ApplicationDetailsOutletContext } from '../types';
 
-function AdvancedSettings() {
-  const {
-    app: { type: applicationType },
-    oidcConfig,
-  } = useOutletContext<ApplicationDetailsOutletContext>();
+type Props = {
+  app: Application;
+  oidcConfig: SnakeCaseOidcConfig;
+};
+
+function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const {
     register,
@@ -113,7 +113,7 @@ function AdvancedSettings() {
           />
         </div>
       )}
-      {[ApplicationType.Traditional, ApplicationType.SPA].includes(applicationType) && (
+      {[ApplicationType.Traditional, ApplicationType.SPA].includes(type) && (
         <FormField title="application_details.always_issue_refresh_token">
           <Switch
             label={t('application_details.always_issue_refresh_token_label')}
@@ -121,7 +121,7 @@ function AdvancedSettings() {
           />
         </FormField>
       )}
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {type !== ApplicationType.MachineToMachine && (
         <>
           <FormField title="application_details.rotate_refresh_token">
             <Switch
@@ -169,7 +169,7 @@ function AdvancedSettings() {
           </FormField>
         </>
       )}
-      {applicationType === ApplicationType.MachineToMachine && (
+      {type === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Switch
             label={t('application_details.enable_admin_access_label')}
