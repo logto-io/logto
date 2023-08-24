@@ -3,6 +3,7 @@ import { useLogto } from '@logto/react';
 import { getManagementApiResourceIndicator, type RequestErrorBody } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import ky from 'ky';
+import { type KyInstance } from 'node_modules/ky/distribution/types/ky';
 import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +30,11 @@ export type StaticApiProps = {
   resourceIndicator: string;
 };
 
-export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: StaticApiProps) => {
+export const useStaticApi = ({
+  prefixUrl,
+  hideErrorToast,
+  resourceIndicator,
+}: StaticApiProps): KyInstance => {
   const { isAuthenticated, getAccessToken, signOut } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
