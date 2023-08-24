@@ -4,7 +4,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import type { SignInExperience as SignInExperienceType, ConnectorResponse } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -241,18 +240,6 @@ function SignInExperience() {
       </OverlayScrollbar>
       <ActionBar step={2}>
         <div className={styles.continueActions}>
-          <Button
-            type="outline"
-            title="general.save"
-            disabled={isSubmitting}
-            onClick={async () => {
-              await handleSubmit(
-                submit(() => {
-                  toast.success(t('general.saved'));
-                })
-              )();
-            }}
-          />
           <Button
             type="primary"
             title="cloud.sie.finish_and_done"

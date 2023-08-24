@@ -12,39 +12,36 @@ export const defaultOnboardingSieConfig: OnboardingSieConfig = {
   authentications: [Authentication.Password],
 };
 
+// Email + password sign-up; password sign-in
 const configTemplate1: OnboardingSieConfig = {
   logo: `${assetsUrl}/tVCAHjAB/logo1.png`,
   color: '#19BEFD',
   identifier: SignInIdentifier.Email,
-  authentications: [Authentication.Password, Authentication.VerificationCode],
-};
-
-const configTemplate2: OnboardingSieConfig = {
-  logo: `${assetsUrl}/IcI0snBP/logo3.png`,
-  color: '#FF5449',
-  identifier: SignInIdentifier.Username,
   authentications: [Authentication.Password],
 };
 
+// Email + password sign-up; password + code sign-in
+const configTemplate2: OnboardingSieConfig = {
+  logo: `${assetsUrl}/IcI0snBP/logo3.png`,
+  color: '#FF5449',
+  identifier: SignInIdentifier.Email,
+  authentications: [Authentication.Password, Authentication.VerificationCode],
+};
+
+// Email + code sign-up; code sign-in
 const configTemplate3: OnboardingSieConfig = {
   logo: `${assetsUrl}/7UQyvuFc/logo4.png`,
   color: '#CA4E96',
   identifier: SignInIdentifier.Email,
-  authentications: [Authentication.Password],
-};
-
-const configTemplate4: OnboardingSieConfig = {
-  logo: `${assetsUrl}/zB2merH1/logo5.png`,
-  color: '#F07EFF',
-  identifier: SignInIdentifier.Email,
   authentications: [Authentication.VerificationCode],
 };
 
-const configTemplate5: OnboardingSieConfig = {
+// Username sign-up; password sign-in
+const configTemplate4: OnboardingSieConfig = {
   logo: `${assetsUrl}/uLoMzrlz/logo7.png`,
   color: '#FF5449',
-  identifier: SignInIdentifier.Email,
-  authentications: [Authentication.Password, Authentication.VerificationCode],
+  identifier: SignInIdentifier.Username,
+  authentications: [Authentication.Password],
 };
 
 const sieConfigTemplates: OnboardingSieConfig[] = [
@@ -52,7 +49,6 @@ const sieConfigTemplates: OnboardingSieConfig[] = [
   configTemplate2,
   configTemplate3,
   configTemplate4,
-  configTemplate5,
 ];
 
 export const randomSieConfigTemplate = (
