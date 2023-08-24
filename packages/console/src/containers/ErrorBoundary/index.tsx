@@ -35,24 +35,6 @@ class ErrorBoundary extends Component<Props, State> {
 
   public state: State = {};
 
-  promiseRejectionHandler(error: unknown) {
-    this.setState(
-      ErrorBoundary.getDerivedStateFromError(
-        error instanceof Error ? error : new Error(String(error))
-      )
-    );
-  }
-
-  componentDidMount(): void {
-    window.addEventListener('unhandledrejection', (event) => {
-      this.promiseRejectionHandler(event.reason);
-    });
-  }
-
-  componentWillUnmount(): void {
-    window.removeEventListener('unhandledrejection', this.promiseRejectionHandler);
-  }
-
   render() {
     const { children, t } = this.props;
     const { error } = this.state;
