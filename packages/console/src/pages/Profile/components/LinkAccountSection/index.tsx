@@ -125,6 +125,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
     t,
     onUpdate,
     getSocialAuthorizationUri,
+    getUrl,
   ]);
 
   return (

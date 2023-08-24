@@ -1,6 +1,5 @@
 import type { FormEventHandler, KeyboardEventHandler } from 'react';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
 
@@ -27,8 +26,6 @@ function Search({
   onClearSearch,
 }: Props) {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   const handleSearchKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter' && inputValue) {
       onSearch?.(inputValue);

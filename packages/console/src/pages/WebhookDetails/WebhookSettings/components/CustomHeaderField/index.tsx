@@ -48,7 +48,7 @@ function CustomHeaderField() {
   };
 
   const revalidate = () => {
-    for (const [index, _] of fields.entries()) {
+    for (const [index] of fields.entries()) {
       void trigger(`headers.${index}.key`);
       if (submitCount > 0) {
         void trigger(`headers.${index}.value`);

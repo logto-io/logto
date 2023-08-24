@@ -51,7 +51,6 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 function ApplicationDetails() {
   const { id, guideId, tab } = useParams();
-  console.log(tab);
   const { navigate, match } = useTenantPathname();
   const isGuideView = id && guideId && match(`/applications/${id}/guide/${guideId}`);
 

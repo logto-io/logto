@@ -1,7 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import ArrowDown from '@/assets/icons/arrow-down.svg';
 import ArrowUp from '@/assets/icons/arrow-up.svg';
@@ -24,8 +23,6 @@ type Props = {
 };
 
 function Block({ variant = 'default', count, delta, title, tip }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   const deltaLabel = delta !== undefined && `${conditionalString(delta >= 0 && '+')}${delta}`;
 
   return (

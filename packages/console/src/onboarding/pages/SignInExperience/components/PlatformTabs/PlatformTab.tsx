@@ -1,7 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import type { PreviewPlatform } from '@/components/SignInExperiencePreview/types';
 import DynamicT from '@/ds-components/DynamicT';
@@ -18,8 +17,6 @@ type Props = {
 };
 
 function PlatformTab({ isSelected, icon, title, tab, onClick }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
   return (
     <div
       role="tab"
