@@ -68,11 +68,10 @@ function Welcome() {
               <Controller
                 control={control}
                 name="project"
-                rules={{ required: true }}
                 render={({ field: { onChange, value, name } }) => (
                   <CardSelector
                     name={name}
-                    value={value}
+                    value={value ?? ''}
                     options={projectOptions}
                     onChange={onChange}
                   />

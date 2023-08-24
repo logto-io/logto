@@ -52,7 +52,7 @@ export enum Reason {
 }
 
 const questionnaireGuard = z.object({
-  project: z.nativeEnum(Project),
+  project: z.nativeEnum(Project).optional(),
   /** @deprecated Open-source options was for cloud preview use, no longer needed. Use default `Cloud` value for placeholder. */
   deploymentType: z.nativeEnum(DeploymentType).optional().default(DeploymentType.Cloud),
   titles: z.array(z.nativeEnum(Title)).optional(),
