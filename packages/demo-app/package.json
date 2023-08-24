@@ -37,7 +37,7 @@
     "eslint": "^8.44.0",
     "i18next": "^22.4.15",
     "i18next-browser-languagedetector": "^7.0.1",
-    "lint-staged": "^13.0.0",
+    "lint-staged": "^14.0.0",
     "parcel": "2.9.3",
     "postcss": "^8.4.6",
     "prettier": "^3.0.0",
