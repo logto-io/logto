@@ -6,13 +6,13 @@ import ky from 'ky';
 import { useCallback, useContext, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useHref } from 'react-router-dom';
 
 import { requestTimeout } from '@/consts';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import { useConfirmModal } from './use-confirm-modal';
+import useRedirectUri from './use-redirect-uri';
 
 export class RequestError extends Error {
   constructor(
@@ -33,7 +33,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
   const { isAuthenticated, getAccessToken, signOut } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
-  const href = useHref('/');
+  const postSignOutRedirectUri = useRedirectUri('signOut');
 
   const toastError = useCallback(
     async (response: Response) => {
@@ -51,7 +51,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
             cancelButtonText: 'general.got_it',
           });
 
-          await signOut(href);
+          await signOut(postSignOutRedirectUri.href);
           return;
         }
 
@@ -60,7 +60,7 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
         toast.error(httpCodeToMessage[response.status] ?? fallbackErrorMessage);
       }
     },
-    [show, signOut, t, href]
+    [show, signOut, t, postSignOutRedirectUri]
   );
 
   const api = useMemo(
@@ -73,7 +73,6 @@ export const useStaticApi = ({ prefixUrl, hideErrorToast, resourceIndicator }: S
             !hideErrorToast &&
               (async (error) => {
                 await toastError(error.response);
-
                 return error;
               })
           ),
