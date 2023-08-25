@@ -2,6 +2,7 @@ const role = {
   name_in_use: 'This role name {{name}} is already in use',
   scope_exists: 'The scope id {{scopeId}} has already been added to this role',
   user_exists: 'The user id {{userId}} is already been added to this role',
+  application_exists: 'The application id {{applicationId}} is already been added to this role',
   default_role_missing:
     'Some of the default roleNames does not exist in database, please ensure to create roles first',
   internal_role_violation:

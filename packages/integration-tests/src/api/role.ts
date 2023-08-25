@@ -1,4 +1,4 @@
-import type { CreateRole, Role, Scope, User } from '@logto/schemas';
+import type { CreateRole, Role, Scope, User, Application } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 
 import { generateRoleName } from '#src/utils.js';
@@ -65,3 +65,14 @@ export const assignUsersToRole = async (userIds: string[], roleId: string) =>
 
 export const deleteUserFromRole = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`roles/${roleId}/users/${userId}`);
+
+export const getRoleApplications = async (roleId: string) =>
+  authedAdminApi.get(`roles/${roleId}/applications`).json<Application[]>();
+
+export const assignApplicationsToRole = async (applicationIds: string[], roleId: string) =>
+  authedAdminApi.post(`roles/${roleId}/applications`, {
+    json: { applicationIds },
+  });
+
+export const deleteApplicationFromRole = async (applicationId: string, roleId: string) =>
+  authedAdminApi.delete(`roles/${roleId}/applications/${applicationId}`);

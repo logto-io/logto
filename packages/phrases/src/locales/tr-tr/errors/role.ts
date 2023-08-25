@@ -2,6 +2,7 @@ const role = {
   name_in_use: 'Bu rol adı {{name}} zaten kullanımda',
   scope_exists: 'Bu kapsam kimliği {{scopeId}} zaten bu role eklendi',
   user_exists: 'Bu kullanıcı kimliği {{userId}} zaten bu role eklendi',
+  application_exists: 'Bu uygulama kimliği {{applicationId}} zaten bu role eklendi',
   default_role_missing:
     'Varsayılan rol adlarından bazıları veritabanında mevcut değil, lütfen önce rolleri oluşturduğunuzdan emin olun',
   internal_role_violation:

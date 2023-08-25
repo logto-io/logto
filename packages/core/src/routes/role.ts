@@ -12,6 +12,7 @@ import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.j
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
+import roleApplicationRoutes from './role.application.js';
 import roleUserRoutes from './role.user.js';
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -214,4 +215,5 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
   );
 
   roleUserRoutes(router, tenant);
+  roleApplicationRoutes(router, tenant);
 }
