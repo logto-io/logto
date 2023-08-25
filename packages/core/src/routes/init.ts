@@ -14,6 +14,7 @@ import adminUserRoleRoutes from './admin-user-role.js';
 import adminUserSearchRoutes from './admin-user-search.js';
 import adminUserSocialRoutes from './admin-user-social.js';
 import adminUserRoutes from './admin-user.js';
+import applicationRoleRoutes from './application-role.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
 import connectorRoutes from './connector/index.js';
@@ -44,6 +45,7 @@ const createRouters = (tenant: TenantContext) => {
   managementRouter.use(koaTenantGuard(tenant.cloudConnection));
 
   applicationRoutes(managementRouter, tenant);
+  applicationRoleRoutes(managementRouter, tenant);
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
   resourceRoutes(managementRouter, tenant);
