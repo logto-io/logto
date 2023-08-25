@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import {
   createDefaultAdminConsoleConfig,
-  createCloudConnectionConfig,
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
@@ -14,8 +13,6 @@ import {
   createDefaultAdminConsoleApplication,
   createCloudApi,
   createTenantApplicationRole,
-  createTenantMachineToMachineApplication,
-  createAdminTenantApplicationRole,
   CloudScope,
 } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
@@ -28,7 +25,7 @@ import { getDatabaseName } from '../../../queries/database.js';
 import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
 
-import { appendAdminConsoleRedirectUris } from './cloud.js';
+import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
 
@@ -134,8 +131,10 @@ export const seedTables = async (
   await seedAdminData(connection, createMeApiInAdminTenant());
 
   const [cloudData, ...cloudAdditionalScopes] = createCloudApi();
-  const applicationRole = createTenantApplicationRole();
   await seedAdminData(connection, cloudData, ...cloudAdditionalScopes);
+
+  // Create tenant application role
+  const applicationRole = createTenantApplicationRole();
   await connection.query(insertInto(applicationRole, 'roles'));
   await assignScopesToRole(
     connection,
@@ -144,16 +143,6 @@ export const seedTables = async (
     ...cloudAdditionalScopes
       .filter(({ name }) => name === CloudScope.SendSms || name === CloudScope.SendEmail)
       .map(({ id }) => id)
-  );
-
-  // Add M2M app for default tenant
-  const defaultTenantApplication = createTenantMachineToMachineApplication(defaultTenantId);
-  await connection.query(insertInto(defaultTenantApplication, 'applications'));
-  await connection.query(
-    insertInto(
-      createAdminTenantApplicationRole(defaultTenantApplication.id, applicationRole.id),
-      'applications_roles'
-    )
   );
 
   // Assign all cloud API scopes to role `admin:admin`
@@ -166,20 +155,10 @@ export const seedTables = async (
 
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
-    connection.query(
-      insertInto(
-        createCloudConnectionConfig(
-          defaultTenantId,
-          defaultTenantApplication.id,
-          defaultTenantApplication.secret
-        ),
-        'logto_configs'
-      )
-    ),
+    connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), 'sign_in_experiences')
     ),
-    connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), 'applications')),
     updateDatabaseTimestamp(connection, latestTimestamp),
@@ -189,5 +168,9 @@ export const seedTables = async (
 };
 
 export const seedCloud = async (connection: DatabaseTransactionConnection) => {
-  await appendAdminConsoleRedirectUris(connection);
+  await Promise.all([
+    appendAdminConsoleRedirectUris(connection),
+    seedTenantCloudServiceApplication(connection, defaultTenantId),
+    seedTenantCloudServiceApplication(connection, adminTenantId),
+  ]);
 };
