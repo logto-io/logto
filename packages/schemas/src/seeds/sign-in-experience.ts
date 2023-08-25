@@ -2,7 +2,7 @@ import { generateDarkColor } from '@logto/core-kit';
 
 import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
-import { SignInIdentifier } from '../foundations/index.js';
+import { MfaPolicy, SignInIdentifier } from '../foundations/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
@@ -50,6 +50,10 @@ export const createDefaultSignInExperience = (
     customCss: null,
     customContent: {},
     passwordPolicy: {},
+    mfa: {
+      factors: [],
+      policy: MfaPolicy.UserControlled,
+    },
   });
 
 /** @deprecated Use `createDefaultSignInExperience()` instead. */

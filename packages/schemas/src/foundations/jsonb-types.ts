@@ -164,6 +164,28 @@ export const customContentGuard = z.record(z.string());
 
 export type CustomContent = z.infer<typeof customContentGuard>;
 
+export enum MfaFactor {
+  TOTP = 'TOTP',
+  WebAuthn = 'WebAuthn',
+  BackupCode = 'BackupCode',
+}
+
+export const mfaFactorsGuard = z.nativeEnum(MfaFactor).array();
+
+export type MfaFactors = z.infer<typeof mfaFactorsGuard>;
+
+export enum MfaPolicy {
+  UserControlled = 'UserControlled',
+  Mandatory = 'Mandatory',
+}
+
+export const mfaGuard = z.object({
+  factors: mfaFactorsGuard,
+  policy: z.nativeEnum(MfaPolicy),
+});
+
+export type Mfa = z.infer<typeof mfaGuard>;
+
 /* === Phrases === */
 
 export type Translation = {
