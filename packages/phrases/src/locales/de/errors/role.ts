@@ -2,6 +2,8 @@ const role = {
   name_in_use: 'Dieser Rollenname {{name}} wird bereits verwendet.',
   scope_exists: 'Die Scope-ID {{scopeId}} wurde bereits zu dieser Rolle hinzugefügt.',
   user_exists: 'Die Benutzer-ID {{userId}} wurde bereits zu dieser Rolle hinzugefügt.',
+  application_exists:
+    'Die Anwendungs-ID {{applicationId}} wurde bereits zu dieser Rolle hinzugefügt.',
   default_role_missing:
     'Einige der Standardrollennamen sind in der Datenbank nicht vorhanden. Bitte stellen Sie sicher, dass Sie zuerst Rollen erstellen.',
   internal_role_violation:

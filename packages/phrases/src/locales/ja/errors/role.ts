@@ -2,6 +2,7 @@ const role = {
   name_in_use: 'このロール名{{name}}はすでに使用されています',
   scope_exists: 'スコープID {{scopeId}}はすでにこのロールに追加されています',
   user_exists: 'ユーザーID{{userId}}はすでにこのロールに追加されています',
+  application_exists: 'アプリケーション ID {{applicationId}} はすでにこのロールに追加されています',
   default_role_missing:
     'データベースにデフォルトロール名が存在しないものがあります。ロールを作成してください',
   internal_role_violation:

@@ -58,6 +58,14 @@ export const mockScopeWithResource = {
   resource: mockResource,
 };
 
+export const mockAdminApplicationRole: Role = {
+  tenantId: 'fake_tenant',
+  id: 'role_id',
+  name: 'admin',
+  description: 'admin application',
+  type: RoleType.MachineToMachine,
+};
+
 export const mockAdminUserRole: Role = {
   tenantId: 'fake_tenant',
   id: 'role_id',

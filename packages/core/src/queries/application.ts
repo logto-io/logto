@@ -1,4 +1,4 @@
-import type { CreateApplication } from '@logto/schemas';
+import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType, Applications } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers } from '@logto/shared';
@@ -16,18 +16,24 @@ const { table, fields } = convertToIdentifiers(Applications);
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
   const findTotalNumberOfApplications = async () => getTotalRowCountWithPool(pool)(table);
+
   const findAllApplications = buildFindAllEntitiesWithPool(pool)(Applications, [
     { field: 'createdAt', order: 'desc' },
   ]);
+
   const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
+
   const insertApplication = buildInsertIntoWithPool(pool)(Applications, {
     returning: true,
   });
+
   const updateApplication = buildUpdateWhereWithPool(pool)(Applications, true);
+
   const updateApplicationById = async (
     id: string,
     set: Partial<OmitAutoSetFields<CreateApplication>>
   ) => updateApplication({ set, where: { id }, jsonbMode: 'merge' });
+
   const countNonM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
@@ -37,6 +43,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
 
     return { count: Number(count) };
   };
+
   const countM2mApplications = async () => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
@@ -45,6 +52,40 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     `);
 
     return { count: Number(count) };
+  };
+
+  const countM2mApplicationsByIds = async (applicationIds: string[]) => {
+    if (applicationIds.length === 0) {
+      return { count: 0 };
+    }
+
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.type} = ${ApplicationType.MachineToMachine}
+      and ${fields.id} in (${sql.join(applicationIds, sql`, `)})
+    `);
+
+    return { count: Number(count) };
+  };
+
+  const findM2mApplicationsByIds = async (
+    limit: number,
+    offset: number,
+    applicationIds: string[]
+  ) => {
+    if (applicationIds.length === 0) {
+      return [];
+    }
+
+    return pool.any<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.type} = ${ApplicationType.MachineToMachine}
+      and ${fields.id} in (${sql.join(applicationIds, sql`, `)})
+      limit ${limit}
+      offset ${offset}
+    `);
   };
 
   const deleteApplicationById = async (id: string) => {
@@ -67,6 +108,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     updateApplicationById,
     countNonM2mApplications,
     countM2mApplications,
+    countM2mApplicationsByIds,
+    findM2mApplicationsByIds,
     deleteApplicationById,
   };
 };
