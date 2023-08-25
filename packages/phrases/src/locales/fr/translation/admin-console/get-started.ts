@@ -1,33 +1,37 @@
 const get_started = {
   page_title: 'Commencer',
-  progress: 'Guide de démarrage : {{completed}}/{{total}}',
-  progress_dropdown_title: 'Il y a quelques choses que vous pouvez faire...',
   title: 'Quelque chose à explorer pour vous aider à réussir',
-  subtitle_part1:
-    'Voici quelques mesures que vous pouvez prendre pour tirer rapidement profit de Logto',
-  check_preview_title: "Vérifiez l'aperçu en direct",
-  check_preview_subtitle:
-    "Essayez maintenant l'expérience de connexion Logto pour voir comment elle fonctionne.",
-  integration_title: 'Créez et intégrez votre application',
-  integration_subtitle:
-    "Configurez l'authentification Logto pour votre application native, à page unique, machine à machine ou traditionnelle",
-  custom_sie_title: "Personnalisez l'expérience de connexion",
-  custom_sie_subtitle: 'Déverrouillez une grande variété de scénarios avec des paramètres avancés',
-  passwordless_title:
-    'Évolutivité de la connexion sans mot de passe en ajoutant vos propres connecteurs',
-  passwordless_subtitle:
-    'Essayez la connexion sans mot de passe et offrez à vos clients une expérience sécurisée et sans friction',
-  community_title: 'Rejoignez notre communauté discord',
-  community_subtitle: "Rejoignez notre chaîne publique pour discuter avec d'autres développeurs",
-  management_api_title: 'Interagissez avec Management API',
-  management_api_subtitle:
-    "Connectez directement votre système d'authentification à notre Management API",
-  further_readings_title: 'Lectures complémentaires',
-  further_readings_subtitle:
-    'Consultez nos documents étape par étape et basés sur des scénarios, sans concepts fastidieux',
-  add_rbac_title: "Ajoutez un contrôle d'accès basé sur les rôles pour protéger vos ressources",
-  add_rbac_subtitle:
-    "Contrôlez vos ressources par l autorisation de rôle évolutive pour divers cas d'utilisation.",
+  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  develop: {
+    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+  },
+  customize: {
+    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    preview: {
+      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
+      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+    },
+    connector: {
+      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
+      subtitle:
+        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+    },
+    continue_customizing: 'Continue customizing', // UNTRANSLATED
+    try_now: 'Try now', // UNTRANSLATED
+    add_more: 'Add more', // UNTRANSLATED
+  },
+  secure: {
+    title: 'Secure: Protect your resources', // UNTRANSLATED
+  },
+  manage: {
+    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    rbac: {
+      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
+      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+    },
+    create_roles: 'Create roles', // UNTRANSLATED
+  },
+  view_all: 'View all', // UNTRANSLATED
 };
 
 export default Object.freeze(get_started);

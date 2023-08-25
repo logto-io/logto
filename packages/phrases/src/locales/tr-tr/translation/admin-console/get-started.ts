@@ -1,29 +1,37 @@
 const get_started = {
   page_title: 'Başlangıca Başlayın',
-  progress: 'Başlangıç Kılavuzu: {{completed}}/{{total}}',
-  progress_dropdown_title: 'Yapabileceğiniz Bazı Şeyler...',
   title: 'Başarınızı Desteklemek İçin Keşfedilecek Bir Şey',
-  subtitle_part1: 'Logto Değerini Hızlı Bir Şekilde Elde Etmek İçin Yapabileceğiniz Birkaç Şey',
-  check_preview_title: 'Canlı Önizlemeyi Kontrol Edin',
-  check_preview_subtitle: 'Logto Oturum Açma Deneyimini Denemek İçin Şimdi Deneyin',
-  integration_title: 'Uygulamanızı Oluşturun ve Entegre Edin',
-  integration_subtitle:
-    'Doğal, tek sayfa, makineye makineye veya geleneksel bir uygulama için Logto kimlik doğrulamasını ayarlayın',
-  custom_sie_title: 'Oturum Açma Deneyimini Özelleştirin',
-  custom_sie_subtitle: 'Gelişmiş ayarlarla geniş bir senaryo yelpazesini açın',
-  passwordless_title: 'Kendi Bağlayıcılarınızı Ekleyerek Şifresiz Oturum Açmayı Ölçeklendirin',
-  passwordless_subtitle:
-    'Deneyin ve Müşteriniz İçin Güvenli ve Sürtünmesiz Bir Deneyim Sağlayarak Şifresiz Oturum Açmayı Etkinleştirin',
-  community_title: 'Discord Topluluğumuza Katılın',
-  community_subtitle: 'Diğer Geliştiricilerle Sohbet Etmek İçin Kamu Kanalımıza Katılın',
-  management_api_title: 'Yönetim API İle Etkileşim Sağlayın',
-  management_api_subtitle: "Kimlik doğrulama sisteminizi doğrudan yönetim API'mize bağlayın",
-  further_readings_title: 'Daha Fazla Okuma',
-  further_readings_subtitle:
-    'Kavramlarla Uğraştırmayan Adım Adım Senaryo Temelli Belgelerimize Göz Atın',
-  add_rbac_title: 'Kaynaklarınızı Korumak İçin Rol Tabanlı Erişim Kontrolü Ekleyin',
-  add_rbac_subtitle:
-    'Farklı kullanım durumları için ölçeklenebilir rol yetkilendirmesi ile kaynaklarınızı kontrol edin.',
+  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  develop: {
+    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+  },
+  customize: {
+    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    preview: {
+      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
+      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+    },
+    connector: {
+      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
+      subtitle:
+        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+    },
+    continue_customizing: 'Continue customizing', // UNTRANSLATED
+    try_now: 'Try now', // UNTRANSLATED
+    add_more: 'Add more', // UNTRANSLATED
+  },
+  secure: {
+    title: 'Secure: Protect your resources', // UNTRANSLATED
+  },
+  manage: {
+    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    rbac: {
+      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
+      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+    },
+    create_roles: 'Create roles', // UNTRANSLATED
+  },
+  view_all: 'View all', // UNTRANSLATED
 };
 
 export default Object.freeze(get_started);

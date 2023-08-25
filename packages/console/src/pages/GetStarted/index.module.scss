@@ -4,63 +4,85 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  gap: _.unit(6);
   padding-bottom: _.unit(6);
 }
 
+.title {
+  font: var(--font-title-1);
+  color: var(--color-text);
+}
+
+.subtitle {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .header {
-  margin-bottom: _.unit(6);
-
-  .title {
-    font: var(--font-title-1);
-    color: var(--color-text);
-  }
-
-  .subtitle {
-    display: flex;
-    align-items: center;
-    margin-top: _.unit(1);
-    padding-right: _.unit(6);
-    font: var(--font-body-2);
-    color: var(--color-text-secondary);
-
-    .hideButton {
-      display: inline-block;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
 }
 
 .card {
   display: flex;
-  padding: _.unit(6) _.unit(8);
-  position: relative;
+  flex-direction: column;
+  padding: _.unit(6);
+  gap: _.unit(6);
+  container-type: inline-size;
 
-  .icon {
-    width: 48px;
-    height: 48px;
-    margin-right: _.unit(6);
-  }
-
-  .wrapper {
-    flex: 1;
+  .borderBox {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    padding: _.unit(6) _.unit(8);
+    border: 1px solid var(--color-divider);
+    border-radius: 16px;
+    gap: _.unit(6);
+
+    .icon {
+      width: 48px;
+      height: 48px;
+    }
 
     .title {
       font: var(--font-title-2);
-      color: var(--color-text);
-    }
-
-    .subtitle {
-      font: var(--font-body-2);
-      color: var(--color-text-secondary);
     }
   }
 
-  .button {
-    min-width: 120px;
+  .rowWrapper {
+    display: flex;
+    align-items: center;
+    gap: _.unit(6);
   }
-}
 
-.card + .card {
-  margin-top: _.unit(4);
+  .columnWrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid {
+    width: 100%;
+    display: grid;
+    gap: _.unit(4) _.unit(3);
+  }
+
+  @container (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @container (min-width: 961px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @container (max-width: 720px) {
+    .buttons {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: _.unit(4);
+    }
+  }
 }
