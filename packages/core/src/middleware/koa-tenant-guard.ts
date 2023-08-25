@@ -5,7 +5,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 
-const getAvailableTenants = async (cloudConnection: CloudConnectionLibrary) => {
+const getAvailableTenant = async (cloudConnection: CloudConnectionLibrary) => {
   const client = await cloudConnection.getClient();
   const tenant = await client.get('/api/my/tenant');
 
@@ -22,7 +22,7 @@ export default function koaTenantGuard<StateT, ContextT extends IRouterParamCont
       return next();
     }
 
-    const tenant = await getAvailableTenants(cloudConnection);
+    const tenant = await getAvailableTenant(cloudConnection);
 
     if (tenant.isSuspended) {
       throw new RequestError('subscription.tenant_suspended', 403);
