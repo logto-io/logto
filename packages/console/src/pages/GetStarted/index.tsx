@@ -27,6 +27,11 @@ import useAppGuideMetadata from '../Applications/components/GuideLibrary/hook';
 import FreePlanNotification from './FreePlanNotification';
 import * as styles from './index.module.scss';
 
+const icons = {
+  [Theme.Light]: { PreviewIcon: CheckPreview, SocialIcon: Social, RbacIcon: CreateRole },
+  [Theme.Dark]: { PreviewIcon: CheckPreviewDark, SocialIcon: SocialDark, RbacIcon: CreateRoleDark },
+};
+
 function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
@@ -35,11 +40,12 @@ function GetStarted() {
   const [_, getStructuredMetadata] = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   const theme = useTheme();
-  const isLightMode = theme === Theme.Light;
-  const PreviewIcon = isLightMode ? CheckPreview : CheckPreviewDark;
-  const SocialIcon = isLightMode ? Social : SocialDark;
-  const RbacIcon = isLightMode ? CreateRole : CreateRoleDark;
+  const { PreviewIcon, SocialIcon, RbacIcon } = icons[theme];
 
+  /**
+   * Only need 4 featured guides at most, since by design in get-started page we need to show
+   * a few most popular SDK guides, and 4 makes it easy to have a 4 x 1 or 2 x 2 card layout.
+   */
   const featuredAppGuides = useMemo(
     () => getStructuredMetadata().featured.slice(0, 4),
     [getStructuredMetadata]

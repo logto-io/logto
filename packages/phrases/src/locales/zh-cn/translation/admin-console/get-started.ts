@@ -1,37 +1,36 @@
 const get_started = {
   page_title: '开始上手',
   title: '成功开发身份方案，我们先来探索一番',
-  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  subtitle: '一些你可以做的事情，以快速获取 Logto 的价值',
   develop: {
-    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+    title: '开发：花 5 分钟集成你的应用',
   },
   customize: {
-    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    title: '自定义：提供出色的登录体验',
     preview: {
-      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
-      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+      title: '实时预览定制的登录体验',
+      subtitle: '立刻尝试 Logto 登录体验，看看它是如何工作的',
     },
     connector: {
-      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
-      subtitle:
-        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+      title: '添加更多连接器来支持更多社交登录方式',
+      subtitle: '尝试免密码登录，为您的客户提供安全、无摩擦的体验',
     },
-    continue_customizing: 'Continue customizing', // UNTRANSLATED
-    try_now: 'Try now', // UNTRANSLATED
-    add_more: 'Add more', // UNTRANSLATED
+    continue_customizing: '继续定制',
+    try_now: '立即尝试',
+    add_more: '添加更多',
   },
   secure: {
-    title: 'Secure: Protect your resources', // UNTRANSLATED
+    title: '安全：保护你的资源',
   },
   manage: {
-    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    title: '管理：为你的产品和用户定义访问控制',
     rbac: {
-      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
-      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+      title: '为你的资源添加基于角色的访问控制',
+      subtitle: '通过可扩展的角色授权控制你的资源，应对不同的使用场景。',
     },
-    create_roles: 'Create roles', // UNTRANSLATED
+    create_roles: '创建角色',
   },
-  view_all: 'View all', // UNTRANSLATED
+  view_all: '查看全部 →',
 };
 
 export default Object.freeze(get_started);

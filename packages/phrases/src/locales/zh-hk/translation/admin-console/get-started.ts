@@ -1,37 +1,36 @@
 const get_started = {
   page_title: '開始上手',
   title: '成功開發身份方案，我們先來探索一番',
-  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  subtitle: '一些你可以做的事情，以快速獲取 Logto 的價值',
   develop: {
-    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+    title: '開發：花 5 分鐘將你的應用集成進來',
   },
   customize: {
-    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    title: '定制：提供出色的登錄體驗',
     preview: {
-      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
-      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+      title: '查看剛剛定制的登錄體驗的實時預覽',
+      subtitle: '現在嘗試 Logto 登錄體驗，看看它如何運作',
     },
     connector: {
-      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
-      subtitle:
-        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+      title: '添加更多連接器以支持更多社交登錄方式',
+      subtitle: '試一試無密碼登錄，為你的客戶提供安全、無摩擦的體驗',
     },
-    continue_customizing: 'Continue customizing', // UNTRANSLATED
-    try_now: 'Try now', // UNTRANSLATED
-    add_more: 'Add more', // UNTRANSLATED
+    continue_customizing: '繼續定制',
+    try_now: '立即試用',
+    add_more: '添加更多',
   },
   secure: {
-    title: 'Secure: Protect your resources', // UNTRANSLATED
+    title: '安全：保護你的資源',
   },
   manage: {
-    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    title: '管理：為你的產品和用戶定義存取控制',
     rbac: {
-      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
-      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+      title: '為你的資源添加基於角色的存取控制',
+      subtitle: '通過可擴展的角色授權，控制你的資源，滿足不同的使用場景',
     },
-    create_roles: 'Create roles', // UNTRANSLATED
+    create_roles: '創建角色',
   },
-  view_all: 'View all', // UNTRANSLATED
+  view_all: '查看全部 →',
 };
 
 export default Object.freeze(get_started);

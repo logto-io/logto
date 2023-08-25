@@ -1,37 +1,39 @@
 const get_started = {
   page_title: 'Başlangıca Başlayın',
   title: 'Başarınızı Desteklemek İçin Keşfedilecek Bir Şey',
-  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  subtitle: "Logto'nun değerini hızla elde etmek için yapabileceğiniz birkaç şey",
   develop: {
-    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+    title: 'Geliştir: Uygulamanızı entegre etmek için 5 dakika ayırın',
   },
   customize: {
-    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    title: 'Özelleştir: Harika bir oturum açma deneyimi sunun',
     preview: {
-      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
-      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+      title: 'Yeni özelleştirdiğiniz oturum açma deneyiminin canlı önizlemesini kontrol edin',
+      subtitle: 'Nasıl çalıştığını görmek için şimdi Logto oturum açma deneyimini deneyin',
     },
     connector: {
-      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
+      title:
+        'Daha fazla bağdaştırıcı ekleyerek daha fazla sosyal oturum açma yöntemini destekleyin',
       subtitle:
-        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+        'Şifresiz oturum açmayı deneyin ve müşterileriniz için güvenli ve sürtünmesiz bir deneyim sağlayın',
     },
-    continue_customizing: 'Continue customizing', // UNTRANSLATED
-    try_now: 'Try now', // UNTRANSLATED
-    add_more: 'Add more', // UNTRANSLATED
+    continue_customizing: 'Özelleştirmeye devam et',
+    try_now: 'Şimdi deneyin',
+    add_more: 'Daha fazla ekle',
   },
   secure: {
-    title: 'Secure: Protect your resources', // UNTRANSLATED
+    title: 'Güvenli: Kaynaklarınızı koruyun',
   },
   manage: {
-    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    title: 'Yönet: Ürününüz ve kullanıcılarınız için erişim denetimi tanımlayın',
     rbac: {
-      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
-      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+      title:
+        'Diverse kullanım durumları için ölçeklenebilir rol yetkilendirmesi ile kaynaklarınızı koruyun',
+      subtitle: 'Kaynağınızı kontrol edin',
     },
-    create_roles: 'Create roles', // UNTRANSLATED
+    create_roles: 'Roller oluştur',
   },
-  view_all: 'View all', // UNTRANSLATED
+  view_all: 'Hepsini görüntüle →',
 };
 
 export default Object.freeze(get_started);

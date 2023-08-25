@@ -31,7 +31,7 @@ const get_started = {
     },
     create_roles: 'Create roles',
   },
-  view_all: 'View all',
+  view_all: 'View all →',
 };
 
 export default Object.freeze(get_started);

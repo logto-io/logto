@@ -1,37 +1,39 @@
 const get_started = {
   page_title: 'Loslegen',
   title: 'Etwas zum Erkunden, um dir zu helfen, erfolgreich zu sein',
-  subtitle: 'A few things you can do to quickly get value of Logto', // UNTRANSLATED
+  subtitle: 'Einige Dinge, die Sie tun können, um schnell den Wert von Logto zu erhalten',
   develop: {
-    title: 'Develop: Take 5 minutes to integrate your app', // UNTRANSLATED
+    title: 'Entwicklung: Nehmen Sie sich 5 Minuten Zeit, um Ihre App zu integrieren',
   },
   customize: {
-    title: 'Customize: Deliver a great sign-in experience', // UNTRANSLATED
+    title: 'Anpassen: Liefern Sie ein großartiges Anmeldeerlebnis',
     preview: {
-      title: 'Check the live preview of the sign-in experience you just customized', // UNTRANSLATED
-      subtitle: 'Try Logto sign-in experience now to see how it works', // UNTRANSLATED
+      title: 'Überprüfen Sie die Live-Vorschau des gerade angepassten Anmeldeerlebnisses',
+      subtitle: 'Testen Sie jetzt das Logto-Anmeldeerlebnis, um zu sehen, wie es funktioniert',
     },
     connector: {
-      title: 'Add more connectors to support more social sign-in methods', // UNTRANSLATED
+      title:
+        'Fügen Sie weitere Connectors hinzu, um weitere soziale Anmeldeverfahren zu unterstützen',
       subtitle:
-        'Try passwordless sign in and enable a secure and frictionless experience for your customers', // UNTRANSLATED
+        'Probieren Sie die passwortlose Anmeldung aus und ermöglichen Sie Ihren Kunden ein sicheres und reibungsloses Erlebnis',
     },
-    continue_customizing: 'Continue customizing', // UNTRANSLATED
-    try_now: 'Try now', // UNTRANSLATED
-    add_more: 'Add more', // UNTRANSLATED
+    continue_customizing: 'Mit der Anpassung fortfahren',
+    try_now: 'Jetzt ausprobieren',
+    add_more: 'Mehr hinzufügen',
   },
   secure: {
-    title: 'Secure: Protect your resources', // UNTRANSLATED
+    title: 'Sichern: Schützen Sie Ihre Ressourcen',
   },
   manage: {
-    title: 'Manage: Define access control for your product and users', // UNTRANSLATED
+    title: 'Verwalten: Definieren Sie Zugriffssteuerung für Ihr Produkt und Ihre Benutzer',
     rbac: {
-      title: 'Add role-based access control to protect your resources', // UNTRANSLATED
-      subtitle: 'Control your resource through scalable role authorization for diverse use cases.', // UNTRANSLATED
+      title: 'Fügen Sie rollenbasierte Zugriffssteuerung hinzu, um Ihre Ressourcen zu schützen',
+      subtitle:
+        'Steuern Sie Ihre Ressource durch skalierbare Rollenautorisierung für verschiedene Anwendungsfälle.',
     },
-    create_roles: 'Create roles', // UNTRANSLATED
+    create_roles: 'Rollen erstellen',
   },
-  view_all: 'View all', // UNTRANSLATED
+  view_all: 'Alle anzeigen →',
 };
 
 export default Object.freeze(get_started);
