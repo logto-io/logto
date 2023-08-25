@@ -153,6 +153,9 @@ export const seedTables = async (
     ...cloudAdditionalScopes.map(({ id }) => id)
   );
 
+  // FIXME: @wangsijie should not create tenant Cloud Service application in the OSS DB.
+  await seedTenantCloudServiceApplication(connection, defaultTenantId);
+
   await Promise.all([
     connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
     connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
@@ -170,7 +173,6 @@ export const seedTables = async (
 export const seedCloud = async (connection: DatabaseTransactionConnection) => {
   await Promise.all([
     appendAdminConsoleRedirectUris(connection),
-    seedTenantCloudServiceApplication(connection, defaultTenantId),
     seedTenantCloudServiceApplication(connection, adminTenantId),
   ]);
 };
