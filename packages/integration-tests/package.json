@@ -43,7 +43,7 @@
     "openapi-schema-validator": "^12.0.0",
     "openapi-types": "^12.0.0",
     "prettier": "^3.0.0",
-    "puppeteer": "^20.0.0",
+    "puppeteer": "^21.0.0",
     "text-encoder": "^0.0.4",
     "typescript": "^5.0.0"
   },
