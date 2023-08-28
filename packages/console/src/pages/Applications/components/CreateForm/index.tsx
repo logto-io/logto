@@ -48,7 +48,7 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
     control,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>();
+  } = useForm<FormData>({ defaultValues: { type: defaultCreateType } });
 
   const {
     field: { onChange, value, name, ref },
