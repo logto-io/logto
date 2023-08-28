@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, expectToSaveChanges, waitForToast } from '#src/ui-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
@@ -83,10 +83,8 @@ describe('webhooks', () => {
 
     await expect(page).toFill('input[name=name]', 'hook_name_updated');
     await expect(page).toFill('input[name=url]', 'https://example.com/new-webhook');
-    // Wait for the form to be validated
-    await page.waitForTimeout(1000);
 
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
   });
 

@@ -1,5 +1,9 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { expectToClickNavTab, goToAdminConsole, trySaveChanges } from '#src/ui-helpers/index.js';
+import {
+  expectToClickNavTab,
+  goToAdminConsole,
+  expectToSaveChanges,
+} from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
@@ -61,7 +65,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No email connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignUpIdentifierSelectorError(page);
 
@@ -78,7 +82,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No SMS connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
@@ -92,7 +96,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           option: 'Password',
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
@@ -117,7 +121,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No SMS connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignUpIdentifierSelectorError(page);
 
@@ -134,7 +138,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No email connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
@@ -148,7 +152,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           option: 'Password',
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
@@ -209,7 +213,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No SMS connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
@@ -223,7 +227,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           option: 'Password',
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
@@ -274,7 +278,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           content: /No email connector set-up yet./,
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
@@ -288,7 +292,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
           option: 'Password',
         });
 
-        await trySaveChanges(page);
+        await expectToSaveChanges(page);
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {

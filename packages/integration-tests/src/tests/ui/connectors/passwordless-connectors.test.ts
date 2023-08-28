@@ -5,7 +5,7 @@ import {
   expectToClickDetailsPageOption,
   expectUnsavedChangesAlert,
   goToAdminConsole,
-  trySaveChanges,
+  expectToSaveChanges,
   waitForToast,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
@@ -115,7 +115,7 @@ describe('passwordless connectors', () => {
       // Fill incorrect form
       await expect(page).toFillForm('form', errorFormData);
 
-      await trySaveChanges(page);
+      await expectToSaveChanges(page);
 
       await page.waitForSelector('form div[class$=field] div[class$=error]');
 
@@ -124,7 +124,7 @@ describe('passwordless connectors', () => {
 
       await expectUnsavedChangesAlert(page);
 
-      await trySaveChanges(page);
+      await expectToSaveChanges(page);
 
       await waitForToast(page, { text: 'Saved' });
 
