@@ -12,6 +12,7 @@ import spaReact from './spa-react/index';
 import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import { type Guide } from './types';
+import webAspNetCore from './web-asp-net-core/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
@@ -64,6 +65,12 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-remix/logo.svg')),
     Component: lazy(async () => import('./web-remix/README.mdx')),
     metadata: webRemix,
+  },
+  {
+    id: 'web-asp-net-core',
+    Logo: lazy(async () => import('./web-asp-net-core/logo.svg')),
+    Component: lazy(async () => import('./web-asp-net-core/README.mdx')),
+    metadata: webAspNetCore,
   },
   {
     id: 'web-outline',
