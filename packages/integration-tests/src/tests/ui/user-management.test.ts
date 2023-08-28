@@ -1,5 +1,10 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
+import {
+  goToAdminConsole,
+  expectToSaveChanges,
+  waitForToast,
+  expectToDiscardChanges,
+} from '#src/ui-helpers/index.js';
 import {
   appendPathname,
   expectNavigation,
@@ -141,7 +146,7 @@ describe('user management', () => {
       username: newUsername,
       name: newFullName,
     });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
     // Top userinfo card shows the updated user full name as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
@@ -149,7 +154,7 @@ describe('user management', () => {
     });
 
     await expect(page).toFillForm('form', { name: '' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     // After removing full name, top userinfo card shows the email as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: newEmail,
@@ -157,7 +162,7 @@ describe('user management', () => {
 
     await page.waitForTimeout(500);
     await expect(page).toFillForm('form', { primaryEmail: '' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     // After removing email, top userinfo card shows the phone number as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: formatPhoneNumberToInternational(newPhone),
@@ -165,7 +170,7 @@ describe('user management', () => {
     await page.waitForTimeout(500);
 
     await expect(page).toFillForm('form', { primaryPhone: '' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     // After removing phone number, top userinfo card shows the username as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: newUsername,
@@ -173,7 +178,7 @@ describe('user management', () => {
     await page.waitForTimeout(500);
 
     await expect(page).toFillForm('form', { username: '' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     // After removing all identifiers, saving the form will pop up a confirm dialog
     await expect(page).toMatchElement('.ReactModalPortal div[class$=medium] div[class$=content]', {
       text: 'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
@@ -190,31 +195,26 @@ describe('user management', () => {
     await page.waitForSelector('form');
     // Conflicted email
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     await waitForToast(page, {
       text: 'This email is associated with an existing account.',
       type: 'error',
     });
-    // Discard changes
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
+    await expectToDiscardChanges(page);
 
     // Conflicted phone number
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     await waitForToast(page, {
       text: 'This phone number is associated with an existing account.',
       type: 'error',
     });
-
-    // Discard changes
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
+    await expectToDiscardChanges(page);
 
     // Conflicted username
     await expect(page).toFillForm('form', { username: 'johndoe' });
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
+    await expectToSaveChanges(page);
     await waitForToast(page, { text: 'This username is already in use.', type: 'error' });
-
-    // Discard changes
-    await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
+    await expectToDiscardChanges(page);
   });
 });

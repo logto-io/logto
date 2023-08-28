@@ -50,10 +50,16 @@ export const expectUnsavedChangesAlert = async (page: Page) => {
   });
 };
 
-export const trySaveChanges = async (page: Page) => {
+export const expectToSaveChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
   await page.waitForTimeout(500);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save Changes' });
+};
+
+export const expectToDiscardChanges = async (page: Page) => {
+  // Wait for the action bar to finish animating
+  await page.waitForTimeout(500);
+  await expect(page).toClick('div[class$=actionBar] button span', { text: 'Discard' });
 };
 
 export const expectToClickDetailsPageOption = async (page: Page, optionText: string) => {
