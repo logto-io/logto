@@ -110,10 +110,7 @@ describe('passwordless connectors', () => {
         text: 'Send',
       });
 
-      await waitForToaster(page, {
-        text: /error/i,
-        isError: true,
-      });
+      await waitForToaster(page, { text: /error/i, type: 'error' });
 
       // Fill incorrect form
       await expect(page).toFillForm('form', errorFormData);

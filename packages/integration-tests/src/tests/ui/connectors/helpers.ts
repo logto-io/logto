@@ -88,5 +88,8 @@ export const expectToConfirmConnectorDeletion = async (page: Page) => {
     actionText: 'Delete',
   });
 
+  // Wait to navigate to the connector list page
+  await page.waitForNavigation({ waitUntil: 'networkidle0' });
+
   await waitForToaster(page, { text: 'The connector has been successfully deleted' });
 };
