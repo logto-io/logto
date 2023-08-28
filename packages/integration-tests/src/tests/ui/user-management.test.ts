@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, waitForToaster } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
 import {
   appendPathname,
   expectNavigation,
@@ -89,7 +89,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await expect(page).toClick('button[type=submit]');
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'This email is associated with an existing account.',
       type: 'error',
     });
@@ -100,7 +100,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('button[type=submit]');
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'This phone number is associated with an existing account.',
       type: 'error',
     });
@@ -111,7 +111,7 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('button[type=submit]');
-    await waitForToaster(page, { text: 'This username is already in use.', type: 'error' });
+    await waitForToast(page, { text: 'This username is already in use.', type: 'error' });
 
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
   });
@@ -142,7 +142,7 @@ describe('user management', () => {
       name: newFullName,
     });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await waitForToaster(page, { text: 'Saved' });
+    await waitForToast(page, { text: 'Saved' });
     // Top userinfo card shows the updated user full name as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: newFullName,
@@ -191,7 +191,7 @@ describe('user management', () => {
     // Conflicted email
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'This email is associated with an existing account.',
       type: 'error',
     });
@@ -201,7 +201,7 @@ describe('user management', () => {
     // Conflicted phone number
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'This phone number is associated with an existing account.',
       type: 'error',
     });
@@ -212,7 +212,7 @@ describe('user management', () => {
     // Conflicted username
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await waitForToaster(page, { text: 'This username is already in use.', type: 'error' });
+    await waitForToast(page, { text: 'This username is already in use.', type: 'error' });
 
     // Discard changes
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');

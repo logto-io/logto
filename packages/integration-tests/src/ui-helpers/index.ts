@@ -25,10 +25,7 @@ type WaitToasterOptions = {
   type?: 'success' | 'error';
 };
 
-export const waitForToaster = async (
-  page: Page,
-  { text, type = 'success' }: WaitToasterOptions
-) => {
+export const waitForToast = async (page: Page, { text, type = 'success' }: WaitToasterOptions) => {
   const toast = await expect(page).toMatchElement(
     `div[class*=toast][class*=${type}]:has(div[class$=message])`,
     { text }

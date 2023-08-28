@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { type Page } from 'puppeteer';
 
-import { expectConfirmModalAndAct, waitForToaster } from '#src/ui-helpers/index.js';
+import { expectConfirmModalAndAct, waitForToast } from '#src/ui-helpers/index.js';
 
 import {
   passwordlessConnectorTestCases,
@@ -91,5 +91,5 @@ export const expectToConfirmConnectorDeletion = async (page: Page) => {
   // Wait to navigate to the connector list page
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-  await waitForToaster(page, { text: 'The connector has been successfully deleted' });
+  await waitForToast(page, { text: 'The connector has been successfully deleted' });
 };

@@ -1,6 +1,6 @@
 import { type Page } from 'puppeteer';
 
-import { trySaveChanges, expectConfirmModalAndAct, waitForToaster } from '#src/ui-helpers/index.js';
+import { trySaveChanges, expectConfirmModalAndAct, waitForToast } from '#src/ui-helpers/index.js';
 
 export const waitForFormCard = async (page: Page, title: string) => {
   await expect(page).toMatchElement('div[class$=tabContent] div[class$=card] div[class$=title]', {
@@ -52,7 +52,7 @@ export const expectToSaveSignInExperience = async (
     });
   }
 
-  await waitForToaster(page, {
+  await waitForToast(page, {
     text: 'Saved',
   });
 };

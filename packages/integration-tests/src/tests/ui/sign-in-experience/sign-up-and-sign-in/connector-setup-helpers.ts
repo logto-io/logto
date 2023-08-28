@@ -2,7 +2,7 @@ import { ConnectorType } from '@logto/schemas';
 import { type Page } from 'puppeteer';
 
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { expectToClickDetailsPageOption, waitForToaster } from '#src/ui-helpers/index.js';
+import { expectToClickDetailsPageOption, waitForToast } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import {
@@ -90,7 +90,7 @@ export const expectToSetupPasswordlessConnector = async (
     text: 'Save and Done',
   });
 
-  await waitForToaster(page, { text: 'Saved' });
+  await waitForToast(page, { text: 'Saved' });
 };
 
 export const expectToSetupSocialConnector = async (
@@ -121,7 +121,7 @@ export const expectToSetupSocialConnector = async (
     text: 'Save and Done',
   });
 
-  await waitForToaster(page, { text: 'Saved' });
+  await waitForToast(page, { text: 'Saved' });
 };
 
 export const expectToDeletePasswordlessConnector = async (page: Page, { name }: TestConnector) => {

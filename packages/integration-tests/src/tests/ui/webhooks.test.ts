@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, waitForToaster } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
@@ -87,7 +87,7 @@ describe('webhooks', () => {
     await page.waitForTimeout(1000);
 
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await waitForToaster(page, { text: 'Saved' });
+    await waitForToast(page, { text: 'Saved' });
   });
 
   it('can disable or enable a webhook', async () => {
@@ -141,6 +141,6 @@ describe('webhooks', () => {
       }
     );
     await expect(page).toClick('.ReactModalPortal div[class$=footer] button:last-of-type');
-    await waitForToaster(page, { text: 'Signing key has been regenerated.' });
+    await waitForToast(page, { text: 'Signing key has been regenerated.' });
   });
 });
