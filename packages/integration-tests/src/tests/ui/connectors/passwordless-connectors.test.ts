@@ -163,9 +163,10 @@ describe('passwordless connectors', () => {
       // Delete email connector
       await expectToClickDetailsPageOption(page, 'Delete');
 
-      await expectToConfirmConnectorDeletion(page);
-
-      expect(page.url()).toBe(new URL(`console/connectors/passwordless`, logtoConsoleUrl).href);
+      await expectToConfirmConnectorDeletion(
+        page,
+        new URL(`console/connectors/passwordless`, logtoConsoleUrl).href
+      );
     }
   );
 });

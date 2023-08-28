@@ -139,7 +139,10 @@ export const expectToDeletePasswordlessConnector = async (page: Page, { name }: 
 
   await expectToClickDetailsPageOption(page, 'Delete');
 
-  await expectToConfirmConnectorDeletion(page);
+  await expectToConfirmConnectorDeletion(
+    page,
+    new URL('/console/connectors/passwordless', logtoConsoleUrl).href
+  );
 };
 
 export const expectToDeleteSocialConnector = async (page: Page, { name }: TestConnector) => {
@@ -157,5 +160,8 @@ export const expectToDeleteSocialConnector = async (page: Page, { name }: TestCo
 
   await expectToClickDetailsPageOption(page, 'Delete');
 
-  await expectToConfirmConnectorDeletion(page);
+  await expectToConfirmConnectorDeletion(
+    page,
+    new URL('/console/connectors/social', logtoConsoleUrl).href
+  );
 };

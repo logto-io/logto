@@ -82,7 +82,7 @@ export const waitForConnectorCreationGuide = async (page: Page, connectorName: s
   });
 };
 
-export const expectToConfirmConnectorDeletion = async (page: Page) => {
+export const expectToConfirmConnectorDeletion = async (page: Page, redirectUri: string) => {
   await expectConfirmModalAndAct(page, {
     title: 'Reminder',
     actionText: 'Delete',
@@ -90,6 +90,7 @@ export const expectToConfirmConnectorDeletion = async (page: Page) => {
 
   // Wait to navigate to the connector list page
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  expect(page.url()).toBe(redirectUri);
 
   await waitForToast(page, { text: 'The connector has been successfully deleted' });
 };

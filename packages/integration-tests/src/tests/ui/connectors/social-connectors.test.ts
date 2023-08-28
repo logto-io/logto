@@ -135,9 +135,10 @@ describe('social connectors', () => {
       // Delete connector
       await expectToClickDetailsPageOption(page, 'Delete');
 
-      await expectToConfirmConnectorDeletion(page);
-
-      expect(page.url()).toBe(new URL(`console/connectors/social`, logtoConsoleUrl).href);
+      await expectToConfirmConnectorDeletion(
+        page,
+        new URL(`console/connectors/social`, logtoConsoleUrl).href
+      );
     }
   );
 });
