@@ -22,18 +22,18 @@ export const goToAdminConsole = async () => {
 
 type WaitToasterOptions = {
   text?: string | RegExp;
-  isError?: boolean;
+  type?: 'success' | 'error';
 };
 
-export const waitForToaster = async (page: Page, { text, isError }: WaitToasterOptions) => {
-  const toastStyleClass = isError ? 'error' : 'success';
-  const toastHandle = await page.waitForSelector(`div[class*=toast][class*=${toastStyleClass}]`);
-  await expect(toastHandle).toMatchElement('div[class$=message]', {
-    text,
-  });
-  // Wait the toast to disappear so that the next time we call this function we will match the brand new toast
-  await page.waitForSelector(`div[class*=toast][class*=${toastStyleClass}]`, {
-    hidden: true,
+export const waitForToast = async (page: Page, { text, type = 'success' }: WaitToasterOptions) => {
+  const toast = await expect(page).toMatchElement(
+    `div[class*=toast][class*=${type}]:has(div[class$=message])`,
+    { text }
+  );
+
+  // Remove immediately to prevent waiting for the toast to disappear and matching the same toast again
+  await toast.evaluate((element) => {
+    element.remove();
   });
 };
 

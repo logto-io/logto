@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
@@ -85,13 +85,9 @@ describe('webhooks', () => {
     await expect(page).toFill('input[name=url]', 'https://example.com/new-webhook');
     // Wait for the form to be validated
     await page.waitForTimeout(1000);
+
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    // Wait for the data to be saved
-    await page.waitForTimeout(1000);
-    const successToastHandle = await page.waitForSelector('div[class$=success]');
-    await expect(successToastHandle).toMatchElement('div[class$=message]', {
-      text: 'Saved',
-    });
+    await waitForToast(page, { text: 'Saved' });
   });
 
   it('can disable or enable a webhook', async () => {
@@ -145,11 +141,6 @@ describe('webhooks', () => {
       }
     );
     await expect(page).toClick('.ReactModalPortal div[class$=footer] button:last-of-type');
-    // Wait for the state to be updated
-    await page.waitForTimeout(500);
-    const successToastHandle = await page.waitForSelector('div[class$=success]');
-    await expect(successToastHandle).toMatchElement('div[class$=message]', {
-      text: 'Signing key has been regenerated.',
-    });
+    await waitForToast(page, { text: 'Signing key has been regenerated.' });
   });
 });

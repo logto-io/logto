@@ -6,7 +6,7 @@ import {
   expectUnsavedChangesAlert,
   goToAdminConsole,
   trySaveChanges,
-  waitForToaster,
+  waitForToast,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
@@ -110,7 +110,7 @@ describe('social connectors', () => {
         }
       );
 
-      await waitForToaster(page, { text: 'Saved' });
+      await waitForToast(page, { text: 'Saved' });
 
       await expect(page).toMatchElement('div[class$=header] div[class$=name] span', {
         text: name,
@@ -130,14 +130,15 @@ describe('social connectors', () => {
 
       await trySaveChanges(page);
 
-      await waitForToaster(page, { text: 'Saved' });
+      await waitForToast(page, { text: 'Saved' });
 
       // Delete connector
       await expectToClickDetailsPageOption(page, 'Delete');
 
-      await expectToConfirmConnectorDeletion(page);
-
-      expect(page.url()).toBe(new URL(`console/connectors/social`, logtoConsoleUrl).href);
+      await expectToConfirmConnectorDeletion(
+        page,
+        new URL(`console/connectors/social`, logtoConsoleUrl).href
+      );
     }
   );
 });

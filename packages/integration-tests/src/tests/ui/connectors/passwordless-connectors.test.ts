@@ -6,7 +6,7 @@ import {
   expectUnsavedChangesAlert,
   goToAdminConsole,
   trySaveChanges,
-  waitForToaster,
+  waitForToast,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
@@ -94,7 +94,7 @@ describe('passwordless connectors', () => {
         }
       );
 
-      await waitForToaster(page, { text: 'Saved' });
+      await waitForToast(page, { text: 'Saved' });
 
       await expect(page).toMatchElement('div[class$=header] div[class$=name] span', {
         text: name,
@@ -110,10 +110,7 @@ describe('passwordless connectors', () => {
         text: 'Send',
       });
 
-      await waitForToaster(page, {
-        text: /error/i,
-        isError: true,
-      });
+      await waitForToast(page, { text: /error/i, type: 'error' });
 
       // Fill incorrect form
       await expect(page).toFillForm('form', errorFormData);
@@ -129,7 +126,7 @@ describe('passwordless connectors', () => {
 
       await trySaveChanges(page);
 
-      await waitForToaster(page, { text: 'Saved' });
+      await waitForToast(page, { text: 'Saved' });
 
       // Change to next connector
       const nextConnector = findNextCompatibleConnector(connector);
@@ -156,7 +153,7 @@ describe('passwordless connectors', () => {
           }
         );
 
-        await waitForToaster(page, { text: 'Saved' });
+        await waitForToast(page, { text: 'Saved' });
 
         await expect(page).toMatchElement('div[class$=header] div[class$=name] span', {
           text: nextConnector.name,
@@ -166,9 +163,10 @@ describe('passwordless connectors', () => {
       // Delete email connector
       await expectToClickDetailsPageOption(page, 'Delete');
 
-      await expectToConfirmConnectorDeletion(page);
-
-      expect(page.url()).toBe(new URL(`console/connectors/passwordless`, logtoConsoleUrl).href);
+      await expectToConfirmConnectorDeletion(
+        page,
+        new URL(`console/connectors/passwordless`, logtoConsoleUrl).href
+      );
     }
   );
 });

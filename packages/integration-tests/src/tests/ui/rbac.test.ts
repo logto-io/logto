@@ -3,7 +3,7 @@ import {
   expectConfirmModalAndAct,
   expectToClickDetailsPageOption,
   goToAdminConsole,
-  waitForToaster,
+  waitForToast,
 } from '#src/ui-helpers/index.js';
 import {
   expectNavigation,
@@ -65,7 +65,7 @@ describe('RBAC', () => {
       text: 'Create API Resource',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The API resource ${apiResourceName} has been successfully created`,
     });
 
@@ -99,7 +99,7 @@ describe('RBAC', () => {
       text: 'Create permission',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The permission ${permissionName} has been successfully created`,
     });
 
@@ -191,7 +191,7 @@ describe('RBAC', () => {
       text: 'Create Role',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The role ${roleName} has been successfully created.`,
     });
 
@@ -233,7 +233,7 @@ describe('RBAC', () => {
       text: 'Remove',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The permission "${permissionName}" was successfully removed from this role`,
     });
   });
@@ -268,7 +268,7 @@ describe('RBAC', () => {
       text: 'Assign Permissions',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'The selected permissions were successfully assigned to this role',
     });
 
@@ -304,7 +304,7 @@ describe('RBAC', () => {
       text: 'Assign users',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'The selected users were successfully assigned to this role',
     });
 
@@ -349,7 +349,7 @@ describe('RBAC', () => {
       text: 'Remove',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `${roleName} was successfully removed from this user.`,
     });
   });
@@ -377,7 +377,7 @@ describe('RBAC', () => {
       text: 'Assign roles',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'Successfully assigned role(s)',
     });
   });
@@ -390,7 +390,7 @@ describe('RBAC', () => {
       actionText: 'Delete',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: 'The user has been successfully deleted',
     });
 
@@ -421,7 +421,7 @@ describe('RBAC', () => {
       actionText: 'Delete',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `${roleName} was successfully deleted`,
     });
 
@@ -469,7 +469,7 @@ describe('RBAC', () => {
       text: 'Delete',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The permission "${permissionName}" was successfully deleted.`,
     });
   });
@@ -490,7 +490,7 @@ describe('RBAC', () => {
       text: 'Delete',
     });
 
-    await waitForToaster(page, {
+    await waitForToast(page, {
       text: `The API Resource ${apiResourceName} has been successfully deleted`,
     });
 

@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, waitForToast } from '#src/ui-helpers/index.js';
 import {
   appendPathname,
   expectNavigation,
@@ -89,30 +89,31 @@ describe('user management', () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
+    await waitForToast(page, {
       text: 'This email is associated with an existing account.',
+      type: 'error',
     });
+
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
 
     // Conflicted phone number
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
+    await waitForToast(page, {
       text: 'This phone number is associated with an existing account.',
+      type: 'error',
     });
+
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
 
     // Conflicted username
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
-      text: 'This username is already in use.',
-    });
+    await waitForToast(page, { text: 'This username is already in use.', type: 'error' });
+
     await expect(page).toClick('.ReactModalPortal div[class$=header] button');
-    // Wait for 5 seconds for the error toasts to dismiss
-    await page.waitForTimeout(4000);
   });
 
   it('can update user details', async () => {
@@ -141,10 +142,7 @@ describe('user management', () => {
       name: newFullName,
     });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    const successToastHandle = await page.waitForSelector('div[class$=success]');
-    await expect(successToastHandle).toMatchElement('div[class$=message]', {
-      text: 'Saved',
-    });
+    await waitForToast(page, { text: 'Saved' });
     // Top userinfo card shows the updated user full name as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: newFullName,
@@ -193,8 +191,9 @@ describe('user management', () => {
     // Conflicted email
     await expect(page).toFillForm('form', { primaryEmail: 'jdoe@gmail.com' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
+    await waitForToast(page, {
       text: 'This email is associated with an existing account.',
+      type: 'error',
     });
     // Discard changes
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
@@ -202,18 +201,19 @@ describe('user management', () => {
     // Conflicted phone number
     await expect(page).toFillForm('form', { primaryPhone: '+1 810 555 5555' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
+    await waitForToast(page, {
       text: 'This phone number is associated with an existing account.',
+      type: 'error',
     });
+
     // Discard changes
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
 
     // Conflicted username
     await expect(page).toFillForm('form', { username: 'johndoe' });
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(2)');
-    await expect(page).toMatchElement('div[class$=error] div[class$=message]', {
-      text: 'This username is already in use.',
-    });
+    await waitForToast(page, { text: 'This username is already in use.', type: 'error' });
+
     // Discard changes
     await expect(page).toClick('form div[class$=actionBar] button:nth-of-type(1)');
   });
