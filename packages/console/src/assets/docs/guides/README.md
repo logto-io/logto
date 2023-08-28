@@ -55,3 +55,20 @@ Images and other assets (if any) should be placed in the `assets` directory of t
 Since Parcel doesn't support dynamic import (see [#112](https://github.com/parcel-bundler/parcel/issues/112) [#125](https://github.com/parcel-bundler/parcel/issues/125)), we need to run `node generate-metadata.js` to update the metadata in `index.ts`, thus we can use it in the guide components with React lazy loading.
 
 This may be fixed by replacing Parcel with something else.
+
+### Order guides
+
+The guides are ordered by the following rules in ascending order:
+
+1. The first segment of the directory name, which should be the target of the guide;
+2. The `order` property of the guide.
+
+You can configure the property by creating a `config.json` file in the guide directory. The file should be an object with the following structure:
+
+```json
+{
+  "order": 1
+}
+```
+
+If no `config.json` file is found, the guide will be placed at the end of the list.
