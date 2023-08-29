@@ -1,4 +1,4 @@
-import { type Page } from 'puppeteer';
+import { type Browser, type Page } from 'puppeteer';
 
 import {
   consolePassword,
@@ -119,4 +119,13 @@ export const expectToClickNavTab = async (page: Page, tab: string) => {
   await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
     text: tab,
   });
+};
+
+export const expectToOpenNewPage = async (browser: Browser, url: string) => {
+  const target = await browser.waitForTarget((target) => target.url() === url);
+
+  const newPage = await target.page();
+  expect(newPage).toBeTruthy();
+
+  await newPage?.close();
 };
