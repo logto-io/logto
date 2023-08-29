@@ -56,6 +56,10 @@ export const getCallbackLinkFromStorage = (connectorId: string) => {
   return sessionStorage.getItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
 };
 
+export const removeCallbackLinkFromStorage = (connectorId: string) => {
+  sessionStorage.removeItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
+};
+
 /**
  * Social Connectors Filter Utility Methods
  */
