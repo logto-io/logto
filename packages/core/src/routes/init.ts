@@ -5,6 +5,7 @@ import Router from 'koa-router';
 import { EnvSet } from '#src/env-set/index.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaCors from '#src/middleware/koa-cors.js';
+import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
@@ -40,6 +41,8 @@ const createRouters = (tenant: TenantContext) => {
 
   const managementRouter: AuthedRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
+  managementRouter.use(koaTenantGuard(tenant.cloudConnection));
+
   applicationRoutes(managementRouter, tenant);
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
