@@ -158,8 +158,8 @@ importers:
         specifier: ^7.3.4
         version: 7.3.4
       p-retry:
-        specifier: ^5.1.2
-        version: 5.1.2
+        specifier: ^6.0.0
+        version: 6.0.0
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
@@ -3248,8 +3248,8 @@ importers:
         specifier: ^8.2.2
         version: 8.2.2
       p-retry:
-        specifier: ^5.1.2
-        version: 5.1.2
+        specifier: ^6.0.0
+        version: 6.0.0
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
@@ -9817,8 +9817,8 @@ packages:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: true
 
-  /@types/retry@0.12.1:
-    resolution: {integrity: sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==}
+  /@types/retry@0.12.2:
+    resolution: {integrity: sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==}
     dev: false
 
   /@types/scheduler@0.16.2:
@@ -16742,11 +16742,11 @@ packages:
       p-timeout: 5.1.0
     dev: false
 
-  /p-retry@5.1.2:
-    resolution: {integrity: sha512-couX95waDu98NfNZV+i/iLt+fdVxmI7CbrrdC2uDWfPdUAApyxT4wmDlyOtR5KtTDmkDO0zDScDjDou9YHhd9g==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+  /p-retry@6.0.0:
+    resolution: {integrity: sha512-6NuuXu8Upembd4sNdo4PRbs+M6aHgBTrFE6lkH0YKjVzne3cDW4gkncB98ty/bkMxLxLVNeD5bX9FyWjM7WZ+A==}
+    engines: {node: '>=16.17'}
     dependencies:
-      '@types/retry': 0.12.1
+      '@types/retry': 0.12.2
       retry: 0.13.1
     dev: false
 
