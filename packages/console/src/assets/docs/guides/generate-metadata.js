@@ -8,8 +8,8 @@ import fs from 'node:fs/promises';
 const entries = await fs.readdir('.');
 const directories = entries.filter((entry) => !entry.includes('.'));
 
-const metadata = directories
-  .map((directory) => {
+const data = await Promise.all(
+  directories.map(async (directory) => {
     if (!existsSync(`${directory}/README.mdx`)) {
       console.warn(`No README.mdx file found in ${directory} directory, skipping.`);
       return;
@@ -23,12 +23,24 @@ const metadata = directories
     // Add `.png` later
     const logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
 
+    const config = existsSync(`${directory}/config.json`)
+      ? await import(`./${directory}/config.json`, { assert: { type: 'json' } }).then((module) => module.default)
+      : undefined;
+
     return {
       name: directory,
       logo,
+      order: config?.order ?? Number.POSITIVE_INFINITY,
     };
   })
-  .filter(Boolean);
+);
+const metadata = data.filter(Boolean).slice().sort((a, b) => {
+  if (a.name.split('-')[0] !== b.name.split('-')[0]) {
+    return a.name.localeCompare(b.name);
+  }
+
+  return a.order - b.order;
+});
 
 const camelCase = (value) => value.replaceAll(/-./g, (x) => x[1].toUpperCase());
 const filename = 'index.ts';
@@ -46,12 +58,13 @@ for (const { name } of metadata) {
 await fs.appendFile(filename, '\n');
 await fs.appendFile(filename, 'const guides: Readonly<Guide[]> = Object.freeze([');
 
-for (const { name, logo } of metadata) {
+for (const { name, logo, order } of metadata) {
   // eslint-disable-next-line no-await-in-loop
   await fs.appendFile(
     filename,
     `
   {
+    order: ${order},
     id: '${name}',
     Logo: ${logo ? `lazy(async () => import('./${name}/${logo}'))` : 'undefined'},
     Component: lazy(async () => import('./${name}/README.mdx')),
