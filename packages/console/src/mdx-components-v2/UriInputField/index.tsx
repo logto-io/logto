@@ -86,7 +86,7 @@ function UriInputField({ name, defaultValue }: Props) {
 
   return (
     <FormProvider {...methods}>
-      <form>
+      <form className={styles.form}>
         <Controller
           name={name}
           control={control}
