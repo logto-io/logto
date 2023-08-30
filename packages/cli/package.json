@@ -1,6 +1,6 @@
 {
   "name": "@logto/cli",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -48,7 +48,7 @@
     "@logto/language-kit": "workspace:^1.0.0",
     "@logto/phrases": "workspace:^1.4.1",
     "@logto/phrases-ui": "workspace:^1.2.0",
-    "@logto/schemas": "workspace:1.7.0",
+    "@logto/schemas": "workspace:1.8.0",
     "@logto/shared": "workspace:^2.0.0",
     "@silverhand/essentials": "^2.5.0",
     "chalk": "^5.0.0",

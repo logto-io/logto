@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.8.0
+
+### Patch Changes
+
+- 0b519e548: allow non-http origins for application CORS
+
 ## 1.7.0
 
 ### Minor Changes
