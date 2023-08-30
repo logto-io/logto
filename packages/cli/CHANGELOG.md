@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.8.0
+
+### Minor Changes
+
+- ae0ef919f: Add key type option for the command of rotating oidc.privateKeys
+
+### Patch Changes
+
+- Updated dependencies [0b519e548]
+  - @logto/schemas@1.8.0
+
 ## 1.7.0
 
 ### Minor Changes

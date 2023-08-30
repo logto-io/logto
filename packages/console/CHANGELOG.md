@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.6.0
+
+### Minor Changes
+
+- d90b4e7f6: add asp.net core tutorial
+
+### Patch Changes
+
+- 0b519e548: allow non-http origins for application CORS
+
 ## 1.5.1
 
 ### Patch Changes

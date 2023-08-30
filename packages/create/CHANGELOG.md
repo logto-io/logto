@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.8.0
+
+### Patch Changes
+
+- Updated dependencies [ae0ef919f]
+  - @logto/cli@1.8.0
+
 ## 1.7.0
 
 ### Patch Changes
