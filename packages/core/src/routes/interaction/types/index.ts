@@ -6,6 +6,7 @@ import type {
   InteractionEvent,
   SocialEmailPayload,
   SocialPhonePayload,
+  Profile,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
@@ -17,9 +18,6 @@ import type {
   socialIdentifierGuard,
   identifierGuard,
   anonymousInteractionResultGuard,
-  verifiedRegisterInteractionResultGuard,
-  verifiedSignInteractionResultGuard,
-  verifiedForgotPasswordInteractionResultGuard,
 } from './guard.js';
 
 /* Payload Types */
@@ -44,7 +42,7 @@ export type SocialIdentifier = z.infer<typeof socialIdentifierGuard>;
 
 export type Identifier = z.infer<typeof identifierGuard>;
 
-// Interaction
+// Interaction Result
 export type AnonymousInteractionResult = z.infer<typeof anonymousInteractionResultGuard>;
 
 export type RegisterInteractionResult = Omit<AnonymousInteractionResult, 'event'> & {
@@ -59,6 +57,7 @@ export type ForgotPasswordInteractionResult = Omit<AnonymousInteractionResult, '
   event: InteractionEvent.ForgotPassword;
 };
 
+// Intermediate interaction  result
 export type AccountVerifiedInteractionResult =
   | (Omit<SignInInteractionResult, 'accountId' | 'identifiers'> & {
       accountId: string;
@@ -73,15 +72,27 @@ export type IdentifierVerifiedInteractionResult =
   | RegisterInteractionResult
   | AccountVerifiedInteractionResult;
 
-export type VerifiedRegisterInteractionResult = z.infer<
-  typeof verifiedRegisterInteractionResultGuard
->;
+export type VerifiedRegisterInteractionResult = {
+  event: InteractionEvent.Register;
+  profile?: Profile;
+  identifiers?: Identifier[];
+};
 
-export type VerifiedSignInInteractionResult = z.infer<typeof verifiedSignInteractionResultGuard>;
+export type VerifiedSignInInteractionResult = {
+  event: InteractionEvent.SignIn;
+  accountId: string;
+  identifiers: Identifier[];
+  profile?: Profile;
+};
 
-export type VerifiedForgotPasswordInteractionResult = z.infer<
-  typeof verifiedForgotPasswordInteractionResultGuard
->;
+export type VerifiedForgotPasswordInteractionResult = {
+  event: InteractionEvent.ForgotPassword;
+  accountId: string;
+  identifiers: Identifier[];
+  profile: {
+    password: string;
+  };
+};
 
 export type VerifiedInteractionResult =
   | VerifiedRegisterInteractionResult
