@@ -1,9 +1,12 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import type { HTMLProps, ReactElement, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Ring as Spinner } from '@/ds-components/Spinner';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
+import { isAbsoluteUrl } from '@/utils/url';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -103,7 +106,7 @@ function Button({
 
 export default Button;
 
-type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title'> & {
+type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title' | 'ref'> & {
   /**
    * If the link will be opened in a new tab. This prop will override the `target`
    * and `rel` attributes.
@@ -122,25 +125,42 @@ export function LinkButton({
   type = 'default',
   size = 'medium',
   className,
+  href,
   targetBlank,
   ...rest
 }: LinkProps) {
-  return (
-    <a
-      className={classNames(styles.button, styles[type], styles[size], className)}
-      {...rest}
-      {...(Boolean(targetBlank) && {
+  const { getTo } = useTenantPathname();
+  const props = useMemo(
+    () => ({
+      ...rest,
+      className: classNames(styles.button, styles[type], styles[size], className),
+      ...(Boolean(targetBlank) && {
         rel: typeof targetBlank === 'string' ? targetBlank : 'noopener noreferrer',
         target: '_blank',
-      })}
-    >
-      {typeof title === 'string' ? (
+      }),
+    }),
+    [className, rest, size, targetBlank, type]
+  );
+
+  const innerElement = useMemo(
+    () =>
+      typeof title === 'string' ? (
         <span>
           <DynamicT forKey={title} />
         </span>
       ) : (
         title
-      )}
+      ),
+    [title]
+  );
+
+  return !href || isAbsoluteUrl(href) ? (
+    <a {...props} href={href}>
+      {innerElement}
     </a>
+  ) : (
+    <Link {...props} to={getTo(href)}>
+      {innerElement}
+    </Link>
   );
 }

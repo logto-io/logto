@@ -1,30 +1,36 @@
 const get_started = {
   page_title: '시작하기',
-  progress: '시작 가이드: {{completed}}/{{total}}',
-  progress_dropdown_title: '해야 할 것들...',
   title: '성공하는 데 도움이 될 탐색 항목',
-  subtitle_part1: 'Logto의 가치를 얻기 위해 해야 할 것들이 있어요.',
-  subtitle_part2: '설정을 마칠게요 ',
-  hide_this: '가리기',
-  confirm_message: '정말로 이 페이지를 가릴까요? 이 행동은 취소할 수 없어요.',
-  check_preview_title: '라이브 프리뷰 확인하기',
-  check_preview_subtitle: 'Logto 로그인 경험을 체험해 보세요.',
-  integration_title: '애플리케이션 생성하고 통합하기',
-  integration_subtitle:
-    '당신의 네이티브, 싱글 페이지, 기계 대 기계 또는 정적 애플리케이션에 Logto 인증을 설정하세요',
-  custom_sie_title: '로그인 경험 사용자화',
-  custom_sie_subtitle: '고급 설정으로 다양한 시나리오를 잠금 해제하세요',
-  passwordless_title: '자체 연동을 추가하여 비밀번호 없는 로그인 구축하기',
-  passwordless_subtitle:
-    '비밀번호 없는 로그인을 사용하여 고객에게 안전하고 원활한 환경을 제공하세요',
-  community_title: 'Discord 커뮤니티 참여하기',
-  community_subtitle: '우리의 공식 채널에 참여하여 다른 개발자들과 채팅하세요',
-  management_api_title: '관리 API와 상호작용',
-  management_api_subtitle: '당신의 인증 시스템을 관리 API에 직접 연결하세요',
-  further_readings_title: '더 읽어보기',
-  further_readings_subtitle: '지루한 개념이 없는 단계별 시나리오 기반 문서를 확인하세요.',
-  add_rbac_title: '역할 기반 액세스 제어를 추가하여 리소스 보호',
-  add_rbac_subtitle: '다양한 사용 사례에 맞게 확장 가능한 역할 부여를 통해 리소스를 제어하세요.',
+  subtitle: 'Logto의 가치를 빠르게 얻을 수 있는 몇 가지 방법',
+  develop: {
+    title: '개발: 앱을 통합하는 데 5분이면 충분합니다',
+  },
+  customize: {
+    title: '사용자 정의: 훌륭한 로그인 경험 전달하기',
+    preview: {
+      title: '방금 사용자 정의한 로그인 경험의 실시간 미리보기 확인하기',
+      subtitle: '작동 방식을 확인하려면 지금 Logto 로그인 경험을 시도해보세요',
+    },
+    connector: {
+      title: '더 많은 커넥터 추가하여 더 많은 소셜 로그인 방식 지원하기',
+      subtitle: '비밀번호 없는 로그인을 시도하고 고객에게 안전하고 원활한 경험을 제공하세요',
+    },
+    continue_customizing: '사용자 정의 계속하기',
+    try_now: '지금 시도해보세요',
+    add_more: '더 추가하기',
+  },
+  secure: {
+    title: '보안: 리소스 보호',
+  },
+  manage: {
+    title: '관리: 제품 및 사용자에 대한 액세스 제어 정의',
+    rbac: {
+      title: '롤 기반 액세스 제어 추가하여 리소스 보호',
+      subtitle: '다양한 사용 사례에 대해 확장 가능한 역할 권한부여를 통해 리소스 제어',
+    },
+    create_roles: '역할 생성',
+  },
+  view_all: '모두 보기 →',
 };
 
 export default Object.freeze(get_started);

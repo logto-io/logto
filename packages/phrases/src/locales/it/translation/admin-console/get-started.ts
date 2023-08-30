@@ -1,35 +1,39 @@
 const get_started = {
   page_title: 'Inizia',
-  progress: 'Guida per iniziare: {{completed}}/{{total}}',
-  progress_dropdown_title: 'Alcune cose che puoi fare...',
   title: 'Esplora per avere successo',
-  subtitle_part1: 'Alcune cose che puoi fare per ottenere rapidamente il valore di Logto',
-  subtitle_part2: 'Sono un professionista e ho completato tutti i passaggi.',
-  hide_this: 'Nascondi questo',
-  confirm_message:
-    'Sei sicuro di voler nascondere questa pagina? Questa azione non può essere annullata.',
-  check_preview_title: "Controlla l'anteprima dal vivo",
-  check_preview_subtitle: 'Prova subito Logto sign-in per vedere come funziona',
-  integration_title: 'Crea ed integra la tua applicazione',
-  integration_subtitle:
-    "Configura l'autenticazione di Logto per la tua applicazione nativa, single page, machine to machine o tradizionale",
-  custom_sie_title: "Personalizza l'esperienza di accesso",
-  custom_sie_subtitle: 'Sblocca una vasta gamma di scenari con le impostazioni avanzate',
-  passwordless_title: "Scala l'accesso senza password aggiungendo i tuoi connettori",
-  passwordless_subtitle:
-    "Prova l'accesso senza password e abilita un'esperienza sicura e priva di attriti per i tuoi clienti",
-  community_title: 'Unisciti alla nostra community su Discord',
-  community_subtitle: 'Entra nel nostro canale pubblico per parlare con altri sviluppatori',
-  management_api_title: 'Interagisci con la Management API',
-  management_api_subtitle:
-    'Collega direttamente il tuo sistema di autenticazione alla nostra Management API',
-  further_readings_title: 'Ulteriori letture',
-  further_readings_subtitle:
-    'Consulta la nostra documentazione passo-passo basata su scenari senza concetti noiosi',
-  add_rbac_title:
-    'Aggiungi il controllo degli accessi basati sui ruoli per proteggere le tue risorse',
-  add_rbac_subtitle:
-    "Controlla le tue risorse attraverso l'autorizzazione basata su ruoli scalabile per utilizzi diversi.",
+  subtitle: 'Alcune cose che puoi fare per ottenere rapidamente il valore di Logto',
+  develop: {
+    title: 'Sviluppa: Dedica 5 minuti per integrare la tua app',
+  },
+  customize: {
+    title: "Personalizza: Offri un'ottima esperienza di accesso",
+    preview: {
+      title:
+        "Controlla l'anteprima in tempo reale dell'esperienza di accesso appena personalizzata",
+      subtitle: "Prova subito l'esperienza di accesso a Logto per vedere come funziona",
+    },
+    connector: {
+      title: 'Aggiungi più connettori per supportare più metodi di accesso sociali',
+      subtitle:
+        "Prova l'accesso senza password e abilita un'esperienza sicura e senza attriti per i tuoi clienti",
+    },
+    continue_customizing: 'Continua la personalizzazione',
+    try_now: 'Prova ora',
+    add_more: 'Aggiungi altro',
+  },
+  secure: {
+    title: 'Sicurezza: Proteggi le tue risorse',
+  },
+  manage: {
+    title: 'Gestisci: Definisci il controllo di accesso per il tuo prodotto e gli utenti',
+    rbac: {
+      title: 'Aggiungi il controllo degli accessi basato sui ruoli per proteggere le tue risorse',
+      subtitle:
+        "Controlla le tue risorse attraverso l'autorizzazione basata sui ruoli scalabile per casi d'uso diversi.",
+    },
+    create_roles: 'Crea ruoli',
+  },
+  view_all: 'Visualizza tutto →',
 };
 
 export default Object.freeze(get_started);

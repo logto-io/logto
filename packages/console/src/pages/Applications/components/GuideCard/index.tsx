@@ -72,7 +72,9 @@ function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
             <div className={styles.name}>{name}</div>
             {isSubscriptionRequired && <ProTag />}
           </div>
-          <div className={styles.description}>{description}</div>
+          <div className={styles.description} title={description}>
+            {description}
+          </div>
         </div>
       </div>
       {!isCompact && (

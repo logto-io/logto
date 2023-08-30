@@ -1,33 +1,36 @@
 const get_started = {
   page_title: 'はじめに',
-  progress: 'はじめにガイド：{{completed}}/{{total}}',
-  progress_dropdown_title: 'できることは何かあるかな？',
   title: 'あなたの成功を手助けする探索',
-  subtitle_part1: 'すばやくLogtoの価値を得るには、いくつかのことができます',
-  subtitle_part2: '私はプロであり、すべてのステップを完了しました。 ',
-  hide_this: 'これを隠す',
-  confirm_message: 'このページを隠すことを確認しますか？この操作は取り消せません。',
-  check_preview_title: 'ライブプレビューを確認してください',
-  check_preview_subtitle:
-    'Logtoのサインインエクスペリエンスを今すぐ試して、どのように機能するかを確認してください',
-  integration_title: 'アプリケーションの作成と統合',
-  integration_subtitle:
-    'ネイティブ、シングルページ、機械間、または従来のアプリケーションにLogto認証を設定してください',
-  custom_sie_title: 'サインインエクスペリエンスをカスタマイズする',
-  custom_sie_subtitle: '高度な設定で、さまざまなシナリオを解除する',
-  passwordless_title: 'コネクタを追加して、パスワードなしのサインインをスケーリングする',
-  passwordless_subtitle:
-    'パスワードなしでサインインを試し、お客様に安全で摩擦の少ないエクスペリエンスを提供してください。',
-  community_title: 'ディスコードコミュニティに参加する',
-  community_subtitle: '他の開発者とチャットするためのパブリックチャンネルに参加してください。',
-  management_api_title: 'Management APIとのやり取り',
-  management_api_subtitle: '認証システムを直接管理APIに接続してください。',
-  further_readings_title: 'さらなる読書',
-  further_readings_subtitle:
-    '面倒な概念なしで、ステップバイステップ、シナリオベースのドキュメントをチェックしてください。',
-  add_rbac_title: 'ロールベースのアクセス制御を追加して、リソースを保護する',
-  add_rbac_subtitle:
-    '多様なユースケースに対応するスケーラブルなロール承認により、リソースを制御します。',
+  subtitle: 'Logtoの価値を迅速に把握するための数つの方法',
+  develop: {
+    title: 'Develop: 5分の時間を使ってアプリを統合してみましょう',
+  },
+  customize: {
+    title: 'Customize: 素晴らしいサインイン体験を提供する',
+    preview: {
+      title: 'あなたがカスタマイズしたサインイン体験のライブプレビューをチェックしましょう',
+      subtitle: 'Logtoのサインイン体験を試して、その使い方を確認してください',
+    },
+    connector: {
+      title: 'さらなるコネクタを追加して、さまざまなソーシャルサインイン方式をサポートしましょう',
+      subtitle: 'パスワードレスサインインを試して、顧客に安全かつ摩擦のない体験を提供しましょう',
+    },
+    continue_customizing: 'カスタマイズを続ける',
+    try_now: '今すぐ試す',
+    add_more: 'もっと追加する',
+  },
+  secure: {
+    title: 'Secure: リソースを保護する',
+  },
+  manage: {
+    title: 'Manage: 製品とユーザーのアクセス制御を定義する',
+    rbac: {
+      title: 'ロールベースのアクセス制御を追加して、リソースを保護する',
+      subtitle: '多様なユースケースに対してスケーラブルなロールの認可によりリソースを制御します',
+    },
+    create_roles: 'ロールを作成する',
+  },
+  view_all: 'すべての内容を表示 →',
 };
 
 export default Object.freeze(get_started);

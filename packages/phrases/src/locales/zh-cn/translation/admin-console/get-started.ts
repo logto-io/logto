@@ -1,28 +1,36 @@
 const get_started = {
   page_title: '开始上手',
-  progress: '开始上手: {{completed}}/{{total}}',
-  progress_dropdown_title: '一些快速上手的操作',
   title: '成功开发身份方案，我们先来探索一番',
-  subtitle_part1: '下列是一些可以快速上手的操作，通过这些，你可以更好地感受 Logto 的价值',
-  subtitle_part2: '我已经完成了这些设置。',
-  hide_this: '隐藏引导',
-  confirm_message: '你确认要隐藏该页面吗? 本操作将无法恢复。',
-  check_preview_title: '查看实时预览',
-  check_preview_subtitle: '来体验 Logto 登录吧',
-  integration_title: '创建和集成你的应用程序',
-  integration_subtitle: '为你的本地、单页、机器对机器或传统应用程序设置 Logto 身份验证',
-  custom_sie_title: '自定义登录体验',
-  custom_sie_subtitle: '使用高级设置解锁各种场景',
-  passwordless_title: '通过添加自己的连接器来扩展无密码登录',
-  passwordless_subtitle: '尝试无密码登录，并为你的客户提供安全和无摩擦的体验',
-  community_title: '加入我们的 Discord 社区',
-  community_subtitle: '加入我们的公共频道与其他开发人员交流',
-  management_api_title: '与管理 API 交互',
-  management_api_subtitle: '直接将你的身份验证系统连接到我们的管理 API',
-  further_readings_title: '进一步阅读',
-  further_readings_subtitle: '查看我们的逐步、基于场景的文档，避免繁琐的概念',
-  add_rbac_title: '添加基于角色的访问控制以保护你的资源',
-  add_rbac_subtitle: '通过可扩展的角色授权控制你的资源，以适应各种用例。',
+  subtitle: '一些你可以做的事情，以快速获取 Logto 的价值',
+  develop: {
+    title: '开发：花 5 分钟集成你的应用',
+  },
+  customize: {
+    title: '自定义：提供出色的登录体验',
+    preview: {
+      title: '实时预览定制的登录体验',
+      subtitle: '立刻尝试 Logto 登录体验，看看它是如何工作的',
+    },
+    connector: {
+      title: '添加更多连接器来支持更多社交登录方式',
+      subtitle: '尝试免密码登录，为您的客户提供安全、无摩擦的体验',
+    },
+    continue_customizing: '继续定制',
+    try_now: '立即尝试',
+    add_more: '添加更多',
+  },
+  secure: {
+    title: '安全：保护你的资源',
+  },
+  manage: {
+    title: '管理：为你的产品和用户定义访问控制',
+    rbac: {
+      title: '为你的资源添加基于角色的访问控制',
+      subtitle: '通过可扩展的角色授权控制你的资源，应对不同的使用场景。',
+    },
+    create_roles: '创建角色',
+  },
+  view_all: '查看全部 →',
 };
 
 export default Object.freeze(get_started);
