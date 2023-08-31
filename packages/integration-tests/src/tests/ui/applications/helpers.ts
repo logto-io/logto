@@ -10,7 +10,20 @@ import {
 } from '#src/ui-helpers/index.js';
 import { expectNavigation } from '#src/utils.js';
 
-import { type ApplicationCase } from './application-test-cases.js';
+import { frameworkGroupLabels, type ApplicationCase } from './constants.js';
+
+export const expectFrameworksInGroup = async (page: Page, groupSelector: string) => {
+  /* eslint-disable no-await-in-loop */
+  for (const groupLabel of frameworkGroupLabels) {
+    const frameGroup = await expect(page).toMatchElement(groupSelector, {
+      text: groupLabel,
+    });
+
+    const frameworks = await frameGroup.$$('div[class$=grid] div[class*=card]');
+    expect(frameworks.length).toBeGreaterThan(0);
+  }
+  /* eslint-enable no-await-in-loop */
+};
 
 export const expectToClickFramework = async (page: Page, framework: string) => {
   const frameworkCard = await expect(page).toMatchElement(
@@ -54,43 +67,37 @@ export const expectToProceedSdkGuide = async (
 
   expect(page.url()).toContain(`/guide/${guideFilename}`);
 
-  if (sample) {
-    await expect(page).toClick('.ReactModalPortal aside[class$=sample] a span', {
-      text: 'Check out sample',
-    });
+  await expect(page).toClick('.ReactModalPortal aside[class$=sample] a span', {
+    text: 'Check out sample',
+  });
 
-    await expectToOpenNewPage(
-      browser,
-      appendPath(new URL('https://github.com/logto-io'), sample.repo, 'tree/HEAD', sample.path).href
-    );
-  }
+  await expectToOpenNewPage(
+    browser,
+    appendPath(new URL('https://github.com/logto-io'), sample.repo, 'tree/HEAD', sample.path).href
+  );
 
   if (!skipFillForm) {
-    if (redirectUri) {
-      const redirectUriFieldWrapper = await expect(page).toMatchElement(
-        'div[class$=wrapper]:has(>div[class$=field]>div[class$=headline]>div[class$=title])',
-        { text: 'Redirect URI' }
-      );
+    const redirectUriFieldWrapper = await expect(page).toMatchElement(
+      'div[class$=wrapper]:has(>div[class$=field]>div[class$=headline]>div[class$=title])',
+      { text: 'Redirect URI' }
+    );
 
-      await expect(redirectUriFieldWrapper).toFill('input', redirectUri);
+    await expect(redirectUriFieldWrapper).toFill('input', redirectUri);
 
-      await expect(redirectUriFieldWrapper).toClick('button span', { text: 'Save' });
+    await expect(redirectUriFieldWrapper).toClick('button span', { text: 'Save' });
 
-      await waitForToast(page, { text: 'Saved' });
-    }
+    await waitForToast(page, { text: 'Saved' });
 
-    if (postSignOutRedirectUri) {
-      const postSignOutRedirectUriWrapper = await expect(page).toMatchElement(
-        'div[class$=wrapper]:has(>div[class$=field]>div[class$=headline]>div[class$=title])',
-        { text: 'Post Sign-out Redirect URI' }
-      );
+    const postSignOutRedirectUriWrapper = await expect(page).toMatchElement(
+      'div[class$=wrapper]:has(>div[class$=field]>div[class$=headline]>div[class$=title])',
+      { text: 'Post Sign-out Redirect URI' }
+    );
 
-      await expect(postSignOutRedirectUriWrapper).toFill('input', postSignOutRedirectUri);
+    await expect(postSignOutRedirectUriWrapper).toFill('input', postSignOutRedirectUri);
 
-      await expect(postSignOutRedirectUriWrapper).toClick('button span', { text: 'Save' });
+    await expect(postSignOutRedirectUriWrapper).toClick('button span', { text: 'Save' });
 
-      await waitForToast(page, { text: 'Saved' });
-    }
+    await waitForToast(page, { text: 'Saved' });
   }
 
   // Finish guide

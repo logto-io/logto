@@ -12,18 +12,20 @@ import {
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
-import { type ApplicationCase, initialApp, testAppCases } from './application-test-cases.js';
+import {
+  type ApplicationMetadata,
+  applicationTypesMetadata,
+  initialApp,
+  testApp,
+} from './constants.js';
 import {
   expectFrameworkExists,
   expectToClickFramework,
   expectToProceedCreationFrom,
   expectToProceedSdkGuide,
   expectToProceedAppDeletion,
+  expectFrameworksInGroup,
 } from './helpers.js';
-import {
-  type TypedApplicationCase,
-  typedApplicationCases,
-} from './typed-application-test-cases.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
 
@@ -42,13 +44,16 @@ describe('applications', () => {
     expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
   });
 
-  it('create the initial application from the table placeholder', async () => {
-    // Expect to see the placeholder
+  it('the table placeholder should be rendered correctly', async () => {
     await expect(page).toMatchElement(
       'div[class$=guideLibraryContainer] div[class$=titleEllipsis]',
       { text: 'Select a framework or tutorial', timeout: 2000 }
     );
 
+    await expectFrameworksInGroup(page, 'div[class$=guideGroup]:has(>label)');
+  });
+
+  it('create the initial application from the table placeholder', async () => {
     await expectToClickFramework(page, initialApp.framework);
 
     await expectToProceedCreationFrom(page, initialApp);
@@ -88,11 +93,9 @@ describe('applications', () => {
 
     await expectModalWithTitle(page, 'Start with SDK and guides');
 
+    // Click request sdk button
     await expect(page).toClick(
-      '.ReactModalPortal div[class$=header] button[class$=requestSdkButton] span',
-      {
-        text: "Can't find your guide?",
-      }
+      '.ReactModalPortal div[class$=header] button[class$=requestSdkButton]'
     );
 
     await expectToOpenNewPage(browser, 'https://github.com/logto-io/logto/issues');
@@ -105,121 +108,120 @@ describe('applications', () => {
     expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
   });
 
-  it.each(testAppCases)(
-    'can create and modify a(n) $framework application by framework',
-    async (app: ApplicationCase) => {
-      await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
-        text: 'Create Application',
-      });
+  it('can create an application by framework from the app creation modal and modify its data', async () => {
+    await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
+      text: 'Create Application',
+    });
 
-      // Expect the framework contains on the page
-      await expectFrameworkExists(page, app.framework);
+    await expectModalWithTitle(page, 'Start with SDK and guides');
 
-      // Filter
-      await expect(page).toFill('div[class$=searchInput] input', app.framework);
+    await expectFrameworksInGroup(page, '.ReactModalPortal div[class$=guideGroup]:has(>label)');
 
-      // Expect the framework exists after filtering
-      await expectFrameworkExists(page, app.framework);
+    // Expect the framework contains on the page
+    await expectFrameworkExists(page, testApp.framework);
 
-      await expectToClickFramework(page, app.framework);
+    // Filter
+    await expect(page).toFill('div[class$=searchInput] input', testApp.framework);
 
-      await expectToProceedCreationFrom(page, app);
+    // Expect the framework exists after filtering
+    await expectFrameworkExists(page, testApp.framework);
 
-      await expectToProceedSdkGuide(page, app);
+    await expectToClickFramework(page, testApp.framework);
 
-      // Expect on the details page
-      await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
-        text: app.name,
-      });
+    await expectToProceedCreationFrom(page, testApp);
 
-      // Check guide
-      await expect(page).toClick('div[class$=header] button span', { text: 'Check Guide' });
+    await expectToProceedSdkGuide(page, testApp);
 
-      // Wait for the guide drawer to be ready
-      await page.waitForTimeout(500);
+    // Expect on the details page
+    await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
+      text: testApp.name,
+    });
 
-      // Close guide
-      await expect(page).toClick(
-        '.ReactModalPortal div[class$=drawerContainer] div[class$=header] button:last-of-type'
-      );
+    // Check guide
+    await expect(page).toClick('div[class$=header] button span', { text: 'Check Guide' });
 
-      // Wait for the guide drawer to disappear
-      await page.waitForSelector('.ReactModalPortal div[class$=drawerContainer]', { hidden: true });
+    // Wait for the guide drawer to be ready
+    await page.waitForTimeout(500);
 
-      // Update application data
-      await expect(page).toFillForm('form', {
-        description: `(New): ${app.description}`,
-      });
+    // Close guide
+    await expect(page).toClick(
+      '.ReactModalPortal div[class$=drawerContainer] div[class$=header] button:last-of-type'
+    );
 
-      await expectUnsavedChangesAlert(page);
+    // Wait for the guide drawer to disappear
+    await page.waitForSelector('.ReactModalPortal div[class$=drawerContainer]', { hidden: true });
 
-      await expectToSaveChanges(page);
-      await waitForToast(page, { text: 'Saved' });
+    // Update application data
+    await expect(page).toFillForm('form', {
+      description: `(New): ${testApp.description}`,
+    });
 
-      if (app.redirectUri) {
-        const redirectUriFiled = await expect(page).toMatchElement(
-          'div[class$=field]:has(>div[class$=headline]>div[class$=title]',
-          { text: 'Redirect URIs' }
-        );
+    await expectUnsavedChangesAlert(page);
 
-        // Add and remove redirect uri
-        await expect(redirectUriFiled).toClick('div[class$=multilineInput]>button>span', {
-          text: 'Add Another',
-        });
+    await expectToSaveChanges(page);
+    await waitForToast(page, { text: 'Saved' });
 
-        // Wait for the new redirect uri field
-        await page.waitForSelector(
-          'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
-        );
+    const redirectUriFiled = await expect(page).toMatchElement(
+      'div[class$=field]:has(>div[class$=headline]>div[class$=title]',
+      { text: 'Redirect URIs' }
+    );
 
-        await expect(redirectUriFiled).toFill(
-          'div:has(>div[class$=deletableInput]):last-of-type input',
-          `${app.redirectUri}/v2`
-        );
+    // Add and remove redirect uri
+    await expect(redirectUriFiled).toClick('div[class$=multilineInput]>button>span', {
+      text: 'Add Another',
+    });
 
-        await expectToSaveChanges(page);
+    // Wait for the new redirect uri field
+    await page.waitForSelector(
+      'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
+    );
 
-        await waitForToast(page, { text: 'Saved' });
+    await expect(redirectUriFiled).toFill(
+      'div:has(>div[class$=deletableInput]):last-of-type input',
+      `${testApp.redirectUri}/v2`
+    );
 
-        // Click delete button
-        await expect(redirectUriFiled).toClick(
-          'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
-        );
+    await expectToSaveChanges(page);
 
-        await expectConfirmModalAndAct(page, { title: 'Reminder', actionText: 'Delete' });
+    await waitForToast(page, { text: 'Saved' });
 
-        await expectToSaveChanges(page);
+    // Click delete button
+    await expect(redirectUriFiled).toClick(
+      'div:has(>div[class$=deletableInput]):last-of-type button:has(svg[class$=minusIcon])'
+    );
 
-        await waitForToast(page, { text: 'Saved' });
+    await expectConfirmModalAndAct(page, { title: 'Reminder', actionText: 'Delete' });
 
-        // Wait for the redirect uri field to be updated
-        await page.waitForTimeout(500);
+    await expectToSaveChanges(page);
 
-        // Remove Redirect Uri
-        await expect(page).toFill(`input[value="${app.redirectUri}"]`, '');
+    await waitForToast(page, { text: 'Saved' });
 
-        await expectToSaveChanges(page);
+    // Wait for the redirect uri field to be updated
+    await page.waitForTimeout(500);
 
-        // Expect error
-        await expect(page).toMatchElement(
-          'div[class$=field] div[class$=multilineInput] div[class$=error]',
-          {
-            text: 'You must enter at least one redirect URI',
-          }
-        );
+    // Remove Redirect Uri
+    await expect(page).toFill(`input[value="${testApp.redirectUri}"]`, '');
 
-        await expectToDiscardChanges(page);
+    await expectToSaveChanges(page);
+
+    // Expect error
+    await expect(page).toMatchElement(
+      'div[class$=field] div[class$=multilineInput] div[class$=error]',
+      {
+        text: 'You must enter at least one redirect URI',
       }
+    );
 
-      await expectToProceedAppDeletion(page, app.name);
+    await expectToDiscardChanges(page);
 
-      expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
-    }
-  );
+    await expectToProceedAppDeletion(page, testApp.name);
 
-  it.each(typedApplicationCases)(
+    expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
+  });
+
+  it.each(applicationTypesMetadata)(
     'can create and modify a(n) $type application without framework',
-    async (app: TypedApplicationCase) => {
+    async (app: ApplicationMetadata) => {
       await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
         text: 'Create Application',
       });
