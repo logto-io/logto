@@ -7,6 +7,7 @@ import {
   goToAdminConsole,
   expectToSaveChanges,
   waitForToast,
+  expectModalWithTitle,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
@@ -53,12 +54,7 @@ describe('social connectors', () => {
       text: 'Add Social Connector',
     });
 
-    await expect(page).toMatchElement(
-      '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
-      {
-        text: 'Add Social Connector',
-      }
-    );
+    await expectModalWithTitle(page, 'Add Social Connector');
 
     // Close modal
     await page.keyboard.press('Escape');

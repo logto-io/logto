@@ -4,6 +4,8 @@ import {
   expectToSaveChanges,
   waitForToast,
   expectToDiscardChanges,
+  expectModalWithTitle,
+  expectToClickModalAction,
 } from '#src/ui-helpers/index.js';
 import {
   appendPathname,
@@ -44,14 +46,10 @@ describe('user management', () => {
     });
     await expect(page).toClick('button[type=submit]');
     await page.waitForSelector('div[class$=infoLine');
-    await expect(page).toMatchElement(
-      '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
-      {
-        text: 'This user has been successfully created',
-      }
-    );
+    await expectModalWithTitle(page, 'This user has been successfully created');
+
     // Go to user details page
-    await expect(page).toClick('div.ReactModalPortal div[class$=footer] button:first-of-type');
+    await expectToClickModalAction(page, 'Check user detail');
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: 'jdoe@gmail.com',
     });
@@ -131,7 +129,7 @@ describe('user management', () => {
     await page.waitForSelector('div[class$=infoLine');
 
     // Go to the user details page
-    await expect(page).toClick('div.ReactModalPortal div[class$=footer] button:nth-of-type(1)');
+    await expectToClickModalAction(page, 'Check user detail');
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: username,
     });
@@ -183,7 +181,7 @@ describe('user management', () => {
     await expect(page).toMatchElement('.ReactModalPortal div[class$=medium] div[class$=content]', {
       text: 'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
     });
-    await expect(page).toClick('div.ReactModalPortal div[class$=footer] button:nth-of-type(2)');
+    await expectToClickModalAction(page, 'Confirm');
     // After all identifiers, top userinfo card shows 'Unnamed' as the title
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: 'Unnamed',

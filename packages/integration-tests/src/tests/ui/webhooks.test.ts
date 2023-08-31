@@ -1,5 +1,13 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, expectToSaveChanges, waitForToast } from '#src/ui-helpers/index.js';
+import {
+  goToAdminConsole,
+  expectToSaveChanges,
+  waitForToast,
+  expectToClickModalAction,
+  expectToClickDetailsPageOption,
+  expectModalWithTitle,
+  expectConfirmModalAndAct,
+} from '#src/ui-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });
@@ -93,38 +101,28 @@ describe('webhooks', () => {
     await createWebhookFromWebhooksPage();
 
     // Disable webhook
-    await expect(page).toClick('div[class$=header] >div:nth-of-type(2) button');
-    // Wait for the menu to be opened
-    await page.waitForTimeout(500);
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]:nth-of-type(1)'
-    );
+    await expectToClickDetailsPageOption(page, 'Disable webhook');
+    await expectModalWithTitle(page, 'Reminder');
     await expect(page).toMatchElement('.ReactModalPortal div[class$=content] div[class$=content]', {
       text: 'Are you sure you want to reactivate this webhook? Doing so will not send HTTP request to endpoint URL.',
     });
-    await expect(page).toClick('.ReactModalPortal div[class$=footer] button:last-of-type');
-    // Wait for the state to be updated
-    await page.waitForTimeout(500);
+    await expectToClickModalAction(page, 'Disable webhook');
+
     await expect(page).toMatchElement(
       'div[class$=header] div[class$=metadata] div:nth-of-type(2) div[class$=outlined] div:nth-of-type(2)',
       {
         text: 'Not in use',
+        timeout: 1000,
       }
     );
 
-    // Enable webhook
-    await expect(page).toClick('div[class$=header] >div:nth-of-type(2) button');
-    // Wait for the menu to be opened
-    await page.waitForTimeout(500);
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]:nth-of-type(1)'
-    );
-    // Wait for the state to be updated
-    await page.waitForTimeout(500);
-    const stateDiv = await page.waitForSelector(
+    // Reactivate webhook
+    await expectToClickDetailsPageOption(page, 'Reactivate webhook');
+
+    // Wait for the active webhook state info to appear
+    await page.waitForSelector(
       'div[class$=header] div[class$=metadata] div:nth-of-type(2) div[class$=state]'
     );
-    expect(stateDiv).toBeTruthy();
   });
 
   it('can regenerate signing key for a webhook', async () => {
@@ -132,13 +130,11 @@ describe('webhooks', () => {
     await createWebhookFromWebhooksPage();
     await expect(page).toClick('button[class$=regenerateButton]');
 
-    await expect(page).toMatchElement(
-      '.ReactModalPortal div[class$=content] div[class$=titleEllipsis]',
-      {
-        text: 'Regenerate signing key',
-      }
-    );
-    await expect(page).toClick('.ReactModalPortal div[class$=footer] button:last-of-type');
+    await expectConfirmModalAndAct(page, {
+      title: 'Regenerate signing key',
+      actionText: 'Regenerate',
+    });
+
     await waitForToast(page, { text: 'Signing key has been regenerated.' });
   });
 });
