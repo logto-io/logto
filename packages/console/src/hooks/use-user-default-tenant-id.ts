@@ -1,6 +1,6 @@
 import { defaultTenantId as ossDefaultTenantId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { z } from 'zod';
 
 import { isCloud } from '@/consts/env';
@@ -24,8 +24,6 @@ const useUserDefaultTenantId = () => {
     () => trySafe(() => z.object({ [key]: z.string() }).parse(data)[key]),
     [data]
   );
-  /** The last tenant ID that has been updated in the user's `customData`. */
-  const [updatedTenantId, setUpdatedTenantId] = useState(storedId);
 
   const defaultTenantId = useMemo(() => {
     // Directly return the default tenant ID for OSS because it's single tenant.
@@ -42,31 +40,26 @@ const useUserDefaultTenantId = () => {
     return tenants[0]?.id;
   }, [storedId, tenants]);
 
-  const updateIfNeeded = useCallback(async () => {
-    // No need for updating for OSS because it's single tenant.
-    if (!isCloud) {
-      return;
-    }
+  const updateDefaultTenantId = useCallback(
+    async (tenantId: string) => {
+      // No need for updating for OSS because it's single tenant.
+      if (!isCloud) {
+        return;
+      }
 
-    // Note storedId is not checked here because it's by design that the default tenant ID
-    // should be updated only when the user manually changes the current tenant. That is,
-    // if the user opens a new tab and go back to the original tab, the default tenant ID
-    // should still be the ID of the new tab.
-    if (currentTenantId !== updatedTenantId) {
-      setUpdatedTenantId(currentTenantId);
       await updateMeCustomData({
-        [key]: currentTenantId,
+        [key]: tenantId,
       });
-    }
-  }, [currentTenantId, updateMeCustomData, updatedTenantId]);
+    },
+    [updateMeCustomData]
+  );
 
   return useMemo(
     () => ({
       defaultTenantId,
-      /** Update the default tenant ID to the current tenant ID. */
-      updateIfNeeded,
+      updateDefaultTenantId,
     }),
-    [defaultTenantId, updateIfNeeded]
+    [defaultTenantId, updateDefaultTenantId]
   );
 };
 

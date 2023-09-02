@@ -9,6 +9,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown from '@/ds-components/Dropdown';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantDropdownItem from './TenantDropdownItem';
@@ -28,6 +29,7 @@ export default function TenantSelector() {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showCreateTenantModal, setShowCreateTenantModal] = useState(false);
+  const { updateDefaultTenantId } = useUserDefaultTenantId();
 
   if (tenants.length === 0 || !currentTenantInfo) {
     return null;
@@ -69,6 +71,7 @@ export default function TenantSelector() {
               isSelected={tenantData.id === currentTenantId}
               onClick={() => {
                 navigateTenant(tenantData.id);
+                void updateDefaultTenantId(tenantData.id);
                 setShowDropdown(false);
               }}
             />
