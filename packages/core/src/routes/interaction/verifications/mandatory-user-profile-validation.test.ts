@@ -1,3 +1,6 @@
+import crypto from 'node:crypto';
+
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import { InteractionEvent, MissingProfile, SignInIdentifier } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
@@ -32,6 +35,10 @@ describe('validateMandatoryUserProfile', () => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: {} as Awaited<ReturnType<Provider['interactionDetails']>>,
     signInExperience: mockSignInExperience,
+    passwordPolicyChecker: new PasswordPolicyChecker(
+      mockSignInExperience.passwordPolicy,
+      crypto.subtle
+    ),
   };
 
   const interaction: IdentifierVerifiedInteractionResult = {
@@ -274,7 +281,7 @@ describe('validateMandatoryUserProfile', () => {
     });
   });
 
-  describe('email or Phone required', () => {
+  describe('email or phone required', () => {
     const ctx = {
       ...baseCtx,
       signInExperience: {

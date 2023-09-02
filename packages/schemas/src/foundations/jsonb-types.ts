@@ -1,5 +1,6 @@
-import { hexColorRegEx } from '@logto/core-kit';
+import { type PasswordPolicy, hexColorRegEx, passwordPolicyGuard } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
+import { type DeepPartial } from '@silverhand/essentials';
 import type { Json } from '@withtyped/server';
 import { z } from 'zod';
 
@@ -203,6 +204,10 @@ export const logContextPayloadGuard = z
     sessionId: z.string().optional(),
   })
   .catchall(z.unknown());
+
+export type PartialPasswordPolicy = DeepPartial<PasswordPolicy>;
+
+export const partialPasswordPolicyGuard = passwordPolicyGuard.deepPartial();
 
 /**
  * The basic log context type. It's more about a type hint instead of forcing the log shape.

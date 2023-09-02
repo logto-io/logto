@@ -33,8 +33,9 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
+    "@logto/core-kit": "workspace:^2.0.1",
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.5.0"
+    "@silverhand/essentials": "^2.8.4"
   },
   "peerDependencies": {
     "zod": "^3.20.2"

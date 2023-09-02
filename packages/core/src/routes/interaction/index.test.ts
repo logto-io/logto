@@ -76,6 +76,10 @@ const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
   })
 );
 
+const { validatePassword } = await mockEsmWithActual('./utils/validate-password.js', () => ({
+  validatePassword: jest.fn(),
+}));
+
 const { createLog, prependAllLogEntries } = createMockLogContext();
 
 await mockEsmWithActual(
@@ -151,6 +155,7 @@ describe('interaction routes', () => {
       expect(verifyIdentifierSettings).toBeCalled();
       expect(verifyProfileSettings).toBeCalled();
       expect(verifyIdentifierPayload).toBeCalled();
+      expect(validatePassword).toBeCalled();
       expect(storeInteractionResult).toBeCalled();
       expect(response.status).toEqual(204);
     });

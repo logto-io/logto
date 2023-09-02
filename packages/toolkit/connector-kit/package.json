@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.5.0",
+    "@silverhand/essentials": "^2.8.4",
     "@withtyped/client": "^0.7.22"
   },
   "optionalDependencies": {

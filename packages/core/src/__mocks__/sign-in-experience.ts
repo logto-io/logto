@@ -91,4 +91,5 @@ export const mockSignInExperience: SignInExperience = {
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
   customContent: {},
+  passwordPolicy: {},
 };

@@ -20,6 +20,7 @@ import {
   ZodString,
   ZodUnion,
   ZodUnknown,
+  ZodDefault,
 } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -264,6 +265,14 @@ export const zodTypeToSwagger = (
         description: 'Validator function',
       };
     }
+  }
+
+  if (config instanceof ZodDefault) {
+    return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      default: config._def.defaultValue(),
+      ...zodTypeToSwagger(config._def.innerType),
+    };
   }
 
   throw new RequestError('swagger.invalid_zod_type', config);

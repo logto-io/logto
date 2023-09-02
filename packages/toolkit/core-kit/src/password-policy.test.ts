@@ -25,7 +25,7 @@ describe('PasswordPolicyChecker', () => {
   it('should reject malformed policy', () => {
     expect(() => {
       // @ts-expect-error
-      return new PasswordPolicyChecker({ length: { min: 1, max: 2 } });
+      return new PasswordPolicyChecker({ length: { min: 1, max: '2' } });
     }).toThrowError(ZodError);
   });
 });
@@ -39,35 +39,37 @@ describe('PasswordPolicyChecker -> check()', () => {
     rejects: {
       pwned: true,
       repetitionAndSequence: true,
-      words: [{ type: 'custom', value: 'test' }],
+      personalInfo: true,
+      words: ['test', 'aaaa'],
     },
   });
 
   it('should accept valid password', async () => {
-    expect(await checker.check('aL1!aL1!')).toEqual([]);
+    expect(await checker.check('aL1!aL1!', {})).toEqual([]);
   });
 
   it('should reject with all failed checks', async () => {
-    expect(await checker.check('aaa')).toEqual([
-      { code: 'password_rejected.too_short' },
+    expect(await checker.check('aaa', {})).toEqual([
+      { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.character_types', interpolation: { min: 2 } },
       { code: 'password_rejected.repetition' },
     ]);
 
-    expect(await checker.check('123456')).toEqual([
-      { code: 'password_rejected.too_short' },
+    expect(await checker.check('123456', { phoneNumber: '12345' })).toEqual([
+      { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.character_types', interpolation: { min: 2 } },
-      { code: 'password_rejected.pwned' },
       { code: 'password_rejected.sequence' },
+      { code: 'password_rejected.pwned' },
+      { code: 'password_rejected.personal_info' },
     ]);
 
-    expect(await checker.check('aaaaaatest😀')).toEqual([
-      { code: 'password_rejected.too_long' },
+    expect(await checker.check('aaaaaatest😀', {})).toEqual([
+      { code: 'password_rejected.too_long', interpolation: { max: 8 } },
       { code: 'password_rejected.unsupported_characters' },
       { code: 'password_rejected.repetition' },
       {
         code: 'password_rejected.restricted_words',
-        interpolation: { type: 'custom', value: 'test' },
+        interpolation: { words: 'test\naaaa', count: 2 },
       },
     ]);
   });
@@ -77,12 +79,12 @@ describe('PasswordPolicyChecker -> checkCharTypes()', () => {
   const checker1 = new PasswordPolicyChecker({
     length: { min: 1, max: 256 },
     characterTypes: { min: 2 },
-    rejects: { pwned: false, repetitionAndSequence: false, words: [] },
+    rejects: { pwned: false, repetitionAndSequence: false, personalInfo: false, words: [] },
   });
   const checker2 = new PasswordPolicyChecker({
     length: { min: 1, max: 256 },
     characterTypes: { min: 4 },
-    rejects: { pwned: false, repetitionAndSequence: false, words: [] },
+    rejects: { pwned: false, repetitionAndSequence: false, personalInfo: false, words: [] },
   });
 
   it('should reject unsupported characters', () => {
@@ -106,7 +108,7 @@ describe('PasswordPolicyChecker -> hasBeenPwned()', () => {
   const checker = new PasswordPolicyChecker({
     length: { min: 1, max: 256 },
     characterTypes: { min: 2 },
-    rejects: { pwned: true, repetitionAndSequence: false, words: [] },
+    rejects: { pwned: true, repetitionAndSequence: false, personalInfo: false, words: [] },
   });
 
   mockPwnResponse();
@@ -139,6 +141,36 @@ describe('PasswordPolicyChecker -> hasRepetition()', () => {
   });
 });
 
+describe('PasswordPolicyChecker -> hasPersonalInfo()', () => {
+  const checker = new PasswordPolicyChecker({
+    rejects: { pwned: false, repetitionAndSequence: false, personalInfo: true, words: [] },
+  });
+
+  it('should reject password with name', () => {
+    expect(checker.hasPersonalInfo('test', { name: 'test' })).toBe(true);
+    expect(checker.hasPersonalInfo('test', { name: 'test2' })).toBe(false);
+    expect(checker.hasPersonalInfo('FOO', { name: 'Foo bar' })).toBe(true);
+    expect(checker.hasPersonalInfo('Foo', { name: 'bar fOo' })).toBe(true);
+  });
+
+  it('should reject password with username', () => {
+    expect(checker.hasPersonalInfo('123.456!test', { username: 'teST' })).toBe(true);
+    expect(checker.hasPersonalInfo('test', { username: 'test2' })).toBe(false);
+  });
+
+  it('should reject password with email', () => {
+    expect(checker.hasPersonalInfo('teST', { email: 'test@foo.com' })).toBe(true);
+    expect(checker.hasPersonalInfo('TEST', { email: 'test1@foo.com' })).toBe(false);
+    expect(checker.hasPersonalInfo('FOO', { email: 'test@foo.com' })).toBe(false);
+    expect(checker.hasPersonalInfo('Foo', { email: 'fOO@foo.com' })).toBe(true);
+  });
+
+  it('should reject password with phone number', () => {
+    expect(checker.hasPersonalInfo('teST1234567890.', { phoneNumber: '123456789' })).toBe(true);
+    expect(checker.hasPersonalInfo('TEST12345678', { phoneNumber: '123456789' })).toBe(false);
+  });
+});
+
 describe('PasswordPolicyChecker -> hasWords()', () => {
   const checker = new PasswordPolicyChecker({
     length: { min: 1, max: 256 },
@@ -146,25 +178,15 @@ describe('PasswordPolicyChecker -> hasWords()', () => {
     rejects: {
       pwned: false,
       repetitionAndSequence: false,
-      words: [
-        { type: 'custom', value: 'test' },
-        { type: 'custom', value: 'teSt2' },
-        { type: 'personal', value: 'TesT3' },
-      ],
+      personalInfo: false,
+      words: ['test', 'teSt2', 'TesT3'],
     },
   });
 
   it('should reject password with blacklisted words (case insensitive)', () => {
-    expect(checker.hasWords('test')).toEqual([{ type: 'custom', value: 'test' }]);
-    expect(checker.hasWords('tEst2')).toEqual([
-      { type: 'custom', value: 'test' },
-      { type: 'custom', value: 'test2' },
-    ]);
-    expect(checker.hasWords('tEST TEst2 teSt3')).toEqual([
-      { type: 'custom', value: 'test' },
-      { type: 'custom', value: 'test2' },
-      { type: 'personal', value: 'test3' },
-    ]);
+    expect(checker.hasWords('test')).toEqual(['test']);
+    expect(checker.hasWords('tEst2')).toEqual(['test', 'test2']);
+    expect(checker.hasWords('tEST TEst2 teSt3')).toEqual(['test', 'test2', 'test3']);
   });
 
   it('should accept password without blacklisted words', () => {
@@ -177,7 +199,7 @@ describe('PasswordPolicyChecker -> hasSequentialChars()', () => {
   const checker = new PasswordPolicyChecker({
     length: { min: 1, max: 256 },
     characterTypes: { min: 2 },
-    rejects: { pwned: false, repetitionAndSequence: true, words: [] },
+    rejects: { pwned: false, repetitionAndSequence: true, personalInfo: false, words: [] },
   });
 
   it('should reject password with too many sequential characters', () => {
