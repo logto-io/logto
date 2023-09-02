@@ -10,7 +10,6 @@ import AppLoading from '@/components/AppLoading';
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 
 /**
  * The container that ensures the user has access to the current tenant. When the user is
@@ -47,7 +46,6 @@ export default function TenantAccess() {
   const { getAccessToken, signIn, isAuthenticated } = useLogto();
   const { currentTenant, currentTenantId, currentTenantStatus, setCurrentTenantStatus } =
     useContext(TenantsContext);
-  const { updateIfNeeded } = useUserDefaultTenantId();
   const { mutate } = useSWRConfig();
 
   // Clean the cache when the current tenant ID changes. This is required because the
@@ -103,13 +101,6 @@ export default function TenantAccess() {
     setCurrentTenantStatus,
     signIn,
   ]);
-
-  // Update the user's default tenant ID if the current tenant is validated.
-  useEffect(() => {
-    if (currentTenantStatus === 'validated') {
-      void updateIfNeeded();
-    }
-  }, [currentTenantStatus, updateIfNeeded]);
 
   return currentTenantStatus === 'validated' ? <Outlet /> : <AppLoading />;
 }
