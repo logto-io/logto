@@ -1,11 +1,11 @@
 import type { KeyboardEventHandler, KeyboardEvent } from 'react';
 
-type callbackHandler<T> = ((event: KeyboardEvent<T>) => void) | undefined;
+type CallbackHandler<T> = ((event: KeyboardEvent<T>) => void) | undefined;
 
-type callbackHandlerMap<T> = Record<string, callbackHandler<T>>;
+type CallbackHandlerMap<T> = Record<string, CallbackHandler<T>>;
 
 export const onKeyDownHandler =
-  <T = Element>(callback?: callbackHandler<T> | callbackHandlerMap<T>): KeyboardEventHandler<T> =>
+  <T = Element>(callback?: CallbackHandler<T> | CallbackHandlerMap<T>): KeyboardEventHandler<T> =>
   (event) => {
     const { key } = event;
 

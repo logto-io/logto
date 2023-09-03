@@ -10,7 +10,7 @@ import Checkbox from '@/ds-components/Checkbox/Checkbox';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TabWrapper from '@/ds-components/TabWrapper';
-import TextInput from '@/ds-components/TextInput';
+import NumericInput from '@/ds-components/TextInput/NumericInput';
 import Textarea from '@/ds-components/Textarea';
 
 import { type SignInExperienceForm } from '../../types';
@@ -62,7 +62,7 @@ function PasswordPolicy({ isActive }: Props) {
     getValues,
     formState: { errors },
   } = useFormContext<SignInExperienceForm>();
-  const maxPasswordLength = getValues('passwordPolicy.length.max');
+  const { max } = getValues('passwordPolicy.length');
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.sign_in_exp.password_policy',
   });
@@ -76,26 +76,40 @@ function PasswordPolicy({ isActive }: Props) {
         <div className={commonStyles.title}>{t('password_requirements')}</div>
         <FormField title="sign_in_exp.password_policy.minimum_length">
           <div className={commonStyles.formFieldDescription}>
-            {t('minimum_length_description', { max: maxPasswordLength })}
+            {t('minimum_length_description', { max })}
           </div>
           <Controller
             name="passwordPolicy.length.min"
             control={control}
             rules={{
               min: 1,
-              max: maxPasswordLength,
+              max,
             }}
             render={({ field: { onChange, value, name } }) => (
-              <TextInput
+              <NumericInput
+                className={styles.minLength}
                 name={name}
-                type="number"
                 value={String(value)}
+                min={1}
+                max={max}
                 error={
-                  errors.passwordPolicy?.length?.min &&
-                  t('minimum_length_error', { min: 1, max: maxPasswordLength })
+                  errors.passwordPolicy?.length?.min && t('minimum_length_error', { min: 1, max })
                 }
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   onChange(Number(event.target.value));
+                }}
+                onValueUp={() => {
+                  onChange(value + 1);
+                }}
+                onValueDown={() => {
+                  onChange(value - 1);
+                }}
+                onBlur={() => {
+                  if (value < 1) {
+                    onChange(1);
+                  } else if (value > max) {
+                    onChange(max);
+                  }
                 }}
               />
             )}

@@ -214,7 +214,10 @@ function SignInExperience() {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
-        <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
+        {/* Uncomment until all the changes are merged */}
+        {isCloud && (
+          <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
+        )}
       </TabNav>
       {data && defaultFormData && (
         <div className={styles.content}>
