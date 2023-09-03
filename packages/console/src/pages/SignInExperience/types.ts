@@ -1,3 +1,4 @@
+import { type PasswordPolicy } from '@logto/core-kit';
 import type { SignInExperience, SignInIdentifier, SignUp } from '@logto/schemas';
 
 export enum SignUpIdentifier {
@@ -12,9 +13,27 @@ export type SignUpForm = Omit<SignUp, 'identifiers'> & {
   identifier: SignUpIdentifier;
 };
 
-export type SignInExperienceForm = Omit<SignInExperience, 'signUp' | 'customCss'> & {
+export type SignInExperienceForm = Omit<
+  SignInExperience,
+  'signUp' | 'customCss' | 'passwordPolicy'
+> & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp?: SignUpForm;
+  /** The parsed password policy object. All properties are required. */
+  passwordPolicy: PasswordPolicy & {
+    /**
+     * The custom words separated by line breaks.
+     *
+     * This property is only used for UI display.
+     */
+    customWords: string;
+    /**
+     * Whether the custom words feature is enabled. Default value will be true if `rejects.words` is not empty.
+     *
+     * This property is only used for UI display.
+     */
+    isCustomWordsEnabled: boolean;
+  };
   createAccountEnabled: boolean;
 };
 

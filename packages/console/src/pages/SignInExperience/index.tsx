@@ -32,6 +32,7 @@ import usePreviewConfigs from './hooks/use-preview-configs';
 import * as styles from './index.module.scss';
 import Branding from './tabs/Branding';
 import Content from './tabs/Content';
+import PasswordPolicy from './tabs/PasswordPolicy';
 import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
 import {
@@ -46,6 +47,7 @@ export enum SignInExperienceTab {
   Branding = 'branding',
   SignUpAndSignIn = 'sign-up-and-sign-in',
   Content = 'content',
+  PasswordPolicy = 'password-policy',
 }
 
 const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
@@ -212,6 +214,7 @@ function SignInExperience() {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
+        <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
       </TabNav>
       {data && defaultFormData && (
         <div className={styles.content}>
@@ -221,6 +224,7 @@ function SignInExperience() {
                 <Branding isActive={tab === SignInExperienceTab.Branding} />
                 <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
                 <Content isActive={tab === SignInExperienceTab.Content} />
+                <PasswordPolicy isActive={tab === SignInExperienceTab.PasswordPolicy} />
               </form>
             </FormProvider>
             {formData.id && (

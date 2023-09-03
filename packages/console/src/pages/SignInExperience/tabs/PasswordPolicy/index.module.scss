@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.characterTypes {
+  display: flex;
+  gap: _.unit(6);
+}
+
+.passwordOption {
+  // Every password option should be put in a `<FormField>` component, a margin
+  // is added to the component to separate it from the previous one or the title.
+  margin-top: _.unit(3);
+  font: var(--font-body-2);
+
+  > div[role='checkbox'] {
+    align-items: flex-start;
+  }
+
+  .label {
+    white-space: normal;
+
+    .title {
+      color: var(--color-text);
+    }
+
+    .description {
+      color: var(--color-text-secondary);
+      margin-top: _.unit(0.5);
+    }
+
+    .textarea {
+      margin-top: _.unit(1);
+    }
+  }
+}

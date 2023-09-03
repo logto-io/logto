@@ -1,3 +1,4 @@
+import { passwordPolicyGuard } from '@logto/core-kit';
 import type { SignInExperience, SignUp } from '@logto/schemas';
 import { SignInMode, SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -32,7 +33,7 @@ export const signInExperienceParser = {
     };
   },
   toLocalForm: (signInExperience: SignInExperience): SignInExperienceForm => {
-    const { signUp, signInMode, customCss, branding } = signInExperience;
+    const { signUp, signInMode, customCss, branding, passwordPolicy } = signInExperience;
 
     return {
       ...signInExperience,
@@ -45,10 +46,23 @@ export const signInExperienceParser = {
         darkLogoUrl: branding.darkLogoUrl ?? '',
         favicon: branding.favicon ?? '',
       },
+      /** Parse password policy with default values. */
+      passwordPolicy: {
+        ...passwordPolicyGuard.parse(passwordPolicy),
+        customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
+        isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
+      },
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
-    const { branding, createAccountEnabled, signUp, customCss } = setup;
+    const {
+      branding,
+      createAccountEnabled,
+      signUp,
+      customCss,
+      /** Remove the custom words related properties since they are not used in the remote model. */
+      passwordPolicy: { isCustomWordsEnabled, customWords, ...passwordPolicy },
+    } = setup;
 
     return {
       ...setup,
@@ -68,6 +82,13 @@ export const signInExperienceParser = {
           },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
+      passwordPolicy: {
+        ...passwordPolicy,
+        rejects: {
+          ...passwordPolicy.rejects,
+          words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
+        },
+      },
     };
   },
 };

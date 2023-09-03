@@ -1,4 +1,5 @@
 import content from './content.js';
+import password_policy from './password-policy.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -10,6 +11,7 @@ const sign_in_exp = {
     branding: 'Image de marque',
     sign_up_and_sign_in: 'Inscription et connexion',
     content: 'Contenu',
+    password_policy: 'Password policy', // UNTRANSLATED
   },
   welcome: {
     title: "Personnaliser l'expérience de connexion",
@@ -54,6 +56,7 @@ const sign_in_exp = {
   },
   sign_up_and_sign_in,
   content,
+  password_policy,
   setup_warning: {
     no_connector_sms:
       'Aucun connecteur SMS n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connectors"',
