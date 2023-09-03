@@ -13,7 +13,6 @@ import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isCloud } from '@/consts/env';
-import { SignInExperiencePage } from '@/consts/page-tabs';
 import CardTitle from '@/ds-components/CardTitle';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -32,16 +31,24 @@ import Welcome from './components/Welcome';
 import usePreviewConfigs from './hooks/use-preview-configs';
 import * as styles from './index.module.scss';
 import Branding from './tabs/Branding';
-import Others from './tabs/Others';
+import Content from './tabs/Content';
 import SignUpAndSignIn from './tabs/SignUpAndSignIn';
 import type { SignInExperienceForm } from './types';
 import {
   hasSignUpAndSignInConfigChanged,
   getBrandingErrorCount,
-  getOthersErrorCount,
+  getContentErrorCount,
   getSignUpAndSignInErrorCount,
   signInExperienceParser,
 } from './utils/form';
+
+export enum SignInExperienceTab {
+  Branding = 'branding',
+  SignUpAndSignIn = 'sign-up-and-sign-in',
+  Content = 'content',
+}
+
+const PageTab = TabNavItem<`../${SignInExperienceTab}`>;
 
 type PageWrapperProps = {
   children: ReactNode;
@@ -193,33 +200,27 @@ function SignInExperience() {
   return (
     <PageWrapper>
       <TabNav className={styles.tabs}>
-        <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.BrandingTab}`}
-          errorCount={getBrandingErrorCount(errors)}
-        >
+        <PageTab href="../branding" errorCount={getBrandingErrorCount(errors)}>
           {t('sign_in_exp.tabs.branding')}
-        </TabNavItem>
-        <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.SignUpAndSignInTab}`}
+        </PageTab>
+        <PageTab
+          href="../sign-up-and-sign-in"
           errorCount={getSignUpAndSignInErrorCount(errors, formData)}
         >
           {t('sign_in_exp.tabs.sign_up_and_sign_in')}
-        </TabNavItem>
-        <TabNavItem
-          href={`/sign-in-experience/${SignInExperiencePage.OthersTab}`}
-          errorCount={getOthersErrorCount(errors)}
-        >
-          {t('sign_in_exp.tabs.others')}
-        </TabNavItem>
+        </PageTab>
+        <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
+          {t('sign_in_exp.tabs.content')}
+        </PageTab>
       </TabNav>
       {data && defaultFormData && (
         <div className={styles.content}>
           <div className={classNames(styles.contentTop, isDirty && styles.withSubmitActionBar)}>
             <FormProvider {...methods}>
               <form className={styles.form}>
-                <Branding isActive={tab === SignInExperiencePage.BrandingTab} />
-                <SignUpAndSignIn isActive={tab === SignInExperiencePage.SignUpAndSignInTab} />
-                <Others isActive={tab === SignInExperiencePage.OthersTab} />
+                <Branding isActive={tab === SignInExperienceTab.Branding} />
+                <SignUpAndSignIn isActive={tab === SignInExperienceTab.SignUpAndSignIn} />
+                <Content isActive={tab === SignInExperienceTab.Content} />
               </form>
             </FormProvider>
             {formData.id && (

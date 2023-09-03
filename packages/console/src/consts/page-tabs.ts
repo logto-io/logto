@@ -18,12 +18,6 @@ export enum WebhookDetailsTabs {
   RecentRequests = 'recent-requests',
 }
 
-export enum SignInExperiencePage {
-  BrandingTab = 'branding',
-  SignUpAndSignInTab = 'sign-up-and-sign-in',
-  OthersTab = 'others',
-}
-
 export enum UserDetailsTabs {
   Settings = 'settings',
   Roles = 'roles',

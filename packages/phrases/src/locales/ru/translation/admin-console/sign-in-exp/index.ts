@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,7 +9,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'Брендирование',
     sign_up_and_sign_in: 'Регистрация и вход в систему',
-    others: 'Другое',
+    content: 'Содержание',
   },
   welcome: {
     title: 'Настройка входа в систему',
@@ -53,7 +53,7 @@ const sign_in_exp = {
       'Введите ваш пользовательский CSS, чтобы настроить стили для чего-угодно в соответствии с вашими требованиями. Выражайте свою креативность и выделяйте свой пользовательский интерфейс.',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'Еще не настроен коннектор SMS. Пока не завершено настройка, пользователи не смогут войти с помощью этого метода. <a>{{link}}</a> в «Коннекторах»',

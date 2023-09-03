@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,7 +9,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'Branding',
     sign_up_and_sign_in: 'Registro e inicio de sesión',
-    others: 'Otros',
+    content: 'Contenido',
   },
   welcome: {
     title: 'Personalice la experiencia de inicio de sesión',
@@ -53,7 +53,7 @@ const sign_in_exp = {
       'Ingrese su CSS personalizado para adaptar los estilos de cualquier cosa a sus especificaciones exactas. Expresa tu creatividad y haz que tu IU se destaque.',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'Aún no se ha configurado el conector SMS. Antes de completar la configuración, los usuarios no podrán iniciar sesión con este método. <a>{{link}}</a> en "Conectores"',

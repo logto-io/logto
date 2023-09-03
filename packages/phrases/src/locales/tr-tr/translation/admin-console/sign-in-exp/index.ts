@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,7 +9,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'Markalaşma',
     sign_up_and_sign_in: 'Kaydol ve Oturum Aç',
-    others: 'Diğerleri',
+    content: 'İçerik',
   },
   welcome: {
     title: 'Oturum açma deneyimini özelleştirin',
@@ -52,7 +52,7 @@ const sign_in_exp = {
       "Tam olarak istediğiniz gibi o herhangi bir şeyin stilini kişiselleştirmek için özel CSS'nizi girin. Yaratıcılığınızı ifade edin ve UI'ınızın dikkat çekmesini sağlayın.",
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'Henüz SMS konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',

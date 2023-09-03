@@ -14,11 +14,11 @@ function AuthenticationForm() {
 
   return (
     <Card>
-      <div className={styles.title}>{t('sign_in_exp.others.advanced_options.title')}</div>
-      <FormField title="sign_in_exp.others.advanced_options.enable_user_registration">
+      <div className={styles.title}>{t('sign_in_exp.content.advanced_options.title')}</div>
+      <FormField title="sign_in_exp.content.advanced_options.enable_user_registration">
         <Switch
           {...register('createAccountEnabled')}
-          label={t('sign_in_exp.others.advanced_options.enable_user_registration_description')}
+          label={t('sign_in_exp.content.advanced_options.enable_user_registration_description')}
         />
       </FormField>
     </Card>

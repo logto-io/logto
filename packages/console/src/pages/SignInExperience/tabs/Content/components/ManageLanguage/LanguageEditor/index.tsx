@@ -83,8 +83,8 @@ function LanguageEditorModal({ isOpen, onClose }: Props) {
       <Card className={styles.editor}>
         <div className={styles.header}>
           <CardTitle
-            title="sign_in_exp.others.manage_language.title"
-            subtitle="sign_in_exp.others.manage_language.subtitle"
+            title="sign_in_exp.content.manage_language.title"
+            subtitle="sign_in_exp.content.manage_language.subtitle"
           />
           <IconButton onClick={onCloseModal}>
             <Close />
@@ -104,7 +104,7 @@ function LanguageEditorModal({ isOpen, onClose }: Props) {
         }}
         onConfirm={onConfirmUnsavedChanges}
       >
-        {t('sign_in_exp.others.manage_language.unsaved_description')}
+        {t('sign_in_exp.content.manage_language.unsaved_description')}
       </ConfirmModal>
     </Modal>
   );

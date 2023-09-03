@@ -175,10 +175,10 @@ function LanguageDetails() {
         <div className={styles.languageInfo}>
           {uiLanguageNameMapping[selectedLanguage]}
           <span>{selectedLanguage}</span>
-          {isBuiltIn && <Tag>{t('sign_in_exp.others.manage_language.logto_provided')}</Tag>}
+          {isBuiltIn && <Tag>{t('sign_in_exp.content.manage_language.logto_provided')}</Tag>}
         </div>
         {!isBuiltIn && (
-          <Tooltip content={t('sign_in_exp.others.manage_language.deletion_tip')}>
+          <Tooltip content={t('sign_in_exp.content.manage_language.deletion_tip')}>
             <IconButton
               onClick={() => {
                 setIsDeletionAlertOpen(true);
@@ -208,13 +208,13 @@ function LanguageDetails() {
           }))}
           columns={[
             {
-              title: t('sign_in_exp.others.manage_language.key'),
+              title: t('sign_in_exp.content.manage_language.key'),
               dataIndex: 'phraseKey',
               render: ({ phraseKey }) => phraseKey,
               className: styles.sectionDataKey,
             },
             {
-              title: t('sign_in_exp.others.manage_language.logto_source_values'),
+              title: t('sign_in_exp.content.manage_language.logto_source_values'),
               dataIndex: 'sourceValue',
               render: ({ sourceValue }) => (
                 <div className={styles.sectionBuiltInText}>{sourceValue}</div>
@@ -223,10 +223,10 @@ function LanguageDetails() {
             {
               title: (
                 <span className={styles.customValuesColumn}>
-                  {t('sign_in_exp.others.manage_language.custom_values')}
+                  {t('sign_in_exp.content.manage_language.custom_values')}
                   <Tooltip
                     anchorClassName={styles.clearButton}
-                    content={t('sign_in_exp.others.manage_language.clear_all_tip')}
+                    content={t('sign_in_exp.content.manage_language.clear_all_tip')}
                   >
                     <IconButton
                       size="small"
@@ -265,8 +265,8 @@ function LanguageDetails() {
         isOpen={isDeletionAlertOpen}
         title={
           isDefaultLanguage
-            ? 'sign_in_exp.others.manage_language.default_language_deletion_title'
-            : 'sign_in_exp.others.manage_language.deletion_title'
+            ? 'sign_in_exp.content.manage_language.default_language_deletion_title'
+            : 'sign_in_exp.content.manage_language.deletion_title'
         }
         confirmButtonText={isDefaultLanguage ? 'general.got_it' : 'general.delete'}
         confirmButtonType={isDefaultLanguage ? 'primary' : 'danger'}
@@ -276,10 +276,10 @@ function LanguageDetails() {
         onConfirm={onConfirmDeletion}
       >
         {isDefaultLanguage
-          ? t('sign_in_exp.others.manage_language.default_language_deletion_description', {
+          ? t('sign_in_exp.content.manage_language.default_language_deletion_description', {
               language: uiLanguageNameMapping[selectedLanguage],
             })
-          : t('sign_in_exp.others.manage_language.deletion_description')}
+          : t('sign_in_exp.content.manage_language.deletion_description')}
       </ConfirmModal>
     </div>
   );

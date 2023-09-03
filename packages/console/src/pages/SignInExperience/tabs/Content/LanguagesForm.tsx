@@ -47,17 +47,17 @@ function LanguagesForm({ isManageLanguageVisible = false }: Props) {
 
   return (
     <Card>
-      <div className={styles.title}>{t('sign_in_exp.others.languages.title')}</div>
-      <FormField title="sign_in_exp.others.languages.enable_auto_detect">
+      <div className={styles.title}>{t('sign_in_exp.content.languages.title')}</div>
+      <FormField title="sign_in_exp.content.languages.enable_auto_detect">
         <Switch
           {...register('languageInfo.autoDetect')}
-          label={t('sign_in_exp.others.languages.description')}
+          label={t('sign_in_exp.content.languages.description')}
         />
         {isManageLanguageVisible && (
           <ManageLanguageButton className={styles.manageLanguageButton} />
         )}
       </FormField>
-      <FormField title="sign_in_exp.others.languages.default_language">
+      <FormField title="sign_in_exp.content.languages.default_language">
         <Controller
           name="languageInfo.fallbackLanguage"
           control={control}
@@ -67,8 +67,8 @@ function LanguagesForm({ isManageLanguageVisible = false }: Props) {
         />
         <div className={styles.defaultLanguageDescription}>
           {isAutoDetect
-            ? t('sign_in_exp.others.languages.default_language_description_auto')
-            : t('sign_in_exp.others.languages.default_language_description_fixed')}
+            ? t('sign_in_exp.content.languages.default_language_description_auto')
+            : t('sign_in_exp.content.languages.default_language_description_fixed')}
         </div>
       </FormField>
     </Card>

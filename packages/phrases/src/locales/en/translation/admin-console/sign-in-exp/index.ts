@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -8,7 +8,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'Branding',
     sign_up_and_sign_in: 'Sign-up and Sign-in',
-    others: 'Others',
+    content: 'Content',
   },
   welcome: {
     title: 'Customize sign-in experience',
@@ -51,7 +51,7 @@ const sign_in_exp = {
       'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'No SMS connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',

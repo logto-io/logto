@@ -65,8 +65,20 @@ function useTenantPathname(): TenantPathname {
   const href = useHref('/');
 
   const match = useCallback(
-    (pathname: string, exact = false) =>
-      matchPath(joinPath(':tenantId', pathname, exact ? '' : '*'), location.pathname) !== null,
+    (pathname: string, exact = false) => {
+      // Match relative pathnames directly
+      if (pathname.startsWith('.')) {
+        return (
+          matchPath(joinPath(location.pathname, pathname, exact ? '' : '*'), location.pathname) !==
+          null
+        );
+      }
+
+      // Match absolute pathnames with the tenant segment
+      return (
+        matchPath(joinPath(':tenantId', pathname, exact ? '' : '*'), location.pathname) !== null
+      );
+    },
     [location.pathname]
   );
 

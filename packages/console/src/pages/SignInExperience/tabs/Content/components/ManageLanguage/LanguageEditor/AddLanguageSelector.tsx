@@ -80,7 +80,7 @@ function AddLanguageSelector({ options, onSelect }: Props) {
           <Button
             className={style.addLanguageButton}
             icon={<Plus className={style.buttonIcon} />}
-            title="sign_in_exp.others.manage_language.add_language"
+            title="sign_in_exp.content.manage_language.add_language"
             type="default"
             size="medium"
             onClick={() => {
