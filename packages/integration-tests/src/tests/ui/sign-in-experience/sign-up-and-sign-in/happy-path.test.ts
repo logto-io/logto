@@ -556,8 +556,8 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
   });
 
   describe('disable user registration', () => {
-    it('navigate to others tab', async () => {
-      await expectToClickNavTab(page, 'Others');
+    it('navigate to content tab', async () => {
+      await expectToClickNavTab(page, 'Content');
 
       await waitForFormCard(page, 'TERMS');
       await waitForFormCard(page, 'LANGUAGES');
