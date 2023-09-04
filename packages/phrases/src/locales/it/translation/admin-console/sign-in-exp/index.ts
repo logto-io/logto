@@ -59,9 +59,7 @@ const sign_in_exp = {
     no_connector_email:
       'Nessun connettore email ancora configurato. Prima di completare la configurazione, gli utenti non saranno in grado di accedere con questo metodo. <a>{{link}}</a> in "Connettori"',
     no_connector_social:
-      'Nessun connettore sociale ancora configurato. Prima di completare la configurazione, gli utenti non saranno in grado di accedere con questo metodo. <a>{{link}}</a> in "Connettori"',
-    no_added_social_connector:
-      'Hai configurato alcuni connettori sociali adesso. Assicurati di aggiungerne alcuni alla tua esperienza di accesso.',
+      'Non hai ancora configurato nessun connettore sociale. Aggiungi prima i connettori per applicare i metodi di accesso sociale. <a>{{link}}</a> in "Connettori".',
     setup_link: 'Configura',
   },
   save_alert: {

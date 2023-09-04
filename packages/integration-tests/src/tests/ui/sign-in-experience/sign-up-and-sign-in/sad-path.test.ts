@@ -166,7 +166,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
       it('should display no social connector notification in social sign-in field', async () => {
         await expectNotificationInFiled(page, {
           field: 'Social sign-in',
-          content: /No social connector set-up yet./,
+          content: /You haven’t set up any social connector yet./,
         });
       });
     });

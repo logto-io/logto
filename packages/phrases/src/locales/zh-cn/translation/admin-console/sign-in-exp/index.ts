@@ -56,8 +56,7 @@ const sign_in_exp = {
     no_connector_email:
       '尚未设置电子邮件连接器。在完成该配置前，用户将无法通过此登录方式登录。<a>{{link}}</a>连接器。',
     no_connector_social:
-      '尚未设置社交连接器。在完成该配置前，用户将无法通过此登录方式登录。<a>{{link}}</a>连接器。',
-    no_added_social_connector: '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
+      '您还没有设置任何社交连接器。首先添加连接器以应用社交登录方法。<a>{{link}}</a>连接器。',
     setup_link: '立即设置',
   },
   save_alert: {
