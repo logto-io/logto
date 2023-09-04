@@ -18,3 +18,10 @@
     margin: _.unit(6) 0 0 _.unit(2);
   }
 }
+
+/* Avoid using element selector directly in mdx components, as it will
+ * affect all elements in the entire admin console app.
+ */
+.form {
+  margin: _.unit(4) 0;
+}

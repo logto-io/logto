@@ -1,7 +1,8 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type { KeyboardEvent } from 'react';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ import {
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import { GuideContext } from '@/pages/Applications/components/Guide';
 import type { GuideForm } from '@/types/guide';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
@@ -24,13 +26,12 @@ import { uriValidator } from '@/utils/validator';
 import * as styles from './index.module.scss';
 
 type Props = {
-  appId: string;
   name: 'redirectUris' | 'postLogoutRedirectUris';
-  title: AdminConsoleKey;
-  isSingle?: boolean;
+  /** The default value of the input field when there's no data. */
+  defaultValue?: string;
 };
 
-function UriInputField({ appId, name, title, isSingle = false }: Props) {
+function UriInputField({ name, defaultValue }: Props) {
   const methods = useForm<Partial<GuideForm>>();
   const {
     control,
@@ -39,12 +40,20 @@ function UriInputField({ appId, name, title, isSingle = false }: Props) {
     reset,
     formState: { isSubmitting },
   } = methods;
-
+  const {
+    app: { id: appId },
+    isCompact,
+  } = useContext(GuideContext);
+  const isSingle = !isCompact;
   const { data, mutate } = useSWR<Application, RequestError>(`api/applications/${appId}`);
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
+  const title: AdminConsoleKey =
+    name === 'redirectUris'
+      ? 'application_details.redirect_uri'
+      : 'application_details.post_sign_out_redirect_uri';
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
     const updatedApp = await api
@@ -70,13 +79,18 @@ function UriInputField({ appId, name, title, isSingle = false }: Props) {
     }
   };
 
+  const clientMetadata = data?.oidcClientMetadata[name];
+  const defaultValueArray = clientMetadata?.length
+    ? clientMetadata
+    : conditional(defaultValue && [defaultValue]);
+
   return (
     <FormProvider {...methods}>
-      <form>
+      <form className={styles.form}>
         <Controller
           name={name}
           control={control}
-          defaultValue={data?.oidcClientMetadata[name]}
+          defaultValue={defaultValueArray}
           rules={{
             validate: createValidatorForRhf({
               required: t(
