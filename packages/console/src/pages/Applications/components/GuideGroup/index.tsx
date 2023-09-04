@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { type Ref, forwardRef } from 'react';
 
 import { type Guide } from '@/assets/docs/guides/types';
 
@@ -15,20 +16,16 @@ type GuideGroupProps = {
   onClickGuide: (data: SelectedGuide) => void;
 };
 
-function GuideGroup({
-  className,
-  categoryName,
-  guides,
-  hasCardBorder,
-  isCompact,
-  onClickGuide,
-}: GuideGroupProps) {
+function GuideGroup(
+  { className, categoryName, guides, hasCardBorder, isCompact, onClickGuide }: GuideGroupProps,
+  ref: Ref<HTMLDivElement>
+) {
   if (!guides?.length) {
     return null;
   }
 
   return (
-    <div className={classNames(styles.guideGroup, className)}>
+    <div ref={ref} className={classNames(styles.guideGroup, className)}>
       {categoryName && <label>{categoryName}</label>}
       <div className={styles.grid}>
         {guides.map((guide) => (
@@ -45,4 +42,4 @@ function GuideGroup({
   );
 }
 
-export default GuideGroup;
+export default forwardRef<HTMLDivElement, GuideGroupProps>(GuideGroup);
