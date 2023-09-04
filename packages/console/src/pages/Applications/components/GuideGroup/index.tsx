@@ -12,12 +12,12 @@ type GuideGroupProps = {
   categoryName?: string;
   guides?: readonly Guide[];
   hasCardBorder?: boolean;
-  isCompact?: boolean;
+  hasCardButton?: boolean;
   onClickGuide: (data: SelectedGuide) => void;
 };
 
 function GuideGroup(
-  { className, categoryName, guides, hasCardBorder, isCompact, onClickGuide }: GuideGroupProps,
+  { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: GuideGroupProps,
   ref: Ref<HTMLDivElement>
 ) {
   if (!guides?.length) {
@@ -31,8 +31,8 @@ function GuideGroup(
         {guides.map((guide) => (
           <GuideCard
             key={guide.id}
-            isCompact={isCompact}
             hasBorder={hasCardBorder}
+            hasButton={hasCardButton}
             data={guide}
             onClick={onClickGuide}
           />

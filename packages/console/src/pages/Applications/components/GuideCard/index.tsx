@@ -1,6 +1,6 @@
 import { ApplicationType } from '@logto/schemas';
 import classNames from 'classnames';
-import { Suspense, useContext } from 'react';
+import { Suspense, useCallback, useContext } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import ProTag from '@/components/ProTag';
@@ -24,10 +24,10 @@ type Props = {
   data: Guide;
   onClick: (data: SelectedGuide) => void;
   hasBorder?: boolean;
-  isCompact?: boolean;
+  hasButton?: boolean;
 };
 
-function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
+function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   const { navigate } = useTenantPathname();
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
@@ -41,26 +41,26 @@ function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
     metadata: { target, name, description },
   } = data;
 
-  const onClickCard = () => {
-    if (!isCompact) {
-      return;
+  const handleClick = useCallback(() => {
+    if (isSubscriptionRequired) {
+      navigate(subscriptionPage);
+    } else {
+      onClick({ id, target, name });
     }
-
-    onClick({ id, target, name });
-  };
+  }, [id, isSubscriptionRequired, name, target, navigate, onClick]);
 
   return (
     <div
       className={classNames(
         styles.card,
         hasBorder && styles.hasBorder,
-        isCompact && styles.compact
+        hasButton && styles.hasButton
       )}
-      {...(isCompact && {
+      {...(!hasButton && {
         tabIndex: 0,
         role: 'button',
-        onKeyDown: onKeyDownHandler(onClickCard),
-        onClick: onClickCard,
+        onKeyDown: onKeyDownHandler(handleClick),
+        onClick: handleClick,
       })}
     >
       <div className={styles.header}>
@@ -77,19 +77,13 @@ function GuideCard({ data, onClick, hasBorder, isCompact }: Props) {
           </div>
         </div>
       </div>
-      {!isCompact && (
+      {hasButton && (
         <Button
           title={
             isSubscriptionRequired ? 'upsell.upgrade_plan' : 'applications.guide.start_building'
           }
           size="small"
-          onClick={() => {
-            if (isSubscriptionRequired) {
-              navigate(subscriptionPage);
-            } else {
-              onClick({ id, target, name });
-            }
-          }}
+          onClick={handleClick}
         />
       )}
     </div>

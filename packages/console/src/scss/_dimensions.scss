@@ -6,3 +6,11 @@ $modal-layout-grid-large: 850px;
 $modal-layout-grid-medium: 668px;
 $modal-layout-grid-small: 500px;
 $form-text-field-width: 556px;
+
+// Guide related dimensions
+$guide-main-content-max-width: 858px;
+$guide-sidebar-width: 220px;
+$guide-panel-gap: 30px;
+$guide-content-padding: 24px;
+$guide-content-max-width: calc($guide-main-content-max-width + 2 * ($guide-sidebar-width + $guide-panel-gap + $guide-content-padding));
+$guide-content-min-width: 750px;

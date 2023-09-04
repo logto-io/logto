@@ -1,38 +1,50 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .container {
   display: flex;
   flex-direction: column;
   background-color: var(--color-base);
+  width: 100vw;
   height: 100vh;
+  overflow-x: auto;
+
+  > * {
+    min-width: dim.$guide-content-min-width;
+  }
 
   .content {
     flex: 1;
-    display: flex;
-    width: 100%;
     overflow: hidden;
   }
 
   .actionBar {
-    display: flex;
-    align-items: center;
     inset: auto 0 0 0;
-    padding: _.unit(4) _.unit(8);
+    width: 100%;
+    padding: _.unit(4) _.unit(6);
     background-color: var(--color-layer-1);
     box-shadow: var(--shadow-3);
     z-index: 1;
 
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: dim.$guide-main-content-max-width;
+      margin: 0 auto;
+    }
+
     .text {
       font: var(--font-body-2);
       color: var(--color-text);
-      margin-left: _.unit(62.5);
-      margin-right: _.unit(4);
+      margin-right: _.unit(3);
       @include _.multi-line-ellipsis(2);
     }
+  }
+}
 
-    .button {
-      margin-right: 0;
-      margin-left: auto;
-    }
+@media screen and (max-width: dim.$guide-content-max-width) {
+  .container .actionBar .wrapper {
+    margin: 0 0 0 _.unit(62.5);
   }
 }

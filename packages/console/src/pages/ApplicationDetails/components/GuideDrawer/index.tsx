@@ -74,7 +74,6 @@ function GuideDrawer({ app, onClose }: Props) {
       </div>
       {!selectedGuide && (
         <GuideGroup
-          isCompact
           className={styles.cardGroup}
           categoryName={t(`categories.${app.type}`)}
           guides={structuredMetadata[app.type]}
