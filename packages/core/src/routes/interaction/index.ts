@@ -88,16 +88,16 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         verifyProfileSettings(profile, signInExperience);
       }
 
-      const verifiedIdentifier = identifier && [
+      const verifiedIdentifiers = identifier && [
         await verifyIdentifierPayload(ctx, tenant, identifier, {
           event,
         }),
       ];
 
-      eventLog.append({ profile, verifiedIdentifier });
+      eventLog.append({ profile, verifiedIdentifiers });
 
       await storeInteractionResult(
-        { event, identifiers: verifiedIdentifier, profile },
+        { event, identifiers: verifiedIdentifiers, profile },
         ctx,
         provider
       );
