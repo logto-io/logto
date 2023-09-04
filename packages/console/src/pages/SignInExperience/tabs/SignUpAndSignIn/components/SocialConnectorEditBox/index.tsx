@@ -48,14 +48,14 @@ function SocialConnectorEditBox({ value, onChange }: Props) {
     );
   };
 
+  const socialConnectors = connectorData.filter(({ type }) => type === ConnectorType.Social);
+
   const selectedConnectorItems = value
-    .map((connectorTarget) => connectorData.find(({ target }) => target === connectorTarget))
+    .map((connectorTarget) => socialConnectors.find(({ target }) => target === connectorTarget))
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
     .filter((item): item is ConnectorGroup => Boolean(item));
 
-  const connectorOptions = connectorData.filter(
-    ({ target, type }) => !value.includes(target) && type === ConnectorType.Social
-  );
+  const connectorOptions = socialConnectors.filter(({ target }) => !value.includes(target));
 
   return (
     <div>
@@ -85,13 +85,15 @@ function SocialConnectorEditBox({ value, onChange }: Props) {
         }}
       />
       <ConnectorSetupWarning requiredConnectors={[ConnectorType.Social]} />
-      <div className={styles.setUpHint}>
-        {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.not_in_list')}
-        <TextLink to="/connectors/social" className={styles.setup}>
-          {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.set_up_more')}
-        </TextLink>
-        {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.go_to')}
-      </div>
+      {socialConnectors.length > 0 && (
+        <div className={styles.setUpHint}>
+          {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.not_in_list')}
+          <TextLink to="/connectors/social" className={styles.setup}>
+            {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.set_up_more')}
+          </TextLink>
+          {t('sign_in_exp.sign_up_and_sign_in.social_sign_in.set_up_hint.go_to')}
+        </div>
+      )}
     </div>
   );
 }
