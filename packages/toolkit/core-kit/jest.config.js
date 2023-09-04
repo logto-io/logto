@@ -5,6 +5,7 @@ const config = {
   coverageReporters: ['text-summary', 'lcov'],
   coverageProvider: 'v8',
   roots: ['./lib'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     '^(chalk|inquirer)$': '<rootDir>/../../shared/lib/esm/module-proxy.js',
   },
