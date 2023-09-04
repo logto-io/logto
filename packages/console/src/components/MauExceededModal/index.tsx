@@ -1,9 +1,7 @@
 import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import useSWRImmutable from 'swr/immutable';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import PlanUsage from '@/components/PlanUsage';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
@@ -21,35 +19,22 @@ import PlanName from '../PlanName';
 import * as styles from './index.module.scss';
 
 function MauExceededModal() {
-  const { currentTenantId } = useContext(TenantsContext);
-  const cloudApi = useCloudApi();
+  const { currentTenant } = useContext(TenantsContext);
+  const { usage, subscription } = currentTenant ?? {};
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
-  const [hasClosed, setHasClosed] = useState(false);
 
+  const [hasClosed, setHasClosed] = useState(false);
   const handleCloseModal = () => {
     setHasClosed(true);
   };
 
   const { data: subscriptionPlans } = useSubscriptionPlans();
 
-  const { data: currentSubscription } = useSWRImmutable(
-    `/api/tenants/${currentTenantId}/subscription`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/subscription', { params: { tenantId: currentTenantId } })
-  );
+  const currentPlan = subscriptionPlans?.find((plan) => plan.id === subscription?.planId);
 
-  const { data: currentUsage } = useSWRImmutable(
-    `/api/tenants/${currentTenantId}/usage`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/usage', { params: { tenantId: currentTenantId } })
-  );
-
-  const currentPlan =
-    currentSubscription &&
-    subscriptionPlans?.find((plan) => plan.id === currentSubscription.planId);
-
-  if (!currentPlan || !currentUsage || hasClosed) {
+  if (!subscription || !usage || !currentPlan || hasClosed) {
     return null;
   }
 
@@ -58,7 +43,7 @@ function MauExceededModal() {
     name: planName,
   } = currentPlan;
 
-  const isMauExceeded = mauLimit !== null && currentUsage.activeUsers >= mauLimit;
+  const isMauExceeded = mauLimit !== null && usage.activeUsers >= mauLimit;
 
   if (!isMauExceeded) {
     return null;
@@ -102,8 +87,8 @@ function MauExceededModal() {
         </InlineNotification>
         <FormField title="subscription.plan_usage">
           <PlanUsage
-            subscriptionUsage={currentUsage}
-            currentSubscription={currentSubscription}
+            subscriptionUsage={usage}
+            currentSubscription={subscription}
             currentPlan={currentPlan}
           />
         </FormField>
