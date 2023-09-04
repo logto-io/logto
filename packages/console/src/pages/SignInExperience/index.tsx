@@ -214,7 +214,7 @@ function SignInExperience() {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
-        {/* Uncomment until all the changes are merged */}
+        {/* Remove the `isCloud` check until all the changes are merged */}
         {isCloud && (
           <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
         )}
