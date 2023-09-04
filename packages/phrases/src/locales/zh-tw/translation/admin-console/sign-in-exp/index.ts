@@ -56,8 +56,7 @@ const sign_in_exp = {
     no_connector_email:
       '尚未設置電子郵件連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',
     no_connector_social:
-      '尚未設置社交連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',
-    no_added_social_connector: '你已經成功設置了一些社交連接器。點按「+」添加一些到你的登錄體驗。',
+      '您還沒有設置任何社交連接器。首先添加連接器以應用社交登錄方法。<a>{{link}}</a>連接器。',
     setup_link: '立即設置',
   },
   save_alert: {

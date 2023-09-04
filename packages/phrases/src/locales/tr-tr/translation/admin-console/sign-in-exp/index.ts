@@ -59,9 +59,7 @@ const sign_in_exp = {
     no_connector_email:
       'Henüz e-posta konektörü kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
     no_connector_social:
-      'Henüz sosyal konektör kurulmadı. Yapılandırmayı tamamlamadan önce, kullanıcılar bu yöntemle oturum açamazlar. "Konektörler"deki <a>{{link}}</a>',
-    no_added_social_connector:
-      'Şimdi birkaç sosyal konektör eklediniz. Oturum açma deneyiminize bazı şeyler eklediğinizden emin olun.',
+      'Henüz hiçbir sosyal bağlayıcıyı ayarlamadınız. Sosyal giriş yöntemlerini uygulamak için önce bağlayıcı ekleyin. "Bağlayıcılar" bölümünde <a>{{link}}</a> görüntüleyin.',
     setup_link: 'Kurulum yapın',
   },
   save_alert: {
