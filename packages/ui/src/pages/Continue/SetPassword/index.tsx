@@ -1,19 +1,66 @@
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import SetPasswordForm from '@/containers/SetPassword';
-import { passwordMinLength } from '@/utils/form';
+import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import useSetPassword from './use-set-password';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import { addProfile } from '@/apis/interaction';
+import SetPasswordForm from '@/containers/SetPassword';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
+import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import { usePasswordPolicy } from '@/hooks/use-sie';
 
 const SetPassword = () => {
-  const { setPassword } = useSetPassword();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const clearErrorMessage = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+
+  const navigate = useNavigate();
+  const { show } = useConfirmModal();
+
+  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const errorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'user.password_exists_in_profile': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-1);
+      },
+      ...requiredProfileErrorHandler,
+    }),
+    [navigate, requiredProfileErrorHandler, show]
+  );
+  const successHandler: SuccessHandler<typeof addProfile> = useCallback((result) => {
+    if (result?.redirectTo) {
+      window.location.replace(result.redirectTo);
+    }
+  }, []);
+  const { action } = usePasswordAction({
+    api: addProfile,
+    setErrorMessage,
+    errorHandlers,
+    successHandler,
+  });
+
+  const {
+    policy: {
+      length: { min },
+      characterTypes: { min: count },
+    },
+  } = usePasswordPolicy();
 
   return (
     <SecondaryPageLayout
       title="description.set_password"
-      description="error.invalid_password"
-      descriptionProps={{ min: passwordMinLength }}
+      description="description.password_requirements_with_type"
+      descriptionProps={{ min, count }}
     >
-      <SetPasswordForm autoFocus onSubmit={setPassword} />
+      <SetPasswordForm
+        autoFocus
+        errorMessage={errorMessage}
+        clearErrorMessage={clearErrorMessage}
+        onSubmit={action}
+      />
     </SecondaryPageLayout>
   );
 };

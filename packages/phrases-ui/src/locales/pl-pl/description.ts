@@ -58,6 +58,9 @@ const description = {
   no_region_code_found: 'Nie znaleziono kodu regionu',
   verify_email: 'Potwierdź swój email',
   verify_phone: 'Potwierdź swój numer telefonu',
+  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.', // UNTRANSLATED
+  password_requirements_with_type_other:
+    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.', // UNTRANSLATED
 };
 
 export default Object.freeze(description);

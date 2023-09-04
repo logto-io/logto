@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { PasswordInputField } from '@/components/InputFields';
-import { validatePassword } from '@/utils/form';
 
 import * as styles from './index.module.scss';
 
@@ -37,6 +36,7 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
   useEffect(() => {
     if (!isValid) {
+      console.log('!isValid');
       clearErrorMessage?.();
     }
   }, [clearErrorMessage, isValid]);
@@ -64,17 +64,6 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
         aria-invalid={!!errors.newPassword}
         {...register('newPassword', {
           required: t('error.password_required'),
-          validate: (password) => {
-            const errorMessage = validatePassword(password);
-
-            if (errorMessage) {
-              return typeof errorMessage === 'string'
-                ? t(`error.${errorMessage}`)
-                : t(`error.${errorMessage.code}`, errorMessage.data ?? {});
-            }
-
-            return true;
-          },
         })}
       />
 

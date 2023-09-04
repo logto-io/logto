@@ -57,6 +57,9 @@ const description = {
   no_region_code_found: 'Não foi possível encontrar o código de região do seu telefone.',
   verify_email: 'Verificar e-mail',
   verify_phone: 'Verificar número de telefone',
+  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.', // UNTRANSLATED
+  password_requirements_with_type_other:
+    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.', // UNTRANSLATED
 };
 
 export default Object.freeze(description);

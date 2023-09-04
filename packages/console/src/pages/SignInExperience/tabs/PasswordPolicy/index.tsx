@@ -62,7 +62,7 @@ function PasswordPolicy({ isActive }: Props) {
     getValues,
     formState: { errors },
   } = useFormContext<SignInExperienceForm>();
-  const { max } = getValues('passwordPolicy.length');
+  const max = getValues('passwordPolicy.length.max');
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.sign_in_exp.password_policy',
   });

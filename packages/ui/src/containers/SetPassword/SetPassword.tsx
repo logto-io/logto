@@ -8,7 +8,6 @@ import Button from '@/components/Button';
 import IconButton from '@/components/Button/IconButton';
 import ErrorMessage from '@/components/ErrorMessage';
 import { InputField } from '@/components/InputFields';
-import { validatePassword } from '@/utils/form';
 
 import TogglePassword from './TogglePassword';
 import * as styles from './index.module.scss';
@@ -79,17 +78,6 @@ const SetPassword = ({
         aria-invalid={!!errors.newPassword}
         {...register('newPassword', {
           required: t('error.password_required'),
-          validate: (password) => {
-            const errorMessage = validatePassword(password);
-
-            if (errorMessage) {
-              return typeof errorMessage === 'string'
-                ? t(`error.${errorMessage}`)
-                : t(`error.${errorMessage.code}`, errorMessage.data ?? {});
-            }
-
-            return true;
-          },
         })}
         isSuffixFocusVisible={!!watch('newPassword')}
         suffix={

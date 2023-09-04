@@ -51,7 +51,9 @@ describe('<Lite />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('error.password_min_length')).not.toBeNull();
+      expect(queryByText('error.password_rejected.too_short')).not.toBeNull();
+      expect(queryByText('error.password_rejected.character_types')).not.toBeNull();
+      expect(queryByText('error.password_rejected.sequence')).not.toBeNull();
     });
 
     expect(submit).not.toBeCalled();
@@ -65,7 +67,9 @@ describe('<Lite />', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('error.password_min_length')).toBeNull();
+      expect(queryByText('error.password_rejected.too_short')).toBeNull();
+      expect(queryByText('error.password_rejected.character_types')).toBeNull();
+      expect(queryByText('error.password_rejected.sequence')).toBeNull();
     });
   });
 
