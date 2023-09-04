@@ -37,8 +37,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@silverhand/essentials": "^2.8.4",
-    "@withtyped/client": "^0.7.22"
+    "@silverhand/essentials": "^2.8.4"
   },
   "optionalDependencies": {
     "zod": "^3.20.2"
@@ -51,6 +50,7 @@
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",
     "eslint": "^8.44.0",
+    "got": "^13.0.0",
     "jest": "^29.5.0",
     "lint-staged": "^14.0.0",
     "prettier": "^3.0.0",

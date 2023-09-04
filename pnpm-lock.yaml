@@ -3756,9 +3756,6 @@ importers:
       '@silverhand/essentials':
         specifier: ^2.8.4
         version: 2.8.4
-      '@withtyped/client':
-        specifier: ^0.7.22
-        version: 0.7.22(zod@3.20.2)
     optionalDependencies:
       zod:
         specifier: ^3.20.2
@@ -3785,6 +3782,9 @@ importers:
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
+      got:
+        specifier: ^13.0.0
+        version: 13.0.0
       jest:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)

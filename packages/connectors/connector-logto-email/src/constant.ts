@@ -104,6 +104,6 @@ export const scope = ['send:email'];
 
 export const defaultTimeout = 5000;
 
-export const emailEndpoint = '/services/mails';
+export const emailEndpoint = 'services/mails';
 
-export const usageEndpoint = '/services/mails/usage';
+export const usageEndpoint = 'services/mails/usage';

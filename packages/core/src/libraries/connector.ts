@@ -15,10 +15,10 @@ export type ConnectorLibrary = ReturnType<typeof createConnectorLibrary>;
 
 export const createConnectorLibrary = (
   queries: Queries,
-  cloudConnection: Pick<CloudConnectionLibrary, 'getClient'>
+  cloudConnection: Pick<CloudConnectionLibrary, 'getAuthedCloudApi'>
 ) => {
   const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
-  const { getClient } = cloudConnection;
+  const { getAuthedCloudApi } = cloudConnection;
 
   const getConnectorConfig = async (id: string): Promise<unknown> => {
     const connectors = await findAllConnectors();
@@ -78,7 +78,9 @@ export const createConnectorLibrary = (
           const { rawConnector, rawMetadata } = await buildRawConnector(
             connectorFactory,
             async () => getConnectorConfig(id),
-            conditional(connectorFactory.metadata.id === ServiceConnector.Email && getClient)
+            conditional(
+              connectorFactory.metadata.id === ServiceConnector.Email && getAuthedCloudApi
+            )
           );
 
           const connector: AllConnector = {

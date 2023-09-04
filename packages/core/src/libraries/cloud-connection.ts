@@ -2,7 +2,7 @@ import type router from '@logto/cloud/routes';
 import { cloudConnectionDataGuard, CloudScope } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 import Client from '@withtyped/client';
-import { got } from 'got';
+import { type Got, got } from 'got';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -33,6 +33,7 @@ const accessTokenExpirationMargin = 60;
 
 /** The library for connecting to Logto Cloud service. */
 export class CloudConnectionLibrary {
+  private authedCloudApi?: Got;
   private client?: Client<typeof router>;
   private accessTokenCache?: { expiresAt: number; accessToken: string };
 
@@ -115,6 +116,23 @@ export class CloudConnectionLibrary {
     }
 
     return this.client;
+  };
+
+  /**
+   * Get an authed cloud API.
+   */
+  public getAuthedCloudApi = async (): Promise<Got> => {
+    if (!this.authedCloudApi) {
+      const { endpoint } = await this.getCloudConnectionData();
+      const accessToken = await this.getAccessToken();
+
+      this.authedCloudApi = got.extend({
+        prefixUrl: new URL(endpoint),
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+    }
+
+    return this.authedCloudApi;
   };
 }
 

@@ -10,22 +10,22 @@ const { jest } = import.meta;
 
 const endpoint = 'http://localhost:3003';
 
-const api = got.extend({ prefixUrl: endpoint });
+const api = got.extend({ prefixUrl: new URL('/api', endpoint) });
 const dropLeadingSlash = (path: string) => path.replace(/^\//, '');
-const buildUrl = (path: string, endpoint: string) => new URL(`${endpoint}/api${path}`);
+const buildUrl = (path: string, endpoint: string) => new URL(`${endpoint}/api/${path}`);
 
 const getConfig = jest.fn().mockResolvedValue({});
-const getCloudServiceClient = jest.fn().mockResolvedValue({
+const getAuthedCloudServiceApi = jest.fn().mockResolvedValue({
   post: async (path: string, payload: { body: unknown }) => {
     return api(dropLeadingSlash(path), {
       method: 'POST',
       json: payload.body,
     });
   },
-  get: async (path: string, payload: { search: Record<string, string> }) => {
+  get: async (path: string, payload: { searchParams: Record<string, string> }) => {
     return api(dropLeadingSlash(path), {
       method: 'GET',
-      searchParams: payload.search,
+      searchParams: payload.searchParams,
     }).json<{ count: number }>();
   },
 });
@@ -34,7 +34,7 @@ describe('sendMessage()', () => {
   it('should send message successfully', async () => {
     const url = buildUrl(emailEndpoint, endpoint);
     nock(url.origin).post(url.pathname).reply(204);
-    const { sendMessage } = await createConnector({ getConfig, getCloudServiceClient });
+    const { sendMessage } = await createConnector({ getConfig, getAuthedCloudServiceApi });
     await expect(
       sendMessage({
         to: 'wangsijie94@gmail.com',
@@ -47,8 +47,11 @@ describe('sendMessage()', () => {
   it('should get usage successfully', async () => {
     const date = new Date();
     const url = buildUrl(usageEndpoint, endpoint);
-    nock(url.origin).get(url.pathname).query({ from: date.toISOString() }).reply(200, { count: 1 });
-    const connector = await createConnector({ getConfig, getCloudServiceClient });
+    nock(url.origin)
+      .get(url.pathname)
+      .query({ from: date.toISOString() })
+      .reply(200, { body: JSON.stringify({ count: 1 }) });
+    const connector = await createConnector({ getConfig, getAuthedCloudServiceApi });
     expect(connector.getUsage).toBeDefined();
     const usage = await connector.getUsage!(date);
     expect(usage).toEqual(1);

@@ -20,7 +20,7 @@ const connectors: Connector[] = [
 const { createConnectorLibrary } = await import('./connector.js');
 const { getConnectorConfig } = createConnectorLibrary(
   new MockQueries({ connectors: { findAllConnectors: async () => connectors } }),
-  { getClient: jest.fn() }
+  { getAuthedCloudApi: jest.fn() }
 );
 
 it('getConnectorConfig() should return right config', async () => {

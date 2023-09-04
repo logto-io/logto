@@ -38,7 +38,7 @@ const queries = new MockQueries({
   signInExperiences,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
-  getClient: jest.fn(),
+  getAuthedCloudApi: jest.fn(),
 });
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 

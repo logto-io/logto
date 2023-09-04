@@ -22,7 +22,7 @@ import type { AuthedRouter, RouterInitArgs } from '../types.js';
 export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
   ...[router, { cloudConnection }]: RouterInitArgs<T>
 ) {
-  const { getClient } = cloudConnection;
+  const { getAuthedCloudApi } = cloudConnection;
 
   router.post(
     '/connectors/:factoryId/test',
@@ -69,7 +69,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
       } = await buildRawConnector<SmsConnector | EmailConnector>(
         connectorFactory,
         notImplemented,
-        conditional(ServiceConnector.Email === connectorFactory.metadata.id && getClient)
+        conditional(ServiceConnector.Email === connectorFactory.metadata.id && getAuthedCloudApi)
       );
 
       await sendMessage(
