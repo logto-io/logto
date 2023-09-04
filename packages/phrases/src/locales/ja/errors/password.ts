@@ -1,6 +1,7 @@
 const password = {
   unsupported_encryption_method: '暗号化方式 {{name}} はサポートされていません。',
   pepper_not_found: 'パスワードペッパーが見つかりません。コアの環境を確認してください。',
+  password_rejected: 'Password rejected. Please check if your password meets the requirements.', // UNTRANSLATED
 };
 
 export default Object.freeze(password);

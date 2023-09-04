@@ -49,6 +49,7 @@ export const createDefaultSignInExperience = (
     signInMode: SignInMode.SignInAndRegister,
     customCss: null,
     customContent: {},
+    passwordPolicy: {},
   });
 
 /** @deprecated Use `createDefaultSignInExperience()` instead. */

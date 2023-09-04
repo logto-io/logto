@@ -22,4 +22,4 @@ export const signUpIdentifiers = {
 };
 
 export const consoleUsername = 'admin';
-export const consolePassword = 'abcd1234';
+export const consolePassword = 'some_random_password_123';

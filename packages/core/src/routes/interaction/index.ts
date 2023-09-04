@@ -37,6 +37,7 @@ import {
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
+import { validatePassword } from './utils/validate-password.js';
 import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
 import {
   verifyIdentifierPayload,
@@ -71,6 +72,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 401, 403, 422],
     }),
     koaInteractionSie(queries),
+    async ({ guard: { body }, passwordPolicyChecker }, next) => {
+      await validatePassword(body.profile?.password, passwordPolicyChecker);
+      return next();
+    },
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
       const { signInExperience, createLog } = ctx;
@@ -205,6 +210,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
+    async ({ guard: { body }, passwordPolicyChecker }, next) => {
+      await validatePassword(body.password, passwordPolicyChecker);
+      return next();
+    },
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -243,6 +252,10 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
+    async ({ guard: { body }, passwordPolicyChecker }, next) => {
+      await validatePassword(body.password, passwordPolicyChecker);
+      return next();
+    },
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
       const { signInExperience, interactionDetails, createLog } = ctx;
@@ -373,6 +386,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
 
+      // This file needs refactor
+      // eslint-disable-next-line max-lines
       await sendVerificationCodeToIdentifier(
         { event, ...guard.body },
         interactionDetails.jti,

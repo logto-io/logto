@@ -1,13 +1,8 @@
+import { type DeepPartial } from '@silverhand/essentials';
 import { z } from 'zod';
 
-/** A word that used for password policy. */
-type Word = {
-  type: 'custom' | 'personal';
-  value: string;
-};
-
 /** Password policy configuration type. */
-type PasswordPolicy = {
+export type PasswordPolicy = {
   /** Policy about password length. */
   length: {
     /** Minimum password length. */
@@ -33,29 +28,38 @@ type PasswordPolicy = {
     pwned: boolean;
     /** Whether to reject passwords that like '123456' or 'aaaaaa'. */
     repetitionAndSequence: boolean;
+    /** Whether to reject passwords that include personal information. */
+    personalInfo: boolean;
     /** Whether to reject passwords that include specific words. */
-    words: Word[];
+    words: string[];
   };
 };
 
 /** Password policy configuration guard. */
-const passwordPolicyGuard: z.ZodType<PasswordPolicy> = z.object({
-  length: z.object({
-    min: z.number().int().min(1),
-    max: z.number().int().min(1),
-  }),
-  characterTypes: z.object({
-    min: z.number().int().min(1).max(4),
-  }),
-  rejects: z.object({
-    pwned: z.boolean(),
-    repetitionAndSequence: z.boolean(),
-    words: z.array(z.object({ type: z.enum(['custom', 'personal']), value: z.string() })),
-  }),
-});
+export const passwordPolicyGuard = z.object({
+  length: z
+    .object({
+      min: z.number().int().min(1).default(8),
+      max: z.number().int().min(1).default(256),
+    })
+    .default({}),
+  characterTypes: z
+    .object({
+      min: z.number().int().min(1).max(4).optional().default(2),
+    })
+    .default({}),
+  rejects: z
+    .object({
+      pwned: z.boolean().default(true),
+      repetitionAndSequence: z.boolean().default(true),
+      personalInfo: z.boolean().default(true),
+      words: z.string().array().default([]),
+    })
+    .default({}),
+}) satisfies z.ZodType<PasswordPolicy, z.ZodTypeDef, DeepPartial<PasswordPolicy>>;
 
 /** The code of why a password is rejected. */
-type PasswordRejectionCode =
+export type PasswordRejectionCode =
   | 'too_short'
   | 'too_long'
   | 'character_types'
@@ -63,15 +67,24 @@ type PasswordRejectionCode =
   | 'pwned'
   | 'repetition'
   | 'sequence'
+  | 'personal_info'
   | 'restricted_words';
 
 /** A password issue that does not meet the policy. */
-type PasswordIssue = {
+export type PasswordIssue = {
   /** Issue code. */
   code: `password_rejected.${PasswordRejectionCode}`;
   /** Interpolation data for the issue message. */
   interpolation?: Record<string, unknown>;
 };
+
+/** Personal information to check. */
+export type PersonalInfo = Partial<{
+  name: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+}>;
 
 /**
  * The class for checking if a password meets the policy. The policy is defined as
@@ -98,28 +111,73 @@ type PasswordIssue = {
 export class PasswordPolicyChecker {
   static symbols = Object.freeze('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' as const);
 
-  constructor(public readonly policy: PasswordPolicy) {
-    // Validate policy.
-    passwordPolicyGuard.parse(policy);
+  public readonly policy: PasswordPolicy;
+
+  constructor(
+    policy: DeepPartial<PasswordPolicy>,
+    /** The Web Crypto API to use. By default, the global `crypto.subtle` will be used. */
+    protected readonly subtle: SubtleCrypto = crypto.subtle
+  ) {
+    this.policy = passwordPolicyGuard.parse(policy);
   }
 
   /**
-   * Check if a password meets the policy.
+   * Check if a password meets all the policy requirements.
    *
    * @param password - Password to check.
+   * @param personalInfo - Personal information to check. Required if the policy
+   * requires to reject passwords that include personal information.
    * @returns An array of issues. If the password meets the policy, an empty array will be returned.
+   * @throws TypeError - If the policy requires to reject passwords that include personal information
+   * but the personal information is not provided.
    */
   /* eslint-disable @silverhand/fp/no-mutating-methods */
-  async check(password: string): Promise<PasswordIssue[]> {
+
+  async check(password: string, personalInfo?: PersonalInfo): Promise<PasswordIssue[]> {
+    const issues: PasswordIssue[] = this.fastCheck(password);
+
+    if (this.policy.rejects.pwned && (await this.hasBeenPwned(password))) {
+      issues.push({
+        code: 'password_rejected.pwned',
+      });
+    }
+
+    if (this.policy.rejects.personalInfo) {
+      if (!personalInfo) {
+        throw new TypeError('Personal information is required to check personal information.');
+      }
+
+      if (this.hasPersonalInfo(password, personalInfo)) {
+        issues.push({
+          code: 'password_rejected.personal_info',
+        });
+      }
+    }
+
+    return issues;
+  }
+
+  /**
+   * Perform a fast check to see if the password passes the basic requirements.
+   * No pwned password and personal information check will be performed.
+   *
+   * This method is used for frontend validation.
+   *
+   * @param password - Password to check.
+   * @returns Whether the password passes the basic requirements.
+   */
+  fastCheck(password: string) {
     const issues: PasswordIssue[] = [];
 
     if (password.length < this.policy.length.min) {
       issues.push({
         code: 'password_rejected.too_short',
+        interpolation: { min: this.policy.length.min },
       });
     } else if (password.length > this.policy.length.max) {
       issues.push({
         code: 'password_rejected.too_long',
+        interpolation: { max: this.policy.length.max },
       });
     }
 
@@ -132,12 +190,6 @@ export class PasswordPolicyChecker {
       issues.push({
         code: 'password_rejected.character_types',
         interpolation: { min: this.policy.characterTypes.min },
-      });
-    }
-
-    if (this.policy.rejects.pwned && (await this.hasBeenPwned(password))) {
-      issues.push({
-        code: 'password_rejected.pwned',
       });
     }
 
@@ -155,12 +207,14 @@ export class PasswordPolicyChecker {
       }
     }
 
-    issues.push(
-      ...this.hasWords(password).map<PasswordIssue>(({ type, value }) => ({
+    const words = this.hasWords(password);
+
+    if (words.length > 0) {
+      issues.push({
         code: 'password_rejected.restricted_words',
-        interpolation: { type, value },
-      }))
-    );
+        interpolation: { words: words.join('\n'), count: words.length },
+      });
+    }
 
     return issues;
   }
@@ -199,13 +253,13 @@ export class PasswordPolicyChecker {
    * @returns Whether the password has been pwned.
    */
   async hasBeenPwned(password: string): Promise<boolean> {
-    const hash = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+    const hash = await this.subtle.digest('SHA-1', new TextEncoder().encode(password));
     const hashHex = Array.from(new Uint8Array(hash))
       .map((binary) => binary.toString(16).padStart(2, '0'))
       .join('');
     const hashPrefix = hashHex.slice(0, 5);
     const hashSuffix = hashHex.slice(5);
-    const response = await fetch(`https://api.haveibeenpwned.com/range/${hashPrefix}`);
+    const response = await fetch(`https://api.pwnedpasswords.com/range/${hashPrefix}`);
     const text = await response.text();
     const hashes = text.split('\n');
     const found = hashes.some((hex) => hex.toLowerCase().startsWith(hashSuffix));
@@ -229,19 +283,52 @@ export class PasswordPolicyChecker {
   }
 
   /**
+   * Check if the given password contains personal information.
+   *
+   * @param password - Password to check.
+   * @param personalInfo - Personal information to check.
+   * @returns Whether the password contains personal information.
+   */
+  hasPersonalInfo(password: string, personalInfo: PersonalInfo): boolean {
+    const lowercasedPassword = password.toLowerCase();
+    const { name, username, email, phoneNumber } = personalInfo;
+
+    if (
+      name
+        ?.toLowerCase()
+        .split(' ')
+        .some((word) => lowercasedPassword.includes(word))
+    ) {
+      return true;
+    }
+
+    if (username && lowercasedPassword.includes(username.toLowerCase())) {
+      return true;
+    }
+
+    const emailPrefix = email?.split('@')[0];
+    if (emailPrefix && lowercasedPassword.includes(emailPrefix.toLowerCase())) {
+      return true;
+    }
+
+    if (phoneNumber && lowercasedPassword.includes(phoneNumber)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Check if the given password contains specific words.
    *
    * @param password - Password to check.
    * @returns An array of matched words.
    */
-  hasWords(password: string): Word[] {
-    const words = this.policy.rejects.words.map(({ value, ...rest }) => ({
-      ...rest,
-      value: value.toLowerCase(),
-    }));
+  hasWords(password: string): string[] {
+    const words = this.policy.rejects.words.map((word) => word.toLowerCase());
     const lowercasedPassword = password.toLowerCase();
 
-    return words.filter(({ value }) => lowercasedPassword.includes(value));
+    return words.filter((word) => lowercasedPassword.includes(word));
   }
 
   /**

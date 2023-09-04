@@ -204,6 +204,7 @@ export const mockSignInExperience: SignInExperience = {
   signInMode: SignInMode.SignInAndRegister,
   customCss: null,
   customContent: {},
+  passwordPolicy: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -228,6 +229,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   },
   customCss: null,
   customContent: {},
+  passwordPolicy: {},
 };
 
 const usernameSettings = {
