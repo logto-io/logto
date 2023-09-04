@@ -34,13 +34,7 @@ const data = await Promise.all(
     };
   })
 );
-const metadata = data.filter(Boolean).slice().sort((a, b) => {
-  if (a.name.split('-')[0] !== b.name.split('-')[0]) {
-    return a.name.localeCompare(b.name);
-  }
-
-  return a.order - b.order;
-});
+const metadata = data.filter(Boolean).slice().sort((a, b) => a.order - b.order);
 
 const camelCase = (value) => value.replaceAll(/-./g, (x) => x[1].toUpperCase());
 const filename = 'index.ts';
