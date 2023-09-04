@@ -1,7 +1,8 @@
 const application = {
-  invalid_type: 'Only machine to machine applications can have associated roles.',
-  role_exists: 'The role id {{roleId}} is already been added to this application.',
-  invalid_role_type: 'Can not assign user type role to machine to machine application.',
+  invalid_type: 'Apenas aplicações máquina a máquina podem ter funções associadas.',
+  role_exists: 'O id da função {{roleId}} já foi adicionado a esta aplicação.',
+  invalid_role_type:
+    'Não é possível atribuir uma função de tipo de utilizador a uma aplicação máquina a máquina.',
 };
 
 export default Object.freeze(application);

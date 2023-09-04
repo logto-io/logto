@@ -21,7 +21,7 @@ describe('admin console application management (roles)', () => {
     expect(applicationRoles.length).toBe(0);
   });
 
-  it('throw when trying to get roles of non-m2m app', async () => {
+  it('throws when trying to get roles of non-m2m app', async () => {
     const applicationType = ApplicationType.SPA;
     const application = await createApplication(generateStandardId(), applicationType);
 
