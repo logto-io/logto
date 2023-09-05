@@ -144,6 +144,13 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           size={radioGroupSize}
           onChange={handleGroupChange}
         />
+        {activeGroup && (
+          <PlatformSelector
+            connectorGroup={activeGroup}
+            connectorId={activeFactoryId}
+            onConnectorIdChange={setActiveFactoryId}
+          />
+        )}
         {standardGroups.length > 0 && (
           <>
             <div className={styles.standardLabel}>
@@ -158,13 +165,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
               onChange={handleGroupChange}
             />
           </>
-        )}
-        {activeGroup && (
-          <PlatformSelector
-            connectorGroup={activeGroup}
-            connectorId={activeFactoryId}
-            onConnectorIdChange={setActiveFactoryId}
-          />
         )}
       </ModalLayout>
     </Modal>
