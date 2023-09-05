@@ -89,7 +89,7 @@ function UriInputField({ name, defaultValue }: Props) {
           defaultValue={defaultValueArray}
           rules={{
             validate: createValidatorForRhf({
-              required: t('errors.required_field_missing_plural', { field: title }),
+              required: t('errors.required_field_missing_plural', { field: t(title) }),
               pattern: {
                 verify: (value) => !value || uriValidator(value),
                 message: t('errors.invalid_uri_format'),
