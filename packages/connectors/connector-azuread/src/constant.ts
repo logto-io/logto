@@ -43,7 +43,8 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       label: 'Cloud Instance',
-      placeholder: '<cloud-instance>',
+      placeholder: 'https://login.microsoftonline.com',
+      defaultValue: 'https://login.microsoftonline.com',
     },
     {
       key: 'tenantId',
