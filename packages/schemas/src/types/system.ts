@@ -69,7 +69,7 @@ export enum EmailServiceProvider {
   SendGrid = 'SendGrid',
 }
 
-export const sendgridEmailServiceDataGuard = z.object({
+export const sendgridEmailServiceConfigGuard = z.object({
   provider: z.literal(EmailServiceProvider.SendGrid),
   apiKey: z.string(),
   templateId: z.string(),
@@ -77,26 +77,26 @@ export const sendgridEmailServiceDataGuard = z.object({
   fromEmail: z.string(),
 });
 
-export type SendgridEmailServiceData = z.infer<typeof sendgridEmailServiceDataGuard>;
+export type SendgridEmailServiceConfig = z.infer<typeof sendgridEmailServiceConfigGuard>;
 
-export const emailServiceDataGuard = z.discriminatedUnion('provider', [
-  sendgridEmailServiceDataGuard,
+export const emailServiceConfigGuard = z.discriminatedUnion('provider', [
+  sendgridEmailServiceConfigGuard,
 ]);
 
-export type EmailServiceData = z.infer<typeof emailServiceDataGuard>;
+export type EmailServiceConfig = z.infer<typeof emailServiceConfigGuard>;
 
 export enum EmailServiceProviderKey {
   EmailServiceProvider = 'emailServiceProvider',
 }
 
 export type EmailServiceProviderType = {
-  [EmailServiceProviderKey.EmailServiceProvider]: EmailServiceData;
+  [EmailServiceProviderKey.EmailServiceProvider]: EmailServiceConfig;
 };
 
 export const emailServiceProviderGuard: Readonly<{
   [key in EmailServiceProviderKey]: ZodType<EmailServiceProviderType[key]>;
 }> = Object.freeze({
-  [EmailServiceProviderKey.EmailServiceProvider]: emailServiceDataGuard,
+  [EmailServiceProviderKey.EmailServiceProvider]: emailServiceConfigGuard,
 });
 
 // Demo social connectors
