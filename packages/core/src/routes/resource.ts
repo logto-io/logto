@@ -8,6 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { attachScopesToResources } from '#src/utils/resource.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -20,7 +21,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
     router,
     {
       queries,
-      libraries: { quota, resources },
+      libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -35,6 +36,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       updateResourceById,
       deleteResourceById,
     },
+    scopes: scopeQueries,
     scopes: {
       countScopesByResourceId,
       deleteScopeById,
@@ -44,7 +46,6 @@ export default function resourceRoutes<T extends AuthedRouter>(
       updateScopeById,
     },
   } = queries;
-  const { attachScopesToResources } = resources;
 
   router.get(
     '/resources',
@@ -64,7 +65,9 @@ export default function resourceRoutes<T extends AuthedRouter>(
 
       if (disabled) {
         const resources = await findAllResources();
-        ctx.body = yes(includeScopes) ? await attachScopesToResources(resources) : resources;
+        ctx.body = yes(includeScopes)
+          ? await attachScopesToResources(resources, scopeQueries)
+          : resources;
 
         return next();
       }
@@ -75,7 +78,9 @@ export default function resourceRoutes<T extends AuthedRouter>(
       ]);
 
       ctx.pagination.totalCount = count;
-      ctx.body = yes(includeScopes) ? await attachScopesToResources(resources) : resources;
+      ctx.body = yes(includeScopes)
+        ? await attachScopesToResources(resources, scopeQueries)
+        : resources;
 
       return next();
     }

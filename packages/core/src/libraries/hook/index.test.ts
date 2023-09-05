@@ -2,7 +2,6 @@ import type { Hook } from '@logto/schemas';
 import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
-import { mockHook } from '#src/__mocks__/hook.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import { generateHookTestPayload, parseResponse } from './utils.js';
@@ -49,7 +48,7 @@ const findAllHooks = jest.fn().mockResolvedValue([hook]);
 const findHookById = jest.fn().mockResolvedValue(hook);
 
 const { createHookLibrary } = await import('./index.js');
-const { triggerInteractionHooks, attachExecutionStatsToHook, testHook } = createHookLibrary(
+const { triggerInteractionHooks, testHook } = createHookLibrary(
   new MockQueries({
     users: {
       findUserById: jest.fn().mockReturnValue({
@@ -110,13 +109,6 @@ describe('triggerInteractionHooks()', () => {
     expect(calledPayload).toHaveProperty('payload.response.statusCode', 200);
     expect(calledPayload).toHaveProperty('payload.response.body.message', 'ok');
     jest.useRealTimers();
-  });
-});
-
-describe('attachExecutionStatsToHook', () => {
-  it('should attach execution stats to a hook', async () => {
-    const result = await attachExecutionStatsToHook(mockHook);
-    expect(result).toEqual({ ...mockHook, executionStats: mockHookState });
   });
 });
 

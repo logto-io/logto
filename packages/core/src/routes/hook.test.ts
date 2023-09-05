@@ -66,6 +66,7 @@ const logs = {
     count: 1,
   }),
   findLogs: jest.fn().mockResolvedValue([mockLog]),
+  getHookExecutionStatsByHookId: jest.fn().mockResolvedValue(mockExecutionStats),
 };
 
 const { countLogs, findLogs } = logs;
@@ -75,18 +76,10 @@ const mockQueries = {
   logs,
 };
 
-const attachExecutionStatsToHook = jest.fn().mockImplementation((hook) => ({
-  ...hook,
-  executionStats: mockExecutionStats,
-}));
-
 const testHook = jest.fn();
 
 const mockLibraries = {
-  hooks: {
-    attachExecutionStatsToHook,
-    testHook,
-  },
+  hooks: { testHook },
   quota: createMockQuotaLibrary(),
 };
 
@@ -117,7 +110,6 @@ describe('hook routes', () => {
 
   it('GET /hooks?includeExecutionStats', async () => {
     const response = await hookRequest.get('/hooks?includeExecutionStats=true');
-    expect(attachExecutionStatsToHook).toHaveBeenCalledTimes(mockHookList.length);
     expect(response.body).toEqual(
       mockHookList.map((hook) => ({
         ...hook,
@@ -136,7 +128,6 @@ describe('hook routes', () => {
   it('GET /hooks/:id?includeExecutionStats', async () => {
     const hookIdInMockList = mockHookList[0]?.id ?? '';
     const response = await hookRequest.get(`/hooks/${hookIdInMockList}?includeExecutionStats=true`);
-    expect(attachExecutionStatsToHook).toHaveBeenCalledWith(mockHookList[0]);
     expect(response.body).toEqual({
       ...mockHookList[0],
       executionStats: mockExecutionStats,
