@@ -61,10 +61,7 @@ function Welcome() {
           <div className={styles.title}>{t('cloud.welcome.title')}</div>
           <div className={styles.description}>{t('cloud.welcome.description')}</div>
           <form className={styles.form}>
-            <FormField
-              title="cloud.welcome.project_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField title="cloud.welcome.project_field" headlineSpacing="large">
               <Controller
                 control={control}
                 name="project"
@@ -81,11 +78,7 @@ function Welcome() {
             {/* Check whether it is a business use case */}
             {watch('project') === Project.Company && (
               <>
-                <FormField
-                  isMultiple
-                  title="cloud.welcome.title_field"
-                  headlineClassName={styles.cardFieldHeadline}
-                >
+                <FormField isMultiple title="cloud.welcome.title_field" headlineSpacing="large">
                   <Controller
                     control={control}
                     name="titles"
@@ -108,10 +101,7 @@ function Welcome() {
                     {...register('companyName')}
                   />
                 </FormField>
-                <FormField
-                  title="cloud.welcome.company_size_field"
-                  headlineClassName={styles.cardFieldHeadline}
-                >
+                <FormField title="cloud.welcome.company_size_field" headlineSpacing="large">
                   <Controller
                     control={control}
                     name="companySize"
@@ -130,11 +120,7 @@ function Welcome() {
                 </FormField>
               </>
             )}
-            <FormField
-              isMultiple
-              title="cloud.welcome.reason_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField isMultiple title="cloud.welcome.reason_field" headlineSpacing="large">
               <Controller
                 control={control}
                 name="reasons"
