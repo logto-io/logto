@@ -1,4 +1,4 @@
-const others = {
+const content = {
   terms_of_use: {
     title: 'TERMS',
     terms_of_use: 'Terms of use URL',
@@ -45,4 +45,4 @@ const others = {
   },
 };
 
-export default Object.freeze(others);
+export default Object.freeze(content);

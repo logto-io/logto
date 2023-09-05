@@ -2,7 +2,6 @@ import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
 import {
   ApiResourceDetailsTabs,
-  SignInExperiencePage,
   ConnectorsTabs,
   UserDetailsTabs,
   RoleDetailsTabs,
@@ -36,7 +35,7 @@ import RolePermissions from '@/pages/RoleDetails/RolePermissions';
 import RoleSettings from '@/pages/RoleDetails/RoleSettings';
 import RoleUsers from '@/pages/RoleDetails/RoleUsers';
 import Roles from '@/pages/Roles';
-import SignInExperience from '@/pages/SignInExperience';
+import SignInExperience, { SignInExperienceTab } from '@/pages/SignInExperience';
 import TenantSettings from '@/pages/TenantSettings';
 import BillingHistory from '@/pages/TenantSettings/BillingHistory';
 import Subscription from '@/pages/TenantSettings/Subscription';
@@ -94,7 +93,7 @@ function ConsoleContent() {
               </Route>
             </Route>
             <Route path="sign-in-experience">
-              <Route index element={<Navigate replace to={SignInExperiencePage.BrandingTab} />} />
+              <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />
               <Route path=":tab" element={<SignInExperience />} />
             </Route>
             <Route path="connectors">

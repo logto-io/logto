@@ -19,8 +19,8 @@ import { trySubmitSafe } from '@/utils/form';
 
 import usePreviewConfigs from '../../hooks/use-preview-configs';
 import BrandingForm from '../../tabs/Branding/BrandingForm';
-import LanguagesForm from '../../tabs/Others/LanguagesForm';
-import TermsForm from '../../tabs/Others/TermsForm';
+import LanguagesForm from '../../tabs/Content/LanguagesForm';
+import TermsForm from '../../tabs/Content/TermsForm';
 import type { SignInExperienceForm } from '../../types';
 import { signInExperienceParser } from '../../utils/form';
 import Preview from '../Preview';

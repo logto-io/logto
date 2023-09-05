@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -8,7 +8,7 @@ const sign_in_exp = {
   tabs: {
     branding: '品牌',
     sign_up_and_sign_in: '註冊與登錄',
-    others: '其他',
+    content: '內容',
   },
   welcome: {
     title: '自定義登錄體驗',
@@ -49,7 +49,7 @@ const sign_in_exp = {
       '輸入 CSS 代碼，修改顏色、字體、組件樣式、布局，定制你的登錄、註冊、忘記密碼等頁面。充分發揮創造力，讓你的用戶界面脫穎而出。',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       '尚未設置 SMS 短信連接器。在完成該配置前，用戶將無法通過此登錄方式登錄。<a>{{link}}</a>連接器。',

@@ -16,7 +16,7 @@ function ManageLanguageButton({ className }: Props) {
       <Button
         type="text"
         size="small"
-        title="sign_in_exp.others.languages.manage_language"
+        title="sign_in_exp.content.languages.manage_language"
         className={className}
         onClick={() => {
           setIsLanguageEditorOpen(true);

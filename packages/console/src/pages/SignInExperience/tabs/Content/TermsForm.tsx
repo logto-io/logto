@@ -18,23 +18,23 @@ function TermsForm() {
 
   return (
     <Card>
-      <div className={styles.title}>{t('sign_in_exp.others.terms_of_use.title')}</div>
-      <FormField title="sign_in_exp.others.terms_of_use.terms_of_use">
+      <div className={styles.title}>{t('sign_in_exp.content.terms_of_use.title')}</div>
+      <FormField title="sign_in_exp.content.terms_of_use.terms_of_use">
         <TextInput
           {...register('termsOfUseUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
           })}
           error={errors.termsOfUseUrl?.message}
-          placeholder={t('sign_in_exp.others.terms_of_use.terms_of_use_placeholder')}
+          placeholder={t('sign_in_exp.content.terms_of_use.terms_of_use_placeholder')}
         />
       </FormField>
-      <FormField title="sign_in_exp.others.terms_of_use.privacy_policy">
+      <FormField title="sign_in_exp.content.terms_of_use.privacy_policy">
         <TextInput
           {...register('privacyPolicyUrl', {
             validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
           })}
           error={errors.termsOfUseUrl?.message}
-          placeholder={t('sign_in_exp.others.terms_of_use.privacy_policy_placeholder')}
+          placeholder={t('sign_in_exp.content.terms_of_use.privacy_policy_placeholder')}
         />
       </FormField>
     </Card>

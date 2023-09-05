@@ -17,6 +17,6 @@ export const validatePassword = async (
 
   const issues = await checker.check(password, {});
   if (issues.length > 0) {
-    throw new RequestError('password.password_rejected', issues);
+    throw new RequestError('password.rejected', issues);
   }
 };

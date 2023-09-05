@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -8,7 +8,7 @@ const sign_in_exp = {
   tabs: {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
-    others: '기타',
+    content: '내용',
   },
   welcome: {
     title: '로그인 경험 사용자화',
@@ -49,7 +49,7 @@ const sign_in_exp = {
       '사용자 정의 CSS를 입력하여 원하는 대로 스타일을 조정할 수 있어요. 창의성을 표현하고 UI를 돋보이게 만드세요.',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'SMS 연동 설정이 아직 없어요. 이 구성을 완료하기 전에는 사용자가 이 로그인 방식으로 로그인 할 수 없어요. "연동 설정"에서 <a>{{link}}</a>하세요.',

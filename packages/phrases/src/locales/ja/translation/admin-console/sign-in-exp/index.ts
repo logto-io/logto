@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -8,7 +8,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'ブランディング',
     sign_up_and_sign_in: 'サインアップとサインイン',
-    others: 'その他',
+    content: '内容',
   },
   welcome: {
     title: 'サインインエクスペリエンスをカスタマイズ',
@@ -51,7 +51,7 @@ const sign_in_exp = {
       'カスタムCSSを入力して、すべてのスタイルをあなたの仕様に合わせて調整します。クリエイティビティを発揮して、UIを際立たせましょう。',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'まだSMSコネクタが設定されていません。構成を完了する前に、この方法でのサインインはできません。<a>{{link}}</a>「コネクタ」に移動してください',

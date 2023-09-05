@@ -13,19 +13,25 @@ type BaseProps = {
   children: React.ReactNode;
 };
 
-type LinkStyleProps = {
-  href: string;
+type LinkStyleProps<Paths> = {
+  href: Paths;
 };
 
 type TabStyleProps = {
   onClick: () => void;
 };
 
-type Props =
-  | (BaseProps & LinkStyleProps & Partial<Record<keyof TabStyleProps, undefined>>)
-  | (BaseProps & TabStyleProps & Partial<Record<keyof LinkStyleProps, undefined>>);
+type Props<Paths extends string> =
+  | (BaseProps & LinkStyleProps<Paths> & Partial<Record<keyof TabStyleProps, never>>)
+  | (BaseProps & TabStyleProps & Partial<Record<keyof LinkStyleProps<Paths>, never>>);
 
-function TabNavItem({ children, href, isActive, errorCount = 0, onClick }: Props) {
+function TabNavItem<Paths extends string>({
+  children,
+  href,
+  isActive,
+  errorCount = 0,
+  onClick,
+}: Props<Paths>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { match, getTo } = useMatchTenantPath();
   const selected = href ? match(href) : isActive;

@@ -11,10 +11,10 @@ type Props = {
   isActive: boolean;
 };
 
-function Others({ isActive }: Props) {
+function Content({ isActive }: Props) {
   return (
     <TabWrapper isActive={isActive} className={styles.tabContent}>
-      {isActive && <PageMeta titleKey={['sign_in_exp.tabs.others', 'sign_in_exp.page_title']} />}
+      {isActive && <PageMeta titleKey={['sign_in_exp.tabs.content', 'sign_in_exp.page_title']} />}
       <TermsForm />
       <LanguagesForm isManageLanguageVisible />
       <AuthenticationForm />
@@ -22,4 +22,4 @@ function Others({ isActive }: Props) {
   );
 }
 
-export default Others;
+export default Content;

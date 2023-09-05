@@ -1,4 +1,4 @@
-import others from './others.js';
+import content from './content.js';
 import sign_up_and_sign_in from './sign-up-and-sign-in.js';
 
 const sign_in_exp = {
@@ -9,7 +9,7 @@ const sign_in_exp = {
   tabs: {
     branding: 'Marka',
     sign_up_and_sign_in: 'Rejestracja i logowanie',
-    others: 'Inne',
+    content: 'Treść',
   },
   welcome: {
     title: 'Dostosuj swoje doświadczenie logowania',
@@ -52,7 +52,7 @@ const sign_in_exp = {
       'Wprowadź swoje niestandardowe CSS, aby dostosować style czegokolwiek do swoich dokładnych specyfikacji. Wyraź swoją kreatywność i wyróżnij swój interfejs użytkownika.',
   },
   sign_up_and_sign_in,
-  others,
+  content,
   setup_warning: {
     no_connector_sms:
       'Nie ustawiono jeszcze łącznika SMS. Przed zakończeniem konfiguracji użytkownicy nie będą mogli się zalogować przy użyciu tej metody. <a>{{link}}</a> w sekcji „Łączniki“',
