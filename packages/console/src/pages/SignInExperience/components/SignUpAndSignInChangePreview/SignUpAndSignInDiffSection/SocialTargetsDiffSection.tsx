@@ -25,11 +25,7 @@ function SocialTargetsDiffSection({ before, after, isAfter = false }: Props) {
 
   const hasChanged = (target: string) => !(before.includes(target) && after.includes(target));
 
-  if (!groups) {
-    return null;
-  }
-
-  if (error) {
+  if (!groups || displayTargets.length === 0 || error) {
     return null;
   }
 

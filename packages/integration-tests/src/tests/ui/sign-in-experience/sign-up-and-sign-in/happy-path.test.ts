@@ -1,5 +1,12 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { expectToClickNavTab, goToAdminConsole } from '#src/ui-helpers/index.js';
+import {
+  expectModalWithTitle,
+  expectToClickModalAction,
+  expectToClickNavTab,
+  expectToSaveChanges,
+  goToAdminConsole,
+  waitForToast,
+} from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';
@@ -547,7 +554,31 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
 
     it('add social sign-in connector', async () => {
       await expectToAddSocialSignInConnector(page, 'Apple');
-      await expectToSaveSignInExperience(page, { needToConfirmChanges: true });
+      // Should have diffs about social sign-in connector
+      await expectToSaveChanges(page);
+      await expectModalWithTitle(page, 'Reminder');
+      // No social content in the before section
+      const beforeSection = await expect(page).toMatchElement(
+        'div[class$=section]:has(div[class$=title])',
+        { text: 'Before' }
+      );
+      await expect(
+        expect(beforeSection).toMatchElement('div[class$=title]', {
+          text: 'Social',
+        })
+      ).rejects.toThrow();
+
+      // Have social content in the after section
+      const afterSection = await expect(page).toMatchElement(
+        'div[class$=section]:has(div[class$=title])',
+        { text: 'After' }
+      );
+      await expect(afterSection).toMatchElement('div[class$=title]', {
+        text: 'Social',
+      });
+
+      await expectToClickModalAction(page, 'Confirm');
+      await waitForToast(page, { text: 'Saved' });
 
       // Reset
       await expectToRemoveSocialSignInConnector(page, 'Apple');
