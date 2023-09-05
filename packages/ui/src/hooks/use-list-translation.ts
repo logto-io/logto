@@ -1,4 +1,4 @@
-import { conditionalArray } from '@silverhand/essentials';
+import { condString, conditionalArray } from '@silverhand/essentials';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -52,20 +52,22 @@ const useListTranslation = () => {
         return list[0];
       }
 
-      const prefix = list.slice(0, -1).join(t('list.separator'));
-      const suffix = list.at(-1)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion -- `list` is not empty
       const jointT = t(`list.${joint}`);
+      const prefix = list
+        .slice(0, -1)
+        .join(t('list.separator') + condString(!isCjk(jointT) && ' '));
+      const suffix = list.at(-1)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion -- `list` is not empty
 
-      if (!isCjk(jointT)) {
+      if (!isCjk(jointT) && list.length > 2) {
         // Oxford comma
-        return `${prefix}${t(`list.separator`)}${jointT}${suffix}`;
+        return `${prefix}${t(`list.separator`)} ${jointT} ${suffix}`;
       }
 
       return conditionalArray(
         prefix,
-        isCjk(prefix.at(-1)) && ' ',
+        !isCjk(prefix.at(-1)) && ' ',
         jointT,
-        isCjk(suffix[0]) && ' ',
+        !isCjk(suffix[0]) && ' ',
         suffix
       ).join('');
     },

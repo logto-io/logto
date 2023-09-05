@@ -36,7 +36,6 @@ const Lite = ({ className, autoFocus, onSubmit, errorMessage, clearErrorMessage 
 
   useEffect(() => {
     if (!isValid) {
-      console.log('!isValid');
       clearErrorMessage?.();
     }
   }, [clearErrorMessage, isValid]);

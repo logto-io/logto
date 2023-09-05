@@ -1,7 +1,38 @@
 import useListTranslation from './use-list-translation';
 
+const mockT = jest.fn((key: string) => key);
+
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useCallback: (function_: () => void) => function_,
+}));
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: mockT,
+  }),
+}));
+
 describe('useListTranslation (en)', () => {
   const translateList = useListTranslation();
+
+  beforeAll(() => {
+    mockT.mockImplementation((key: string) => {
+      switch (key) {
+        case 'list.or': {
+          return 'or';
+        }
+        case 'list.and': {
+          return 'and';
+        }
+        case 'list.separator': {
+          return ',';
+        }
+        default: {
+          return key;
+        }
+      }
+    });
+  });
 
   it('returns undefined for an empty list', () => {
     expect(translateList([])).toBeUndefined();
@@ -26,6 +57,25 @@ describe('useListTranslation (en)', () => {
 
 describe('useListTranslation (zh)', () => {
   const translateList = useListTranslation();
+
+  beforeAll(() => {
+    mockT.mockImplementation((key: string) => {
+      switch (key) {
+        case 'list.or': {
+          return '或';
+        }
+        case 'list.and': {
+          return '和';
+        }
+        case 'list.separator': {
+          return '、';
+        }
+        default: {
+          return key;
+        }
+      }
+    });
+  });
 
   it('returns undefined for an empty list', () => {
     expect(translateList([])).toBeUndefined();

@@ -7,10 +7,10 @@ import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 import usePasswordErrorMessage from './use-password-error-message';
 import { usePasswordPolicy } from './use-sie';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- we don't know the type of the api, use `any` to avoid type error
-export type PasswordAction<Response> = (...args: any[]) => Promise<Response>;
+export type PasswordAction<Response> = (password: string) => Promise<Response>;
 
-export type SuccessHandler<F> = F extends PasswordAction<infer Response>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- we don't care about the args type, but `any` is needed for type inference
+export type SuccessHandler<F> = F extends (...args: any[]) => Promise<infer Response>
   ? (result?: Response) => void
   : never;
 

@@ -36,7 +36,7 @@ const SetPassword = () => {
     }
   }, []);
   const { action } = usePasswordAction({
-    api: addProfile,
+    api: async (password) => addProfile({ password }),
     setErrorMessage,
     errorHandlers,
     successHandler,

@@ -80,7 +80,43 @@ describe('<RegisterPassword />', () => {
     expect(queryByText('description.not_found')).not.toBeNull();
   });
 
-  it('submit properly', async () => {
+  it('should show error message when password cannot pass fast check', async () => {
+    const { queryByText, getByText, container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          forgotPassword: {
+            email: false,
+            phone: false,
+          },
+        }}
+      >
+        <RegisterPassword />
+      </SettingsProvider>
+    );
+
+    const submitButton = getByText('action.save_password');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
+
+    act(() => {
+      if (passwordInput) {
+        fireEvent.change(passwordInput, { target: { value: '1234' } });
+      }
+
+      if (confirmPasswordInput) {
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234' } });
+      }
+
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.password_rejected.too_short')).not.toBeNull();
+    });
+  });
+
+  it('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider
         settings={{
