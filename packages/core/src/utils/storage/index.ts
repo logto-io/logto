@@ -11,12 +11,15 @@ export const buildUploadFile = (config: StorageProviderData): UploadFile => {
     return storage.uploadFile;
   }
 
-  const storage = buildS3Storage(
-    config.endpoint,
-    config.bucket,
-    config.accessKeyId,
-    config.accessSecretKey
-  );
+  const { endpoint, bucket, accessKeyId, accessSecretKey, region } = config;
+
+  const storage = buildS3Storage({
+    endpoint,
+    bucket,
+    accessKeyId,
+    secretAccessKey: accessSecretKey,
+    region,
+  });
 
   return storage.uploadFile;
 };

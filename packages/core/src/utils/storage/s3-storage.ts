@@ -2,17 +2,38 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 import type { UploadFile } from './types.js';
 
-export const buildS3Storage = (
-  endpoint: string,
-  bucket: string,
-  accessKeyId: string,
-  secretAccessKey: string
-) => {
+const getRegionFromEndpoint = (endpoint?: string) => {
+  if (!endpoint) {
+    return;
+  }
+
+  return /s3\.([^.]*)\.amazonaws/.exec(endpoint)?.[1];
+};
+
+type BuildS3StorageParameters = {
+  bucket: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  region?: string;
+  endpoint?: string;
+};
+
+export const buildS3Storage = ({
+  bucket,
+  accessKeyId,
+  secretAccessKey,
+  region,
+  endpoint,
+}: BuildS3StorageParameters) => {
+  if (!region && !endpoint) {
+    throw new Error('Either region or endpoint must be provided');
+  }
+
   // Endpoint example: s3.us-west-2.amazonaws.com
-  const region = /s3\.([^.]*)\.amazonaws/.exec(endpoint)?.[1] ?? 'us-east-1';
+  const finalRegion = region ?? getRegionFromEndpoint(endpoint) ?? 'us-east-1';
 
   const client = new S3Client({
-    region,
+    region: finalRegion,
     endpoint,
     credentials: {
       accessKeyId,
@@ -40,7 +61,7 @@ export const buildS3Storage = (
     }
 
     return {
-      url: `https://${bucket}.s3.${region}.amazonaws.com/${objectKey}`,
+      url: `https://${bucket}.s3.${finalRegion}.amazonaws.com/${objectKey}`,
     };
   };
 
