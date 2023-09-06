@@ -62,9 +62,11 @@ const description = {
   no_region_code_found: 'Aucun code de région trouvé',
   verify_email: 'Vérifiez votre e-mail',
   verify_phone: 'Vérifiez votre numéro de téléphone',
-  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.', // UNTRANSLATED
+  /** UNTRANSLATED */
+  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.',
+  /** UNTRANSLATED */
   password_requirements_with_type_other:
-    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.', // UNTRANSLATED
+    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.',
 };
 
 export default Object.freeze(description);

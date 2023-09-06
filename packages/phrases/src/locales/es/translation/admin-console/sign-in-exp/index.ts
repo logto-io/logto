@@ -11,7 +11,8 @@ const sign_in_exp = {
     branding: 'Branding',
     sign_up_and_sign_in: 'Registro e inicio de sesión',
     content: 'Contenido',
-    password_policy: 'Password policy', // UNTRANSLATED
+    /** UNTRANSLATED */
+    password_policy: 'Password policy',
   },
   welcome: {
     title: 'Personalice la experiencia de inicio de sesión',

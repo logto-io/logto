@@ -11,7 +11,8 @@ const sign_in_exp = {
     branding: 'Branding',
     sign_up_and_sign_in: 'Anmeldung und Registrierung',
     content: 'Inhalt',
-    password_policy: 'Password policy', // UNTRANSLATED
+    /** UNTRANSLATED */
+    password_policy: 'Password policy',
   },
   welcome: {
     title: 'Anmeldungs-Erlebnis anpassen',

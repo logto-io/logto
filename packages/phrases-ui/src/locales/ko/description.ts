@@ -55,9 +55,11 @@ const description = {
   no_region_code_found: '지역 코드를 찾을 수 없습니다.',
   verify_email: '이메일 인증',
   verify_phone: '휴대전화번호 인증',
-  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.', // UNTRANSLATED
+  /** UNTRANSLATED */
+  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.',
+  /** UNTRANSLATED */
   password_requirements_with_type_other:
-    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.', // UNTRANSLATED
+    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.',
 };
 
 export default Object.freeze(description);

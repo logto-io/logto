@@ -10,7 +10,8 @@ const sign_in_exp = {
     branding: '品牌',
     sign_up_and_sign_in: '註冊與登錄',
     content: '內容',
-    password_policy: 'Password policy', // UNTRANSLATED
+    /** UNTRANSLATED */
+    password_policy: 'Password policy',
   },
   welcome: {
     title: '自定義登錄體驗',
