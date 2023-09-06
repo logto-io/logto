@@ -36,7 +36,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
-import GuideModal from '../Applications/components/Guide/GuideModal';
+import GuideModal from '../Applications/components/GuideModal';
 
 import AdvancedSettings from './components/AdvancedSettings';
 import GuideDrawer from './components/GuideDrawer';

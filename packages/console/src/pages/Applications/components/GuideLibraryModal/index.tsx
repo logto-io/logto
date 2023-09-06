@@ -30,18 +30,19 @@ function GuideLibraryModal({ isOpen, onClose }: Props) {
     >
       <div className={styles.container}>
         <GuideHeader onClose={onClose} />
-        <GuideLibrary hasFilters className={styles.content} />
+        <GuideLibrary hasFilters hasCardButton className={styles.content} />
         <nav className={styles.actionBar}>
-          <span className={styles.text}>{t('do_not_need_tutorial')}</span>
-          <Button
-            className={styles.button}
-            size="large"
-            title="applications.guide.create_without_framework"
-            type="outline"
-            onClick={() => {
-              setShowCreateForm(true);
-            }}
-          />
+          <div className={styles.wrapper}>
+            <span className={styles.text}>{t('do_not_need_tutorial')}</span>
+            <Button
+              size="large"
+              title="applications.guide.create_without_framework"
+              type="outline"
+              onClick={() => {
+                setShowCreateForm(true);
+              }}
+            />
+          </div>
         </nav>
       </div>
       {showCreateForm && (

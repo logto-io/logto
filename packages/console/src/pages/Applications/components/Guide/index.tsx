@@ -9,12 +9,12 @@ import { type GuideMetadata } from '@/assets/docs/guides/types';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import NotFound from '@/pages/NotFound';
 
-import GuideHeader from '../GuideHeader';
 import StepsSkeleton from '../StepsSkeleton';
 
 import * as styles from './index.module.scss';
@@ -86,9 +86,8 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   );
 
   return (
-    <div className={classNames(styles.container, className)}>
-      {!isCompact && <GuideHeader onClose={onClose} />}
-      <div className={styles.content}>
+    <>
+      <OverlayScrollbar className={classNames(styles.content, className)}>
         {memorizedContext ? (
           <GuideContext.Provider value={memorizedContext}>
             <MDXProvider
@@ -125,20 +124,20 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
         ) : (
           <NotFound className={styles.notFound} />
         )}
-        {!isCompact && memorizedContext && (
-          <nav className={styles.actionBar}>
-            <div className={styles.layout}>
-              <Button
-                size="large"
-                title="applications.guide.finish_and_done"
-                type="primary"
-                onClick={onClose}
-              />
-            </div>
-          </nav>
-        )}
-      </div>
-    </div>
+      </OverlayScrollbar>
+      {memorizedContext && (
+        <nav className={styles.actionBar}>
+          <div className={styles.layout}>
+            <Button
+              size="large"
+              title="applications.guide.finish_and_done"
+              type="primary"
+              onClick={onClose}
+            />
+          </div>
+        </nav>
+      )}
+    </>
   );
 }
 

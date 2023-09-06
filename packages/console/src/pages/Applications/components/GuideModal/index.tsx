@@ -3,7 +3,10 @@ import Modal from 'react-modal';
 
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import Guide from '.';
+import Guide from '../Guide';
+import GuideHeader from '../GuideHeader';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   guideId: string;
@@ -27,7 +30,10 @@ function GuideModal({ guideId, app, onClose }: Props) {
       className={modalStyles.fullScreen}
       onRequestClose={closeModal}
     >
-      <Guide guideId={guideId} app={app} onClose={closeModal} />
+      <div className={styles.modalContainer}>
+        <GuideHeader onClose={closeModal} />
+        <Guide className={styles.guide} guideId={guideId} app={app} onClose={closeModal} />
+      </div>
     </Modal>
   );
 }

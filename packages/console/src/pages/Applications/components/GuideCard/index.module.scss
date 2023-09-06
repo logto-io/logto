@@ -11,9 +11,10 @@
   min-width: 220px;
   max-width: 460px;
   justify-content: space-between;
+  cursor: pointer;
 
-  &.compact {
-    cursor: pointer;
+  &.hasButton {
+    cursor: default;
   }
 
   &.hasBorder {
