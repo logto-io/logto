@@ -1,6 +1,7 @@
 import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
 import { TenantTag } from '@logto/schemas/models';
 import { conditionalArray, noop } from '@silverhand/essentials';
+import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
@@ -65,17 +66,27 @@ const { tenantId, indicator } = defaultManagementApi.resource;
  * - For cloud, the initial tenants data is empty, and it will be fetched from the cloud API.
  * - OSS has a fixed tenant with ID `default` and no cloud API to dynamically fetch tenants.
  */
-const initialTenants = Object.freeze(
-  conditionalArray(
-    !isCloud && {
-      id: tenantId,
-      name: `tenant_${tenantId}`,
-      tag: TenantTag.Development,
-      indicator,
-      planId: `${ReservedPlanId.free}`, // `planId` is string type.
-    }
-  )
-);
+const defaultTenantResponse: TenantResponse = {
+  id: tenantId,
+  name: `tenant_${tenantId}`,
+  tag: TenantTag.Development,
+  indicator,
+  subscription: {
+    status: 'active',
+    planId: ReservedPlanId.free,
+    currentPeriodStart: dayjs().toDate(),
+    currentPeriodEnd: dayjs().add(1, 'month').toDate(),
+  },
+  usage: {
+    activeUsers: 0,
+    cost: 0,
+  },
+  openInvoices: [],
+  isSuspended: false,
+  planId: ReservedPlanId.free, // Reserved for compatibility with cloud
+};
+
+const initialTenants = Object.freeze(conditionalArray(!isCloud && defaultTenantResponse));
 
 export const TenantsContext = createContext<Tenants>({
   tenants: initialTenants,
