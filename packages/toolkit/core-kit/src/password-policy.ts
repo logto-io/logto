@@ -28,8 +28,8 @@ export type PasswordPolicy = {
     pwned: boolean;
     /** Whether to reject passwords that like '123456' or 'aaaaaa'. */
     repetitionAndSequence: boolean;
-    /** Whether to reject passwords that include personal information. */
-    personalInfo: boolean;
+    /** Whether to reject passwords that include current user information. */
+    userInfo: boolean;
     /** Whether to reject passwords that include specific words. */
     words: string[];
   };
@@ -52,7 +52,7 @@ export const passwordPolicyGuard = z.object({
     .object({
       pwned: z.boolean().default(true),
       repetitionAndSequence: z.boolean().default(true),
-      personalInfo: z.boolean().default(true),
+      userInfo: z.boolean().default(true),
       words: z.string().array().default([]),
     })
     .default({}),
@@ -67,7 +67,7 @@ export type PasswordRejectionCode =
   | 'pwned'
   | 'restricted.repetition'
   | 'restricted.sequence'
-  | 'restricted.personal_info'
+  | 'restricted.user_info'
   | 'restricted.words';
 
 /** A password issue that does not meet the policy. */
@@ -78,8 +78,8 @@ export type PasswordIssue<Code extends PasswordRejectionCode = PasswordRejection
   interpolation?: Record<string, unknown>;
 };
 
-/** Personal information to check. */
-export type PersonalInfo = Partial<{
+/** User information to check. */
+export type UserInfo = Partial<{
   name: string;
   username: string;
   email: string;
@@ -125,15 +125,15 @@ export class PasswordPolicyChecker {
    * Check if a password meets all the policy requirements.
    *
    * @param password - Password to check.
-   * @param personalInfo - Personal information to check. Required if the policy
-   * requires to reject passwords that include personal information.
+   * @param userInfo - User information to check. Required if the policy
+   * requires to reject passwords that include user information.
    * @returns An array of issues. If the password meets the policy, an empty array will be returned.
-   * @throws TypeError - If the policy requires to reject passwords that include personal information
-   * but the personal information is not provided.
+   * @throws TypeError - If the policy requires to reject passwords that include user information
+   * but the user information is not provided.
    */
   /* eslint-disable @silverhand/fp/no-mutating-methods */
 
-  async check(password: string, personalInfo?: PersonalInfo): Promise<PasswordIssue[]> {
+  async check(password: string, userInfo?: UserInfo): Promise<PasswordIssue[]> {
     const issues: PasswordIssue[] = this.fastCheck(password);
 
     if (this.policy.rejects.pwned && (await this.hasBeenPwned(password))) {
@@ -165,14 +165,14 @@ export class PasswordPolicyChecker {
       });
     }
 
-    if (this.policy.rejects.personalInfo) {
-      if (!personalInfo) {
-        throw new TypeError('Personal information is required to check personal information.');
+    if (this.policy.rejects.userInfo) {
+      if (!userInfo) {
+        throw new TypeError('User information is required to check user information.');
       }
 
-      if (this.hasPersonalInfo(password, personalInfo)) {
+      if (this.hasUserInfo(password, userInfo)) {
         issues.push({
-          code: 'password_rejected.restricted.personal_info',
+          code: 'password_rejected.restricted.user_info',
         });
       }
     }
@@ -283,15 +283,15 @@ export class PasswordPolicyChecker {
   }
 
   /**
-   * Check if the given password contains personal information.
+   * Check if the given password contains user information.
    *
    * @param password - Password to check.
-   * @param personalInfo - Personal information to check.
-   * @returns Whether the password contains personal information.
+   * @param userInfo - User information to check.
+   * @returns Whether the password contains user information.
    */
-  hasPersonalInfo(password: string, personalInfo: PersonalInfo): boolean {
+  hasUserInfo(password: string, userInfo: UserInfo): boolean {
     const lowercasedPassword = password.toLowerCase();
-    const { name, username, email, phoneNumber } = personalInfo;
+    const { name, username, email, phoneNumber } = userInfo;
 
     if (
       name

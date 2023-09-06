@@ -1,5 +1,6 @@
 import { PasswordPolicyChecker, passwordPolicyGuard } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -39,9 +40,30 @@ export const usePasswordPolicy = () => {
   );
   const policyChecker = useMemo(() => new PasswordPolicyChecker(policy), [policy]);
 
+  const requirementsDescription = useMemo(
+    () =>
+      t('description.password_requirements', {
+        items: condArray(
+          // There's no need to show the length requirement if it can be satisfied by the character types
+          policy.length.min > policy.characterTypes.min &&
+            t('description.password_requirement.length', { count: policy.length.min }),
+          // Show the character types requirement if:
+          // - It's greater than 1, or;
+          // - The length requirement is equal to or less than 1 (since the length requirement will be hidden in this case)
+          (policy.characterTypes.min > 1 || policy.length.min <= 1) &&
+            t('description.password_requirement.character_types', {
+              count: policy.characterTypes.min,
+            })
+        ),
+      }),
+    [t, policy.length.min, policy.characterTypes.min]
+  );
+
   return {
     policy,
     policyChecker,
+    /** The localized description of the password policy. */
+    requirementsDescription,
   };
 };
 

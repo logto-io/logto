@@ -49,6 +49,7 @@ const RegisterPassword = () => {
       length: { min },
       characterTypes: { min: count },
     },
+    requirementsDescription,
   } = usePasswordPolicy();
 
   if (!signUpMethods.includes(SignInIdentifier.Username)) {
@@ -58,7 +59,7 @@ const RegisterPassword = () => {
   return (
     <SecondaryPageLayout
       title="description.new_password"
-      description="description.password_requirements_with_type"
+      description={<span>{requirementsDescription}</span>}
       descriptionProps={{ min, count }}
     >
       <SetPassword

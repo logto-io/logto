@@ -271,18 +271,11 @@ const traverseNode = async (
       if (Array.isArray(value)) {
         const [phrase] = value;
 
-        // If the key exists in the target language and the value is a string,
-        // use the value of the target language and inherit the untranslated
-        // mark; otherwise, use the value of the baseline language and add a
-        // comment to indicate that the phrase is untranslated to help identify
-        // missing translations.
-        if (Array.isArray(existingValue)) {
-          if (!existingValue[1]) {
-            await fs.appendFile(
-              targetFilePath,
-              `${' '.repeat(tabSize)}/** ${untranslatedMark} */\n`
-            );
-          }
+        // If the key exists in the target language and the value is a translated
+        // string, use the value of the target language; otherwise, use the value
+        // of the baseline language and add a comment to indicate that the phrase
+        // is untranslated to help identify missing translations.
+        if (Array.isArray(existingValue) && existingValue[1]) {
           await fs.appendFile(
             targetFilePath,
             `${' '.repeat(tabSize)}${key}: ${existingValue[0]},\n`

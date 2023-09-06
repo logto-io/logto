@@ -47,12 +47,13 @@ const SetPassword = () => {
       length: { min },
       characterTypes: { min: count },
     },
+    requirementsDescription,
   } = usePasswordPolicy();
 
   return (
     <SecondaryPageLayout
       title="description.set_password"
-      description="description.password_requirements_with_type"
+      description={<span>{requirementsDescription}</span>}
       descriptionProps={{ min, count }}
     >
       <SetPasswordForm

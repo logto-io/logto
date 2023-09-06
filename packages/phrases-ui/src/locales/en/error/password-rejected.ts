@@ -9,7 +9,7 @@ const password_rejected = {
   restricted_found: 'Avoid overusing {{list}}.',
   'restricted.repetition': 'repeated characters',
   'restricted.sequence': 'sequential characters',
-  'restricted.personal_info': 'your personal information',
+  'restricted.user_info': 'your personal information',
   'restricted.words': 'product context',
 } satisfies Record<PasswordRejectionCode, string> & {
   // Use for displaying a list of restricted issues
