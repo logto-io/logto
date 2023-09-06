@@ -15,21 +15,14 @@ type Props = {
 };
 
 function GuideModal({ guideId, app, onClose }: Props) {
-  if (!app) {
-    return null;
-  }
-
   const closeModal = () => {
-    onClose(app.id);
+    if (app) {
+      onClose(app.id);
+    }
   };
 
   return (
-    <Modal
-      shouldCloseOnEsc
-      isOpen={Boolean(app)}
-      className={modalStyles.fullScreen}
-      onRequestClose={closeModal}
-    >
+    <Modal shouldCloseOnEsc isOpen className={modalStyles.fullScreen} onRequestClose={closeModal}>
       <div className={styles.modalContainer}>
         <GuideHeader onClose={closeModal} />
         <Guide className={styles.guide} guideId={guideId} app={app} onClose={closeModal} />

@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .step {
   display: flex;
@@ -6,6 +7,8 @@
   padding: _.unit(5) _.unit(6);
   border-radius: 16px;
   background-color: var(--color-layer-1);
+  max-width: dim.$guide-main-content-max-width;
+  margin: 0 auto;
 
   .index {
     @include _.shimmering-animation;

@@ -51,7 +51,7 @@ export const GuideContext = createContext<GuideContextType>({
 type Props = {
   className?: string;
   guideId: string;
-  app: ApplicationResponse;
+  app?: ApplicationResponse;
   isCompact?: boolean;
   onClose: () => void;
 };
@@ -67,20 +67,21 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   const memorizedContext = useMemo(
     () =>
       conditional(
-        !!guide && {
-          metadata: guide.metadata,
-          Logo: guide.Logo,
-          app,
-          endpoint: tenantEndpoint?.toString() ?? '',
-          alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
-          redirectUris: app.oidcClientMetadata.redirectUris,
-          postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
-          isCompact: Boolean(isCompact),
-          sampleUrls: {
-            origin: 'http://localhost:3001/',
-            callback: 'http://localhost:3001/callback',
-          },
-        }
+        !!guide &&
+          !!app && {
+            metadata: guide.metadata,
+            Logo: guide.Logo,
+            app,
+            endpoint: tenantEndpoint?.toString() ?? '',
+            alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
+            redirectUris: app.oidcClientMetadata.redirectUris,
+            postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
+            isCompact: Boolean(isCompact),
+            sampleUrls: {
+              origin: 'http://localhost:3001/',
+              callback: 'http://localhost:3001/callback',
+            },
+          }
       ) satisfies GuideContextType | undefined,
     [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
   );
@@ -88,7 +89,9 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   return (
     <>
       <OverlayScrollbar className={classNames(styles.content, className)}>
-        {memorizedContext ? (
+        {!app && <StepsSkeleton />}
+        {!!app && !guide && <NotFound className={styles.notFound} />}
+        {memorizedContext && (
           <GuideContext.Provider value={memorizedContext}>
             <MDXProvider
               components={{
@@ -121,8 +124,6 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
               </Suspense>
             </MDXProvider>
           </GuideContext.Provider>
-        ) : (
-          <NotFound className={styles.notFound} />
         )}
       </OverlayScrollbar>
       {memorizedContext && (

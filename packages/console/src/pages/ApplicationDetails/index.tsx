@@ -52,7 +52,7 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 function ApplicationDetails() {
   const { id, guideId, tab } = useParams();
   const { navigate, match } = useTenantPathname();
-  const isGuideView = id && guideId && match(`/applications/${id}/guide/${guideId}`);
+  const isGuideView = !!id && !!guideId && match(`/applications/${id}/guide/${guideId}`);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ApplicationResponse, RequestError>(
@@ -144,6 +144,18 @@ function ApplicationDetails() {
   const onCloseDrawer = () => {
     setIsReadmeOpen(false);
   };
+
+  if (isGuideView) {
+    return (
+      <GuideModal
+        guideId={guideId}
+        app={data}
+        onClose={(id) => {
+          navigate(`/applications/${id}`);
+        }}
+      />
+    );
+  }
 
   return (
     <DetailsPage
@@ -242,15 +254,6 @@ function ApplicationDetails() {
         </>
       )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
-      {isGuideView && (
-        <GuideModal
-          guideId={guideId}
-          app={data}
-          onClose={(id) => {
-            navigate(`/applications/${id}`);
-          }}
-        />
-      )}
     </DetailsPage>
   );
 }
