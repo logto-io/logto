@@ -1,10 +1,17 @@
 @use '@/scss/underscore' as _;
 
 .platforms {
-  margin-top: _.unit(6);
+  padding: _.unit(4) _.unit(6);
+  background: var(--color-bg-layer-2);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: _.unit(3);
+  margin-top: _.unit(4);
 
   .title {
     font: var(--font-label-2);
-    margin-bottom: _.unit(3);
   }
 }
