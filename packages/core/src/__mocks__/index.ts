@@ -44,24 +44,6 @@ export const mockResource: Resource = {
   isDefault: false,
 };
 
-export const mockResource2: Resource = {
-  tenantId: 'fake_tenant',
-  id: 'logto_api2',
-  name: 'management api',
-  indicator: 'logto.dev/api',
-  accessTokenTtl: 3600,
-  isDefault: false,
-};
-
-export const mockResource3: Resource = {
-  tenantId: 'fake_tenant',
-  id: 'logto_api3',
-  name: 'management api',
-  indicator: 'logto.dev/api',
-  accessTokenTtl: 3600,
-  isDefault: false,
-};
-
 export const mockScope: Scope = {
   tenantId: 'fake_tenant',
   id: 'scope_id',
