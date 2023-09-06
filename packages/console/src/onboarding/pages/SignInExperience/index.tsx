@@ -176,10 +176,7 @@ function SignInExperience() {
                 )}
               />
             </FormField>
-            <FormField
-              title="cloud.sie.identifier_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField title="cloud.sie.identifier_field" headlineSpacing="large">
               <Controller
                 name="identifier"
                 control={control}
@@ -196,11 +193,7 @@ function SignInExperience() {
                 )}
               />
             </FormField>
-            <FormField
-              isMultiple
-              title="cloud.sie.authn_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField isMultiple title="cloud.sie.authn_field" headlineSpacing="large">
               <Controller
                 name="authentications"
                 control={control}
@@ -220,11 +213,7 @@ function SignInExperience() {
                 )}
               />
             </FormField>
-            <FormField
-              isMultiple
-              title="cloud.sie.social_field"
-              headlineClassName={styles.cardFieldHeadline}
-            >
+            <FormField isMultiple title="cloud.sie.social_field" headlineSpacing="large">
               <Controller
                 name="socialTargets"
                 control={control}

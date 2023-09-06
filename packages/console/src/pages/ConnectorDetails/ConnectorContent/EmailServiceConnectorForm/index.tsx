@@ -1,5 +1,5 @@
 import { urlRegEx } from '@logto/connector-kit';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -91,7 +91,7 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
       <FormField
         title="connector_details.logto_email.app_logo_field"
         tip={<DynamicT forKey="connector_details.logto_email.app_logo_tip" />}
-        headlineClassName={conditional(isUserAssetsServiceReady && styles.imageFieldHeadline)}
+        headlineSpacing={isUserAssetsServiceReady ? 'large' : 'default'}
       >
         {isUserAssetsServiceReady ? (
           <Controller

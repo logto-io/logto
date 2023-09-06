@@ -11,6 +11,10 @@
   align-items: center;
   margin-bottom: _.unit(1);
 
+  &.withLargeSpacing {
+    margin-bottom: _.unit(2);
+  }
+
   .title {
     font: var(--font-label-2);
     color: var(--color-text);

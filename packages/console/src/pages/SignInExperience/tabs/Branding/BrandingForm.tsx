@@ -74,7 +74,7 @@ function BrandingForm() {
               {t('sign_in_exp.branding.favicon')}
             </DangerousRaw>
           }
-          headlineClassName={styles.imageFieldHeadline}
+          headlineSpacing="large"
         >
           <LogoAndFaviconUploader />
         </FormField>
@@ -131,10 +131,7 @@ function BrandingForm() {
             )}
           </FormField>
           {isUserAssetsServiceReady ? (
-            <FormField
-              title="sign_in_exp.branding.dark_logo_image"
-              headlineClassName={styles.imageFieldHeadline}
-            >
+            <FormField title="sign_in_exp.branding.dark_logo_image" headlineSpacing="large">
               <Controller
                 name="branding.darkLogoUrl"
                 control={control}
