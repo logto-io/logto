@@ -36,10 +36,9 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
 
-import GuideModal from '../Applications/components/GuideModal';
-
 import AdvancedSettings from './components/AdvancedSettings';
 import GuideDrawer from './components/GuideDrawer';
+import GuideModal from './components/GuideModal';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
 
@@ -150,7 +149,7 @@ function ApplicationDetails() {
       <GuideModal
         guideId={guideId}
         app={data}
-        onClose={(id) => {
+        onClose={() => {
           navigate(`/applications/${id}`);
         }}
       />

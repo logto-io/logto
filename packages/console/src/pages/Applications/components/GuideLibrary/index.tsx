@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
+import GuideCardGroup from '@/components/Guide/GuideCardGroup';
+import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import ProTag from '@/components/ProTag';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -16,10 +19,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
 
 import CreateForm from '../CreateForm';
-import { type SelectedGuide } from '../GuideCard';
-import GuideGroup from '../GuideGroup';
 
-import useAppGuideMetadata from './hook';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -35,7 +35,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
-  const [getFilteredMetadata, getStructuredMetadata] = useAppGuideMetadata();
+  const { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
 
   const { currentTenantId } = useContext(TenantsContext);
@@ -43,13 +43,13 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
   const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
 
   const structuredMetadata = useMemo(
-    () => getStructuredMetadata({ categories: filterCategories }),
-    [getStructuredMetadata, filterCategories]
+    () => getStructuredAppGuideMetadata({ categories: filterCategories }),
+    [getStructuredAppGuideMetadata, filterCategories]
   );
 
   const filteredMetadata = useMemo(
-    () => getFilteredMetadata({ keyword, categories: filterCategories }),
-    [getFilteredMetadata, keyword, filterCategories]
+    () => getFilteredAppGuideMetadata({ keyword, categories: filterCategories }),
+    [getFilteredAppGuideMetadata, keyword, filterCategories]
   );
 
   const onClickGuide = useCallback((data: SelectedGuide) => {
@@ -108,7 +108,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
           )}
           {keyword &&
             (filteredMetadata?.length ? (
-              <GuideGroup
+              <GuideCardGroup
                 className={styles.guideGroup}
                 hasCardBorder={hasCardBorder}
                 hasCardButton={hasCardButton}
@@ -122,7 +122,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
             (filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
               (category) =>
                 structuredMetadata[category].length > 0 && (
-                  <GuideGroup
+                  <GuideCardGroup
                     key={category}
                     className={styles.guideGroup}
                     hasCardBorder={hasCardBorder}

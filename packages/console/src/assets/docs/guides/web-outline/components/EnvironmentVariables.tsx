@@ -2,15 +2,14 @@ import { type SnakeCaseOidcConfig } from '@logto/schemas';
 import { useContext } from 'react';
 import useSWR from 'swr';
 
+import { GuideContext } from '@/components/Guide';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import { type RequestError } from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 
 export default function EnvironmentVariables() {
-  const {
-    app: { id, secret },
-  } = useContext(GuideContext);
+  const { app } = useContext(GuideContext);
+  const { id, secret } = app ?? {};
   const { data } = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
   const authorizationEndpoint = data?.authorization_endpoint ?? '[LOADING]';
   const tokenEndpoint = data?.token_endpoint ?? '[LOADING]';
@@ -26,20 +25,24 @@ export default function EnvironmentVariables() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>OIDC_CLIENT_ID</td>
-          <td>App ID</td>
-          <td>
-            <CopyToClipboard value={id} />
-          </td>
-        </tr>
-        <tr>
-          <td>OIDC_CLIENT_SECRET</td>
-          <td>App secret</td>
-          <td>
-            <CopyToClipboard value={secret} />
-          </td>
-        </tr>
+        {id && (
+          <tr>
+            <td>OIDC_CLIENT_ID</td>
+            <td>App ID</td>
+            <td>
+              <CopyToClipboard value={id} />
+            </td>
+          </tr>
+        )}
+        {secret && (
+          <tr>
+            <td>OIDC_CLIENT_SECRET</td>
+            <td>App secret</td>
+            <td>
+              <CopyToClipboard value={secret} />
+            </td>
+          </tr>
+        )}
         <tr>
           <td>OIDC_AUTH_URI</td>
           <td>Authorization endpoint</td>

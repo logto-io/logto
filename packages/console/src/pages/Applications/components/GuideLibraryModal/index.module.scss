@@ -17,34 +17,4 @@
     flex: 1;
     overflow: hidden;
   }
-
-  .actionBar {
-    inset: auto 0 0 0;
-    width: 100%;
-    padding: _.unit(4) _.unit(6);
-    background-color: var(--color-layer-1);
-    box-shadow: var(--shadow-3);
-    z-index: 1;
-
-    .wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: dim.$guide-main-content-max-width;
-      margin: 0 auto;
-    }
-
-    .text {
-      font: var(--font-body-2);
-      color: var(--color-text);
-      margin-right: _.unit(3);
-      @include _.multi-line-ellipsis(2);
-    }
-  }
-}
-
-@media screen and (max-width: dim.$guide-content-max-width) {
-  .container .actionBar .wrapper {
-    margin: 0 0 0 _.unit(62.5);
-  }
 }

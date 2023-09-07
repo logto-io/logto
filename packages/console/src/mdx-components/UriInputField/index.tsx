@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import { GuideContext } from '@/components/Guide';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import Button from '@/ds-components/Button';
 import {
@@ -16,7 +17,6 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 import type { GuideForm } from '@/types/guide';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
@@ -38,10 +38,9 @@ function UriInputField({ name, defaultValue }: Props) {
     reset,
     formState: { isSubmitting },
   } = methods;
-  const {
-    app: { id: appId },
-  } = useContext(GuideContext);
-  const { data, mutate } = useSWR<Application, RequestError>(`api/applications/${appId}`);
+  const { app } = useContext(GuideContext);
+  const appId = app?.id;
+  const { data, mutate } = useSWR<Application, RequestError>(appId && `api/applications/${appId}`);
 
   const ref = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -52,6 +51,9 @@ function UriInputField({ name, defaultValue }: Props) {
       : 'application_details.post_sign_out_redirect_uri';
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
+    if (!appId) {
+      return;
+    }
     const updatedApp = await api
       .patch(`api/applications/${appId}`, {
         json: {

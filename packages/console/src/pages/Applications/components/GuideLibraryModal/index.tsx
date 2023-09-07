@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import Button from '@/ds-components/Button';
+import ModalFooter from '@/components/Guide/ModalFooter';
+import ModalHeader from '@/components/Guide/ModalHeader';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import CreateForm from '../CreateForm';
-import GuideHeader from '../GuideHeader';
 import GuideLibrary from '../GuideLibrary';
 
 import * as styles from './index.module.scss';
@@ -18,7 +17,6 @@ type Props = {
 };
 
 function GuideLibraryModal({ isOpen, onClose }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
   const { navigate } = useTenantPathname();
   const [showCreateForm, setShowCreateForm] = useState(false);
   return (
@@ -29,21 +27,23 @@ function GuideLibraryModal({ isOpen, onClose }: Props) {
       onRequestClose={onClose}
     >
       <div className={styles.container}>
-        <GuideHeader onClose={onClose} />
+        <ModalHeader
+          title="applications.guide.modal_header_title"
+          subtitle="applications.guide.header_subtitle"
+          buttonText="applications.guide.cannot_find_guide"
+          requestFormFieldLabel="applications.guide.describe_guide_looking_for"
+          requestFormFieldPlaceholder="applications.guide.describe_guide_looking_for_placeholder"
+          requestSuccessMessage="applications.guide.request_guide_successfully"
+          onClose={onClose}
+        />
         <GuideLibrary hasFilters hasCardButton className={styles.content} />
-        <nav className={styles.actionBar}>
-          <div className={styles.wrapper}>
-            <span className={styles.text}>{t('do_not_need_tutorial')}</span>
-            <Button
-              size="large"
-              title="applications.guide.create_without_framework"
-              type="outline"
-              onClick={() => {
-                setShowCreateForm(true);
-              }}
-            />
-          </div>
-        </nav>
+        <ModalFooter
+          content="applications.guide.do_not_need_tutorial"
+          buttonText="applications.guide.create_without_framework"
+          onClick={() => {
+            setShowCreateForm(true);
+          }}
+        />
       </div>
       {showCreateForm && (
         <CreateForm
