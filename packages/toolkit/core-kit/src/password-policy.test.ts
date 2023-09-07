@@ -52,23 +52,23 @@ describe('PasswordPolicyChecker -> check()', () => {
     expect(await checker.check('aaa', {})).toEqual([
       { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.character_types', interpolation: { min: 2 } },
-      { code: 'password_rejected.repetition' },
+      { code: 'password_rejected.restricted.repetition' },
     ]);
 
     expect(await checker.check('123456', { phoneNumber: '12345' })).toEqual([
       { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.character_types', interpolation: { min: 2 } },
-      { code: 'password_rejected.sequence' },
       { code: 'password_rejected.pwned' },
-      { code: 'password_rejected.personal_info' },
+      { code: 'password_rejected.restricted.sequence' },
+      { code: 'password_rejected.restricted.personal_info' },
     ]);
 
     expect(await checker.check('aaaaaatest😀', {})).toEqual([
       { code: 'password_rejected.too_long', interpolation: { max: 8 } },
       { code: 'password_rejected.unsupported_characters' },
-      { code: 'password_rejected.repetition' },
+      { code: 'password_rejected.restricted.repetition' },
       {
-        code: 'password_rejected.restricted_words',
+        code: 'password_rejected.restricted.words',
         interpolation: { words: 'test\naaaa', count: 2 },
       },
     ]);

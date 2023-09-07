@@ -51,6 +51,9 @@ const description = {
   no_region_code_found: '沒有找到區域碼',
   verify_email: '驗證你的郵箱',
   verify_phone: '驗證你的手機號',
+  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.', // UNTRANSLATED
+  password_requirements_with_type_other:
+    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.', // UNTRANSLATED
 };
 
 export default Object.freeze(description);

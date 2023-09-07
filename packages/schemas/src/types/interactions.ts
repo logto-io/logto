@@ -1,4 +1,4 @@
-import { emailRegEx, phoneRegEx, usernameRegEx, passwordRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { jsonObjectGuard } from '../foundations/index.js';
@@ -88,7 +88,7 @@ export const profileGuard = z.object({
   email: z.string().regex(emailRegEx).optional(),
   phone: z.string().regex(phoneRegEx).optional(),
   connectorId: z.string().optional(),
-  password: z.string().regex(passwordRegEx).optional(),
+  password: z.string().optional(),
 });
 
 export type Profile = z.infer<typeof profileGuard>;

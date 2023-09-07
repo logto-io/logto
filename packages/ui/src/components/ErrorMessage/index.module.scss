@@ -3,4 +3,8 @@
 .error {
   font: var(--font-body-2);
   color: var(--color-danger-default);
+
+  ul {
+    padding-inline-start: 1rem;
+  }
 }

@@ -31,6 +31,29 @@ describe('ForgotPassword', () => {
     expect(queryByText('action.save_password')).not.toBeNull();
   });
 
+  test('should show error message when password cannot pass fast check', async () => {
+    const { queryByText, getByText, container } = renderWithPageContext(<ResetPassword />);
+    const submitButton = getByText('action.save_password');
+    const passwordInput = container.querySelector('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirmPassword"]');
+
+    act(() => {
+      if (passwordInput) {
+        fireEvent.change(passwordInput, { target: { value: '1234' } });
+      }
+
+      if (confirmPasswordInput) {
+        fireEvent.change(confirmPasswordInput, { target: { value: '1234' } });
+      }
+
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.password_rejected.too_short')).not.toBeNull();
+    });
+  });
+
   test('should submit properly', async () => {
     const { getByText, container } = renderWithPageContext(<ResetPassword />);
     const submitButton = getByText('action.save_password');

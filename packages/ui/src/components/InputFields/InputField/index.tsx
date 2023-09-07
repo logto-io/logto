@@ -28,25 +28,40 @@ const InputField = (
     ...props
   }: Props,
   reference: ForwardedRef<HTMLInputElement>
-) => (
-  <div className={className}>
-    <div
-      className={classNames(
-        styles.inputField,
-        isDanger && styles.danger,
-        isSuffixFocusVisible && styles.isSuffixFocusVisible,
-        isSuffixVisible && styles.isSuffixVisible
-      )}
-    >
-      {prefix}
-      <input {...props} ref={reference} />
-      {suffix &&
-        cloneElement(suffix, {
-          className: classNames([suffix.props.className, styles.suffix]),
-        })}
-    </div>
-    {errorMessage && <ErrorMessage className={styles.errorMessage}>{errorMessage}</ErrorMessage>}
-  </div>
-);
+) => {
+  const errorMessages = errorMessage?.split('\n');
 
+  return (
+    <div className={className}>
+      <div
+        className={classNames(
+          styles.inputField,
+          isDanger && styles.danger,
+          isSuffixFocusVisible && styles.isSuffixFocusVisible,
+          isSuffixVisible && styles.isSuffixVisible
+        )}
+      >
+        {prefix}
+        <input {...props} ref={reference} />
+        {suffix &&
+          cloneElement(suffix, {
+            className: classNames([suffix.props.className, styles.suffix]),
+          })}
+      </div>
+      {errorMessages && (
+        <ErrorMessage className={styles.errorMessage}>
+          {errorMessages.length > 1 ? (
+            <ul>
+              {errorMessages.map((message) => (
+                <li key={message}>{message}</li>
+              ))}
+            </ul>
+          ) : (
+            errorMessages[0]
+          )}
+        </ErrorMessage>
+      )}
+    </div>
+  );
+};
 export default forwardRef(InputField);

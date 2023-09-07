@@ -65,15 +65,15 @@ export type PasswordRejectionCode =
   | 'character_types'
   | 'unsupported_characters'
   | 'pwned'
-  | 'repetition'
-  | 'sequence'
-  | 'personal_info'
-  | 'restricted_words';
+  | 'restricted.repetition'
+  | 'restricted.sequence'
+  | 'restricted.personal_info'
+  | 'restricted.words';
 
 /** A password issue that does not meet the policy. */
-export type PasswordIssue = {
+export type PasswordIssue<Code extends PasswordRejectionCode = PasswordRejectionCode> = {
   /** Issue code. */
-  code: `password_rejected.${PasswordRejectionCode}`;
+  code: `password_rejected.${Code}`;
   /** Interpolation data for the issue message. */
   interpolation?: Record<string, unknown>;
 };
@@ -104,7 +104,7 @@ export type PersonalInfo = Partial<{
  * //   { code: 'password_rejected.too_short' },
  * //   { code: 'password_rejected.character_types', interpolation: { min: 2 } },
  * //   { code: 'password_rejected.pwned' },
- * //   { code: 'password_rejected.sequence' },
+ * //   { code: 'password_rejected.restricted.sequence' },
  * // ]
  * ```
  */
@@ -142,6 +142,29 @@ export class PasswordPolicyChecker {
       });
     }
 
+    if (this.policy.rejects.repetitionAndSequence) {
+      if (this.hasRepetition(password)) {
+        issues.push({
+          code: 'password_rejected.restricted.repetition',
+        });
+      }
+
+      if (this.hasSequentialChars(password)) {
+        issues.push({
+          code: 'password_rejected.restricted.sequence',
+        });
+      }
+    }
+
+    const words = this.hasWords(password);
+
+    if (words.length > 0) {
+      issues.push({
+        code: 'password_rejected.restricted.words',
+        interpolation: { words: words.join('\n'), count: words.length },
+      });
+    }
+
     if (this.policy.rejects.personalInfo) {
       if (!personalInfo) {
         throw new TypeError('Personal information is required to check personal information.');
@@ -149,7 +172,7 @@ export class PasswordPolicyChecker {
 
       if (this.hasPersonalInfo(password, personalInfo)) {
         issues.push({
-          code: 'password_rejected.personal_info',
+          code: 'password_rejected.restricted.personal_info',
         });
       }
     }
@@ -159,7 +182,7 @@ export class PasswordPolicyChecker {
 
   /**
    * Perform a fast check to see if the password passes the basic requirements.
-   * No pwned password and personal information check will be performed.
+   * Only the length and character types will be checked.
    *
    * This method is used for frontend validation.
    *
@@ -190,29 +213,6 @@ export class PasswordPolicyChecker {
       issues.push({
         code: 'password_rejected.character_types',
         interpolation: { min: this.policy.characterTypes.min },
-      });
-    }
-
-    if (this.policy.rejects.repetitionAndSequence) {
-      if (this.hasRepetition(password)) {
-        issues.push({
-          code: 'password_rejected.repetition',
-        });
-      }
-
-      if (this.hasSequentialChars(password)) {
-        issues.push({
-          code: 'password_rejected.sequence',
-        });
-      }
-    }
-
-    const words = this.hasWords(password);
-
-    if (words.length > 0) {
-      issues.push({
-        code: 'password_rejected.restricted_words',
-        interpolation: { words: words.join('\n'), count: words.length },
       });
     }
 

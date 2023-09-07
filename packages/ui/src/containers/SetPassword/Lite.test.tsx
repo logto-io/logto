@@ -37,40 +37,8 @@ describe('<Lite />', () => {
     expect(submit).not.toBeCalled();
   });
 
-  test('password less than 8 chars should throw', async () => {
-    const { queryByText, getByText, container } = render(<Lite onSubmit={submit} />);
-    const submitButton = getByText('action.save_password');
-    const passwordInput = container.querySelector('input[name="newPassword"]');
-
-    if (passwordInput) {
-      fireEvent.change(passwordInput, { target: { value: '1234567' } });
-    }
-
-    act(() => {
-      fireEvent.submit(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(queryByText('error.password_min_length')).not.toBeNull();
-    });
-
-    expect(submit).not.toBeCalled();
-
-    act(() => {
-      // Clear error
-      if (passwordInput) {
-        fireEvent.change(passwordInput, { target: { value: '1234asdf' } });
-        fireEvent.blur(passwordInput);
-      }
-    });
-
-    await waitFor(() => {
-      expect(queryByText('error.password_min_length')).toBeNull();
-    });
-  });
-
   test('should submit properly', async () => {
-    const { queryByText, getByText, container } = render(<Lite onSubmit={submit} />);
+    const { getByText, container } = render(<Lite onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
     const passwordInput = container.querySelector('input[name="newPassword"]');
 

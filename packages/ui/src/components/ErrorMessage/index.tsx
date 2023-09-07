@@ -5,7 +5,14 @@ import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-type ErrorCode = TFuncKey<'translation', 'error'>;
+type RemovePrefix<T extends string, Prefix extends T> = T extends `${Prefix}${string}` ? never : T;
+
+/**
+ * All error codes that can be passed to ErrorMessage.
+ * Nested keys are removed since they will result in a non-string return value. They
+ * can be processed manually.
+ */
+type ErrorCode = RemovePrefix<TFuncKey<'translation', 'error'>, 'password_rejected'>;
 
 export type ErrorType = ErrorCode | { code: ErrorCode; data?: Record<string, unknown> };
 

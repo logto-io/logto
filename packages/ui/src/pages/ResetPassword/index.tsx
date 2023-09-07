@@ -1,23 +1,71 @@
-import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import SetPassword from '@/containers/SetPassword';
-import { passwordMinLength } from '@/utils/form';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-import useResetPassword from './use-reset-password';
+import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import { setUserPassword } from '@/apis/interaction';
+import SetPassword from '@/containers/SetPassword';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { type ErrorHandlers } from '@/hooks/use-error-handler';
+import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
+import { usePasswordPolicy } from '@/hooks/use-sie';
+import useToast from '@/hooks/use-toast';
 
 const ResetPassword = () => {
-  const { resetPassword, errorMessage, clearErrorMessage } = useResetPassword();
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const clearErrorMessage = useCallback(() => {
+    setErrorMessage(undefined);
+  }, []);
+  const { t } = useTranslation();
+  const { setToast } = useToast();
+  const navigate = useNavigate();
+  const { show } = useConfirmModal();
+  const errorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'session.verification_session_not_found': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-2);
+      },
+      'user.same_password': (error) => {
+        setErrorMessage(error.message);
+      },
+    }),
+    [navigate, setErrorMessage, show]
+  );
+  const successHandler: SuccessHandler<typeof setUserPassword> = useCallback(
+    (result) => {
+      if (result) {
+        setToast(t('description.password_changed'));
+        navigate('/sign-in', { replace: true });
+      }
+    },
+    [navigate, setToast, t]
+  );
+
+  const [action] = usePasswordAction({
+    api: setUserPassword,
+    setErrorMessage,
+    errorHandlers,
+    successHandler,
+  });
+  const {
+    policy: {
+      length: { min },
+      characterTypes: { min: count },
+    },
+  } = usePasswordPolicy();
 
   return (
     <SecondaryPageLayout
       title="description.new_password"
-      description="error.invalid_password"
-      descriptionProps={{ min: passwordMinLength }}
+      description="description.password_requirements_with_type"
+      descriptionProps={{ min, count }}
     >
       <SetPassword
         autoFocus
         errorMessage={errorMessage}
         clearErrorMessage={clearErrorMessage}
-        onSubmit={resetPassword}
+        onSubmit={action}
       />
     </SecondaryPageLayout>
   );
