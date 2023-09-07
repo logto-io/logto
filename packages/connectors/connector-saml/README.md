@@ -24,21 +24,21 @@ You also need to configure the ACS (Assertion Consumer Service) URL as `${your_l
 
 In this section, we will introduce each attribute in detail.
 
-### entityID `Required`
+### SP Entity ID (Audience) `Required`
 
-`entityID` (i.e. `issuer`) is Entity identifier. It is used to identify your entity (SAML SP entity), and match the equivalence in each SAML request/response.
+`SP Entity ID (Audience)` (i.e. `issuer`) is Entity identifier. It is used to identify your entity (SAML SP entity), and match the equivalence in each SAML request/response.
 
-### signInEndpoint
+### IdP Single Sign-On URL
 
 The IdP's endpoint that you send SAML authentication requests to. Usually, you can find this value in IdP details page (i.e. IdP's `SSO URL` or `Login URL`).
 
-### x509Certificate `Required`
+### X.509 Certificate `Required`
 
 The x509 certificate generated from IdPs private key, IdP is expected to have this value available.
 
 The content of the certificate comes with `-----BEGIN CERTIFICATE-----` header and `-----END CERTIFICATE-----` tail.
 
-### idpMetadataXml `Required`
+### IdP's Metadata in XML format `Required`
 
 The field is used to place contents from your IdP metadata XML file.
 
@@ -48,46 +48,46 @@ The field is used to place contents from your IdP metadata XML file.
 > If the IdP metadata comes with namespace, you should manually remove them.
 > For namespace of XML file, see [reference](http://www.xmlmaster.org/en/article/d01/c10/).
 
-### assertionConsumerServiceUrl `Required`
+### Assertion Consumer Service URL `Required`
 
 The assertion consumer service (ACS) URL is the SP's endpoint to receive IdP's SAML Assertion POST requests. As we mentioned in previous part, it is usually configured at IdP settings but some IdP get this value from SAML authentication requests, we hence also add this value as a REQUIRED field. It's value should look like `${your_logto_origin}/api/authn/saml/${connector_id}`.
 
-### signAuthnRequest
-
-The boolean value that controls whether SAML authentication request should be signed, whose default value is `false`.
-
-### encryptAssertion
-
-`encryptAssertion` is a boolean value that indicates if IdP will encrypt SAML assertion, with default value `false`.
-
-> ℹ️ **Note**
->
-> `signAuthnRequest` and `encryptAssertion` attributes should align with corresponding parameters of IdP setting, otherwise error will be thrown to show that configuration does not match.
-> All SAML responses need to be signed.
-
-### requestSignatureAlgorithm
+### Signature Algorithm
 
 This should be aligned with the signature algorithms of IdP so that Logto can verify the signature of the SAML assertion. Its value should be either `http://www.w3.org/2000/09/xmldsig#rsa-sha1`, `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` or `http://www.w3.org/2001/04/xmldsig-more#rsa-sha512` and the default value is `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256`.
 
-### messageSigningOrder
+### Message Signing Order
 
-`messageSigningOrder` indicates the signing and encrypting order of IdP, it's value should be either `sign-then-encrypt` or `encrypt-then-sign` and the default value is `sign-then-encrypt`.
+`Message Signing Order` indicates the signing and encrypting order of IdP, it's value should be either `sign-then-encrypt` or `encrypt-then-sign` and the default value is `sign-then-encrypt`.
 
-### privateKey and privateKeyPass
+### Sign Authentication Request
 
-`privateKey` is an OPTIONAL value and is required when `signAuthnRequest` is `true`.
+The boolean value that controls whether SAML authentication request should be signed, whose default value is `false`.
 
-`privateKeyPass` is the password you've set when creating `privateKey`, required when necessary.
+### SAML Assertion Encrypted
 
-If `signAuthnRequest` is `true`, the corresponding certificate generated from `privateKey` is required by IdP for checking the signature.
+`SAML Assertion Encrypted` is a boolean value that indicates if IdP will encrypt SAML assertion, with default value `false`.
 
-### encPrivateKey and encPrivateKeyPass
+> ℹ️ **Note**
+>
+> `Sign Authentication Request` and `SAML Assertion Encrypted` attributes should align with corresponding parameters of IdP setting, otherwise error will be thrown to show that configuration does not match.
+> All SAML responses need to be signed.
 
-`encPrivateKey` is an OPTIONAL value and is required when `encryptAssertion` is `true`.
+### 'Signature Private Key' and 'Signature Private Key Password'
 
-`encPrivateKeyPass` is the password you've set when creating `encPrivateKey`, required when necessary.
+`Signature Private Key` is an OPTIONAL value and is required when `Sign Authentication Request` is `true`.
 
-If `encryptAssertion` is `true`, the corresponding certificate generated from `encPrivateKey` is required by IdP for encrypting SAML assertion.
+`Signature Private Key Password` is the password you've set when creating `Signature Private Key`, required when necessary.
+
+If `Sign Authentication Request` is `true`, the corresponding certificate generated from `Signature Private Key` is required by IdP for checking the signature.
+
+### 'Decryption Private Key' and 'Decryption Private Key Password'
+
+`Decryption Private Key` is an OPTIONAL value and is required when `SAML Assertion Encrypted` is `true`.
+
+`Decryption Private Key Password` is the password you've set when creating `Decryption Private Key`, required when necessary.
+
+If `SAML Assertion Encrypted` is `true`, the corresponding certificate generated from `Decryption Private Key` is required by IdP for encrypting SAML assertion.
 
 > ℹ️ **Note**
 >
@@ -98,38 +98,38 @@ If `encryptAssertion` is `true`, the corresponding certificate generated from `e
 > openssl req -new -x509 -key ${encryptPrivateKeyFilename}.pem -out ${encryptionCertificateFilename}.cer -days 3650
 > ```
 >
-> `privateKey` and `encPrivateKey` files are enforced to be encoded in `pkcs1` scheme as pem string, which means the private key files should start with `-----BEGIN RSA PRIVATE KEY-----` and end with `-----END RSA PRIVATE KEY-----`.
+> `Signature Private Key` and `Decryption Private Key` files are enforced to be encoded in `pkcs1` scheme as pem string, which means the private key files should start with `-----BEGIN RSA PRIVATE KEY-----` and end with `-----END RSA PRIVATE KEY-----`.
 
-### nameIDFormat
+### Name ID Format
 
-`nameIDFormat` is an OPTIONAL attribute that declares the name id format that would respond. The value can be among `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`, `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`, `urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName`, `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent` and `urn:oasis:names:tc:SAML:2.0:nameid-format:transient`, and the default value is `urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified`.
+`Name ID Format` is an OPTIONAL attribute that declares the name id format that would respond. The value can be among `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`, `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`, `urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName`, `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent` and `urn:oasis:names:tc:SAML:2.0:nameid-format:transient`, and the default value is `urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified`.
 
-### timeout
+### Timeout
 
-`timeout` is the time tolerance for time validation, since the time between your SP entity and IdP entity could be different and network connection may also bring some delay. The unit is in millisecond, and the default value is 5000 (i.e. 5s).
+`Timeout` is the time tolerance for time validation, since the time between your SP entity and IdP entity could be different and network connection may also bring some delay. The unit is in millisecond, and the default value is 5000 (i.e. 5s).
 
-### profileMap
+### Profile Mapping
 
-Logto also provide a `profileMap` field that users can customize the mapping from the social vendors' profiles which are usually not standard. Each `profileMap` keys is Logto's standard user profile field name and corresponding value should be social profiles field name. In current stage, Logto only concern 'id', 'name', 'avatar', 'email' and 'phone' from social profile, only 'id' is REQUIRED and others are optional fields.
+Logto also provide a `Profile Mapping` field that users can customize the mapping from the social vendors' profiles which are usually not standard. Each `Profile Mapping` keys is Logto's standard user profile field name and corresponding value should be social profiles field name. In current stage, Logto only concern 'id', 'name', 'avatar', 'email' and 'phone' from social profile, only 'id' is REQUIRED and others are optional fields.
 
 ### Config types
 
 | Name                        | Type                                                                                                                                                                                                                                                                                                  | Required | Default Value                                           |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------- |
-| signInEndpoint              | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
-| x509certificate             | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
-| idpMetadataXml              | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
-| entityID                    | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
-| assertionConsumerServiceUrl | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
-| messageSigningOrder         | `encrypt-then-sign` \| `sign-then-encrypt`                                                                                                                                                                                                                                                            | false    | `sign-then-encrypt`                                     |
-| requestSignatureAlgorithm   | `http://www.w3.org/2000/09/xmldsig#rsa-sha1` \| `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` \| `http://www.w3.org/2001/04/xmldsig-more#rsa-sha512`                                                                                                                                            | false    | `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256`     |
-| signAuthnRequest            | boolean                                                                                                                                                                                                                                                                                               | false    | false                                                   |
-| encryptAssertion            | boolean                                                                                                                                                                                                                                                                                               | false    | false                                                   |
-| privateKey                  | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
-| privateKeyPass              | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
-| nameIDFormat                | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:transient` | false    | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` |
-| timeout                     | number                                                                                                                                                                                                                                                                                                | false    | 5000                                                    |
-| profileMap                  | ProfileMap                                                                                                                                                                                                                                                                                            | false    |                                                         |
+| IdP Single Sign-On URL              | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
+| X.509 Certificate             | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
+| IdP's Metadata in XML format              | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
+| SP Entity ID (Audience)                    | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
+| Assertion Consumer Service URL | string                                                                                                                                                                                                                                                                                                | true     |                                                         |
+| Message Signing Order         | `encrypt-then-sign` \| `sign-then-encrypt`                                                                                                                                                                                                                                                            | false    | `sign-then-encrypt`                                     |
+| Signature Algorithm   | `http://www.w3.org/2000/09/xmldsig#rsa-sha1` \| `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256` \| `http://www.w3.org/2001/04/xmldsig-more#rsa-sha512`                                                                                                                                            | false    | `http://www.w3.org/2001/04/xmldsig-more#rsa-sha256`     |
+| Sign Authentication Request            | boolean                                                                                                                                                                                                                                                                                               | false    | false                                                   |
+| SAML Assertion Encrypted            | boolean                                                                                                                                                                                                                                                                                               | false    | false                                                   |
+| Signature Private Key                  | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
+| Signature Private Key Password              | string                                                                                                                                                                                                                                                                                                | false    |                                                         |
+| Name ID Format                | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:transient` | false    | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` |
+| Timeout                     | number                                                                                                                                                                                                                                                                                                | false    | 5000                                                    |
+| Profile Mapping                  | ProfileMap                                                                                                                                                                                                                                                                                            | false    |                                                         |
 
 | ProfileMap fields | Type   | Required | Default value |
 | ----------------- | ------ | -------- | ------------- |

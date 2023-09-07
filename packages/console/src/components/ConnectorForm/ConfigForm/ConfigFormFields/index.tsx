@@ -1,6 +1,6 @@
 import type { ConnectorConfigFormItem } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -33,19 +33,20 @@ function ConfigFormFields({ formItems }: Props) {
 
   const values = watch('formConfig');
 
-  const filteredFormItems = useMemo(() => {
-    return formItems.filter((item) => {
-      if (!item.showConditions) {
+  const showFormItems = useCallback(
+    (formItem: ConnectorConfigFormItem) => {
+      if (!formItem.showConditions) {
         return true;
       }
 
-      return item.showConditions.every(({ expectValue, targetKey }) => {
+      return formItem.showConditions.every(({ expectValue, targetKey }) => {
         const targetValue = values[targetKey];
 
         return targetValue === expectValue;
       });
-    });
-  }, [formItems, values]);
+    },
+    [values]
+  );
 
   const renderFormItem = (item: ConnectorConfigFormItem) => {
     const errorMessage = formConfigErrors?.[item.key]?.message;
@@ -146,24 +147,26 @@ function ConfigFormFields({ formItems }: Props) {
 
   return (
     <>
-      {filteredFormItems.map((item) => (
-        <FormField
-          key={item.key}
-          isRequired={item.required}
-          // Tooltip is currently string and does not support i18n.
-          tip={item.tooltip}
-          title={
-            <DangerousRaw>
-              {item.type !== ConnectorConfigFormItemType.Switch && item.label}
-            </DangerousRaw>
-          }
-        >
-          {renderFormItem(item)}
-          {Boolean(item.description) && (
-            <div className={styles.description}>{item.description}</div>
-          )}
-        </FormField>
-      ))}
+      {formItems.map((item) =>
+        showFormItems(item) ? (
+          <FormField
+            key={item.key}
+            isRequired={item.required}
+            // Tooltip is currently string and does not support i18n.
+            tip={item.tooltip}
+            title={
+              <DangerousRaw>
+                {item.type !== ConnectorConfigFormItemType.Switch && item.label}
+              </DangerousRaw>
+            }
+          >
+            {renderFormItem(item)}
+            {Boolean(item.description) && (
+              <div className={styles.description}>{item.description}</div>
+            )}
+          </FormField>
+        ) : null
+      )}
     </>
   );
 }
