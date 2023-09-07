@@ -1,4 +1,4 @@
-import { HookEvent } from '@logto/schemas';
+import { HookEvent, type Hook, type HookConfig } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -8,14 +8,18 @@ import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import { uriValidator } from '@/utils/validator';
 
-import { type BasicWebhookFormType } from '../../types';
-
 import * as styles from './index.module.scss';
 
 const hookEventOptions = Object.values(HookEvent).map((event) => ({
   title: hookEventLabel[event],
   value: event,
 }));
+
+export type BasicWebhookFormType = {
+  name: Hook['name'];
+  events: HookEvent[];
+  url: HookConfig['url'];
+};
 
 function BasicWebhookForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

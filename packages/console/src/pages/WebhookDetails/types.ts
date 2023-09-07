@@ -1,6 +1,6 @@
 import { type HookResponse, type Hook } from '@logto/schemas';
 
-import { type BasicWebhookFormType } from '../Webhooks/types';
+import { type BasicWebhookFormType } from '@/components/BasicWebhookForm';
 
 export type WebhookDetailsOutletContext = {
   hook: HookResponse;

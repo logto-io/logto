@@ -13,6 +13,7 @@ import WebhooksEmptyDark from '@/assets/images/webhooks-empty-dark.svg';
 import WebhooksEmpty from '@/assets/images/webhooks-empty.svg';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
+import SuccessRate from '@/components/SuccessRate';
 import { defaultPageSize } from '@/consts';
 import { hookEventLabel } from '@/consts/webhooks';
 import Button from '@/ds-components/Button';
@@ -25,8 +26,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
-import CreateFormModal from './components/CreateFormModal';
-import SuccessRate from './components/SuccessRate';
+import CreateFormModal from './CreateFormModal';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;

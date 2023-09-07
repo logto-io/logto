@@ -15,6 +15,7 @@ import WebhookDark from '@/assets/icons/webhook-dark.svg';
 import Webhook from '@/assets/icons/webhook.svg';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
+import SuccessRate from '@/components/SuccessRate';
 import { WebhookDetailsTabs } from '@/consts';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Card from '@/ds-components/Card';
@@ -27,8 +28,6 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
-
-import SuccessRate from '../Webhooks/components/SuccessRate';
 
 import * as styles from './index.module.scss';
 import { type WebhookDetailsOutletContext } from './types';

@@ -4,20 +4,20 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 
+import BasicWebhookForm from '@/components/BasicWebhookForm';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import BasicWebhookForm from '@/pages/Webhooks/components/BasicWebhookForm';
 import { trySubmitSafe } from '@/utils/form';
 
 import { type WebhookDetailsFormType, type WebhookDetailsOutletContext } from '../types';
 import { webhookDetailsParser } from '../utils';
 
-import CustomHeaderField from './components/CustomHeaderField';
-import SigningKeyField from './components/SigningKeyField';
-import TestWebhook from './components/TestWebhook';
+import CustomHeaderField from './CustomHeaderField';
+import SigningKeyField from './SigningKeyField';
+import TestWebhook from './TestWebhook';
 
 function WebhookSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
