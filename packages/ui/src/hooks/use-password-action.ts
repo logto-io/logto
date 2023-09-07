@@ -26,7 +26,7 @@ const usePasswordAction = <Response>({
   errorHandlers,
   setErrorMessage,
   successHandler,
-}: UsePasswordApiInit<Response>) => {
+}: UsePasswordApiInit<Response>): [PasswordAction<void>] => {
   const asyncAction = useApi(api);
   const handleError = useErrorHandler();
   const { getErrorMessage, getErrorMessageFromBody } = usePasswordErrorMessage();
@@ -72,9 +72,7 @@ const usePasswordAction = <Response>({
     ]
   );
 
-  return {
-    action,
-  };
+  return [action];
 };
 
 export default usePasswordAction;

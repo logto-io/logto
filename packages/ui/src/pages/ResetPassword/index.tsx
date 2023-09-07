@@ -42,7 +42,7 @@ const ResetPassword = () => {
     [navigate, setToast, t]
   );
 
-  const { action } = usePasswordAction({
+  const [action] = usePasswordAction({
     api: setUserPassword,
     setErrorMessage,
     errorHandlers,
