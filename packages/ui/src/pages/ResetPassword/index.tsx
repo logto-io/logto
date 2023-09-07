@@ -50,7 +50,7 @@ const ResetPassword = () => {
   });
   const {
     policy: {
-      length: { min },
+      length: { min, max },
       characterTypes: { min: count },
     },
     requirementsDescription,
@@ -59,12 +59,13 @@ const ResetPassword = () => {
   return (
     <SecondaryPageLayout
       title="description.new_password"
-      description={<span>{requirementsDescription}</span>}
+      description={requirementsDescription && <span>{requirementsDescription}</span>}
       descriptionProps={{ min, count }}
     >
       <SetPassword
         autoFocus
         errorMessage={errorMessage}
+        maxLength={max}
         clearErrorMessage={clearErrorMessage}
         onSubmit={action}
       />

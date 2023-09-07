@@ -44,7 +44,7 @@ const SetPassword = () => {
 
   const {
     policy: {
-      length: { min },
+      length: { min, max },
       characterTypes: { min: count },
     },
     requirementsDescription,
@@ -53,12 +53,13 @@ const SetPassword = () => {
   return (
     <SecondaryPageLayout
       title="description.set_password"
-      description={<span>{requirementsDescription}</span>}
+      description={requirementsDescription && <span>{requirementsDescription}</span>}
       descriptionProps={{ min, count }}
     >
       <SetPasswordForm
         autoFocus
         errorMessage={errorMessage}
+        maxLength={max}
         clearErrorMessage={clearErrorMessage}
         onSubmit={action}
       />
