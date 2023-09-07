@@ -3,7 +3,7 @@ const password = {
   pepper_not_found:
     'Mot de passe pepper non trouvé. Veuillez vérifier votre environnement de base.',
   /** UNTRANSLATED */
-  rejected: 'Password rejected. Please check your password meets the requirements.',
+  rejected: 'Password rejected. Please check if your password meets the requirements.',
 };
 
 export default Object.freeze(password);

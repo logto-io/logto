@@ -63,10 +63,17 @@ const description = {
   verify_email: 'Vérifiez votre e-mail',
   verify_phone: 'Vérifiez votre numéro de téléphone',
   /** UNTRANSLATED */
-  password_requirements_with_type_one: 'Password requires a minimum of {{min}} characters.',
+  password_requirements: 'Password {{items, list}}.',
   /** UNTRANSLATED */
-  password_requirements_with_type_other:
-    'Password requires a minimum of {{min}} characters, and contains {{count}} of the following: uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and symbols.',
+  'password_requirement.length_one': 'requires a minimum of {{count}} character',
+  /** UNTRANSLATED */
+  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
+  /** UNTRANSLATED */
+  'password_requirement.character_types_one':
+    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
+  /** UNTRANSLATED */
+  'password_requirement.character_types_other':
+    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
 };
 
 export default Object.freeze(description);

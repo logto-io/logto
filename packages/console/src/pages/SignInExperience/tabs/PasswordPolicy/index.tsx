@@ -2,7 +2,7 @@ import { PasswordPolicyChecker } from '@logto/core-kit';
 import { cond } from '@silverhand/essentials';
 import { type ChangeEvent, type ReactNode } from 'react';
 import { Controller, type FieldPath, useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import PageMeta from '@/components/PageMeta';
 import Card from '@/ds-components/Card';
@@ -11,6 +11,7 @@ import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TabWrapper from '@/ds-components/TabWrapper';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
+import TextLink from '@/ds-components/TextLink';
 import Textarea from '@/ds-components/Textarea';
 
 import { type SignInExperienceForm } from '../../types';
@@ -76,7 +77,13 @@ function PasswordPolicy({ isActive }: Props) {
         <div className={commonStyles.title}>{t('password_requirements')}</div>
         <FormField title="sign_in_exp.password_policy.minimum_length">
           <div className={commonStyles.formFieldDescription}>
-            {t('minimum_length_description', { max })}
+            <Trans
+              components={{
+                a: <TextLink href="https://pages.nist.gov/800-63-3/sp800-63b.html#sec5" />,
+              }}
+            >
+              {t('minimum_length_description', { max })}
+            </Trans>
           </div>
           <Controller
             name="passwordPolicy.length.min"
@@ -143,23 +150,26 @@ function PasswordPolicy({ isActive }: Props) {
       </Card>
       <Card>
         <div className={commonStyles.title}>{t('password_rejection')}</div>
-        <FormField title="sign_in_exp.password_policy.forbidden_passwords">
+        <FormField title="sign_in_exp.password_policy.compromised_passwords">
           <PasswordOption
             name="passwordPolicy.rejects.pwned"
             title={t('breached_passwords')}
             description={t('breached_passwords_description')}
           />
         </FormField>
-        <FormField title="sign_in_exp.password_policy.restricted_phrases_in_passwords">
+        <FormField
+          title="sign_in_exp.password_policy.restricted_phrases"
+          tip={t('restricted_phrases_tooltip')}
+        >
           <PasswordOption
             name="passwordPolicy.rejects.repetitionAndSequence"
             title={t('repetitive_or_sequential_characters')}
             description={t('repetitive_or_sequential_characters_description')}
           />
           <PasswordOption
-            name="passwordPolicy.rejects.personalInfo"
-            title={t('personal_information')}
-            description={t('personal_information_description')}
+            name="passwordPolicy.rejects.userInfo"
+            title={t('user_information')}
+            description={t('user_information_description')}
           />
           <PasswordOption
             name="passwordPolicy.isCustomWordsEnabled"

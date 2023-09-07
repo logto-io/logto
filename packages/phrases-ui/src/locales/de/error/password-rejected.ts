@@ -16,7 +16,7 @@ const password_rejected = {
   /** UNTRANSLATED */
   'restricted.sequence': 'sequential characters',
   /** UNTRANSLATED */
-  'restricted.personal_info': 'your personal information',
+  'restricted.user_info': 'your personal information',
   /** UNTRANSLATED */
   'restricted.words': 'product context',
 };

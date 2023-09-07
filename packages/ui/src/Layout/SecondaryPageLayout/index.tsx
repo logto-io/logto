@@ -1,4 +1,5 @@
 import type { TFuncKey } from 'i18next';
+import { type ReactElement } from 'react';
 
 import DynamicT from '@/components/DynamicT';
 import NavBar from '@/components/NavBar';
@@ -11,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: TFuncKey;
-  description?: TFuncKey;
+  description?: TFuncKey | ReactElement;
   titleProps?: Record<string, unknown>;
   descriptionProps?: Record<string, unknown>;
   notification?: TFuncKey;
@@ -42,7 +43,11 @@ const SecondaryPageLayout = ({
           </div>
           {description && (
             <div className={styles.description}>
-              <DynamicT forKey={description} interpolation={descriptionProps} />
+              {typeof description === 'string' ? (
+                <DynamicT forKey={description} interpolation={descriptionProps} />
+              ) : (
+                description
+              )}
             </div>
           )}
         </div>
