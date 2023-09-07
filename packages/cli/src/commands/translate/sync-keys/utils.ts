@@ -12,8 +12,10 @@ type FileStructure = {
 };
 
 type NestedPhraseObject = {
-  [key: string]: string | NestedPhraseObject;
+  [key: string]: [phrase: string, isTranslated: boolean] | NestedPhraseObject;
 };
+
+const untranslatedMark = 'UNTRANSLATED';
 
 type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
 
@@ -28,7 +30,8 @@ type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
  * import errors from './errors/index.js';
  *
  * const translation = {
- *   page_title: 'Anwendungen',
+ *   // UNTRANSLATED
+ *   page_title: 'Applications',
  *   errors,
  * };
  * ```
@@ -37,9 +40,9 @@ type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
  *
  * ```ts
  * {
- *   page_title: 'Anwendungen',
+ *   page_title: ['Anwendungen', false],
  *   errors: {
- *     page_not_found: 'Seite nicht gefunden',
+ *     page_not_found: ['Seite nicht gefunden', true],
  *   },
  * }
  * ```
@@ -96,13 +99,13 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
         // Recursively parse the nested object from the imported file
         const [phrases, structure] = praseLocaleFiles(resolvedPath);
 
-        // eslint-disable-next-line @silverhand/fp/no-mutation
+        /* eslint-disable @silverhand/fp/no-mutation */
         nestedObject[key] = phrases;
-        // eslint-disable-next-line @silverhand/fp/no-mutation
         fileStructure[key] = {
           filePath: importPath,
           structure,
         };
+        /* eslint-enable @silverhand/fp/no-mutation */
       }
 
       if (ts.isPropertyAssignment(property)) {
@@ -111,17 +114,35 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
         // Nested object, recursively parse it
         if (ts.isObjectLiteralExpression(property.initializer)) {
           const [phrases, structure] = traverseNode(property.initializer, {}, {});
-          // eslint-disable-next-line @silverhand/fp/no-mutation
+          /* eslint-disable @silverhand/fp/no-mutation */
           nestedObject[key] = phrases;
-          // eslint-disable-next-line @silverhand/fp/no-mutation
           fileStructure[key] = { structure };
+          /* eslint-enable @silverhand/fp/no-mutation */
         } else if (
           ts.isStringLiteral(property.initializer) ||
           ts.isNoSubstitutionTemplateLiteral(property.initializer)
         ) {
           const value = property.initializer.getText();
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          nestedObject[key] = value;
+
+          const commentRanges = ts.getLeadingCommentRanges(property.getFullText(), 0);
+
+          if (commentRanges?.[0]) {
+            if (commentRanges.length > 1) {
+              consoleLog.fatal('Multiple comments found for property:', property);
+            }
+
+            const commentRange = commentRanges[0];
+            const comment = property.getFullText().slice(commentRange.pos, commentRange.end);
+            if (comment.includes(untranslatedMark)) {
+              // eslint-disable-next-line @silverhand/fp/no-mutation
+              nestedObject[key] = [value, false];
+            } else {
+              consoleLog.fatal('Unsupported comment:', comment);
+            }
+          } else {
+            // eslint-disable-next-line @silverhand/fp/no-mutation
+            nestedObject[key] = [value, true];
+          }
         } else {
           consoleLog.fatal('Unsupported property:', property);
         }
@@ -247,17 +268,29 @@ const traverseNode = async (
     for (const [key, value] of Object.entries(baselineObject)) {
       const existingValue = targetObject[key];
 
-      if (typeof value === 'string') {
-        // If the key exists in the target language and the value is a string, use
-        // the value of the target language; otherwise, use the value of the
-        // baseline language and add a comment to indicate that the phrase is
-        // untranslated to help identify missing translations.
-        await (typeof existingValue === 'string'
-          ? fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: ${existingValue},\n`)
-          : fs.appendFile(
+      if (Array.isArray(value)) {
+        const [phrase] = value;
+
+        // If the key exists in the target language and the value is a string,
+        // use the value of the target language and inherit the untranslated
+        // mark; otherwise, use the value of the baseline language and add a
+        // comment to indicate that the phrase is untranslated to help identify
+        // missing translations.
+        if (Array.isArray(existingValue)) {
+          if (!existingValue[1]) {
+            await fs.appendFile(
               targetFilePath,
-              `${' '.repeat(tabSize)}${key}: ${value}, // UNTRANSLATED\n`
-            ));
+              `${' '.repeat(tabSize)}/** ${untranslatedMark} */\n`
+            );
+          }
+          await fs.appendFile(
+            targetFilePath,
+            `${' '.repeat(tabSize)}${key}: ${existingValue[0]},\n`
+          );
+        } else {
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}/** ${untranslatedMark} */\n`);
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: ${phrase},\n`);
+        }
       }
       // Not a string, treat it as a nested object or an import
       else {
@@ -269,7 +302,7 @@ const traverseNode = async (
 
           await traverseNode(
             [value, keyStructure.structure],
-            typeof existingValue === 'object' ? existingValue : {},
+            Array.isArray(existingValue) ? {} : existingValue ?? {},
             path.join(targetDirectory, keyStructure.filePath)
           );
         }
@@ -278,7 +311,7 @@ const traverseNode = async (
           await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: {\n`);
           await traverseObject(
             [value, keyStructure?.structure ?? {}],
-            typeof existingValue === 'object' ? existingValue : {},
+            Array.isArray(existingValue) ? {} : existingValue ?? {},
             tabSize + 2
           );
           await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}},\n`);

@@ -10,7 +10,8 @@ const sign_in_exp = {
     branding: 'ブランディング',
     sign_up_and_sign_in: 'サインアップとサインイン',
     content: '内容',
-    password_policy: 'Password policy', // UNTRANSLATED
+    /** UNTRANSLATED */
+    password_policy: 'Password policy',
   },
   welcome: {
     title: 'サインインエクスペリエンスをカスタマイズ',

@@ -11,7 +11,8 @@ const sign_in_exp = {
     branding: 'Брендирование',
     sign_up_and_sign_in: 'Регистрация и вход в систему',
     content: 'Содержание',
-    password_policy: 'Password policy', // UNTRANSLATED
+    /** UNTRANSLATED */
+    password_policy: 'Password policy',
   },
   welcome: {
     title: 'Настройка входа в систему',
