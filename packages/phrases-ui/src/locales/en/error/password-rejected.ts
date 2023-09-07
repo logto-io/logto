@@ -6,7 +6,7 @@ const password_rejected = {
   character_types: 'At least {{min}} types of characters are required.',
   unsupported_characters: 'Unsupported character found.',
   pwned: 'Avoid using simple passwords that are easy to guess.',
-  restricted_found: 'Avoid overusing {{list}}.',
+  restricted_found: 'Avoid overusing {{list, list}}.',
   'restricted.repetition': 'repeated characters',
   'restricted.sequence': 'sequential characters',
   'restricted.personal_info': 'your personal information',
