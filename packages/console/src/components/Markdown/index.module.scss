@@ -56,6 +56,11 @@
     margin: _.unit(6) 0 _.unit(3);
   }
 
+  h3 {
+    font: var(--font-title-3);
+    margin: _.unit(6) 0 _.unit(3);
+  }
+
   p {
     font: var(--font-body-2);
     margin: _.unit(3) 0;
