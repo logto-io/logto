@@ -4,6 +4,10 @@
   width: _.unit(8);
   height: _.unit(8);
   display: none;
+
+  &.visible {
+    display: block;
+  }
 }
 
 .hideTextContainerContent {
@@ -13,6 +17,7 @@
 }
 
 .container {
+  position: relative;
   display: flex;
   align-items: center;
   border-radius: 6px;

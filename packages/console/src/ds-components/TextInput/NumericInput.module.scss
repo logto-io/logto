@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: absolute;
+  // The design is 2px off from the edge of the input, while the input has 1px border.
+  right: 1px;
+  top: 1px;
+  bottom: 1px;
+
+  .button {
+    width: 32px;
+    height: 16px;
+    margin: 0;
+    padding-inline: 0;
+    padding-block: 0;
+    padding: 0 _.unit(2);
+
+    &.disabled > svg {
+      color: var(--color-disabled);
+    }
+
+    &:not(.disabled):hover {
+      cursor: pointer;
+      background: var(--color-hover);
+    }
+
+    &:not(.disabled):active {
+      background: var(--color-pressed);
+    }
+
+    &.up {
+      border-radius: 6px 6px 2px 2px;
+    }
+
+    &.down {
+      border-radius: 2px 2px 6px 6px;
+    }
+  }
+}

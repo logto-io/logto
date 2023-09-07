@@ -21,7 +21,14 @@ import * as styles from './index.module.scss';
 type Props = Omit<HTMLProps<HTMLInputElement>, 'size'> & {
   error?: string | boolean;
   icon?: ReactElement;
-  suffix?: ReactElement;
+  /**
+   * An element to be rendered on the right side of the input.
+   * By default, the suffix is only visible when the input is focused.
+   */
+  suffix?: ReactElement<Record<string, unknown>>;
+  /** Whether to always show the suffix. */
+  // eslint-disable-next-line react/boolean-prop-naming
+  alwaysShowSuffix?: boolean;
   isConfidential?: boolean;
 };
 
@@ -30,6 +37,7 @@ function TextInput(
     error,
     icon,
     suffix,
+    alwaysShowSuffix = false,
     disabled,
     className,
     readOnly,
@@ -95,7 +103,13 @@ function TextInput(
         <input type={type} {...rest} ref={innerRef} disabled={disabled} readOnly={readOnly} />
         {suffixIcon &&
           cloneElement(suffixIcon, {
-            className: classNames([suffixIcon.props.className, styles.suffix]),
+            className: classNames(
+              // Handle by classNames
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              suffixIcon.props.className,
+              styles.suffix,
+              alwaysShowSuffix && styles.visible
+            ),
           })}
       </div>
       {Boolean(error) && typeof error === 'string' && (
