@@ -10,7 +10,7 @@ const password_rejected = {
   /** UNTRANSLATED */
   pwned: 'Avoid using simple passwords that are easy to guess.',
   /** UNTRANSLATED */
-  restricted_found: 'Avoid overusing {{list}}.',
+  restricted_found: 'Avoid overusing {{list, list}}.',
   /** UNTRANSLATED */
   'restricted.repetition': 'repeated characters',
   /** UNTRANSLATED */

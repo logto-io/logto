@@ -3,7 +3,6 @@ import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
 import { mockResource, mockScope } from '#src/__mocks__/index.js';
-import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -38,6 +37,7 @@ const scopes = {
   findScopesByResourceId: async () => [mockScope],
   searchScopesByResourceId: async () => [mockScope],
   countScopesByResourceId: async () => ({ count: 1 }),
+  findScopesByResourceIds: async () => [],
   insertScope: jest.fn(async () => mockScope),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
@@ -45,23 +45,12 @@ const scopes = {
 };
 const { insertScope, updateScopeById } = scopes;
 
-const libraries = {
-  resources: {
-    attachScopesToResources: async (resources: readonly Resource[]) =>
-      resources.map((resource) => ({
-        ...resource,
-        scopes: [],
-      })),
-  },
-  quota: createMockQuotaLibrary(),
-};
-
 mockEsm('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: () => () => 'randomId',
 }));
 
-const tenantContext = new MockTenant(undefined, { scopes, resources }, undefined, libraries);
+const tenantContext = new MockTenant(undefined, { scopes, resources }, undefined);
 
 const resourceRoutes = await pickDefault(import('./resource.js'));
 

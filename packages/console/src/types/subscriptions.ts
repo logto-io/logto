@@ -76,6 +76,4 @@ export const localCheckoutSessionGuard = z.object({
 
 export type LocalCheckoutSession = z.infer<typeof localCheckoutSessionGuard>;
 
-export type Invoice = InvoicesResponse['invoices'][number];
-
-export type InvoiceStatus = Invoice['status'];
+export type InvoiceStatus = InvoicesResponse['invoices'][number]['status'];

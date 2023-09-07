@@ -106,7 +106,13 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           "'self'",
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
         ],
-        connectSrc: ["'self'", ...adminOrigins, ...coreOrigins, ...developmentOrigins],
+        connectSrc: [
+          "'self'",
+          ...adminOrigins,
+          ...coreOrigins,
+          ...developmentOrigins,
+          ...appInsightsOrigins,
+        ],
         // Allow Main Flow origin loaded in preview iframe
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },

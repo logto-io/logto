@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import BasicWebhookForm, { type BasicWebhookFormType } from '@/components/BasicWebhookForm';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
@@ -13,9 +14,6 @@ import useApi from '@/hooks/use-api';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
-
-import { type BasicWebhookFormType } from '../../types';
-import BasicWebhookForm from '../BasicWebhookForm';
 
 type Props = {
   totalWebhookCount: number;

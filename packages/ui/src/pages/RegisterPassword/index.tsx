@@ -37,7 +37,7 @@ const RegisterPassword = () => {
     }
   }, []);
 
-  const { action } = usePasswordAction({
+  const [action] = usePasswordAction({
     api: setUserPassword,
     setErrorMessage,
     errorHandlers,

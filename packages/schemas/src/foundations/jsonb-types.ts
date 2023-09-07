@@ -1,4 +1,9 @@
-import { type PasswordPolicy, hexColorRegEx, passwordPolicyGuard } from '@logto/core-kit';
+import {
+  type PasswordPolicy,
+  hexColorRegEx,
+  passwordPolicyGuard,
+  validateRedirectUrl,
+} from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { type DeepPartial } from '@silverhand/essentials';
 import type { Json } from '@withtyped/server';
@@ -36,22 +41,6 @@ export const oidcModelInstancePayloadGuard = z
   .catchall(z.unknown());
 
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
-
-// Import from @logto/core-kit later, pending for new version publish
-export const webRedirectUriProtocolRegEx = /^https?:$/;
-export const mobileUriSchemeProtocolRegEx = /^[a-z][\d_a-z]*(\.[\d_a-z]+)+:$/;
-
-export const validateRedirectUrl = (urlString: string, type: 'web' | 'mobile') => {
-  try {
-    const { protocol } = new URL(urlString);
-    const protocolRegEx =
-      type === 'mobile' ? mobileUriSchemeProtocolRegEx : webRedirectUriProtocolRegEx;
-
-    return protocolRegEx.test(protocol);
-  } catch {
-    return false;
-  }
-};
 
 export const oidcClientMetadataGuard = z.object({
   redirectUris: z

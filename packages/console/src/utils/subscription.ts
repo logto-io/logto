@@ -5,7 +5,6 @@ import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import { communitySupportEnabledMap, ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { reservedPlanIdOrder } from '@/consts/subscriptions';
-import { type Invoice } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
   const { id, quota } = subscriptionPlanResponse;
@@ -42,15 +41,6 @@ export const formatPeriod = ({ periodStart, periodEnd, displayYear }: FormatPeri
   const formattedEnd = dayjs(periodEnd).format(format);
   return `${formattedStart} - ${formattedEnd}`;
 };
-
-export const getLatestUnpaidInvoice = (invoices: Invoice[]) =>
-  invoices
-    .slice()
-    .sort(
-      (invoiceA, invoiceB) =>
-        new Date(invoiceB.createdAt).getTime() - new Date(invoiceA.createdAt).getTime()
-    )
-    .find(({ status }) => status === 'uncollectible');
 
 /**
  * Note: this is a temporary solution to handle the case when the user tries to downgrade but the quota limit is exceeded.

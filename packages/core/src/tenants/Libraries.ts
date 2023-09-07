@@ -6,7 +6,6 @@ import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
 import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createQuotaLibrary } from '#src/libraries/quota.js';
-import { createResourceLibrary } from '#src/libraries/resource.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createUserLibrary } from '#src/libraries/user.js';
@@ -18,7 +17,6 @@ export default class Libraries {
   users = createUserLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(this.queries, this.connectors);
   phrases = createPhraseLibrary(this.queries);
-  resources = createResourceLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   passcodes = createPasscodeLibrary(this.queries, this.connectors);

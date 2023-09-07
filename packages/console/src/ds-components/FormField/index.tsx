@@ -20,6 +20,7 @@ export type Props = {
   isRequired?: boolean;
   isMultiple?: boolean;
   className?: string;
+  headlineSpacing?: 'default' | 'large';
   headlineClassName?: string;
   tip?: ToggleTipProps['content'];
 };
@@ -30,6 +31,7 @@ function FormField({
   isRequired,
   isMultiple,
   className,
+  headlineSpacing = 'default',
   tip,
   headlineClassName,
 }: Props) {
@@ -37,7 +39,13 @@ function FormField({
 
   return (
     <div className={classNames(styles.field, className)}>
-      <div className={classNames(styles.headline, headlineClassName)}>
+      <div
+        className={classNames(
+          styles.headline,
+          headlineSpacing === 'large' && styles.withLargeSpacing,
+          headlineClassName
+        )}
+      >
         <div className={styles.title}>
           {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
           {isMultiple && (

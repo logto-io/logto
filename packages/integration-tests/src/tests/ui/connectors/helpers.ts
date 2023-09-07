@@ -1,7 +1,11 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { type Page } from 'puppeteer';
 
-import { expectConfirmModalAndAct, waitForToast } from '#src/ui-helpers/index.js';
+import {
+  expectConfirmModalAndAct,
+  expectModalWithTitle,
+  waitForToast,
+} from '#src/ui-helpers/index.js';
 
 import {
   passwordlessConnectorTestCases,
@@ -38,16 +42,13 @@ export const expectToSelectConnector = async (
   page: Page,
   { groupFactoryId, factoryId, connectorType }: SelectConnectorOption
 ) => {
-  await expect(page).toMatchElement(
-    '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
-    {
-      text:
-        connectorType === ConnectorType.Email
-          ? 'Set up email connector'
-          : connectorType === ConnectorType.Sms
-          ? 'Set up SMS connector'
-          : 'Add Social Connector',
-    }
+  await expectModalWithTitle(
+    page,
+    connectorType === ConnectorType.Email
+      ? 'Set up email connector'
+      : connectorType === ConnectorType.Sms
+      ? 'Set up SMS connector'
+      : 'Add Social Connector'
   );
 
   if (groupFactoryId) {

@@ -1,9 +1,9 @@
-import UriInputField from '@/mdx-components-v2/UriInputField';
+import UriInputField from '@/mdx-components/UriInputField';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
-import Steps from '@/mdx-components-v2/Steps';
-import Step from '@/mdx-components-v2/Step';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
 
 <Steps>
 
@@ -115,7 +115,6 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 <UriInputField
   appId={props.app.id}
-  isSingle={!props.isCompact}
   name="postLogoutRedirectUris"
   title="application_details.post_sign_out_redirect_uri"
 />

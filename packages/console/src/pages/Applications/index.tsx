@@ -85,7 +85,7 @@ function Applications() {
             title="applications.guide.header_title"
             subtitle="applications.guide.header_subtitle"
           />
-          <GuideLibrary hasCardBorder className={styles.library} />
+          <GuideLibrary hasCardBorder hasCardButton className={styles.library} />
         </OverlayScrollbar>
       )}
       {(isLoading || !!applications?.length) && (

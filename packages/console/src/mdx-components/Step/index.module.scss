@@ -1,103 +1,15 @@
 @use '@/scss/underscore' as _;
 
-.card {
+.wrapper {
+  border-radius: 16px;
+  background: var(--color-layer-1);
   padding: _.unit(5) _.unit(6);
-  display: flex;
-  flex-direction: column;
-  scroll-margin: _.unit(5);
+  width: 100%;
 
-  .header {
+  header {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    cursor: pointer;
-
-    > svg {
-      color: var(--color-text-secondary);
-    }
-
-    .index {
-      margin-right: _.unit(4);
-    }
+    gap: _.unit(4);
+    margin-bottom: _.unit(6);
   }
-
-  .buttonWrapper {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: _.unit(6);
-  }
-
-  .content {
-    margin-top: 0;
-    height: 0;
-    overflow: hidden;
-
-    &.expanded {
-      height: auto;
-      overflow: unset;
-    }
-
-    > *:first-child {
-      margin-top: _.unit(6);
-    }
-  }
-
-  li {
-    font: var(--font-body-2);
-
-    ul,
-    ol {
-      padding-inline-start: 1ch;
-    }
-  }
-
-  ul {
-    padding-inline-start: 4ch;
-
-    > li {
-      margin-block-start: _.unit(2);
-      margin-block-end: _.unit(2);
-      padding-inline-start: _.unit(1);
-    }
-  }
-
-  ol {
-    padding-inline-start: 2ch;
-
-    > li {
-      margin-block-start: _.unit(3);
-      margin-block-end: _.unit(3);
-      padding-inline-start: _.unit(1);
-    }
-  }
-
-  h3 {
-    font: var(--font-title-2);
-    color: var(--color-text-secondary);
-    margin: _.unit(6) 0 _.unit(3);
-  }
-
-  p {
-    font: var(--font-body-2);
-    margin: _.unit(3) 0;
-  }
-
-  strong {
-    font: var(--font-label-2);
-  }
-
-  pre {
-    margin: _.unit(3) 0;
-  }
-
-  code:not(pre > code) {
-    background: var(--color-layer-2);
-    font: var(--font-body-2);
-    padding: _.unit(1) _.unit(1);
-    border-radius: 4px;
-  }
-}
-
-.card + .card {
-  margin-top: _.unit(6);
 }

@@ -60,8 +60,10 @@ This may be fixed by replacing Parcel with something else.
 
 The guides are ordered by the following rules in ascending order:
 
-1. The first segment of the directory name, which should be the target of the guide;
-2. The `order` property of the guide.
+1. The `order` property of all guides across all category groups
+2. The sorting order should exactly follow the order in UX design. E.g. Next.js being the 1st one, React being the 2nd
+3. The guides in featured group ("Popular and for you") should have `1.x` order value
+4. The guides that are not listed in featured group can have order value equal to or greater than 2
 
 You can configure the property by creating a `config.json` file in the guide directory. The file should be an object with the following structure:
 

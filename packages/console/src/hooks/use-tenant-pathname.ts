@@ -67,7 +67,7 @@ function useTenantPathname(): TenantPathname {
   const match = useCallback(
     (pathname: string, exact = false) => {
       // Match relative pathnames directly
-      if (pathname.startsWith('.')) {
+      if (!pathname.startsWith('/')) {
         return (
           matchPath(joinPath(location.pathname, pathname, exact ? '' : '*'), location.pathname) !==
           null

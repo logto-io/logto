@@ -13,9 +13,8 @@ import {
 } from './verification-code.js';
 
 /**
- * Detailed Identifier Methods guard
+ * Detailed interaction identifier payload guard
  */
-
 export const usernamePasswordPayloadGuard = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
@@ -54,9 +53,7 @@ export const socialPhonePayloadGuard = z.object({
 
 export type SocialPhonePayload = z.infer<typeof socialPhonePayloadGuard>;
 
-// Interaction Payload Guard
-
-/** Interaction flow (main flow) types. */
+// Interaction flow event types
 export enum InteractionEvent {
   SignIn = 'SignIn',
   Register = 'Register',

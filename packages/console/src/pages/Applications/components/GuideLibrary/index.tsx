@@ -25,10 +25,11 @@ import * as styles from './index.module.scss';
 type Props = {
   className?: string;
   hasCardBorder?: boolean;
+  hasCardButton?: boolean;
   hasFilters?: boolean;
 };
 
-function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
+function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
   const { navigate } = useTenantPathname();
   const [keyword, setKeyword] = useState<string>('');
@@ -69,66 +70,71 @@ function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
   );
 
   return (
-    <div className={classNames(styles.container, className)}>
-      {hasFilters && (
-        <div className={styles.filters}>
-          <label>{t('filter.title')}</label>
-          <TextInput
-            className={styles.searchInput}
-            icon={<SearchIcon />}
-            placeholder={t('filter.placeholder')}
-            value={keyword}
-            onChange={(event) => {
-              setKeyword(event.currentTarget.value);
-            }}
-          />
-          <div className={styles.checkboxGroupContainer}>
-            <CheckboxGroup
-              className={styles.checkboxGroup}
-              options={allAppGuideCategories.map((category) => ({
-                title: `applications.guide.categories.${category}`,
-                value: category,
-              }))}
-              value={filterCategories}
-              onChange={(value) => {
-                const sortedValue = allAppGuideCategories.filter((category) =>
-                  value.includes(category)
-                );
-                setFilterCategories(sortedValue);
-              }}
-            />
-            {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
-          </div>
-        </div>
-      )}
-      {keyword &&
-        (filteredMetadata?.length ? (
-          <GuideGroup
-            className={styles.guideGroup}
-            hasCardBorder={hasCardBorder}
-            guides={filteredMetadata}
-            onClickGuide={onClickGuide}
-          />
-        ) : (
-          <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
-        ))}
-      {!keyword && (
-        <OverlayScrollbar className={styles.groups}>
-          {(filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
-            (category) =>
-              structuredMetadata[category].length > 0 && (
-                <GuideGroup
-                  key={category}
-                  className={styles.guideGroup}
-                  hasCardBorder={hasCardBorder}
-                  categoryName={t(`categories.${category}`)}
-                  guides={structuredMetadata[category]}
-                  onClickGuide={onClickGuide}
+    <OverlayScrollbar className={classNames(styles.container, className)}>
+      <div className={classNames(styles.wrapper, hasFilters && styles.hasFilters)}>
+        <div className={styles.groups}>
+          {hasFilters && (
+            <div className={styles.filterAnchor}>
+              <div className={styles.filters}>
+                <label>{t('filter.title')}</label>
+                <TextInput
+                  className={styles.searchInput}
+                  icon={<SearchIcon />}
+                  placeholder={t('filter.placeholder')}
+                  value={keyword}
+                  onChange={(event) => {
+                    setKeyword(event.currentTarget.value);
+                  }}
                 />
-              )
+                <div className={styles.checkboxGroupContainer}>
+                  <CheckboxGroup
+                    className={styles.checkboxGroup}
+                    options={allAppGuideCategories.map((category) => ({
+                      title: `applications.guide.categories.${category}`,
+                      value: category,
+                    }))}
+                    value={filterCategories}
+                    onChange={(value) => {
+                      const sortedValue = allAppGuideCategories.filter((category) =>
+                        value.includes(category)
+                      );
+                      setFilterCategories(sortedValue);
+                    }}
+                  />
+                  {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
+                </div>
+              </div>
+            </div>
           )}
-        </OverlayScrollbar>
-      )}
+          {keyword &&
+            (filteredMetadata?.length ? (
+              <GuideGroup
+                className={styles.guideGroup}
+                hasCardBorder={hasCardBorder}
+                hasCardButton={hasCardButton}
+                guides={filteredMetadata}
+                onClickGuide={onClickGuide}
+              />
+            ) : (
+              <EmptyDataPlaceholder className={styles.emptyPlaceholder} size="large" />
+            ))}
+          {!keyword &&
+            (filterCategories.length > 0 ? filterCategories : allAppGuideCategories).map(
+              (category) =>
+                structuredMetadata[category].length > 0 && (
+                  <GuideGroup
+                    key={category}
+                    className={styles.guideGroup}
+                    hasCardBorder={hasCardBorder}
+                    hasCardButton={hasCardButton}
+                    categoryName={t(`categories.${category}`)}
+                    guides={structuredMetadata[category]}
+                    onClickGuide={onClickGuide}
+                  />
+                )
+            )}
+        </div>
+      </div>
       {selectedGuide?.target !== 'API' && showCreateForm && (
         <CreateForm
           defaultCreateType={selectedGuide?.target}
@@ -136,7 +142,7 @@ function GuideLibrary({ className, hasCardBorder, hasFilters }: Props) {
           onClose={onCloseCreateForm}
         />
       )}
-    </div>
+    </OverlayScrollbar>
   );
 }
 

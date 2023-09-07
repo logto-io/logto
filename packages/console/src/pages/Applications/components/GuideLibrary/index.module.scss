@@ -1,17 +1,36 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .container {
-  display: flex;
-  gap: _.unit(7);
+  width: 100%;
+}
+
+.wrapper {
+  width: 100%;
+  min-width: dim.$guide-content-min-width;
+  max-width: dim.$guide-content-max-width;
+  margin: 0 auto;
+  position: relative;
+
+  &.hasFilters {
+    padding: dim.$guide-content-padding calc(dim.$guide-sidebar-width + dim.$guide-panel-gap + dim.$guide-content-padding);
+  }
+}
+
+.filterAnchor {
+  position: absolute;
+  top: 0;
+  right: 100%;
 }
 
 .filters {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
+  width: dim.$guide-sidebar-width;
   gap: _.unit(4);
-  padding: _.unit(8) 0 _.unit(8) _.unit(11);
-  flex-shrink: 0;
-  overflow-y: auto;
+  margin-right: dim.$guide-panel-gap;
 
   label {
     font: var(--font-label-2);
@@ -45,16 +64,23 @@
   display: flex;
   flex-direction: column;
   padding-bottom: _.unit(8);
-  overflow-y: auto;
+  position: relative;
 
   > div {
     flex: unset;
   }
 }
 
+.wrapper.hasFilters .groups {
+  max-width: dim.$guide-main-content-max-width;
+}
+
 .guideGroup {
   flex: 1;
-  margin: _.unit(8) _.unit(8) 0 0;
+
+  + .guideGroup {
+    margin-top: _.unit(8);
+  }
 }
 
 .emptyPlaceholder {
@@ -62,4 +88,12 @@
   position: absolute;
   width: 100%;
   height: 70%;
+}
+
+@media screen and (max-width: dim.$guide-content-max-width) {
+  .wrapper.hasFilters {
+    margin-left: 0;
+    padding-right: dim.$guide-content-padding;
+    max-width: calc(dim.$guide-main-content-max-width + dim.$guide-sidebar-width + dim.$guide-panel-gap + 2 * dim.$guide-content-padding);
+  }
 }

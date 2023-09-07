@@ -3,14 +3,11 @@ import { type RequestErrorBody } from '@logto/schemas';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import useListTranslation from '@/hooks/use-list-translation';
-
 /**
  * Return an object with two functions for getting the error message from an array of {@link PasswordIssue} or a {@link RequestErrorBody}.
  */
 const usePasswordErrorMessage = () => {
   const { t } = useTranslation();
-  const translateList = useListTranslation();
   const getErrorMessage = useCallback(
     (issues: PasswordIssue[]) => {
       // Errors that should be displayed first and alone
@@ -39,11 +36,11 @@ const usePasswordErrorMessage = () => {
 
       if (restrictedErrors.length > 0) {
         return t('error.password_rejected.restricted_found', {
-          list: translateList(restrictedErrors),
+          list: restrictedErrors,
         });
       }
     },
-    [translateList, t]
+    [t]
   );
 
   const getErrorMessageFromBody = useCallback(

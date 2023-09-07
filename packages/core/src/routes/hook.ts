@@ -5,6 +5,8 @@ import {
   hookEventsGuard,
   hookResponseGuard,
   hook,
+  type HookResponse,
+  type Hook,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
@@ -36,13 +38,18 @@ export default function hookRoutes<T extends AuthedRouter>(
       updateHookById,
       deleteHookById,
     },
-    logs: { countLogs, findLogs },
+    logs: { countLogs, findLogs, getHookExecutionStatsByHookId },
   } = queries;
 
   const {
-    hooks: { attachExecutionStatsToHook, testHook },
+    hooks: { testHook },
     quota,
   } = libraries;
+
+  const attachExecutionStatsToHook = async (hook: Hook): Promise<HookResponse> => ({
+    ...hook,
+    executionStats: await getHookExecutionStatsByHookId(hook.id),
+  });
 
   router.get(
     '/hooks',

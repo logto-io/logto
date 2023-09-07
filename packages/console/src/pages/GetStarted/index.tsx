@@ -1,7 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { Theme, type Application } from '@logto/schemas';
 import classNames from 'classnames';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CheckPreviewDark from '@/assets/icons/check-demo-dark.svg';
@@ -19,9 +19,11 @@ import Spacer from '@/ds-components/Spacer';
 import TextLink from '@/ds-components/TextLink';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
+import useWindowResize from '@/hooks/use-window-resize';
 
 import CreateForm from '../Applications/components/CreateForm';
-import GuideCard, { type SelectedGuide } from '../Applications/components/GuideCard';
+import { type SelectedGuide } from '../Applications/components/GuideCard';
+import GuideGroup from '../Applications/components/GuideGroup';
 import useAppGuideMetadata from '../Applications/components/GuideLibrary/hook';
 
 import FreePlanNotification from './FreePlanNotification';
@@ -39,16 +41,26 @@ function GetStarted() {
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
   const [_, getStructuredMetadata] = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+  // The number of visible guide cards to show in one row per the current screen width
+  const [visibleCardCount, setVisibleCardCount] = useState(4);
+  const containerRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const { PreviewIcon, SocialIcon, RbacIcon } = icons[theme];
 
+  useWindowResize(() => {
+    const containerWidth = containerRef.current?.clientWidth ?? 0;
+
+    // Responsive breakpoints (1080, 680px) are defined in `GuideGroup` component SCSS,
+    // and we need to keep them consistent.
+    setVisibleCardCount(containerWidth > 1080 ? 4 : containerWidth > 680 ? 3 : 2);
+  });
+
   /**
-   * Only need 4 featured guides at most, since by design in get-started page we need to show
-   * a few most popular SDK guides, and 4 makes it easy to have a 4 x 1 or 2 x 2 card layout.
+   * Slice the guide metadata as we only need to show 1 row of guide cards in get-started page
    */
   const featuredAppGuides = useMemo(
-    () => getStructuredMetadata().featured.slice(0, 4),
-    [getStructuredMetadata]
+    () => getStructuredMetadata().featured.slice(0, visibleCardCount),
+    [visibleCardCount, getStructuredMetadata]
   );
 
   const onClickGuide = useCallback((data: SelectedGuide) => {
@@ -78,21 +90,23 @@ function GetStarted() {
       <FreePlanNotification />
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.develop.title')}</div>
-        <div className={styles.grid}>
-          {featuredAppGuides.map((guide) => (
-            <GuideCard key={guide.id} hasBorder data={guide} onClick={onClickGuide} />
-          ))}
-          {selectedGuide?.target !== 'API' && showCreateForm && (
-            <CreateForm
-              defaultCreateType={selectedGuide?.target}
-              defaultCreateFrameworkName={selectedGuide?.name}
-              onClose={onCloseCreateForm}
-            />
-          )}
-        </div>
+        <GuideGroup
+          ref={containerRef}
+          hasCardBorder
+          guides={featuredAppGuides}
+          onClickGuide={onClickGuide}
+        />
+        {selectedGuide?.target !== 'API' && showCreateForm && (
+          <CreateForm
+            defaultCreateType={selectedGuide?.target}
+            defaultCreateFrameworkName={selectedGuide?.name}
+            onClose={onCloseCreateForm}
+          />
+        )}
         <TextLink to="/applications/create">{t('get_started.view_all')}</TextLink>
       </Card>
       <Card className={styles.card}>
+        <div className={styles.title}>{t('get_started.customize.title')}</div>
         <div className={styles.borderBox}>
           <div className={styles.rowWrapper}>
             <div className={styles.icon}>
@@ -134,6 +148,7 @@ function GetStarted() {
         </div>
       </Card>
       <Card className={styles.card}>
+        <div className={styles.title}>{t('get_started.manage.title')}</div>
         <div className={styles.borderBox}>
           <div className={styles.rowWrapper}>
             <div className={styles.icon}>

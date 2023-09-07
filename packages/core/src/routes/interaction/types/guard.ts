@@ -1,6 +1,6 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
-import { eventGuard, profileGuard, InteractionEvent } from '@logto/schemas';
+import { eventGuard, profileGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 // Social Authorization Uri Route Payload Guard
@@ -46,26 +46,6 @@ export const anonymousInteractionResultGuard = z.object({
   identifiers: z.array(identifierGuard).optional(),
 });
 
-export const verifiedRegisterInteractionResultGuard = z.object({
-  event: z.literal(InteractionEvent.Register),
-  profile: profileGuard.optional(),
-  identifiers: z.array(identifierGuard).optional(),
-});
-
-export const verifiedSignInteractionResultGuard = z.object({
-  event: z.literal(InteractionEvent.SignIn),
-  accountId: z.string(),
-  profile: profileGuard.optional(),
-  identifiers: z.array(identifierGuard),
-});
-
 export const forgotPasswordProfileGuard = z.object({
   password: z.string(),
-});
-
-export const verifiedForgotPasswordInteractionResultGuard = z.object({
-  event: z.literal(InteractionEvent.ForgotPassword),
-  accountId: z.string(),
-  identifiers: z.array(identifierGuard),
-  profile: forgotPasswordProfileGuard,
 });

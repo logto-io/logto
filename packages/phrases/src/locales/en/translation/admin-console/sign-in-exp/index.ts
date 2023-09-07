@@ -61,9 +61,7 @@ const sign_in_exp = {
     no_connector_email:
       'No email connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
     no_connector_social:
-      'No social connector set-up yet. Before completing the configuration, users will not be able to sign in with this method. <a>{{link}}</a> in "Connectors"',
-    no_added_social_connector:
-      'You’ve set up a few social connectors now. Make sure to add some to your sign in experience.',
+      'You haven’t set up any social connector yet. Add connectors first to apply social sign in methods. <a>{{link}}</a> in “Connectors”.',
     setup_link: 'Set up',
   },
   save_alert: {

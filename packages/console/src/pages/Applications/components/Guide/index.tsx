@@ -9,12 +9,12 @@ import { type GuideMetadata } from '@/assets/docs/guides/types';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
+import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
 import NotFound from '@/pages/NotFound';
 
-import GuideHeader from '../GuideHeader';
 import StepsSkeleton from '../StepsSkeleton';
 
 import * as styles from './index.module.scss';
@@ -51,7 +51,7 @@ export const GuideContext = createContext<GuideContextType>({
 type Props = {
   className?: string;
   guideId: string;
-  app: ApplicationResponse;
+  app?: ApplicationResponse;
   isCompact?: boolean;
   onClose: () => void;
 };
@@ -67,29 +67,31 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
   const memorizedContext = useMemo(
     () =>
       conditional(
-        !!guide && {
-          metadata: guide.metadata,
-          Logo: guide.Logo,
-          app,
-          endpoint: tenantEndpoint?.toString() ?? '',
-          alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
-          redirectUris: app.oidcClientMetadata.redirectUris,
-          postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
-          isCompact: Boolean(isCompact),
-          sampleUrls: {
-            origin: 'http://localhost:3001/',
-            callback: 'http://localhost:3001/callback',
-          },
-        }
+        !!guide &&
+          !!app && {
+            metadata: guide.metadata,
+            Logo: guide.Logo,
+            app,
+            endpoint: tenantEndpoint?.toString() ?? '',
+            alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
+            redirectUris: app.oidcClientMetadata.redirectUris,
+            postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
+            isCompact: Boolean(isCompact),
+            sampleUrls: {
+              origin: 'http://localhost:3001/',
+              callback: 'http://localhost:3001/callback',
+            },
+          }
       ) satisfies GuideContextType | undefined,
     [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
   );
 
   return (
-    <div className={classNames(styles.container, className)}>
-      {!isCompact && <GuideHeader onClose={onClose} />}
-      <div className={styles.content}>
-        {memorizedContext ? (
+    <>
+      <OverlayScrollbar className={classNames(styles.content, className)}>
+        {!app && <StepsSkeleton />}
+        {!!app && !guide && <NotFound className={styles.notFound} />}
+        {memorizedContext && (
           <GuideContext.Provider value={memorizedContext}>
             <MDXProvider
               components={{
@@ -122,23 +124,21 @@ function Guide({ className, guideId, app, isCompact, onClose }: Props) {
               </Suspense>
             </MDXProvider>
           </GuideContext.Provider>
-        ) : (
-          <NotFound className={styles.notFound} />
         )}
-        {!isCompact && memorizedContext && (
-          <nav className={styles.actionBar}>
-            <div className={styles.layout}>
-              <Button
-                size="large"
-                title="applications.guide.finish_and_done"
-                type="primary"
-                onClick={onClose}
-              />
-            </div>
-          </nav>
-        )}
-      </div>
-    </div>
+      </OverlayScrollbar>
+      {memorizedContext && (
+        <nav className={styles.actionBar}>
+          <div className={styles.layout}>
+            <Button
+              size="large"
+              title="applications.guide.finish_and_done"
+              type="primary"
+              onClick={onClose}
+            />
+          </div>
+        </nav>
+      )}
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import { type Page } from 'puppeteer';
+import { type Browser, type Page } from 'puppeteer';
 
 import {
   consolePassword,
@@ -45,9 +45,7 @@ export const expectUnsavedChangesAlert = async (page: Page) => {
     '.ReactModalPortal div[class$=content]::-p-text(You have made some changes. Are you sure you want to leave this page?)'
   );
 
-  await expect(page).toClick('.ReactModalPortal div[class$=footer] button', {
-    text: 'Stay on Page',
-  });
+  await expectToClickModalAction(page, 'Stay on Page');
 };
 
 export const expectToSaveChanges = async (page: Page) => {
@@ -89,31 +87,45 @@ export const expectToClickDetailsPageOption = async (page: Page, optionText: str
   );
 };
 
-type ExpectConfirmModalAndActOptions = {
-  title?: string | RegExp;
-  actionText?: string | RegExp;
-};
-
-export const expectConfirmModalAndAct = async (
-  page: Page,
-  { title, actionText }: ExpectConfirmModalAndActOptions
-) => {
+export const expectModalWithTitle = async (page: Page, title: string | RegExp) => {
   await expect(page).toMatchElement(
     '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
     {
       text: title,
     }
   );
+};
 
-  if (actionText) {
-    await expect(page).toClick('.ReactModalPortal div[class$=footer] button span', {
-      text: actionText,
-    });
-  }
+export const expectToClickModalAction = async (page: Page, actionText: string | RegExp) => {
+  await expect(page).toClick('.ReactModalPortal div[class$=footer] button span', {
+    text: actionText,
+  });
+};
+
+type ExpectConfirmModalAndActOptions = {
+  title: string | RegExp;
+  actionText: string | RegExp;
+};
+
+export const expectConfirmModalAndAct = async (
+  page: Page,
+  { title, actionText }: ExpectConfirmModalAndActOptions
+) => {
+  await expectModalWithTitle(page, title);
+  await expectToClickModalAction(page, actionText);
 };
 
 export const expectToClickNavTab = async (page: Page, tab: string) => {
   await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
     text: tab,
   });
+};
+
+export const expectToOpenNewPage = async (browser: Browser, url: string) => {
+  const target = await browser.waitForTarget((target) => target.url() === url);
+
+  const newPage = await target.page();
+  expect(newPage).toBeTruthy();
+
+  await newPage?.close();
 };

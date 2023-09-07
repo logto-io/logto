@@ -1,11 +1,9 @@
-import { conditional } from '@silverhand/essentials';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import useSWRImmutable from 'swr/immutable';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { contactEmailLink } from '@/consts';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -13,7 +11,6 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useSubscribe from '@/hooks/use-subscribe';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { getLatestUnpaidInvoice } from '@/utils/subscription';
 
 import BillInfo from '../BillInfo';
 
@@ -22,26 +19,17 @@ import * as styles from './index.module.scss';
 function PaymentOverdueModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { currentTenant, currentTenantId } = useContext(TenantsContext);
-  const cloudApi = useCloudApi();
-  const { data: invoicesResponse } = useSWRImmutable(
-    `/api/tenants/${currentTenantId}/invoices`,
-    async () =>
-      cloudApi.get('/api/tenants/:tenantId/invoices', { params: { tenantId: currentTenantId } })
-  );
+  const { openInvoices = [] } = currentTenant ?? {};
+
   const { visitManagePaymentPage } = useSubscribe();
   const [isActionLoading, setIsActionLoading] = useState(false);
-
-  const latestUnpaidInvoice = useMemo(
-    () => conditional(invoicesResponse && getLatestUnpaidInvoice(invoicesResponse.invoices)),
-    [invoicesResponse]
-  );
 
   const [hasClosed, setHasClosed] = useState(false);
   const handleCloseModal = () => {
     setHasClosed(true);
   };
 
-  if (!invoicesResponse || !latestUnpaidInvoice || hasClosed) {
+  if (!isCloud || openInvoices.length === 0 || hasClosed) {
     return null;
   }
 
@@ -82,7 +70,12 @@ function PaymentOverdueModal() {
           </InlineNotification>
         )}
         <FormField title="upsell.payment_overdue_modal.unpaid_bills">
-          <BillInfo cost={latestUnpaidInvoice.amountDue} />
+          <BillInfo
+            cost={openInvoices.reduce(
+              (total, currentInvoice) => total + currentInvoice.amountDue,
+              0
+            )}
+          />
         </FormField>
       </ModalLayout>
     </ReactModal>

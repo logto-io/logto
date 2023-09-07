@@ -35,7 +35,7 @@ const SetPassword = () => {
       window.location.replace(result.redirectTo);
     }
   }, []);
-  const { action } = usePasswordAction({
+  const [action] = usePasswordAction({
     api: async (password) => addProfile({ password }),
     setErrorMessage,
     errorHandlers,

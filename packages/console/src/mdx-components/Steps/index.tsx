@@ -48,6 +48,7 @@ export default function Steps({ children: reactChildren }: Props) {
         : [reactChildren, furtherReadings],
     [furtherReadings, reactChildren]
   );
+
   const { isCompact } = useContext(GuideContext);
 
   useEffect(() => {
@@ -85,30 +86,30 @@ export default function Steps({ children: reactChildren }: Props) {
   };
 
   return (
-    <div className={classNames(styles.wrapper, isCompact && styles.fullWidth)}>
-      {!isCompact && (
-        <div className={styles.navigationAnchor}>
-          <nav className={styles.navigation}>
-            {children.map((component, index) => (
-              <div
-                key={component.props.title}
-                role="button"
-                tabIndex={0}
-                className={classNames(styles.stepper, index === activeIndex && styles.active)}
-                onKeyDown={onKeyDownHandler(() => {
-                  navigateToStep(index);
-                })}
-                onClick={() => {
-                  navigateToStep(index);
-                }}
-              >
-                {index + 1}. {component.props.title}
-              </div>
-            ))}
-          </nav>
-        </div>
-      )}
-      <div ref={contentRef} className={styles.content}>
+    <div className={styles.wrapper}>
+      <div ref={contentRef} className={classNames(styles.content, isCompact && styles.compact)}>
+        {!isCompact && (
+          <div className={styles.navigationAnchor}>
+            <nav className={styles.navigation}>
+              {children.map((component, index) => (
+                <div
+                  key={component.props.title}
+                  role="button"
+                  tabIndex={0}
+                  className={classNames(styles.stepper, index === activeIndex && styles.active)}
+                  onKeyDown={onKeyDownHandler(() => {
+                    navigateToStep(index);
+                  })}
+                  onClick={() => {
+                    navigateToStep(index);
+                  }}
+                >
+                  {index + 1}. {component.props.title}
+                </div>
+              ))}
+            </nav>
+          </div>
+        )}
         <Sample />
         {children.map((component, index) =>
           React.cloneElement(component, {
