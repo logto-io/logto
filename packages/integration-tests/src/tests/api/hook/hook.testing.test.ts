@@ -73,13 +73,18 @@ describe('hook testing', () => {
     await authedAdminApi.delete(`hooks/${created.id}`);
   });
 
-  it('should return 204 if the hook endpoint return 500', async () => {
+  it('should return 422 and contains endpoint response if the hook endpoint return 500', async () => {
     const payload = getHookCreationPayload(HookEvent.PostRegister);
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
-    const response = await authedAdminApi.post(`hooks/${created.id}/test`, {
-      json: { events: [HookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
-    });
-    expect(response.statusCode).toBe(204);
+    await expectRejects(
+      authedAdminApi.post(`hooks/${created.id}/test`, {
+        json: { events: [HookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
+      }),
+      {
+        code: 'hook.endpoint_responded_with_error',
+        statusCode: 422,
+      }
+    );
 
     // Clean Up
     await authedAdminApi.delete(`hooks/${created.id}`);
