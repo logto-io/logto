@@ -5,6 +5,7 @@ import {
   LogResult,
   userInfoSelectFields,
   type HookConfig,
+  type HookTestErrorResponseData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, pick, trySafe } from '@silverhand/essentials';
@@ -141,12 +142,17 @@ export const createHookLibrary = (queries: Queries) => {
         })
       );
     } catch (error: unknown) {
-      /**
-       * Note: We only care about whether the test payload is sent to the endpoint of the webhook,
-       * so we don't care about http errors returned by the endpoint.
-       */
       if (error instanceof HTTPError) {
-        return;
+        throw new RequestError(
+          {
+            status: 422,
+            code: 'hook.endpoint_responded_with_error',
+          },
+          {
+            responseStatus: error.response.statusCode,
+            responseBody: String(error.response.rawBody),
+          } satisfies HookTestErrorResponseData
+        );
       }
 
       throw new RequestError({

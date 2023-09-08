@@ -28,3 +28,10 @@ export const hookResponseGuard = Hooks.guard.extend({
 });
 
 export type HookResponse = z.infer<typeof hookResponseGuard>;
+
+export const hookTestErrorResponseDataGuard = z.object({
+  responseStatus: z.number(),
+  responseBody: z.string(),
+});
+
+export type HookTestErrorResponseData = z.infer<typeof hookTestErrorResponseDataGuard>;

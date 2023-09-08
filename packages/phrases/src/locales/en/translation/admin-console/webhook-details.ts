@@ -45,7 +45,14 @@ const webhook_details = {
     test_webhook_description:
       'Configure the webhook, and test it with payload examples for each selected event to verify correct reception and processing.',
     send_test_payload: 'Send test payload',
-    test_payload_sent: 'The payload has been sent successfully.',
+    test_result: {
+      endpoint_url: 'Endpoint URL: {{url}}',
+      message: 'Message: {{message}}',
+      response_status: 'Response status: {{status, number}}',
+      response_body: 'Response body: {{body}}',
+      request_time: 'Request time: {{time}}',
+      test_success: 'The webhook test to the endpoint was successful.',
+    },
   },
 };
 

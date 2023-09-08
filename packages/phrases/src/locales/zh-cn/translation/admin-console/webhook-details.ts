@@ -42,7 +42,14 @@ const webhook_details = {
     test_webhook_description:
       '配置 Webhook，并使用每个选定事件的负载示例进行测试，以验证正确的接收和处理。',
     send_test_payload: '发送测试负载',
-    test_payload_sent: '负载已成功发送。',
+    test_result: {
+      endpoint_url: '端点 URL：{{url}}',
+      message: '消息：{{message}}',
+      response_status: '响应状态：{{status, number}}',
+      response_body: '响应主体：{{body}}',
+      request_time: '请求时间：{{time}}',
+      test_success: '向端点发起的 webhook 测试成功。',
+    },
   },
 };
 

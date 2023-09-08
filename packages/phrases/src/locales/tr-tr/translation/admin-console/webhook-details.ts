@@ -44,7 +44,14 @@ const webhook_details = {
     test_webhook_description:
       'Webhook’u yapılandırın ve her seçilen olay için yük örnekleriyle test ederek doğru alma ve işleme işlemini doğrulayın.',
     send_test_payload: 'Test yükünü gönder',
-    test_payload_sent: 'Yük başarıyla gönderildi.',
+    test_result: {
+      endpoint_url: 'Son nokta URL: {{url}}',
+      message: 'Mesaj: {{message}}',
+      response_status: 'Yanıt durumu: {{status, number}}',
+      response_body: 'Yanıt gövdesi: {{body}}',
+      request_time: 'İstek zamanı: {{time}}',
+      test_success: 'Son noktaya yapılan webhook testi başarılı oldu.',
+    },
   },
 };
 

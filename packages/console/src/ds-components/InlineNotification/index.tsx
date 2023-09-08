@@ -1,6 +1,7 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import { forwardRef } from 'react';
+import type { ReactNode, Ref } from 'react';
 
 import Info from '@/assets/icons/info.svg';
 import Error from '@/assets/icons/toast-error.svg';
@@ -24,19 +25,23 @@ type Props = {
   className?: string;
 };
 
-function InlineNotification({
-  children,
-  action,
-  href,
-  onClick,
-  severity = 'info',
-  variant = 'plain',
-  hasIcon = true,
-  isActionLoading = false,
-  className,
-}: Props) {
+function InlineNotification(
+  {
+    children,
+    action,
+    href,
+    onClick,
+    severity = 'info',
+    variant = 'plain',
+    hasIcon = true,
+    isActionLoading = false,
+    className,
+  }: Props,
+  ref?: Ref<HTMLDivElement>
+) {
   return (
     <div
+      ref={ref}
       className={classNames(
         styles.inlineNotification,
         styles[severity],
@@ -72,4 +77,4 @@ function InlineNotification({
   );
 }
 
-export default InlineNotification;
+export default forwardRef(InlineNotification);
