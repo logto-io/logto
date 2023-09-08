@@ -129,3 +129,13 @@ export const expectToOpenNewPage = async (browser: Browser, url: string) => {
 
   await newPage?.close();
 };
+
+export const expectMainPageWithTitle = async (page: Page, title: string) => {
+  await expect(page).toMatchElement(
+    'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
+    {
+      text: title,
+      timeout: 2000,
+    }
+  );
+};
