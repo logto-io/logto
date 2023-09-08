@@ -27,17 +27,17 @@ Add the `github.com/logto-io/go/client` package to your application code:
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	// Add dependency
-	"github.com/logto-io/go/client"
+    "github.com/gin-gonic/gin"
+    // Add dependency
+    "github.com/logto-io/go/client"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.String(200, "Hello Logto!")
-	})
-	router.Run(":8080")
+    router := gin.Default()
+    router.GET("/", func(c *gin.Context) {
+        c.String(200, "Hello Logto!")
+    })
+    router.Run(":8080")
 }
 ```
 
@@ -65,8 +65,8 @@ The `Storage` type in the Logto SDK is as follows:
 package client
 
 type Storage interface {
-	GetItem(key string) string
-	SetItem(key, value string)
+    GetItem(key string) string
+    SetItem(key, value string)
 }
 ```
 
@@ -80,26 +80,26 @@ Apply the [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessi
 package main
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/memstore"
-	"github.com/gin-gonic/gin"
-	"github.com/logto-io/go/client"
+    "github.com/gin-contrib/sessions"
+    "github.com/gin-contrib/sessions/memstore"
+    "github.com/gin-gonic/gin"
+    "github.com/logto-io/go/client"
 )
 
 func main() {
-	router := gin.Default()
+    router := gin.Default()
 
-	// We use memory-based session in this example
-	store := memstore.NewStore([]byte("your session secret"))
-	router.Use(sessions.Sessions("logto-session", store))
+    // We use memory-based session in this example
+    store := memstore.NewStore([]byte("your session secret"))
+    router.Use(sessions.Sessions("logto-session", store))
 
-	router.GET("/", func(ctx *gin.Context) {
-		// Get user session
-		session := sessions.Default(ctx)
-		// ...
-		ctx.String(200, "Hello Logto!")
-	})
-	router.Run(":8080")
+    router.GET("/", func(ctx *gin.Context) {
+        // Get user session
+        session := sessions.Default(ctx)
+        // ...
+        ctx.String(200, "Hello Logto!")
+    })
+    router.Run(":8080")
 }
 ```
 
@@ -112,24 +112,24 @@ Create a `session_storage.go` file, define a `SessionStorage` and implement the 
 package main
 
 import (
-	"github.com/gin-contrib/sessions"
+    "github.com/gin-contrib/sessions"
 )
 
 type SessionStorage struct {
-	session sessions.Session
+    session sessions.Session
 }
 
 func (storage *SessionStorage) GetItem(key string) string {
-	value := storage.session.Get(key)
-	if value == nil {
-		return ""
-	}
-	return value.(string)
+    value := storage.session.Get(key)
+    if value == nil {
+        return ""
+    }
+    return value.(string)
 }
 
 func (storage *SessionStorage) SetItem(key, value string) {
-	storage.session.Set(key, value)
-	storage.session.Save()
+    storage.session.Set(key, value)
+    storage.session.Save()
 }
 ```
 
@@ -147,21 +147,21 @@ sessionStorage := &SessionStorage{session: session}
   subtitle="2 steps"
 >
 
-### Create LogtConfig
+### Create LogtoConfig
 
 <pre>
   <code className="language-go">
     {`// main.go
 func main() {
-	// ...
+    // ...
 
-	logtoConfig := &client.LogtoConfig{
-		Endpoint:           "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
-		AppId:              "${props.app.id}",
-		AppSecret:          "${props.app.secret}",
-	}
+    logtoConfig := &client.LogtoConfig{
+        Endpoint:           "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+        AppId:              "${props.app.id}",
+        AppSecret:          "${props.app.secret}",
+    }
 
-	// ...
+    // ...
 }`}
   </code>
 </pre>
@@ -171,30 +171,30 @@ func main() {
 ```go
 // main.go
 func main() {
-	// ...
+    // ...
 
-	router.GET("/", func(ctx *gin.Context) {
-		// Init LogtoClient
-		session := sessions.Default(ctx)
-		logtoClient := client.NewLogtoClient(
-			logtoConfig,
-			&SessionStorage{session: session},
-		)
+    router.GET("/", func(ctx *gin.Context) {
+        // Init LogtoClient
+        session := sessions.Default(ctx)
+        logtoClient := client.NewLogtoClient(
+            logtoConfig,
+            &SessionStorage{session: session},
+        )
 
-		// Use Logto to control the content of the home page
-		authState := "You are not logged in to this website. :("
+        // Use Logto to control the content of the home page
+        authState := "You are not logged in to this website. :("
 
-		if logtoClient.IsAuthenticated() {
-			authState = "You are logged in to this website! :)"
-		}
+        if logtoClient.IsAuthenticated() {
+            authState = "You are logged in to this website! :)"
+        }
 
-		homePage := `<h1>Hello Logto</h1>` +
-			"<div>" + authState + "</div>"
+        homePage := `<h1>Hello Logto</h1>` +
+            "<div>" + authState + "</div>"
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
-	})
+        ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+    })
 
-	// ...
+    // ...
 }
 ```
 
@@ -217,40 +217,40 @@ This allows Logto to redirect the user to the `/sign-in-callback` route of your 
 ```go
 //main.go
 func main() {
-	// ...
+    // ...
 
-	// Add a link to perform a sign-in request on the home page
-	router.GET("/", func(ctx *gin.Context) {
-		// ...
-		homePage := `<h1>Hello Logto</h1>` +
-			"<div>" + authState + "</div>" +
-			// Add link
-			`<div><a href="/sign-in">Sign In</a></div>`
+    // Add a link to perform a sign-in request on the home page
+    router.GET("/", func(ctx *gin.Context) {
+        // ...
+        homePage := `<h1>Hello Logto</h1>` +
+            "<div>" + authState + "</div>" +
+            // Add link
+            `<div><a href="/sign-in">Sign In</a></div>`
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
-	})
+        ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+    })
 
-	// Add a route for handling sign-in requests
-	router.GET("/sign-in", func(ctx *gin.Context) {
-		session := sessions.Default(ctx)
-		logtoClient := client.NewLogtoClient(
-			logtoConfig,
-			&SessionStorage{session: session},
-		)
+    // Add a route for handling sign-in requests
+    router.GET("/sign-in", func(ctx *gin.Context) {
+        session := sessions.Default(ctx)
+        logtoClient := client.NewLogtoClient(
+            logtoConfig,
+            &SessionStorage{session: session},
+        )
 
-		// The sign-in request is handled by Logto.
-		// The user will be redirected to the Redirect URI on signed in.
-		signInUri, err := logtoClient.SignIn("http://localhost:8080/sign-in-callback")
-		if err != nil {
-			ctx.String(http.StatusInternalServerError, err.Error())
-			return
-		}
+        // The sign-in request is handled by Logto.
+        // The user will be redirected to the Redirect URI on signed in.
+        signInUri, err := logtoClient.SignIn("http://localhost:8080/sign-in-callback")
+        if err != nil {
+            ctx.String(http.StatusInternalServerError, err.Error())
+            return
+        }
 
-		// Redirect the user to the Logto sign-in page.
-		ctx.Redirect(http.StatusTemporaryRedirect, signInUri)
-	})
+        // Redirect the user to the Logto sign-in page.
+        ctx.Redirect(http.StatusTemporaryRedirect, signInUri)
+    })
 
-	// ...
+    // ...
 }
 ```
 
@@ -263,29 +263,29 @@ Since the Redirect URI is `http://localhost:8080/sign-in-callback`, we add the `
 ```go
 // main.go
 func main() {
-	// ...
+    // ...
 
-	// Add a route for handling sign-in callback requests
-	router.GET("/sign-in-callback", func(ctx *gin.Context) {
-		session := sessions.Default(ctx)
-		logtoClient := client.NewLogtoClient(
-			logtoConfig,
-			&SessionStorage{session: session},
-		)
+    // Add a route for handling sign-in callback requests
+    router.GET("/sign-in-callback", func(ctx *gin.Context) {
+        session := sessions.Default(ctx)
+        logtoClient := client.NewLogtoClient(
+            logtoConfig,
+            &SessionStorage{session: session},
+        )
 
-		// The sign-in callback request is handled by Logto
-		err := logtoClient.HandleSignInCallback(ctx.Request)
-		if err != nil {
-			ctx.String(http.StatusInternalServerError, err.Error())
-			return
-		}
+        // The sign-in callback request is handled by Logto
+        err := logtoClient.HandleSignInCallback(ctx.Request)
+        if err != nil {
+            ctx.String(http.StatusInternalServerError, err.Error())
+            return
+        }
 
-		// Jump to the page specified by the developer.
-		// This example takes the user back to the home page.
-		ctx.Redirect(http.StatusTemporaryRedirect, "/")
-	})
+        // Jump to the page specified by the developer.
+        // This example takes the user back to the home page.
+        ctx.Redirect(http.StatusTemporaryRedirect, "/")
+    })
 
-	// ...
+    // ...
 }
 ```
 
@@ -309,41 +309,41 @@ This configuration enables the user to return to the home page after signing out
 ```go
 //main.go
 func main() {
-	// ...
+    // ...
 
-	// Add a link to perform a sign-out request on the home page
-	router.GET("/", func(ctx *gin.Context) {
-		// ...
-		homePage := `<h1>Hello Logto</h1>` +
-			"<div>" + authState + "</div>" +
-			`<div><a href="/sign-in">Sign In</a></div>` +
-			// Add link
-			`<div><a href="/sign-out">Sign Out</a></div>`
+    // Add a link to perform a sign-out request on the home page
+    router.GET("/", func(ctx *gin.Context) {
+        // ...
+        homePage := `<h1>Hello Logto</h1>` +
+            "<div>" + authState + "</div>" +
+            `<div><a href="/sign-in">Sign In</a></div>` +
+            // Add link
+            `<div><a href="/sign-out">Sign Out</a></div>`
 
-		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
-	})
+        ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+    })
 
-	// Add a route for handling signing out requests
-	router.GET("/sign-out", func(ctx *gin.Context) {
-		session := sessions.Default(ctx)
-		logtoClient := client.NewLogtoClient(
-			logtoConfig,
-			&SessionStorage{session: session},
-		)
+    // Add a route for handling signing out requests
+    router.GET("/sign-out", func(ctx *gin.Context) {
+        session := sessions.Default(ctx)
+        logtoClient := client.NewLogtoClient(
+            logtoConfig,
+            &SessionStorage{session: session},
+        )
 
-		// The sign-out request is handled by Logto.
-		// The user will be redirected to the Post Sign-out Redirect URI on signed out.
-		signOutUri, signOutErr := logtoClient.SignOut("http://localhost:8080")
+        // The sign-out request is handled by Logto.
+        // The user will be redirected to the Post Sign-out Redirect URI on signed out.
+        signOutUri, signOutErr := logtoClient.SignOut("http://localhost:8080")
 
-		if signOutErr != nil {
-			ctx.String(http.StatusOK, signOutErr.Error())
-			return
-		}
+        if signOutErr != nil {
+            ctx.String(http.StatusOK, signOutErr.Error())
+            return
+        }
 
-		ctx.Redirect(http.StatusTemporaryRedirect, signOutUri)
-	})
+        ctx.Redirect(http.StatusTemporaryRedirect, signOutUri)
+    })
 
-	// ...
+    // ...
 }
 ```
 
