@@ -6,6 +6,7 @@ import { object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -36,17 +37,19 @@ export default function roleApplicationRoutes<T extends AuthedRouter>(
         params: { id },
       } = ctx.guard;
       const { limit, offset } = ctx.pagination;
+      const { searchParams } = ctx.request.URL;
 
       await findRoleById(id);
 
       return tryThat(
         async () => {
+          const search = parseSearchParamsForSearch(searchParams);
           const applicationRoles = await findApplicationsRolesByRoleId(id);
           const applicationIds = applicationRoles.map(({ applicationId }) => applicationId);
 
           const [{ count }, applications] = await Promise.all([
-            countM2mApplicationsByIds(applicationIds),
-            findM2mApplicationsByIds(limit, offset, applicationIds),
+            countM2mApplicationsByIds(search, applicationIds),
+            findM2mApplicationsByIds(search, limit, offset, applicationIds),
           ]);
 
           ctx.pagination.totalCount = count;
