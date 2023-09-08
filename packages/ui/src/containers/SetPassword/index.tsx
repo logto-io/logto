@@ -10,6 +10,7 @@ type Props = {
   onSubmit: (password: string) => void;
   errorMessage?: string;
   clearErrorMessage?: () => void;
+  maxLength?: number;
 };
 
 const SetPassword = (props: Props) => {

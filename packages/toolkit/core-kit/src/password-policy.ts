@@ -110,6 +110,20 @@ export type UserInfo = Partial<{
  */
 export class PasswordPolicyChecker {
   static symbols = Object.freeze('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' as const);
+  /** The length threshold for checking repetition and sequence. */
+  static repetitionAndSequenceThreshold = 3 as const;
+  /**
+   * If the password contains more than such number of characters that are not
+   * in the restricted phrases, it will be accepted.
+   */
+  static restrictedPhrasesTolerance = 3 as const;
+
+  /** Get the length threshold for checking restricted phrases. */
+  protected static getRestrictedPhraseThreshold(password: string): number {
+    const { restrictedPhrasesTolerance } = PasswordPolicyChecker;
+
+    return Math.max(1, password.length - restrictedPhrasesTolerance);
+  }
 
   public readonly policy: PasswordPolicy;
 
@@ -269,14 +283,20 @@ export class PasswordPolicyChecker {
 
   /**
    * Check if the given password contains repetition characters that are more than
-   * 4 characters or equal to the password length.
+   * the threshold.
    *
    * @param password - Password to check.
    * @returns Whether the password contains repetition characters.
    */
   hasRepetition(password: string): boolean {
+    const { repetitionAndSequenceThreshold, getRestrictedPhraseThreshold } = PasswordPolicyChecker;
+
+    if (password.length < repetitionAndSequenceThreshold) {
+      return false;
+    }
+
     const matchedRepetition = password.match(
-      new RegExp(`(.)\\1{${Math.min(password.length - 1, 4)},}`, 'g')
+      new RegExp(`(.)\\1{${getRestrictedPhraseThreshold(password)},}`, 'g')
     );
 
     return Boolean(matchedRepetition);
@@ -289,29 +309,50 @@ export class PasswordPolicyChecker {
    * @param userInfo - User information to check.
    * @returns Whether the password contains user information.
    */
+  // eslint-disable-next-line complexity
   hasUserInfo(password: string, userInfo: UserInfo): boolean {
     const lowercasedPassword = password.toLowerCase();
     const { name, username, email, phoneNumber } = userInfo;
+    const threshold = PasswordPolicyChecker.getRestrictedPhraseThreshold(password);
+
+    if (name) {
+      const joined = name.replaceAll(/\s+/g, '');
+      if (joined.length >= threshold && lowercasedPassword.includes(joined.toLowerCase())) {
+        return true;
+      }
+
+      if (
+        name
+          .toLowerCase()
+          .split(' ')
+          .some((word) => word.length >= threshold && lowercasedPassword.includes(word))
+      ) {
+        return true;
+      }
+    }
 
     if (
-      name
-        ?.toLowerCase()
-        .split(' ')
-        .some((word) => lowercasedPassword.includes(word))
+      username &&
+      username.length >= threshold &&
+      lowercasedPassword.includes(username.toLowerCase())
     ) {
       return true;
     }
 
-    if (username && lowercasedPassword.includes(username.toLowerCase())) {
-      return true;
-    }
-
     const emailPrefix = email?.split('@')[0];
-    if (emailPrefix && lowercasedPassword.includes(emailPrefix.toLowerCase())) {
+    if (
+      emailPrefix &&
+      emailPrefix.length >= threshold &&
+      lowercasedPassword.includes(emailPrefix.toLowerCase())
+    ) {
       return true;
     }
 
-    if (phoneNumber && lowercasedPassword.includes(phoneNumber)) {
+    if (
+      phoneNumber &&
+      phoneNumber.length >= threshold &&
+      lowercasedPassword.includes(phoneNumber)
+    ) {
       return true;
     }
 
@@ -327,13 +368,14 @@ export class PasswordPolicyChecker {
   hasWords(password: string): string[] {
     const words = this.policy.rejects.words.map((word) => word.toLowerCase());
     const lowercasedPassword = password.toLowerCase();
+    const threshold = PasswordPolicyChecker.getRestrictedPhraseThreshold(password);
 
-    return words.filter((word) => lowercasedPassword.includes(word));
+    return words.filter((word) => word.length >= threshold && lowercasedPassword.includes(word));
   }
 
   /**
    * Check if the given password contains sequential characters, and the number of
-   * sequential characters is over 4 or equal to the password length when (1 < length < 5).
+   * sequential characters is over the threshold.
    *
    * @param password - Password to check.
    * @returns Whether the password contains sequential characters.
@@ -341,6 +383,7 @@ export class PasswordPolicyChecker {
    * @example
    * ```ts
    * hasSequentialChars('1'); // false
+   * hasSequentialChars('12'); // false
    * hasSequentialChars('12345'); // true
    * hasSequentialChars('123456@Bc.dcE'); // true
    * hasSequentialChars('123@Bc.dcE'); // false
@@ -349,6 +392,15 @@ export class PasswordPolicyChecker {
   // Disable the mutation rules because the algorithm is much easier to implement with
   /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
   hasSequentialChars(password: string): boolean {
+    const { repetitionAndSequenceThreshold, getRestrictedPhraseThreshold } = PasswordPolicyChecker;
+    if (password.length < repetitionAndSequenceThreshold) {
+      return false;
+    }
+
+    const threshold = Math.max(
+      getRestrictedPhraseThreshold(password),
+      repetitionAndSequenceThreshold
+    );
     let sequence: number[] = [];
 
     for (const char of password) {
@@ -370,7 +422,7 @@ export class PasswordPolicyChecker {
         sequence = [charCode];
       }
 
-      if (sequence.length >= 5 || sequence.length === password.length) {
+      if (sequence.length >= threshold) {
         return true;
       }
     }

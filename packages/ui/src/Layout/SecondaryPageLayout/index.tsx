@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: TFuncKey;
-  description?: TFuncKey | ReactElement;
+  description?: TFuncKey | ReactElement | '';
   titleProps?: Record<string, unknown>;
   descriptionProps?: Record<string, unknown>;
   notification?: TFuncKey;
