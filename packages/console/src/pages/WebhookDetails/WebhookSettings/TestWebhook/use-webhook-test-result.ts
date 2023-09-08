@@ -1,4 +1,4 @@
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import { useState } from 'react';
 import { z } from 'zod';
 
@@ -21,12 +21,7 @@ const readResult = () => {
     conditionalString(sessionStorage.getItem(storageKeys.webhookTestResult))
   );
 
-  if (!parsedJson.success) {
-    return;
-  }
-  console.log('parsedJson', parsedJson);
-
-  return webhookTestResultGuard.parse(parsedJson.data);
+  return conditional(parsedJson.success && webhookTestResultGuard.parse(parsedJson.data));
 };
 
 const useWebhookTestResult = () => {

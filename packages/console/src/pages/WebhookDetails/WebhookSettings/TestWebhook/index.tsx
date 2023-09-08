@@ -93,6 +93,7 @@ function TestWebhook({ hookId }: Props) {
       throw error;
     } finally {
       setIsSendingPayload(false);
+      // Set timeout to wait for the notification to be rendered
       setTimeout(() => {
         testResultRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 50);
