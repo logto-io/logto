@@ -1,0 +1,134 @@
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+
+<Steps>
+
+<Step title="Extract the Bearer Token from request header">
+
+A authorized request should contain an Authorization header with Bearer `<access_token>` as its content. Extract the Authorization Token from the request header:
+
+```ts
+// auth_middleware.ts
+
+import { IncomingHttpHeaders } from 'http';
+
+const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
+  if (!authorization) {
+    throw new Error({ code: 'auth.authorization_header_missing', status: 401 });
+  }
+
+  if (!authorization.startsWith('Bearer')) {
+    throw new Error({ code: 'auth.authorization_token_type_not_supported', status: 401 });
+  }
+
+  return authorization.slice(bearerTokenIdentifier.length + 1);
+};
+```
+
+</Step>
+
+<Step title="Token validation" subtitle="3 steps">
+
+<InlineNotification>
+  For demonstration, we use <a href="https://github.com/panva/jose" target="_blank" rel="noopener noreferrer">jose</a> package to validate the token's signature, expiration status, and required claims.
+</InlineNotification>
+
+### Install `jose` as dependency
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm install jose
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add jose
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add jose
+```
+
+</TabItem>
+</Tabs>
+
+### Retrieve Logto's OIDC configurations
+
+You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token. All the latest public Logto Authorization Configurations can be found at `https://<your-logto-domain>/oidc/.well-known/openid-configuration`.
+
+e.g. Call `https://logto.dev/oidc/.well-known/openid-configuration`. And locate the following two fields in the response body:
+
+```ts
+{
+  "jwks_uri": "https://logto.dev/oidc/jwks",
+  "issuer": "https://logto.dev/oidc"
+}
+```
+
+### Add auth middleware
+
+Jose's `jwtVerify` method may helps you to verify the token's JWS format, token signature, issuer, audience and the expiration status. A exception will be thrown if validation failed.
+
+<InlineNotification>
+  For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.
+</InlineNotification>
+
+```ts
+// auth-middleware.ts
+
+import { createRemoteJWKSet, jwtVerify } from 'jose';
+
+//...
+
+export const verifyAuthFromRequest = async (req, res, next) => {
+  // Extract the token
+  const token = extractBearerTokenFromHeaders(req.headers);
+
+  const { payload } = await jwtVerify(
+    // The raw Bearer Token extracted from the request header
+    token,
+    // Generate a jwks using jwks_uri inquired from Logto server
+    createRemoteJWKSet('https://<your-logto-domain>/oidc/jwks'),
+    {
+      // Expected issuer of the token, should be issued by the Logto server
+      issuer: 'https://<your-logto-domain>/oidc',
+      // Expected audience token, should be the resource indicator of the current API
+      audience: '<your request listener resource indicator>',
+    }
+  );
+
+  // If you are using RBAC
+  assert(payload.scope.includes('some_scope'));
+
+  // Custom payload logic
+  userId = payload.sub;
+
+  return next();
+};
+```
+
+</Step>
+
+<Step title="Apply middleware to your API">
+
+```ts
+import { verifyAuthFromRequest } from '/middleware/auth-middleware.ts';
+
+app.get('/user/:id', verifyAuthFromRequest, (req, res, next) => {
+  // Custom code
+});
+```
+
+</Step>
+
+</Steps>
