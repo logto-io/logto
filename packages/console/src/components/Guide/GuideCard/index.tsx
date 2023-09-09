@@ -32,14 +32,19 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const isM2mDisabled = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
-  const isSubscriptionRequired =
-    isM2mDisabled && data.metadata.target === ApplicationType.MachineToMachine;
 
   const {
     id,
     Logo,
     metadata: { target, name, description },
   } = data;
+
+  const isSubscriptionRequired = isM2mDisabled && target === ApplicationType.MachineToMachine;
+  const buttonText = isSubscriptionRequired
+    ? 'upsell.upgrade_plan'
+    : target === 'API'
+    ? 'guide.get_started'
+    : 'guide.start_building';
 
   const handleClick = useCallback(() => {
     if (isSubscriptionRequired) {
@@ -77,15 +82,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
           </div>
         </div>
       </div>
-      {hasButton && (
-        <Button
-          title={
-            isSubscriptionRequired ? 'upsell.upgrade_plan' : 'applications.guide.start_building'
-          }
-          size="small"
-          onClick={handleClick}
-        />
-      )}
+      {hasButton && <Button title={buttonText} size="small" onClick={handleClick} />}
     </div>
   );
 }

@@ -97,12 +97,7 @@ function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {
       {!isApiResourceGuide && (
         <nav className={styles.actionBar}>
           <div className={styles.layout}>
-            <Button
-              size="large"
-              title="applications.guide.finish_and_done"
-              type="primary"
-              onClick={onClose}
-            />
+            <Button size="large" title="guide.finish_and_done" type="primary" onClick={onClose} />
           </div>
         </nav>
       )}

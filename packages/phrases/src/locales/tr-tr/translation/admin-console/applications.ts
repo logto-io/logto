@@ -36,41 +36,6 @@ const applications = {
       description: 'Örneğin, Backend servisi',
     },
   },
-  guide: {
-    header_title: 'Bir çerçeve veya öğretici seçin',
-    modal_header_title: 'SDK ve kılavuzlarla başlayın',
-    header_subtitle:
-      'Önceden oluşturulmuş SDK ve öğreticilerimizle uygulama geliştirme sürecine hız kazandırın.',
-    start_building: 'Geliştirmeye Başla',
-    categories: {
-      featured: 'Popüler ve sizin için',
-      Traditional: 'Geleneksel web uygulaması',
-      SPA: 'Tek sayfa uygulama',
-      Native: 'Native',
-      MachineToMachine: 'Machine-to-machine',
-    },
-    filter: {
-      title: 'Çerçeve filtrele',
-      placeholder: 'Çerçeve arayın',
-    },
-    select_a_framework: 'Bir çerçeve seçin',
-    checkout_tutorial: '{{name}} öğreticiye göz atın',
-    get_sample_file: 'Örnek Gör',
-    title: 'Uygulama başarıyla oluşturuldu',
-    subtitle:
-      'Şimdi uygulama ayarlarınızı tamamlamak için aşağıdaki adımları izleyiniz. Lütfen devam etmek için SDK türünü seçiniz.',
-    description_by_sdk:
-      'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
-    do_not_need_tutorial:
-      'Bir öğreticiye ihtiyacınız yoksa, çerçeve rehberi olmadan devam edebilirsiniz',
-    create_without_framework: 'Çerçevesiz uygulama oluşturma',
-    finish_and_done: 'Tamamla ve Bitir',
-    cannot_find_guide: 'Rehberinizi bulamıyor musunuz?',
-    describe_guide_looking_for: 'Aramakta olduğunuz rehberi açıklayın',
-    describe_guide_looking_for_placeholder:
-      'Örn., Logtoyu Angular uygulamama entegre etmek istiyorum.',
-    request_guide_successfully: 'Talebiniz başarıyla gönderildi. Teşekkür ederiz!',
-  },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',
   placeholder_description:
     'Logto, uygulamanızı tanımlamaya, oturum açmayı yönetmeye ve denetim kayıtları oluşturmaya yardımcı olmak için OIDC için bir uygulama varlığı kullanır.',

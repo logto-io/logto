@@ -20,7 +20,7 @@ type Props = {
 };
 
 function GuideDrawer({ app, onClose }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
   const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
 
@@ -67,7 +67,7 @@ function GuideDrawer({ app, onClose }: Props) {
             <span>{t('checkout_tutorial', { name: selectedGuide.name })}</span>
           </>
         )}
-        {!selectedGuide && t('select_a_framework')}
+        {!selectedGuide && t('app.select_a_framework')}
         <Spacer />
         <IconButton size="large" onClick={onClose}>
           <Close />
