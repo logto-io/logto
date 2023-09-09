@@ -2,7 +2,7 @@ const guide = {
   start_building: '开始构建',
   get_started: '立即开始',
   categories: {
-    featured: '推荐热门框架',
+    featured: '推荐热门开发框架',
     Traditional: '传统网页应用',
     SPA: '单页应用',
     Native: '原生应用',

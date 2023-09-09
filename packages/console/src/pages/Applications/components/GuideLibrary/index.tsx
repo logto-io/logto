@@ -107,7 +107,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
             </div>
           )}
           {keyword &&
-            (filteredMetadata?.length ? (
+            (filteredMetadata.length > 0 ? (
               <GuideCardGroup
                 className={styles.guideGroup}
                 hasCardBorder={hasCardBorder}

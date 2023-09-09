@@ -13,9 +13,11 @@ import ApiResource from '@/assets/icons/api-resource.svg';
 import Delete from '@/assets/icons/delete.svg';
 import More from '@/assets/icons/more.svg';
 import DetailsPage from '@/components/DetailsPage';
+import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
+import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
@@ -26,14 +28,18 @@ import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
+import GuideDrawer from './components/GuideDrawer';
+import GuideModal from './components/GuideModal';
 import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
 
 function ApiResourceDetails() {
   const { pathname } = useLocation();
-  const { id } = useParams();
+  const { id, guideId } = useParams();
+  const { navigate, match } = useTenantPathname();
+  const isGuideView = !!id && !!guideId && match(`/api-resources/${id}/guide/${guideId}`);
+
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `api/resources/${id}`);
   const isLoading = !data && !error;
   const theme = useTheme();
@@ -42,6 +48,7 @@ function ApiResourceDetails() {
   const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
   const isLogtoManagementApiResource = isManagementApi(data?.indicator ?? '');
 
+  const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
   useEffect(() => {
@@ -67,6 +74,21 @@ function ApiResourceDetails() {
       setIsDeleting(false);
     }
   };
+
+  const onCloseDrawer = () => {
+    setIsGuideDrawerOpen(false);
+  };
+
+  if (isGuideView) {
+    return (
+      <GuideModal
+        guideId={guideId}
+        onClose={() => {
+          navigate(`/api-resources/${id}`);
+        }}
+      />
+    );
+  }
 
   return (
     <DetailsPage
@@ -99,6 +121,16 @@ function ApiResourceDetails() {
             </div>
             {!isLogtoManagementApiResource && (
               <div className={styles.operations}>
+                <Button
+                  title="application_details.check_guide"
+                  size="large"
+                  onClick={() => {
+                    setIsGuideDrawerOpen(true);
+                  }}
+                />
+                <Drawer isOpen={isGuideDrawerOpen} onClose={onCloseDrawer}>
+                  <GuideDrawer onClose={onCloseDrawer} />
+                </Drawer>
                 <ActionMenu
                   buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
                   title={t('general.more_options')}

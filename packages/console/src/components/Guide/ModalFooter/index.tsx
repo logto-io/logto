@@ -1,4 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
+import classNames from 'classnames';
 
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -6,15 +7,16 @@ import DynamicT from '@/ds-components/DynamicT';
 import * as styles from './index.module.scss';
 
 type Props = {
+  wrapperClassName?: string;
   content: AdminConsoleKey;
   buttonText: AdminConsoleKey;
   onClick: () => void;
 };
 
-export default function ModalFooter({ content, buttonText, onClick }: Props) {
+export default function ModalFooter({ wrapperClassName, content, buttonText, onClick }: Props) {
   return (
     <nav className={styles.actionBar}>
-      <div className={styles.wrapper}>
+      <div className={classNames(styles.wrapper, wrapperClassName)}>
         <span className={styles.text}>
           <DynamicT forKey={content} />
         </span>
