@@ -1,24 +1,14 @@
 const password_rejected = {
-  /** UNTRANSLATED */
-  too_short: 'Minimum length is {{min}}.',
-  /** UNTRANSLATED */
-  too_long: 'Maximum length is {{max}}.',
-  /** UNTRANSLATED */
-  character_types: 'At least {{min}} types of characters are required.',
-  /** UNTRANSLATED */
-  unsupported_characters: 'Unsupported character found.',
-  /** UNTRANSLATED */
-  pwned: 'Avoid using simple passwords that are easy to guess.',
-  /** UNTRANSLATED */
-  restricted_found: 'Avoid overusing {{list, list}}.',
-  /** UNTRANSLATED */
-  'restricted.repetition': 'repeated characters',
-  /** UNTRANSLATED */
-  'restricted.sequence': 'sequential characters',
-  /** UNTRANSLATED */
-  'restricted.user_info': 'your personal information',
-  /** UNTRANSLATED */
-  'restricted.words': 'product context',
+  too_short: 'O comprimento mínimo é {{min}}.',
+  too_long: 'O comprimento máximo é {{max}}.',
+  character_types: 'Pelo menos {{min}} tipos de caracteres são necessários.',
+  unsupported_characters: 'Caractere não suportado encontrado.',
+  pwned: 'Evite o uso de senhas simples que são fáceis de adivinhar.',
+  restricted_found: 'Evite usar em excesso {{list, list}}.',
+  'restricted.repetition': 'caracteres repetidos',
+  'restricted.sequence': 'caracteres sequenciais',
+  'restricted.user_info': 'suas informações pessoais',
+  'restricted.words': 'contexto do produto',
 };
 
 export default Object.freeze(password_rejected);

@@ -1,10 +1,7 @@
 const list = {
-  /** UNTRANSLATED */
-  or: 'or',
-  /** UNTRANSLATED */
-  and: 'and',
-  /** UNTRANSLATED */
-  separator: ',',
+  or: '或',
+  and: '和',
+  separator: '，',
 };
 
 export default Object.freeze(list);

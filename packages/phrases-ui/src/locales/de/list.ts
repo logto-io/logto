@@ -1,9 +1,6 @@
 const list = {
-  /** UNTRANSLATED */
-  or: 'or',
-  /** UNTRANSLATED */
-  and: 'and',
-  /** UNTRANSLATED */
+  or: 'oder',
+  and: 'und',
   separator: ',',
 };
 

@@ -10,7 +10,7 @@ import { type CommandModule } from 'yargs';
 import { consoleLog } from '../../../utils.js';
 import { inquireInstancePath } from '../../connector/utils.js';
 
-import { praseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
+import { parseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
 
 const execPromise = promisify(execFile);
 
@@ -77,7 +77,7 @@ const syncKeys: CommandModule<
     const phrasesPath = path.join(instancePath, 'packages', packageName);
     const localesPath = path.join(phrasesPath, 'src/locales');
     const entrypoint = path.join(localesPath, baselineTag.toLowerCase(), 'index.ts');
-    const baseline = praseLocaleFiles(entrypoint);
+    const baseline = parseLocaleFiles(entrypoint);
     const targetLocales =
       targetTag === 'all' ? fs.readdirSync(localesPath) : [targetTag.toLowerCase()];
 

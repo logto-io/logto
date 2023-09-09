@@ -1,45 +1,27 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
+  password_requirements: '密码要求',
+  minimum_length: '最小长度',
   /** UNTRANSLATED */
   minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
+  minimum_length_error: '最小长度必须在{{min}}和{{max}}之间（包括{{min}}和{{max}}）。',
+  minimum_required_char_types: '最小要求字符类型',
   /** UNTRANSLATED */
   minimum_required_char_types_description:
     'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+  password_rejection: '密码拒绝',
+  compromised_passwords: '拒绝已泄露的密码',
+  breached_passwords: '泄露的密码',
+  breached_passwords_description: '拒绝之前在泄露数据库中发现的密码。',
+  restricted_phrases: '限制低安全性短语',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
-  custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    '用户不能使用与下方列表中的短语完全相同或由其组成的密码。可以添加3个或更多个非连续字符以增加密码复杂性。',
+  repetitive_or_sequential_characters: '重复或连续字符',
+  repetitive_or_sequential_characters_description: '例如，“AAAA”、“1234”和“abcd”。',
+  user_information: '用户信息',
+  user_information_description: '例如，电子邮件地址，电话号码，用户名等。',
+  custom_words: '自定义词汇',
+  custom_words_description: '个性化上下文相关的词汇，不区分大小写，每行一个。',
+  custom_words_placeholder: '您的服务名称，公司名称等。',
 };
 
 export default Object.freeze(password_policy);

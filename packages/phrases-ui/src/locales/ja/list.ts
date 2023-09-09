@@ -1,10 +1,9 @@
 const list = {
-  /** UNTRANSLATED */
-  or: 'or',
-  /** UNTRANSLATED */
-  and: 'and',
-  /** UNTRANSLATED */
+  or: 'または',
+  and: 'そして',
   separator: ',',
 };
 
-export default Object.freeze(list);
+Object.freeze(list);
+
+export default list;

@@ -1,45 +1,29 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
+  password_requirements: 'Passwortanforderungen',
+  minimum_length: 'Mindestlänge',
   /** UNTRANSLATED */
   minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
+  minimum_length_error: 'Die Mindestlänge muss zwischen {{min}} und {{max}} (einschließlich) sein.',
+  minimum_required_char_types: 'Mindestanzahl erforderlicher Zeichentypen',
   /** UNTRANSLATED */
   minimum_required_char_types_description:
     'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+  password_rejection: 'Passwortablehnung',
+  compromised_passwords: 'Abgelehnte Passwörter',
+  breached_passwords: 'Verletzte Passwörter',
+  breached_passwords_description:
+    'Ablehnung von zuvor in den Verletzungsdatenbanken gefundenen Passwörtern.',
+  restricted_phrases: 'Einschränkung niedrigsicherer Phrasen',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    'Benutzer dürfen keine Passwörter verwenden, die genau den unten aufgeführten Phrasen entsprechen oder daraus bestehen. Es ist erlaubt, 3 oder mehr nicht aufeinanderfolgende Zeichen hinzuzufügen, um die Komplexität des Passworts zu erhöhen.',
+  repetitive_or_sequential_characters: 'Wiederholte oder aufeinanderfolgende Zeichen',
+  repetitive_or_sequential_characters_description: 'Zum Beispiel "AAAA", "1234" und "abcd".',
+  user_information: 'Benutzerinformationen',
+  user_information_description: 'Zum Beispiel E-Mail-Adresse, Telefonnummer, Benutzername, etc.',
+  custom_words: 'Benutzerdefinierte Wörter',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    'Personalisierte kontextspezifische Wörter, Groß-/Kleinschreibung wird nicht beachtet, ein Wort pro Zeile.',
+  custom_words_placeholder: 'Name Ihres Dienstes, Firmenname, etc.',
 };
 
 export default Object.freeze(password_policy);

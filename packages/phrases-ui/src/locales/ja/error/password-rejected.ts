@@ -1,24 +1,14 @@
 const password_rejected = {
-  /** UNTRANSLATED */
-  too_short: 'Minimum length is {{min}}.',
-  /** UNTRANSLATED */
-  too_long: 'Maximum length is {{max}}.',
-  /** UNTRANSLATED */
-  character_types: 'At least {{min}} types of characters are required.',
-  /** UNTRANSLATED */
-  unsupported_characters: 'Unsupported character found.',
-  /** UNTRANSLATED */
-  pwned: 'Avoid using simple passwords that are easy to guess.',
-  /** UNTRANSLATED */
-  restricted_found: 'Avoid overusing {{list, list}}.',
-  /** UNTRANSLATED */
-  'restricted.repetition': 'repeated characters',
-  /** UNTRANSLATED */
-  'restricted.sequence': 'sequential characters',
-  /** UNTRANSLATED */
-  'restricted.user_info': 'your personal information',
-  /** UNTRANSLATED */
-  'restricted.words': 'product context',
+  too_short: '最小の長さは{{min}}です。',
+  too_long: '最大の長さは{{max}}です。',
+  character_types: '少なくとも{{min}}種類の文字が必要です。',
+  unsupported_characters: 'サポートされていない文字が見つかりました。',
+  pwned: '簡単に推測できる簡単なパスワードの使用を避けてください。',
+  restricted_found: '{{list, list}}の過度な使用を避けてください。',
+  'restricted.repetition': '繰り返された文字',
+  'restricted.sequence': '連続する文字',
+  'restricted.user_info': '個人情報',
+  'restricted.words': '製品のコンテキスト',
 };
 
 export default Object.freeze(password_rejected);

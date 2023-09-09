@@ -21,8 +21,8 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Google is a principal search engine technology and email service provider.',
     'zh-CN': 'Google 是全球性的搜索引擎和邮件服务提供商。',
-    'tr-TR': 'Google, en büyük arama motoru teknolojisi ve e-posta servis sağlayıcısıdır.', // UNTRANSLATED
-    ko: 'Google은 가장 큰 검색 엔진 기술과 이메일 서비스 제공자입니다.', // UNTRANSLATED
+    'tr-TR': 'Google, en büyük arama motoru teknolojisi ve e-posta servis sağlayıcısıdır.',
+    ko: 'Google은 가장 큰 검색 엔진 기술과 이메일 서비스 제공자입니다.',
   },
   readme: './README.md',
   formItems: [

@@ -58,18 +58,13 @@ const description = {
   no_region_code_found: 'Bölge kodu bulunamadı',
   verify_email: 'E-postanızın doğrulanması',
   verify_phone: 'Telefon numaranızın doğrulanması',
-  /** UNTRANSLATED */
-  password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
+  password_requirements: 'Şifre {{items, list}}.',
+  'password_requirement.length_one': 'en az {{count}} karakter gerektirir',
+  'password_requirement.length_other': 'en az {{count}} karakter gerektirir',
   'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+    'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
 };
 
 export default Object.freeze(description);

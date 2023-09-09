@@ -1,9 +1,6 @@
 const list = {
-  /** UNTRANSLATED */
-  or: 'or',
-  /** UNTRANSLATED */
-  and: 'and',
-  /** UNTRANSLATED */
+  or: '또는',
+  and: '및',
   separator: ',',
 };
 

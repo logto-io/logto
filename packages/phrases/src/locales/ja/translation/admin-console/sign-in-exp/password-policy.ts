@@ -1,45 +1,28 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
+  password_requirements: 'パスワードの要件',
+  minimum_length: '最小の長さ',
   /** UNTRANSLATED */
   minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
+  minimum_length_error: '最小の長さは {{min}} から {{max}}（両方含む）の間でなければなりません。',
+  minimum_required_char_types: '必要な文字の種類の最小数',
   /** UNTRANSLATED */
   minimum_required_char_types_description:
     'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+  password_rejection: 'パスワードの拒否',
+  compromised_passwords: '危険なパスワードの拒否',
+  breached_passwords: '漏洩したパスワードの拒否',
+  breached_passwords_description: '以前に流出したデータベースで見つかったパスワードを拒否します。',
+  restricted_phrases: '低セキュリティフレーズの制限',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    '以下にリストされたフレーズと完全に一致するパスワードや、そのフレーズを構成する文字のみで構成されたパスワードは使用できません。パスワードの複雑さを高めるために、非連続の3文字以上の追加も許可されています。',
+  repetitive_or_sequential_characters: '繰り返しまたは連続する文字',
+  repetitive_or_sequential_characters_description: '「AAAA」、「1234」、「abcd」などです。',
+  user_information: 'ユーザー情報',
+  user_information_description: '例：メールアドレス、電話番号、ユーザー名など。',
+  custom_words: 'カスタムワード',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    'コンテキストに特化したワードを、大文字小文字を区別せずに、1つの行に1つずつ追加します。',
+  custom_words_placeholder: 'サービス名、会社名など',
 };
 
 export default Object.freeze(password_policy);

@@ -1,45 +1,28 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
+  password_requirements: '암호 요구 사항',
+  minimum_length: '최소 길이',
   /** UNTRANSLATED */
   minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
+  minimum_length_error: '최소 길이는 {{min}}에서 {{max}}(포함) 사이여야 합니다.',
+  minimum_required_char_types: '최소 필요 문자 유형',
   /** UNTRANSLATED */
   minimum_required_char_types_description:
     'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+  password_rejection: '암호 거부',
+  compromised_passwords: '의심되는 암호 거부',
+  breached_passwords: '위반된 암호',
+  breached_passwords_description: '이전에 위반 데이터베이스에서 발견된 암호를 거부합니다.',
+  restricted_phrases: '저보안 구구절 제한',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    '사용자는 아래 목록에 정확히 같거나 해당 구구절로 구성된 암호를 사용할 수 없습니다. 비 연속적인 문자 3개 이상의 추가는 암호 복잡성을 높이기 위해 허용됩니다.',
+  repetitive_or_sequential_characters: '반복 또는 순차 문자',
+  repetitive_or_sequential_characters_description: '예: "AAAA", "1234" 및 "abcd".',
+  user_information: '사용자 정보',
+  user_information_description: '예: 이메일 주소, 전화 번호, 사용자 이름 등.',
+  custom_words: '사용자 지정 단어',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    '맞춤형 컨텍스트별 단어, 대소 문자를 구분하지 않으며 한 줄에 하나씩 작성합니다.',
+  custom_words_placeholder: '서비스 이름, 회사 이름 등.',
 };
 
 export default Object.freeze(password_policy);

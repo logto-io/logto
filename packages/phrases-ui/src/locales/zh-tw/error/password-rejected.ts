@@ -1,24 +1,14 @@
 const password_rejected = {
-  /** UNTRANSLATED */
-  too_short: 'Minimum length is {{min}}.',
-  /** UNTRANSLATED */
-  too_long: 'Maximum length is {{max}}.',
-  /** UNTRANSLATED */
-  character_types: 'At least {{min}} types of characters are required.',
-  /** UNTRANSLATED */
-  unsupported_characters: 'Unsupported character found.',
-  /** UNTRANSLATED */
-  pwned: 'Avoid using simple passwords that are easy to guess.',
-  /** UNTRANSLATED */
-  restricted_found: 'Avoid overusing {{list, list}}.',
-  /** UNTRANSLATED */
-  'restricted.repetition': 'repeated characters',
-  /** UNTRANSLATED */
-  'restricted.sequence': 'sequential characters',
-  /** UNTRANSLATED */
-  'restricted.user_info': 'your personal information',
-  /** UNTRANSLATED */
-  'restricted.words': 'product context',
+  too_short: '最少需要 {{min}} 位字元。',
+  too_long: '最多只能有 {{max}} 位字元。',
+  character_types: '至少需要 {{min}} 種不同的字元類型。',
+  unsupported_characters: '發現不支援的字元。',
+  pwned: '請避免使用容易被猜中的簡單密碼。',
+  restricted_found: '請避免過度使用 {{list, list}}。',
+  'restricted.repetition': '連續重複的字元',
+  'restricted.sequence': '連續的字元',
+  'restricted.user_info': '個人資訊',
+  'restricted.words': '使用產品相關的字詞',
 };
 
 export default Object.freeze(password_rejected);

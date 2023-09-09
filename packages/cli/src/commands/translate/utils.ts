@@ -10,10 +10,9 @@ import PQueue from 'p-queue';
 import { consoleLog } from '../../utils.js';
 
 import { createOpenaiApi, translate } from './openai.js';
+import { untranslatedMark } from './prompts.js';
 
 export const baseLanguage = 'en' satisfies LanguageTag;
-
-const untranslatedMark = '// UNTRANSLATED';
 
 export const readLocaleFiles = async (directory: string): Promise<string[]> => {
   const entities = await fs.readdir(directory, { withFileTypes: true });
@@ -148,7 +147,6 @@ export const syncTranslation = async ({
         api: openai,
         sourceFilePath: targetLocaleFile,
         targetLanguage: languageTag,
-        extraPrompt: `Object values without an "${untranslatedMark}" mark should be skipped and keep its original value. Remember to remove the "${untranslatedMark}" mark with the spaces before and after it in the output content.`,
       });
 
       if (!result) {

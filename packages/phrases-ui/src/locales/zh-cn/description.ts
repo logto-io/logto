@@ -51,18 +51,12 @@ const description = {
   no_region_code_found: '没有找到区域码',
   verify_email: '验证你的邮箱',
   verify_phone: '验证你的手机号',
-  /** UNTRANSLATED */
-  password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
-  'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+  password_requirements: '密码 {{items, list}}。',
+  'password_requirement.length_one': '应至少有{{count}}个字符',
+  'password_requirement.length_other': '应至少有{{count}}个字符',
+  'password_requirement.character_types_one': '应包含至少{{count}}种大写字母、小写字母、数字和符号',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    '应包含至少{{count}}种大写字母、小写字母、数字和符号',
 };
 
 export default Object.freeze(description);

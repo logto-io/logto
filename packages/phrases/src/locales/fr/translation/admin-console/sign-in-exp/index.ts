@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Image de marque',
     sign_up_and_sign_in: 'Inscription et connexion',
     content: 'Contenu',
-    /** UNTRANSLATED */
-    password_policy: 'Password policy',
+    password_policy: 'Politique de mot de passe',
   },
   welcome: {
     title: "Personnaliser l'expérience de connexion",
@@ -60,9 +59,9 @@ const sign_in_exp = {
   password_policy,
   setup_warning: {
     no_connector_sms:
-      'Aucun connecteur SMS n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connectors"',
+      'Aucun connecteur SMS n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connecteurs"',
     no_connector_email:
-      'Aucun connecteur d\'email n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a>dans"Connectors"',
+      'Aucun connecteur d\'email n\'a été configuré. Avant de terminer la configuration, les utilisateurs ne pourront pas se connecter avec cette méthode. <a>{{link}}</a> dans "Connecteurs"',
     no_connector_social:
       'Vous n’avez pas encore configuré de connecteur social. Ajoutez d’abord des connecteurs pour appliquer des méthodes de connexion sociale. <a>{{link}}</a> dans "Connecteurs".',
     setup_link: 'Configurer',

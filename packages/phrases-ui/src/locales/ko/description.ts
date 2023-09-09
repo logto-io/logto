@@ -55,18 +55,13 @@ const description = {
   no_region_code_found: '지역 코드를 찾을 수 없습니다.',
   verify_email: '이메일 인증',
   verify_phone: '휴대전화번호 인증',
-  /** UNTRANSLATED */
-  password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
+  password_requirements: '비밀번호는 {{items, list}}로 이루어져야 합니다.',
+  'password_requirement.length_one': '최소 {{count}}자 이상이어야 함',
+  'password_requirement.length_other': '최소 {{count}} 문자 이상이어야 함',
   'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+    '최소 {{count}}개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    '최소 {{count}}개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
 };
 
 export default Object.freeze(description);
