@@ -4,7 +4,7 @@
  */
 // Tip: See https://github.com/argos-ci/jest-puppeteer/blob/main/packages/expect-puppeteer/README.md
 // for convenient expect methods
-describe('smoke testing for the main flow', () => {
+describe('smoke testing', () => {
   it('should not explode', async () => {
     expect(true);
   });
