@@ -1,7 +1,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
-import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
-import en from '@logto/phrases-ui/lib/locales/en';
+import resource, { isBuiltInLanguageTag } from '@logto/phrases-journey';
+import en from '@logto/phrases-journey/lib/locales/en';
 import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';

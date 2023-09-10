@@ -1,5 +1,5 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { builtInLanguages } from '@logto/phrases-ui';
+import { builtInLanguages } from '@logto/phrases-journey';
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
 import {

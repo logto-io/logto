@@ -1,6 +1,6 @@
 import { isLanguageTag } from '@logto/language-kit';
 import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phrases';
-import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
+import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-journey';
 import type { CommandModule } from 'yargs';
 
 import { consoleLog } from '../../utils.js';

@@ -1,4 +1,4 @@
-import resource from '@logto/phrases-ui';
+import resource from '@logto/phrases-journey';
 import { type CustomPhrase } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 

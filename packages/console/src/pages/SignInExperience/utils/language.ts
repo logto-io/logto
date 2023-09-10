@@ -1,4 +1,4 @@
-import en from '@logto/phrases-ui/lib/locales/en';
+import en from '@logto/phrases-journey/lib/locales/en';
 import type { Translation } from '@logto/schemas';
 
 export const flattenTranslation = (
