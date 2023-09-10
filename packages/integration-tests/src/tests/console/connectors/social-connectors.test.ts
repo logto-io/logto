@@ -7,7 +7,7 @@ import {
   goToAdminConsole,
   expectToSaveChanges,
   waitForToast,
-} from '#src/ui-helpers/index.js';
+} from '#src/page-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import {

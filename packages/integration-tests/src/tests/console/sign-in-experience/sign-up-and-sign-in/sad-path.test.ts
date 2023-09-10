@@ -3,7 +3,7 @@ import {
   expectToClickNavTab,
   goToAdminConsole,
   expectToSaveChanges,
-} from '#src/ui-helpers/index.js';
+} from '#src/page-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import { expectToSaveSignInExperience, waitForFormCard } from '../helpers.js';

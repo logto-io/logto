@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { type Page } from 'puppeteer';
 
-import { expectConfirmModalAndAct, waitForToast } from '#src/ui-helpers/index.js';
+import { expectConfirmModalAndAct, waitForToast } from '#src/page-helpers/index.js';
 
 import {
   passwordlessConnectorTestCases,

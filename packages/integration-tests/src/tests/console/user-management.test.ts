@@ -4,7 +4,7 @@ import {
   expectToSaveChanges,
   waitForToast,
   expectToDiscardChanges,
-} from '#src/ui-helpers/index.js';
+} from '#src/page-helpers/index.js';
 import {
   appendPathname,
   expectNavigation,

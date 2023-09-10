@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole } from '#src/ui-helpers/index.js';
+import { goToAdminConsole } from '#src/page-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
 import { waitForFormCard, expectToSelectColor, expectToSaveSignInExperience } from './helpers.js';

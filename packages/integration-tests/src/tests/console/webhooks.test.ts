@@ -1,5 +1,5 @@
 import { logtoConsoleUrl as logtoConsoleUrlString } from '#src/constants.js';
-import { goToAdminConsole, expectToSaveChanges, waitForToast } from '#src/ui-helpers/index.js';
+import { goToAdminConsole, expectToSaveChanges, waitForToast } from '#src/page-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
 await page.setViewport({ width: 1280, height: 720 });

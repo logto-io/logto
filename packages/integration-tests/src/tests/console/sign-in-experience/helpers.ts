@@ -4,7 +4,7 @@ import {
   expectToSaveChanges,
   expectConfirmModalAndAct,
   waitForToast,
-} from '#src/ui-helpers/index.js';
+} from '#src/page-helpers/index.js';
 
 export const waitForFormCard = async (page: Page, title: string) => {
   await expect(page).toMatchElement('div[class$=tabContent] div[class$=card] div[class$=title]', {
