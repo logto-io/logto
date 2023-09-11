@@ -45,7 +45,7 @@ export const passwordPolicyGuard = z.object({
     .default({}),
   characterTypes: z
     .object({
-      min: z.number().int().min(1).max(4).optional().default(2),
+      min: z.number().int().min(1).max(4).optional().default(1),
     })
     .default({}),
   rejects: z
@@ -110,6 +110,25 @@ export type UserInfo = Partial<{
  */
 export class PasswordPolicyChecker {
   static symbols = Object.freeze('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' as const);
+
+  /** A set of characters that are considered as sequential. */
+  static sequence = Object.freeze([
+    '0123456789',
+    'abcdefghijklmnopqrstuvwxyz',
+    'qwertyuiop',
+    'asdfghjkl',
+    'zxcvbnm',
+    '1qaz',
+    '2wsx',
+    '3edc',
+    '4rfv',
+    '5tgb',
+    '6yhn',
+    '7ujm',
+    '8ik',
+    '9ol',
+  ] as const);
+
   /** The length threshold for checking repetition and sequence. */
   static repetitionAndSequenceThreshold = 3 as const;
   /**
@@ -145,8 +164,7 @@ export class PasswordPolicyChecker {
    * @throws TypeError - If the policy requires to reject passwords that include user information
    * but the user information is not provided.
    */
-  /* eslint-disable @silverhand/fp/no-mutating-methods */
-
+  /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
   async check(password: string, userInfo?: UserInfo): Promise<PasswordIssue[]> {
     const issues: PasswordIssue[] = this.fastCheck(password);
 
@@ -156,43 +174,55 @@ export class PasswordPolicyChecker {
       });
     }
 
-    if (this.policy.rejects.repetitionAndSequence) {
-      if (this.hasRepetition(password)) {
-        issues.push({
-          code: 'password_rejected.restricted.repetition',
-        });
+    // `hashArray[i]` indicates whether the `i`th character violates the restriction.
+    // We'll gradually set the value to `1` if needed.
+    // The algorithm time complexity should be O(n^2), but it's fast enough for a password.
+    const hashArray = Array.from<0 | 1>({ length: password.length }).fill(0);
+    const issueCodes = new Set<PasswordRejectionCode>();
+    const { repetitionAndSequence, words, userInfo: rejectUserInfo } = this.policy.rejects;
+    const rejectWords = words.length > 0;
+
+    const fillHashArray = (startIndex: number, length: number, code: PasswordRejectionCode) => {
+      if (length <= 0) {
+        return;
       }
 
-      if (this.hasSequentialChars(password)) {
-        issues.push({
-          code: 'password_rejected.restricted.sequence',
-        });
+      for (let i = startIndex; i < startIndex + length; i += 1) {
+        hashArray[i] = 1;
+      }
+      issueCodes.add(code);
+    };
+
+    for (let i = 0; i < password.length; i += 1) {
+      const sliced = password.slice(i);
+
+      if (repetitionAndSequence) {
+        fillHashArray(i, this.repetitionLength(sliced), 'restricted.repetition');
+        fillHashArray(i, this.sequenceLength(sliced), 'restricted.sequence');
+      }
+
+      if (rejectWords) {
+        fillHashArray(i, this.wordLength(sliced), 'restricted.words');
+      }
+
+      if (rejectUserInfo) {
+        if (!userInfo) {
+          throw new TypeError('User information data is required to check user information.');
+        }
+
+        fillHashArray(i, this.userInfoLength(sliced, userInfo), 'restricted.user_info');
       }
     }
 
-    const words = this.hasWords(password);
-
-    if (words.length > 0) {
-      issues.push({
-        code: 'password_rejected.restricted.words',
-        interpolation: { words: words.join('\n'), count: words.length },
-      });
-    }
-
-    if (this.policy.rejects.userInfo) {
-      if (!userInfo) {
-        throw new TypeError('User information is required to check user information.');
-      }
-
-      if (this.hasUserInfo(password, userInfo)) {
-        issues.push({
-          code: 'password_rejected.restricted.user_info',
-        });
-      }
-    }
-
-    return issues;
+    return hashArray.reduce<number>((total, current) => total + current, 0) >
+      PasswordPolicyChecker.getRestrictedPhraseThreshold(password)
+      ? [
+          ...issues,
+          ...[...issueCodes].map<PasswordIssue>((code) => ({ code: `password_rejected.${code}` })),
+        ]
+      : issues;
   }
+  /* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
 
   /**
    * Perform a fast check to see if the password passes the basic requirements.
@@ -203,6 +233,7 @@ export class PasswordPolicyChecker {
    * @param password - Password to check.
    * @returns Whether the password passes the basic requirements.
    */
+  /* eslint-disable @silverhand/fp/no-mutating-methods */
   fastCheck(password: string) {
     const issues: PasswordIssue[] = [];
 
@@ -282,171 +313,143 @@ export class PasswordPolicyChecker {
   }
 
   /**
-   * Check if the given password contains repetition characters that are more than
-   * the threshold.
+   * Get the length of the repetition at the beginning of the given string.
+   * For example, `repetitionLength('aaaaa')` will return `5`.
    *
-   * @param password - Password to check.
-   * @returns Whether the password contains repetition characters.
+   * If the length is less than {@link PasswordPolicyChecker.repetitionAndSequenceThreshold},
+   * `0` will be returned.
    */
-  hasRepetition(password: string): boolean {
-    const { repetitionAndSequenceThreshold, getRestrictedPhraseThreshold } = PasswordPolicyChecker;
+  /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
+  repetitionLength(password: string): number {
+    const { repetitionAndSequenceThreshold } = PasswordPolicyChecker;
+    const firstChar = password[0]?.toLowerCase();
+    let length = 0;
 
-    if (password.length < repetitionAndSequenceThreshold) {
-      return false;
+    for (const char of password) {
+      if (char.toLowerCase() === firstChar) {
+        length += 1;
+      } else {
+        break;
+      }
     }
 
-    const matchedRepetition = password.match(
-      new RegExp(`(.)\\1{${getRestrictedPhraseThreshold(password)},}`, 'g')
-    );
-
-    return Boolean(matchedRepetition);
+    return length >= repetitionAndSequenceThreshold ? length : 0;
   }
+  /* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
 
   /**
-   * Check if the given password contains user information.
+   * Get the length of the user information at the beginning of the given string.
+   * For example, `userInfoLength('silverhand', { username: 'silverhand' })` will return `10`.
    *
-   * @param password - Password to check.
-   * @param userInfo - User information to check.
-   * @returns Whether the password contains user information.
+   * For multiple matches, the longest length will be returned.
    */
   // eslint-disable-next-line complexity
-  hasUserInfo(password: string, userInfo: UserInfo): boolean {
-    const lowercasedPassword = password.toLowerCase();
+  userInfoLength(password: string, userInfo: UserInfo): number {
+    const lowercased = password.toLowerCase();
     const { name, username, email, phoneNumber } = userInfo;
-    const threshold = PasswordPolicyChecker.getRestrictedPhraseThreshold(password);
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let length = 0;
+
+    const updateLength = (newLength: number) => {
+      if (newLength > length) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        length = newLength;
+      }
+    };
 
     if (name) {
       const joined = name.replaceAll(/\s+/g, '');
-      if (joined.length >= threshold && lowercasedPassword.includes(joined.toLowerCase())) {
-        return true;
+
+      // The original name should be the longest string, so we check it first.
+      if (lowercased.startsWith(name.toLowerCase())) {
+        updateLength(name.length);
+      } else {
+        if (lowercased.startsWith(joined.toLowerCase())) {
+          updateLength(joined.length);
+        }
+
+        for (const word of name.split(' ')) {
+          if (lowercased.startsWith(word.toLowerCase())) {
+            updateLength(word.length);
+          }
+        }
       }
+    }
 
-      if (
-        name
-          .toLowerCase()
-          .split(' ')
-          .some((word) => word.length >= threshold && lowercasedPassword.includes(word))
-      ) {
-        return true;
+    if (username && lowercased.startsWith(username.toLowerCase())) {
+      updateLength(username.length);
+    }
+
+    if (email) {
+      const emailPrefix = email.split('@')[0];
+      if (emailPrefix && lowercased.startsWith(emailPrefix.toLowerCase())) {
+        updateLength(emailPrefix.length);
       }
     }
 
-    if (
-      username &&
-      username.length >= threshold &&
-      lowercasedPassword.includes(username.toLowerCase())
-    ) {
-      return true;
+    if (phoneNumber && lowercased.startsWith(phoneNumber)) {
+      updateLength(phoneNumber.length);
     }
 
-    const emailPrefix = email?.split('@')[0];
-    if (
-      emailPrefix &&
-      emailPrefix.length >= threshold &&
-      lowercasedPassword.includes(emailPrefix.toLowerCase())
-    ) {
-      return true;
-    }
-
-    if (
-      phoneNumber &&
-      phoneNumber.length >= threshold &&
-      lowercasedPassword.includes(phoneNumber)
-    ) {
-      return true;
-    }
-
-    return false;
+    return length;
   }
 
   /**
-   * Check if the given password contains specific words.
+   * Get the length of the word that matches the word list at the beginning of the given string.
    *
-   * @param password - Password to check.
-   * @returns An array of matched words.
+   * For multiple matches, the longest length will be returned.
    */
-  hasWords(password: string): string[] {
-    const words = this.policy.rejects.words.map((word) => word.toLowerCase());
-    const lowercasedPassword = password.toLowerCase();
-    const threshold = PasswordPolicyChecker.getRestrictedPhraseThreshold(password);
+  /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
+  wordLength(password: string): number {
+    const sliced = password.toLowerCase();
+    let length = 0;
 
-    return words.filter((word) => word.length >= threshold && lowercasedPassword.includes(word));
-  }
-
-  /**
-   * Check if the given password contains sequential characters, and the number of
-   * sequential characters is over the threshold.
-   *
-   * @param password - Password to check.
-   * @returns Whether the password contains sequential characters.
-   *
-   * @example
-   * ```ts
-   * hasSequentialChars('1'); // false
-   * hasSequentialChars('12'); // false
-   * hasSequentialChars('12345'); // true
-   * hasSequentialChars('123456@Bc.dcE'); // true
-   * hasSequentialChars('123@Bc.dcE'); // false
-   * ```
-   */
-  // Disable the mutation rules because the algorithm is much easier to implement with
-  /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
-  hasSequentialChars(password: string): boolean {
-    const { repetitionAndSequenceThreshold, getRestrictedPhraseThreshold } = PasswordPolicyChecker;
-    if (password.length < repetitionAndSequenceThreshold) {
-      return false;
+    for (const word of this.policy.rejects.words) {
+      if (sliced.startsWith(word.toLowerCase()) && word.length > length) {
+        length = word.length;
+      }
     }
 
-    const threshold = Math.max(
-      getRestrictedPhraseThreshold(password),
-      repetitionAndSequenceThreshold
-    );
-    let sequence: number[] = [];
+    return length;
+  }
+  /* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
+
+  /**
+   * Get the length of the sequence at the beginning of the given string.
+   * For example, `sequenceLength('12345')` will return `5`.
+   *
+   * If the length is less than {@link PasswordPolicyChecker.repetitionAndSequenceThreshold},
+   * `0` will be returned.
+   */
+  /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
+  sequenceLength(password: string): number {
+    const { repetitionAndSequenceThreshold } = PasswordPolicyChecker;
+    let value = '';
+    let length = 0;
 
     for (const char of password) {
-      // Always true
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const charCode = char.codePointAt(0)!;
-
-      if (sequence.length === 0) {
-        sequence.push(charCode);
-        continue;
-      }
-
-      if (
-        this.checkSequentialWithChar(sequence, charCode, 1) ||
-        this.checkSequentialWithChar(sequence, charCode, -1)
-      ) {
-        sequence.push(charCode);
+      if (!value || this.isSequential(value + char)) {
+        value += char;
+        length += 1;
       } else {
-        sequence = [charCode];
-      }
-
-      if (sequence.length >= threshold) {
-        return true;
+        break;
       }
     }
 
-    return false;
+    return length >= repetitionAndSequenceThreshold ? length : 0;
   }
-  /* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation, @silverhand/fp/no-mutating-methods */
+  /* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
 
   /**
-   * Check if the given char code will be sequential after appending to the given
-   * char code array.
+   * Check if the given string is sequential by iterating through the {@link PasswordPolicyChecker.sequence}.
    */
-  protected checkSequentialWithChar(
-    current: Readonly<number[]>,
-    newCharCode: number,
-    direction: 1 | -1
-  ): boolean {
-    const lastCharCode = current.at(-1);
+  protected isSequential(value: string): boolean {
+    const { sequence } = PasswordPolicyChecker;
+    const lowercased = value.toLowerCase();
 
-    if (newCharCode - direction === lastCharCode) {
-      if (current.length === 1) {
-        return true;
-      }
-      if (current.at(-2) === newCharCode - direction * 2) {
+    for (const seq of sequence) {
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- created a new array before mutating
+      if (seq.includes(lowercased) || [...seq].reverse().join('').includes(lowercased)) {
         return true;
       }
     }
