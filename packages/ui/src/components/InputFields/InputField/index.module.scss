@@ -56,7 +56,6 @@
     }
   }
 
-  &.isSuffixVisible,
   &.isSuffixFocusVisible:focus-within {
     input {
       padding-right: _.unit(10);
