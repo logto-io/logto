@@ -10,6 +10,9 @@ import CreateRoleDark from '@/assets/icons/create-role-dark.svg';
 import CreateRole from '@/assets/icons/create-role.svg';
 import SocialDark from '@/assets/icons/social-dark.svg';
 import Social from '@/assets/icons/social.svg';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
+import GuideCardGroup from '@/components/Guide/GuideCardGroup';
+import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs } from '@/consts';
 import { AppDataContext } from '@/contexts/AppDataProvider';
@@ -22,9 +25,6 @@ import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
 
 import CreateForm from '../Applications/components/CreateForm';
-import { type SelectedGuide } from '../Applications/components/GuideCard';
-import GuideGroup from '../Applications/components/GuideGroup';
-import useAppGuideMetadata from '../Applications/components/GuideLibrary/hook';
 
 import FreePlanNotification from './FreePlanNotification';
 import * as styles from './index.module.scss';
@@ -39,7 +39,7 @@ function GetStarted() {
   const { navigate } = useTenantPathname();
   const { tenantEndpoint } = useContext(AppDataContext);
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
-  const [_, getStructuredMetadata] = useAppGuideMetadata();
+  const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   // The number of visible guide cards to show in one row per the current screen width
   const [visibleCardCount, setVisibleCardCount] = useState(4);
@@ -50,7 +50,7 @@ function GetStarted() {
   useWindowResize(() => {
     const containerWidth = containerRef.current?.clientWidth ?? 0;
 
-    // Responsive breakpoints (1080, 680px) are defined in `GuideGroup` component SCSS,
+    // Responsive breakpoints (1080, 680px) are defined in `GuideCardGroup` component SCSS,
     // and we need to keep them consistent.
     setVisibleCardCount(containerWidth > 1080 ? 4 : containerWidth > 680 ? 3 : 2);
   });
@@ -59,8 +59,8 @@ function GetStarted() {
    * Slice the guide metadata as we only need to show 1 row of guide cards in get-started page
    */
   const featuredAppGuides = useMemo(
-    () => getStructuredMetadata().featured.slice(0, visibleCardCount),
-    [visibleCardCount, getStructuredMetadata]
+    () => getStructuredAppGuideMetadata().featured.slice(0, visibleCardCount),
+    [visibleCardCount, getStructuredAppGuideMetadata]
   );
 
   const onClickGuide = useCallback((data: SelectedGuide) => {
@@ -90,7 +90,7 @@ function GetStarted() {
       <FreePlanNotification />
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.develop.title')}</div>
-        <GuideGroup
+        <GuideCardGroup
           ref={containerRef}
           hasCardBorder
           guides={featuredAppGuides}

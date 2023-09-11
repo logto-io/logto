@@ -1,6 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Application } from '@logto/schemas';
-import { ApplicationType } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
@@ -30,14 +29,6 @@ const pageSize = defaultPageSize;
 const applicationsPathname = '/applications';
 const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
-const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
-
-const buildNavigatePathPostAppCreation = ({ type, id }: Application) => {
-  const build =
-    type === ApplicationType.MachineToMachine ? buildDetailsPathname : buildGuidePathname;
-
-  return build(id);
-};
 
 function Applications() {
   const { search } = useLocation();

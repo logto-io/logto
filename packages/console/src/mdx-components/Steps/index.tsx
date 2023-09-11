@@ -2,8 +2,8 @@ import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useRef, type ReactElement, useEffect, useState, useMemo, useContext } from 'react';
 
+import { GuideContext } from '@/components/Guide';
 import useScroll from '@/hooks/use-scroll';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Sample from '../Sample';
@@ -37,19 +37,17 @@ export default function Steps({ children: reactChildren }: Props) {
   const stepReferences = useRef<Array<Nullable<HTMLElement>>>([]);
   const { scrollTop } = useScroll(findScrollableElement(contentRef.current));
   const [activeIndex, setActiveIndex] = useState(-1);
+  const { isCompact, metadata } = useContext(GuideContext);
+  const isApiResourceGuide = metadata.target === 'API';
+
   const furtherReadings = useMemo(
     () => <FurtherReadings title="Further readings" subtitle="4 articles" />,
     []
   );
-  const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(
-    () =>
-      Array.isArray(reactChildren)
-        ? reactChildren.concat(furtherReadings)
-        : [reactChildren, furtherReadings],
-    [furtherReadings, reactChildren]
-  );
-
-  const { isCompact } = useContext(GuideContext);
+  const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(() => {
+    const steps = Array.isArray(reactChildren) ? reactChildren : [reactChildren];
+    return isApiResourceGuide ? steps : steps.concat(furtherReadings);
+  }, [isApiResourceGuide, furtherReadings, reactChildren]);
 
   useEffect(() => {
     // Make sure the step references length matches the number of children.

@@ -2,20 +2,22 @@ import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import { GuideContext } from '@/components/Guide';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 
 export default function EnableAdminAccess() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    app: { id: appId, isAdmin },
-  } = useContext(GuideContext);
+  const { app } = useContext(GuideContext);
+  const { id: appId, isAdmin = false } = app ?? {};
   const [value, setValue] = useState(isAdmin);
   const api = useApi();
 
   const onSubmit = async (value: boolean) => {
+    if (!appId) {
+      return;
+    }
     setValue(value);
     try {
       await api.patch(`api/applications/${appId}`, {

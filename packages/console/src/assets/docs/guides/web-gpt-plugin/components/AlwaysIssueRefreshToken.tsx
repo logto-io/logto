@@ -2,25 +2,25 @@ import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import { GuideContext } from '@/components/Guide';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 
 export default function AlwaysIssueRefreshToken() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    app: {
-      id: appId,
-      customClientMetadata: { alwaysIssueRefreshToken },
-    },
-  } = useContext(GuideContext);
-  const [value, setValue] = useState(alwaysIssueRefreshToken ?? false);
+  const { app } = useContext(GuideContext);
+  const { alwaysIssueRefreshToken = false } = app?.customClientMetadata ?? {};
+  const [value, setValue] = useState(alwaysIssueRefreshToken);
   const api = useApi();
+
   const onSubmit = async (value: boolean) => {
+    if (!app?.id) {
+      return;
+    }
     setValue(value);
     try {
-      await api.patch(`api/applications/${appId}`, {
+      await api.patch(`api/applications/${app.id}`, {
         json: {
           customClientMetadata: {
             alwaysIssueRefreshToken: value,

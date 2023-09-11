@@ -1,3 +1,4 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import { useCallback, useState } from 'react';
 
 import Box from '@/assets/icons/box.svg';
@@ -9,14 +10,30 @@ import CardTitle from '@/ds-components/CardTitle';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 
-import RequestGuide from './RequestGuide';
+import RequestForm from './RequestForm';
 import * as styles from './index.module.scss';
 
 type Props = {
+  title: AdminConsoleKey;
+  subtitle: AdminConsoleKey;
+  buttonText: AdminConsoleKey;
+  requestFormTitle?: AdminConsoleKey;
+  requestFormFieldLabel: AdminConsoleKey;
+  requestFormFieldPlaceholder: AdminConsoleKey;
+  requestSuccessMessage: AdminConsoleKey;
   onClose: () => void;
 };
 
-function GuideHeader({ onClose }: Props) {
+function ModalHeader({
+  title,
+  subtitle,
+  buttonText,
+  requestFormTitle = buttonText,
+  requestFormFieldLabel,
+  requestFormFieldPlaceholder,
+  requestSuccessMessage,
+  onClose,
+}: Props) {
   const [isRequestGuideOpen, setIsRequestGuideOpen] = useState(false);
   const onRequestGuideClose = useCallback(() => {
     setIsRequestGuideOpen(false);
@@ -28,17 +45,13 @@ function GuideHeader({ onClose }: Props) {
         <Close className={styles.closeIcon} />
       </IconButton>
       <div className={styles.separator} />
-      <CardTitle
-        size="small"
-        title="applications.guide.modal_header_title"
-        subtitle="applications.guide.header_subtitle"
-      />
+      <CardTitle size="small" title={title} subtitle={subtitle} />
       <Spacer />
       <Button
         className={styles.requestSdkButton}
         type="outline"
         icon={<Box />}
-        title="applications.guide.cannot_find_guide"
+        title={buttonText}
         onClick={() => {
           if (isCloud) {
             setIsRequestGuideOpen(true);
@@ -47,9 +60,18 @@ function GuideHeader({ onClose }: Props) {
           }
         }}
       />
-      {isCloud && <RequestGuide isOpen={isRequestGuideOpen} onClose={onRequestGuideClose} />}
+      {isCloud && (
+        <RequestForm
+          title={requestFormTitle}
+          successMessage={requestSuccessMessage}
+          fieldLabel={requestFormFieldLabel}
+          fieldPlaceholder={requestFormFieldPlaceholder}
+          isOpen={isRequestGuideOpen}
+          onClose={onRequestGuideClose}
+        />
+      )}
     </div>
   );
 }
 
-export default GuideHeader;
+export default ModalHeader;

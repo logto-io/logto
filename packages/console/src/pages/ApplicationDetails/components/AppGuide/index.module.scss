@@ -1,0 +1,84 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
+
+.content {
+  flex: 1;
+  width: 100%;
+  position: relative;
+
+  section {
+    h3 {
+      font: var(--font-title-2);
+      color: var(--color-text-secondary);
+      margin: _.unit(6) 0 _.unit(3);
+    }
+
+    p {
+      font: var(--font-body-2);
+      margin: _.unit(4) 0;
+    }
+
+    ul > li,
+    ol > li {
+      font: var(--font-body-2);
+      margin-block: _.unit(2);
+      padding-inline-start: _.unit(1);
+    }
+
+    table {
+      border-spacing: 0;
+      border: 1px solid var(--color-border);
+      font: var(--font-body-2);
+
+      tr {
+        width: 100%;
+      }
+
+      td,
+      th {
+        padding: _.unit(2) _.unit(4);
+      }
+
+      thead {
+        font: var(--font-title-3);
+      }
+
+      tbody td {
+        border-top: 1px solid var(--color-border);
+      }
+    }
+
+    code:not(pre > code) {
+      background: var(--color-layer-2);
+      font: var(--font-body-2);
+      padding: _.unit(1);
+      border-radius: 4px;
+    }
+  }
+}
+
+.notFound {
+  width: 100%;
+
+  svg {
+    margin-top: 10%;
+  }
+}
+
+.actionBar {
+  flex-shrink: 0;
+  padding: _.unit(4) _.unit(6);
+  background-color: var(--color-layer-1);
+  box-shadow: var(--shadow-3);
+  z-index: 1;
+
+  .layout {
+    margin: 0 auto;
+    max-width: dim.$guide-main-content-max-width;
+
+    > button {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
+}

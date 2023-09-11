@@ -1,11 +1,11 @@
 import { appendPath } from '@silverhand/essentials';
 import { useContext } from 'react';
 
+import { GuideContext } from '@/components/Guide';
 import { githubOrgLink } from '@/consts';
 import { LinkButton } from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import Spacer from '@/ds-components/Spacer';
-import { GuideContext } from '@/pages/Applications/components/Guide';
 
 import * as styles from './index.module.scss';
 

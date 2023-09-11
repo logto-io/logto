@@ -7,7 +7,7 @@ import GuideCard, { type SelectedGuide } from '../GuideCard';
 
 import * as styles from './index.module.scss';
 
-type GuideGroupProps = {
+type Props = {
   className?: string;
   categoryName?: string;
   guides?: readonly Guide[];
@@ -16,8 +16,8 @@ type GuideGroupProps = {
   onClickGuide: (data: SelectedGuide) => void;
 };
 
-function GuideGroup(
-  { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: GuideGroupProps,
+function GuideCardGroup(
+  { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: Props,
   ref: Ref<HTMLDivElement>
 ) {
   if (!guides?.length) {
@@ -42,4 +42,4 @@ function GuideGroup(
   );
 }
 
-export default forwardRef<HTMLDivElement, GuideGroupProps>(GuideGroup);
+export default forwardRef<HTMLDivElement, Props>(GuideCardGroup);

@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next';
 
 import ArrowLeft from '@/assets/icons/arrow-left.svg';
 import Close from '@/assets/icons/close.svg';
+import { type SelectedGuide } from '@/components/Guide/GuideCard';
+import GuideCardGroup from '@/components/Guide/GuideCardGroup';
+import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
-import Guide from '@/pages/Applications/components/Guide';
-import { type SelectedGuide } from '@/pages/Applications/components/GuideCard';
-import GuideGroup from '@/pages/Applications/components/GuideGroup';
-import useAppGuideMetadata from '@/pages/Applications/components/GuideLibrary/hook';
+
+import AppGuide from '../AppGuide';
 
 import * as styles from './index.module.scss';
 
@@ -20,12 +21,12 @@ type Props = {
 
 function GuideDrawer({ app, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
-  const [_, getStructuredMetadata] = useAppGuideMetadata();
+  const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
 
   const structuredMetadata = useMemo(
-    () => getStructuredMetadata({ categories: [app.type] }),
-    [getStructuredMetadata, app.type]
+    () => getStructuredAppGuideMetadata({ categories: [app.type] }),
+    [getStructuredAppGuideMetadata, app.type]
   );
 
   const hasSingleGuide = useMemo(() => {
@@ -73,7 +74,7 @@ function GuideDrawer({ app, onClose }: Props) {
         </IconButton>
       </div>
       {!selectedGuide && (
-        <GuideGroup
+        <GuideCardGroup
           className={styles.cardGroup}
           categoryName={t(`categories.${app.type}`)}
           guides={structuredMetadata[app.type]}
@@ -83,7 +84,7 @@ function GuideDrawer({ app, onClose }: Props) {
         />
       )}
       {selectedGuide && (
-        <Guide
+        <AppGuide
           isCompact
           className={styles.guide}
           guideId={selectedGuide.id}
