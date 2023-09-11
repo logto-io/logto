@@ -35,39 +35,6 @@ const applications = {
       description: 'E.g., Backend service',
     },
   },
-  guide: {
-    header_title: 'Select a framework or tutorial',
-    modal_header_title: 'Start with SDK and guides',
-    header_subtitle: 'Jumpstart your app development process with our pre-built SDK and tutorials.',
-    start_building: 'Start Building',
-    categories: {
-      featured: 'Popular and for you',
-      Traditional: 'Traditional web app',
-      SPA: 'Single page app',
-      Native: 'Native',
-      MachineToMachine: 'Machine-to-machine',
-    },
-    filter: {
-      title: 'Filter framework',
-      placeholder: 'Search for framework',
-    },
-    select_a_framework: 'Select a framework',
-    checkout_tutorial: 'Checkout {{name}} tutorial',
-    get_sample_file: 'Get Sample',
-    title: 'The application has been successfully created',
-    subtitle:
-      'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
-    description_by_sdk:
-      'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
-    do_not_need_tutorial:
-      'If you don’t need a tutorial, you can continue without a framework guide',
-    create_without_framework: 'Create app without framework',
-    finish_and_done: 'Finish and done',
-    cannot_find_guide: "Can't find your guide?",
-    describe_guide_looking_for: 'Describe the guide you are looking for',
-    describe_guide_looking_for_placeholder: 'E.g., I want to integrate Logto into my Angular app.',
-    request_guide_successfully: 'Your request has been successfully submitted. Thank you!',
-  },
   placeholder_title: 'Select an application type to continue',
   placeholder_description:
     'Logto uses an application entity for OIDC to help with tasks such as identifying your apps, managing sign-in, and creating audit logs.',

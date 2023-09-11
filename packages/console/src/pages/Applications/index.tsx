@@ -73,8 +73,8 @@ function Applications() {
         <OverlayScrollbar className={styles.guideLibraryContainer}>
           <CardTitle
             className={styles.title}
-            title="applications.guide.header_title"
-            subtitle="applications.guide.header_subtitle"
+            title="guide.app.select_framework_or_tutorial"
+            subtitle="guide.app.modal_subtitle"
           />
           <GuideLibrary hasCardBorder hasCardButton className={styles.library} />
         </OverlayScrollbar>

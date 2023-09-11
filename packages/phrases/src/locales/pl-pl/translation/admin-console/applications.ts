@@ -36,40 +36,6 @@ const applications = {
       description: 'Na przykład usługa backendowa',
     },
   },
-  guide: {
-    header_title: 'Wybierz framework lub samouczek',
-    modal_header_title: 'Rozpocznij z&nbsp;SDK i&nbsp;samouczkami',
-    header_subtitle:
-      'Rozpocznij proces tworzenia aplikacji&nbsp;za&nbsp;pomocą naszego SDK i&nbsp;samouczków.',
-    start_building: 'Rozpocznij tworzenie',
-    categories: {
-      featured: 'Popularne oraz dedykowane tobie',
-      Traditional: 'Tradycyjna aplikacja internetowa',
-      SPA: 'Aplikacja jednostronicowa',
-      Native: 'Natywna',
-      MachineToMachine: 'Machine-to-machine',
-    },
-    filter: {
-      title: 'Filtruj framework',
-      placeholder: 'Wyszukaj framework',
-    },
-    select_a_framework: 'Wybierz framework',
-    checkout_tutorial: 'Sprawdź samouczek dla {{name}}',
-    get_sample_file: 'Pobierz przykład',
-    title: 'Aplikacja została pomyślnie utworzona',
-    subtitle:
-      'Teraz postępuj zgodnie z&nbsp;poniższymi krokami, aby zakończyć konfigurację aplikacji. Wybierz typ SDK, aby kontynuować.',
-    description_by_sdk:
-      'Ten przewodnik po szybkim rozpoczęciu przedstawia, jak zintegrować Logto z&nbsp;aplikacją {{sdk}}',
-    do_not_need_tutorial:
-      'Jeśli nie potrzebujesz samouczka, możesz kontynuować bez przewodnika frameworka',
-    create_without_framework: 'Utwórz aplikację bez użycia frameworka',
-    finish_and_done: 'Zakończ i&nbsp;zrobione',
-    cannot_find_guide: 'Nie możesz znaleźć odpowiedniego przewodnika?',
-    describe_guide_looking_for: 'Opisz szukany przewodnik',
-    describe_guide_looking_for_placeholder: 'Np. Chcę zintegrować logto do mojej aplikacji Angular',
-    request_guide_successfully: 'Twoja prośba została wysłana pomyślnie. Dziękujemy!',
-  },
   placeholder_title: 'Wybierz typ aplikacji, aby kontynuować',
   placeholder_description:
     'Logto używa jednostki aplikacji dla OIDC, aby pomóc w takich zadaniach jak identyfikowanie Twoich aplikacji, zarządzanie logowaniem i tworzenie dzienników audytu.',

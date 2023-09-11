@@ -35,41 +35,6 @@ const applications = {
       description: 'Например, backend-сервис',
     },
   },
-  guide: {
-    header_title: 'Выбрать фреймворк или учебник',
-    modal_header_title: 'Начать с SDK и руководств',
-    header_subtitle:
-      'Ускорьте процесс разработки приложений с нашими заранее подготовленными SDK и учебниками.',
-    start_building: 'Начать разработку',
-    categories: {
-      featured: 'Популярные и для вас',
-      Traditional: 'Традиционное веб-приложение',
-      SPA: 'Одностраничное приложение',
-      Native: 'Нативное',
-      MachineToMachine: 'Machine-to-machine',
-    },
-    filter: {
-      title: 'Фильтр фреймворков',
-      placeholder: 'Поиск фреймворка',
-    },
-    select_a_framework: 'Выбрать фреймворк',
-    checkout_tutorial: 'Посмотреть учебник {{name}}',
-    get_sample_file: 'Получить образец',
-    title: 'Приложение успешно создано',
-    subtitle:
-      'Теперь следуйте инструкциям ниже, чтобы завершить настройку приложения. Выберите тип SDK, чтобы продолжить.',
-    description_by_sdk:
-      'Это быстрое руководство демонстрирует, как интегрировать Logto в приложение {{sdk}}',
-    do_not_need_tutorial:
-      'Если вам не нужен учебник, вы можете продолжить без руководства по фреймворку',
-    create_without_framework: 'Создать приложение без фреймворка',
-    finish_and_done: 'Завершить и готово',
-    cannot_find_guide: 'Не можете найти нужное вам руководство?',
-    describe_guide_looking_for: 'Опишите руководство, которое вы ищете',
-    describe_guide_looking_for_placeholder:
-      'Например, я хочу интегрировать Logto в мое приложение Angular',
-    request_guide_successfully: 'Ваш запрос был успешно отправлен. Спасибо!',
-  },
   placeholder_title: 'Выберите тип приложения, чтобы продолжить',
   placeholder_description:
     'Logto использует сущность приложения для OIDC для выполнения задач, таких как идентификация ваших приложений, управление входом в систему и создание журналов аудита.',

@@ -30,7 +30,7 @@ type Props = {
 };
 
 function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.applications.guide' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
   const { navigate } = useTenantPathname();
   const [keyword, setKeyword] = useState<string>('');
   const [filterCategories, setFilterCategories] = useState<AppGuideCategory[]>([]);
@@ -90,7 +90,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <CheckboxGroup
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories.map((category) => ({
-                      title: `applications.guide.categories.${category}`,
+                      title: `guide.categories.${category}`,
                       value: category,
                     }))}
                     value={filterCategories}
