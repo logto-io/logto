@@ -72,13 +72,9 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 401, 403, 422],
     }),
     koaInteractionSie(queries),
-    async ({ guard: { body }, passwordPolicyChecker }, next) => {
-      await validatePassword(body.profile?.password, passwordPolicyChecker);
-      return next();
-    },
     async (ctx, next) => {
       const { event, identifier, profile } = ctx.guard.body;
-      const { signInExperience, createLog } = ctx;
+      const { signInExperience, createLog, passwordPolicyChecker } = ctx;
 
       const eventLog = createLog(`Interaction.${event}.Update`);
       eventLog.append({ event });
@@ -100,6 +96,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       ];
 
       eventLog.append({ profile, verifiedIdentifiers });
+
+      await validatePassword(tenant, profile?.password, passwordPolicyChecker, {
+        identifiers: verifiedIdentifier,
+        profile,
+      });
 
       await storeInteractionResult(
         { event, identifiers: verifiedIdentifiers, profile },
@@ -210,17 +211,13 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
-    async ({ guard: { body }, passwordPolicyChecker }, next) => {
-      await validatePassword(body.password, passwordPolicyChecker);
-      return next();
-    },
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-      const { signInExperience, interactionDetails, createLog } = ctx;
+      const { signInExperience, interactionDetails, createLog, passwordPolicyChecker } = ctx;
 
       // Check interaction exists
       const interactionStorage = getInteractionStorage(interactionDetails.result);
-      const { event } = interactionStorage;
+      const { event, identifiers } = interactionStorage;
 
       const profileLog = createLog(`Interaction.${event}.Profile.Create`);
       profileLog.append({ profile: profilePayload, interactionStorage });
@@ -228,6 +225,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       if (event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profilePayload, signInExperience);
       }
+
+      await validatePassword(tenant, profilePayload.password, passwordPolicyChecker, {
+        identifiers,
+        profile: profilePayload,
+      });
 
       await storeInteractionResult(
         {
@@ -252,30 +254,31 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       status: [204, 400, 404],
     }),
     koaInteractionSie(queries),
-    async ({ guard: { body }, passwordPolicyChecker }, next) => {
-      await validatePassword(body.password, passwordPolicyChecker);
-      return next();
-    },
     async (ctx, next) => {
       const profilePayload = ctx.guard.body;
-      const { signInExperience, interactionDetails, createLog } = ctx;
+      const { signInExperience, interactionDetails, createLog, passwordPolicyChecker } = ctx;
 
       const interactionStorage = getInteractionStorage(interactionDetails.result);
+      const { event, identifiers, profile } = interactionStorage;
+      const mergedProfile = { ...profile, ...profilePayload };
 
-      const profileLog = createLog(`Interaction.${interactionStorage.event}.Profile.Update`);
+      const profileLog = createLog(`Interaction.${event}.Profile.Update`);
 
       profileLog.append({ profile: profilePayload, interactionStorage, method: 'PATCH' });
 
-      if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
+      if (event !== InteractionEvent.ForgotPassword) {
         verifyProfileSettings(profilePayload, signInExperience);
       }
 
+      await validatePassword(tenant, profilePayload.password, passwordPolicyChecker, {
+        identifiers,
+        // Merge with previous to provide a complete profile for validation
+        profile: mergedProfile,
+      });
+
       await storeInteractionResult(
         {
-          profile: {
-            ...interactionStorage.profile,
-            ...profilePayload,
-          },
+          profile: mergedProfile,
         },
         ctx,
         provider,
@@ -386,9 +389,8 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       // Check interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
 
-      // This file needs refactor
-      // eslint-disable-next-line max-lines
       await sendVerificationCodeToIdentifier(
+        // eslint-disable-next-line max-lines -- TODO: refactor @simeng
         { event, ...guard.body },
         interactionDetails.jti,
         createLog,
