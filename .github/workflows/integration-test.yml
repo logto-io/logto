@@ -112,16 +112,17 @@ jobs:
 
       # Test
       - name: Run tests
-        # continue-on-error: true # Uncomment this line to debug
         run: |
           cd tests/packages/integration-tests
           pnpm build
           pnpm run test:${{ matrix.target }}
 
       - name: Show logs
+        if: always()
         working-directory: logto/
         run: cat nohup.out
 
       - name: Show error logs
+        if: always()
         working-directory: logto/
         run: cat nohup.err
