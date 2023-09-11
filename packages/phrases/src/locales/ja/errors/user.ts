@@ -28,6 +28,8 @@ const user = {
   user_not_exist: '{{ identifier }}を持つユーザーは存在しません。',
   missing_profile: 'サインインする前に追加情報を提供する必要があります。',
   role_exists: 'このユーザーには既に役割ID {{roleId}}が追加されています。',
+  invalid_role_type:
+    '役割タイプが無効です。ユーザーにはマシン対マシンの役割を割り当てることはできません。',
 };
 
 export default Object.freeze(user);

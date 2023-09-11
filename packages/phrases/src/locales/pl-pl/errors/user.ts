@@ -29,6 +29,7 @@ const user = {
   user_not_exist: 'Użytkownik z identyfikatorem {{ identifier }} nie istnieje.',
   missing_profile: 'Musisz podać dodatkowe informacje przed zalogowaniem.',
   role_exists: 'Identyfikator roli {{roleId}} jest już dodany do tego użytkownika',
+  invalid_role_type: 'Nieprawidłowy typ roli, nie można przypisać roli maszynowej do użytkownika.',
 };
 
 export default Object.freeze(user);

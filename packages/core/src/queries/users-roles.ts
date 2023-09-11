@@ -1,5 +1,5 @@
 import type { CreateUsersRole, UsersRole } from '@logto/schemas';
-import { RolesScopes, UsersRoles } from '@logto/schemas';
+import { UsersRoles } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
@@ -58,7 +58,7 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
     `);
 
     if (rowCount < 1) {
-      throw new DeletionError(RolesScopes.table);
+      throw new DeletionError(UsersRoles.table);
     }
   };
 

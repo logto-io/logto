@@ -28,6 +28,8 @@ const user = {
   user_not_exist: "L'utilisateur avec {{ identifier }} n'existe pas.",
   missing_profile: 'Vous devez fournir des informations supplémentaires avant de vous connecter.',
   role_exists: "L'ID de rôle {{roleId}} a déjà été ajouté à cet utilisateur",
+  invalid_role_type:
+    'Le type de rôle est invalide, il est impossible d\'assigner un rôle "machine-to-machine" à un utilisateur.',
 };
 
 export default Object.freeze(user);

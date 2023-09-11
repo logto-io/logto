@@ -1,3 +1,4 @@
+import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
@@ -12,12 +13,19 @@ describe('admin console user management (roles)', () => {
     expect(roles.length).toBe(0);
   });
 
-  it('should assign role to user and get list successfully', async () => {
+  it('should successfully assign user role to user and get list, but failed to assign m2m role to user', async () => {
     const user = await createUserByAdmin();
     const role = await createRole({});
 
+    const m2mRole = await createRole({ type: RoleType.MachineToMachine });
+    await expectRejects(assignRolesToUser(user.id, [m2mRole.id]), {
+      code: 'user.invalid_role_type',
+      statusCode: 422,
+    });
+
     await assignRolesToUser(user.id, [role.id]);
     const roles = await getUserRoles(user.id);
+    expect(roles.length).toBe(1);
     expect(roles[0]).toHaveProperty('id', role.id);
   });
 
@@ -26,10 +34,10 @@ describe('admin console user management (roles)', () => {
     const role = await createRole({});
 
     await assignRolesToUser(user.id, [role.id]);
-    await expectRejects(assignRolesToUser(user.id, [role.id]), {
-      code: 'user.role_exists',
-      statusCode: 422,
-    });
+    await assignRolesToUser(user.id, [role.id]);
+    const roles = await getUserRoles(user.id);
+    expect(roles.length).toBe(1);
+    expect(roles[0]).toHaveProperty('id', role.id);
   });
 
   it('should delete role from user successfully', async () => {

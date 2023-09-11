@@ -1,4 +1,4 @@
-import { Roles } from '@logto/schemas';
+import { RoleType, Roles } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { array, object, string } from 'zod';
@@ -16,7 +16,7 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    roles: { findRoleById, countRoles, findRoles },
+    roles: { findRoleById, countRoles, findRoles, findRolesByRoleIds },
     users: { findUserById },
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByUserId, insertUsersRoles },
   } = queries;
@@ -82,22 +82,24 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
 
       await findUserById(userId);
       const usersRoles = await findUsersRolesByUserId(userId);
+      const existingRoleIds = new Set(usersRoles.map(({ roleId }) => roleId));
+      const roleIdsToAdd = roleIds.filter((id) => !existingRoleIds.has(id)); // ignore existing roles.
+      const roles = await findRolesByRoleIds(roleIdsToAdd);
 
-      for (const roleId of roleIds) {
+      for (const role of roles) {
         assertThat(
-          !usersRoles.some(({ roleId: _roleId }) => _roleId === roleId),
-          new RequestError({
-            code: 'user.role_exists',
-            status: 422,
-            roleId,
-          })
+          role.type === RoleType.User,
+          new RequestError({ code: 'user.invalid_role_type', status: 422, roleId: role.id })
         );
       }
 
-      await Promise.all(roleIds.map(async (roleId) => findRoleById(roleId)));
-      await insertUsersRoles(
-        roleIds.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
-      );
+      if (roleIdsToAdd.length > 0) {
+        await Promise.all(roleIdsToAdd.map(async (roleId) => findRoleById(roleId)));
+        await insertUsersRoles(
+          roleIdsToAdd.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
+        );
+      }
+
       ctx.status = 201;
 
       return next();

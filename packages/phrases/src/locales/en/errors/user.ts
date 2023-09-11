@@ -28,6 +28,7 @@ const user = {
   user_not_exist: 'User with {{ identifier }} does not exist.',
   missing_profile: 'You need to provide additional info before signing-in.',
   role_exists: 'The role id {{roleId}} is already been added to this user',
+  invalid_role_type: 'Invalid role type, can not assign machine-to-machine role to user.',
 };
 
 export default Object.freeze(user);

@@ -28,6 +28,8 @@ const user = {
   user_not_exist: 'O utilizador com {{ identifier }} não existe.',
   missing_profile: 'Precisa de fornecer informações adicionais antes de iniciar sessão.',
   role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
+  invalid_role_type:
+    'Tipo de função inválido, não é possível atribuir uma função máquina a máquina ao utilizador.',
 };
 
 export default Object.freeze(user);

@@ -27,6 +27,8 @@ const user = {
   user_not_exist: '{{identifier}}의 사용자가 아직 등록되지 않았어요.',
   missing_profile: '로그인 전에 추가 정보를 제공해야 해요.',
   role_exists: '역할 ID {{roleId}}은/는 이미 이 사용자에게 할당되어 있어요.',
+  invalid_role_type:
+    '유효하지 않은 역할 유형입니다. 사용자에게 기계 대 기계 역할을 할당할 수 없습니다.',
 };
 
 export default Object.freeze(user);

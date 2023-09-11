@@ -32,6 +32,8 @@ const user = {
   user_not_exist: 'Der Benutzer mit {{ identifier }} existiert nicht.',
   missing_profile: 'Sie müssen zusätzliche Informationen angeben, bevor Sie sich anmelden können.',
   role_exists: 'Die Rollen-ID {{roleId}} wurde diesem Benutzer bereits hinzugefügt.',
+  invalid_role_type:
+    'Ungültiger Rollentyp, kann keine Maschinen-zu-Maschinen-Rolle einem Benutzer zuweisen.',
 };
 
 export default Object.freeze(user);

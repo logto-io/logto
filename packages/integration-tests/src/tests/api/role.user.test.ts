@@ -1,7 +1,9 @@
+import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createUser } from '#src/api/index.js';
 import { assignUsersToRole, createRole, deleteUserFromRole, getRoleUsers } from '#src/api/role.js';
+import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 
 describe('roles users', () => {
@@ -28,6 +30,18 @@ describe('roles users', () => {
     const users = await getRoleUsers(role.id);
 
     expect(users.length).toBe(2);
+  });
+
+  it('should throw when assigning users to m2m role', async () => {
+    const m2mRole = await createRole({ type: RoleType.MachineToMachine });
+    const user = await createUser(generateNewUserProfile({}));
+    await expectRejects(assignUsersToRole([user.id], m2mRole.id), {
+      code: 'user.invalid_role_type',
+      statusCode: 422,
+    });
+    const users = await getRoleUsers(m2mRole.id);
+
+    expect(users.length).toBe(0);
   });
 
   it('should fail when try to assign empty users', async () => {
@@ -79,7 +93,7 @@ describe('roles users', () => {
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 
-  it('should fail if user not found when trying to  remove user from role', async () => {
+  it('should fail if user not found when trying to remove user from role', async () => {
     const role = await createRole({});
     const response = await deleteUserFromRole('not-found', role.id).catch(
       (error: unknown) => error

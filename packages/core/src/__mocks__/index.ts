@@ -74,6 +74,14 @@ export const mockAdminUserRole2: Role = {
   type: RoleType.User,
 };
 
+export const mockAdminUserRole3: Role = {
+  tenantId: 'fake_tenant',
+  id: 'role_id3',
+  name: 'admin3',
+  description: 'admin3',
+  type: RoleType.MachineToMachine,
+};
+
 export const mockAdminConsoleData: AdminConsoleData = {
   livePreviewChecked: false,
   applicationCreated: false,

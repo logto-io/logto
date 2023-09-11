@@ -1,9 +1,11 @@
+import { RoleType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import {
   mockAdminUserRole,
   mockUser,
   mockAdminUserRole2,
+  mockAdminUserRole3,
   mockUserRole,
 } from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
@@ -29,6 +31,7 @@ const usersRoles = {
   deleteUsersRolesByUserIdAndRoleId: jest.fn(),
 };
 const { findUsersRolesByUserId, insertUsersRoles, deleteUsersRolesByUserIdAndRoleId } = usersRoles;
+const { findRolesByRoleIds } = roles;
 
 const tenantContext = new MockTenant(undefined, { usersRoles, users, roles });
 
@@ -44,30 +47,62 @@ describe('user role routes', () => {
     expect(response.body).toEqual([mockAdminUserRole]);
   });
 
-  it('POST /users/:id/roles', async () => {
-    findUsersRolesByUserId.mockResolvedValueOnce([]);
-    const response = await roleRequester.post(`/users/${mockUser.id}/roles`).send({
-      roleIds: [mockAdminUserRole.id],
+  describe('POST /users/:id/roles', () => {
+    it('Succeed', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([]);
+      findRolesByRoleIds.mockResolvedValueOnce([mockAdminUserRole]);
+      const response = await roleRequester.post(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole.id],
+      });
+      expect(response.status).toEqual(201);
+      expect(insertUsersRoles).toHaveBeenCalledWith([
+        { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
+      ]);
+      insertUsersRoles.mockClear();
     });
-    expect(response.status).toEqual(201);
-    expect(insertUsersRoles).toHaveBeenCalledWith([
-      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
-    ]);
+
+    it('Can not assign machine to machine roles to user', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([]);
+      findRolesByRoleIds.mockResolvedValueOnce([
+        { ...mockAdminUserRole, type: RoleType.MachineToMachine },
+      ]);
+      const response = await roleRequester.post(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole.id],
+      });
+      expect(response.status).toEqual(422);
+    });
   });
 
-  it('PUT /users/:id/roles', async () => {
-    findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
-    const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
-      roleIds: [mockAdminUserRole2.id],
+  describe('PUT /users/:id/roles', () => {
+    it('Succeed', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
+      findRolesByRoleIds.mockResolvedValueOnce([mockAdminUserRole2]);
+      const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole2.id],
+      });
+      expect(response.status).toEqual(200);
+      expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
+        mockUser.id,
+        mockUserRole.roleId
+      );
+      expect(insertUsersRoles).toHaveBeenCalledWith([
+        { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole2.id },
+      ]);
+      insertUsersRoles.mockClear();
+      deleteUsersRolesByUserIdAndRoleId.mockClear();
     });
-    expect(response.status).toEqual(200);
-    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
-      mockUser.id,
-      mockAdminUserRole.id
-    );
-    expect(insertUsersRoles).toHaveBeenCalledWith([
-      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole2.id },
-    ]);
+
+    it('Machine to machine roles will be filtered out', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([
+        { ...mockUserRole, roleId: mockAdminUserRole3.id },
+      ]);
+      const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole3.id],
+      });
+      expect(response.status).toEqual(200);
+      expect(deleteUsersRolesByUserIdAndRoleId).not.toHaveBeenCalled();
+      expect(insertUsersRoles).toHaveBeenCalledWith([]);
+    });
   });
 
   it('DELETE /users/:id/roles/:roleId', async () => {
