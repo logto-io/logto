@@ -45,7 +45,14 @@ const webhook_details = {
     test_webhook_description:
       'Настройте вебхук и протестируйте его с примерами нагрузки для каждого выбранного события, чтобы проверить правильный прием и обработку.',
     send_test_payload: 'Отправить тестовую нагрузку',
-    test_payload_sent: 'Нагрузка успешно отправлена.',
+    test_result: {
+      endpoint_url: 'URL конечной точки: {{url}}',
+      message: 'Сообщение: {{message}}',
+      response_status: 'Статус ответа: {{status, number}}',
+      response_body: 'Тело ответа: {{body}}',
+      request_time: 'Время запроса: {{time}}',
+      test_success: 'Тест вебхука на конечную точку прошел успешно.',
+    },
   },
 };
 

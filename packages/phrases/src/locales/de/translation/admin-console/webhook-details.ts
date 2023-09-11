@@ -46,7 +46,14 @@ const webhook_details = {
     test_webhook_description:
       'Konfigurieren Sie den Webhook und testen Sie ihn mit Beispieldaten für jede ausgewählte Ereigniskategorie, um eine korrekte Empfangs- und Verarbeitungsfunktion zu überprüfen.',
     send_test_payload: 'Testnutzlast senden',
-    test_payload_sent: 'Die Nutzlast wurde erfolgreich gesendet.',
+    test_result: {
+      endpoint_url: 'Endpunkt-URL: {{url}}',
+      message: 'Nachricht: {{message}}',
+      response_status: 'Antwortstatus: {{status, number}}',
+      response_body: 'Antwortkörper: {{body}}',
+      request_time: 'Anforderungszeit: {{time}}',
+      test_success: 'Der Webhook-Test zum Endpunkt war erfolgreich.',
+    },
   },
 };
 

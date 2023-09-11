@@ -46,7 +46,14 @@ const webhook_details = {
     test_webhook_description:
       'Configurez le webhook, et testez-le avec des exemples de payload pour chaque événement sélectionné pour vérifier la réception et le traitement corrects.',
     send_test_payload: 'Envoyer une charge utile de test',
-    test_payload_sent: 'La charge utile a été envoyée avec succès.',
+    test_result: {
+      endpoint_url: 'URL du point de terminaison : {{url}}',
+      message: 'Message : {{message}}',
+      response_status: 'Statut de la réponse : {{status, number}}',
+      response_body: 'Corps de la réponse : {{body}}',
+      request_time: 'Temps de la demande : {{time}}',
+      test_success: 'Le test du webhook vers le point de terminaison a réussi.',
+    },
   },
 };
 

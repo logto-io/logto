@@ -44,7 +44,14 @@ const webhook_details = {
     test_webhook_description:
       '웹훅을 구성하고 각 선택한 이벤트의 페이로드 예제로 검증하여 올바른 수신 및 처리를 확인하세요.',
     send_test_payload: '테스트 페이로드 보내기',
-    test_payload_sent: '페이로드가 성공적으로 보내졌습니다.',
+    test_result: {
+      endpoint_url: '엔드포인트 URL: {{url}}',
+      message: '메시지: {{message}}',
+      response_status: '응답 상태: {{status, number}}',
+      response_body: '응답 본문: {{body}}',
+      request_time: '요청 시간: {{time}}',
+      test_success: '엔드포인트로의 웹훅 테스트가 성공했습니다.',
+    },
   },
 };
 

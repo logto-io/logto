@@ -45,7 +45,14 @@ const webhook_details = {
     test_webhook_description:
       'Configurare il webhook e testarlo con esempi di payload per ciascun evento selezionato al fine di verificare la corretta ricezione e elaborazione.',
     send_test_payload: 'Invia Payload di Test',
-    test_payload_sent: 'Il payload è stato inviato con successo.',
+    test_result: {
+      endpoint_url: 'URL del punto di arrivo: {{url}}',
+      message: 'Messaggio: {{message}}',
+      response_status: 'Stato della risposta: {{status, number}}',
+      response_body: 'Corpo della risposta: {{body}}',
+      request_time: 'Tempo di richiesta: {{time}}',
+      test_success: 'Il test del webhook al punto di arrivo è stato eseguito con successo.',
+    },
   },
 };
 

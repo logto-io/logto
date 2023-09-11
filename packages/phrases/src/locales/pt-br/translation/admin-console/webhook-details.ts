@@ -45,7 +45,14 @@ const webhook_details = {
     test_webhook_description:
       'Configure o webhook e teste-o com exemplos de carga para cada evento selecionado para verificação da recepção e processamento corretos.',
     send_test_payload: 'Enviar carga de teste',
-    test_payload_sent: 'A carga foi enviada com sucesso.',
+    test_result: {
+      endpoint_url: 'URL do ponto de extremidade: {{url}}',
+      message: 'Mensagem: {{message}}',
+      response_status: 'Status da resposta: {{status, number}}',
+      response_body: 'Corpo da resposta: {{body}}',
+      request_time: 'Tempo da solicitação: {{time}}',
+      test_success: 'O teste de webhook para o ponto de extremidade foi bem-sucedido.',
+    },
   },
 };
 

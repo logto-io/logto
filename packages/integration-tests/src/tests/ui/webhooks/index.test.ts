@@ -7,20 +7,13 @@ import {
   expectToClickDetailsPageOption,
   expectModalWithTitle,
   expectConfirmModalAndAct,
+  expectMainPageWithTitle,
 } from '#src/ui-helpers/index.js';
 import { appendPathname, expectNavigation } from '#src/utils.js';
 
-await page.setViewport({ width: 1280, height: 720 });
+import { expectToCreateWebhook } from './helpers.js';
 
-const createWebhookFromWebhooksPage = async () => {
-  await expect(page).toClick('div[class$=main] div[class$=headline] > button');
-  await expect(page).toClick('span[class$=label]', { text: 'Create new account' });
-  await expect(page).toClick('span[class$=label]', { text: 'Sign in' });
-  await expect(page).toFill('input[name=name]', 'hook_name');
-  await expect(page).toFill('input[name=url]', 'https://example.com/webhook');
-  await expect(page).toClick('button[type=submit]');
-  await page.waitForSelector('div[class$=header] div[class$=metadata] div[class$=title]');
-};
+await page.setViewport({ width: 1280, height: 720 });
 
 describe('webhooks', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
@@ -32,23 +25,19 @@ describe('webhooks', () => {
   it('navigates to webhooks page on clicking sidebar menu', async () => {
     await expectNavigation(page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href));
 
-    await expect(page).toMatchElement(
-      'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
-      {
-        text: 'Webhooks',
-      }
-    );
+    await expectMainPageWithTitle(page, 'Webhooks');
   });
 
   it('can create a new webhook', async () => {
     await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
 
-    await createWebhookFromWebhooksPage();
+    await expectToCreateWebhook(page);
 
     // Go to webhook details page
     await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
       text: 'hook_name',
     });
+
     const hookId = await page.$eval(
       'div[class$=main] div[class$=metadata] div[class$=row] div:first-of-type',
       (element) => element.textContent
@@ -87,7 +76,7 @@ describe('webhooks', () => {
   it('can update webhook details', async () => {
     await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
 
-    await createWebhookFromWebhooksPage();
+    await expectToCreateWebhook(page);
 
     await expect(page).toFill('input[name=name]', 'hook_name_updated');
     await expect(page).toFill('input[name=url]', 'https://example.com/new-webhook');
@@ -98,7 +87,7 @@ describe('webhooks', () => {
 
   it('can disable or enable a webhook', async () => {
     await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
-    await createWebhookFromWebhooksPage();
+    await expectToCreateWebhook(page);
 
     // Disable webhook
     await expectToClickDetailsPageOption(page, 'Disable webhook');
@@ -127,7 +116,7 @@ describe('webhooks', () => {
 
   it('can regenerate signing key for a webhook', async () => {
     await page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href);
-    await createWebhookFromWebhooksPage();
+    await expectToCreateWebhook(page);
     await expect(page).toClick('button[class$=regenerateButton]');
 
     await expectConfirmModalAndAct(page, {
@@ -136,5 +125,16 @@ describe('webhooks', () => {
     });
 
     await waitForToast(page, { text: 'Signing key has been regenerated.' });
+  });
+
+  it('should display an error info if test failed', async () => {
+    await expect(page).toClick('div[class$=field] button span', { text: 'Send test payload' });
+    await expect(page).toMatchElement('div[class*=inlineNotification] div[class$=content] div', {
+      text: /Endpoint URL:/,
+      timeout: 3000,
+    });
+
+    await expect(page).toClick('div[class*=inlineNotification] button span', { text: 'Got it' });
+    await page.waitForSelector('div[class*=inlineNotification]', { hidden: true });
   });
 });

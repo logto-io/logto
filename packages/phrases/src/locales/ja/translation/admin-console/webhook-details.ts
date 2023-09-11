@@ -45,7 +45,14 @@ const webhook_details = {
     test_webhook_description:
       'Webhookを設定し、各選択したイベントのペイロード例を使用してテストして、正しい受信と処理を確認してください。',
     send_test_payload: 'テストペイロードを送信する',
-    test_payload_sent: 'ペイロードが正常に送信されました。',
+    test_result: {
+      endpoint_url: 'エンドポイントURL：{{url}}',
+      message: 'メッセージ：{{message}}',
+      response_status: 'レスポンスステータス：{{status, number}}',
+      response_body: 'レスポンスボディ：{{body}}',
+      request_time: 'リクエスト時間：{{time}}',
+      test_success: 'エンドポイントへのWebhookテストは成功しました。',
+    },
   },
 };
 
