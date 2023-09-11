@@ -54,13 +54,10 @@ const sign_up_and_sign_in = {
       'Это необходимо, так как вы выбрали {{identifier}} в качестве обязательного идентификатора.',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: 'ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ',
+    enable_user_registration: 'Включить регистрацию пользователей',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Включить или запретить регистрацию пользователей. После отключения пользователи все еще могут быть добавлены через консоль администратора, но пользователи больше не могут создавать учетные записи через пользовательский интерфейс регистрации.',
   },
 };
 

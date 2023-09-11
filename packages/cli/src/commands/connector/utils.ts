@@ -4,20 +4,22 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
-import { assert, conditionalArray, conditionalString, trySafe } from '@silverhand/essentials';
+import { conditionalArray, conditionalString, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got } from 'got';
-import inquirer from 'inquirer';
 import pLimit from 'p-limit';
 import pRetry from 'p-retry';
 import tar from 'tar';
 import { z } from 'zod';
 
-import { connectorDirectory } from '../../constants.js';
-import { consoleLog, getConnectorPackagesFromDirectory, isTty, oraPromise } from '../../utils.js';
-import { defaultPath } from '../install/utils.js';
+import { connectorDirectory, coreDirectory } from '../../constants.js';
+import {
+  consoleLog,
+  getConnectorPackagesFromDirectory,
+  inquireInstancePath,
+  oraPromise,
+} from '../../utils.js';
 
-const coreDirectory = 'packages/core';
 const execPromise = promisify(exec);
 export const npmPackResultGuard = z
   .object({
@@ -26,67 +28,6 @@ export const npmPackResultGuard = z
     filename: z.string(),
   })
   .array();
-
-const buildPathErrorMessage = (value: string) =>
-  `The path ${chalk.green(value)} does not contain a Logto instance, please try another.`;
-
-const validatePath = async (value: string) => {
-  const corePackageJsonPath = path.resolve(path.join(value, coreDirectory, 'package.json'));
-
-  if (!existsSync(corePackageJsonPath)) {
-    return buildPathErrorMessage(value);
-  }
-
-  const packageJson = await fs.readFile(corePackageJsonPath, { encoding: 'utf8' });
-  const packageName = await z
-    .object({ name: z.string() })
-    .parseAsync(JSON.parse(packageJson))
-    .then(({ name }) => name)
-    .catch(() => '');
-
-  if (packageName !== '@logto/core') {
-    return buildPathErrorMessage(value);
-  }
-
-  return true;
-};
-
-export const inquireInstancePath = async (initialPath?: string) => {
-  const inquire = async () => {
-    if (!initialPath && (await validatePath('.')) === true) {
-      return path.resolve('.');
-    }
-
-    if (!isTty()) {
-      assert(initialPath, new Error('Path is missing'));
-
-      return initialPath;
-    }
-
-    const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
-      {
-        name: 'instancePath',
-        message: 'Where is your Logto instance?',
-        type: 'input',
-        default: defaultPath,
-        filter: (value: string) => value.trim(),
-        validate: validatePath,
-      },
-      { instancePath: initialPath }
-    );
-
-    return instancePath;
-  };
-
-  const instancePath = await inquire();
-  const validated = await validatePath(instancePath);
-
-  if (validated !== true) {
-    consoleLog.fatal(validated);
-  }
-
-  return instancePath;
-};
 
 const packagePrefix = 'connector-';
 

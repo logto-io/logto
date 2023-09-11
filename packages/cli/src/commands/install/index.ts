@@ -6,7 +6,7 @@ import { consoleLog } from '../../utils.js';
 
 import {
   validateNodeVersion,
-  inquireInstancePath,
+  inquireInstallPath,
   validateDatabase,
   downloadRelease,
   seedDatabase,
@@ -26,8 +26,8 @@ export type InstallArgs = {
 const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs) => {
   validateNodeVersion();
 
-  // Get instance path
-  const instancePath = await inquireInstancePath(path);
+  // Get install location path
+  const installPath = await inquireInstallPath(path);
 
   // Validate if user has a valid database
   await validateDatabase();
@@ -35,7 +35,7 @@ const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs)
   // Download and decompress
   const tarPath =
     !downloadUrl || isUrl(downloadUrl) ? await downloadRelease(downloadUrl) : downloadUrl;
-  await decompress(instancePath, tarPath);
+  await decompress(installPath, tarPath);
 
   // Seed database
   if (skipSeed) {
@@ -45,14 +45,14 @@ const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs)
       )} command to seed database when ready.\n`
     );
   } else {
-    await seedDatabase(instancePath, cloud);
+    await seedDatabase(installPath, cloud);
   }
 
   // Save to dot env
-  await createEnv(instancePath, await getDatabaseUrlFromConfig());
+  await createEnv(installPath, await getDatabaseUrlFromConfig());
 
   // Finale
-  logFinale(instancePath);
+  logFinale(installPath);
 };
 
 const install: CommandModule<

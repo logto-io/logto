@@ -1,20 +1,19 @@
 const password_policy = {
-  password_requirements: 'Şifre gereksinimleri',
+  password_requirements: 'Parola gereksinimleri',
   minimum_length: 'Minimum uzunluk',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
+  minimum_length_description:
+    'NIST önerilerine göre, web ürünleri için en az <a>8 karakter</a> kullanın.',
   minimum_length_error: 'Minimum uzunluk {{min}} ile {{max}} (dahil) arasında olmalıdır.',
   minimum_required_char_types: 'Minimum gereken karakter tipleri',
-  /** UNTRANSLATED */
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
+    'Karakter tipleri: büyük harfler (A-Z), küçük harfler (a-z), sayılar (0-9) ve özel semboller ({{symbols}}).',
   password_rejection: 'Parola reddi',
   compromised_passwords: 'Etkilenen şifreleri reddet',
   breached_passwords: 'Veri tabanında yer alan şifreleri reddet',
   breached_passwords_description: 'Daha önceki ihlal veritabanlarında bulunan şifreleri reddet.',
   restricted_phrases: 'Düşük güvenlikli ifadeleri kısıtla',
   restricted_phrases_tooltip:
-    'Kullanıcılar aşağıda listelenen ifadelerin tam olarak aynısı veya tamamı tarafından oluşturulmuş parolaları kullanamazlar. Parola karmaşıklığını artırmak için 3 veya daha fazla aralıksız karakter eklemek izin verilir.',
+    'Parolanız 3 ya da daha fazla karakterle birleştirilmediği sürece bu ifadelerden kaçınmalıdır.',
   repetitive_or_sequential_characters: 'Tekrarlayan veya ardışık karakterler',
   repetitive_or_sequential_characters_description: 'Örn., "AAAA", "1234" ve "abcd".',
   user_information: 'Kullanıcı bilgisi',

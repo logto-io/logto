@@ -18,10 +18,8 @@ const sign_in_experiences = {
     'サインアップ時にパスワードが不要な場合、検証コードサインインを有効にする必要があります。',
   unsupported_default_language: 'この言語- {{language}} は、現時点ではサポートされていません。',
   at_least_one_authentication_factor: '認証ファクタを1つ以上選択する必要があります。',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'バックアップコードは単独で有効にできません。',
+  duplicated_mfa_factors: '重複したMFAファクタです。',
 };
 
 export default Object.freeze(sign_in_experiences);

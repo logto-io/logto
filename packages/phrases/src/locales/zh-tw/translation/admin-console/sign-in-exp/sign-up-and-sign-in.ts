@@ -47,13 +47,10 @@ const sign_up_and_sign_in = {
     delete_sign_in_method: '因註冊設置啟用了{{identifier}}標誌。在使用者登入時，這些資訊是必填的。',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: '進階選項',
+    enable_user_registration: '啟用使用者註冊',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      '啟用或禁止使用者註冊。禁用後，管理員仍然可以新增使用者，但無法透過登入界面建立帳戶。',
   },
 };
 

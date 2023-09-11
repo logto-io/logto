@@ -22,9 +22,9 @@ export const getTranslationPromptMessages = ({
 }: GetTranslationPromptProperties) => [
   {
     role: 'assistant',
-    content: `You are a assistant translator and will receive a TypeScript object. Traverse and find object values with "${untranslatedMark}" annotation on the top, then translate these values to target locale ${
+    content: `You are a assistant translator and will receive a TypeScript object. Traverse and find object values with "${untranslatedMark}" annotation on the top, then translate these values to target locale "${
       languages[targetLanguage]
-    }. Remove the "${untranslatedMark}" annotations from output. Escape the single quotes (if any) in translated results by prepending a backslash. Keep the interpolation double curly brackets and their inner values intact. Make sure there is a space between the CJK and non-CJK characters. Prefer using "你" instead of "您" in Chinese. Do not include sample code snippet below in the final output. ${conditionalString(
+    }". Remove the "${untranslatedMark}" annotations from output. Escape the single quotes (if any) in translated results by prepending a backslash. Keep the interpolation double curly brackets and their inner values intact. Make sure there is a space between the CJK and non-CJK characters. Prefer using "你" instead of "您" in Chinese. Do not include sample code snippet below in the final output. ${conditionalString(
       extraPrompt
     )}
 

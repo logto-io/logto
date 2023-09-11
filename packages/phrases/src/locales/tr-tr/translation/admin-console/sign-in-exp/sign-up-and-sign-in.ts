@@ -53,13 +53,10 @@ const sign_up_and_sign_in = {
     delete_sign_in_method: 'Bu, {{identifier}} gerekliliğini belirlediğiniz için önemlidir.',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: 'GELİŞMİŞ SEÇENEKLER',
+    enable_user_registration: 'Kullanıcı kaydını etkinleştir',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Kullanıcı kaydını etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, kullanıcılar yönetici konsolunda hala eklenilebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamaz.',
   },
 };
 

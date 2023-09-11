@@ -1,12 +1,13 @@
-import { execSync } from 'node:child_process';
+import { execSync, execFile } from 'node:child_process';
 import { createWriteStream, existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { promisify } from 'node:util';
 
 import { ConsoleLog } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
-import { conditionalString } from '@silverhand/essentials';
+import { assert, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { Progress } from 'got';
 import { got } from 'got';
@@ -15,6 +16,8 @@ import inquirer from 'inquirer';
 import type { Options } from 'ora';
 import ora from 'ora';
 import { z } from 'zod';
+
+import { coreDirectory, defaultPath } from './constants.js';
 
 export const safeExecSync = (command: string) => {
   try {
@@ -170,6 +173,67 @@ export function findLastIndex<T>(
   return -1;
 }
 
+const buildPathErrorMessage = (value: string) =>
+  `The path ${chalk.green(value)} does not contain a Logto instance. Please try another.`;
+
+const validatePath = async (value: string) => {
+  const corePackageJsonPath = path.resolve(path.join(value, coreDirectory, 'package.json'));
+
+  if (!existsSync(corePackageJsonPath)) {
+    return buildPathErrorMessage(value);
+  }
+
+  const packageJson = await readFile(corePackageJsonPath, { encoding: 'utf8' });
+  const packageName = await z
+    .object({ name: z.string() })
+    .parseAsync(JSON.parse(packageJson))
+    .then(({ name }) => name)
+    .catch(() => '');
+
+  if (packageName !== '@logto/core') {
+    return buildPathErrorMessage(value);
+  }
+
+  return true;
+};
+
+export const inquireInstancePath = async (initialPath?: string) => {
+  const inquire = async () => {
+    if (!initialPath && (await validatePath('.')) === true) {
+      return path.resolve('.');
+    }
+
+    if (!isTty()) {
+      assert(initialPath, new Error('Path is missing'));
+
+      return initialPath;
+    }
+
+    const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
+      {
+        name: 'instancePath',
+        message: 'Where is your Logto instance?',
+        type: 'input',
+        default: defaultPath,
+        filter: (value: string) => value.trim(),
+        validate: validatePath,
+      },
+      { instancePath: initialPath }
+    );
+
+    return instancePath;
+  };
+
+  const instancePath = await inquire();
+  const validated = await validatePath(instancePath);
+
+  if (validated !== true) {
+    consoleLog.fatal(validated);
+  }
+
+  return instancePath;
+};
+
 const getConnectorPackageName = async (directory: string) => {
   const filePath = path.join(directory, 'package.json');
 
@@ -203,4 +267,33 @@ export const getConnectorPackagesFromDirectory = async (directory: string) => {
   return rawPackages.filter(
     (packageInfo): packageInfo is ConnectorPackage => typeof packageInfo.name === 'string'
   );
+};
+
+const execPromise = promisify(execFile);
+
+export const lintLocaleFiles = async (
+  /** Logto instance path */
+  instancePath: string,
+  /** Target package name, ignore to lint both packages */
+  packageName?: 'phrases' | 'phrases-ui'
+) => {
+  const spinner = ora({
+    text: 'Running `eslint --fix` for locales',
+  }).start();
+
+  const targetPackages = packageName ? [packageName] : ['phrases', 'phrases-ui'];
+
+  await Promise.all(
+    targetPackages.map(async (packageName) => {
+      const phrasesPath = path.join(instancePath, 'packages', packageName);
+      const localesPath = path.join(phrasesPath, 'src/locales');
+      await execPromise(
+        'pnpm',
+        ['eslint', '--ext', '.ts', path.relative(phrasesPath, localesPath), '--fix'],
+        { cwd: phrasesPath }
+      );
+    })
+  );
+
+  spinner.succeed('Ran `eslint --fix` for locales');
 };

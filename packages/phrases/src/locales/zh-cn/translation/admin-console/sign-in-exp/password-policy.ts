@@ -1,20 +1,17 @@
 const password_policy = {
   password_requirements: '密码要求',
   minimum_length: '最小长度',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  minimum_length_error: '最小长度必须在{{min}}和{{max}}之间（包括{{min}}和{{max}}）。',
+  minimum_length_description: 'NIST 建议在 Web 产品中使用至少 8 个字符。',
+  minimum_length_error: '最小长度必须在 {{min}} 和 {{max}} 之间（包括 {{min}} 和 {{max}}）。',
   minimum_required_char_types: '最小要求字符类型',
-  /** UNTRANSLATED */
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
+    '字符类型：大写字母（A-Z），小写字母（a-z），数字（0-9）以及特殊字符（{{symbols}}）。',
   password_rejection: '密码拒绝',
   compromised_passwords: '拒绝已泄露的密码',
   breached_passwords: '泄露的密码',
   breached_passwords_description: '拒绝之前在泄露数据库中发现的密码。',
   restricted_phrases: '限制低安全性短语',
-  restricted_phrases_tooltip:
-    '用户不能使用与下方列表中的短语完全相同或由其组成的密码。可以添加3个或更多个非连续字符以增加密码复杂性。',
+  restricted_phrases_tooltip: '密码应避免使用这些短语，除非结合 3 个或更多额外字符。',
   repetitive_or_sequential_characters: '重复或连续字符',
   repetitive_or_sequential_characters_description: '例如，“AAAA”、“1234”和“abcd”。',
   user_information: '用户信息',

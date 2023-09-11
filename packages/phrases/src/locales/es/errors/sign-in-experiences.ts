@@ -18,10 +18,8 @@ const sign_in_experiences = {
     'La firma de código de verificación debe estar habilitada cuando no se requiere contraseña en el registro.',
   unsupported_default_language: 'Este lenguaje - {{language}} no es compatible en este momento.',
   at_least_one_authentication_factor: 'Debe seleccionar al menos un factor de autenticación.',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'El código de respaldo no se puede habilitar solo.',
+  duplicated_mfa_factors: 'Factores MFA duplicados.',
 };
 
 export default Object.freeze(sign_in_experiences);

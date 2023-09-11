@@ -14,7 +14,7 @@ const sign_up_and_sign_in = {
     sign_up_authentication: 'Configuración de autenticación para el registro',
     authentication_description:
       'Todas las acciones seleccionadas serán obligatorias para que los usuarios completen el proceso.',
-    set_a_password_option: 'Crea una contraseña',
+    set_a_password_option: 'Crear una contraseña',
     verify_at_sign_up_option: 'Verificar al registrarse',
     social_only_creation_description:
       '(Esto se aplica solo a la creación de cuentas mediante redes sociales)',
@@ -57,13 +57,10 @@ const sign_up_and_sign_in = {
       'Es esencial ya que has seleccionado {{identifier}} como identificador obligatorio.',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: 'OPCIONES AVANZADAS',
+    enable_user_registration: 'Habilitar registro de usuario',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Habilitar o deshabilitar el registro de usuarios. Una vez deshabilitado, los usuarios aún se pueden agregar en la consola de administración, pero los usuarios ya no pueden establecer cuentas a través de la interfaz de inicio de sesión.',
   },
 };
 

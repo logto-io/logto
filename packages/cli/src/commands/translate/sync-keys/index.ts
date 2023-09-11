@@ -1,18 +1,13 @@
-import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { promisify } from 'node:util';
 
 import { isLanguageTag } from '@logto/language-kit';
 import ora from 'ora';
 import { type CommandModule } from 'yargs';
 
-import { consoleLog } from '../../../utils.js';
-import { inquireInstancePath } from '../../connector/utils.js';
+import { consoleLog, inquireInstancePath, lintLocaleFiles } from '../../../utils.js';
 
 import { parseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
-
-const execPromise = promisify(execFile);
 
 const syncKeys: CommandModule<
   { path?: string },
@@ -99,15 +94,7 @@ const syncKeys: CommandModule<
     /* eslint-enable no-await-in-loop */
 
     if (!skipLint) {
-      const spinner = ora({
-        text: 'Running `eslint --fix` for locales',
-      }).start();
-      await execPromise(
-        'pnpm',
-        ['eslint', '--ext', '.ts', path.relative(phrasesPath, localesPath), '--fix'],
-        { cwd: phrasesPath }
-      );
-      spinner.succeed('Ran `eslint --fix` for locales');
+      void lintLocaleFiles(instancePath, packageName);
     }
   },
 };

@@ -51,13 +51,10 @@ const sign_up_and_sign_in = {
     delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수예요.',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: '고급 옵션',
+    enable_user_registration: '사용자 등록 활성화',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      '사용자 등록을 활성화하거나 비활성화합니다. 비활성화된 경우 사용자는 관리 콘솔에서는 추가할 수 있지만 사용자는 더 이상 로그인 UI를 통해 계정을 설정할 수 없습니다.',
   },
 };
 

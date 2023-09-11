@@ -15,10 +15,8 @@ const sign_in_experiences = {
     '비밀번호를 설정할 필요가 없을 때는 인증 코드 로그인을 활성화해야 해요.',
   unsupported_default_language: '{{language}} 언어는 아직 지원하지 않아요.',
   at_least_one_authentication_factor: '최소한 하나의 인증 방법을 선택해야 해요.',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: '백업 코드는 단독으로 활성화할 수 없습니다.',
+  duplicated_mfa_factors: '중복된 MFA 인증 요소입니다.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -1,13 +1,12 @@
 const password_policy = {
   password_requirements: 'Passwortanforderungen',
   minimum_length: 'Mindestlänge',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
+  minimum_length_description:
+    'NIST schlägt vor, <a>mindestens 8 Zeichen</a> für Webprodukte zu verwenden.',
   minimum_length_error: 'Die Mindestlänge muss zwischen {{min}} und {{max}} (einschließlich) sein.',
   minimum_required_char_types: 'Mindestanzahl erforderlicher Zeichentypen',
-  /** UNTRANSLATED */
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
+    'Zeichentypen: Großbuchstaben (A-Z), Kleinbuchstaben (a-z), Zahlen (0-9) und Sonderzeichen ({{symbols}}).',
   password_rejection: 'Passwortablehnung',
   compromised_passwords: 'Abgelehnte Passwörter',
   breached_passwords: 'Verletzte Passwörter',
@@ -15,7 +14,7 @@ const password_policy = {
     'Ablehnung von zuvor in den Verletzungsdatenbanken gefundenen Passwörtern.',
   restricted_phrases: 'Einschränkung niedrigsicherer Phrasen',
   restricted_phrases_tooltip:
-    'Benutzer dürfen keine Passwörter verwenden, die genau den unten aufgeführten Phrasen entsprechen oder daraus bestehen. Es ist erlaubt, 3 oder mehr nicht aufeinanderfolgende Zeichen hinzuzufügen, um die Komplexität des Passworts zu erhöhen.',
+    'Ihr Passwort sollte diese Phrasen vermeiden, es sei denn, Sie kombinieren sie mit 3 oder mehr zusätzlichen Zeichen.',
   repetitive_or_sequential_characters: 'Wiederholte oder aufeinanderfolgende Zeichen',
   repetitive_or_sequential_characters_description: 'Zum Beispiel "AAAA", "1234" und "abcd".',
   user_information: 'Benutzerinformationen',

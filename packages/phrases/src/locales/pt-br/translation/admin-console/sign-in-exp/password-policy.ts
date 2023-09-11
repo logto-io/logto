@@ -1,21 +1,20 @@
 const password_policy = {
   password_requirements: 'Requisitos de senha',
   minimum_length: 'Comprimento mínimo',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
+  minimum_length_description:
+    'O NIST sugere o uso de <a>pelo menos 8 caracteres</a> para produtos na web.',
   minimum_length_error: 'O comprimento mínimo deve estar entre {{min}} e {{max}} (inclusive).',
   minimum_required_char_types: 'Tipos de caracteres mínimos necessários',
-  /** UNTRANSLATED */
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
+    'Tipos de caracteres: maiúsculas (A-Z), minúsculas (a-z), números (0-9) e símbolos especiais ({{symbols}}).',
   password_rejection: 'Rejeição de senha',
-  compromised_passwords: 'Rejeitar senha comprometida',
+  compromised_passwords: 'Senhas comprometidas',
   breached_passwords: 'Senhas comprometidas',
   breached_passwords_description:
-    'Rejeitar senhas encontradas em bancos de dados de violação anteriormente.',
+    'Rejeitar senhas encontradas em bancos de dados de violações anteriores.',
   restricted_phrases: 'Restringir frases de baixa segurança',
   restricted_phrases_tooltip:
-    'Os usuários não podem usar senhas que sejam exatamente iguais ou compostas das frases listadas abaixo. A adição de 3 ou mais caracteres não consecutivos é permitida para aumentar a complexidade da senha.',
+    'Sua senha deve evitar essas frases, a menos que você combine com 3 ou mais caracteres extras.',
   repetitive_or_sequential_characters: 'Caracteres repetitivos ou sequenciais',
   repetitive_or_sequential_characters_description: 'Por exemplo, "AAAA", "1234" e "abcd".',
   user_information: 'Informações do usuário',

@@ -3,9 +3,9 @@ import path from 'node:path';
 
 import type { CommandModule } from 'yargs';
 
-import { consoleLog } from '../../utils.js';
+import { consoleLog, inquireInstancePath } from '../../utils.js';
 
-import { getConnectorDirectory, getLocalConnectorPackages, inquireInstancePath } from './utils.js';
+import { getConnectorDirectory, getLocalConnectorPackages } from './utils.js';
 
 const link: CommandModule<{ path?: string }, { path?: string; cloud: boolean; mock: boolean }> = {
   command: ['link', 'ln'],

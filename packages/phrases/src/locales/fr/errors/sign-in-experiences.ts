@@ -20,10 +20,8 @@ const sign_in_experiences = {
     "Cette langue - {{language}} n'est pas prise en charge pour le moment.",
   at_least_one_authentication_factor:
     "Vous devez sélectionner au moins un facteur d'authentification.",
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'Le code de sauvegarde ne peut être activé seul.',
+  duplicated_mfa_factors: 'Facteurs de MFA en double.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -18,10 +18,8 @@ const sign_in_experiences = {
     'Вход в систему по коду проверки должен быть включен, когда для создания учетной записи не требуется установка пароля.',
   unsupported_default_language: 'Этот язык - {{language}} не поддерживается в данный момент.',
   at_least_one_authentication_factor: 'Вы должны выбрать как минимум один фактор аутентификации.',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'Резервный код не может быть включен самостоятельно.',
+  duplicated_mfa_factors: 'Факторы MFA не должны повторяться.',
 };
 
 export default Object.freeze(sign_in_experiences);
