@@ -10,6 +10,10 @@ const sign_in_experiences = {
   code_sign_in_must_be_enabled: '必须在注册中不要求设置密码时启用验证码登录。',
   unsupported_default_language: '{{language}} 无法选择为默认语言。',
   at_least_one_authentication_factor: '至少要选择一个登录要素',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);

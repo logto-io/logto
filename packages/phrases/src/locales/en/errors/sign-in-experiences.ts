@@ -15,6 +15,8 @@ const sign_in_experiences = {
     'Verification code sign in must be enabled when set a password is not required in sign up.',
   unsupported_default_language: 'This language - {{language}} is not supported at the moment.',
   at_least_one_authentication_factor: 'You have to select at least one authentication factor.',
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);

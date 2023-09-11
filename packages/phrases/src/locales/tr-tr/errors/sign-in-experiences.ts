@@ -16,6 +16,10 @@ const sign_in_experiences = {
     'Kayıtta şifre belirleme zorunlu olmadığında doğrulama koduyla oturum açma etkinleştirilmelidir.',
   unsupported_default_language: 'Bu dil - {{language}}, şu anda desteklenmemektedir.',
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);

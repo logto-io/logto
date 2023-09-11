@@ -17,6 +17,10 @@ const sign_in_experiences = {
     'Logowanie za pomocą kodu weryfikacyjnego musi być włączone, gdy w rejestracji nie jest wymagane ustawienie hasła.',
   unsupported_default_language: 'Ten język - {{language}} nie jest obecnie obsługiwany.',
   at_least_one_authentication_factor: 'Musisz wybrać co najmniej jeden czynnik uwierzytelniający.',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);

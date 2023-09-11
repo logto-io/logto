@@ -18,6 +18,10 @@ const sign_in_experiences = {
     'Il metodo di accesso con codice di verifica deve essere abilitato quando non è richiesta una password nella registrazione.',
   unsupported_default_language: 'Questa lingua - {{language}} non è supportata al momento.',
   at_least_one_authentication_factor: 'Devi selezionare almeno un fattore di autenticazione.',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);

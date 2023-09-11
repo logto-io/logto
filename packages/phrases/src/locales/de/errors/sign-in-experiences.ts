@@ -19,6 +19,10 @@ const sign_in_experiences = {
   unsupported_default_language: 'Die Sprache - {{language}} wird momentan nicht unterstützt.',
   at_least_one_authentication_factor:
     'Sie müssen mindestens einen Authentifizierungsfaktor auswählen.',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);
