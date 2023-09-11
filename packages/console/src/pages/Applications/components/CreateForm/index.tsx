@@ -1,6 +1,5 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -15,7 +14,6 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useConfigs from '@/hooks/use-configs';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -42,7 +40,6 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const isMachineToMachineDisabled = isCloud && !currentPlan?.quota.machineToMachineLimit;
-  const { updateConfigs } = useConfigs();
   const {
     handleSubmit,
     control,
@@ -69,12 +66,6 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
 
       const createdApp = await api.post('api/applications', { json: data }).json<Application>();
       toast.success(t('applications.application_created'));
-      void updateConfigs({
-        applicationCreated: true,
-        ...conditional(
-          createdApp.type === ApplicationType.MachineToMachine && { m2mApplicationCreated: true }
-        ),
-      });
       onClose?.(createdApp);
     })
   );

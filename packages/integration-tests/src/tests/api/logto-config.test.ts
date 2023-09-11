@@ -3,14 +3,7 @@ import { type AdminConsoleData } from '@logto/schemas';
 import { getAdminConsoleConfig, updateAdminConsoleConfig } from '#src/api/index.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
-  livePreviewChecked: false,
-  applicationCreated: false,
   signInExperienceCustomized: false,
-  passwordlessConfigured: false,
-  furtherReadingsChecked: false,
-  roleCreated: false,
-  communityChecked: false,
-  m2mApplicationCreated: false,
 };
 
 describe('admin console sign-in experience', () => {
@@ -22,8 +15,6 @@ describe('admin console sign-in experience', () => {
 
   it('should update admin console config successfully', async () => {
     const newAdminConsoleConfig = {
-      m2mApplicationCreated: true,
-      passwordlessConfigured: true,
       signInExperienceCustomized: true,
     };
 

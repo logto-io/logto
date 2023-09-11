@@ -15,14 +15,7 @@ export const createDefaultAdminConsoleConfig = (
     tenantId: forTenantId,
     key: LogtoTenantConfigKey.AdminConsole,
     value: {
-      livePreviewChecked: false,
-      applicationCreated: false,
       signInExperienceCustomized: false,
-      passwordlessConfigured: false,
-      furtherReadingsChecked: false,
-      roleCreated: false,
-      communityChecked: false,
-      m2mApplicationCreated: false,
     },
   } satisfies CreateLogtoConfig);
 

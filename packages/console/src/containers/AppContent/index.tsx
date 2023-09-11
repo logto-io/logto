@@ -6,7 +6,6 @@ import AppLoading from '@/components/AppLoading';
 import MauExceededModal from '@/components/MauExceededModal';
 import PaymentOverdueModal from '@/components/PaymentOverdueModal';
 import { isCloud } from '@/consts/env';
-import useConfigs from '@/hooks/use-configs';
 import useScroll from '@/hooks/use-scroll';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -18,10 +17,7 @@ import * as styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
 
 export default function AppContent() {
-  const { isLoading: isPreferencesLoading } = useUserPreferences();
-  const { isLoading: isConfigsLoading } = useConfigs();
-
-  const isLoading = isPreferencesLoading || isConfigsLoading;
+  const { isLoading } = useUserPreferences();
 
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
