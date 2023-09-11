@@ -1,3 +1,4 @@
+import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
 import domain from './domain.js';
@@ -42,6 +43,7 @@ const errors = {
   hook,
   domain,
   subscription,
+  application,
 };
 
 export default Object.freeze(errors);

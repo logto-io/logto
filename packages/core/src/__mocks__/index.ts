@@ -2,6 +2,7 @@ import { VerificationCodeType } from '@logto/connector-kit';
 import type {
   AdminConsoleData,
   Application,
+  ApplicationsRole,
   Passcode,
   Resource,
   Role,
@@ -118,5 +119,12 @@ export const mockUserRole: UsersRole = {
   tenantId: 'fake_tenant',
   id: 'user_role_id',
   userId: 'foo',
+  roleId: 'role_id',
+};
+
+export const mockApplicationRole: ApplicationsRole = {
+  tenantId: 'fake_tenant',
+  id: 'application_role_id',
+  applicationId: 'application_id',
   roleId: 'role_id',
 };

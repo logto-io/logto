@@ -3,6 +3,7 @@ import type {
   CreateApplication,
   ApplicationType,
   OidcClientMetadata,
+  Role,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -45,3 +46,19 @@ export const updateApplication = async (
 
 export const deleteApplication = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}`);
+
+export const getApplicationRoles = async (applicationId: string) =>
+  authedAdminApi.get(`applications/${applicationId}/roles`).json<Role[]>();
+
+export const assignRolesToApplication = async (applicationId: string, roleIds: string[]) =>
+  authedAdminApi.post(`applications/${applicationId}/roles`, {
+    json: { roleIds },
+  });
+
+export const putRolesToApplication = async (applicationId: string, roleIds: string[]) =>
+  authedAdminApi.put(`applications/${applicationId}/roles`, {
+    json: { roleIds },
+  });
+
+export const deleteRoleFromApplication = async (applicationId: string, roleId: string) =>
+  authedAdminApi.delete(`applications/${applicationId}/roles/${roleId}`);
