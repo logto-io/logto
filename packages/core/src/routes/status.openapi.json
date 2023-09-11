@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "/api/status": {
+      "get": {
+        "summary": "Health check",
+        "description": "The traditional health check API. No authentication needed.\n\n> **Note**\n> Even if 204 is returned, it does not guarantee all the APIs are working properly since they may depend on additional resources or external services.",
+        "responses": {
+          "204": {
+            "description": "The Logto core service is healthy."
+          }
+        }
+      }
+    }
+  }
+}

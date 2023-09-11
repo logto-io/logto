@@ -1,5 +1,12 @@
+import assert from 'node:assert';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { httpCodeToMessage } from '@logto/core-kit';
 import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
+import deepmerge from 'deepmerge';
+import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -146,6 +153,27 @@ const isManagementApiRouter = ({ stack }: Router) =>
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
 
+/**
+ * Recursively find all supplement files (files end with `.openapi.json`) for the given
+ * directory.
+ */
+/* eslint-disable @silverhand/fp/no-mutating-methods, no-await-in-loop */
+const findSupplementFiles = async (directory: string) => {
+  const result: string[] = [];
+
+  for (const file of await fs.readdir(directory)) {
+    const stats = await fs.stat(path.join(directory, file));
+    if (stats.isDirectory()) {
+      result.push(...(await findSupplementFiles(path.join(directory, file))));
+    } else if (file.endsWith('.openapi.json')) {
+      result.push(path.join(directory, file));
+    }
+  }
+
+  return result;
+};
+/* eslint-enable @silverhand/fp/no-mutating-methods, no-await-in-loop */
+
 // Keep using `any` to accept various custom context types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
@@ -185,17 +213,37 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
-    const document: OpenAPIV3.Document = {
+    const sourcePath = await findUp('src', {
+      type: 'directory',
+      cwd: path.dirname(fileURLToPath(import.meta.url)),
+    });
+    assert(
+      sourcePath,
+      'Cannot find the `src` directory, please make sure you downloaded the full distribution.'
+    );
+    const supplementPaths = await findSupplementFiles(path.join(sourcePath, 'routes'));
+    const supplementDocuments = await Promise.all(
+      supplementPaths.map(
+        // eslint-disable-next-line no-restricted-syntax
+        async (path) => JSON.parse(await fs.readFile(path, 'utf8')) as Record<string, unknown>
+      )
+    );
+
+    const baseDocument: OpenAPIV3.Document = {
       openapi: '3.0.1',
       info: {
         title: 'Logto Core',
-        version: '0.1.0',
+        description: 'Management APIs for Logto core service.',
+        version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
       components: { schemas: translationSchemas },
     };
 
-    ctx.body = document;
+    ctx.body = supplementDocuments.reduce(
+      (document, supplement) => deepmerge(document, supplement),
+      baseDocument
+    );
 
     return next();
   });

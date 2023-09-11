@@ -5,7 +5,10 @@
       "source.fixAll.stylelint": true
     }
   },
-  "stylelint.validate": ["css", "scss"],
+  "stylelint.validate": [
+    "css",
+    "scss"
+  ],
   "eslint.workingDirectories": [
     {
       "pattern": "./packages/*",
@@ -23,6 +26,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
   },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "packages/core/src/routes/*.openapi.json"
+      ],
+      "url": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"
+    }
+  ],
   "cSpell.words": [
     "Alipay",
     "CIAM",
