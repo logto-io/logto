@@ -14,7 +14,7 @@
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build && pnpm test:api && pnpm test:ui",
     "test:api": "pnpm test:only -i ./lib/tests/api/",
-    "test:ui": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/ui/",
+    "test:ui": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/console/ ./lib/tests/flows/",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "start": "pnpm test"

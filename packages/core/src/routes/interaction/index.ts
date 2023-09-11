@@ -98,7 +98,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       eventLog.append({ profile, verifiedIdentifiers });
 
       await validatePassword(tenant, profile?.password, passwordPolicyChecker, {
-        identifiers: verifiedIdentifier,
+        identifiers: verifiedIdentifiers,
         profile,
       });
 
