@@ -4,10 +4,9 @@ import { useMemo } from 'react';
 import Tick from '@/assets/icons/tick.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
+import TenantEnvTag from '@/components/TenantEnvTag';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
-
-import TenantEnvTag from '../TenantEnvTag';
 
 import TenantStatusTag from './TenantStatusTag';
 import * as styles from './index.module.scss';

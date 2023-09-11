@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
 import { type TenantResponse } from '@/cloud/types/router';
+import { tenantTagMap } from '@/components/TenantEnvTag';
 import { contactEmailLink } from '@/consts';
-import { tenantTagMap } from '@/containers/AppContent/components/Topbar/TenantSelector/TenantEnvTag';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TextLink from '@/ds-components/TextLink';
 

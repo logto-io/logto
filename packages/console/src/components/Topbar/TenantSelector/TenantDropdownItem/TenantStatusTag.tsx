@@ -10,14 +10,22 @@ type Props = {
 };
 
 function TenantStatusTag({ tenantData, tenantPlan, className }: Props) {
-  const { usage, openInvoices } = tenantData;
+  const { usage, openInvoices, isSuspended } = tenantData;
 
   /**
    * Tenant status priority:
-   * 1. suspend (WIP) @xiaoyijun
+   * 1. suspend
    * 2. overdue
    * 3. mau exceeded
    */
+
+  if (isSuspended) {
+    return (
+      <Tag className={className}>
+        <DynamicT forKey="user_details.suspended" />
+      </Tag>
+    );
+  }
 
   if (openInvoices.length > 0) {
     return (
