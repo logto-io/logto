@@ -24,11 +24,11 @@ const buildRoleConditions = (search: Search) => {
   );
 };
 
-export const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
+export const defaultSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
 
 export const createRolesQueries = (pool: CommonQueryMethods) => {
   const countRoles = async (
-    search: Search = defaultUserSearch,
+    search: Search = defaultSearch,
     { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
   ) => {
     const { count } = await pool.one<{ count: string }>(sql`

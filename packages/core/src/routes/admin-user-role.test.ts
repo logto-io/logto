@@ -103,16 +103,42 @@ describe('user role routes', () => {
       expect(deleteUsersRolesByUserIdAndRoleId).not.toHaveBeenCalled();
       expect(insertUsersRoles).toHaveBeenCalledWith([]);
     });
-  });
 
-  it('DELETE /users/:id/roles/:roleId', async () => {
-    const response = await roleRequester.delete(
-      `/users/${mockUser.id}/roles/${mockAdminUserRole.id}`
-    );
-    expect(response.status).toEqual(204);
-    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
-      mockUser.id,
-      mockAdminUserRole.id
-    );
+    it('POST /users/:id/roles', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([]);
+      const response = await roleRequester.post(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole.id],
+      });
+      expect(response.status).toEqual(201);
+      expect(insertUsersRoles).toHaveBeenCalledWith([
+        { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
+      ]);
+    });
+
+    it('PUT /users/:id/roles', async () => {
+      findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
+      const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
+        roleIds: [mockAdminUserRole2.id],
+      });
+      expect(response.status).toEqual(200);
+      expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
+        mockUser.id,
+        mockAdminUserRole.id
+      );
+      expect(insertUsersRoles).toHaveBeenCalledWith([
+        { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole2.id },
+      ]);
+    });
+
+    it('DELETE /users/:id/roles/:roleId', async () => {
+      const response = await roleRequester.delete(
+        `/users/${mockUser.id}/roles/${mockAdminUserRole.id}`
+      );
+      expect(response.status).toEqual(204);
+      expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
+        mockUser.id,
+        mockAdminUserRole.id
+      );
+    });
   });
 });

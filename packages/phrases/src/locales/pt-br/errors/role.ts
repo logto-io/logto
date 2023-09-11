@@ -2,6 +2,7 @@ const role = {
   name_in_use: 'Este nome de papel {{name}} já está em uso',
   scope_exists: 'O id de escopo {{scopeId}} já foi adicionado a este papel',
   user_exists: 'O id de usuário {{userId}} já foi adicionado a este papel',
+  application_exists: 'O id do aplicativo {{applicationId}} já foi adicionado a este papel',
   default_role_missing:
     'Alguns dos nomes de função padrão não existem no banco de dados, certifique-se de criar funções primeiro',
   internal_role_violation:

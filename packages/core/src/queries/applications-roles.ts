@@ -1,6 +1,7 @@
 import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/schemas';
 import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
+import { type Nullable } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -10,6 +11,27 @@ const { table, fields } = convertToIdentifiers(ApplicationsRoles, true);
 const { fields: insertFields } = convertToIdentifiers(ApplicationsRoles);
 
 export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
+  const findFirstApplicationsRolesByRoleIdAndApplicationIds = async (
+    roleId: string,
+    applicationIds: string[]
+  ): Promise<Nullable<ApplicationsRole>> =>
+    applicationIds.length > 0
+      ? pool.maybeOne<ApplicationsRole>(sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        where ${fields.roleId}=${roleId}
+        and ${fields.applicationId} in (${sql.join(applicationIds, sql`, `)})
+        limit 1
+      `)
+      : null;
+
+  const countApplicationsRolesByRoleId = async (roleId: string) =>
+    pool.one<{ count: number }>(sql`
+      select count(*)
+      from ${table}
+      where ${fields.roleId}=${roleId}
+    `);
+
   const findApplicationsRolesByApplicationId = async (applicationId: string) =>
     pool.any<ApplicationsRole & { role: Role }>(sql`
       select
@@ -18,6 +40,14 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
       from ${table}
       join roles on ${sql.identifier([Roles.table, Roles.fields.id])} = ${fields.roleId}
       where ${fields.applicationId}=${applicationId}
+    `);
+
+  const findApplicationsRolesByRoleId = async (roleId: string) =>
+    pool.any<ApplicationsRole>(sql`
+      select
+        ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where ${fields.roleId}=${roleId}
     `);
 
   const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>
@@ -45,7 +75,10 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
+    findFirstApplicationsRolesByRoleIdAndApplicationIds,
+    countApplicationsRolesByRoleId,
     findApplicationsRolesByApplicationId,
+    findApplicationsRolesByRoleId,
     insertApplicationsRoles,
     deleteApplicationRole,
   };
