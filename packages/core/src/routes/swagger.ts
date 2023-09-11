@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { httpCodeToMessage } from '@logto/core-kit';
 import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
-import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -213,15 +211,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
-    const sourcePath = await findUp('src', {
-      type: 'directory',
-      cwd: path.dirname(fileURLToPath(import.meta.url)),
-    });
-    assert(
-      sourcePath,
-      'Cannot find the `src` directory, please make sure you downloaded the full distribution.'
-    );
-    const supplementPaths = await findSupplementFiles(path.join(sourcePath, 'routes'));
+    // Current path should be the root directory of routes files.
+    const supplementPaths = await findSupplementFiles(path.dirname(fileURLToPath(import.meta.url)));
     const supplementDocuments = await Promise.all(
       supplementPaths.map(
         // eslint-disable-next-line no-restricted-syntax
