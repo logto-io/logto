@@ -15,6 +15,7 @@ import {
   AdminTenantRole,
   type Role,
   type User,
+  RoleType,
 } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 
@@ -40,7 +41,7 @@ const createUserWithRoles = async (roleNames: string[]) => {
   const roles = await api.get('roles').json<Role[]>();
   await Promise.all(
     roles
-      .filter(({ name }) => roleNames.includes(name))
+      .filter(({ name, type }) => roleNames.includes(name) && type !== RoleType.MachineToMachine)
       .map(async ({ id }) =>
         api.post(`roles/${id}/users`, {
           json: { userIds: [user.id] },

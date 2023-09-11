@@ -12,7 +12,7 @@ import { createScope } from '#src/api/scope.js';
 
 describe('roles scopes', () => {
   it('should get role scopes successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const resource = await createResource();
     const scope = await createScope(resource.id);
     await assignScopesToRole([scope.id], role.id);
@@ -28,13 +28,13 @@ describe('roles scopes', () => {
   });
 
   it('should return empty if role has no scopes', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const scopes = await getRoleScopes(role.id);
     expect(scopes.length).toBe(0);
   });
 
   it('should assign scopes to role successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const resource = await createResource();
     const scope1 = await createScope(resource.id);
     const scope2 = await createScope(resource.id);
@@ -44,13 +44,13 @@ describe('roles scopes', () => {
   });
 
   it('should fail when try to assign empty scopes', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignScopesToRole([], role.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
   });
 
   it('should fail with invalid scope input', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignScopesToRole([''], role.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
   });
@@ -65,7 +65,7 @@ describe('roles scopes', () => {
   });
 
   it('should fail if scope not found', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignScopesToRole(['not-found'], role.id).catch(
       (error: unknown) => error
     );
@@ -73,7 +73,7 @@ describe('roles scopes', () => {
   });
 
   it('should fail if scope already assigned to role', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const resource = await createResource();
     const scope1 = await createScope(resource.id);
     const scope2 = await createScope(resource.id);
@@ -85,7 +85,7 @@ describe('roles scopes', () => {
   });
 
   it('should remove scope from role successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const resource = await createResource();
     const scope = await createScope(resource.id);
     await assignScopesToRole([scope.id], role.id);
@@ -99,7 +99,7 @@ describe('roles scopes', () => {
   });
 
   it('should fail when try to remove scope from role that is not assigned', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const resource = await createResource();
     const scope = await createScope(resource.id);
     const response = await deleteScopeFromRole(scope.id, role.id).catch((error: unknown) => error);

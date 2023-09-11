@@ -1,15 +1,27 @@
 import type { CreateRole, Role, Scope, User } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 
 import { generateRoleName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export const createRole = async (name?: string, description?: string, scopeIds?: string[]) =>
+export const createRole = async ({
+  name,
+  description,
+  type,
+  scopeIds,
+}: {
+  name?: string;
+  description?: string;
+  type?: RoleType;
+  scopeIds?: string[];
+}) =>
   authedAdminApi
     .post('roles', {
       json: {
         name: name ?? generateRoleName(),
         description: description ?? generateRoleName(),
+        type: type ?? RoleType.User,
         scopeIds,
       },
     })

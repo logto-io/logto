@@ -143,7 +143,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
           })
         ),
       response: Applications.guard,
-      status: [200, 404, 500],
+      status: [200, 404, 422, 500],
     }),
     async (ctx, next) => {
       const {

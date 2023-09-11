@@ -14,7 +14,7 @@ import { generateRoleName } from '#src/utils.js';
 
 describe('roles', () => {
   it('should get roles list successfully', async () => {
-    await createRole();
+    await createRole({});
     const roles = await getRoles();
 
     expect(roles.length > 0).toBeTruthy();
@@ -24,7 +24,7 @@ describe('roles', () => {
     const roleName = generateRoleName();
     const description = roleName;
 
-    const role = await createRole(roleName, description);
+    const role = await createRole({ name: roleName, description });
 
     expect(role.name).toBe(roleName);
     expect(role.description).toBe(description);
@@ -36,7 +36,7 @@ describe('roles', () => {
     const resource = await createResource();
     const scope = await createScope(resource.id);
 
-    const role = await createRole(roleName, description, [scope.id]);
+    const role = await createRole({ name: roleName, description, scopeIds: [scope.id] });
     const scopes = await getRoleScopes(role.id);
 
     expect(role.name).toBe(roleName);
@@ -45,20 +45,20 @@ describe('roles', () => {
   });
 
   it('should fail when create role with conflict name', async () => {
-    const createdRole = await createRole();
+    const { name } = await createRole({});
 
-    const response = await createRole(createdRole.name).catch((error: unknown) => error);
+    const response = await createRole({ name }).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(422);
   });
 
   it('should fail when try to create an internal role', async () => {
-    const response = await createRole('#internal:foo').catch((error: unknown) => error);
+    const response = await createRole({ name: '#internal:foo' }).catch((error: unknown) => error);
 
     expect(response instanceof HTTPError && response.response.statusCode).toBe(403);
   });
 
   it('should get role detail successfully', async () => {
-    const createdRole = await createRole();
+    const createdRole = await createRole({});
     const role = await getRole(createdRole.id);
 
     expect(role.name).toBe(createdRole.name);
@@ -72,7 +72,7 @@ describe('roles', () => {
   });
 
   it('should update role details successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
 
     const newName = `new_${role.name}`;
     const newDescription = `new_${role.description}`;
@@ -89,8 +89,8 @@ describe('roles', () => {
   });
 
   it('should fail when update role with conflict name', async () => {
-    const role1 = await createRole();
-    const role2 = await createRole();
+    const role1 = await createRole({});
+    const role2 = await createRole({});
     const response = await updateRole(role2.id, {
       name: role1.name,
     }).catch((error: unknown) => error);
@@ -105,7 +105,7 @@ describe('roles', () => {
   });
 
   it('should fail when try to update an internal role', async () => {
-    const role = await createRole();
+    const role = await createRole({});
 
     const response = await updateRole(role.id, {
       name: '#internal:foo',
@@ -115,7 +115,7 @@ describe('roles', () => {
   });
 
   it('should delete role successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
 
     await deleteRole(role.id);
 

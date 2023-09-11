@@ -1,7 +1,12 @@
 import type { Role } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockRole, mockScope, mockResource, mockScopeWithResource } from '#src/__mocks__/index.js';
+import {
+  mockAdminUserRole,
+  mockScope,
+  mockResource,
+  mockScopeWithResource,
+} from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -12,15 +17,15 @@ const { jest } = import.meta;
 await mockStandardId();
 
 const roles = {
-  findRoles: jest.fn(async (): Promise<Role[]> => [mockRole]),
+  findRoles: jest.fn(async (): Promise<Role[]> => [mockAdminUserRole]),
   countRoles: jest.fn(async () => ({ count: 10 })),
   insertRole: jest.fn(async (data) => ({
     ...data,
-    id: mockRole.id,
+    id: mockAdminUserRole.id,
   })),
   findRoleById: jest.fn(),
   updateRoleById: jest.fn(async (id, data) => ({
-    ...mockRole,
+    ...mockAdminUserRole,
     ...data,
   })),
   findRolesByRoleIds: jest.fn(),
@@ -71,40 +76,42 @@ describe('role scope routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });
 
   it('GET /roles/:id/scopes', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     findRolesScopesByRoleId.mockResolvedValueOnce([]);
     findScopesByIds.mockResolvedValueOnce([mockScope]);
-    const response = await roleRequester.get(`/roles/${mockRole.id}/scopes`);
+    const response = await roleRequester.get(`/roles/${mockAdminUserRole.id}/scopes`);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockScopeWithResource]);
   });
 
   it('GET /roles/:id/scopes (with pagination)', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     findRolesScopesByRoleId.mockResolvedValueOnce([]);
     findScopesByIds.mockResolvedValueOnce([mockScope]);
-    const response = await roleRequester.get(`/roles/${mockRole.id}/scopes?page=1`);
+    const response = await roleRequester.get(`/roles/${mockAdminUserRole.id}/scopes?page=1`);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockScopeWithResource]);
   });
 
   it('POST /roles/:id/scopes', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     findRolesScopesByRoleId.mockResolvedValue([]);
     findScopesByIds.mockResolvedValueOnce([]);
-    const response = await roleRequester.post(`/roles/${mockRole.id}/scopes`).send({
+    const response = await roleRequester.post(`/roles/${mockAdminUserRole.id}/scopes`).send({
       scopeIds: [mockScope.id],
     });
     expect(response.status).toEqual(200);
     expect(insertRolesScopes).toHaveBeenCalledWith([
-      { id: mockId, roleId: mockRole.id, scopeId: mockScope.id },
+      { id: mockId, roleId: mockAdminUserRole.id, scopeId: mockScope.id },
     ]);
   });
 
   it('DELETE /roles/:id/scopes/:scopeId', async () => {
-    findRoleById.mockResolvedValueOnce(mockRole);
+    findRoleById.mockResolvedValueOnce(mockAdminUserRole);
     findRolesScopesByRoleId.mockResolvedValueOnce([]);
-    const response = await roleRequester.delete(`/roles/${mockRole.id}/scopes/${mockScope.id}`);
+    const response = await roleRequester.delete(
+      `/roles/${mockAdminUserRole.id}/scopes/${mockScope.id}`
+    );
     expect(response.status).toEqual(204);
   });
 });

@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
-import { mockRole } from '#src/__mocks__/index.js';
+import { mockAdminUserRole } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -49,7 +49,7 @@ const baseProviderMock = {
 };
 
 const usersLibraries = {
-  findUserRoles: jest.fn(async () => [mockRole]),
+  findUserRoles: jest.fn(async () => [mockAdminUserRole]),
 } satisfies Partial<Libraries['users']>;
 
 const tenantContext = new MockTenant(
@@ -66,7 +66,7 @@ const request = createRequester({
 
 describe('authn route for Hasura', () => {
   const mockUserId = 'foo';
-  const mockExpectedRole = mockRole.name;
+  const mockExpectedRole = mockAdminUserRole.name;
   const mockUnauthorizedRole = 'V';
   const keys = Object.freeze({
     expectedRole: 'Expected-Role',

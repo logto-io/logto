@@ -1,5 +1,5 @@
 import type { CreateUser, Role, User } from '@logto/schemas';
-import { userInfoSelectFields } from '@logto/schemas';
+import { userInfoSelectFields, RoleType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { pick } from '@silverhand/essentials';
 
@@ -35,7 +35,13 @@ const mockedQueries = {
   roles: {
     findRolesByRoleNames: jest.fn(
       async (): Promise<Role[]> => [
-        { tenantId: 'fake_tenant', id: 'role_id', name: 'admin', description: 'none' },
+        {
+          tenantId: 'fake_tenant',
+          id: 'role_id',
+          name: 'admin',
+          description: 'none',
+          type: RoleType.User,
+        },
       ]
     ),
   },

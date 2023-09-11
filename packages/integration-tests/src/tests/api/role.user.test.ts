@@ -6,7 +6,7 @@ import { generateNewUserProfile } from '#src/helpers/user.js';
 
 describe('roles users', () => {
   it('should get role users successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const user = await createUser(generateNewUserProfile({}));
     await assignUsersToRole([user.id], role.id);
     const users = await getRoleUsers(role.id);
@@ -21,7 +21,7 @@ describe('roles users', () => {
   });
 
   it('should assign users to role successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const user1 = await createUser(generateNewUserProfile({}));
     const user2 = await createUser(generateNewUserProfile({}));
     await assignUsersToRole([user1.id, user2.id], role.id);
@@ -31,13 +31,13 @@ describe('roles users', () => {
   });
 
   it('should fail when try to assign empty users', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignUsersToRole([], role.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
   });
 
   it('should fail with invalid user input', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignUsersToRole([''], role.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
   });
@@ -51,7 +51,7 @@ describe('roles users', () => {
   });
 
   it('should fail if user not found', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await assignUsersToRole(['not-found'], role.id).catch(
       (error: unknown) => error
     );
@@ -59,7 +59,7 @@ describe('roles users', () => {
   });
 
   it('should remove user from role successfully', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const user = await createUser(generateNewUserProfile({}));
     await assignUsersToRole([user.id], role.id);
     const users = await getRoleUsers(role.id);
@@ -80,7 +80,7 @@ describe('roles users', () => {
   });
 
   it('should fail if user not found when trying to  remove user from role', async () => {
-    const role = await createRole();
+    const role = await createRole({});
     const response = await deleteUserFromRole('not-found', role.id).catch(
       (error: unknown) => error
     );

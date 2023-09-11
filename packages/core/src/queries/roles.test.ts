@@ -2,7 +2,7 @@ import { Roles } from '@logto/schemas';
 import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { mockRole } from '#src/__mocks__/index.js';
+import { mockAdminUserRole } from '#src/__mocks__/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -33,7 +33,7 @@ describe('roles query', () => {
   const { table, fields } = convertToIdentifiers(Roles);
 
   it('findRolesByRoleIds', async () => {
-    const roleIds = [mockRole.id];
+    const roleIds = [mockAdminUserRole.id];
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
@@ -44,45 +44,47 @@ describe('roles query', () => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([roleIds.join(', ')]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await expect(findRolesByRoleIds(roleIds)).resolves.toEqual([mockRole]);
+    await expect(findRolesByRoleIds(roleIds)).resolves.toEqual([mockAdminUserRole]);
   });
 
   it('findRoleByRoleName', async () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.name} = ${mockRole.name}
+      where ${fields.name} = ${mockAdminUserRole.name}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockRole.name]);
+      expect(values).toEqual([mockAdminUserRole.name]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await expect(findRoleByRoleName(mockRole.name)).resolves.toEqual(mockRole);
+    await expect(findRoleByRoleName(mockAdminUserRole.name)).resolves.toEqual(mockAdminUserRole);
   });
 
   it('findRoleByRoleName with excludeRoleId', async () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.name} = ${mockRole.name}
-      and ${fields.id}<>${mockRole.id}
+      where ${fields.name} = ${mockAdminUserRole.name}
+      and ${fields.id}<>${mockAdminUserRole.id}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockRole.name, mockRole.id]);
+      expect(values).toEqual([mockAdminUserRole.name, mockAdminUserRole.id]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await expect(findRoleByRoleName(mockRole.name, mockRole.id)).resolves.toEqual(mockRole);
+    await expect(findRoleByRoleName(mockAdminUserRole.name, mockAdminUserRole.id)).resolves.toEqual(
+      mockAdminUserRole
+    );
   });
 
   it('findRolesByRoleNames', async () => {
@@ -98,10 +100,10 @@ describe('roles query', () => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([roleNames.join(', ')]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await expect(findRolesByRoleNames(roleNames)).resolves.toEqual([mockRole]);
+    await expect(findRolesByRoleNames(roleNames)).resolves.toEqual([mockAdminUserRole]);
   });
 
   it('insertRoles', async () => {
@@ -113,19 +115,23 @@ describe('roles query', () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
 
-      expect(values).toEqual([mockRole.id, mockRole.name, mockRole.description]);
+      expect(values).toEqual([
+        mockAdminUserRole.id,
+        mockAdminUserRole.name,
+        mockAdminUserRole.description,
+      ]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await insertRoles([mockRole]);
+    await insertRoles([mockAdminUserRole]);
   });
 
   it('insertRole', async () => {
     const keys = excludeAutoSetFields(Roles.fieldKeys);
 
     const expectSql = `
-      insert into "roles" ("id", "name", "description")
+      insert into "roles" ("id", "name", "description", "type")
       values (${keys.map((_, index) => `$${index + 1}`).join(', ')})
       returning *
     `;
@@ -134,12 +140,12 @@ describe('roles query', () => {
       const rowData = { id: 'foo' };
       expectSqlAssert(sql, expectSql);
 
-      expect(values).toEqual(keys.map((k) => convertToPrimitiveOrSql(k, mockRole[k])));
+      expect(values).toEqual(keys.map((k) => convertToPrimitiveOrSql(k, mockAdminUserRole[k])));
 
       return createMockQueryResult([rowData]);
     });
 
-    await insertRole(mockRole);
+    await insertRole(mockAdminUserRole);
   });
 
   it('findRoleById', async () => {
@@ -151,16 +157,16 @@ describe('roles query', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockRole.id]);
+      expect(values).toEqual([mockAdminUserRole.id]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await findRoleById(mockRole.id);
+    await findRoleById(mockAdminUserRole.id);
   });
 
   it('updateRoleById', async () => {
-    const { id, description } = mockRole;
+    const { id, description } = mockAdminUserRole;
 
     const expectSql = sql`
       update ${table}
@@ -187,16 +193,16 @@ describe('roles query', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockRole.id]);
+      expect(values).toEqual([mockAdminUserRole.id]);
 
-      return createMockQueryResult([mockRole]);
+      return createMockQueryResult([mockAdminUserRole]);
     });
 
-    await deleteRoleById(mockRole.id);
+    await deleteRoleById(mockAdminUserRole.id);
   });
 
   it('deleteRoleById throw error if return row count is 0', async () => {
-    const { id } = mockRole;
+    const { id } = mockAdminUserRole;
 
     mockQuery.mockImplementationOnce(async () => {
       return createMockQueryResult([]);

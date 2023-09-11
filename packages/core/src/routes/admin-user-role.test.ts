@@ -1,6 +1,11 @@
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockRole, mockUser, mockRole2, mockUserRole } from '#src/__mocks__/index.js';
+import {
+  mockAdminUserRole,
+  mockUser,
+  mockAdminUserRole2,
+  mockUserRole,
+} from '#src/__mocks__/index.js';
 import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -15,7 +20,7 @@ const roles = {
   findRolesByRoleIds: jest.fn(),
   findRoleById: jest.fn(),
   countRoles: jest.fn(async () => ({ count: 1 })),
-  findRoles: jest.fn(async () => [mockRole]),
+  findRoles: jest.fn(async () => [mockAdminUserRole]),
 };
 
 const usersRoles = {
@@ -36,35 +41,43 @@ describe('user role routes', () => {
     findUsersRolesByUserId.mockResolvedValueOnce([]);
     const response = await roleRequester.get(`/users/${mockUser.id}/roles`);
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockRole]);
+    expect(response.body).toEqual([mockAdminUserRole]);
   });
 
   it('POST /users/:id/roles', async () => {
     findUsersRolesByUserId.mockResolvedValueOnce([]);
     const response = await roleRequester.post(`/users/${mockUser.id}/roles`).send({
-      roleIds: [mockRole.id],
+      roleIds: [mockAdminUserRole.id],
     });
     expect(response.status).toEqual(201);
     expect(insertUsersRoles).toHaveBeenCalledWith([
-      { id: mockId, userId: mockUser.id, roleId: mockRole.id },
+      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
     ]);
   });
 
   it('PUT /users/:id/roles', async () => {
     findUsersRolesByUserId.mockResolvedValueOnce([mockUserRole]);
     const response = await roleRequester.put(`/users/${mockUser.id}/roles`).send({
-      roleIds: [mockRole2.id],
+      roleIds: [mockAdminUserRole2.id],
     });
     expect(response.status).toEqual(200);
-    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(mockUser.id, mockRole.id);
+    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
+      mockUser.id,
+      mockAdminUserRole.id
+    );
     expect(insertUsersRoles).toHaveBeenCalledWith([
-      { id: mockId, userId: mockUser.id, roleId: mockRole2.id },
+      { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole2.id },
     ]);
   });
 
   it('DELETE /users/:id/roles/:roleId', async () => {
-    const response = await roleRequester.delete(`/users/${mockUser.id}/roles/${mockRole.id}`);
+    const response = await roleRequester.delete(
+      `/users/${mockUser.id}/roles/${mockAdminUserRole.id}`
+    );
     expect(response.status).toEqual(204);
-    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(mockUser.id, mockRole.id);
+    expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
+      mockUser.id,
+      mockAdminUserRole.id
+    );
   });
 });

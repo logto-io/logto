@@ -1,6 +1,11 @@
 import { generateStandardId } from '@logto/shared/universal';
 
-import type { CreateResource, CreateRole, CreateScope } from '../db-entries/index.js';
+import {
+  RoleType,
+  type CreateResource,
+  type CreateRole,
+  type CreateScope,
+} from '../db-entries/index.js';
 import { PredefinedScope, InternalRole, AdminTenantRole } from '../types/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
@@ -52,6 +57,7 @@ export const defaultManagementApi = Object.freeze({
     id: 'admin-role',
     name: InternalRole.Admin,
     description: `Internal admin role for Logto tenant ${defaultTenantId}.`,
+    type: RoleType.MachineToMachine,
   },
 }) satisfies AdminData;
 
@@ -95,6 +101,7 @@ export const createAdminData = (tenantId: string): AdminData => {
       id: generateStandardId(),
       name: InternalRole.Admin,
       description: `Internal admin role for Logto tenant ${defaultTenantId}.`,
+      type: RoleType.MachineToMachine,
     },
   });
 };
@@ -124,6 +131,7 @@ export const createAdminDataInAdminTenant = (tenantId: string): AdminData => {
       id: generateStandardId(),
       name: getManagementApiAdminName(tenantId),
       description: `Admin tenant admin role for Logto tenant ${tenantId}.`,
+      type: RoleType.User,
     },
   });
 };
@@ -152,6 +160,7 @@ export const createMeApiInAdminTenant = (): AdminData => {
       id: generateStandardId(),
       name: AdminTenantRole.User,
       description: 'Default role for admin tenant.',
+      type: RoleType.User,
     },
   });
 };
