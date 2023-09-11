@@ -81,7 +81,7 @@
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
     "just-kebab-case": "^4.2.0",
-    "ky": "^0.33.0",
+    "ky": "^1.0.0",
     "libphonenumber-js": "^1.9.49",
     "lint-staged": "^14.0.0",
     "nanoid": "^4.0.0",

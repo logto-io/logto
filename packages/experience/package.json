@@ -63,7 +63,7 @@
     "jest-transform-stub": "^2.0.0",
     "jest-transformer-svg": "^2.0.0",
     "js-base64": "^3.7.5",
-    "ky": "^0.33.0",
+    "ky": "^1.0.0",
     "libphonenumber-js": "^1.9.49",
     "lint-staged": "^14.0.0",
     "parcel": "2.9.3",
