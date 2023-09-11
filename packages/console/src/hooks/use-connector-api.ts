@@ -1,21 +1,16 @@
 import { type ConnectorResponse } from '@logto/schemas';
 
 import useApi, { type StaticApiProps } from './use-api';
-import useConfigs from './use-configs';
 
 const useConnectorApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> = {}) => {
   const api = useApi(props);
-  const { updateConfigs } = useConfigs();
 
-  const createConnector = async (payload: unknown) => {
-    const connector = await api
+  const createConnector = async (payload: unknown) =>
+    api
       .post('api/connectors', {
         json: payload,
       })
       .json<ConnectorResponse>();
-    await updateConfigs({ passwordlessConfigured: true });
-    return connector;
-  };
 
   return {
     createConnector,

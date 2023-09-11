@@ -8,7 +8,6 @@ import { AppDataContext } from '@/contexts/AppDataProvider';
 import type { Props as ButtonProps, ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
 import { Tooltip } from '@/ds-components/Tip';
-import useConfigs from '@/hooks/use-configs';
 
 import * as styles from './index.module.scss';
 
@@ -19,7 +18,6 @@ type Props = {
 };
 
 function LivePreviewButton({ size, type, isDisabled }: Props) {
-  const { configs, updateConfigs } = useConfigs();
   const { tenantEndpoint } = useContext(AppDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -39,10 +37,6 @@ function LivePreviewButton({ size, type, isDisabled }: Props) {
           />
         }
         onClick={() => {
-          if (!configs?.livePreviewChecked) {
-            void updateConfigs({ livePreviewChecked: true });
-          }
-
           window.open(new URL('/demo-app', tenantEndpoint), '_blank');
         }}
       />

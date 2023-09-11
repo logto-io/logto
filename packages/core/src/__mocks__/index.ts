@@ -92,14 +92,7 @@ export const mockAdminUserRole3: Role = {
 };
 
 export const mockAdminConsoleData: AdminConsoleData = {
-  livePreviewChecked: false,
-  applicationCreated: false,
   signInExperienceCustomized: false,
-  passwordlessConfigured: false,
-  furtherReadingsChecked: false,
-  roleCreated: false,
-  communityChecked: false,
-  m2mApplicationCreated: false,
 };
 
 export const mockPasscode: Passcode = {

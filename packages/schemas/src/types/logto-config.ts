@@ -21,15 +21,7 @@ export const logtoOidcConfigGuard: Readonly<{
 
 /* --- Logto tenant configs --- */
 export const adminConsoleDataGuard = z.object({
-  // Get started challenges
-  livePreviewChecked: z.boolean(),
-  applicationCreated: z.boolean(),
   signInExperienceCustomized: z.boolean(),
-  passwordlessConfigured: z.boolean(),
-  communityChecked: z.boolean(),
-  furtherReadingsChecked: z.boolean(),
-  roleCreated: z.boolean(),
-  m2mApplicationCreated: z.boolean(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

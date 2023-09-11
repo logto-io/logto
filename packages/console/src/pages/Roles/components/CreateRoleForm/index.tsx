@@ -15,7 +15,6 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useConfigs from '@/hooks/use-configs';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
@@ -46,7 +45,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
   } = useForm<CreateRoleFormData>();
 
   const api = useApi();
-  const { updateConfigs } = useConfigs();
   const roleScopes = watch('scopes', []);
 
   const onSubmit = handleSubmit(
@@ -62,7 +60,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
       };
 
       const createdRole = await api.post('api/roles', { json: payload }).json<Role>();
-      await updateConfigs({ roleCreated: true });
       onClose(createdRole);
     })
   );

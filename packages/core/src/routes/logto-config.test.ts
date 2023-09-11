@@ -18,24 +18,27 @@ const logtoConfigs = {
 const settingRoutes = await pickDefault(import('./logto-config.js'));
 
 describe('configs routes', () => {
-  const roleRequester = createRequester({
+  const routeRequester = createRequester({
     authedRoutes: settingRoutes,
     tenantContext: new MockTenant(undefined, { logtoConfigs }),
   });
 
   it('GET /configs/admin-console', async () => {
-    const response = await roleRequester.get('/configs/admin-console');
+    const response = await routeRequester.get('/configs/admin-console');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockAdminConsoleData);
   });
 
   it('PATCH /configs/admin-console', async () => {
-    const livePreviewChecked = !mockAdminConsoleData.livePreviewChecked;
-    const response = await roleRequester
+    const signInExperienceCustomized = !mockAdminConsoleData.signInExperienceCustomized;
+    const response = await routeRequester
       .patch('/configs/admin-console')
-      .send({ livePreviewChecked });
+      .send({ signInExperienceCustomized });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockAdminConsoleData, livePreviewChecked });
+    expect(response.body).toEqual({
+      ...mockAdminConsoleData,
+      signInExperienceCustomized,
+    });
   });
 });
