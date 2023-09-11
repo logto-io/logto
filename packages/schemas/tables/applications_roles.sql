@@ -12,7 +12,7 @@ create table applications_roles (
   constraint applications_roles__application_id_role_id
     unique (tenant_id, application_id, role_id),
   constraint applications_roles__role_type
-    check (check_role_type(role_id, 'MachineToMachine'))
+    check (public.check_role_type(role_id, 'MachineToMachine'))
 );
 
 create index applications_roles__id
