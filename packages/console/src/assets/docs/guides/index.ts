@@ -2,6 +2,7 @@
 
 import { lazy } from 'react';
 
+import apiExpress from './api-express/index';
 import m2mGeneral from './m2m-general/index';
 import nativeAndroidJava from './native-android-java/index';
 import nativeAndroidKt from './native-android-kt/index';
@@ -156,6 +157,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-outline/logo.svg')),
     Component: lazy(async () => import('./web-outline/README.mdx')),
     metadata: webOutline,
+  },
+  {
+    order: Number.POSITIVE_INFINITY,
+    id: 'api-express',
+    Logo: lazy(async () => import('./api-express/logo.svg')),
+    Component: lazy(async () => import('./api-express/README.mdx')),
+    metadata: apiExpress,
   },
 ]);
 
