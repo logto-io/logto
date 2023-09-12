@@ -12,7 +12,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "copyfiles": "copyfiles -u 1 src/**/*.md build",
+    "copyfiles": "copyfiles -u 1 src/routes/**/*.openapi.json build/",
     "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copyfiles",
     "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
     "lint": "eslint --ext .ts src",
