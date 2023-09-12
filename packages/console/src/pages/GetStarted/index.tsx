@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { Theme, type Application } from '@logto/schemas';
+import { Theme, type Application, type Resource } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import SocialDark from '@/assets/icons/social-dark.svg';
 import Social from '@/assets/icons/social.svg';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
-import { useAppGuideMetadata } from '@/components/Guide/hooks';
+import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs } from '@/consts';
 import { AppDataContext } from '@/contexts/AppDataProvider';
@@ -24,7 +24,8 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
 
-import CreateForm from '../Applications/components/CreateForm';
+import CreateApiForm from '../ApiResources/components/CreateForm';
+import CreateAppForm from '../Applications/components/CreateForm';
 
 import FreePlanNotification from './FreePlanNotification';
 import * as styles from './index.module.scss';
@@ -40,7 +41,9 @@ function GetStarted() {
   const { tenantEndpoint } = useContext(AppDataContext);
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
   const { getStructuredAppGuideMetadata } = useAppGuideMetadata();
-  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+  const apiGuideMetadata = useApiGuideMetadata();
+  const [showCreateAppForm, setShowCreateAppForm] = useState<boolean>(false);
+  const [showCreateApiForm, setShowCreateApiForm] = useState<boolean>(false);
   // The number of visible guide cards to show in one row per the current screen width
   const [visibleCardCount, setVisibleCardCount] = useState(4);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,18 +66,35 @@ function GetStarted() {
     [visibleCardCount, getStructuredAppGuideMetadata]
   );
 
-  const onClickGuide = useCallback((data: SelectedGuide) => {
-    setShowCreateForm(true);
+  const onClickAppGuide = useCallback((data: SelectedGuide) => {
+    setShowCreateAppForm(true);
     setSelectedGuide(data);
   }, []);
 
-  const onCloseCreateForm = useCallback(
+  const onCloseCreateAppForm = useCallback(
     (newApp?: Application) => {
       if (newApp && selectedGuide) {
         navigate(`/applications/${newApp.id}/guide/${selectedGuide.id}`, { replace: true });
         return;
       }
-      setShowCreateForm(false);
+      setShowCreateAppForm(false);
+      setSelectedGuide(undefined);
+    },
+    [navigate, selectedGuide]
+  );
+
+  const onClickApiGuide = useCallback((data: SelectedGuide) => {
+    setShowCreateApiForm(true);
+    setSelectedGuide(data);
+  }, []);
+
+  const onCloseCreateApiForm = useCallback(
+    (newResource?: Resource) => {
+      if (newResource && selectedGuide) {
+        navigate(`/api-resources/${newResource.id}/guide/${selectedGuide.id}`, { replace: true });
+        return;
+      }
+      setShowCreateApiForm(false);
       setSelectedGuide(undefined);
     },
     [navigate, selectedGuide]
@@ -93,14 +113,15 @@ function GetStarted() {
         <GuideCardGroup
           ref={containerRef}
           hasCardBorder
+          hasCardButton
           guides={featuredAppGuides}
-          onClickGuide={onClickGuide}
+          onClickGuide={onClickAppGuide}
         />
-        {selectedGuide?.target !== 'API' && showCreateForm && (
-          <CreateForm
+        {selectedGuide?.target !== 'API' && showCreateAppForm && (
+          <CreateAppForm
             defaultCreateType={selectedGuide?.target}
             defaultCreateFrameworkName={selectedGuide?.name}
-            onClose={onCloseCreateForm}
+            onClose={onCloseCreateAppForm}
           />
         )}
         <TextLink to="/applications/create">{t('get_started.view_all')}</TextLink>
@@ -146,6 +167,18 @@ function GetStarted() {
             href={`/connectors/${ConnectorsTabs.Social}`}
           />
         </div>
+      </Card>
+      <Card className={styles.card}>
+        <div className={styles.title}>{t('get_started.secure.title')}</div>
+        <GuideCardGroup
+          ref={containerRef}
+          hasCardBorder
+          hasCardButton
+          guides={apiGuideMetadata}
+          onClickGuide={onClickApiGuide}
+        />
+        {showCreateApiForm && <CreateApiForm onClose={onCloseCreateApiForm} />}
+        <TextLink to="/api-resources/create">{t('get_started.view_all')}</TextLink>
       </Card>
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.manage.title')}</div>

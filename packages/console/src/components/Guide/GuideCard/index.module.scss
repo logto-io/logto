@@ -17,6 +17,10 @@
     cursor: default;
   }
 
+  &:not(.hasButton):hover {
+    box-shadow: var(--shadow-2);
+  }
+
   &.hasBorder {
     border-color: var(--color-divider);
   }
