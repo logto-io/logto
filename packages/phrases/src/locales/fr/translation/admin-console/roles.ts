@@ -4,7 +4,10 @@ const roles = {
   subtitle:
     "Les rôles incluent des autorisations qui déterminent ce qu'un utilisateur peut faire. RBAC utilise des rôles pour donner aux utilisateurs accès à des ressources pour des actions spécifiques.",
   create: 'Créer un rôle',
-  role_name: 'Rôle',
+  role_name: 'Role name', // UNTRANSLATED
+  role_type: 'Role type', // UNTRANSLATED
+  type_user: 'User role', // UNTRANSLATED
+  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
   role_description: 'Description',
   role_name_placeholder: 'Entrez le nom de votre rôle',
   role_description_placeholder: 'Entrez la description de votre rôle',

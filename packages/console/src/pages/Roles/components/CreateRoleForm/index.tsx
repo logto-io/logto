@@ -1,5 +1,6 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
-import { internalRolePrefix } from '@logto/schemas';
+import { RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -9,10 +10,13 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import { isProduction } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
+import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
@@ -20,16 +24,23 @@ import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
+import * as styles from './index.module.scss';
+
+const radioOptions: Array<{ key: AdminConsoleKey; value: RoleType }> = [
+  { key: 'roles.type_user', value: RoleType.User },
+  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine },
+];
+
 export type Props = {
   totalRoleCount: number;
   onClose: (createdRole?: Role) => void;
 };
 
-type CreateRoleFormData = Pick<Role, 'name' | 'description'> & {
+type CreateRoleFormData = Pick<Role, 'name' | 'description' | 'type'> & {
   scopes: ScopeResponse[];
 };
 
-type CreateRolePayload = Pick<Role, 'name' | 'description'> & {
+type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
   scopeIds?: string[];
 };
 
@@ -43,14 +54,14 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
     register,
     watch,
     formState: { isSubmitting, errors },
-  } = useForm<CreateRoleFormData>();
+  } = useForm<CreateRoleFormData>({ defaultValues: { type: RoleType.User } });
 
   const api = useApi();
   const { updateConfigs } = useConfigs();
   const roleScopes = watch('scopes', []);
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async ({ name, description, scopes }) => {
+    trySubmitSafe(async ({ name, description, type, scopes }) => {
       if (isSubmitting) {
         return;
       }
@@ -58,6 +69,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
       const payload: CreateRolePayload = {
         name,
         description,
+        type,
         scopeIds: conditional(scopes.length > 0 && scopes.map(({ id }) => id)),
       };
 
@@ -149,6 +161,28 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             error={errors.name?.message}
           />
         </FormField>
+        {!isProduction && (
+          <FormField title="roles.role_type">
+            <Controller
+              name="type"
+              control={control}
+              render={({ field: { onChange, value, name } }) => (
+                <RadioGroup
+                  name={name}
+                  className={styles.roleTypes}
+                  value={value}
+                  onChange={(value) => {
+                    onChange(value);
+                  }}
+                >
+                  {radioOptions.map(({ key, value }) => (
+                    <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
+                  ))}
+                </RadioGroup>
+              )}
+            />
+          </FormField>
+        )}
         <FormField isRequired title="roles.role_description">
           <TextInput
             {...register('description', { required: true })}
@@ -162,7 +196,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             name="scopes"
             defaultValue={[]}
             render={({ field: { value, onChange } }) => (
-              <RoleScopesTransfer value={value} onChange={onChange} />
+              <RoleScopesTransfer roleType={watch('type')} value={value} onChange={onChange} />
             )}
           />
         </FormField>

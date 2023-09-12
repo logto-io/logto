@@ -4,7 +4,10 @@ const roles = {
   subtitle:
     '역할은 사용자가 무엇을 할 수 있는지를 결정하는 권한을 포함해요. RBAC는 사용자에게 특정 행동에 대한 접근 권한을 부여하기 위해 역할을 사용해요.',
   create: '역할 생성',
-  role_name: '역할 이름',
+  role_name: 'Role name', // UNTRANSLATED
+  role_type: 'Role type', // UNTRANSLATED
+  type_user: 'User role', // UNTRANSLATED
+  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
   role_description: '설명',
   role_name_placeholder: '역할 이름을 입력하세요',
   role_description_placeholder: '역할 설명을 입력하세요',

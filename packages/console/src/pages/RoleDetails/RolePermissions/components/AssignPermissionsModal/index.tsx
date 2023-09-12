@@ -1,4 +1,4 @@
-import type { ScopeResponse } from '@logto/schemas';
+import type { ScopeResponse, RoleType } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -19,11 +19,12 @@ import { hasReachedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   roleId: string;
+  roleType: RoleType;
   totalRoleScopeCount: number;
   onClose: (success?: boolean) => void;
 };
 
-function AssignPermissionsModal({ roleId, totalRoleScopeCount, onClose }: Props) {
+function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
@@ -108,6 +109,7 @@ function AssignPermissionsModal({ roleId, totalRoleScopeCount, onClose }: Props)
         <FormField title="role_details.permission.assign_form_field">
           <RoleScopesTransfer
             roleId={roleId}
+            roleType={roleType}
             value={scopes}
             onChange={(scopes) => {
               setScopes(scopes);

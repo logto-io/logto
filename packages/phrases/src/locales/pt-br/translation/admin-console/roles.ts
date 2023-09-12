@@ -4,7 +4,10 @@ const roles = {
   subtitle:
     'As funções incluem permissões que determinam o que um usuário pode fazer. O RBAC usa funções para dar aos usuários acesso a recursos para ações específicas.',
   create: 'Criar função',
-  role_name: 'Função',
+  role_name: 'Role name', // UNTRANSLATED
+  role_type: 'Role type', // UNTRANSLATED
+  type_user: 'User role', // UNTRANSLATED
+  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
   role_description: 'Descrição',
   role_name_placeholder: 'Insira o nome da sua função',
   role_description_placeholder: 'Insira a descrição da sua função',

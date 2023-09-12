@@ -4,7 +4,10 @@ const roles = {
   subtitle:
     'ロールには、ユーザーが実行できるアクションを決定する権限が含まれます。RBACは、特定のアクションのためにリソースにアクセスするためにユーザーに権限を付与するために、ロールを使用します。',
   create: 'ロールを作成する',
-  role_name: 'ロールの名前',
+  role_name: 'Role name', // UNTRANSLATED
+  role_type: 'Role type', // UNTRANSLATED
+  type_user: 'User role', // UNTRANSLATED
+  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
   role_description: '説明',
   role_name_placeholder: 'ロールの名前を入力してください',
   role_description_placeholder: 'ロールの説明を入力してください',

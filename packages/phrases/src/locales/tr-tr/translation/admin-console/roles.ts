@@ -4,7 +4,10 @@ const roles = {
   subtitle:
     'Roller, bir kullanıcının ne yapabileceğini belirleyen izinleri içerir. RBAC, kullanıcılara belirli işlemler için kaynaklara erişim vermek için roller kullanır.',
   create: 'Rol Oluştur',
-  role_name: 'Rol Adı',
+  role_name: 'Role name', // UNTRANSLATED
+  role_type: 'Role type', // UNTRANSLATED
+  type_user: 'User role', // UNTRANSLATED
+  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
   role_description: 'Açıklama',
   role_name_placeholder: 'Rol adınızı girin',
   role_description_placeholder: 'Rol açıklamanızı girin',
