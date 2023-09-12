@@ -17,8 +17,11 @@ type FilterOptions = {
   keyword?: string;
 };
 
+export const useApiGuideMetadata = () =>
+  guides.filter(({ metadata: { target } }) => target === 'API');
+
 export const useAppGuideMetadata = (): {
-  getFilteredAppGuideMetadata: (filters?: FilterOptions) => readonly Guide[] | undefined;
+  getFilteredAppGuideMetadata: (filters?: FilterOptions) => readonly Guide[];
   getStructuredAppGuideMetadata: (
     filters?: FilterOptions
   ) => Record<AppGuideCategory, readonly Guide[]>;
@@ -64,13 +67,14 @@ export const useAppGuideMetadata = (): {
             )
         );
       }
+      return [];
     },
     [appGuides]
   );
 
   const getStructuredAppGuideMetadata = useCallback(
     (filters?: FilterOptions) => {
-      const filteredMetadata = getFilteredAppGuideMetadata(filters) ?? [];
+      const filteredMetadata = getFilteredAppGuideMetadata(filters);
       return filteredMetadata.reduce((accumulated, guide) => {
         const { target, isFeatured } = guide.metadata;
 

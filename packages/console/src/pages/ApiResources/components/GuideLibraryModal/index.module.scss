@@ -18,9 +18,3 @@
     overflow: hidden;
   }
 }
-
-@media screen and (max-width: dim.$guide-content-max-width) {
-  .container .footerInnerWrapper {
-    margin: 0 0 0 _.unit(62.5);
-  }
-}

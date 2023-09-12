@@ -83,6 +83,7 @@ function ConsoleContent() {
             <Route path="api-resources">
               <Route index element={<ApiResources />} />
               <Route path="create" element={<ApiResources />} />
+              <Route path=":id/guide/:guideId" element={<ApiResourceDetails />} />
               <Route path=":id" element={<ApiResourceDetails />}>
                 <Route index element={<Navigate replace to={ApiResourceDetailsTabs.Settings} />} />
                 <Route path={ApiResourceDetailsTabs.Settings} element={<ApiResourceSettings />} />

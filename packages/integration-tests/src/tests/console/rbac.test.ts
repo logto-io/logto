@@ -51,6 +51,13 @@ describe('RBAC', () => {
       text: 'Create API Resource',
     });
 
+    await expectModalWithTitle(page, 'Start with tutorials');
+
+    // Click bottom button to skip tutorials
+    await expect(page).toClick('.ReactModalPortal nav[class$=actionBar] button span', {
+      text: 'Continue without tutorial',
+    });
+
     await expectModalWithTitle(page, 'Create API Resource');
 
     await expect(page).toFillForm('.ReactModalPortal form', {

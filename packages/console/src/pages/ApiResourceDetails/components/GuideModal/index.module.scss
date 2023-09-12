@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-base);
+  overflow-x: auto;
+
+  > * {
+    min-width: dim.$guide-content-min-width;
+  }
+}
+
+.guide {
+  flex: 1;
+}
