@@ -39,6 +39,7 @@ describe('user query', () => {
     ...mockUser,
     identities: JSON.stringify(mockUser.identities),
     customData: JSON.stringify(mockUser.customData),
+    mfaVerifications: JSON.stringify(mockUser.mfaVerifications),
   };
 
   it('findUserByUsername', async () => {
@@ -271,6 +272,7 @@ describe('user query', () => {
       ...mockUser,
       identities: JSON.stringify(restIdentities),
       customData: JSON.stringify(mockUser.customData),
+      mfaVerifications: JSON.stringify(mockUser.mfaVerifications),
     };
 
     const expectSql = sql`
