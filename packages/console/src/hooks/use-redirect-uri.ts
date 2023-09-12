@@ -1,5 +1,6 @@
 import { ossConsolePath } from '@logto/schemas';
 import { conditionalArray, joinPath } from '@silverhand/essentials';
+import { useMemo } from 'react';
 import { useHref } from 'react-router-dom';
 
 import { isCloud } from '@/consts/env';
@@ -13,8 +14,9 @@ const useRedirectUri = (flow: 'signIn' | 'signOut' = 'signIn') => {
   const path = useHref(
     joinPath(...conditionalArray(!isCloud && ossConsolePath, flow === 'signIn' ? '/callback' : '/'))
   );
+  const url = useMemo(() => new URL(path, window.location.origin), [path]);
 
-  return new URL(path, window.location.origin);
+  return url;
 };
 
 export default useRedirectUri;
