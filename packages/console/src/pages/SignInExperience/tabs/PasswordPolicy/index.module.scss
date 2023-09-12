@@ -10,6 +10,11 @@
   gap: _.unit(6);
 }
 
+.textarea {
+  margin-left: _.unit(7);
+  margin-top: _.unit(2);
+}
+
 .passwordOption {
   // Every password option should be put in a `<FormField>` component, a margin
   // is added to the component to separate it from the previous one or the title.
@@ -30,10 +35,6 @@
     .description {
       color: var(--color-text-secondary);
       margin-top: _.unit(0.5);
-    }
-
-    .textarea {
-      margin-top: _.unit(1);
     }
   }
 }

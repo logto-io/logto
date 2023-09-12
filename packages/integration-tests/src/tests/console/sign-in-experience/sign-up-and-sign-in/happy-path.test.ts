@@ -586,23 +586,13 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
     });
   });
 
-  describe('disable user registration', () => {
-    it('navigate to content tab', async () => {
-      await expectToClickNavTab(page, 'Content');
+  it('can disable user registration', async () => {
+    const switchSelector = 'label[class$=switch]:has(input[name=createAccountEnabled])';
+    await expect(page).toClick(switchSelector);
+    await expectToSaveSignInExperience(page);
 
-      await waitForFormCard(page, 'TERMS');
-      await waitForFormCard(page, 'LANGUAGES');
-      await waitForFormCard(page, 'ADVANCED OPTIONS');
-    });
-
-    it('disable user registration', async () => {
-      const switchSelector = 'label[class$=switch]:has(input[name=createAccountEnabled])';
-      await expect(page).toClick(switchSelector);
-      await expectToSaveSignInExperience(page);
-
-      // Reset
-      await expect(page).toClick(switchSelector);
-      await expectToSaveSignInExperience(page);
-    });
+    // Reset
+    await expect(page).toClick(switchSelector);
+    await expectToSaveSignInExperience(page);
   });
 });

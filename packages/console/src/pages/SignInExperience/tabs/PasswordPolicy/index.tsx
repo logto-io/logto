@@ -79,10 +79,16 @@ function PasswordPolicy({ isActive }: Props) {
           <div className={commonStyles.formFieldDescription}>
             <Trans
               components={{
-                a: <TextLink href="https://pages.nist.gov/800-63-3/sp800-63b.html#sec5" />,
+                a: (
+                  <TextLink
+                    href="https://pages.nist.gov/800-63-3/sp800-63b.html#sec5"
+                    target="_blank"
+                    rel="noopener"
+                  />
+                ),
               }}
             >
-              {t('minimum_length_description', { max })}
+              {t('minimum_length_description')}
             </Trans>
           </div>
           <Controller
@@ -102,8 +108,8 @@ function PasswordPolicy({ isActive }: Props) {
                 error={
                   errors.passwordPolicy?.length?.min && t('minimum_length_error', { min: 1, max })
                 }
-                onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  onChange(Number(event.target.value));
+                onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+                  onChange(value && Number(value));
                 }}
                 onValueUp={() => {
                   onChange(value + 1);
@@ -175,22 +181,15 @@ function PasswordPolicy({ isActive }: Props) {
             name="passwordPolicy.isCustomWordsEnabled"
             title={t('custom_words')}
             description={t('custom_words_description')}
-          >
-            {getValues('passwordPolicy.isCustomWordsEnabled') && (
-              <Textarea
-                className={styles.textarea}
-                rows={5}
-                placeholder={t('custom_words_placeholder')}
-                onClick={(event) => {
-                  event.stopPropagation();
-                }}
-                onKeyDown={(event) => {
-                  event.stopPropagation();
-                }}
-                {...register('passwordPolicy.customWords')}
-              />
-            )}
-          </PasswordOption>
+          />
+          {getValues('passwordPolicy.isCustomWordsEnabled') && (
+            <Textarea
+              className={styles.textarea}
+              rows={5}
+              placeholder={t('custom_words_placeholder')}
+              {...register('passwordPolicy.customWords')}
+            />
+          )}
         </FormField>
       </Card>
     </TabWrapper>

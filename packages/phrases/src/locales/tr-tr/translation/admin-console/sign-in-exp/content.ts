@@ -37,12 +37,6 @@ const content = {
     default_language_deletion_description:
       '{{language}} is set as your default language and can’t be deleted. ',
   },
-  advanced_options: {
-    title: 'ADVANCED OPTIONS',
-    enable_user_registration: 'Enable user registration',
-    enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
-  },
 };
 
 export default Object.freeze(content);

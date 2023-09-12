@@ -3,7 +3,6 @@ import TabWrapper from '@/ds-components/TabWrapper';
 
 import * as styles from '../index.module.scss';
 
-import AuthenticationForm from './AuthenticationForm';
 import LanguagesForm from './LanguagesForm';
 import TermsForm from './TermsForm';
 
@@ -17,7 +16,6 @@ function Content({ isActive }: Props) {
       {isActive && <PageMeta titleKey={['sign_in_exp.tabs.content', 'sign_in_exp.page_title']} />}
       <TermsForm />
       <LanguagesForm isManageLanguageVisible />
-      <AuthenticationForm />
     </TabWrapper>
   );
 }
