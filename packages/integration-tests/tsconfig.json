@@ -1,6 +1,7 @@
 {
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
+    "rootDir": "src",
     "isolatedModules": false,
     "allowJs": true,
     "outDir": "lib",

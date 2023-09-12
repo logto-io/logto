@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 
 import { assert } from '@silverhand/essentials';
+import { type Page } from 'puppeteer';
 
 export const generateName = () => crypto.randomUUID();
 export const generateUserId = () => crypto.randomUUID();
@@ -70,7 +71,10 @@ export const appendPathname = (pathname: string, baseUrl: URL) =>
  * useful for actions that trigger navigation, such as clicking a link or
  * submitting a form.
  */
-export const expectNavigation = async <T>(action: Promise<T>): Promise<T> => {
+export const expectNavigation = async <T>(
+  action: Promise<T>,
+  page: Page = global.page
+): Promise<T> => {
   const [result] = await Promise.all([
     action,
     page.waitForNavigation({ waitUntil: 'networkidle0' }),

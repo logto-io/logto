@@ -24,7 +24,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, generateNewUser } from '#src/helpers/user.js';
 
-describe('Register with username and password', () => {
+describe('register with username and password', () => {
   it('register with username and password', async () => {
     await enableAllPasswordSignInMethods({
       identifiers: [SignInIdentifier.Username],
@@ -51,7 +51,7 @@ describe('Register with username and password', () => {
   });
 });
 
-describe('Register with passwordless identifier', () => {
+describe('register with passwordless identifier', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();

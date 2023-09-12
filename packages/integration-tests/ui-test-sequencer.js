@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const Sequencer = require('@jest/test-sequencer').default;
 
-const bootstrapTestSuitePathSuffix = '/tests/ui/bootstrap.test.js';
+const bootstrapTestSuitePathSuffix = '/bootstrap.test.js';
 
 class CustomSequencer extends Sequencer {
   sort(tests) {
