@@ -16,5 +16,6 @@ create table sign_in_experiences (
   custom_css text,
   custom_content jsonb /* @use CustomContent */ not null default '{}'::jsonb,
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
+  mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
   primary key (tenant_id, id)
 );
