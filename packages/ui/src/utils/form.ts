@@ -10,15 +10,6 @@ import { parseE164Number, parsePhoneNumber } from '@/utils/country-code';
 
 const { t } = i18next;
 
-// We validate the password format step by step to provide more detailed error messages at the front end.
-// The overall password format regex passwordRegEx is defined in the '@logto/core-kit' need to align these two.
-const specialChars = /[!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-]/;
-const digits = /\d/;
-const letters = /[A-Za-z]/;
-const allowedChars = /^[\w!"#$%&'()*+,./:;<=>?@[\]^`{|}~-]*$/;
-
-export const passwordMinLength = 8;
-
 export const validateUsername = (username: string): ErrorType | undefined => {
   if (!username) {
     return 'username_required';
@@ -52,25 +43,6 @@ export const validatePhone = (value: string): ErrorType | undefined => {
     }
 
     throw error;
-  }
-};
-
-export const validatePassword = (value: string): ErrorType | undefined => {
-  const hasDigits = digits.test(value);
-  const hasLetters = letters.test(value);
-  const hasSpecialChars = specialChars.test(value);
-  const nonInvalidChars = allowedChars.test(value);
-
-  if (!nonInvalidChars) {
-    return { code: 'invalid_password', data: { min: passwordMinLength } };
-  }
-
-  if (value.length < passwordMinLength) {
-    return { code: 'password_min_length', data: { min: passwordMinLength } };
-  }
-
-  if ((hasDigits ? 1 : 0) + (hasLetters ? 1 : 0) + (hasSpecialChars ? 1 : 0) < 2) {
-    return { code: 'invalid_password', data: { min: passwordMinLength } };
   }
 };
 
