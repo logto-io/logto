@@ -51,6 +51,15 @@ const sign_up_and_sign_in = {
       'これは、サインアップ時に確認コードの提供オプションのみを有効にした場合に必要です。サインアッププロセスでパスワード設定を許可する場合は、ボックスのチェックを外してもかまいません。',
     delete_sign_in_method: 'これは{{identifier}}を必須の識別子として選択した場合に必要です。',
   },
+  advanced_options: {
+    /** UNTRANSLATED */
+    title: 'ADVANCED OPTIONS',
+    /** UNTRANSLATED */
+    enable_user_registration: 'Enable user registration',
+    /** UNTRANSLATED */
+    enable_user_registration_description:
+      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

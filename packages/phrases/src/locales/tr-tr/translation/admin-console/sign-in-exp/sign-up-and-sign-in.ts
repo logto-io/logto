@@ -52,6 +52,15 @@ const sign_up_and_sign_in = {
       'Bu, yalnızca doğrulama kodu sağlama seçeneğini etkinleştirdiğiniz için önemlidir. Kayıt işlemi sırasında şifre oluşturma izni verildiğinde kutuyu kaldırabilirsiniz.',
     delete_sign_in_method: 'Bu, {{identifier}} gerekliliğini belirlediğiniz için önemlidir.',
   },
+  advanced_options: {
+    /** UNTRANSLATED */
+    title: 'ADVANCED OPTIONS',
+    /** UNTRANSLATED */
+    enable_user_registration: 'Enable user registration',
+    /** UNTRANSLATED */
+    enable_user_registration_description:
+      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

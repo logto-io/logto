@@ -3,6 +3,7 @@ import TabWrapper from '@/ds-components/TabWrapper';
 
 import * as styles from '../index.module.scss';
 
+import AdvancedOptions from './AdvancedOptions';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import SocialSignInForm from './SocialSignInForm';
@@ -20,6 +21,7 @@ function SignUpAndSignIn({ isActive }: Props) {
       <SignUpForm />
       <SignInForm />
       <SocialSignInForm />
+      <AdvancedOptions />
     </TabWrapper>
   );
 }

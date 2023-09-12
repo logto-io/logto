@@ -1,12 +1,11 @@
 const password_policy = {
   password_requirements: 'Password requirements',
   minimum_length: 'Minimum length',
-  minimum_length_description:
-    'NIST suggests using <a>at least 8 characters</a> for web products. The maximum length is {{max}}.',
+  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
   minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
   minimum_required_char_types: 'Minimum required character types',
   minimum_required_char_types_description:
-    'Lowercase letters (A-Z), uppercase letters (a-z), numbers (0-9), and special characters ({{symbols}}) are all.',
+    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
   password_rejection: 'Password rejection',
   compromised_passwords: 'Reject compromised password',
   breached_passwords: 'Breached passwords',

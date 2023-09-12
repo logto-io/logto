@@ -52,6 +52,12 @@ const sign_up_and_sign_in = {
     delete_sign_in_method:
       'This is essential as you have selected {{identifier}} as a required identifier.',
   },
+  advanced_options: {
+    title: 'ADVANCED OPTIONS',
+    enable_user_registration: 'Enable user registration',
+    enable_user_registration_description:
+      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

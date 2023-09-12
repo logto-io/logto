@@ -109,7 +109,7 @@ export type UserInfo = Partial<{
  * ```
  */
 export class PasswordPolicyChecker {
-  static symbols = Object.freeze('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~' as const);
+  static symbols = Object.freeze('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ ' as const);
 
   /** A set of characters that are considered as sequential. */
   static sequence = Object.freeze([

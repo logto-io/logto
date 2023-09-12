@@ -56,6 +56,15 @@ const sign_up_and_sign_in = {
     delete_sign_in_method:
       'Ceci est essentiel car vous avez sélectionné {{identifier}} comme identificateur requis.',
   },
+  advanced_options: {
+    /** UNTRANSLATED */
+    title: 'ADVANCED OPTIONS',
+    /** UNTRANSLATED */
+    enable_user_registration: 'Enable user registration',
+    /** UNTRANSLATED */
+    enable_user_registration_description:
+      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

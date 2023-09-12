@@ -50,6 +50,15 @@ const sign_up_and_sign_in = {
       '가입 시 인증 코드를 제공하는 옵션만 활성화했기 때문에 이것은 필수예요. 회원가입에서 비밀번호 설정이 허용되면 이 옵션을 취소할 수 있어요.',
     delete_sign_in_method: '{{identifier}}를 필수 ID로 설정했기 때문에 이 옵션은 필수예요.',
   },
+  advanced_options: {
+    /** UNTRANSLATED */
+    title: 'ADVANCED OPTIONS',
+    /** UNTRANSLATED */
+    enable_user_registration: 'Enable user registration',
+    /** UNTRANSLATED */
+    enable_user_registration_description:
+      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);
