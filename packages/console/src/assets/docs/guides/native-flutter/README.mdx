@@ -112,7 +112,7 @@ Andorid:
 In order to capture the callback url from Logto's sign-in web page, you will need to register your sign-in redirectUri to the `AndroidManifest.xml`.
 
 ```xml
-<activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="false">
+<activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
   <intent-filter android:label="flutter_web_auth">
     <action android:name="android.intent.action.VIEW"/>
     <category android:name="android.intent.category.DEFAULT"/>
