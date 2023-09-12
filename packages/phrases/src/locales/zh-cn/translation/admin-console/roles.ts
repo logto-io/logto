@@ -4,10 +4,10 @@ const roles = {
   subtitle:
     'RBAC 是一种访问控制方法，它使用角色来决定用户可以做什么事情，包括授予用户访问特定资源的权限。',
   create: '创建角色',
-  role_name: 'Role name', // UNTRANSLATED
-  role_type: 'Role type', // UNTRANSLATED
-  type_user: 'User role', // UNTRANSLATED
-  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
+  role_name: '角色名称',
+  role_type: '角色类型',
+  type_user: '用户角色',
+  type_machine_to_machine: '机器对机器应用程序角色',
   role_description: '描述',
   role_name_placeholder: '输入你的角色名称',
   role_description_placeholder: '输入你的角色描述',

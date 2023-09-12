@@ -4,10 +4,10 @@ const roles = {
   subtitle:
     'Роли включают права доступа, которые определяют, что может делать пользователь. RBAC использует роли для предоставления пользователям доступа к ресурсам для конкретных действий.',
   create: 'Создать роль',
-  role_name: 'Role name', // UNTRANSLATED
-  role_type: 'Role type', // UNTRANSLATED
-  type_user: 'User role', // UNTRANSLATED
-  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
+  role_name: 'Имя роли',
+  role_type: 'Тип роли',
+  type_user: 'Роль пользователя',
+  type_machine_to_machine: 'Роль приложения между машинами',
   role_description: 'Описание',
   role_name_placeholder: 'Введите название роли',
   role_description_placeholder: 'Введите описание роли',

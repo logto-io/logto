@@ -4,10 +4,10 @@ const roles = {
   subtitle:
     'Os papéis incluem permissões que determinam o que um usuário pode fazer. RBAC usa papéis para conceder acesso a recursos para ações específicas.',
   create: 'Criar papel',
-  role_name: 'Role name', // UNTRANSLATED
-  role_type: 'Role type', // UNTRANSLATED
-  type_user: 'User role', // UNTRANSLATED
-  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
+  role_name: 'Nome do papel',
+  role_type: 'Tipo de papel',
+  type_user: 'Função de usuário',
+  type_machine_to_machine: 'Função de aplicação máquina-a-máquina',
   role_description: 'Descrição',
   role_name_placeholder: 'Digite o nome do papel',
   role_description_placeholder: 'Digite a descrição do papel',

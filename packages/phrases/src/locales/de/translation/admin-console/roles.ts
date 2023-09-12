@@ -4,10 +4,10 @@ const roles = {
   subtitle:
     'Rollen beinhalten Berechtigungen, die bestimmen, was ein Benutzer tun kann. RBAC verwendet Rollen, um Benutzern Zugriff auf Ressourcen für bestimmte Aktionen zu geben.',
   create: 'Rolle erstellen',
-  role_name: 'Role name', // UNTRANSLATED
-  role_type: 'Role type', // UNTRANSLATED
-  type_user: 'User role', // UNTRANSLATED
-  type_machine_to_machine: 'Machine-to-machine app role', // UNTRANSLATED
+  role_name: 'Rollenname',
+  role_type: 'Rollenart',
+  type_user: 'Benutzerrolle',
+  type_machine_to_machine: 'Maschinen-zu-Maschinen-App-Rolle',
   role_description: 'Beschreibung',
   role_name_placeholder: 'Geben Sie Ihren Rollennamen ein',
   role_description_placeholder: 'Geben Sie Ihre Rollenbeschreibung ein',
