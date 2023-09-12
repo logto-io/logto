@@ -186,12 +186,12 @@ export const identitiesGuard = z.record(identityGuard);
 export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
-const baseMfaVerification = {
+export const baseMfaVerification = {
   id: z.string(),
-  createdAt: z.date(),
+  createdAt: z.string(),
 };
 
-const mfaVerificationGuard = z.discriminatedUnion('type', [
+export const mfaVerificationGuard = z.discriminatedUnion('type', [
   z.object({
     type: z.literal(MfaFactor.TOTP),
     ...baseMfaVerification,

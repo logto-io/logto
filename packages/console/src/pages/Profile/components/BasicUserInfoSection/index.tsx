@@ -1,4 +1,4 @@
-import type { UserInfo } from '@logto/schemas';
+import type { UserProfileResponse } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 
 type Props = {
-  user: UserInfo;
+  user: UserProfileResponse;
   onUpdate?: () => void;
 };
 
