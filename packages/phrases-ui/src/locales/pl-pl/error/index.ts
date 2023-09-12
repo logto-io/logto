@@ -11,9 +11,6 @@ const error = {
     'Nazwa użytkownika powinna zawierać tylko litery, liczby lub podkreślenia.',
   invalid_email: 'Nieprawidłowy adres e-mail',
   invalid_phone: 'Nieprawidłowy numer telefonu',
-  password_min_length: 'Hasło wymaga minimum {{min}} znaków',
-  invalid_password:
-    'Hasło wymaga minimum {{min}} znaków i zawiera kombinację liter, cyfr oraz symboli.',
   passwords_do_not_match: 'Hasła nie pasują do siebie. Proszę spróbuj ponownie.',
   invalid_passcode: 'Nieprawidłowy kod weryfikacyjny',
   invalid_connector_auth: 'Nieprawidłowa autoryzacja',

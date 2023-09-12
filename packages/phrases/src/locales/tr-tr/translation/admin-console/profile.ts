@@ -36,7 +36,6 @@ const profile = {
     verify_via_password: 'Şifre ile doğrula',
     show_password: 'Şifreyi göster',
     required: 'Şifre gerekli',
-    min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
     do_not_match: 'Şifreler eşleşmiyor. Tekrar deneyin.',
   },
   code: {

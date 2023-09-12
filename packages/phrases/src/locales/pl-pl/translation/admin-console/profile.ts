@@ -35,7 +35,6 @@ const profile = {
     verify_via_password: 'Zweryfikuj za pomocą hasła',
     show_password: 'Pokaż hasło',
     required: 'Hasło jest wymagane',
-    min_length: 'Hasło wymaga co najmniej {{min}} znaków.',
     do_not_match: 'Hasła nie pasują do siebie. Spróbuj ponownie.',
   },
   code: {

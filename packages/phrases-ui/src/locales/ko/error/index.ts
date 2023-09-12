@@ -10,8 +10,6 @@ const error = {
   username_invalid_charset: '사용자 이름은 문자, 숫자, _(밑줄 문자) 로만 이루어져야 해요.',
   invalid_email: '이메일이 유효하지 않아요.',
   invalid_phone: '휴대전화번호가 유효하지 않아요.',
-  password_min_length: '비밀번호는 최소 {{min}} 자리로 이루어져야 해요.',
-  invalid_password: '비밀번호는 최소 {{min}}자 이상이며 문자, 숫자 및 기호의 조합이어야 해요.',
   passwords_do_not_match: '비밀번호가 일치하지 않아요.',
   invalid_passcode: '비밀번호가 유효하지 않아요.',
   invalid_connector_auth: '인증이 유효하지 않아요.',

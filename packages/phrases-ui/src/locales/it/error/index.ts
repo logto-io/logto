@@ -10,9 +10,6 @@ const error = {
   username_invalid_charset: "L'username dovrebbe contenere solo lettere, numeri o underscore.",
   invalid_email: "L'email non è valida",
   invalid_phone: 'Il numero di telefono non è valido',
-  password_min_length: 'La password richiede un minimo di {{min}} caratteri',
-  invalid_password:
-    'La password richiede un minimo di {{min}} caratteri e contiene una combinazione di lettere, numeri e simboli.',
   passwords_do_not_match: 'Le password non corrispondono. Per favore prova di nuovo.',
   invalid_passcode: 'Il codice di verifica non è valido',
   invalid_connector_auth: "L'autorizzazione è invalida",

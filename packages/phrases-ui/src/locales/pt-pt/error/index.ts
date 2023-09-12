@@ -11,9 +11,6 @@ const error = {
     'O nome de utilizador deve conter apenas letras, números ou underscores.',
   invalid_email: 'O email é inválido',
   invalid_phone: 'O número de telefone é inválido',
-  password_min_length: 'A password requer um mínimo de {{min}} caracteres',
-  invalid_password:
-    'A senha requer um mínimo de {{min}} caracteres e contém uma mistura de letras, números e símbolos.',
   passwords_do_not_match: 'As passwords não coincidem',
   invalid_passcode: 'O código de verificação é inválido.',
   invalid_connector_auth: 'A autorização é inválida',

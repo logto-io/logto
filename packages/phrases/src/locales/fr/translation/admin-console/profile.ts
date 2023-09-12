@@ -36,7 +36,6 @@ const profile = {
     verify_via_password: 'Vérifier via mot de passe',
     show_password: 'Afficher le mot de passe',
     required: 'Le mot de passe est obligatoire',
-    min_length: 'Le mot de passe doit comporter au minimum {{min}} caractères',
     do_not_match: 'Les mots de passe ne correspondent pas. Veuillez réessayer.',
   },
   code: {

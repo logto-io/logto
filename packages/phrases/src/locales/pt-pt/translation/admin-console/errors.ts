@@ -13,8 +13,6 @@ const errors = {
   more_details: 'Mais detalhes',
   username_pattern_error:
     'O nome de utilizador deve conter apenas letras, números ou underscores e não deve começar com um número.',
-  password_pattern_error:
-    'A password deve conter pelo menos {{min}} caracteres e ter uma combinação de letras, números e símbolos.',
   email_pattern_error: 'O endereço de e-mail é inválido.',
   phone_pattern_error: 'O número de telefone é inválido.',
   insecure_contexts: 'Contextos inseguros (não HTTPS) não são compatíveis.',

@@ -11,9 +11,6 @@ const error = {
     'ユーザー名は文字、数字、またはアンダースコアのみを含める必要があります。',
   invalid_email: 'メールアドレスが無効です',
   invalid_phone: '電話番号が無効です',
-  password_min_length: 'パスワードは{{min}}文字以上である必要があります',
-  invalid_password:
-    'パスワードは{{min}}文字以上で、文字、数字、および記号の組み合わせである必要があります。',
   passwords_do_not_match: 'パスワードが一致しません。もう一度お試しください。',
   invalid_passcode: '検証コードが無効です',
   invalid_connector_auth: '認証が無効です',

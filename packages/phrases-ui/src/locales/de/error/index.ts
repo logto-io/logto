@@ -10,9 +10,6 @@ const error = {
   username_invalid_charset: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten',
   invalid_email: 'Die Email ist ungültig',
   invalid_phone: 'Die Telefonnummer ist ungültig',
-  password_min_length: 'Passwort muss mindestens {{min}} Zeichen lang sein',
-  invalid_password:
-    'Passwort erfordert mindestens {{min}} Zeichen und enthält eine Kombination aus Buchstaben, Zahlen und Symbolen.',
   passwords_do_not_match: 'Passwörter stimmen nicht überein',
   invalid_passcode: 'Der Bestätigungscode ist ungültig',
   invalid_connector_auth: 'Die Autorisierung ist ungültig',
