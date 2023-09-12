@@ -1,4 +1,4 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { MfaPolicy, SignInIdentifier } from '@logto/schemas';
 
 import { getSignInExperience, updateSignInExperience } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -23,6 +23,10 @@ describe('admin console sign-in experience', () => {
       },
       termsOfUseUrl: 'https://logto.io/terms',
       privacyPolicyUrl: 'https://logto.io/privacy',
+      mfa: {
+        policy: MfaPolicy.UserControlled,
+        factors: [],
+      },
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);

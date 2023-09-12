@@ -3,6 +3,7 @@ import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { literal, object, string, z } from 'zod';
 
 import { validateSignUp, validateSignIn } from '#src/libraries/sign-in-experience/index.js';
+import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
@@ -55,7 +56,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, ...rest },
       } = ctx.guard;
-      const { languageInfo, signUp, signIn } = rest;
+      const { languageInfo, signUp, signIn, mfa } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -80,6 +81,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
       } else if (signIn) {
         const signInExperience = await findDefaultSignInExperience();
         validateSignIn(signIn, signInExperience.signUp, connectors);
+      }
+
+      if (mfa) {
+        validateMfa(mfa);
       }
 
       // Remove unused demo social connectors, those that are not selected in onboarding SIE config.

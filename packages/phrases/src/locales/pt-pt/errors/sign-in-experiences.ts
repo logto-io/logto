@@ -18,6 +18,10 @@ const sign_in_experiences = {
     'O login com código de verificação deve ser habilitado quando não é requerido configurar uma senha na inscrição.',
   unsupported_default_language: 'Este idioma - {{language}} não é suportado no momento.',
   at_least_one_authentication_factor: 'Você deve selecionar pelo menos um fator de autenticação.',
+  /** UNTRANSLATED */
+  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
+  /** UNTRANSLATED */
+  duplicated_mfa_factors: 'Duplicated MFA factors.',
 };
 
 export default Object.freeze(sign_in_experiences);
