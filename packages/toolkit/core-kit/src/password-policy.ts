@@ -322,11 +322,15 @@ export class PasswordPolicyChecker {
   /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
   repetitionLength(password: string): number {
     const { repetitionAndSequenceThreshold } = PasswordPolicyChecker;
-    const firstChar = password[0]?.toLowerCase();
+    const firstChar = password[0];
     let length = 0;
 
+    if (firstChar === undefined) {
+      return 0;
+    }
+
     for (const char of password) {
-      if (char.toLowerCase() === firstChar) {
+      if (char === firstChar) {
         length += 1;
       } else {
         break;
@@ -445,11 +449,16 @@ export class PasswordPolicyChecker {
    */
   protected isSequential(value: string): boolean {
     const { sequence } = PasswordPolicyChecker;
-    const lowercased = value.toLowerCase();
 
     for (const seq of sequence) {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- created a new array before mutating
-      if (seq.includes(lowercased) || [...seq].reverse().join('').includes(lowercased)) {
+      const reversedSeq = [...seq].reverse().join('');
+
+      if (
+        [seq, reversedSeq, seq.toUpperCase(), reversedSeq.toUpperCase()].some((item) =>
+          item.includes(value)
+        )
+      ) {
         return true;
       }
     }

@@ -54,10 +54,10 @@ describe('PasswordPolicyChecker -> check()', () => {
     expect(await checker.check('aL1!aL1!', { name: 'aL1!' })).toEqual([
       { code: 'password_rejected.restricted.user_info' },
     ]);
-    expect(await checker.check('lo9KI8mJu78911', {})).toEqual([
+    expect(await checker.check('lo9KI8mju78911', {})).toEqual([
       { code: 'password_rejected.restricted.sequence' },
     ]);
-    expect(await checker.check('lo9KI8mJu789111', {})).toEqual([
+    expect(await checker.check('lo9KI8MJU789111', {})).toEqual([
       { code: 'password_rejected.restricted.sequence' },
       { code: 'password_rejected.restricted.repetition' },
     ]);
@@ -78,7 +78,7 @@ describe('PasswordPolicyChecker -> check()', () => {
       { code: 'password_rejected.restricted.user_info' },
     ]);
 
-    expect(await checker.check('aAaAaAaAaAaAaAaAaAteABcOK', { name: 'CO' })).toEqual([
+    expect(await checker.check('aaaaaaaaAAAAAAAAbcdCOK', { name: 'CO' })).toEqual([
       { code: 'password_rejected.too_long', interpolation: { max: 15 } },
       { code: 'password_rejected.character_types', interpolation: { min: 3 } },
       { code: 'password_rejected.restricted.repetition' },
@@ -146,12 +146,13 @@ describe('PasswordPolicyChecker -> repetitionLength()', () => {
   it('should recognize repeated characters that start at the beginning', () => {
     expect(checker.repetitionLength('aaaa')).toBe(4);
     expect(checker.repetitionLength('aaa12')).toBe(3);
-    expect(checker.repetitionLength('aaAaAa😀')).toBe(6);
+    expect(checker.repetitionLength('AAAAAA😀')).toBe(6);
   });
 
   it('should ignore repeated characters that do not start at the beginning or are too short', () => {
     expect(checker.repetitionLength('a')).toBe(0);
     expect(checker.repetitionLength('aa')).toBe(0);
+    expect(checker.repetitionLength('aaAaaAaa')).toBe(0);
     expect(checker.repetitionLength('aL!bbbbb')).toBe(0);
     expect(checker.repetitionLength('aL1!')).toBe(0);
     expect(checker.repetitionLength('aL1!bbbbbbbbbbbb')).toBe(0);
@@ -240,7 +241,7 @@ describe('PasswordPolicyChecker -> sequenceLength()', () => {
     expect(checker.sequenceLength('1234')).toBe(4);
     expect(checker.sequenceLength('edcba')).toBe(5);
     expect(checker.sequenceLength('BCDEDC')).toBe(4);
-    expect(checker.sequenceLength('yuIOp##')).toBe(5);
+    expect(checker.sequenceLength('YUIOP##')).toBe(5);
     expect(checker.sequenceLength('2wsx3edc1')).toBe(4);
     expect(checker.sequenceLength('lo9KI8mJu7890')).toBe(3);
   });
