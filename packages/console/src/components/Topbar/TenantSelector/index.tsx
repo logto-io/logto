@@ -5,6 +5,7 @@ import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import PlusSign from '@/assets/icons/plus.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
+import TenantEnvTag from '@/components/TenantEnvTag';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown from '@/ds-components/Dropdown';
@@ -13,7 +14,6 @@ import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import TenantDropdownItem from './TenantDropdownItem';
-import TenantEnvTag from './TenantEnvTag';
 import * as styles from './index.module.scss';
 
 export default function TenantSelector() {

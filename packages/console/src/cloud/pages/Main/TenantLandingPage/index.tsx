@@ -1,4 +1,4 @@
-import Topbar from '@/containers/AppContent/components/Topbar';
+import Topbar from '@/components/Topbar';
 
 import TenantLandingPageContent from './TenantLandingPageContent';
 import * as styles from './index.module.scss';
