@@ -3,7 +3,7 @@ import { SignInMode, SignInIdentifier, ConnectorType } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
-import ExpectJourney from '#src/ui-helpers/expect-journey.js';
+import ExpectFlows from '#src/ui-helpers/expect-flows.js';
 
 const credentials = {
   username: 'test_bootstrap',
@@ -42,7 +42,7 @@ describe('smoke testing on the demo app', () => {
   });
 
   it('should be able to create a new account with a credential preset', async () => {
-    const journey = new ExpectJourney(await browser.newPage());
+    const journey = new ExpectFlows(await browser.newPage());
 
     // Open the demo app and navigate to the register page
     await journey.startWith(demoAppUrl, 'register');

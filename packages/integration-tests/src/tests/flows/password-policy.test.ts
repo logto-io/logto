@@ -5,7 +5,7 @@ import { ConnectorType, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
-import ExpectJourney from '#src/ui-helpers/expect-journey.js';
+import ExpectFlows from '#src/ui-helpers/expect-flows.js';
 import { waitFor } from '#src/utils.js';
 
 describe('password policy', () => {
@@ -60,7 +60,7 @@ describe('password policy', () => {
   });
 
   it('should work for username + password', async () => {
-    const journey = new ExpectJourney(await browser.newPage(), { forgotPassword: true });
+    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
     await journey.startWith(demoAppUrl, 'register');
@@ -86,7 +86,7 @@ describe('password policy', () => {
         verify: true,
       },
     });
-    const journey = new ExpectJourney(await browser.newPage(), { forgotPassword: true });
+    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
     await journey.startWith(demoAppUrl, 'register');
@@ -108,7 +108,7 @@ describe('password policy', () => {
   });
 
   it('should work for forgot password', async () => {
-    const journey = new ExpectJourney(await browser.newPage(), { forgotPassword: true });
+    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
     await journey.startWith(demoAppUrl, 'sign-in');
