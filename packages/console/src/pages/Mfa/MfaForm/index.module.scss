@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.factorField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.fieldDescription {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
+.backupCodeField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+
+  .backupCodeDescription {
+    margin-bottom: unset;
+  }
+}
+
+.policyRadio {
+  > div[class$='content'] {
+    > div[class$='indicator'] {
+      align-self: flex-start;
+    }
+  }
+}

@@ -9,7 +9,7 @@ import {
   TenantSettingsTabs,
   ApplicationDetailsTabs,
 } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isProduction } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
@@ -24,6 +24,7 @@ import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
+import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
 import Profile from '@/pages/Profile';
 import ChangePasswordModal from '@/pages/Profile/containers/ChangePasswordModal';
@@ -96,6 +97,7 @@ function ConsoleContent() {
               <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />
               <Route path=":tab" element={<SignInExperience />} />
             </Route>
+            {!isProduction && <Route path="mfa" element={<Mfa />} />}
             <Route path="connectors">
               <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
               <Route path=":tab" element={<Connectors />} />

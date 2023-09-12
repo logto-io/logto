@@ -11,6 +11,8 @@ const tabs = {
   roles: 'Role',
   docs: 'Dokumentacja',
   tenant_settings: 'Ustawienia',
+  /** UNTRANSLATED */
+  mfa: 'Multi-factor auth',
 };
 
 export default Object.freeze(tabs);
