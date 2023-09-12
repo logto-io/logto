@@ -2,27 +2,28 @@
 
 import { lazy } from 'react';
 
-import apiExpress from './api-express/index';
-import m2mGeneral from './m2m-general/index';
-import nativeAndroidJava from './native-android-java/index';
-import nativeAndroidKt from './native-android-kt/index';
-import nativeCapacitor from './native-capacitor/index';
-import nativeFlutter from './native-flutter/index';
-import nativeIosSwift from './native-ios-swift/index';
-import spaReact from './spa-react/index';
-import spaVanilla from './spa-vanilla/index';
-import spaVue from './spa-vue/index';
 import { type Guide } from './types';
-import webAspNetCore from './web-asp-net-core/index';
+import webNext from './web-next/index';
+import spaReact from './spa-react/index';
+import webNextAppRouter from './web-next-app-router/index';
+import m2mGeneral from './m2m-general/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
-import webNext from './web-next/index';
-import webNextAppRouter from './web-next-app-router/index';
-import webOutline from './web-outline/index';
+import spaVue from './spa-vue/index';
+import nativeIosSwift from './native-ios-swift/index';
+import nativeAndroidKt from './native-android-kt/index';
+import spaVanilla from './spa-vanilla/index';
 import webPhp from './web-php/index';
+import nativeAndroidJava from './native-android-java/index';
 import webPython from './web-python/index';
+import nativeCapacitor from './native-capacitor/index';
 import webRemix from './web-remix/index';
+import nativeFlutter from './native-flutter/index';
+import webAspNetCore from './web-asp-net-core/index';
+import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
+import webOutline from './web-outline/index';
+import apiExpress from './api-express/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -152,6 +153,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webAspNetCore,
   },
   {
+    order: 5.1,
+    id: 'web-asp-net-core-mvc',
+    Logo: lazy(async () => import('./web-asp-net-core-mvc/logo.svg')),
+    Component: lazy(async () => import('./web-asp-net-core-mvc/README.mdx')),
+    metadata: webAspNetCoreMvc,
+  },
+  {
     order: 6,
     id: 'web-outline',
     Logo: lazy(async () => import('./web-outline/logo.svg')),
@@ -159,12 +167,11 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webOutline,
   },
   {
-    order: Number.POSITIVE_INFINITY,
+    order: Infinity,
     id: 'api-express',
     Logo: lazy(async () => import('./api-express/logo.svg')),
     Component: lazy(async () => import('./api-express/README.mdx')),
     metadata: apiExpress,
-  },
-]);
+  },]);
 
 export default guides;
