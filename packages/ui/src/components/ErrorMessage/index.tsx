@@ -37,7 +37,11 @@ const ErrorMessage = ({ error, className, children }: Props) => {
     return t(error.code, { ...error.data });
   };
 
-  return <div className={classNames(styles.error, className)}>{getMessage()}</div>;
+  return (
+    <div role="alert" className={classNames(styles.error, className)}>
+      {getMessage()}
+    </div>
+  );
 };
 
 export default ErrorMessage;
