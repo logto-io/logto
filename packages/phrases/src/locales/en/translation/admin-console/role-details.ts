@@ -45,6 +45,19 @@ const role_details = {
     users_assigned: 'The selected users were successfully assigned to this role',
     empty: 'No user available',
   },
+  applications: {
+    assign_button: 'Assign applications',
+    name_column: 'Application',
+    app_column: 'App',
+    deleted: '{{name}} was successfully removed from this role',
+    assign_title: 'Assign applications',
+    assign_subtitle:
+      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
+    assign_applications_field: 'Assign applications',
+    confirm_assign: 'Assign applications',
+    applications_assigned: 'The selected applications were successfully assigned to this role',
+    empty: 'No application available',
+  },
 };
 
 export default Object.freeze(role_details);

@@ -246,7 +246,7 @@ describe('RBAC', () => {
     await expectModalWithTitle(page, 'Assign users');
 
     await expect(page).toClick(
-      '.ReactModalPortal div[class$=roleUsersTransfer] div[class$=item] div[class$=title]',
+      '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div[class$=title]',
       {
         text: rbacTestUsername,
       }

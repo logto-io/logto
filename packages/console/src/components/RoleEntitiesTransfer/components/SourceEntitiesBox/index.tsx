@@ -1,4 +1,5 @@
-import type { User } from '@logto/schemas';
+import type { Application, User } from '@logto/schemas';
+import { ApplicationType, RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -16,32 +17,48 @@ import useDebounce from '@/hooks/use-debounce';
 import * as transferLayout from '@/scss/transfer.module.scss';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import SourceUserItem from '../SourceUserItem';
+import SourceEntityItem from '../SourceEntityItem';
 
 import * as styles from './index.module.scss';
 
-type Props = {
+type Props<T> = {
   roleId: string;
-  onChange: (value: User[]) => void;
-  selectedUsers: User[];
+  roleType: RoleType;
+  onChange: (value: T[]) => void;
+  selectedEntities: T[];
 };
 
 const pageSize = defaultPageSize;
 
-function SourceUsersBox({ roleId, selectedUsers, onChange }: Props) {
+function SourceEntitiesBox<T extends User | Application>({
+  roleId,
+  roleType,
+  selectedEntities,
+  onChange,
+}: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const debounce = useDebounce();
 
-  const url = buildUrl('api/users', {
-    excludeRoleId: roleId,
+  const commonSearchParams = {
     page: String(page),
     page_size: String(pageSize),
     ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
-  });
+  };
 
-  const { data, error } = useSWR<[User[], number], RequestError>(url);
+  const { data, error } = useSWR<[Props<T>['selectedEntities'], number], RequestError>(
+    roleType === RoleType.User
+      ? buildUrl('api/users', {
+          excludeRoleId: roleId,
+          ...commonSearchParams,
+        })
+      : buildUrl(`api/applications`, {
+          ...commonSearchParams,
+          'search.type': ApplicationType.MachineToMachine,
+          'mode.type': 'exact',
+        })
+  );
 
   const isLoading = !data && !error;
 
@@ -54,7 +71,8 @@ function SourceUsersBox({ roleId, selectedUsers, onChange }: Props) {
     });
   };
 
-  const isUserAdded = (user: User) => selectedUsers.findIndex(({ id }) => id === user.id) >= 0;
+  const isEntityAdded = (entity: User | Application) =>
+    selectedEntities.findIndex(({ id }) => id === entity.id) >= 0;
 
   const isEmpty = !isLoading && !error && dataSource.length === 0;
 
@@ -72,21 +90,28 @@ function SourceUsersBox({ roleId, selectedUsers, onChange }: Props) {
         className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
       >
         {isEmpty ? (
-          <EmptyDataPlaceholder size="small" title={t('role_details.users.empty')} />
+          <EmptyDataPlaceholder
+            size="small"
+            title={t(
+              roleType === RoleType.User
+                ? 'role_details.users.empty'
+                : 'role_details.applications.empty'
+            )}
+          />
         ) : (
-          dataSource.map((user) => {
-            const isSelected = isUserAdded(user);
+          dataSource.map((entity) => {
+            const isSelected = isEntityAdded(entity);
 
             return (
-              <SourceUserItem
-                key={user.id}
-                user={user}
+              <SourceEntityItem
+                key={entity.id}
+                entity={entity}
                 isSelected={isSelected}
                 onSelect={() => {
                   onChange(
                     isSelected
-                      ? selectedUsers.filter(({ id }) => user.id !== id)
-                      : [user, ...selectedUsers]
+                      ? selectedEntities.filter(({ id }) => entity.id !== id)
+                      : [entity, ...selectedEntities]
                   );
                 }}
               />
@@ -107,4 +132,4 @@ function SourceUsersBox({ roleId, selectedUsers, onChange }: Props) {
     </div>
   );
 }
-export default SourceUsersBox;
+export default SourceEntitiesBox;

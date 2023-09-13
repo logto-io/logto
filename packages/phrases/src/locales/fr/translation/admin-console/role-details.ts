@@ -45,6 +45,29 @@ const role_details = {
     users_assigned: 'Les utilisateurs sélectionnés ont été attribués avec succès à ce rôle',
     empty: 'Aucun utilisateur disponible',
   },
+  applications: {
+    /** UNTRANSLATED */
+    assign_button: 'Assign applications',
+    /** UNTRANSLATED */
+    name_column: 'Application',
+    /** UNTRANSLATED */
+    app_column: 'App',
+    /** UNTRANSLATED */
+    deleted: '{{name}} was successfully removed from this role',
+    /** UNTRANSLATED */
+    assign_title: 'Assign applications',
+    /** UNTRANSLATED */
+    assign_subtitle:
+      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
+    /** UNTRANSLATED */
+    assign_applications_field: 'Assign applications',
+    /** UNTRANSLATED */
+    confirm_assign: 'Assign applications',
+    /** UNTRANSLATED */
+    applications_assigned: 'The selected applications were successfully assigned to this role',
+    /** UNTRANSLATED */
+    empty: 'No application available',
+  },
 };
 
 export default Object.freeze(role_details);

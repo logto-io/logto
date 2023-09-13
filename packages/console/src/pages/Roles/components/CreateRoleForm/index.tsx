@@ -10,7 +10,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isProduction } from '@/consts/env';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -158,7 +158,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             error={errors.name?.message}
           />
         </FormField>
-        {!isProduction && (
+        {isDevFeaturesEnabled && (
           <FormField title="roles.role_type">
             <Controller
               name="type"
