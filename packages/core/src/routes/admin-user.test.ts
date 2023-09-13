@@ -1,6 +1,7 @@
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -84,7 +85,7 @@ const usersLibraries = {
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
       ...mockUser,
-      ...user,
+      ...removeUndefinedKeys(user), // No undefined values will be returned from database
     })
   ),
 } satisfies Partial<Libraries['users']>;
@@ -125,14 +126,14 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('POST /users should throw with invalid input params', async () => {
+  it('POST /users should be ok with simple passwords', async () => {
     const username = 'MJAtLogto';
     const name = 'Michael';
 
     // Invalid input format
     await expect(
       userRequest.post('/users').send({ username, password: 'abc', name })
-    ).resolves.toHaveProperty('status', 400);
+    ).resolves.toHaveProperty('status', 200);
   });
 
   it('POST /users should throw if username exists', async () => {

@@ -1,4 +1,4 @@
-import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
@@ -100,7 +100,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
         primaryPhone: string().regex(phoneRegEx),
         primaryEmail: string().regex(emailRegEx),
         username: string().regex(usernameRegEx),
-        password: string().regex(passwordRegEx),
+        password: string().min(1),
         name: string(),
       }).partial(),
       response: userProfileResponseGuard,
@@ -183,7 +183,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(
     '/users/:userId/password',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ password: string().regex(passwordRegEx) }),
+      body: object({ password: string().min(1) }),
       response: userProfileResponseGuard,
       status: [200, 422],
     }),

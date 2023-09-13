@@ -35,7 +35,6 @@ const profile = {
     verify_via_password: 'Verificar via senha',
     show_password: 'Mostrar senha',
     required: 'Senha obrigatória',
-    min_length: 'A senha requer um mínimo de {{min}} caracteres',
     do_not_match: 'As senhas não coincidem. Tente novamente.',
   },
   code: {

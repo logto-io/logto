@@ -36,7 +36,6 @@ const profile = {
     verify_via_password: 'Проверить через пароль',
     show_password: 'Показать пароль',
     required: 'Пароль обязателен',
-    min_length: 'Пароль должен содержать не менее {{min}} символов',
     do_not_match: 'Пароли не совпадают. Попробуйте еще раз.',
   },
   code: {

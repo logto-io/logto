@@ -11,9 +11,6 @@ const error = {
     'El nombre de usuario solo debe contener letras, números o guiones bajos.',
   invalid_email: 'El correo electrónico no es válido',
   invalid_phone: 'El número de teléfono no es válido',
-  password_min_length: 'La contraseña requiere un mínimo de {{min}} caracteres',
-  invalid_password:
-    'La contraseña requiere un mínimo de {{min}} caracteres y debe contener una combinación de letras, números y símbolos.',
   passwords_do_not_match: 'Las contraseñas no coinciden. Por favor intente de nuevo',
   invalid_passcode: 'El código de verificación no es válido',
   invalid_connector_auth: 'La autorización no es válida',

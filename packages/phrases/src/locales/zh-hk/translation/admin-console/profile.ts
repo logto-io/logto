@@ -33,7 +33,6 @@ const profile = {
     verify_via_password: '通過密碼驗證',
     show_password: '顯示密碼',
     required: '密碼不能為空',
-    min_length: '密碼最少需要{{min}}個字符',
     do_not_match: '密碼不匹配，請重新輸入。',
   },
   code: {

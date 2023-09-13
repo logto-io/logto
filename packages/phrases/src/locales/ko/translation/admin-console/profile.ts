@@ -34,7 +34,6 @@ const profile = {
     verify_via_password: '비밀번호로 인증',
     show_password: '비밀번호 보이기',
     required: '비밀번호 필요',
-    min_length: '비밀번호는 최소 {{min}} 글자여야 해요.',
     do_not_match: '비밀번호가 일치하지 않아요. 다시 시도해 주세요.',
   },
   code: {

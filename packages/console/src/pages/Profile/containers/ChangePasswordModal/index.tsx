@@ -1,4 +1,3 @@
-import { passwordRegEx } from '@logto/core-kit';
 import type { KeyboardEventHandler } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -94,14 +93,6 @@ function ChangePasswordModal() {
         placeholder={t('profile.password.password')}
         {...register('newPassword', {
           required: t('profile.password.required'),
-          minLength: {
-            value: 8,
-            message: t('profile.password.min_length', { min: 8 }),
-          },
-          pattern: {
-            value: passwordRegEx,
-            message: t('errors.password_pattern_error'),
-          },
         })}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus

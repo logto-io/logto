@@ -12,9 +12,6 @@ const error = {
     "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des caractères de soulignement.",
   invalid_email: "L'email n'est pas valide",
   invalid_phone: "Le numéro de téléphone n'est pas valide",
-  password_min_length: 'Le mot de passe doit comporter un minimum de {{min}} caractères.',
-  invalid_password:
-    'Le mot de passe doit contenir au minimum {{min}} caractères et doit inclure une combinaison de lettres, de chiffres et de symboles.',
   passwords_do_not_match: 'Les mots de passe ne correspondent pas',
   invalid_passcode: 'Le code est invalide',
   invalid_connector_auth: "L'autorisation n'est pas valide",

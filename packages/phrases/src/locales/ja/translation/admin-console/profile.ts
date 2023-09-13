@@ -35,7 +35,6 @@ const profile = {
     verify_via_password: 'パスワードを使って確認する',
     show_password: 'パスワードを表示する',
     required: 'パスワードが必要です',
-    min_length: 'パスワードは{{min}}文字以上である必要があります',
     do_not_match: 'パスワードが一致しません。もう一度お試しください。',
   },
   code: {

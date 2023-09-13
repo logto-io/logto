@@ -1,4 +1,4 @@
-import { emailRegEx, passwordRegEx, usernameRegEx } from '@logto/core-kit';
+import { emailRegEx, usernameRegEx } from '@logto/core-kit';
 import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
@@ -123,7 +123,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
 
   router.post(
     '/password',
-    koaGuard({ body: object({ password: string().regex(passwordRegEx) }) }),
+    koaGuard({ body: object({ password: string().min(1) }) }),
     async (ctx, next) => {
       const { id: userId } = ctx.auth;
       const { password } = ctx.guard.body;

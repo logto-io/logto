@@ -13,7 +13,6 @@ const errors = {
   more_details: '자세히',
   username_pattern_error:
     '아이디는 반드시 문자, 숫자, _ 만으로 이루어져야 하며, 숫자로 시작하면 안 돼요.',
-  password_pattern_error: '비밀번호에는 최소 {{min}}자의 문자, 숫자, 특수문자가 포함되어야 해요.',
   email_pattern_error: '이메일 형식이 유효하지 않아요.',
   phone_pattern_error: '전화번호 형식이 유효하지 않아요.',
   insecure_contexts: '비보안 연결(non-HTTPS)는 지원하지 않아요.',

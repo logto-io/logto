@@ -10,8 +10,6 @@ const error = {
   username_invalid_charset: '用户名只能包含英文字母、数字或下划线。',
   invalid_email: '无效的邮箱',
   invalid_phone: '无效的手机号',
-  password_min_length: '密码最少需要 {{min}} 个字符',
-  invalid_password: '密码至少需要 {{min}} 个字符，并包含字母、数字和符号的组合。',
   passwords_do_not_match: '两次输入的密码不一致，请重试。',
   invalid_passcode: '无效的验证码',
   invalid_connector_auth: '登录失败',

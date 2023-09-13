@@ -33,7 +33,6 @@ const profile = {
     verify_via_password: '通过密码验证',
     show_password: '显示密码',
     required: '密码不能为空',
-    min_length: '密码最少需要{{min}}个字符',
     do_not_match: '密码不匹配，请重新输入。',
   },
   code: {

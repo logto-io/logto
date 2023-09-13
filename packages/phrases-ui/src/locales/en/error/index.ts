@@ -10,9 +10,6 @@ const error = {
   username_invalid_charset: 'Username should only contain letters, numbers, or underscores.',
   invalid_email: 'The email is invalid',
   invalid_phone: 'The phone number is invalid',
-  password_min_length: 'Password requires a minimum of {{min}} characters',
-  invalid_password:
-    'Password requires a minimum of {{min}} characters and contains a mix of letters, numbers, and symbols.',
   passwords_do_not_match: 'Your passwords don’t match. Please try again.',
   invalid_passcode: 'The verification code is invalid',
   invalid_connector_auth: 'The authorization is invalid',
