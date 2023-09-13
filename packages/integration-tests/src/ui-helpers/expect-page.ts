@@ -1,9 +1,10 @@
+import { condString } from '@silverhand/essentials';
 import { type ElementHandle, type Page } from 'puppeteer';
 
 import { expectNavigation } from '#src/utils.js';
 
 /** Error thrown by {@link ExpectPage}. */
-class ExpectPageError extends Error {
+export class ExpectPageError extends Error {
   constructor(
     message: string,
     public readonly page: Page
@@ -123,14 +124,28 @@ export default class ExpectPage {
   }
 
   /**
+   * Navigate to the given URL and wait for the page to be navigated.
+   */
+  async navigateTo(url: URL | string) {
+    const [result] = await Promise.all([
+      this.page.goto(typeof url === 'string' ? url : url.href),
+      this.page.waitForNavigation({ waitUntil: 'networkidle0' }),
+    ]);
+    return result;
+  }
+
+  /**
    * Expect a toast to appear with the given text, then remove it immediately.
    *
    * @param text The text to match.
    */
-  async waitForToast(text: string | RegExp) {
-    const toast = await expect(this.page).toMatchElement(`.ReactModal__Content[class*=toast]`, {
-      text,
-    });
+  async waitForToast(text: string | RegExp, type?: 'success' | 'error') {
+    const toast = await expect(this.page).toMatchElement(
+      `[class*=toast]${condString(type && `[class*=${type}]`)}:has(div[class$=message]`,
+      {
+        text,
+      }
+    );
 
     // Remove immediately to prevent waiting for the toast to disappear and matching the same toast again
     await toast.evaluate((element) => {
