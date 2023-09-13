@@ -2,28 +2,28 @@
 
 import { lazy } from 'react';
 
-import { type Guide } from './types';
-import webNext from './web-next/index';
-import spaReact from './spa-react/index';
-import webNextAppRouter from './web-next-app-router/index';
+import apiExpress from './api-express/index';
 import m2mGeneral from './m2m-general/index';
+import nativeAndroidJava from './native-android-java/index';
+import nativeAndroidKt from './native-android-kt/index';
+import nativeCapacitor from './native-capacitor/index';
+import nativeFlutter from './native-flutter/index';
+import nativeIosSwift from './native-ios-swift/index';
+import spaReact from './spa-react/index';
+import spaVanilla from './spa-vanilla/index';
+import spaVue from './spa-vue/index';
+import { type Guide } from './types';
+import webAspNetCore from './web-asp-net-core/index';
+import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
-import spaVue from './spa-vue/index';
-import nativeIosSwift from './native-ios-swift/index';
-import nativeAndroidKt from './native-android-kt/index';
-import spaVanilla from './spa-vanilla/index';
-import webPhp from './web-php/index';
-import nativeAndroidJava from './native-android-java/index';
-import webPython from './web-python/index';
-import nativeCapacitor from './native-capacitor/index';
-import webRemix from './web-remix/index';
-import nativeFlutter from './native-flutter/index';
-import webAspNetCore from './web-asp-net-core/index';
-import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
+import webNext from './web-next/index';
+import webNextAppRouter from './web-next-app-router/index';
 import webOutline from './web-outline/index';
-import apiExpress from './api-express/index';
+import webPhp from './web-php/index';
+import webPython from './web-python/index';
+import webRemix from './web-remix/index';
 
 const guides: Readonly<Guide[]> = Object.freeze([
   {
@@ -167,11 +167,12 @@ const guides: Readonly<Guide[]> = Object.freeze([
     metadata: webOutline,
   },
   {
-    order: Infinity,
+    order: Number.POSITIVE_INFINITY,
     id: 'api-express',
     Logo: lazy(async () => import('./api-express/logo.svg')),
     Component: lazy(async () => import('./api-express/README.mdx')),
     metadata: apiExpress,
-  },]);
+  },
+]);
 
 export default guides;
