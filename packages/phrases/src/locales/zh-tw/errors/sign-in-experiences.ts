@@ -10,10 +10,8 @@ const sign_in_experiences = {
   code_sign_in_must_be_enabled: '必須在註冊中不要求設置密碼時啟用驗證碼登錄。',
   unsupported_default_language: '{{language}} 無法選擇為默認語言。',
   at_least_one_authentication_factor: '至少要選擇一個登錄要素',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: '備份碼不能單獨啟用。',
+  duplicated_mfa_factors: '重複的MFA要素。',
 };
 
 export default Object.freeze(sign_in_experiences);

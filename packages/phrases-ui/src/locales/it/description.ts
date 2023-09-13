@@ -58,18 +58,13 @@ const description = {
   no_region_code_found: 'Nessun codice di regione trovato',
   verify_email: 'Verifica la tua email',
   verify_phone: 'Verifica il tuo numero di telefono',
-  /** UNTRANSLATED */
   password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
+  'password_requirement.length_one': 'richiede almeno {{count}} carattere',
+  'password_requirement.length_other': 'richiede almeno {{count}} caratteri',
   'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+    'dovrebbe contenere almeno {{count}} tipo di lettere maiuscole, lettere minuscole, numeri e simboli',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    'dovrebbe contenere almeno {{count}} tipi di lettere maiuscole, lettere minuscole, numeri e simboli',
 };
 
 export default Object.freeze(description);

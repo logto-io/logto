@@ -10,8 +10,7 @@ const sign_in_exp = {
     branding: '브랜딩',
     sign_up_and_sign_in: '회원가입/로그인',
     content: '내용',
-    /** UNTRANSLATED */
-    password_policy: 'Password policy',
+    password_policy: '암호 정책',
   },
   welcome: {
     title: '로그인 경험 사용자화',
@@ -74,7 +73,7 @@ const sign_in_exp = {
   },
   preview: {
     title: '로그인 화면 미리보기',
-    live_preview: 'Live Preview',
+    live_preview: '실시간 미리보기',
     live_preview_tip: '저장하여 변경 사항 미리보기',
     native: '네이티브',
     desktop_web: '데스크톱 웹',

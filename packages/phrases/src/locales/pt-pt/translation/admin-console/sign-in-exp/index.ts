@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Marca',
     sign_up_and_sign_in: 'Registo e login',
     content: 'Conteúdo',
-    /** UNTRANSLATED */
-    password_policy: 'Password policy',
+    password_policy: 'Política de senha',
   },
   welcome: {
     title: 'Personalize a experiência de início de sessão',

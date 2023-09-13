@@ -12,7 +12,7 @@ const password_policy = {
   breached_passwords_description: 'Reject passwords previously found in breach databases.',
   restricted_phrases: 'Restrict low-security phrases',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
+    'Your password should avoid these phrases unless you combine with 3 or more extra characters.',
   repetitive_or_sequential_characters: 'Repetitive or sequential characters',
   repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
   user_information: 'User information',

@@ -52,13 +52,10 @@ const sign_up_and_sign_in = {
     delete_sign_in_method: 'これは{{identifier}}を必須の識別子として選択した場合に必要です。',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: '高度なオプション',
+    enable_user_registration: 'ユーザー登録を有効にする',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'ユーザー登録を有効にするか無効にすることができます。無効にした場合、ユーザーは管理コンソールで追加することはできますが、サインイン画面を介してアカウントを作成することはできなくなります。',
   },
 };
 

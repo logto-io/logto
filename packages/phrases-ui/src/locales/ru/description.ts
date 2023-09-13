@@ -61,18 +61,13 @@ const description = {
   no_region_code_found: 'Не удалось определить код региона',
   verify_email: 'Подтвердите Ваш электронный адрес',
   verify_phone: 'Подтвердите свой номер телефона',
-  /** UNTRANSLATED */
-  password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
+  password_requirements: 'Требования к паролю {{items, list}}.',
+  'password_requirement.length_one': 'требуется минимум {{count}} символ',
+  'password_requirement.length_other': 'требуется минимум {{count}} символов',
   'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+    'должен содержать по крайней мере {{count}} тип прописных букв, строчных букв, цифр и символов',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
 };
 
 export default Object.freeze(description);

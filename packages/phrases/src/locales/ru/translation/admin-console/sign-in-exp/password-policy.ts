@@ -1,45 +1,28 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
-  /** UNTRANSLATED */
+  password_requirements: 'Требования к паролю',
+  minimum_length: 'Минимальная длина',
+  minimum_length_description:
+    'NIST предлагает использовать <a>не менее 8 символов</a> для веб-продуктов.',
+  minimum_length_error: 'Минимальная длина должна быть от {{min}} до {{max}} (включительно).',
+  minimum_required_char_types: 'Минимальное количество типов символов',
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+    'Типы символов: прописные (A-Z), строчные (a-z), цифры (0-9) и специальные символы ({{symbols}}).',
+  password_rejection: 'Отклонение пароля',
+  compromised_passwords: 'Отклонить скомпрометированный пароль',
+  breached_passwords: 'Сломанные пароли',
+  breached_passwords_description: 'Отвергнуть пароли, найденные ранее в базах данных нарушений.',
+  restricted_phrases: 'Ограничение низкобезопасных фраз',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    'Ваш пароль должен избегать эти фразы, если не сопровождаются еще 3 или более символами.',
+  repetitive_or_sequential_characters: 'Повторяющиеся или последовательные символы',
+  repetitive_or_sequential_characters_description: 'Например, "AAAA", "1234" и "abcd".',
+  user_information: 'Информация пользователя',
+  user_information_description:
+    'Например, адрес электронной почты, номер телефона, имя пользователя и т.д.',
+  custom_words: 'Пользовательские слова',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    'Персонализируйте слова, специфичные для контекста, без учета регистра, одно на строку.',
+  custom_words_placeholder: 'Имя вашей службы, название компании и т. д.',
 };
 
 export default Object.freeze(password_policy);

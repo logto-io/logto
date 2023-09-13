@@ -30,8 +30,8 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Facebook is a worldwide social media platform with billions of users.',
     'zh-CN': 'Facebook 是有数十亿用户的社交平台。',
-    'tr-TR': 'Facebook, en aktif kullanıcılara sahip dünya çapında bir sosyal medya platformudur.', // UNTRANSLATED
-    ko: '페이스북은 가장 활동적인 사용자를 가진 세계적인 소셜 미디어 플랫폼입니다.', // UNTRANSLATED
+    'tr-TR': 'Facebook, en aktif kullanıcılara sahip dünya çapında bir sosyal medya platformudur.',
+    ko: '페이스북은 가장 활동적인 사용자를 가진 세계적인 소셜 미디어 플랫폼입니다.',
   },
   readme: './README.md',
   formItems: [

@@ -54,13 +54,10 @@ const sign_up_and_sign_in = {
       'Jest to istotne, ponieważ wybrałeś {{identifier}} jako wymagany identyfikator.',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: 'USTAWIENIA ZAAWANSOWANE',
+    enable_user_registration: 'Włącz rejestrację użytkowników',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      'Włącz lub wyłącz rejestrację użytkowników. Po wyłączeniu użytkownicy nadal mogą być dodawani w konsoli administratora, ale nie mogą już zakładać kont za pomocą interfejsu logowania.',
   },
 };
 

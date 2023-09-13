@@ -48,13 +48,10 @@ const sign_up_and_sign_in = {
       '因註冊設置裏你啟用了{{identifier}}標識。這些信息在用戶登錄時，屬於必選項。',
   },
   advanced_options: {
-    /** UNTRANSLATED */
-    title: 'ADVANCED OPTIONS',
-    /** UNTRANSLATED */
-    enable_user_registration: 'Enable user registration',
-    /** UNTRANSLATED */
+    title: '進階選項',
+    enable_user_registration: '啟用用戶註冊',
     enable_user_registration_description:
-      'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',
+      '啟用或禁止用戶註冊。禁用後，管理控制台仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
   },
 };
 

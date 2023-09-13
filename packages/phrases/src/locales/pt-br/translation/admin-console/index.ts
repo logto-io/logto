@@ -28,7 +28,7 @@ import tab_sections from './tab-sections.js';
 import tabs from './tabs.js';
 import tenants from './tenants.js';
 import topbar from './topbar.js';
-import upsell from './upsell.js';
+import upsell from './upsell/index.js';
 import user_details from './user-details.js';
 import users from './users.js';
 import webhook_details from './webhook-details.js';

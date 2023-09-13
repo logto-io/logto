@@ -4,7 +4,7 @@ import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/ph
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
-import { inquireInstancePath } from '../connector/utils.js';
+import { inquireInstancePath, lintLocaleFiles } from '../../utils.js';
 
 import { type TranslationOptions, baseLanguage, syncTranslation } from './utils.js';
 
@@ -27,8 +27,9 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
         queue,
       } satisfies Partial<TranslationOptions>;
 
+      /* eslint-disable no-await-in-loop */
       if (isPhrasesBuiltInLanguageTag(languageTag)) {
-        void syncTranslation({
+        await syncTranslation({
           ...baseOptions,
           packageName: 'phrases',
           languageTag,
@@ -36,15 +37,18 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
       }
 
       if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
-        void syncTranslation({
+        await syncTranslation({
           ...baseOptions,
           packageName: 'phrases-ui',
           languageTag,
         });
       }
+      /* eslint-enable no-await-in-loop */
     }
 
     await queue.onIdle();
+
+    void lintLocaleFiles(instancePath);
   },
 };
 

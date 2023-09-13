@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Markalaşma',
     sign_up_and_sign_in: 'Kaydol ve Oturum Aç',
     content: 'İçerik',
-    /** UNTRANSLATED */
-    password_policy: 'Password policy',
+    password_policy: 'Şifre politikası',
   },
   welcome: {
     title: 'Oturum açma deneyimini özelleştirin',

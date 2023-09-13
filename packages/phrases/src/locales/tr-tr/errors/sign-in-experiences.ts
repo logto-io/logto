@@ -1,8 +1,8 @@
 const sign_in_experiences = {
   empty_content_url_of_terms_of_use:
-    '"Kullanım Koşulları" İçerik URLi yok. Lütfen "Kullanım Koşulları" etkinse içerik URLi ekleyiniz.',
+    "Kullanım Koşulları İçerik URL'i yok. Lütfen Kullanım Koşulları etkinse içerik URL'i ekleyiniz.",
   empty_social_connectors:
-    'Social connectors yok. Sosyal oturum açma yöntemi etkinleştirildiğinde lütfen etkin social connectorları ekleyiniz.',
+    'Sosyal bağlayıcılar yok. Sosyal oturum açma yöntemi etkinleştirildiğinde lütfen etkin sosyal bağlayıcıları ekleyiniz.',
   enabled_connector_not_found: 'Etkin {{type}} bağlayıcı bulunamadı.',
   not_one_and_only_one_primary_sign_in_method:
     'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
@@ -16,10 +16,8 @@ const sign_in_experiences = {
     'Kayıtta şifre belirleme zorunlu olmadığında doğrulama koduyla oturum açma etkinleştirilmelidir.',
   unsupported_default_language: 'Bu dil - {{language}}, şu anda desteklenmemektedir.',
   at_least_one_authentication_factor: 'En az bir doğrulama faktörü seçmelisiniz.',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'Yedek kod yalnız başına etkinleştirilemez.',
+  duplicated_mfa_factors: 'Yinelenen MFA faktörleri.',
 };
 
 export default Object.freeze(sign_in_experiences);

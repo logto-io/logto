@@ -60,18 +60,13 @@ const description = {
   no_region_code_found: '地域コードが見つかりません',
   verify_email: 'Eメールを確認する',
   verify_phone: '電話番号を確認する',
-  /** UNTRANSLATED */
-  password_requirements: 'Password {{items, list}}.',
-  /** UNTRANSLATED */
-  'password_requirement.length_one': 'requires a minimum of {{count}} character',
-  /** UNTRANSLATED */
-  'password_requirement.length_other': 'requires a minimum of {{count}} characters',
-  /** UNTRANSLATED */
+  password_requirements: 'パスワード {{items, list}}。',
+  'password_requirement.length_one': '最低{{count}}文字',
+  'password_requirement.length_other': '最低{{count}}文字',
   'password_requirement.character_types_one':
-    'should contain at least {{count}} type of uppercase letters, lowercase letters, digits, and symbols',
-  /** UNTRANSLATED */
+    '大文字、小文字、数字、記号のうち{{count}}種類を含む必要があります',
   'password_requirement.character_types_other':
-    'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
+    '大文字、小文字、数字、記号のうち{{count}}種類を含む必要があります',
 };
 
 export default Object.freeze(description);

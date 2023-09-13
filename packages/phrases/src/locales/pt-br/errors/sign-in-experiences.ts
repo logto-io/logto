@@ -18,10 +18,8 @@ const sign_in_experiences = {
     'O login do código de verificação deve ser ativado quando definir uma senha não é necessária na inscrição.',
   unsupported_default_language: 'Este idioma - {{language}} não é suportado no momento.',
   at_least_one_authentication_factor: 'Você deve selecionar pelo menos um fator de autenticação.',
-  /** UNTRANSLATED */
-  backup_code_cannot_be_enabled_alone: 'Backup code cannot be enabled alone.',
-  /** UNTRANSLATED */
-  duplicated_mfa_factors: 'Duplicated MFA factors.',
+  backup_code_cannot_be_enabled_alone: 'Código de backup não pode ser ativado sozinho.',
+  duplicated_mfa_factors: 'Fatores MFA duplicados.',
 };
 
 export default Object.freeze(sign_in_experiences);

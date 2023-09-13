@@ -1,45 +1,26 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
-  /** UNTRANSLATED */
+  password_requirements: '비밀번호 요구사항',
+  minimum_length: '최소 길이',
+  minimum_length_description: 'NIST는 <a>최소 8자리</a>를 권장합니다.',
+  minimum_length_error: '최소 길이는 {{min}} ~ {{max}}(포함) 사이여야 합니다.',
+  minimum_required_char_types: '최소 필요 문자 유형',
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+    '문자 유형: 대문자(A-Z), 소문자(a-z), 숫자(0-9), 특수 기호({{symbols}}).',
+  password_rejection: '비밀번호 거부',
+  compromised_passwords: '위험한 비밀번호',
+  breached_passwords: '유출된 비밀번호',
+  breached_passwords_description: '이전에 유출된 비밀번호를 거부합니다.',
+  restricted_phrases: '보안속에 좋지 않은 구구절',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    '3글자 이상의 다른 글자와 함께 조합하지 않는 한 이러한 구문을 피하세요.',
+  repetitive_or_sequential_characters: '반복된 혹은 순차적인 문자',
+  repetitive_or_sequential_characters_description: '예: "AAAA", "1234", "abcd" 등.',
+  user_information: '사용자 정보',
+  user_information_description: '예: 이메일 주소, 전화 번호, 사용자 이름 등.',
+  custom_words: '사용자 정의 단어',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    '컨텍스트에 따라 맞춤형 단어입니다. 대소문자를 구분하지 않으며, 한 줄에 하나씩 작성하세요.',
+  custom_words_placeholder: '서비스 이름, 회사 이름 등.',
 };
 
 export default Object.freeze(password_policy);

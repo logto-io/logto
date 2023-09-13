@@ -1,8 +1,7 @@
 const password = {
-  unsupported_encryption_method: 'O método de enncriptação {{name}} não é suportado.',
+  unsupported_encryption_method: 'O método de encriptação {{name}} não é suportado.',
   pepper_not_found: 'pepper da Password não encontrada. Por favor, verifique os envs.',
-  /** UNTRANSLATED */
-  rejected: 'Password rejected. Please check if your password meets the requirements.',
+  rejected: 'Senha rejeitada. Por favor, verifique se sua senha atende aos requisitos.',
 };
 
 export default Object.freeze(password);

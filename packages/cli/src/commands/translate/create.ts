@@ -3,8 +3,7 @@ import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phra
 import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
 import type { CommandModule } from 'yargs';
 
-import { consoleLog } from '../../utils.js';
-import { inquireInstancePath } from '../connector/utils.js';
+import { consoleLog, inquireInstancePath } from '../../utils.js';
 
 import { createFullTranslation } from './utils.js';
 

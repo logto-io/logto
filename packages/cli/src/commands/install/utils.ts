@@ -11,6 +11,7 @@ import inquirer from 'inquirer';
 import * as semver from 'semver';
 import tar from 'tar';
 
+import { defaultPath } from '../../constants.js';
 import { createPoolAndDatabaseIfNeeded } from '../../database.js';
 import { packageJson } from '../../package-json.js';
 import {
@@ -24,7 +25,6 @@ import {
 } from '../../utils.js';
 import { seedByPool } from '../database/seed/index.js';
 
-export const defaultPath = path.join(os.homedir(), 'logto');
 const pgRequired = new semver.SemVer('14.0.0');
 
 export const validateNodeVersion = () => {
@@ -50,7 +50,7 @@ const validatePath = (value: string) =>
     ? `The path ${chalk.green(value)} already exists, please try another.`
     : true;
 
-export const inquireInstancePath = async (initialPath?: string) => {
+export const inquireInstallPath = async (initialPath?: string) => {
   if (!isTty()) {
     assert(initialPath, new Error('Path is missing'));
 
@@ -178,14 +178,14 @@ export const seedDatabase = async (instancePath: string, cloud: boolean) => {
   }
 };
 
-export const createEnv = async (instancePath: string, databaseUrl: string) => {
-  const dotEnvPath = path.resolve(instancePath, '.env');
+export const createEnv = async (installPath: string, databaseUrl: string) => {
+  const dotEnvPath = path.resolve(installPath, '.env');
   await fs.writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, 'utf8');
   consoleLog.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);
 };
 
-export const logFinale = (instancePath: string) => {
-  const startCommand = `cd ${instancePath} && npm start`;
+export const logFinale = (installPath: string) => {
+  const startCommand = `cd ${installPath} && npm start`;
   consoleLog.info(
     `Use the command below to start Logto. Happy hacking!\n\n  ${chalk.green(startCommand)}`
   );

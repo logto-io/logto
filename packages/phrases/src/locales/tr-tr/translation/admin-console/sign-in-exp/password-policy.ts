@@ -1,45 +1,27 @@
 const password_policy = {
-  /** UNTRANSLATED */
-  password_requirements: 'Password requirements',
-  /** UNTRANSLATED */
-  minimum_length: 'Minimum length',
-  /** UNTRANSLATED */
-  minimum_length_description: 'NIST suggests using <a>at least 8 characters</a> for web products.',
-  /** UNTRANSLATED */
-  minimum_length_error: 'Minimum length must be between {{min}} and {{max}} (inclusive).',
-  /** UNTRANSLATED */
-  minimum_required_char_types: 'Minimum required character types',
-  /** UNTRANSLATED */
+  password_requirements: 'Parola gereksinimleri',
+  minimum_length: 'Minimum uzunluk',
+  minimum_length_description:
+    'NIST önerilerine göre, web ürünleri için en az <a>8 karakter</a> kullanın.',
+  minimum_length_error: 'Minimum uzunluk {{min}} ile {{max}} (dahil) arasında olmalıdır.',
+  minimum_required_char_types: 'Minimum gereken karakter tipleri',
   minimum_required_char_types_description:
-    'Character types: uppercase (A-Z), lowercase (a-z), numbers (0-9), and special symbols ({{symbols}}).',
-  /** UNTRANSLATED */
-  password_rejection: 'Password rejection',
-  /** UNTRANSLATED */
-  compromised_passwords: 'Reject compromised password',
-  /** UNTRANSLATED */
-  breached_passwords: 'Breached passwords',
-  /** UNTRANSLATED */
-  breached_passwords_description: 'Reject passwords previously found in breach databases.',
-  /** UNTRANSLATED */
-  restricted_phrases: 'Restrict low-security phrases',
-  /** UNTRANSLATED */
+    'Karakter tipleri: büyük harfler (A-Z), küçük harfler (a-z), sayılar (0-9) ve özel semboller ({{symbols}}).',
+  password_rejection: 'Parola reddi',
+  compromised_passwords: 'Etkilenen şifreleri reddet',
+  breached_passwords: 'Veri tabanında yer alan şifreleri reddet',
+  breached_passwords_description: 'Daha önceki ihlal veritabanlarında bulunan şifreleri reddet.',
+  restricted_phrases: 'Düşük güvenlikli ifadeleri kısıtla',
   restricted_phrases_tooltip:
-    'Users cannot use passwords that are exactly the same as or made up of the listed phrases below. The addition of 3 or more non-consecutive characters is allowed to increase password complexity.',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters: 'Repetitive or sequential characters',
-  /** UNTRANSLATED */
-  repetitive_or_sequential_characters_description: 'E.g., "AAAA", "1234", and "abcd".',
-  /** UNTRANSLATED */
-  user_information: 'User information',
-  /** UNTRANSLATED */
-  user_information_description: 'E.g., email address, phone number, username, etc.',
-  /** UNTRANSLATED */
-  custom_words: 'Custom words',
-  /** UNTRANSLATED */
+    'Parolanız 3 ya da daha fazla karakterle birleştirilmediği sürece bu ifadelerden kaçınmalıdır.',
+  repetitive_or_sequential_characters: 'Tekrarlayan veya ardışık karakterler',
+  repetitive_or_sequential_characters_description: 'Örn., "AAAA", "1234" ve "abcd".',
+  user_information: 'Kullanıcı bilgisi',
+  user_information_description: 'Örn., e-posta adresi, telefon numarası, kullanıcı adı vb.',
+  custom_words: 'Özel kelimeler',
   custom_words_description:
-    'Personalize context-specific words, case-insensitive, and one per line.',
-  /** UNTRANSLATED */
-  custom_words_placeholder: 'Your service name, company name, etc.',
+    'Bağlamla ilgili kelimeleri kişiselleştirin, küçük/büyük harf duyarsız ve satır başına bir kelime olacak şekilde.',
+  custom_words_placeholder: 'Servis adınız, şirket adınız, vb.',
 };
 
 export default Object.freeze(password_policy);

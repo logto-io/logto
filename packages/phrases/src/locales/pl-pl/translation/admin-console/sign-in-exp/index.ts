@@ -11,8 +11,7 @@ const sign_in_exp = {
     branding: 'Marka',
     sign_up_and_sign_in: 'Rejestracja i logowanie',
     content: 'Treść',
-    /** UNTRANSLATED */
-    password_policy: 'Password policy',
+    password_policy: 'Polityka hasła',
   },
   welcome: {
     title: 'Dostosuj swoje doświadczenie logowania',

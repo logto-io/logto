@@ -63,7 +63,7 @@ type ParsedTuple = readonly [NestedPhraseObject, FileStructure];
  * @returns A tuple of the nested object of phrases and the file structure
  *
  */
-export const praseLocaleFiles = (filePath: string): ParsedTuple => {
+export const parseLocaleFiles = (filePath: string): ParsedTuple => {
   const content = readFileSync(filePath, 'utf8');
   const ast = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
   const importIdentifierPath = new Map<string, string>();
@@ -97,7 +97,7 @@ export const praseLocaleFiles = (filePath: string): ParsedTuple => {
         const resolvedPath = path.resolve(path.dirname(filePath), importPath);
 
         // Recursively parse the nested object from the imported file
-        const [phrases, structure] = praseLocaleFiles(resolvedPath);
+        const [phrases, structure] = parseLocaleFiles(resolvedPath);
 
         /* eslint-disable @silverhand/fp/no-mutation */
         nestedObject[key] = phrases;
@@ -329,7 +329,7 @@ export const syncPhraseKeysAndFileStructure = async (
 ) => {
   const targetEntrypoint = path.join(targetDirectory, 'index.ts');
   const isTargetLocaleExist = existsSync(targetEntrypoint);
-  const targetObject = isTargetLocaleExist ? praseLocaleFiles(targetEntrypoint)[0] : {};
+  const targetObject = isTargetLocaleExist ? parseLocaleFiles(targetEntrypoint)[0] : {};
   const backupDirectory = targetDirectory + '.bak';
 
   if (isTargetLocaleExist) {
