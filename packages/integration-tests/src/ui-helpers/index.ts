@@ -50,13 +50,13 @@ export const expectUnsavedChangesAlert = async (page: Page) => {
 
 export const expectToSaveChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
-  await waitFor(200);
+  await waitFor(500);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save Changes' });
 };
 
 export const expectToDiscardChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
-  await waitFor(200);
+  await waitFor(500);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Discard' });
 };
 
@@ -73,7 +73,7 @@ export const expectToClickDetailsPageOption = async (page: Page, optionText: str
   );
 
   // Wait for the dropdown menu to be rendered in the correct position
-  await page.waitForTimeout(500);
+  await waitFor(500);
 
   await expect(page).toClick('.ReactModalPortal div[class$=dropdownContainer] div[role=menuitem]', {
     text: optionText,
