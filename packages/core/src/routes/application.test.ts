@@ -22,8 +22,8 @@ const tenantContext = new MockTenant(
   undefined,
   {
     applications: {
-      findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
-      findAllApplications: jest.fn(async () => [mockApplication]),
+      countApplications: jest.fn(async () => ({ count: 10 })),
+      findApplications: jest.fn(async () => [mockApplication]),
       findApplicationById,
       deleteApplicationById,
       insertApplication: jest.fn(

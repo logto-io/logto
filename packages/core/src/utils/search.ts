@@ -200,6 +200,7 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
  * @returns The SQL token that includes the all condition checks.
  * @throws TypeError error if fields in `search` do not match the `searchFields`, or invalid condition found (e.g. the value is empty).
  */
+// TODO: Can not search multiple enum values at a time, since values will be cast to varchar (See LOG-7078).
 export const buildConditionsFromSearch = (search: Search, searchFields: string[]) => {
   assertThat(searchFields.length > 0, new TypeError('No search field found.'));
 

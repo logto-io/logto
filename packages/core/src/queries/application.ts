@@ -1,8 +1,8 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType, Applications } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
-import { convertToIdentifiers, conditionalSql } from '@logto/shared';
-import type { CommonQueryMethods } from 'slonik';
+import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logto/shared';
+import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
@@ -22,15 +22,41 @@ const buildApplicationConditions = (search: Search) => {
     Applications.fields.id,
     Applications.fields.name,
     Applications.fields.description,
+    Applications.fields.type,
   ];
 
-  return conditionalSql(
-    hasSearch,
-    () => sql`and ${buildConditionsFromSearch(search, searchFields)}`
+  return conditionalSql(hasSearch, () => sql`${buildConditionsFromSearch(search, searchFields)}`);
+};
+
+const buildConditionArray = (conditions: SqlSqlToken[]) => {
+  const filteredConditions = conditions.filter((condition) => condition.sql !== '');
+  return conditionalArraySql(
+    filteredConditions,
+    (filteredConditions) => sql`where ${sql.join(filteredConditions, sql` and `)}`
   );
 };
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
+  const countApplications = async (search: Search) => {
+    const { count } = await pool.one<{ count: string }>(sql`
+      select count(*)
+      from ${table}
+      ${buildConditionArray([buildApplicationConditions(search)])}
+    `);
+
+    return { count: Number(count) };
+  };
+
+  const findApplications = async (search: Search, limit?: number, offset?: number) =>
+    pool.any<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      ${buildConditionArray([buildApplicationConditions(search)])}
+      order by ${fields.createdAt} desc
+      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
+      ${conditionalSql(offset, (value) => sql`offset ${value}`)}
+    `);
+
   const findTotalNumberOfApplications = async () => getTotalRowCountWithPool(pool)(table);
 
   const findAllApplications = buildFindAllEntitiesWithPool(pool)(Applications, [
@@ -78,9 +104,11 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
-      where ${fields.type} = ${ApplicationType.MachineToMachine}
-      and ${fields.id} in (${sql.join(applicationIds, sql`, `)})
-      ${buildApplicationConditions(search)}
+      ${buildConditionArray([
+        sql`${fields.type} = ${ApplicationType.MachineToMachine}`,
+        sql`${fields.id} in (${sql.join(applicationIds, sql`, `)})`,
+        buildApplicationConditions(search),
+      ])}
     `);
 
     return { count: Number(count) };
@@ -99,9 +127,11 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     return pool.any<Application>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      where ${fields.type} = ${ApplicationType.MachineToMachine}
-      and ${fields.id} in (${sql.join(applicationIds, sql`, `)})
-      ${buildApplicationConditions(search)}
+      ${buildConditionArray([
+        sql`${fields.type} = ${ApplicationType.MachineToMachine}`,
+        sql`${fields.id} in (${sql.join(applicationIds, sql`, `)})`,
+        buildApplicationConditions(search),
+      ])}
       limit ${limit}
       offset ${offset}
     `);
@@ -119,6 +149,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
+    countApplications,
+    findApplications,
     findTotalNumberOfApplications,
     findAllApplications,
     findApplicationById,

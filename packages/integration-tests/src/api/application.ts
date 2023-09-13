@@ -1,10 +1,11 @@
-import type {
-  Application,
-  CreateApplication,
-  ApplicationType,
-  OidcClientMetadata,
-  Role,
+import {
+  type Application,
+  type CreateApplication,
+  type ApplicationType,
+  type OidcClientMetadata,
+  type Role,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import { authedAdminApi } from './api.js';
 
@@ -23,7 +24,19 @@ export const createApplication = async (
     })
     .json<Application>();
 
-export const getApplications = async () => authedAdminApi.get('applications').json<Application[]>();
+export const getApplications = async (type?: ApplicationType) => {
+  const searchParams = new URLSearchParams(
+    conditional(
+      type && [
+        ['search.type', type],
+        ['mode.type', 'exact'],
+        ['isCaseSensitive', 'true'],
+      ]
+    )
+  );
+
+  return authedAdminApi.get('applications', { searchParams }).json<Application[]>();
+};
 
 export const getApplication = async (applicationId: string) =>
   authedAdminApi.get(`applications/${applicationId}`).json<Application & { isAdmin: boolean }>();
