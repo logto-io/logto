@@ -58,4 +58,12 @@
     margin-right: _.unit(2);
     font: var(--font-body-2);
   }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &:focus-within {
+      outline-color: var(--color-danger-focused);
+    }
+  }
 }

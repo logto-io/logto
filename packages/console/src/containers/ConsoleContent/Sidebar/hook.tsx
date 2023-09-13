@@ -12,6 +12,7 @@ import List from '@/assets/icons/list.svg';
 import UserProfile from '@/assets/icons/profile.svg';
 import ResourceIcon from '@/assets/icons/resource.svg';
 import Role from '@/assets/icons/role.svg';
+import SecurityLock from '@/assets/icons/security-lock.svg';
 import Web from '@/assets/icons/web.svg';
 import { isCloud } from '@/consts/env';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -77,6 +78,10 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Web,
           title: 'sign_in_experience',
+        },
+        {
+          Icon: SecurityLock,
+          title: 'mfa',
         },
         {
           Icon: Connection,

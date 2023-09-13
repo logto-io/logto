@@ -131,11 +131,14 @@ export const expectToOpenNewPage = async (browser: Browser, url: string) => {
 };
 
 export const expectMainPageWithTitle = async (page: Page, title: string) => {
-  await expect(page).toMatchElement(
-    'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
-    {
-      text: title,
-      timeout: 2000,
-    }
-  );
+  await expect(page).toMatchElement('div[class$=main] div[class$=titleEllipsis]', {
+    text: title,
+    timeout: 2000,
+  });
+};
+
+export const expectToClickSidebarMenu = async (page: Page, menuText: string) => {
+  await expect(page).toClick('div[class$=sidebar] a div[class$=title]', {
+    text: menuText,
+  });
 };

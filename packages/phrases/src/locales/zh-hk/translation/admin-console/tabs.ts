@@ -11,6 +11,8 @@ const tabs = {
   roles: '角色',
   docs: '文檔',
   tenant_settings: '設置',
+  /** UNTRANSLATED */
+  mfa: 'Multi-factor auth',
 };
 
 export default Object.freeze(tabs);
