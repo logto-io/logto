@@ -1,11 +1,11 @@
-import { type Browser, type Page } from 'puppeteer';
+import { type ElementHandle, type Browser, type Page } from 'puppeteer';
 
 import {
   consolePassword,
   consoleUsername,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
-import { expectNavigation } from '#src/utils.js';
+import { expectNavigation, waitFor } from '#src/utils.js';
 
 export const goToAdminConsole = async () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
@@ -50,13 +50,13 @@ export const expectUnsavedChangesAlert = async (page: Page) => {
 
 export const expectToSaveChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
-  await page.waitForTimeout(500);
+  await waitFor(200);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save Changes' });
 };
 
 export const expectToDiscardChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
-  await page.waitForTimeout(500);
+  await waitFor(200);
   await expect(page).toClick('div[class$=actionBar] button span', { text: 'Discard' });
 };
 
@@ -141,4 +141,8 @@ export const expectToClickSidebarMenu = async (page: Page, menuText: string) => 
   await expect(page).toClick('div[class$=sidebar] a div[class$=title]', {
     text: menuText,
   });
+};
+
+export const getInputValue = async (input: ElementHandle<HTMLInputElement>) => {
+  return input.evaluate((element) => element.value);
 };

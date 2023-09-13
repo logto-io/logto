@@ -119,6 +119,6 @@ describe('smoke testing for console admin account creation and sign-in', () => {
   });
 
   it('renders SVG correctly with viewbox property', async () => {
-    await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]');
+    await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]', { visible: true });
   });
 });
