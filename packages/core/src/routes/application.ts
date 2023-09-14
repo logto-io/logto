@@ -47,21 +47,32 @@ export default function applicationRoutes<T extends AuthedRouter>(
   router.get(
     '/applications',
     koaPagination({ isOptional: true }),
-    koaGuard({ response: z.array(Applications.guard), status: 200 }),
+    koaGuard({
+      response: z.array(Applications.guard),
+      status: 200,
+    }),
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
       const { searchParams } = ctx.URL;
+
+      // TODO: koaGuard() can not handle array in query for now (LOG-7080).
+      const result = z.nativeEnum(ApplicationType).array().safeParse(searchParams.getAll('type'));
+      if (!result.success) {
+        throw new RequestError({ code: 'guard.invalid_input', type: 'query' }, result.error);
+      }
+      const types = result.data;
+
       const search = parseSearchParamsForSearch(searchParams);
 
       if (paginationDisabled) {
-        ctx.body = await findApplications(search);
+        ctx.body = await findApplications(search, undefined, undefined, types);
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications(search),
-        findApplications(search, limit, offset),
+        countApplications(search, types),
+        findApplications(search, limit, offset, types),
       ]);
 
       // Return totalCount to pagination middleware

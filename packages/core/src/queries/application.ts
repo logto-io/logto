@@ -22,7 +22,6 @@ const buildApplicationConditions = (search: Search) => {
     Applications.fields.id,
     Applications.fields.name,
     Applications.fields.description,
-    Applications.fields.type,
   ];
 
   return conditionalSql(hasSearch, () => sql`${buildConditionsFromSearch(search, searchFields)}`);
@@ -37,21 +36,36 @@ const buildConditionArray = (conditions: SqlSqlToken[]) => {
 };
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
-  const countApplications = async (search: Search) => {
+  const countApplications = async (search: Search, types?: ApplicationType[]) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
-      ${buildConditionArray([buildApplicationConditions(search)])}
+      ${buildConditionArray([
+        conditionalSql(types, (types) =>
+          types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``
+        ),
+        buildApplicationConditions(search),
+      ])}
     `);
 
     return { count: Number(count) };
   };
 
-  const findApplications = async (search: Search, limit?: number, offset?: number) =>
+  const findApplications = async (
+    search: Search,
+    limit?: number,
+    offset?: number,
+    types?: ApplicationType[]
+  ) =>
     pool.any<Application>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      ${buildConditionArray([buildApplicationConditions(search)])}
+      ${buildConditionArray([
+        conditionalSql(types, (types) =>
+          types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``
+        ),
+        buildApplicationConditions(search),
+      ])}
       order by ${fields.createdAt} desc
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
       ${conditionalSql(offset, (value) => sql`offset ${value}`)}

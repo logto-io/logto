@@ -24,15 +24,9 @@ export const createApplication = async (
     })
     .json<Application>();
 
-export const getApplications = async (type?: ApplicationType) => {
+export const getApplications = async (types?: ApplicationType[]) => {
   const searchParams = new URLSearchParams(
-    conditional(
-      type && [
-        ['search.type', type],
-        ['mode.type', 'exact'],
-        ['isCaseSensitive', 'true'],
-      ]
-    )
+    conditional(types && types.length > 0 && types.map((type) => ['type', type]))
   );
 
   return authedAdminApi.get('applications', { searchParams }).json<Application[]>();
