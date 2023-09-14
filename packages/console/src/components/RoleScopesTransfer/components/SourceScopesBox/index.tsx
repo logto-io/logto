@@ -1,5 +1,5 @@
 import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
-import { isManagementApi, PredefinedScope } from '@logto/schemas';
+import { isManagementApi, PredefinedScope, RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
+import { isProduction } from '@/consts/env';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -20,11 +21,12 @@ import * as styles from './index.module.scss';
 
 type Props = {
   roleId?: string;
+  roleType: RoleType;
   selectedScopes: ScopeResponse[];
   onChange: (value: ScopeResponse[]) => void;
 };
 
-function SourceScopesBox({ roleId, selectedScopes, onChange }: Props) {
+function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data: allResources, error: fetchAllResourcesError } = useSWR<
@@ -85,7 +87,10 @@ function SourceScopesBox({ roleId, selectedScopes, onChange }: Props) {
     return allResources
       .filter(
         ({ indicator, scopes }) =>
-          !isManagementApi(indicator) && scopes.some(({ id }) => !excludeScopeIds.has(id))
+          /** Should show management API scopes for machine-to-machine roles */
+          ((!isProduction && roleType === RoleType.MachineToMachine) ||
+            !isManagementApi(indicator)) &&
+          scopes.some(({ id }) => !excludeScopeIds.has(id))
       )
       .map(({ scopes, ...resource }) => ({
         ...resource,
@@ -96,7 +101,7 @@ function SourceScopesBox({ roleId, selectedScopes, onChange }: Props) {
             resource,
           })),
       }));
-  }, [allResources, roleId, roleScopes]);
+  }, [allResources, roleType, roleId, roleScopes]);
 
   const dataSource = useMemo(() => {
     const lowerCasedKeyword = keyword.toLowerCase();

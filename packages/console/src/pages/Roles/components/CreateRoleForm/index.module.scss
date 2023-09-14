@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.roleTypes {
+  display: flex;
+  gap: _.unit(6);
+}

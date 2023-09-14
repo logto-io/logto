@@ -22,7 +22,7 @@ const pageSize = defaultPageSize;
 
 function RolePermissions() {
   const {
-    role: { id: roleId },
+    role: { id: roleId, type: roleType },
   } = useOutletContext<RoleDetailsOutletContext>();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -117,6 +117,7 @@ function RolePermissions() {
       {isAssignPermissionsModalOpen && totalCount !== undefined && (
         <AssignPermissionsModal
           roleId={roleId}
+          roleType={roleType}
           totalRoleScopeCount={totalCount}
           onClose={(success) => {
             if (success) {
