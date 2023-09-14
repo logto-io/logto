@@ -17,6 +17,7 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
+import useCustomDomain from '@/hooks/use-custom-domain';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import * as styles from '../index.module.scss';
@@ -27,6 +28,7 @@ type Props = {
 
 function Settings({ data }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
+  const { applyDomain: applyCustomDomain } = useCustomDomain();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -62,7 +64,7 @@ function Settings({ data }: Props) {
       {tenantEndpoint && (
         <FormField title="application_details.logto_endpoint">
           <CopyToClipboard
-            value={tenantEndpoint.href}
+            value={applyCustomDomain(tenantEndpoint.href)}
             variant="border"
             className={styles.textField}
           />

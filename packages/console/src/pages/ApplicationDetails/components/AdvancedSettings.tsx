@@ -20,7 +20,6 @@ import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useCustomDomain from '@/hooks/use-custom-domain';
-import { applyDomain } from '@/utils/domain';
 
 import * as styles from '../index.module.scss';
 
@@ -44,10 +43,7 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
     min: minTtl,
     max: maxTtl,
   });
-  const { data: customDomain } = useCustomDomain();
-
-  const tryApplyCustomDomain = (url: string) =>
-    customDomain?.status === DomainStatus.Active ? applyDomain(url, customDomain.domain) : url;
+  const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
 
   return (
     <FormCard
@@ -59,7 +55,7 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
         <FormField title="application_details.config_endpoint">
           <CopyToClipboard
             className={styles.textField}
-            value={tryApplyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
+            value={applyCustomDomain(appendPath(tenantEndpoint, openIdProviderConfigPath).href)}
             variant="border"
           />
         </FormField>
@@ -84,21 +80,21 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
       >
         <CopyToClipboard
           className={styles.textField}
-          value={tryApplyCustomDomain(oidcConfig.authorization_endpoint)}
+          value={applyCustomDomain(oidcConfig.authorization_endpoint)}
           variant="border"
         />
       </FormField>
       <FormField title="application_details.token_endpoint">
         <CopyToClipboard
           className={styles.textField}
-          value={tryApplyCustomDomain(oidcConfig.token_endpoint)}
+          value={applyCustomDomain(oidcConfig.token_endpoint)}
           variant="border"
         />
       </FormField>
       <FormField title="application_details.user_info_endpoint">
         <CopyToClipboard
           className={styles.textField}
-          value={tryApplyCustomDomain(oidcConfig.userinfo_endpoint)}
+          value={applyCustomDomain(oidcConfig.userinfo_endpoint)}
           variant="border"
         />
       </FormField>

@@ -12,7 +12,6 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
 import type { ConnectorFormType } from '@/types/connector';
-import { applyDomain } from '@/utils/domain';
 import { jsonValidator } from '@/utils/validator';
 
 import ConfigFormFields from './ConfigFormFields';
@@ -32,7 +31,7 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
     formState: { errors },
   } = useFormContext<ConnectorFormType>();
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { data: customDomain } = useCustomDomain();
+  const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
   const callbackUri = new URL(`/callback/${connectorId}`, tenantEndpoint).toString();
 
   return (
@@ -45,11 +44,7 @@ function ConfigForm({ formItems, className, connectorId, connectorType }: Props)
           <CopyToClipboard
             className={styles.copyToClipboard}
             variant="border"
-            value={
-              customDomain?.status === DomainStatus.Active
-                ? applyDomain(callbackUri, customDomain.domain)
-                : callbackUri
-            }
+            value={applyCustomDomain(callbackUri)}
           />
           {customDomain?.status === DomainStatus.Active && tenantEndpoint && (
             <div className={styles.description}>
