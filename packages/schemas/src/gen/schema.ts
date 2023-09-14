@@ -16,7 +16,8 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
-      ({ name, type, isArray, nullable, hasDefaultValue }) =>
+      ({ name, comments, type, isArray, nullable, hasDefaultValue }) =>
+        conditionalString(comments && `  /** ${comments} */\n`) +
         `  ${camelcase(name)}${conditionalString(
           (nullable || hasDefaultValue || name === tenantId) && '?'
         )}: ${type}${conditionalString(isArray && '[]')}${conditionalString(
@@ -27,7 +28,8 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '',
     `export type ${modelName} = {`,
     ...fields.map(
-      ({ name, type, isArray, nullable, hasDefaultValue }) =>
+      ({ name, comments, type, isArray, nullable, hasDefaultValue }) =>
+        conditionalString(comments && `  /** ${comments} */\n`) +
         `  ${camelcase(name)}: ${type}${conditionalString(isArray && '[]')}${
           nullable && !hasDefaultValue ? ' | null' : ''
         };`
