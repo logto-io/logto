@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [api, ui]
+        target: [api, experience, console]
 
     needs: package
     runs-on: ubuntu-latest

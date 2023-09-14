@@ -12,9 +12,10 @@
   "scripts": {
     "build": "rm -rf lib/ && tsc -p tsconfig.test.json --sourcemap",
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "test": "pnpm build && pnpm test:api && pnpm test:ui",
+    "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console",
     "test:api": "pnpm test:only -i ./lib/tests/api/",
-    "test:ui": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/flows/ ./lib/tests/console/",
+    "test:experience": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/flows/",
+    "test:console": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/console/",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "start": "pnpm test"

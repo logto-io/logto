@@ -53,10 +53,8 @@ export default class ExpectConsole extends ExpectPage {
   async gotoPage(pathname: string, title: ConsoleTitle) {
     await this.navigateTo(this.buildUrl(path.join(this.options.tenantId, pathname)));
     await expect(this.page).toMatchElement(
-      'div[class$=main] div[class$=container] div[class$=cardTitle] div[class$=titleEllipsis]',
-      {
-        text: title,
-      }
+      'div[class$=main] div[class$=container] div[class$=cardTitle]',
+      { text: title }
     );
   }
 

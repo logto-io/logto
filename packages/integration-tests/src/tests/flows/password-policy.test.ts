@@ -133,7 +133,7 @@ describe('password policy', () => {
       emailName + 'ABCD135'
     );
 
-    await journey.waitForToast(/password changed/i);
+    journey.toBeAt('sign-in');
     await journey.toFillInput('identifier', email, { submit: true });
     await journey.toFillInput('password', emailName + 'ABCD135', { submit: true });
     await journey.verifyThenEnd();
