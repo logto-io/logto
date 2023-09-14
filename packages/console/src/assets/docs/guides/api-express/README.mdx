@@ -3,6 +3,7 @@ import TabItem from '@mdx/components/TabItem';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import { appendPath } from '@silverhand/essentials';
 
 <Steps>
 
@@ -64,16 +65,22 @@ pnpm add jose
 
 ### Retrieve Logto's OIDC configurations
 
-You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token. All the latest public Logto Authorization Configurations can be found at `https://<your-logto-domain>/oidc/.well-known/openid-configuration`.
+<p>
+You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token. All the latest public Logto Authorization Configurations can be found at <code>{`${appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}`}</code>.
+</p>
 
-e.g. Call `https://logto.dev/oidc/.well-known/openid-configuration`. And locate the following two fields in the response body:
+<p>
+e.g. Call <code>{`${appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}`}</code>. And locate the following two fields in the response body:
+</p>
 
-```ts
-{
-  "jwks_uri": "https://logto.dev/oidc/jwks",
-  "issuer": "https://logto.dev/oidc"
-}
-```
+<pre>
+  <code className="language-ts">
+{`{
+  "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}",
+  "issuer": "${appendPath(props.endpoint, '/oidc')}"
+}`}
+  </code>
+</pre>
 
 ### Add auth middleware
 
@@ -83,8 +90,9 @@ Jose's `jwtVerify` method may helps you to verify the token's JWS format, token 
   For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.
 </InlineNotification>
 
-```ts
-// auth-middleware.ts
+<pre>
+  <code className="language-ts">
+{`// auth-middleware.ts
 
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
@@ -98,12 +106,12 @@ export const verifyAuthFromRequest = async (req, res, next) => {
     // The raw Bearer Token extracted from the request header
     token,
     // Generate a jwks using jwks_uri inquired from Logto server
-    createRemoteJWKSet('https://<your-logto-domain>/oidc/jwks'),
+    createRemoteJWKSet('${appendPath(props.endpoint, '/oidc/jwks')}'),
     {
       // Expected issuer of the token, should be issued by the Logto server
-      issuer: 'https://<your-logto-domain>/oidc',
+      issuer: '${appendPath(props.endpoint, '/oidc')}',
       // Expected audience token, should be the resource indicator of the current API
-      audience: '<your request listener resource indicator>',
+      audience: '${props.audience}',
     }
   );
 
@@ -114,8 +122,9 @@ export const verifyAuthFromRequest = async (req, res, next) => {
   userId = payload.sub;
 
   return next();
-};
-```
+};`}
+  </code>
+</pre>
 
 </Step>
 

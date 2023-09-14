@@ -28,6 +28,7 @@ export type GuideContextType = {
     origin: string;
     callback: string;
   };
+  audience?: string;
 };
 
 type Props = {
@@ -50,6 +51,7 @@ export const GuideContext = createContext<GuideContextType>({
   postLogoutRedirectUris: [],
   isCompact: false,
   sampleUrls: { origin: '', callback: '' },
+  audience: '',
 });
 
 function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {

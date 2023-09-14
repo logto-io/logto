@@ -83,6 +83,7 @@ function ApiResourceDetails() {
     return (
       <GuideModal
         guideId={guideId}
+        apiResource={data}
         onClose={() => {
           navigate(`/api-resources/${id}`);
         }}
@@ -129,7 +130,7 @@ function ApiResourceDetails() {
                   }}
                 />
                 <Drawer isOpen={isGuideDrawerOpen} onClose={onCloseDrawer}>
-                  <GuideDrawer onClose={onCloseDrawer} />
+                  <GuideDrawer apiResource={data} onClose={onCloseDrawer} />
                 </Drawer>
                 <ActionMenu
                   buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}

@@ -1,29 +1,38 @@
+import { type Resource } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import guides from '@/assets/docs/guides';
 import Guide, { GuideContext, type GuideContextType } from '@/components/Guide';
+import { AppDataContext } from '@/contexts/AppDataProvider';
+import useCustomDomain from '@/hooks/use-custom-domain';
 
 type Props = {
   className?: string;
   guideId: string;
+  apiResource?: Resource;
   isCompact?: boolean;
   onClose: () => void;
 };
 
-function ApiGuide({ className, guideId, isCompact, onClose }: Props) {
+function ApiGuide({ className, guideId, apiResource, isCompact, onClose }: Props) {
+  const { tenantEndpoint } = useContext(AppDataContext);
+  const { applyDomain: applyCustomDomain } = useCustomDomain();
   const guide = guides.find(({ id }) => id === guideId);
 
   const memorizedContext = useMemo(
     () =>
       conditional(
-        !!guide && {
-          metadata: guide.metadata,
-          Logo: guide.Logo,
-          isCompact: Boolean(isCompact),
-        }
+        !!guide &&
+          !!apiResource && {
+            metadata: guide.metadata,
+            Logo: guide.Logo,
+            isCompact: Boolean(isCompact),
+            endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
+            audience: apiResource.indicator,
+          }
       ) satisfies GuideContextType | undefined,
-    [guide, isCompact]
+    [apiResource, applyCustomDomain, guide, isCompact, tenantEndpoint?.href]
   );
 
   return memorizedContext ? (

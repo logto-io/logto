@@ -1,3 +1,4 @@
+import { type Resource } from '@logto/schemas';
 import Modal from 'react-modal';
 
 import ModalHeader from '@/components/Guide/ModalHeader';
@@ -9,10 +10,11 @@ import * as styles from './index.module.scss';
 
 type Props = {
   guideId: string;
+  apiResource?: Resource;
   onClose: () => void;
 };
 
-function GuideModal({ guideId, onClose }: Props) {
+function GuideModal({ guideId, apiResource, onClose }: Props) {
   return (
     <Modal shouldCloseOnEsc isOpen className={modalStyles.fullScreen} onRequestClose={onClose}>
       <div className={styles.modalContainer}>
@@ -25,7 +27,12 @@ function GuideModal({ guideId, onClose }: Props) {
           requestSuccessMessage="guide.request_guide_successfully"
           onClose={onClose}
         />
-        <ApiGuide className={styles.guide} guideId={guideId} onClose={onClose} />
+        <ApiGuide
+          className={styles.guide}
+          guideId={guideId}
+          apiResource={apiResource}
+          onClose={onClose}
+        />
       </div>
     </Modal>
   );
