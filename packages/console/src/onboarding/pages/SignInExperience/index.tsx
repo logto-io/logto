@@ -116,9 +116,19 @@ function SignInExperience() {
         }
       }
 
+      /**
+       * Note: extract `mfa` since it will not be updated on the SIE config page.
+       * This is a temporary solution, we will split `SignInExperience` type into multiple types
+       * when the SIE config page is split into multiple pages.
+       */
+      const { mfa, ...payload } = parser.onboardSieConfigToSignInExperience(
+        formData,
+        signInExperience
+      );
+
       const updatedData = await api
         .patch(buildUrl('api/sign-in-exp', { removeUnusedDemoSocialConnector: '1' }), {
-          json: parser.onboardSieConfigToSignInExperience(formData, signInExperience),
+          json: payload,
         })
         .json<SignInExperienceType>();
 
