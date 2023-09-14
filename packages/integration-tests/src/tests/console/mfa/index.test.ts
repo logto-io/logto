@@ -15,7 +15,8 @@ import {
 
 await page.setViewport({ width: 1920, height: 1080 });
 
-describe('multi-factor authentication', () => {
+// Skip this test suite since it's not public yet
+describe.skip('multi-factor authentication', () => {
   beforeAll(async () => {
     await goToAdminConsole();
   });
