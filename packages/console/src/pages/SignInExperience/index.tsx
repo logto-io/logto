@@ -133,10 +133,14 @@ function SignInExperience() {
     setIsSaving(true);
 
     try {
+      /**
+       * Note: extract `mfa` since it will not be updated on the SIE config page.
+       * This is a temporary solution, we will split `SignInExperience` type into multiple types
+       * when the SIE config page is split into multiple pages.
+       */
+      const { mfa, ...payload } = signInExperienceParser.toRemoteModel(getValues());
       const updatedData = await api
-        .patch('api/sign-in-exp', {
-          json: signInExperienceParser.toRemoteModel(getValues()),
-        })
+        .patch('api/sign-in-exp', { json: payload })
         .json<SignInExperienceType>();
       reset(signInExperienceParser.toLocalForm(updatedData));
       void mutate(updatedData);
