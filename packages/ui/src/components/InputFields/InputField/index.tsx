@@ -12,21 +12,11 @@ export type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix'> & {
   isDanger?: boolean;
   prefix?: ReactElement;
   suffix?: ReactElement;
-  isSuffixVisible?: boolean;
   isSuffixFocusVisible?: boolean;
 };
 
 const InputField = (
-  {
-    className,
-    errorMessage,
-    isDanger,
-    prefix,
-    suffix,
-    isSuffixFocusVisible,
-    isSuffixVisible,
-    ...props
-  }: Props,
+  { className, errorMessage, isDanger, prefix, suffix, isSuffixFocusVisible, ...props }: Props,
   reference: ForwardedRef<HTMLInputElement>
 ) => {
   const errorMessages = errorMessage?.split('\n');
@@ -37,8 +27,7 @@ const InputField = (
         className={classNames(
           styles.inputField,
           isDanger && styles.danger,
-          isSuffixFocusVisible && styles.isSuffixFocusVisible,
-          isSuffixVisible && styles.isSuffixVisible
+          isSuffixFocusVisible && styles.isSuffixFocusVisible
         )}
       >
         {prefix}
