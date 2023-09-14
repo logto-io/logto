@@ -14,6 +14,7 @@ import spaVanilla from './spa-vanilla/index';
 import spaVue from './spa-vue/index';
 import { type Guide } from './types';
 import webAspNetCore from './web-asp-net-core/index';
+import webAspNetCoreMvc from './web-asp-net-core-mvc/index';
 import webExpress from './web-express/index';
 import webGo from './web-go/index';
 import webGptPlugin from './web-gpt-plugin/index';
@@ -150,6 +151,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./web-asp-net-core/logo.svg')),
     Component: lazy(async () => import('./web-asp-net-core/README.mdx')),
     metadata: webAspNetCore,
+  },
+  {
+    order: 5.1,
+    id: 'web-asp-net-core-mvc',
+    Logo: lazy(async () => import('./web-asp-net-core-mvc/logo.svg')),
+    Component: lazy(async () => import('./web-asp-net-core-mvc/README.mdx')),
+    metadata: webAspNetCoreMvc,
   },
   {
     order: 6,
