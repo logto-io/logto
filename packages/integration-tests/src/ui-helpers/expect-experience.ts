@@ -181,6 +181,8 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   protected throwNoOngoingExperienceError() {
-    return this.throwError('The experience has not started yet. Use `startWith` to start the experience.');
+    return this.throwError(
+      'The experience has not started yet. Use `startWith` to start the experience.'
+    );
   }
 }
