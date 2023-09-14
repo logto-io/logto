@@ -7,10 +7,11 @@ const bootstrapTestSuitePathSuffix = '/bootstrap.test.js';
 
 class CustomSequencer extends Sequencer {
   sort(tests) {
-    const bootstrap = tests.find(({ path }) => path.includes(bootstrapTestSuitePathSuffix));
+    // Let the bootstrap test suite does its job first
+    const bootstrap = tests.filter(({ path }) => path.endsWith(bootstrapTestSuitePathSuffix));
     return [
-      bootstrap,
-      ...tests.filter(({ path }) => !path.includes(bootstrapTestSuitePathSuffix)),
+      ...bootstrap,
+      ...tests.filter(({ path }) => !path.endsWith(bootstrapTestSuitePathSuffix)),
     ].filter(Boolean);
   }
 }
