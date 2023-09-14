@@ -42,6 +42,15 @@ const user_details = {
     deletion_confirmation:
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
   },
+  mfa: {
+    field_name: 'Çok faktörlü kimlik doğrulama',
+    field_description: 'Bu kullanıcı 2 adımlı kimlik doğrulama faktörlerini etkinleştirdi.',
+    name_column: 'Çok Faktörlü Kimlik Doğrulama',
+    field_description_empty:
+      'Bu kullanıcı 2 aşamalı kimlik doğrulama faktörlerini etkinleştirmedi.',
+    deletion_confirmation:
+      '2 aşamalı kimlik doğrulama için mevcut olan <name/> kaldırıyorsunuz. Bunun yapmak istediğinizden emin misiniz?',
+  },
   suspended: 'Askıya alınmış',
   suspend_user: 'Kullanıcıyı Askıya Al',
   suspend_user_reminder:

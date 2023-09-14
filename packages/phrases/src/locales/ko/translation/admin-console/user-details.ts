@@ -41,6 +41,14 @@ const user_details = {
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
   },
+  mfa: {
+    field_name: '다단계 인증',
+    field_description: '이 사용자는 2단계 인증 요소를 활성화했습니다.',
+    name_column: '다단계 인증',
+    field_description_empty: '이 사용자는 2단계 인증 요소를 활성화하지 않았습니다.',
+    deletion_confirmation:
+      '2단계 인증기에 대한 기존 <name/>을 제거하려고 합니다. 정말로 그렇게 하시겠습니까?',
+  },
   suspended: '정지됨',
   suspend_user: '사용자 정지',
   suspend_user_reminder:
