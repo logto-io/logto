@@ -14,8 +14,10 @@
     "test:only": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test": "pnpm build && pnpm test:api && pnpm test:experience && pnpm test:console",
     "test:api": "pnpm test:only -i ./lib/tests/api/",
-    "test:experience": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/flows/",
-    "test:console": "pnpm test:only -i --config=jest.config.ui.js ./lib/tests/console/",
+    "test:experience:bootstrap": "pnpm test:only --config=jest.config.ui.js ./lib/tests/bootstrap/experience.test.js",
+    "test:experience": "pnpm test:experience:bootstrap && pnpm test:only --config=jest.config.ui.js ./lib/tests/experience/",
+    "test:console:bootstrap": "pnpm test:only --config=jest.config.ui.js ./lib/tests/bootstrap/console.test.js",
+    "test:console": "pnpm test:console:bootstrap && pnpm test:only --config=jest.config.ui.js ./lib/tests/bootstrap/",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "start": "pnpm test"
