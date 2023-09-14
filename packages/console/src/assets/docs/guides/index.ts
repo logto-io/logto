@@ -3,6 +3,7 @@
 import { lazy } from 'react';
 
 import apiExpress from './api-express/index';
+import apiPython from './api-python/index';
 import apiSpringBoot from './api-spring-boot/index';
 import m2mGeneral from './m2m-general/index';
 import nativeAndroidJava from './native-android-java/index';
@@ -173,6 +174,13 @@ const guides: Readonly<Guide[]> = Object.freeze([
     Logo: lazy(async () => import('./api-express/logo.svg')),
     Component: lazy(async () => import('./api-express/README.mdx')),
     metadata: apiExpress,
+  },
+  {
+    order: Number.POSITIVE_INFINITY,
+    id: 'api-python',
+    Logo: lazy(async () => import('./api-python/logo.svg')),
+    Component: lazy(async () => import('./api-python/README.mdx')),
+    metadata: apiPython,
   },
   {
     order: Number.POSITIVE_INFINITY,
