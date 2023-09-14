@@ -148,6 +148,7 @@ jobs:
         working-directory: ./fresh
         run: pnpm cli db alt deploy next
         env:
+          ALTERATION_TEST: true
           DB_URL: postgres://postgres:postgres@localhost:5432/alteration
 
       - name: Compare databases
@@ -168,6 +169,7 @@ jobs:
         working-directory: ./fresh
         run: pnpm cli db alt r v$(echo ${{ steps.version.outputs.current }} | cut -d@ -f3)
         env:
+          ALTERATION_TEST: true
           DB_URL: postgres://postgres:postgres@localhost:5432/fresh
 
       - name: Compare manifests
