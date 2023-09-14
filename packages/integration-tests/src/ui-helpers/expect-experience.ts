@@ -10,17 +10,17 @@ const demoAppUrl = appendPath(new URL(logtoUrl), 'demo-app');
 /** Remove the query string together with the `?` from a URL string. */
 const stripQuery = (url: string) => url.split('?')[0];
 
-export type FlowsType = 'sign-in' | 'register' | 'continue' | 'forgot-password';
+export type ExperienceType = 'sign-in' | 'register' | 'continue' | 'forgot-password';
 
-export type FlowsPath =
-  | FlowsType
-  | `${FlowsType}/password`
-  | `${FlowsType}/verify`
-  | `${FlowsType}/verification-code`
+export type ExperiencePath =
+  | ExperienceType
+  | `${ExperienceType}/password`
+  | `${ExperienceType}/verify`
+  | `${ExperienceType}/verification-code`
   | `forgot-password/reset`;
 
-export type ExpectFlowsOptions = {
-  /** The URL of the flows endpoint. */
+export type ExpectExperienceOptions = {
+  /** The URL of the experience endpoint. */
   endpoint?: URL;
   /**
    * Whether the forgot password flow is enabled.
@@ -30,30 +30,30 @@ export type ExpectFlowsOptions = {
   forgotPassword?: boolean;
 };
 
-type OngoingFlows = {
-  type: FlowsType;
+type OngoingExperience = {
+  type: ExperienceType;
   initialUrl: URL;
 };
 
 /**
  * A class that provides:
  *
- * - A set of methods to navigate to a specific page for a flows.
- * - A set of methods to assert the state of a flows and its side effects.
+ * - A set of methods to navigate to a specific page for a experience.
+ * - A set of methods to assert the state of a experience and its side effects.
  */
-export default class ExpectFlows extends ExpectPage {
-  readonly options: Required<ExpectFlowsOptions>;
+export default class ExpectExperience extends ExpectPage {
+  readonly options: Required<ExpectExperienceOptions>;
 
-  protected get flowsType() {
+  protected get experienceType() {
     if (this.#ongoing === undefined) {
-      return this.throwNoOngoingFlowsError();
+      return this.throwNoOngoingExperienceError();
     }
     return this.#ongoing.type;
   }
 
-  #ongoing?: OngoingFlows;
+  #ongoing?: OngoingExperience;
 
-  constructor(thePage = global.page, options: ExpectFlowsOptions = {}) {
+  constructor(thePage = global.page, options: ExpectExperienceOptions = {}) {
     super(thePage);
     this.options = {
       endpoint: new URL(logtoUrl),
@@ -63,16 +63,16 @@ export default class ExpectFlows extends ExpectPage {
   }
 
   /**
-   * Start flows with the given initial URL. Expect the initial URL is protected by Logto, and
-   * navigate to the flows sign-in page if unauthenticated.
+   * Start experience with the given initial URL. Expect the initial URL is protected by Logto, and
+   * navigate to the experience sign-in page if unauthenticated.
    *
-   * If the flows can be started, the instance will be marked as ongoing.
+   * If the experience can be started, the instance will be marked as ongoing.
    *
-   * @param initialUrl The initial URL to start the flows with.
-   * @param type The type of flows to expect. If it's `register`, it will try to click the "Create
+   * @param initialUrl The initial URL to start the experience with.
+   * @param type The type of experience to expect. If it's `register`, it will try to click the "Create
    * account" link on the sign-in page.
    */
-  async startWith(initialUrl = demoAppUrl, type: FlowsType = 'sign-in') {
+  async startWith(initialUrl = demoAppUrl, type: ExperienceType = 'sign-in') {
     await this.toStart(initialUrl);
     this.toBeAt('sign-in');
 
@@ -85,14 +85,14 @@ export default class ExpectFlows extends ExpectPage {
   }
 
   /**
-   * Ensure the flows is ongoing and the page is at the initial URL; then try to click the "sign out"
+   * Ensure the experience is ongoing and the page is at the initial URL; then try to click the "sign out"
    * button (case-insensitive) and close the page.
    *
-   * It will clear the ongoing flows if the flows is ended successfully.
+   * It will clear the ongoing experience if the experience is ended successfully.
    */
   async verifyThenEnd() {
     if (this.#ongoing === undefined) {
-      return this.throwNoOngoingFlowsError();
+      return this.throwNoOngoingExperienceError();
     }
 
     this.toMatchUrl(this.#ongoing.initialUrl);
@@ -103,22 +103,22 @@ export default class ExpectFlows extends ExpectPage {
   }
 
   /**
-   * Assert the page is at the given flows path.
+   * Assert the page is at the given experience path.
    *
-   * @param pathname The flows path to assert.
+   * @param pathname The experience path to assert.
    */
-  toBeAt(pathname: FlowsPath) {
+  toBeAt(pathname: ExperiencePath) {
     const stripped = stripQuery(this.page.url());
-    expect(stripped).toBe(this.buildFlowsUrl(pathname).href);
+    expect(stripped).toBe(this.buildExperienceUrl(pathname).href);
   }
 
   /**
    * Assert the page is at the verification code page and fill the verification code input with the
    * code from Logto database.
    *
-   * @param type The type of flows to expect.
+   * @param type The type of experience to expect.
    */
-  async toCompleteVerification(type: FlowsType) {
+  async toCompleteVerification(type: ExperienceType) {
     this.toBeAt(`${type}/verification-code`);
     const { code } = await readVerificationCode();
 
@@ -140,7 +140,7 @@ export default class ExpectFlows extends ExpectPage {
    * "simple password" (case-insensitive), and the second password is expected to be accepted.
    *
    * ```ts
-   * await journey.toFillPasswords(
+   * await experience.toFillPasswords(
    *  [credentials.pwnedPassword, 'simple password'],
    *  credentials.password,
    * );
@@ -175,12 +175,12 @@ export default class ExpectFlows extends ExpectPage {
     }
   }
 
-  /** Build a full flows URL from a pathname. */
-  protected buildFlowsUrl(pathname = '') {
+  /** Build a full experience URL from a pathname. */
+  protected buildExperienceUrl(pathname = '') {
     return appendPath(this.options.endpoint, pathname);
   }
 
-  protected throwNoOngoingFlowsError() {
-    return this.throwError('The flows has not started yet. Use `startWith` to start the flows.');
+  protected throwNoOngoingExperienceError() {
+    return this.throwError('The experience has not started yet. Use `startWith` to start the experience.');
   }
 }
