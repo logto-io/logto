@@ -293,6 +293,8 @@ export const hookConfigGuard = z.object({
 
 export type HookConfig = z.infer<typeof hookConfigGuard>;
 
+/* === Custom domains and Cloudflare === */
+
 export const domainDnsRecordGuard = z.object({
   name: z.string(),
   type: z.string(),
@@ -334,3 +336,44 @@ export enum DomainStatus {
 }
 
 export const domainStatusGuard = z.nativeEnum(DomainStatus);
+
+/* === Sentinel activities === */
+
+/** The subject (actor) type of a sentinel activity. */
+export enum SentinelActivitySubjectType {
+  User = 'User',
+  App = 'App',
+  Sentinel = 'Sentinel',
+}
+export const sentinelActivitySubjectTypeGuard = z.nativeEnum(SentinelActivitySubjectType);
+
+/** The action target type of a sentinel activity. */
+export enum SentinelActivityTargetType {
+  User = 'User',
+  App = 'App',
+}
+export const sentinelActivityTargetTypeGuard = z.nativeEnum(SentinelActivityTargetType);
+
+/** The action type of a sentinel activity. */
+export enum SentinelActivityAction {
+  /**
+   * The subject tries to pass a verification for a target.
+   *
+   * For example, a user (subject) who inputted a verification code or password for themselves
+   * (target).
+   */
+  Verification = 'Verification',
+  /**
+   * The subject tries to block the target from passing a verification.
+   *
+   * For example, the sentinel (subject) who blocked a user (target) from passing a verification
+   * for 10 minutes.
+   */
+  BlockVerification = 'BlockVerification',
+}
+export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
+
+export type SentinelActivityPayload = Record<string, unknown>;
+export const sentinelActivityPayloadGuard = z.record(
+  z.unknown()
+) satisfies z.ZodType<SentinelActivityPayload>;
