@@ -80,7 +80,8 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         // Non-production environment allow "unsafe-eval" and "unsafe-inline" for debugging purpose
         scriptSrc: [
           "'self'",
-          ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
+          "'unsafe-inline'",
+          ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
         connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins, ...appInsightsOrigins],
         // WARNING: high risk Need to allow self hosted terms of use page loaded in an iframe
