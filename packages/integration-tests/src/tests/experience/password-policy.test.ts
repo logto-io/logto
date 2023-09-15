@@ -5,7 +5,7 @@ import { ConnectorType, SignInIdentifier, SignInMode } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
-import ExpectFlows from '#src/ui-helpers/expect-flows.js';
+import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { waitFor } from '#src/utils.js';
 
 describe('password policy', () => {
@@ -60,21 +60,21 @@ describe('password policy', () => {
   });
 
   it('should work for username + password', async () => {
-    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
+    const experience = new ExpectExperience(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
-    await journey.startWith(demoAppUrl, 'register');
-    await journey.toFillInput('identifier', username, { submit: true });
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
 
     // Password tests
-    journey.toBeAt('register/password');
-    await journey.toFillPasswords(
+    experience.toBeAt('register/password');
+    await experience.toFillPasswords(
       ...invalidPasswords,
       [username + 'A', /product context .* personal information/],
       username + 'ABCD_ok'
     );
 
-    await journey.verifyThenEnd();
+    await experience.verifyThenEnd();
   });
 
   it('should work for email + password', async () => {
@@ -86,56 +86,56 @@ describe('password policy', () => {
         verify: true,
       },
     });
-    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
+    const experience = new ExpectExperience(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
-    await journey.startWith(demoAppUrl, 'register');
+    await experience.startWith(demoAppUrl, 'register');
 
     // Complete verification code flow
-    await journey.toFillInput('identifier', email, { submit: true });
-    await journey.toCompleteVerification('register');
+    await experience.toFillInput('identifier', email, { submit: true });
+    await experience.toCompleteVerification('register');
 
     // Wait for the password page to load
     await waitFor(100);
-    journey.toBeAt('continue/password');
-    await journey.toFillPasswords(
+    experience.toBeAt('continue/password');
+    await experience.toFillPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
       emailName + 'ABCD@# $'
     );
 
-    await journey.verifyThenEnd();
+    await experience.verifyThenEnd();
   });
 
   it('should work for forgot password', async () => {
-    const journey = new ExpectFlows(await browser.newPage(), { forgotPassword: true });
+    const experience = new ExpectExperience(await browser.newPage(), { forgotPassword: true });
 
     // Open the demo app and navigate to the register page
-    await journey.startWith(demoAppUrl, 'sign-in');
+    await experience.startWith(demoAppUrl, 'sign-in');
 
     // Click the forgot password link
-    await journey.toFillInput('identifier', email, { submit: true });
-    await journey.toClick('a', 'Forgot your password');
+    await experience.toFillInput('identifier', email, { submit: true });
+    await experience.toClick('a', 'Forgot your password');
 
     // Submit to continue
-    await journey.toClickSubmit();
+    await experience.toClickSubmit();
 
     // Complete verification code flow
-    await journey.toCompleteVerification('forgot-password');
+    await experience.toCompleteVerification('forgot-password');
 
     // Wait for the password page to load
     await waitFor(100);
-    journey.toBeAt('forgot-password/reset');
-    await journey.toFillPasswords(
+    experience.toBeAt('forgot-password/reset');
+    await experience.toFillPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
       [emailName + 'ABCD@# $', 'be the same as'],
       emailName + 'ABCD135'
     );
 
-    journey.toBeAt('sign-in');
-    await journey.toFillInput('identifier', email, { submit: true });
-    await journey.toFillInput('password', emailName + 'ABCD135', { submit: true });
-    await journey.verifyThenEnd();
+    experience.toBeAt('sign-in');
+    await experience.toFillInput('identifier', email, { submit: true });
+    await experience.toFillInput('password', emailName + 'ABCD135', { submit: true });
+    await experience.verifyThenEnd();
   });
 });

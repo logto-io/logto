@@ -3,7 +3,7 @@ import { SignInMode, SignInIdentifier, ConnectorType } from '@logto/schemas';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
-import ExpectFlows from '#src/ui-helpers/expect-flows.js';
+import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 
 const credentials = {
   username: 'test_bootstrap',
@@ -42,19 +42,19 @@ describe('smoke testing on the demo app', () => {
   });
 
   it('should be able to create a new account with a credential preset', async () => {
-    const journey = new ExpectFlows(await browser.newPage());
+    const experience = new ExpectExperience(await browser.newPage());
 
     // Open the demo app and navigate to the register page
-    await journey.startWith(demoAppUrl, 'register');
-    await journey.toFillInput('identifier', credentials.username, { submit: true });
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', credentials.username, { submit: true });
 
     // Simple password tests
-    journey.toBeAt('register/password');
-    await journey.toFillPasswords(
+    experience.toBeAt('register/password');
+    await experience.toFillPasswords(
       [credentials.pwnedPassword, 'simple password'],
       credentials.password
     );
 
-    await journey.verifyThenEnd();
+    await experience.verifyThenEnd();
   });
 });
