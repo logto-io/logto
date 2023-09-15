@@ -3,9 +3,9 @@
 "@logto/console": minor
 "@logto/core": minor
 "@logto/phrases": minor
-"@logto/phrases-ui": minor
+"@logto/phrases-experience": minor
 "@logto/core-kit": minor
-"@logto/ui": minor
+"@logto/experience": minor
 ---
 
 feature: password policy
