@@ -1,3 +1,4 @@
+import { type Resource } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,10 +15,11 @@ import ApiGuide from '../ApiGuide';
 import * as styles from './index.module.scss';
 
 type Props = {
+  apiResource: Resource;
   onClose: () => void;
 };
 
-function GuideDrawer({ onClose }: Props) {
+function GuideDrawer({ apiResource, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.guide' });
   const guides = useApiGuideMetadata();
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
@@ -59,6 +61,7 @@ function GuideDrawer({ onClose }: Props) {
           isCompact
           className={styles.guide}
           guideId={selectedGuide.id}
+          apiResource={apiResource}
           onClose={() => {
             setSelectedGuide(undefined);
           }}
