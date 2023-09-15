@@ -21,6 +21,7 @@ export const quotaItemPhrasesMap: Record<
   auditLogsRetentionDays: 'audit_logs_retention_days.name',
   communitySupportEnabled: 'community_support_enabled.name',
   ticketSupportResponseTime: 'customer_ticket_support.name',
+  mfaEnabled: 'mfa_enabled.name',
 };
 
 export const quotaItemUnlimitedPhrasesMap: Record<
@@ -42,6 +43,7 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   auditLogsRetentionDays: 'audit_logs_retention_days.unlimited',
   communitySupportEnabled: 'community_support_enabled.unlimited',
   ticketSupportResponseTime: 'customer_ticket_support.unlimited',
+  mfaEnabled: 'mfa_enabled.unlimited',
 };
 
 export const quotaItemLimitedPhrasesMap: Record<
@@ -63,6 +65,7 @@ export const quotaItemLimitedPhrasesMap: Record<
   auditLogsRetentionDays: 'audit_logs_retention_days.limited',
   communitySupportEnabled: 'community_support_enabled.limited',
   ticketSupportResponseTime: 'customer_ticket_support.limited',
+  mfaEnabled: 'mfa_enabled.limited',
 };
 
 export const quotaItemNotEligiblePhrasesMap: Record<
@@ -84,4 +87,5 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   auditLogsRetentionDays: 'audit_logs_retention_days.not_eligible',
   communitySupportEnabled: 'community_support_enabled.not_eligible',
   ticketSupportResponseTime: 'customer_ticket_support.not_eligible',
+  mfaEnabled: 'mfa_enabled.not_eligible',
 };

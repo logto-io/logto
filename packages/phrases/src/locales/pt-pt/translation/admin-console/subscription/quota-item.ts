@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: 'Apoio de bilhetes de cliente',
     not_eligible: 'Sem apoio de bilhetes de cliente',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: 'Desative a sua MFA',
+  },
 };
 
 export default Object.freeze(quota_item);

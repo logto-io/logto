@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: 'Поддержка клиентов по билетам',
     not_eligible: 'Без поддержки клиентов по билетам',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: 'Отключите свой MFA',
+  },
 };
 
 export default Object.freeze(quota_item);

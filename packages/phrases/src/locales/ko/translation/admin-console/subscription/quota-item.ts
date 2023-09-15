@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: '고객 지원 티켓',
     not_eligible: '고객 지원 티켓 없음',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: 'MFA 비활성화',
+  },
 };
 
 export default Object.freeze(quota_item);

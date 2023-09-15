@@ -9,7 +9,7 @@ import {
   TenantSettingsTabs,
   ApplicationDetailsTabs,
 } from '@/consts';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
@@ -98,7 +98,7 @@ function ConsoleContent() {
               <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />
               <Route path=":tab" element={<SignInExperience />} />
             </Route>
-            {!isProduction && <Route path="mfa" element={<Mfa />} />}
+            {isDevFeaturesEnabled && <Route path="mfa" element={<Mfa />} />}
             <Route path="connectors">
               <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
               <Route path=":tab" element={<Connectors />} />

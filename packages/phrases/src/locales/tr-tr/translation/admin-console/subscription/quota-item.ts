@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: 'Müşteri destek bileti',
     not_eligible: 'Müşteri destek bileti yok',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: "MFA'nızı devre dışı bırakın",
+  },
 };
 
 export default Object.freeze(quota_item);
