@@ -3,6 +3,7 @@ import path from 'node:path';
 import { appendPath } from '@silverhand/essentials';
 
 import { consolePassword, consoleUsername, logtoConsoleUrl } from '#src/constants.js';
+import { dcls } from '#src/utils.js';
 
 import ExpectPage, { ExpectPageError } from './expect-page.js';
 import { expectConfirmModalAndAct, expectToSaveChanges } from './index.js';
@@ -53,7 +54,7 @@ export default class ExpectConsole extends ExpectPage {
   async gotoPage(pathname: string, title: ConsoleTitle) {
     await this.navigateTo(this.buildUrl(path.join(this.options.tenantId, pathname)));
     await expect(this.page).toMatchElement(
-      'div[class*=_main] div[class*=_container] div[class*=_cardTitle]',
+      [dcls('main'), dcls('container'), dcls('cardTitle')].join(' '),
       { text: title }
     );
   }
@@ -67,7 +68,7 @@ export default class ExpectConsole extends ExpectPage {
     await Promise.all(
       titles.map(async (title) => {
         return expect(this.page).toMatchElement(
-          'div[class*=_tabContent] div[class*=_card] div[class*=_title]',
+          [dcls('tabContent'), dcls('card'), dcls('title')].join(' '),
           { text: new RegExp(title, 'i'), visible: true }
         );
       })
@@ -78,7 +79,7 @@ export default class ExpectConsole extends ExpectPage {
     const fieldTitle = await expect(this.page).toMatchElement(
       // Use `:has()` for a quick and dirty way to match the field title.
       // Not harmful in most cases.
-      'div[class*=_field]:has(div[class*=_title])',
+      `${dcls('field')}:has(${dcls('title')})`,
       {
         text: new RegExp(title, 'i'),
         visible: true,
@@ -100,7 +101,9 @@ export default class ExpectConsole extends ExpectPage {
    * Click a `<nav>` navigation tab (not the page tab) in the Console.
    */
   async toClickTab(tabName: string | RegExp) {
-    await expect(this.page).toClick(`nav div[class*=_item] div[class*=_link] a`, { text: tabName });
+    await expect(this.page).toClick(['nav', dcls('item'), dcls('link'), 'a'].join(' '), {
+      text: tabName,
+    });
   }
 
   async toSaveChanges(confirmation?: string | RegExp) {

@@ -81,3 +81,27 @@ export const expectNavigation = async <T>(
   ]);
   return result;
 };
+
+/**
+ * Build the string for a CSS selector that matches a class name.
+ *
+ * Since we use CSS modules, the class names are prefixed with a hash followed by a `_`.
+ * For example, the class name `foo` will be transformed to `abc123_foo`. This function
+ * returns a selector that matches any class name that contains `_foo`.
+ *
+ * It is accurate enough for our tests, as long as our class names are camelCased.
+ */
+export const cls = <C extends string>(className: C) => `[class*=_${className}]` as const;
+
+/**
+ * Build the string for a CSS selector that matches a class name for a `<div>` element.
+ * This is a shorthand for `div${cls(className)}`.
+ *
+ * @example
+ * ```ts
+ * dcls('foo') // => 'div[class*=_foo]'
+ * ```
+ *
+ * @see {@link cls}
+ */
+export const dcls = <C extends string>(className: C) => `div${cls(className)}` as const;
