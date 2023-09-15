@@ -1,4 +1,4 @@
-import { DomainStatus, type ApplicationResponse } from '@logto/schemas';
+import { type ApplicationResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 
@@ -17,8 +17,7 @@ type Props = {
 
 function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { data: customDomain } = useCustomDomain();
-  const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
+  const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
   const guide = guides.find(({ id }) => id === guideId);
 
   const memorizedContext = useMemo(
@@ -29,8 +28,10 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             metadata: guide.metadata,
             Logo: guide.Logo,
             app,
-            endpoint: tenantEndpoint?.toString() ?? '',
-            alternativeEndpoint: conditional(isCustomDomainActive && customDomain.domain),
+            endpoint: tenantEndpoint?.href ?? '',
+            alternativeEndpoint: conditional(
+              customDomain && applyCustomDomain(tenantEndpoint?.href ?? '')
+            ),
             redirectUris: app.oidcClientMetadata.redirectUris,
             postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
             isCompact: Boolean(isCompact),
@@ -40,7 +41,7 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             },
           }
       ) satisfies GuideContextType | undefined,
-    [guide, app, tenantEndpoint, isCustomDomainActive, customDomain?.domain, isCompact]
+    [guide, app, tenantEndpoint?.href, customDomain, applyCustomDomain, isCompact]
   );
 
   return memorizedContext ? (
