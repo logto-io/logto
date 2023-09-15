@@ -27,7 +27,7 @@ function Sidebar() {
                   key={title}
                   titleKey={title}
                   icon={<Icon />}
-                  isActive={match(getPath(title))}
+                  isActive={match('/' + getPath(title))}
                   modal={modal}
                   externalLink={externalLink}
                 />
