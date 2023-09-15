@@ -1,0 +1,136 @@
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+import { appendPath } from '@silverhand/essentials';
+
+<Steps>
+
+<Step title="Extract the Bearer Token from request header">
+
+```python
+"""requires-auth.py
+"""
+def get_auth_token():
+  auth = request.headers.get("Authorization", None)
+
+  if not auth:
+    raise Error({ code: 'auth.authorization_header_missing', status: 401 })
+
+  contents = auth.split()
+
+  if len(contents) < 2
+    raise Error({code: 'auth.authorization_token_invalid_format', status: 401})
+
+  elif contents[0] != 'Bearer'
+    raise Error({code: 'auth.authorization_token_type_not_supported', status: 401})
+
+  return contents[1]
+```
+
+</Step>
+
+<Step title="Extract the Bearer Token from request header" subtitle="3 steps">
+
+### Install `python-jose` as your dependency
+
+Pick the cryptography your are using in Logto. (`ecdsa` by default)
+
+```bash
+pip install python-jose[ecdsa]
+```
+
+### Retrieve Logto's OIDC configurations
+
+<p>
+You will need a JWK public key set and the token issuer to verify the signature and source of the received JWS token.
+All the latest public Logto Authorization Configurations can be found at <code>{appendPath(props.endpoint, '/oidc/.well-known/openid-configuration')}</code>.
+
+e.g. You can locate the following two fields in the response body if you request the above endpoint.
+</p>
+
+<pre>
+  <code className="language-json">
+{`{
+  "issuer": "${appendPath(props.endpoint, '/oidc')}",
+  "jwks_uri": "${appendPath(props.endpoint, '/oidc/jwks')}"
+}`}
+  </code>
+</pre>
+
+### Create the authorization validation decorator
+
+<pre>
+  <code className="language-python">
+{`"""requires-auth.py
+"""
+
+import json
+from flask import request,  _request_ctx_stack
+from six.moves.urllib.request import urlopen
+from functools import wraps
+from jose import jwt
+
+def requires_auth(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    token = get_token_auth_header()
+
+    # jwks_uri endpoint retrieved from Logto
+    jwks_uri = urlopen('${appendPath(props.endpoint, '/oidc/jwks')}')
+
+    # issuer retrieved from Logto
+    issuer = '${appendPath(props.endpoint, '/oidc')}'
+
+    jwks = json.loads(jwks_uri.read())
+
+    try:
+      payload = jwt.decode(
+        token,
+        jwks,
+        # The jwt encode algorithm retrieved along with jwks. ES384 by default
+        algorithms=jwt.get_unverified_header(token).get('alg'),
+        # The API's registered resource indicator in Logto
+        audience='${props.audience}',
+        issuer=issuer,
+        options={
+          'verify_at_hash': False
+        }
+      )
+    except Exception:
+      # exception handler
+      raise Error({code: 'invalid_token', status: 401})
+
+      # Custom code to process payload
+    _request_ctx_stack.top.user_id = payload.get('sub')
+
+    return f(*args, **kwargs)
+  return decorated`}
+  </code>
+</pre>
+
+<InlineNotification>
+  For <a href="https://docs.logto.io/docs/recipes/rbac/" target="_blank" rel="noopener">🔐 RBAC</a>, scope validation is also required.
+</InlineNotification>
+
+</Step>
+
+<Step title="Apply decorator to your API">
+
+```python
+from flask import Flask
+from flask_cors import cross_origin
+
+APP = Flask(__name__)
+
+@APP.route("/user/info")
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
+def api:
+  # Your API Logic
+```
+
+</Step>
+
+</Steps>
