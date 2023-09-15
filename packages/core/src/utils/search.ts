@@ -1,6 +1,6 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
-import { yes, conditionalString } from '@silverhand/essentials';
+import { yes, conditionalString, conditional } from '@silverhand/essentials';
 import { sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
@@ -190,6 +190,43 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
   }
 };
 
+const validateAndBuildValueExpression = (
+  rawValues: string[],
+  field: string,
+  shouldLowercase: boolean,
+  fieldsTypeMapping?: Record<string, string>
+) => {
+  const values =
+    shouldLowercase && isLowercaseValid(field, fieldsTypeMapping)
+      ? rawValues.map((rawValue) => rawValue.toLowerCase())
+      : rawValues;
+
+  // Type check for the first value
+  assertThat(
+    values[0] && values.every(Boolean),
+    new TypeError(`Empty value found${conditionalString(field && ` for field ${field}`)}.`)
+  );
+
+  const valueExpression =
+    values.length === 1
+      ? sql`${values[0]}`
+      : sql`any(${sql.array(values, conditional(fieldsTypeMapping?.[field]) ?? 'varchar')})`;
+
+  return valueExpression;
+};
+
+const isLowercaseValid = (field: string, fieldsTypeMapping?: Record<string, string>) => {
+  return !conditional(fieldsTypeMapping?.[field]);
+};
+
+const showLowercase = (
+  shouldLowercase: boolean,
+  field: string,
+  fieldsTypeMapping?: Record<string, string>
+) => {
+  return shouldLowercase && isLowercaseValid(field, fieldsTypeMapping);
+};
+
 /**
  * Build search SQL token by parsing the search object and available search fields.
  * Note all `field`s will be normalized to snake case, so camel case fields are valid.
@@ -200,11 +237,15 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
  * @returns The SQL token that includes the all condition checks.
  * @throws TypeError error if fields in `search` do not match the `searchFields`, or invalid condition found (e.g. the value is empty).
  */
-export const buildConditionsFromSearch = (search: Search, searchFields: string[]) => {
+export const buildConditionsFromSearch = (
+  search: Search,
+  searchFields: string[],
+  fieldsTypeMapping?: Record<string, string>
+) => {
   assertThat(searchFields.length > 0, new TypeError('No search field found.'));
 
   const { matches, joint, isCaseSensitive } = search;
-  const conditions = matches.map(({ mode, field: rawField, values: rawValues }) => {
+  const conditions = matches.map(({ mode, field: rawField, values }) => {
     const field = rawField && snakeCase(rawField);
 
     if (field && !searchFields.includes(field)) {
@@ -215,23 +256,21 @@ export const buildConditionsFromSearch = (search: Search, searchFields: string[]
 
     const shouldLowercase = !isCaseSensitive && mode === SearchMatchMode.Exact;
     const fields = field ? [field] : searchFields;
-    const values = shouldLowercase ? rawValues.map((value) => value.toLowerCase()) : rawValues;
 
-    // Type check for the first value
-    assertThat(
-      values[0] && values.every(Boolean),
-      new TypeError(`Empty value found${conditionalString(field && ` for field ${field}`)}.`)
-    );
-
-    const valueExpression =
-      values.length === 1 ? sql`${values[0]}` : sql`any(${sql.array(values, 'varchar')})`;
+    const getValueExpressionFor = (fieldName: string, shouldLowercase: boolean) =>
+      validateAndBuildValueExpression(values, fieldName, shouldLowercase, fieldsTypeMapping);
 
     return sql`(${sql.join(
       fields.map(
         (field) =>
           sql`${
-            shouldLowercase ? sql`lower(${sql.identifier([field])})` : sql.identifier([field])
-          } ${getMatchModeOperator(mode, isCaseSensitive)} ${valueExpression}`
+            showLowercase(shouldLowercase, field, fieldsTypeMapping)
+              ? sql`lower(${sql.identifier([field])})`
+              : sql.identifier([field])
+          } ${getMatchModeOperator(mode, isCaseSensitive)} ${getValueExpressionFor(
+            field,
+            shouldLowercase
+          )}`
       ),
       sql` or `
     )})`;

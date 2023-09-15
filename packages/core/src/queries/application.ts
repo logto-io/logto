@@ -4,6 +4,7 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logto/shared';
 import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
 import { sql } from 'slonik';
+import { snakeCase } from 'snake-case';
 
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
@@ -22,9 +23,20 @@ const buildApplicationConditions = (search: Search) => {
     Applications.fields.id,
     Applications.fields.name,
     Applications.fields.description,
+    Applications.fields.type,
   ];
 
-  return conditionalSql(hasSearch, () => sql`${buildConditionsFromSearch(search, searchFields)}`);
+  return conditionalSql(
+    hasSearch,
+    () =>
+      /**
+       * Avoid specifying the DB column type when calling the API (which is meaningless).
+       * Should specify the DB column type of enum type.
+       */
+      sql`${buildConditionsFromSearch(search, searchFields, {
+        [Applications.fields.type]: snakeCase('ApplicationType'),
+      })}`
+  );
 };
 
 const buildConditionArray = (conditions: SqlSqlToken[]) => {
@@ -36,36 +48,21 @@ const buildConditionArray = (conditions: SqlSqlToken[]) => {
 };
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
-  const countApplications = async (search: Search, types?: ApplicationType[]) => {
+  const countApplications = async (search: Search) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
-      ${buildConditionArray([
-        conditionalSql(types, (types) =>
-          types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``
-        ),
-        buildApplicationConditions(search),
-      ])}
+      ${buildConditionArray([buildApplicationConditions(search)])}
     `);
 
     return { count: Number(count) };
   };
 
-  const findApplications = async (
-    search: Search,
-    limit?: number,
-    offset?: number,
-    types?: ApplicationType[]
-  ) =>
+  const findApplications = async (search: Search, limit?: number, offset?: number) =>
     pool.any<Application>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
-      ${buildConditionArray([
-        conditionalSql(types, (types) =>
-          types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``
-        ),
-        buildApplicationConditions(search),
-      ])}
+      ${buildConditionArray([buildApplicationConditions(search)])}
       order by ${fields.createdAt} desc
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
       ${conditionalSql(offset, (value) => sql`offset ${value}`)}
