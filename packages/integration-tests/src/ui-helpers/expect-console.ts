@@ -53,7 +53,7 @@ export default class ExpectConsole extends ExpectPage {
   async gotoPage(pathname: string, title: ConsoleTitle) {
     await this.navigateTo(this.buildUrl(path.join(this.options.tenantId, pathname)));
     await expect(this.page).toMatchElement(
-      'div[class$=main] div[class$=container] div[class$=cardTitle]',
+      'div[class*=_main] div[class*=_container] div[class*=_cardTitle]',
       { text: title }
     );
   }
@@ -67,7 +67,7 @@ export default class ExpectConsole extends ExpectPage {
     await Promise.all(
       titles.map(async (title) => {
         return expect(this.page).toMatchElement(
-          'div[class$=tabContent] div[class$=card] div[class$=title]',
+          'div[class*=_tabContent] div[class*=_card] div[class*=_title]',
           { text: new RegExp(title, 'i'), visible: true }
         );
       })
@@ -78,7 +78,7 @@ export default class ExpectConsole extends ExpectPage {
     const fieldTitle = await expect(this.page).toMatchElement(
       // Use `:has()` for a quick and dirty way to match the field title.
       // Not harmful in most cases.
-      'div[class$=field]:has(div[class$=title])',
+      'div[class*=_field]:has(div[class*=_title])',
       {
         text: new RegExp(title, 'i'),
         visible: true,
@@ -100,7 +100,7 @@ export default class ExpectConsole extends ExpectPage {
    * Click a `<nav>` navigation tab (not the page tab) in the Console.
    */
   async toClickTab(tabName: string | RegExp) {
-    await expect(this.page).toClick(`nav div[class$=item] div[class$=link] a`, { text: tabName });
+    await expect(this.page).toClick(`nav div[class*=_item] div[class*=_link] a`, { text: tabName });
   }
 
   async toSaveChanges(confirmation?: string | RegExp) {

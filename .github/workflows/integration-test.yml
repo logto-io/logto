@@ -15,6 +15,9 @@ jobs:
   package:
     runs-on: buildjet-4vcpu-ubuntu-2204
 
+    env:
+      INTEGRATION_TEST: true
+
     steps:
       - uses: actions/checkout@v4
 
