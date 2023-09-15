@@ -12,7 +12,7 @@ import useSWR from 'swr';
 import RequestDataError from '@/components/RequestDataError';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -218,9 +218,7 @@ function SignInExperience() {
         <PageTab href="../content" errorCount={getContentErrorCount(errors)}>
           {t('sign_in_exp.tabs.content')}
         </PageTab>
-        {isDevFeaturesEnabled && (
-          <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
-        )}
+        <PageTab href="../password-policy">{t('sign_in_exp.tabs.password_policy')}</PageTab>
       </TabNav>
       {data && defaultFormData && (
         <div className={styles.content}>
