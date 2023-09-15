@@ -7,7 +7,7 @@ import {
   consoleUsername,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
-import { appendPathname, expectNavigation } from '#src/utils.js';
+import { appendPathname, cls, dcls, expectNavigation } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -120,5 +120,19 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
   it('renders SVG correctly with viewbox property', async () => {
     await page.waitForSelector('div[class$=topbar] > svg[viewbox][class$=logo]', { visible: true });
+  });
+
+  it('can highlight the current tab in the sidebar', async () => {
+    const activeSelector = [dcls('sidebar'), 'a' + cls('row') + cls('active'), dcls('title')].join(
+      ' '
+    );
+
+    await expect(page).toMatchElement(activeSelector, { text: 'Applications', visible: true });
+    await expectNavigation(
+      expect(page).toClick([dcls('sidebar'), 'a' + cls('row')].join(' '), {
+        text: 'Dashboard',
+      })
+    );
+    await expect(page).toMatchElement(activeSelector, { text: 'Dashboard', visible: true });
   });
 });
