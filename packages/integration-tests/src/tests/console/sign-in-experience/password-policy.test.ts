@@ -1,10 +1,10 @@
 import ExpectConsole from '#src/ui-helpers/expect-console.js';
 import { getInputValue } from '#src/ui-helpers/index.js';
 
-const expectConsole = new ExpectConsole(await browser.newPage(), { tenantId: 'default' });
+const expectConsole = new ExpectConsole(await browser.newPage());
 
 describe('sign-in experience: password policy', () => {
-  it('navigate to sign-in experience page', async () => {
+  it('navigates to sign-in experience page', async () => {
     await expectConsole.start();
     await expectConsole.gotoPage('/sign-in-experience', 'Sign-in experience');
     await expectConsole.toClickTab('Password policy');
