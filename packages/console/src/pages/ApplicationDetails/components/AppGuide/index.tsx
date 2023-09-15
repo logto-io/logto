@@ -21,8 +21,6 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
   const isCustomDomainActive = customDomain?.status === DomainStatus.Active;
   const guide = guides.find(({ id }) => id === guideId);
 
-  const GuideComponent = guide?.Component;
-
   const memorizedContext = useMemo(
     () =>
       conditional(
@@ -32,7 +30,7 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             Logo: guide.Logo,
             app,
             endpoint: tenantEndpoint?.toString() ?? '',
-            alternativeEndpoint: conditional(isCustomDomainActive && tenantEndpoint?.toString()),
+            alternativeEndpoint: conditional(isCustomDomainActive && customDomain.domain),
             redirectUris: app.oidcClientMetadata.redirectUris,
             postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
             isCompact: Boolean(isCompact),
@@ -42,7 +40,7 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             },
           }
       ) satisfies GuideContextType | undefined,
-    [guide, app, tenantEndpoint, isCustomDomainActive, isCompact]
+    [guide, app, tenantEndpoint, isCustomDomainActive, customDomain?.domain, isCompact]
   );
 
   return memorizedContext ? (
