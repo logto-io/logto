@@ -1,5 +1,5 @@
-import en from '@logto/phrases-ui/lib/locales/en/index.js';
-import fr from '@logto/phrases-ui/lib/locales/fr/index.js';
+import en from '@logto/phrases-experience/lib/locales/en/index.js';
+import fr from '@logto/phrases-experience/lib/locales/fr/index.js';
 
 import { isStrictlyPartial } from '#src/utils/translation.js';
 

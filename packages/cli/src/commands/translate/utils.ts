@@ -43,7 +43,7 @@ export const readBaseLocaleFiles = async (directory: string): Promise<string[]> 
 
 export type TranslationOptions = {
   instancePath: string;
-  packageName: 'phrases' | 'phrases-ui';
+  packageName: 'phrases' | 'phrases-experience';
   languageTag: LanguageTag;
   verbose?: boolean;
   queue?: PQueue;

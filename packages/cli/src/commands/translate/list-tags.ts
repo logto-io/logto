@@ -1,6 +1,6 @@
 import { languages } from '@logto/language-kit';
 import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phrases';
-import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
+import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-experience';
 import chalk from 'chalk';
 import type { CommandModule } from 'yargs';
 
@@ -16,7 +16,7 @@ const listTags: CommandModule<Record<string, unknown>> = {
         ...[
           tag,
           isPhrasesBuiltInLanguageTag(tag) && chalk.blue('phrases'),
-          isPhrasesUiBuiltInLanguageTag(tag) && chalk.blue('phrases-ui'),
+          isPhrasesUiBuiltInLanguageTag(tag) && chalk.blue('phrases-experience'),
         ].filter(Boolean)
       );
     }

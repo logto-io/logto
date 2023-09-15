@@ -1,5 +1,5 @@
 import { languageTagGuard } from '@logto/language-kit';
-import resource from '@logto/phrases-ui';
+import resource from '@logto/phrases-experience';
 import type { Translation } from '@logto/schemas';
 import { CustomPhrases, translationGuard } from '@logto/schemas';
 import cleanDeep from 'clean-deep';

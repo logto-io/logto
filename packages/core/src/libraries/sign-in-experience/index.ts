@@ -1,4 +1,4 @@
-import { builtInLanguages } from '@logto/phrases-ui';
+import { builtInLanguages } from '@logto/phrases-experience';
 import type { ConnectorMetadata, LanguageInfo } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
