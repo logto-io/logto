@@ -1,6 +1,6 @@
 import { isLanguageTag } from '@logto/language-kit';
 import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phrases';
-import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
+import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-experience';
 import type { CommandModule } from 'yargs';
 
 import { consoleLog, inquireInstancePath } from '../../utils.js';
@@ -37,12 +37,12 @@ const create: CommandModule<{ path?: string }, { path?: string; 'language-tag': 
 
     if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
       consoleLog.info(
-        languageTag + ' is a built-in tag of phrases-ui, updating untranslated phrases'
+        languageTag + ' is a built-in tag of phrases-experience, updating untranslated phrases'
       );
     }
     await createFullTranslation({
       instancePath,
-      packageName: 'phrases-ui',
+      packageName: 'phrases-experience',
       languageTag,
     });
   },

@@ -1,4 +1,4 @@
-import { isBuiltInLanguageTag } from '@logto/phrases-ui';
+import { isBuiltInLanguageTag } from '@logto/phrases-experience';
 import { adminTenantId } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import { z } from 'zod';

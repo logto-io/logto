@@ -1,6 +1,6 @@
 import { languages } from '@logto/language-kit';
 import { isBuiltInLanguageTag as isPhrasesBuiltInLanguageTag } from '@logto/phrases';
-import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-ui';
+import { isBuiltInLanguageTag as isPhrasesUiBuiltInLanguageTag } from '@logto/phrases-experience';
 import PQueue from 'p-queue';
 import type { CommandModule } from 'yargs';
 
@@ -39,7 +39,7 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
       if (isPhrasesUiBuiltInLanguageTag(languageTag)) {
         await syncTranslation({
           ...baseOptions,
-          packageName: 'phrases-ui',
+          packageName: 'phrases-experience',
           languageTag,
         });
       }

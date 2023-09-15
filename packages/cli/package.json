@@ -47,7 +47,7 @@
     "@logto/core-kit": "workspace:^2.0.1",
     "@logto/language-kit": "workspace:^1.0.0",
     "@logto/phrases": "workspace:^1.4.1",
-    "@logto/phrases-ui": "workspace:^1.2.0",
+    "@logto/phrases-experience": "workspace:^1.2.0",
     "@logto/schemas": "workspace:1.8.0",
     "@logto/shared": "workspace:^2.0.0",
     "@silverhand/essentials": "^2.8.4",

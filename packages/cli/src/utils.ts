@@ -275,13 +275,13 @@ export const lintLocaleFiles = async (
   /** Logto instance path */
   instancePath: string,
   /** Target package name, ignore to lint both packages */
-  packageName?: 'phrases' | 'phrases-ui'
+  packageName?: 'phrases' | 'phrases-experience'
 ) => {
   const spinner = ora({
     text: 'Running `eslint --fix` for locales',
   }).start();
 
-  const targetPackages = packageName ? [packageName] : ['phrases', 'phrases-ui'];
+  const targetPackages = packageName ? [packageName] : ['phrases', 'phrases-experience'];
 
   await Promise.all(
     targetPackages.map(async (packageName) => {

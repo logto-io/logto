@@ -1,5 +1,5 @@
-import type { LocalePhrase } from '@logto/phrases-ui';
-import resource from '@logto/phrases-ui';
+import type { LocalePhrase } from '@logto/phrases-experience';
+import resource from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
 import type { Resource } from 'i18next';
 import i18next from 'i18next';

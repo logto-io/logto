@@ -115,9 +115,9 @@ importers:
       '@logto/phrases':
         specifier: workspace:^1.4.1
         version: link:../phrases
-      '@logto/phrases-ui':
+      '@logto/phrases-experience':
         specifier: workspace:^1.2.0
-        version: link:../phrases-ui
+        version: link:../phrases-experience
       '@logto/schemas':
         specifier: workspace:1.8.0
         version: link:../schemas
@@ -2848,9 +2848,9 @@ importers:
       '@logto/phrases':
         specifier: workspace:^1.4.1
         version: link:../phrases
-      '@logto/phrases-ui':
+      '@logto/phrases-experience':
         specifier: workspace:^1.2.0
-        version: link:../phrases-ui
+        version: link:../phrases-experience
       '@logto/react':
         specifier: ^2.1.0
         version: 2.1.0(react@18.2.0)
@@ -3151,9 +3151,9 @@ importers:
       '@logto/phrases':
         specifier: workspace:^1.4.1
         version: link:../phrases
-      '@logto/phrases-ui':
+      '@logto/phrases-experience':
         specifier: workspace:^1.2.0
-        version: link:../phrases-ui
+        version: link:../phrases-experience
       '@logto/schemas':
         specifier: workspace:^1.8.0
         version: link:../schemas
@@ -3577,7 +3577,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.2
 
-  packages/phrases-ui:
+  packages/phrases-experience:
     dependencies:
       '@logto/core-kit':
         specifier: workspace:^2.0.1
@@ -3628,9 +3628,9 @@ importers:
       '@logto/phrases':
         specifier: workspace:^1.4.1
         version: link:../phrases
-      '@logto/phrases-ui':
+      '@logto/phrases-experience':
         specifier: workspace:^1.2.0
-        version: link:../phrases-ui
+        version: link:../phrases-experience
       '@logto/shared':
         specifier: workspace:^2.0.0
         version: link:../shared
@@ -3926,9 +3926,9 @@ importers:
       '@logto/phrases':
         specifier: workspace:^1.4.1
         version: link:../phrases
-      '@logto/phrases-ui':
+      '@logto/phrases-experience':
         specifier: workspace:^1.2.0
-        version: link:../phrases-ui
+        version: link:../phrases-experience
       '@logto/schemas':
         specifier: workspace:^1.6.0
         version: link:../schemas
@@ -6074,11 +6074,6 @@ packages:
   /@babel/helper-string-parser@7.19.4:
     resolution: {integrity: sha512-nHtDoQcuqFmwYNYPz3Rah5ph2p8PFeFCsZk9A/48dPc/rGocJ5J3hAAZ7pb76VWX3fZKu+uEr/FhH5jLx7umrw==}
     engines: {node: '>=6.9.0'}
-
-  /@babel/helper-validator-identifier@7.19.1:
-    resolution: {integrity: sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==}
-    engines: {node: '>=6.9.0'}
-    dev: true
 
   /@babel/helper-validator-identifier@7.22.5:
     resolution: {integrity: sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ==}
@@ -12297,7 +12292,7 @@ packages:
     peerDependencies:
       eslint: '>=8.38.0'
     dependencies:
-      '@babel/helper-validator-identifier': 7.19.1
+      '@babel/helper-validator-identifier': 7.22.5
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.44.0)
       ci-info: 3.8.0
       clean-regexp: 1.0.0
@@ -12312,7 +12307,7 @@ packages:
       regexp-tree: 0.1.24
       regjsparser: 0.10.0
       safe-regex: 2.1.1
-      semver: 7.5.3
+      semver: 7.5.4
       strip-indent: 3.0.0
     dev: true
 
