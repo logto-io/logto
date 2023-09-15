@@ -40,7 +40,7 @@
     "@logto/phrases-experience": "workspace:^1.2.0",
     "@logto/schemas": "workspace:^1.8.0",
     "@logto/shared": "workspace:^2.0.0",
-    "@logto/ui": "workspace:*",
+    "@logto/experience": "workspace:*",
     "@silverhand/essentials": "^2.8.4",
     "@withtyped/client": "^0.7.22",
     "chalk": "^5.0.0",
