@@ -4,11 +4,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: 'Planı Yükselt',
   compare_plans: 'Planları Karşılaştır',
-  get_started: {
-    title: 'Ücretsiz bir planla sorunsuz kimlik yolculuğunuza başlayın!',
-    description:
-      "Ücretsiz plan, Logto'yu yan projelerinizde veya denemelerinizde denemek için mükemmeldir. Ekibiniz için Logto'nun yeteneklerini tam anlamıyla kullanmak için sınırsız erişim elde etmek için yükseltme yaparak premium özelliklere sahip olun: sınırsız MAU kullanımı, Makine-Makine entegrasyonu, RBAC yönetimi, uzun süreli denetim günlükleri vb. <a>Tüm planları görüntüle</a>",
-  },
   create_tenant: {
     title: 'Kiracı planınızı seçin',
     description:

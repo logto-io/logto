@@ -4,11 +4,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: '플랜 업그레이드',
   compare_plans: '플랜 비교',
-  get_started: {
-    title: '무료 플랜으로 원활한 신원 확인 여정을 시작하세요!',
-    description:
-      '무료 플랜은 사이드 프로젝트나 시험용으로 Logto를 시도하기에 완벽합니다. 팀에 Logto의 기능을 모두 활용하려면 업그레이드하여 프리미엄 기능에 무제한으로 접근하세요: 무제한 MAU 사용, 기기 간 통합, RBAC 관리, 장기간 감사 로그 등. <a>모든 플랜 보기</a>',
-  },
   create_tenant: {
     title: '테넌트 플랜 선택하기',
     description:

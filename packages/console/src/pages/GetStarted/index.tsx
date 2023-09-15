@@ -27,7 +27,6 @@ import useWindowResize from '@/hooks/use-window-resize';
 import CreateApiForm from '../ApiResources/components/CreateForm';
 import CreateAppForm from '../Applications/components/CreateForm';
 
-import FreePlanNotification from './FreePlanNotification';
 import * as styles from './index.module.scss';
 
 const icons = {
@@ -107,7 +106,6 @@ function GetStarted() {
         <div className={styles.title}>{t('get_started.title')}</div>
         <div className={styles.subtitle}>{t('get_started.subtitle')}</div>
       </div>
-      <FreePlanNotification />
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.develop.title')}</div>
         <GuideCardGroup

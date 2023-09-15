@@ -4,11 +4,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: '升級計劃',
   compare_plans: '比較計劃',
-  get_started: {
-    title: '通過免費計劃開始您無縫的身份之旅！',
-    description:
-      '免費計劃非常適合在您的邊项目或試用中嘗試Logto。為了充分利用Logto團隊的功能，升級並獲得對高級功能的無限訪問：無限MAU使用、機器對機器集成、RBAC管理、長期審計日志等。 <a>查看所有計劃</a>',
-  },
   create_tenant: {
     title: '選擇您的租戶計劃',
     description:

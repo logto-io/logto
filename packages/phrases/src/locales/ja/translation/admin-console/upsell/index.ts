@@ -4,11 +4,6 @@ const upsell = {
   pro_tag: 'プロ',
   upgrade_plan: 'プランをアップグレード',
   compare_plans: 'プラン比較',
-  get_started: {
-    title: '無料プランでスムーズなアイデンティティの旅を始めましょう！',
-    description:
-      '無料プランは、サイドプロジェクトやトライアルでのLogtoの試用に最適です。チームにLogtoの機能を最大限に活用するには、アップグレードしてプレミアム機能への無制限アクセスを獲得してください：無制限のMAU利用、マシン間統合、RBAC管理、長期間の監査ログなど。<a>すべてのプランを表示</a>',
-  },
   create_tenant: {
     title: 'テナントプランを選択',
     description:

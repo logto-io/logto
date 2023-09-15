@@ -4,11 +4,6 @@ const upsell = {
   pro_tag: 'PRO',
   upgrade_plan: 'Atualizar plano',
   compare_plans: 'Comparar planos',
-  get_started: {
-    title: 'Inicie sua jornada de identidade sem problemas com um plano gratuito!',
-    description:
-      'O plano gratuito é perfeito para experimentar o Logto em seus projetos paralelos ou testes. Para aproveitar ao máximo as capacidades do Logto para sua equipe, faça um upgrade para obter acesso ilimitado aos recursos premium: uso ilimitado de MAU, integração Máquina-a-Máquina, gerenciamento de RBAC, logs de auditoria de longo prazo, etc. <a>Ver todos os planos</a>',
-  },
   create_tenant: {
     title: 'Selecione o seu plano de inquilino',
     description:
