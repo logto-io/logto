@@ -5,7 +5,7 @@
 "@logto/schemas": patch
 "@logto/core": patch
 "@logto/cli": patch
-"@logto/ui": patch
+"@logto/experience": patch
 ---
 
 rename the package `phrases-ui` to `phrases-experience`
