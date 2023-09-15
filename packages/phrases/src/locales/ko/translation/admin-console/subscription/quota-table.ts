@@ -34,6 +34,7 @@ const quota_table = {
     social_connectors: '소셜 커넥터',
     standard_connectors: '표준 커넥터',
     built_in_email_connector: '내장 이메일 커넥터',
+    mfa: 'MFA',
   },
   user_management: {
     title: '사용자 관리',

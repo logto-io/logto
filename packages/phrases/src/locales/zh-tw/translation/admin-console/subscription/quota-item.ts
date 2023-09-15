@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: '客戶票證支援',
     not_eligible: '無客戶票證支援',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: '停用你的 MFA',
+  },
 };
 
 export default Object.freeze(quota_item);

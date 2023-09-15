@@ -14,7 +14,7 @@ import ResourceIcon from '@/assets/icons/resource.svg';
 import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
 import Web from '@/assets/icons/web.svg';
-import { isCloud, isProduction } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 type SidebarItem = {
@@ -82,7 +82,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: SecurityLock,
           title: 'mfa',
-          isHidden: isProduction,
+          isHidden: !isDevFeaturesEnabled,
         },
         {
           Icon: Connection,

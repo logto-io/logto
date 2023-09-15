@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: '顧客チケットサポート',
     not_eligible: '顧客チケットサポートなし',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: 'MFAを無効にする',
+  },
 };
 
 export default Object.freeze(quota_item);

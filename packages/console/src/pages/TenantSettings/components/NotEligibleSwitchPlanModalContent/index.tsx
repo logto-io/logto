@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { planQuotaItemOrder } from '@/consts/plan-quotas';
 import {
   quotaItemLimitedPhrasesMap,
@@ -32,7 +33,14 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
     keyPrefix: 'admin_console.subscription.not_eligible_modal',
   });
 
-  const { id, name, quota } = targetPlan;
+  const {
+    id,
+    name,
+    quota: fullQuota,
+    quota: { mfaEnabled, ...quotaWithoutMfa },
+  } = targetPlan;
+
+  const quota = isDevFeaturesEnabled ? fullQuota : quotaWithoutMfa;
 
   const orderedEntries = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax

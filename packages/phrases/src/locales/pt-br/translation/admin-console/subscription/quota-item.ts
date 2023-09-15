@@ -113,6 +113,12 @@ const quota_item = {
     unlimited: 'Suporte de ticket de cliente',
     not_eligible: 'Nenhum suporte de ticket de cliente',
   },
+  mfa_enabled: {
+    name: 'MFA',
+    limited: 'MFA',
+    unlimited: 'MFA',
+    not_eligible: 'Desative sua MFA',
+  },
 };
 
 export default Object.freeze(quota_item);
