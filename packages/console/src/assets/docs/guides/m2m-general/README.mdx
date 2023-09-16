@@ -5,15 +5,18 @@ import ApplicationCredentials from '@/mdx-components/ApplicationCredentials';
 import EnableAdminAccess from './components/EnableAdminAccess';
 import EnableAdminAccessSrc from './assets/enable-admin-access.png';
 import AppIdentifierSrc from './assets/api-identifier.png';
+import { appendPath } from '@silverhand/essentials';
 
 <Steps>
 <Step title="Intro">
+
 Machine-to-machine (M2M) is a common practice to authenticate if you have an app that needs to directly talks to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
 
 Usually, an M2M app doesn't need user interactions, i.e., it has no UI.
 
 </Step>
 <Step title="Locate the app ID and app secret">
+
 Get your App ID and App Secret.
 
 <ApplicationCredentials />
@@ -43,7 +46,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
 
 <ul>
   <li>
-    Use Token Endpoint <code>{`${props.endpoint}/oidc/token`}</code> as the request endpoint, and
+    Use Token Endpoint <code>{`${appendPath(props.alternativeEndpoint ?? props.endpoint), '/oidc/token'}`}</code> as the request endpoint, and
     use POST as the method.
   </li>
   <li>
@@ -54,12 +57,12 @@ In the API Resource tab, find the API identifier that the app needs to access. I
     <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication">
       Basic authentication
     </a>
-    , where username is the App ID, and password is the App Secret.
+    , where username is the App ID, and password is the App Secret. The credential is the username and password combined with a colon, encoded in base64.
   </li>
   <li>Carry the body data</li>
 </ul>
 
-```jsonc
+```json
 {
   "grant_type": "client_credentials",
   "resource": "https://shopping.api", // Replace with your API identifier
@@ -72,8 +75,8 @@ If you are using cURL:
 <pre>
   <code className="language-bash">
     {`curl --location
-  --request POST '${props.endpoint}/oidc/token'
-  --header 'Authorization: Basic eW91ci1hcHAtaWQ6eW91ci1hcHAtc2VjcmV0'
+  --request POST '${appendPath(props.alternativeEndpoint ?? props.endpoint, '/oidc/token')}'
+  --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString('base64')}'
   --header 'Content-Type: application/x-www-form-urlencoded'
   --data-urlencode 'grant_type=client_credentials'
   --data-urlencode 'resource=https://shopping.api'
@@ -86,7 +89,7 @@ If you are using cURL:
 
 A successful response body would be like:
 
-```jsonc
+```json
 {
   "access_token": "eyJhbG...2g", // Use this token for accessing the resource
   "expires_in": 3600, // Token expiration in seconds
@@ -104,7 +107,7 @@ For example, if you have requested an Access Token with the resource `https://ap
 <pre>
   <code className="language-bash">
     {`curl --location
-  --request GET '${props.endpoint}/api/applications'
+  --request GET '${appendPath(props.alternativeEndpoint ?? props.endpoint, '/api/applications')}'
   --header 'Authorization: Bearer eyJhbG...2g' # Access Token
 `}
   </code>
