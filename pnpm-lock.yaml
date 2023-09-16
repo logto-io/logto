@@ -3600,8 +3600,8 @@ importers:
         specifier: ^3.7.5
         version: 3.7.5
       ky:
-        specifier: ^0.33.0
-        version: 0.33.0
+        specifier: ^1.0.0
+        version: 1.0.0
       libphonenumber-js:
         specifier: ^1.9.49
         version: 1.9.49
