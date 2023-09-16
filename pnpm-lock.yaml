@@ -2999,8 +2999,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       ky:
-        specifier: ^0.33.0
-        version: 0.33.0
+        specifier: ^1.0.0
+        version: 1.0.0
       libphonenumber-js:
         specifier: ^1.9.49
         version: 1.9.49
@@ -3600,8 +3600,8 @@ importers:
         specifier: ^3.7.5
         version: 3.7.5
       ky:
-        specifier: ^0.33.0
-        version: 0.33.0
+        specifier: ^1.0.0
+        version: 1.0.0
       libphonenumber-js:
         specifier: ^1.9.49
         version: 1.9.49
@@ -15057,9 +15057,9 @@ packages:
       - supports-color
     dev: false
 
-  /ky@0.33.0:
-    resolution: {integrity: sha512-peKzuOlN/q3Q3jOgi4t0cp6DOgif5rVnmiSIsjsmkiOcdnSjkrKSUqQmRWYCTqjUtR9b3xQQr8aj7KwSW1r49A==}
-    engines: {node: '>=14.16'}
+  /ky@1.0.0:
+    resolution: {integrity: sha512-ptUup6btycj2IXLL/L5Bh/QC9ghYC2k/BsnnSf0ccEap8FpCvJ32FL5s5Potb8NkH6HOTdnVGmyI1wkHZ3mfEQ==}
+    engines: {node: '>=18'}
     dev: true
 
   /language-subtag-registry@0.3.22:
