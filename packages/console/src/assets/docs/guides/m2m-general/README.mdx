@@ -10,14 +10,14 @@ import { appendPath } from '@silverhand/essentials';
 <Steps>
 <Step title="Intro">
 
-Machine-to-machine (M2M) is a common practice to authenticate if you have an app that needs to directly talks to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
+Machine-to-machine (M2M) is a common practice to authenticate if you have an app that needs to directly talk to resources. E.g., an API service that updates users' custom data in Logto, a statistic service that pulls daily orders, etc.
 
-Usually, an M2M app doesn't need user interactions, i.e., it has no UI.
+Usually, an M2M app doesn't need user interface.
 
 </Step>
 <Step title="Locate the app ID and app secret">
 
-Get your App ID and App Secret.
+Get your app ID and app secret.
 
 <ApplicationCredentials />
 
@@ -26,16 +26,16 @@ Get your App ID and App Secret.
 
 ### Accessing Logto Management API
 
-If you want to use this m2m app for accessing Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to turn on "admin access" for you application.
+If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to enable "admin access" for you application.
 
 <EnableAdminAccess />
 
 </Step>
-<Step title="Locate the API Resource">
+<Step title="Locate the API resource">
 
 ### Find the API identifier
 
-In the API Resource tab, find the API identifier that the app needs to access. If you haven't added the API Resource in Logto or don't know what API Resource is, see [API Resource](https://docs.logto.io/docs/references/resources).
+In the "API Resource" page, find the API identifier that the app needs to access. If you haven't added an API Resource in Logto or don't know what API Resource is, see [API Resource](https://docs.logto.io/docs/references/resources).
 
 <img alt="API identifier" src={AppIdentifierSrc} width="600px" style={{ borderRadius: '6px' }} />
 
@@ -46,7 +46,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
 
 <ul>
   <li>
-    Use Token Endpoint <code>{`${appendPath(props.endpoint), '/oidc/token'}`}</code> as the request endpoint, and
+    Use Token Endpoint <code>{`${appendPath(props.endpoint, '/oidc/token')}`}</code> as the request endpoint, and
     use POST as the method.
   </li>
   <li>
@@ -57,7 +57,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
     <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization#basic_authentication">
       Basic authentication
     </a>
-    , where username is the App ID, and password is the App Secret. The credential is the username and password combined with a colon, encoded in base64.
+    , where username is the app ID, and password is the app secret.
   </li>
   <li>Carry the body data</li>
 </ul>
@@ -76,6 +76,7 @@ If you are using cURL:
   <code className="language-bash">
     {`curl --location
   --request POST '${appendPath(props.endpoint, '/oidc/token')}'
+  # Credentials are constructed by "<app-id>:<app-secret>" and encoded in base64
   --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString('base64')}'
   --header 'Content-Type: application/x-www-form-urlencoded'
   --data-urlencode 'grant_type=client_credentials'
@@ -91,24 +92,24 @@ A successful response body would be like:
 
 ```json
 {
-  "access_token": "eyJhbG...2g", // Use this token for accessing the resource
+  "access_token": "<granted-access-token>", // Use this token to access the API resource
   "expires_in": 3600, // Token expiration in seconds
-  "token_type": "Bearer" // Auth type for your request when using the Access Token
+  "token_type": "Bearer" // Auth type for your request when using the access token
 }
 ```
 
 </Step>
-<Step title="Access resource using access token">
+<Step title="Access API resource using access token">
 
-You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the Access Token in the Authorization field of HTTP headers with the Bearer format (`Bearer YOUR_TOKEN`).
+You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the access token in the `Authorization` field of HTTP headers with the Bearer format (`Bearer <your-access-token>`).
 
-For example, if you have requested an Access Token with the resource `https://api.logto.io`, to get all applications in Logto:
+For example, if you have acquired an access token with the Logto admin API resource `https://api.logto.io`, then you can compose a GET request to fetch all applications in Logto as follows:
 
 <pre>
   <code className="language-bash">
     {`curl --location
   --request GET '${appendPath(props.endpoint, '/api/applications')}'
-  --header 'Authorization: Bearer eyJhbG...2g' # Access token
+  --header 'Authorization: Bearer <granted-access-token>'
 `}
   </code>
 </pre>
