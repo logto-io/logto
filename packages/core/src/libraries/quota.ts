@@ -69,6 +69,7 @@ export const createQuotaLibrary = (
       return { count };
     },
     customDomainEnabled: notNumber,
+    mfaEnabled: notNumber,
     omniSignInEnabled: notNumber, // No limit for now
     builtInEmailConnectorEnabled: notNumber, // No limit for now
   };
@@ -81,7 +82,7 @@ export const createQuotaLibrary = (
   };
 
   const guardKey = async (key: keyof FeatureQuota, queryKey?: string) => {
-    const { isCloud, isIntegrationTest, isProduction } = EnvSet.values;
+    const { isCloud, isIntegrationTest } = EnvSet.values;
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
