@@ -17,7 +17,7 @@ type Props = {
 
 function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
-  const { data: customDomain, applyDomain: applyCustomDomain } = useCustomDomain();
+  const { applyDomain: applyCustomDomain } = useCustomDomain();
   const guide = guides.find(({ id }) => id === guideId);
 
   const memorizedContext = useMemo(
@@ -28,10 +28,7 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             metadata: guide.metadata,
             Logo: guide.Logo,
             app,
-            endpoint: tenantEndpoint?.href ?? '',
-            alternativeEndpoint: conditional(
-              customDomain && applyCustomDomain(tenantEndpoint?.href ?? '')
-            ),
+            endpoint: applyCustomDomain(tenantEndpoint?.href ?? ''),
             redirectUris: app.oidcClientMetadata.redirectUris,
             postLogoutRedirectUris: app.oidcClientMetadata.postLogoutRedirectUris,
             isCompact: Boolean(isCompact),
@@ -41,7 +38,7 @@ function AppGuide({ className, guideId, app, isCompact, onClose }: Props) {
             },
           }
       ) satisfies GuideContextType | undefined,
-    [guide, app, tenantEndpoint?.href, customDomain, applyCustomDomain, isCompact]
+    [guide, app, tenantEndpoint?.href, applyCustomDomain, isCompact]
   );
 
   return memorizedContext ? (

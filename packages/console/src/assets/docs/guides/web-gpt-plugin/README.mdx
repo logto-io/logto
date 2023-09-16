@@ -37,7 +37,7 @@ Remember to click Save. To help ChatGPT maintain the authentication state, you c
 
 When setting up your plugin with ChatGPT, you will need to provide your OAuth Client ID and Client Secret.
 
-<img alt="ChatGPT plugin OAuth credentials" src={chatgptPluginOauthCredentials} width="560" />
+<img alt="ChatGPT plugin OAuth credentials" src={chatgptPluginOauthCredentials} width="560" style={{ borderRadius: '6px' }} />
 
 These correspond to the “App ID” and “App Secret” below (you can copy and paste):
 
@@ -57,11 +57,11 @@ Remember to replace the `verification_tokens.openai` value with the actual one.
 
 The ChatGPT UI will automatically prompt you to install the plugin. Once successful, you will see a dialog with a button that says "Log in with [your plugin name]."
 
-<img alt="ChatGPT plugin login" src={chatgptPluginLogin} width="560" />
+<img alt="ChatGPT plugin login" src={chatgptPluginLogin} width="560" style={{ borderRadius: '6px' }} />
 
 Click on the button, and you will be directed to the Logto sign-in experience.
 
-<img alt="Logto sign-in experience" src={logtoSignInExperience} width="560" />
+<img alt="Logto sign-in experience" src={logtoSignInExperience} width="560" style={{ borderRadius: '6px' }} />
 
 If everything is configured correctly, once you complete the sign-in or registration process in Logto, you will be redirected back to ChatGPT. From now on, every request sent by ChatGPT to your plugin server will carry the Authorization header, allowing you to decode and verify the token in your API.
 

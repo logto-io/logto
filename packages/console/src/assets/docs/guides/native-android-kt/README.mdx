@@ -42,7 +42,7 @@ import io.logto.sdk.android.type.LogtoConfig
 
 class MainActivity : AppCompatActivity() {
     val logtoConfig = LogtoConfig(
-        endpoint = "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+        endpoint = "${props.endpoint}",
         appId = "${props.app.id}",
         scopes = null,
         resources = null,

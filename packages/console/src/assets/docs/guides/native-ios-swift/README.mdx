@@ -50,7 +50,7 @@ CocoaPods [does not support local dependency](https://github.com/CocoaPods/Cocoa
 import LogtoClient
 
 let config = try? LogtoConfig(
-  endpoint: "${props.endpoint}",${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+  endpoint: "${props.endpoint}",
   appId: "${props.app.id}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}

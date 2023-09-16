@@ -21,7 +21,6 @@ export type GuideContextType = {
   isCompact: boolean;
   app?: ApplicationResponse;
   endpoint?: string;
-  alternativeEndpoint?: string;
   redirectUris?: string[];
   postLogoutRedirectUris?: string[];
   sampleUrls?: {

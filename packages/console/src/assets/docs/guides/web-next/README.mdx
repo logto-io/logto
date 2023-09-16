@@ -54,7 +54,7 @@ Import and initialize LogtoClient:
 import LogtoClient from '@logto/next';
 
 export const logtoClient = new LogtoClient({
-  endpoint: '${props.endpoint}',${props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''}
+  endpoint: '${props.endpoint}',
   appId: '${props.app.id}',
   appSecret: '${props.app.secret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL

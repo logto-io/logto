@@ -34,7 +34,7 @@ Insert the following code into your Python file:
 
 client = LogtoClient(
     LogtoConfig(
-        endpoint="${props.endpoint}",${props.alternativeEndpoint ? ' # or "${props.alternativeEndpoint}"' : ''}
+        endpoint="${props.endpoint}",
         appId="${props.app.id}",
         appSecret="${props.app.secret}",
     )
