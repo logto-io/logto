@@ -46,7 +46,7 @@ In the API Resource tab, find the API identifier that the app needs to access. I
 
 <ul>
   <li>
-    Use Token Endpoint <code>{`${appendPath(props.alternativeEndpoint ?? props.endpoint), '/oidc/token'}`}</code> as the request endpoint, and
+    Use Token Endpoint <code>{`${appendPath(props.endpoint), '/oidc/token'}`}</code> as the request endpoint, and
     use POST as the method.
   </li>
   <li>
@@ -75,7 +75,7 @@ If you are using cURL:
 <pre>
   <code className="language-bash">
     {`curl --location
-  --request POST '${appendPath(props.alternativeEndpoint ?? props.endpoint, '/oidc/token')}'
+  --request POST '${appendPath(props.endpoint, '/oidc/token')}'
   --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString('base64')}'
   --header 'Content-Type: application/x-www-form-urlencoded'
   --data-urlencode 'grant_type=client_credentials'
@@ -98,7 +98,7 @@ A successful response body would be like:
 ```
 
 </Step>
-<Step title="Access resource using Access Token">
+<Step title="Access resource using access token">
 
 You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the Access Token in the Authorization field of HTTP headers with the Bearer format (`Bearer YOUR_TOKEN`).
 
@@ -107,8 +107,8 @@ For example, if you have requested an Access Token with the resource `https://ap
 <pre>
   <code className="language-bash">
     {`curl --location
-  --request GET '${appendPath(props.alternativeEndpoint ?? props.endpoint, '/api/applications')}'
-  --header 'Authorization: Bearer eyJhbG...2g' # Access Token
+  --request GET '${appendPath(props.endpoint, '/api/applications')}'
+  --header 'Authorization: Bearer eyJhbG...2g' # Access token
 `}
   </code>
 </pre>

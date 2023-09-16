@@ -78,9 +78,7 @@ import { makeLogtoRemix } from "@logto/remix";
 
 export const logto = makeLogtoRemix(
   {
-    endpoint: '${props.endpoint}',${
-      props.alternativeEndpoint ? ` // or "${props.alternativeEndpoint}"` : ''
-    }
+    endpoint: '${props.endpoint}',
     appId: '${props.app.id}',
     appSecret: '${props.app.secret}',
     baseUrl: 'http://localhost:3000', // Change to your own base URL

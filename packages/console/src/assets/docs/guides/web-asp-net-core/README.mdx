@@ -36,7 +36,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogtoAuthentication(options =>
 {
-  options.Endpoint = "${props.endpoint}";${props.alternativeEndpoint ? ' // or "${props.alternativeEndpoint}"' : ''}
+  options.Endpoint = "${props.endpoint}";
   options.AppId = "${props.app.id}";
   options.AppSecret = "${props.app.secret}";
 });
