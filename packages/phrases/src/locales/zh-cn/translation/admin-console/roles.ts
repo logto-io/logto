@@ -11,7 +11,22 @@ const roles = {
   role_description: '描述',
   role_name_placeholder: '输入你的角色名称',
   role_description_placeholder: '输入你的角色描述',
-  assigned_users: '已分配的用户',
+  /** UNTRANSLATED */
+  col_roles: 'Roles',
+  /** UNTRANSLATED */
+  col_type: 'Type',
+  /** UNTRANSLATED */
+  col_description: 'Description',
+  /** UNTRANSLATED */
+  col_assigned_entities: 'Assigned',
+  /** UNTRANSLATED */
+  user_counts: '{{count}} users',
+  /** UNTRANSLATED */
+  application_counts: '{{count}} apps',
+  /** UNTRANSLATED */
+  user_count: '{{count}} user',
+  /** UNTRANSLATED */
+  application_count: '{{count}} app',
   assign_permissions: '分配权限',
   create_role_title: '创建角色',
   create_role_description: '为你的应用程序创建和管理角色。角色包含权限集合，并可以分配给用户。',

@@ -11,7 +11,22 @@ const roles = {
   role_description: 'Descrição',
   role_name_placeholder: 'Insira o nome da sua função',
   role_description_placeholder: 'Insira a descrição da sua função',
-  assigned_users: 'Usuários atribuídos',
+  /** UNTRANSLATED */
+  col_roles: 'Roles',
+  /** UNTRANSLATED */
+  col_type: 'Type',
+  /** UNTRANSLATED */
+  col_description: 'Description',
+  /** UNTRANSLATED */
+  col_assigned_entities: 'Assigned',
+  /** UNTRANSLATED */
+  user_counts: '{{count}} users',
+  /** UNTRANSLATED */
+  application_counts: '{{count}} apps',
+  /** UNTRANSLATED */
+  user_count: '{{count}} user',
+  /** UNTRANSLATED */
+  application_count: '{{count}} app',
   assign_permissions: 'Atribuir permissões',
   create_role_title: 'Criar função',
   create_role_description:

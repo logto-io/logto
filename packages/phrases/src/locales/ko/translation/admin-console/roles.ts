@@ -11,7 +11,22 @@ const roles = {
   role_description: '설명',
   role_name_placeholder: '역할 이름을 입력하세요',
   role_description_placeholder: '역할 설명을 입력하세요',
-  assigned_users: '할당된 사용자',
+  /** UNTRANSLATED */
+  col_roles: 'Roles',
+  /** UNTRANSLATED */
+  col_type: 'Type',
+  /** UNTRANSLATED */
+  col_description: 'Description',
+  /** UNTRANSLATED */
+  col_assigned_entities: 'Assigned',
+  /** UNTRANSLATED */
+  user_counts: '{{count}} users',
+  /** UNTRANSLATED */
+  application_counts: '{{count}} apps',
+  /** UNTRANSLATED */
+  user_count: '{{count}} user',
+  /** UNTRANSLATED */
+  application_count: '{{count}} app',
   assign_permissions: '권한 할당',
   create_role_title: '역할 생성',
   create_role_description:

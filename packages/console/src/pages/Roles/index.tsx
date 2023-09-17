@@ -1,11 +1,16 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { RoleResponse } from '@logto/schemas';
+import { RoleType, type RoleResponse } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
+import MachineToMachineIconDark from '@/assets/icons/m2m-role-dark.svg';
+import MachineToMachineIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
+import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
+import UserRoleIcon from '@/assets/icons/user-role.svg';
 import RolesEmptyDark from '@/assets/images/roles-empty-dark.svg';
 import RolesEmpty from '@/assets/images/roles-empty.svg';
 import ItemPreview from '@/components/ItemPreview';
@@ -18,9 +23,10 @@ import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+import useTheme from '@/hooks/use-theme';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import AssignedUsers from './components/AssignedUsers';
+import AssignedEntities from './components/AssignedEntities';
 import CreateRoleModal from './components/CreateRoleModal';
 import * as styles from './index.module.scss';
 
@@ -30,12 +36,21 @@ const buildDetailsPathname = (id: string) => `${rolesPathname}/${id}`;
 
 const pageSize = defaultPageSize;
 
+const getRoleIcon = (type: RoleType, isDarkMode: boolean) => {
+  if (type === RoleType.User) {
+    return isDarkMode ? <UserRoleIconDark /> : <UserRoleIcon />;
+  }
+
+  return isDarkMode ? <MachineToMachineIconDark /> : <MachineToMachineIcon />;
+};
+
 function Roles() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { search } = useLocation();
   const { navigate, match } = useTenantPathname();
   const isCreating = match(createRolePathname);
   const { getDocumentationUrl } = useDocumentationUrl();
+  const theme = useTheme();
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -76,24 +91,55 @@ function Roles() {
         errorMessage: error?.body?.message ?? error?.message,
         columns: [
           {
-            title: t('roles.role_name'),
-            dataIndex: 'name',
+            title: t('roles.col_roles'),
+            dataIndex: 'roles',
             colSpan: 5,
-            render: ({ id, name }) => <ItemPreview title={name} to={buildDetailsPathname(id)} />,
+            render: ({ id, name, type }) => (
+              <ItemPreview
+                title={name}
+                to={buildDetailsPathname(id)}
+                icon={getRoleIcon(type, theme === Theme.Dark)}
+              />
+            ),
           },
           {
-            title: t('roles.role_description'),
+            title: t('roles.col_type'),
+            dataIndex: 'type',
+            colSpan: 5,
+            render: ({ type }) => (
+              <div className={styles.type}>
+                {type === RoleType.User ? t('roles.type_user') : t('roles.type_machine_to_machine')}
+              </div>
+            ),
+          },
+          {
+            title: t('roles.col_description'),
             dataIndex: 'description',
-            colSpan: 6,
+            colSpan: 5,
             render: ({ description }) => <div className={styles.description}>{description}</div>,
           },
           {
-            title: <span>{t('roles.assigned_users')}</span>,
-            dataIndex: 'users',
+            title: <span>{t('roles.col_assigned_entities')}</span>,
+            dataIndex: 'entities',
             colSpan: 5,
-            render: ({ featuredUsers, usersCount }) => (
-              <AssignedUsers users={featuredUsers} count={usersCount} />
-            ),
+            render: ({
+              type,
+              featuredUsers,
+              usersCount,
+              featuredApplications,
+              applicationsCount,
+            }) => {
+              if (type === RoleType.User) {
+                return <AssignedEntities entities={featuredUsers} count={usersCount} type={type} />;
+              }
+              return (
+                <AssignedEntities
+                  entities={featuredApplications}
+                  count={applicationsCount}
+                  type={type}
+                />
+              );
+            },
           },
         ],
         rowClickHandler: ({ id }) => {

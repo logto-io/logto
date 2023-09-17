@@ -1,6 +1,6 @@
 import type { ApplicationsRole, CreateApplicationsRole, Role } from '@logto/schemas';
 import { Roles, ApplicationsRoles, RolesScopes } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { convertToIdentifiers, conditionalSql } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
@@ -42,12 +42,13 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
       where ${fields.applicationId}=${applicationId}
     `);
 
-  const findApplicationsRolesByRoleId = async (roleId: string) =>
+  const findApplicationsRolesByRoleId = async (roleId: string, limit?: number) =>
     pool.any<ApplicationsRole>(sql`
       select
         ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       where ${fields.roleId}=${roleId}
+      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
     `);
 
   const insertApplicationsRoles = async (applicationsRoles: CreateApplicationsRole[]) =>

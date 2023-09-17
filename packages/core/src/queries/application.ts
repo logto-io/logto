@@ -148,6 +148,15 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  const findApplicationsByIds = async (applicationIds: string[]) =>
+    applicationIds.length > 0
+      ? pool.any<Application>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.id} in (${sql.join(applicationIds, sql`, `)})
+      `)
+      : [];
+
   const deleteApplicationById = async (id: string) => {
     const { rowCount } = await pool.query(sql`
       delete from ${table}
@@ -172,6 +181,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     countM2mApplications,
     countM2mApplicationsByIds,
     findM2mApplicationsByIds,
+    findApplicationsByIds,
     deleteApplicationById,
   };
 };

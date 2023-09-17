@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.users {
+.entities {
   display: flex;
   align-items: center;
 
@@ -18,10 +18,16 @@
         margin-left: _.unit(-2);
       }
     }
+
+    .applicationIcon {
+      width: 24px;
+      height: 24px;
+      border-radius: _.unit(2);
+    }
   }
 
   .count {
-    margin-left: _.unit(2);
+    margin-left: 9px;
     color: var(--color-text);
     font: var(--font-body-2);
   }

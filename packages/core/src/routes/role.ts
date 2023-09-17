@@ -1,5 +1,5 @@
 import type { RoleResponse } from '@logto/schemas';
-import { Roles, Users } from '@logto/schemas';
+import { Applications, Roles, Users } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { object, string, z, number } from 'zod';
@@ -35,6 +35,8 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
     scopes: { findScopeById },
     users: { findUsersByIds },
     usersRoles: { countUsersRolesByRoleId, findUsersRolesByRoleId, findUsersRolesByUserId },
+    applications: { findApplicationsByIds },
+    applicationsRoles: { countApplicationsRolesByRoleId, findApplicationsRolesByRoleId },
   } = queries;
 
   router.use('/roles(/.*)?', koaRoleRlsErrorHandler());
@@ -50,6 +52,13 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
             featuredUsers: Users.guard
               .pick({
                 avatar: true,
+                id: true,
+                name: true,
+              })
+              .array(),
+            applicationsCount: number(),
+            featuredApplications: Applications.guard
+              .pick({
                 id: true,
                 name: true,
               })
@@ -77,14 +86,22 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
 
           const rolesResponse: RoleResponse[] = await Promise.all(
             roles.map(async (role) => {
-              const { count } = await countUsersRolesByRoleId(role.id);
+              const { count: usersCount } = await countUsersRolesByRoleId(role.id);
               const usersRoles = await findUsersRolesByRoleId(role.id, 3);
               const users = await findUsersByIds(usersRoles.map(({ userId }) => userId));
 
+              const { count: applicationsCount } = await countApplicationsRolesByRoleId(role.id);
+              const applicationsRoles = await findApplicationsRolesByRoleId(role.id, 3);
+              const applications = await findApplicationsByIds(
+                applicationsRoles.map(({ applicationId }) => applicationId)
+              );
+
               return {
                 ...role,
-                usersCount: count,
+                usersCount,
                 featuredUsers: users.map(({ id, avatar, name }) => ({ id, avatar, name })),
+                applicationsCount,
+                featuredApplications: applications.map(({ id, name }) => ({ id, name })),
               };
             })
           );
