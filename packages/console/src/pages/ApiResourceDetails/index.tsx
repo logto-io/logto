@@ -1,6 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
-import { isManagementApi, Theme } from '@logto/schemas';
+import { isManagementApi, Theme, isManagementApiIndicator } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -30,6 +30,7 @@ import useTheme from '@/hooks/use-theme';
 
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
+import ManagementApiIntroductionNotice from './components/ManagementApiIntroductionNotice';
 import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
 
@@ -101,6 +102,9 @@ function ApiResourceDetails() {
       onRetry={mutate}
     >
       <PageMeta titleKey="api_resource_details.page_title" />
+      {data?.indicator && isManagementApiIndicator(data.indicator) && (
+        <ManagementApiIntroductionNotice />
+      )}
       {data && (
         <>
           <Card className={styles.header}>

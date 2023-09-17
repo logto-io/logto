@@ -1,4 +1,9 @@
 const api_resource_details = {
+  /** UNTRANSLATED */
+  management_api_notice:
+    'This API represents Logto entity and can not be modified or deleted. You can use management API for a wide range of identity-related tasks. <a>{{link}}</a>',
+  /** UNTRANSLATED */
+  management_api_notice_link_text: 'Learn more',
   page_title: 'API 資源詳情',
   back_to_api_resources: '返回 API 資源',
   settings_tab: '設定',
