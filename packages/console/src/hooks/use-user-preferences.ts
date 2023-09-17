@@ -17,6 +17,7 @@ const userPreferencesGuard = z.object({
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
   connectorSieNoticeConfirmed: z.boolean().optional(),
+  managementApiIntroductionNoticeConfirmed: z.boolean().optional(),
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

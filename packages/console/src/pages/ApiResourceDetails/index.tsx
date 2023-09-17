@@ -1,8 +1,8 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
-import { isManagementApi, Theme } from '@logto/schemas';
+import { isManagementApi, Theme, isManagementApiIndicator } from '@logto/schemas';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -30,6 +31,7 @@ import useTheme from '@/hooks/use-theme';
 
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
+import ManagementApiIntroductionNotice from './components/ManagementApiIntroductionNotice';
 import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
 
@@ -37,6 +39,7 @@ function ApiResourceDetails() {
   const { pathname } = useLocation();
   const { id, guideId } = useParams();
   const { navigate, match } = useTenantPathname();
+  const { currentTenantId } = useContext(TenantsContext);
   const isGuideView = !!id && !!guideId && match(`/api-resources/${id}/guide/${guideId}`);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -101,6 +104,9 @@ function ApiResourceDetails() {
       onRetry={mutate}
     >
       <PageMeta titleKey="api_resource_details.page_title" />
+      {data?.indicator && isManagementApiIndicator(data.indicator, currentTenantId) && (
+        <ManagementApiIntroductionNotice />
+      )}
       {data && (
         <>
           <Card className={styles.header}>

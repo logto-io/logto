@@ -73,6 +73,15 @@ export function getManagementApiResourceIndicator(tenantId: string, path = 'api'
   return `https://${tenantId}.logto.app/${path}`;
 }
 
+export const isManagementApiIndicator = (resourceIndicator: string, tenantId?: string) => {
+  const regex = new RegExp(
+    tenantId ? `https://${tenantId}.logto.app/.+` : 'https://\\w+.logto.app/.+',
+    'g'
+  );
+
+  return regex.test(resourceIndicator);
+};
+
 export const getManagementApiAdminName = <TenantId extends string>(tenantId: TenantId) =>
   `${tenantId}:${AdminTenantRole.Admin}` as const;
 
