@@ -32,6 +32,7 @@ import LinkEmailModal from '@/pages/Profile/containers/LinkEmailModal';
 import VerificationCodeModal from '@/pages/Profile/containers/VerificationCodeModal';
 import VerifyPasswordModal from '@/pages/Profile/containers/VerifyPasswordModal';
 import RoleDetails from '@/pages/RoleDetails';
+import RoleApplications from '@/pages/RoleDetails/RoleApplications';
 import RolePermissions from '@/pages/RoleDetails/RolePermissions';
 import RoleSettings from '@/pages/RoleDetails/RoleSettings';
 import RoleUsers from '@/pages/RoleDetails/RoleUsers';
@@ -145,6 +146,7 @@ function ConsoleContent() {
                 <Route path={RoleDetailsTabs.Settings} element={<RoleSettings />} />
                 <Route path={RoleDetailsTabs.Permissions} element={<RolePermissions />} />
                 <Route path={RoleDetailsTabs.Users} element={<RoleUsers />} />
+                <Route path={RoleDetailsTabs.M2mApps} element={<RoleApplications />} />
               </Route>
             </Route>
             <Route path="profile">

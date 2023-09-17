@@ -40,8 +40,12 @@ export default function applicationRoutes<T extends AuthedRouter>(
     countApplications,
     findApplications,
   } = queries.applications;
-  const { findApplicationsRolesByApplicationId, insertApplicationsRoles, deleteApplicationRole } =
-    queries.applicationsRoles;
+  const {
+    findApplicationsRolesByApplicationId,
+    insertApplicationsRoles,
+    deleteApplicationRole,
+    findApplicationsRolesByRoleId,
+  } = queries.applicationsRoles;
   const { findRoleByRoleName } = queries.roles;
 
   router.get(
@@ -57,15 +61,23 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
       const search = parseSearchParamsForSearch(searchParams);
 
+      const excludeRoleId = searchParams.get('excludeRoleId');
+      const excludeApplicationsRoles = excludeRoleId
+        ? await findApplicationsRolesByRoleId(excludeRoleId)
+        : [];
+      const excludeApplicationIds = excludeApplicationsRoles.map(
+        ({ applicationId }) => applicationId
+      );
+
       if (paginationDisabled) {
-        ctx.body = await findApplications(search);
+        ctx.body = await findApplications(search, excludeApplicationIds);
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications(search),
-        findApplications(search, limit, offset),
+        countApplications(search, excludeApplicationIds),
+        findApplications(search, excludeApplicationIds, limit, offset),
       ]);
 
       // Return totalCount to pagination middleware

@@ -6,12 +6,18 @@ const role_details = {
   role_deleted: '{{name}} 已成功刪除。',
   settings_tab: '設置',
   users_tab: '用戶',
+  /** UNTRANSLATED */
+  m2m_apps_tab: 'Machine-to-machine apps',
   permissions_tab: '權限',
   settings: '設置',
   settings_description:
     '角色是一組權限，可以分配給用戶。它們還提供了一種聚合不同 API 定義的權限的方法，使得添加、刪除或調整權限比將其單獨分配給用戶更有效率。',
   field_name: '名稱',
   field_description: '描述',
+  /** UNTRANSLATED */
+  type_m2m_role_tag: 'Machine-to-machine app role',
+  /** UNTRANSLATED */
+  type_user_role_tag: 'User role',
   permission: {
     assign_button: '分配權限',
     assign_title: '分配權限',
@@ -47,11 +53,16 @@ const role_details = {
     /** UNTRANSLATED */
     name_column: 'Application',
     /** UNTRANSLATED */
-    app_column: 'App',
+    app_column: 'Apps',
+    /** UNTRANSLATED */
+    description_column: 'Description',
+    /** UNTRANSLATED */
+    delete_description:
+      'It will remain in your application pool but lose the authorization for this role.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this role',
     /** UNTRANSLATED */
-    assign_title: 'Assign applications',
+    assign_title: 'Assign apps',
     /** UNTRANSLATED */
     assign_subtitle:
       'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',

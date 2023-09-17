@@ -6,12 +6,18 @@ const role_details = {
   role_deleted: '{{name}} は正常に削除されました。',
   settings_tab: '設定',
   users_tab: 'ユーザー',
+  /** UNTRANSLATED */
+  m2m_apps_tab: 'Machine-to-machine apps',
   permissions_tab: '許可',
   settings: '設定',
   settings_description:
     'ロールは、ユーザーに割り当てることができる許可のグループ化です。また、異なるAPIに対して定義された許可を集約する方法を提供し、ユーザーに個別に割り当てるよりも許可を追加、削除、または調整するのに効率的です。',
   field_name: '名前',
   field_description: '説明',
+  /** UNTRANSLATED */
+  type_m2m_role_tag: 'Machine-to-machine app role',
+  /** UNTRANSLATED */
+  type_user_role_tag: 'User role',
   permission: {
     assign_button: '許可を割り当てる',
     assign_title: '許可の割り当て',
@@ -50,11 +56,16 @@ const role_details = {
     /** UNTRANSLATED */
     name_column: 'Application',
     /** UNTRANSLATED */
-    app_column: 'App',
+    app_column: 'Apps',
+    /** UNTRANSLATED */
+    description_column: 'Description',
+    /** UNTRANSLATED */
+    delete_description:
+      'It will remain in your application pool but lose the authorization for this role.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this role',
     /** UNTRANSLATED */
-    assign_title: 'Assign applications',
+    assign_title: 'Assign apps',
     /** UNTRANSLATED */
     assign_subtitle:
       'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',

@@ -1,0 +1,20 @@
+@use '@/scss/underscore' as _;
+
+.applicationsTable {
+  flex: 1;
+  margin-bottom: _.unit(6);
+  color: var(--color-text);
+
+  .filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  tbody {
+    td {
+      max-width: 100%;
+      @include _.text-ellipsis;
+    }
+  }
+}

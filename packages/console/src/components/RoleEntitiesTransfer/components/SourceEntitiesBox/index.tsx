@@ -54,6 +54,7 @@ function SourceEntitiesBox<T extends User | Application>({
           ...commonSearchParams,
         })
       : buildUrl(`api/applications`, {
+          excludeRoleId: roleId,
           ...commonSearchParams,
           'search.type': ApplicationType.MachineToMachine,
           'mode.type': 'exact',
