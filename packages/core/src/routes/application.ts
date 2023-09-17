@@ -14,6 +14,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
@@ -34,10 +35,10 @@ export default function applicationRoutes<T extends AuthedRouter>(
   const {
     deleteApplicationById,
     findApplicationById,
-    findAllApplications,
     insertApplication,
     updateApplicationById,
-    findTotalNumberOfApplications,
+    countApplications,
+    findApplications,
   } = queries.applications;
   const { findApplicationsRolesByApplicationId, insertApplicationsRoles, deleteApplicationRole } =
     queries.applicationsRoles;
@@ -46,19 +47,25 @@ export default function applicationRoutes<T extends AuthedRouter>(
   router.get(
     '/applications',
     koaPagination({ isOptional: true }),
-    koaGuard({ response: z.array(Applications.guard), status: 200 }),
+    koaGuard({
+      response: z.array(Applications.guard),
+      status: 200,
+    }),
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
+      const { searchParams } = ctx.URL;
+
+      const search = parseSearchParamsForSearch(searchParams);
 
       if (paginationDisabled) {
-        ctx.body = await findAllApplications();
+        ctx.body = await findApplications(search);
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        findTotalNumberOfApplications(),
-        findAllApplications(limit, offset),
+        countApplications(search),
+        findApplications(search, limit, offset),
       ]);
 
       // Return totalCount to pagination middleware

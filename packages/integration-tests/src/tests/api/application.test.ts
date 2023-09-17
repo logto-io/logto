@@ -81,6 +81,32 @@ describe('admin console application', () => {
     expect(applicationNames).toContain('test-update-app');
   });
 
+  it('should create m2m application successfully and can get only m2m applications by specifying types', async () => {
+    await createApplication('test-m2m-app-1', ApplicationType.MachineToMachine);
+    await createApplication('test-m2m-app-2', ApplicationType.MachineToMachine);
+    const m2mApps = await getApplications([ApplicationType.MachineToMachine]);
+    const m2mAppNames = m2mApps.map(({ name }) => name);
+    expect(m2mAppNames).toContain('test-m2m-app-1');
+    expect(m2mAppNames).toContain('test-m2m-app-2');
+  });
+
+  it('total number of apps should equal to the sum of number of each types', async () => {
+    const allApps = await getApplications();
+    const m2mApps = await getApplications([ApplicationType.MachineToMachine]);
+    const spaApps = await getApplications([ApplicationType.SPA]);
+    const otherApps = await getApplications([ApplicationType.Native, ApplicationType.Traditional]);
+    expect(allApps.length).toBe(m2mApps.length + spaApps.length + otherApps.length);
+    const allAppNames = allApps.map(({ name }) => name);
+    const spaAppNames = spaApps.map(({ name }) => name);
+    const otherAppNames = otherApps.map(({ name }) => name);
+    expect(allAppNames).toContain('test-m2m-app-1');
+    expect(allAppNames).toContain('test-m2m-app-2');
+    expect(spaAppNames).not.toContain('test-m2m-app-1');
+    expect(spaAppNames).not.toContain('test-m2m-app-2');
+    expect(otherAppNames).not.toContain('test-m2m-app-1');
+    expect(otherAppNames).not.toContain('test-m2m-app-2');
+  });
+
   it('should delete application successfully', async () => {
     const application = await createApplication('test-delete-app', ApplicationType.Native);
 
