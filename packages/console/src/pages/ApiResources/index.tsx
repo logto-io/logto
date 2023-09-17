@@ -1,12 +1,14 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import type { Resource } from '@logto/schemas';
-import { Theme } from '@logto/schemas';
+import { Theme, isManagementApi } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
 import ApiResource from '@/assets/icons/api-resource.svg';
+import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
+import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
@@ -29,6 +31,11 @@ const createApiResourcePathname = `${apiResourcesPathname}/create`;
 const buildDetailsPathname = (id: string) =>
   `${apiResourcesPathname}/${id}/${ApiResourceDetailsTabs.Settings}`;
 
+const icons = {
+  [Theme.Light]: { ApiIcon: ApiResource, ManagementApiIcon: ManagementApiResource },
+  [Theme.Dark]: { ApiIcon: ApiResourceDark, ManagementApiIcon: ManagementApiResourceDark },
+};
+
 function ApiResources() {
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -49,7 +56,7 @@ function ApiResources() {
   const theme = useTheme();
   const [apiResources, totalCount] = data ?? [];
 
-  const ResourceIcon = theme === Theme.Light ? ApiResource : ApiResourceDark;
+  const { ApiIcon, ManagementApiIcon } = icons[theme];
   const isCreating = match(createApiResourcePathname);
 
   return (
@@ -79,14 +86,17 @@ function ApiResources() {
               title: t('api_resources.api_name'),
               dataIndex: 'name',
               colSpan: 6,
-              render: ({ id, name, isDefault }) => (
-                <ItemPreview
-                  title={name}
-                  icon={<ResourceIcon className={styles.icon} />}
-                  to={buildDetailsPathname(id)}
-                  suffix={isDefault && <Tag>{t('api_resources.default_api')}</Tag>}
-                />
-              ),
+              render: ({ id, name, isDefault, indicator }) => {
+                const Icon = isManagementApi(indicator) ? ManagementApiIcon : ApiIcon;
+                return (
+                  <ItemPreview
+                    title={name}
+                    icon={<Icon className={styles.icon} />}
+                    to={buildDetailsPathname(id)}
+                    suffix={isDefault && <Tag>{t('api_resources.default_api')}</Tag>}
+                  />
+                );
+              },
             },
             {
               title: t('api_resources.api_identifier'),

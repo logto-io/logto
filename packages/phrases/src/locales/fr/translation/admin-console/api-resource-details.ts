@@ -8,6 +8,9 @@ const api_resource_details = {
     "Les ressources API, également connues sous le nom d'indicateurs de ressource, indiquent les services ou les ressources cibles à demander, généralement une variable de format d'URI représentant l'identité de la ressource.",
   management_api_settings_description:
     "La Logto Management API est une collection complète d'API qui permettent aux administrateurs de gérer une large gamme de tâches liées à l'identité, d'appliquer des politiques de sécurité et de se conformer aux réglementations et normes.",
+  /** UNTRANSLATED */
+  management_api_notice:
+    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
   token_expiration_time_in_seconds: "Temps d'expiration du jeton (en secondes)",
   token_expiration_time_in_seconds_placeholder: "Entrez le délai d'expiration de votre jeton",
   delete_description:

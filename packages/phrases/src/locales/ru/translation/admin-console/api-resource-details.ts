@@ -8,6 +8,9 @@ const api_resource_details = {
     'Ресурсы API, также известные как индикаторы ресурсов, указывают целевые службы или ресурсы, запрашиваемые обычно в виде переменной формата URI, представляющей идентификатор ресурса.',
   management_api_settings_description:
     'Logto Management API - это комплексный набор API, который дает администраторам возможность управлять широким спектром задач, связанных с идентификацией, обеспечивать политику безопасности и соблюдать требования и стандарты.',
+  /** UNTRANSLATED */
+  management_api_notice:
+    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
   token_expiration_time_in_seconds: 'Время истечения токена (в секундах)',
   token_expiration_time_in_seconds_placeholder: 'Введите время истечения вашего токена',
   delete_description:
