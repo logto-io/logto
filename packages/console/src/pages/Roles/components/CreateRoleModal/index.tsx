@@ -1,13 +1,13 @@
-import type { Role } from '@logto/schemas';
+import { type Role } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import AssignUsersModal from '@/pages/RoleDetails/RoleUsers/components/AssignUsersModal';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import AssignRoleModal from '../AssignRoleModal';
 import type { Props as CreateRoleFormProps } from '../CreateRoleForm';
 import CreateRoleForm from '../CreateRoleForm';
 
@@ -42,9 +42,10 @@ function CreateRoleModal({ totalRoleCount, onClose }: Props) {
       onRequestClose={onClose}
     >
       {createdRole ? (
-        <AssignUsersModal
+        <AssignRoleModal
           isRemindSkip
           roleId={createdRole.id}
+          roleType={createdRole.type}
           onClose={() => {
             navigate(`/roles/${createdRole.id}`, { replace: true });
           }}

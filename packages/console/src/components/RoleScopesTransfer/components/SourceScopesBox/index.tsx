@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import Search from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
-import { isProduction } from '@/consts/env';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -88,7 +88,7 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
       .filter(
         ({ indicator, scopes }) =>
           /** Should show management API scopes for machine-to-machine roles */
-          ((!isProduction && roleType === RoleType.MachineToMachine) ||
+          ((isDevFeaturesEnabled && roleType === RoleType.MachineToMachine) ||
             !isManagementApi(indicator)) &&
           scopes.some(({ id }) => !excludeScopeIds.has(id))
       )
