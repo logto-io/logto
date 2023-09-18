@@ -23,7 +23,7 @@ function TargetRoleItem({ role, onDelete }: Props) {
           ({t('user_details.roles.assigned_user_count', { value: usersCount })})
         </div>
       </div>
-      <IconButton size="small" iconClassName={styles.icon} onClick={onDelete}>
+      <IconButton size="small" onClick={onDelete}>
         <Close />
       </IconButton>
     </div>
