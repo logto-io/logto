@@ -1,5 +1,5 @@
 import type { User } from '@logto/schemas';
-import { userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { MfaFactor, userInfoSelectFields, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 
 export const mockUser: User = {
@@ -21,6 +21,17 @@ export const mockUser: User = {
   lastSignInAt: 1_650_969_465_789,
   createdAt: 1_650_969_000_000,
   isSuspended: false,
+};
+
+export const mockUserTotpMfaVerification = {
+  id: 'fake_totp_id',
+  type: MfaFactor.TOTP,
+  createdAt: new Date().toISOString(),
+  key: 'key',
+} satisfies User['mfaVerifications'][number];
+export const mockUserWithMfaVerifications: User = {
+  ...mockUser,
+  mfaVerifications: [mockUserTotpMfaVerification],
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);

@@ -1,7 +1,7 @@
 import type { SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { Theme } from '@logto/schemas';
-import type { UserInfo, ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse, UserProfileResponse } from '@logto/schemas';
 import { buildIdGenerator } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
@@ -27,7 +27,7 @@ import NotSet from '../NotSet';
 import * as styles from './index.module.scss';
 
 type Props = {
-  user: UserInfo;
+  user: UserProfileResponse;
   connectors?: ConnectorResponse[];
   onUpdate: () => void;
 };
