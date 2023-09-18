@@ -150,7 +150,6 @@ export const decompress = async (toPath: string, tarPath: string) => {
     run(),
     {
       text: `Decompress to ${toPath}`,
-      prefixText: chalk.blue('[info]'),
     },
     true
   );
@@ -166,7 +165,6 @@ export const seedDatabase = async (instancePath: string, cloud: boolean) => {
 
     await oraPromise(fs.rm(instancePath, { force: true, recursive: true }), {
       text: 'Clean up',
-      prefixText: chalk.blue('[info]'),
     });
 
     consoleLog.fatal(
