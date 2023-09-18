@@ -11,7 +11,22 @@ const roles = {
   role_description: 'Açıklama',
   role_name_placeholder: 'Rol adınızı girin',
   role_description_placeholder: 'Rol açıklamanızı girin',
-  assigned_users: 'Atanmış kullanıcılar',
+  /** UNTRANSLATED */
+  col_roles: 'Roles',
+  /** UNTRANSLATED */
+  col_type: 'Type',
+  /** UNTRANSLATED */
+  col_description: 'Description',
+  /** UNTRANSLATED */
+  col_assigned_entities: 'Assigned',
+  /** UNTRANSLATED */
+  user_counts: '{{count}} users',
+  /** UNTRANSLATED */
+  application_counts: '{{count}} apps',
+  /** UNTRANSLATED */
+  user_count: '{{count}} user',
+  /** UNTRANSLATED */
+  application_count: '{{count}} app',
   assign_permissions: 'İzinleri Ata',
   create_role_title: 'Rol Oluştur',
   create_role_description:

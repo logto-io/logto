@@ -2,7 +2,8 @@ import type router from '@logto/cloud/routes';
 import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
 type GetRoutes = RouterRoutes<typeof router>['get'];
-type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
+
+export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
 export type SubscriptionPlanResponse = GuardedResponse<
   GetRoutes['/api/subscription-plans']

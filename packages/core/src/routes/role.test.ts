@@ -54,6 +54,15 @@ const usersRoles = {
 };
 const { findUsersRolesByRoleId, countUsersRolesByRoleId } = usersRoles;
 
+const applications = { findApplicationsByIds: jest.fn() };
+const { findApplicationsByIds } = applications;
+
+const applicationsRoles = {
+  countApplicationsRolesByRoleId: jest.fn(),
+  findApplicationsRolesByRoleId: jest.fn(),
+};
+const { countApplicationsRolesByRoleId, findApplicationsRolesByRoleId } = applicationsRoles;
+
 const roleRoutes = await pickDefault(import('./role.js'));
 
 const tenantContext = new MockTenant(
@@ -64,6 +73,8 @@ const tenantContext = new MockTenant(
     rolesScopes,
     scopes,
     roles,
+    applicationsRoles,
+    applications,
   },
   undefined,
   { quota: createMockQuotaLibrary() }
@@ -76,6 +87,9 @@ describe('role routes', () => {
     countUsersRolesByRoleId.mockResolvedValueOnce({ count: 1 });
     findUsersByIds.mockResolvedValueOnce([mockUser]);
     findUsersRolesByRoleId.mockResolvedValueOnce([]);
+    countApplicationsRolesByRoleId.mockResolvedValueOnce({ count: 0 });
+    findApplicationsRolesByRoleId.mockResolvedValueOnce([]);
+    findApplicationsByIds.mockResolvedValueOnce([]);
     const response = await roleRequester.get('/roles');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([
@@ -89,6 +103,8 @@ describe('role routes', () => {
             name: mockUser.name,
           },
         ],
+        applicationsCount: 0,
+        featuredApplications: [],
       },
     ]);
   });

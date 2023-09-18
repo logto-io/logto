@@ -4,6 +4,7 @@
   width: 306px;
 }
 
+.type,
 .description {
   @include _.text-ellipsis;
 }

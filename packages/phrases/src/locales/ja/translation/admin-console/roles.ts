@@ -11,7 +11,22 @@ const roles = {
   role_description: '説明',
   role_name_placeholder: 'ロールの名前を入力してください',
   role_description_placeholder: 'ロールの説明を入力してください',
-  assigned_users: '割り当てられたユーザー',
+  /** UNTRANSLATED */
+  col_roles: 'Roles',
+  /** UNTRANSLATED */
+  col_type: 'Type',
+  /** UNTRANSLATED */
+  col_description: 'Description',
+  /** UNTRANSLATED */
+  col_assigned_entities: 'Assigned',
+  /** UNTRANSLATED */
+  user_counts: '{{count}} users',
+  /** UNTRANSLATED */
+  application_counts: '{{count}} apps',
+  /** UNTRANSLATED */
+  user_count: '{{count}} user',
+  /** UNTRANSLATED */
+  application_count: '{{count}} app',
   assign_permissions: '権限の割り当て',
   create_role_title: 'ロールを作成する',
   create_role_description:
