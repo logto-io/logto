@@ -1,5 +1,52 @@
 # Change Log
 
+## 1.9.0
+
+### Patch Changes
+
+- daf9674b6: keep original untranslated mark when syncing keys
+
+  When executing `pnpm cli translate sk --target all`:
+
+  - use JSDoc comment to stick with the standard approach
+  - if the value was originally untranslated, keep the mark
+
+  For example:
+
+  **Original**
+
+  ```ts
+  {
+    "hello": "Hello", // UNTRANSLATED
+    "world": "世界",
+  }
+  ```
+
+  **Now**
+
+  ```ts
+  {
+    /** UNTRANSLATED */
+    "hello": "Hello",
+    "world": "世界",
+  }
+  ```
+
+- f8408fa77: rename the package `phrases-ui` to `phrases-experience`
+- f6723d5e2: rename the package `ui` to `experience`
+- 310698b0d: align cli output for a better looking
+- Updated dependencies [e8b0b1d02]
+- Updated dependencies [f8408fa77]
+- Updated dependencies [17fd64e64]
+- Updated dependencies [f6723d5e2]
+- Updated dependencies [310698b0d]
+- Updated dependencies [5d78c7271]
+  - @logto/schemas@1.9.0
+  - @logto/phrases@1.5.0
+  - @logto/phrases-experience@1.3.0
+  - @logto/core-kit@2.1.0
+  - @logto/shared@2.0.1
+
 ## 1.8.0
 
 ### Minor Changes

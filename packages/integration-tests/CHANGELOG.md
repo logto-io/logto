@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.4.1
+
+### Patch Changes
+
+- f8408fa77: rename the package `phrases-ui` to `phrases-experience`
+- f6723d5e2: rename the package `ui` to `experience`
+
 ## 1.4.0
 
 ### Minor Changes

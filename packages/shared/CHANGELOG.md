@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- 310698b0d: align cli output for a better looking
+
 ## 2.0.0
 
 ### Major Changes
