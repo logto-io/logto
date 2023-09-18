@@ -19,6 +19,10 @@ const session = {
   identifier_not_found: 'User identifier not found. Please go back and sign in again.',
   interaction_not_found:
     'Interaction session not found. Please go back and start the session again.',
+  mfa: {
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);

@@ -23,6 +23,12 @@ const session = {
     'Identifiant utilisateur introuvable. Veuillez retourner en arrière et vous connecter à nouveau.',
   interaction_not_found:
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
+  mfa: {
+    /** UNTRANSLATED */
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    /** UNTRANSLATED */
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);
