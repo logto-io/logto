@@ -203,7 +203,6 @@ export const addOfficialConnectors = async (
 ) => {
   const packages = await oraPromise(fetchOfficialConnectorList(includingCloudConnectors), {
     text: 'Fetch official connector list',
-    prefixText: chalk.blue('[info]'),
   });
 
   consoleLog.info(`Found ${packages.length} official connectors`);

@@ -49,9 +49,9 @@ export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenan
     const { value, fromEnv } = await oidcConfigReaders[key]();
 
     if (fromEnv) {
-      consoleLog.info(tenantPrefix, `Read config ${chalk.green(key)} from env`);
+      consoleLog.succeed(tenantPrefix, `Read config ${chalk.green(key)} from env`);
     } else {
-      consoleLog.info(tenantPrefix, `Generated config ${chalk.green(key)}`);
+      consoleLog.succeed(tenantPrefix, `Generated config ${chalk.green(key)}`);
     }
 
     await updateValueByKey(pool, tenantId, key, value);

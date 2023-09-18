@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import type { DatabasePool } from 'slonik';
 import type { CommandModule } from 'yargs';
 
@@ -24,7 +23,6 @@ export const seedByPool = async (pool: DatabasePool, cloud = false) => {
 
     await oraPromise(createTables(connection), {
       text: 'Create tables',
-      prefixText: chalk.blue('[info]'),
     });
     await seedTables(connection, latestTimestamp, cloud);
 

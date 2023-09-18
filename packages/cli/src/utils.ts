@@ -51,7 +51,7 @@ export const downloadFile = async (url: string, destination: string) => {
   });
   const spinner = ora({
     text: 'Connecting',
-    prefixText: chalk.blue('[info]'),
+    prefixText: ConsoleLog.prefixes.info,
   }).start();
 
   stream.pipe(file);
@@ -91,7 +91,7 @@ export const oraPromise = async <T>(
   options?: Options,
   exitOnError = false
 ) => {
-  const spinner = ora(options).start();
+  const spinner = ora({ prefixText: ConsoleLog.prefixes.info, ...options }).start();
 
   try {
     const result = await promise;
