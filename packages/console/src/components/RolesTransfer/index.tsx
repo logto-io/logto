@@ -1,4 +1,4 @@
-import type { RoleResponse } from '@logto/schemas';
+import type { RoleResponse, RoleType } from '@logto/schemas';
 import classNames from 'classnames';
 
 import * as transferLayout from '@/scss/transfer.module.scss';
@@ -8,19 +8,20 @@ import TargetRolesBox from './components/TargetRolesBox';
 import * as styles from './index.module.scss';
 
 type Props = {
-  userId: string;
+  entityId: string;
+  type: RoleType;
   value: RoleResponse[];
   onChange: (value: RoleResponse[]) => void;
 };
 
-function UserRolesTransfer({ userId, value, onChange }: Props) {
+function RolesTransfer({ entityId, type, value, onChange }: Props) {
   return (
     <div className={classNames(transferLayout.container, styles.rolesTransfer)}>
-      <SourceRolesBox userId={userId} selectedRoles={value} onChange={onChange} />
+      <SourceRolesBox entityId={entityId} type={type} selectedRoles={value} onChange={onChange} />
       <div className={transferLayout.verticalBar} />
       <TargetRolesBox selectedRoles={value} onChange={onChange} />
     </div>
   );
 }
 
-export default UserRolesTransfer;
+export default RolesTransfer;

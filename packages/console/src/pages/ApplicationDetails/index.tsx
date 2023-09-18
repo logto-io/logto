@@ -4,6 +4,7 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
   customClientMetadataDefault,
+  ApplicationType,
 } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -21,6 +22,7 @@ import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
@@ -39,6 +41,8 @@ import { trySubmitSafe } from '@/utils/form';
 import AdvancedSettings from './components/AdvancedSettings';
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
+import MachineLogs from './components/MachineLogs';
+import MachineToMachineApplicationRoles from './components/MachineToMachineApplicationRoles';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
 
@@ -234,6 +238,18 @@ function ApplicationDetails() {
             >
               {t('application_details.advanced_settings')}
             </TabNavItem>
+            {isDevFeaturesEnabled && (
+              <>
+                {data.type === ApplicationType.MachineToMachine && (
+                  <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
+                    {t('application_details.application_roles')}
+                  </TabNavItem>
+                )}
+                <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Logs}`}>
+                  {t('application_details.machine_logs')}
+                </TabNavItem>
+              </>
+            )}
           </TabNav>
           <FormProvider {...formMethods}>
             <DetailsForm
@@ -248,6 +264,18 @@ function ApplicationDetails() {
               <TabWrapper isActive={tab === ApplicationDetailsTabs.AdvancedSettings}>
                 <AdvancedSettings app={data} oidcConfig={oidcConfig} />
               </TabWrapper>
+              {isDevFeaturesEnabled && (
+                <>
+                  {data.type === ApplicationType.MachineToMachine && (
+                    <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
+                      <MachineToMachineApplicationRoles application={data} />
+                    </TabWrapper>
+                  )}
+                  <TabWrapper isActive={tab === ApplicationDetailsTabs.Logs}>
+                    <MachineLogs applicationId={data.id} />
+                  </TabWrapper>
+                </>
+              )}
             </DetailsForm>
           </FormProvider>
         </>

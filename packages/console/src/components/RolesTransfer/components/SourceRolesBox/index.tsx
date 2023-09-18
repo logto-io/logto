@@ -1,4 +1,5 @@
 import type { RoleResponse } from '@logto/schemas';
+import { RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
@@ -21,14 +22,15 @@ import SourceRoleItem from '../SourceRoleItem';
 import * as styles from './index.module.scss';
 
 type Props = {
-  userId: string;
+  entityId: string;
+  type: RoleType;
   selectedRoles: RoleResponse[];
   onChange: (value: RoleResponse[]) => void;
 };
 
 const pageSize = defaultPageSize;
 
-function SourceRolesBox({ userId, selectedRoles, onChange }: Props) {
+function SourceRolesBox({ entityId, type, selectedRoles, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [page, setPage] = useState(1);
@@ -37,9 +39,11 @@ function SourceRolesBox({ userId, selectedRoles, onChange }: Props) {
   const debounce = useDebounce();
 
   const url = buildUrl('api/roles', {
-    excludeUserId: userId,
     page: String(page),
     page_size: String(pageSize),
+    'search.type': type,
+    'mode.type': 'exact',
+    [type === RoleType.User ? 'excludeUserId' : 'excludeApplicationId']: entityId,
     ...conditional(keyword && { search: `%${keyword}%` }),
   });
 
@@ -75,7 +79,14 @@ function SourceRolesBox({ userId, selectedRoles, onChange }: Props) {
         className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
       >
         {isEmpty ? (
-          <EmptyDataPlaceholder size="small" title={t('user_details.roles.empty')} />
+          <EmptyDataPlaceholder
+            size="small"
+            title={t(
+              type === RoleType.User
+                ? 'user_details.roles.empty'
+                : 'application_details.roles.empty'
+            )}
+          />
         ) : (
           dataSource.map((role) => {
             const isSelected = isRoleSelected(role);

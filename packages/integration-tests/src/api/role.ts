@@ -5,6 +5,8 @@ import { generateRoleName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
+export type GetRoleOptions = { excludeUserId?: string; excludeApplicationId?: string };
+
 export const createRole = async ({
   name,
   description,
@@ -27,7 +29,8 @@ export const createRole = async ({
     })
     .json<Role>();
 
-export const getRoles = async () => authedAdminApi.get('roles').json<Role[]>();
+export const getRoles = async (options?: GetRoleOptions) =>
+  authedAdminApi.get('roles', { searchParams: new URLSearchParams(options) }).json<Role[]>();
 
 export const getRole = async (roleId: string) => authedAdminApi.get(`roles/${roleId}`).json<Role>();
 

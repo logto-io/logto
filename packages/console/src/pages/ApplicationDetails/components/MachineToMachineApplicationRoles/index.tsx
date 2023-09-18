@@ -1,10 +1,9 @@
-import type { Role } from '@logto/schemas';
+import type { Application, Role } from '@logto/schemas';
 import { RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -24,16 +23,15 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import AssignToRoleModal from '@/pages/Roles/components/AssignToRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
-import type { UserDetailsOutletContext } from '../types';
-
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 
-function UserRoles() {
-  const { user } = useOutletContext<UserDetailsOutletContext>();
-  const { id: userId } = user;
+type Props = {
+  application: Application;
+};
 
+function MachineToMachineApplicationRoles({ application }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
@@ -42,7 +40,7 @@ function UserRoles() {
   });
 
   const { data, error, mutate } = useSWR<[Role[], number], RequestError>(
-    buildUrl(`api/users/${userId}/roles`, {
+    buildUrl(`api/applications/${application.id}/roles`, {
       page: String(page),
       page_size: String(pageSize),
       ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
@@ -66,8 +64,8 @@ function UserRoles() {
     setIsDeleting(true);
 
     try {
-      await api.delete(`api/users/${userId}/roles/${roleToBeDeleted.id}`);
-      toast.success(t('user_details.roles.deleted', { name: roleToBeDeleted.name }));
+      await api.delete(`api/applications/${application.id}/roles/${roleToBeDeleted.id}`);
+      toast.success(t('application_details.roles.deleted', { name: roleToBeDeleted.name }));
       await mutate();
       setRoleToBeDeleted(undefined);
     } finally {
@@ -84,7 +82,7 @@ function UserRoles() {
         rowIndexKey="id"
         columns={[
           {
-            title: t('user_details.roles.name_column'),
+            title: t('application_details.roles.name_column'),
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
@@ -94,7 +92,7 @@ function UserRoles() {
             ),
           },
           {
-            title: t('user_details.roles.description_column'),
+            title: t('application_details.roles.description_column'),
             dataIndex: 'description',
             colSpan: 9,
             render: ({ description }) => <div className={styles.description}>{description}</div>,
@@ -122,7 +120,7 @@ function UserRoles() {
               inputClassName={styles.searchInput}
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
-              placeholder={t('user_details.roles.search')}
+              placeholder={t('application_details.roles.search')}
               onSearch={(keyword) => {
                 updateSearchParameters({ keyword, page: 1 });
               }}
@@ -131,7 +129,7 @@ function UserRoles() {
               }}
             />
             <Button
-              title="user_details.roles.assign_button"
+              title="application_details.roles.assign_button"
               type="primary"
               size="large"
               icon={<Plus />}
@@ -163,13 +161,13 @@ function UserRoles() {
           }}
           onConfirm={handleDelete}
         >
-          {t('user_details.roles.delete_description')}
+          {t('application_details.roles.delete_description')}
         </ConfirmModal>
       )}
       {isAssignRolesModalOpen && (
         <AssignToRoleModal
-          entity={user}
-          type={RoleType.User}
+          entity={application}
+          type={RoleType.MachineToMachine}
           onClose={(success) => {
             if (success) {
               void mutate();
@@ -182,4 +180,4 @@ function UserRoles() {
   );
 }
 
-export default UserRoles;
+export default MachineToMachineApplicationRoles;
