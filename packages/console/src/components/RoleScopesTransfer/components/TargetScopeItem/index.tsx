@@ -24,7 +24,6 @@ function TargetScopeItem({ scope, onDelete }: Props) {
       </div>
       <IconButton
         size="small"
-        iconClassName={styles.icon}
         onClick={() => {
           onDelete(scope);
         }}

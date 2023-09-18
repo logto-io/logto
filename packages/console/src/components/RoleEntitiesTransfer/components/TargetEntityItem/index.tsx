@@ -31,7 +31,6 @@ function TargetEntityItem<T extends User | Application>({ entity, onDelete }: Pr
       </div>
       <IconButton
         size="small"
-        iconClassName={styles.icon}
         onClick={() => {
           onDelete();
         }}

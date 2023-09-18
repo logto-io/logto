@@ -3,21 +3,20 @@
 .item {
   display: flex;
   align-items: center;
-  padding: _.unit(2.5) _.unit(4);
+  padding: _.unit(2) _.unit(3) _.unit(2) _.unit(4);
   user-select: none;
-
-  .icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    color: var(--color-text-secondary);
-  }
 
   .meta {
     flex: 1;
     display: flex;
     align-items: center;
     overflow: hidden;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+    }
 
     .title {
       flex: 1 1 0;

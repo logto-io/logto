@@ -3,7 +3,7 @@
 .targetScopeItem {
   display: flex;
   align-items: center;
-  padding: _.unit(1.5) _.unit(4);
+  padding: _.unit(1.5) _.unit(3) _.unit(1.5) _.unit(4);
 
   .title {
     flex: 1 1 0;
@@ -26,10 +26,6 @@
       color: var(--color-text-secondary);
       @include _.text-ellipsis;
     }
-  }
-
-  .icon {
-    color: var(--color-text-secondary);
   }
 
   &:hover {
