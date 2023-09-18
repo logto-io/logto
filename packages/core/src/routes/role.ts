@@ -99,7 +99,13 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
               return {
                 ...role,
                 usersCount,
-                featuredUsers: users.map(({ id, avatar, name }) => ({ id, avatar, name })),
+                featuredUsers: users.map(({ id, avatar, name, username, primaryEmail }) => ({
+                  id,
+                  avatar,
+                  name,
+                  username,
+                  primaryEmail,
+                })),
                 applicationsCount,
                 featuredApplications: applications.map(({ id, name }) => ({ id, name })),
               };
