@@ -11,6 +11,8 @@ import useSWR from 'swr';
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
 import ApiResource from '@/assets/icons/api-resource.svg';
 import Delete from '@/assets/icons/delete.svg';
+import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
+import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
 import More from '@/assets/icons/more.svg';
 import DetailsPage from '@/components/DetailsPage';
 import Drawer from '@/components/Drawer';
@@ -30,8 +32,14 @@ import useTheme from '@/hooks/use-theme';
 
 import GuideDrawer from './components/GuideDrawer';
 import GuideModal from './components/GuideModal';
+import ManagementApiNotice from './components/ManagementApiNotice';
 import * as styles from './index.module.scss';
 import { type ApiResourceDetailsOutletContext } from './types';
+
+const icons = {
+  [Theme.Light]: { ApiIcon: ApiResource, ManagementApiIcon: ManagementApiResource },
+  [Theme.Dark]: { ApiIcon: ApiResourceDark, ManagementApiIcon: ManagementApiResourceDark },
+};
 
 function ApiResourceDetails() {
   const { pathname } = useLocation();
@@ -43,10 +51,11 @@ function ApiResourceDetails() {
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `api/resources/${id}`);
   const isLoading = !data && !error;
   const theme = useTheme();
-  const Icon = theme === Theme.Light ? ApiResource : ApiResourceDark;
+  const { ApiIcon, ManagementApiIcon } = icons[theme];
 
   const isOnPermissionPage = pathname.endsWith(ApiResourceDetailsTabs.Permissions);
   const isLogtoManagementApiResource = isManagementApi(data?.indicator ?? '');
+  const Icon = isLogtoManagementApiResource ? ManagementApiIcon : ApiIcon;
 
   const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -101,6 +110,7 @@ function ApiResourceDetails() {
       onRetry={mutate}
     >
       <PageMeta titleKey="api_resource_details.page_title" />
+      {isLogtoManagementApiResource && <ManagementApiNotice />}
       {data && (
         <>
           <Card className={styles.header}>

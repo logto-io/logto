@@ -8,6 +8,9 @@ const api_resource_details = {
     'Zasoby API, tzw. wskaźniki zasobów, wskazują na usługi lub zasoby docelowe, które mają być żądane, zwykle w zmiennej formatu URI reprezentującej tożsamość zasobu.',
   management_api_settings_description:
     'Logto Management API to kompleksowa kolekcja interfejsów API, które umożliwiają administratorom zarządzanie szerokim zakresem zadań związanych z tożsamością, egzekwowanie polityk bezpieczeństwa oraz przestrzeganie przepisów i standardów.',
+  /** UNTRANSLATED */
+  management_api_notice:
+    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
   token_expiration_time_in_seconds: 'Czas wygaśnięcia tokenu (w sekundach)',
   token_expiration_time_in_seconds_placeholder: 'Wprowadź czas wygaśnięcia tokenu',
   delete_description:

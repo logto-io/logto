@@ -8,6 +8,9 @@ const api_resource_details = {
     'Recursos da API, também conhecidos como indicadores de recursos, indicam os serviços ou recursos de destino a serem solicitados, geralmente uma variável de formato URI que representa a identidade do recurso.',
   management_api_settings_description:
     'A API de Gerenciamento do Logto é uma coleção abrangente de APIs que capacitam os administradores a gerenciar uma ampla gama de tarefas relacionadas à identidade, aplicar políticas de segurança e cumprir regulamentos e padrões.',
+  /** UNTRANSLATED */
+  management_api_notice:
+    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
   token_expiration_time_in_seconds: 'Tempo de expiração do token (em segundos)',
   token_expiration_time_in_seconds_placeholder: 'Insira o tempo de expiração do token',
   delete_description:
