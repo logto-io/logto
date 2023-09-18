@@ -44,6 +44,11 @@
   input:checked + .slider::before {
     transform: translateX(16px);
   }
+
+  input:disabled + .slider {
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+  }
 }
 
 .wrapper {
