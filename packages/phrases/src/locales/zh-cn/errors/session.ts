@@ -15,6 +15,12 @@ const session = {
   connector_validation_session_not_found: '找不到连接器用于验证 token 的信息。',
   identifier_not_found: '找不到用户标识符。请返回并重新登录。',
   interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
+  mfa: {
+    /** UNTRANSLATED */
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    /** UNTRANSLATED */
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);

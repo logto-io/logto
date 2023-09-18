@@ -19,6 +19,12 @@ const session = {
   identifier_not_found: 'ユーザーIDが見つかりません。戻って再度サインインしてください。',
   interaction_not_found:
     'インタラクションセッションが見つかりません。戻ってセッションを開始してください。',
+  mfa: {
+    /** UNTRANSLATED */
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    /** UNTRANSLATED */
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);

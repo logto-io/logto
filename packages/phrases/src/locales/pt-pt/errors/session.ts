@@ -23,6 +23,12 @@ const session = {
     'Identificador do usuário não encontrado. Por favor, volte e faça login novamente.',
   interaction_not_found:
     'Sessão de interação não encontrada. Por favor, volte e inicie a sessão novamente.',
+  mfa: {
+    /** UNTRANSLATED */
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    /** UNTRANSLATED */
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);

@@ -21,6 +21,12 @@ const session = {
     'Benutzerkennung nicht gefunden. Bitte gehen Sie zurück und melden Sie sich erneut an.',
   interaction_not_found:
     'Interaktionssitzung nicht gefunden. Bitte gehen Sie zurück und starten Sie die Sitzung erneut.',
+  mfa: {
+    /** UNTRANSLATED */
+    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
+    /** UNTRANSLATED */
+    invalid_totp_code: 'Invalid TOTP code.',
+  },
 };
 
 export default Object.freeze(session);
