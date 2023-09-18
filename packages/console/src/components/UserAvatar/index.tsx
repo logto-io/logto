@@ -92,16 +92,17 @@ function UserAvatar({ className, size = 'medium', user, hasTooltip = false }: Pr
   );
 
   return (
-    <Tooltip
-      className={styles.tooltip}
-      content={conditional(hasTooltip && user && <UserInfoTipContent user={user} />)}
-    >
-      <div className={wrapperClassName}>
+    <div className={wrapperClassName}>
+      <Tooltip
+        className={styles.tooltip}
+        anchorClassName={styles[size]}
+        content={conditional(hasTooltip && user && <UserInfoTipContent user={user} />)}
+      >
         <div className={avatarClassName} style={{ backgroundColor: color }}>
           {nameToDisplay ? nameToDisplay.charAt(0) : <DefaultAvatar />}
         </div>
-      </div>
-    </Tooltip>
+      </Tooltip>
+    </div>
   );
 }
 

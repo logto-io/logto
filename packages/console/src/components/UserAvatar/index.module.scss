@@ -7,32 +7,32 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+}
 
-  &.micro {
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-  }
+.micro {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+}
 
-  &.small {
-    width: 24px;
-    height: 24px;
-  }
+.small {
+  width: 24px;
+  height: 24px;
+}
 
-  &.medium {
-    width: 32px;
-    height: 32px;
-  }
+.medium {
+  width: 32px;
+  height: 32px;
+}
 
-  &.large {
-    width: 40px;
-    height: 40px;
-  }
+.large {
+  width: 40px;
+  height: 40px;
+}
 
-  &.xlarge {
-    width: 60px;
-    height: 60px;
-  }
+.xlarge {
+  width: 60px;
+  height: 60px;
 }
 
 .avatar {
