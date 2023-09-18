@@ -15,6 +15,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
   const { deleteConnectorById } = queries.connectors;
   const {
     signInExperiences: { validateLanguageInfo },
+    quota: { guardKey },
   } = libraries;
   const { getLogtoConnectors } = connectors;
 
@@ -84,6 +85,9 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(
       }
 
       if (mfa) {
+        if (mfa.factors.length > 0) {
+          await guardKey('mfaEnabled');
+        }
         validateMfa(mfa);
       }
 
