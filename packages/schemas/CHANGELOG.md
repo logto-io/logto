@@ -1,5 +1,67 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- e8b0b1d02: feature: password policy
+
+  ### Summary
+
+  This feature enables custom password policy for users. Now it is possible to guard with the following rules when a user is creating a new password:
+
+  - Minimum length (default: `8`)
+  - Minimum character types (default: `1`)
+  - If the password has been pwned (default: `true`)
+  - If the password is exactly the same as or made up of the restricted phrases:
+    - Repetitive or sequential characters (default: `true`)
+    - User information (default: `true`)
+    - Custom words (default: `[]`)
+
+  If you are an existing Logto Cloud user or upgrading from a previous version, to ensure a smooth experience, we'll keep the original policy as much as possible:
+
+  > The original password policy requires a minimum length of 8 and at least 2 character types (letters, numbers, and symbols).
+
+  Note in the new policy implementation, it is not possible to combine lower and upper case letters into one character type. So the original password policy will be translated into the following:
+
+  - Minimum length: `8`
+  - Minimum character types: `2`
+  - Pwned: `false`
+  - Repetitive or sequential characters: `false`
+  - User information: `false`
+  - Custom words: `[]`
+
+  If you want to change the policy, you can do it:
+
+  - Logto Console -> Sign-in experience -> Password policy.
+  - Update `passwordPolicy` property in the sign-in experience via Management API.
+
+  ### Side effects
+
+  - All new users will be affected by the new policy immediately.
+  - Existing users will not be affected by the new policy until they change their password.
+  - We removed password restrictions when adding or updating a user via Management API.
+
+- 17fd64e64: Support region option for s3 storage
+- 5d78c7271: Add `type` field to `roles` schema.
+
+  `type` can be either 'User' or 'MachineToMachine' in our case, this change distinguish between the two types of roles.
+  Roles with type 'MachineToMachine' are not allowed to be assigned to users and 'User' roles can not be assigned to machine-to-machine apps.
+  It's worth noting that we do not differentiate by `scope` (or `permission` in Admin Console), so a scope can be assigned to both the 'User' role and the 'MachineToMachine' role simultaneously.
+
+### Patch Changes
+
+- f8408fa77: rename the package `phrases-ui` to `phrases-experience`
+- f6723d5e2: rename the package `ui` to `experience`
+- Updated dependencies [e8b0b1d02]
+- Updated dependencies [f8408fa77]
+- Updated dependencies [f6723d5e2]
+- Updated dependencies [310698b0d]
+  - @logto/phrases@1.5.0
+  - @logto/phrases-experience@1.3.0
+  - @logto/core-kit@2.1.0
+  - @logto/shared@2.0.1
+
 ## 1.8.0
 
 ### Patch Changes

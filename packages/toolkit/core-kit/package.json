@@ -1,6 +1,6 @@
 {
   "name": "@logto/core-kit",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@logto/language-kit": "workspace:^1.0.0",
-    "@logto/shared": "workspace:^2.0.0",
+    "@logto/shared": "workspace:^2.0.1",
     "color": "^4.2.3"
   },
   "optionalDependencies": {

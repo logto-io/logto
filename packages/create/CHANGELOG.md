@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.9.0
+
+### Patch Changes
+
+- Updated dependencies [daf9674b6]
+- Updated dependencies [f8408fa77]
+- Updated dependencies [f6723d5e2]
+- Updated dependencies [310698b0d]
+  - @logto/cli@1.9.0
+
 ## 1.8.0
 
 ### Patch Changes
