@@ -339,14 +339,6 @@ export const domainStatusGuard = z.nativeEnum(DomainStatus);
 
 /* === Sentinel activities === */
 
-/** The subject (actor) type of a sentinel activity. */
-export enum SentinelActivitySubjectType {
-  User = 'User',
-  App = 'App',
-  Sentinel = 'Sentinel',
-}
-export const sentinelActivitySubjectTypeGuard = z.nativeEnum(SentinelActivitySubjectType);
-
 /** The action target type of a sentinel activity. */
 export enum SentinelActivityTargetType {
   User = 'User',
@@ -357,19 +349,19 @@ export const sentinelActivityTargetTypeGuard = z.nativeEnum(SentinelActivityTarg
 /** The action type of a sentinel activity. */
 export enum SentinelActivityAction {
   /**
-   * The subject tries to pass a verification for a target.
+   * The subject tries to pass a verification by inputting a password.
    *
-   * For example, a user (subject) who inputted a verification code or password for themselves
+   * For example, a user (subject) who inputted a password (action) to authenticate themselves
    * (target).
    */
-  Verification = 'Verification',
+  Password = 'Password',
   /**
-   * The subject tries to block the target from passing a verification.
+   * The subject tries to pass a verification by inputting a verification code.
    *
-   * For example, the sentinel (subject) who blocked a user (target) from passing a verification
-   * for 10 minutes.
+   * For example, a user (subject) who inputted a verification code (action) to authenticate
+   * themselves (target).
    */
-  BlockVerification = 'BlockVerification',
+  VerificationCode = 'VerificationCode',
 }
 export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
 
