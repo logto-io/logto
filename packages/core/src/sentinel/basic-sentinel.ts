@@ -2,13 +2,14 @@ import {
   type ActivityReport,
   Sentinel,
   SentinelDecision,
+  type SentinelDecisionTuple,
   type SentinelActivity,
   SentinelActivities,
   SentinelActionResult,
   SentinelActivityAction,
 } from '@logto/schemas';
 import { convertToIdentifiers, generateStandardId } from '@logto/shared';
-import { cond } from '@silverhand/essentials';
+import { type Nullable } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
 import { sql, type CommonQueryMethods } from 'slonik';
 
@@ -64,25 +65,25 @@ export default class BasicSentinel extends Sentinel {
    * @throws {Error} If the action is not supported.
    * @see {@link BasicSentinel.supportedActions} for the list of supported actions.
    */
-  async reportActivity(activity: ActivityReport): Promise<SentinelDecision> {
+  async reportActivity(activity: ActivityReport): Promise<SentinelDecisionTuple> {
     BasicSentinel.assertAction(activity.action);
 
-    const decision = await this.decide(activity);
+    const [decision, decisionExpiresAt] = await this.decide(activity);
 
     await this.insertActivity({
       id: generateStandardId(),
       ...activity,
       decision,
-      decisionExpiresAt: cond(
-        decision === SentinelDecision.Blocked && addMinutes(new Date(), 10).valueOf()
-      ),
+      decisionExpiresAt,
     });
 
-    return decision;
+    return [decision, decisionExpiresAt];
   }
 
   /**
    * Checks whether the given target is blocked from performing actions.
+   *
+   * @returns The decision made by the sentinel, or `null` if the target is not blocked.
    *
    * @remarks
    * All supported actions share the same pool of activities, i.e. once a user has failed to
@@ -91,9 +92,9 @@ export default class BasicSentinel extends Sentinel {
    */
   protected async isBlocked(
     query: Pick<SentinelActivity, 'targetType' | 'targetHash'>
-  ): Promise<boolean> {
-    const blocked = await this.pool.maybeOne(sql`
-      select ${fields.id} from ${table}
+  ): Promise<Nullable<SentinelDecisionTuple>> {
+    const blocked = await this.pool.maybeOne<Pick<SentinelActivity, 'decisionExpiresAt'>>(sql`
+      select ${fields.decisionExpiresAt} from ${table}
       where ${fields.targetType} = ${query.targetType}
         and ${fields.targetHash} = ${query.targetHash}
         and ${fields.action} = any(${BasicSentinel.supportedActionArray})
@@ -101,16 +102,16 @@ export default class BasicSentinel extends Sentinel {
         and ${fields.decisionExpiresAt} > now()
       limit 1
     `);
-    return Boolean(blocked);
+    return blocked && [SentinelDecision.Blocked, blocked.decisionExpiresAt];
   }
 
   protected async decide(
     query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'actionResult'>
-  ): Promise<SentinelDecision> {
+  ): Promise<SentinelDecisionTuple> {
     const blocked = await this.isBlocked(query);
 
     if (blocked) {
-      return SentinelDecision.Blocked;
+      return blocked;
     }
 
     const failedAttempts = await this.pool.oneFirst<number>(sql`
@@ -122,9 +123,10 @@ export default class BasicSentinel extends Sentinel {
         and ${fields.decision} != ${SentinelDecision.Blocked}
         and ${fields.createdAt} > now() - interval '1 hour'
     `);
+    const now = new Date();
 
     return failedAttempts + (query.actionResult === SentinelActionResult.Failed ? 1 : 0) >= 5
-      ? SentinelDecision.Blocked
-      : SentinelDecision.Allowed;
+      ? [SentinelDecision.Blocked, addMinutes(now, 10).valueOf()]
+      : [SentinelDecision.Allowed, now.valueOf()];
   }
 }
