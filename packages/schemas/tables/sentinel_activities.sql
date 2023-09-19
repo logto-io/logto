@@ -18,7 +18,7 @@ create table sentinel_activities (
   payload jsonb /* @use SentinelActivityPayload */ not null,
   /** The sentinel decision for the action. */
   decision sentinel_decision not null,
-  /** The expiry date of the decision. */
+  /** The expiry date of the decision. For instant decisions, this is the date the activity was created. */
   decision_expires_at timestamptz not null default(now()),
   /** The time the activity was created. */
   created_at timestamptz not null default(now()),
