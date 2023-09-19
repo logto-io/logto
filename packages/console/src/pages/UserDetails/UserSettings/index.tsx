@@ -10,6 +10,7 @@ import { useOutletContext } from 'react-router-dom';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -24,6 +25,7 @@ import { uriValidator } from '@/utils/validator';
 import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
 
+import UserMfaVerifications from './UserMfaVerifications';
 import UserSocialIdentities from './components/UserSocialIdentities';
 
 function UserSettings() {
@@ -160,6 +162,11 @@ function UserSettings() {
               }}
             />
           </FormField>
+          {isDevFeaturesEnabled && (
+            <FormField title="user_details.mfa.field_name">
+              <UserMfaVerifications userId={user.id} />
+            </FormField>
+          )}
           <FormField
             isRequired
             title="user_details.field_custom_data"

@@ -42,6 +42,13 @@ const user_details = {
     deletion_confirmation:
       '既存の<name/>アイデンティティを削除しています。本当にそれをやり遂げますか？',
   },
+  mfa: {
+    field_name: '多要素認証',
+    field_description: 'このユーザーは2段階認証要素を有効にしました。',
+    name_column: '多要素認証',
+    field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
+    deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当にそれを行いたいですか？',
+  },
   suspended: '停止中',
   suspend_user: 'ユーザーを一時停止',
   suspend_user_reminder:

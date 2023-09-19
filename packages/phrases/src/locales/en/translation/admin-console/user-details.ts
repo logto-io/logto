@@ -42,6 +42,14 @@ const user_details = {
     deletion_confirmation:
       'You are removing the existing <name/> identity. Are you sure you want to do that?',
   },
+  mfa: {
+    field_name: 'Multi-factor authentication',
+    field_description: 'This user has enabled 2-step authentication factors.',
+    name_column: 'Multi-Factor',
+    field_description_empty: 'This user has not enabled 2-step authentication factors.',
+    deletion_confirmation:
+      'You are removing the existing <name/> for the 2-step authenticator. Are you sure you want to do that?',
+  },
   suspended: 'Suspended',
   suspend_user: 'Suspend user',
   suspend_user_reminder:

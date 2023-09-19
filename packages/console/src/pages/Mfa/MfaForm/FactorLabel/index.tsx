@@ -1,25 +1,27 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import { type ReactElement, cloneElement } from 'react';
+import { MfaFactor } from '@logto/schemas';
 
+import MfaFactorTitle from '@/components/MfaFactorTitle';
 import DynamicT from '@/ds-components/DynamicT';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  description: AdminConsoleKey;
-  icon: ReactElement;
+  type: MfaFactor;
 };
 
-function FactorLabel({ title, description, icon }: Props) {
+const factorDescriptionLabel: Record<MfaFactor, AdminConsoleKey> = {
+  [MfaFactor.TOTP]: 'mfa.otp_description',
+  [MfaFactor.WebAuthn]: 'mfa.webauthn_description',
+  [MfaFactor.BackupCode]: 'mfa.backup_code_description',
+};
+
+function FactorLabel({ type }: Props) {
   return (
     <div className={styles.factorLabel}>
-      <div className={styles.factorTitle}>
-        {cloneElement(icon, { className: styles.factorIcon })}
-        <DynamicT forKey={title} />
-      </div>
-      <div>
-        <DynamicT forKey={description} />
+      <MfaFactorTitle type={type} />
+      <div className={styles.factorDescription}>
+        <DynamicT forKey={factorDescriptionLabel[type]} />
       </div>
     </div>
   );

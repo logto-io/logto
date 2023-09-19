@@ -40,6 +40,13 @@ const user_details = {
     not_connected: '该用户还没有绑定社交帐号',
     deletion_confirmation: '你在正要删除现有的 <name /> 身份，是否确认？',
   },
+  mfa: {
+    field_name: '多因素认证',
+    field_description: '该用户已启用2步认证因素。',
+    name_column: '多因素认证',
+    field_description_empty: '此用户尚未启用两步身份验证因素。',
+    deletion_confirmation: '您正在移除现有的2步身份验证器的<name/>。您确定要这样做吗？',
+  },
   suspended: '已禁用',
   suspend_user: '禁用用户',
   suspend_user_reminder:

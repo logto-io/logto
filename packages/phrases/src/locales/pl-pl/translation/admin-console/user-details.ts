@@ -41,6 +41,14 @@ const user_details = {
     not_connected: 'Użytkownik nie jest połączony z żadnym połączeniem społecznościowym',
     deletion_confirmation: 'Usuwasz istniejącą tożsamość <name/>. Czy na pewno chcesz to zrobić?',
   },
+  mfa: {
+    field_name: 'Wieloetapowa autoryzacja',
+    field_description: 'Ten użytkownik włączył czynniki autoryzacji dwuetapowej.',
+    name_column: 'Wieloetapowa autoryzacja',
+    field_description_empty: 'Ten użytkownik nie włączył czynników uwierzytelniania dwuetapowego.',
+    deletion_confirmation:
+      'Usuwasz istniejący <name/> dla autentykatora dwuetapowego. Czy na pewno chcesz to zrobić?',
+  },
   suspended: 'Zawieszony',
   suspend_user: 'Zawieś użytkownika',
   suspend_user_reminder:

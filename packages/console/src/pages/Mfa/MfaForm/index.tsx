@@ -1,13 +1,10 @@
-import { MfaPolicy, type SignInExperience } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import FactorBackupCode from '@/assets/icons/factor-backup-code.svg';
-import FactorOtp from '@/assets/icons/factor-totp.svg';
-import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -83,24 +80,9 @@ function MfaForm({ data, onMfaUpdated }: Props) {
               <DynamicT forKey="mfa.multi_factors_description" />
             </div>
             <div className={styles.factorField}>
+              <Switch label={<FactorLabel type={MfaFactor.TOTP} />} {...register('totpEnabled')} />
               <Switch
-                label={
-                  <FactorLabel
-                    title="mfa.totp"
-                    description="mfa.otp_description"
-                    icon={<FactorOtp />}
-                  />
-                }
-                {...register('totpEnabled')}
-              />
-              <Switch
-                label={
-                  <FactorLabel
-                    title="mfa.webauthn"
-                    description="mfa.webauthn_description"
-                    icon={<FactorWebAuthn />}
-                  />
-                }
+                label={<FactorLabel type={MfaFactor.WebAuthn} />}
                 {...register('webAuthnEnabled')}
               />
               <div className={styles.backupCodeField}>
@@ -108,13 +90,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
                   <DynamicT forKey="mfa.backup_code_setup_hint" />
                 </div>
                 <Switch
-                  label={
-                    <FactorLabel
-                      title="mfa.backup_code"
-                      description="mfa.backup_code_description"
-                      icon={<FactorBackupCode />}
-                    />
-                  }
+                  label={<FactorLabel type={MfaFactor.BackupCode} />}
                   hasError={!isBackupCodeAllowed}
                   {...register('backupCodeEnabled')}
                 />

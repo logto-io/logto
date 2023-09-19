@@ -44,6 +44,14 @@ const user_details = {
     deletion_confirmation:
       'Está removendo a identidade <name/> existente. Tem a certeza que deseja fazer isso?',
   },
+  mfa: {
+    field_name: 'Autenticação de dois fatores',
+    field_description: 'Este utilizador ativou fatores de autenticação de 2 etapas.',
+    name_column: 'Autenticação de dois fatores',
+    field_description_empty: 'Este utilizador não ativou fatores de autenticação de 2 passos.',
+    deletion_confirmation:
+      'Está a remover o <name/> existente para o autenticador de 2 passos. Tem a certeza de que deseja fazê-lo?',
+  },
   suspended: 'suspenso',
   suspend_user: 'Suspender utilizador',
   suspend_user_reminder:
