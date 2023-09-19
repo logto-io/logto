@@ -2,14 +2,14 @@ import type { Role } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockAdminUserRole, mockScope, mockUser } from '#src/__mocks__/index.js';
-import { mockStandardId } from '#src/test-utils/nanoid.js';
+import { mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-await mockStandardId();
+await mockIdGenerators();
 
 const roles = {
   findRoles: jest.fn(async (): Promise<Role[]> => [mockAdminUserRole]),

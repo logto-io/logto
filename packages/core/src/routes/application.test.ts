@@ -1,22 +1,18 @@
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
 
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
 
-await mockEsmWithActual('@logto/shared', () => ({
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: () => () => 'randomId',
-  generateStandardId: () => 'randomId',
-}));
+await mockIdGenerators();
 
 const tenantContext = new MockTenant(
   undefined,
@@ -83,8 +79,8 @@ describe('application route', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockApplication,
-      id: 'randomId',
-      secret: 'randomId',
+      id: mockId,
+      secret: mockId,
       name,
       description,
       type,
@@ -101,7 +97,7 @@ describe('application route', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockApplication,
-      id: 'randomId',
+      id: mockId,
       name,
       type,
       customClientMetadata,
