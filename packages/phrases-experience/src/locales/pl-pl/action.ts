@@ -24,6 +24,9 @@ const action = {
   link_another_phone: 'Połącz inne konto telefoniczne',
   link_another_email_or_phone: 'Połącz inne konto email lub telefoniczne',
   show_password: 'Pokaż hasło',
+  copy: 'Kopiuj',
+  verify_via_passkey: 'Weryfikacja za pomocą klucza dostępu',
+  download: 'Pobierz',
 };
 
 export default Object.freeze(action);

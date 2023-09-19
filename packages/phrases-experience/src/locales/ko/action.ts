@@ -24,6 +24,9 @@ const action = {
   link_another_phone: '다른 전화번호 연동',
   link_another_email_or_phone: '다른 이메일 또는 전화번호 연동',
   show_password: '비밀번호 보기',
+  copy: '복사',
+  verify_via_passkey: '패스키로 확인',
+  download: '다운로드',
 };
 
 export default Object.freeze(action);

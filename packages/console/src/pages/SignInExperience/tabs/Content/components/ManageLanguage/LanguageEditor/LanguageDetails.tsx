@@ -2,6 +2,7 @@ import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-experience';
 import en from '@logto/phrases-experience/lib/locales/en';
+import { type LocalePhraseGroupKey } from '@logto/phrases-experience/lib/types';
 import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
@@ -31,6 +32,7 @@ import type { CustomPhraseResponse } from '@/types/custom-phrase';
 import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './LanguageDetails.module.scss';
+import { excludePhraseGroups, excludePhrases } from './constants';
 import { LanguageEditorContext } from './use-language-editor-context';
 
 const emptyUiTranslation = createEmptyUiTranslation();
@@ -47,12 +49,33 @@ function LanguageDetails() {
   const fetchApi = useApi({ hideErrorToast: true });
   const fetcher = useSwrFetcher<CustomPhraseResponse>(fetchApi);
 
-  const translationEntries = useMemo(
+  const translationData = useMemo(
     () =>
-      Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation).filter(
-        // Filter out the demo app phrases in AC
-        ([groupKey]) => groupKey !== 'demo_app'
-      ),
+      Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation)
+        .filter(
+          // eslint-disable-next-line no-restricted-syntax
+          ([groupKey]) => !excludePhraseGroups.includes(groupKey as LocalePhraseGroupKey)
+        )
+        .map(([groupKey, value]) => ({
+          key: groupKey,
+          label: groupKey,
+          labelClassName: styles.sectionTitle,
+          data: Object.entries(flattenTranslation(value))
+            .filter(
+              ([phraseKey]) =>
+                !excludePhrases.some(
+                  ({ groupKey: excludeGroupKey, phraseKeys: excludePhraseKeys }) =>
+                    excludeGroupKey === groupKey &&
+                    // eslint-disable-next-line no-restricted-syntax
+                    (excludePhraseKeys as string[]).includes(phraseKey)
+                )
+            )
+            .map(([phraseKey, value]) => ({
+              phraseKey,
+              sourceValue: value,
+              fieldKey: `${groupKey}.${phraseKey}`,
+            })),
+        })),
     [isBuiltIn, selectedLanguage]
   );
 
@@ -196,16 +219,7 @@ function LanguageDetails() {
           headerTableClassName={styles.tableWrapper}
           bodyTableWrapperClassName={styles.tableWrapper}
           rowIndexKey="phraseKey"
-          rowGroups={translationEntries.map(([groupKey, value]) => ({
-            key: groupKey,
-            label: groupKey,
-            labelClassName: styles.sectionTitle,
-            data: Object.entries(flattenTranslation(value)).map(([phraseKey, value]) => ({
-              phraseKey,
-              sourceValue: value,
-              fieldKey: `${groupKey}.${phraseKey}`,
-            })),
-          }))}
+          rowGroups={translationData}
           columns={[
             {
               title: t('sign_in_exp.content.manage_language.key'),

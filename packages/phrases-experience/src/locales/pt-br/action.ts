@@ -24,6 +24,9 @@ const action = {
   link_another_phone: 'Vincular outro telefone',
   link_another_email_or_phone: 'Vincular outro e-mail ou telefone',
   show_password: 'Mostrar senha',
+  copy: 'Copiar',
+  verify_via_passkey: 'Verificar via chave de acesso',
+  download: 'Baixar',
 };
 
 export default Object.freeze(action);

@@ -5,6 +5,7 @@ const input = {
   phone_number: 'Número de telefone',
   confirm_password: 'Confirme a senha',
   search_region_code: 'Pesquisar código de região',
+  backup_code: 'Código de backup',
 };
 
 export default Object.freeze(input);

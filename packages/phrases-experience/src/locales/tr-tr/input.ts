@@ -5,6 +5,7 @@ const input = {
   phone_number: 'Telefon Numarası',
   confirm_password: 'Şifreyi Doğrula',
   search_region_code: 'Bölge kodunu ara',
+  backup_code: 'Yedek kod',
 };
 
 export default Object.freeze(input);

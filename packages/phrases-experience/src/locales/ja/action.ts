@@ -24,6 +24,9 @@ const action = {
   link_another_phone: '別の電話番号をリンクする',
   link_another_email_or_phone: '別のメールアドレスまたは電話番号をリンクする',
   show_password: 'パスワードを表示する',
+  copy: 'コピー',
+  verify_via_passkey: 'パスキー経由で確認',
+  download: 'ダウンロード',
 };
 
 export default Object.freeze(action);

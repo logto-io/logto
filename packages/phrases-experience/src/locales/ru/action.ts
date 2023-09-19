@@ -24,6 +24,9 @@ const action = {
   link_another_phone: 'Привязать другой номер',
   link_another_email_or_phone: 'Привязать другую почту или номер',
   show_password: 'Показать пароль',
+  copy: 'Копировать',
+  verify_via_passkey: 'Проверить с помощью ключа доступа',
+  download: 'Скачать',
 };
 
 export default Object.freeze(action);
