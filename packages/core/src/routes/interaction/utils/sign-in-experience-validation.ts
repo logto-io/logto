@@ -1,4 +1,4 @@
-import type { SignInExperience, Profile, IdentifierPayload } from '@logto/schemas';
+import type { SignInExperience, Profile, IdentifierPayload, MfaFactor } from '@logto/schemas';
 import { SignInMode, SignInIdentifier, InteractionEvent } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -126,4 +126,12 @@ export const verifyProfileSettings = (profile: Profile, { signUp }: SignInExperi
   if (profile.password) {
     assertThat(signUp.password, forbiddenIdentifierError());
   }
+};
+
+export const verifyMfaSettings = (type: MfaFactor, signInExperience: SignInExperience) => {
+  const {
+    mfa: { factors },
+  } = signInExperience;
+
+  assertThat(factors.includes(type), forbiddenIdentifierError());
 };

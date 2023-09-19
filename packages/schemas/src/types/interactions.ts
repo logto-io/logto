@@ -1,7 +1,7 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { jsonObjectGuard } from '../foundations/index.js';
+import { MfaFactor, jsonObjectGuard } from '../foundations/index.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -100,3 +100,38 @@ export enum MissingProfile {
   password = 'password',
   emailOrPhone = 'emailOrPhone',
 }
+
+export const bindTotpPayloadGuard = z.object({
+  // Unlike identifier payload which has indicator like "email",
+  // mfa payload must have an additional type field to indicate type
+  type: z.literal(MfaFactor.TOTP),
+  code: z.string(),
+});
+
+export type BindTotpPayload = z.infer<typeof bindTotpPayloadGuard>;
+
+export const bindMfaPayloadGuard = bindTotpPayloadGuard;
+
+export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
+
+export const pendingTotpGuard = z.object({
+  type: z.literal(MfaFactor.TOTP),
+  secret: z.string(),
+});
+
+export type PendingTotp = z.infer<typeof pendingTotpGuard>;
+
+// Some information like TOTP secret should be generated in the backend
+// and stored in the interaction temporarily.
+export const pendingMfaGuard = pendingTotpGuard;
+
+export type PendingMfa = z.infer<typeof pendingMfaGuard>;
+
+export const bindTotpGuard = pendingTotpGuard;
+
+export type BindTotp = z.infer<typeof bindTotpGuard>;
+
+// The type for binding new mfa verification to a user, not always equals to the pending type.
+export const bindMfaGuard = bindTotpGuard;
+
+export type BindMfa = z.infer<typeof bindMfaGuard>;

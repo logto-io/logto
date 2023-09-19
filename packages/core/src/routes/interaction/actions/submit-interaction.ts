@@ -11,7 +11,7 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
 } from '@logto/schemas';
-import { type OmitAutoSetFields } from '@logto/shared';
+import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 import { type IRouterContext } from 'koa-router';
 
@@ -168,6 +168,23 @@ const parseUserProfile = async (
   };
 };
 
+const parseBindMfa = ({
+  bindMfa,
+}: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult):
+  | User['mfaVerifications'][number]
+  | undefined => {
+  if (!bindMfa) {
+    return;
+  }
+
+  return {
+    type: bindMfa.type,
+    key: bindMfa.secret,
+    id: generateStandardId(),
+    createdAt: new Date().toISOString(),
+  };
+};
+
 const getInitialUserRoles = (
   isInAdminTenant: boolean,
   isCreatingFirstAdminUser: boolean,
@@ -220,6 +237,7 @@ export default async function submitInteraction(
   if (event === InteractionEvent.Register) {
     const id = await generateUserId();
     const userProfile = await parseUserProfile(connectors, interaction);
+    const mfaVerification = parseBindMfa(interaction);
 
     const { client_id } = ctx.interactionDetails.params;
 
@@ -234,6 +252,7 @@ export default async function submitInteraction(
       {
         id,
         ...userProfile,
+        ...conditional(mfaVerification && { mfaVerifications: [mfaVerification] }),
       },
       getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
     );
@@ -265,8 +284,14 @@ export default async function submitInteraction(
   if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
     const updateUserProfile = await parseUserProfile(connectors, interaction, user);
+    const mfaVerification = parseBindMfa(interaction);
 
-    await updateUserById(accountId, updateUserProfile);
+    await updateUserById(accountId, {
+      ...updateUserProfile,
+      ...conditional(
+        mfaVerification && { mfaVerifications: [...user.mfaVerifications, mfaVerification] }
+      ),
+    });
     await assignInteractionResults(ctx, provider, { login: { accountId } });
     ctx.assignInteractionHookResult({ userId: accountId });
 

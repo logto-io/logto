@@ -69,6 +69,7 @@
     "lru-cache": "^10.0.0",
     "nanoid": "^4.0.0",
     "oidc-provider": "^8.2.2",
+    "otplib": "^12.0.1",
     "p-retry": "^6.0.0",
     "pg-protocol": "^1.6.0",
     "redis": "^4.6.5",

@@ -11,10 +11,10 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
-import { verificationPath, interactionPrefix } from './const.js';
+import { interactionPrefix } from './const.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsmDefault, mockEsmWithActual } = createMockUtils(jest);
 
 // FIXME @Darcy: no more `enabled` for `connectors` table
 const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
@@ -39,24 +39,30 @@ const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/ses
   assignInteractionResults: jest.fn(),
 }));
 
-const { verifySignInModeSettings, verifyIdentifierSettings, verifyProfileSettings } = mockEsm(
-  './utils/sign-in-experience-validation.js',
-  () => ({
+const { verifySignInModeSettings, verifyIdentifierSettings, verifyProfileSettings } =
+  await mockEsmWithActual('./utils/sign-in-experience-validation.js', () => ({
     verifySignInModeSettings: jest.fn(),
     verifyIdentifierSettings: jest.fn(),
     verifyProfileSettings: jest.fn(),
-  })
-);
+  }));
 
 const submitInteraction = mockEsmDefault('./actions/submit-interaction.js', () => jest.fn());
 
-const { verifyIdentifierPayload, verifyIdentifier, verifyProfile, validateMandatoryUserProfile } =
-  await mockEsmWithActual('./verifications/index.js', () => ({
-    verifyIdentifierPayload: jest.fn(),
-    verifyIdentifier: jest.fn().mockResolvedValue({}),
-    verifyProfile: jest.fn(),
-    validateMandatoryUserProfile: jest.fn(),
-  }));
+const {
+  verifyIdentifierPayload,
+  verifyIdentifier,
+  verifyProfile,
+  validateMandatoryUserProfile,
+  validateMandatoryBindMfa,
+  verifyBindMfa,
+} = await mockEsmWithActual('./verifications/index.js', () => ({
+  verifyIdentifierPayload: jest.fn(),
+  verifyIdentifier: jest.fn().mockResolvedValue({}),
+  verifyProfile: jest.fn(),
+  validateMandatoryUserProfile: jest.fn(),
+  validateMandatoryBindMfa: jest.fn(),
+  verifyBindMfa: jest.fn(),
+}));
 
 const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = await mockEsmWithActual(
   './utils/interaction.js',
@@ -66,13 +72,6 @@ const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = awai
     getInteractionStorage: jest.fn().mockReturnValue({
       event: InteractionEvent.SignIn,
     }),
-  })
-);
-
-const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
-  './utils/verification-code-validation.js',
-  () => ({
-    sendVerificationCodeToIdentifier: jest.fn(),
   })
 );
 
@@ -175,8 +174,14 @@ describe('interaction routes', () => {
       jest.clearAllMocks();
     });
 
-    it('should call identifier and profile verification properly', async () => {
+    it('should call identifier, profile and bindMfa verification properly', async () => {
       verifyProfile.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      validateMandatoryUserProfile.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      verifyBindMfa.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
       });
 
@@ -185,15 +190,23 @@ describe('interaction routes', () => {
       expect(verifyIdentifier).toBeCalled();
       expect(verifyProfile).toBeCalled();
       expect(validateMandatoryUserProfile).toBeCalled();
+      expect(verifyBindMfa).toBeCalled();
+      expect(validateMandatoryBindMfa).toBeCalled();
       expect(submitInteraction).toBeCalled();
     });
 
-    it('should not call validateMandatoryUserProfile for forgot password request', async () => {
+    it('should not call validateMandatoryUserProfile and validateMandatoryBindMfa for forgot password request', async () => {
       getInteractionStorage.mockReturnValue({
         event: InteractionEvent.ForgotPassword,
       });
 
       verifyProfile.mockReturnValueOnce({
+        event: InteractionEvent.ForgotPassword,
+      });
+      validateMandatoryUserProfile.mockReturnValueOnce({
+        event: InteractionEvent.ForgotPassword,
+      });
+      verifyBindMfa.mockReturnValueOnce({
         event: InteractionEvent.ForgotPassword,
       });
 
@@ -202,6 +215,7 @@ describe('interaction routes', () => {
       expect(verifyIdentifier).toBeCalled();
       expect(verifyProfile).toBeCalled();
       expect(validateMandatoryUserProfile).not.toBeCalled();
+      expect(validateMandatoryBindMfa).not.toBeCalled();
       expect(submitInteraction).toBeCalled();
     });
   });
@@ -307,78 +321,6 @@ describe('interaction routes', () => {
       expect(getInteractionStorage).toBeCalled();
       expect(storeInteractionResult).toBeCalled();
       expect(response.status).toEqual(204);
-    });
-  });
-
-  describe('POST /interaction/verification/verification-code', () => {
-    const path = `${interactionPrefix}/${verificationPath}/verification-code`;
-
-    it('should call send verificationCode properly', async () => {
-      const body = {
-        email: 'email@logto.io',
-      };
-
-      const response = await sessionRequest.post(path).send(body);
-      expect(getInteractionStorage).toBeCalled();
-      expect(sendVerificationCodeToIdentifier).toBeCalledWith(
-        {
-          event: InteractionEvent.SignIn,
-          ...body,
-        },
-        'jti',
-        createLog,
-        tenantContext.libraries.passcodes
-      );
-      expect(response.status).toEqual(204);
-    });
-  });
-
-  describe('POST /verification/social/authorization-uri', () => {
-    const path = `${interactionPrefix}/${verificationPath}/social-authorization-uri`;
-
-    it('should throw when redirectURI is invalid', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
-        state: 'state',
-        redirectUri: 'logto.dev',
-      });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('should return the authorization-uri properly', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
-
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo', '');
-    });
-
-    it('throw error when sign-in with social but miss state', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
-        redirectUri: 'https://logto.dev',
-      });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error when sign-in with social but miss redirectUri', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'social_enabled',
-        state: 'state',
-      });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error when no social connector is found', async () => {
-      const response = await sessionRequest.post(path).send({
-        connectorId: 'others',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
-      expect(response.statusCode).toEqual(404);
     });
   });
 });
