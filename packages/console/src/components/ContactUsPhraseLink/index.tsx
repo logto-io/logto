@@ -8,11 +8,7 @@ type Props = {
 };
 
 function ContactUsPhraseLink({ children }: Props) {
-  return (
-    <TextLink href={contactEmailLink} target="_blank">
-      {children}
-    </TextLink>
-  );
+  return <TextLink href={contactEmailLink}>{children}</TextLink>;
 }
 
 export default ContactUsPhraseLink;

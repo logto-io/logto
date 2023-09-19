@@ -22,6 +22,10 @@
   }
 }
 
+.unlockMfaNotice {
+  margin-top: _.unit(4);
+}
+
 .policyRadio {
   > div[class$='content'] {
     > div[class$='indicator'] {
