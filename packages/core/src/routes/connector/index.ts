@@ -1,7 +1,7 @@
 import { type ConnectorFactory, buildRawConnector } from '@logto/cli/lib/connector/index.js';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import { Connectors, ConnectorType, connectorResponseGuard, type JsonObject } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
+import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { string, object } from 'zod';
@@ -19,8 +19,6 @@ import type { AuthedRouter, RouterInitArgs } from '../types.js';
 import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 import connectorFactoryRoutes from './factory.js';
-
-const generateConnectorId = buildIdGenerator(12);
 
 const guardConnectorsQuota = async (factory: ConnectorFactory, quota: QuotaLibrary) => {
   if (factory.metadata.isStandard) {
@@ -130,7 +128,7 @@ export default function connectorRoutes<T extends AuthedRouter>(
         validateConfig(config, rawConnector.configGuard);
       }
 
-      const insertConnectorId = proposedId ?? generateConnectorId();
+      const insertConnectorId = proposedId ?? generateStandardShortId();
       await insertConnector({
         id: insertConnectorId,
         connectorId,

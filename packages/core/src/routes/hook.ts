@@ -8,7 +8,7 @@ import {
   type HookResponse,
   type Hook,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
@@ -171,7 +171,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       ctx.body = await insertHook({
         ...rest,
         id: generateStandardId(),
-        signingKey: generateStandardId(),
+        signingKey: generateStandardSecret(),
         events: events ?? [],
         enabled: enabled ?? true,
         ...conditional(event && { event }),
@@ -242,7 +242,7 @@ export default function hookRoutes<T extends AuthedRouter>(
       } = ctx.guard;
 
       ctx.body = await updateHookById(id, {
-        signingKey: generateStandardId(),
+        signingKey: generateStandardSecret(),
       });
 
       return next();

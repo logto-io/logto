@@ -1,7 +1,7 @@
 import { generateKeyPair } from 'node:crypto';
 import { promisify } from 'node:util';
 
-import { generateStandardId } from '@logto/shared';
+import { generateStandardSecret } from '@logto/shared';
 
 export enum PrivateKeyType {
   RSA = 'rsa',
@@ -46,4 +46,4 @@ export const generateOidcPrivateKey = async (type: PrivateKeyType = PrivateKeyTy
   throw new Error(`Unsupported private key ${String(type)}`);
 };
 
-export const generateOidcCookieKey = () => generateStandardId();
+export const generateOidcCookieKey = () => generateStandardSecret();

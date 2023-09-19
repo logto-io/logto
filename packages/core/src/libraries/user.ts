@@ -1,6 +1,6 @@
 import type { User, CreateUser, Scope } from '@logto/schemas';
 import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { buildIdGenerator, generateStandardId } from '@logto/shared';
+import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicate } from '@silverhand/essentials';
@@ -14,8 +14,6 @@ import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { encryptPassword } from '#src/utils/password.js';
-
-const userId = buildIdGenerator(12);
 
 export const encryptUserPassword = async (
   password: string
@@ -64,7 +62,7 @@ export const createUserLibrary = (queries: Queries) => {
   const generateUserId = async (retries = 500) =>
     pRetry(
       async () => {
-        const id = userId();
+        const id = generateStandardShortId();
 
         if (!(await hasUserWithId(id))) {
           return id;
