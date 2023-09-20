@@ -6,12 +6,18 @@ const role_details = {
   role_deleted: '{{name}} başarıyla silindi.',
   settings_tab: 'Ayarlar',
   users_tab: 'Kullanıcılar',
+  /** UNTRANSLATED */
+  m2m_apps_tab: 'Machine-to-machine apps',
   permissions_tab: 'İzinler',
   settings: 'Ayarlar',
   settings_description:
     "Roller, kullanıcılara atanabilen izinlerin bir gruplamasıdır. Ayrıca, farklı API'ler için tanımlanan izinleri biriktirmek için bir yol sağladıkları için, izinleri kullanıcılara bireysel olarak atamaktan daha verimli bir şekilde eklemek, kaldırmak veya ayarlamak için bir yoldur.",
   field_name: 'Adı',
   field_description: 'Açıklama',
+  /** UNTRANSLATED */
+  type_m2m_role_tag: 'Machine-to-machine app role',
+  /** UNTRANSLATED */
+  type_user_role_tag: 'User role',
   permission: {
     assign_button: 'İzinleri Ata',
     assign_title: 'İzinleri Ata',
@@ -50,11 +56,16 @@ const role_details = {
     /** UNTRANSLATED */
     name_column: 'Application',
     /** UNTRANSLATED */
-    app_column: 'App',
+    app_column: 'Apps',
+    /** UNTRANSLATED */
+    description_column: 'Description',
+    /** UNTRANSLATED */
+    delete_description:
+      'It will remain in your application pool but lose the authorization for this role.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this role',
     /** UNTRANSLATED */
-    assign_title: 'Assign applications',
+    assign_title: 'Assign apps',
     /** UNTRANSLATED */
     assign_subtitle:
       'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',

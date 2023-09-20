@@ -28,6 +28,7 @@ export enum RoleDetailsTabs {
   Settings = 'settings',
   Permissions = 'permissions',
   Users = 'users',
+  M2mApps = 'machine-to-machine-apps',
 }
 
 export enum TenantSettingsTabs {

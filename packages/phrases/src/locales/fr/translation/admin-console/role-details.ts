@@ -6,12 +6,18 @@ const role_details = {
   role_deleted: '{{name}} a été supprimé avec succès.',
   settings_tab: 'Paramètres',
   users_tab: 'Utilisateurs',
+  /** UNTRANSLATED */
+  m2m_apps_tab: 'Machine-to-machine apps',
   permissions_tab: 'Autorisations',
   settings: 'Paramètres',
   settings_description:
     "Les rôles sont un regroupement d'autorisations qui peuvent être attribuées aux utilisateurs. Ils fournissent également un moyen d'agréger les autorisations définies pour différentes API, ce qui rend plus efficace l'ajout, la suppression ou l'ajustement des autorisations par rapport à leur attribution individuelle aux utilisateurs.",
   field_name: 'Nom',
   field_description: 'Description',
+  /** UNTRANSLATED */
+  type_m2m_role_tag: 'Machine-to-machine app role',
+  /** UNTRANSLATED */
+  type_user_role_tag: 'User role',
   permission: {
     assign_button: 'Attribuer des autorisations',
     assign_title: 'Attribuer des autorisations',
@@ -51,11 +57,16 @@ const role_details = {
     /** UNTRANSLATED */
     name_column: 'Application',
     /** UNTRANSLATED */
-    app_column: 'App',
+    app_column: 'Apps',
+    /** UNTRANSLATED */
+    description_column: 'Description',
+    /** UNTRANSLATED */
+    delete_description:
+      'It will remain in your application pool but lose the authorization for this role.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this role',
     /** UNTRANSLATED */
-    assign_title: 'Assign applications',
+    assign_title: 'Assign apps',
     /** UNTRANSLATED */
     assign_subtitle:
       'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
