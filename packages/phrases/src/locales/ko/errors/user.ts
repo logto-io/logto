@@ -29,6 +29,10 @@ const user = {
   role_exists: '역할 ID {{roleId}}은/는 이미 이 사용자에게 할당되어 있어요.',
   invalid_role_type:
     '유효하지 않은 역할 유형입니다. 사용자에게 기계 대 기계 역할을 할당할 수 없습니다.',
+  /** UNTRANSLATED */
+  missing_mfa: 'You need to bind additional MFA before signing-in.',
+  /** UNTRANSLATED */
+  totp_already_in_use: 'TOTP is already in use.',
 };
 
 export default Object.freeze(user);

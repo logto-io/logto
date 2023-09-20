@@ -28,6 +28,10 @@ const user = {
   missing_profile: '请于登录时提供必要的用户补充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用户',
   invalid_role_type: '无效的角色类型，无法将机器到机器角色分配给用户。',
+  /** UNTRANSLATED */
+  missing_mfa: 'You need to bind additional MFA before signing-in.',
+  /** UNTRANSLATED */
+  totp_already_in_use: 'TOTP is already in use.',
 };
 
 export default Object.freeze(user);

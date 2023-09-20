@@ -30,6 +30,10 @@ const user = {
   role_exists: "L'ID de rôle {{roleId}} a déjà été ajouté à cet utilisateur",
   invalid_role_type:
     'Le type de rôle est invalide, il est impossible d\'assigner un rôle "machine-to-machine" à un utilisateur.',
+  /** UNTRANSLATED */
+  missing_mfa: 'You need to bind additional MFA before signing-in.',
+  /** UNTRANSLATED */
+  totp_already_in_use: 'TOTP is already in use.',
 };
 
 export default Object.freeze(user);
