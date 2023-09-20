@@ -11,6 +11,7 @@ import { useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -165,7 +166,7 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
           </FormField>
         </>
       )}
-      {type === ApplicationType.MachineToMachine && (
+      {!isDevFeaturesEnabled && type === ApplicationType.MachineToMachine && (
         <FormField title="application_details.enable_admin_access">
           <Switch
             label={t('application_details.enable_admin_access_label')}
