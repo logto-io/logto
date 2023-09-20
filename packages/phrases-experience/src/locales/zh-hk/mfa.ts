@@ -41,6 +41,8 @@ const mfa = {
   verify_via_passkey: '通過 Passkey 驗證',
   verify_via_passkey_description:
     '使用 Passkey 通過設備密碼或生物識別、掃描 QR 碼或使用類似 YubiKey 的 USB 安全金鑰進行驗證。',
+  secret_key_copied: '已複製秘密金鑰。',
+  backup_code_copied: '已複製備用碼。',
 };
 
 export default Object.freeze(mfa);

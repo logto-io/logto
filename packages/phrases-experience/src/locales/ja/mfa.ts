@@ -46,6 +46,8 @@ const mfa = {
   verify_via_passkey: 'パスキーを使用して確認',
   verify_via_passkey_description:
     'デバイスのパスワードまたはバイオメトリック、QRコードのスキャン、YubiKeyなどのUSBセキュリティキーを使用して確認するためにパスキーを使用します。',
+  secret_key_copied: 'シークレットキーがコピーされました。',
+  backup_code_copied: 'バックアップコードがコピーされました。',
 };
 
 export default Object.freeze(mfa);

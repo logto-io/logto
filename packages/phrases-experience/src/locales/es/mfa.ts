@@ -46,6 +46,8 @@ const mfa = {
   verify_via_passkey: 'Verificar mediante clave de acceso',
   verify_via_passkey_description:
     'Use la clave de acceso para verificar mediante la contraseña de su dispositivo o biometría, escanee el código QR o use una llave de seguridad USB como YubiKey.',
+  secret_key_copied: 'Clave secreta copiada.',
+  backup_code_copied: 'Código de respaldo copiado.',
 };
 
 export default Object.freeze(mfa);

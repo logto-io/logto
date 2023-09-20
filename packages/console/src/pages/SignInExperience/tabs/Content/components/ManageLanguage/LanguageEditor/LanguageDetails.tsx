@@ -28,8 +28,8 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import {
-  hiddenLocalPhraseGroups,
-  hiddenLocalPhrases,
+  hiddenLocalePhraseGroups,
+  hiddenLocalePhrases,
 } from '@/pages/SignInExperience/utils/constants';
 import {
   createEmptyUiTranslation,
@@ -60,7 +60,7 @@ function LanguageDetails() {
       Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation)
         .filter(
           // eslint-disable-next-line no-restricted-syntax
-          ([groupKey]) => !hiddenLocalPhraseGroups.includes(groupKey as LocalePhraseGroupKey)
+          ([groupKey]) => !hiddenLocalePhraseGroups.includes(groupKey as LocalePhraseGroupKey)
         )
         .map(([groupKey, value]) => ({
           key: groupKey,
@@ -70,7 +70,7 @@ function LanguageDetails() {
             .filter(
               ([phraseKey]) =>
                 // eslint-disable-next-line no-restricted-syntax
-                !hiddenLocalPhrases.includes(`${groupKey}.${phraseKey}` as LocalePhraseKey)
+                !hiddenLocalePhrases.includes(`${groupKey}.${phraseKey}` as LocalePhraseKey)
             )
             .map(([phraseKey, value]) => ({
               phraseKey,

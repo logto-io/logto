@@ -46,6 +46,8 @@ const mfa = {
   verify_via_passkey: 'Anahtar kodu ile doğrulama',
   verify_via_passkey_description:
     'Cihazınızın şifresi veya biyometrisi, QR kodunu tarayarak veya YubiKey gibi bir USB güvenlik anahtarı kullanarak doğrulama için anahtar kodunu kullanın.',
+  secret_key_copied: 'Gizli anahtar kopyalandı.',
+  backup_code_copied: 'Yedek kodu kopyalandı.',
 };
 
 export default Object.freeze(mfa);

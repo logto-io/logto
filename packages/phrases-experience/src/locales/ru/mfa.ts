@@ -46,6 +46,8 @@ const mfa = {
   verify_via_passkey: 'Подтвердить через ключ доступа',
   verify_via_passkey_description:
     'Используйте ключ доступа для верификации с помощью пароля вашего устройства или биометрии, сканирования QR-кода или использования USB-ключа безопасности, такого как YubiKey.',
+  secret_key_copied: 'Секретный ключ скопирован.',
+  backup_code_copied: 'Резервный код скопирован.',
 };
 
 export default Object.freeze(mfa);
