@@ -1,3 +1,4 @@
+import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from 'slonik';
 
@@ -8,6 +9,7 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 import Libraries from '#src/tenants/Libraries.js';
 import Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -65,6 +67,7 @@ export class MockTenant implements TenantContext {
   public cloudConnection: CloudConnectionLibrary;
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
+  public sentinel: Sentinel;
 
   constructor(
     public provider = createMockProvider(),
@@ -81,6 +84,7 @@ export class MockTenant implements TenantContext {
     };
     this.libraries = new Libraries(this.id, this.queries, this.connectors, this.cloudConnection);
     this.setPartial('libraries', librariesOverride);
+    this.sentinel = new BasicSentinel(this.queries.pool);
   }
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(

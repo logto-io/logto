@@ -1,15 +1,22 @@
-import type {
-  InteractionEvent,
-  IdentifierPayload,
-  SocialConnectorPayload,
-  VerifyVerificationCodePayload,
+import {
+  type InteractionEvent,
+  type IdentifierPayload,
+  type SocialConnectorPayload,
+  type VerifyVerificationCodePayload,
+  SentinelActionResult,
+  SentinelActivityTargetType,
+  SentinelDecision,
+  SentinelActivityAction,
 } from '@logto/schemas';
+import { type Optional, isKeyInObject } from '@silverhand/essentials';
+import { sha256 } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyUserPassword } from '#src/libraries/user.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { i18next } from '#src/utils/i18n.js';
 
 import type {
   PasswordIdentifierPayload,
@@ -126,7 +133,20 @@ const verifySocialVerifiedIdentifier = async (
   };
 };
 
-export default async function identifierPayloadVerification(
+/**
+ * Validate the identifier payload according to the payload type. Type should be one of
+ * the following:
+ *
+ * - Password: If an existing user with the given identifier exists, and the password is
+ *   correct, then the payload is valid.
+ * - Verification code: If the verification code in the payload matches the one sent to
+ *   the given identifier, then the payload is valid.
+ * - Social: If the connector can use the session data to retrieve the user info, then
+ *   the payload is valid.
+ * - Social verified email/phone: If the connector session data contains the verified email
+ *   or phone, then the payload is valid.
+ */
+async function identifierPayloadVerification(
   ctx: WithLogContext,
   tenant: TenantContext,
   identifierPayload: IdentifierPayload,
@@ -149,3 +169,99 @@ export default async function identifierPayloadVerification(
   // Sign-In with social verified email or phone
   return verifySocialVerifiedIdentifier(identifierPayload, ctx, interactionStorage);
 }
+
+const getActionByPayload = (payload: IdentifierPayload): Optional<SentinelActivityAction> => {
+  if (isPasswordIdentifier(payload)) {
+    return SentinelActivityAction.Password;
+  }
+
+  if (isVerificationCodeIdentifier(payload)) {
+    return SentinelActivityAction.VerificationCode;
+  }
+};
+
+const getUserIdentifier = (payload: IdentifierPayload): Optional<string> => {
+  for (const key of ['username', 'email', 'phone'] as const) {
+    if (isKeyInObject(payload, key)) {
+      return String(payload[key]);
+    }
+  }
+};
+
+/**
+ * Verify the identifier payload, and report the activity to this sentinel. The sentinel
+ * will decide whether to block the user or not.
+ *
+ * If the payload is not recognized, the activity will be ignored. Supported payloads are the
+ * cartesian product of (identifier type) x (action type):
+ *
+ * - Identifier type: Username, email, phone
+ * - Action type: Password, verification code
+ *
+ * @remarks
+ * If the user is blocked, the verification will still be performed, but the promise will be
+ * rejected with a {@link RequestError} with the code `session.verification_blocked_too_many_attempts`.
+ *
+ * If the user is not blocked, but the verification throws, the promise will be rejected with
+ * the error thrown by the verification.
+ *
+ * @param verificationPromise The promise that resolves when the verification is complete.
+ * @param payload The payload to report.
+ * @returns The result of the verification.
+ * @throws {RequestError} If the user is blocked.
+ * @throws If the user is not blocked but the verification throws.
+ * @see {@link identifierPayloadVerification} for the actual verification.
+ */
+const verifyIdentifierPayload: typeof identifierPayloadVerification = async (
+  ctx,
+  tenant,
+  identifierPayload,
+  interactionStorage
+) => {
+  const action = getActionByPayload(identifierPayload);
+  const identifier = getUserIdentifier(identifierPayload);
+  const verificationPromise = identifierPayloadVerification(
+    ctx,
+    tenant,
+    identifierPayload,
+    interactionStorage
+  );
+
+  if (!action || !identifier) {
+    return verificationPromise;
+  }
+
+  const [result, error] = await (async () => {
+    try {
+      return [await verificationPromise, undefined];
+    } catch (error) {
+      return [undefined, error instanceof Error ? error : new Error(String(error))];
+    }
+  })();
+
+  const actionResult = error ? SentinelActionResult.Failed : SentinelActionResult.Success;
+
+  const [decision, decisionExpiresAt] = await tenant.sentinel.reportActivity({
+    targetType: SentinelActivityTargetType.User,
+    targetHash: await sha256(identifier),
+    action,
+    actionResult,
+    payload: { event: interactionStorage.event }, // Maybe also include the session data?
+  });
+
+  if (decision === SentinelDecision.Blocked) {
+    const rtf = new Intl.RelativeTimeFormat([...i18next.languages]);
+    throw new RequestError({
+      code: 'session.verification_blocked_too_many_attempts',
+      relativeTime: rtf.format(Math.round((decisionExpiresAt - Date.now()) / 1000 / 60), 'minute'),
+    });
+  }
+
+  if (error) {
+    throw error;
+  }
+
+  return result;
+};
+
+export default verifyIdentifierPayload;

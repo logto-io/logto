@@ -1,3 +1,4 @@
+import { type Sentinel } from '@logto/schemas';
 import type Provider from 'oidc-provider';
 
 import type { EnvSet } from '#src/env-set/index.js';
@@ -17,4 +18,5 @@ export default abstract class TenantContext {
   public abstract readonly cloudConnection: CloudConnectionLibrary;
   public abstract readonly connectors: ConnectorLibrary;
   public abstract readonly libraries: Libraries;
+  public abstract readonly sentinel: Sentinel;
 }

@@ -25,6 +25,7 @@ import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
+import BasicSentinel from '#src/sentinel/basic-sentinel.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -57,7 +58,8 @@ export default class Tenant implements TenantContext {
     public readonly logtoConfigs = createLogtoConfigLibrary(queries),
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
-    public readonly libraries = new Libraries(id, queries, connectors, cloudConnection)
+    public readonly libraries = new Libraries(id, queries, connectors, cloudConnection),
+    public readonly sentinel = new BasicSentinel(envSet.pool)
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
@@ -92,6 +94,7 @@ export default class Tenant implements TenantContext {
       connectors,
       libraries,
       envSet,
+      sentinel,
     };
 
     // Mount APIs

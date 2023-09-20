@@ -9,6 +9,8 @@ const session = {
   verification_session_not_found:
     'The verification was not successful. Restart the verification flow and try again.',
   verification_expired: 'The connection has timed out. Verify again to ensure your account safety.',
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Please sign in first.',
   unsupported_prompt_name: 'Unsupported prompt name.',
   forgot_password_not_enabled: 'Forgot password is not enabled.',

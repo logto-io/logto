@@ -11,6 +11,9 @@ const session = {
     "La vérification n'a pas abouti. Redémarrez le processus de vérification et réessayez.",
   verification_expired:
     'La connexion a expiré. Vérifiez à nouveau pour assurer la sécurité de votre compte.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: "Veuillez vous enregistrer d'abord.",
   unsupported_prompt_name: "Nom d'invite non supporté.",
   forgot_password_not_enabled:

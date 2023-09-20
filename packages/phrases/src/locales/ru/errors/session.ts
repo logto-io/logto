@@ -10,6 +10,9 @@ const session = {
     'Верификация не прошла успешно. Перезапустите процесс верификации и попробуйте еще раз.',
   verification_expired:
     'Соединение истекло. Повторите верификацию, чтобы обеспечить безопасность вашей учетной записи.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Сначала войдите в систему.',
   unsupported_prompt_name: 'Неподдерживаемое имя подсказки.',
   forgot_password_not_enabled: 'Забыли пароль не включен.',

@@ -30,10 +30,7 @@ export default class BasicSentinel extends Sentinel {
   ] as const);
 
   /** The array of all supported actions in SQL format. */
-  static supportedActionArray = sql.array(
-    BasicSentinel.supportedActions,
-    SentinelActivities.fields.action
-  );
+  static supportedActionArray = sql.array(BasicSentinel.supportedActions, 'varchar');
 
   /**
    * Asserts that the given action is supported by this sentinel.

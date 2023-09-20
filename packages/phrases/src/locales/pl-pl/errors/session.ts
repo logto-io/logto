@@ -10,6 +10,9 @@ const session = {
     'Weryfikacja nie powiodła się. Uruchom proces weryfikacji ponownie i spróbuj ponownie.',
   verification_expired:
     'Połączenie wygasło. Zweryfikuj ponownie, aby zapewnić bezpieczeństwo Twojego konta.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Proszę się najpierw zalogować.',
   unsupported_prompt_name: 'Nieobsługiwana nazwa podpowiedzi.',
   forgot_password_not_enabled: 'Odzyskiwanie hasła nie jest włączone.',

@@ -10,6 +10,9 @@ const session = {
     'Die Verifizierung war nicht erfolgreich. Starte die Verifizierung neu und versuche es erneut.',
   verification_expired:
     'Die Verbindung wurde unterbrochen. Verifiziere erneut, um die Sicherheit deines Kontos zu gewährleisten.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Bitte melde dich erst an.',
   unsupported_prompt_name: 'Nicht unterstützter prompt Name.',
   forgot_password_not_enabled: 'Forgot password is not enabled.',
