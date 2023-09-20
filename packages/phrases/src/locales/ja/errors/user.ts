@@ -30,6 +30,10 @@ const user = {
   role_exists: 'このユーザーには既に役割ID {{roleId}}が追加されています。',
   invalid_role_type:
     '役割タイプが無効です。ユーザーにはマシン対マシンの役割を割り当てることはできません。',
+  /** UNTRANSLATED */
+  missing_mfa: 'You need to bind additional MFA before signing-in.',
+  /** UNTRANSLATED */
+  totp_already_in_use: 'TOTP is already in use.',
 };
 
 export default Object.freeze(user);
