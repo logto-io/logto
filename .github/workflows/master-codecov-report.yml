@@ -31,5 +31,5 @@ jobs:
       - name: Codecov UI
         uses: codecov/codecov-action@v3
         with:
-          flags: ui
-          directory: ./packages/ui
+          flags: experience
+          directory: ./packages/experience
