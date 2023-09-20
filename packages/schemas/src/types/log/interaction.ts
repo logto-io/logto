@@ -1,3 +1,4 @@
+import { type MfaFactor } from '../../foundations/jsonb-types.js';
 import type { InteractionEvent } from '../interactions.js';
 
 export type Prefix = 'Interaction';
@@ -9,6 +10,7 @@ export enum Field {
   Event = 'Event',
   Identifier = 'Identifier',
   Profile = 'Profile',
+  BindMfa = 'BindMfa',
 }
 
 /** Method to verify the identifier */
@@ -81,4 +83,5 @@ export type LogKey =
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Exclude<
       Method,
       Method.VerificationCode | Method.Social
-    >}.${Action.Submit}`;
+    >}.${Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`;
