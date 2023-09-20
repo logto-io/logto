@@ -2,7 +2,10 @@ import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-experience';
 import en from '@logto/phrases-experience/lib/locales/en';
-import { type LocalePhraseGroupKey } from '@logto/phrases-experience/lib/types';
+import {
+  type LocalePhraseGroupKey,
+  type LocalePhraseKey,
+} from '@logto/phrases-experience/lib/types';
 import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
@@ -25,6 +28,10 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
 import {
+  hiddenLocalPhraseGroups,
+  hiddenLocalPhrases,
+} from '@/pages/SignInExperience/utils/constants';
+import {
   createEmptyUiTranslation,
   flattenTranslation,
 } from '@/pages/SignInExperience/utils/language';
@@ -32,7 +39,6 @@ import type { CustomPhraseResponse } from '@/types/custom-phrase';
 import { trySubmitSafe } from '@/utils/form';
 
 import * as styles from './LanguageDetails.module.scss';
-import { excludePhraseGroups, excludePhrases } from './constants';
 import { LanguageEditorContext } from './use-language-editor-context';
 
 const emptyUiTranslation = createEmptyUiTranslation();
@@ -54,7 +60,7 @@ function LanguageDetails() {
       Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation)
         .filter(
           // eslint-disable-next-line no-restricted-syntax
-          ([groupKey]) => !excludePhraseGroups.includes(groupKey as LocalePhraseGroupKey)
+          ([groupKey]) => !hiddenLocalPhraseGroups.includes(groupKey as LocalePhraseGroupKey)
         )
         .map(([groupKey, value]) => ({
           key: groupKey,
@@ -63,12 +69,8 @@ function LanguageDetails() {
           data: Object.entries(flattenTranslation(value))
             .filter(
               ([phraseKey]) =>
-                !excludePhrases.some(
-                  ({ groupKey: excludeGroupKey, phraseKeys: excludePhraseKeys }) =>
-                    excludeGroupKey === groupKey &&
-                    // eslint-disable-next-line no-restricted-syntax
-                    (excludePhraseKeys as string[]).includes(phraseKey)
-                )
+                // eslint-disable-next-line no-restricted-syntax
+                !hiddenLocalPhrases.includes(`${groupKey}.${phraseKey}` as LocalePhraseKey)
             )
             .map(([phraseKey, value]) => ({
               phraseKey,
