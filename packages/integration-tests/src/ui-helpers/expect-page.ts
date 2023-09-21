@@ -1,7 +1,6 @@
-import { condString } from '@silverhand/essentials';
 import { type ElementHandle, type Page } from 'puppeteer';
 
-import { cls, dcls, expectNavigation } from '#src/utils.js';
+import { expectNavigation } from '#src/utils.js';
 
 /** Error thrown by {@link ExpectPage}. */
 export class ExpectPageError extends Error {
@@ -140,12 +139,9 @@ export default class ExpectPage {
    * @param text The text to match.
    */
   async waitForToast(text: string | RegExp, type?: 'success' | 'error') {
-    const toast = await expect(this.page).toMatchElement(
-      `${cls('toast')}${condString(type && cls(type))}:has(${dcls('message')})`,
-      {
-        text,
-      }
-    );
+    const toast = await expect(this.page).toMatchElement('div[role=toast]', {
+      text,
+    });
 
     // Remove immediately to prevent waiting for the toast to disappear and matching the same toast again
     await toast.evaluate((element) => {
