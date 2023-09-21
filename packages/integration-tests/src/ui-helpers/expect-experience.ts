@@ -201,6 +201,15 @@ export default class ExpectExperience extends ExpectPage {
     }
   }
 
+  /**
+   * Expect a toast to appear with the given text, then remove it immediately.
+   *
+   * @param text The text to match.
+   */
+  async waitForToast(text: string | RegExp) {
+    return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
   /** Build a full experience URL from a pathname. */
   protected buildExperienceUrl(pathname = '') {
     return appendPath(this.options.endpoint, pathname);
