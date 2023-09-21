@@ -65,10 +65,10 @@ export type PasswordRejectionCode =
   | 'character_types'
   | 'unsupported_characters'
   | 'pwned'
-  | 'restricted_repetition'
-  | 'restricted_sequence'
-  | 'restricted_userinfo'
-  | 'restricted_words';
+  | 'restricted.repetition'
+  | 'restricted.sequence'
+  | 'restricted.user_info'
+  | 'restricted.words';
 
 /** A password issue that does not meet the policy. */
 export type PasswordIssue<Code extends PasswordRejectionCode = PasswordRejectionCode> = {
@@ -104,7 +104,7 @@ export type UserInfo = Partial<{
  * //   { code: 'password_rejected.too_short' },
  * //   { code: 'password_rejected.character_types', interpolation: { min: 2 } },
  * //   { code: 'password_rejected.pwned' },
- * //   { code: 'password_rejected.restricted_sequence' },
+ * //   { code: 'password_rejected.restricted.sequence' },
  * // ]
  * ```
  */
@@ -197,12 +197,12 @@ export class PasswordPolicyChecker {
       const sliced = password.slice(i);
 
       if (repetitionAndSequence) {
-        fillHashArray(i, this.repetitionLength(sliced), 'restricted_repetition');
-        fillHashArray(i, this.sequenceLength(sliced), 'restricted_sequence');
+        fillHashArray(i, this.repetitionLength(sliced), 'restricted.repetition');
+        fillHashArray(i, this.sequenceLength(sliced), 'restricted.sequence');
       }
 
       if (rejectWords) {
-        fillHashArray(i, this.wordLength(sliced), 'restricted_words');
+        fillHashArray(i, this.wordLength(sliced), 'restricted.words');
       }
 
       if (rejectUserInfo) {
@@ -210,7 +210,7 @@ export class PasswordPolicyChecker {
           throw new TypeError('User information data is required to check user information.');
         }
 
-        fillHashArray(i, this.userInfoLength(sliced, userInfo), 'restricted_userinfo');
+        fillHashArray(i, this.userInfoLength(sliced, userInfo), 'restricted.user_info');
       }
     }
 

@@ -52,14 +52,14 @@ describe('PasswordPolicyChecker -> check()', () => {
 
   it('should recognize rejection combinations', async () => {
     expect(await checker.check('aL1!aL1!', { name: 'aL1!' })).toEqual([
-      { code: 'password_rejected.restricted_userinfo' },
+      { code: 'password_rejected.restricted.user_info' },
     ]);
     expect(await checker.check('lo9KI8mju78911', {})).toEqual([
-      { code: 'password_rejected.restricted_sequence' },
+      { code: 'password_rejected.restricted.sequence' },
     ]);
     expect(await checker.check('lo9KI8MJU789111', {})).toEqual([
-      { code: 'password_rejected.restricted_sequence' },
-      { code: 'password_rejected.restricted_repetition' },
+      { code: 'password_rejected.restricted.sequence' },
+      { code: 'password_rejected.restricted.repetition' },
     ]);
   });
 
@@ -67,24 +67,24 @@ describe('PasswordPolicyChecker -> check()', () => {
     expect(await checker.check('aaa😀', {})).toEqual([
       { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.unsupported_characters' },
-      { code: 'password_rejected.restricted_repetition' },
+      { code: 'password_rejected.restricted.repetition' },
     ]);
 
     expect(await checker.check('123456', { phoneNumber: '12345' })).toEqual([
       { code: 'password_rejected.too_short', interpolation: { min: 7 } },
       { code: 'password_rejected.character_types', interpolation: { min: 3 } },
       { code: 'password_rejected.pwned' },
-      { code: 'password_rejected.restricted_sequence' },
-      { code: 'password_rejected.restricted_userinfo' },
+      { code: 'password_rejected.restricted.sequence' },
+      { code: 'password_rejected.restricted.user_info' },
     ]);
 
     expect(await checker.check('aaaaaaaaAAAAAAAAbcdCOK', { name: 'CO' })).toEqual([
       { code: 'password_rejected.too_long', interpolation: { max: 15 } },
       { code: 'password_rejected.character_types', interpolation: { min: 3 } },
-      { code: 'password_rejected.restricted_repetition' },
-      { code: 'password_rejected.restricted_words' },
-      { code: 'password_rejected.restricted_sequence' },
-      { code: 'password_rejected.restricted_userinfo' },
+      { code: 'password_rejected.restricted.repetition' },
+      { code: 'password_rejected.restricted.words' },
+      { code: 'password_rejected.restricted.sequence' },
+      { code: 'password_rejected.restricted.user_info' },
     ]);
   });
 });

@@ -1,5 +1,13 @@
 import { type PasswordRejectionCode } from '@logto/core-kit';
 
+type BreakdownKeysToObject<Key extends string> = {
+  [K in Key as K extends `${infer A}.${string}` ? A : K]: K extends `${string}.${infer B}`
+    ? BreakdownKeysToObject<B>
+    : string;
+};
+
+type RejectionPhrases = BreakdownKeysToObject<PasswordRejectionCode>;
+
 const password_rejected = {
   too_short: 'Minimum length is {{min}}.',
   too_long: 'Maximum length is {{max}}.',
@@ -7,11 +15,13 @@ const password_rejected = {
   unsupported_characters: 'Unsupported character found.',
   pwned: 'Avoid using simple passwords that are easy to guess.',
   restricted_found: 'Avoid overusing {{list, list}}.',
-  restricted_repetition: 'repeated characters',
-  restricted_sequence: 'sequential characters',
-  restricted_userinfo: 'your personal information',
-  restricted_words: 'product context',
-} satisfies Record<PasswordRejectionCode, string> & {
+  restricted: {
+    repetition: 'repeated characters',
+    sequence: 'sequential characters',
+    user_info: 'your personal information',
+    words: 'product context',
+  },
+} satisfies RejectionPhrases & {
   // Use for displaying a list of restricted issues
   restricted_found: string;
 };

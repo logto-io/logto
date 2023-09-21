@@ -5,10 +5,12 @@ const password_rejected = {
   unsupported_characters: 'Znaleziono niedozwolony znak.',
   pwned: 'Unikaj używania prostych haseł, które są łatwe do odgadnięcia.',
   restricted_found: 'Unikaj nadużywania {{list, list}}.',
-  restricted_repetition: 'powtarzających się znaków',
-  restricted_sequence: 'sekwencyjnych znaków',
-  restricted_userinfo: 'twoich informacji osobistych',
-  restricted_words: 'kontekstu produktu',
+  restricted: {
+    repetition: 'powtarzających się znaków',
+    sequence: 'sekwencyjnych znaków',
+    user_info: 'twoich informacji osobistych',
+    words: 'kontekstu produktu',
+  },
 };
 
 export default Object.freeze(password_rejected);

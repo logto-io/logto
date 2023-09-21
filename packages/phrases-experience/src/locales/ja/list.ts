@@ -4,6 +4,4 @@ const list = {
   separator: ',',
 };
 
-Object.freeze(list);
-
-export default list;
+export default Object.freeze(list);

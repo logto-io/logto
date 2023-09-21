@@ -5,10 +5,12 @@ const password_rejected = {
   unsupported_characters: 'Найден неподдерживаемый символ.',
   pwned: 'Избегайте использования простых паролей, которые легко угадать.',
   restricted_found: 'Избегайте чрезмерного использования {{list,list}}.',
-  restricted_repetition: 'повторяющиеся символы',
-  restricted_sequence: 'последовательные символы',
-  restricted_userinfo: 'ваши личные данные',
-  restricted_words: 'контекст продукта',
+  restricted: {
+    repetition: 'повторяющиеся символы',
+    sequence: 'последовательные символы',
+    user_info: 'ваши личные данные',
+    words: 'контекст продукта',
+  },
 };
 
 export default Object.freeze(password_rejected);
