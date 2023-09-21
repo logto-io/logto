@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.9.1
+
+### Patch Changes
+
+- Updated dependencies [6f5a0acad]
+  - @logto/phrases-experience@1.3.1
+  - @logto/core-kit@2.1.1
+
 ## 1.9.0
 
 ### Minor Changes

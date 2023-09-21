@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.9.1
+
+### Patch Changes
+
+- Updated dependencies [a4b44dde5]
+- Updated dependencies [6f5a0acad]
+  - @logto/console@1.7.1
+  - @logto/phrases-experience@1.3.1
+  - @logto/core-kit@2.1.1
+  - @logto/experience@1.2.1
+  - @logto/schemas@1.9.1
+  - @logto/cli@1.9.1
+
 ## 1.9.0
 
 ### Minor Changes

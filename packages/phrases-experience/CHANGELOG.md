@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.3.1
+
+### Patch Changes
+
+- 6f5a0acad: fix a bug that prevents user from customizing i18n translations in Sign-in Experience config
+- Updated dependencies [6f5a0acad]
+  - @logto/core-kit@2.1.1
+
 ## 1.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.1
+
+### Patch Changes
+
+- 6f5a0acad: fix a bug that prevents user from customizing i18n translations in Sign-in Experience config
+
 ## 1.2.0
 
 ### Minor Changes
