@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.7.1
+
+### Patch Changes
+
+- a4b44dde5: add more intuitive code samples and fix mistakes in express api guide
+
 ## 1.7.0
 
 ### Minor Changes
