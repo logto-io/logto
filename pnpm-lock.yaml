@@ -2834,8 +2834,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-444ed49
-        version: 0.2.5-444ed49(zod@3.20.2)
+        specifier: 0.2.5-d434baa
+        version: 0.2.5-d434baa(zod@3.20.2)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -7312,6 +7312,16 @@ packages:
 
   /@logto/cloud@0.2.5-a3e852f(zod@3.20.2):
     resolution: {integrity: sha512-dIrEUW7gi477HQpNsq/HT1gdvPK2ZmVuV73u2rH9LXGEIFIVGqmmIaaK3IcOPG110jKCBhTzF0+hKsW9Y3Pjmw==}
+    engines: {node: ^18.12.0}
+    dependencies:
+      '@silverhand/essentials': 2.8.4
+      '@withtyped/server': 0.12.9(zod@3.20.2)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
+  /@logto/cloud@0.2.5-d434baa(zod@3.20.2):
+    resolution: {integrity: sha512-VmWpqFzpWBrzJPQLvfe0bb7/XjF3lxs/rPbLt3zqBjGPtDXM9FAUn1m/gPbTwzXi5PxGOjlbD7jTl+3+1u4/NQ==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.8.4
