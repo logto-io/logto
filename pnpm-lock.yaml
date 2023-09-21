@@ -3679,6 +3679,10 @@ importers:
         version: 3.20.2
 
   packages/integration-tests:
+    dependencies:
+      otplib:
+        specifier: ^12.0.1
+        version: 12.0.1
     devDependencies:
       '@jest/test-sequencer':
         specifier: ^29.5.0
