@@ -29,8 +29,8 @@ const usePasswordErrorMessage = () => {
 
       // The `restricted` errors should be displayed together
       const restrictedErrors = issues
-        .filter((issue): issue is PasswordIssue<`restricted.${string}` & PasswordRejectionCode> =>
-          issue.code.startsWith('password_rejected.restricted.')
+        .filter((issue): issue is PasswordIssue<`restricted_${string}` & PasswordRejectionCode> =>
+          issue.code.startsWith('password_rejected.restricted_')
         )
         .map((issue) => t(`error.${issue.code}`));
 

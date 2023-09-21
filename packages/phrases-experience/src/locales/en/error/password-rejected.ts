@@ -7,10 +7,10 @@ const password_rejected = {
   unsupported_characters: 'Unsupported character found.',
   pwned: 'Avoid using simple passwords that are easy to guess.',
   restricted_found: 'Avoid overusing {{list, list}}.',
-  'restricted.repetition': 'repeated characters',
-  'restricted.sequence': 'sequential characters',
-  'restricted.user_info': 'your personal information',
-  'restricted.words': 'product context',
+  restricted_repetition: 'repeated characters',
+  restricted_sequence: 'sequential characters',
+  restricted_userinfo: 'your personal information',
+  restricted_words: 'product context',
 } satisfies Record<PasswordRejectionCode, string> & {
   // Use for displaying a list of restricted issues
   restricted_found: string;

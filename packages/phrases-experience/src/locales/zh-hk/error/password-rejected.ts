@@ -5,10 +5,10 @@ const password_rejected = {
   unsupported_characters: '發現不支援的字符。',
   pwned: '避免使用容易猜測的簡單密碼。',
   restricted_found: '避免過度使用{{list, list}}。',
-  'restricted.repetition': '重複的字符',
-  'restricted.sequence': '連續的字符',
-  'restricted.user_info': '個人資訊',
-  'restricted.words': '產品上下文',
+  restricted_repetition: '重複的字符',
+  restricted_sequence: '連續的字符',
+  restricted_userinfo: '個人資訊',
+  restricted_words: '產品上下文',
 };
 
 export default Object.freeze(password_rejected);

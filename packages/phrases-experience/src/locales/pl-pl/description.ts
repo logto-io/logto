@@ -59,12 +59,14 @@ const description = {
   verify_email: 'Potwierdź swój email',
   verify_phone: 'Potwierdź swój numer telefonu',
   password_requirements: 'Wymagania dotyczące hasła {{items, list}}.',
-  'password_requirement.length_one': 'wymaga co najmniej {{count}} znaku',
-  'password_requirement.length_other': 'wymaga co najmniej {{count}} znaków',
-  'password_requirement.character_types_one':
-    'powinno zawierać co najmniej {{count}} rodzaj liter wielkich, małych liter, cyfr i symboli',
-  'password_requirement.character_types_other':
-    'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+  password_requirement: {
+    length_one: 'wymaga co najmniej {{count}} znaku',
+    length_other: 'wymaga co najmniej {{count}} znaków',
+    character_types_one:
+      'powinno zawierać co najmniej {{count}} rodzaj liter wielkich, małych liter, cyfr i symboli',
+    character_types_other:
+      'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
+  },
 };
 
 export default Object.freeze(description);

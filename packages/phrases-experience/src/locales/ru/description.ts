@@ -62,12 +62,14 @@ const description = {
   verify_email: 'Подтвердите Ваш электронный адрес',
   verify_phone: 'Подтвердите свой номер телефона',
   password_requirements: 'Требования к паролю {{items, list}}.',
-  'password_requirement.length_one': 'требуется минимум {{count}} символ',
-  'password_requirement.length_other': 'требуется минимум {{count}} символов',
-  'password_requirement.character_types_one':
-    'должен содержать по крайней мере {{count}} тип прописных букв, строчных букв, цифр и символов',
-  'password_requirement.character_types_other':
-    'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
+  password_requirement: {
+    length_one: 'требуется минимум {{count}} символ',
+    length_other: 'требуется минимум {{count}} символов',
+    character_types_one:
+      'должен содержать по крайней мере {{count}} тип прописных букв, строчных букв, цифр и символов',
+    character_types_other:
+      'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
+  },
 };
 
 export default Object.freeze(description);

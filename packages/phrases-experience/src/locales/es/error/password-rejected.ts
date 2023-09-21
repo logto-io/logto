@@ -5,10 +5,10 @@ const password_rejected = {
   unsupported_characters: 'Se encontró un carácter no admitido.',
   pwned: 'Evite usar contraseñas simples que sean fáciles de adivinar.',
   restricted_found: 'Evite utilizar en exceso {{list, list}}.',
-  'restricted.repetition': 'caracteres repetidos',
-  'restricted.sequence': 'caracteres secuenciales',
-  'restricted.user_info': 'su información personal',
-  'restricted.words': 'contexto del producto',
+  restricted_repetition: 'caracteres repetidos',
+  restricted_sequence: 'caracteres secuenciales',
+  restricted_userinfo: 'su información personal',
+  restricted_words: 'contexto del producto',
 };
 
 export default Object.freeze(password_rejected);

@@ -61,12 +61,12 @@ const description = {
   verify_email: 'Eメールを確認する',
   verify_phone: '電話番号を確認する',
   password_requirements: 'パスワード {{items, list}}。',
-  'password_requirement.length_one': '最低{{count}}文字',
-  'password_requirement.length_other': '最低{{count}}文字',
-  'password_requirement.character_types_one':
-    '大文字、小文字、数字、記号のうち{{count}}種類を含む必要があります',
-  'password_requirement.character_types_other':
-    '大文字、小文字、数字、記号のうち{{count}}種類を含む必要があります',
+  password_requirement: {
+    length_one: '最低 {{count}} 文字',
+    length_other: '最低 {{count}} 文字',
+    character_types_one: '大文字、小文字、数字、記号のうち {{count}} 種類を含む必要があります',
+    character_types_other: '大文字、小文字、数字、記号のうち {{count}} 種類を含む必要があります',
+  },
 };
 
 export default Object.freeze(description);
