@@ -5,10 +5,12 @@ const password_rejected = {
   unsupported_characters: 'Desteklenmeyen karakter bulundu.',
   pwned: 'Kolayca tahmin edilebilen basit şifreleri kullanmaktan kaçının.',
   restricted_found: '{{list, list}} fazla kullanımdan kaçının.',
-  'restricted.repetition': 'tekrarlanan karakterler',
-  'restricted.sequence': 'dizisel karakterler',
-  'restricted.user_info': 'kişisel bilgileriniz',
-  'restricted.words': 'ürünle ilgili terimler',
+  restricted: {
+    repetition: 'tekrarlanan karakterler',
+    sequence: 'dizisel karakterler',
+    user_info: 'kişisel bilgileriniz',
+    words: 'ürünle ilgili terimler',
+  },
 };
 
 export default Object.freeze(password_rejected);

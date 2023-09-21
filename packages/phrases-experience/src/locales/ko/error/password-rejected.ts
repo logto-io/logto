@@ -5,10 +5,12 @@ const password_rejected = {
   unsupported_characters: '지원되지 않는 문자가 발견되었습니다.',
   pwned: '추측하기 쉬운 간단한 암호 사용을 피하십시오.',
   restricted_found: '{{list, list}}을(를) 과도하게 사용하지 마십시오.',
-  'restricted.repetition': '반복된 문자',
-  'restricted.sequence': '연속된 문자',
-  'restricted.user_info': '개인 정보',
-  'restricted.words': '품질 가능성',
+  restricted: {
+    repetition: '반복된 문자',
+    sequence: '연속된 문자',
+    user_info: '개인 정보',
+    words: '품질 가능성',
+  },
 };
 
 export default Object.freeze(password_rejected);

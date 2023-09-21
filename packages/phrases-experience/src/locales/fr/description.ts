@@ -63,12 +63,14 @@ const description = {
   verify_email: 'Vérifiez votre e-mail',
   verify_phone: 'Vérifiez votre numéro de téléphone',
   password_requirements: 'Mot de passe {{items, list}}.',
-  'password_requirement.length_one': 'doit contenir au minimum {{count}} caractère',
-  'password_requirement.length_other': 'doit contenir au minimum {{count}} caractères',
-  'password_requirement.character_types_one':
-    'doit contenir au moins {{count}} type de lettres majuscules, lettres minuscules, chiffres et symboles',
-  'password_requirement.character_types_other':
-    'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
+  password_requirement: {
+    length_one: 'doit contenir au minimum {{count}} caractère',
+    length_other: 'doit contenir au minimum {{count}} caractères',
+    character_types_one:
+      'doit contenir au moins {{count}} type de lettres majuscules, lettres minuscules, chiffres et symboles',
+    character_types_other:
+      'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
+  },
 };
 
 export default Object.freeze(description);

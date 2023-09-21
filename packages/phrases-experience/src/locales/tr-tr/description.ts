@@ -59,12 +59,13 @@ const description = {
   verify_email: 'E-postanızın doğrulanması',
   verify_phone: 'Telefon numaranızın doğrulanması',
   password_requirements: 'Şifre {{items, list}}.',
-  'password_requirement.length_one': 'en az {{count}} karakter gerektirir',
-  'password_requirement.length_other': 'en az {{count}} karakter gerektirir',
-  'password_requirement.character_types_one':
-    'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
-  'password_requirement.character_types_other':
-    'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
+  password_requirement: {
+    length_one: 'en az {{count}} karakter gerektirir',
+    length_other: 'en az {{count}} karakter gerektirir',
+    character_types_one: 'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
+    character_types_other:
+      'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
+  },
 };
 
 export default Object.freeze(description);

@@ -52,12 +52,12 @@ const description = {
   verify_email: '驗證你的郵箱',
   verify_phone: '驗證你的手機號',
   password_requirements: '要求密碼 {{items, list}}。',
-  'password_requirement.length_one': '要求至少{{count}}個字符',
-  'password_requirement.length_other': '要求至少{{count}}個字符',
-  'password_requirement.character_types_one':
-    '要求包含至少{{count}}類型的大寫字母，小寫字母，數字和符號',
-  'password_requirement.character_types_other':
-    '要求包含至少{{count}}類型的大寫字母，小寫字母，數字和符號',
+  password_requirement: {
+    length_one: '要求至少 {{count}} 個字符',
+    length_other: '要求至少 {{count}} 個字符',
+    character_types_one: '要求包含至少 {{count}} 類型的大寫字母，小寫字母，數字和符號',
+    character_types_other: '要求包含至少 {{count}} 類型的大寫字母，小寫字母，數字和符號',
+  },
 };
 
 export default Object.freeze(description);
