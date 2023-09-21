@@ -4,6 +4,7 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
+import { snakeCase } from 'snake-case';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -16,11 +17,19 @@ const { table, fields } = convertToIdentifiers(Roles);
 
 const buildRoleConditions = (search: Search) => {
   const hasSearch = search.matches.length > 0;
-  const searchFields = [Roles.fields.id, Roles.fields.name, Roles.fields.description];
+  const searchFields = [
+    Roles.fields.id,
+    Roles.fields.name,
+    Roles.fields.description,
+    Roles.fields.type,
+  ];
 
   return conditionalSql(
     hasSearch,
-    () => sql`and ${buildConditionsFromSearch(search, searchFields)}`
+    () =>
+      sql`and ${buildConditionsFromSearch(search, searchFields, {
+        [Roles.fields.type]: snakeCase('RoleType'),
+      })}`
   );
 };
 

@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.logs {
+  flex: 1;
+  margin-bottom: _.unit(6);
+  overflow-y: auto;
+}

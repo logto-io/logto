@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.rolesTable {
+  flex: 1;
+  margin-bottom: _.unit(6);
+  color: var(--color-text);
+
+  .filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .searchInput {
+      width: 306px;
+    }
+  }
+
+  .name {
+    display: block;
+    @include _.text-ellipsis;
+  }
+
+  .description {
+    @include _.text-ellipsis;
+  }
+}

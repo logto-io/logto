@@ -36,7 +36,11 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
     users: { findUsersByIds },
     usersRoles: { countUsersRolesByRoleId, findUsersRolesByRoleId, findUsersRolesByUserId },
     applications: { findApplicationsByIds },
-    applicationsRoles: { countApplicationsRolesByRoleId, findApplicationsRolesByRoleId },
+    applicationsRoles: {
+      countApplicationsRolesByRoleId,
+      findApplicationsRolesByRoleId,
+      findApplicationsRolesByApplicationId,
+    },
   } = queries;
 
   router.use('/roles(/.*)?', koaRoleRlsErrorHandler());
@@ -75,9 +79,19 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
       return tryThat(
         async () => {
           const search = parseSearchParamsForSearch(searchParams);
+
           const excludeUserId = searchParams.get('excludeUserId');
           const usersRoles = excludeUserId ? await findUsersRolesByUserId(excludeUserId) : [];
-          const excludeRoleIds = usersRoles.map(({ roleId }) => roleId);
+
+          const excludeApplicationId = searchParams.get('excludeApplicationId');
+          const applicationsRoles = excludeApplicationId
+            ? await findApplicationsRolesByApplicationId(excludeApplicationId)
+            : [];
+
+          const excludeRoleIds = [
+            ...usersRoles.map(({ roleId }) => roleId),
+            ...applicationsRoles.map(({ roleId }) => roleId),
+          ];
 
           const [{ count }, roles] = await Promise.all([
             countRoles(search, { excludeRoleIds }),

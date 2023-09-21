@@ -8,6 +8,10 @@ const application_details = {
   advanced_settings: 'Zaawansowane ustawienia',
   advanced_settings_description:
     'Zaawansowane ustawienia obejmują związane z OIDC terminy. Możesz sprawdzić punkt końcowy Token dla bardziej szczegółowych informacji.',
+  /** UNTRANSLATED */
+  application_roles: 'Roles',
+  /** UNTRANSLATED */
+  machine_logs: 'Machine logs',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',
   description: 'Opis',
@@ -55,6 +59,39 @@ const application_details = {
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',
   application_deleted: 'Aplikacja {{name}} została pomyślnie usunięta',
   redirect_uri_required: 'Musisz wpisać co najmniej jeden adres URL przekierowania',
+  roles: {
+    /** UNTRANSLATED */
+    name_column: 'Role',
+    /** UNTRANSLATED */
+    description_column: 'Description',
+    /** UNTRANSLATED */
+    assign_button: 'Assign Roles',
+    /** UNTRANSLATED */
+    delete_description:
+      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+    /** UNTRANSLATED */
+    deleted: '{{name}} was successfully removed from this user.',
+    /** UNTRANSLATED */
+    assign_title: 'Assign roles to {{name}}',
+    /** UNTRANSLATED */
+    assign_subtitle: 'Authorize {{name}} one or more roles',
+    /** UNTRANSLATED */
+    assign_role_field: 'Assign roles',
+    /** UNTRANSLATED */
+    role_search_placeholder: 'Search by role name',
+    /** UNTRANSLATED */
+    added_text: '{{value, number}} added',
+    /** UNTRANSLATED */
+    assigned_user_count: '{{value, number}} users',
+    /** UNTRANSLATED */
+    confirm_assign: 'Assign roles',
+    /** UNTRANSLATED */
+    role_assigned: 'Successfully assigned role(s)',
+    /** UNTRANSLATED */
+    search: 'Search by role name, description or ID',
+    /** UNTRANSLATED */
+    empty: 'No role available',
+  },
 };
 
 export default Object.freeze(application_details);

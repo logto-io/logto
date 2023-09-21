@@ -2,12 +2,18 @@ import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import { createUser } from '#src/api/index.js';
-import { assignUsersToRole, createRole, deleteUserFromRole, getRoleUsers } from '#src/api/role.js';
+import {
+  assignUsersToRole,
+  createRole,
+  deleteUserFromRole,
+  getRoles,
+  getRoleUsers,
+} from '#src/api/role.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 
 describe('roles users', () => {
-  it('should get role users successfully', async () => {
+  it('should get role users successfully and can get roles correctly (specifying exclude user)', async () => {
     const role = await createRole({});
     const user = await createUser(generateNewUserProfile({}));
     await assignUsersToRole([user.id], role.id);
@@ -15,6 +21,9 @@ describe('roles users', () => {
 
     expect(users.length).toBe(1);
     expect(users[0]).toHaveProperty('id', user.id);
+
+    const allRolesWithoutUsersRoles = await getRoles({ excludeUserId: user.id });
+    expect(allRolesWithoutUsersRoles.find(({ id }) => id === role.id)).toBeUndefined();
   });
 
   it('should return 404 if role not found', async () => {

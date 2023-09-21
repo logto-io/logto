@@ -7,11 +7,12 @@ import {
   assignApplicationsToRole,
   createRole,
   deleteApplicationFromRole,
+  getRoles,
   getRoleApplications,
 } from '#src/api/role.js';
 
 describe('roles applications', () => {
-  it('should get role applications successfully', async () => {
+  it('should get role applications successfully and get roles correctly (specifying exclude application)', async () => {
     const role = await createRole({ type: RoleType.MachineToMachine });
     const m2mApp = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
     await assignApplicationsToRole([m2mApp.id], role.id);
@@ -19,6 +20,9 @@ describe('roles applications', () => {
 
     expect(applications.length).toBe(1);
     expect(applications[0]).toHaveProperty('id', m2mApp.id);
+
+    const allRolesWithoutAppsRoles = await getRoles({ excludeApplicationId: m2mApp.id });
+    expect(allRolesWithoutAppsRoles.find(({ id }) => id === role.id)).toBeUndefined();
   });
 
   it('should return 404 if role not found', async () => {

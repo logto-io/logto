@@ -1,5 +1,5 @@
-import type { Log } from '@logto/schemas';
-import { LogResult } from '@logto/schemas';
+import type { Log, ApplicationResponse } from '@logto/schemas';
+import { LogResult, ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -27,24 +27,33 @@ const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, tit
 }));
 
 type Props = {
+  applicationId?: string;
   userId?: string;
   className?: string;
 };
 
-function AuditLogTable({ userId, className }: Props) {
+function AuditLogTable({ applicationId, userId, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const pageSize = defaultPageSize;
-  const [{ page, event, applicationId }, updateSearchParameters] = useSearchParametersWatcher({
-    page: 1,
-    event: '',
-    applicationId: '',
-  });
+
+  const [{ page, event, applicationId: applicationIdFromSearch }, updateSearchParameters] =
+    useSearchParametersWatcher({
+      page: 1,
+      event: '',
+      ...conditional(applicationId && { applicationId: '' }),
+    });
+
+  // TODO: LOG-7135, revisit this fallback logic and see whether this should be done outside of this component.
+  const searchApplicationId = applicationId ?? applicationIdFromSearch;
+  const { data: specifiedApplication } = useSWR<ApplicationResponse>(
+    applicationId && `api/applications/${applicationId}`
+  );
 
   const url = buildUrl('api/logs', {
     page: String(page),
     page_size: String(pageSize),
     ...conditional(event && { logKey: event }),
-    ...conditional(applicationId && { applicationId }),
+    ...conditional(searchApplicationId && { applicationId: searchApplicationId }),
     ...conditional(userId && { userId }),
   });
 
@@ -52,7 +61,8 @@ function AuditLogTable({ userId, className }: Props) {
   const isLoading = !data && !error;
   const { navigate } = useTenantPathname();
   const [logs, totalCount] = data ?? [];
-  const isUserColumnVisible = !userId;
+  const isUserColumnVisible =
+    !userId && specifiedApplication?.type !== ApplicationType.MachineToMachine;
 
   const eventColumn: Column<Log> = {
     title: t('logs.event'),
@@ -114,14 +124,16 @@ function AuditLogTable({ userId, className }: Props) {
               }}
             />
           </div>
-          <div className={styles.applicationSelector}>
-            <ApplicationSelector
-              value={applicationId}
-              onChange={(applicationId) => {
-                updateSearchParameters({ applicationId, page: undefined });
-              }}
-            />
-          </div>
+          {!applicationId && (
+            <div className={styles.applicationSelector}>
+              <ApplicationSelector
+                value={applicationId}
+                onChange={(applicationId) => {
+                  updateSearchParameters({ applicationId, page: undefined });
+                }}
+              />
+            </div>
+          )}
         </div>
       }
       placeholder={<EmptyDataPlaceholder />}
