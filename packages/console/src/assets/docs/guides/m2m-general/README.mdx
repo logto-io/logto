@@ -6,6 +6,9 @@ import EnableAdminAccess from './components/EnableAdminAccess';
 import EnableAdminAccessSrc from './assets/enable-admin-access.png';
 import AppIdentifierSrc from './assets/api-identifier.png';
 import { appendPath } from '@silverhand/essentials';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import AssignManagementApiRole from './assets/assign-mgmt-api-role.webp';
+import CreateM2mManagementApiRole from './assets/create-m2m-mgmt-api-role.webp';
 
 <Steps>
 <Step title="Intro">
@@ -20,15 +23,6 @@ Usually, an M2M app doesn't need user interface.
 Get your app ID and app secret.
 
 <ApplicationCredentials />
-
-</Step>
-<Step title="Enable admin access" subtitle="(optional)">
-
-### Accessing Logto Management API
-
-If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to enable "admin access" for you application.
-
-<EnableAdminAccess />
 
 </Step>
 <Step title="Locate the API resource">
@@ -46,8 +40,8 @@ In the "API Resource" page, find the API identifier that the app needs to access
 
 <ul>
   <li>
-    Use Token Endpoint <code>{`${appendPath(props.endpoint, '/oidc/token')}`}</code> as the request endpoint, and
-    use POST as the method.
+    Use Token Endpoint <code>{`${appendPath(props.endpoint, '/oidc/token')}`}</code> as the request
+    endpoint, and use POST as the method.
   </li>
   <li>
     Set header <code>Content-Type: application/x-www-form-urlencoded</code>
@@ -77,7 +71,9 @@ If you are using cURL:
     {`curl --location
   --request POST '${appendPath(props.endpoint, '/oidc/token')}'
   # Credentials are constructed by "<app-id>:<app-secret>" and encoded in base64
-  --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString('base64')}'
+  --header 'Authorization: Basic ${Buffer.from(`${props.app.id}:${props.app.secret}`).toString(
+    'base64'
+  )}'
   --header 'Content-Type: application/x-www-form-urlencoded'
   --data-urlencode 'grant_type=client_credentials'
   --data-urlencode 'resource=https://shopping.api'
@@ -103,16 +99,55 @@ A successful response body would be like:
 
 You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the access token in the `Authorization` field of HTTP headers with the Bearer format (`Bearer <your-access-token>`).
 
-For example, if you have acquired an access token with the Logto admin API resource `https://api.logto.io`, then you can compose a GET request to fetch all applications in Logto as follows:
+For example, if you have acquired an access token with your "Online Shopping" API resource `https://shopping.api`, then you can send requests to the API resource to achieve some your business logic.
+
+Here is an example of using cURL to send a GET request to get items in your shopping cart:
 
 <pre>
   <code className="language-bash">
     {`curl --location
-  --request GET '${appendPath(props.endpoint, '/api/applications')}'
+  --request GET 'https://shopping.api/my/cart/items'
   --header 'Authorization: Bearer <granted-access-token>'
 `}
   </code>
 </pre>
 
 </Step>
+{ isDevFeaturesEnabled ? (
+  <Step title="Enable admin access" subtitle="(optional)">
+
+  ### Accessing Logto Management API
+
+  If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api).
+
+  You should go to "Roles" tab and create a new machine-to-machine role with the permission of management API.
+
+  <img
+    alt="Create m2m management API role"
+    src={CreateM2mManagementApiRole}
+    width="600px"
+    style={{ borderRadius: '6px' }}
+  />
+
+  And then go to the "Roles" tab under machine to machine app detail page, and assign the role you just created to the app.
+
+  <img
+    alt="Assign m2m management API role to app"
+    src={AssignManagementApiRole}
+    width="600px"
+    style={{ borderRadius: '6px' }}
+  />
+
+  </Step>
+) : (
+  <Step title="Enable admin access" subtitle="(optional)">
+
+  ### Accessing Logto Management API
+
+  If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to enable "admin access" for you application.
+
+  <EnableAdminAccess />
+
+  </Step>
+)}
 </Steps>

@@ -74,7 +74,7 @@ function ApplicationDetails() {
   const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
   const formMethods = useForm<Application & { isAdmin: boolean }>({
-    defaultValues: { customClientMetadata: customClientMetadataDefault },
+    defaultValues: { customClientMetadata: customClientMetadataDefault, isAdmin: false },
   });
 
   const {
