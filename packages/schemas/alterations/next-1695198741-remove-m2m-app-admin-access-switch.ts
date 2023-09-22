@@ -17,10 +17,7 @@ enum PredefinedScope {
   All = 'all',
 }
 
-const managementApiResourceIndicatorPrefix = 'https://';
-const managementApiResourceIndicatorSuffix = '.logto.app/api';
-const getManagementApiResourceIndicator = (tenantId: string) =>
-  `${managementApiResourceIndicatorPrefix}${tenantId}${managementApiResourceIndicatorSuffix}`;
+const getManagementApiResourceIndicator = (tenantId: string) => `https://${tenantId}.logto.app/api`;
 
 const managementApiAccessRoleName = 'Management API Access';
 const managementApiAccessRoleDescription = 'Management API Access';
@@ -30,22 +27,35 @@ const alteration: AlterationScript = {
     /**
      * Step 1
      * Get all internal admin roles.
-     * Notice that in our case: each internal admin role has only one scope (`PredefinedScope.All`), and each tenant has only one internal admin role.
      */
-    const { rows: userAssignedInternalManagementApiRoles } = await pool.query<{
+    /**
+     * Notice that in our case:
+     * Each tenant has only one built-in management API resource and one attached internal admin role.
+     * Each internal admin role has only one scope (`PredefinedScope.All`).
+     *
+     * Can go to @logto/schemas/src/{utils,seeds}/* to find more details.
+     *
+     * Based on this setup, we can use the following query to get all internal admin roles.
+     */
+    const { rows: internalManagementApiRolesCandidates } = await pool.query<{
       roleId: string;
       tenantId: string;
       scopeId: string;
+      indicator: string;
     }>(sql`
-      select * from (select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.id as "resource_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
-      where roles.name = ${InternalRole.Admin} and roles.type = ${
-        RoleType.MachineToMachine
-      } and scopes.name = ${
-        PredefinedScope.All
-      } and resources.indicator like ${getManagementApiResourceIndicator(
-        '%'
-      )} and resources.name = 'Logto Management API') as subQuery where concat(${managementApiResourceIndicatorPrefix}::varchar,subQuery.tenant_id,${managementApiResourceIndicatorSuffix}::varchar) = subQuery.indicator;
+      select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
+          where roles.name = ${InternalRole.Admin} and roles.type = ${
+            RoleType.MachineToMachine
+          } and scopes.name = ${
+            PredefinedScope.All
+          } and resources.indicator like ${getManagementApiResourceIndicator(
+            '%'
+          )} and resources.name = 'Logto Management API'
     `);
+    // Can not directly use the result from the query unless we use subquery, separate the filter and subquery for easy understanding.
+    const internalManagementApiRoles = internalManagementApiRolesCandidates.filter(
+      ({ indicator, tenantId }) => indicator === getManagementApiResourceIndicator(tenantId)
+    );
     /**
      * Step 2
      * Get all applications_roles related to the internal admin roles.
@@ -57,9 +67,7 @@ const alteration: AlterationScript = {
       tenantId: string;
     }>(sql`
       select * from applications_roles where (role_id, tenant_id) in (values ${sql.join(
-        userAssignedInternalManagementApiRoles.map(
-          ({ roleId, tenantId }) => sql`( ${roleId}, ${tenantId} )`
-        ),
+        internalManagementApiRoles.map(({ roleId, tenantId }) => sql`( ${roleId}, ${tenantId} )`),
         sql`, `
       )});
     `);
@@ -98,7 +106,7 @@ const alteration: AlterationScript = {
      */
     await Promise.all(
       insertedRoles.map(async ({ tenantId, id: roleId }) => {
-        const internalRoleForTenant = userAssignedInternalManagementApiRoles.find(
+        const internalRoleForTenant = internalManagementApiRoles.find(
           ({ tenantId: roleTenantId }) => tenantId === roleTenantId
         );
         if (!internalRoleForTenant) {
@@ -126,7 +134,7 @@ const alteration: AlterationScript = {
         const applicationRolesOfTheTenant = applicationRoles.filter(
           ({ tenantId: applicationRoleTenantId }) => tenantId === applicationRoleTenantId
         );
-        const previousInternalRole = userAssignedInternalManagementApiRoles.find(
+        const previousInternalRole = internalManagementApiRoles.find(
           ({ tenantId: internalRoleTenantId }) => internalRoleTenantId === tenantId
         );
         if (applicationRolesOfTheTenant.length === 0 || !previousInternalRole) {
@@ -154,25 +162,39 @@ const alteration: AlterationScript = {
      * Get all auto-created management api access roles.
      * Notice that in our case: each management api access role has only one scope (`PredefinedScope.All`), and each tenant has only one management api access role.
      */
-    const { rows: userAssignedManagementApiAccessRoles } = await pool.query<{
+    /**
+     * Notice that in our case:
+     * Each tenant has only one built-in management API resource and one attached management API access role.
+     * Each management API access role role has only one scope (`PredefinedScope.All`).
+     *
+     * Can go to @logto/schemas/src/{utils,seeds}/* to find more details.
+     *
+     * Based on this setup, we can use the following query to get all internal admin roles.
+     */
+    const { rows: managementApiAccessRolesCandidates } = await pool.query<{
       roleId: string;
       tenantId: string;
       scopeId: string;
+      indicator: string;
     }>(sql`
-      select * from (select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.id as "resource_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
-      where roles.name = ${managementApiAccessRoleName} and roles.description = ${managementApiAccessRoleDescription} and roles.type = ${
-        RoleType.MachineToMachine
-      } and scopes.name = ${
-        PredefinedScope.All
-      } and resources.indicator like ${getManagementApiResourceIndicator(
-        '%'
-      )} and resources.name = 'Logto Management API') as subQuery where concat(${managementApiResourceIndicatorPrefix}::varchar,subQuery.tenant_id,${managementApiResourceIndicatorSuffix}::varchar) = subQuery.indicator;
+      select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
+          where roles.name = ${managementApiAccessRoleName} and roles.description = ${managementApiAccessRoleDescription} and roles.type = ${
+            RoleType.MachineToMachine
+          } and scopes.name = ${
+            PredefinedScope.All
+          } and resources.indicator like ${getManagementApiResourceIndicator(
+            '%'
+          )} and resources.name = 'Logto Management API';
     `);
+    // Can not directly use the result from the query unless we use subquery, separate the filter and subquery for easy understanding.
+    const managementApiAccessRoles = managementApiAccessRolesCandidates.filter(
+      ({ indicator, tenantId }) => indicator === getManagementApiResourceIndicator(tenantId)
+    );
     /**
      * Step 2
      * Get all applications_roles related to the management api access role.
      */
-    if (userAssignedManagementApiAccessRoles.length === 0) {
+    if (managementApiAccessRoles.length === 0) {
       return;
     }
     const { rows: applicationRoles } = await pool.query<{
@@ -182,9 +204,7 @@ const alteration: AlterationScript = {
       tenantId: string;
     }>(sql`
       select * from applications_roles where (role_id, tenant_id) in (values ${sql.join(
-        userAssignedManagementApiAccessRoles.map(
-          ({ roleId, tenantId }) => sql`( ${roleId}, ${tenantId} )`
-        ),
+        managementApiAccessRoles.map(({ roleId, tenantId }) => sql`( ${roleId}, ${tenantId} )`),
         sql`, `
       )});
     `);
@@ -193,7 +213,7 @@ const alteration: AlterationScript = {
      * Find all internal admin access roles.
      */
     const concernedTenantIds = deduplicate(
-      userAssignedManagementApiAccessRoles.map(({ tenantId }) => tenantId)
+      managementApiAccessRoles.map(({ tenantId }) => tenantId)
     );
     const { rows: internalAdminAccessRoles } = await pool.query<{
       roleId: string;
@@ -217,7 +237,7 @@ const alteration: AlterationScript = {
         const pendingApplicationsOfTenant = applicationRoles.filter(
           ({ tenantId: applicationTenantId }) => tenantId === applicationTenantId
         );
-        const previousManagementApiAccessRole = userAssignedManagementApiAccessRoles.find(
+        const previousManagementApiAccessRole = managementApiAccessRoles.find(
           ({ tenantId: managementApiAccessRoleTenantId }) =>
             managementApiAccessRoleTenantId === tenantId
         );
@@ -243,11 +263,11 @@ const alteration: AlterationScript = {
      * Step 5
      * Remove management api access roles. (`roles_scopes` will automatically be removed if roles are removed)
      */
-    if (userAssignedManagementApiAccessRoles.length === 0) {
+    if (managementApiAccessRoles.length === 0) {
       return;
     }
     await Promise.all(
-      userAssignedManagementApiAccessRoles.map(async ({ roleId, tenantId }) => {
+      managementApiAccessRoles.map(async ({ roleId, tenantId }) => {
         await pool.query(sql`
           delete from roles where id = ${roleId} and tenant_id = ${tenantId};
         `);
