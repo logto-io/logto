@@ -17,6 +17,7 @@ import {
   parseType,
   removeUnrecognizedComments,
   splitTableFieldDefinitions,
+  stripLeadingJsDocComments as stripComments,
 } from './utils.js';
 
 const directory = 'tables';
@@ -61,7 +62,10 @@ const generate = async () => {
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
                 constrainedKeywords.every(
-                  (constraint) => !value.toLowerCase().startsWith(constraint + ' ')
+                  (constraint) =>
+                    !stripComments(value)
+                      .toLowerCase()
+                      .startsWith(constraint + ' ')
                 )
               )
               .map<Field>((value) => parseType(value));

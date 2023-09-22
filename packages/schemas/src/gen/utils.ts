@@ -6,6 +6,17 @@ import type { Field } from './types.js';
 export const normalizeWhitespaces = (string: string): string =>
   string.replaceAll(/\s+/g, ' ').trim();
 
+// eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
+const leadingJsDocRegex = /^\s*\/\*\*([^*]*?)\*\//;
+
+// eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
+export const stripLeadingJsDocComments = (string: string): string =>
+  string.replace(leadingJsDocRegex, '').trim();
+
+// eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
+const getLeadingJsDocComments = (string: string): Optional<string> =>
+  leadingJsDocRegex.exec(string)?.[1];
+
 // Remove all comments not start with @
 export const removeUnrecognizedComments = (string: string): string =>
   string.replaceAll(/\/\*(?!\s@)[^*]+\*\//g, '');
@@ -73,7 +84,12 @@ export const splitTableFieldDefinitions = (value: string) =>
     ({ result, count: previousCount }, current) => {
       const count = previousCount + getCountDelta(current);
 
-      if (count === 0 && current === ',') {
+      if (
+        count === 0 &&
+        current === ',' &&
+        // Ignore commas in JSDoc comments
+        !stripLeadingJsDocComments(result.at(-1) ?? '').includes('/**')
+      ) {
         return {
           result: [...result, ''],
           count,
@@ -169,9 +185,12 @@ const parseStringMaxLength = (rawType: string) => {
 };
 
 export const parseType = (tableFieldDefinition: string): Field => {
-  const [nameRaw, typeRaw, ...rest] = tableFieldDefinition.split(' ');
+  const normalized = stripLeadingJsDocComments(tableFieldDefinition);
+  const comments = getLeadingJsDocComments(tableFieldDefinition);
 
-  assert(nameRaw && typeRaw, new Error('Missing field name or type: ' + tableFieldDefinition));
+  const [nameRaw, typeRaw, ...rest] = normalized.split(' ');
+
+  assert(nameRaw && typeRaw, new Error('Missing field name or type: ' + normalized));
 
   const name = nameRaw.toLowerCase();
   const type = typeRaw.toLowerCase();
@@ -198,6 +217,7 @@ export const parseType = (tableFieldDefinition: string): Field => {
 
   return {
     name,
+    comments,
     type: primitiveType,
     isString,
     isArray,

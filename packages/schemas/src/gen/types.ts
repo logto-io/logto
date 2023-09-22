@@ -1,5 +1,7 @@
 export type Field = {
   name: string;
+  /** The JSDoc comment for the field. */
+  comments?: string;
   type?: string;
   customType?: string;
   tsType?: string;
