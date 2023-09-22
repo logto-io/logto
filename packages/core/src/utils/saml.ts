@@ -3,7 +3,7 @@ import forge from 'node-forge';
 
 export const generateSamlKeyPair = () => {
   const { pki } = forge;
-  const { privateKey, publicKey } = pki.rsa.generateKeyPair(1024);
+  const { privateKey, publicKey } = pki.rsa.generateKeyPair(2048);
   const cert = pki.createCertificate();
 
   /* eslint-disable @silverhand/fp/no-mutation */
