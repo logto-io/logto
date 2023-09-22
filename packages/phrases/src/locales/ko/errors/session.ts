@@ -23,6 +23,10 @@ const session = {
   interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
   mfa: {
     /** UNTRANSLATED */
+    require_mfa_verification: 'Mfa verification is required to sign in.',
+    /** UNTRANSLATED */
+    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
+    /** UNTRANSLATED */
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',

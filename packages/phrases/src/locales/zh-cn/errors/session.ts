@@ -20,6 +20,10 @@ const session = {
   interaction_not_found: '找不到交互会话。请返回并重新开始会话。',
   mfa: {
     /** UNTRANSLATED */
+    require_mfa_verification: 'Mfa verification is required to sign in.',
+    /** UNTRANSLATED */
+    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
+    /** UNTRANSLATED */
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',

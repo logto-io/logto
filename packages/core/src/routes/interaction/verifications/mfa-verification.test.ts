@@ -5,14 +5,15 @@ import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
 import type Provider from 'oidc-provider';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser } from '#src/__mocks__/user.js';
+import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
-
-import { verifyBindMfa } from './mfa-verification.js';
+import type {
+  AccountVerifiedInteractionResult,
+  IdentifierVerifiedInteractionResult,
+} from '../types/index.js';
 
 const { jest } = import.meta;
 
@@ -24,7 +25,9 @@ const tenantContext = new MockTenant(undefined, {
   },
 });
 
-const { validateMandatoryBindMfa } = await import('./mfa-verification.js');
+const { validateMandatoryBindMfa, verifyBindMfa, verifyMfa } = await import(
+  './mfa-verification.js'
+);
 
 const baseCtx = {
   ...createContextWithRouteParameters(),
@@ -59,13 +62,17 @@ const interaction: IdentifierVerifiedInteractionResult = {
   identifiers: [{ key: 'accountId', value: 'foo' }],
 };
 
-const signInInteraction: IdentifierVerifiedInteractionResult = {
+const signInInteraction: AccountVerifiedInteractionResult = {
   event: InteractionEvent.SignIn,
   identifiers: [{ key: 'accountId', value: 'foo' }],
   accountId: 'foo',
 };
 
 describe('validateMandatoryBindMfa', () => {
+  afterEach(() => {
+    findUserById.mockReset();
+  });
+
   describe('register', () => {
     it('bindMfa missing but required should throw', async () => {
       await expect(
@@ -121,15 +128,7 @@ describe('validateMandatoryBindMfa', () => {
     });
 
     it('user mfaVerifications existing, bindMfa missing and required should pass', async () => {
-      findUserById.mockResolvedValueOnce({
-        ...mockUser,
-        mfaVerifications: [
-          {
-            type: MfaFactor.TOTP,
-            secret: 'secret',
-          },
-        ],
-      });
+      findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
       await expect(
         validateMandatoryBindMfa(tenantContext, baseCtx, signInInteraction)
       ).resolves.not.toThrow();
@@ -168,15 +167,7 @@ describe('verifyBindMfa', () => {
   });
 
   it('should reject if the user already has a TOTP factor', async () => {
-    findUserById.mockResolvedValueOnce({
-      ...mockUser,
-      mfaVerifications: [
-        {
-          type: MfaFactor.TOTP,
-          secret: 'secret',
-        },
-      ],
-    });
+    findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
     await expect(
       verifyBindMfa(tenantContext, {
         ...signInInteraction,
@@ -186,5 +177,35 @@ describe('verifyBindMfa', () => {
         },
       })
     ).rejects.toMatchError(new RequestError({ code: 'user.totp_already_in_use', status: 422 }));
+  });
+});
+
+describe('verifyMfa', () => {
+  it('should pass if user mfaVerifications is empty', async () => {
+    findUserById.mockResolvedValueOnce(mockUser);
+    await expect(verifyMfa(tenantContext, signInInteraction)).resolves.not.toThrow();
+  });
+
+  it('should pass if verifiedMfa exists', async () => {
+    findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
+    await expect(
+      verifyMfa(tenantContext, {
+        ...signInInteraction,
+        verifiedMfa: {
+          type: MfaFactor.TOTP,
+          id: 'id',
+        },
+      })
+    ).resolves.not.toThrow();
+  });
+
+  it('should reject if verifiedMfa can not be found', async () => {
+    findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
+    await expect(
+      verifyMfa(tenantContext, {
+        ...signInInteraction,
+        verifiedMfa: undefined,
+      })
+    ).rejects.toThrowError();
   });
 });

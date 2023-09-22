@@ -8,6 +8,7 @@ import type {
   SocialPhonePayload,
   Profile,
   BindMfa,
+  VerifyMfaResult,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
@@ -86,6 +87,7 @@ export type VerifiedSignInInteractionResult = {
   identifiers: Identifier[];
   profile?: Profile;
   bindMfa?: BindMfa;
+  verifiedMfa?: VerifyMfaResult;
 };
 
 export type VerifiedForgotPasswordInteractionResult = {

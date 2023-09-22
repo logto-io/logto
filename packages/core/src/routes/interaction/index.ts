@@ -25,6 +25,7 @@ import {
   storeInteractionResult,
   mergeIdentifiers,
   isForgotPasswordInteractionResult,
+  isSignInInteractionResult,
 } from './utils/interaction.js';
 import {
   verifySignInModeSettings,
@@ -39,6 +40,7 @@ import {
   validateMandatoryUserProfile,
   validateMandatoryBindMfa,
   verifyBindMfa,
+  verifyMfa,
 } from './verifications/index.js';
 
 export type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
@@ -333,7 +335,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const accountVerifiedInteraction = await verifyIdentifier(ctx, tenant, interactionStorage);
 
-      const profileVerifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
+      const mfaVerifiedInteraction = isSignInInteractionResult(accountVerifiedInteraction)
+        ? await verifyMfa(tenant, accountVerifiedInteraction)
+        : accountVerifiedInteraction;
+
+      const profileVerifiedInteraction = await verifyProfile(tenant, mfaVerifiedInteraction);
 
       // TODO @simeng-li: make all these verification steps in a middleware.
       const mandatoryProfileVerifiedInteraction = isForgotPasswordInteractionResult(

@@ -10,6 +10,7 @@ import {
   type VerifiedSignInInteractionResult,
   type VerifiedInteractionResult,
   type VerifiedRegisterInteractionResult,
+  type AccountVerifiedInteractionResult,
 } from '../types/index.js';
 
 export const verifyBindMfa = async (
@@ -36,6 +37,27 @@ export const verifyBindMfa = async (
       new RequestError({
         code: 'user.totp_already_in_use',
         status: 422,
+      })
+    );
+  }
+
+  return interaction;
+};
+
+export const verifyMfa = async (
+  tenant: TenantContext,
+  interaction: AccountVerifiedInteractionResult
+): Promise<AccountVerifiedInteractionResult> => {
+  const { accountId, verifiedMfa } = interaction;
+
+  const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+
+  if (mfaVerifications.length > 0) {
+    assertThat(
+      verifiedMfa,
+      new RequestError({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
       })
     );
   }

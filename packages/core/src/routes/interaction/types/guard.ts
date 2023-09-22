@@ -1,6 +1,12 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
-import { bindMfaGuard, eventGuard, pendingMfaGuard, profileGuard } from '@logto/schemas';
+import {
+  bindMfaGuard,
+  eventGuard,
+  verifyMfaResultGuard,
+  pendingMfaGuard,
+  profileGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 // Social Authorization Uri Route Payload Guard
@@ -48,6 +54,8 @@ export const anonymousInteractionResultGuard = z.object({
   bindMfa: bindMfaGuard.optional(),
   // The pending mfa info, such as secret of TOTP
   pendingMfa: pendingMfaGuard.optional(),
+  // The verified mfa
+  verifiedMfa: verifyMfaResultGuard.optional(),
 });
 
 export const forgotPasswordProfileGuard = z.object({
