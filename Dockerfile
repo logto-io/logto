@@ -17,6 +17,10 @@ COPY . .
 RUN node .scripts/update-parcelrc.js
 RUN pnpm i
 
+### Set if dev features enabled ###
+ARG dev_features_enabled
+ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
+
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 RUN pnpm -r build
