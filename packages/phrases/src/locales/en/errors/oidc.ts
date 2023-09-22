@@ -14,7 +14,10 @@ const oidc = {
   unsupported_grant_type: 'Unsupported `grant_type` requested.',
   unsupported_response_mode: 'Unsupported `response_mode` requested.',
   unsupported_response_type: 'Unsupported `response_type` requested.',
+  /** @deprecated Use {@link oidc.server_error} or {@link oidc.provider_error_fallback} instead. */
   provider_error: 'OIDC Internal Error: {{message}}.',
+  server_error: 'An unknown OIDC error occurred. Please try again later.',
+  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
 };
 
 export default Object.freeze(oidc);

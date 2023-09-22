@@ -1,118 +1,98 @@
+import i18next from 'i18next';
+import { type Context } from 'koa';
 import { errors } from 'oidc-provider';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import koaOIDCErrorHandler from './koa-oidc-error-handler.js';
+import koaOidcErrorHandler, { errorOut } from './koa-oidc-error-handler.js';
 
 const { jest } = import.meta;
 
-describe('koaOIDCErrorHandler middleware', () => {
+describe('koaOidcErrorHandler middleware', () => {
   const next = jest.fn();
-  const ctx = createContextWithRouteParameters();
+
+  const expectErrorResponse = async (
+    ctx: Context,
+    error: errors.OIDCProviderError,
+    extraMatch?: Record<string, unknown>
+  ) => {
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    const out = errorOut(error);
+    const code = `oidc.${out.error}`;
+    await koaOidcErrorHandler()(ctx, next);
+    expect(ctx.status).toBe(error.statusCode);
+    expect(ctx.body).toMatchObject({
+      ...out,
+      code,
+      message: i18next.t('errors:' + code),
+      ...extraMatch,
+    });
+  };
 
   it('should throw no errors if no errors are caught', async () => {
-    await expect(koaOIDCErrorHandler()(ctx, next)).resolves.not.toThrow();
+    const ctx = createContextWithRouteParameters();
+    await expect(koaOidcErrorHandler()(ctx, next)).resolves.not.toThrow();
   });
 
   it('should throw original error if error type is not OIDCProviderError', async () => {
+    const ctx = createContextWithRouteParameters();
     const error = new Error('err');
 
     next.mockImplementationOnce(() => {
       throw error;
     });
 
-    await expect(koaOIDCErrorHandler()(ctx, next)).rejects.toMatchError(error);
+    await expect(koaOidcErrorHandler()(ctx, next)).rejects.toMatchError(error);
   });
 
-  it('Invalid Scope', async () => {
+  it('should recognize invalid scope error', async () => {
+    const ctx = createContextWithRouteParameters();
     const error_description = 'Mock scope is invalid';
     const mockScope = 'read:foo';
-    const error = new errors.InvalidScope(error_description, mockScope);
-    next.mockImplementationOnce(() => {
-      throw error;
-    });
-
-    await expect(koaOIDCErrorHandler()(ctx, next)).rejects.toMatchError(
-      new RequestError(
-        {
-          code: 'oidc.invalid_scope',
-          status: error.status,
-          expose: true,
-          scope: mockScope,
-        },
-        { error_description }
-      )
-    );
+    await expectErrorResponse(ctx, new errors.InvalidScope(error_description, mockScope));
   });
 
-  it('Session Not Found', async () => {
-    const error_description = 'session not found';
-    const error = new errors.SessionNotFound('session not found');
+  it('should transform session not found error code', async () => {
+    const ctx = createContextWithRouteParameters();
 
-    next.mockImplementationOnce(() => {
-      throw error;
+    await expectErrorResponse(ctx, new errors.SessionNotFound('session not found'), {
+      code: 'session.not_found',
+      message: i18next.t('errors:session.not_found'),
     });
-
-    await expect(koaOIDCErrorHandler()(ctx, next)).rejects.toMatchError(
-      new RequestError(
-        {
-          code: 'session.not_found',
-          status: error.status,
-          expose: true,
-        },
-        {
-          error_description,
-        }
-      )
-    );
   });
 
-  it('Insufficient Scope', async () => {
+  it('should add scope in response when needed', async () => {
+    const ctx = createContextWithRouteParameters();
     const error_description = 'Insufficient scope for access_token';
     const scope = 'read:foo';
 
-    const error = new errors.InsufficientScope(error_description, scope);
-
-    next.mockImplementationOnce(() => {
-      throw error;
+    await expectErrorResponse(ctx, new errors.InsufficientScope(error_description, scope), {
+      scope,
     });
-
-    await expect(koaOIDCErrorHandler()(ctx, next)).rejects.toMatchError(
-      new RequestError(
-        {
-          code: 'oidc.insufficient_scope',
-          status: error.status,
-          expose: true,
-          scopes: scope,
-        },
-        {
-          error_description,
-        }
-      )
-    );
   });
 
-  it('Unhandled OIDCProvider Error', async () => {
-    const error = new errors.AuthorizationPending();
+  it('should add error uri when available', async () => {
+    const ctx = createContextWithRouteParameters();
+    const error = new errors.InvalidGrant('invalid grant');
 
-    next.mockImplementationOnce(() => {
-      throw error;
+    await expectErrorResponse(ctx, error, {
+      error_uri: 'https://openid.sh/debug/invalid_grant',
     });
+  });
 
-    await expect(koaOIDCErrorHandler()(ctx, next)).rejects.toMatchError(
-      new RequestError(
-        {
-          code: 'oidc.provider_error',
-          status: error.status,
-          expose: true,
-          message: error.message,
-        },
-        {
-          error_description: error.error_description,
-          error_detail: error.error_detail,
-        }
-      )
-    );
+  it('should handle unrecognized oidc error', async () => {
+    const ctx = createContextWithRouteParameters();
+    const unrecognizedError = { error: 'some_error', error_description: 'some error description' };
+
+    ctx.status = 500;
+    ctx.body = unrecognizedError;
+
+    await koaOidcErrorHandler()(ctx, next);
+
+    expect(ctx.status).toBe(500);
+    expect(ctx.body).toMatchObject({ ...unrecognizedError, code: 'oidc.some_error' });
   });
 });

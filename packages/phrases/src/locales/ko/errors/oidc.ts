@@ -14,6 +14,10 @@ const oidc = {
   unsupported_response_mode: '지원하지 않는 `response_mode` 요청이에요.',
   unsupported_response_type: '지원하지 않은 `response_type` 요청이에요.',
   provider_error: 'OIDC 내부 오류: {{message}}.',
+  /** UNTRANSLATED */
+  server_error: 'An unknown OIDC error occurred. Please try again later.',
+  /** UNTRANSLATED */
+  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
 };
 
 export default Object.freeze(oidc);

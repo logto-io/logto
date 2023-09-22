@@ -28,7 +28,6 @@ import { isOriginAllowed, validateCustomClientMetadata } from '#src/oidc/utils.j
 import { routes } from '#src/routes/consts.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
-import { consoleLog } from '#src/utils/console.js';
 
 import defaults from './defaults.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
@@ -47,7 +46,6 @@ export default function initOidc(
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
-    dailyActiveUsers: { insertActiveUser },
   } = queries;
   const { findUserScopesForResourceIndicator } = libraries.users;
   const { findApplicationScopesForResourceIndicator } = libraries.applications;
@@ -62,10 +60,15 @@ export default function initOidc(
 
   const oidc = new Provider(issuer, {
     adapter: postgresAdapter.bind(null, envSet, queries),
-    renderError: (_ctx, _out, error) => {
-      consoleLog.error(error);
-
-      throw error;
+    // Align the error response regardless of the request format. It will be `application/json` by default.
+    // Rendering different error response based on the request format is okay, but it brought more trouble
+    // since `renderError` will be only called when the request prefers `text/html` format.
+    //
+    // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js#L48-L55
+    //
+    // Since we prefer a more consistent error response, we will handle it in `koaOidcErrorHandler` middleware.
+    renderError: (ctx, out, _error) => {
+      ctx.body = out;
     },
     cookies: {
       keys: cookieKeys,
