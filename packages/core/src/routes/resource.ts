@@ -1,5 +1,5 @@
 import { Resources, Scopes } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { tryThat, yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
@@ -12,9 +12,6 @@ import { attachScopesToResources } from '#src/utils/resource.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
-
-const resourceId = buildIdGenerator(21);
-const scopeId = resourceId;
 
 export default function resourceRoutes<T extends AuthedRouter>(
   ...[
@@ -110,7 +107,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       );
 
       const resource = await insertResource({
-        id: resourceId(),
+        id: generateStandardId(),
         ...body,
       });
 
@@ -280,7 +277,7 @@ export default function resourceRoutes<T extends AuthedRouter>(
       ctx.status = 201;
       ctx.body = await insertScope({
         ...body,
-        id: scopeId(),
+        id: generateStandardId(),
         resourceId,
       });
 

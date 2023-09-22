@@ -11,6 +11,8 @@ import type {
 } from '@logto/schemas';
 import { RoleType, ApplicationType } from '@logto/schemas';
 
+import { mockId } from '#src/test-utils/nanoid.js';
+
 export * from './connector.js';
 export * from './sign-in-experience.js';
 export * from './cloud-connection.js';
@@ -20,7 +22,7 @@ export * from './domain.js';
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',
   id: 'foo',
-  secret: 'randomId',
+  secret: mockId,
   name: 'foo',
   type: ApplicationType.SPA,
   description: null,

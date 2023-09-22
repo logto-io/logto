@@ -3,18 +3,15 @@ import { LogResult } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
 
+import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
+
 import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const nanoIdMock = 'mockId';
-await mockEsmWithActual('@logto/shared', () => ({
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: () => () => nanoIdMock,
-  generateStandardId: () => nanoIdMock,
-}));
+await mockIdGenerators();
 
 const { default: RequestError } = await import('#src/errors/RequestError/index.js');
 const { MockQueries } = await import('#src/test-utils/tenant.js');
@@ -56,7 +53,7 @@ describe('koaAuditLog middleware', () => {
     await koaLog(queries)(ctx, next);
 
     expect(insertLog).toBeCalledWith({
-      id: nanoIdMock,
+      id: mockId,
       key: logKey,
       payload: {
         ...mockPayload,
@@ -95,12 +92,12 @@ describe('koaAuditLog middleware', () => {
     };
 
     expect(insertLog).toHaveBeenCalledWith({
-      id: nanoIdMock,
+      id: mockId,
       key: logKey,
       payload: basePayload,
     });
     expect(insertLog).toHaveBeenCalledWith({
-      id: nanoIdMock,
+      id: mockId,
       key: logKey,
       payload: {
         ...basePayload,
@@ -147,7 +144,7 @@ describe('koaAuditLog middleware', () => {
     await koaLog(queries)(ctx, next);
 
     expect(insertLog).toBeCalledWith({
-      id: nanoIdMock,
+      id: mockId,
       key: logKey,
       payload: {
         ...mockPayload,
@@ -179,7 +176,7 @@ describe('koaAuditLog middleware', () => {
       await expect(koaLog(queries)(ctx, next)).rejects.toMatchError(error);
 
       expect(insertLog).toBeCalledWith({
-        id: nanoIdMock,
+        id: mockId,
         key: logKey,
         payload: {
           ...mockPayload,
@@ -216,7 +213,7 @@ describe('koaAuditLog middleware', () => {
 
       expect(insertLog).toHaveBeenCalledTimes(2);
       expect(insertLog).toBeCalledWith({
-        id: nanoIdMock,
+        id: mockId,
         key: logKey,
         payload: {
           ...mockPayload,

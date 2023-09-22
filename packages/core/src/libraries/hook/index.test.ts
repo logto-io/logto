@@ -3,17 +3,14 @@ import { HookEvent, InteractionEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
 import { generateHookTestPayload, parseResponse } from './utils.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
-const nanoIdMock = 'mockId';
-await mockEsmWithActual('@logto/shared', () => ({
-  buildIdGenerator: jest.fn().mockReturnValue(nanoIdMock),
-  generateStandardId: jest.fn().mockReturnValue(nanoIdMock),
-}));
+await mockIdGenerators();
 
 const mockSignature = 'mockSignature';
 mockEsm('#src/utils/sign.js', () => ({
@@ -95,7 +92,7 @@ describe('triggerInteractionHooks()', () => {
     });
 
     const calledPayload: unknown = insertLog.mock.calls[0][0];
-    expect(calledPayload).toHaveProperty('id', nanoIdMock);
+    expect(calledPayload).toHaveProperty('id', mockId);
     expect(calledPayload).toHaveProperty('key', 'TriggerHook.' + HookEvent.PostSignIn);
     expect(calledPayload).toHaveProperty('payload.result', LogResult.Success);
     expect(calledPayload).toHaveProperty('payload.hookId', 'foo');

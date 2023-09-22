@@ -1,15 +1,29 @@
-import { buildIdGenerator } from './id.js';
+import { generateStandardId, generateStandardSecret, generateStandardShortId } from './id.js';
 
-describe('id generator', () => {
+describe('standard id generator', () => {
   it('should match the input length', () => {
-    const id = buildIdGenerator(10)();
-    expect(id.length).toEqual(10);
+    const id = generateStandardId();
+    expect(id.length).toEqual(21);
+  });
+});
+
+describe('standard short id generator', () => {
+  it('should match the input length', () => {
+    const id = generateStandardShortId();
+    expect(id.length).toEqual(12);
+  });
+});
+
+describe('standard secret generator', () => {
+  it('should match the input length', () => {
+    const id = generateStandardSecret();
+    expect(id.length).toEqual(32);
   });
 
-  it('to random id should not equal', () => {
-    const id_1 = buildIdGenerator(10)();
-    const id_2 = buildIdGenerator(10)();
-
-    expect(id_1).not.toEqual(id_2);
+  it('should generate id with uppercase', () => {
+    // If it can't generate uppercase, it will timeout
+    while (!/[A-Z]/.test(generateStandardSecret())) {
+      // Do nothing
+    }
   });
 });

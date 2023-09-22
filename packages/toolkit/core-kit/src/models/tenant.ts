@@ -1,7 +1,7 @@
-import { generateStandardId, buildIdGenerator } from '@logto/shared/universal';
+import { generateStandardId } from '@logto/shared/universal';
 
 // Use lowercase letters for tenant IDs to improve compatibility
-const generateTenantId = buildIdGenerator(6, false);
+const generateTenantId = () => generateStandardId(6);
 
 export type TenantMetadata = {
   id: string;
@@ -12,7 +12,7 @@ export type TenantMetadata = {
 
 export const createTenantMetadata = (
   databaseName: string,
-  tenantId = generateTenantId(6)
+  tenantId = generateTenantId()
 ): TenantMetadata => {
   const parentRole = `logto_tenant_${databaseName}`;
   const role = `logto_tenant_${databaseName}_${tenantId}`;

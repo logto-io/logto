@@ -6,7 +6,7 @@ import {
   InternalRole,
   ApplicationType,
 } from '@logto/schemas';
-import { generateStandardId, buildIdGenerator } from '@logto/shared';
+import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { boolean, object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -18,7 +18,6 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-const applicationId = buildIdGenerator(21);
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
@@ -108,8 +107,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
       );
 
       ctx.body = await insertApplication({
-        id: applicationId(),
-        secret: generateStandardId(),
+        id: generateStandardId(),
+        secret: generateStandardSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });

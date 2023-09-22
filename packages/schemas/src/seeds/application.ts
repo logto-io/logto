@@ -1,4 +1,4 @@
-import { generateStandardId } from '@logto/shared/universal';
+import { generateStandardId, generateStandardSecret } from '@logto/shared/universal';
 
 import type {
   Application,
@@ -35,7 +35,7 @@ export const createDefaultAdminConsoleApplication = (): Readonly<CreateApplicati
     tenantId: adminTenantId,
     id: adminConsoleApplicationId,
     name: 'Admin Console',
-    secret: generateStandardId(),
+    secret: generateStandardSecret(),
     description: 'Logto Admin Console.',
     type: ApplicationType.SPA,
     oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
@@ -49,7 +49,7 @@ export const createTenantMachineToMachineApplication = (
     id: generateStandardId(),
     name: 'Cloud Service',
     description: `Machine to machine application for tenant ${tenantId}`,
-    secret: generateStandardId(),
+    secret: generateStandardSecret(),
     type: ApplicationType.MachineToMachine,
     oidcClientMetadata: {
       redirectUris: [],

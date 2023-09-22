@@ -2,7 +2,7 @@ import type { SocialUserInfo } from '@logto/connector-kit';
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { Theme } from '@logto/schemas';
 import type { ConnectorResponse, UserProfileResponse } from '@logto/schemas';
-import { buildIdGenerator } from '@logto/shared/universal';
+import { generateStandardId } from '@logto/shared/universal';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath, conditional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
@@ -42,7 +42,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const getSocialAuthorizationUri = useCallback(
     async (connectorId: string) => {
       const adminTenantEndpointUrl = new URL(adminTenantEndpoint);
-      const state = buildIdGenerator(8)();
+      const state = generateStandardId(8);
       const redirectUri = new URL(`/callback/${connectorId}`, adminTenantEndpointUrl).href;
       const { redirectTo } = await api
         .post('me/social/authorization-uri', { json: { connectorId, state, redirectUri } })

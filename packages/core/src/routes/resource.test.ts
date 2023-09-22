@@ -1,14 +1,13 @@
 import type { Resource, CreateResource } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 
 import { mockResource, mockScope } from '#src/__mocks__/index.js';
+import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-
-const { mockEsm } = createMockUtils(jest);
 
 const resources = {
   findTotalNumberOfResources: async () => ({ count: 10 }),
@@ -45,10 +44,7 @@ const scopes = {
 };
 const { insertScope, updateScopeById } = scopes;
 
-mockEsm('@logto/shared', () => ({
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  buildIdGenerator: () => () => 'randomId',
-}));
+await mockIdGenerators();
 
 const tenantContext = new MockTenant(undefined, { scopes, resources }, undefined);
 
@@ -89,7 +85,7 @@ describe('resource routes', () => {
     expect(response.status).toEqual(201);
     expect(response.body).toEqual({
       tenantId: 'fake_tenant',
-      id: 'randomId',
+      id: mockId,
       name,
       indicator,
       isDefault: false,
@@ -183,7 +179,7 @@ describe('resource routes', () => {
     expect(response.status).toEqual(201);
     expect(findResourceById).toHaveBeenCalledWith('foo');
     expect(insertScope).toHaveBeenCalledWith({
-      id: 'randomId',
+      id: mockId,
       name,
       description,
       resourceId: 'foo',

@@ -8,13 +8,13 @@ import {
   mockAdminUserRole3,
   mockUserRole,
 } from '#src/__mocks__/index.js';
-import { mockId, mockStandardId } from '#src/test-utils/nanoid.js';
+import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
-await mockStandardId();
+await mockIdGenerators();
 
 const users = { findUserById: jest.fn() };
 
