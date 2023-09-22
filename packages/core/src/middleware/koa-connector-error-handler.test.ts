@@ -217,6 +217,7 @@ describe('koaConnectorErrorHandler middleware', () => {
         {
           code: 'connector.general',
           status: 400,
+          errorDescription: JSON.stringify({ message }),
         },
         { message }
       )
@@ -235,7 +236,7 @@ describe('koaConnectorErrorHandler middleware', () => {
         {
           code: 'connector.general',
           status: 400,
-          errorDescription: '\nMock General connector errors',
+          errorDescription: 'Mock General connector errors',
         },
         message
       )

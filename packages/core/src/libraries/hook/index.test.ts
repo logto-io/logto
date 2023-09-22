@@ -141,7 +141,7 @@ describe('testHook', () => {
     await expect(testHook(hook.id, [HookEvent.PostSignIn], hook.config)).rejects.toThrowError(
       new RequestError({
         code: 'hook.send_test_payload_failed',
-        message: 'test error',
+        message: 'Error: test error',
         status: 422,
       })
     );

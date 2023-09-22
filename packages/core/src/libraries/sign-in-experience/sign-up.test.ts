@@ -65,7 +65,7 @@ describe('validate sign-up', () => {
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
-          type: ConnectorType.Sms,
+          type: ConnectorType.Email,
         })
       );
     });
