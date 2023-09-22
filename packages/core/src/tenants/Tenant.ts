@@ -25,6 +25,7 @@ import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
+import initSaml from '#src/saml/inits.js';
 
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
@@ -93,6 +94,9 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
     };
+
+    // Mount SAML
+    app.use(mount('/saml', initSaml(tenantContext)));
 
     // Mount APIs
     app.use(mount('/api', initApis(tenantContext)));

@@ -55,17 +55,44 @@ export const logtoTenantConfigGuard: Readonly<{
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: z.object({ url: z.string() }),
 });
 
+/* --- Logto SAML configs --- */
+export enum LogtoSamlConfigKey {
+  // Only support signing key for now, consider support encryption key later
+  SigningKeyPair = 'saml.signingKeyPair',
+}
+
+export const logtoSamlSigningKeyPairGuard = z.object({
+  privateKey: z.string(),
+  publicCert: z.string(),
+});
+export type LogtoSamlSigningKeyPair = z.infer<typeof logtoSamlSigningKeyPairGuard>;
+
+// Saml config is optional, generate one only when SAML is enabled
+export type LogtoSamlConfigType = {
+  [LogtoSamlConfigKey.SigningKeyPair]: LogtoSamlSigningKeyPair;
+};
+
+export const logtoSamlConfigGuard: Readonly<{
+  [key in LogtoSamlConfigKey]: ZodType<LogtoSamlConfigType[key]>;
+}> = Object.freeze({
+  [LogtoSamlConfigKey.SigningKeyPair]: logtoSamlSigningKeyPairGuard,
+});
+
 /* --- Summary --- */
-export type LogtoConfigKey = LogtoOidcConfigKey | LogtoTenantConfigKey;
-export type LogtoConfigType = LogtoOidcConfigType | LogtoTenantConfigType;
-export type LogtoConfigGuard = typeof logtoOidcConfigGuard & typeof logtoTenantConfigGuard;
+export type LogtoConfigKey = LogtoOidcConfigKey | LogtoTenantConfigKey | LogtoSamlConfigKey;
+
+export type LogtoConfigGuard = typeof logtoOidcConfigGuard &
+  typeof logtoTenantConfigGuard &
+  typeof logtoSamlConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
   ...Object.values(LogtoTenantConfigKey),
+  ...Object.values(LogtoSamlConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
   ...logtoTenantConfigGuard,
+  ...logtoSamlConfigGuard,
 });

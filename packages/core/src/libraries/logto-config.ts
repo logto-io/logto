@@ -1,20 +1,28 @@
-import type { LogtoOidcConfigType } from '@logto/schemas';
+import type { LogtoOidcConfigType, LogtoSamlSigningKeyPair } from '@logto/schemas';
 import {
   cloudApiIndicator,
   cloudConnectionDataGuard,
   logtoOidcConfigGuard,
+  logtoSamlSigningKeyPairGuard,
   LogtoOidcConfigKey,
 } from '@logto/schemas';
 import chalk from 'chalk';
 import { z, ZodError } from 'zod';
 
 import type Queries from '#src/tenants/Queries.js';
+import assertThat from '#src/utils/assert-that.js';
 import { consoleLog } from '#src/utils/console.js';
+import { generateSamlKeyPair } from '#src/utils/saml.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
 export const createLogtoConfigLibrary = ({
-  logtoConfigs: { getRowsByKeys, getCloudConnectionData: queryCloudConnectionData },
+  logtoConfigs: {
+    getRowsByKeys,
+    getCloudConnectionData: queryCloudConnectionData,
+    getSamlSigningKeyPair: querySamlSigningKeyPair,
+    insertSamlSigningKeyPair,
+  },
 }: Pick<Queries, 'logtoConfigs'>) => {
   const getOidcConfigs = async (): Promise<LogtoOidcConfigType> => {
     try {
@@ -59,5 +67,23 @@ export const createLogtoConfigLibrary = ({
     };
   };
 
-  return { getOidcConfigs, getCloudConnectionData };
+  /* We will generate a pair of RSA keys for SAML for each tenant up on SAML IdP creation request. */
+  const getSamlSigningKeyPair = async (): Promise<LogtoSamlSigningKeyPair> => {
+    const signingKeyPair = await querySamlSigningKeyPair();
+
+    if (signingKeyPair) {
+      return signingKeyPair;
+    }
+
+    // Generate one if not exists
+    const keyPair = generateSamlKeyPair();
+    const { value } = await insertSamlSigningKeyPair(keyPair);
+
+    const result = logtoSamlSigningKeyPairGuard.safeParse(value);
+    assertThat(result.success, new Error('Failed to generate SAML signing key pair'));
+
+    return result.data;
+  };
+
+  return { getOidcConfigs, getCloudConnectionData, getSamlSigningKeyPair };
 };

@@ -19,6 +19,7 @@ const logtoConfigs: LogtoConfigLibrary = {
     resource: 'resource',
   }),
   getOidcConfigs: jest.fn(),
+  getSamlSigningKeyPair: jest.fn(),
 };
 
 describe('koaTenantGuard middleware', () => {

@@ -16,6 +16,7 @@ export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
   DemoApp = 'demo-app',
+  Saml = 'saml',
 }
 
 /** Apps (also paths) ONLY for the admin tenant. */

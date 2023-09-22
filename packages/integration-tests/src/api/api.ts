@@ -28,3 +28,7 @@ export const authedAdminTenantApi = adminTenantApi.extend({
 export const cloudApi = got.extend({
   prefixUrl: new URL('/api', logtoCloudUrl),
 });
+
+export const samlApi = got.extend({
+  prefixUrl: new URL('/saml', logtoUrl),
+});

@@ -47,7 +47,6 @@ export default function initOidc(
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
-    dailyActiveUsers: { insertActiveUser },
   } = queries;
   const { findUserScopesForResourceIndicator } = libraries.users;
   const { findApplicationScopesForResourceIndicator } = libraries.applications;

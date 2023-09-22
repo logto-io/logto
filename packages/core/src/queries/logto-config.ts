@@ -1,8 +1,15 @@
-import type { AdminConsoleData, LogtoConfig, LogtoConfigKey } from '@logto/schemas';
-import { LogtoTenantConfigKey, LogtoConfigs } from '@logto/schemas';
+import type {
+  AdminConsoleData,
+  LogtoConfig,
+  LogtoConfigKey,
+  LogtoSamlSigningKeyPair,
+} from '@logto/schemas';
+import { LogtoTenantConfigKey, LogtoConfigs, LogtoSamlConfigKey } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
+
+import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -27,11 +34,33 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
       where ${fields.key} = ${LogtoTenantConfigKey.CloudConnection}
     `);
 
+  const getSamlSigningKeyPair = async () => {
+    const result = await pool.maybeOne<{ value: LogtoSamlSigningKeyPair }>(sql`
+      select ${fields.value} from ${table}
+      where ${fields.key} = ${LogtoSamlConfigKey.SigningKeyPair}
+    `);
+
+    return result ? result.value : undefined;
+  };
+
+  const insertSamlSigningKeyPair = async (keyPair: LogtoSamlSigningKeyPair) =>
+    buildInsertIntoWithPool(pool)(LogtoConfigs, { returning: true })({
+      key: LogtoSamlConfigKey.SigningKeyPair,
+      value: keyPair,
+    });
+
   const getRowsByKeys = async (keys: LogtoConfigKey[]) =>
     pool.query<LogtoConfig>(sql`
       select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
-  return { getAdminConsoleConfig, updateAdminConsoleConfig, getCloudConnectionData, getRowsByKeys };
+  return {
+    getAdminConsoleConfig,
+    updateAdminConsoleConfig,
+    getCloudConnectionData,
+    getRowsByKeys,
+    getSamlSigningKeyPair,
+    insertSamlSigningKeyPair,
+  };
 };
