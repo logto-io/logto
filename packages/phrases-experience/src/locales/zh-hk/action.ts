@@ -24,6 +24,9 @@ const action = {
   link_another_phone: '綁定其他手機',
   link_another_email_or_phone: '綁定電子郵件或手機號碼',
   show_password: '顯示密碼',
+  copy: '複製',
+  verify_via_passkey: '透過 Passkey 驗證',
+  download: '下載',
 };
 
 export default Object.freeze(action);

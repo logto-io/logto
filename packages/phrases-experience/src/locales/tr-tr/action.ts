@@ -24,6 +24,9 @@ const action = {
   link_another_phone: 'Başka bir telefon bağla',
   link_another_email_or_phone: 'Başka bir e-posta veya telefon bağlayın',
   show_password: 'Şifreyi göster',
+  copy: 'Kopyala',
+  verify_via_passkey: 'Parola ile doğrula',
+  download: 'İndir',
 };
 
 export default Object.freeze(action);

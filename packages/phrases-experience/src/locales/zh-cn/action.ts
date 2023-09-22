@@ -24,6 +24,9 @@ const action = {
   link_another_phone: '绑定其它手机',
   link_another_email_or_phone: '绑定邮箱或手机号',
   show_password: '显示密码',
+  copy: '复制',
+  verify_via_passkey: '通过 Passkey 验证',
+  download: '下载',
 };
 
 export default Object.freeze(action);

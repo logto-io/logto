@@ -2,6 +2,10 @@ import type { LanguageTag } from '@logto/language-kit';
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-experience';
 import en from '@logto/phrases-experience/lib/locales/en';
+import {
+  type LocalePhraseGroupKey,
+  type LocalePhraseKey,
+} from '@logto/phrases-experience/lib/types';
 import type { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import deepmerge from 'deepmerge';
@@ -23,6 +27,10 @@ import { Tooltip } from '@/ds-components/Tip';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import useUiLanguages from '@/hooks/use-ui-languages';
+import {
+  hiddenLocalePhraseGroups,
+  hiddenLocalePhrases,
+} from '@/pages/SignInExperience/utils/constants';
 import {
   createEmptyUiTranslation,
   flattenTranslation,
@@ -47,12 +55,29 @@ function LanguageDetails() {
   const fetchApi = useApi({ hideErrorToast: true });
   const fetcher = useSwrFetcher<CustomPhraseResponse>(fetchApi);
 
-  const translationEntries = useMemo(
+  const translationData = useMemo(
     () =>
-      Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation).filter(
-        // Filter out the demo app phrases in AC
-        ([groupKey]) => groupKey !== 'demo_app'
-      ),
+      Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation)
+        .filter(
+          // eslint-disable-next-line no-restricted-syntax
+          ([groupKey]) => !hiddenLocalePhraseGroups.includes(groupKey as LocalePhraseGroupKey)
+        )
+        .map(([groupKey, value]) => ({
+          key: groupKey,
+          label: groupKey,
+          labelClassName: styles.sectionTitle,
+          data: Object.entries(flattenTranslation(value))
+            .filter(
+              ([phraseKey]) =>
+                // eslint-disable-next-line no-restricted-syntax
+                !hiddenLocalePhrases.includes(`${groupKey}.${phraseKey}` as LocalePhraseKey)
+            )
+            .map(([phraseKey, value]) => ({
+              phraseKey,
+              sourceValue: value,
+              fieldKey: `${groupKey}.${phraseKey}`,
+            })),
+        })),
     [isBuiltIn, selectedLanguage]
   );
 
@@ -196,16 +221,7 @@ function LanguageDetails() {
           headerTableClassName={styles.tableWrapper}
           bodyTableWrapperClassName={styles.tableWrapper}
           rowIndexKey="phraseKey"
-          rowGroups={translationEntries.map(([groupKey, value]) => ({
-            key: groupKey,
-            label: groupKey,
-            labelClassName: styles.sectionTitle,
-            data: Object.entries(flattenTranslation(value)).map(([phraseKey, value]) => ({
-              phraseKey,
-              sourceValue: value,
-              fieldKey: `${groupKey}.${phraseKey}`,
-            })),
-          }))}
+          rowGroups={translationData}
           columns={[
             {
               title: t('sign_in_exp.content.manage_language.key'),

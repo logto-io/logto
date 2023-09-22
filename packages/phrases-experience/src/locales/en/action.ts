@@ -24,6 +24,9 @@ const action = {
   link_another_phone: 'Link another phone',
   link_another_email_or_phone: 'Link another email or phone',
   show_password: 'Show password',
+  copy: 'Copy',
+  verify_via_passkey: 'Verify via passkey',
+  download: 'Download',
 };
 
 export default Object.freeze(action);
