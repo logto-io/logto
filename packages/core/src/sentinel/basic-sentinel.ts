@@ -50,6 +50,13 @@ export default class BasicSentinel extends Sentinel {
 
   protected insertActivity = buildInsertIntoWithPool(this.pool)(SentinelActivities);
 
+  /**
+   * Init a basic sentinel with the given pool that has at least the access to the tenant-level
+   * data. We don't directly put the queries in the `TenantContext` because the sentinel was
+   * designed to be used as an isolated module that can be separated from the core business logic.
+   *
+   * @param pool A database pool with methods {@link CommonQueryMethods}.
+   */
   constructor(protected readonly pool: CommonQueryMethods) {
     super();
   }
