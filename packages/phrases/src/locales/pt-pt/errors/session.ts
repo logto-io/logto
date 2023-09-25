@@ -12,6 +12,9 @@ const session = {
     'A verificação não foi bem-sucedida. Reinicie o processo de verificação e tente novamente.',
   verification_expired:
     'A conexão expirou. Verifique novamente para garantir a segurança de sua conta.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Faça login primeiro.',
   unsupported_prompt_name: 'Nome de prompt não suportado.',
   forgot_password_not_enabled: 'Recuperação de senha não está habilitada.',

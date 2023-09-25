@@ -1,3 +1,4 @@
+import { type Sentinel } from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 import { createMockPool, createMockQueryResult } from 'slonik';
 
@@ -15,6 +16,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import { mockEnvSet } from './env-set.js';
 import type { GrantMock } from './oidc-provider.js';
 import { createMockProvider } from './oidc-provider.js';
+import { MockSentinel } from './sentinel.js';
 
 export class MockWellKnownCache extends WellKnownCache {
   constructor(public ttlCache = new TtlCache<string, string>(60_000)) {
@@ -65,6 +67,7 @@ export class MockTenant implements TenantContext {
   public cloudConnection: CloudConnectionLibrary;
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
+  public sentinel: Sentinel;
 
   constructor(
     public provider = createMockProvider(),
@@ -81,6 +84,7 @@ export class MockTenant implements TenantContext {
     };
     this.libraries = new Libraries(this.id, this.queries, this.connectors, this.cloudConnection);
     this.setPartial('libraries', librariesOverride);
+    this.sentinel = new MockSentinel();
   }
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(

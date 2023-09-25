@@ -11,6 +11,9 @@ const session = {
     '検証が成功しませんでした。検証フローを再開してもう一度やり直してください。',
   verification_expired:
     '接続がタイムアウトしました。アカウントの安全性を確保するために再度検証してください。',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: '最初にサインインしてください。',
   unsupported_prompt_name: 'サポートされていないプロンプト名です。',
   forgot_password_not_enabled: 'パスワードを忘れた場合の対処が有効になっていません。',

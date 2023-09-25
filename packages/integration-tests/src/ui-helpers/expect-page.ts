@@ -1,7 +1,6 @@
-import { condString } from '@silverhand/essentials';
 import { type ElementHandle, type Page } from 'puppeteer';
 
-import { cls, dcls, expectNavigation } from '#src/utils.js';
+import { expectNavigation } from '#src/utils.js';
 
 /** Error thrown by {@link ExpectPage}. */
 export class ExpectPageError extends Error {
@@ -135,20 +134,18 @@ export default class ExpectPage {
   }
 
   /**
-   * Expect a toast to appear with the given text, then remove it immediately.
+   * Expect the page to match an element with the given selector and text, then remove it immediately.
    *
+   * @param selector The selector to match.
    * @param text The text to match.
    */
-  async waitForToast(text: string | RegExp, type?: 'success' | 'error') {
-    const toast = await expect(this.page).toMatchElement(
-      `${cls('toast')}${condString(type && cls(type))}:has(${dcls('message')})`,
-      {
-        text,
-      }
-    );
+  async toMatchAndRemove(selector: string, text: string | RegExp) {
+    const matched = await expect(this.page).toMatchElement(selector, {
+      text,
+    });
 
-    // Remove immediately to prevent waiting for the toast to disappear and matching the same toast again
-    await toast.evaluate((element) => {
+    // Remove immediately to prevent matching the same element again while waiting for the element to disappear
+    await matched.evaluate((element) => {
       element.remove();
     });
   }

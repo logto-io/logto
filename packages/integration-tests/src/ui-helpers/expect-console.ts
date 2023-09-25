@@ -1,9 +1,9 @@
 import path from 'node:path';
 
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, condString } from '@silverhand/essentials';
 
 import { consolePassword, consoleUsername, logtoConsoleUrl } from '#src/constants.js';
-import { dcls } from '#src/utils.js';
+import { cls, dcls } from '#src/utils.js';
 
 import ExpectPage, { ExpectPageError } from './expect-page.js';
 import { expectConfirmModalAndAct, expectToSaveChanges } from './index.js';
@@ -104,6 +104,19 @@ export default class ExpectConsole extends ExpectPage {
     await expect(this.page).toClick(['nav', dcls('item'), dcls('link'), 'a'].join(' '), {
       text: tabName,
     });
+  }
+
+  /**
+   * Expect a toast to appear with the given text, then remove it immediately.
+   *
+   * @param text The text to match.
+   * @param type The type of the toast, if provided.
+   */
+  async waitForToast(text: string | RegExp, type?: 'success' | 'error') {
+    return this.toMatchAndRemove(
+      `${cls('toast')}${condString(type && cls(type))}:has(${dcls('message')})`,
+      text
+    );
   }
 
   async toSaveChanges(confirmation?: string | RegExp) {

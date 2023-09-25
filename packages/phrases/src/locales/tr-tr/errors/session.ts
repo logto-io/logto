@@ -11,6 +11,9 @@ const session = {
     'Doğrulama başarısız oldu. Lütfen doğrulama işlemini yeniden başlatın ve tekrar deneyin.',
   verification_expired:
     'Bağlantı zaman aşımına uğradı. Hesap güvenliğiniz için yeniden doğrulama yapın.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Lütfen önce oturum açın.',
   unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
   forgot_password_not_enabled: 'Parolamı unuttum özelliği etkin değil.',

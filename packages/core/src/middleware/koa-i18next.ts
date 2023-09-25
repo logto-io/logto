@@ -1,14 +1,8 @@
-import type { i18n } from 'i18next';
-import _i18next from 'i18next';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import detectLanguage from '#src/i18n/detect-language.js';
-
-// This may be fixed by a cjs require wrapper. TBD.
-// See https://github.com/microsoft/TypeScript/issues/49189
-// eslint-disable-next-line no-restricted-syntax
-const i18next = _i18next as unknown as i18n;
+import { i18next } from '#src/utils/i18n.js';
 
 type LanguageUtils = {
   formatLanguageCode(code: string): string;

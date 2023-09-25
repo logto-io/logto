@@ -11,6 +11,9 @@ const session = {
     'La verificación no se completó correctamente. Reinicie el flujo de verificación e intente de nuevo.',
   verification_expired:
     'La conexión ha expirado. Verifique de nuevo para garantizar la seguridad de su cuenta.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Inicie sesión primero, por favor.',
   unsupported_prompt_name: 'Nombre de indicación no compatible.',
   forgot_password_not_enabled: 'Olvidé la contraseña no está habilitada.',

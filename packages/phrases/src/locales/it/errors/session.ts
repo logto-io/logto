@@ -11,6 +11,9 @@ const session = {
     'La verifica non è stata completata con successo. Riavvia il processo di verifica e riprova.',
   verification_expired:
     'La connessione è scaduta. Verifica di nuovo per garantire la sicurezza del tuo account.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Accedi prima di procedere.',
   unsupported_prompt_name: 'Nome del prompt non supportato.',
   forgot_password_not_enabled: 'Recupero password non abilitato.',

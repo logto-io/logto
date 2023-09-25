@@ -1,11 +1,12 @@
 /* Test the sign-in with different password policies. */
 
-import { ConnectorType, SignInIdentifier, SignInMode } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
+import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
 import { waitFor } from '#src/utils.js';
 
 describe('password policy', () => {
@@ -23,38 +24,14 @@ describe('password policy', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
-    await updateSignInExperience({
-      signInMode: SignInMode.SignInAndRegister,
-      signUp: {
-        identifiers: [SignInIdentifier.Username],
-        password: true,
-        verify: false,
-      },
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Username,
-            password: true,
-            verificationCode: false,
-            isPasswordPrimary: true,
-          },
-          {
-            identifier: SignInIdentifier.Email,
-            password: true,
-            verificationCode: true,
-            isPasswordPrimary: true,
-          },
-        ],
-      },
-      passwordPolicy: {
-        length: { min: 8, max: 32 },
-        characterTypes: { min: 3 },
-        rejects: {
-          pwned: true,
-          repetitionAndSequence: true,
-          userInfo: true,
-          words: [username],
-        },
+    await setupUsernameAndEmailExperience({
+      length: { min: 8, max: 32 },
+      characterTypes: { min: 3 },
+      rejects: {
+        pwned: true,
+        repetitionAndSequence: true,
+        userInfo: true,
+        words: [username],
       },
     });
   });
@@ -68,7 +45,7 @@ describe('password policy', () => {
 
     // Password tests
     experience.toBeAt('register/password');
-    await experience.toFillPasswords(
+    await experience.toFillNewPasswords(
       ...invalidPasswords,
       [username + 'A', /product context .* personal information/],
       username + 'ABCD_ok'
@@ -98,7 +75,7 @@ describe('password policy', () => {
     // Wait for the password page to load
     await waitFor(100);
     experience.toBeAt('continue/password');
-    await experience.toFillPasswords(
+    await experience.toFillNewPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
       emailName + 'ABCD@# $'
@@ -126,7 +103,7 @@ describe('password policy', () => {
     // Wait for the password page to load
     await waitFor(100);
     experience.toBeAt('forgot-password/reset');
-    await experience.toFillPasswords(
+    await experience.toFillNewPasswords(
       ...invalidPasswords,
       [emailName, 'personal information'],
       [emailName + 'ABCD@# $', 'be the same as'],

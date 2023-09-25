@@ -50,7 +50,7 @@ describe('smoke testing on the demo app', () => {
 
     // Simple password tests
     experience.toBeAt('register/password');
-    await experience.toFillPasswords(
+    await experience.toFillNewPasswords(
       [credentials.pwnedPassword, 'simple password'],
       credentials.password
     );

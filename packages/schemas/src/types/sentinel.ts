@@ -31,5 +31,5 @@ export abstract class Sentinel {
    * @returns A Promise that resolves to the sentinel decision.
    * @see {@link SentinelDecision}
    */
-  abstract reportActivity(activity: ActivityReport): Promise<SentinelDecisionTuple>;
+  abstract reportActivity(activity: ActivityReport): Promise<Readonly<SentinelDecisionTuple>>;
 }

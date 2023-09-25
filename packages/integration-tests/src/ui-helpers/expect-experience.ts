@@ -113,7 +113,7 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   /**
-   * Assert the page is at the verification code page and fill the verification code input with the
+   * Assert the page is at the verification code page and fill the verification code inputs with the
    * code from Logto database.
    *
    * @param type The type of experience to expect.
@@ -121,7 +121,15 @@ export default class ExpectExperience extends ExpectPage {
   async toCompleteVerification(type: ExperienceType) {
     this.toBeAt(`${type}/verification-code`);
     const { code } = await readVerificationCode();
+    await this.toFillVerificationCode(code);
+  }
 
+  /**
+   * Fill the verification code inputs with the given code.
+   *
+   * @param code The verification code to fill.
+   */
+  async toFillVerificationCode(code: string) {
     for (const [index, char] of code.split('').entries()) {
       // eslint-disable-next-line no-await-in-loop
       await this.toFillInput(`passcode_${index}`, char);
@@ -129,10 +137,32 @@ export default class ExpectExperience extends ExpectPage {
   }
 
   /**
-   * Fill the password inputs with the given passwords. If the password is an array, the second
-   * element will be used to assert the error message; otherwise, the password is expected to be
-   * valid and the form will be submitted.
+   * Fill the password form inputs with the given passwords. If forgot password flow is enabled,
+   * only the `newPassword` input will be filled; otherwise, both `newPassword` and `confirmPassword`
+   * will be filled.
    *
+   * @param passwords The passwords to fill.
+   * @see {@link toFillPasswordsToInputs} for filling passwords to specific named inputs.
+   */
+  async toFillNewPasswords(
+    ...passwords: Array<string | [password: string, errorMessage: string | RegExp]>
+  ) {
+    return this.toFillPasswordsToInputs(
+      {
+        inputNames: this.options.forgotPassword
+          ? ['newPassword']
+          : ['newPassword', 'confirmPassword'],
+      },
+      ...passwords
+    );
+  }
+
+  /**
+   * Fill the password form inputs with the given passwords. If the password is an array,
+   * the second element will be used to assert the error message; otherwise, the password is
+   * expected to be valid and the form will be submitted.
+   *
+   * @param inputNames The names of the password form inputs.
    * @param passwords The passwords to fill.
    * @example
    *
@@ -146,22 +176,18 @@ export default class ExpectExperience extends ExpectPage {
    * );
    * ```
    */
-  async toFillPasswords(
+  async toFillPasswordsToInputs(
+    { inputNames, shouldNavigate = true }: { inputNames: string[]; shouldNavigate?: boolean },
     ...passwords: Array<string | [password: string, errorMessage: string | RegExp]>
   ) {
     for (const element of passwords) {
       const [password, errorMessage] = Array.isArray(element) ? element : [element, undefined];
 
       // eslint-disable-next-line no-await-in-loop
-      await this.toFillForm(
-        this.options.forgotPassword
-          ? { newPassword: password }
-          : {
-              newPassword: password,
-              confirmPassword: password,
-            },
-        { submit: true, shouldNavigate: errorMessage === undefined }
-      );
+      await this.toFillForm(Object.fromEntries(inputNames.map((name) => [name, password])), {
+        submit: true,
+        shouldNavigate: shouldNavigate && errorMessage === undefined,
+      });
 
       if (errorMessage === undefined) {
         break;
@@ -173,6 +199,15 @@ export default class ExpectExperience extends ExpectPage {
         );
       }
     }
+  }
+
+  /**
+   * Expect a toast to appear with the given text, then remove it immediately.
+   *
+   * @param text The text to match.
+   */
+  async waitForToast(text: string | RegExp) {
+    return this.toMatchAndRemove('div[role=toast]', text);
   }
 
   /** Build a full experience URL from a pathname. */

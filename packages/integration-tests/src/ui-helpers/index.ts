@@ -1,10 +1,14 @@
+import { ConnectorType } from '@logto/connector-kit';
+import { SignInMode, SignInIdentifier, type PartialPasswordPolicy } from '@logto/schemas';
 import { type ElementHandle, type Browser, type Page } from 'puppeteer';
 
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
   consolePassword,
   consoleUsername,
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
+import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { expectNavigation, waitFor } from '#src/utils.js';
 
 export const goToAdminConsole = async () => {
@@ -145,4 +149,44 @@ export const expectToClickSidebarMenu = async (page: Page, menuText: string) => 
 
 export const getInputValue = async (input: ElementHandle<HTMLInputElement>) => {
   return input.evaluate((element) => element.value);
+};
+
+/**
+ * Setup the email connector and update the sign-in experience to the following:
+ *
+ * - Sign-in and register mode
+ * - Use username and password to sign-up
+ * - Use username or email to sign-in
+ * - Email sign-in can use verification code
+ *
+ * @param passwordPolicy The password policy to partially update the existing one.
+ */
+export const setupUsernameAndEmailExperience = async (passwordPolicy?: PartialPasswordPolicy) => {
+  await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+  await setEmailConnector();
+  await updateSignInExperience({
+    signInMode: SignInMode.SignInAndRegister,
+    signUp: {
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    },
+    signIn: {
+      methods: [
+        {
+          identifier: SignInIdentifier.Username,
+          password: true,
+          verificationCode: false,
+          isPasswordPrimary: true,
+        },
+        {
+          identifier: SignInIdentifier.Email,
+          password: true,
+          verificationCode: true,
+          isPasswordPrimary: true,
+        },
+      ],
+    },
+    passwordPolicy,
+  });
 };

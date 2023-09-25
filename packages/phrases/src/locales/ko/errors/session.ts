@@ -10,6 +10,9 @@ const session = {
     '검증을 실패했어요. 검증 과정을 다시 시작하고 다시 시도해 주세요.',
   verification_expired:
     '연결 시간이 초과되었어요. 검증을 다시 시작하고, 계정이 안전한지 확인해 주세요.',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: '로그인을 먼저 해 주세요.',
   unsupported_prompt_name: '지원하지 않는 Prompt 이름이에요.',
   forgot_password_not_enabled: '비밀번호 찾기가 활성화되어있지 않아요.',

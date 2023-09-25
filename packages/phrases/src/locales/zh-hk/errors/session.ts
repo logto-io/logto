@@ -8,6 +8,9 @@ const session = {
   connector_session_not_found: '無法找到連接器登錄信息，請嘗試重新登錄。',
   verification_session_not_found: '驗證失敗，請重新驗證。',
   verification_expired: '當前頁面已超時。為確保你的賬號安全，請重新驗證。',
+  /** UNTRANSLATED */
+  verification_blocked_too_many_attempts:
+    'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: '請先登錄',
   unsupported_prompt_name: '不支持的 prompt name',
   forgot_password_not_enabled: '忘記密碼功能沒有開啟。',
