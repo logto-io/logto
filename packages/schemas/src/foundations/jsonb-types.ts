@@ -153,7 +153,7 @@ export const customContentGuard = z.record(z.string());
 export type CustomContent = z.infer<typeof customContentGuard>;
 
 export enum MfaFactor {
-  TOTP = 'TOTP',
+  TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
   BackupCode = 'BackupCode',
 }
