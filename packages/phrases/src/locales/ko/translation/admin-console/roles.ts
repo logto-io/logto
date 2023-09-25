@@ -6,6 +6,10 @@ const roles = {
   create: '역할 생성',
   role_name: '역할 이름',
   role_type: '역할 유형',
+  /** UNTRANSLATED */
+  show_role_type_button_text: 'Show more options',
+  /** UNTRANSLATED */
+  hide_role_type_button_text: 'Hide more options',
   type_user: '사용자 역할',
   type_machine_to_machine: '기계 간 앱 역할',
   role_description: '설명',

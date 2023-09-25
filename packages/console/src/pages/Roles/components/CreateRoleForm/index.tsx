@@ -2,15 +2,18 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
 import { RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
+import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
+import ProTag from '@/components/ProTag';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -20,14 +23,15 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
+import { ReservedPlanName } from '@/types/subscriptions';
 import { trySubmitSafe } from '@/utils/form';
 import { hasReachedQuotaLimit } from '@/utils/quota';
 
 import * as styles from './index.module.scss';
 
-const radioOptions: Array<{ key: AdminConsoleKey; value: RoleType }> = [
-  { key: 'roles.type_user', value: RoleType.User },
-  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine },
+const radioOptions: Array<{ key: AdminConsoleKey; value: RoleType; proTagCheck: boolean }> = [
+  { key: 'roles.type_user', value: RoleType.User, proTagCheck: false },
+  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine, proTagCheck: true },
 ];
 
 export type Props = {
@@ -45,8 +49,10 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
 
 function CreateRoleForm({ totalRoleCount, onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
+  const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
   const {
     control,
     handleSubmit,
@@ -100,9 +106,25 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
       subtitle="roles.create_role_description"
       learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
       size="large"
-      footer={
-        <>
-          {isRolesReachLimit && currentPlan && (
+      footer={(() => {
+        if (
+          currentPlan?.name === ReservedPlanName.Free &&
+          watch('type') === RoleType.MachineToMachine
+        ) {
+          return (
+            <QuotaGuardFooter>
+              <Trans
+                components={{
+                  a: <ContactUsPhraseLink />,
+                }}
+              >
+                {t('upsell.paywall.machine_to_machine_feature')}
+              </Trans>
+            </QuotaGuardFooter>
+          );
+        }
+        if (isRolesReachLimit && currentPlan) {
+          return (
             <QuotaGuardFooter>
               <Trans
                 components={{
@@ -113,8 +135,10 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                 {t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
               </Trans>
             </QuotaGuardFooter>
-          )}
-          {isScopesPerReachLimit && currentPlan && !isRolesReachLimit && (
+          );
+        }
+        if (isScopesPerReachLimit && currentPlan && !isRolesReachLimit) {
+          return (
             <QuotaGuardFooter>
               <Trans
                 components={{
@@ -127,8 +151,10 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                 })}
               </Trans>
             </QuotaGuardFooter>
-          )}
-          {!isRolesReachLimit && !isScopesPerReachLimit && (
+          );
+        }
+        if (!isRolesReachLimit && !isScopesPerReachLimit) {
+          return (
             <Button
               isLoading={isSubmitting}
               htmlType="submit"
@@ -137,9 +163,9 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
               type="primary"
               onClick={onSubmit}
             />
-          )}
-        </>
-      }
+          );
+        }
+      })()}
       onClose={onClose}
     >
       <form>
@@ -157,8 +183,26 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             placeholder={t('roles.role_name_placeholder')}
             error={errors.name?.message}
           />
+          <Button
+            type="text"
+            size="small"
+            title={
+              isTypeSelectorVisible
+                ? 'roles.hide_role_type_button_text'
+                : 'roles.show_role_type_button_text'
+            }
+            trailingIcon={
+              <div className={styles.trailingIcon}>
+                {isTypeSelectorVisible ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              </div>
+            }
+            className={styles.roleTypeSelectionSwitch}
+            onClick={() => {
+              setIsTypeSelectorVisible(!isTypeSelectorVisible);
+            }}
+          />
         </FormField>
-        {isDevFeaturesEnabled && (
+        {isDevFeaturesEnabled && isTypeSelectorVisible && (
           <FormField title="roles.role_type">
             <Controller
               name="type"
@@ -172,8 +216,16 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                     onChange(value);
                   }}
                 >
-                  {radioOptions.map(({ key, value }) => (
-                    <Radio key={value} title={<DynamicT forKey={key} />} value={value} />
+                  {radioOptions.map(({ key, value, proTagCheck }) => (
+                    <Radio
+                      key={value}
+                      title={<DynamicT forKey={key} />}
+                      value={value}
+                      trailingIcon={
+                        proTagCheck &&
+                        isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />
+                      }
+                    />
                   ))}
                 </RadioGroup>
               )}

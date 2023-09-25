@@ -32,6 +32,7 @@ export type Props = {
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
   icon?: ReactNode;
+  trailingIcon?: ReactNode;
   hasCheckIconForCard?: boolean;
 };
 
@@ -48,6 +49,7 @@ function Radio({
   isDisabled,
   disabledLabel,
   icon,
+  trailingIcon,
   hasCheckIconForCard = true,
 }: Props) {
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
@@ -90,6 +92,7 @@ function Radio({
         {type === 'plain' && <div className={styles.indicator} />}
         {icon && <span className={styles.icon}>{icon}</span>}
         {title && (typeof title === 'string' ? <DynamicT forKey={title} /> : title)}
+        {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
         {isDisabled && disabledLabel && (
           <div className={classNames(styles.indicator, styles.disabledLabel)}>
             <DynamicT forKey={disabledLabel} />
