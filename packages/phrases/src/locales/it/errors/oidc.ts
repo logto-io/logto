@@ -15,6 +15,10 @@ const oidc = {
   unsupported_response_mode: 'Modalità di risposta `response_mode` richiesta non supportata.',
   unsupported_response_type: 'Tipo di risposta `response_type` richiesto non supportato.',
   provider_error: 'Errore interno OIDC: {{message}}.',
+  /** UNTRANSLATED */
+  server_error: 'An unknown OIDC error occurred. Please try again later.',
+  /** UNTRANSLATED */
+  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
 };
 
 export default Object.freeze(oidc);

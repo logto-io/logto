@@ -2,7 +2,9 @@
  * Setup environment variables for unit test
  */
 
+import en from '@logto/phrases/lib/locales/en/index.js';
 import { createMockUtils } from '@logto/shared/esm';
+import { init } from 'i18next';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmDefault } = createMockUtils(jest);
@@ -32,3 +34,10 @@ mockEsmDefault('#src/env-set/oidc.js', () => () => ({
 // Logger is not considered in all test cases
 // eslint-disable-next-line unicorn/consistent-function-scoping
 mockEsm('koa-logger', () => ({ default: () => (_, next) => next() }));
+
+// Init i18next and load en locale only
+await init({
+  fallbackLng: 'en',
+  supportedLngs: ['en'],
+  resources: { en },
+});

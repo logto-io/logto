@@ -17,7 +17,7 @@ import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handle
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
-import koaOIDCErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
+import koaOidcErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
 import koaSecurityHeaders from '#src/middleware/koa-security-headers.js';
 import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
@@ -72,7 +72,7 @@ export default class Tenant implements TenantContext {
 
     app.use(koaLogger());
     app.use(koaErrorHandler());
-    app.use(koaOIDCErrorHandler());
+    app.use(koaOidcErrorHandler());
     app.use(koaSlonikErrorHandler());
     app.use(koaConnectorErrorHandler());
     app.use(koaI18next());

@@ -137,7 +137,9 @@ export const parseLocaleFiles = (filePath: string): ParsedTuple => {
               // eslint-disable-next-line @silverhand/fp/no-mutation
               nestedObject[key] = [value, false];
             } else {
-              consoleLog.fatal('Unsupported comment:', comment);
+              // eslint-disable-next-line @silverhand/fp/no-mutation
+              nestedObject[key] = [value, true];
+              consoleLog.warn('Unsupported comment:', comment);
             }
           } else {
             // eslint-disable-next-line @silverhand/fp/no-mutation

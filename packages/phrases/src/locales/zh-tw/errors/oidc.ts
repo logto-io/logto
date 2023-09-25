@@ -14,6 +14,10 @@ const oidc = {
   unsupported_response_mode: '不支援的 response_mode',
   unsupported_response_type: '不支援的 response_type',
   provider_error: 'OIDC 內部錯誤: {{message}}',
+  /** UNTRANSLATED */
+  server_error: 'An unknown OIDC error occurred. Please try again later.',
+  /** UNTRANSLATED */
+  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
 };
 
 export default Object.freeze(oidc);

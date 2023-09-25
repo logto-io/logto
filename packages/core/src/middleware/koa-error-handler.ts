@@ -16,7 +16,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
     try {
       await next();
     } catch (error: unknown) {
-      if (!EnvSet.values.isProduction) {
+      if (!EnvSet.values.isUnitTest && !EnvSet.values.isProduction) {
         consoleLog.error(error);
       }
 
