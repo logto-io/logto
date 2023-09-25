@@ -161,7 +161,7 @@ export const getInputValue = async (input: ElementHandle<HTMLInputElement>) => {
  *
  * @param passwordPolicy The password policy to partially update the existing one.
  */
-export const setupStandardExperience = async (passwordPolicy?: PartialPasswordPolicy) => {
+export const setupUsernameAndEmailExperience = async (passwordPolicy?: PartialPasswordPolicy) => {
   await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   await setEmailConnector();
   await updateSignInExperience({

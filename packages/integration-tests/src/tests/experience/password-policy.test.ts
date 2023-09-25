@@ -6,7 +6,7 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { setupStandardExperience } from '#src/ui-helpers/index.js';
+import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
 import { waitFor } from '#src/utils.js';
 
 describe('password policy', () => {
@@ -24,7 +24,7 @@ describe('password policy', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
-    await setupStandardExperience({
+    await setupUsernameAndEmailExperience({
       length: { min: 8, max: 32 },
       characterTypes: { min: 3 },
       rejects: {

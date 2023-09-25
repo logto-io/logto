@@ -1,10 +1,10 @@
 import { demoAppUrl } from '#src/constants.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { setupStandardExperience } from '#src/ui-helpers/index.js';
+import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
 
 describe('basic sentinel', () => {
   beforeAll(async () => {
-    await setupStandardExperience();
+    await setupUsernameAndEmailExperience();
   });
 
   it('should block a non-existing identifier after 5 failed attempts in 1 hour', async () => {
