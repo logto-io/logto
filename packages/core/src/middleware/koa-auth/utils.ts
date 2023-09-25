@@ -41,7 +41,7 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
   `);
   const privateKeys = logtoOidcConfigGuard['oidc.privateKeys']
     .parse(value)
-    .map((key) => crypto.createPrivateKey(key));
+    .map(({ value }) => crypto.createPrivateKey(value));
   const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
 
   return {

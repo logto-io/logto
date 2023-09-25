@@ -7,16 +7,24 @@ export enum LogtoOidcConfigKey {
   CookieKeys = 'oidc.cookieKeys',
 }
 
+const oidcPrivateKeyGuard = z.object({
+  id: z.string(),
+  value: z.string(),
+  createdAt: z.number(),
+});
+
+export type PrivateKey = z.infer<typeof oidcPrivateKeyGuard>;
+
 export type LogtoOidcConfigType = {
-  [LogtoOidcConfigKey.PrivateKeys]: string[];
-  [LogtoOidcConfigKey.CookieKeys]: string[];
+  [LogtoOidcConfigKey.PrivateKeys]: PrivateKey[];
+  [LogtoOidcConfigKey.CookieKeys]: PrivateKey[];
 };
 
 export const logtoOidcConfigGuard: Readonly<{
   [key in LogtoOidcConfigKey]: ZodType<LogtoOidcConfigType[key]>;
 }> = Object.freeze({
-  [LogtoOidcConfigKey.PrivateKeys]: z.string().array(),
-  [LogtoOidcConfigKey.CookieKeys]: z.string().array(),
+  [LogtoOidcConfigKey.PrivateKeys]: oidcPrivateKeyGuard.array(),
+  [LogtoOidcConfigKey.CookieKeys]: oidcPrivateKeyGuard.array(),
 });
 
 /* --- Logto tenant configs --- */

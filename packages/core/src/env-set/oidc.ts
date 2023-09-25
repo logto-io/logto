@@ -8,9 +8,9 @@ import { createLocalJWKSet } from 'jose';
 import { exportJWK } from '#src/utils/jwks.js';
 
 const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
-  const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys];
-  const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys].map((key) =>
-    crypto.createPrivateKey(key)
+  const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys].map(({ value }) => value);
+  const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys].map(({ value }) =>
+    crypto.createPrivateKey(value)
   );
   const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
   const privateJwks = await Promise.all(privateKeys.map(async (key) => exportJWK(key)));

@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
 import { LogtoOidcConfigKey, logtoConfigGuards } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { getEnvAsStringArray } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -9,7 +10,11 @@ import { z } from 'zod';
 
 import { getRowsByKeys, updateValueByKey } from '../../../queries/logto-config.js';
 import { consoleLog } from '../../../utils.js';
-import { generateOidcCookieKey, generateOidcPrivateKey } from '../utils.js';
+import {
+  buildOidcKeyFromRawString,
+  generateOidcCookieKey,
+  generateOidcPrivateKey,
+} from '../utils.js';
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 
@@ -88,13 +93,11 @@ export const oidcConfigReaders: {
 
     if (privateKeys.length > 0) {
       return {
-        value: privateKeys.map((key) => {
-          if (isBase64FormatPrivateKey(key)) {
-            return Buffer.from(key, 'base64').toString('utf8');
-          }
-
-          return key;
-        }),
+        value: privateKeys.map((key) =>
+          buildOidcKeyFromRawString(
+            isBase64FormatPrivateKey(key) ? Buffer.from(key, 'base64').toString('utf8') : key
+          )
+        ),
         fromEnv: true,
       };
     }
@@ -103,8 +106,11 @@ export const oidcConfigReaders: {
     const privateKeyPaths = getEnvAsStringArray('OIDC_PRIVATE_KEY_PATHS');
 
     if (privateKeyPaths.length > 0) {
+      const privateKeys = await Promise.all(
+        privateKeyPaths.map(async (path) => readFile(path, 'utf8'))
+      );
       return {
-        value: await Promise.all(privateKeyPaths.map(async (path) => readFile(path, 'utf8'))),
+        value: privateKeys.map((key) => buildOidcKeyFromRawString(key)),
         fromEnv: true,
       };
     }
@@ -116,7 +122,11 @@ export const oidcConfigReaders: {
   },
   [LogtoOidcConfigKey.CookieKeys]: async () => {
     const envKey = 'OIDC_COOKIE_KEYS';
-    const keys = getEnvAsStringArray(envKey);
+    const keys = getEnvAsStringArray(envKey).map((key) => ({
+      id: generateStandardId(),
+      value: key,
+      createdAt: Math.floor(Date.now() / 1000),
+    }));
 
     return { value: keys.length > 0 ? keys : [generateOidcCookieKey()], fromEnv: keys.length > 0 };
   },

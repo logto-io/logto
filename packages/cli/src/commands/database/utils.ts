@@ -1,14 +1,17 @@
 import { generateKeyPair } from 'node:crypto';
 import { promisify } from 'node:util';
 
-import { generateStandardSecret } from '@logto/shared';
+import { type PrivateKey } from '@logto/schemas';
+import { generateStandardId, generateStandardSecret } from '@logto/shared';
 
 export enum PrivateKeyType {
   RSA = 'rsa',
   EC = 'ec',
 }
 
-export const generateOidcPrivateKey = async (type: PrivateKeyType = PrivateKeyType.EC) => {
+export const generateOidcPrivateKey = async (
+  type: PrivateKeyType = PrivateKeyType.EC
+): Promise<PrivateKey> => {
   if (type === PrivateKeyType.RSA) {
     const { privateKey } = await promisify(generateKeyPair)('rsa', {
       modulusLength: 4096,
@@ -22,7 +25,7 @@ export const generateOidcPrivateKey = async (type: PrivateKeyType = PrivateKeyTy
       },
     });
 
-    return privateKey;
+    return buildOidcKeyFromRawString(privateKey);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -40,10 +43,16 @@ export const generateOidcPrivateKey = async (type: PrivateKeyType = PrivateKeyTy
       },
     });
 
-    return privateKey;
+    return buildOidcKeyFromRawString(privateKey);
   }
 
   throw new Error(`Unsupported private key ${String(type)}`);
 };
 
-export const generateOidcCookieKey = () => generateStandardSecret();
+export const generateOidcCookieKey = () => buildOidcKeyFromRawString(generateStandardSecret());
+
+export const buildOidcKeyFromRawString = (raw: string) => ({
+  id: generateStandardId(),
+  value: raw,
+  createdAt: Math.floor(Date.now() / 1000),
+});
