@@ -1,100 +1,20 @@
-import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
-
 import type { AlterationScript } from '../lib/types/alteration.js';
 
-const adminConsoleConfigKey = 'adminConsole';
-
-type OldAdminConsoleData = {
-  livePreviewChecked: boolean;
-  applicationCreated: boolean;
-  signInExperienceCustomized: boolean;
-  passwordlessConfigured: boolean;
-  furtherReadingsChecked: boolean;
-  roleCreated: boolean;
-  communityChecked: boolean;
-  m2mApplicationCreated: boolean;
-} & Record<string, unknown>;
-
-type OldLogtoAdminConsoleConfig = {
-  tenantId: string;
-  value: OldAdminConsoleData;
-};
-
-type NewAdminConsoleData = {
-  signInExperienceCustomized: boolean;
-} & Record<string, unknown>;
-
-type NewLogtoAdminConsoleConfig = {
-  tenantId: string;
-  value: NewAdminConsoleData;
-};
-
-const alterAdminConsoleData = async (
-  logtoConfig: OldLogtoAdminConsoleConfig,
-  pool: DatabaseTransactionConnection
-) => {
-  const { tenantId, value: oldAdminConsoleConfig } = logtoConfig;
-
-  const {
-    livePreviewChecked,
-    applicationCreated,
-    passwordlessConfigured,
-    communityChecked,
-    furtherReadingsChecked,
-    roleCreated,
-    m2mApplicationCreated,
-    ...others
-  } = oldAdminConsoleConfig;
-
-  const newAdminConsoleData: NewAdminConsoleData = {
-    ...others,
-  };
-
-  await pool.query(
-    sql`update logto_configs set value = ${JSON.stringify(
-      newAdminConsoleData
-    )} where tenant_id = ${tenantId} and key = ${adminConsoleConfigKey}`
-  );
-};
-
-const rollbackAdminConsoleData = async (
-  logtoConfig: NewLogtoAdminConsoleConfig,
-  pool: DatabaseTransactionConnection
-) => {
-  const { tenantId, value: newAdminConsoleConfig } = logtoConfig;
-
-  const oldAdminConsoleData: OldAdminConsoleData = {
-    ...newAdminConsoleConfig,
-    livePreviewChecked: false,
-    applicationCreated: false,
-    passwordlessConfigured: false,
-    communityChecked: false,
-    furtherReadingsChecked: false,
-    roleCreated: false,
-    m2mApplicationCreated: false,
-  };
-
-  await pool.query(
-    sql`update logto_configs set value = ${JSON.stringify(
-      oldAdminConsoleData
-    )} where tenant_id = ${tenantId} and key = ${adminConsoleConfigKey}`
-  );
-};
-
+/**
+ * Note:
+ * In order to maintain compatibility with the database when staging,
+ * data associated with the deprecated challenge flag should not be deleted in version 1.9.0.
+ * However, the [PR](https://github.com/logto-io/logto/pull/4468) removed the relevant data by mistake.
+ *
+ * To prevent compatibility issues for new users who are upgrading, we removed the related alteration logic below.
+ *
+ * Also, since the database records the state of the database based on the timestamp in the script name, this script cannot be deleted.
+ */
 const alteration: AlterationScript = {
-  up: async (pool) => {
-    const rows = await pool.many<OldLogtoAdminConsoleConfig>(
-      sql`select * from logto_configs where key = ${adminConsoleConfigKey}`
-    );
-    await Promise.all(rows.map(async (row) => alterAdminConsoleData(row, pool)));
-  },
-  down: async (pool) => {
-    const rows = await pool.many<NewLogtoAdminConsoleConfig>(
-      sql`select * from logto_configs where key = ${adminConsoleConfigKey}`
-    );
-    await Promise.all(rows.map(async (row) => rollbackAdminConsoleData(row, pool)));
-  },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  up: async () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  down: async () => {},
 };
 
 export default alteration;
