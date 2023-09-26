@@ -1,4 +1,9 @@
-import { InteractionEvent, adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  adminConsoleApplicationId,
+  adminTenantId,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -31,14 +36,19 @@ const { encryptUserPassword } = mockEsm('#src/libraries/user.js', () => ({
   }),
 }));
 
+mockEsm('@logto/shared', () => ({
+  generateStandardId: jest.fn().mockReturnValue('uid'),
+}));
+
 mockEsm('#src/utils/tenant.js', () => ({
   getTenantId: () => adminTenantId,
 }));
 
 const userQueries = {
-  findUserById: jest
-    .fn()
-    .mockResolvedValue({ identities: { google: { userId: 'googleId', details: {} } } }),
+  findUserById: jest.fn().mockResolvedValue({
+    identities: { google: { userId: 'googleId', details: {} } },
+    mfaVerifications: [],
+  }),
   updateUserById: jest.fn(),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
 };
@@ -165,6 +175,35 @@ describe('submit action', () => {
     );
   });
 
+  it('register with bindMfa', async () => {
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+      bindMfa: { type: MfaFactor.TOTP, secret: 'secret' },
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+    expect(generateUserId).toBeCalled();
+    expect(hasActiveUsers).not.toBeCalled();
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        mfaVerifications: [
+          {
+            type: MfaFactor.TOTP,
+            key: 'secret',
+            id: 'uid',
+            createdAt: new Date(now).toISOString(),
+          },
+        ],
+        ...upsertProfile,
+      },
+      ['user']
+    );
+  });
+
   it('admin user register', async () => {
     hasActiveUsers.mockResolvedValueOnce(false);
     const adminConsoleCtx = {
@@ -227,6 +266,41 @@ describe('submit action', () => {
         logto: { userId: userInfo.id, details: userInfo },
         google: { userId: 'googleId', details: {} },
       },
+      lastSignInAt: now,
+    });
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'foo' },
+    });
+  });
+
+  it('sign-in with bindMfa', async () => {
+    getLogtoConnectorById.mockResolvedValueOnce({
+      metadata: { target: 'logto' },
+      dbEntry: { syncProfile: false },
+    });
+    const interaction: VerifiedSignInInteractionResult = {
+      event: InteractionEvent.SignIn,
+      accountId: 'foo',
+      identifiers,
+      bindMfa: {
+        type: MfaFactor.TOTP,
+        secret: 'secret',
+      },
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+    expect(updateUserById).toBeCalledWith('foo', {
+      mfaVerifications: [
+        {
+          type: MfaFactor.TOTP,
+          key: 'secret',
+          id: 'uid',
+          createdAt: new Date(now).toISOString(),
+        },
+      ],
       lastSignInAt: now,
     });
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {

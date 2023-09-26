@@ -1,8 +1,8 @@
-import type {
-  SocialConnectorPayload,
-  User,
-  IdentifierPayload,
-  VerifyVerificationCodePayload,
+import {
+  type SocialConnectorPayload,
+  type User,
+  type IdentifierPayload,
+  type VerifyVerificationCodePayload,
 } from '@logto/schemas';
 
 import type { PasswordIdentifierPayload } from '../types/index.js';

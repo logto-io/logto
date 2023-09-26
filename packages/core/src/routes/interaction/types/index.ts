@@ -7,6 +7,7 @@ import type {
   SocialEmailPayload,
   SocialPhonePayload,
   Profile,
+  BindMfa,
 } from '@logto/schemas';
 import type { z } from 'zod';
 
@@ -76,6 +77,7 @@ export type VerifiedRegisterInteractionResult = {
   event: InteractionEvent.Register;
   profile?: Profile;
   identifiers?: Identifier[];
+  bindMfa?: BindMfa;
 };
 
 export type VerifiedSignInInteractionResult = {
@@ -83,6 +85,7 @@ export type VerifiedSignInInteractionResult = {
   accountId: string;
   identifiers: Identifier[];
   profile?: Profile;
+  bindMfa?: BindMfa;
 };
 
 export type VerifiedForgotPasswordInteractionResult = {

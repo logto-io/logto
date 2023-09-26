@@ -1,11 +1,5 @@
 import type { LogtoErrorCode } from '@logto/phrases';
-import {
-  InteractionEvent,
-  eventGuard,
-  identifierPayloadGuard,
-  profileGuard,
-  requestVerificationCodePayloadGuard,
-} from '@logto/schemas';
+import { InteractionEvent, eventGuard, identifierPayloadGuard, profileGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -18,13 +12,14 @@ import assertThat from '#src/utils/assert-that.js';
 import type { AnonymousRouter, RouterInitArgs } from '../types.js';
 
 import submitInteraction from './actions/submit-interaction.js';
+import additionalRoutes from './additional.js';
 import consentRoutes from './consent.js';
-import { interactionPrefix, verificationPath } from './const.js';
+import { interactionPrefix } from './const.js';
+import mfaRoutes from './mfa.js';
 import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
-import { socialAuthorizationUrlPayloadGuard } from './types/guard.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
@@ -36,14 +31,14 @@ import {
   verifyIdentifierSettings,
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
-import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import { validatePassword } from './utils/validate-password.js';
-import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
 import {
   verifyIdentifierPayload,
   verifyIdentifier,
   verifyProfile,
   validateMandatoryUserProfile,
+  validateMandatoryBindMfa,
+  verifyBindMfa,
 } from './verifications/index.js';
 
 export type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
@@ -340,9 +335,22 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       const profileVerifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
 
-      const interaction = isForgotPasswordInteractionResult(profileVerifiedInteraction)
+      // TODO @simeng-li: make all these verification steps in a middleware.
+      const mandatoryProfileVerifiedInteraction = isForgotPasswordInteractionResult(
+        profileVerifiedInteraction
+      )
         ? profileVerifiedInteraction
         : await validateMandatoryUserProfile(queries.users, ctx, profileVerifiedInteraction);
+
+      const bindMfaVerifiedInteraction = isForgotPasswordInteractionResult(
+        mandatoryProfileVerifiedInteraction
+      )
+        ? mandatoryProfileVerifiedInteraction
+        : await verifyBindMfa(tenant, mandatoryProfileVerifiedInteraction);
+
+      const interaction = isForgotPasswordInteractionResult(bindMfaVerifiedInteraction)
+        ? bindMfaVerifiedInteraction
+        : await validateMandatoryBindMfa(tenant, ctx, bindMfaVerifiedInteraction);
 
       await submitInteraction(interaction, ctx, tenant, log);
 
@@ -350,58 +358,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // Create social authorization url interaction verification
-  router.post(
-    `${interactionPrefix}/${verificationPath}/social-authorization-uri`,
-    koaGuard({
-      body: socialAuthorizationUrlPayloadGuard,
-      status: [200, 400, 404],
-      response: z.object({
-        redirectTo: z.string(),
-      }),
-    }),
-    async (ctx, next) => {
-      // Check interaction exists
-      const { event } = getInteractionStorage(ctx.interactionDetails.result);
-      const log = ctx.createLog(`Interaction.${event}.Identifier.Social.Create`);
-
-      const { body: payload } = ctx.guard;
-
-      log.append(payload);
-
-      const redirectTo = await createSocialAuthorizationUrl(ctx, tenant, payload);
-
-      ctx.body = { redirectTo };
-
-      return next();
-    }
-  );
-
-  // Create passwordless interaction verification-code
-  router.post(
-    `${interactionPrefix}/${verificationPath}/verification-code`,
-    koaGuard({
-      body: requestVerificationCodePayloadGuard,
-      status: [204, 400, 404],
-    }),
-    async (ctx, next) => {
-      const { interactionDetails, guard, createLog } = ctx;
-      // Check interaction exists
-      const { event } = getInteractionStorage(interactionDetails.result);
-
-      await sendVerificationCodeToIdentifier(
-        // eslint-disable-next-line max-lines -- TODO: refactor @simeng
-        { event, ...guard.body },
-        interactionDetails.jti,
-        createLog,
-        libraries.passcodes
-      );
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
   consentRoutes(router, tenant);
+  additionalRoutes(router, tenant);
+  mfaRoutes(router, tenant);
 }

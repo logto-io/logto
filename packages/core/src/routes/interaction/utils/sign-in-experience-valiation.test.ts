@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignInIdentifier, SignInMode, InteractionEvent } from '@logto/schemas';
+import { SignInIdentifier, SignInMode, InteractionEvent, MfaFactor } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
@@ -7,6 +7,7 @@ import {
   verifySignInModeSettings,
   verifyIdentifierSettings,
   verifyProfileSettings,
+  verifyMfaSettings,
 } from './sign-in-experience-validation.js';
 
 describe('verifySignInModeSettings', () => {
@@ -372,6 +373,30 @@ describe('profile validation', () => {
           },
         }
       );
+    }).toThrow();
+  });
+});
+
+describe('MFA', () => {
+  it('MFA sign-in-experience settings verification', () => {
+    expect(() => {
+      verifyMfaSettings(MfaFactor.TOTP, {
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.TOTP],
+        },
+      });
+    }).not.toThrow();
+
+    expect(() => {
+      verifyMfaSettings(MfaFactor.TOTP, {
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.WebAuthn],
+        },
+      });
     }).toThrow();
   });
 });
