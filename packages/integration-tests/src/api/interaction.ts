@@ -3,6 +3,7 @@ import type {
   IdentifierPayload,
   Profile,
   RequestVerificationCodePayload,
+  BindMfaPayload,
 } from '@logto/schemas';
 import type { Got } from 'got';
 
@@ -67,6 +68,15 @@ export const putInteractionProfile = async (cookie: string, payload: Profile) =>
     })
     .json();
 
+export const putInteractionBindMfa = async (cookie: string, payload: BindMfaPayload) =>
+  api
+    .put('interaction/bind-mfa', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json();
+
 export const deleteInteractionProfile = async (cookie: string) =>
   api
     .delete('interaction/profile', {
@@ -105,6 +115,15 @@ export const createSocialAuthorizationUri = async (
     json: payload,
     followRedirect: false,
   });
+
+export const initTotp = async (cookie: string) =>
+  api
+    .post('interaction/verification/totp', {
+      headers: { cookie },
+      json: {},
+      followRedirect: false,
+    })
+    .json<{ secret: string }>();
 
 export const consent = async (api: Got, cookie: string) =>
   api

@@ -1,5 +1,5 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignInMode, SignInIdentifier } from '@logto/schemas';
+import { SignInMode, SignInIdentifier, MfaFactor, MfaPolicy } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/index.js';
 
@@ -60,6 +60,7 @@ export const enableAllPasswordSignInMethods = async (
     signIn: {
       methods: defaultPasswordSignInMethods,
     },
+    mfa: { factors: [], policy: MfaPolicy.UserControlled },
   });
 
 export const enableAllVerificationCodeSignInMethods = async (
@@ -70,5 +71,14 @@ export const enableAllVerificationCodeSignInMethods = async (
     signUp,
     signIn: {
       methods: defaultVerificationCodeSignInMethods,
+    },
+    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+  });
+
+export const enableMandatoryMfaWithTotp = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.Mandatory,
     },
   });

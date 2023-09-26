@@ -53,5 +53,8 @@
   "eslintConfig": {
     "extends": "@silverhand"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "otplib": "^12.0.1"
+  }
 }
