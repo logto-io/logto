@@ -40,11 +40,13 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     useSearchParametersWatcher({
       page: 1,
       event: '',
-      ...conditional(applicationId && { applicationId: '' }),
+      // If `applicationId` not specified when init this component, then search parameter of `applicationId` can be accepted.
+      ...conditional(!applicationId && { applicationId: '' }),
     });
 
   // TODO: LOG-7135, revisit this fallback logic and see whether this should be done outside of this component.
-  const searchApplicationId = applicationId ?? applicationIdFromSearch;
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const searchApplicationId = applicationId || applicationIdFromSearch;
   const { data: specifiedApplication } = useSWR<ApplicationResponse>(
     applicationId && `api/applications/${applicationId}`
   );
@@ -127,9 +129,12 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
           {!applicationId && (
             <div className={styles.applicationSelector}>
               <ApplicationSelector
-                value={applicationId}
-                onChange={(applicationId) => {
-                  updateSearchParameters({ applicationId, page: undefined });
+                value={applicationIdFromSearch}
+                onChange={(applicationIdFromSearch) => {
+                  updateSearchParameters({
+                    applicationId: applicationIdFromSearch,
+                    page: undefined,
+                  });
                 }}
               />
             </div>
