@@ -77,7 +77,12 @@ describe('validateMandatoryBindMfa', () => {
     it('bindMfa missing but required should throw', async () => {
       await expect(
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, interaction)
-      ).rejects.toMatchError(new RequestError({ code: 'user.missing_mfa', status: 422 }));
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_mfa', status: 422 },
+          { missingFactors: [MfaFactor.TOTP] }
+        )
+      );
     });
 
     it('bindMfa exists should pass', async () => {
@@ -104,7 +109,12 @@ describe('validateMandatoryBindMfa', () => {
       findUserById.mockResolvedValueOnce(mockUser);
       await expect(
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, signInInteraction)
-      ).rejects.toMatchError(new RequestError({ code: 'user.missing_mfa', status: 422 }));
+      ).rejects.toMatchError(
+        new RequestError(
+          { code: 'user.missing_mfa', status: 422 },
+          { missingFactors: [MfaFactor.TOTP] }
+        )
+      );
     });
 
     it('user mfaVerifications and bindMfa missing and not required should pass', async () => {

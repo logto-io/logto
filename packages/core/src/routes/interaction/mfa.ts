@@ -1,12 +1,6 @@
-import {
-  InteractionEvent,
-  MfaFactor,
-  bindMfaPayloadGuard,
-  verifyMfaPayloadGuard,
-} from '@logto/schemas';
+import { InteractionEvent, bindMfaPayloadGuard, verifyMfaPayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -100,45 +94,6 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
 
       ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  // Get user's available MFA
-  router.get(
-    `${interactionPrefix}/mfa-verification-types`,
-    koaGuard({
-      status: [200, 400, 404],
-      response: z.object({
-        mfaVerificationTypes: z.array(z.nativeEnum(MfaFactor)),
-      }),
-    }),
-    koaInteractionSie(queries),
-    async (ctx, next) => {
-      const { interactionDetails } = ctx;
-      const interactionStorage = getInteractionStorage(interactionDetails.result);
-
-      assertThat(
-        interactionStorage.event === InteractionEvent.SignIn,
-        new RequestError({
-          code: 'session.mfa.mfa_sign_in_only',
-        })
-      );
-
-      const { accountId } = await verifyIdentifier(ctx, tenant, interactionStorage);
-      assertThat(
-        accountId,
-        new RequestError({
-          code: 'session.mfa.mfa_sign_in_only',
-        })
-      );
-
-      const { mfaVerifications } = await queries.users.findUserById(accountId);
-
-      ctx.body = {
-        mfaVerificationTypes: mfaVerifications.map(({ type }) => type),
-      };
 
       return next();
     }

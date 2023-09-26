@@ -185,47 +185,4 @@ describe('interaction routes (MFA verification)', () => {
       );
     });
   });
-
-  describe('GET /interaction/mfa-verification-types', () => {
-    const path = `${interactionPrefix}/mfa-verification-types`;
-
-    it('should throw for register event', async () => {
-      getInteractionStorage.mockReturnValue({
-        event: InteractionEvent.Register,
-      });
-
-      const response = await sessionRequest.get(path);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should throw when account id is empty', async () => {
-      getInteractionStorage.mockReturnValue({
-        event: InteractionEvent.SignIn,
-      });
-      verifyIdentifier.mockResolvedValue({
-        event: InteractionEvent.SignIn,
-      });
-
-      const response = await sessionRequest.get(path);
-
-      expect(response.status).toEqual(400);
-    });
-
-    it('should return mfa verification types', async () => {
-      getInteractionStorage.mockReturnValue({
-        event: InteractionEvent.SignIn,
-      });
-      verifyIdentifier.mockResolvedValue({
-        event: InteractionEvent.SignIn,
-        accountId: 'accountId',
-      });
-
-      const response = await sessionRequest.get(path);
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual({
-        mfaVerificationTypes: [MfaFactor.TOTP],
-      });
-    });
-  });
 });
