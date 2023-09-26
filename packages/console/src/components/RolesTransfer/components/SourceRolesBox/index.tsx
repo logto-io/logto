@@ -95,6 +95,7 @@ function SourceRolesBox({ entityId, type, selectedRoles, onChange }: Props) {
               <SourceRoleItem
                 key={role.id}
                 role={role}
+                type={type}
                 isSelected={isSelected}
                 onSelect={() => {
                   onChange(
