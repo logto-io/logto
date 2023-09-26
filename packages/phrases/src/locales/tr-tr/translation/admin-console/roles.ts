@@ -6,6 +6,10 @@ const roles = {
   create: 'Rol Oluştur',
   role_name: 'Rol adı',
   role_type: 'Rol tipi',
+  /** UNTRANSLATED */
+  show_role_type_button_text: 'Show more options',
+  /** UNTRANSLATED */
+  hide_role_type_button_text: 'Hide more options',
   type_user: 'Kullanıcı rolü',
   type_machine_to_machine: 'Makine-makine uygulama rolü',
   role_description: 'Açıklama',

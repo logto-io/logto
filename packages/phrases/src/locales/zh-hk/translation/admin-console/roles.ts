@@ -6,6 +6,10 @@ const roles = {
   create: '創建角色',
   role_name: '角色名稱',
   role_type: '角色類型',
+  /** UNTRANSLATED */
+  show_role_type_button_text: 'Show more options',
+  /** UNTRANSLATED */
+  hide_role_type_button_text: 'Hide more options',
   type_user: '用戶角色',
   type_machine_to_machine: '機器到機器應用程式角色',
   role_description: '描述',

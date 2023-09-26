@@ -6,6 +6,10 @@ const roles = {
   create: 'Rolle erstellen',
   role_name: 'Rollenname',
   role_type: 'Rollenart',
+  /** UNTRANSLATED */
+  show_role_type_button_text: 'Show more options',
+  /** UNTRANSLATED */
+  hide_role_type_button_text: 'Hide more options',
   type_user: 'Benutzerrolle',
   type_machine_to_machine: 'Maschinen-zu-Maschinen-App-Rolle',
   role_description: 'Beschreibung',

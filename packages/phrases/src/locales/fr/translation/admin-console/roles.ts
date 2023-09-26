@@ -6,6 +6,10 @@ const roles = {
   create: 'Créer un rôle',
   role_name: 'Nom du rôle',
   role_type: 'Type de rôle',
+  /** UNTRANSLATED */
+  show_role_type_button_text: 'Show more options',
+  /** UNTRANSLATED */
+  hide_role_type_button_text: 'Hide more options',
   type_user: 'Rôle utilisateur',
   type_machine_to_machine: "Rôle d'application machine-à-machine",
   role_description: 'Description',
