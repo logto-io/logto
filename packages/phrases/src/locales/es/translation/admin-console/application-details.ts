@@ -5,7 +5,8 @@ const application_details = {
   settings: 'Configuraciones',
   settings_description:
     'Las aplicaciones se utilizan para identificar tus aplicaciones en Logto para OIDC, experiencia de inicio de sesión, registros de auditoría, etc.',
-  advanced_settings: 'Configuraciones Avanzadas',
+  /** UNTRANSLATED */
+  advanced_settings: 'Advanced settings',
   advanced_settings_description:
     'Las configuraciones avanzadas incluyen términos relacionados con OIDC. Puedes revisar el Endpoint del Token para obtener más información.',
   /** UNTRANSLATED */
@@ -68,7 +69,7 @@ const application_details = {
     assign_button: 'Assign Roles',
     /** UNTRANSLATED */
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this user.',
     /** UNTRANSLATED */

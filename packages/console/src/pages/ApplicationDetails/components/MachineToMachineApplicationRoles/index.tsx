@@ -1,5 +1,5 @@
 import type { Application, Role } from '@logto/schemas';
-import { RoleType } from '@logto/schemas';
+import { RoleType, Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,19 +7,22 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
+import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
+import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import ItemPreview from '@/components/ItemPreview';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import IconButton from '@/ds-components/IconButton';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
-import TextLink from '@/ds-components/TextLink';
 import { Tooltip } from '@/ds-components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTheme from '@/hooks/use-theme';
 import AssignToRoleModal from '@/pages/Roles/components/AssignToRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
@@ -33,6 +36,7 @@ type Props = {
 
 function MachineToMachineApplicationRoles({ application }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const theme = useTheme();
 
   const [{ page, keyword }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
@@ -86,9 +90,17 @@ function MachineToMachineApplicationRoles({ application }: Props) {
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
-              <TextLink className={styles.name} to={`/roles/${id}`}>
-                {name}
-              </TextLink>
+              <ItemPreview
+                title={name}
+                to={`/roles/${id}`}
+                icon={
+                  theme === Theme.Dark ? (
+                    <MachineToMachineRoleIconDark />
+                  ) : (
+                    <MachineToMachineRoleIcon />
+                  )
+                }
+              />
             ),
           },
           {

@@ -9,8 +9,8 @@ import { Outlet, useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import MachineToMachineIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineIcon from '@/assets/icons/m2m-role.svg';
+import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
+import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import More from '@/assets/icons/more.svg';
 import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
@@ -40,9 +40,9 @@ const getRoleIcon = (type: RoleType, isDarkMode: boolean) => {
   }
 
   return isDarkMode ? (
-    <MachineToMachineIconDark className={styles.icon} />
+    <MachineToMachineRoleIconDark className={styles.icon} />
   ) : (
-    <MachineToMachineIcon className={styles.icon} />
+    <MachineToMachineRoleIcon className={styles.icon} />
   );
 };
 

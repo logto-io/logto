@@ -1,8 +1,8 @@
-import { type RoleResponse, RoleType } from '@logto/schemas';
+import { type RoleResponse, RoleType, ApplicationType } from '@logto/schemas';
 import classNames from 'classnames';
 
-import MachineToMachineRole from '@/assets/icons/m2m-role.svg';
 import type { GetArrayElementType } from '@/cloud/types/router';
+import ApplicationIcon from '@/components/ApplicationIcon';
 import UserAvatar from '@/components/UserAvatar';
 import DynamicT from '@/ds-components/DynamicT';
 
@@ -27,14 +27,17 @@ function AssignedEntities({ entities, count, type }: Props) {
   return count ? (
     <div className={styles.entities}>
       <div className={styles.avatars}>
-        {type === RoleType.User
-          ? entities.map((entity) => (
-              <UserAvatar key={entity.id} className={styles.avatar} user={entity} size="small" />
-            ))
-          : Array.from({ length: entities.length }, () => (
-              // eslint-disable-next-line react/jsx-key
-              <MachineToMachineRole className={classNames(styles.applicationIcon, styles.avatar)} />
-            ))}
+        {entities.map((entity) =>
+          type === RoleType.User ? (
+            <UserAvatar key={entity.id} className={styles.avatar} user={entity} size="small" />
+          ) : (
+            <ApplicationIcon
+              key={entity.id}
+              type={ApplicationType.MachineToMachine}
+              className={classNames(styles.applicationIcon, styles.avatar)}
+            />
+          )
+        )}
       </div>
       <span className={styles.count}>
         <DynamicT

@@ -1,4 +1,4 @@
-import { type Application, RoleType, Theme } from '@logto/schemas';
+import { type Application, RoleType, ApplicationType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,9 +7,8 @@ import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import MachineToMachineIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
+import ApplicationIcon from '@/components/ApplicationIcon';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import { defaultPageSize } from '@/consts';
@@ -22,7 +21,6 @@ import { Tooltip } from '@/ds-components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
-import useTheme from '@/hooks/use-theme';
 import AssignRoleModal from '@/pages/Roles/components/AssignRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
@@ -36,7 +34,6 @@ function RoleApplications() {
   const {
     role: { id: roleId },
   } = useOutletContext<RoleDetailsOutletContext>();
-  const theme = useTheme();
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -97,7 +94,10 @@ function RoleApplications() {
                 <ItemPreview
                   title={application.name}
                   icon={
-                    theme === Theme.Light ? <MachineToMachineIcon /> : <MachineToMachineIconDark />
+                    <ApplicationIcon
+                      type={ApplicationType.MachineToMachine}
+                      className={styles.icon}
+                    />
                   }
                   to={`/applications/${application.id}`}
                 />

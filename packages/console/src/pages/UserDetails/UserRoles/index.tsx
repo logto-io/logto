@@ -1,5 +1,5 @@
 import type { Role } from '@logto/schemas';
-import { RoleType } from '@logto/schemas';
+import { RoleType, Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -9,18 +9,21 @@ import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import Plus from '@/assets/icons/plus.svg';
+import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
+import UserRoleIcon from '@/assets/icons/user-role.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import ItemPreview from '@/components/ItemPreview';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import IconButton from '@/ds-components/IconButton';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
-import TextLink from '@/ds-components/TextLink';
 import { Tooltip } from '@/ds-components/Tip';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useTheme from '@/hooks/use-theme';
 import AssignToRoleModal from '@/pages/Roles/components/AssignToRoleModal';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
@@ -31,6 +34,7 @@ import * as styles from './index.module.scss';
 const pageSize = defaultPageSize;
 
 function UserRoles() {
+  const theme = useTheme();
   const { user } = useOutletContext<UserDetailsOutletContext>();
   const { id: userId } = user;
 
@@ -88,9 +92,11 @@ function UserRoles() {
             dataIndex: 'name',
             colSpan: 6,
             render: ({ id, name }) => (
-              <TextLink className={styles.name} to={`/roles/${id}`}>
-                {name}
-              </TextLink>
+              <ItemPreview
+                title={name}
+                to={`/roles/${id}`}
+                icon={theme === Theme.Dark ? <UserRoleIconDark /> : <UserRoleIcon />}
+              />
             ),
           },
           {

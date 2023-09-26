@@ -238,13 +238,11 @@ function ApplicationDetails() {
             >
               {t('application_details.advanced_settings')}
             </TabNavItem>
-            {isDevFeaturesEnabled && (
+            {isDevFeaturesEnabled && data.type === ApplicationType.MachineToMachine && (
               <>
-                {data.type === ApplicationType.MachineToMachine && (
-                  <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
-                    {t('application_details.application_roles')}
-                  </TabNavItem>
-                )}
+                <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
+                  {t('application_details.application_roles')}
+                </TabNavItem>
                 <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Logs}`}>
                   {t('application_details.machine_logs')}
                 </TabNavItem>
@@ -264,13 +262,11 @@ function ApplicationDetails() {
               <TabWrapper isActive={tab === ApplicationDetailsTabs.AdvancedSettings}>
                 <AdvancedSettings app={data} oidcConfig={oidcConfig} />
               </TabWrapper>
-              {isDevFeaturesEnabled && (
+              {isDevFeaturesEnabled && data.type === ApplicationType.MachineToMachine && (
                 <>
-                  {data.type === ApplicationType.MachineToMachine && (
-                    <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
-                      <MachineToMachineApplicationRoles application={data} />
-                    </TabWrapper>
-                  )}
+                  <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
+                    <MachineToMachineApplicationRoles application={data} />
+                  </TabWrapper>
                   <TabWrapper isActive={tab === ApplicationDetailsTabs.Logs}>
                     <MachineLogs applicationId={data.id} />
                   </TabWrapper>

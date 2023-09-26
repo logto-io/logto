@@ -15,12 +15,13 @@
     }
   }
 
-  .name {
-    display: block;
-    @include _.text-ellipsis;
-  }
-
   .description {
     @include _.text-ellipsis;
   }
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  margin-right: _.unit(2);
 }

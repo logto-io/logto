@@ -5,7 +5,8 @@ const application_details = {
   settings: '設定',
   settings_description:
     'アプリケーションは、Logto for OIDC、サインインエクスペリエンス、監査ログなどでアプリケーションを識別するために使用されます。',
-  advanced_settings: '高度な設定',
+  /** UNTRANSLATED */
+  advanced_settings: 'Advanced settings',
   advanced_settings_description:
     '高度な設定にはOIDC関連用語が含まれます。詳細については、トークンエンドポイントを確認してください。',
   /** UNTRANSLATED */
@@ -68,7 +69,7 @@ const application_details = {
     assign_button: 'Assign Roles',
     /** UNTRANSLATED */
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this user.',
     /** UNTRANSLATED */
