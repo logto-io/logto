@@ -64,6 +64,12 @@ export const auditLogEventTitle: Record<string, Optional<string>> &
   'Interaction.SignIn.BindMfa.BackupCode.Submit': undefined,
   'Interaction.SignIn.BindMfa.WebAuthn.Create': undefined,
   'Interaction.SignIn.BindMfa.WebAuthn.Submit': undefined,
+  'Interaction.SignIn.Mfa.Totp.Create': undefined,
+  'Interaction.SignIn.Mfa.Totp.Submit': undefined,
+  'Interaction.SignIn.Mfa.BackupCode.Create': undefined,
+  'Interaction.SignIn.Mfa.BackupCode.Submit': undefined,
+  'Interaction.SignIn.Mfa.WebAuthn.Create': undefined,
+  'Interaction.SignIn.Mfa.WebAuthn.Submit': undefined,
   RevokeToken: undefined,
   Unknown: undefined,
 });

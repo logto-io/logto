@@ -11,6 +11,7 @@ export enum Field {
   Identifier = 'Identifier',
   Profile = 'Profile',
   BindMfa = 'BindMfa',
+  Mfa = 'Mfa',
 }
 
 /** Method to verify the identifier */
@@ -84,4 +85,7 @@ export type LogKey =
       Method,
       Method.VerificationCode | Method.Social
     >}.${Action.Submit}`
-  | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`;
+  | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`
+  | `${Prefix}.${InteractionEvent.SignIn}.${Field.Mfa}.${MfaFactor}.${
+      | Action.Submit
+      | Action.Create}`;

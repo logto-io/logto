@@ -4,6 +4,7 @@ import type {
   Profile,
   RequestVerificationCodePayload,
   BindMfaPayload,
+  VerifyMfaPayload,
 } from '@logto/schemas';
 import type { Got } from 'got';
 
@@ -71,6 +72,15 @@ export const putInteractionProfile = async (cookie: string, payload: Profile) =>
 export const putInteractionBindMfa = async (cookie: string, payload: BindMfaPayload) =>
   api
     .put('interaction/bind-mfa', {
+      headers: { cookie },
+      json: payload,
+      followRedirect: false,
+    })
+    .json();
+
+export const putInteractionMfa = async (cookie: string, payload: VerifyMfaPayload) =>
+  api
+    .put('interaction/mfa', {
       headers: { cookie },
       json: payload,
       followRedirect: false,

@@ -114,6 +114,14 @@ export const bindMfaPayloadGuard = bindTotpPayloadGuard;
 
 export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
 
+export const totpVerificationPayloadGuard = bindTotpPayloadGuard;
+
+export type TotpVerificationPayload = z.infer<typeof totpVerificationPayloadGuard>;
+
+export const verifyMfaPayloadGuard = totpVerificationPayloadGuard;
+
+export type VerifyMfaPayload = z.infer<typeof verifyMfaPayloadGuard>;
+
 export const pendingTotpGuard = z.object({
   type: z.literal(MfaFactor.TOTP),
   secret: z.string(),
@@ -135,3 +143,10 @@ export type BindTotp = z.infer<typeof bindTotpGuard>;
 export const bindMfaGuard = bindTotpGuard;
 
 export type BindMfa = z.infer<typeof bindMfaGuard>;
+
+export const verifyMfaResultGuard = z.object({
+  type: z.nativeEnum(MfaFactor),
+  id: z.string(),
+});
+
+export type VerifyMfaResult = z.infer<typeof verifyMfaResultGuard>;

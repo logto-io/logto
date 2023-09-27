@@ -22,6 +22,8 @@ const session = {
   interaction_not_found:
     'Interaction session not found. Please go back and start the session again.',
   mfa: {
+    require_mfa_verification: 'Mfa verification is required to sign in.',
+    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     invalid_totp_code: 'Invalid TOTP code.',
   },

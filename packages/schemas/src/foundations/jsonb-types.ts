@@ -191,26 +191,38 @@ export const baseMfaVerification = {
   createdAt: z.string(),
 };
 
+export const mfaVerificationTotp = z.object({
+  type: z.literal(MfaFactor.TOTP),
+  ...baseMfaVerification,
+  key: z.string(),
+});
+
+export type MfaVerificationTotp = z.infer<typeof mfaVerificationTotp>;
+
+export const mfaVerificationWebAuthn = z.object({
+  type: z.literal(MfaFactor.WebAuthn),
+  ...baseMfaVerification,
+  credentialId: z.string(),
+  publicKey: z.string(),
+  counter: z.number(),
+  agent: z.string(),
+});
+
+export type MfaVerificationWebAuthn = z.infer<typeof mfaVerificationWebAuthn>;
+
+export const mfaVerificationBackupCode = z.object({
+  type: z.literal(MfaFactor.BackupCode),
+  ...baseMfaVerification,
+  code: z.string(),
+  usedAt: z.string().optional(),
+});
+
+export type MfaVerificationBackupCode = z.infer<typeof mfaVerificationBackupCode>;
+
 export const mfaVerificationGuard = z.discriminatedUnion('type', [
-  z.object({
-    type: z.literal(MfaFactor.TOTP),
-    ...baseMfaVerification,
-    key: z.string(),
-  }),
-  z.object({
-    type: z.literal(MfaFactor.WebAuthn),
-    ...baseMfaVerification,
-    credentialId: z.string(),
-    publicKey: z.string(),
-    counter: z.number(),
-    agent: z.string(),
-  }),
-  z.object({
-    type: z.literal(MfaFactor.BackupCode),
-    ...baseMfaVerification,
-    code: z.string(),
-    usedAt: z.date().optional(),
-  }),
+  mfaVerificationTotp,
+  mfaVerificationWebAuthn,
+  mfaVerificationBackupCode,
 ]);
 
 export type MfaVerification = z.infer<typeof mfaVerificationGuard>;

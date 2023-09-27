@@ -10,6 +10,7 @@ import {
   type VerifiedSignInInteractionResult,
   type VerifiedInteractionResult,
   type VerifiedRegisterInteractionResult,
+  type AccountVerifiedInteractionResult,
 } from '../types/index.js';
 
 export const verifyBindMfa = async (
@@ -43,6 +44,32 @@ export const verifyBindMfa = async (
   return interaction;
 };
 
+export const verifyMfa = async (
+  tenant: TenantContext,
+  interaction: AccountVerifiedInteractionResult
+): Promise<AccountVerifiedInteractionResult> => {
+  const { accountId, verifiedMfa } = interaction;
+
+  const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+
+  if (mfaVerifications.length > 0) {
+    assertThat(
+      verifiedMfa,
+      new RequestError(
+        {
+          code: 'session.mfa.require_mfa_verification',
+          status: 403,
+        },
+        {
+          availableFactors: mfaVerifications.map(({ type }) => type),
+        }
+      )
+    );
+  }
+
+  return interaction;
+};
+
 export const validateMandatoryBindMfa = async (
   tenant: TenantContext,
   ctx: WithInteractionSieContext & WithInteractionDetailsContext,
@@ -57,28 +84,35 @@ export const validateMandatoryBindMfa = async (
     return interaction;
   }
 
-  const hasEnoughBindFactor = Boolean(bindMfa && factors.includes(bindMfa.type));
-
   if (event === InteractionEvent.Register) {
+    const missingFactors = factors.filter((factor) => factor !== bindMfa?.type);
     assertThat(
-      hasEnoughBindFactor,
-      new RequestError({
-        code: 'user.missing_mfa',
-        status: 422,
-      })
+      missingFactors.length === 0,
+      new RequestError(
+        {
+          code: 'user.missing_mfa',
+          status: 422,
+        },
+        { missingFactors }
+      )
     );
   }
 
   if (event === InteractionEvent.SignIn) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+    const missingFactors = factors.filter(
+      (factor) => factor !== bindMfa?.type && !mfaVerifications.some(({ type }) => type === factor)
+    );
     assertThat(
-      hasEnoughBindFactor ||
-        factors.some((factor) => mfaVerifications.some(({ type }) => type === factor)),
-      new RequestError({
-        code: 'user.missing_mfa',
-        status: 422,
-      })
+      missingFactors.length === 0,
+      new RequestError(
+        {
+          code: 'user.missing_mfa',
+          status: 422,
+        },
+        { missingFactors }
+      )
     );
   }
 

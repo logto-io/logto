@@ -55,6 +55,7 @@ const {
   validateMandatoryUserProfile,
   validateMandatoryBindMfa,
   verifyBindMfa,
+  verifyMfa,
 } = await mockEsmWithActual('./verifications/index.js', () => ({
   verifyIdentifierPayload: jest.fn(),
   verifyIdentifier: jest.fn().mockResolvedValue({}),
@@ -62,6 +63,7 @@ const {
   validateMandatoryUserProfile: jest.fn(),
   validateMandatoryBindMfa: jest.fn(),
   verifyBindMfa: jest.fn(),
+  verifyMfa: jest.fn(),
 }));
 
 const { storeInteractionResult, mergeIdentifiers, getInteractionStorage } = await mockEsmWithActual(
@@ -174,7 +176,10 @@ describe('interaction routes', () => {
       jest.clearAllMocks();
     });
 
-    it('should call identifier, profile and bindMfa verification properly', async () => {
+    it('should call identifier, verifyMfa, profile and bindMfa verification properly', async () => {
+      verifyIdentifier.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
       verifyProfile.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
       });
@@ -184,15 +189,38 @@ describe('interaction routes', () => {
       verifyBindMfa.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
       });
+      verifyMfa.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
 
       await sessionRequest.post(path).send();
       expect(getInteractionStorage).toBeCalled();
       expect(verifyIdentifier).toBeCalled();
+      expect(verifyMfa).toBeCalled();
       expect(verifyProfile).toBeCalled();
       expect(validateMandatoryUserProfile).toBeCalled();
       expect(verifyBindMfa).toBeCalled();
       expect(validateMandatoryBindMfa).toBeCalled();
       expect(submitInteraction).toBeCalled();
+    });
+
+    it('should not call verifyMfa for register request', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.Register,
+      });
+
+      verifyProfile.mockReturnValueOnce({
+        event: InteractionEvent.Register,
+      });
+      validateMandatoryUserProfile.mockReturnValueOnce({
+        event: InteractionEvent.Register,
+      });
+      verifyBindMfa.mockReturnValueOnce({
+        event: InteractionEvent.Register,
+      });
+
+      await sessionRequest.post(path).send();
+      expect(verifyMfa).not.toBeCalled();
     });
 
     it('should not call validateMandatoryUserProfile and validateMandatoryBindMfa for forgot password request', async () => {
