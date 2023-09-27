@@ -63,7 +63,7 @@ const application_details = {
     /** UNTRANSLATED */
     description_column: 'Description',
     /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
+    assign_button: 'Assign roles',
     /** UNTRANSLATED */
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',

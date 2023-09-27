@@ -63,7 +63,8 @@ const user_details = {
   roles: {
     name_column: '役割',
     description_column: '説明',
-    assign_button: '権限を付与',
+    /** UNTRANSLATED */
+    assign_button: 'Assign roles',
     delete_description:
       'この操作により、このユーザーからこの役割が削除されます。役割自体はまだ存在しますが、このユーザーに関連付けられなくなります。',
     deleted: '{{name}} はこのユーザーから正常に削除されました。',

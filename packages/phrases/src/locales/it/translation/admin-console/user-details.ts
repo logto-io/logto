@@ -67,7 +67,8 @@ const user_details = {
   roles: {
     name_column: 'Ruolo',
     description_column: 'Descrizione',
-    assign_button: 'Assegna ruoli',
+    /** UNTRANSLATED */
+    assign_button: 'Assign roles',
     delete_description:
       'Questa azione rimuoverà questo ruolo da questo utente. Il ruolo stesso esisterà ancora, ma non sarà più associato a questo utente.',
     deleted: '{{nome}} è stato rimosso con successo da questo utente.',

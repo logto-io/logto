@@ -60,7 +60,8 @@ const user_details = {
   roles: {
     name_column: '角色名称',
     description_column: '描述',
-    assign_button: '分配角色',
+    /** UNTRANSLATED */
+    assign_button: 'Assign roles',
     delete_description: '此操作将从此用户中删除此角色。角色本身仍将存在，但不再与此用户相关联。',
     deleted: '已成功将 {{name}} 从此用户中删除。',
     assign_title: '将角色分配给 {{name}}',
