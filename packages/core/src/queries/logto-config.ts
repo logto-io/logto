@@ -1,4 +1,10 @@
-import type { AdminConsoleData, LogtoConfig, LogtoConfigKey } from '@logto/schemas';
+import type {
+  AdminConsoleData,
+  LogtoConfig,
+  LogtoConfigKey,
+  LogtoOidcConfigKey,
+  OidcConfigKey,
+} from '@logto/schemas';
 import { LogtoTenantConfigKey, LogtoConfigs } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
@@ -33,5 +39,19 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
-  return { getAdminConsoleConfig, updateAdminConsoleConfig, getCloudConnectionData, getRowsByKeys };
+  const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) =>
+    pool.query(sql`
+      update ${table}
+      set ${fields.value} = ${sql.jsonb(value)}
+      where ${fields.key} = ${key}
+      returning *
+    `);
+
+  return {
+    getAdminConsoleConfig,
+    updateAdminConsoleConfig,
+    getCloudConnectionData,
+    getRowsByKeys,
+    updateOidcConfigsByKey,
+  };
 };

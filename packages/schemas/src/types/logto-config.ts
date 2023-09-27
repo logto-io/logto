@@ -7,24 +7,30 @@ export enum LogtoOidcConfigKey {
   CookieKeys = 'oidc.cookieKeys',
 }
 
-const oidcPrivateKeyGuard = z.object({
+/* --- Logto supported JWK signing key types --- */
+export enum SupportedSigningKeyAlgorithm {
+  RSA = 'RSA',
+  EC = 'EC',
+}
+
+export const oidcConfigKeyGuard = z.object({
   id: z.string(),
   value: z.string(),
   createdAt: z.number(),
 });
 
-export type PrivateKey = z.infer<typeof oidcPrivateKeyGuard>;
+export type OidcConfigKey = z.infer<typeof oidcConfigKeyGuard>;
 
 export type LogtoOidcConfigType = {
-  [LogtoOidcConfigKey.PrivateKeys]: PrivateKey[];
-  [LogtoOidcConfigKey.CookieKeys]: PrivateKey[];
+  [LogtoOidcConfigKey.PrivateKeys]: OidcConfigKey[];
+  [LogtoOidcConfigKey.CookieKeys]: OidcConfigKey[];
 };
 
 export const logtoOidcConfigGuard: Readonly<{
   [key in LogtoOidcConfigKey]: ZodType<LogtoOidcConfigType[key]>;
 }> = Object.freeze({
-  [LogtoOidcConfigKey.PrivateKeys]: oidcPrivateKeyGuard.array(),
-  [LogtoOidcConfigKey.CookieKeys]: oidcPrivateKeyGuard.array(),
+  [LogtoOidcConfigKey.PrivateKeys]: oidcConfigKeyGuard.array(),
+  [LogtoOidcConfigKey.CookieKeys]: oidcConfigKeyGuard.array(),
 });
 
 /* --- Logto tenant configs --- */
@@ -77,3 +83,9 @@ export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
   ...logtoTenantConfigGuard,
 });
+
+export const oidcConfigKeysResponseGuard = oidcConfigKeyGuard
+  .omit({ value: true })
+  .merge(z.object({ signingKeyAlgorithm: z.nativeEnum(SupportedSigningKeyAlgorithm).optional() }));
+
+export type OidcConfigKeysResponse = z.infer<typeof oidcConfigKeysResponseGuard>;

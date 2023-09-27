@@ -5,8 +5,7 @@
 
 import { createHash } from 'node:crypto';
 
-import type { JWK, KeyLike } from 'jose';
-import { exportJWK as joseExportJWK } from 'jose';
+import { type JWK, type KeyLike, exportJWK as joseExportJWK } from 'jose';
 
 const getCalculateKidComponents = (jwk: JWK) => {
   switch (jwk.kty) {

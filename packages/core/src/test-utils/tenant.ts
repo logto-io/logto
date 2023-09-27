@@ -69,14 +69,16 @@ export class MockTenant implements TenantContext {
   public libraries: Libraries;
   public sentinel: Sentinel;
 
+  // eslint-disable-next-line max-params
   constructor(
     public provider = createMockProvider(),
     queriesOverride?: Partial2<Queries>,
     connectorsOverride?: Partial<ConnectorLibrary>,
-    librariesOverride?: Partial2<Libraries>
+    librariesOverride?: Partial2<Libraries>,
+    logtoConfigsOverride?: Partial<LogtoConfigLibrary>
   ) {
     this.queries = new MockQueries(queriesOverride);
-    this.logtoConfigs = createLogtoConfigLibrary(this.queries);
+    this.logtoConfigs = { ...createLogtoConfigLibrary(this.queries), ...logtoConfigsOverride };
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
     this.connectors = {
       ...createConnectorLibrary(this.queries, this.cloudConnection),

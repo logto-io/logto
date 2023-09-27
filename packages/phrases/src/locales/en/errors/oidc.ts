@@ -18,6 +18,8 @@ const oidc = {
   provider_error: 'OIDC Internal Error: {{message}}.',
   server_error: 'An unknown OIDC error occurred. Please try again later.',
   provider_error_fallback: 'An OIDC error occurred: {{code}}.',
+  key_required: 'At least one key is required.',
+  key_not_found: 'Key with ID {{id}} is not found.',
 };
 
 export default Object.freeze(oidc);
