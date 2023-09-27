@@ -27,13 +27,15 @@ const TotpBinding = () => {
         <SecretSection {...totpBindingState} />
         <Divider />
         <VerificationSection />
-        <Divider />
         {totpBindingState.allowOtherFactors && (
-          <TextLink
-            to={`/${UserMfaFlow.MfaBinding}`}
-            text="mfa.link_another_mfa_factor"
-            icon={<SwitchIcon />}
-          />
+          <>
+            <Divider />
+            <TextLink
+              to={`/${UserMfaFlow.MfaBinding}`}
+              text="mfa.link_another_mfa_factor"
+              icon={<SwitchIcon />}
+            />
+          </>
         )}
       </div>
     </SecondaryPageLayout>
