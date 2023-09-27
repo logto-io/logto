@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Configuraciones',
   settings_description:
     'Las aplicaciones se utilizan para identificar tus aplicaciones en Logto para OIDC, experiencia de inicio de sesión, registros de auditoría, etc.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Configuraciones avanzadas',
   advanced_settings_description:
     'Las configuraciones avanzadas incluyen términos relacionados con OIDC. Puedes revisar el Endpoint del Token para obtener más información.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Roles de Aplicación',
+  machine_logs: 'Registros de Máquina',
   application_name: 'Nombre de Aplicación',
   application_name_placeholder: 'Mi App',
   description: 'Descripción',
@@ -21,7 +18,7 @@ const application_details = {
   authorization_endpoint: 'Endpoint de Autorización',
   authorization_endpoint_tip:
     'El endpoint para la autenticación y autorización. Se utiliza para OpenID Connect <a>Autenticación</a>.',
-  logto_endpoint: 'Logto endpoint',
+  logto_endpoint: 'Endpoint de Logto',
   application_id: 'ID de Aplicación',
   application_id_tip:
     'El identificador de aplicación único normalmente generado por Logto. También se conoce como “<a>client_id</a>” en OpenID Connect.',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: 'Se ha eliminado exitosamente la aplicación {{name}}',
   redirect_uri_required: 'Debes ingresar al menos un URI de Redireccionamiento',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
-    /** UNTRANSLATED */
+    name_column: 'Rol',
+    description_column: 'Descripción',
+    assign_button: 'Asignar roles',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'Esta acción eliminará este rol de esta aplicación de máquina a máquina. El rol seguirá existiendo, pero ya no estará asociado con esta aplicación de máquina a máquina.',
+    deleted: 'Se ha eliminado correctamente {{name}} de este usuario.',
+    assign_title: 'Asignar roles a {{name}}',
+    assign_subtitle: 'Autorizar {{name}} uno o más roles',
+    assign_role_field: 'Asignar roles',
+    role_search_placeholder: 'Buscar por nombre de rol',
+    added_text: '{{value, number}} añadido',
+    assigned_app_count: '{{value, number}} aplicaciones',
+    confirm_assign: 'Asignar roles',
+    role_assigned: 'Rol(es) asignado(s) correctamente',
+    search: 'Buscar por nombre de rol, descripción o ID',
+    empty: 'No hay roles disponibles',
   },
 };
 

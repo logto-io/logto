@@ -6,31 +6,21 @@ const roles = {
   create: 'Rol Oluştur',
   role_name: 'Rol adı',
   role_type: 'Rol tipi',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: 'Daha fazla seçenek göster',
+  hide_role_type_button_text: 'Daha fazla seçeneği gizle',
   type_user: 'Kullanıcı rolü',
   type_machine_to_machine: 'Makine-makine uygulama rolü',
   role_description: 'Açıklama',
   role_name_placeholder: 'Rol adınızı girin',
   role_description_placeholder: 'Rol açıklamanızı girin',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_roles: 'Roller',
+  col_type: 'Tür',
+  col_description: 'Açıklama',
+  col_assigned_entities: 'Atanan',
+  user_counts: '{{count}} kullanıcılar',
+  application_counts: '{{count}} uygulamalar',
+  user_count: '{{count}} kullanıcı',
+  application_count: '{{count}} uygulama',
   assign_permissions: 'İzinleri Ata',
   create_role_title: 'Rol Oluştur',
   create_role_description:

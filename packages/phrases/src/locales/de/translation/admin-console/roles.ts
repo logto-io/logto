@@ -6,31 +6,21 @@ const roles = {
   create: 'Rolle erstellen',
   role_name: 'Rollenname',
   role_type: 'Rollenart',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: 'Weitere Optionen anzeigen',
+  hide_role_type_button_text: 'Weitere Optionen ausblenden',
   type_user: 'Benutzerrolle',
   type_machine_to_machine: 'Maschinen-zu-Maschinen-App-Rolle',
   role_description: 'Beschreibung',
   role_name_placeholder: 'Geben Sie Ihren Rollennamen ein',
   role_description_placeholder: 'Geben Sie Ihre Rollenbeschreibung ein',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_roles: 'Rollen',
+  col_type: 'Art',
+  col_description: 'Beschreibung',
+  col_assigned_entities: 'Zugewiesen',
+  user_counts: '{{count}} Benutzer',
+  application_counts: '{{count}} Apps',
+  user_count: '{{count}} Benutzer',
+  application_count: '{{count}} App',
   assign_permissions: 'Berechtigungen zuweisen',
   create_role_title: 'Rolle erstellen',
   create_role_description:

@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Einstellungen',
   settings_description:
     'Anwendungen werden verwendet, um Ihre Anwendungen in Logto für OIDC, Anmeldeerfahrung, Audit-Logs usw. zu identifizieren.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Erweiterte Einstellungen',
   advanced_settings_description:
     'Erweiterte Einstellungen beinhalten OIDC-bezogene Begriffe. Sie können den Token-Endpunkt für weitere Informationen überprüfen.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Rollen',
+  machine_logs: 'Maschinenprotokolle',
   application_name: 'Anwendungsname',
   application_name_placeholder: 'Meine App',
   description: 'Beschreibung',
@@ -21,11 +18,11 @@ const application_details = {
   authorization_endpoint: 'Autorisierungs-Endpoint',
   authorization_endpoint_tip:
     'Der Endpoint, der für die Authentifizierung und <a>Authorisierung</a> via OpenID Connect verwendet wird.',
-  logto_endpoint: 'Logto endpoint',
-  application_id: 'App ID',
+  logto_endpoint: 'Logto-Endpunkt',
+  application_id: 'App-ID',
   application_id_tip:
     'Die eindeutige Anwendungs-ID, die normalerweise von Logto generiert wird. Es steht auch für "<a>client_id</a>" in OpenID Connect.',
-  application_secret: 'App Geheimnis',
+  application_secret: 'App-Geheimnis',
   redirect_uri: 'Umleitungs-URI',
   redirect_uris: 'Umleitungs-URIs',
   redirect_uri_placeholder: 'https://deine.website.de/app',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: 'Anwendung {{name}} wurde erfolgreich gelöscht',
   redirect_uri_required: 'Gib mindestens eine Umleitungs-URI an',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
-    /** UNTRANSLATED */
+    name_column: 'Rolle',
+    description_column: 'Beschreibung',
+    assign_button: 'Rollen zuweisen',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'Diese Aktion entfernt diese Rolle von dieser Maschinen-zu-Maschinen-App. Die Rolle selbst existiert weiterhin, ist aber nicht mehr mit dieser Maschinen-zu-Maschinen-App verknüpft.',
+    deleted: '{{name}} wurde erfolgreich von diesem Benutzer entfernt.',
+    assign_title: 'Rollen an {{name}} zuweisen',
+    assign_subtitle: 'Autorisiere {{name}} mit einer oder mehreren Rollen',
+    assign_role_field: 'Rollen zuweisen',
+    role_search_placeholder: 'Nach Rollennamen suchen',
+    added_text: '{{value, number}} hinzugefügt',
+    assigned_app_count: '{{value, number}} Anwendungen',
+    confirm_assign: 'Rollen zuweisen',
+    role_assigned: 'Rolle(n) erfolgreich zugewiesen',
+    search: 'Nach Rollennamen, Beschreibung oder ID suchen',
+    empty: 'Keine Rollen verfügbar',
   },
 };
 

@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}}이 성공적으로 삭제되었어요.',
   settings_tab: '설정',
   users_tab: '사용자',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: '기계 대 기계 앱',
   permissions_tab: '권한',
   settings: '설정',
   settings_description:
     '역할은 사용자에게 할당된 권한들의 모음이에요. 역할은 다양한 API에 정의된 권한들을 통합하는 방법을 제공하기 때문에, 사용자에게 개별적으로 할당하는 것보다 효율적으로 권한을 추가, 제거, 조정할 수 있어요.',
   field_name: '이름',
   field_description: '설명',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: '기계 대 기계 앱 역할',
+  type_user_role_tag: '사용자 역할',
   permission: {
     assign_button: '권한 할당',
     assign_title: '권한 할당',
@@ -51,32 +48,18 @@ const role_details = {
     empty: '사용자 없음',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
-    assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+    assign_button: '앱 할당',
+    name_column: '앱',
+    app_column: '앱',
+    description_column: '설명',
+    delete_description: '이 앱은 앱 모음에 남아 있지만 이 역할에 대한 권한을 상실하게 됩니다.',
+    deleted: '{{name}} 이(가) 이 역할에서 성공적으로 제거되었습니다.',
+    assign_title: '앱 할당',
+    assign_subtitle: '이 역할에 앱 할당 적절한 앱을 이름, 설명 또는 앱 ID로 검색하여 찾아보세요.',
+    assign_applications_field: '앱 할당',
+    confirm_assign: '앱 할당',
+    applications_assigned: '선택한 앱이이 역할에 성공적으로 할당되었습니다',
+    empty: '사용 가능한 앱 없음',
   },
 };
 

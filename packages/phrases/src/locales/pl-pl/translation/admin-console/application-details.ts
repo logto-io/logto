@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Ustawienia',
   settings_description:
     'Aplikacje są używane do identyfikowania Twoich aplikacji w Logto dla OIDC, doświadczenia logowania, dzienników audytowych itp.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Zaawansowane ustawienia',
   advanced_settings_description:
     'Zaawansowane ustawienia obejmują związane z OIDC terminy. Możesz sprawdzić punkt końcowy Token dla bardziej szczegółowych informacji.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Role',
+  machine_logs: 'Dzienniki maszynowe',
   application_name: 'Nazwa aplikacji',
   application_name_placeholder: 'Moja aplikacja',
   description: 'Opis',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: 'Aplikacja {{name}} została pomyślnie usunięta',
   redirect_uri_required: 'Musisz wpisać co najmniej jeden adres URL przekierowania',
   roles: {
-    /** UNTRANSLATED */
     name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
-    /** UNTRANSLATED */
+    description_column: 'Opis',
+    assign_button: 'Przypisz role',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'Ta akcja usunie tę rolę z tej aplikacji machine-to-machine. Rola ta nadal będzie istnieć, ale nie będzie już powiązana z tą aplikacją machine-to-machine.',
+    deleted: '{{name}} został(a) pomyślnie usunięty(ą) z tego użytkownika.',
+    assign_title: 'Przypisz role dla {{name}}',
+    assign_subtitle: 'Autoryzuj {{name}} jedną lub więcej ról',
+    assign_role_field: 'Przypisz role',
+    role_search_placeholder: 'Wyszukaj według nazwy roli',
+    added_text: '{{value, number}} dodane',
+    assigned_app_count: '{{value, number}} aplikacje',
+    confirm_assign: 'Przypisz role',
+    role_assigned: 'Pomyślnie przypisano rolę(y)',
+    search: 'Wyszukaj według nazwy roli, opisu lub ID',
+    empty: 'Brak dostępnych ról',
   },
 };
 

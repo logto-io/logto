@@ -5,14 +5,11 @@ const application_details = {
   settings: '설정',
   settings_description:
     '애플리케이션은 Logto for OIDC, 로그인 환경, 감사 로그 등에서 애플리케이션을 식별하는 데 사용돼요.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: '고급 설정',
   advanced_settings_description:
     '고급 설정에는 OIDC 관련 용어가 포함돼요. 자세한 내용은 토큰 엔드포인트에서 확인할 수 있어요.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: '역할',
+  machine_logs: '기계 로그',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   description: '설명',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: '{{name}} 어플리케이션이 성공적으로 삭제되었어요.',
   redirect_uri_required: '반드시 최소 하나의 Redirect URI 를 입력해야 해요.',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
-    /** UNTRANSLATED */
+    name_column: '역할',
+    description_column: '설명',
+    assign_button: '역할 할당',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      '이 행동은 이 장치 간 앱에서 이 역할을 제거합니다. 역할 자체는 여전히 존재하지만 이 장치 간 앱과 연계되지 않게 됩니다.',
+    deleted: '{{name}} 가 성공적으로 삭제되었습니다.',
+    assign_title: '{{name}} 에 역할 할당',
+    assign_subtitle: '{{name}} 에게 하나 이상의 역할을 승인',
+    assign_role_field: '역할 할당',
+    role_search_placeholder: '역할 이름으로 검색',
+    added_text: '{{value, number}} 추가됨',
+    assigned_app_count: '{{value, number}} 개의 어플리케이션',
+    confirm_assign: '역할 할당',
+    role_assigned: '역할이 성공적으로 할당되었습니다.',
+    search: '역할 이름, 설명 또는 ID로 검색',
+    empty: '사용 가능한 역할이 없습니다.',
   },
 };
 

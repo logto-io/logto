@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} został pomyślnie usunięty.',
   settings_tab: 'Ustawienia',
   users_tab: 'Użytkownicy',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: 'Maszyny do maszyn',
   permissions_tab: 'Uprawnienia',
   settings: 'Ustawienia',
   settings_description:
     'Role to grupowanie uprawnień, które mogą być przypisywane do użytkowników. Zapewniają również sposób agregacji uprawnień zdefiniowanych dla różnych interfejsów API, co umożliwia bardziej efektywne dodawanie, usuwanie lub modyfikowanie uprawnień w porównaniu z przypisywaniem ich do użytkowników indywidualnie.',
   field_name: 'Nazwa',
   field_description: 'Opis',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Rola aplikacji maszynowych',
+  type_user_role_tag: 'Rola użytkownika',
   permission: {
     assign_button: 'Przypisz uprawnienia',
     assign_title: 'Przypisz uprawnienia',
@@ -52,32 +49,20 @@ const role_details = {
     empty: 'Brak dostępnych użytkowników',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
+    assign_button: 'Przypisz aplikacje',
+    name_column: 'Aplikacja',
+    app_column: 'Aplikacje',
+    description_column: 'Opis',
     delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+      'Aplikacja pozostanie w puli Twoich aplikacji, ale utraci autoryzację dla tej roli.',
+    deleted: '{{name}} został pomyślnie usunięty z tej roli',
+    assign_title: 'Przypisz aplikacje',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'Przypisz aplikacje do tej roli. Znajdź odpowiednie aplikacje, wyszukując po nazwie, opisie lub identyfikatorze aplikacji.',
+    assign_applications_field: 'Przypisz aplikacje',
+    confirm_assign: 'Przypisz aplikacje',
+    applications_assigned: 'Wybrane aplikacje zostały pomyślnie przypisane do tej roli',
+    empty: 'Brak dostępnych aplikacji',
   },
 };
 

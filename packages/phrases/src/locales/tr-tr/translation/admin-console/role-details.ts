@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} başarıyla silindi.',
   settings_tab: 'Ayarlar',
   users_tab: 'Kullanıcılar',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: 'Makine-makine uygulamaları',
   permissions_tab: 'İzinler',
   settings: 'Ayarlar',
   settings_description:
     "Roller, kullanıcılara atanabilen izinlerin bir gruplamasıdır. Ayrıca, farklı API'ler için tanımlanan izinleri biriktirmek için bir yol sağladıkları için, izinleri kullanıcılara bireysel olarak atamaktan daha verimli bir şekilde eklemek, kaldırmak veya ayarlamak için bir yoldur.",
   field_name: 'Adı',
   field_description: 'Açıklama',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Makine-makine uygulama rolü',
+  type_user_role_tag: 'Kullanıcı rolü',
   permission: {
     assign_button: 'İzinleri Ata',
     assign_title: 'İzinleri Ata',
@@ -51,32 +48,20 @@ const role_details = {
     empty: 'Mevcut kullanıcı yok',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
+    assign_button: 'Uygulamaları Ata',
+    name_column: 'Uygulama',
+    app_column: 'Uygulamalar',
+    description_column: 'Açıklama',
     delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+      'Bunu yaparsanız, uygulama havuzunuzda kalır, ancak bu role ait yetkileri kaybeder.',
+    deleted: '{{name}} bu rolden başarıyla kaldırıldı',
+    assign_title: 'Uygulamaları Ata',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'Bu role uygulamaları atayın. İsim, açıklama veya uygulama kimliği arayarak uygun uygulamaları bulun.',
+    assign_applications_field: 'Uygulamaları Ata',
+    confirm_assign: 'Uygulamaları Ata',
+    applications_assigned: 'Seçilen uygulamalar bu role başarıyla atandı',
+    empty: 'Mevcut uygulama yok',
   },
 };
 

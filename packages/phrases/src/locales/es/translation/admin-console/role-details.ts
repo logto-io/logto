@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} fue eliminado correctamente.',
   settings_tab: 'Configuración',
   users_tab: 'Usuarios',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: 'Aplicaciones de máquina a máquina',
   permissions_tab: 'Permisos',
   settings: 'Configuración',
   settings_description:
     'Los roles son un agrupamiento de permisos que se pueden asignar a los usuarios. También proporcionan una manera de agregar permisos definidos para diferentes APIs, lo que hace más eficiente agregar, eliminar o ajustar permisos en comparación con asignarlos individualmente a los usuarios.',
   field_name: 'Nombre',
   field_description: 'Descripción',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Rol de aplicación de máquina a máquina',
+  type_user_role_tag: 'Rol de usuario',
   permission: {
     assign_button: 'Asignar permisos',
     assign_title: 'Asignar permisos',
@@ -52,32 +49,20 @@ const role_details = {
     empty: 'No hay usuarios disponibles',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
+    assign_button: 'Asignar aplicaciones',
+    name_column: 'Aplicación',
+    app_column: 'Aplicaciones',
+    description_column: 'Descripción',
     delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+      'Permanecerá en su conjunto de aplicaciones, pero perderá la autorización para este rol.',
+    deleted: '{{name}} se eliminó correctamente de este rol',
+    assign_title: 'Asignar aplicaciones',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'Asignar aplicaciones a este rol. Encuentre las aplicaciones adecuadas buscando el nombre, la descripción o el ID de la aplicación.',
+    assign_applications_field: 'Asignar aplicaciones',
+    confirm_assign: 'Asignar aplicaciones',
+    applications_assigned: 'Las aplicaciones seleccionadas se asignaron correctamente a este rol',
+    empty: 'No hay aplicaciones disponibles',
   },
 };
 

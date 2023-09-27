@@ -63,20 +63,19 @@ const user_details = {
   roles: {
     name_column: '役割',
     description_column: '説明',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: '役割を割り当てる',
     delete_description:
       'この操作により、このユーザーからこの役割が削除されます。役割自体はまだ存在しますが、このユーザーに関連付けられなくなります。',
-    deleted: '{{name}} はこのユーザーから正常に削除されました。',
-    assign_title: '{{name}}に役割を割り当てる',
-    assign_subtitle: '{{name}}に1つ以上の役割を承認します',
+    deleted: '役割 {{name}} はこのユーザーから正常に削除されました。',
+    assign_title: '{{name}} に役割を割り当てる',
+    assign_subtitle: '{{name}} に1つ以上の役割を承認します',
     assign_role_field: '役割を割り当てる',
     role_search_placeholder: '役割名で検索',
-    added_text: '{{value, number}}追加しました',
-    assigned_user_count: '{{value, number}}ユーザー',
+    added_text: '{{value, number}} 追加しました',
+    assigned_user_count: '{{value, number}} ユーザー',
     confirm_assign: '役割を割り当てる',
     role_assigned: '役割が正常に割り当てられました',
-    search: 'ロール名、説明、またはIDで検索',
+    search: 'ロール名、説明、または ID で検索',
     empty: '利用可能な役割はありません',
   },
   warning_no_sign_in_identifier:

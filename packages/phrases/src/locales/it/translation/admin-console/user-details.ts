@@ -2,7 +2,7 @@ const user_details = {
   page_title: 'Dettagli utente',
   back_to_users: 'Torna alla gestione utenti',
   created_title: 'Questo utente è stato creato con successo',
-  created_guide: 'Ecco le informazioni per aiutare l’utente con il processo di accesso.',
+  created_guide: "Ecco le informazioni per aiutare l'utente con il processo di accesso.",
   created_email: 'Indirizzo email:',
   created_phone: 'Numero di telefono:',
   created_username: 'Nome utente:',
@@ -67,8 +67,7 @@ const user_details = {
   roles: {
     name_column: 'Ruolo',
     description_column: 'Descrizione',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: 'Assegna ruoli',
     delete_description:
       'Questa azione rimuoverà questo ruolo da questo utente. Il ruolo stesso esisterà ancora, ma non sarà più associato a questo utente.',
     deleted: '{{nome}} è stato rimosso con successo da questo utente.',

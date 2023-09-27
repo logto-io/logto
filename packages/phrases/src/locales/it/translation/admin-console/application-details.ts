@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Impostazioni',
   settings_description:
     'Le applicazioni vengono utilizzate per identificare le tue applicazioni in Logto per OIDC, esperienza di accesso, registri di controllo, ecc.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Impostazioni avanzate',
   advanced_settings_description:
     "Le impostazioni avanzate includono termini correlati all'OIDC. Puoi consultare il Endpoint Token per ulteriori informazioni.",
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Ruoli',
+  machine_logs: 'Log delle macchine',
   application_name: "Nome dell'applicazione",
   application_name_placeholder: 'La mia app',
   description: 'Descrizione',
@@ -21,11 +18,11 @@ const application_details = {
   authorization_endpoint: 'Endpoint di autorizzazione',
   authorization_endpoint_tip:
     "L'endpoint per effettuare l'autenticazione e l'autorizzazione. Viene utilizzato per la connessione OpenID <a>autenticazione</a>.",
-  logto_endpoint: 'Logto endpoint',
-  application_id: 'App ID',
+  logto_endpoint: 'Endpoint Logto',
+  application_id: 'ID App',
   application_id_tip:
     'L\'identificatore univoco dell\'applicazione generato normalmente da Logto. Sta anche per "<a>client_id</a>" in OpenID Connect.',
-  application_secret: 'App Segreta',
+  application_secret: 'Secret App',
   redirect_uri: 'URI di reindirizzamento',
   redirect_uris: 'URI di reindirizzamento',
   redirect_uri_placeholder: 'https://il-tuo-sito-web.com/la-tua-app',
@@ -41,8 +38,8 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://il-tuo-sito-web.com',
   cors_allowed_origins_tip:
     'Per impostazione predefinita, saranno consentite tutte le origini degli URI di reindirizzamento. Di solito non è richiesta alcuna azione per questo campo. Vedi la documentazione MDN per informazioni dettagliate.',
-  token_endpoint: 'Endpoint del token',
-  user_info_endpoint: 'Endpoint delle informazioni utente',
+  token_endpoint: 'Endpoint token',
+  user_info_endpoint: 'Endpoint informazioni utente',
   enable_admin_access: "Abilita l'accesso amministratore",
   enable_admin_access_label:
     "Abilita o disabilita l'accesso all'API di gestione. Una volta abilitato, puoi utilizzare i token di accesso per chiamare l'API di gestione a nome di questa applicazione.",
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: "L'applicazione {{name}} è stata eliminata con successo",
   redirect_uri_required: 'Devi inserire almeno un URI di reindirizzamento',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
-    /** UNTRANSLATED */
+    name_column: 'Ruolo',
+    description_column: 'Descrizione',
+    assign_button: 'Assegna ruoli',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'Questa azione rimuoverà questo ruolo da questa applicazione tra macchine. Il ruolo stesso esisterà ancora, ma non sarà più associato a questa applicazione tra macchine.',
+    deleted: '{{name}} è stato rimosso con successo da questo utente.',
+    assign_title: 'Assegna ruoli a {{name}}',
+    assign_subtitle: 'Autorizza {{name}} uno o più ruoli',
+    assign_role_field: 'Assegna ruoli',
+    role_search_placeholder: 'Cerca per nome ruolo',
+    added_text: '{{value, number}} aggiunti',
+    assigned_app_count: '{{value, number}} applicazioni',
+    confirm_assign: 'Assegna ruoli',
+    role_assigned: 'Ruolo(i) assegnato con successo',
+    search: 'Cerca per nome ruolo, descrizione o ID',
+    empty: 'Nessun ruolo disponibile',
   },
 };
 

@@ -6,30 +6,20 @@ const roles = {
   create: 'Crea Ruolo',
   role_name: 'Nome ruolo',
   role_type: 'Tipo ruolo',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: 'Mostra altre opzioni',
+  hide_role_type_button_text: 'Nascondi altre opzioni',
   type_user: 'Ruolo utente',
   type_machine_to_machine: 'Ruolo app M2M',
   role_description: 'Descrizione',
   role_name_placeholder: 'Inserisci il nome del tuo ruolo',
   role_description_placeholder: 'Inserisci la descrizione del tuo ruolo',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
+  col_roles: 'Ruoli',
+  col_type: 'Tipo',
+  col_description: 'Descrizione',
+  col_assigned_entities: 'Assegnati',
+  user_counts: '{{count}} utenti',
+  application_counts: '{{count}} app',
+  user_count: '{{count}} utente',
   application_count: '{{count}} app',
   assign_permissions: 'Assegna autorizzazioni',
   create_role_title: 'Crea Ruolo',

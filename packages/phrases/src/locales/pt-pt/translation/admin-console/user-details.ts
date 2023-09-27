@@ -1,11 +1,11 @@
 const user_details = {
   page_title: 'Detalhes do utilizador',
-  back_to_users: 'Voltar a gestão de utilizadores',
+  back_to_users: 'Voltar à gestão de utilizadores',
   created_title: 'Este utilizador foi criado com sucesso',
   created_guide: 'Aqui está a informação para ajudar o utilizador no processo de login.',
   created_email: 'Endereço de email:',
   created_phone: 'Número de telefone:',
-  created_username: 'Utilizador:',
+  created_username: 'Nome de utilizador:',
   created_password: 'Palavra-passe:',
   menu_delete: 'eliminar',
   delete_description:
@@ -13,7 +13,7 @@ const user_details = {
   deleted: 'O utilizador foi eliminado com sucesso',
   reset_password: {
     reset_password: 'Redefinir palavra-passe',
-    title: 'Tem a certeza que deseja redefinir a palavra-passe?',
+    title: 'Tem a certeza de que deseja redefinir a palavra-passe?',
     content:
       'Esta ação não pode ser desfeita. Isso irá redefinir as informações de login do utilizador.',
     congratulations: 'Este utilizador foi redefinido',
@@ -42,7 +42,7 @@ const user_details = {
     remove: 'Remover',
     not_connected: 'O utilizador não está conectado a nenhum conector social',
     deletion_confirmation:
-      'Está removendo a identidade <name/> existente. Tem a certeza que deseja fazer isso?',
+      'Está a remover a identidade <name/> existente. Tem a certeza de que deseja fazê-lo?',
   },
   mfa: {
     field_name: 'Autenticação de dois fatores',
@@ -55,19 +55,18 @@ const user_details = {
   suspended: 'suspenso',
   suspend_user: 'Suspender utilizador',
   suspend_user_reminder:
-    'Tem a certeza que deseja suspender este utilizador? O utilizador não conseguira entrar na sua aplicação e não será capaz de obter um novo Token de acesso após o termo do atual. Além disso, qualquer pedido API feito por este utilizador irá falhar.',
+    'Tem a certeza de que deseja suspender este utilizador? O utilizador não conseguirá entrar na sua aplicação e não será capaz de obter um novo Token de acesso após o termo atual. Além disso, qualquer pedido API feito por este utilizador irá falhar.',
   suspend_action: 'Suspender',
   user_suspended: 'O utilizador foi suspenso.',
   reactivate_user: 'Reativar utilizador',
   reactivate_user_reminder:
-    'Tem a certeza que deseja reativar este utilizador? Isso permitirá tentativas de login para este utilizador.',
+    'Tem a certeza de que deseja reativar este utilizador? Isso permitirá tentativas de login para este utilizador.',
   reactivate_action: 'Reativar',
   user_reactivated: 'O utilizador foi reativado.',
   roles: {
     name_column: 'Função',
     description_column: 'Descrição',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: 'Atribuir funções',
     delete_description:
       'Esta ação irá remover esta função deste utilizador. A função em si ainda existirá, mas não estará mais associada a este utilizador.',
     deleted: '{{name}} foi removido do utilizador com sucesso.',
@@ -75,15 +74,15 @@ const user_details = {
     assign_subtitle: 'Autorize {{name}} uma ou mais funções',
     assign_role_field: 'Atribuir funções',
     role_search_placeholder: 'Pesquisar pelo nome da função',
-    added_text: '{{value, number}} adicionado',
-    assigned_user_count: '{{value, number}} utilizadores',
+    added_text: '{{value, number}} adicionados',
+    assigned_user_count: '{{value, number}} utilizador(es)',
     confirm_assign: 'Atribuir funções',
-    role_assigned: 'Função(s) atribuída(s) com sucesso',
+    role_assigned: 'Função(ões) atribuída(s) com sucesso',
     search: 'Pesquisar pelo nome, descrição ou ID da função',
     empty: 'Nenhuma função disponível',
   },
   warning_no_sign_in_identifier:
-    'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone, ou social) para iniciar sessão. Tem a certeza de que quer continuar?',
+    'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone ou redes sociais) para iniciar sessão. Tem a certeza de que quer continuar?',
 };
 
 export default Object.freeze(user_details);

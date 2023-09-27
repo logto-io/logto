@@ -6,31 +6,21 @@ const roles = {
   create: 'Criar função',
   role_name: 'Nome da função',
   role_type: 'Tipo de função',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: 'Mostrar mais opções',
+  hide_role_type_button_text: 'Esconder mais opções',
   type_user: 'Função do usuário',
-  type_machine_to_machine: 'Função do aplicativo de máquina para máquina',
+  type_machine_to_machine: 'Função de aplicativo de máquina para máquina',
   role_description: 'Descrição',
   role_name_placeholder: 'Insira o nome da sua função',
   role_description_placeholder: 'Insira a descrição da sua função',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_roles: 'Funções',
+  col_type: 'Tipo',
+  col_description: 'Descrição',
+  col_assigned_entities: 'Atribuído',
+  user_counts: '{{count}} usuários',
+  application_counts: '{{count}} aplicativos',
+  user_count: '{{count}} usuário',
+  application_count: '{{count}} aplicativo',
   assign_permissions: 'Atribuir permissões',
   create_role_title: 'Criar função',
   create_role_description:

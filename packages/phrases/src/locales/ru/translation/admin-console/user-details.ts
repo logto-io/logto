@@ -1,7 +1,7 @@
 const user_details = {
   page_title: 'Детали пользователя',
   back_to_users: 'Вернуться к управлению пользователями',
-  created_title: 'Этот пользователь был успешно создан',
+  created_title: 'Пользователь успешно создан',
   created_guide: 'Вот информация, которая поможет пользователю в процессе входа в систему.',
   created_email: 'Адрес электронной почты:',
   created_phone: 'Номер телефона:',
@@ -9,7 +9,7 @@ const user_details = {
   created_password: 'Пароль:',
   menu_delete: 'Удалить',
   delete_description: 'Это действие нельзя отменить. Оно окончательно удалит пользователя.',
-  deleted: 'Пользователь был успешно удален',
+  deleted: 'Пользователь успешно удален',
   reset_password: {
     reset_password: 'Сбросить пароль',
     title: 'Вы уверены, что хотите сбросить пароль?',
@@ -64,16 +64,15 @@ const user_details = {
   roles: {
     name_column: 'Роль',
     description_column: 'Описание',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: 'Назначить роли',
     delete_description:
       'Это действие удалит эту роль у данного пользователя. Роль все еще будет существовать, но она больше не будет связана с этим пользователем.',
-    deleted: '{{name}} был успешно удален из этого пользователя.',
+    deleted: '{{name}} был(а) успешно удален(а) из этого пользователя.',
     assign_title: 'Назначить роли {{name}}',
     assign_subtitle: 'Авторизовать {{name}} в одной или нескольких ролях',
     assign_role_field: 'Назначить роли',
     role_search_placeholder: 'Поиск по названию роли',
-    added_text: '{{value, number}} добавлено',
+    added_text: '{{value, number}} добавлен(а)',
     assigned_user_count: '{{value, number}} пользователей',
     confirm_assign: 'Назначить роли',
     role_assigned: 'Роль(и) успешно назначена(ы)',

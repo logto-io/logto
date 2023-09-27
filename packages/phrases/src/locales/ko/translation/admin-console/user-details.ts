@@ -63,8 +63,7 @@ const user_details = {
   roles: {
     name_column: '역할',
     description_column: '설명',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: '역할 할당',
     delete_description:
       '이 행동은 사용자에게서 이 역할을 삭제할 거예요. 역할은 그대로 존재하지만, 이 사용자에게 더 이상 할당되지 않아요.',
     deleted: '{{name}}이/가 성공적으로 이 사용자에게서 제거되었어요.',

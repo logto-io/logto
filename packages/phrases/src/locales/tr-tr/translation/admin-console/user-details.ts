@@ -65,8 +65,7 @@ const user_details = {
   roles: {
     name_column: 'Rol',
     description_column: 'Açıklama',
-    /** UNTRANSLATED */
-    assign_button: 'Assign roles',
+    assign_button: 'Rolleri Ata',
     delete_description:
       'Bu işlem, bu rolü bu kullanıcıdan kaldıracaktır. Rol kendisi hala var olacaktır, ancak artık bu kullanıcıyla ilişkili olmayacaktır.',
     deleted: '{{name}} bu kullanıcıdan başarıyla kaldırıldı.',
