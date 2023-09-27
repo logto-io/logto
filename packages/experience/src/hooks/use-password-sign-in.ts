@@ -6,6 +6,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 
+import useMfaVerificationErrorHandler from './use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 
 const usePasswordSignIn = () => {
@@ -19,6 +20,7 @@ const usePasswordSignIn = () => {
   const asyncSignIn = useApi(signInWithPasswordIdentifier);
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -26,8 +28,9 @@ const usePasswordSignIn = () => {
         setErrorMessage(error.message);
       },
       ...requiredProfileErrorHandler,
+      ...mfaVerificationErrorHandler,
     }),
-    [requiredProfileErrorHandler]
+    [mfaVerificationErrorHandler, requiredProfileErrorHandler]
   );
 
   const onSubmit = useCallback(

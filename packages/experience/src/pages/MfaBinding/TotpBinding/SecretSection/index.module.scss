@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.secretContent {
+  @include _.flex-column(center);
+
+  .qrCode {
+    border: 1px solid var(--color-line-divider);
+    margin: _.unit(4);
+    min-height: 148px;
+    min-width: 148px;
+
+    > img {
+      display: block;
+      @include _.image-align-center;
+    }
+  }
+
+  .rawSecret {
+    padding: _.unit(4);
+    width: 100%;
+    text-align: center;
+    font: var(--font-label-1);
+    border-radius: var(--radius);
+    background-color: var(--color-bg-layer-2);
+    color: var(--color-type-primary);
+    margin-bottom: _.unit(3);
+  }
+
+  .copySecret {
+    width: 100%;
+    margin: _.unit(4);
+  }
+}

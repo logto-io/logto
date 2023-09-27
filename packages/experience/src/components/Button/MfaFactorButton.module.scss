@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.mfaFactorButton {
+  padding: _.unit(3) _.unit(4) _.unit(3) _.unit(3);
+  height: unset;
+  gap: _.unit(4);
+  border-radius: 12px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-type-secondary);
+}
+
+.title {
+  flex: 1;
+  @include _.flex-column;
+  align-items: flex-start;
+
+  .name {
+    font: var(--font-body-1);
+  }
+
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-type-secondary);
+  }
+}

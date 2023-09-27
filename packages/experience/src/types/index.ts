@@ -7,6 +7,11 @@ export enum UserFlow {
   Continue = 'continue',
 }
 
+export enum UserMfaFlow {
+  MfaBinding = 'mfa-binding',
+  MfaVerification = 'mfa-verification',
+}
+
 export enum SearchParameters {
   NativeCallbackLink = 'native_callback',
   RedirectTo = 'redirect_to',

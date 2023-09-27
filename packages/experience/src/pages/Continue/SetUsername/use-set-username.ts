@@ -4,6 +4,7 @@ import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 
 const useSetUsername = () => {
@@ -16,6 +17,7 @@ const useSetUsername = () => {
   const asyncAddProfile = useApi(addProfile);
   const handleError = useErrorHandler();
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -23,8 +25,9 @@ const useSetUsername = () => {
         setErrorMessage(error.message);
       },
       ...requiredProfileErrorHandler,
+      ...mfaVerificationErrorHandler,
     }),
-    [requiredProfileErrorHandler]
+    [mfaVerificationErrorHandler, requiredProfileErrorHandler]
   );
 
   const onSubmit = useCallback(

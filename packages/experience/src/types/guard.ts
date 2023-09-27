@@ -1,4 +1,4 @@
-import { SignInIdentifier, MissingProfile } from '@logto/schemas';
+import { SignInIdentifier, MissingProfile, MfaFactor } from '@logto/schemas';
 import * as s from 'superstruct';
 
 import { UserFlow } from '.';
@@ -61,3 +61,44 @@ export const socialAccountNotExistErrorDataGuard = s.object({
 export type SocialRelatedUserInfo = s.Infer<
   typeof socialAccountNotExistErrorDataGuard
 >['relatedUser'];
+
+/* Mfa */
+const mfaFactorsGuard = s.array(
+  s.union([
+    s.literal(MfaFactor.TOTP),
+    s.literal(MfaFactor.WebAuthn),
+    s.literal(MfaFactor.BackupCode),
+  ])
+);
+
+export const missingMfaFactorsErrorDataGuard = s.object({
+  missingFactors: mfaFactorsGuard,
+});
+
+export const requireMfaFactorsErrorDataGuard = s.object({
+  availableFactors: mfaFactorsGuard,
+});
+
+export const mfaFactorsStateGuard = s.object({
+  factors: mfaFactorsGuard,
+});
+
+export type MfaFactorsState = s.Infer<typeof mfaFactorsStateGuard>;
+
+const mfaFlowStateGuard = s.object({
+  allowOtherFactors: s.boolean(),
+});
+
+export const totpBindingStateGuard = s.assign(
+  s.object({
+    secret: s.string(),
+    secretQrCode: s.string(),
+  }),
+  mfaFlowStateGuard
+);
+
+export type TotpBindingState = s.Infer<typeof totpBindingStateGuard>;
+
+export const totpVerificationStateGuard = mfaFlowStateGuard;
+
+export type TotpVerificationState = s.Infer<typeof totpVerificationStateGuard>;

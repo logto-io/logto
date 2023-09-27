@@ -12,6 +12,7 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
@@ -37,9 +38,9 @@ const useSignInFlowCodeVerification = (
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
-    replace: true,
-  });
+  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
   const identifierNotExistErrorHandler = useCallback(async () => {
@@ -98,6 +99,7 @@ const useSignInFlowCodeVerification = (
       'user.user_not_exist': identifierNotExistErrorHandler,
       ...generalVerificationCodeErrorHandlers,
       ...requiredProfileErrorHandlers,
+      ...mfaVerificationErrorHandler,
       callback: errorCallback,
     }),
     [
@@ -105,6 +107,7 @@ const useSignInFlowCodeVerification = (
       identifierNotExistErrorHandler,
       requiredProfileErrorHandlers,
       generalVerificationCodeErrorHandlers,
+      mfaVerificationErrorHandler,
     ]
   );
 

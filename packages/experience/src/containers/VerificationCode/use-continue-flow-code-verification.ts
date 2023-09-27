@@ -7,6 +7,7 @@ import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
@@ -28,6 +29,8 @@ const useContinueFlowCodeVerification = (
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ replace: true });
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
   const identifierExistErrorHandler = useCallback(
@@ -54,12 +57,14 @@ const useContinueFlowCodeVerification = (
         identifierExistErrorHandler(SignInIdentifier.Email, target),
       ...requiredProfileErrorHandler,
       ...generalVerificationCodeErrorHandlers,
+      ...mfaVerificationErrorHandler,
     }),
     [
       target,
       identifierExistErrorHandler,
       requiredProfileErrorHandler,
       generalVerificationCodeErrorHandlers,
+      mfaVerificationErrorHandler,
     ]
   );
 

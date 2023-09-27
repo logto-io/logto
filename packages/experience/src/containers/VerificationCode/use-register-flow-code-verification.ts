@@ -12,6 +12,7 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
@@ -39,6 +40,8 @@ const useRegisterFlowCodeVerification = (
     useGeneralVerificationCodeErrorHandler();
 
   const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const identifierExistErrorHandler = useCallback(async () => {
     // Should not redirect user to sign-in if is register-only mode
@@ -95,6 +98,7 @@ const useRegisterFlowCodeVerification = (
       'user.phone_already_in_use': identifierExistErrorHandler,
       ...generalVerificationCodeErrorHandlers,
       ...requiredProfileErrorHandlers,
+      ...mfaVerificationErrorHandler,
       callback: errorCallback,
     }),
     [
@@ -102,6 +106,7 @@ const useRegisterFlowCodeVerification = (
       identifierExistErrorHandler,
       requiredProfileErrorHandlers,
       generalVerificationCodeErrorHandlers,
+      mfaVerificationErrorHandler,
     ]
   );
 

@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  > *:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+}

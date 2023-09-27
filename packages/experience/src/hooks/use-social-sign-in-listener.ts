@@ -13,6 +13,7 @@ import { stateValidation } from '@/utils/social-connectors';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import type { ErrorHandlers } from './use-error-handler';
+import useMfaVerificationErrorHandler from './use-mfa-verification-error-handler';
 import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
 import { useSieMethods } from './use-sie';
 import useSocialRegister from './use-social-register';
@@ -62,6 +63,8 @@ const useSocialSignInListener = (connectorId?: string) => {
     replace: true,
   });
 
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.identity_not_exist': async (error) => {
@@ -80,9 +83,11 @@ const useSocialSignInListener = (connectorId?: string) => {
         await accountNotExistErrorHandler(error);
       },
       ...requiredProfileErrorHandlers,
+      ...mfaVerificationErrorHandler,
     }),
     [
       requiredProfileErrorHandlers,
+      mfaVerificationErrorHandler,
       signInMode,
       termsValidation,
       accountNotExistErrorHandler,

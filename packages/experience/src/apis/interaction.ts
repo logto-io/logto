@@ -8,6 +8,8 @@ import type {
   SocialConnectorPayload,
   SocialEmailPayload,
   SocialPhonePayload,
+  BindMfaPayload,
+  VerifyMfaPayload,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -219,6 +221,21 @@ export const linkWithSocial = async (connectorId: string) => {
       connectorId,
     },
   });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const createTotpSecret = async () =>
+  api.post(`${interactionPrefix}/${verificationPath}/totp`).json<{ secret: string }>();
+
+export const bindMfa = async (payload: BindMfaPayload) => {
+  await api.put(`${interactionPrefix}/bind-mfa`, { json: payload });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};
+
+export const verifyMfa = async (payload: VerifyMfaPayload) => {
+  await api.put(`${interactionPrefix}/mfa`, { json: payload });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };

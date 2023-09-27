@@ -6,6 +6,7 @@ import { addProfile } from '@/apis/interaction';
 import SetPasswordForm from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
@@ -20,6 +21,8 @@ const SetPassword = () => {
   const { show } = useConfirmModal();
 
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.password_exists_in_profile': async (error) => {
@@ -27,8 +30,9 @@ const SetPassword = () => {
         navigate(-1);
       },
       ...requiredProfileErrorHandler,
+      ...mfaVerificationErrorHandler,
     }),
-    [navigate, requiredProfileErrorHandler, show]
+    [navigate, mfaVerificationErrorHandler, requiredProfileErrorHandler, show]
   );
   const successHandler: SuccessHandler<typeof addProfile> = useCallback((result) => {
     if (result?.redirectTo) {
