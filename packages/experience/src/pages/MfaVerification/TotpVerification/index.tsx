@@ -28,7 +28,7 @@ const TotpVerification = () => {
       >
         <TotpCodeVerification flow={UserMfaFlow.MfaVerification} />
       </SectionLayout>
-      {!totpVerificationState.allowOtherFactors && (
+      {totpVerificationState.allowOtherFactors && (
         <TextLink
           to={`/${UserMfaFlow.MfaVerification}`}
           text="mfa.try_another_verification_method"
