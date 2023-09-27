@@ -42,7 +42,6 @@ export default function initOidc(
   queries: Queries,
   libraries: Libraries
 ): Provider {
-  const { issuer, cookieKeys, privateJwks, jwkSigningAlg } = envSet.oidc;
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
@@ -58,7 +57,9 @@ export default function initOidc(
     signed: true,
   } as const);
 
-  const oidc = new Provider(issuer, {
+  // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
+  // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
+  const oidc = new Provider(envSet.oidc.issuer, {
     adapter: postgresAdapter.bind(null, envSet, queries),
     // Align the error response regardless of the request format. It will be `application/json` by default.
     // Rendering different error response based on the request format is okay, but it brought more trouble
@@ -71,12 +72,12 @@ export default function initOidc(
       ctx.body = out;
     },
     cookies: {
-      keys: cookieKeys,
+      keys: envSet.oidc.cookieKeys,
       long: cookieConfig,
       short: cookieConfig,
     },
     jwks: {
-      keys: privateJwks,
+      keys: envSet.oidc.privateJwks,
     },
     enabledJWA: {
       authorizationSigningAlgValues: [...supportedSigningAlgs],
@@ -126,7 +127,7 @@ export default function initOidc(
             accessTokenFormat: 'jwt',
             accessTokenTTL,
             jwt: {
-              sign: { alg: jwkSigningAlg },
+              sign: { alg: envSet.oidc.jwkSigningAlg },
             },
             scope: '',
           } satisfies ResourceServer;
