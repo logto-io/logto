@@ -8,14 +8,13 @@ import * as styles from './index.module.scss';
 
 type Props = {
   role: RoleResponse;
-  type: RoleType;
   isSelected: boolean;
   onSelect: () => void;
 };
 
-function SourceRoleItem({ role, type, isSelected, onSelect }: Props) {
+function SourceRoleItem({ role, isSelected, onSelect }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { name, usersCount, applicationsCount } = role;
+  const { name, type, usersCount, applicationsCount } = role;
 
   return (
     <div
@@ -38,12 +37,9 @@ function SourceRoleItem({ role, type, isSelected, onSelect }: Props) {
       <div className={styles.name}>{name}</div>
       <div className={styles.count}>
         (
-        {t(
-          type === RoleType.User
-            ? 'user_details.roles.assigned_user_count'
-            : 'application_details.roles.assigned_app_count',
-          { value: type === RoleType.User ? usersCount : applicationsCount }
-        )}
+        {type === RoleType.User
+          ? t('user_details.roles.assigned_user_count', { value: usersCount })
+          : t('application_details.roles.assigned_app_count', { value: applicationsCount })}
         )
       </div>
     </div>
