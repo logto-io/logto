@@ -81,7 +81,7 @@ const application_details = {
     /** UNTRANSLATED */
     added_text: '{{value, number}} added',
     /** UNTRANSLATED */
-    assigned_user_count: '{{value, number}} users',
+    assigned_app_count: '{{value, number}} applications',
     /** UNTRANSLATED */
     confirm_assign: 'Assign roles',
     /** UNTRANSLATED */
