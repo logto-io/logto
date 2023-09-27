@@ -4,7 +4,8 @@ const application_details = {
   check_guide: '查看指南',
   settings: '設定',
   settings_description: '應用程式用於在 Logto OIDC、登入體驗、審計日誌等方面識別你的應用程式。',
-  advanced_settings: '高級設定',
+  /** UNTRANSLATED */
+  advanced_settings: 'Advanced settings',
   advanced_settings_description:
     '高級設定包括 OIDC 相關術語。你可以查看 Token Endpoint 以獲取更多資訊。',
   /** UNTRANSLATED */
@@ -65,7 +66,7 @@ const application_details = {
     assign_button: 'Assign Roles',
     /** UNTRANSLATED */
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this user.',
     /** UNTRANSLATED */

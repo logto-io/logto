@@ -15,11 +15,6 @@
     }
   }
 
-  .name {
-    display: block;
-    @include _.text-ellipsis;
-  }
-
   .description {
     @include _.text-ellipsis;
   }

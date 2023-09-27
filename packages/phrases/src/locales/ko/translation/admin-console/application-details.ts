@@ -5,7 +5,8 @@ const application_details = {
   settings: '설정',
   settings_description:
     '애플리케이션은 Logto for OIDC, 로그인 환경, 감사 로그 등에서 애플리케이션을 식별하는 데 사용돼요.',
-  advanced_settings: '고급 설정',
+  /** UNTRANSLATED */
+  advanced_settings: 'Advanced settings',
   advanced_settings_description:
     '고급 설정에는 OIDC 관련 용어가 포함돼요. 자세한 내용은 토큰 엔드포인트에서 확인할 수 있어요.',
   /** UNTRANSLATED */
@@ -68,7 +69,7 @@ const application_details = {
     assign_button: 'Assign Roles',
     /** UNTRANSLATED */
     delete_description:
-      'This action will remove this role from this user. The role itself will still exist, but it will no longer be associated with this user.',
+      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
     /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this user.',
     /** UNTRANSLATED */

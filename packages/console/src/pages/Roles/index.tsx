@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import MachineToMachineIconDark from '@/assets/icons/m2m-role-dark.svg';
-import MachineToMachineIcon from '@/assets/icons/m2m-role.svg';
+import MachineToMachineRoleIconDark from '@/assets/icons/m2m-role-dark.svg';
+import MachineToMachineRoleIcon from '@/assets/icons/m2m-role.svg';
 import Plus from '@/assets/icons/plus.svg';
 import UserRoleIconDark from '@/assets/icons/user-role-dark.svg';
 import UserRoleIcon from '@/assets/icons/user-role.svg';
@@ -41,7 +41,7 @@ const getRoleIcon = (type: RoleType, isDarkMode: boolean) => {
     return isDarkMode ? <UserRoleIconDark /> : <UserRoleIcon />;
   }
 
-  return isDarkMode ? <MachineToMachineIconDark /> : <MachineToMachineIcon />;
+  return isDarkMode ? <MachineToMachineRoleIconDark /> : <MachineToMachineRoleIcon />;
 };
 
 function Roles() {

@@ -280,7 +280,7 @@ describe('RBAC', () => {
       text: 'Roles',
     });
 
-    const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=name])', {
+    const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=title])', {
       text: roleName,
     });
 
