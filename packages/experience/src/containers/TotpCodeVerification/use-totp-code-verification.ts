@@ -4,8 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { bindMfa, verifyMfa } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
-import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { UserMfaFlow } from '@/types';
 
 type Options = {
@@ -16,8 +15,7 @@ const useTotpCodeVerification = ({ flow }: Options) => {
   const asyncBindMfa = useApi(bindMfa);
   const asyncVerifyMfa = useApi(verifyMfa);
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
   const handleError = useErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
@@ -25,10 +23,9 @@ const useTotpCodeVerification = ({ flow }: Options) => {
       'session.mfa.invalid_totp_code': (error) => {
         setErrorMessage(error.message);
       },
-      ...requiredProfileErrorHandlers,
-      ...mfaVerificationErrorHandler,
+      ...preSignInErrorHandler,
     }),
-    [mfaVerificationErrorHandler, requiredProfileErrorHandlers]
+    [preSignInErrorHandler]
   );
 
   const onSubmit = useCallback(

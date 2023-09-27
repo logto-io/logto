@@ -10,7 +10,7 @@ import { queryStringify } from '@/utils';
 import type { ErrorHandlers } from './use-error-handler';
 import useToast from './use-toast';
 
-type Options = {
+export type Options = {
   replace?: boolean;
   linkSocial?: string;
 };

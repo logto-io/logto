@@ -4,8 +4,7 @@ import { addProfile } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 
 const useSetUsername = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -16,18 +15,17 @@ const useSetUsername = () => {
 
   const asyncAddProfile = useApi(addProfile);
   const handleError = useErrorHandler();
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+
+  const preSignInErrorHandler = usePreSignInErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.username_already_in_use': (error) => {
         setErrorMessage(error.message);
       },
-      ...requiredProfileErrorHandler,
-      ...mfaVerificationErrorHandler,
+      ...preSignInErrorHandler,
     }),
-    [mfaVerificationErrorHandler, requiredProfileErrorHandler]
+    [preSignInErrorHandler]
   );
 
   const onSubmit = useCallback(

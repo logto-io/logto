@@ -15,7 +15,7 @@ import type { ErrorHandlers } from './use-error-handler';
 import useStartTotpBinding from './use-start-binding-totp';
 import useToast from './use-toast';
 
-type Options = {
+export type Options = {
   replace?: boolean;
 };
 

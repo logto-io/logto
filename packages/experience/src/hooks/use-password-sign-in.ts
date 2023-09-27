@@ -6,8 +6,7 @@ import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 
-import useMfaVerificationErrorHandler from './use-mfa-verification-error-handler';
-import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
+import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const usePasswordSignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -18,19 +17,16 @@ const usePasswordSignIn = () => {
 
   const handleError = useErrorHandler();
   const asyncSignIn = useApi(signInWithPasswordIdentifier);
-
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+  const preSignInErrorHandler = usePreSignInErrorHandler();
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
         setErrorMessage(error.message);
       },
-      ...requiredProfileErrorHandler,
-      ...mfaVerificationErrorHandler,
+      ...preSignInErrorHandler,
     }),
-    [mfaVerificationErrorHandler, requiredProfileErrorHandler]
+    [preSignInErrorHandler]
   );
 
   const onSubmit = useCallback(

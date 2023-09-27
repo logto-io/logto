@@ -12,8 +12,7 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
@@ -38,8 +37,7 @@ const useSignInFlowCodeVerification = (
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
 
@@ -73,7 +71,7 @@ const useSignInFlowCodeVerification = (
     );
 
     if (error) {
-      await handleError(error, requiredProfileErrorHandlers);
+      await handleError(error, preSignInErrorHandler);
 
       return;
     }
@@ -86,7 +84,7 @@ const useSignInFlowCodeVerification = (
     method,
     navigate,
     registerWithIdentifierAsync,
-    requiredProfileErrorHandlers,
+    preSignInErrorHandler,
     show,
     showIdentifierErrorAlert,
     signInMode,
@@ -98,16 +96,14 @@ const useSignInFlowCodeVerification = (
     () => ({
       'user.user_not_exist': identifierNotExistErrorHandler,
       ...generalVerificationCodeErrorHandlers,
-      ...requiredProfileErrorHandlers,
-      ...mfaVerificationErrorHandler,
+      ...preSignInErrorHandler,
       callback: errorCallback,
     }),
     [
       errorCallback,
       identifierNotExistErrorHandler,
-      requiredProfileErrorHandlers,
+      preSignInErrorHandler,
       generalVerificationCodeErrorHandlers,
-      mfaVerificationErrorHandler,
     ]
   );
 

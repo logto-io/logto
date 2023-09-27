@@ -13,8 +13,7 @@ import { stateValidation } from '@/utils/social-connectors';
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import type { ErrorHandlers } from './use-error-handler';
-import useMfaVerificationErrorHandler from './use-mfa-verification-error-handler';
-import useRequiredProfileErrorHandler from './use-required-profile-error-handler';
+import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 import { useSieMethods } from './use-sie';
 import useSocialRegister from './use-social-register';
 import useTerms from './use-terms';
@@ -59,11 +58,8 @@ const useSocialSignInListener = (connectorId?: string) => {
     },
     [connectorId, navigate, registerWithSocial]
   );
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({
-    replace: true,
-  });
 
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler();
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -82,17 +78,9 @@ const useSocialSignInListener = (connectorId?: string) => {
 
         await accountNotExistErrorHandler(error);
       },
-      ...requiredProfileErrorHandlers,
-      ...mfaVerificationErrorHandler,
+      ...preSignInErrorHandler,
     }),
-    [
-      requiredProfileErrorHandlers,
-      mfaVerificationErrorHandler,
-      signInMode,
-      termsValidation,
-      accountNotExistErrorHandler,
-      setToast,
-    ]
+    [preSignInErrorHandler, signInMode, termsValidation, accountNotExistErrorHandler, setToast]
   );
 
   const signInWithSocialHandler = useCallback(
