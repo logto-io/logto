@@ -13,7 +13,7 @@ import PlanName from '@/components/PlanName';
 import ProTag from '@/components/ProTag';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -202,7 +202,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             }}
           />
         </FormField>
-        {isDevFeaturesEnabled && isTypeSelectorVisible && (
+        {isTypeSelectorVisible && (
           <FormField title="roles.role_type">
             <Controller
               name="type"

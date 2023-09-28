@@ -22,7 +22,6 @@ import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import Button from '@/ds-components/Button';
@@ -238,7 +237,7 @@ function ApplicationDetails() {
             >
               {t('application_details.advanced_settings')}
             </TabNavItem>
-            {isDevFeaturesEnabled && data.type === ApplicationType.MachineToMachine && (
+            {data.type === ApplicationType.MachineToMachine && (
               <>
                 <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Roles}`}>
                   {t('application_details.application_roles')}
@@ -262,7 +261,7 @@ function ApplicationDetails() {
               <TabWrapper isActive={tab === ApplicationDetailsTabs.AdvancedSettings}>
                 <AdvancedSettings app={data} oidcConfig={oidcConfig} />
               </TabWrapper>
-              {isDevFeaturesEnabled && data.type === ApplicationType.MachineToMachine && (
+              {data.type === ApplicationType.MachineToMachine && (
                 <>
                   <TabWrapper isActive={tab === ApplicationDetailsTabs.Roles}>
                     <MachineToMachineApplicationRoles application={data} />
