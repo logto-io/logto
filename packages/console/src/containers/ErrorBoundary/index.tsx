@@ -19,11 +19,11 @@ import { isInCallback } from '@/utils/url';
  * We need to check the error code to determine if it is an OIDC invalid_grant error.
  */
 const isOidcInvalidGrantError = (error: Error) => {
-  const oidcGrantErrors = ['oidc.invalid_grant', 'oidc.invalid_target'];
-
   if (!(error instanceof LogtoRequestError)) {
     return false;
   }
+
+  const oidcGrantErrors = ['oidc.invalid_grant', 'oidc.invalid_target'];
 
   return oidcGrantErrors.includes(error.code);
 };
