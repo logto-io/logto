@@ -11,6 +11,7 @@ export type UserClaim =
   | 'email_verified'
   | 'phone_number'
   | 'phone_number_verified'
+  | 'roles'
   | 'custom_data'
   | 'identities';
 
@@ -48,6 +49,12 @@ export enum UserScope {
    * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
    */
   Identities = 'identities',
+  /**
+   * Scope for user's roles.
+   *
+   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   */
+  Roles = 'roles',
 }
 
 /**
@@ -57,6 +64,7 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.Profile]: ['name', 'picture', 'username'],
   [UserScope.Email]: ['email', 'email_verified'],
   [UserScope.Phone]: ['phone_number', 'phone_number_verified'],
+  [UserScope.Roles]: ['roles'],
   [UserScope.CustomData]: [],
   [UserScope.Identities]: [],
 });
@@ -68,6 +76,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.Profile]: [],
   [UserScope.Email]: [],
   [UserScope.Phone]: [],
+  [UserScope.Roles]: [],
   [UserScope.CustomData]: ['custom_data'],
   [UserScope.Identities]: ['identities'],
 });

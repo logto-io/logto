@@ -4,8 +4,10 @@ import type { User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
+import type Libraries from '#src/tenants/Libraries.js';
+
 const claimToUserKey: Readonly<
-  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified'>, keyof User>
+  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles'>, keyof User>
 > = Object.freeze({
   name: 'name',
   picture: 'avatar',
@@ -16,7 +18,11 @@ const claimToUserKey: Readonly<
   identities: 'identities',
 });
 
-export const getUserClaimData = (user: User, claim: UserClaim): unknown => {
+export const getUserClaimData = async (
+  user: User,
+  claim: UserClaim,
+  userLibrary: Libraries['users']
+): Promise<unknown> => {
   // LOG-4165: Change to proper key/function once profile fulfilling implemented
   if (claim === 'email_verified') {
     return Boolean(user.primaryEmail);
@@ -25,6 +31,11 @@ export const getUserClaimData = (user: User, claim: UserClaim): unknown => {
   // LOG-4165: Change to proper key/function once profile fulfilling implemented
   if (claim === 'phone_number_verified') {
     return Boolean(user.primaryPhone);
+  }
+
+  if (claim === 'roles') {
+    const roles = await userLibrary.findUserRoles(user.id);
+    return roles.map(({ name }) => name);
   }
 
   return user[claimToUserKey[claim]];
