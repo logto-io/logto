@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.9.2
+
+### Patch Changes
+
+- Updated dependencies [18181f892]
+  - @logto/cli@1.9.2
+
 ## 1.9.1
 
 ### Patch Changes
