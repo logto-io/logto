@@ -20,8 +20,8 @@ import {
 } from './constants.js';
 import {
   expectFrameworkExists,
-  expectToClickFramework,
-  expectToProceedCreationFrom,
+  expectToChooseAndClickApplicationFramework,
+  expectToProceedApplicationCreationFrom,
   expectToProceedSdkGuide,
   expectToProceedAppDeletion,
   expectFrameworksInGroup,
@@ -54,9 +54,9 @@ describe('applications', () => {
   });
 
   it('create the initial application from the table placeholder', async () => {
-    await expectToClickFramework(page, initialApp.framework);
+    await expectToChooseAndClickApplicationFramework(page, initialApp.framework);
 
-    await expectToProceedCreationFrom(page, initialApp);
+    await expectToProceedApplicationCreationFrom(page, initialApp);
 
     await expectToProceedSdkGuide(page, initialApp, true);
 
@@ -126,9 +126,9 @@ describe('applications', () => {
     // Expect the framework exists after filtering
     await expectFrameworkExists(page, testApp.framework);
 
-    await expectToClickFramework(page, testApp.framework);
+    await expectToChooseAndClickApplicationFramework(page, testApp.framework);
 
-    await expectToProceedCreationFrom(page, testApp);
+    await expectToProceedApplicationCreationFrom(page, testApp);
 
     await expectToProceedSdkGuide(page, testApp);
 

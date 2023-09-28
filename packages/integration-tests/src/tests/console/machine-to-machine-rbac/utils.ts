@@ -6,45 +6,6 @@ import {
   waitForToast,
 } from '#src/ui-helpers/index.js';
 
-import {
-  expectFrameworkExists,
-  expectToClickFramework,
-  expectToProceedCreationFrom,
-  expectFrameworksInGroup,
-} from '../applications/helpers.js';
-
-const m2mFramework = 'Machine-to-machine';
-
-export const createM2mApp = async (
-  page: Page,
-  { name, description }: { name: string; description: string }
-) => {
-  await expect(page).toClick('div[class$=headline] button span', { text: 'Create Application' });
-
-  await expectModalWithTitle(page, 'Start with SDK and guides');
-
-  await expectFrameworksInGroup(page, '.ReactModalPortal div[class$=guideGroup]:has(>label)');
-
-  // Expect the framework contains on the page
-  await expectFrameworkExists(page, m2mFramework);
-
-  // Filter
-  await expect(page).toFill('div[class$=searchInput] input', m2mFramework);
-
-  // Expect the framework exists after filtering
-  await expectFrameworkExists(page, m2mFramework);
-
-  await expectToClickFramework(page, m2mFramework);
-
-  await expectToProceedCreationFrom(page, {
-    name,
-    description,
-  });
-
-  // Skip guide
-  await page.keyboard.press('Escape');
-};
-
 export const createM2mRoleAndAssignPermissions = async (
   page: Page,
   { roleName, roleDescription }: { roleName: string; roleDescription: string },
@@ -61,7 +22,7 @@ export const createM2mRoleAndAssignPermissions = async (
     text: 'Show more options',
   });
 
-  await expect(page).toClick('div[class*=radioGroup][class$=roleTypes] content', {
+  await expect(page).toClick('div[class*=radioGroup][class$=roleTypes] div[class$=content]', {
     text: 'Machine-to-machine app role',
   });
 
@@ -96,7 +57,7 @@ export const createM2mRoleAndAssignPermissions = async (
     text: `The role ${roleName} has been successfully created.`,
   });
 
-  await expectModalWithTitle(page, 'Assign users');
+  await expectModalWithTitle(page, 'Assign apps');
   await expectToClickModalAction(page, 'Skip for now');
 
   await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
