@@ -19,8 +19,8 @@ enum PredefinedScope {
 
 const getManagementApiResourceIndicator = (tenantId: string) => `https://${tenantId}.logto.app/api`;
 
-const managementApiAccessRoleName = 'Management API Access';
-const managementApiAccessRoleDescription = 'Management API Access';
+const managementApiAccessRoleName = 'Management API access';
+const managementApiAccessRoleDescription = 'Management API access';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
