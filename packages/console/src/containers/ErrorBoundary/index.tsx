@@ -1,4 +1,4 @@
-import { LogtoClientError, LogtoError, OidcError } from '@logto/react';
+import { LogtoClientError, LogtoError, OidcError, LogtoRequestError } from '@logto/react';
 import { conditional } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { type TFunction } from 'i18next';
@@ -10,6 +10,23 @@ import { withTranslation } from 'react-i18next';
 import AppError from '@/components/AppError';
 import SessionExpired from '@/components/SessionExpired';
 import { isInCallback } from '@/utils/url';
+
+/**
+ * Returns true if the error is an OIDC invalid_grant error.
+ *
+ * OIDC request error is globally converted to the LogtoRequestError.
+ * @see {@link @logto/core/packages/core/src/middleware/koa-oidc-error-handler.ts}
+ * We need to check the error code to determine if it is an OIDC invalid_grant error.
+ */
+const isOidcInvalidGrantError = (error: Error) => {
+  if (!(error instanceof LogtoRequestError)) {
+    return false;
+  }
+
+  const oidcGrantErrors = ['oidc.invalid_grant', 'oidc.invalid_target'];
+
+  return oidcGrantErrors.includes(error.code);
+};
 
 type Props = {
   children: ReactNode;
@@ -70,6 +87,7 @@ class ErrorBoundary extends Component<Props, State> {
     if (
       error instanceof LogtoError ||
       error instanceof LogtoClientError ||
+      isOidcInvalidGrantError(error) ||
       (error instanceof HTTPError && error.response.status === 401) ||
       (error instanceof ResponseError && error.status === 401)
     ) {
