@@ -25,7 +25,7 @@ export const expectFrameworksInGroup = async (page: Page, groupSelector: string)
   /* eslint-enable no-await-in-loop */
 };
 
-export const expectToClickFramework = async (page: Page, framework: string) => {
+export const expectToChooseAndClickApplicationFramework = async (page: Page, framework: string) => {
   const frameworkCard = await expect(page).toMatchElement(
     'div[class*=card]:has(div[class$=header] div[class$=name])',
     {
@@ -42,9 +42,9 @@ export const expectFrameworkExists = async (page: Page, framework: string) => {
   });
 };
 
-export const expectToProceedCreationFrom = async (
+export const expectToProceedApplicationCreationFrom = async (
   page: Page,
-  { name, description }: ApplicationCase
+  { name, description }: { name: string; description: string }
 ) => {
   // Expect the creation form to be open
   await expectModalWithTitle(page, 'Create Application');
