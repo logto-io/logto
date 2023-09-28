@@ -44,7 +44,7 @@ export const expectFrameworkExists = async (page: Page, framework: string) => {
 
 export const expectToProceedCreationFrom = async (
   page: Page,
-  { name, description }: ApplicationCase
+  { name, description }: Pick<ApplicationCase, 'name' | 'description'>
 ) => {
   // Expect the creation form to be open
   await expectModalWithTitle(page, 'Create Application');
