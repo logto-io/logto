@@ -6,30 +6,20 @@ const roles = {
   create: 'Create Role',
   role_name: 'Role name',
   role_type: 'Role type',
-  /** UNTRANSLATED */
   show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
   hide_role_type_button_text: 'Hide more options',
   type_user: 'User role',
   type_machine_to_machine: 'Machine-to-machine app role',
   role_description: 'Description',
   role_name_placeholder: 'Enter your role name',
   role_description_placeholder: 'Enter your role description',
-  /** UNTRANSLATED */
   col_roles: 'Roles',
-  /** UNTRANSLATED */
   col_type: 'Type',
-  /** UNTRANSLATED */
   col_description: 'Description',
-  /** UNTRANSLATED */
   col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
   user_counts: '{{count}} users',
-  /** UNTRANSLATED */
   application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
   user_count: '{{count}} user',
-  /** UNTRANSLATED */
   application_count: '{{count}} app',
   assign_permissions: 'Assign permissions',
   create_role_title: 'Create Role',
