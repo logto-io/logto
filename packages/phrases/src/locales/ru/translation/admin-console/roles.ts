@@ -1,36 +1,26 @@
 const roles = {
-  page_title: 'Roles',
-  title: 'Roles',
+  page_title: 'Роли',
+  title: 'Роли',
   subtitle:
     'Роли включают права доступа, которые определяют, что может делать пользователь. RBAC использует роли для предоставления пользователям доступа к ресурсам для конкретных действий.',
   create: 'Создать роль',
   role_name: 'Имя роли',
   role_type: 'Тип роли',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: 'Показать дополнительные варианты',
+  hide_role_type_button_text: 'Скрыть дополнительные варианты',
   type_user: 'Роль пользователя',
   type_machine_to_machine: 'Роль приложения между машинами',
   role_description: 'Описание',
   role_name_placeholder: 'Введите название роли',
   role_description_placeholder: 'Введите описание роли',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_roles: 'Роли',
+  col_type: 'Тип',
+  col_description: 'Описание',
+  col_assigned_entities: 'Назначенные',
+  user_counts: '{{count}} пользователей',
+  application_counts: '{{count}} приложений',
+  user_count: '{{count}} пользователь',
+  application_count: '{{count}} приложение',
   assign_permissions: 'Назначить права доступа',
   create_role_title: 'Создать роль',
   create_role_description:

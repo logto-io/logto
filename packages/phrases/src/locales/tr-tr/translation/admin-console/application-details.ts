@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Ayarlar',
   settings_description:
     'Uygulamalar, Logto için OIDC, oturum açma deneyimi, denetim kayıtları vb. alanlarda uygulamalarınızı tanımlamak için kullanılır.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Gelişmiş ayarlar',
   advanced_settings_description:
     'Gelişmiş ayarlar, OIDC ile ilgili terimleri içerir. Daha fazla bilgi için Token Bitiş Noktasına bakabilirsiniz.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Roller',
+  machine_logs: 'Makine günlükleri',
   application_name: 'Uygulama Adı',
   application_name_placeholder: 'Uygulamam',
   description: 'Açıklama',
@@ -21,7 +18,7 @@ const application_details = {
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect <a>Authentication</a> için kullanılır.',
-  logto_endpoint: 'Logto endpoint',
+  logto_endpoint: 'Logto bitiş noktası',
   application_id: 'Uygulama IDsi',
   application_id_tip:
     'Logto tarafından normalde oluşturulan benzersiz uygulama tanımlayıcısıdır. Ayrıca OpenID Connect "client_id" anlamına gelir.',
@@ -54,44 +51,29 @@ const application_details = {
     'Yeni erişim belirteği istekleri için Refresh Belirteği kullanılabilecek süre. Belirteğin süresi dolmadan önce yapılan talepler belirteğin ömrünü uzatacaktır.',
   rotate_refresh_token: 'Refresh Tokenı değiştir',
   rotate_refresh_token_label:
-    'Bu seçenek etkinleştirildiğinde, Logto Token Bitiş Süresinin %70&#39;i geçildiğinde veya belli koşullar sağlandığında yeni bir Refresh Token verecektir. <a>Daha fazlası için tıklayın</a>',
+    "Bu seçenek etkinleştirildiğinde, Logto Token Bitiş Süresinin %70'i geçildiğinde veya belli koşullar sağlandığında yeni bir Refresh Token verecektir. <a>Daha fazlası için tıklayın</a>",
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',
   application_deleted: '{{name}} Uygulaması başarıyla silindi',
   redirect_uri_required: 'En az 1 yönlendirme URIı girmelisiniz',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    name_column: 'Rol',
+    description_column: 'Açıklama',
+    assign_button: 'Rolleri Ata',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'Bu işlem bu role bu makine-makine uygulamasından kaldıracaktır. Rol kendisi hala var olacak, ancak artık makine-makine uygulamasıyla ilişkilendirilmeyecektir.',
+    deleted: '{{name}}, bu kullanıcıdan başarıyla kaldırıldı.',
+    assign_title: "{{name}}'a rolleri atayın",
+    assign_subtitle: '{{name}} için bir veya daha fazla rol yetkilendirin',
+    assign_role_field: 'Rolleri Ata',
+    role_search_placeholder: 'Rol adıyla arama yapın',
+    added_text: '{{value, number}} eklendi',
+    assigned_app_count: '{{value, number}} uygulamalar',
+    confirm_assign: 'Rolleri Ata',
+    role_assigned: 'Başarıyla rol(ler) atandı',
+    search: "Rol adı, açıklaması veya ID'si ile arama yapın",
+    empty: 'Mevcut rol yok',
   },
 };
 

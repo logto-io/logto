@@ -1,18 +1,15 @@
 const application_details = {
-  page_title: 'Détails de l application',
+  page_title: "Détails de l'application",
   back_to_applications: 'Retour aux applications',
   check_guide: 'Consulter le guide',
   settings: 'Paramètres',
   settings_description:
     "Les applications sont utilisées pour identifier vos applications dans Logto pour OIDC, l'expérience de connexion, les journaux d'audit, etc.",
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Paramètres avancés',
   advanced_settings_description:
     "Les paramètres avancés comprennent des termes liés à OIDC. Vous pouvez consulter le point de terminaison de jeton pour plus d'informations.",
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Rôles',
+  machine_logs: 'Journaux de machine',
   application_name: "Nom de l'application",
   application_name_placeholder: 'Mon App',
   description: 'Description',
@@ -21,7 +18,7 @@ const application_details = {
   authorization_endpoint: "Point de terminaison d'autorisation",
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour <a>l'authentification</a> OpenID Connect.",
-  logto_endpoint: 'Logto endpoint',
+  logto_endpoint: 'Endpoint Logto',
   application_id: "ID de l'application",
   application_id_tip:
     "L'identifiant d'application unique généralement généré par Logto. Il signifie également <a>client_id</a> dans OpenID Connect.",
@@ -32,8 +29,8 @@ const application_details = {
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     "L'URI de redirection après la connexion d'un utilisateur (qu'elle soit réussie ou non). Voir OpenID Connect <a>AuthRequest</a> pour plus d'informations.",
-  post_sign_out_redirect_uri: 'URI de redirection post-signature',
-  post_sign_out_redirect_uris: 'URI de redirection après la signature',
+  post_sign_out_redirect_uri: 'URI de redirection post-déconnexion',
+  post_sign_out_redirect_uris: 'URI de redirection après la déconnexion',
   post_sign_out_redirect_uri_placeholder: 'https://votre.site.com/home',
   post_sign_out_redirect_uri_tip:
     "L'URI de redirection après la déconnexion de l'utilisateur (facultatif). Cela peut n'avoir aucun effet pratique dans certains types d'applications.",
@@ -41,15 +38,15 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://votre.site.com',
   cors_allowed_origins_tip:
     "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. Consultez la documentation <a>MDN</a> pour des informations détaillées.",
-  token_endpoint: "Point d'extrémité du jeton",
-  user_info_endpoint: "Point d'extrémité Utilisateur",
+  token_endpoint: 'Point de terminaison du jeton',
+  user_info_endpoint: "Point de terminaison de l'utilisateur",
   enable_admin_access: "Activer l'accès administrateur",
   enable_admin_access_label:
     "Activer ou désactiver l'accès à l'API de gestion. Une fois activé, vous pouvez utiliser des jetons d'accès pour appeler l'API de gestion au nom de cette application.",
   always_issue_refresh_token: 'Toujours émettre le Refresh Token.',
   always_issue_refresh_token_label:
     "En activant cette configuration, Logto pourra toujours émettre des Refresh Tokens, indépendamment de la présentation ou non de la demande d'authentification `prompt=consent`. Cependant, cette pratique est découragée sauf si nécessaire, car elle n'est pas compatible avec OpenID Connect et peut potentiellement causer des problèmes.",
-  refresh_token_ttl: 'Durée de vie du rafraîchissement du jeton en jours',
+  refresh_token_ttl: 'Durée de vie du Refresh Token en jours',
   refresh_token_ttl_tip:
     "La durée pendant laquelle un Refresh Token peut être utilisé pour demander de nouveaux jetons d'accès avant qu'il n'expire et devienne invalide. Les demandes de jeton étendront la durée de vie du Refresh Token à cette valeur.",
   rotate_refresh_token: 'Tourner le Refresh Token',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: "L'application {{name}} a été supprimée avec succès.",
   redirect_uri_required: 'Vous devez entrer au moins un URI de redirection.',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
+    name_column: 'Rôle',
     description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    assign_button: 'Attribuer des rôles',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
+      'Cette action supprimera ce rôle de cette application machine-to-machine. Le rôle lui-même existera toujours, mais il ne sera plus associé à cette application machine-to-machine.',
+    deleted: '{{name}} a été supprimé(e) avec succès de cet utilisateur.',
+    assign_title: 'Attribuer des rôles à {{name}}',
+    assign_subtitle: 'Autoriser {{name}} à un ou plusieurs rôles',
+    assign_role_field: 'Attribuer des rôles',
+    role_search_placeholder: 'Rechercher par nom de rôle',
+    added_text: '{{value, number}} ajouté(s)',
     assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+    confirm_assign: 'Assigner des rôles',
+    role_assigned: 'Rôle(s) attribué(e)s avec succès',
+    search: 'Rechercher par nom de rôle, description ou ID',
+    empty: 'Aucun rôle disponible',
   },
 };
 

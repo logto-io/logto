@@ -5,14 +5,11 @@ const application_details = {
   settings: '設定',
   settings_description:
     'アプリケーションは、Logto for OIDC、サインインエクスペリエンス、監査ログなどでアプリケーションを識別するために使用されます。',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: '高度な設定',
   advanced_settings_description:
     '高度な設定にはOIDC関連用語が含まれます。詳細については、トークンエンドポイントを確認してください。',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: '役割',
+  machine_logs: 'マシンログ',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',
   description: '説明',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: 'アプリケーション{{name}}が正常に削除されました',
   redirect_uri_required: 'リダイレクトURIを少なくとも1つ入力する必要があります',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    name_column: '役割',
+    description_column: '説明',
+    assign_button: '役割を割り当てる',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      'この操作は、このマシン対マシンアプリからこの役割を削除します。役割自体はまだ存在しますが、もはやマシン対マシンアプリに関連付けられていません。',
+    deleted: '{{name}} がこのユーザーから正常に削除されました。',
+    assign_title: '{{name}} に役割を割り当てる',
+    assign_subtitle: '{{name}} に1つ以上の役割を承認する',
+    assign_role_field: '役割を割り当てる',
+    role_search_placeholder: '役割名で検索',
+    added_text: '{{value, number}} 件追加',
+    assigned_app_count: '{{value, number}} 個のアプリケーション',
+    confirm_assign: '役割を割り当てる',
+    role_assigned: '役割の割り当てに成功しました。',
+    search: '役割名、説明、または ID で検索',
+    empty: '利用可能な役割はありません',
   },
 };
 

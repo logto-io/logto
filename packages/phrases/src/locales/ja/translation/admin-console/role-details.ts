@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} は正常に削除されました。',
   settings_tab: '設定',
   users_tab: 'ユーザー',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: '機械対機械のアプリ',
   permissions_tab: '許可',
   settings: '設定',
   settings_description:
     'ロールは、ユーザーに割り当てることができる許可のグループ化です。また、異なるAPIに対して定義された許可を集約する方法を提供し、ユーザーに個別に割り当てるよりも許可を追加、削除、または調整するのに効率的です。',
   field_name: '名前',
   field_description: '説明',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: '機械対機械のアプリのロール',
+  type_user_role_tag: 'ユーザーロール',
   permission: {
     assign_button: '許可を割り当てる',
     assign_title: '許可の割り当て',
@@ -41,42 +38,29 @@ const role_details = {
     app_column: 'アプリ',
     latest_sign_in_column: '最新サインイン',
     delete_description: 'ユーザープールには残りますが、このロールに対する認可を失います。',
-    deleted: '{{name}} was successfully removed from this role',
+    deleted: '{{name}} はこのロールから正常に削除されました',
     assign_title: 'ユーザーを割り当てる',
     assign_subtitle:
       'ユーザーをこのロールに割り当てます。名前、電子メール、電話、またはユーザーIDで検索して適切なユーザーを見つけます。',
     assign_users_field: 'ユーザーを割り当てる',
     confirm_assign: 'ユーザーを割り当てる',
-    users_assigned: '選択したユーザーがこのロールに正常に割り当てられました',
+    users_assigned: '選択したユーザーは、このロールに正常に割り当てられました',
     empty: '使用可能なユーザーはありません',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+    assign_button: 'アプリケーションを割り当てる',
+    name_column: 'アプリケーション',
+    app_column: 'アプリ',
+    description_column: '説明',
+    delete_description: 'アプリケーションプールには残りますが、このロールに対する認可を失います。',
+    deleted: '{{name}} はこのロールから正常に削除されました',
+    assign_title: 'アプリケーションを割り当てる',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'このロールにアプリケーションを割り当てます。名前、説明、またはアプリIDで検索して適切なアプリケーションを見つけます。',
+    assign_applications_field: 'アプリケーションを割り当てる',
+    confirm_assign: 'アプリケーションを割り当てる',
+    applications_assigned: '選択したアプリケーションは、このロールに正常に割り当てられました',
+    empty: '利用可能なアプリケーションはありません',
   },
 };
 

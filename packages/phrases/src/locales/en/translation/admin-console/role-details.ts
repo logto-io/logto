@@ -6,7 +6,6 @@ const role_details = {
   role_deleted: '{{name}} was successfully deleted.',
   settings_tab: 'Settings',
   users_tab: 'Users',
-  /** UNTRANSLATED */
   m2m_apps_tab: 'Machine-to-machine apps',
   permissions_tab: 'Permissions',
   settings: 'Settings',
@@ -14,9 +13,7 @@ const role_details = {
     'Roles are a grouping of permissions that can be assigned to users. They also provide a way to aggregate permissions defined for different APIs, making it more efficient to add, remove, or adjust permissions compared to assigning them individually to users.',
   field_name: 'Name',
   field_description: 'Description',
-  /** UNTRANSLATED */
   type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
   type_user_role_tag: 'User role',
   permission: {
     assign_button: 'Assign Permissions',

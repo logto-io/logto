@@ -4,14 +4,11 @@ const application_details = {
   check_guide: '查看指南',
   settings: '設置',
   settings_description: '應用程式用於在 Logto OIDC、登錄體驗、審計日誌等方面識別你的應用程式。',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: '高級設置',
   advanced_settings_description:
     '高級設置包括 OIDC 相關術語。你可以查看 Token Endpoint 以獲取更多信息。',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: '角色',
+  machine_logs: '機器日誌',
   application_name: '應用程式姓名',
   application_name_placeholder: '我的應用程式',
   description: '說明',
@@ -59,37 +56,22 @@ const application_details = {
   application_deleted: '應用 {{name}} 成功刪除。',
   redirect_uri_required: '至少需要輸入一個重定向 URL。',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    name_column: '角色',
+    description_column: '描述',
+    assign_button: '分配角色',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      '本操作將從此機器到機器應用程式中刪除此角色。該角色本身仍然存在，但不再與此機器到機器應用程式關聯。',
+    deleted: '已成功從此用戶中刪除 {{name}}。',
+    assign_title: '將角色分配給 {{name}}',
+    assign_subtitle: '授權 {{name}} 一個或多個角色',
+    assign_role_field: '分配角色',
+    role_search_placeholder: '按角色名稱搜索',
+    added_text: '{{value, number}} 已添加',
+    assigned_app_count: '{{value, number}} 應用程式',
+    confirm_assign: '分配角色',
+    role_assigned: '成功分配角色',
+    search: '按角色名稱、描述或 ID 搜索',
+    empty: '沒有可用的角色',
   },
 };
 

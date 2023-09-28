@@ -36,7 +36,7 @@ const webhooks = {
     missing_event_error: '하나 이상의 이벤트를 선택해야 합니다.',
     https_format_error: '보안 상의 이유로 HTTPS 형식이 필요합니다.',
   },
-  webhook_created: 'Webhook {{name}}가 성공적으로 생성되었습니다.',
+  webhook_created: 'Webhook {{name}} 가 성공적으로 생성되었습니다.',
 };
 
 export default Object.freeze(webhooks);

@@ -6,31 +6,21 @@ const roles = {
   create: '建立角色',
   role_name: '角色名稱',
   role_type: '角色類型',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: '顯示更多選項',
+  hide_role_type_button_text: '隱藏更多選項',
   type_user: '使用者角色',
   type_machine_to_machine: '機器對機器應用角色',
   role_description: '描述',
   role_name_placeholder: '輸入你的角色名稱',
   role_description_placeholder: '輸入你的角色描述',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_roles: '角色',
+  col_type: '類型',
+  col_description: '描述',
+  col_assigned_entities: '已分配',
+  user_counts: '{{count}} 個使用者',
+  application_counts: '{{count}} 個應用程式',
+  user_count: '{{count}} 個使用者',
+  application_count: '{{count}} 個應用程式',
   assign_permissions: '分配權限',
   create_role_title: '建立角色',
   create_role_description: '為你的應用程式建立和管理角色。角色包含權限集合，並可以分配給使用者。',

@@ -6,31 +6,21 @@ const roles = {
   create: 'Créer un rôle',
   role_name: 'Nom du rôle',
   role_type: 'Type de rôle',
-  /** UNTRANSLATED */
-  show_role_type_button_text: 'Show more options',
-  /** UNTRANSLATED */
-  hide_role_type_button_text: 'Hide more options',
+  show_role_type_button_text: "Afficher plus d'options",
+  hide_role_type_button_text: "Masquer plus d'options",
   type_user: 'Rôle utilisateur',
   type_machine_to_machine: "Rôle d'application machine-à-machine",
   role_description: 'Description',
   role_name_placeholder: 'Entrez le nom de votre rôle',
   role_description_placeholder: 'Entrez la description de votre rôle',
-  /** UNTRANSLATED */
-  col_roles: 'Roles',
-  /** UNTRANSLATED */
+  col_roles: 'Rôles',
   col_type: 'Type',
-  /** UNTRANSLATED */
   col_description: 'Description',
-  /** UNTRANSLATED */
-  col_assigned_entities: 'Assigned',
-  /** UNTRANSLATED */
-  user_counts: '{{count}} users',
-  /** UNTRANSLATED */
-  application_counts: '{{count}} apps',
-  /** UNTRANSLATED */
-  user_count: '{{count}} user',
-  /** UNTRANSLATED */
-  application_count: '{{count}} app',
+  col_assigned_entities: 'Assigné',
+  user_counts: '{{count}} utilisateurs',
+  application_counts: '{{count}} applications',
+  user_count: '{{count}} utilisateur',
+  application_count: '{{count}} application',
   assign_permissions: 'Assigner des autorisations',
   create_role_title: 'Créer un rôle',
   create_role_description:

@@ -299,7 +299,7 @@ describe('RBAC', () => {
 
   it('add a role to a user on the user details page', async () => {
     await expect(page).toClick('div[class$=filter] button span', {
-      text: 'Assign Roles',
+      text: 'Assign roles',
     });
 
     await expectModalWithTitle(page, `Assign roles to ${rbacTestUsername}`);

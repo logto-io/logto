@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} был успешно удален.',
   settings_tab: 'Настройки',
   users_tab: 'Пользователи',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: 'Машинные приложения',
   permissions_tab: 'Разрешения',
   settings: 'Настройки',
   settings_description:
     'Роли - это группировка разрешений, которые могут быть назначены пользователям. Они также обеспечивают способ объединения разрешений, определенных для разных API, что делает более эффективным добавление, удаление или корректировку разрешений по сравнению с назначением их отдельно пользователям.',
   field_name: 'Имя',
   field_description: 'Описание',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Роль машинного приложения',
+  type_user_role_tag: 'Роль пользователя',
   permission: {
     assign_button: 'Назначить Разрешения',
     assign_title: 'Назначить разрешения',
@@ -52,32 +49,20 @@ const role_details = {
     empty: 'Нет доступных пользователей',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
+    assign_button: 'Назначить приложения',
+    name_column: 'Приложение',
+    app_column: 'Приложения',
+    description_column: 'Описание',
     delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+      'Оно останется в вашем пуле приложений, но потеряет авторизацию для этой роли.',
+    deleted: '{{name}} был успешно удален из этой роли',
+    assign_title: 'Назначить приложения',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'Назначить приложения на эту роль. Найдите подходящие приложения, используя поиск по имени, описанию или идентификатору приложения.',
+    assign_applications_field: 'Назначить приложения',
+    confirm_assign: 'Назначить приложения',
+    applications_assigned: 'Выбранные приложения были успешно назначены на эту роль',
+    empty: 'Нет доступных приложений',
   },
 };
 

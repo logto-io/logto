@@ -6,18 +6,15 @@ const role_details = {
   role_deleted: '{{name}} foi excluído com sucesso.',
   settings_tab: 'Configurações',
   users_tab: 'Usuários',
-  /** UNTRANSLATED */
-  m2m_apps_tab: 'Machine-to-machine apps',
+  m2m_apps_tab: 'Aplicativos máquina-a-máquina',
   permissions_tab: 'Permissões',
   settings: 'Configurações',
   settings_description:
     'Os papéis são um agrupamento de permissões que podem ser atribuídas a usuários. Eles também fornecem uma maneira de agregar permissões definidas para diferentes APIs, tornando mais eficiente a adição, remoção ou ajuste de permissões em comparação com a atribuição individual a usuários.',
   field_name: 'Nome',
   field_description: 'Descrição',
-  /** UNTRANSLATED */
-  type_m2m_role_tag: 'Machine-to-machine app role',
-  /** UNTRANSLATED */
-  type_user_role_tag: 'User role',
+  type_m2m_role_tag: 'Função de aplicativo máquina-a-máquina',
+  type_user_role_tag: 'Função de usuário',
   permission: {
     assign_button: 'Atribuir permissões',
     assign_title: 'Atribuir permissões',
@@ -52,32 +49,20 @@ const role_details = {
     empty: 'Nenhum usuário disponível',
   },
   applications: {
-    /** UNTRANSLATED */
-    assign_button: 'Assign applications',
-    /** UNTRANSLATED */
-    name_column: 'Application',
-    /** UNTRANSLATED */
-    app_column: 'Apps',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
+    assign_button: 'Atribuir aplicativos',
+    name_column: 'Aplicativo',
+    app_column: 'Aplicativos',
+    description_column: 'Descrição',
     delete_description:
-      'It will remain in your application pool but lose the authorization for this role.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this role',
-    /** UNTRANSLATED */
-    assign_title: 'Assign apps',
-    /** UNTRANSLATED */
+      'Ele permanecerá em seu pool de aplicativos, mas perderá a autorização para este papel.',
+    deleted: '{{name}} foi removido com sucesso deste papel',
+    assign_title: 'Atribuir aplicativos',
     assign_subtitle:
-      'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    /** UNTRANSLATED */
-    assign_applications_field: 'Assign applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign applications',
-    /** UNTRANSLATED */
-    applications_assigned: 'The selected applications were successfully assigned to this role',
-    /** UNTRANSLATED */
-    empty: 'No application available',
+      'Atribuir aplicativos a este papel. Encontre os aplicativos adequados pesquisando por nome, descrição ou ID do aplicativo.',
+    assign_applications_field: 'Atribuir aplicativos',
+    confirm_assign: 'Atribuir aplicativos',
+    applications_assigned: 'As aplicações selecionadas foram atribuídas com sucesso a este papel',
+    empty: 'Nenhum aplicativo disponível',
   },
 };
 

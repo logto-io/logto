@@ -4,14 +4,11 @@ const application_details = {
   check_guide: '查看指南',
   settings: '設定',
   settings_description: '應用程式用於在 Logto OIDC、登入體驗、審計日誌等方面識別你的應用程式。',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: '高級設定',
   advanced_settings_description:
     '高級設定包括 OIDC 相關術語。你可以查看 Token Endpoint 以獲取更多資訊。',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: '角色',
+  machine_logs: '機器日誌',
   application_name: '應用程式名稱',
   application_name_placeholder: '我的應用程式',
   description: '描述',
@@ -25,13 +22,13 @@ const application_details = {
     '應用程式的唯一標識，通常由 Logto 生成。等價於 OpenID Connect 中的<a> client_id </a>。',
   application_secret: '應用程式密鑰',
   redirect_uri: '重定向 URI',
-  redirect_uris: '重定向 URIs',
+  redirect_uris: '重定向 URI',
   redirect_uri_placeholder: 'https://your.website.com/app',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在使用者登入完成（不論成功與否）後重定向的目標 URI。參見 OpenID Connect <a> AuthRequest </a> 以瞭解更多。',
   post_sign_out_redirect_uri: '登出後重定向 URI',
-  post_sign_out_redirect_uris: '登出後重定向 URIs',
+  post_sign_out_redirect_uris: '登出後重定向 URI',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
   post_sign_out_redirect_uri_tip:
     '在使用者登出後重定向的目標 URI（可選）。在某些應用程式類型中可能無實質作用。',
@@ -58,37 +55,22 @@ const application_details = {
   application_deleted: '應用 {{name}} 成功刪除。',
   redirect_uri_required: '至少需要輸入一個重定向 URL。',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    name_column: '角色',
+    description_column: '描述',
+    assign_button: '指派角色',
     delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+      '該操作將從此機器對機器應用程式中刪除該角色。該角色本身仍然存在，但不再與此機器對機器應用程式相關聯。',
+    deleted: '{{name}} 已成功從此使用者中刪除。',
+    assign_title: '為 {{name}} 指派角色',
+    assign_subtitle: '授權 {{name}} 至少一個角色',
+    assign_role_field: '指派角色',
+    role_search_placeholder: '按角色名稱搜索',
+    added_text: '{{value, number}} 已添加',
+    assigned_app_count: '{{value, number}} 個應用程式',
+    confirm_assign: '指派角色',
+    role_assigned: '成功指派角色',
+    search: '按角色名稱、描述或 ID 搜索',
+    empty: '無可用角色',
   },
 };
 

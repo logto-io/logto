@@ -4,14 +4,11 @@ const application_details = {
   check_guide: '查看指南',
   settings: '设置',
   settings_description: '应用程序用于在 Logto OIDC、登录体验、审计日志等方面识别你的应用程序。',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: '高级设置',
   advanced_settings_description:
     '高级设置包括 OIDC 相关术语。你可以查看 Token Endpoint 以获取更多信息。',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: '角色',
+  machine_logs: '机器日志',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
   description: '描述',
@@ -19,7 +16,7 @@ const application_details = {
   config_endpoint: 'OpenID Provider 配置端点',
   authorization_endpoint: '授权端点',
   authorization_endpoint_tip: '进行鉴权与授权的端点。用于 OpenID Connect 中的 <a>鉴权</a> 流程。',
-  logto_endpoint: 'Logto endpoint',
+  logto_endpoint: 'Logto 端点',
   application_id: '应用 ID',
   application_id_tip:
     '应用的唯一标识，通常由 Logto 生成。等价于 OpenID Connect 中的 <a>client_id</a>。',
@@ -58,37 +55,21 @@ const application_details = {
   application_deleted: '应用 {{name}} 成功删除。',
   redirect_uri_required: '至少需要输入一个重定向 URI。',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
-    delete_description:
-      'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+    name_column: '角色',
+    description_column: '描述',
+    assign_button: '分配角色',
+    delete_description: '此操作将会从此应用中移除此角色。角色本身仍然存在，但不再与此应用关联。',
+    deleted: '成功从此用户中移除 {{name}}。',
+    assign_title: '为 {{name}} 分配角色',
+    assign_subtitle: '授权 {{name}} 一个或多个角色',
+    assign_role_field: '分配角色',
+    role_search_placeholder: '按角色名称搜索',
+    added_text: '{{value, number}}个已添加',
+    assigned_app_count: '{{value, number}}个应用',
+    confirm_assign: '分配角色',
+    role_assigned: '成功分配角色',
+    search: '按角色名称、描述或 ID 搜索',
+    empty: '没有可用的角色',
   },
 };
 

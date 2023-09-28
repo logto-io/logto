@@ -5,14 +5,11 @@ const application_details = {
   settings: 'Настройки',
   settings_description:
     'Приложения используются для идентификации ваших приложений в Logto для OIDC, опыта входа, аудита и т. Д.',
-  /** UNTRANSLATED */
-  advanced_settings: 'Advanced settings',
+  advanced_settings: 'Расширенные настройки',
   advanced_settings_description:
     'Расширенные настройки включают связанные с OIDC термины. Вы можете проверить конечную точку токена для получения дополнительной информации.',
-  /** UNTRANSLATED */
-  application_roles: 'Roles',
-  /** UNTRANSLATED */
-  machine_logs: 'Machine logs',
+  application_roles: 'Роли',
+  machine_logs: 'Машинные журналы',
   application_name: 'Название приложения',
   application_name_placeholder: 'Мое приложение',
   description: 'Описание',
@@ -61,37 +58,22 @@ const application_details = {
   application_deleted: 'Приложение {{name}} успешно удалено',
   redirect_uri_required: 'Вы должны ввести по крайней мере один URI перенаправления',
   roles: {
-    /** UNTRANSLATED */
-    name_column: 'Role',
-    /** UNTRANSLATED */
-    description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    name_column: 'Роль',
+    description_column: 'Описание',
+    assign_button: 'Назначить роли',
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
-    deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
-    assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
-    assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
-    assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
-    role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
-    added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
-    assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
-    confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
-    role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
-    search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
-    empty: 'No role available',
+    deleted: '{{name}} успешно удалено у этого пользователя.',
+    assign_title: 'Назначить роли для {{name}}',
+    assign_subtitle: 'Авторизовать {{name}} одну или несколько ролей',
+    assign_role_field: 'Назначить роли',
+    role_search_placeholder: 'Поиск по названию роли',
+    added_text: '{{value, number}} добавлено',
+    assigned_app_count: '{{value, number}} приложений',
+    confirm_assign: 'Назначить роли',
+    role_assigned: 'Роль(и) успешно назначены',
+    search: 'Поиск по названию роли, описанию или ID',
+    empty: 'Нет доступных ролей',
   },
 };
 

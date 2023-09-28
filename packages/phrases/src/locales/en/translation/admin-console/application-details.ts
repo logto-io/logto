@@ -5,13 +5,10 @@ const application_details = {
   settings: 'Settings',
   settings_description:
     'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',
-  /** UNTRANSLATED */
   advanced_settings: 'Advanced settings',
   advanced_settings_description:
     'Advanced settings include OIDC related terms. You can check out the Token Endpoint for more information.',
-  /** UNTRANSLATED */
   application_roles: 'Roles',
-  /** UNTRANSLATED */
   machine_logs: 'Machine logs',
   application_name: 'Application name',
   application_name_placeholder: 'My App',
@@ -61,36 +58,21 @@ const application_details = {
   application_deleted: 'Application {{name}} has been successfully deleted',
   redirect_uri_required: 'You must enter at least one redirect URI',
   roles: {
-    /** UNTRANSLATED */
     name_column: 'Role',
-    /** UNTRANSLATED */
     description_column: 'Description',
-    /** UNTRANSLATED */
-    assign_button: 'Assign Roles',
-    /** UNTRANSLATED */
+    assign_button: 'Assign roles',
     delete_description:
       'This action will remove this role from this machine-to-machine app. The role itself will still exist, but it will no longer be associated with this machine-to-machine app.',
-    /** UNTRANSLATED */
     deleted: '{{name}} was successfully removed from this user.',
-    /** UNTRANSLATED */
     assign_title: 'Assign roles to {{name}}',
-    /** UNTRANSLATED */
     assign_subtitle: 'Authorize {{name}} one or more roles',
-    /** UNTRANSLATED */
     assign_role_field: 'Assign roles',
-    /** UNTRANSLATED */
     role_search_placeholder: 'Search by role name',
-    /** UNTRANSLATED */
     added_text: '{{value, number}} added',
-    /** UNTRANSLATED */
     assigned_app_count: '{{value, number}} applications',
-    /** UNTRANSLATED */
     confirm_assign: 'Assign roles',
-    /** UNTRANSLATED */
     role_assigned: 'Successfully assigned role(s)',
-    /** UNTRANSLATED */
     search: 'Search by role name, description or ID',
-    /** UNTRANSLATED */
     empty: 'No role available',
   },
 };
