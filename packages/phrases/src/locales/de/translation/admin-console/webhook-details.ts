@@ -41,6 +41,10 @@ const webhook_details = {
     key_duplicated_error: 'Schlüssel können nicht wiederholt werden.',
     key_missing_error: 'Key ist erforderlich.',
     value_missing_error: 'Eine Eingabe ist erforderlich.',
+    /** UNTRANSLATED */
+    invalid_key_error: 'Key is invalid',
+    /** UNTRANSLATED */
+    invalid_value_error: 'Value is invalid',
     test: 'Test',
     test_webhook: 'Testen Sie Ihren Webhook',
     test_webhook_description:

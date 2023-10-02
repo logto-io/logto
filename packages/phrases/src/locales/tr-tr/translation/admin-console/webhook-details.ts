@@ -39,6 +39,10 @@ const webhook_details = {
     key_duplicated_error: 'Anahtarlar tekrarlanamaz.',
     key_missing_error: 'Anahtar gereklidir.',
     value_missing_error: 'Değer gereklidir.',
+    /** UNTRANSLATED */
+    invalid_key_error: 'Key is invalid',
+    /** UNTRANSLATED */
+    invalid_value_error: 'Value is invalid',
     test: 'Test',
     test_webhook: 'Webhook’unuzu test edin',
     test_webhook_description:
