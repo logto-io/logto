@@ -1,14 +1,16 @@
 import classNames from 'classnames';
-import type { ReactEventHandler, ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import type { ChangeEvent, ReactEventHandler, ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
+import SearchIcon from '@/assets/icons/search.svg';
 import { onKeyDownHandler } from '@/utils/a11y';
 
-import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
+import OverlayScrollbar from '../OverlayScrollbar';
 
 import * as styles from './index.module.scss';
 
@@ -27,6 +29,7 @@ type Props<T> = {
   placeholder?: ReactNode;
   isClearable?: boolean;
   size?: 'small' | 'medium' | 'large';
+  isSearchEnabled?: boolean;
 };
 
 function Select<T extends string>({
@@ -39,14 +42,19 @@ function Select<T extends string>({
   placeholder,
   isClearable,
   size = 'large',
+  isSearchEnabled,
 }: Props<T>) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const selectContainerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const anchorRef = useRef<HTMLInputElement>(null);
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
   const current = options.find((option) => value && option.value === value);
 
   const handleSelect = (value: T) => {
     onChange?.(value);
     setIsOpen(false);
+    setSearchInputValue('');
   };
 
   const handleClear: ReactEventHandler<HTMLButtonElement> = (event) => {
@@ -55,67 +63,123 @@ function Select<T extends string>({
     event.stopPropagation();
   };
 
+  const clickOutsideHandler = ({ target }: MouseEvent) => {
+    if (target instanceof Element && !selectContainerRef.current?.contains(target)) {
+      setIsOpen(false);
+      setSearchInputValue('');
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      searchInputRef.current?.focus();
+      document.addEventListener('mousedown', clickOutsideHandler);
+    } else {
+      document.removeEventListener('mousedown', clickOutsideHandler);
+    }
+    return () => {
+      if (isOpen) {
+        document.removeEventListener('mousedown', clickOutsideHandler);
+      }
+    };
+  }, [isOpen, searchInputRef]);
+
+  useEffect(() => {
+    const optionEls = document.querySelectorAll<HTMLDivElement>('div[data-option]');
+    for (const element of optionEls) {
+      const value = element.dataset.optionValue ?? '';
+      const textContent = element.textContent ?? '';
+      if (
+        textContent.toLowerCase().includes(searchInputValue.toLowerCase()) ||
+        value.toLowerCase().includes(searchInputValue.toLowerCase())
+      ) {
+        element.style.setProperty('display', 'block');
+      } else {
+        element.style.setProperty('display', 'none');
+      }
+    }
+  }, [searchInputValue]);
+
   return (
-    <>
+    <div ref={selectContainerRef} className={styles.selectContainer}>
       <div
-        ref={anchorRef}
         className={classNames(
           styles.select,
           styles[size],
           isOpen && styles.open,
           isReadOnly && styles.readOnly,
           Boolean(error) && styles.error,
-          isClearable && value && styles.clearable,
           className
         )}
-        role="button"
-        tabIndex={0}
-        onKeyDown={onKeyDownHandler(() => {
-          if (!isReadOnly) {
-            setIsOpen(true);
-          }
-        })}
-        onClick={() => {
-          if (!isReadOnly) {
-            setIsOpen(true);
-          }
-        }}
       >
-        <div className={styles.title}>{current?.title ?? placeholder}</div>
-        {isClearable && (
-          <IconButton
-            className={classNames(styles.icon, styles.clear)}
-            size="small"
-            onClick={handleClear}
-          >
-            <Close />
-          </IconButton>
-        )}
-        <div className={classNames(styles.icon, styles.arrow)}>
-          {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-        </div>
-      </div>
-      <Dropdown
-        isFullWidth
-        anchorRef={anchorRef}
-        className={styles.dropdown}
-        isOpen={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-        }}
-      >
-        {options.map(({ value, title }) => (
-          <DropdownItem
-            key={value}
+        {isOpen && isSearchEnabled ? (
+          <div className={styles.searchBox}>
+            <div className={classNames(styles.icon, styles.search)}>
+              <SearchIcon />
+            </div>
+            <input
+              ref={searchInputRef}
+              placeholder={t('general.type_to_search')}
+              value={searchInputValue}
+              className={styles.searchInput}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                setSearchInputValue(event.target.value);
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            tabIndex={0}
+            role="button"
+            className={classNames(styles.displayBox, isClearable && value && styles.clearable)}
+            onKeyDown={onKeyDownHandler(() => {
+              if (!isReadOnly) {
+                setIsOpen(true);
+              }
+            })}
             onClick={() => {
-              handleSelect(value);
+              setIsOpen((previous) => (isReadOnly ? false : !previous));
             }}
           >
-            {title}
-          </DropdownItem>
-        ))}
-      </Dropdown>
-    </>
+            <div className={styles.title}>{current?.title ?? placeholder}</div>
+            {isClearable && (
+              <IconButton
+                className={classNames(styles.icon, styles.clear)}
+                size="small"
+                onClick={handleClear}
+              >
+                <Close />
+              </IconButton>
+            )}
+            <div className={classNames(styles.icon, styles.arrow)}>
+              {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+            </div>
+          </div>
+        )}
+      </div>
+      {isOpen && (
+        <OverlayScrollbar className={styles.menu}>
+          {options.map(({ value, title }) => (
+            <div
+              key={value}
+              data-option
+              tabIndex={0}
+              role="tab"
+              className={styles.option}
+              data-option-value={value}
+              onClick={() => {
+                handleSelect(value);
+              }}
+              onKeyDown={onKeyDownHandler(() => {
+                handleSelect(value);
+              })}
+            >
+              {title}
+            </div>
+          ))}
+        </OverlayScrollbar>
+      )}
+    </div>
   );
 }
 
