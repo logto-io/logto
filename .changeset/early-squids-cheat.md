@@ -2,9 +2,9 @@
 "@logto/core": minor
 ---
 
-### Minor changes:
+machine-to-machine (M2M) role-based access control (RBAC)
 
-Feature: Machine-to-machine (M2M) role-based access control (RBAC)
+### Summary
 
 This feature enables Logto users to apply role-based access control (RBAC) to their machine-to-machine (M2M) applications.
 
@@ -14,10 +14,12 @@ From now on, Logto enables it's users to manage their M2M applications using RBA
 
 Following new APIs are added for M2M role management:
 
+**Applications**
 - `POST /applications/:appId/roles` assigns role(s) to the M2M application
 - `DELETE /applications/:appId/roles/:roleId` deletes the role from the M2M application
 - `GET /applications/:appId/roles` lists all roles assigned to the M2M application
 
+**Roles**
 - `POST /roles/:roleId/applications` assigns the role to multiple M2M applications
 - `DELETE /roles/:roleId/applications/:appId` removes the M2M application assigned to the role
 - `GET /roles/:roleId/applications` lists all M2M applications granted with the role
