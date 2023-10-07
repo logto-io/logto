@@ -230,16 +230,18 @@ export default function initOidc(
           return snakecaseKeys(
             {
               /**
-               * This line is required because:
+               * The manual `sub` assignment is required because:
                * 1. TypeScript will complain since `Object.fromEntries()` has a fixed key type `string`
                * 2. Scope `openid` is removed from `UserScope` enum
                */
               sub,
               ...Object.fromEntries(
-                getUserClaims(use, scope, claims, rejected).map((claim) => [
-                  claim,
-                  getUserClaimData(user, claim),
-                ])
+                await Promise.all(
+                  getUserClaims(use, scope, claims, rejected).map(
+                    async (claim) =>
+                      [claim, await getUserClaimData(user, claim, libraries.users)] as const
+                  )
+                )
               ),
             },
             {
