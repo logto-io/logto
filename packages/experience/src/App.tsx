@@ -7,6 +7,7 @@ import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
+import { isDevelopmentFeaturesEnabled } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -72,19 +73,23 @@ const App = () => {
                     {/* Passwordless verification code */}
                     <Route path=":flow/verification-code" element={<VerificationCode />} />
 
-                    {/* Mfa binding */}
-                    {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
-                    <Route path={UserMfaFlow.MfaBinding}>
-                      <Route index element={<MfaBinding />} />
-                      <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                    </Route>
+                    {isDevelopmentFeaturesEnabled && (
+                      <>
+                        {/* Mfa binding */}
+                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
+                        <Route path={UserMfaFlow.MfaBinding}>
+                          <Route index element={<MfaBinding />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                        </Route>
 
-                    {/* Mfa verification */}
-                    {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
-                    <Route path={UserMfaFlow.MfaVerification}>
-                      <Route index element={<MfaVerification />} />
-                      <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
-                    </Route>
+                        {/* Mfa verification */}
+                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
+                        <Route path={UserMfaFlow.MfaVerification}>
+                          <Route index element={<MfaVerification />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+                        </Route>
+                      </>
+                    )}
 
                     {/* Continue set up missing profile */}
                     <Route path="continue">
