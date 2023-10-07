@@ -1,7 +1,8 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  > *:not(:first-child) {
-    margin-top: _.unit(6);
-  }
+  @include _.flex-column;
+  gap: _.unit(6);
+  margin-bottom: _.unit(6);
+  align-items: stretch;
 }

@@ -6,10 +6,12 @@
   .qrCode {
     border: 1px solid var(--color-line-divider);
     margin: _.unit(4);
-    min-height: 148px;
-    min-width: 148px;
+    height: 136px;
+    width: 136px;
 
     > img {
+      width: 100%;
+      height: 100%;
       display: block;
       @include _.image-align-center;
     }

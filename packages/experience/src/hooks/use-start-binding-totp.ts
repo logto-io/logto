@@ -33,7 +33,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
       if (secret) {
         const state: TotpBindingState = {
           secret,
-          // Todo @wangsijie generate QR code in the server side
+          // Todo @wangsijie generate QR code on the server side
           secretQrCode: await qrcode.toDataURL(`otpauth://totp/?secret=${secret}`),
           allowOtherFactors,
         };

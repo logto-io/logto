@@ -26,7 +26,7 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
 
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(
     () => ({
-      'user.missing_mfa': async (error) => {
+      'user.missing_mfa': (error) => {
         const [_, data] = validate(error.data, missingMfaFactorsErrorDataGuard);
         const missingFactors = data?.missingFactors ?? [];
 
@@ -44,7 +44,7 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         const factor = missingFactors[0];
 
         if (factor === MfaFactor.TOTP) {
-          await startBindingTotp();
+          void startBindingTotp();
         }
         // Todo: @xiaoyijun handle other factors
       },
