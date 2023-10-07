@@ -107,7 +107,7 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.1.2
+        specifier: workspace:^2.2.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
@@ -119,7 +119,7 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:1.9.2
+        specifier: workspace:1.10.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -3131,7 +3131,7 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.9.2
+        specifier: workspace:^1.10.0
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
@@ -3140,7 +3140,7 @@ importers:
         specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
-        specifier: workspace:^2.1.2
+        specifier: workspace:^2.2.0
         version: link:../toolkit/core-kit
       '@logto/demo-app':
         specifier: workspace:*
@@ -3158,7 +3158,7 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.9.2
+        specifier: workspace:^1.10.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -3381,7 +3381,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.9.2
+        specifier: workspace:^1.10.0
         version: link:../cli
 
   packages/demo-app:
@@ -3834,7 +3834,7 @@ importers:
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.1.2
+        specifier: workspace:^2.2.0
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
