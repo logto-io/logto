@@ -1,7 +1,9 @@
+import { type MfaFactor } from '@logto/schemas';
 import { appendPath } from '@silverhand/essentials';
 
-import { logtoUrl } from '#src/constants.js';
+import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readVerificationCode } from '#src/helpers/index.js';
+import { dcls } from '#src/utils.js';
 
 import ExpectPage from './expect-page.js';
 
@@ -17,7 +19,9 @@ export type ExperiencePath =
   | `${ExperienceType}/password`
   | `${ExperienceType}/verify`
   | `${ExperienceType}/verification-code`
-  | `forgot-password/reset`;
+  | `forgot-password/reset`
+  | `mfa-binding/${MfaFactor.TOTP}`
+  | `mfa-verification/${MfaFactor.TOTP}`;
 
 export type ExpectExperienceOptions = {
   /** The URL of the experience endpoint. */
@@ -208,6 +212,59 @@ export default class ExpectExperience extends ExpectPage {
    */
   async waitForToast(text: string | RegExp) {
     return this.toMatchAndRemove('div[role=toast]', text);
+  }
+
+  /**
+   * Assert the page is at the sign-in page with the mock social sign-in method.
+   * Click the 'Mock Social' sign in method and visit the mocked 3rd-party social sign-in page and redirect
+   * back with the given user social data.
+   *
+   * @param socialUserData The given user social data.
+   */
+  async toProcessSocialSignIn({
+    socialUserId,
+    socialEmail,
+    socialPhone,
+  }: {
+    socialUserId: string;
+    socialEmail?: string;
+    socialPhone?: string;
+  }) {
+    const authPageRequestListener = this.page.waitForRequest((request) =>
+      request.url().startsWith(mockSocialAuthPageUrl)
+    );
+
+    await this.toClick('button', 'Continue with Mock Social');
+
+    const result = await authPageRequestListener;
+
+    const { searchParams: authSearchParams } = new URL(result.url());
+    const redirectUri = authSearchParams.get('redirect_uri') ?? '';
+    const state = authSearchParams.get('state') ?? '';
+
+    // Mock social redirects
+    const callbackUrl = new URL(redirectUri);
+    callbackUrl.searchParams.set('state', state);
+    callbackUrl.searchParams.set('code', 'mock-code');
+    callbackUrl.searchParams.set('userId', socialUserId);
+
+    if (socialEmail) {
+      callbackUrl.searchParams.set('email', socialEmail);
+    }
+
+    if (socialPhone) {
+      callbackUrl.searchParams.set('phone', socialPhone);
+    }
+
+    await this.navigateTo(callbackUrl.toString());
+  }
+
+  async getUserIdFromDemoAppPage() {
+    const userIdDiv = await expect(this.page).toMatchElement([dcls('infoCard'), 'div'].join(' '), {
+      text: 'User ID: ',
+    });
+    const userIdSpan = await expect(userIdDiv).toMatchElement('span');
+    return (await userIdSpan.evaluate((element) => element.textContent)) ?? '';
   }
 
   /** Build a full experience URL from a pathname. */

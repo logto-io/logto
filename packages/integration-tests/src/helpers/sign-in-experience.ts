@@ -3,7 +3,7 @@ import { SignInMode, SignInIdentifier, MfaFactor, MfaPolicy } from '@logto/schem
 
 import { updateSignInExperience } from '#src/api/index.js';
 
-const defaultSignUpMethod = {
+export const defaultSignUpMethod = {
   identifiers: [],
   password: false,
   verify: false,
