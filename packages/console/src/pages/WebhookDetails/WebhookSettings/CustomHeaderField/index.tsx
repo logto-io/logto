@@ -38,6 +38,10 @@ function CustomHeaderField() {
   });
 
   const keyValidator = (key: string, index: number) => {
+    if (!isValidHeaderKey(key)) {
+      return t('webhook_details.settings.invalid_key_error');
+    }
+
     const headers = getValues('headers');
     if (!headers) {
       return true;
@@ -53,6 +57,15 @@ function CustomHeaderField() {
     }
 
     return true;
+  };
+
+  const valueValidator = (value: string, index: number) => {
+    if (!isValidHeaderValue(value)) {
+      return t('webhook_details.settings.invalid_value_error');
+    }
+    return getValues(`headers.${index}.key`)
+      ? Boolean(value) || t('webhook_details.settings.value_missing_error')
+      : true;
   };
 
   const revalidate = () => {
@@ -78,12 +91,7 @@ function CustomHeaderField() {
                 placeholder="Key"
                 error={Boolean(headerErrors?.[index]?.key)}
                 {...register(`headers.${index}.key`, {
-                  validate: (key) => {
-                    if (!isValidHeaderKey(key)) {
-                      return t('webhook_details.settings.invalid_key_error');
-                    }
-                    return keyValidator(key, index);
-                  },
+                  validate: (key) => keyValidator(key, index),
                   onChange: revalidate,
                 })}
               />
@@ -92,14 +100,7 @@ function CustomHeaderField() {
                 placeholder="Value"
                 error={Boolean(headerErrors?.[index]?.value)}
                 {...register(`headers.${index}.value`, {
-                  validate: (value) => {
-                    if (!isValidHeaderValue(value)) {
-                      return t('webhook_details.settings.invalid_value_error');
-                    }
-                    return getValues(`headers.${index}.key`)
-                      ? Boolean(value) || t('webhook_details.settings.value_missing_error')
-                      : true;
-                  },
+                  validate: (value) => valueValidator(value, index),
                   onChange: revalidate,
                 })}
               />
