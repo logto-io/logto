@@ -43,14 +43,23 @@ const alteration: AlterationScript = {
       scopeId: string;
       indicator: string;
     }>(sql`
-      select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
-          where roles.name = ${InternalRole.Admin} and roles.type = ${
-            RoleType.MachineToMachine
-          } and scopes.name = ${
-            PredefinedScope.All
-          } and resources.indicator like ${getManagementApiResourceIndicator(
-            '%'
-          )} and resources.name = 'Logto Management API'
+      select
+        roles.id as "role_id",
+        roles.tenant_id as "tenant_id",
+        scopes.id as "scope_id",
+        resources.indicator as "indicator" from roles
+      join roles_scopes
+        on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id
+      join scopes
+        on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id
+      join resources
+        on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
+      where
+        roles.name = ${InternalRole.Admin}
+        and roles.type = ${RoleType.MachineToMachine}
+        and scopes.name = ${PredefinedScope.All}
+        and resources.indicator like ${getManagementApiResourceIndicator('%')}
+        and resources.name = 'Logto Management API'
     `);
     // Can not directly use the result from the query unless we use subquery, separate the filter and subquery for easy understanding.
     const internalManagementApiRoles = internalManagementApiRolesCandidates.filter(
@@ -177,14 +186,24 @@ const alteration: AlterationScript = {
       scopeId: string;
       indicator: string;
     }>(sql`
-      select roles.id as "role_id", roles.tenant_id as "tenant_id", scopes.id as "scope_id", resources.indicator as "indicator" from roles join roles_scopes on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id join scopes on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
-          where roles.name = ${managementApiAccessRoleName} and roles.description = ${managementApiAccessRoleDescription} and roles.type = ${
-            RoleType.MachineToMachine
-          } and scopes.name = ${
-            PredefinedScope.All
-          } and resources.indicator like ${getManagementApiResourceIndicator(
-            '%'
-          )} and resources.name = 'Logto Management API';
+      select
+        roles.id as "role_id",
+        roles.tenant_id as "tenant_id",
+        scopes.id as "scope_id",
+        resources.indicator as "indicator" from roles
+      join roles_scopes
+        on roles_scopes.role_id = roles.id and roles_scopes.tenant_id = roles.tenant_id
+      join scopes
+        on scopes.id = roles_scopes.scope_id and scopes.tenant_id = roles_scopes.tenant_id
+      join resources
+        on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
+      where
+        roles.name = ${managementApiAccessRoleName}
+        and roles.description = ${managementApiAccessRoleDescription}
+        and roles.type = ${RoleType.MachineToMachine}
+        and scopes.name = ${PredefinedScope.All}
+        and resources.indicator like ${getManagementApiResourceIndicator('%')}
+        and resources.name = 'Logto Management API';
     `);
     // Can not directly use the result from the query unless we use subquery, separate the filter and subquery for easy understanding.
     const managementApiAccessRoles = managementApiAccessRolesCandidates.filter(
@@ -219,14 +238,23 @@ const alteration: AlterationScript = {
       roleId: string;
       tenantId: string;
     }>(sql`
-      select roles.id as "roleId", roles.tenant_id as "tenantId" from roles join roles_scopes on roles.tenant_id = roles_scopes.tenant_id and roles.id = roles_scopes.role_id join scopes on scopes.tenant_id = roles_scopes.tenant_id and scopes.id = roles_scopes.scope_id join resources on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id where roles.name = ${
-        InternalRole.Admin
-      } and ( roles.tenant_id, resources.indicator ) in (values ${sql.join(
-        concernedTenantIds.map(
-          (tenantId) => sql`( ${tenantId}, ${getManagementApiResourceIndicator(tenantId)} )`
-        ),
-        sql`, `
-      )});
+      select
+        roles.id as "roleId",
+        roles.tenant_id as "tenantId" from roles
+      join roles_scopes
+        on roles.tenant_id = roles_scopes.tenant_id and roles.id = roles_scopes.role_id
+      join scopes
+        on scopes.tenant_id = roles_scopes.tenant_id and scopes.id = roles_scopes.scope_id
+      join resources
+        on resources.id = scopes.resource_id and resources.tenant_id = scopes.tenant_id
+      where
+        roles.name = ${InternalRole.Admin}
+        and ( roles.tenant_id, resources.indicator ) in (values ${sql.join(
+          concernedTenantIds.map(
+            (tenantId) => sql`( ${tenantId}, ${getManagementApiResourceIndicator(tenantId)} )`
+          ),
+          sql`, `
+        )});
     `);
     /**
      * Step 4
