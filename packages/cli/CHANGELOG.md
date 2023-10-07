@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.9.2
+
+### Patch Changes
+
+- 18181f892: standardize id and secret generators
+
+  - Remove `buildIdGenerator` export from `@logto/shared`
+  - Add `generateStandardSecret` and `generateStandardShortId` exports to `@logto/shared`
+  - Align comment and implementation of `buildIdGenerator` in `@logto/shared`
+    - The comment stated the function will include uppercase letters by default, but it did not; Now it does.
+  - Use `generateStandardSecret` for all secret generation
+
+- Updated dependencies [18181f892]
+  - @logto/shared@3.0.0
+  - @logto/schemas@1.9.2
+  - @logto/core-kit@2.1.2
+
 ## 1.9.1
 
 ### Patch Changes

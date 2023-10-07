@@ -1,5 +1,12 @@
 # @logto/connector-apple
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [18181f892]
+  - @logto/shared@3.0.0
+
 ## 1.0.1
 
 ### Patch Changes

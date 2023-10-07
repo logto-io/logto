@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.1.2
+
+### Patch Changes
+
+- Updated dependencies [18181f892]
+  - @logto/shared@3.0.0
+
 ## 2.1.1
 
 ### Patch Changes

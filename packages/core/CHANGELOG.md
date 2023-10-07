@@ -1,5 +1,26 @@
 # Change Log
 
+## 1.9.2
+
+### Patch Changes
+
+- 18181f892: standardize id and secret generators
+
+  - Remove `buildIdGenerator` export from `@logto/shared`
+  - Add `generateStandardSecret` and `generateStandardShortId` exports to `@logto/shared`
+  - Align comment and implementation of `buildIdGenerator` in `@logto/shared`
+    - The comment stated the function will include uppercase letters by default, but it did not; Now it does.
+  - Use `generateStandardSecret` for all secret generation
+
+- 827123faa: block an identifier from verification for 10 minutes after 5 failed attempts within 1 hour
+- Updated dependencies [a8b5a020f]
+- Updated dependencies [18181f892]
+  - @logto/console@1.8.0
+  - @logto/shared@3.0.0
+  - @logto/schemas@1.9.2
+  - @logto/cli@1.9.2
+  - @logto/core-kit@2.1.2
+
 ## 1.9.1
 
 ### Patch Changes
