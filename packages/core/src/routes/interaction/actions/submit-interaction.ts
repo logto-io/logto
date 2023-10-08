@@ -1,7 +1,6 @@
-import { defaults, parseAffiliateData } from '@logto/affiliate';
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
-import type { User, Profile, CreateUser } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import {
   AdminTenantRole,
   SignInMode,
@@ -11,13 +10,10 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
 } from '@logto/schemas';
-import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
+import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
-import { type IRouterContext } from 'koa-router';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
-import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { encryptUserPassword } from '#src/libraries/user.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -28,145 +24,13 @@ import { getTenantId } from '#src/utils/tenant.js';
 import type { WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 import type {
-  Identifier,
   VerifiedInteractionResult,
-  SocialIdentifier,
   VerifiedSignInInteractionResult,
   VerifiedRegisterInteractionResult,
 } from '../types/index.js';
-import { clearInteractionStorage, categorizeIdentifiers } from '../utils/interaction.js';
+import { clearInteractionStorage } from '../utils/interaction.js';
 
-const filterSocialIdentifiers = (identifiers: Identifier[]): SocialIdentifier[] =>
-  identifiers.filter((identifier): identifier is SocialIdentifier => identifier.key === 'social');
-
-const getNewSocialProfile = async (
-  { getLogtoConnectorById }: ConnectorLibrary,
-  {
-    user,
-    connectorId,
-    identifiers,
-  }: {
-    user?: User;
-    connectorId: string;
-    identifiers: SocialIdentifier[];
-  }
-) => {
-  // TODO: @simeng refactor me. This step should be verified by the previous profile verification cycle Already.
-  const socialIdentifier = identifiers.find((identifier) => identifier.connectorId === connectorId);
-
-  if (!socialIdentifier) {
-    return;
-  }
-
-  const {
-    metadata: { target },
-    dbEntry: { syncProfile },
-  } = await getLogtoConnectorById(connectorId);
-
-  const { userInfo } = socialIdentifier;
-  const { name, avatar, id, email, phone } = userInfo;
-
-  const identities = { ...user?.identities, [target]: { userId: id, details: userInfo } };
-
-  // Sync the name, avatar, email and phone for new user
-  if (!user) {
-    return {
-      identities,
-      ...conditional(name && { name }),
-      ...conditional(avatar && { avatar }),
-      ...conditional(email && { primaryEmail: email }),
-      ...conditional(phone && { primaryPhone: phone }),
-    };
-  }
-
-  // Sync the user name and avatar if the connector has syncProfile enabled
-  return {
-    identities,
-    ...conditional(
-      syncProfile && {
-        ...conditional(name && { name }),
-        ...conditional(avatar && { avatar }),
-      }
-    ),
-  };
-};
-
-const getLatestUserProfileFromSocial = async (
-  { getLogtoConnectorById }: ConnectorLibrary,
-  authIdentifiers: Identifier[]
-) => {
-  const socialIdentifier = filterSocialIdentifiers(authIdentifiers).at(-1);
-
-  if (!socialIdentifier) {
-    return;
-  }
-
-  const {
-    userInfo: { name, avatar },
-    connectorId,
-  } = socialIdentifier;
-
-  const {
-    dbEntry: { syncProfile },
-  } = await getLogtoConnectorById(connectorId);
-
-  return conditional(
-    syncProfile && {
-      ...conditional(name && { name }),
-      ...conditional(avatar && { avatar }),
-    }
-  );
-};
-
-const parseNewUserProfile = async (
-  connectorLibrary: ConnectorLibrary,
-  profile: Profile,
-  profileIdentifiers: Identifier[],
-  user?: User
-) => {
-  const { phone, username, email, connectorId, password } = profile;
-
-  const [passwordProfile, socialProfile] = await Promise.all([
-    conditional(password && (await encryptUserPassword(password))),
-    conditional(
-      connectorId &&
-        (await getNewSocialProfile(connectorLibrary, {
-          connectorId,
-          identifiers: filterSocialIdentifiers(profileIdentifiers),
-          user,
-        }))
-    ),
-  ]);
-
-  return {
-    ...socialProfile, // SocialProfile should be applied first
-    ...passwordProfile,
-    ...conditional(phone && { primaryPhone: phone }),
-    ...conditional(username && { username }),
-    ...conditional(email && { primaryEmail: email }),
-  };
-};
-
-const parseUserProfile = async (
-  connectorLibrary: ConnectorLibrary,
-  { profile, identifiers }: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult,
-  user?: User
-): Promise<Omit<OmitAutoSetFields<CreateUser>, 'id'>> => {
-  const { authIdentifiers, profileIdentifiers } = categorizeIdentifiers(identifiers ?? [], profile);
-
-  const newUserProfile =
-    profile && (await parseNewUserProfile(connectorLibrary, profile, profileIdentifiers, user));
-
-  // Sync from the latest social identity profile for existing users
-  const syncedSocialUserProfile =
-    user && (await getLatestUserProfileFromSocial(connectorLibrary, authIdentifiers));
-
-  return {
-    ...syncedSocialUserProfile,
-    ...newUserProfile,
-    lastSignInAt: Date.now(),
-  };
-};
+import { postAffiliateLogs, parseUserProfile } from './helpers.js';
 
 const parseBindMfa = ({
   bindMfa,
@@ -196,36 +60,13 @@ const getInitialUserRoles = (
     isCreatingFirstAdminUser && isCloud && getManagementApiAdminName(adminTenantId)
   );
 
-/** Post affiliate data to the cloud service. */
-const postAffiliateLogs = async (
-  ctx: IRouterContext,
-  cloudConnection: CloudConnectionLibrary,
-  userId: string,
-  tenantId: string
-) => {
-  if (!EnvSet.values.isCloud || tenantId !== adminTenantId) {
-    return;
-  }
-
-  const affiliateData = trySafe(() =>
-    parseAffiliateData(JSON.parse(decodeURIComponent(ctx.cookies.get(defaults.cookieName) ?? '')))
-  );
-
-  if (affiliateData) {
-    const client = await cloudConnection.getClient();
-    await client.post('/api/affiliate-logs', {
-      body: { userId, ...affiliateData },
-    });
-    consoleLog.info('Affiliate logs posted', userId);
-  }
-};
-
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
-  { provider, libraries, connectors, queries, cloudConnection, id: tenantId }: TenantContext,
+  tenantContext: TenantContext,
   log?: LogEntry
 ) {
+  const { provider, libraries, queries, cloudConnection, id: tenantId } = tenantContext;
   const { hasActiveUsers, findUserById, updateUserById } = queries.users;
   const { updateDefaultSignInExperience } = queries.signInExperiences;
 
@@ -236,7 +77,7 @@ export default async function submitInteraction(
 
   if (event === InteractionEvent.Register) {
     const id = await generateUserId();
-    const userProfile = await parseUserProfile(connectors, interaction);
+    const userProfile = await parseUserProfile(tenantContext, interaction);
     const mfaVerification = parseBindMfa(interaction);
 
     const { client_id } = ctx.interactionDetails.params;
@@ -283,7 +124,7 @@ export default async function submitInteraction(
 
   if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
-    const updateUserProfile = await parseUserProfile(connectors, interaction, user);
+    const updateUserProfile = await parseUserProfile(tenantContext, interaction, user);
     const mfaVerification = parseBindMfa(interaction);
 
     await updateUserById(accountId, {
