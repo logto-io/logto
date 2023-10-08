@@ -1,4 +1,5 @@
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import type router from '@logto/cloud/routes';
 import { VerificationCodeType } from '@logto/connector-kit';
 import type { EmailConnector, SmsConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
@@ -66,7 +67,7 @@ describe('connector services route', () => {
 
     it('should get SMS connector and send test message', async () => {
       const sendMessage = jest.fn();
-      const mockedSmsConnectorFactory: ConnectorFactory<SmsConnector> = {
+      const mockedSmsConnectorFactory: ConnectorFactory<typeof router, SmsConnector> = {
         ...mockConnectorFactory,
         metadata: mockMetadata,
         type: ConnectorType.Sms,
@@ -93,7 +94,7 @@ describe('connector services route', () => {
 
     it('should get email connector and send test message', async () => {
       const sendMessage = jest.fn();
-      const mockedEmailConnectorFactory: ConnectorFactory<EmailConnector> = {
+      const mockedEmailConnectorFactory: ConnectorFactory<typeof router, EmailConnector> = {
         ...mockConnectorFactory,
         metadata: mockMetadata,
         type: ConnectorType.Email,

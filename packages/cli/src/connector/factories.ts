@@ -1,3 +1,4 @@
+import type { BaseRoutes, Router } from '@withtyped/server';
 import chalk from 'chalk';
 
 import { consoleLog } from '../utils.js';
@@ -7,8 +8,8 @@ import { loadConnector } from './loader.js';
 import type { ConnectorFactory, ConnectorPackage } from './types.js';
 import { parseMetadata, validateConnectorModule } from './utils.js';
 
-// eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectorFactories: ConnectorFactory[] | undefined;
+// eslint-disable-next-line @silverhand/fp/no-let, @typescript-eslint/no-explicit-any
+let cachedConnectorFactories: Array<ConnectorFactory<Router<any, BaseRoutes, string>>> | undefined;
 
 export const loadConnectorFactories = async (
   connectorPackages: ConnectorPackage[],
@@ -46,7 +47,9 @@ export const loadConnectorFactories = async (
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
   cachedConnectorFactories = connectorFactories.filter(
-    (connectorFactory): connectorFactory is ConnectorFactory => connectorFactory !== undefined
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (connectorFactory): connectorFactory is ConnectorFactory<Router<any, BaseRoutes, string>> =>
+      connectorFactory !== undefined
   );
 
   return cachedConnectorFactories;

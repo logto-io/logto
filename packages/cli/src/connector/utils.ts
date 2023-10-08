@@ -10,6 +10,7 @@ import type {
   GetCloudServiceClient,
 } from '@logto/connector-kit';
 import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/connector-kit';
+import type { BaseRoutes, Router } from '@withtyped/server';
 
 import { consoleLog } from '../utils.js';
 
@@ -90,11 +91,15 @@ export const parseMetadata = async (
   };
 };
 
-export const buildRawConnector = async <T extends AllConnector = AllConnector>(
-  connectorFactory: ConnectorFactory<T>,
+export const buildRawConnector = async <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Router<any, BaseRoutes, string>,
+  U extends AllConnector = AllConnector,
+>(
+  connectorFactory: ConnectorFactory<T, U>,
   getConnectorConfig?: GetConnectorConfig,
-  getCloudServiceClient?: GetCloudServiceClient
-): Promise<{ rawConnector: T; rawMetadata: ConnectorMetadata }> => {
+  getCloudServiceClient?: GetCloudServiceClient<T>
+): Promise<{ rawConnector: U; rawMetadata: ConnectorMetadata }> => {
   const { createConnector, path: packagePath } = connectorFactory;
   const rawConnector = await createConnector({
     getConfig: getConnectorConfig ?? notImplemented,

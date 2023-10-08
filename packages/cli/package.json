@@ -76,6 +76,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "4.0.1",
     "@silverhand/ts-config": "4.0.0",
+    "@withtyped/server": "^0.12.9",
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",

@@ -1,7 +1,7 @@
-import type router from '@logto/cloud/routes';
 import type { LanguageTag } from '@logto/language-kit';
 import { isLanguageTag } from '@logto/language-kit';
 import type Client from '@withtyped/client';
+import type { BaseRoutes, Router } from '@withtyped/server';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -199,14 +199,21 @@ export type BaseConnector<Type extends ConnectorType> = {
   configGuard: ZodType;
 };
 
-export type CreateConnector<T extends AllConnector> = (options: {
+export type CreateConnector<
+  T extends AllConnector,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  U extends Router<any, BaseRoutes, string> = Router<any, BaseRoutes, string>,
+> = (options: {
   getConfig: GetConnectorConfig;
-  getCloudServiceClient?: GetCloudServiceClient;
+  getCloudServiceClient?: GetCloudServiceClient<U>;
 }) => Promise<T>;
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
-export type GetCloudServiceClient = () => Promise<Client<typeof router>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GetCloudServiceClient<T extends Router<any, BaseRoutes, string>> = () => Promise<
+  Client<T>
+>;
 
 export type AllConnector = SmsConnector | EmailConnector | SocialConnector;
 
