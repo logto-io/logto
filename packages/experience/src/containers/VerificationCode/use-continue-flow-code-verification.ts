@@ -7,7 +7,7 @@ import { addProfileWithVerificationCodeIdentifier } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import type { VerificationCodeIdentifier } from '@/types';
 import { SearchParameters } from '@/types';
 
@@ -27,7 +27,8 @@ const useContinueFlowCodeVerification = (
 
   const { generalVerificationCodeErrorHandlers, errorMessage, clearErrorMessage } =
     useGeneralVerificationCodeErrorHandler();
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ replace: true });
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
+
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const showLinkSocialConfirmModal = useLinkSocialConfirmModal();
   const identifierExistErrorHandler = useCallback(
@@ -52,14 +53,14 @@ const useContinueFlowCodeVerification = (
         identifierExistErrorHandler(SignInIdentifier.Phone, target),
       'user.email_already_in_use': async () =>
         identifierExistErrorHandler(SignInIdentifier.Email, target),
-      ...requiredProfileErrorHandler,
+      ...preSignInErrorHandler,
       ...generalVerificationCodeErrorHandlers,
     }),
     [
-      target,
-      identifierExistErrorHandler,
-      requiredProfileErrorHandler,
+      preSignInErrorHandler,
       generalVerificationCodeErrorHandlers,
+      identifierExistErrorHandler,
+      target,
     ]
   );
 

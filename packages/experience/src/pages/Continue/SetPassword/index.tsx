@@ -7,7 +7,7 @@ import SetPasswordForm from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { usePasswordPolicy } from '@/hooks/use-sie';
 
 const SetPassword = () => {
@@ -19,16 +19,17 @@ const SetPassword = () => {
   const navigate = useNavigate();
   const { show } = useConfirmModal();
 
-  const requiredProfileErrorHandler = useRequiredProfileErrorHandler();
+  const preSignInErrorHandler = usePreSignInErrorHandler();
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.password_exists_in_profile': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      ...requiredProfileErrorHandler,
+      ...preSignInErrorHandler,
     }),
-    [navigate, requiredProfileErrorHandler, show]
+    [navigate, preSignInErrorHandler, show]
   );
   const successHandler: SuccessHandler<typeof addProfile> = useCallback((result) => {
     if (result?.redirectTo) {

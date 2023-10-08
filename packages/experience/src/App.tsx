@@ -1,4 +1,5 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
+import { MfaFactor } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppLayout from './Layout/AppLayout';
@@ -6,11 +7,16 @@ import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
+import { isDevelopmentFeaturesEnabled } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
+import MfaBinding from './pages/MfaBinding';
+import TotpBinding from './pages/MfaBinding/TotpBinding';
+import MfaVerification from './pages/MfaVerification';
+import TotpVerification from './pages/MfaVerification/TotpVerification';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -21,6 +27,7 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
 import Springboard from './pages/Springboard';
 import VerificationCode from './pages/VerificationCode';
+import { UserMfaFlow } from './types';
 import { handleSearchParametersData } from './utils/search-parameters';
 
 import './scss/normalized.scss';
@@ -65,6 +72,24 @@ const App = () => {
 
                     {/* Passwordless verification code */}
                     <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                    {isDevelopmentFeaturesEnabled && (
+                      <>
+                        {/* Mfa binding */}
+                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
+                        <Route path={UserMfaFlow.MfaBinding}>
+                          <Route index element={<MfaBinding />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                        </Route>
+
+                        {/* Mfa verification */}
+                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
+                        <Route path={UserMfaFlow.MfaVerification}>
+                          <Route index element={<MfaVerification />} />
+                          <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+                        </Route>
+                      </>
+                    )}
 
                     {/* Continue set up missing profile */}
                     <Route path="continue">

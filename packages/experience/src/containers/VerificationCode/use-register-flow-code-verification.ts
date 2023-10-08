@@ -12,7 +12,7 @@ import useApi from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
-import useRequiredProfileErrorHandler from '@/hooks/use-required-profile-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import type { VerificationCodeIdentifier } from '@/types';
 import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
@@ -37,8 +37,8 @@ const useRegisterFlowCodeVerification = (
 
   const { errorMessage, clearErrorMessage, generalVerificationCodeErrorHandlers } =
     useGeneralVerificationCodeErrorHandler();
+  const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
-  const requiredProfileErrorHandlers = useRequiredProfileErrorHandler({ replace: true });
   const showIdentifierErrorAlert = useIdentifierErrorAlert();
   const identifierExistErrorHandler = useCallback(async () => {
     // Should not redirect user to sign-in if is register-only mode
@@ -68,7 +68,7 @@ const useRegisterFlowCodeVerification = (
     const [error, result] = await signInWithIdentifierAsync();
 
     if (error) {
-      await handleError(error, requiredProfileErrorHandlers);
+      await handleError(error, preSignInErrorHandler);
 
       return;
     }
@@ -80,7 +80,7 @@ const useRegisterFlowCodeVerification = (
     handleError,
     method,
     navigate,
-    requiredProfileErrorHandlers,
+    preSignInErrorHandler,
     show,
     showIdentifierErrorAlert,
     signInMode,
@@ -94,14 +94,14 @@ const useRegisterFlowCodeVerification = (
       'user.email_already_in_use': identifierExistErrorHandler,
       'user.phone_already_in_use': identifierExistErrorHandler,
       ...generalVerificationCodeErrorHandlers,
-      ...requiredProfileErrorHandlers,
+      ...preSignInErrorHandler,
       callback: errorCallback,
     }),
     [
-      errorCallback,
       identifierExistErrorHandler,
-      requiredProfileErrorHandlers,
       generalVerificationCodeErrorHandlers,
+      preSignInErrorHandler,
+      errorCallback,
     ]
   );
 

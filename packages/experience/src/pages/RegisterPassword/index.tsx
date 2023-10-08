@@ -7,6 +7,7 @@ import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
+import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
 
@@ -21,6 +22,9 @@ const RegisterPassword = () => {
   const clearErrorMessage = useCallback(() => {
     setErrorMessage(undefined);
   }, []);
+
+  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       // Incase previous page submitted username has been taken
@@ -28,9 +32,11 @@ const RegisterPassword = () => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
+      ...mfaVerificationErrorHandler,
     }),
-    [navigate, show]
+    [navigate, mfaVerificationErrorHandler, show]
   );
+
   const successHandler: SuccessHandler<typeof setUserPassword> = useCallback((result) => {
     if (result && 'redirectTo' in result) {
       window.location.replace(result.redirectTo);
