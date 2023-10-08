@@ -43,7 +43,7 @@ const alteration: AlterationScript = {
         /** The organization's name for display. */
         name varchar(128) not null,
         /** A brief description of the organization. */
-        description varchar(256) not null,
+        description varchar(256),
         /** When the organization was created. */
         created_at timestamptz not null default(now()),
         primary key (id)
@@ -63,7 +63,7 @@ const alteration: AlterationScript = {
         /** The organization role's name, unique within the organization template. */
         name varchar(128) not null,
         /** A brief description of the organization role. */
-        description varchar(256) not null,
+        description varchar(256),
         primary key (id),
         constraint organization_roles__name
           unique (tenant_id, name)
@@ -83,7 +83,7 @@ const alteration: AlterationScript = {
         /** The organization scope's name, unique within the organization template. */
         name varchar(128) not null,
         /** A brief description of the organization scope. */
-        description varchar(256) not null,
+        description varchar(256),
         primary key (id),
         constraint organization_scopes__name
           unique (tenant_id, name)

@@ -9,7 +9,7 @@ create table organizations (
   /** The organization's name for display. */
   name varchar(128) not null,
   /** A brief description of the organization. */
-  description varchar(256) not null,
+  description varchar(256),
   /** When the organization was created. */
   created_at timestamptz not null default(now()),
   primary key (id)

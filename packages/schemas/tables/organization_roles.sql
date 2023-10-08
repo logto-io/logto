@@ -9,7 +9,7 @@ create table organization_roles (
   /** The organization role's name, unique within the organization template. */
   name varchar(128) not null,
   /** A brief description of the organization role. */
-  description varchar(256) not null,
+  description varchar(256),
   primary key (id),
   constraint organization_roles__name
     unique (tenant_id, name)

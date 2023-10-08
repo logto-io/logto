@@ -9,7 +9,7 @@ create table organization_scopes (
   /** The organization scope's name, unique within the organization template. */
   name varchar(128) not null,
   /** A brief description of the organization scope. */
-  description varchar(256) not null,
+  description varchar(256),
   primary key (id),
   constraint organization_scopes__name
     unique (tenant_id, name)
