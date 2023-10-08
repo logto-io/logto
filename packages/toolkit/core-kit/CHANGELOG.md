@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.0
+
+### Minor Changes
+
+- 2c340d379: support `roles` scope for ID token to issue `roles` claim
+
 ## 2.1.2
 
 ### Patch Changes
