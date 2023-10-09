@@ -1,0 +1,183 @@
+# This integration test ci job is used to test the DB alterations compatibility with the current codebase.
+
+name: Alteration Compatibility Test
+
+on:
+  push:
+    branches:
+      - master
+      - "push-action/**"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  fetch-current:
+    name: Fetch current codebase and check alteration changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: ./head
+
+      # compare the current codebase with HEAD and check if there are any changes in the alterations folder
+      - name: Check for alteration changes
+        id: check-alteration-changes
+        working-directory: ./head
+        run: |
+          CHANGE_FILES=$(git diff --name-only HEAD...origin/${{ github.base_ref }} | grep -p 'packages/schemas/alterations/*')
+          if [ -z "$CHANGE_FILES" ]; then
+            echo "No alteration changes detected"
+            exit 0
+          else
+            echo "Alteration changes detected"
+            echo "$CHANGE_FILES"
+          fi
+
+      - name: Copy lockfile # Make setup workflow happy
+        run: cp ./head/pnpm-lock.yaml ./
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v3
+        with:
+          run-install: false
+
+      #prepack the alteration cli
+      - name: prepack
+        working-directory: ./head
+        run: |
+          npm i
+          npm run prepack
+
+  # package the base code
+  package-base:
+    runs-on: ubuntu-latest
+    needs: fetch-current
+    env:
+      INTEGRATION_TEST: true
+
+    steps:
+      # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
+      - id: version
+        working-directory: ./head
+        run: echo "current=$(git describe --match "@logto/schemas@*" --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.version.outputs.current }}
+          path: ./alteration
+
+      - name: Build and package
+        working-directory: ./alteration
+        run: |
+          pnpm i
+          pnpm -r build
+          ./.scripts/package.sh
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+          path: /tmp/logto.tar.gz
+          retention-days: 3
+
+  run-logto:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api, experience, console]
+
+    needs: [fetch-current, package-base]
+    runs-on: ubuntu-latest
+    env:
+      INTEGRATION_TEST: true
+      DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+    steps:
+      # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
+      - id: version
+        working-directory: ./head
+        run: echo "current=$(git describe --match "@logto/schemas@*" --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.version.outputs.current }}
+          path: ./tests
+
+      # Setup integration test
+      - name: Install dependencies
+        run: |
+          cd tests
+          pnpm i
+          pnpm prepack
+          # Install Chromium
+          cd packages/integration-tests/node_modules/puppeteer
+          pnpm postinstall
+
+      # Setup environment
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v4
+
+      - name: Setup Redis
+        uses: supercharge/redis-github-action@6dc7a5eeaf9a8f860b6464e05195a15f8b9f3bbb # 1.7.0
+        with:
+          redis-version: 6
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+
+      - name: Extract
+        working-directory: tests
+        run: |
+          npm run cli init -- \
+            -p ../logto \
+            --du ../logto.tar.gz
+
+      - name: Check and add mock connectors
+        working-directory: tests
+        run: |
+          npm run cli connector list -- -p ../logto | grep OFFICIAL
+          npm run cli connector link -- --mock -p ../logto
+
+      - name: Setup mock Cloudflare Hostname Provider config
+        working-directory: tests
+        run: npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+      - name: Run the alteration script
+        working-directory: ./head
+        run: pnpm cli db alt deploy next
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+      - name: Run Logto
+        working-directory: logto/
+        run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
+        env:
+          REDIS_URL: 1
+
+      - name: Sleep for 5 seconds
+        run: sleep 5
+
+      # Test
+      - name: Run tests
+        run: |
+          cd tests/packages/integration-tests
+          pnpm build
+          pnpm run test:${{ matrix.target }}
+
+      - name: Show logs
+        if: always()
+        working-directory: logto/
+        run: cat nohup.out
+
+      - name: Show error logs
+        if: always()
+        working-directory: logto/
+        run: cat nohup.err
