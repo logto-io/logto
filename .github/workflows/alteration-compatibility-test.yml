@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  integration-test:
+  check-alteration-changes:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,31 +24,17 @@ jobs:
           fetch-depth: 0
           path: ./head
 
-      # compare the current codebase with HEAD and check if there are any changes in the alterations folder
+      # compare the current codebase with HEAD and check if there are any changes under the alterations folder
       - name: Check for alteration changes
-        id: check-alteration-changes
+        id: alteration-changes
         working-directory: ./head
         run: |
-          CHANGE_FILES=$(git diff --name-only HEAD...origin/${{ github.base_ref }} | grep -q 'packages/schemas/alterations/*')
+          CHANGE_FILES=$(git diff --name-only HEAD..origin/${{ github.base_ref }} | grep -q 'packages/schemas/alterations/*')
           if [ -z "$CHANGE_FILES" ]; then
             echo "No alteration changes detected"
-            exit 0
+            echo "::set-output name=has-alteration-changes::false"
           else
             echo "Alteration changes detected"
             echo "$CHANGE_FILES"
+            echo "::set-output name=has-alteration-changes::true"
           fi
-
-      - name: Copy lockfile # Make setup workflow happy
-        run: cp ./head/pnpm-lock.yaml ./
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v3
-        with:
-          run-install: false
-
-      #prepack the alteration cli
-      - name: prepack
-        working-directory: ./head
-        run: |
-          npm i
-          npm run prepack
