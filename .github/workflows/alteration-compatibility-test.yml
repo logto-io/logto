@@ -22,12 +22,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          path: ./head
 
       # compare the current codebase with HEAD and check if there are any changes under the alterations folder
       - name: Check for alteration changes
         id: alteration-changes
-        working-directory: ./head
         run: |
           CHANGE_FILES=$(git diff --name-only HEAD..origin/${{ github.base_ref }} | grep 'packages/schemas/alterations/*')
           if [ -z "$CHANGE_FILES" ]; then
@@ -38,3 +36,15 @@ jobs:
             echo "$CHANGE_FILES"
             echo "::set-output name=has-alteration-changes::true"
           fi
+
+  package:
+    needs: check-alteration-changes
+    runs-on: ubuntu-latest
+    if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+
+    steps:
+      - name: checkout base
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.base_ref }}
