@@ -21,6 +21,8 @@ const session = {
   connector_validation_session_not_found: '연동 세션 유효성 검증을 위한 토큰을 찾을 수 없어요.',
   identifier_not_found: '사용자 식별자를 찾을 수 없어요. 처음부터 다시 로그인을 시도해 주세요.',
   interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
+  /** UNTRANSLATED */
+  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
     /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
@@ -30,6 +32,8 @@ const session = {
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
+    /** UNTRANSLATED */
+    webauthn_verification_failed: 'WebAuthn verification failed.',
   },
 };
 

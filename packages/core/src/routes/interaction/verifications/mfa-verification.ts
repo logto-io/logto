@@ -25,8 +25,6 @@ export const verifyBindMfa = async (
 
   const { type } = bindMfa;
 
-  // There will be more types later
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (type === MfaFactor.TOTP) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);

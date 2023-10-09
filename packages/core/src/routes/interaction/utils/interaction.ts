@@ -17,6 +17,7 @@ import type {
   VerifiedInteractionResult,
   RegisterInteractionResult,
   AccountVerifiedInteractionResult,
+  VerifiedRegisterInteractionResult,
 } from '../types/index.js';
 
 const isProfileIdentifier = (identifier: Identifier, profile?: Profile) => {
@@ -87,6 +88,11 @@ export const isForgotPasswordInteractionResult = (
   interaction: VerifiedInteractionResult
 ): interaction is VerifiedForgotPasswordInteractionResult =>
   interaction.event === InteractionEvent.ForgotPassword;
+
+export const isRegisterInteractionResult = (
+  interaction: VerifiedInteractionResult
+): interaction is VerifiedRegisterInteractionResult =>
+  interaction.event === InteractionEvent.Register;
 
 export const isSignInInteractionResult = (
   interaction: RegisterInteractionResult | AccountVerifiedInteractionResult

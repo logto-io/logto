@@ -19,3 +19,4 @@ export * from './cookie.js';
 export * from './dashboard.js';
 export * from './domain.js';
 export * from './sentinel.js';
+export * from './mfa.js';

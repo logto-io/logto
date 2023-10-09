@@ -26,11 +26,22 @@ export const mfaVerificationTotp = z.object({
 
 export type MfaVerificationTotp = z.infer<typeof mfaVerificationTotp>;
 
+export const webAuthnTransportGuard = z.enum([
+  'usb',
+  'nfc',
+  'ble',
+  'internal',
+  'cable',
+  'hybrid',
+  'smart-card',
+]);
+
 export const mfaVerificationWebAuthn = z.object({
   type: z.literal(MfaFactor.WebAuthn),
   ...baseMfaVerification,
   credentialId: z.string(),
   publicKey: z.string(),
+  transports: webAuthnTransportGuard.array().optional(),
   counter: z.number(),
   agent: z.string(),
 });

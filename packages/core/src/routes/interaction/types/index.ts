@@ -79,6 +79,7 @@ export type VerifiedRegisterInteractionResult = {
   profile?: Profile;
   identifiers?: Identifier[];
   bindMfa?: BindMfa;
+  pendingAccountId?: string;
 };
 
 export type VerifiedSignInInteractionResult = {

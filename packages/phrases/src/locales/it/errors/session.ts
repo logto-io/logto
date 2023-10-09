@@ -24,6 +24,8 @@ const session = {
   identifier_not_found: 'Identificativo utente non trovato. Torna indietro e accedi nuovamente.',
   interaction_not_found:
     'Sessione di interazione non trovata. Torna indietro e avvia la sessione nuovamente.',
+  /** UNTRANSLATED */
+  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
     /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
@@ -33,6 +35,8 @@ const session = {
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
+    /** UNTRANSLATED */
+    webauthn_verification_failed: 'WebAuthn verification failed.',
   },
 };
 

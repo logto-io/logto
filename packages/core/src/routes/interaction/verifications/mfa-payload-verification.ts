@@ -9,7 +9,10 @@ import {
   type MfaVerificationTotp,
   type VerifyMfaPayload,
   type VerifyMfaResult,
+  type BindWebAuthn,
+  type BindWebAuthnPayload,
 } from '@logto/schemas';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -17,6 +20,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousInteractionResult } from '../types/index.js';
 import { validateTotpToken } from '../utils/totp-validation.js';
+import { verifyWebAuthnRegistration } from '../utils/webauthn.js';
 
 const verifyBindTotp = async (
   interactionStorage: AnonymousInteractionResult,
@@ -27,8 +31,6 @@ const verifyBindTotp = async (
   ctx.createLog(`Interaction.${event}.BindMfa.Totp.Submit`);
 
   assertThat(pendingMfa, 'session.mfa.pending_info_not_found');
-  // Will add more type, disable the rule for now, this can be a reminder when adding new type
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   assertThat(pendingMfa.type === MfaFactor.TOTP, 'session.mfa.pending_info_not_found');
 
   const { code, type } = payload;
@@ -61,12 +63,69 @@ const verifyTotp = async (
   return { type, id };
 };
 
+const verifyBindWebAuthn = async (
+  interactionStorage: AnonymousInteractionResult,
+  payload: BindWebAuthnPayload,
+  ctx: WithLogContext,
+  {
+    rpId,
+    userAgent,
+    origin,
+  }: {
+    rpId: string;
+    userAgent: string;
+    origin: string;
+  }
+): Promise<BindWebAuthn> => {
+  const { event, pendingMfa } = interactionStorage;
+  ctx.createLog(`Interaction.${event}.BindMfa.Totp.Submit`);
+
+  assertThat(pendingMfa, 'session.mfa.pending_info_not_found');
+  assertThat(pendingMfa.type === MfaFactor.WebAuthn, 'session.mfa.pending_info_not_found');
+
+  const { type, ...rest } = payload;
+  const { challenge } = pendingMfa;
+  const { verified, registrationInfo } = await verifyWebAuthnRegistration(
+    rest,
+    challenge,
+    rpId,
+    origin
+  );
+
+  assertThat(verified, 'session.mfa.webauthn_verification_failed');
+  assertThat(registrationInfo, 'session.mfa.webauthn_verification_failed');
+
+  const { credentialID, credentialPublicKey, counter } = registrationInfo;
+
+  return {
+    type,
+    credentialId: isoBase64URL.fromBuffer(credentialID),
+    publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
+    counter,
+    agent: userAgent,
+    transports: payload.response.transports ?? [],
+  };
+};
+
 export async function bindMfaPayloadVerification(
   ctx: WithLogContext,
   bindMfaPayload: BindMfaPayload,
-  interactionStorage: AnonymousInteractionResult
+  interactionStorage: AnonymousInteractionResult,
+  {
+    rpId,
+    userAgent,
+    origin,
+  }: {
+    rpId: string;
+    userAgent: string;
+    origin: string;
+  }
 ): Promise<BindMfa> {
-  return verifyBindTotp(interactionStorage, bindMfaPayload, ctx);
+  if (bindMfaPayload.type === MfaFactor.TOTP) {
+    return verifyBindTotp(interactionStorage, bindMfaPayload, ctx);
+  }
+
+  return verifyBindWebAuthn(interactionStorage, bindMfaPayload, ctx, { rpId, userAgent, origin });
 }
 
 export async function verifyMfaPayloadVerification(

@@ -1,9 +1,4 @@
-import {
-  InteractionEvent,
-  MfaFactor,
-  adminConsoleApplicationId,
-  adminTenantId,
-} from '@logto/schemas';
+import { InteractionEvent, adminConsoleApplicationId, adminTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -147,6 +142,33 @@ describe('submit action', () => {
     });
   });
 
+  it('register and use pendingAccountId', async () => {
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+      pendingAccountId: 'pending-account-id',
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(generateUserId).not.toBeCalled();
+    expect(hasActiveUsers).not.toBeCalled();
+    expect(encryptUserPassword).toBeCalledWith('password');
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'pending-account-id',
+        ...upsertProfile,
+      },
+      ['user']
+    );
+    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+      login: { accountId: 'pending-account-id' },
+    });
+  });
+
   it('register new social user', async () => {
     const interaction: VerifiedRegisterInteractionResult = {
       event: InteractionEvent.Register,
@@ -205,35 +227,6 @@ describe('submit action', () => {
         name: userInfo.name,
         avatar: userInfo.avatar,
         lastSignInAt: now,
-      },
-      ['user']
-    );
-  });
-
-  it('register with bindMfa', async () => {
-    const interaction: VerifiedRegisterInteractionResult = {
-      event: InteractionEvent.Register,
-      profile,
-      identifiers,
-      bindMfa: { type: MfaFactor.TOTP, secret: 'secret' },
-    };
-
-    await submitInteraction(interaction, ctx, tenant);
-    expect(generateUserId).toBeCalled();
-    expect(hasActiveUsers).not.toBeCalled();
-
-    expect(insertUser).toBeCalledWith(
-      {
-        id: 'uid',
-        mfaVerifications: [
-          {
-            type: MfaFactor.TOTP,
-            key: 'secret',
-            id: 'uid',
-            createdAt: new Date(now).toISOString(),
-          },
-        ],
-        ...upsertProfile,
       },
       ['user']
     );
@@ -301,41 +294,6 @@ describe('submit action', () => {
         logto: { userId: userInfo.id, details: userInfo },
         google: { userId: 'googleId', details: {} },
       },
-      lastSignInAt: now,
-    });
-    expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
-      login: { accountId: 'foo' },
-    });
-  });
-
-  it('sign-in with bindMfa', async () => {
-    getLogtoConnectorById.mockResolvedValueOnce({
-      metadata: { target: 'logto' },
-      dbEntry: { syncProfile: false },
-    });
-    const interaction: VerifiedSignInInteractionResult = {
-      event: InteractionEvent.SignIn,
-      accountId: 'foo',
-      identifiers,
-      bindMfa: {
-        type: MfaFactor.TOTP,
-        secret: 'secret',
-      },
-    };
-
-    await submitInteraction(interaction, ctx, tenant);
-
-    expect(getLogtoConnectorById).toBeCalledWith('logto');
-
-    expect(updateUserById).toBeCalledWith('foo', {
-      mfaVerifications: [
-        {
-          type: MfaFactor.TOTP,
-          key: 'secret',
-          id: 'uid',
-          createdAt: new Date(now).toISOString(),
-        },
-      ],
       lastSignInAt: now,
     });
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
