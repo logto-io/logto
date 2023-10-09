@@ -41,6 +41,8 @@ const webhook_details = {
     key_duplicated_error: 'Las claves no pueden repetirse.',
     key_missing_error: 'Se requiere clave.',
     value_missing_error: 'Se requiere valor.',
+    invalid_key_error: 'La clave no es válida',
+    invalid_value_error: 'El valor no es válido',
     test: 'Prueba',
     test_webhook: 'Probar su webhook',
     test_webhook_description:

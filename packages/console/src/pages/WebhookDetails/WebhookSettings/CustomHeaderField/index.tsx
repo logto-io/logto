@@ -11,6 +11,14 @@ import { type WebhookDetailsFormType } from '@/pages/WebhookDetails/types';
 
 import * as styles from './index.module.scss';
 
+const isValidHeaderKey = (key: string) => {
+  return /^[\u0021-\u0039\u003B-\u007E]+$/.test(key);
+};
+
+const isValidHeaderValue = (value: string) => {
+  return /^[\u0020-\u007E]*$/.test(value);
+};
+
 function CustomHeaderField() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -44,7 +52,21 @@ function CustomHeaderField() {
       return Boolean(key) || t('webhook_details.settings.key_missing_error');
     }
 
+    if (Boolean(key) && !isValidHeaderKey(key)) {
+      return t('webhook_details.settings.invalid_key_error');
+    }
+
     return true;
+  };
+
+  const valueValidator = (value: string, index: number) => {
+    if (Boolean(value) && !isValidHeaderValue(value)) {
+      return t('webhook_details.settings.invalid_value_error');
+    }
+
+    return getValues(`headers.${index}.key`)
+      ? Boolean(value) || t('webhook_details.settings.value_missing_error')
+      : true;
   };
 
   const revalidate = () => {
@@ -79,10 +101,7 @@ function CustomHeaderField() {
                 placeholder="Value"
                 error={Boolean(headerErrors?.[index]?.value)}
                 {...register(`headers.${index}.value`, {
-                  validate: (value) =>
-                    getValues(`headers.${index}.key`)
-                      ? Boolean(value) || t('webhook_details.settings.value_missing_error')
-                      : true,
+                  validate: (value) => valueValidator(value, index),
                   onChange: revalidate,
                 })}
               />

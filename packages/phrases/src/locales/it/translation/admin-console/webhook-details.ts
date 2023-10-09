@@ -40,6 +40,8 @@ const webhook_details = {
     key_duplicated_error: 'Le chiavi non possono essere ripetute.',
     key_missing_error: 'La chiave è necessaria.',
     value_missing_error: 'Il valore è obbligatorio.',
+    invalid_key_error: 'Chiave non valida',
+    invalid_value_error: 'Valore non valido',
     test: 'Test',
     test_webhook: 'Testa il tuo webhook',
     test_webhook_description:

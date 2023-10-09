@@ -37,6 +37,8 @@ const webhook_details = {
     key_duplicated_error: 'Key 不能重复。',
     key_missing_error: '必须填写 Key。',
     value_missing_error: '必须填写值。',
+    invalid_key_error: ' Key 无效',
+    invalid_value_error: '值无效',
     test: '测试',
     test_webhook: '测试您的 Webhook',
     test_webhook_description:

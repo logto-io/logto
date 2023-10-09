@@ -40,6 +40,8 @@ const webhook_details = {
     key_duplicated_error: 'キーは繰り返すことはできません。',
     key_missing_error: 'キーは必須です。',
     value_missing_error: '値が必要です。',
+    invalid_key_error: 'キーが無効です',
+    invalid_value_error: '値が無効です',
     test: 'テスト',
     test_webhook: 'Webhookをテストする',
     test_webhook_description:
