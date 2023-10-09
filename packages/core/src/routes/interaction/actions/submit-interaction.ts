@@ -9,6 +9,7 @@ import {
   adminTenantId,
   InteractionEvent,
   adminConsoleApplicationId,
+  MfaFactor,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
@@ -41,12 +42,28 @@ const parseBindMfa = ({
     return;
   }
 
-  return {
-    type: bindMfa.type,
-    key: bindMfa.secret,
-    id: generateStandardId(),
-    createdAt: new Date().toISOString(),
-  };
+  if (bindMfa.type === MfaFactor.TOTP) {
+    return {
+      type: MfaFactor.TOTP,
+      key: bindMfa.secret,
+      id: generateStandardId(),
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (bindMfa.type === MfaFactor.WebAuthn) {
+    return {
+      type: MfaFactor.WebAuthn,
+      credentialId: bindMfa.credentialId,
+      publicKey: bindMfa.publicKey,
+      counter: bindMfa.counter,
+      agent: bindMfa.agent,
+      transports: bindMfa.transports,
+      id: generateStandardId(),
+      createdAt: new Date().toISOString(),
+    };
+  }
 };
 
 const getInitialUserRoles = (
@@ -76,7 +93,8 @@ export default async function submitInteraction(
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {
-    const id = await generateUserId();
+    const { pendingAccountId } = interaction;
+    const id = pendingAccountId ?? (await generateUserId());
     const userProfile = await parseUserProfile(tenantContext, interaction);
     const mfaVerification = parseBindMfa(interaction);
 

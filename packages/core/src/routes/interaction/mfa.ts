@@ -2,6 +2,7 @@ import { InteractionEvent, bindMfaPayloadGuard, verifyMfaPayloadGuard } from '@l
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -35,7 +36,14 @@ export default function mfaRoutes<T extends IRouterParamContext>(
     koaInteractionSie(queries),
     async (ctx, next) => {
       const bindMfaPayload = ctx.guard.body;
-      const { signInExperience, interactionDetails, createLog } = ctx;
+      const {
+        signInExperience,
+        interactionDetails,
+        createLog,
+        request: {
+          headers: { 'user-agent': userAgent = '' },
+        },
+      } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
 
       const log = createLog(`Interaction.${interactionStorage.event}.BindMfa.Totp.Submit`);
@@ -44,7 +52,12 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         verifyMfaSettings(bindMfaPayload.type, signInExperience);
       }
 
-      const bindMfa = await bindMfaPayloadVerification(ctx, bindMfaPayload, interactionStorage);
+      const { hostname, origin } = EnvSet.values.endpoint;
+      const bindMfa = await bindMfaPayloadVerification(ctx, bindMfaPayload, interactionStorage, {
+        rpId: hostname,
+        userAgent,
+        origin,
+      });
 
       log.append({ bindMfa, interactionStorage });
 

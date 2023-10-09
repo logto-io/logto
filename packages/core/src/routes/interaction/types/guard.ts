@@ -56,6 +56,9 @@ export const anonymousInteractionResultGuard = z.object({
   pendingMfa: pendingMfaGuard.optional(),
   // The verified mfa
   verifiedMfa: verifyMfaResultGuard.optional(),
+  // The user id to be used for register, if not provided, a new one will be generated
+  // WebAuthn requires a user id to be provided, so we have to generate and know it before submit interaction
+  pendingAccountId: z.string().optional(),
 });
 
 export const forgotPasswordProfileGuard = z.object({
