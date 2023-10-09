@@ -51,8 +51,11 @@ const userQueries = {
   }),
   updateUserById: jest.fn(),
   hasActiveUsers: jest.fn().mockResolvedValue(true),
+  hasUserWithEmail: jest.fn().mockResolvedValue(false),
+  hasUserWithPhone: jest.fn().mockResolvedValue(false),
 };
-const { hasActiveUsers, updateUserById } = userQueries;
+
+const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithPhone } = userQueries;
 
 const userLibraries = { generateUserId: jest.fn().mockResolvedValue('uid'), insertUser: jest.fn() };
 const { generateUserId, insertUser } = userLibraries;
@@ -169,6 +172,38 @@ describe('submit action', () => {
         avatar: userInfo.avatar,
         primaryEmail: userInfo.email,
         primaryPhone: userInfo.phone,
+        lastSignInAt: now,
+      },
+      ['user']
+    );
+  });
+
+  it('register new social user should not sync email and phone if already exists', async () => {
+    hasUserWithEmail.mockResolvedValueOnce(true);
+    hasUserWithPhone.mockResolvedValueOnce(true);
+
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile: { connectorId: 'logto', username: 'username' },
+      identifiers,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(generateUserId).toBeCalled();
+    expect(hasActiveUsers).not.toBeCalled();
+    expect(encryptUserPassword).not.toBeCalled();
+    expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        username: 'username',
+        identities: {
+          logto: { userId: userInfo.id, details: userInfo },
+        },
+        name: userInfo.name,
+        avatar: userInfo.avatar,
         lastSignInAt: now,
       },
       ['user']
