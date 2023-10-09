@@ -11,6 +11,7 @@ import { createHooksQueries } from '#src/queries/hooks.js';
 import { createLogQueries } from '#src/queries/log.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createOidcModelInstanceQueries } from '#src/queries/oidc-model-instance.js';
+import OrganizationQueries from '#src/queries/organizations.js';
 import { createPasscodeQueries } from '#src/queries/passcode.js';
 import { createResourceQueries } from '#src/queries/resource.js';
 import { createRolesScopesQueries } from '#src/queries/roles-scopes.js';
@@ -41,6 +42,7 @@ export default class Queries {
   hooks = createHooksQueries(this.pool);
   domains = createDomainsQueries(this.pool);
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
+  organizations = new OrganizationQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,
