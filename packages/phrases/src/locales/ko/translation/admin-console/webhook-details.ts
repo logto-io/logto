@@ -39,10 +39,8 @@ const webhook_details = {
     key_duplicated_error: '키는 반복될 수 없습니다.',
     key_missing_error: '키는 필수 값입니다.',
     value_missing_error: '값은 필수 값입니다.',
-    /** UNTRANSLATED */
-    invalid_key_error: 'Key is invalid',
-    /** UNTRANSLATED */
-    invalid_value_error: 'Value is invalid',
+    invalid_key_error: '키가 유효하지 않습니다',
+    invalid_value_error: '값이 유효하지 않습니다',
     test: '테스트',
     test_webhook: 'Webhook 테스트',
     test_webhook_description:

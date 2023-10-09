@@ -40,10 +40,8 @@ const webhook_details = {
     key_duplicated_error: 'Ключи не могут повторяться.',
     key_missing_error: 'Ключ обязателен.',
     value_missing_error: 'Значение обязательно',
-    /** UNTRANSLATED */
-    invalid_key_error: 'Key is invalid',
-    /** UNTRANSLATED */
-    invalid_value_error: 'Value is invalid',
+    invalid_key_error: 'Ключ недействителен',
+    invalid_value_error: 'Значение недействительно',
     test: 'Тестирование',
     test_webhook: 'Протестировать ваш вебхук',
     test_webhook_description:
