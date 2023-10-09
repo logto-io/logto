@@ -13,12 +13,14 @@ export default function organizationRoutes<T extends AuthedRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(Organizations, {
-    findAll: async ({ limit, offset }) =>
+    get: async ({ limit, offset }) =>
       Promise.all([organizations.findTotalNumber(), organizations.findAll(limit, offset)]),
-    findById: organizations.findById,
-    insert: organizations.insert,
-    updateGuard: Organizations.guard.omit({ id: true, createdAt: true }).partial(),
-    updateById: organizations.updateById,
+    getById: organizations.findById,
+    post: organizations.insert,
+    patchById: {
+      guard: Organizations.guard.omit({ id: true, createdAt: true }).partial(),
+      run: organizations.updateById,
+    },
     deleteById: organizations.deleteById,
   });
 
