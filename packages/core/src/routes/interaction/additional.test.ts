@@ -285,4 +285,67 @@ describe('interaction routes', () => {
       expect(response.body).toMatchObject(mockWebAuthnCreationOptions);
     });
   });
+
+  describe('POST /verification/webauthn-registration', () => {
+    const path = `${interactionPrefix}/${verificationPath}/webauthn-registration`;
+
+    afterEach(() => {
+      getInteractionStorage.mockClear();
+    });
+
+    it('should return WebAuthn options for new user', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.Register,
+      });
+      verifyIdentifier.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      verifyProfile.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      const response = await sessionRequest.post(path).send();
+      expect(generateWebAuthnRegistrationOptions).toBeCalled();
+      expect(storeInteractionResult).toBeCalledWith(
+        {
+          pendingMfa: {
+            type: MfaFactor.WebAuthn,
+            challenge: mockWebAuthnCreationOptions.challenge,
+          },
+          pendingAccountId: 'generated-id',
+        },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+      expect(response.statusCode).toEqual(200);
+      expect(response.body).toMatchObject(mockWebAuthnCreationOptions);
+    });
+
+    it('should return WebAuthn options for existing user', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.SignIn,
+      });
+      verifyIdentifier.mockResolvedValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      verifyProfile.mockResolvedValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      const response = await sessionRequest.post(path).send();
+      expect(response.statusCode).toEqual(200);
+      expect(generateWebAuthnRegistrationOptions).toBeCalled();
+      expect(storeInteractionResult).toBeCalledWith(
+        {
+          pendingMfa: {
+            type: MfaFactor.WebAuthn,
+            challenge: mockWebAuthnCreationOptions.challenge,
+          },
+        },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+      expect(response.body).toMatchObject(mockWebAuthnCreationOptions);
+    });
+  });
 });
