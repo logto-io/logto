@@ -38,10 +38,6 @@ function CustomHeaderField() {
   });
 
   const keyValidator = (key: string, index: number) => {
-    if (!isValidHeaderKey(key)) {
-      return t('webhook_details.settings.invalid_key_error');
-    }
-
     const headers = getValues('headers');
     if (!headers) {
       return true;
@@ -56,13 +52,18 @@ function CustomHeaderField() {
       return Boolean(key) || t('webhook_details.settings.key_missing_error');
     }
 
+    if (Boolean(key) && !isValidHeaderKey(key)) {
+      return t('webhook_details.settings.invalid_key_error');
+    }
+
     return true;
   };
 
   const valueValidator = (value: string, index: number) => {
-    if (!isValidHeaderValue(value)) {
+    if (Boolean(value) && !isValidHeaderValue(value)) {
       return t('webhook_details.settings.invalid_value_error');
     }
+
     return getValues(`headers.${index}.key`)
       ? Boolean(value) || t('webhook_details.settings.value_missing_error')
       : true;
