@@ -29,7 +29,7 @@ jobs:
         id: alteration-changes
         working-directory: ./head
         run: |
-          CHANGE_FILES=$(git diff --name-only HEAD..origin/${{ github.base_ref }} | grep -q 'packages/schemas/alterations/*')
+          CHANGE_FILES=$(git diff --name-only HEAD..origin/${{ github.base_ref }} | grep 'packages/schemas/alterations/*')
           if [ -z "$CHANGE_FILES" ]; then
             echo "No alteration changes detected"
             echo "::set-output name=has-alteration-changes::false"
