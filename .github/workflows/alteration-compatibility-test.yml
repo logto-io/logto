@@ -48,4 +48,4 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.base_ref }}
       - name: checkout head
-        run: echo ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+        run: echo ${{needs.check-alteration-changes.outputs.has-alteration-changes}}
