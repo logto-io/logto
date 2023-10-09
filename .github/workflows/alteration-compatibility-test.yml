@@ -149,8 +149,8 @@ jobs:
           pnpm i
           pnpm prepack
 
-      - name: Run alteration scripts
-        working-directory: tests
+      - name: Run alteration scripts from head codebase
+        working-directory: head
         run: |
           pnpm cli db alt deploy next
 
