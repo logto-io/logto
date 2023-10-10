@@ -3,22 +3,23 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import SwitchIcon from '@/assets/icons/switch-icon.svg';
-import TextLink from '@/components/TextLink';
+import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import TotpCodeVerification from '@/containers/TotpCodeVerification';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
-import { totpVerificationStateGuard } from '@/types/guard';
+import { mfaFactorsStateGuard } from '@/types/guard';
 
 import * as styles from './index.module.scss';
 
 const TotpVerification = () => {
   const { state } = useLocation();
-  const [, totpVerificationState] = validate(state, totpVerificationStateGuard);
+  const [, mfaFactorsState] = validate(state, mfaFactorsStateGuard);
 
-  if (!totpVerificationState) {
+  if (!mfaFactorsState) {
     return <ErrorPage title="error.invalid_session" />;
   }
+
+  const { availableFactors } = mfaFactorsState;
 
   return (
     <SecondaryPageLayout title="mfa.verify_mfa_factors">
@@ -28,11 +29,10 @@ const TotpVerification = () => {
       >
         <TotpCodeVerification flow={UserMfaFlow.MfaVerification} />
       </SectionLayout>
-      {totpVerificationState.allowOtherFactors && (
-        <TextLink
-          to={`/${UserMfaFlow.MfaVerification}`}
-          text="mfa.try_another_verification_method"
-          icon={<SwitchIcon />}
+      {availableFactors.length > 1 && (
+        <SwitchMfaFactorsLink
+          flow={UserMfaFlow.MfaVerification}
+          factors={availableFactors}
           className={styles.switchFactorLink}
         />
       )}

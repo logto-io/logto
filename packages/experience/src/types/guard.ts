@@ -80,25 +80,17 @@ export const requireMfaFactorsErrorDataGuard = s.object({
 });
 
 export const mfaFactorsStateGuard = s.object({
-  factors: mfaFactorsGuard,
+  availableFactors: mfaFactorsGuard,
 });
 
 export type MfaFactorsState = s.Infer<typeof mfaFactorsStateGuard>;
-
-const mfaFlowStateGuard = s.object({
-  allowOtherFactors: s.boolean(),
-});
 
 export const totpBindingStateGuard = s.assign(
   s.object({
     secret: s.string(),
     secretQrCode: s.string(),
   }),
-  mfaFlowStateGuard
+  mfaFactorsStateGuard
 );
 
 export type TotpBindingState = s.Infer<typeof totpBindingStateGuard>;
-
-export const totpVerificationStateGuard = mfaFlowStateGuard;
-
-export type TotpVerificationState = s.Infer<typeof totpVerificationStateGuard>;

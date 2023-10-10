@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
-import useStartTotpBinding from '@/hooks/use-start-binding-totp';
+import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import { UserMfaFlow } from '@/types';
-import { type TotpVerificationState } from '@/types/guard';
+import { type MfaFactorsState } from '@/types/guard';
 
 import * as styles from './index.module.scss';
 
@@ -22,17 +22,17 @@ const MfaFactorList = ({ flow, factors }: Props) => {
     async (factor: MfaFactor) => {
       if (factor === MfaFactor.TOTP) {
         if (flow === UserMfaFlow.MfaBinding) {
-          await startTotpBinding(factors.length > 1);
+          await startTotpBinding(factors);
         }
 
         if (flow === UserMfaFlow.MfaVerification) {
-          const state: TotpVerificationState = { allowOtherFactors: true };
+          const state: MfaFactorsState = { availableFactors: factors };
           navigate(`/${UserMfaFlow.MfaVerification}/${factor}`, { state });
         }
       }
       // Todo @xiaoyijun implement other factors
     },
-    [factors.length, flow, navigate, startTotpBinding]
+    [factors, flow, navigate, startTotpBinding]
   );
 
   return (
