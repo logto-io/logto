@@ -35,8 +35,10 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         }
 
         if (missingFactors.length > 1) {
-          const state: MfaFactorsState = { availableFactors: missingFactors };
-          navigate({ pathname: `/${UserMfaFlow.MfaBinding}` }, { replace, state });
+          navigate(
+            { pathname: `/${UserMfaFlow.MfaBinding}` },
+            { replace, state: { availableFactors: missingFactors } satisfies MfaFactorsState }
+          );
           return;
         }
 
@@ -44,6 +46,14 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
 
         if (factor === MfaFactor.TOTP) {
           void startTotpBinding(missingFactors);
+          return;
+        }
+
+        if (factor === MfaFactor.WebAuthn) {
+          navigate(
+            { pathname: `/${UserMfaFlow.MfaBinding}/${factor}` },
+            { replace, state: { availableFactors: missingFactors } satisfies MfaFactorsState }
+          );
         }
         // Todo: @xiaoyijun handle other factors
       },
@@ -56,8 +66,10 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         }
 
         if (availableFactors.length > 1) {
-          const state: MfaFactorsState = { availableFactors };
-          navigate({ pathname: `/${UserMfaFlow.MfaVerification}` }, { replace, state });
+          navigate(
+            { pathname: `/${UserMfaFlow.MfaVerification}` },
+            { replace, state: { availableFactors } satisfies MfaFactorsState }
+          );
           return;
         }
 
@@ -67,9 +79,11 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
           return;
         }
 
-        if (factor === MfaFactor.TOTP) {
-          const state: MfaFactorsState = { availableFactors };
-          navigate({ pathname: `/${UserMfaFlow.MfaVerification}/${factor}` }, { replace, state });
+        if (factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn) {
+          navigate(
+            { pathname: `/${UserMfaFlow.MfaVerification}/${factor}` },
+            { replace, state: { availableFactors } satisfies MfaFactorsState }
+          );
         }
         // Todo: @xiaoyijun handle other factors
       },

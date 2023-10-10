@@ -1,15 +1,17 @@
 /* istanbul ignore file */
 
-import { InteractionEvent } from '@logto/schemas';
-import type {
-  SignInIdentifier,
-  EmailVerificationCodePayload,
-  PhoneVerificationCodePayload,
-  SocialConnectorPayload,
-  SocialEmailPayload,
-  SocialPhonePayload,
-  BindMfaPayload,
-  VerifyMfaPayload,
+import {
+  InteractionEvent,
+  type SignInIdentifier,
+  type EmailVerificationCodePayload,
+  type PhoneVerificationCodePayload,
+  type SocialConnectorPayload,
+  type SocialEmailPayload,
+  type SocialPhonePayload,
+  type BindMfaPayload,
+  type VerifyMfaPayload,
+  type WebAuthnRegistrationOptions,
+  type WebAuthnAuthenticationOptions,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -227,6 +229,16 @@ export const linkWithSocial = async (connectorId: string) => {
 
 export const createTotpSecret = async () =>
   api.post(`${interactionPrefix}/${verificationPath}/totp`).json<{ secret: string }>();
+
+export const createWebAuthnRegistrationOptions = async () =>
+  api
+    .post(`${interactionPrefix}/${verificationPath}/webauthn-registration`)
+    .json<WebAuthnRegistrationOptions>();
+
+export const generateWebAuthnAuthnOptions = async () =>
+  api
+    .post(`${interactionPrefix}/${verificationPath}/webauthn-authentication`)
+    .json<WebAuthnAuthenticationOptions>();
 
 export const bindMfa = async (payload: BindMfaPayload) => {
   await api.put(`${interactionPrefix}/bind-mfa`, { json: payload });

@@ -26,10 +26,18 @@ const MfaFactorList = ({ flow, factors }: Props) => {
         }
 
         if (flow === UserMfaFlow.MfaVerification) {
-          const state: MfaFactorsState = { availableFactors: factors };
-          navigate(`/${UserMfaFlow.MfaVerification}/${factor}`, { state });
+          navigate(`/${UserMfaFlow.MfaVerification}/${factor}`, {
+            state: { availableFactors: factors } satisfies MfaFactorsState,
+          });
         }
       }
+
+      if (factor === MfaFactor.WebAuthn) {
+        navigate(`/${flow}/${factor}`, {
+          state: { availableFactors: factors } satisfies MfaFactorsState,
+        });
+      }
+
       // Todo @xiaoyijun implement other factors
     },
     [factors, flow, navigate, startTotpBinding]
