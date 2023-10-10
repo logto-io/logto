@@ -20,7 +20,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
   const handleError = useErrorHandler();
 
   return useCallback(
-    async (allowOtherFactors = false) => {
+    async (availableFactors: MfaFactor[]) => {
       const [error, result] = await asyncCreateTotpSecret();
 
       if (error) {
@@ -35,7 +35,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
           secret,
           // Todo @wangsijie generate QR code on the server side
           secretQrCode: await qrcode.toDataURL(`otpauth://totp/?secret=${secret}`),
-          allowOtherFactors,
+          availableFactors,
         };
         navigate({ pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.TOTP}` }, { replace, state });
       }

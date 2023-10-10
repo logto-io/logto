@@ -11,15 +11,15 @@ import ErrorPage from '../ErrorPage';
 const MfaVerification = () => {
   const { state } = useLocation();
   const [, mfaFactorsState] = validate(state, mfaFactorsStateGuard);
-  const { factors } = mfaFactorsState ?? {};
+  const { availableFactors } = mfaFactorsState ?? {};
 
-  if (!factors || factors.length === 0) {
+  if (!availableFactors || availableFactors.length === 0) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
   return (
     <SecondaryPageLayout title="mfa.verify_mfa_factors" description="mfa.verify_mfa_description">
-      <MfaFactorList flow={UserMfaFlow.MfaVerification} factors={factors} />
+      <MfaFactorList flow={UserMfaFlow.MfaVerification} factors={availableFactors} />
     </SecondaryPageLayout>
   );
 };

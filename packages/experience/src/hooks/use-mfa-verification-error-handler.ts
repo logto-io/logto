@@ -8,11 +8,10 @@ import {
   type MfaFactorsState,
   missingMfaFactorsErrorDataGuard,
   requireMfaFactorsErrorDataGuard,
-  type TotpVerificationState,
 } from '@/types/guard';
 
 import type { ErrorHandlers } from './use-error-handler';
-import useStartTotpBinding from './use-start-binding-totp';
+import useStartTotpBinding from './use-start-totp-binding';
 import useToast from './use-toast';
 
 export type Options = {
@@ -22,7 +21,7 @@ export type Options = {
 const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
   const navigate = useNavigate();
   const { setToast } = useToast();
-  const startBindingTotp = useStartTotpBinding({ replace });
+  const startTotpBinding = useStartTotpBinding({ replace });
 
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(
     () => ({
@@ -36,7 +35,7 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         }
 
         if (missingFactors.length > 1) {
-          const state: MfaFactorsState = { factors: missingFactors };
+          const state: MfaFactorsState = { availableFactors: missingFactors };
           navigate({ pathname: `/${UserMfaFlow.MfaBinding}` }, { replace, state });
           return;
         }
@@ -44,7 +43,7 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         const factor = missingFactors[0];
 
         if (factor === MfaFactor.TOTP) {
-          void startBindingTotp();
+          void startTotpBinding(missingFactors);
         }
         // Todo: @xiaoyijun handle other factors
       },
@@ -57,7 +56,7 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         }
 
         if (availableFactors.length > 1) {
-          const state: MfaFactorsState = { factors: availableFactors };
+          const state: MfaFactorsState = { availableFactors };
           navigate({ pathname: `/${UserMfaFlow.MfaVerification}` }, { replace, state });
           return;
         }
@@ -69,13 +68,13 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
         }
 
         if (factor === MfaFactor.TOTP) {
-          const state: TotpVerificationState = { allowOtherFactors: false };
+          const state: MfaFactorsState = { availableFactors };
           navigate({ pathname: `/${UserMfaFlow.MfaVerification}/${factor}` }, { replace, state });
         }
         // Todo: @xiaoyijun handle other factors
       },
     }),
-    [navigate, replace, setToast, startBindingTotp]
+    [navigate, replace, setToast, startTotpBinding]
   );
 
   return mfaVerificationErrorHandler;

@@ -11,15 +11,15 @@ import ErrorPage from '../ErrorPage';
 const MfaBinding = () => {
   const { state } = useLocation();
   const [, mfaFactorsState] = validate(state, mfaFactorsStateGuard);
-  const { factors } = mfaFactorsState ?? {};
+  const { availableFactors } = mfaFactorsState ?? {};
 
-  if (!factors || factors.length === 0) {
+  if (!availableFactors || availableFactors.length === 0) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
   return (
     <SecondaryPageLayout title="mfa.add_mfa_factors" description="mfa.add_mfa_description">
-      <MfaFactorList flow={UserMfaFlow.MfaBinding} factors={factors} />
+      <MfaFactorList flow={UserMfaFlow.MfaBinding} factors={availableFactors} />
     </SecondaryPageLayout>
   );
 };

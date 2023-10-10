@@ -2,9 +2,8 @@ import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import SwitchIcon from '@/assets/icons/switch-icon.svg';
 import Divider from '@/components/Divider';
-import TextLink from '@/components/TextLink';
+import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { totpBindingStateGuard } from '@/types/guard';
@@ -21,19 +20,21 @@ const TotpBinding = () => {
     return <ErrorPage title="error.invalid_session" />;
   }
 
+  const { availableFactors } = totpBindingState;
+
   return (
     <SecondaryPageLayout title="mfa.add_authenticator_app">
       <div className={styles.container}>
         <SecretSection {...totpBindingState} />
         <Divider />
         <VerificationSection />
-        {totpBindingState.allowOtherFactors && (
+        {availableFactors.length > 1 && (
           <>
             <Divider />
-            <TextLink
-              to={`/${UserMfaFlow.MfaBinding}`}
-              text="mfa.link_another_mfa_factor"
-              icon={<SwitchIcon />}
+            <SwitchMfaFactorsLink
+              flow={UserMfaFlow.MfaBinding}
+              factors={availableFactors}
+              className={styles.switchLink}
             />
           </>
         )}
