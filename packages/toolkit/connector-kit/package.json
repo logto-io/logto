@@ -42,7 +42,7 @@
     "@withtyped/server":"^0.12.9"
   },
   "optionalDependencies": {
-    "zod": "^3.20.2"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@jest/types": "^29.0.3",

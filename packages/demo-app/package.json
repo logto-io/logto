@@ -46,7 +46,7 @@
     "react-i18next": "^12.3.1",
     "stylelint": "^15.0.0",
     "typescript": "^5.0.0",
-    "zod": "^3.20.2"
+    "zod": "^3.22.3"
   },
   "engines": {
     "node": "^18.12.0"

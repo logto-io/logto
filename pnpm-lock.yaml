@@ -188,8 +188,8 @@ importers:
         specifier: ^17.6.0
         version: 17.6.0
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 4.0.1
@@ -220,7 +220,7 @@ importers:
         version: 17.0.13
       '@withtyped/server':
         specifier: ^0.12.9
-        version: 0.12.9(zod@3.20.2)
+        version: 0.12.9(zod@3.22.3)
       eslint:
         specifier: ^8.44.0
         version: 8.44.0
@@ -258,8 +258,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -346,8 +346,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -428,8 +428,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -507,8 +507,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -592,8 +592,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -677,8 +677,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -759,8 +759,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -838,8 +838,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -917,8 +917,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -996,8 +996,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1078,8 +1078,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1157,8 +1157,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1236,8 +1236,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1315,15 +1315,15 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
         specifier: 0.2.5-d434baa
-        version: 0.2.5-d434baa(zod@3.20.2)
+        version: 0.2.5-d434baa(zod@3.22.3)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.0(rollup@3.8.0)
@@ -1397,8 +1397,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1476,8 +1476,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1555,8 +1555,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1634,8 +1634,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1713,8 +1713,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1792,8 +1792,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1871,8 +1871,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -1950,8 +1950,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2032,8 +2032,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2120,8 +2120,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2205,8 +2205,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2284,8 +2284,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2363,8 +2363,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2445,8 +2445,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2527,8 +2527,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2606,8 +2606,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2685,8 +2685,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2764,8 +2764,8 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -2841,7 +2841,7 @@ importers:
         version: link:../app-insights
       '@logto/cloud':
         specifier: 0.2.5-d434baa
-        version: 0.2.5-d434baa(zod@3.20.2)
+        version: 0.2.5-d434baa(zod@3.22.3)
       '@logto/connector-kit':
         specifier: workspace:^1.1.1
         version: link:../toolkit/connector-kit
@@ -2943,7 +2943,7 @@ importers:
         version: 15.5.1
       '@withtyped/client':
         specifier: ^0.7.22
-        version: 0.7.22(zod@3.20.2)
+        version: 0.7.22(zod@3.22.3)
       buffer:
         specifier: ^5.7.1
         version: 5.7.1
@@ -3116,8 +3116,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.2
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
 
   packages/core:
     dependencies:
@@ -3174,7 +3174,7 @@ importers:
         version: 2.8.4
       '@withtyped/client':
         specifier: ^0.7.22
-        version: 0.7.22(zod@3.20.2)
+        version: 0.7.22(zod@3.22.3)
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -3287,12 +3287,12 @@ importers:
         specifier: ^5.4.4
         version: 5.4.4
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@logto/cloud':
         specifier: 0.2.5-444ed49
-        version: 0.2.5-444ed49(zod@3.20.2)
+        version: 0.2.5-444ed49(zod@3.22.3)
       '@silverhand/eslint-config':
         specifier: 4.0.1
         version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
@@ -3474,8 +3474,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.2
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
 
   packages/experience:
     dependencies:
@@ -3688,8 +3688,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(react@18.2.0)
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
 
   packages/integration-tests:
     dependencies:
@@ -3982,14 +3982,14 @@ importers:
         version: 2.8.4
       '@withtyped/client':
         specifier: ^0.7.22
-        version: 0.7.22(zod@3.20.2)
+        version: 0.7.22(zod@3.22.3)
       '@withtyped/server':
         specifier: ^0.12.9
-        version: 0.12.9(zod@3.20.2)
+        version: 0.12.9(zod@3.22.3)
     optionalDependencies:
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.0.3
@@ -4038,8 +4038,8 @@ importers:
         version: 4.2.3
     optionalDependencies:
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.0.3
@@ -4096,8 +4096,8 @@ importers:
   packages/toolkit/language-kit:
     optionalDependencies:
       zod:
-        specifier: ^3.20.2
-        version: 3.20.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@jest/types':
         specifier: ^29.0.3
@@ -7337,22 +7337,22 @@ packages:
       jose: 4.14.4
     dev: true
 
-  /@logto/cloud@0.2.5-444ed49(zod@3.20.2):
+  /@logto/cloud@0.2.5-444ed49(zod@3.22.3):
     resolution: {integrity: sha512-UirssRQV8+UAG/d0amK3qSrZstYW8+VUtfRWcKN8Ka0oJbPaNQL+fW+8OCB39ikQqT39KLrClXbThu3akPUWhw==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.8.4
-      '@withtyped/server': 0.12.9(zod@3.20.2)
+      '@withtyped/server': 0.12.9(zod@3.22.3)
     transitivePeerDependencies:
       - zod
     dev: true
 
-  /@logto/cloud@0.2.5-d434baa(zod@3.20.2):
+  /@logto/cloud@0.2.5-d434baa(zod@3.22.3):
     resolution: {integrity: sha512-VmWpqFzpWBrzJPQLvfe0bb7/XjF3lxs/rPbLt3zqBjGPtDXM9FAUn1m/gPbTwzXi5PxGOjlbD7jTl+3+1u4/NQ==}
     engines: {node: ^18.12.0}
     dependencies:
       '@silverhand/essentials': 2.8.4
-      '@withtyped/server': 0.12.9(zod@3.20.2)
+      '@withtyped/server': 0.12.9(zod@3.22.3)
     transitivePeerDependencies:
       - zod
     dev: true
@@ -9984,10 +9984,10 @@ packages:
       eslint-visitor-keys: 3.4.1
     dev: true
 
-  /@withtyped/client@0.7.22(zod@3.20.2):
+  /@withtyped/client@0.7.22(zod@3.22.3):
     resolution: {integrity: sha512-emNtcO0jc0dFWhvL7eUIRYzhTfn+JqgIvCmXb8ZUFOR8wdSSGrr9VDlm+wgQD06DEBBpmqtTHMMHTNXJdUC/Qw==}
     dependencies:
-      '@withtyped/server': 0.12.9(zod@3.20.2)
+      '@withtyped/server': 0.12.9(zod@3.22.3)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
@@ -10000,6 +10000,16 @@ packages:
       '@silverhand/essentials': 2.8.4
       '@withtyped/shared': 0.2.2
       zod: 3.20.2
+    dev: false
+
+  /@withtyped/server@0.12.9(zod@3.22.3):
+    resolution: {integrity: sha512-K5zoV9D+WpawbghtlJKF1KOshKkBjq+gYzNRWuZk13YmFWFLcmZn+QCblNP55z9IGdcHWpTRknqb1APuicdzgA==}
+    peerDependencies:
+      zod: ^3.19.1
+    dependencies:
+      '@silverhand/essentials': 2.8.4
+      '@withtyped/shared': 0.2.2
+      zod: 3.22.3
 
   /@withtyped/shared@0.2.2:
     resolution: {integrity: sha512-Vpcj12NqaoZ8M5Z/1kffheI9FBZEm9goed0THmgTcMKXLHjXSRbMZMp0olVxovEgaTIAydshqJOQUXKZMctIZw==}
@@ -20533,6 +20543,10 @@ packages:
   /zod@3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
     requiresBuild: true
+    dev: false
+
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
   /zwitch@1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
