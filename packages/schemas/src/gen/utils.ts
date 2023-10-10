@@ -7,14 +7,14 @@ export const normalizeWhitespaces = (string: string): string =>
   string.replaceAll(/\s+/g, ' ').trim();
 
 // eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
-const leadingJsDocRegex = /^\s*\/\*\*([^*]*?)\*\//;
+const leadingJsDocRegex = /^\s*\/\*\* *([^*]*?) *\*\//;
 
 // eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
 export const stripLeadingJsDocComments = (string: string): string =>
   string.replace(leadingJsDocRegex, '').trim();
 
 // eslint-disable-next-line unicorn/prevent-abbreviations -- JSDoc is a term
-const getLeadingJsDocComments = (string: string): Optional<string> =>
+export const getLeadingJsDocComments = (string: string): Optional<string> =>
   leadingJsDocRegex.exec(string)?.[1];
 
 // Remove all comments not start with @

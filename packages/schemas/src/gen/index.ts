@@ -12,12 +12,15 @@ import pluralize from 'pluralize';
 import { generateSchema } from './schema.js';
 import type { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types.js';
 import {
+  type ParenthesesMatch,
   findFirstParentheses,
   normalizeWhitespaces,
   parseType,
   removeUnrecognizedComments,
   splitTableFieldDefinitions,
   stripLeadingJsDocComments as stripComments,
+  stripLeadingJsDocComments as stripLeadingJsDocumentComments,
+  getLeadingJsDocComments as getLeadingJsDocumentComments,
 } from './utils.js';
 
 const directory = 'tables';
@@ -50,14 +53,18 @@ const generate = async () => {
 
         // Parse Table statements
         const tables = statements
-          .filter((value) => value.toLowerCase().startsWith('create table'))
-          .map((value) => findFirstParentheses(value))
-          // eslint-disable-next-line unicorn/prefer-native-coercion-functions
-          .filter((value): value is NonNullable<typeof value> => Boolean(value))
-          .map<Table>(({ prefix, body }) => {
+          .filter((value) =>
+            stripLeadingJsDocumentComments(value).toLowerCase().startsWith('create table')
+          )
+          .map(
+            (value) => [findFirstParentheses(stripLeadingJsDocumentComments(value)), value] as const
+          )
+          .filter((value): value is NonNullable<[ParenthesesMatch, string]> => Boolean(value[0]))
+          .map<Table>(([{ prefix, body }, raw]) => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
             assert(name, 'Missing table name: ' + prefix);
 
+            const comments = getLeadingJsDocumentComments(raw);
             const fields = splitTableFieldDefinitions(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
@@ -70,7 +77,7 @@ const generate = async () => {
               )
               .map<Field>((value) => parseType(value));
 
-            return { name, fields };
+            return { name, comments, fields };
           });
 
         // Parse enum statements
