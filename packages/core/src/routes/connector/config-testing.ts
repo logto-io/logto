@@ -1,5 +1,6 @@
 import { buildRawConnector, notImplemented } from '@logto/cli/lib/connector/index.js';
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import type CloudRouter from '@logto/cloud/routes';
 import {
   type SmsConnector,
   type EmailConnector,
@@ -47,7 +48,11 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
       const connectorFactories = await loadConnectorFactories();
       const connectorFactory = connectorFactories
         .filter(
-          (factory): factory is ConnectorFactory<SmsConnector> | ConnectorFactory<EmailConnector> =>
+          (
+            factory
+          ): factory is
+            | ConnectorFactory<typeof CloudRouter, SmsConnector>
+            | ConnectorFactory<typeof CloudRouter, EmailConnector> =>
             factory.type === ConnectorType.Email || factory.type === ConnectorType.Sms
         )
         .find(({ metadata: { id } }) => id === factoryId && !demoConnectorIds.includes(id));
@@ -66,7 +71,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
 
       const {
         rawConnector: { sendMessage },
-      } = await buildRawConnector<SmsConnector | EmailConnector>(
+      } = await buildRawConnector<typeof CloudRouter, SmsConnector | EmailConnector>(
         connectorFactory,
         notImplemented,
         conditional(ServiceConnector.Email === connectorFactory.metadata.id && getClient)

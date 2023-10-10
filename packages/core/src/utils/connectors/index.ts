@@ -6,6 +6,7 @@ import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import { loadConnectorFactories as _loadConnectorFactories } from '@logto/cli/lib/connector/index.js';
 import { connectorDirectory } from '@logto/cli/lib/constants.js';
 import { getConnectorPackagesFromDirectory } from '@logto/cli/lib/utils.js';
+import type router from '@logto/cloud/routes';
 import {
   demoConnectorIds,
   ConnectorType,
@@ -59,7 +60,7 @@ export const transpileLogtoConnector = async (
 export const transpileConnectorFactory = ({
   metadata,
   type,
-}: ConnectorFactory): ConnectorFactoryResponse => {
+}: ConnectorFactory<typeof router>): ConnectorFactoryResponse => {
   return {
     type,
     ...metadata,
@@ -67,7 +68,9 @@ export const transpileConnectorFactory = ({
   };
 };
 
-const checkDuplicateConnectorFactoriesId = (connectorFactories: ConnectorFactory[]) => {
+const checkDuplicateConnectorFactoriesId = (
+  connectorFactories: Array<ConnectorFactory<typeof router>>
+) => {
   const connectorFactoryIds = connectorFactories.map(({ metadata }) => metadata.id);
   const deduplicatedConnectorFactoryIds = deduplicate(connectorFactoryIds);
 

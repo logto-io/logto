@@ -1,4 +1,5 @@
 import { type ConnectorFactory, buildRawConnector } from '@logto/cli/lib/connector/index.js';
+import type router from '@logto/cloud/routes';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import { Connectors, ConnectorType, connectorResponseGuard, type JsonObject } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
@@ -20,7 +21,10 @@ import connectorAuthorizationUriRoutes from './authorization-uri.js';
 import connectorConfigTestingRoutes from './config-testing.js';
 import connectorFactoryRoutes from './factory.js';
 
-const guardConnectorsQuota = async (factory: ConnectorFactory, quota: QuotaLibrary) => {
+const guardConnectorsQuota = async (
+  factory: ConnectorFactory<typeof router>,
+  quota: QuotaLibrary
+) => {
   if (factory.metadata.isStandard) {
     await quota.guardKey('standardConnectorsLimit');
   }

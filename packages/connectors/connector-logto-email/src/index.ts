@@ -1,6 +1,7 @@
 import { assert, conditional } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
+import type router from '@logto/cloud/routes';
 import type {
   CreateConnector,
   EmailConnector,
@@ -20,7 +21,10 @@ import { defaultMetadata, emailEndpoint, usageEndpoint } from './constant.js';
 import { logtoEmailConfigGuard } from './types.js';
 
 const sendMessage =
-  (getConfig: GetConnectorConfig, getClient?: GetCloudServiceClient): SendMessageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getClient?: GetCloudServiceClient<typeof router>
+  ): SendMessageFunction =>
   async (data, inputConfig) => {
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, logtoEmailConfigGuard);
@@ -47,7 +51,10 @@ const sendMessage =
   };
 
 const getUsage =
-  (getConfig: GetConnectorConfig, getClient?: GetCloudServiceClient): GetUsageFunction =>
+  (
+    getConfig: GetConnectorConfig,
+    getClient?: GetCloudServiceClient<typeof router>
+  ): GetUsageFunction =>
   async (startFrom?: Date) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, logtoEmailConfigGuard);
@@ -61,7 +68,7 @@ const getUsage =
     return count;
   };
 
-const createLogtoEmailConnector: CreateConnector<EmailConnector> = async ({
+const createLogtoEmailConnector: CreateConnector<EmailConnector, typeof router> = async ({
   getConfig,
   getCloudServiceClient: getClient,
 }) => {

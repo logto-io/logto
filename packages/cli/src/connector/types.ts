@@ -1,13 +1,15 @@
 import type { AllConnector, CreateConnector } from '@logto/connector-kit';
+import type { BaseRoutes, Router } from '@withtyped/server';
 
 /**
  * Dynamic loaded connector type.
  */
-export type ConnectorFactory<T extends AllConnector = AllConnector> = Pick<
-  T,
-  'type' | 'metadata'
-> & {
-  createConnector: CreateConnector<T>;
+export type ConnectorFactory<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Router<any, BaseRoutes, string>,
+  U extends AllConnector = AllConnector,
+> = Pick<U, 'type' | 'metadata'> & {
+  createConnector: CreateConnector<U, T>;
   path: string;
 };
 

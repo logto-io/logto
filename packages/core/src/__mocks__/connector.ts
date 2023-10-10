@@ -1,4 +1,5 @@
 import type { ConnectorFactory } from '@logto/cli/lib/connector/index.js';
+import type router from '@logto/cloud/routes';
 import { ConnectorPlatform, DemoConnector } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
@@ -54,7 +55,7 @@ export const mockLogtoConnector = {
   configGuard: any(),
 };
 
-export const mockConnectorFactory: ConnectorFactory = {
+export const mockConnectorFactory: ConnectorFactory<typeof router> = {
   metadata: mockMetadata,
   type: ConnectorType.Social,
   path: 'random_path',
