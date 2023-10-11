@@ -8,10 +8,9 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 export type AnonymousRouter = Router<unknown, WithLogContext & WithI18nContext>;
 
-export type AuthedRouter = Router<
-  unknown,
-  WithAuthContext & WithLogContext & WithI18nContext & ExtendableContext
->;
+type AuthedRouterContext = WithAuthContext & WithLogContext & WithI18nContext & ExtendableContext;
+
+export type AuthedRouter = Router<unknown, AuthedRouterContext>;
 
 type RouterInit<T> = (router: T, tenant: TenantContext) => void;
 export type RouterInitArgs<T> = Parameters<RouterInit<T>>;

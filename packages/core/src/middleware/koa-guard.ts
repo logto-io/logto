@@ -23,7 +23,7 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    * // e.g. parse '?key1=foo'
    * z.object({ key1: z.string() })
    */
-  query?: ZodType<QueryT>;
+  query?: ZodType<QueryT, ZodTypeDef, unknown>;
   /**
    * Guard JSON request body. You can treat the body like a normal object.
    *
@@ -33,7 +33,7 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    *   key2: z.object({ key3: z.number() }).array(),
    * })
    */
-  body?: ZodType<BodyT>;
+  body?: ZodType<BodyT, ZodTypeDef, unknown>;
   /**
    * Guard `koa-router` path parameters (i.e. `ctx.params`).
    *
@@ -41,19 +41,19 @@ export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT, FilesT> = {
    * // e.g. parse '/foo/:key1'
    * z.object({ key1: z.string() })
    */
-  params?: ZodType<ParametersT>;
+  params?: ZodType<ParametersT, ZodTypeDef, unknown>;
   /**
    * Guard response body.
    *
    * @example z.object({ key1: z.string() })
    */
-  response?: ZodType<ResponseT>;
+  response?: ZodType<ResponseT, ZodTypeDef, unknown>;
   /**
    * Guard response status code. It produces a `ServerError` (500)
    * if the response does not satisfy any of the given value(s).
    */
   status?: number | number[];
-  files?: ZodType<FilesT>;
+  files?: ZodType<FilesT, ZodTypeDef, unknown>;
 };
 
 export type GuardedRequest<QueryT, BodyT, ParametersT, FilesT> = {

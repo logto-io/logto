@@ -25,6 +25,7 @@ import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config.js';
+import organizationRoutes from './organizations.js';
 import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
@@ -63,6 +64,7 @@ const createRouters = (tenant: TenantContext) => {
   verificationCodeRoutes(managementRouter, tenant);
   userAssetsRoutes(managementRouter, tenant);
   domainRoutes(managementRouter, tenant);
+  organizationRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);
