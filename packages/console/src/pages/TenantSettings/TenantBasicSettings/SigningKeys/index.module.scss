@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.idWrapper {
+  font: var(--font-body-2);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-text);
+  line-height: 26px;
+  padding: 0 _.unit(2);
+  border-radius: 6px;
+  background-color: var(--color-bg-info-tag);
+}
+
+.deleteIcon {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rotateKey {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+  padding: _.unit(4);
+  gap: _.unit(2);
+
+  .description {
+    flex: 1;
+    font: var(--font-body-2);
+  }
+}
+
+.bone {
+  @include _.shimmering-animation;
+  height: 26px;
+  max-width: 344px;
+}

@@ -4,7 +4,7 @@ import type { FieldValues } from 'react-hook-form';
 export type Column<TFieldValues extends FieldValues = FieldValues> = {
   title: ReactNode;
   dataIndex: string;
-  render: (row: TFieldValues) => ReactNode;
+  render: (row: TFieldValues, rowIndex: number) => ReactNode;
   colSpan?: number;
   className?: string;
 };
