@@ -26,17 +26,16 @@ export type Guard<T extends Record<string, unknown>> = ZodObject<
 >;
 
 export type GeneratedSchema<
-  CreateSchema extends SchemaLike,
-  Schema extends CreateSchema,
-> = keyof Schema extends string
-  ? Readonly<{
-      table: string;
-      tableSingular: string;
-      fields: {
-        [key in keyof Required<Schema>]: string;
-      };
-      fieldKeys: ReadonlyArray<keyof Schema>;
-      createGuard: CreateGuard<CreateSchema>;
-      guard: Guard<Schema>;
-    }>
-  : never;
+  Key extends string,
+  CreateSchema extends Partial<SchemaLike<Key>>,
+  Schema extends SchemaLike<Key>,
+> = Readonly<{
+  table: string;
+  tableSingular: string;
+  fields: {
+    [key in Key]: string;
+  };
+  fieldKeys: readonly Key[];
+  createGuard: CreateGuard<CreateSchema>;
+  guard: Guard<Schema>;
+}>;

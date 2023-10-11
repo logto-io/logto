@@ -7,10 +7,16 @@ import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOf } from '#src/utils/schema.js';
 
+type WithId<Key> = Key | 'id';
+
 export const buildFindEntityByIdWithPool =
   (pool: CommonQueryMethods) =>
-  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
-    schema: GeneratedSchema<CreateSchema, Schema & { id: string }>
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<WithId<Key>>>,
+    Schema extends SchemaLike<WithId<Key>>,
+  >(
+    schema: GeneratedSchema<WithId<Key>, CreateSchema, Schema>
   ) => {
     const { table, fields } = convertToIdentifiers(schema);
     const isKeyOfSchema = isKeyOf(schema);

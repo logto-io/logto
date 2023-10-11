@@ -1,4 +1,4 @@
-import type { CreateUser, User } from '@logto/schemas';
+import type { CreateUser, UserKeys } from '@logto/schemas';
 import { Users, Applications } from '@logto/schemas';
 import type { UpdateWhereData } from '@logto/shared';
 
@@ -97,7 +97,7 @@ describe('buildUpdateWhere()', () => {
     const pool = createTestPool('update "users"\nset "username"=$1\nwhere "id"=$2\nreturning *');
 
     const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
-    const updateWhereData: UpdateWhereData<User> = {
+    const updateWhereData: UpdateWhereData<UserKeys, UserKeys> = {
       set: { username: '123' },
       where: { id: 'foo' },
       jsonbMode: 'merge',
@@ -114,7 +114,7 @@ describe('buildUpdateWhere()', () => {
     );
 
     const updateWhere = buildUpdateWhereWithPool(pool)(Users, true);
-    const updateWhereData: UpdateWhereData<User> = {
+    const updateWhereData: UpdateWhereData<UserKeys, UserKeys> = {
       set: { username: '123' },
       where: { username: 'foo' },
       jsonbMode: 'merge',

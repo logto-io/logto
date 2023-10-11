@@ -40,20 +40,32 @@ type InsertIntoConfig = {
 };
 
 type BuildInsertInto = {
-  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
-    { fieldKeys, ...rest }: GeneratedSchema<CreateSchema, Schema>,
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<Key>>,
+    Schema extends SchemaLike<Key>,
+  >(
+    { fieldKeys, ...rest }: GeneratedSchema<Key, CreateSchema, Schema>,
     config: InsertIntoConfigReturning
   ): (data: OmitAutoSetFields<CreateSchema>) => Promise<Schema>;
-  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
-    { fieldKeys, ...rest }: GeneratedSchema<CreateSchema, Schema>,
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<Key>>,
+    Schema extends SchemaLike<Key>,
+  >(
+    { fieldKeys, ...rest }: GeneratedSchema<Key, CreateSchema, Schema>,
     config?: InsertIntoConfig
   ): (data: OmitAutoSetFields<CreateSchema>) => Promise<void>;
 };
 
 export const buildInsertIntoWithPool =
   (pool: CommonQueryMethods): BuildInsertInto =>
-  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
-    schema: GeneratedSchema<CreateSchema, Schema>,
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<Key>>,
+    Schema extends SchemaLike<Key>,
+  >(
+    schema: GeneratedSchema<Key, CreateSchema, Schema>,
     config?: InsertIntoConfig | InsertIntoConfigReturning
   ) => {
     const { fieldKeys, ...rest } = schema;
@@ -88,7 +100,7 @@ export const buildInsertIntoWithPool =
         ${conditionalSql(returning, () => sql`returning *`)}
       `);
 
-      assertThat(!returning || entry, new InsertionError<CreateSchema, Schema>(schema, data));
+      assertThat(!returning || entry, new InsertionError<Key, CreateSchema, Schema>(schema, data));
 
       return entry;
     };
