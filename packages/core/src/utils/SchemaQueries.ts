@@ -1,10 +1,5 @@
 import { type GeneratedSchema } from '@logto/schemas';
-import {
-  generateStandardId,
-  type UpdateWhereData,
-  type OmitAutoSetFields,
-  type SchemaLike,
-} from '@logto/shared';
+import { type UpdateWhereData, type OmitAutoSetFields, type SchemaLike } from '@logto/shared';
 import { type CommonQueryMethods } from 'slonik';
 
 import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
@@ -14,6 +9,11 @@ import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildGetTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 
+/**
+ * Query class that contains all the necessary CRUD queries for a schema. It is
+ * designed to be used with SchemaActions for a SchemaRouter. You can also extend
+ * this class to add more queries.
+ */
 export default class SchemaQueries<
   Key extends string,
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
@@ -55,9 +55,8 @@ export default class SchemaQueries<
     return this.#findById(id);
   }
 
-  async insert(data: Omit<OmitAutoSetFields<CreateSchema>, 'id'>): Promise<Readonly<Schema>>;
   async insert(data: OmitAutoSetFields<CreateSchema>): Promise<Readonly<Schema>> {
-    return this.#insert({ id: generateStandardId(), ...data });
+    return this.#insert(data);
   }
 
   async updateById(

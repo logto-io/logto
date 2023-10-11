@@ -3,8 +3,9 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+import SchemaQueries from './SchemaQueries.js';
 import SchemaRouter, { type SchemaActions } from './SchemaRouter.js';
-import { createRequester } from './test-utils.js';
+import { createRequester, createTestPool } from './test-utils.js';
 
 const { jest } = import.meta;
 
@@ -26,9 +27,11 @@ describe('SchemaRouter', () => {
     fieldKeys: ['id'],
     createGuard: z.object({ id: z.string().optional() }),
     guard: z.object({ id: z.string() }),
+    updateGuard: z.object({ id: z.string().optional() }),
   };
   const entities = [{ id: 'test' }, { id: 'test2' }] as const satisfies readonly Schema[];
-  const actions: SchemaActions<'id', Schema, CreateSchema, CreateSchema> = {
+  const actions: SchemaActions<'id', CreateSchema, Schema> = {
+    queries: new SchemaQueries(createTestPool(), schema),
     get: jest.fn().mockResolvedValue([entities.length, entities]),
     getById: jest.fn(async (id) => {
       const entity = entities.find((entity) => entity.id === id);
@@ -37,9 +40,7 @@ describe('SchemaRouter', () => {
       }
       return entity;
     }),
-    postGuard: z.object({ id: z.string().optional() }),
     post: jest.fn(async () => ({ id: 'test_new' })),
-    patchGuard: z.object({ id: z.string().optional() }),
     patchById: jest.fn(async (id, data) => ({ id, ...data })),
     deleteById: jest.fn(),
   };

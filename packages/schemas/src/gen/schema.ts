@@ -72,7 +72,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
       .map(({ name }) => `'${camelcase(name)}'`)
       .join(' | ')};`,
     '',
-    `const createGuard: CreateGuard<${databaseEntryType}> = z.object({`,
+    `const createGuard: Guard<${databaseEntryType}> = z.object({`,
 
     ...fields.map(
       // eslint-disable-next-line complexity
@@ -137,6 +137,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
     '  ] as const,',
     '  createGuard,',
     '  guard,',
+    '  updateGuard: guard.partial(),',
     '});',
   ].join('\n');
 };

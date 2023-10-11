@@ -1,36 +1,23 @@
 import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
+import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination, { type Pagination } from '#src/middleware/koa-pagination.js';
 
+import type SchemaQueries from './SchemaQueries.js';
+
 /**
  * Actions configuration for a {@link SchemaRouter}. It contains the
  * necessary functions to handle the CRUD operations for a schema.
  */
-export abstract class SchemaActions<
+export class SchemaActions<
   Key extends string,
-  Schema extends SchemaLike<Key>,
-  PostSchema extends Partial<Schema>,
-  PatchSchema extends Partial<Schema>,
+  CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
+  Schema extends SchemaLike<Key> & { id: string },
 > {
-  /**
-   * The guard for the `POST /` request body. You can specify a partial
-   * schema and disable some fields for business logic reasons, such as
-   * id and createdAt.
-   *
-   * @see {@link post} for the function to create an entity.
-   */
-  public abstract postGuard: z.ZodType<PostSchema>;
-
-  /**
-   * The guard for the `PATCH /:id` request body. You can specify a
-   * partial schema and disable some fields for business logic reasons.
-   *
-   * @see {@link patchById} for the function to update an entity.
-   */
-  public abstract patchGuard: z.ZodType<PatchSchema>;
+  constructor(public readonly queries: SchemaQueries<Key, CreateSchema, Schema>) {}
 
   /**
    * The function for `GET /` route to get a list of entities.
@@ -40,23 +27,33 @@ export abstract class SchemaActions<
    * @returns A tuple of `[count, entities]`. `count` is the total count of entities
    *  in the database; `entities` is the list of entities to be returned.
    */
-  public abstract get(
-    pagination: Pick<Pagination, 'limit' | 'offset'>
-  ): Promise<[count: number, entities: readonly Schema[]]>;
+  public async get({
+    limit,
+    offset,
+  }: Pick<Pagination, 'limit' | 'offset'>): Promise<[count: number, entities: readonly Schema[]]> {
+    return Promise.all([this.queries.findTotalNumber(), this.queries.findAll(limit, offset)]);
+  }
+
   /**
    * The function for `GET /:id` route to get an entity by ID.
    *
    * @param id The ID of the entity to be fetched.
    * @returns The entity to be returned.
    */
-  public abstract getById(id: string): Promise<Readonly<Schema>>;
+  public async getById(id: string): Promise<Readonly<Schema>> {
+    return this.queries.findById(id);
+  }
+
   /**
    * The function for `POST /` route to create an entity.
    *
    * @param data The data of the entity to be created.
    * @returns The created entity.
    */
-  public abstract post(data: PostSchema): Promise<Readonly<Schema>>;
+  public async post(data: Omit<OmitAutoSetFields<CreateSchema>, 'id'>): Promise<Readonly<Schema>>;
+  public async post(data: OmitAutoSetFields<CreateSchema>): Promise<Readonly<Schema>> {
+    return this.queries.insert({ id: generateStandardId(), ...data });
+  }
 
   /**
    * The function for `PATCH /:id` route to update the entity by ID.
@@ -65,14 +62,18 @@ export abstract class SchemaActions<
    * @param data The data of the entity to be updated.
    * @returns The updated entity.
    */
-  public abstract patchById(id: string, data: PatchSchema): Promise<Readonly<Schema>>;
+  public async patchById(id: string, data: Partial<Schema>): Promise<Readonly<Schema>> {
+    return this.queries.updateById(id, data);
+  }
 
   /**
    * The function for `DELETE /:id` route to delete an entity by ID.
    *
    * @param id The ID of the entity to be deleted.
    */
-  public abstract deleteById(id: string): Promise<void>;
+  public async deleteById(id: string): Promise<void> {
+    return this.queries.deleteById(id);
+  }
 }
 
 /**
@@ -92,16 +93,14 @@ export abstract class SchemaActions<
  */
 export default class SchemaRouter<
   Key extends string,
-  CreateSchema extends Partial<SchemaLike<Key>>,
-  Schema extends SchemaLike<Key>,
-  PostSchema extends Partial<Schema> = Partial<Schema>,
-  PatchSchema extends Partial<Schema> = Partial<Schema>,
+  CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
+  Schema extends SchemaLike<Key> & { id: string },
   StateT = unknown,
   CustomT extends IRouterParamContext = IRouterParamContext,
 > extends Router<StateT, CustomT> {
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
-    public readonly actions: SchemaActions<Key, Schema, PostSchema, PatchSchema>
+    public readonly actions: SchemaActions<Key, CreateSchema, Schema>
   ) {
     super({ prefix: '/' + schema.table.replaceAll('_', '-') });
 
@@ -120,7 +119,7 @@ export default class SchemaRouter<
     this.post(
       '/',
       koaGuard({
-        body: actions.postGuard,
+        body: schema.createGuard,
         response: schema.guard,
         status: [201, 422],
       }),
@@ -148,7 +147,7 @@ export default class SchemaRouter<
       '/:id',
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
-        body: actions.patchGuard,
+        body: schema.updateGuard,
         response: schema.guard,
         status: [200, 404],
       }),
