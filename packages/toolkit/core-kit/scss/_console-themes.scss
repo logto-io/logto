@@ -192,6 +192,7 @@
   --color-bg-toast: var(--color-neutral-20);
   --color-bg-state-unselected: var(--color-neutral-90);
   --color-bg-state-disabled: rgba(25, 28, 29, 8%); // 8% --color-neutral-10
+  --color-bg-info-tag: rgba(229, 225, 236, 80%); // 80% --color-neutral-variant-90
 }
 
 @mixin dark {
@@ -391,4 +392,5 @@
   --color-bg-toast: var(--color-neutral-80);
   --color-bg-state-unselected: var(--color-neutral-90);
   --color-bg-state-disabled: rgba(247, 248, 248, 8%); // 8% --color-neutral-10
+  --color-bg-info-tag: var(--color-neutral-variant-90);
 }

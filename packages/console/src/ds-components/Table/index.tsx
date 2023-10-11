@@ -33,6 +33,7 @@ export type Props<
   isLoading?: boolean;
   pagination?: PaginationProps;
   placeholder?: ReactNode;
+  loadingSkeleton?: ReactNode;
   errorMessage?: string;
   hasBorder?: boolean;
   onRetry?: () => void;
@@ -56,6 +57,7 @@ function Table<
   isLoading,
   pagination,
   placeholder,
+  loadingSkeleton,
   errorMessage,
   hasBorder,
   onRetry,
@@ -103,9 +105,10 @@ function Table<
         >
           <table>
             <tbody>
-              {isLoading && (
-                <TableLoading columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)} />
-              )}
+              {isLoading &&
+                (loadingSkeleton ?? (
+                  <TableLoading columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)} />
+                ))}
               {hasError && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
               )}
@@ -145,7 +148,7 @@ function Table<
                         >
                           {columns.map(({ dataIndex, colSpan, className, render }) => (
                             <td key={dataIndex} colSpan={colSpan} className={className}>
-                              {render(row)}
+                              {render(row, rowIndex)}
                             </td>
                           ))}
                         </tr>
