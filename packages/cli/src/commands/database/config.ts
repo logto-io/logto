@@ -4,6 +4,7 @@ import {
   LogtoOidcConfigKey,
   logtoConfigGuards,
   logtoConfigKeys,
+  SupportedSigningKeyAlgorithm,
 } from '@logto/schemas';
 import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
@@ -13,7 +14,7 @@ import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { consoleLog } from '../../utils.js';
 
-import { PrivateKeyType, generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
+import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
@@ -41,7 +42,10 @@ const validRotateKeys = Object.freeze([
   LogtoOidcConfigKey.CookieKeys,
 ] as const);
 
-const validPrivateKeyTypes = Object.freeze([PrivateKeyType.RSA, PrivateKeyType.EC] as const);
+const validPrivateKeyTypes = Object.freeze([
+  SupportedSigningKeyAlgorithm.RSA,
+  SupportedSigningKeyAlgorithm.EC,
+] as const);
 
 type ValidateRotateKeyFunction = (key: string) => asserts key is (typeof validRotateKeys)[number];
 
@@ -62,7 +66,7 @@ const validateRotateKey: ValidateRotateKeyFunction = (key) => {
 const validatePrivateKeyType: ValidatePrivateKeyTypeFunction = (key) => {
   // Using `.includes()` will result a type error
   // eslint-disable-next-line unicorn/prefer-includes
-  if (!validPrivateKeyTypes.some((element) => element === key)) {
+  if (!validPrivateKeyTypes.some((element) => element === key.toUpperCase())) {
     consoleLog.fatal(
       `Invalid private key type ${chalk.red(
         key

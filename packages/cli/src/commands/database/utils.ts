@@ -1,18 +1,13 @@
 import { generateKeyPair } from 'node:crypto';
 import { promisify } from 'node:util';
 
-import { type PrivateKey } from '@logto/schemas';
+import { type OidcConfigKey, SupportedSigningKeyAlgorithm } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 
-export enum PrivateKeyType {
-  RSA = 'rsa',
-  EC = 'ec',
-}
-
 export const generateOidcPrivateKey = async (
-  type: PrivateKeyType = PrivateKeyType.EC
-): Promise<PrivateKey> => {
-  if (type === PrivateKeyType.RSA) {
+  type: SupportedSigningKeyAlgorithm = SupportedSigningKeyAlgorithm.EC
+): Promise<OidcConfigKey> => {
+  if (type === SupportedSigningKeyAlgorithm.RSA) {
     const { privateKey } = await promisify(generateKeyPair)('rsa', {
       modulusLength: 4096,
       publicKeyEncoding: {
@@ -29,7 +24,7 @@ export const generateOidcPrivateKey = async (
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (type === PrivateKeyType.EC) {
+  if (type === SupportedSigningKeyAlgorithm.EC) {
     const { privateKey } = await promisify(generateKeyPair)('ec', {
       // https://security.stackexchange.com/questions/78621/which-elliptic-curve-should-i-use
       namedCurve: 'secp384r1',

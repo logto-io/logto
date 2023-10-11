@@ -3,13 +3,15 @@ import type {
   AdminConsoleData,
   Application,
   ApplicationsRole,
+  LogtoConfig,
   Passcode,
+  OidcConfigKey,
   Resource,
   Role,
   Scope,
   UsersRole,
 } from '@logto/schemas';
-import { RoleType, ApplicationType } from '@logto/schemas';
+import { RoleType, ApplicationType, LogtoOidcConfigKey } from '@logto/schemas';
 
 import { mockId } from '#src/test-utils/nanoid.js';
 
@@ -96,6 +98,31 @@ export const mockAdminUserRole3: Role = {
 export const mockAdminConsoleData: AdminConsoleData = {
   signInExperienceCustomized: false,
 };
+
+export const mockPrivateKeys: OidcConfigKey[] = [
+  {
+    id: 'private',
+    value: '-----BEGIN PRIVATE KEY-----\nxxxxx\nyyyyy\nzzzzz\n-----END PRIVATE KEY-----\n',
+    createdAt: 123_456_789,
+  },
+];
+
+export const mockCookieKeys: OidcConfigKey[] = [
+  { id: 'cookie', value: 'bar', createdAt: 987_654_321 },
+];
+
+export const mockLogtoConfigs: LogtoConfig[] = [
+  {
+    tenantId: 'fake_tenant',
+    key: LogtoOidcConfigKey.PrivateKeys,
+    value: mockPrivateKeys,
+  },
+  {
+    tenantId: 'fake_tenant',
+    key: LogtoOidcConfigKey.CookieKeys,
+    value: mockCookieKeys,
+  },
+];
 
 export const mockPasscode: Passcode = {
   tenantId: 'fake_tenant',
