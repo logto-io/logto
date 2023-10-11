@@ -29,6 +29,17 @@ export const mockUserTotpMfaVerification = {
   createdAt: new Date().toISOString(),
   key: 'key',
 } satisfies User['mfaVerifications'][number];
+
+export const mockUserWebAuthnMfaVerification = {
+  id: 'fake_webauthn_id',
+  type: MfaFactor.WebAuthn,
+  createdAt: new Date().toISOString(),
+  credentialId: 'credentialId',
+  publicKey: 'publickKey',
+  counter: 0,
+  agent: 'agent',
+} satisfies User['mfaVerifications'][number];
+
 export const mockUserWithMfaVerifications: User = {
   ...mockUser,
   mfaVerifications: [mockUserTotpMfaVerification],

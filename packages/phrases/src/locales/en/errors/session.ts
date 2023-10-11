@@ -28,6 +28,7 @@ const session = {
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     invalid_totp_code: 'Invalid TOTP code.',
     webauthn_verification_failed: 'WebAuthn verification failed.',
+    webauthn_verification_not_found: 'WebAuthn verification not found.',
   },
 };
 

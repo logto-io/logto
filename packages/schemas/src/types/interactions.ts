@@ -114,6 +114,11 @@ export const bindWebAuthnPayloadGuard = z.object({
   type: z.literal(MfaFactor.WebAuthn),
   id: z.string(),
   rawId: z.string(),
+  /**
+   * The response from WebAuthn API
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential}
+   */
   response: z.object({
     clientDataJSON: z.string(),
     attestationObject: z.string(),
@@ -147,7 +152,23 @@ export const totpVerificationPayloadGuard = bindTotpPayloadGuard;
 
 export type TotpVerificationPayload = z.infer<typeof totpVerificationPayloadGuard>;
 
-export const verifyMfaPayloadGuard = totpVerificationPayloadGuard;
+export const webAuthnVerificationPayloadGuard = bindWebAuthnPayloadGuard
+  .omit({ response: true })
+  .extend({
+    response: z.object({
+      clientDataJSON: z.string(),
+      authenticatorData: z.string(),
+      signature: z.string(),
+      userHandle: z.string().optional(),
+    }),
+  });
+
+export type WebAuthnVerificationPayload = z.infer<typeof webAuthnVerificationPayloadGuard>;
+
+export const verifyMfaPayloadGuard = z.discriminatedUnion('type', [
+  totpVerificationPayloadGuard,
+  webAuthnVerificationPayloadGuard,
+]);
 
 export type VerifyMfaPayload = z.infer<typeof verifyMfaPayloadGuard>;
 
