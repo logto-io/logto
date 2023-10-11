@@ -11,6 +11,8 @@ import {
   type VerifyMfaResult,
   type BindWebAuthn,
   type BindWebAuthnPayload,
+  type MfaVerifications,
+  type WebAuthnVerificationPayload,
 } from '@logto/schemas';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
@@ -20,7 +22,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousInteractionResult } from '../types/index.js';
 import { validateTotpToken } from '../utils/totp-validation.js';
-import { verifyWebAuthnRegistration } from '../utils/webauthn.js';
+import { verifyWebAuthnAuthentication, verifyWebAuthnRegistration } from '../utils/webauthn.js';
 
 const verifyBindTotp = async (
   interactionStorage: AnonymousInteractionResult,
@@ -132,12 +134,79 @@ export async function bindMfaPayloadVerification(
   return verifyBindWebAuthn(interactionStorage, bindMfaPayload, ctx, { rpId, userAgent, origin });
 }
 
+async function verifyWebAuthn(
+  interactionStorage: AnonymousInteractionResult,
+  mfaVerifications: MfaVerifications,
+  { rpId, origin, payload }: { rpId: string; origin: string; payload: WebAuthnVerificationPayload }
+): Promise<{ result: VerifyMfaResult; newCounter?: number }> {
+  const { pendingMfa } = interactionStorage;
+  assertThat(pendingMfa, 'session.mfa.pending_info_not_found');
+  // Will add more type, disable the rule for now, this can be a reminder when adding new type
+
+  assertThat(pendingMfa.type === MfaFactor.WebAuthn, 'session.mfa.pending_info_not_found');
+
+  const { result, newCounter } = await verifyWebAuthnAuthentication({
+    payload,
+    challenge: pendingMfa.challenge,
+    rpId,
+    origin,
+    mfaVerifications,
+  });
+
+  assertThat(result, 'session.mfa.webauthn_verification_failed');
+
+  return {
+    result,
+    newCounter,
+  };
+}
+
 export async function verifyMfaPayloadVerification(
   tenant: TenantContext,
-  accountId: string,
-  verifyMfaPayload: VerifyMfaPayload
+  verifyMfaPayload: VerifyMfaPayload,
+  interactionStorage: AnonymousInteractionResult,
+  {
+    rpId,
+    origin,
+    accountId,
+  }: {
+    rpId: string;
+    origin: string;
+    accountId: string;
+  }
 ): Promise<VerifyMfaResult> {
   const user = await tenant.queries.users.findUserById(accountId);
 
-  return verifyTotp(user.mfaVerifications, verifyMfaPayload);
+  if (verifyMfaPayload.type === MfaFactor.TOTP) {
+    return verifyTotp(user.mfaVerifications, verifyMfaPayload);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (verifyMfaPayload.type === MfaFactor.WebAuthn) {
+    const { result, newCounter } = await verifyWebAuthn(interactionStorage, user.mfaVerifications, {
+      payload: verifyMfaPayload,
+      rpId,
+      origin,
+    });
+
+    if (newCounter !== undefined) {
+      // Update the authenticator's counter in the DB to the newest count in the authentication
+      await tenant.queries.users.updateUserById(accountId, {
+        mfaVerifications: user.mfaVerifications.map((mfa) => {
+          if (mfa.type !== MfaFactor.WebAuthn) {
+            return mfa;
+          }
+
+          return {
+            ...mfa,
+            counter: newCounter,
+          };
+        }),
+      });
+    }
+
+    return result;
+  }
+
+  throw new Error('Unsupported MFA type');
 }

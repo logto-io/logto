@@ -4,13 +4,21 @@ import {
   type MfaVerificationWebAuthn,
   type User,
   type WebAuthnRegistrationOptions,
+  type MfaVerifications,
+  type WebAuthnVerificationPayload,
+  type VerifyMfaResult,
 } from '@logto/schemas';
 import {
   type GenerateRegistrationOptionsOpts,
   generateRegistrationOptions,
   verifyRegistrationResponse,
   type VerifyRegistrationResponseOpts,
+  type GenerateAuthenticationOptionsOpts,
+  generateAuthenticationOptions,
+  type VerifyAuthenticationResponseOpts,
+  verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
 type GenerateWebAuthnRegistrationOptionsParameters = {
   rpId: string;
@@ -64,4 +72,99 @@ export const verifyWebAuthnRegistration = async (
     requireUserVerification: true,
   };
   return verifyRegistrationResponse(options);
+};
+
+export const generateWebAuthnAuthenticationOptions = async ({
+  rpId,
+  mfaVerifications,
+}: {
+  rpId: string;
+  mfaVerifications: MfaVerifications;
+}) => {
+  const webAuthnVerifications = mfaVerifications.filter(
+    (verification): verification is MfaVerificationWebAuthn =>
+      verification.type === MfaFactor.WebAuthn
+  );
+
+  if (webAuthnVerifications.length === 0) {
+    throw new Error('No WebAuthn verifications found');
+  }
+
+  const options: GenerateAuthenticationOptionsOpts = {
+    timeout: 60_000,
+    allowCredentials: webAuthnVerifications.map(({ credentialId, transports }) => ({
+      id: isoBase64URL.toBuffer(credentialId),
+      type: 'public-key',
+      transports,
+    })),
+    userVerification: 'required',
+    rpID: rpId,
+  };
+  return generateAuthenticationOptions(options);
+};
+
+type VerifyWebAuthnAuthenticationParameters = {
+  payload: Omit<WebAuthnVerificationPayload, 'type'>;
+  challenge: string;
+  rpId: string;
+  origin: string;
+  mfaVerifications: MfaVerifications;
+};
+
+export const verifyWebAuthnAuthentication = async ({
+  payload,
+  challenge,
+  rpId,
+  origin,
+  mfaVerifications,
+}: VerifyWebAuthnAuthenticationParameters): Promise<{
+  result: false | VerifyMfaResult;
+  newCounter?: number;
+}> => {
+  const webAuthnVerifications = mfaVerifications.filter(
+    (verification): verification is MfaVerificationWebAuthn =>
+      verification.type === MfaFactor.WebAuthn
+  );
+  const verification = webAuthnVerifications.find(
+    ({ credentialId }) => credentialId === payload.id
+  );
+
+  if (!verification) {
+    return { result: false };
+  }
+
+  const { publicKey, credentialId, counter, transports, id } = verification;
+
+  const options: VerifyAuthenticationResponseOpts = {
+    response: {
+      ...payload,
+      type: 'public-key',
+    },
+    expectedChallenge: challenge,
+    expectedOrigin: origin,
+    expectedRPID: rpId,
+    authenticator: {
+      credentialPublicKey: isoBase64URL.toBuffer(publicKey),
+      credentialID: isoBase64URL.toBuffer(credentialId),
+      counter,
+      transports,
+    },
+    requireUserVerification: true,
+  };
+
+  try {
+    const { verified, authenticationInfo } = await verifyAuthenticationResponse(options);
+    if (!verified) {
+      return { result: false };
+    }
+    return {
+      result: {
+        type: MfaFactor.WebAuthn,
+        id,
+      },
+      newCounter: authenticationInfo.newCounter,
+    };
+  } catch {
+    return { result: false };
+  }
 };

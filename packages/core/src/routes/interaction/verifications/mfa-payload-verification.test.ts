@@ -111,10 +111,15 @@ describe('verifyMfaPayloadVerification', () => {
       });
 
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).resolves.toMatchObject({
         type: MfaFactor.TOTP,
         id: 'id',
@@ -129,10 +134,15 @@ describe('verifyMfaPayloadVerification', () => {
         mfaVerifications: [],
       });
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
     });
 
@@ -143,10 +153,15 @@ describe('verifyMfaPayloadVerification', () => {
       validateTotpToken.mockReturnValueOnce(false);
 
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
     });
   });

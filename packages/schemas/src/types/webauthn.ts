@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { webAuthnTransportGuard } from '../foundations/jsonb-types.js';
+
 export const webAuthnRegistrationOptionsGuard = z.object({
   rp: z.object({
     name: z.string(),
@@ -23,9 +25,7 @@ export const webAuthnRegistrationOptionsGuard = z.object({
       z.object({
         type: z.literal('public-key'),
         id: z.string(),
-        transports: z
-          .array(z.enum(['ble', 'cable', 'hybrid', 'internal', 'nfc', 'smart-card', 'usb']))
-          .optional(),
+        transports: webAuthnTransportGuard.array().optional(),
       })
     )
     .optional(),
@@ -48,3 +48,28 @@ export const webAuthnRegistrationOptionsGuard = z.object({
 });
 
 export type WebAuthnRegistrationOptions = z.infer<typeof webAuthnRegistrationOptionsGuard>;
+
+export const webAuthnAuthenticationOptionsGuard = z.object({
+  challenge: z.string(),
+  timeout: z.number().optional(),
+  rpId: z.string().optional(),
+  allowCredentials: z
+    .array(
+      z.object({
+        type: z.literal('public-key'),
+        id: z.string(),
+        transports: webAuthnTransportGuard.array().optional(),
+      })
+    )
+    .optional(),
+  userVerification: z.enum(['required', 'preferred', 'discouraged']).optional(),
+  extensions: z
+    .object({
+      appid: z.string().optional(),
+      credProps: z.boolean().optional(),
+      hmacCreateSecret: z.boolean().optional(),
+    })
+    .optional(),
+});
+
+export type WebAuthnAuthenticationOptions = z.infer<typeof webAuthnAuthenticationOptionsGuard>;
