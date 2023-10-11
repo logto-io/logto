@@ -61,6 +61,57 @@ const tenants = {
     description_2:
       'Se necessiti ulteriori chiarimenti, hai qualche preoccupazione o desideri ripristinare la funzionalità completa e sbloccare i tuoi tenant, ti preghiamo di contattarci immediatamente.',
   },
+  signing_keys: {
+    /** UNTRANSLATED */
+    title: 'SIGNING KEYS',
+    /** UNTRANSLATED */
+    description: 'Securely manage signing keys in your tenant.',
+    type: {
+      /** UNTRANSLATED */
+      private_key: 'OIDC private keys',
+      /** UNTRANSLATED */
+      cookie_key: 'OIDC cookie keys',
+    },
+    /** UNTRANSLATED */
+    private_keys_in_use: 'Private keys in use',
+    /** UNTRANSLATED */
+    rotate_private_keys: 'Rotate private keys',
+    /** UNTRANSLATED */
+    rotate_private_keys_description:
+      'This will rotate the currently used private keys. Your {{entities}} with previous private keys will stay valid until you delete it.',
+    /** UNTRANSLATED */
+    select_private_key_algorithm: 'Select signing key algorithm for private keys',
+    /** UNTRANSLATED */
+    rotate_button: 'Rotate',
+    table_column: {
+      /** UNTRANSLATED */
+      id: 'ID',
+      /** UNTRANSLATED */
+      status: 'Status',
+      /** UNTRANSLATED */
+      algorithm: 'Signing key algorithm',
+    },
+    status: {
+      /** UNTRANSLATED */
+      current: 'Current',
+      /** UNTRANSLATED */
+      previous: 'Previous',
+    },
+    reminder: {
+      /** UNTRANSLATED */
+      rotate:
+        'Are you sure you want to rotate the <strong>{{key}}</strong>? This will require all your apps and APIs to use the new signing key. Existing {{entities}} stay valid until you rotate again.',
+      /** UNTRANSLATED */
+      delete:
+        'Are you sure you want to delete the <strong>{{key}}</strong>? Existing {{entities}} signed with this signing key will no longer be valid.',
+    },
+    signed_entity: {
+      /** UNTRANSLATED */
+      tokens: 'JWT tokens',
+      /** UNTRANSLATED */
+      cookies: 'cookies',
+    },
+  },
 };
 
 export default Object.freeze(tenants);
