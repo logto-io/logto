@@ -28,7 +28,7 @@ describe('SchemaRouter', () => {
     guard: z.object({ id: z.string() }),
   };
   const entities = [{ id: 'test' }, { id: 'test2' }] as const satisfies readonly Schema[];
-  const actions: SchemaActions<CreateSchema, Schema, CreateSchema> = {
+  const actions: SchemaActions<CreateSchema, Schema, CreateSchema, CreateSchema> = {
     get: jest.fn().mockResolvedValue([entities.length, entities]),
     getById: jest.fn(async (id) => {
       const entity = entities.find((entity) => entity.id === id);
@@ -37,11 +37,10 @@ describe('SchemaRouter', () => {
       }
       return entity;
     }),
+    postGuard: z.object({ id: z.string().optional() }),
     post: jest.fn(async () => ({ id: 'test_new' })),
-    patchById: {
-      guard: z.object({ id: z.string().optional() }),
-      run: jest.fn(async (id, data) => ({ id, ...data })),
-    },
+    patchGuard: z.object({ id: z.string().optional() }),
+    patchById: jest.fn(async (id, data) => ({ id, ...data })),
     deleteById: jest.fn(),
   };
   const schemaRouter = new SchemaRouter(schema, actions);
@@ -56,7 +55,9 @@ describe('SchemaRouter', () => {
     it('should be able to get all entities', async () => {
       const response = await request.get(baseRoute);
 
-      expect(actions.get).toHaveBeenCalledWith(expect.objectContaining({ disabled: true }));
+      expect(actions.get).toHaveBeenCalledWith(
+        expect.objectContaining({ disabled: false, offset: 0, limit: 20 })
+      );
       expect(response.body).toStrictEqual(entities);
     });
 
@@ -104,7 +105,7 @@ describe('SchemaRouter', () => {
     it('should be able to patch an entity by id', async () => {
       const response = await request.patch(`${baseRoute}/test`).send({ id: 'test_new' });
 
-      expect(actions.patchById.run).toHaveBeenCalledWith('test', { id: 'test_new' });
+      expect(actions.patchById).toHaveBeenCalledWith('test', { id: 'test_new' });
       expect(response.body).toStrictEqual({ id: 'test_new' });
       expect(response.status).toEqual(200);
     });

@@ -1,5 +1,5 @@
-import { type Organization, Organizations } from '@logto/schemas';
-import { type OmitAutoSetFields } from '@logto/shared';
+import { type Organization, Organizations, type CreateOrganization } from '@logto/schemas';
+import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
 
 import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
@@ -30,8 +30,10 @@ export default class OrganizationQueries extends TenantQueries {
     return this.#findById(id);
   }
 
-  async insert(data: OmitAutoSetFields<Organization>): Promise<Readonly<Organization>> {
-    return this.#insert(data);
+  async insert(
+    data: Omit<OmitAutoSetFields<CreateOrganization>, 'id'>
+  ): Promise<Readonly<Organization>> {
+    return this.#insert({ id: generateStandardId(), ...data });
   }
 
   async updateById(

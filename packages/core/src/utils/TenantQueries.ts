@@ -1,5 +1,5 @@
 import { type CommonQueryMethods } from 'slonik';
 
-export default abstract class TenantQueries {
+export default class TenantQueries {
   constructor(public readonly pool: CommonQueryMethods) {}
 }

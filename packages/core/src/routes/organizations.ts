@@ -1,8 +1,43 @@
-import { Organizations } from '@logto/schemas';
+import { type CreateOrganization, type Organization, Organizations } from '@logto/schemas';
+import { type OmitAutoSetFields } from '@logto/shared';
 
-import SchemaRouter from '#src/utils/SchemaRouter.js';
+import { type Pagination } from '#src/middleware/koa-pagination.js';
+import type OrganizationQueries from '#src/queries/organizations.js';
+import SchemaRouter, { type SchemaActions } from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from './types.js';
+
+type PostSchema = Omit<OmitAutoSetFields<CreateOrganization>, 'id'>;
+type PatchSchema = Partial<Omit<OmitAutoSetFields<Organization>, 'id'>>;
+
+class OrganizationActions
+  implements SchemaActions<CreateOrganization, Organization, PostSchema, PatchSchema>
+{
+  postGuard = Organizations.createGuard.omit({ id: true, createdAt: true });
+  patchGuard = Organizations.guard.omit({ id: true, createdAt: true }).partial();
+
+  constructor(public readonly queries: OrganizationQueries) {}
+
+  public async get({ limit, offset }: Pick<Pagination, 'limit' | 'offset'>) {
+    return Promise.all([this.queries.findTotalNumber(), this.queries.findAll(limit, offset)]);
+  }
+
+  public async getById(id: string) {
+    return this.queries.findById(id);
+  }
+
+  public async post(data: PostSchema) {
+    return this.queries.insert(data);
+  }
+
+  public async patchById(id: string, data: PatchSchema) {
+    return this.queries.updateById(id, data);
+  }
+
+  public async deleteById(id: string) {
+    return this.queries.deleteById(id);
+  }
+}
 
 export default function organizationRoutes<T extends AuthedRouter>(
   ...[
@@ -12,17 +47,7 @@ export default function organizationRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new SchemaRouter(Organizations, {
-    get: async ({ limit, offset }) =>
-      Promise.all([organizations.findTotalNumber(), organizations.findAll(limit, offset)]),
-    getById: organizations.findById,
-    post: organizations.insert,
-    patchById: {
-      guard: Organizations.guard.omit({ id: true, createdAt: true }).partial(),
-      run: organizations.updateById,
-    },
-    deleteById: organizations.deleteById,
-  });
+  const router = new SchemaRouter(Organizations, new OrganizationActions(organizations));
 
   originalRouter.use(router.routes());
 }
