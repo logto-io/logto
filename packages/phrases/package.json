@@ -37,7 +37,7 @@
     "@silverhand/essentials": "^2.8.4"
   },
   "peerDependencies": {
-    "zod": "^3.20.2"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "4.0.1",
