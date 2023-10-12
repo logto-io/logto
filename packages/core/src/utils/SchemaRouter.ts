@@ -1,4 +1,4 @@
-import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
+import { type SchemaLike, type GeneratedSchema, type Guard } from '@logto/schemas';
 import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -119,7 +119,8 @@ export default class SchemaRouter<
     this.post(
       '/',
       koaGuard({
-        body: schema.createGuard,
+        // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well for generic types
+        body: schema.createGuard.omit({ id: true }) as Guard<Omit<CreateSchema, 'id'>>,
         response: schema.guard,
         status: [201, 422],
       }),
