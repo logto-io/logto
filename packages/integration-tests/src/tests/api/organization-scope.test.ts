@@ -1,4 +1,7 @@
+import assert from 'node:assert';
+
 import { generateStandardId } from '@logto/shared';
+import { isKeyInObject } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
 import {
@@ -12,6 +15,19 @@ import {
 const randomId = () => generateStandardId(4);
 
 describe('organization scopes', () => {
+  it('should fail if the name of the new organization scope already exists', async () => {
+    const name = 'test' + randomId();
+    await createOrganizationScope(name);
+    const response = await createOrganizationScope(name).catch((error: unknown) => error);
+
+    assert(response instanceof HTTPError);
+
+    const { statusCode, body: raw } = response.response;
+    const body: unknown = JSON.parse(String(raw));
+    expect(statusCode).toBe(400);
+    expect(isKeyInObject(body, 'code') && body.code).toBe('entity.duplicate_value_of_unique_field');
+  });
+
   it('should get organization scopes successfully', async () => {
     const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
     await createOrganizationScope(name1, 'A test organization scope.');
