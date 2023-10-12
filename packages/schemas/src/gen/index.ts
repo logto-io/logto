@@ -162,7 +162,7 @@ const generate = async () => {
       }));
 
       if (tableWithTypes.length > 0) {
-        tsTypes.push('GeneratedSchema', 'Guard', 'CreateGuard');
+        tsTypes.push('GeneratedSchema', 'Guard');
       }
       /* eslint-enable @silverhand/fp/no-mutating-methods */
 

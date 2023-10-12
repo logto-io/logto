@@ -3,32 +3,41 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+import SchemaQueries from './SchemaQueries.js';
 import SchemaRouter, { type SchemaActions } from './SchemaRouter.js';
-import { createRequester } from './test-utils.js';
+import { createRequester, createTestPool } from './test-utils.js';
 
 const { jest } = import.meta;
 
 type CreateSchema = {
-  id?: string;
+  id: string;
+  name?: string;
 };
 
 type Schema = {
   id: string;
+  name: string;
 };
 
 describe('SchemaRouter', () => {
-  const schema: GeneratedSchema<'id', CreateSchema, Schema> = {
-    table: 'test_table',
+  const schema: GeneratedSchema<'id' | 'name', CreateSchema, Schema> = {
+    table: 'test_tables',
     tableSingular: 'test_table',
     fields: {
       id: 'id',
+      name: 'name',
     },
-    fieldKeys: ['id'],
-    createGuard: z.object({ id: z.string().optional() }),
-    guard: z.object({ id: z.string() }),
+    fieldKeys: ['id', 'name'],
+    createGuard: z.object({ id: z.string(), name: z.string().optional() }),
+    guard: z.object({ id: z.string(), name: z.string() }),
+    updateGuard: z.object({ id: z.string(), name: z.string() }).partial(),
   };
-  const entities = [{ id: 'test' }, { id: 'test2' }] as const satisfies readonly Schema[];
-  const actions: SchemaActions<'id', Schema, CreateSchema, CreateSchema> = {
+  const entities = [
+    { id: '1', name: 'test' },
+    { id: '2', name: 'test2' },
+  ] as const satisfies readonly Schema[];
+  const actions: SchemaActions<'name', CreateSchema, Schema> = {
+    queries: new SchemaQueries(createTestPool(), schema),
     get: jest.fn().mockResolvedValue([entities.length, entities]),
     getById: jest.fn(async (id) => {
       const entity = entities.find((entity) => entity.id === id);
@@ -37,10 +46,8 @@ describe('SchemaRouter', () => {
       }
       return entity;
     }),
-    postGuard: z.object({ id: z.string().optional() }),
-    post: jest.fn(async () => ({ id: 'test_new' })),
-    patchGuard: z.object({ id: z.string().optional() }),
-    patchById: jest.fn(async (id, data) => ({ id, ...data })),
+    post: jest.fn(async () => ({ id: 'new', name: 'test_new' })),
+    patchById: jest.fn(async (id, data) => ({ id, name: 'name_patch_default', ...data })),
     deleteById: jest.fn(),
   };
   const schemaRouter = new SchemaRouter(schema, actions);
@@ -75,11 +82,11 @@ describe('SchemaRouter', () => {
       const response = await request.post(baseRoute).send({});
 
       expect(actions.post).toHaveBeenCalledWith({});
-      expect(response.body).toStrictEqual({ id: 'test_new' });
+      expect(response.body).toStrictEqual({ id: 'new', name: 'test_new' });
     });
 
     it('should throw with invalid input body', async () => {
-      const response = await request.post(baseRoute).send({ id: 1 });
+      const response = await request.post(baseRoute).send({ name: 1 });
 
       expect(response.status).toEqual(400);
     });
@@ -87,15 +94,15 @@ describe('SchemaRouter', () => {
 
   describe('getById', () => {
     it('should be able to get an entity by id', async () => {
-      const response = await request.get(`${baseRoute}/test`);
+      const response = await request.get(`${baseRoute}/1`);
 
-      expect(actions.getById).toHaveBeenCalledWith('test');
+      expect(actions.getById).toHaveBeenCalledWith('1');
       expect(response.body).toStrictEqual(entities[0]);
     });
 
     // This test case is actually nice-to-have. It's not required for the router to work.
     it('should throw with invalid id', async () => {
-      const response = await request.get(`${baseRoute}/2`);
+      const response = await request.get(`${baseRoute}/foo`);
 
       expect(response.status).toEqual(404);
     });
@@ -103,10 +110,10 @@ describe('SchemaRouter', () => {
 
   describe('patchById', () => {
     it('should be able to patch an entity by id', async () => {
-      const response = await request.patch(`${baseRoute}/test`).send({ id: 'test_new' });
+      const response = await request.patch(`${baseRoute}/test`).send({ name: 'test_new' });
 
-      expect(actions.patchById).toHaveBeenCalledWith('test', { id: 'test_new' });
-      expect(response.body).toStrictEqual({ id: 'test_new' });
+      expect(actions.patchById).toHaveBeenCalledWith('test', { name: 'test_new' });
+      expect(response.body).toStrictEqual({ id: 'test', name: 'test_new' });
       expect(response.status).toEqual(200);
     });
   });
