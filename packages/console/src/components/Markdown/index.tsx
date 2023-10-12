@@ -54,15 +54,15 @@ function Markdown({ className, children }: Props) {
       remarkPlugins={[remarkGfm]}
       className={classNames(styles.markdown, className)}
       components={{
-        code: ({ inline, className, children, ...props }) => {
+        code: ({ className, children, ...props }) => {
           const [, codeBlockType] = /language-(\w+)/.exec(className ?? '') ?? [];
 
-          return inline ? (
+          return codeBlockType ? (
+            <CodeEditor isReadonly language={codeBlockType} value={String(children)} />
+          ) : (
             <code className={styles.inlineCode} {...props}>
               {children}
             </code>
-          ) : (
-            <CodeEditor isReadonly language={codeBlockType} value={String(children)} />
           );
         },
         img: ({ src, alt }) => {
