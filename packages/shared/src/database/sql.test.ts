@@ -81,7 +81,7 @@ describe('convertToIdentifiers()', () => {
     fooBar: 'foo_bar',
     baz: 'baz',
   };
-  const data: Table = { table, fields };
+  const data: Table<string> = { table, fields };
 
   it('converts table to correct identifiers', () => {
     expect(convertToIdentifiers(data)).toEqual({

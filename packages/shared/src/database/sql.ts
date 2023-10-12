@@ -68,16 +68,20 @@ export const convertToPrimitiveOrSql = (
   throw new Error(`Cannot convert ${key} to primitive`);
 };
 
-export const convertToIdentifiers = <T extends Table>({ table, fields }: T, withPrefix = false) => {
-  const fieldsIdentifiers = Object.entries<string>(fields).map<
-    [keyof T['fields'], IdentifierSqlToken]
-  >(([key, value]) => [key, sql.identifier(withPrefix ? [table, value] : [value])]);
+export const convertToIdentifiers = <Key extends string>(
+  { table, fields }: Table<Key>,
+  withPrefix = false
+) => {
+  const fieldsIdentifiers = Object.entries<string>(fields).map<[Key, IdentifierSqlToken]>(
+    // eslint-disable-next-line no-restricted-syntax -- Object.entries can only return string keys
+    ([key, value]) => [key as Key, sql.identifier(withPrefix ? [table, value] : [value])]
+  );
 
   return {
     table: sql.identifier([table]),
     // Key value inferred from the original fields directly
     // eslint-disable-next-line no-restricted-syntax
-    fields: Object.fromEntries(fieldsIdentifiers) as FieldIdentifiers<keyof T['fields']>,
+    fields: Object.fromEntries(fieldsIdentifiers) as FieldIdentifiers<Key>,
   };
 };
 

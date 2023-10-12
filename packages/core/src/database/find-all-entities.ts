@@ -1,18 +1,17 @@
 import { type GeneratedSchema, type SchemaLike } from '@logto/schemas';
-import {
-  type FieldIdentifiers,
-  conditionalSql,
-  convertToIdentifiers,
-  manyRows,
-} from '@logto/shared';
+import { conditionalSql, convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
 export const buildFindAllEntitiesWithPool =
   (pool: CommonQueryMethods) =>
-  <CreateSchema extends SchemaLike, Schema extends CreateSchema>(
-    schema: GeneratedSchema<CreateSchema, Schema>,
+  <
+    Keys extends string,
+    CreateSchema extends Partial<SchemaLike<Keys>>,
+    Schema extends SchemaLike<Keys>,
+  >(
+    schema: GeneratedSchema<Keys, CreateSchema, Schema>,
     orderBy?: Array<{
-      field: keyof FieldIdentifiers<keyof GeneratedSchema<CreateSchema, Schema>['fields']>;
+      field: Keys;
       order: 'asc' | 'desc';
     }>
   ) => {

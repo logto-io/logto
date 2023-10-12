@@ -17,7 +17,7 @@ type Schema = {
 };
 
 describe('SchemaRouter', () => {
-  const schema: GeneratedSchema<CreateSchema, Schema> = {
+  const schema: GeneratedSchema<'id', CreateSchema, Schema> = {
     table: 'test_table',
     tableSingular: 'test_table',
     fields: {
@@ -28,7 +28,7 @@ describe('SchemaRouter', () => {
     guard: z.object({ id: z.string() }),
   };
   const entities = [{ id: 'test' }, { id: 'test2' }] as const satisfies readonly Schema[];
-  const actions: SchemaActions<CreateSchema, Schema, CreateSchema, CreateSchema> = {
+  const actions: SchemaActions<'id', Schema, CreateSchema, CreateSchema> = {
     get: jest.fn().mockResolvedValue([entities.length, entities]),
     getById: jest.fn(async (id) => {
       const entity = entities.find((entity) => entity.id === id);

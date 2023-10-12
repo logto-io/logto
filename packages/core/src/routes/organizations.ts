@@ -1,4 +1,9 @@
-import { type CreateOrganization, type Organization, Organizations } from '@logto/schemas';
+import {
+  type CreateOrganization,
+  type Organization,
+  Organizations,
+  type OrganizationKeys,
+} from '@logto/schemas';
 import { type OmitAutoSetFields } from '@logto/shared';
 
 import { type Pagination } from '#src/middleware/koa-pagination.js';
@@ -11,7 +16,7 @@ type PostSchema = Omit<OmitAutoSetFields<CreateOrganization>, 'id'>;
 type PatchSchema = Partial<Omit<OmitAutoSetFields<Organization>, 'id'>>;
 
 class OrganizationActions
-  implements SchemaActions<CreateOrganization, Organization, PostSchema, PatchSchema>
+  implements SchemaActions<OrganizationKeys, Organization, PostSchema, PatchSchema>
 {
   postGuard = Organizations.createGuard.omit({ id: true, createdAt: true });
   patchGuard = Organizations.guard.omit({ id: true, createdAt: true }).partial();

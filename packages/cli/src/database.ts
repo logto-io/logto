@@ -65,7 +65,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
   }
 };
 
-export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
+export const insertInto = <T extends SchemaLike<string>>(object: T, table: string) => {
   const keys = Object.keys(object);
 
   return sql`

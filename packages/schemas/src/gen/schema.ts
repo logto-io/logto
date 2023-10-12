@@ -68,6 +68,10 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
     ),
     '};',
     '',
+    `export type ${modelName}Keys = ${fields
+      .map(({ name }) => `'${camelcase(name)}'`)
+      .join(' | ')};`,
+    '',
     `const createGuard: CreateGuard<${databaseEntryType}> = z.object({`,
 
     ...fields.map(
@@ -122,7 +126,7 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
     '',
     `export const ${camelcase(name, {
       pascalCase: true,
-    })}: GeneratedSchema<${databaseEntryType}, ${modelName}> = Object.freeze({`,
+    })}: GeneratedSchema<${modelName}Keys, ${databaseEntryType}, ${modelName}> = Object.freeze({`,
     `  table: '${name}',`,
     `  tableSingular: '${pluralize(name, 1)}',`,
     '  fields: {',

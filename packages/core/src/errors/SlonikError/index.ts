@@ -12,23 +12,27 @@ export class DeletionError extends SlonikError {
 }
 
 export class UpdateError<
-  CreateSchema extends SchemaLike,
-  Schema extends CreateSchema,
+  Key extends string,
+  CreateSchema extends Partial<SchemaLike<Key>>,
+  Schema extends SchemaLike<Key>,
+  SetKey extends Key,
+  WhereKey extends Key,
 > extends SlonikError {
   public constructor(
-    public readonly schema: GeneratedSchema<CreateSchema, Schema>,
-    public readonly detail: Partial<UpdateWhereData<Schema>>
+    public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
+    public readonly detail: Partial<UpdateWhereData<SetKey, WhereKey>>
   ) {
     super('Resource not found.');
   }
 }
 
 export class InsertionError<
-  CreateSchema extends SchemaLike,
-  Schema extends CreateSchema,
+  Key extends string,
+  CreateSchema extends Partial<SchemaLike<Key>>,
+  Schema extends SchemaLike<Key>,
 > extends SlonikError {
   public constructor(
-    public readonly schema: GeneratedSchema<CreateSchema, Schema>,
+    public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
     public readonly detail?: OmitAutoSetFields<CreateSchema>
   ) {
     super('Create Error.');

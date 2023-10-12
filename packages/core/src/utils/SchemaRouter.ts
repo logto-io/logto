@@ -10,8 +10,8 @@ import koaPagination, { type Pagination } from '#src/middleware/koa-pagination.j
  * necessary functions to handle the CRUD operations for a schema.
  */
 export abstract class SchemaActions<
-  CreateSchema extends SchemaLike,
-  Schema extends CreateSchema,
+  Key extends string,
+  Schema extends SchemaLike<Key>,
   PostSchema extends Partial<Schema>,
   PatchSchema extends Partial<Schema>,
 > {
@@ -91,16 +91,17 @@ export abstract class SchemaActions<
  * @see {@link SchemaActions} for the `actions` configuration.
  */
 export default class SchemaRouter<
-  CreateSchema extends SchemaLike,
-  Schema extends CreateSchema,
+  Key extends string,
+  CreateSchema extends Partial<SchemaLike<Key>>,
+  Schema extends SchemaLike<Key>,
   PostSchema extends Partial<Schema> = Partial<Schema>,
   PatchSchema extends Partial<Schema> = Partial<Schema>,
   StateT = unknown,
   CustomT extends IRouterParamContext = IRouterParamContext,
 > extends Router<StateT, CustomT> {
   constructor(
-    public readonly schema: GeneratedSchema<CreateSchema, Schema>,
-    public readonly actions: SchemaActions<CreateSchema, Schema, PostSchema, PatchSchema>
+    public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
+    public readonly actions: SchemaActions<Key, Schema, PostSchema, PatchSchema>
   ) {
     super({ prefix: '/' + schema.table.replaceAll('_', '-') });
 
