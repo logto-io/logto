@@ -3291,8 +3291,8 @@ importers:
         version: 3.22.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-444ed49
-        version: 0.2.5-444ed49(zod@3.22.3)
+        specifier: 0.2.5-d434baa
+        version: 0.2.5-d434baa(zod@3.22.3)
       '@silverhand/eslint-config':
         specifier: 4.0.1
         version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
@@ -3887,8 +3887,8 @@ importers:
         specifier: ^18.11.18
         version: 18.11.18
       '@types/pluralize':
-        specifier: ^0.0.29
-        version: 0.0.29
+        specifier: ^0.0.31
+        version: 0.0.31
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -7337,16 +7337,6 @@ packages:
       jose: 4.14.4
     dev: true
 
-  /@logto/cloud@0.2.5-444ed49(zod@3.22.3):
-    resolution: {integrity: sha512-UirssRQV8+UAG/d0amK3qSrZstYW8+VUtfRWcKN8Ka0oJbPaNQL+fW+8OCB39ikQqT39KLrClXbThu3akPUWhw==}
-    engines: {node: ^18.12.0}
-    dependencies:
-      '@silverhand/essentials': 2.8.4
-      '@withtyped/server': 0.12.9(zod@3.22.3)
-    transitivePeerDependencies:
-      - zod
-    dev: true
-
   /@logto/cloud@0.2.5-d434baa(zod@3.22.3):
     resolution: {integrity: sha512-VmWpqFzpWBrzJPQLvfe0bb7/XjF3lxs/rPbLt3zqBjGPtDXM9FAUn1m/gPbTwzXi5PxGOjlbD7jTl+3+1u4/NQ==}
     engines: {node: ^18.12.0}
@@ -9665,8 +9655,8 @@ packages:
       pg-types: 2.2.0
     dev: true
 
-  /@types/pluralize@0.0.29:
-    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+  /@types/pluralize@0.0.31:
+    resolution: {integrity: sha512-MQh69PPwFlYAL2qz/Mw5Zc34VTdt7pTck0Xbb6pbPSzdt5oaLB87iyJJxEMS5Dco/s7lXHunEezAvQurZZdrsQ==}
     dev: true
 
   /@types/prettier@2.7.1:
