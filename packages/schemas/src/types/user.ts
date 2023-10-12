@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { Users } from '../db-entries/index.js';
-import { MfaFactor } from '../foundations/jsonb-types.js';
+import { MfaFactor } from '../foundations/index.js';
 
 export const userInfoSelectFields = Object.freeze([
   'id',
