@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       '続行する場合は、テナント名 "<span>{{name}}</span>" を入力して確認してください。',
     delete_button: '完全に削除する',
+    cannot_delete_title: 'このテナントは削除できません',
+    cannot_delete_description:
+      '申し訳ありませんが、現時点ではこのテナントを削除できません。無料プランに登録しており、未払いの請求がないことを確認してください。',
   },
   tenant_landing_page: {
     title: 'まだテナントを作成していません',

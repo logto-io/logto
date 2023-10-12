@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'Devam etmek isterseniz, "<span>{{name}}</span>" kiracı adını onaylamak için yazın.',
     delete_button: 'Kalıcı olarak sil',
+    cannot_delete_title: 'Bu kiracı silinemez',
+    cannot_delete_description:
+      'Üzgünüm, bu kiracıyı şu anda silemezsiniz. Ücretsiz Plan üzerinde olduğunuzdan ve tüm ödenmemiş faturaları ödediğinizden emin olun.',
   },
   tenant_landing_page: {
     title: 'Henüz bir kiracı oluşturmadınız',

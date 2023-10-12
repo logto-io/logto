@@ -38,6 +38,9 @@ const tenants = {
       '在删除帐户之前，也许我们可以帮助您。<span><a>通过电子邮件联系我们</a></span>',
     description_line3: '如果你想继续，请输入租户名 "<span>{{name}}</span>" 确认。',
     delete_button: '永久删除',
+    cannot_delete_title: '无法删除此租户',
+    cannot_delete_description:
+      '抱歉，您现在无法删除此租户。请确保您处于免费计划并已支付所有未结账单。',
   },
   tenant_landing_page: {
     title: '你还没有创建租户',

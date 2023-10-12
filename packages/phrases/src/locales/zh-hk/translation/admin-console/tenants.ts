@@ -38,6 +38,9 @@ const tenants = {
       '在刪除帳戶之前，也許我們可以為您提供幫助。<span><a>通過電子郵件與我們聯繫</a></span>',
     description_line3: '如果您確定要繼續，請輸入租戶名稱 "<span>{{name}}</span>" 以進行確認。',
     delete_button: '永久刪除',
+    cannot_delete_title: '無法刪除此租戶',
+    cannot_delete_description:
+      '抱歉，您現在無法刪除此租戶。請確保您處於免費計劃並已支付所有未結賬單。',
   },
   tenant_landing_page: {
     title: '您尚未建立租戶',

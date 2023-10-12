@@ -1,10 +1,17 @@
+import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import { useContext } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
-import { checkoutStateQueryKey, checkoutSuccessCallbackPath } from '@/consts/subscriptions';
+import {
+  ReservedPlanId,
+  checkoutStateQueryKey,
+  checkoutSuccessCallbackPath,
+} from '@/consts/subscriptions';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
 
 import useTenantPathname from './use-tenant-pathname';
@@ -18,8 +25,9 @@ type SubscribeProps = {
 };
 
 const useSubscribe = () => {
-  const cloudApi = useCloudApi({ hideErrorToast: true });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const cloudApi = useCloudApi({ hideErrorToast: true });
+  const { updateTenant } = useContext(TenantsContext);
   const { getUrl } = useTenantPathname();
 
   const subscribe = async ({
@@ -68,6 +76,20 @@ const useSubscribe = () => {
     await cloudApi.delete('/api/tenants/:tenantId/subscription', {
       params: {
         tenantId,
+      },
+    });
+
+    /**
+     * Note: need to update the tenant's subscription cache data,
+     * since the cancel subscription flow will not redirect to the stripe payment page.
+     */
+    updateTenant(tenantId, {
+      planId: ReservedPlanId.free,
+      subscription: {
+        status: 'active',
+        planId: ReservedPlanId.free,
+        currentPeriodStart: dayjs().toDate(),
+        currentPeriodEnd: dayjs().add(1, 'month').toDate(),
       },
     });
   };

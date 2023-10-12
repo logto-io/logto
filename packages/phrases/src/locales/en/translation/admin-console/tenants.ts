@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'If you would like to proceed, please enter the tenant name "<span>{{name}}</span>" to confirm.',
     delete_button: 'Permanently delete',
+    cannot_delete_title: 'Cannot delete this tenant',
+    cannot_delete_description:
+      "Sorry, you can't delete this tenant right now. Please make sure you're on the Free Plan and have paid all outstanding billings.",
   },
   tenant_landing_page: {
     title: "You haven't created a tenant yet",

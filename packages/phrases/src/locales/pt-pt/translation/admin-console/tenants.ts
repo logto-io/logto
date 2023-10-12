@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'Se desejar continuar, introduza o nome do inquilino "<span>{{name}}</span>" para confirmar.',
     delete_button: 'Eliminar permanentemente',
+    cannot_delete_title: 'Não é possível apagar este inquilino',
+    cannot_delete_description:
+      'Desculpe, não é possível apagar este inquilino neste momento. Certifique-se de estar no Plano Gratuito e de ter pago todas as faturas em atraso.',
   },
   tenant_landing_page: {
     title: 'Ainda não criou um inquilino',
