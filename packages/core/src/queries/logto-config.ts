@@ -10,9 +10,14 @@ import { convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
+import { WellKnownCache } from '#src/caches/well-known.js';
+
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
-export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
+export const createLogtoConfigQueries = (
+  pool: CommonQueryMethods,
+  wellKnownCache?: WellKnownCache
+) => {
   const getAdminConsoleConfig = async () =>
     pool.one<Record<string, unknown>>(sql`
       select ${fields.value} from ${table}
@@ -39,13 +44,18 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
         where ${fields.key} in (${sql.join(keys, sql`,`)})
     `);
 
-  const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) =>
-    pool.query(sql`
+  const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) => {
+    // Set a expiration timestamp in redis cache, and check it before returning the tenant LRU cache. This helps
+    // determine when to invalidate the cached tenant and force a in-place rolling reload of the OIDC provider.
+    void wellKnownCache?.set('tenant-cache-expires-at', WellKnownCache.defaultKey, Date.now());
+
+    return pool.query(sql`
       update ${table}
       set ${fields.value} = ${sql.jsonb(value)}
       where ${fields.key} = ${key}
       returning *
     `);
+  };
 
   return {
     getAdminConsoleConfig,

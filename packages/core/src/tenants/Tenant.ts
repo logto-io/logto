@@ -59,7 +59,8 @@ export default class Tenant implements TenantContext {
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
     public readonly libraries = new Libraries(id, queries, connectors, cloudConnection),
-    public readonly sentinel = new BasicSentinel(envSet.pool)
+    public readonly sentinel = new BasicSentinel(envSet.pool),
+    public readonly createdAt = Date.now()
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
@@ -95,6 +96,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
       sentinel,
+      createdAt: Date.now(),
     };
 
     // Mount APIs

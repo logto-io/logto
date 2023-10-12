@@ -68,6 +68,7 @@ export class MockTenant implements TenantContext {
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
   public sentinel: Sentinel;
+  public createdAt = Date.now();
 
   // eslint-disable-next-line max-params
   constructor(

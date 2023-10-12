@@ -12,6 +12,7 @@ type WellKnownMap = {
   'connectors-well-known': ConnectorWellKnown[];
   'custom-phrases': Record<string, unknown>;
   'custom-phrases-tags': string[];
+  'tenant-cache-expires-at': number;
 };
 
 type WellKnownCacheType = keyof WellKnownMap;
@@ -51,6 +52,9 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     }
     case 'custom-phrases': {
       return z.record(z.unknown());
+    }
+    case 'tenant-cache-expires-at': {
+      return z.number();
     }
     default: {
       throw new Error(`No proper value guard found for cache key "${String(type)}".`);

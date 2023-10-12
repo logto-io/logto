@@ -1,6 +1,7 @@
 import { LRUCache } from 'lru-cache';
 
 import { redisCache } from '#src/caches/index.js';
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { consoleLog } from '#src/utils/console.js';
 
@@ -16,17 +17,26 @@ export class TenantPool {
   });
 
   async get(tenantId: string): Promise<Tenant> {
-    const tenant = this.cache.get(tenantId);
+    const tenantPromise = this.cache.get(tenantId);
 
-    if (tenant) {
-      return tenant;
+    if (tenantPromise) {
+      const { createdAt, wellKnownCache } = await tenantPromise;
+      const expiresAt = await wellKnownCache.get(
+        'tenant-cache-expires-at',
+        WellKnownCache.defaultKey
+      );
+
+      if (!expiresAt || expiresAt < createdAt) {
+        return tenantPromise;
+      }
+      // Otherwise, create a new tenant instance and store in LRU cache
     }
 
     consoleLog.info('Init tenant:', tenantId);
-    const newTenant = Tenant.create(tenantId, redisCache);
-    this.cache.set(tenantId, newTenant);
+    const newTenantPromise = Tenant.create(tenantId, redisCache);
+    this.cache.set(tenantId, newTenantPromise);
 
-    return newTenant;
+    return newTenantPromise;
   }
 
   async endAll(): Promise<void> {
