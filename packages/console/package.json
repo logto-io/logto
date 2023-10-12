@@ -112,7 +112,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-timer-hook": "^3.0.5",
     "recharts": "^2.1.13",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.0",
     "stylelint": "^15.0.0",
     "swr": "^2.2.0",
     "titleize": "^4.0.0",
