@@ -46,7 +46,7 @@
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.11.18",
-    "@types/pluralize": "^0.0.29",
+    "@types/pluralize": "^0.0.31",
     "camelcase": "^8.0.0",
     "chalk": "^5.0.0",
     "eslint": "^8.44.0",
