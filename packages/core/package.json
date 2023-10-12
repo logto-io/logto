@@ -80,7 +80,7 @@
     "slonik-sql-tag-raw": "^1.1.4",
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.4.4",
-    "zod": "^3.20.2"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-444ed49",
