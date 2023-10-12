@@ -45,7 +45,6 @@
     "@testing-library/react": "^14.0.0",
     "@types/color": "^3.0.3",
     "@types/jest": "^29.4.0",
-    "@types/qrcode": "^1.5.2",
     "@types/react": "^18.0.31",
     "@types/react-dom": "^18.0.0",
     "@types/react-helmet": "^6.1.6",
@@ -118,8 +117,5 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc",
-  "dependencies": {
-    "qrcode": "^1.5.3"
-  }
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }

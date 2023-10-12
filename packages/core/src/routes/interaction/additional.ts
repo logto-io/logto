@@ -1,6 +1,7 @@
 import { MfaFactor, requestVerificationCodePayloadGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
+import qrcode from 'qrcode';
 import { z } from 'zod';
 
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -78,6 +79,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       status: [200],
       response: z.object({
         secret: z.string(),
+        secretQrCode: z.string(),
       }),
     }),
     async (ctx, next) => {
@@ -94,7 +96,10 @@ export default function additionalRoutes<T extends IRouterParamContext>(
         true
       );
 
-      ctx.body = { secret };
+      ctx.body = {
+        secret,
+        secretQrCode: await qrcode.toDataURL(`otpauth://totp/?secret=${secret}`),
+      };
 
       return next();
     }

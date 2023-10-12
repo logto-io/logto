@@ -194,6 +194,7 @@ describe('interaction routes', () => {
       expect(storeInteractionResult).toBeCalled();
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('secret');
+      expect(response.body).toHaveProperty('secretQrCode');
     });
   });
 });
