@@ -72,7 +72,7 @@ const mfaFactorsGuard = s.array(
 );
 
 export const missingMfaFactorsErrorDataGuard = s.object({
-  missingFactors: mfaFactorsGuard,
+  availableFactors: mfaFactorsGuard,
 });
 
 export const requireMfaFactorsErrorDataGuard = s.object({

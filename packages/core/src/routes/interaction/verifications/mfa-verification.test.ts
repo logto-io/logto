@@ -51,7 +51,7 @@ const mfaRequiredCtx = {
   signInExperience: {
     ...mockSignInExperience,
     mfa: {
-      factors: [MfaFactor.TOTP],
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
       policy: MfaPolicy.Mandatory,
     },
   },
@@ -79,8 +79,11 @@ describe('validateMandatoryBindMfa', () => {
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, interaction)
       ).rejects.toMatchError(
         new RequestError(
-          { code: 'user.missing_mfa', status: 422 },
-          { missingFactors: [MfaFactor.TOTP] }
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn] }
         )
       );
     });
@@ -111,8 +114,11 @@ describe('validateMandatoryBindMfa', () => {
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, signInInteraction)
       ).rejects.toMatchError(
         new RequestError(
-          { code: 'user.missing_mfa', status: 422 },
-          { missingFactors: [MfaFactor.TOTP] }
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn] }
         )
       );
     });
