@@ -4,21 +4,15 @@ import { generateStandardId } from '@logto/shared';
 import { isKeyInObject } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
-import {
-  createOrganizationScope,
-  getOrganizationScopes,
-  getOrganizationScope,
-  updateOrganizationScope,
-  deleteOrganizationScope,
-} from '#src/api/organization-scope.js';
+import { scopeApi } from '#src/api/organization-scope.js';
 
 const randomId = () => generateStandardId(4);
 
 describe('organization scopes', () => {
   it('should fail if the name of the new organization scope already exists', async () => {
     const name = 'test' + randomId();
-    await createOrganizationScope(name);
-    const response = await createOrganizationScope(name).catch((error: unknown) => error);
+    await scopeApi.create({ name });
+    const response = await scopeApi.create({ name }).catch((error: unknown) => error);
 
     assert(response instanceof HTTPError);
 
@@ -30,9 +24,9 @@ describe('organization scopes', () => {
 
   it('should get organization scopes successfully', async () => {
     const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
-    await createOrganizationScope(name1, 'A test organization scope.');
-    await createOrganizationScope(name2);
-    const scopes = await getOrganizationScopes();
+    await scopeApi.create({ name: name1, description: 'A test organization scope.' });
+    await scopeApi.create({ name: name2 });
+    const scopes = await scopeApi.getList();
 
     expect(scopes).toContainEqual(
       expect.objectContaining({ name: name1, description: 'A test organization scope.' })
@@ -43,13 +37,13 @@ describe('organization scopes', () => {
   it('should get organization scopes with pagination', async () => {
     // Add 20 scopes to exceed the default page size
     await Promise.all(
-      Array.from({ length: 30 }).map(async () => createOrganizationScope('test' + randomId()))
+      Array.from({ length: 30 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
     );
 
-    const scopes = await getOrganizationScopes();
+    const scopes = await scopeApi.getList();
     expect(scopes).toHaveLength(20);
 
-    const scopes2 = await getOrganizationScopes(
+    const scopes2 = await scopeApi.getList(
       new URLSearchParams({
         page: '2',
         page_size: '10',
@@ -61,22 +55,25 @@ describe('organization scopes', () => {
   });
 
   it('should be able to create and get organization scopes by id', async () => {
-    const createdScope = await createOrganizationScope('test' + randomId());
-    const scope = await getOrganizationScope(createdScope.id);
+    const createdScope = await scopeApi.create({ name: 'test' + randomId() });
+    const scope = await scopeApi.get(createdScope.id);
 
     expect(scope).toStrictEqual(createdScope);
   });
 
   it('should fail when try to get an organization scope that does not exist', async () => {
-    const response = await getOrganizationScope('0').catch((error: unknown) => error);
+    const response = await scopeApi.get('0').catch((error: unknown) => error);
 
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 
   it('should be able to update organization scope', async () => {
-    const createdScope = await createOrganizationScope('test' + randomId());
+    const createdScope = await scopeApi.create({ name: 'test' + randomId() });
     const newName = 'test' + randomId();
-    const scope = await updateOrganizationScope(createdScope.id, newName, 'test description.');
+    const scope = await scopeApi.update(createdScope.id, {
+      name: newName,
+      description: 'test description.',
+    });
     expect(scope).toStrictEqual({
       ...createdScope,
       name: newName,
@@ -85,14 +82,14 @@ describe('organization scopes', () => {
   });
 
   it('should be able to delete organization scope', async () => {
-    const createdScope = await createOrganizationScope('test' + randomId());
-    await deleteOrganizationScope(createdScope.id);
-    const response = await getOrganizationScope(createdScope.id).catch((error: unknown) => error);
+    const createdScope = await scopeApi.create({ name: 'test' + randomId() });
+    await scopeApi.delete(createdScope.id);
+    const response = await scopeApi.get(createdScope.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 
   it('should fail when try to delete an organization scope that does not exist', async () => {
-    const response = await deleteOrganizationScope('0').catch((error: unknown) => error);
+    const response = await scopeApi.delete('0').catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
   });
 });
