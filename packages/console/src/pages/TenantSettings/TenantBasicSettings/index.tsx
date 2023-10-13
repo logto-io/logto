@@ -7,11 +7,13 @@ import { useTranslation } from 'react-i18next';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
-import AppError from '@/components/AppError';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
+import { trySubmitSafe } from '@/utils/form';
 
 import DeleteCard from './DeleteCard';
 import DeleteModal from './DeleteModal';
@@ -28,12 +30,12 @@ const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
 
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useCloudApi({ hideErrorToast: true });
+  const api = useCloudApi();
   const { currentTenant, currentTenantId, updateTenant, removeTenant, navigateTenant } =
     useContext(TenantsContext);
-  const [error, setError] = useState<Error>();
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { show: showModal } = useConfirmModal();
 
   const methods = useForm<TenantSettingsForm>({
     defaultValues: tenantProfileToForm(currentTenant),
@@ -50,35 +52,43 @@ function TenantBasicSettings() {
   }, [currentTenant, reset]);
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
-    try {
-      const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
-        params: { tenantId: currentTenantId },
-        body: data,
-      });
-      reset({ profile: { name, tag } });
-      toast.success(t('tenants.settings.tenant_info_saved'));
-      updateTenant(currentTenantId, data);
-    } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error
-          : new Error(JSON.stringify(error, Object.getOwnPropertyNames(error)))
-      );
-    }
+    const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
+      params: { tenantId: currentTenantId },
+      body: data,
+    });
+    reset({ profile: { name, tag } });
+    toast.success(t('tenants.settings.tenant_info_saved'));
+    updateTenant(currentTenantId, data);
   };
 
-  const onSubmit = handleSubmit(async (formData: TenantSettingsForm) => {
-    if (isSubmitting) {
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async (formData: TenantSettingsForm) => {
+      if (isSubmitting) {
+        return;
+      }
+
+      const {
+        profile: { name, tag },
+      } = formData;
+      await saveData({ name, tag });
+    })
+  );
+
+  const onClickDeletionButton = async () => {
+    if (
+      currentTenant?.subscription.planId !== ReservedPlanId.free ||
+      currentTenant.openInvoices.length > 0
+    ) {
+      await showModal({
+        title: 'tenants.delete_modal.cannot_delete_title',
+        ModalContent: t('tenants.delete_modal.cannot_delete_description'),
+        type: 'alert',
+        cancelButtonText: 'general.got_it',
+      });
+
       return;
     }
 
-    const {
-      profile: { name, tag },
-    } = formData;
-    await saveData({ name, tag });
-  });
-
-  const onClickDeletionButton = () => {
     setIsDeletionModalOpen(true);
   };
 
@@ -93,20 +103,10 @@ function TenantBasicSettings() {
       setIsDeletionModalOpen(false);
       removeTenant(currentTenantId);
       navigateTenant('');
-    } catch (error: unknown) {
-      setError(
-        error instanceof Error
-          ? error
-          : new Error(JSON.stringify(error, Object.getOwnPropertyNames(error)))
-      );
     } finally {
       setIsDeleting(false);
     }
   };
-
-  if (error) {
-    return <AppError errorMessage={error.message} callStack={error.stack} />;
-  }
 
   return (
     <>

@@ -42,6 +42,9 @@ const tenants = {
     description_line3:
       'Se vuoi procedere, inserisci il nome del tenant "<span>{{name}}</span>" per confermare.',
     delete_button: 'Elimina definitivamente',
+    cannot_delete_title: 'Impossibile eliminare questo locatario',
+    cannot_delete_description:
+      'Spiacente, al momento non è possibile eliminare questo locatario. Verifica di essere nel Piano Gratuito e di aver saldato tutte le fatture pendenti.',
   },
   tenant_landing_page: {
     title: 'Non hai ancora creato un tenant',

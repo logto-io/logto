@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'Jeśli chcesz kontynuować, wprowadź nazwę najemcy "<span>{{name}}</span>" w celu potwierdzenia.',
     delete_button: 'Usuń na stałe',
+    cannot_delete_title: 'Nie można usunąć tego najemcy',
+    cannot_delete_description:
+      'Przepraszam, nie możesz teraz usunąć tego najemcy. Upewnij się, że korzystasz z planu darmowego i uregulowałeś wszystkie zaległe płatności.',
   },
   tenant_landing_page: {
     title: 'Nie utworzyłeś jeszcze najemcy',

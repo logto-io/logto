@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',
+    cannot_delete_title: 'Diesen Mandanten kann nicht gelöscht werden',
+    cannot_delete_description:
+      'Entschuldigung, Sie können diesen Mandanten momentan nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
   },
   tenant_landing_page: {
     title: 'Du hast noch keinen Mandanten erstellt',

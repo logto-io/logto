@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       '삭제하려는 테넌트 이름 "<span>{{name}}</span>"을(를) 입력하여 확인하십시오.',
     delete_button: '영구 삭제',
+    cannot_delete_title: '이 테넌트를 삭제할 수 없습니다',
+    cannot_delete_description:
+      '죄송합니다. 현재이 테넌트를 삭제할 수 없습니다. 무료 플랜에 있고 미결제 청구서가 없는지 확인하십시오.',
   },
   tenant_landing_page: {
     title: '아직 테넌트를 만들지 않았습니다.',

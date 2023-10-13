@@ -41,6 +41,9 @@ const tenants = {
     description_line3:
       'Si vous souhaitez continuer, veuillez entrer le nom du locataire "<span>{{name}}</span>" pour confirmer.',
     delete_button: 'Supprimer définitivement',
+    cannot_delete_title: 'Impossible de supprimer ce locataire',
+    cannot_delete_description:
+      "Désolé, vous ne pouvez pas supprimer ce locataire pour le moment. Assurez-vous d'être sur le Plan Gratuit et d'avoir payé toutes les factures en cours.",
   },
   tenant_landing_page: {
     title: "Vous n'avez pas encore créé de locataire",
