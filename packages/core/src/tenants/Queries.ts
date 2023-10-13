@@ -33,7 +33,7 @@ export default class Queries {
   rolesScopes = createRolesScopesQueries(this.pool);
   roles = createRolesQueries(this.pool);
   scopes = createScopeQueries(this.pool);
-  logtoConfigs = createLogtoConfigQueries(this.pool, this.wellKnownCache);
+  logtoConfigs = createLogtoConfigQueries(this.pool);
   signInExperiences = createSignInExperienceQueries(this.pool, this.wellKnownCache);
   users = createUserQueries(this.pool);
   usersRoles = createUsersRolesQueries(this.pool);

@@ -68,7 +68,6 @@ export class MockTenant implements TenantContext {
   public connectors: ConnectorLibrary;
   public libraries: Libraries;
   public sentinel: Sentinel;
-  public createdAt = Date.now();
 
   // eslint-disable-next-line max-params
   constructor(
@@ -89,6 +88,10 @@ export class MockTenant implements TenantContext {
     this.setPartial('libraries', librariesOverride);
     this.sentinel = new MockSentinel();
   }
+
+  public invalidateCache = async () => {
+    // Do nothing
+  };
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(
     type: Type,

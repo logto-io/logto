@@ -19,5 +19,5 @@ export default abstract class TenantContext {
   public abstract readonly connectors: ConnectorLibrary;
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
-  public abstract readonly createdAt: number;
+  public abstract readonly invalidateCache: () => Promise<void>;
 }

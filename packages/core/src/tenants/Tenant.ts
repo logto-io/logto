@@ -46,6 +46,7 @@ export default class Tenant implements TenantContext {
 
   private readonly app: Koa;
 
+  #createdAt = Date.now();
   #requestCount = 0;
   #onRequestEmpty?: () => Promise<void>;
 
@@ -60,7 +61,13 @@ export default class Tenant implements TenantContext {
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
     public readonly libraries = new Libraries(id, queries, connectors, cloudConnection),
     public readonly sentinel = new BasicSentinel(envSet.pool),
-    public readonly createdAt = Date.now()
+    /**
+     * Set a expiration timestamp in redis cache, and check it before returning the tenant LRU cache. This helps
+     * determine when to invalidate the cached tenant and force a in-place rolling reload of the OIDC provider.
+     */
+    public readonly invalidateCache = async () => {
+      await wellKnownCache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, Date.now());
+    }
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
@@ -96,7 +103,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
       sentinel,
-      createdAt: Date.now(),
+      invalidateCache,
     };
 
     // Mount APIs
@@ -193,5 +200,26 @@ export default class Tenant implements TenantContext {
         resolve(true);
       };
     });
+  }
+
+  /**
+   * Check if the tenant cache is healthy by comparing its creation timestamp with the global expiration timestamp.
+   *
+   * The global tenant expiration timestamp is stored in redis and shared across all server cluster instances. It
+   * can be set by calling `invalidateCache()` method on any tenant instance.
+   *
+   * @returns Resolves `true` if the tenant cache is healthy, `false` if it should be invalidated.
+   */
+  public async checkHealth() {
+    // `tenant-cache-expires-at` is a timestamp set in redis, which indicates all existing tenant instances in LRU
+    // cache should be invalidated after this timestamp, effective for the entire server cluster.
+    const tenantCacheExpiresAt = await this.wellKnownCache.get(
+      'tenant-cache-expires-at',
+      WellKnownCache.defaultKey
+    );
+
+    // Healthy if there's no expiration timestamp, or the current LRU cached tenant instance is created after the
+    // expiration timestamp.
+    return !tenantCacheExpiresAt || tenantCacheExpiresAt < this.#createdAt;
   }
 }
