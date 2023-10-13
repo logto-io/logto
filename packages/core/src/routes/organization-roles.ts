@@ -37,11 +37,16 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   ...[
     originalRouter,
     {
-      queries: { organizationRoles, organizationRoleScopeRelations },
+      queries: {
+        organizations: {
+          roles,
+          relations: { rolesScopes },
+        },
+      },
     },
   ]: RouterInitArgs<T>
 ) {
-  const actions = new OrganizationRoleActions(organizationRoles);
+  const actions = new OrganizationRoleActions(roles);
   const router = new SchemaRouter(OrganizationRoles, actions, { disabled: { post: true } });
 
   /** Allows to carry an initial set of scopes for creating a new organization role. */
@@ -68,9 +73,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
       const role = await actions.post(data);
 
       if (scopeIds.length > 0) {
-        await organizationRoleScopeRelations.insert(
-          ...scopeIds.map<[string, string]>((id) => [role.id, id])
-        );
+        await rolesScopes.insert(...scopeIds.map<[string, string]>((id) => [role.id, id]));
       }
 
       ctx.body = role;
