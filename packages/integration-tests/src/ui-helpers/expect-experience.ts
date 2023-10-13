@@ -3,7 +3,7 @@ import { appendPath } from '@silverhand/essentials';
 
 import { logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { readVerificationCode } from '#src/helpers/index.js';
-import { dcls } from '#src/utils.js';
+import { dcls, waitFor } from '#src/utils.js';
 
 import ExpectPage from './expect-page.js';
 
@@ -95,6 +95,8 @@ export default class ExpectExperience extends ExpectPage {
    * It will clear the ongoing experience if the experience is ended successfully.
    */
   async verifyThenEnd() {
+    // Wait for 500ms since some times the sign-in success callback haven't been handled yet
+    await waitFor(500);
     if (this.#ongoing === undefined) {
       return this.throwNoOngoingExperienceError();
     }

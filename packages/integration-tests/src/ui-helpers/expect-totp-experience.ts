@@ -41,6 +41,8 @@ export default class ExpectTotpExperience extends ExpectExperience {
       await this.toFillInput(`totpCode_${index}`, char);
     }
 
+    // Wait for the form to commit automatically
+    await waitFor(500);
     if (signingInAfterBinding) {
       await this.page.waitForSelector('img[alt="Congrats"]');
     }
@@ -68,6 +70,8 @@ export default class ExpectTotpExperience extends ExpectExperience {
       await this.toFillInput(`totpCode_${index}`, char);
     }
 
+    // Wait for the form to commit automatically
+    await waitFor(500);
     if (signingInAfterVerification) {
       await this.page.waitForSelector('img[alt="Congrats"]');
     }
