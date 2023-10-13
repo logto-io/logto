@@ -1,4 +1,4 @@
-import { type CustomClientMetadata } from '../foundations/jsonb-types.js';
+import { type CustomClientMetadata } from '../foundations/index.js';
 
 import { inSeconds } from './date.js';
 

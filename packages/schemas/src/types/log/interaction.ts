@@ -1,4 +1,4 @@
-import { type MfaFactor } from '../../foundations/jsonb-types.js';
+import { type MfaFactor } from '../../foundations/index.js';
 import type { InteractionEvent } from '../interactions.js';
 
 export type Prefix = 'Interaction';
