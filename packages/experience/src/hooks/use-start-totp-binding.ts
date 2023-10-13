@@ -1,5 +1,4 @@
 import { MfaFactor } from '@logto/schemas';
-import qrcode from 'qrcode';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,13 +27,12 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
         return;
       }
 
-      const { secret } = result ?? {};
+      const { secret, secretQrCode } = result ?? {};
 
-      if (secret) {
+      if (secret && secretQrCode) {
         const state: TotpBindingState = {
           secret,
-          // Todo @wangsijie generate QR code on the server side
-          secretQrCode: await qrcode.toDataURL(`otpauth://totp/?secret=${secret}`),
+          secretQrCode,
           availableFactors,
         };
         navigate({ pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.TOTP}` }, { replace, state });

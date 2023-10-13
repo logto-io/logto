@@ -226,7 +226,9 @@ export const linkWithSocial = async (connectorId: string) => {
 };
 
 export const createTotpSecret = async () =>
-  api.post(`${interactionPrefix}/${verificationPath}/totp`).json<{ secret: string }>();
+  api
+    .post(`${interactionPrefix}/${verificationPath}/totp`)
+    .json<{ secret: string; secretQrCode: string }>();
 
 export const bindMfa = async (payload: BindMfaPayload) => {
   await api.put(`${interactionPrefix}/bind-mfa`, { json: payload });

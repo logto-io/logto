@@ -3262,6 +3262,9 @@ importers:
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
+      qrcode:
+        specifier: ^1.5.3
+        version: 1.5.3
       redis:
         specifier: ^4.6.5
         version: 4.6.5
@@ -3335,6 +3338,9 @@ importers:
       '@types/oidc-provider':
         specifier: ^8.0.0
         version: 8.0.0
+      '@types/qrcode':
+        specifier: ^1.5.2
+        version: 1.5.2
       '@types/semver':
         specifier: ^7.3.12
         version: 7.3.12
@@ -3478,10 +3484,6 @@ importers:
         version: 3.22.3
 
   packages/experience:
-    dependencies:
-      qrcode:
-        specifier: ^1.5.3
-        version: 1.5.3
     devDependencies:
       '@jest/types':
         specifier: ^29.5.0
@@ -3558,9 +3560,6 @@ importers:
       '@types/jest':
         specifier: ^29.4.0
         version: 29.4.0
-      '@types/qrcode':
-        specifier: ^1.5.2
-        version: 1.5.2
       '@types/react':
         specifier: ^18.0.31
         version: 18.0.31
