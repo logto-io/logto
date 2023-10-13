@@ -10,7 +10,7 @@ import { useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition from '@/hooks/use-position';
-import type { HorizontalAlignment, VerticalAlignment } from '@/types/positioning';
+import type { HorizontalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import OverlayScrollbar from '../OverlayScrollbar';
@@ -29,7 +29,6 @@ type Props = {
   className?: string;
   titleClassName?: string;
   horizontalAlign?: HorizontalAlignment;
-  verticalAlign?: VerticalAlignment;
   hasOverflowContent?: boolean;
 };
 
@@ -50,15 +49,14 @@ function Dropdown({
   className,
   titleClassName,
   horizontalAlign = 'end',
-  verticalAlign = 'bottom',
   hasOverflowContent,
 }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const { position, positionState, mutate } = usePosition({
-    verticalAlign,
+    verticalAlign: 'bottom',
     horizontalAlign,
-    offset: { vertical: verticalAlign === 'bottom' ? 4 : -4, horizontal: 0 },
+    offset: { vertical: 4, horizontal: 0 },
     anchorRef,
     overlayRef,
   });
