@@ -20,16 +20,19 @@ export class TenantPool {
     const tenantPromise = this.cache.get(tenantId);
 
     if (tenantPromise) {
-      const { createdAt, wellKnownCache } = await tenantPromise;
-      const expiresAt = await wellKnownCache.get(
+      const { createdAt: currentTenantCreatedAt, wellKnownCache } = await tenantPromise;
+      // `tenant-cache-expires-at` is a timestamp set in redis, which indicates all existing tenant instances
+      // in LRU cache should be invalidated after this timestamp, effective for the entire server cluster.
+      const tenantCacheExpiresAt = await wellKnownCache.get(
         'tenant-cache-expires-at',
         WellKnownCache.defaultKey
       );
 
-      if (!expiresAt || expiresAt < createdAt) {
+      // If the current LRU cached tenant instance is created after the global expiration timestamp, return it
+      if (!tenantCacheExpiresAt || tenantCacheExpiresAt < currentTenantCreatedAt) {
         return tenantPromise;
       }
-      // Otherwise, create a new tenant instance and store in LRU cache
+      // Otherwise, create a new tenant instance and store in LRU cache, using the code below.
     }
 
     consoleLog.info('Init tenant:', tenantId);
