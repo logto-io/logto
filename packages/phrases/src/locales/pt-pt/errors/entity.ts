@@ -5,6 +5,8 @@ const entity = {
   not_exists: '{{name}} não existe.',
   not_exists_with_id: '{{name}} com o ID `{{id}}` não existe.',
   not_found: 'O recurso não existe.',
+  /** UNTRANSLATED */
+  duplicate_value_of_unique_field: 'The value of the unique field `{{field}}` is duplicated.',
 };
 
 export default Object.freeze(entity);
