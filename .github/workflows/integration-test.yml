@@ -27,12 +27,11 @@ jobs:
       fail-fast: false
       matrix:
         target: [api, experience, console]
-
     needs: package
     runs-on: ubuntu-latest
 
     steps:
       - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0_beta.1
         with:
-          artifact-name: integration-test-${{ github.sha }}
+          logto_artifact: integration-test-${{ github.sha }}
           test-target: ${{ matrix.target }}
