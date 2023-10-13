@@ -21,9 +21,11 @@ export type GeneratedSchema<
   Key extends string,
   CreateSchema extends Partial<SchemaLike<Key>>,
   Schema extends SchemaLike<Key>,
+  Table extends string = string,
+  TableSingular extends string = string,
 > = Readonly<{
-  table: string;
-  tableSingular: string;
+  table: Table;
+  tableSingular: TableSingular;
   fields: {
     [key in Key]: string;
   };

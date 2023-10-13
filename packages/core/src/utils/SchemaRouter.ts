@@ -1,5 +1,7 @@
 import { type SchemaLike, type GeneratedSchema, type Guard } from '@logto/schemas';
 import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
+import { type DeepPartial } from '@silverhand/essentials';
+import deepmerge from 'deepmerge';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
@@ -76,6 +78,22 @@ export class SchemaActions<
   }
 }
 
+type SchemaRouterConfig = {
+  /** Disable certain routes for the router. */
+  disabled: {
+    /** Disable `GET /` route. */
+    get: boolean;
+    /** Disable `POST /` route. */
+    post: boolean;
+    /** Disable `GET /:id` route. */
+    getById: boolean;
+    /** Disable `PATCH /:id` route. */
+    patchById: boolean;
+    /** Disable `DELETE /:id` route. */
+    deleteById: boolean;
+  };
+};
+
 /**
  * A standard RESTful router for a schema.
  *
@@ -98,77 +116,105 @@ export default class SchemaRouter<
   StateT = unknown,
   CustomT extends IRouterParamContext = IRouterParamContext,
 > extends Router<StateT, CustomT> {
+  public readonly config: SchemaRouterConfig;
+
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
-    public readonly actions: SchemaActions<Key, CreateSchema, Schema>
+    public readonly actions: SchemaActions<Key, CreateSchema, Schema>,
+    config: DeepPartial<SchemaRouterConfig> = {}
   ) {
     super({ prefix: '/' + schema.table.replaceAll('_', '-') });
 
-    this.get(
-      '/',
-      koaPagination(),
-      koaGuard({ response: schema.guard.array(), status: [200] }),
-      async (ctx, next) => {
-        const [count, entities] = await actions.get(ctx.pagination);
-        ctx.pagination.totalCount = count;
-        ctx.body = entities;
-        return next();
-      }
+    this.config = deepmerge<SchemaRouterConfig, DeepPartial<SchemaRouterConfig>>(
+      {
+        disabled: {
+          get: false,
+          post: false,
+          getById: false,
+          patchById: false,
+          deleteById: false,
+        },
+      },
+      config
     );
 
-    this.post(
-      '/',
-      koaGuard({
-        // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well for generic types
-        body: schema.createGuard.omit({ id: true }) as Guard<Omit<CreateSchema, 'id'>>,
-        response: schema.guard,
-        status: [201, 422],
-      }),
-      async (ctx, next) => {
-        ctx.body = await actions.post(ctx.guard.body);
-        ctx.status = 201;
-        return next();
-      }
-    );
+    const { disabled } = this.config;
 
-    this.get(
-      '/:id',
-      koaGuard({
-        params: z.object({ id: z.string().min(1) }),
-        response: schema.guard,
-        status: [200, 404],
-      }),
-      async (ctx, next) => {
-        ctx.body = await actions.getById(ctx.guard.params.id);
-        return next();
-      }
-    );
+    if (!disabled.get) {
+      this.get(
+        '/',
+        koaPagination(),
+        koaGuard({ response: schema.guard.array(), status: [200] }),
+        async (ctx, next) => {
+          const [count, entities] = await actions.get(ctx.pagination);
+          ctx.pagination.totalCount = count;
+          ctx.body = entities;
+          return next();
+        }
+      );
+    }
 
-    this.patch(
-      '/:id',
-      koaGuard({
-        params: z.object({ id: z.string().min(1) }),
-        body: schema.updateGuard,
-        response: schema.guard,
-        status: [200, 404],
-      }),
-      async (ctx, next) => {
-        ctx.body = await actions.patchById(ctx.guard.params.id, ctx.guard.body);
-        return next();
-      }
-    );
+    if (!disabled.post) {
+      this.post(
+        '/',
+        koaGuard({
+          // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well for generic types
+          body: schema.createGuard.omit({ id: true }) as Guard<Omit<CreateSchema, 'id'>>,
+          response: schema.guard,
+          status: [201],
+        }),
+        async (ctx, next) => {
+          ctx.body = await actions.post(ctx.guard.body);
+          ctx.status = 201;
+          return next();
+        }
+      );
+    }
 
-    this.delete(
-      '/:id',
-      koaGuard({
-        params: z.object({ id: z.string().min(1) }),
-        status: [204, 404],
-      }),
-      async (ctx, next) => {
-        await actions.deleteById(ctx.guard.params.id);
-        ctx.status = 204;
-        return next();
-      }
-    );
+    if (!disabled.getById) {
+      this.get(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          response: schema.guard,
+          status: [200, 404],
+        }),
+        async (ctx, next) => {
+          ctx.body = await actions.getById(ctx.guard.params.id);
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.patchById) {
+      this.patch(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          body: schema.updateGuard,
+          response: schema.guard,
+          status: [200, 404],
+        }),
+        async (ctx, next) => {
+          ctx.body = await actions.patchById(ctx.guard.params.id, ctx.guard.body);
+          return next();
+        }
+      );
+    }
+
+    if (!disabled.deleteById) {
+      this.delete(
+        '/:id',
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          status: [204, 404],
+        }),
+        async (ctx, next) => {
+          await actions.deleteById(ctx.guard.params.id);
+          ctx.status = 204;
+          return next();
+        }
+      );
+    }
   }
 }
