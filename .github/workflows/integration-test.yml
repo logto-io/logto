@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     env:
       INTEGRATION_TEST: true
 
