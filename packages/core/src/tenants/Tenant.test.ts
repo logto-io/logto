@@ -1,7 +1,9 @@
 import { adminTenantId, defaultTenantId } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import Sinon from 'sinon';
 
 import { RedisCache } from '#src/caches/index.js';
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
@@ -80,5 +82,33 @@ describe('Tenant `.run()`', () => {
   it('should return a function ', async () => {
     const tenant = await Tenant.create(defaultTenantId, new RedisCache());
     expect(typeof tenant.run).toBe('function');
+  });
+});
+
+describe('Tenant cache health check', () => {
+  it('should set expiration timestamp in redis', async () => {
+    const redisCache = new RedisCache();
+    const tenant = await Tenant.create(defaultTenantId, redisCache);
+    expect(typeof tenant.invalidateCache).toBe('function');
+
+    Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
+
+    await tenant.invalidateCache();
+    expect(tenant.wellKnownCache.set).toBeCalledWith(
+      'tenant-cache-expires-at',
+      WellKnownCache.defaultKey,
+      expect.any(Number)
+    );
+  });
+
+  it('should be able to check the health of tenant cache', async () => {
+    const tenant = await Tenant.create(defaultTenantId, new RedisCache());
+    expect(typeof tenant.checkHealth).toBe('function');
+    expect(await tenant.checkHealth()).toBe(true);
+
+    // Stub the `wellKnownCache.get()` to set current timestamp as the tenant expiration timestamp
+    Sinon.stub(tenant.wellKnownCache, 'get').value(jest.fn(async () => Date.now()));
+
+    expect(await tenant.checkHealth()).toBe(false);
   });
 });
