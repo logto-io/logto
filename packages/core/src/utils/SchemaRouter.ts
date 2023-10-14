@@ -268,21 +268,21 @@ export default class SchemaRouter<
    * singular form with `Ids` suffix. For example, if the relation schema's table name is
    * `organization_roles`, the `[relationSchemaIds]` will be `organizationRoleIds`.
    *
-   * @param relationSchema The schema of the relation to be added.
-   * @param relationQueries The queries for the relation.
+   * @param relationQueries The queries class for the relation.
    * @param pathname The pathname of the relation. If not provided, it will be
    * the camel case of the relation schema's table name.
    * @see {@link RelationQueries} for the `relationQueries` configuration.
    */
   addRelationRoutes<
-    RelationKey extends string,
-    RelationCreateSchema extends Partial<SchemaLike<RelationKey> & { id: string }>,
-    RelationSchema extends SchemaLike<RelationKey> & { id: string },
+    RelationCreateSchema extends Partial<SchemaLike<string> & { id: string }>,
+    RelationSchema extends SchemaLike<string> & { id: string },
   >(
-    relationSchema: GeneratedSchema<RelationKey, RelationCreateSchema, RelationSchema>,
-    relationQueries: RelationQueries<[typeof this.schema, typeof relationSchema]>,
-    pathname = tableToPathname(relationSchema.table)
+    relationQueries: RelationQueries<
+      [typeof this.schema, GeneratedSchema<string, RelationCreateSchema, RelationSchema>]
+    >,
+    pathname = tableToPathname(relationQueries.schemas[1].table)
   ) {
+    const relationSchema = relationQueries.schemas[1];
     const columns = {
       schemaId: camelCaseSchemaId(this.schema),
       relationSchemaId: camelCaseSchemaId(relationSchema),

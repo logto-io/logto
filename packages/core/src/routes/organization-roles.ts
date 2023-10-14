@@ -3,7 +3,6 @@ import {
   type OrganizationRole,
   type OrganizationRoleKeys,
   OrganizationRoles,
-  OrganizationScopes,
 } from '@logto/schemas';
 import { UniqueIntegrityConstraintViolationError } from 'slonik';
 import { z } from 'zod';
@@ -85,7 +84,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
     }
   );
 
-  router.addRelationRoutes(OrganizationScopes, rolesScopes, 'scopes');
+  router.addRelationRoutes(rolesScopes, 'scopes');
 
   originalRouter.use(router.routes());
 }
