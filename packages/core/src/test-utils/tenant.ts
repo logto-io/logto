@@ -89,9 +89,9 @@ export class MockTenant implements TenantContext {
     this.sentinel = new MockSentinel();
   }
 
-  public invalidateCache = async () => {
+  public async invalidateCache() {
     // Do nothing
-  };
+  }
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(
     type: Type,

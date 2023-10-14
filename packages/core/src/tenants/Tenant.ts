@@ -60,14 +60,7 @@ export default class Tenant implements TenantContext {
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
     public readonly libraries = new Libraries(id, queries, connectors, cloudConnection),
-    public readonly sentinel = new BasicSentinel(envSet.pool),
-    /**
-     * Set a expiration timestamp in redis cache, and check it before returning the tenant LRU cache. This helps
-     * determine when to invalidate the cached tenant and force a in-place rolling reload of the OIDC provider.
-     */
-    public readonly invalidateCache = async () => {
-      await wellKnownCache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, Date.now());
-    }
+    public readonly sentinel = new BasicSentinel(envSet.pool)
   ) {
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
@@ -103,7 +96,7 @@ export default class Tenant implements TenantContext {
       libraries,
       envSet,
       sentinel,
-      invalidateCache,
+      invalidateCache: this.invalidateCache.bind(this),
     };
 
     // Mount APIs
@@ -200,6 +193,14 @@ export default class Tenant implements TenantContext {
         resolve(true);
       };
     });
+  }
+
+  /**
+   * Set a expiration timestamp in redis cache, and check it before returning the tenant LRU cache. This helps
+   * determine when to invalidate the cached tenant and force a in-place rolling reload of the OIDC provider.
+   */
+  public async invalidateCache() {
+    await this.wellKnownCache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, Date.now());
   }
 
   /**
