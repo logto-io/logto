@@ -289,6 +289,7 @@ export default class SchemaRouter<
       relationSchemaIds: camelCaseSchemaId(relationSchema) + 's',
     };
 
+    // TODO: Add pagination support
     this.get(
       `/:id/${pathname}`,
       koaGuard({

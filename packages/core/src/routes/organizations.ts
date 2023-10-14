@@ -1,4 +1,4 @@
-import { Organizations } from '@logto/schemas';
+import { Organizations, Users } from '@logto/schemas';
 
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
@@ -13,6 +13,8 @@ export default function organizationRoutes<T extends AuthedRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(Organizations, new SchemaActions(organizations));
+
+  router.addRelationRoutes(Users, organizations.relations.users);
 
   originalRouter.use(router.routes());
 }

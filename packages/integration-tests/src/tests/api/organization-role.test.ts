@@ -141,34 +141,7 @@ describe('organization role APIs', () => {
   });
 
   describe('organization role - scope relations', () => {
-    it('should be able to get scopes of a role', async () => {
-      const [role, scope1, scope2] = await Promise.all([
-        roleApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-      ]);
-      await roleApi.addScopes(role.id, [scope1.id, scope2.id]);
-      const scopes = await roleApi.getScopes(role.id);
-
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope1.name,
-        })
-      );
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope2.name,
-        })
-      );
-
-      await Promise.all([
-        roleApi.delete(role.id),
-        scopeApi.delete(scope1.id),
-        scopeApi.delete(scope2.id),
-      ]);
-    });
-
-    it('should be able to add scopes to a role', async () => {
+    it('should be able to add and get scopes of a role', async () => {
       const [role, scope1, scope2] = await Promise.all([
         roleApi.create({ name: 'test' + randomId() }),
         scopeApi.create({ name: 'test' + randomId() }),
