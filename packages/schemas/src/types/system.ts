@@ -25,6 +25,7 @@ export const alterationStateGuard: Readonly<{
 export enum StorageProvider {
   AzureStorage = 'AzureStorage',
   S3Storage = 'S3Storage',
+  GoogleStorage = 'GoogleStorage',
 }
 
 const basicConfig = {
@@ -45,6 +46,13 @@ export const storageProviderDataGuard = z.discriminatedUnion('provider', [
     bucket: z.string(),
     accessKeyId: z.string(),
     accessSecretKey: z.string(),
+    ...basicConfig,
+  }),
+  z.object({
+    provider: z.literal(StorageProvider.GoogleStorage),
+    projectId: z.string(),
+    keyFilename: z.string(),
+    bucketName: z.string(),
     ...basicConfig,
   }),
 ]);
