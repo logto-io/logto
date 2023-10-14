@@ -28,11 +28,14 @@ describe('Well-known cache basics', () => {
       pick(mockConnector0, 'connectorId', 'id', 'metadata'),
     ]);
 
+    await cache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, 123);
+    expect(await cache.get('tenant-cache-expires-at', WellKnownCache.defaultKey)).toBe(123);
+
     await cache.delete('sie', WellKnownCache.defaultKey);
     expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);
   });
 
-  it('should be able to set the value with wrong structure', async () => {
+  it('should NOT be able to set the value with wrong structure', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     // @ts-expect-error
@@ -40,7 +43,7 @@ describe('Well-known cache basics', () => {
     expect(await cache.get('custom-phrases-tags', WellKnownCache.defaultKey)).toBe(undefined);
   });
 
-  it('should be able to set and get when cache type is wrong', async () => {
+  it('should NOT be able to set and get when cache type is wrong', async () => {
     const cache = new WellKnownCache(tenantId, cacheStore);
 
     // @ts-expect-error

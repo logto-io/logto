@@ -65,30 +65,32 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should rotate OIDC keys successfully', async () => {
-    const privateKeys = await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
+    const existingPrivateKeys = await getOidcKeys('private-keys');
+    const newPrivateKeys = await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
 
-    expect(privateKeys).toHaveLength(2);
-    expect(privateKeys).toMatchObject([
+    expect(newPrivateKeys).toHaveLength(2);
+    expect(newPrivateKeys).toMatchObject([
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { id: expect.any(String), signingKeyAlgorithm: 'RSA', createdAt: expect.any(Number) },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { id: expect.any(String), signingKeyAlgorithm: 'EC', createdAt: expect.any(Number) },
     ]);
+    expect(newPrivateKeys[1]?.id).toBe(existingPrivateKeys[0]?.id);
 
-    const cookieKeys = await rotateOidcKeys('cookie-keys');
+    const existingCookieKeys = await getOidcKeys('cookie-keys');
+    const newCookieKeys = await rotateOidcKeys('cookie-keys');
 
-    expect(cookieKeys).toHaveLength(2);
-    expect(cookieKeys).toMatchObject([
+    expect(newCookieKeys).toHaveLength(2);
+    expect(newCookieKeys).toMatchObject([
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { id: expect.any(String), createdAt: expect.any(Number) },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { id: expect.any(String), createdAt: expect.any(Number) },
     ]);
+    expect(newCookieKeys[1]?.id).toBe(existingCookieKeys[0]?.id);
   });
 
   it('should only keep 2 recent OIDC keys', async () => {
-    await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
-    await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
     const privateKeys = await rotateOidcKeys('private-keys'); // Defaults to 'EC' algorithm
 
     expect(privateKeys).toHaveLength(2);
@@ -98,5 +100,16 @@ describe('admin console sign-in experience', () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       { id: expect.any(String), signingKeyAlgorithm: 'RSA', createdAt: expect.any(Number) },
     ]);
+
+    const privateKeys2 = await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
+
+    expect(privateKeys2).toHaveLength(2);
+    expect(privateKeys2).toMatchObject([
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      { id: expect.any(String), signingKeyAlgorithm: 'RSA', createdAt: expect.any(Number) },
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      { id: expect.any(String), signingKeyAlgorithm: 'EC', createdAt: expect.any(Number) },
+    ]);
+    expect(privateKeys2[1]?.id).toBe(privateKeys[0]?.id);
   });
 });

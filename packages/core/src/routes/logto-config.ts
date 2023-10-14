@@ -65,7 +65,7 @@ const getRedactedOidcKeyResponse = async (
   );
 
 export default function logtoConfigRoutes<T extends AuthedRouter>(
-  ...[router, { queries, logtoConfigs, envSet }]: RouterInitArgs<T>
+  ...[router, { queries, logtoConfigs, invalidateCache }]: RouterInitArgs<T>
 ) {
   const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     queries.logtoConfigs;
@@ -153,9 +153,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       const updatedKeys = existingKeys.filter(({ id }) => id !== keyId);
 
       await updateOidcConfigsByKey(configKey, updatedKeys);
-
-      // Reload OIDC configs in envSet in order to apply the changes immediately
-      await envSet.load();
+      void invalidateCache();
 
       ctx.status = 204;
 
@@ -198,9 +196,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
       const updatedKeys = [newPrivateKey, ...existingKeys].slice(0, 2);
 
       await updateOidcConfigsByKey(configKey, updatedKeys);
-
-      // Reload OIDC configs in envSet in order to apply the changes immediately
-      await envSet.load();
+      void invalidateCache();
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);

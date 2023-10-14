@@ -16,17 +16,22 @@ export class TenantPool {
   });
 
   async get(tenantId: string): Promise<Tenant> {
-    const tenant = this.cache.get(tenantId);
+    const tenantPromise = this.cache.get(tenantId);
 
-    if (tenant) {
-      return tenant;
+    if (tenantPromise) {
+      const tenant = await tenantPromise;
+      // If the current LRU cached tenant instance is still healthy, return it
+      if (await tenant.checkHealth()) {
+        return tenantPromise;
+      }
+      // Otherwise, create a new tenant instance and store in LRU cache, using the code below.
     }
 
     consoleLog.info('Init tenant:', tenantId);
-    const newTenant = Tenant.create(tenantId, redisCache);
-    this.cache.set(tenantId, newTenant);
+    const newTenantPromise = Tenant.create(tenantId, redisCache);
+    this.cache.set(tenantId, newTenantPromise);
 
-    return newTenant;
+    return newTenantPromise;
   }
 
   async endAll(): Promise<void> {
