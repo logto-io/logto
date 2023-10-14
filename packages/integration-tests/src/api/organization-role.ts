@@ -5,14 +5,14 @@ import { ApiFactory } from './factory.js';
 
 class OrganizationRoleApi extends ApiFactory<
   OrganizationRole,
-  { name: string; description?: string; scopeIds?: string[] }
+  { name: string; description?: string; organizationScopeIds?: string[] }
 > {
   constructor() {
     super('organization-roles');
   }
 
-  async addScopes(id: string, scopeIds: string[]): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/scopes`, { json: { scopeIds } });
+  async addScopes(id: string, organizationScopeIds: string[]): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/scopes`, { json: { organizationScopeIds } });
   }
 
   async getScopes(id: string): Promise<OrganizationScope[]> {
