@@ -14,27 +14,28 @@
 
 Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a seamless developer experience and is well-suited for individuals and growing companies.
 
-🧑‍💻 **A frontend-to-backend identity solution**
+🧑‍💻 **Comprehensive Frontend-to-Backend Identity Solution**
 
-- OIDC-based authentication and RBAC authorization.
-- Passwordless sign in and much more diverse options, including Email, Phone number, Username, Google, Facebook and other social sign in methods.
-- Beautiful UI components with customizable CSS to fit your business needs.
+- Enables OIDC-based authentication and RBAC authorization.
+- Supports passwordless sign-in, along with various options like Email, Phone number, Username, Google, Facebook, and other social sign-in methods.
+- Offers beautiful UI components with customizable CSS to suit your business needs.
 
-📦 **Out-of-the-box infrastructure**
+📦 **Out-of-the-Box Infrastructure**
 
-- A ready-to-use management API can serve as your authentication provider, eliminating the need for extra implementation.
-- SDKs that can integrate your apps with Logto quickly, multi-platform and language compatible, tailored to your development environment.
-- Flexible connectors, scalable with community contributions, customizable with SAML, OAuth, and OIDC protocols.
+- Includes a ready-to-use management API, serving as your authentication provider, thus eliminating the need for extra implementation.
+- Provides SDKs that seamlessly integrate your apps with Logto across multiple platforms and languages, tailored to your development environment.
+- Offers flexible connectors that can be scaled with community contributions and customized with SAML, OAuth, and OIDC protocols.
 
-💻 **Enterprise-ready solutions**
+💻 **Enterprise-Ready Solutions**
 
-- RBAC to control your resource through scalable role authorization for diverse use cases.
-- User management and audit Logs to understand identity related user info and keep your security on track.
-- We are currently working on SSO, Organizations and MFA. Stay tuned.
+- Implements RBAC for scalable role authorization, catering to a wide range of use cases.
+- Facilitates user management and provides audit logs for understanding identity-related user information and maintaining security.
+- Currently working on Single Sign-On (SSO), Organizations, and Multi-Factor Authentication (MFA) features. Stay tuned!
 
-Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
+In a more approachable way, we refer to this solution as "[Customer Identity Access Management (CIAM)](https://en.wikipedia.org/wiki/Customer_identity_access_management)" or simply, the "Customer Identity Solution."
 
-[Subscribe to us](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) right away to receive up-to-date information about the Logto Cloud (SaaS) as well as in-time feature updates.
+[Subscribe to us](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) now to stay updated with the latest information about the Logto Cloud (SaaS) and receive feature updates in real-time.
+
 
 ## Get started
 
