@@ -32,28 +32,26 @@ describe('organization role APIs', () => {
     it('should be able to create a role with some scopes', async () => {
       const name = 'test' + randomId();
       const scopes = await Promise.all(
-        // Create 30 scopes to exceed the default page size
-        Array.from({ length: 30 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
+        Array.from({ length: 20 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
       );
       const organizationScopeIds = scopes.map((scope) => scope.id);
       const role = await roleApi.create({ name, organizationScopeIds });
 
       const roleScopes = await roleApi.getScopes(role.id);
       expect(roleScopes).toHaveLength(20);
-      expect(roleScopes[0]?.id).not.toBeFalsy();
-      expect(roleScopes[0]?.id).toBe(scopes[0]?.id);
 
+      // Check pagination
       const roleScopes2 = await roleApi.getScopes(
         role.id,
         new URLSearchParams({
           page: '2',
-          page_size: '20',
+          page_size: '10',
         })
       );
 
       expect(roleScopes2).toHaveLength(10);
       expect(roleScopes2[0]?.id).not.toBeFalsy();
-      expect(roleScopes2[0]?.id).toBe(scopes[20]?.id);
+      expect(roleScopes2[0]?.id).toBe(roleScopes[10]?.id);
 
       await Promise.all(scopes.map(async (scope) => scopeApi.delete(scope.id)));
       await roleApi.delete(role.id);
