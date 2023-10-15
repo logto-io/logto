@@ -31,33 +31,32 @@ describe('organization role APIs', () => {
 
     it('should be able to create a role with some scopes', async () => {
       const name = 'test' + randomId();
-      const [scope1, scope2] = await Promise.all([
-        scopeApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-      ]);
-      const organizationScopeIds = [scope1.id, scope2.id];
+      const scopes = await Promise.all(
+        // Create 30 scopes to exceed the default page size
+        Array.from({ length: 30 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
+      );
+      const organizationScopeIds = scopes.map((scope) => scope.id);
       const role = await roleApi.create({ name, organizationScopeIds });
 
-      expect(role).toStrictEqual(
-        expect.objectContaining({
-          name,
+      const roleScopes = await roleApi.getScopes(role.id);
+      expect(roleScopes).toHaveLength(20);
+      expect(roleScopes[0]?.id).not.toBeFalsy();
+      expect(roleScopes[0]?.id).toBe(scopes[0]?.id);
+
+      const roleScopes2 = await roleApi.getScopes(
+        role.id,
+        new URLSearchParams({
+          page: '2',
+          page_size: '20',
         })
       );
 
-      // Check scopes under a role after API is implemented
-      const scopes = await roleApi.getScopes(role.id);
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope1.name,
-        })
-      );
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope2.name,
-        })
-      );
+      expect(roleScopes2).toHaveLength(10);
+      expect(roleScopes2[0]?.id).not.toBeFalsy();
+      expect(roleScopes2[0]?.id).toBe(scopes[20]?.id);
 
-      await Promise.all([scopeApi.delete(scope1.id), scopeApi.delete(scope2.id)]);
+      await Promise.all(scopes.map(async (scope) => scopeApi.delete(scope.id)));
+      await roleApi.delete(role.id);
     });
 
     it('should get organization roles successfully', async () => {

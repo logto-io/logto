@@ -3,7 +3,7 @@ import { sql } from 'slonik';
 
 export const buildGetTotalRowCountWithPool =
   (pool: CommonQueryMethods, table: string) => async () => {
-    // Postgres returns a biging for count(*), which is then converted to a string by query library.
+    // Postgres returns a bigint for count(*), which is then converted to a string by query library.
     // We need to convert it to a number.
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
@@ -15,7 +15,7 @@ export const buildGetTotalRowCountWithPool =
 
 export const getTotalRowCountWithPool =
   (pool: CommonQueryMethods) => async (table: IdentifierSqlToken) => {
-    // Postgres returns a biging for count(*), which is then converted to a string by query library.
+    // Postgres returns a bigint for count(*), which is then converted to a string by query library.
     // We need to convert it to a number.
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)

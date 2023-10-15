@@ -15,8 +15,10 @@ class OrganizationRoleApi extends ApiFactory<
     await authedAdminApi.post(`${this.path}/${id}/scopes`, { json: { organizationScopeIds } });
   }
 
-  async getScopes(id: string): Promise<OrganizationScope[]> {
-    return authedAdminApi.get(`${this.path}/${id}/scopes`).json<OrganizationScope[]>();
+  async getScopes(id: string, searchParams?: URLSearchParams): Promise<OrganizationScope[]> {
+    return authedAdminApi
+      .get(`${this.path}/${id}/scopes`, { searchParams })
+      .json<OrganizationScope[]>();
   }
 
   async deleteScope(id: string, scopeId: string): Promise<void> {

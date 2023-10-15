@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -28,22 +29,29 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
 
   router.get(
     pathname,
+    koaPagination(),
     koaGuard({
       params: z.object(params),
       response: OrganizationRoles.guard.array(),
       status: [200, 404],
     }),
-    // TODO: Add pagination
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
 
       // Ensure both the organization and the role exist
       await Promise.all([organizations.findById(id), users.findUserById(userId)]);
 
-      ctx.body = await organizations.relations.rolesUsers.getEntries(OrganizationRoles, {
-        organizationId: id,
-        userId,
-      });
+      const [totalCount, entities] = await organizations.relations.rolesUsers.getEntities(
+        OrganizationRoles,
+        {
+          organizationId: id,
+          userId,
+        },
+        ctx.pagination
+      );
+
+      ctx.pagination.totalCount = totalCount;
+      ctx.body = entities;
       return next();
     }
   );
