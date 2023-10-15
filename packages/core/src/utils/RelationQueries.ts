@@ -80,6 +80,9 @@ export default class RelationQueries<
    * Each entry must contain the same number of ids as the number of relations, and
    * the order of the ids must match the order of the relations.
    *
+   * @param data Entries to insert.
+   * @returns A Promise that resolves to the query result.
+   *
    * @example
    * ```ts
    * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
@@ -91,9 +94,6 @@ export default class RelationQueries<
    *   ['user-id-2', 'group-id-1']
    * );
    * ```
-   *
-   * @param data Entries to insert.
-   * @returns A Promise that resolves to the query result.
    */
   async insert(...data: ReadonlyArray<string[] & { length: Length }>) {
     return this.pool.query(sql`
@@ -178,5 +178,33 @@ export default class RelationQueries<
     `);
 
     return rows;
+  }
+
+  /**
+   * Check if a relation exists.
+   *
+   * @param ids The ids of the entries to check. The order of the ids must match the order of the relations.
+   * @returns A Promise that resolves to `true` if the relation exists, otherwise `false`.
+   *
+   * @example
+   * ```ts
+   * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
+   *
+   * userGroupRelations.exists('user-id-1', 'group-id-1');
+   * ```
+   */
+  async exists(...ids: readonly string[] & { length: Length }) {
+    return this.pool.exists(sql`
+      select
+      from ${this.table}
+      where ${sql.join(
+        this.schemas.map(
+          ({ tableSingular }, index) =>
+            sql`${sql.identifier([tableSingular + '_id'])} = ${ids[index] ?? sql`null`}`
+        ),
+        sql` and `
+      )}
+      limit 1
+    `);
   }
 }
