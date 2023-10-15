@@ -158,5 +158,55 @@ describe('organization APIs', () => {
         roleApi.delete(role2.id),
       ]);
     });
+
+    it('should be able to get all organizations with roles for a user', async () => {
+      const [organization1, organization2] = await Promise.all([
+        organizationApi.create({ name: 'test' }),
+        organizationApi.create({ name: 'test' }),
+      ]);
+      const user = await createUser({ username: 'test' + randomId() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        roleApi.create({ name: 'test' + randomId() }),
+      ]);
+
+      await organizationApi.addUsers(organization1.id, [user.id]);
+      await organizationApi.addUserRoles(organization1.id, user.id, [role1.id]);
+      await organizationApi.addUsers(organization2.id, [user.id]);
+      await organizationApi.addUserRoles(organization2.id, user.id, [role1.id, role2.id]);
+
+      const organizations = await organizationApi.getUserOrganizations(user.id);
+
+      // Check organization 1 and ensure it only has role 1
+      const organization1WithRoles = organizations.find((org) => org.id === organization1.id);
+      assert(organization1WithRoles);
+      expect(organization1WithRoles.id).toBe(organization1.id);
+      expect(organization1WithRoles.roles).toContainEqual(
+        expect.objectContaining({ id: role1.id })
+      );
+      expect(organization1WithRoles.roles).not.toContainEqual(
+        expect.objectContaining({ id: role2.id })
+      );
+
+      // Check organization 2 and ensure it has both role 1 and role 2
+      const organization2WithRoles = organizations.find((org) => org.id === organization2.id);
+      assert(organization2WithRoles);
+      expect(organization2WithRoles.id).toBe(organization2.id);
+      expect(organization2WithRoles.roles).toContainEqual(
+        expect.objectContaining({ id: role1.id })
+      );
+      expect(organization2WithRoles.roles).toContainEqual(
+        expect.objectContaining({ id: role2.id })
+      );
+
+      // Clean up
+      await Promise.all([
+        organizationApi.delete(organization1.id),
+        organizationApi.delete(organization2.id),
+        deleteUser(user.id),
+        roleApi.delete(role1.id),
+        roleApi.delete(role2.id),
+      ]);
+    });
   });
 });

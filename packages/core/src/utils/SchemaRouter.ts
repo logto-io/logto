@@ -252,7 +252,7 @@ export default class SchemaRouter<
    *
    * The routes are:
    *
-   * - `GET /:id/[pathname]`: Get the entities of the relation.
+   * - `GET /:id/[pathname]`: Get the entities of the relation with pagination.
    * - `POST /:id/[pathname]`: Add entities to the relation.
    * - `DELETE /:id/[pathname]/:relationSchemaId`: Remove an entity from the relation set.
    * The `:relationSchemaId` is the entity ID in the relation schema.

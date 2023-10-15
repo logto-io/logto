@@ -3,6 +3,12 @@ import { type Role, type Organization } from '@logto/schemas';
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
 
+type RoleEntity = {
+  id: string;
+  name: string;
+};
+type OrganizationWithRoles = Organization & { roles: RoleEntity[] };
+
 class OrganizationApi extends ApiFactory<Organization, { name: string; description?: string }> {
   constructor() {
     super('organizations');
@@ -30,6 +36,10 @@ class OrganizationApi extends ApiFactory<Organization, { name: string; descripti
 
   async deleteUserRole(id: string, userId: string, roleId: string): Promise<void> {
     await authedAdminApi.delete(`${this.path}/${id}/users/${userId}/roles/${roleId}`);
+  }
+
+  async getUserOrganizations(userId: string): Promise<OrganizationWithRoles[]> {
+    return authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
   }
 }
 
