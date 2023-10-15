@@ -5,16 +5,18 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
-import { type AuthedRouter, type RouterInitArgs } from './types.js';
+import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
-export default function organizationRoutes<T extends AuthedRouter>(
-  ...[
+import organizationRoleRoutes from './roles.js';
+import organizationScopeRoutes from './scopes.js';
+
+export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+  const [
     originalRouter,
     {
       queries: { organizations, users },
     },
-  ]: RouterInitArgs<T>
-) {
+  ] = args;
   const router = new SchemaRouter(Organizations, new SchemaActions(organizations));
 
   router.addRelationRoutes(organizations.relations.users);
@@ -91,5 +93,10 @@ export default function organizationRoutes<T extends AuthedRouter>(
     }
   );
 
+  // MARK: Mount sub-routes
+  organizationRoleRoutes(...args);
+  organizationScopeRoutes(...args);
+
+  // Add routes to the router
   originalRouter.use(router.routes());
 }

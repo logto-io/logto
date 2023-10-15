@@ -10,7 +10,7 @@ import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.j
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserRoleRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>

@@ -60,7 +60,7 @@ const usersLibraries = {
   ),
 } satisfies Partial<Libraries['users']>;
 
-const adminUserRoutes = await pickDefault(import('./admin-user-search.js'));
+const adminUserRoutes = await pickDefault(import('./search.js'));
 
 describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
