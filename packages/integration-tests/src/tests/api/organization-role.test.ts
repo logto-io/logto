@@ -31,33 +31,30 @@ describe('organization role APIs', () => {
 
     it('should be able to create a role with some scopes', async () => {
       const name = 'test' + randomId();
-      const [scope1, scope2] = await Promise.all([
-        scopeApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-      ]);
-      const organizationScopeIds = [scope1.id, scope2.id];
+      const scopes = await Promise.all(
+        Array.from({ length: 20 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
+      );
+      const organizationScopeIds = scopes.map((scope) => scope.id);
       const role = await roleApi.create({ name, organizationScopeIds });
 
-      expect(role).toStrictEqual(
-        expect.objectContaining({
-          name,
+      const roleScopes = await roleApi.getScopes(role.id);
+      expect(roleScopes).toHaveLength(20);
+
+      // Check pagination
+      const roleScopes2 = await roleApi.getScopes(
+        role.id,
+        new URLSearchParams({
+          page: '2',
+          page_size: '10',
         })
       );
 
-      // Check scopes under a role after API is implemented
-      const scopes = await roleApi.getScopes(role.id);
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope1.name,
-        })
-      );
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope2.name,
-        })
-      );
+      expect(roleScopes2).toHaveLength(10);
+      expect(roleScopes2[0]?.id).not.toBeFalsy();
+      expect(roleScopes2[0]?.id).toBe(roleScopes[10]?.id);
 
-      await Promise.all([scopeApi.delete(scope1.id), scopeApi.delete(scope2.id)]);
+      await Promise.all(scopes.map(async (scope) => scopeApi.delete(scope.id)));
+      await roleApi.delete(role.id);
     });
 
     it('should get organization roles successfully', async () => {
@@ -141,34 +138,7 @@ describe('organization role APIs', () => {
   });
 
   describe('organization role - scope relations', () => {
-    it('should be able to get scopes of a role', async () => {
-      const [role, scope1, scope2] = await Promise.all([
-        roleApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-        scopeApi.create({ name: 'test' + randomId() }),
-      ]);
-      await roleApi.addScopes(role.id, [scope1.id, scope2.id]);
-      const scopes = await roleApi.getScopes(role.id);
-
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope1.name,
-        })
-      );
-      expect(scopes).toContainEqual(
-        expect.objectContaining({
-          name: scope2.name,
-        })
-      );
-
-      await Promise.all([
-        roleApi.delete(role.id),
-        scopeApi.delete(scope1.id),
-        scopeApi.delete(scope2.id),
-      ]);
-    });
-
-    it('should be able to add scopes to a role', async () => {
+    it('should be able to add and get scopes of a role', async () => {
       const [role, scope1, scope2] = await Promise.all([
         roleApi.create({ name: 'test' + randomId() }),
         scopeApi.create({ name: 'test' + randomId() }),

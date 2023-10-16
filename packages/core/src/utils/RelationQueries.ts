@@ -1,3 +1,4 @@
+import { conditionalSql } from '@logto/shared';
 import { type KeysToCamelCase } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from 'slonik';
 import snakecaseKeys from 'snakecase-keys';
@@ -17,8 +18,13 @@ type CamelCaseIdObject<T extends string> = KeysToCamelCase<{
   [Key in `${T}_id`]: string;
 }>;
 
+type GetEntitiesOptions = {
+  limit?: number;
+  offset?: number;
+};
+
 /**
- * Query class for relation tables that connect several tables by their entry ids.
+ * Query class for relation tables that connect several tables by their entity ids.
  *
  * Let's say we have two tables `users` and `groups` and a relation table
  * `user_group_relations`. Then we can create a `RelationQueries` instance like this:
@@ -41,13 +47,13 @@ type CamelCaseIdObject<T extends string> = KeysToCamelCase<{
  * );
  * ```
  *
- * To get all entries for a specific table, we can use the {@link RelationQueries.getEntries} method:
+ * To get all entities for a specific table, we can use the {@link RelationQueries.getEntities} method:
  *
  * ```ts
- * await userGroupRelations.getEntries(Users, { groupId: 'group-id-1' });
+ * await userGroupRelations.getEntities(Users, { groupId: 'group-id-1' });
  * ```
  *
- * This will return all entries for the `users` table that are connected to the
+ * This will return all entities for the `users` table that are connected to the
  * group with the id `group-id-1`.
  */
 export default class RelationQueries<
@@ -75,10 +81,13 @@ export default class RelationQueries<
   }
 
   /**
-   * Insert new entries into the relation table.
+   * Insert new entities into the relation table.
    *
-   * Each entry must contain the same number of ids as the number of relations, and
+   * Each entity must contain the same number of ids as the number of relations, and
    * the order of the ids must match the order of the relations.
+   *
+   * @param data Entities to insert.
+   * @returns A Promise that resolves to the query result.
    *
    * @example
    * ```ts
@@ -91,9 +100,6 @@ export default class RelationQueries<
    *   ['user-id-2', 'group-id-1']
    * );
    * ```
-   *
-   * @param data Entries to insert.
-   * @returns A Promise that resolves to the query result.
    */
   async insert(...data: ReadonlyArray<string[] & { length: Length }>) {
     return this.pool.query(sql`
@@ -117,7 +123,7 @@ export default class RelationQueries<
   /**
    * Delete a relation from the relation table.
    *
-   * @param data The ids of the entries to delete. The keys must be in camel case
+   * @param data The ids of the entities to delete. The keys must be in camel case
    * and end with `Id`.
    * @returns A Promise that resolves to the query result.
    *
@@ -141,29 +147,34 @@ export default class RelationQueries<
   }
 
   /**
-   * Get all entries for a specific schema that are connected to the given ids.
+   * Get all entities for a specific schema that are connected to the given ids.
    *
-   * @param forSchema The schema to get the entries for.
-   * @param where Other ids to filter the entries by. The keys must be in camel case
+   * @param forSchema The schema to get the entities for.
+   * @param where Other ids to filter the entities by. The keys must be in camel case
    * and end with `Id`.
-   * @returns A Promise that resolves an array of entries of the given schema.
+   * @param options Options for the query.
+   * @param options.limit The maximum number of entities to return.
+   * @param options.offset The number of entities to skip.
+   * @returns A Promise that resolves an array of entities of the given schema.
    *
    * @example
    * ```ts
    * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
    *
-   * userGroupRelations.getEntries(Users, { groupId: 'group-id-1' });
+   * userGroupRelations.getEntities(Users, { groupId: 'group-id-1' });
+   * // With pagination
+   * userGroupRelations.getEntities(Users, { groupId: 'group-id-1' }, { limit: 10, offset: 20 });
    * ```
    */
-  async getEntries<S extends Schemas[number]>(
+  async getEntities<S extends Schemas[number]>(
     forSchema: S,
-    where: CamelCaseIdObject<Exclude<Schemas[number]['tableSingular'], S['tableSingular']>>
-  ): Promise<ReadonlyArray<InferSchema<S>>> {
+    where: CamelCaseIdObject<Exclude<Schemas[number]['tableSingular'], S['tableSingular']>>,
+    options: GetEntitiesOptions = {}
+  ): Promise<[totalCount: number, entities: ReadonlyArray<InferSchema<S>>]> {
+    const { limit, offset } = options;
     const snakeCaseWhere = snakecaseKeys(where);
     const forTable = sql.identifier([forSchema.table]);
-
-    const { rows } = await this.pool.query<InferSchema<S>>(sql`
-      select ${forTable}.*
+    const mainSql = sql`
       from ${this.table}
       join ${forTable} on ${sql.identifier([
         this.relationTable,
@@ -174,9 +185,51 @@ export default class RelationQueries<
           ([column, value]) => sql`${sql.identifier([column])} = ${value}`
         ),
         sql` and `
-      )};
-    `);
+      )}
+    `;
 
-    return rows;
+    const [{ count }, { rows }] = await Promise.all([
+      // Postgres returns a bigint for count(*), which is then converted to a string by query library.
+      // We need to convert it to a number.
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        ${mainSql}
+      `),
+      this.pool.query<InferSchema<S>>(sql`
+        select ${forTable}.* ${mainSql}
+        ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
+        ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
+      `),
+    ]);
+
+    return [Number(count), rows];
+  }
+
+  /**
+   * Check if a relation exists.
+   *
+   * @param ids The ids of the entities to check. The order of the ids must match the order of the relations.
+   * @returns A Promise that resolves to `true` if the relation exists, otherwise `false`.
+   *
+   * @example
+   * ```ts
+   * const userGroupRelations = new RelationQueries(pool, 'user_group_relations', Users, Groups);
+   *
+   * userGroupRelations.exists('user-id-1', 'group-id-1');
+   * ```
+   */
+  async exists(...ids: readonly string[] & { length: Length }) {
+    return this.pool.exists(sql`
+      select
+      from ${this.table}
+      where ${sql.join(
+        this.schemas.map(
+          ({ tableSingular }, index) =>
+            sql`${sql.identifier([tableSingular + '_id'])} = ${ids[index] ?? sql`null`}`
+        ),
+        sql` and `
+      )}
+      limit 1
+    `);
   }
 }

@@ -9,7 +9,7 @@ import { UniqueIntegrityConstraintViolationError } from 'slonik';
 import RequestError from '#src/errors/RequestError/index.js';
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
-import { type AuthedRouter, type RouterInitArgs } from './types.js';
+import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
 export class OrganizationScopeActions extends SchemaActions<
   OrganizationScopeKeys,

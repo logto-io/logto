@@ -14,11 +14,10 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
-export default function adminUserRoutes<T extends AuthedRouter>(
-  ...[router, { queries, libraries }]: RouterInitArgs<T>
-) {
+export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+  const [router, { queries, libraries }] = args;
   const {
     oidcModelInstances: { revokeInstanceByUserId },
     users: {

@@ -10,10 +10,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 
 import koaAuth from '../middleware/koa-auth/index.js';
 
-import adminUserRoleRoutes from './admin-user-role.js';
-import adminUserSearchRoutes from './admin-user-search.js';
-import adminUserSocialRoutes from './admin-user-social.js';
-import adminUserRoutes from './admin-user.js';
+import adminUserRoutes from './admin-user/index.js';
 import applicationRoleRoutes from './application-role.js';
 import applicationRoutes from './application.js';
 import authnRoutes from './authn.js';
@@ -25,9 +22,7 @@ import hookRoutes from './hook.js';
 import interactionRoutes from './interaction/index.js';
 import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config.js';
-import organizationRoleRoutes from './organization-roles.js';
-import organizationScopeRoutes from './organization-scopes.js';
-import organizationRoutes from './organizations.js';
+import organizationRoutes from './organization/index.js';
 import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
@@ -54,9 +49,6 @@ const createRouters = (tenant: TenantContext) => {
   resourceRoutes(managementRouter, tenant);
   signInExperiencesRoutes(managementRouter, tenant);
   adminUserRoutes(managementRouter, tenant);
-  adminUserSearchRoutes(managementRouter, tenant);
-  adminUserRoleRoutes(managementRouter, tenant);
-  adminUserSocialRoutes(managementRouter, tenant);
   logRoutes(managementRouter, tenant);
   roleRoutes(managementRouter, tenant);
   roleScopeRoutes(managementRouter, tenant);
@@ -67,8 +59,6 @@ const createRouters = (tenant: TenantContext) => {
   userAssetsRoutes(managementRouter, tenant);
   domainRoutes(managementRouter, tenant);
   organizationRoutes(managementRouter, tenant);
-  organizationScopeRoutes(managementRouter, tenant);
-  organizationRoleRoutes(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);

@@ -50,13 +50,15 @@ export class SchemaActions<
    *
    * @param pagination The request pagination info parsed from `koa-pagination`. The
    * function should honor the pagination info and return the correct entities.
-   * @returns A tuple of `[count, entities]`. `count` is the total count of entities
-   *  in the database; `entities` is the list of entities to be returned.
+   * @returns A tuple of `[totalCount, entities]`. `totalCount` is the total count of
+   * entities in the database; `entities` is the list of entities to be returned.
    */
   public async get({
     limit,
     offset,
-  }: Pick<Pagination, 'limit' | 'offset'>): Promise<[count: number, entities: readonly Schema[]]> {
+  }: Pick<Pagination, 'limit' | 'offset'>): Promise<
+    [totalCount: number, entries: readonly Schema[]]
+  > {
     return Promise.all([this.queries.findTotalNumber(), this.queries.findAll(limit, offset)]);
   }
 
@@ -268,21 +270,21 @@ export default class SchemaRouter<
    * singular form with `Ids` suffix. For example, if the relation schema's table name is
    * `organization_roles`, the `[relationSchemaIds]` will be `organizationRoleIds`.
    *
-   * @param relationSchema The schema of the relation to be added.
-   * @param relationQueries The queries for the relation.
+   * @param relationQueries The queries class for the relation.
    * @param pathname The pathname of the relation. If not provided, it will be
    * the camel case of the relation schema's table name.
    * @see {@link RelationQueries} for the `relationQueries` configuration.
    */
   addRelationRoutes<
-    RelationKey extends string,
-    RelationCreateSchema extends Partial<SchemaLike<RelationKey> & { id: string }>,
-    RelationSchema extends SchemaLike<RelationKey> & { id: string },
+    RelationCreateSchema extends Partial<SchemaLike<string> & { id: string }>,
+    RelationSchema extends SchemaLike<string> & { id: string },
   >(
-    relationSchema: GeneratedSchema<RelationKey, RelationCreateSchema, RelationSchema>,
-    relationQueries: RelationQueries<[typeof this.schema, typeof relationSchema]>,
-    pathname = tableToPathname(relationSchema.table)
+    relationQueries: RelationQueries<
+      [typeof this.schema, GeneratedSchema<string, RelationCreateSchema, RelationSchema>]
+    >,
+    pathname = tableToPathname(relationQueries.schemas[1].table)
   ) {
+    const relationSchema = relationQueries.schemas[1];
     const columns = {
       schemaId: camelCaseSchemaId(this.schema),
       relationSchemaId: camelCaseSchemaId(relationSchema),
@@ -291,6 +293,7 @@ export default class SchemaRouter<
 
     this.get(
       `/:id/${pathname}`,
+      koaPagination(),
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         response: relationSchema.guard.array(),
@@ -302,9 +305,16 @@ export default class SchemaRouter<
         // Ensure that the main entry exists
         await this.actions.getById(id);
 
-        ctx.body = await relationQueries.getEntries(relationSchema, {
-          [columns.schemaId]: id,
-        });
+        const [totalCount, entities] = await relationQueries.getEntities(
+          relationSchema,
+          {
+            [columns.schemaId]: id,
+          },
+          ctx.pagination
+        );
+
+        ctx.pagination.totalCount = totalCount;
+        ctx.body = entities;
         return next();
       }
     );
@@ -314,8 +324,7 @@ export default class SchemaRouter<
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
-        response: relationSchema.guard.array(),
-        status: [200, 404, 422],
+        status: [201, 404, 422],
       }),
       async (ctx, next) => {
         const {
@@ -326,8 +335,7 @@ export default class SchemaRouter<
         await relationQueries.insert(
           ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
         );
-
-        ctx.body = await relationQueries.getEntries(relationSchema, { [columns.schemaId]: id });
+        ctx.status = 201;
         return next();
       }
     );

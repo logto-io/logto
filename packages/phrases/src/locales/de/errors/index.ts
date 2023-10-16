@@ -8,6 +8,7 @@ import hook from './hook.js';
 import localization from './localization.js';
 import log from './log.js';
 import oidc from './oidc.js';
+import organization from './organization.js';
 import password from './password.js';
 import request from './request.js';
 import resource from './resource.js';
@@ -44,6 +45,7 @@ const errors = {
   domain,
   subscription,
   application,
+  organization,
 };
 
 export default Object.freeze(errors);
