@@ -28,8 +28,8 @@ export default class OrganizationQueries extends SchemaQueries<
     rolesScopes: new RelationQueries(
       this.pool,
       OrganizationRoleScopeRelations.table,
-      OrganizationRoles.table,
-      OrganizationScopes.table
+      OrganizationRoles,
+      OrganizationScopes
     ),
   };
 

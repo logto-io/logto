@@ -41,6 +41,7 @@ export class SchemaActions<
    *
    * @param id The ID of the entity to be fetched.
    * @returns The entity to be returned.
+   * @throws An `RequestError` with 404 status code if the entity is not found.
    */
   public async getById(id: string): Promise<Readonly<Schema>> {
     return this.queries.findById(id);
@@ -63,6 +64,7 @@ export class SchemaActions<
    * @param id The ID of the entity to be updated.
    * @param data The data of the entity to be updated.
    * @returns The updated entity.
+   * @throws An `RequestError` with 404 status code if the entity is not found.
    */
   public async patchById(id: string, data: Partial<Schema>): Promise<Readonly<Schema>> {
     return this.queries.updateById(id, data);
@@ -72,6 +74,7 @@ export class SchemaActions<
    * The function for `DELETE /:id` route to delete an entity by ID.
    *
    * @param id The ID of the entity to be deleted.
+   * @throws An `RequestError` with 404 status code if the entity is not found.
    */
   public async deleteById(id: string): Promise<void> {
     return this.queries.deleteById(id);
