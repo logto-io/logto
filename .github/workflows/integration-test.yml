@@ -14,33 +14,19 @@ concurrency:
 jobs:
   package:
     runs-on: buildjet-4vcpu-ubuntu-2204
-
     env:
       INTEGRATION_TEST: true
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v3
-
-      - name: Build and package
-        run: |
-          pnpm -r build
-          ./.scripts/package.sh
-
-      - uses: actions/upload-artifact@v3
+      - uses: silverhand-io/actions-package-logto-artifact@v1.0.0
         with:
-          name: integration-test-${{ github.sha }}
-          path: /tmp/logto.tar.gz
-          retention-days: 3
+          artifact-name: integration-test-${{ github.sha }}
 
   run-logto:
     strategy:
       fail-fast: false
       matrix:
         target: [api, experience, console]
-
     needs: package
     runs-on: ubuntu-latest
     env:
@@ -48,84 +34,7 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0
         with:
-          path: tests
-
-      - name: Copy lockfile
-        run: |
-          cp tests/pnpm-lock.yaml ./
-          cp tests/package.json ./
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v3
-        with:
-          run-install: false
-
-      # Setup integration test
-      - name: Install dependencies
-        run: |
-          cd tests
-          pnpm i
-          pnpm prepack
-          # Install Chromium
-          cd packages/integration-tests/node_modules/puppeteer
-          pnpm postinstall
-
-      # Setup environment
-      - name: Setup Postgres
-        uses: ikalnytskyi/action-setup-postgres@v4
-
-      - name: Setup Redis
-        uses: supercharge/redis-github-action@6dc7a5eeaf9a8f860b6464e05195a15f8b9f3bbb # 1.7.0
-        with:
-          redis-version: 6
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: integration-test-${{ github.sha }}
-
-      - name: Extract
-        working-directory: tests
-        run: |
-          npm run cli init -- \
-            -p ../logto \
-            --du ../logto.tar.gz 
-
-      - name: Check and add mock connectors
-        working-directory: tests
-        run: |
-          npm run cli connector list -- -p ../logto | grep OFFICIAL
-          npm run cli connector link -- --mock -p ../logto
-
-      - name: Setup mock Cloudflare Hostname Provider config
-        working-directory: tests
-        run: npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'
-        env:
-          DB_URL: postgres://postgres:postgres@localhost:5432/postgres
-
-      - name: Run Logto
-        working-directory: logto/
-        run: nohup npm start > nohup.out 2> nohup.err < /dev/null &
-        env:
-          REDIS_URL: 1
-
-      - name: Sleep for 5 seconds
-        run: sleep 5
-
-      # Test
-      - name: Run tests
-        run: |
-          cd tests/packages/integration-tests
-          pnpm build
-          pnpm run test:${{ matrix.target }}
-
-      - name: Show logs
-        if: always()
-        working-directory: logto/
-        run: cat nohup.out
-
-      - name: Show error logs
-        if: always()
-        working-directory: logto/
-        run: cat nohup.err
+          logto_artifact: integration-test-${{ github.sha }}
+          test_target: ${{ matrix.target }}

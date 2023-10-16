@@ -1,0 +1,70 @@
+# This integration test ci job is used to test the DB alterations compatibility with the current codebase.
+
+name: Alteration compatibility integration test
+on:
+  push:
+    branches:
+      - master
+      - "push-action/**"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  check-alteration-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      has-alteration-changes: ${{ steps.changes-detection.outputs.has-alteration-changes }}
+
+    steps:
+      - name: checkout head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # compare the current codebase with HEAD and check if there are any changes under the alterations folder
+      - name: Check for alteration changes
+        id: changes-detection
+        run: |
+          CHANGE_FILES=$(git diff --name-only ${{github.head}}..origin/${{github.base_ref}} | grep 'packages/schemas/alterations/')
+          if [ -n "$CHANGE_FILES" ]; then
+            echo "$CHANGE_FILES"
+            echo "::set-output name=has-alteration-changes::true"
+            echo "Alteration changes detected"
+          else
+            echo "::set-output name=has-alteration-changes::false"
+            echo "No alteration changes detected"
+          fi
+
+  package:
+    needs: check-alteration-changes
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    if: ${{needs.check-alteration-changes.outputs.has-alteration-changes == 'true'}}
+    env:
+      INTEGRATION_TEST: true
+    steps:
+      - uses: silverhand-io/actions-package-logto-artifact@v1.0.0
+        with:
+          artifact-name: alteration-integration-test-${{ github.sha }}
+          branch: ${{github.base_ref}}
+
+  run-logto:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [api, experience, console]
+    needs: package
+    runs-on: ubuntu-latest
+    env:
+      INTEGRATION_TEST: true
+      DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+    steps:
+      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0
+        with:
+          branch: ${{github.base_ref}}
+          logto_artifact: alteration-integration-test-${{ github.sha }}
+          test_target: ${{ matrix.target }}
+          db_alteration_target: ${{github.head_ref}}
