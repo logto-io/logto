@@ -49,6 +49,10 @@
     background-color: var(--color-disabled);
     cursor: not-allowed;
   }
+
+  input:disabled + .slider::before {
+    background-color: var(--color-specific-toggle-thumb-disabled);
+  }
 }
 
 .wrapper {
