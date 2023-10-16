@@ -1,7 +1,7 @@
 import {
-  LogtoOidcConfigKey,
   SupportedSigningKeyAlgorithm,
   type OidcConfigKeysResponse,
+  LogtoOidcConfigKeyType,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
@@ -26,9 +26,10 @@ import * as styles from './index.module.scss';
 function SigningKeys() {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenants.signing_keys' });
-  const [activeTab, setActiveTab] = useState<LogtoOidcConfigKey>(LogtoOidcConfigKey.PrivateKeys);
-  const isPrivateKey = activeTab === LogtoOidcConfigKey.PrivateKeys;
-  const keyType = isPrivateKey ? 'private-keys' : 'cookie-keys';
+  const [keyType, setKeyType] = useState<LogtoOidcConfigKeyType>(
+    LogtoOidcConfigKeyType.PrivateKeys
+  );
+  const isPrivateKey = keyType === LogtoOidcConfigKeyType.PrivateKeys;
 
   const { data, error, mutate } = useSWR<OidcConfigKeysResponse[], RequestError>(
     `api/configs/oidc/${keyType}`
@@ -97,17 +98,17 @@ function SigningKeys() {
     <FormCard title="tenants.signing_keys.title" description="tenants.signing_keys.description">
       <TabNav>
         <TabNavItem
-          isActive={activeTab === LogtoOidcConfigKey.PrivateKeys}
+          isActive={keyType === LogtoOidcConfigKeyType.PrivateKeys}
           onClick={() => {
-            setActiveTab(LogtoOidcConfigKey.PrivateKeys);
+            setKeyType(LogtoOidcConfigKeyType.PrivateKeys);
           }}
         >
           <DynamicT forKey="tenants.signing_keys.type.private_key" />
         </TabNavItem>
         <TabNavItem
-          isActive={activeTab === LogtoOidcConfigKey.CookieKeys}
+          isActive={keyType === LogtoOidcConfigKeyType.CookieKeys}
           onClick={() => {
-            setActiveTab(LogtoOidcConfigKey.CookieKeys);
+            setKeyType(LogtoOidcConfigKeyType.CookieKeys);
           }}
         >
           <DynamicT forKey="tenants.signing_keys.type.cookie_key" />

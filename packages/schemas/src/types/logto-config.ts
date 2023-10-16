@@ -1,13 +1,25 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
-/* --- Logto OIDC configs --- */
+/**
+ * Logto OIDC signing key types, used mainly in REST API routes.
+ */
+export enum LogtoOidcConfigKeyType {
+  PrivateKeys = 'private-keys',
+  CookieKeys = 'cookie-keys',
+}
+
+/**
+ * Value maps to config key names in `logto_configs` table. Used mainly in DB SQL related scenarios.
+ */
 export enum LogtoOidcConfigKey {
   PrivateKeys = 'oidc.privateKeys',
   CookieKeys = 'oidc.cookieKeys',
 }
 
-/* --- Logto supported JWK signing key types --- */
+/**
+ * Logto supported signing key algorithms for OIDC private keys that sign JWT tokens.
+ */
 export enum SupportedSigningKeyAlgorithm {
   RSA = 'RSA',
   EC = 'EC',

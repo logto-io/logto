@@ -11,6 +11,7 @@ import {
   SupportedSigningKeyAlgorithm,
   type OidcConfigKeysResponse,
   type OidcConfigKey,
+  LogtoOidcConfigKeyType,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -20,19 +21,11 @@ import { exportJWK } from '#src/utils/jwks.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
 
-/*
- * Logto OIDC private key type used in API routes
- */
-enum LogtoOidcPrivateKeyType {
-  PrivateKeys = 'private-keys',
-  CookieKeys = 'cookie-keys',
-}
-
 /**
- * Provide a simple API router key type and DB column mapping
+ * Provide a simple API router key type and DB config key mapping
  */
-const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcPrivateKeyType): LogtoOidcConfigKey =>
-  key === LogtoOidcPrivateKeyType.PrivateKeys
+const getOidcConfigKeyDatabaseColumnName = (key: LogtoOidcConfigKeyType): LogtoOidcConfigKey =>
+  key === LogtoOidcConfigKeyType.PrivateKeys
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
 
@@ -105,7 +98,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     '/configs/oidc/:keyType',
     koaGuard({
       params: z.object({
-        keyType: z.nativeEnum(LogtoOidcPrivateKeyType),
+        keyType: z.nativeEnum(LogtoOidcConfigKeyType),
       }),
       response: z.array(oidcConfigKeysResponseGuard),
       status: [200, 404],
@@ -131,7 +124,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     '/configs/oidc/:keyType/:keyId',
     koaGuard({
       params: z.object({
-        keyType: z.nativeEnum(LogtoOidcPrivateKeyType),
+        keyType: z.nativeEnum(LogtoOidcConfigKeyType),
         keyId: z.string(),
       }),
       status: [204, 404, 422],
@@ -171,7 +164,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     '/configs/oidc/:keyType/rotate',
     koaGuard({
       params: z.object({
-        keyType: z.nativeEnum(LogtoOidcPrivateKeyType),
+        keyType: z.nativeEnum(LogtoOidcConfigKeyType),
       }),
       body: z.object({
         signingKeyAlgorithm: z.nativeEnum(SupportedSigningKeyAlgorithm).optional(),
