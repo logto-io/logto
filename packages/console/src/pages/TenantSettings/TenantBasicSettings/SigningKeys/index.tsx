@@ -185,7 +185,6 @@ function SigningKeys() {
                 title: value,
                 value,
               }))}
-              dropdownPosition="top"
               value={rotateKeyAlgorithm}
               onChange={(value) => {
                 if (!value) {

@@ -5,7 +5,6 @@ import { useRef, useState } from 'react';
 import Close from '@/assets/icons/close.svg';
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
-import { type VerticalAlignment } from '@/types/positioning';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
@@ -28,7 +27,6 @@ type Props<T> = {
   placeholder?: ReactNode;
   isClearable?: boolean;
   size?: 'small' | 'medium' | 'large';
-  dropdownPosition?: VerticalAlignment;
 };
 
 function Select<T extends string>({
@@ -41,7 +39,6 @@ function Select<T extends string>({
   placeholder,
   isClearable,
   size = 'large',
-  dropdownPosition = 'bottom',
 }: Props<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
@@ -100,7 +97,6 @@ function Select<T extends string>({
       </div>
       <Dropdown
         isFullWidth
-        verticalAlign={dropdownPosition}
         anchorRef={anchorRef}
         className={styles.dropdown}
         isOpen={isOpen}
