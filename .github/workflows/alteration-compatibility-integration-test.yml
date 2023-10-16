@@ -45,7 +45,7 @@ jobs:
     env:
       INTEGRATION_TEST: true
     steps:
-      - uses: silverhand-io/actions-package-logto-artifact@v1.0.0_beta.1
+      - uses: silverhand-io/actions-package-logto-artifact@v1.0.0
         with:
           artifact-name: alteration-integration-test-${{ github.sha }}
           branch: ${{github.base_ref}}
@@ -62,7 +62,7 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0_beta.4
+      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0
         with:
           branch: ${{github.base_ref}}
           logto_artifact: alteration-integration-test-${{ github.sha }}
