@@ -19,14 +19,8 @@ const mfa = {
     'Para usar o código de backup para autenticação de vários fatores, outros fatores devem estar ativados para garantir o login bem-sucedido de seus usuários.',
   policy: 'Política',
   two_step_sign_in_policy: 'Política de autenticação de dois passos no login',
-  two_step_sign_in_policy_description:
-    'Defina um requisito de autenticação de dois passos em toda a aplicação no momento do login.',
-  user_controlled: 'Controlado pelo usuário',
-  user_controlled_description:
-    'Desativado por padrão e não obrigatório, mas os usuários podem ativá-lo individualmente.',
-  mandatory: 'Obrigatório',
-  mandatory_description:
-    'Exija autenticação de vários fatores para todos os seus usuários em cada login.',
+  user_controlled: 'Os usuários têm a opção de ativar MFA pessoalmente.',
+  mandatory: 'MFA obrigatório para todos os seus usuários em cada login.',
   unlock_reminder:
     'Desbloqueie a autenticação de vários fatores para verificar a segurança, fazendo upgrade para um plano pago. Não hesite em <a>entrar em contato conosco</a> se precisar de assistência.',
   view_plans: 'Ver planos',

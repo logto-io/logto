@@ -4,8 +4,8 @@ export const expectToClickFactor = async (page: Page, inputName: string) => {
   await expect(page).toClick(`form label[class$=switch]:has(input[name="${inputName}"])`);
 };
 
-export const expectToClickPolicyOption = async (page: Page, inputName: string) => {
-  await expect(page).toClick(`form div[role=radio]:has(input[name=policy][value=${inputName}])`);
+export const expectToClickPolicyOption = async (page: Page, value: string) => {
+  await expect(page).toClick(`form div[role=radio]:has(input[name=policy][value=${value}])`);
 };
 
 export const expectBackupCodeSetupError = async (page: Page) => {

@@ -20,14 +20,8 @@ const mfa = {
     'Aby używać kodu zapasowego do autoryzacji wieloczynnikowej, inne czynniki muszą być włączone, aby zapewnić udane logowanie użytkowników.',
   policy: 'Polityka',
   two_step_sign_in_policy: 'Polityka autoryzacji dwuetapowej podczas logowania',
-  two_step_sign_in_policy_description:
-    'Zdefiniuj wymaganie autoryzacji dwuetapowej na poziomie aplikacji podczas logowania.',
-  user_controlled: 'Kontrolowane przez użytkownika',
-  user_controlled_description:
-    'Domyślnie wyłączone i nieobowiązkowe, ale użytkownicy mogą włączyć je indywidualnie.',
-  mandatory: 'Obowiązkowe',
-  mandatory_description:
-    'Wymagaj autoryzacji wieloczynnikowej dla wszystkich użytkowników podczas każdego logowania.',
+  user_controlled: 'Użytkownicy mają możliwość samodzielnego włączenia MFA.',
+  mandatory: 'Obowiązkowe MFA dla wszystkich użytkowników przy każdym logowaniu.',
   unlock_reminder:
     'Odblokuj autoryzację wieloczynnikową, aby zwiększyć bezpieczeństwo, przechodząc na płatny plan. Nie wahaj się <a>skontaktować z nami</a>, jeśli potrzebujesz pomocy.',
   view_plans: 'Zobacz plany',

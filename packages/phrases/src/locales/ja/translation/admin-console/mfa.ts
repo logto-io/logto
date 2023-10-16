@@ -18,12 +18,8 @@ const mfa = {
     'MFAのバックアップコードを使用するには、他の要因を有効にする必要があり、ユーザーのサインインが成功することを確認します。',
   policy: 'ポリシー',
   two_step_sign_in_policy: 'サインイン時の2段階認証ポリシー',
-  two_step_sign_in_policy_description: 'サインイン時のアプリ全体の2段階認証要件を定義します。',
-  user_controlled: 'ユーザーがコントロール',
-  user_controlled_description:
-    'デフォルトでは無効で、強制ではありませんが、ユーザーは個別に有効にできます。',
-  mandatory: '必須',
-  mandatory_description: 'すべてのユーザーに対してすべてのサインインでMFAが必要です。',
+  user_controlled: 'ユーザーは個人でMFAを有効にする選択肢があります。',
+  mandatory: 'すべてのユーザーに対するすべてのサインインでの義務MFA。',
   unlock_reminder:
     'セキュリティの確認のためにMFAをロック解除して有料プランにアップグレードします。サポートが必要な場合はお気軽に<a>お問い合わせ</a>ください。',
   view_plans: 'プランを表示',

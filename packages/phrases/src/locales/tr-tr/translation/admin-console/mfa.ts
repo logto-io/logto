@@ -20,14 +20,8 @@ const mfa = {
     'Çoklu faktör kimlik doğrulamada yedek kodu kullanmak için kullanıcılarınızın başarılı giriş yapmalarını sağlamak için diğer faktörlerin etkinleştirilmiş olması gerekir.',
   policy: 'Politika',
   two_step_sign_in_policy: 'Giriş sırasında iki adımlı kimlik doğrulama politikası',
-  two_step_sign_in_policy_description:
-    'Giriş sırasında tüm uygulama genelinde iki adımlı kimlik doğrulama gereksinimi tanımlayın.',
-  user_controlled: 'Kullanıcı tarafından kontrol edilen',
-  user_controlled_description:
-    'Varsayılan olarak devre dışı bırakılmış ve zorunlu değildir, ancak kullanıcılar ayrı ayrı etkinleştirebilirler.',
-  mandatory: 'Zorunlu',
-  mandatory_description:
-    'Her girişte tüm kullanıcılarınız için çoklu faktör kimlik doğrulamayı gerektirin.',
+  user_controlled: "Kullanıcılar MFA'yi kişisel olarak etkinleştirmeye karar verebilir.",
+  mandatory: 'Her girişte tüm kullanıcılar için zorunlu MFA.',
   unlock_reminder:
     'Güvenliği doğrulamak için çoklu faktör kimlik doğrulamayı kilit açmak için bir ücretli plana yükselterek etkinleştirin. Yardıma ihtiyacınız varsa çekinmeden <a>bizimle iletişime geçin</a>.',
   view_plans: 'Planları görüntüle',

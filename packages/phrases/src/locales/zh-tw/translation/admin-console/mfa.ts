@@ -14,11 +14,8 @@ const mfa = {
   backup_code_error_hint: '要使用備用代碼進行多因子驗證，必須啟用其他因素以確保用戶成功登錄。',
   policy: '策略',
   two_step_sign_in_policy: '登錄時的雙重驗證策略',
-  two_step_sign_in_policy_description: '為登錄時的應用程序定義雙重驗證要求。',
-  user_controlled: '用戶控制',
-  user_controlled_description: '默認情況下禁用且非強制，但用戶可以單獨啟用它。',
-  mandatory: '強制',
-  mandatory_description: '要求所有用戶在每次登錄時進行多因子驗證。',
+  user_controlled: '用戶可以個人選擇啟用MFA。',
+  mandatory: '每次登錄時對所有用戶強制執行MFA。',
   unlock_reminder:
     '解鎖多因子驗證以通過升級到付費計劃驗證安全性。如果需要幫助，請隨時<a>聯繫我們</a>。',
   view_plans: '查看計劃',
