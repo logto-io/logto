@@ -35,8 +35,8 @@ describe('organization role APIs', () => {
         scopeApi.create({ name: 'test' + randomId() }),
         scopeApi.create({ name: 'test' + randomId() }),
       ]);
-      const scopeIds = [scope1.id, scope2.id];
-      const role = await roleApi.create({ name, scopeIds });
+      const organizationScopeIds = [scope1.id, scope2.id];
+      const role = await roleApi.create({ name, organizationScopeIds });
 
       expect(role).toStrictEqual(
         expect.objectContaining({

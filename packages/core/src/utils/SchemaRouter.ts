@@ -1,6 +1,7 @@
 import { type SchemaLike, type GeneratedSchema, type Guard } from '@logto/schemas';
 import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
 import { type DeepPartial } from '@silverhand/essentials';
+import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -8,7 +9,30 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination, { type Pagination } from '#src/middleware/koa-pagination.js';
 
+import type RelationQueries from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
+
+/**
+ * Generate the pathname for from a table name.
+ *
+ * @example
+ * ```ts
+ * tableToPathname('organization_role') // => 'organization-role'
+ * ```
+ */
+const tableToPathname = (tableName: string) => tableName.replaceAll('_', '-');
+
+/**
+ * Generate the camel case schema ID column name.
+ *
+ * @example
+ * ```ts
+ * camelCaseSchemaId({ tableSingular: 'organization' as const }) // => 'organizationId'
+ * ```
+ *
+ */
+const camelCaseSchemaId = <T extends { tableSingular: Table }, Table extends string>(schema: T) =>
+  `${camelcase(schema.tableSingular)}Id` as const;
 
 /**
  * Actions configuration for a {@link SchemaRouter}. It contains the
@@ -126,7 +150,7 @@ export default class SchemaRouter<
     public readonly actions: SchemaActions<Key, CreateSchema, Schema>,
     config: DeepPartial<SchemaRouterConfig> = {}
   ) {
-    super({ prefix: '/' + schema.table.replaceAll('_', '-') });
+    super({ prefix: '/' + tableToPathname(schema.table) });
 
     this.config = deepmerge<SchemaRouterConfig, DeepPartial<SchemaRouterConfig>>(
       {
@@ -219,5 +243,114 @@ export default class SchemaRouter<
         }
       );
     }
+  }
+
+  /**
+   * Add routes for relations between the current schema and another schema.
+   *
+   * The routes are:
+   *
+   * - `GET /:id/[pathname]`: Get the entities of the relation.
+   * - `POST /:id/[pathname]`: Add entities to the relation.
+   * - `DELETE /:id/[pathname]/:relationSchemaId`: Remove an entity from the relation set.
+   * The `:relationSchemaId` is the entity ID in the relation schema.
+   *
+   * The `[pathname]` is determined by the `pathname` parameter.
+   *
+   * @remarks
+   * The `POST /:id/[pathname]` route accepts a JSON body with the following format:
+   *
+   * ```json
+   * { "[relationSchemaIds]": ["id1", "id2", "id3"] }
+   * ```
+   *
+   * The `[relationSchemaIds]` is the camel case of the relation schema's table name in
+   * singular form with `Ids` suffix. For example, if the relation schema's table name is
+   * `organization_roles`, the `[relationSchemaIds]` will be `organizationRoleIds`.
+   *
+   * @param relationSchema The schema of the relation to be added.
+   * @param relationQueries The queries for the relation.
+   * @param pathname The pathname of the relation. If not provided, it will be
+   * the camel case of the relation schema's table name.
+   * @see {@link RelationQueries} for the `relationQueries` configuration.
+   */
+  addRelationRoutes<
+    RelationKey extends string,
+    RelationCreateSchema extends Partial<SchemaLike<RelationKey> & { id: string }>,
+    RelationSchema extends SchemaLike<RelationKey> & { id: string },
+  >(
+    relationSchema: GeneratedSchema<RelationKey, RelationCreateSchema, RelationSchema>,
+    relationQueries: RelationQueries<[typeof this.schema, typeof relationSchema]>,
+    pathname = tableToPathname(relationSchema.table)
+  ) {
+    const columns = {
+      schemaId: camelCaseSchemaId(this.schema),
+      relationSchemaId: camelCaseSchemaId(relationSchema),
+      relationSchemaIds: camelCaseSchemaId(relationSchema) + 's',
+    };
+
+    this.get(
+      `/:id/${pathname}`,
+      koaGuard({
+        params: z.object({ id: z.string().min(1) }),
+        response: relationSchema.guard.array(),
+        status: [200, 404],
+      }),
+      async (ctx, next) => {
+        const { id } = ctx.guard.params;
+
+        // Ensure that the main entry exists
+        await this.actions.getById(id);
+
+        ctx.body = await relationQueries.getEntries(relationSchema, {
+          [columns.schemaId]: id,
+        });
+        return next();
+      }
+    );
+
+    this.post(
+      `/:id/${pathname}`,
+      koaGuard({
+        params: z.object({ id: z.string().min(1) }),
+        body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
+        response: relationSchema.guard.array(),
+        status: [200, 404, 422],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { id },
+          body: { [columns.relationSchemaIds]: relationIds },
+        } = ctx.guard;
+
+        await relationQueries.insert(
+          ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
+        );
+
+        ctx.body = await relationQueries.getEntries(relationSchema, { [columns.schemaId]: id });
+        return next();
+      }
+    );
+
+    this.delete(
+      `/:id/${pathname}/:relationId`,
+      koaGuard({
+        params: z.object({ id: z.string().min(1), relationId: z.string().min(1) }),
+        status: [204, 422],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { id, relationId },
+        } = ctx.guard;
+
+        await relationQueries.delete({
+          [columns.schemaId]: id,
+          [columns.relationSchemaId]: relationId,
+        });
+
+        ctx.status = 204;
+        return next();
+      }
+    );
   }
 }

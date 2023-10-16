@@ -6,6 +6,7 @@ import {
   OrganizationRoles,
   OrganizationScopes,
   OrganizationRoleScopeRelations,
+  Users,
 } from '@logto/schemas';
 import { type CommonQueryMethods } from 'slonik';
 
@@ -31,6 +32,8 @@ export default class OrganizationQueries extends SchemaQueries<
       OrganizationRoles,
       OrganizationScopes
     ),
+    /** Queries for organization - user relations. */
+    users: new RelationQueries(this.pool, 'organization_user_relations', Organizations, Users),
   };
 
   constructor(pool: CommonQueryMethods) {
