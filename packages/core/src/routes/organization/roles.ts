@@ -1,8 +1,9 @@
 import { type CreateOrganizationRole, OrganizationRoles } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
+import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -21,8 +22,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const actions = new SchemaActions(roles);
-  const router = new SchemaRouter(OrganizationRoles, actions, {
+  const router = new SchemaRouter(OrganizationRoles, roles, {
     disabled: { post: true },
     errorHandler,
   });
@@ -50,7 +50,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
     }),
     async (ctx, next) => {
       const { organizationScopeIds: scopeIds, ...data } = ctx.guard.body;
-      const role = await actions.post(data);
+      const role = await roles.insert({ id: generateStandardId(), ...data });
 
       if (scopeIds.length > 0) {
         await rolesScopes.insert(...scopeIds.map<[string, string]>((id) => [role.id, id]));

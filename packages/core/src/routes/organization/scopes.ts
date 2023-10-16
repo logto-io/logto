@@ -1,6 +1,6 @@
 import { OrganizationScopes } from '@logto/schemas';
 
-import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
+import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -16,7 +16,7 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new SchemaRouter(OrganizationScopes, new SchemaActions(scopes), { errorHandler });
+  const router = new SchemaRouter(OrganizationScopes, scopes, { errorHandler });
 
   originalRouter.use(router.routes());
 }

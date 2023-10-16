@@ -4,7 +4,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
+import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -19,7 +19,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
       queries: { organizations, users },
     },
   ] = args;
-  const router = new SchemaRouter(Organizations, new SchemaActions(organizations), {
+  const router = new SchemaRouter(Organizations, organizations, {
     errorHandler,
   });
 

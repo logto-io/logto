@@ -11,8 +11,8 @@ import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 
 /**
  * Query class that contains all the necessary CRUD queries for a schema. It is
- * designed to be used with SchemaActions for a SchemaRouter. You can also extend
- * this class to add more queries.
+ * designed to be used with a SchemaRouter. You can also extend this class to add
+ * more queries.
  */
 export default class SchemaQueries<
   Key extends string,
@@ -55,7 +55,7 @@ export default class SchemaQueries<
     return this.#findById(id);
   }
 
-  async insert(data: OmitAutoSetFields<CreateSchema>): Promise<Readonly<Schema>> {
+  async insert(data: CreateSchema): Promise<Readonly<Schema>> {
     return this.#insert(data);
   }
 

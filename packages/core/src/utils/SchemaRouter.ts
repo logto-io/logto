@@ -1,5 +1,5 @@
-import { type SchemaLike, type GeneratedSchema, type Guard } from '@logto/schemas';
-import { generateStandardId, type OmitAutoSetFields } from '@logto/shared';
+import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
@@ -7,7 +7,7 @@ import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination, { type Pagination } from '#src/middleware/koa-pagination.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 
 import type RelationQueries from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
@@ -33,79 +33,6 @@ const tableToPathname = (tableName: string) => tableName.replaceAll('_', '-');
  */
 const camelCaseSchemaId = <T extends { tableSingular: Table }, Table extends string>(schema: T) =>
   `${camelcase(schema.tableSingular)}Id` as const;
-
-/**
- * Actions configuration for a {@link SchemaRouter}. It contains the
- * necessary functions to handle the CRUD operations for a schema.
- */
-export class SchemaActions<
-  Key extends string,
-  CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
-  Schema extends SchemaLike<Key> & { id: string },
-> {
-  constructor(public readonly queries: SchemaQueries<Key, CreateSchema, Schema>) {}
-
-  /**
-   * The function for `GET /` route to get a list of entities.
-   *
-   * @param pagination The request pagination info parsed from `koa-pagination`. The
-   * function should honor the pagination info and return the correct entities.
-   * @returns A tuple of `[totalCount, entities]`. `totalCount` is the total count of
-   * entities in the database; `entities` is the list of entities to be returned.
-   */
-  public async get({
-    limit,
-    offset,
-  }: Pick<Pagination, 'limit' | 'offset'>): Promise<
-    [totalCount: number, entries: readonly Schema[]]
-  > {
-    return Promise.all([this.queries.findTotalNumber(), this.queries.findAll(limit, offset)]);
-  }
-
-  /**
-   * The function for `GET /:id` route to get an entity by ID.
-   *
-   * @param id The ID of the entity to be fetched.
-   * @returns The entity to be returned.
-   * @throws An `RequestError` with 404 status code if the entity is not found.
-   */
-  public async getById(id: string): Promise<Readonly<Schema>> {
-    return this.queries.findById(id);
-  }
-
-  /**
-   * The function for `POST /` route to create an entity.
-   *
-   * @param data The data of the entity to be created.
-   * @returns The created entity.
-   */
-  public async post(data: Omit<OmitAutoSetFields<CreateSchema>, 'id'>): Promise<Readonly<Schema>>;
-  public async post(data: OmitAutoSetFields<CreateSchema>): Promise<Readonly<Schema>> {
-    return this.queries.insert({ id: generateStandardId(), ...data });
-  }
-
-  /**
-   * The function for `PATCH /:id` route to update the entity by ID.
-   *
-   * @param id The ID of the entity to be updated.
-   * @param data The data of the entity to be updated.
-   * @returns The updated entity.
-   * @throws An `UpdateError` if the entity is not found.
-   */
-  public async patchById(id: string, data: Partial<Schema>): Promise<Readonly<Schema>> {
-    return this.queries.updateById(id, data);
-  }
-
-  /**
-   * The function for `DELETE /:id` route to delete an entity by ID.
-   *
-   * @param id The ID of the entity to be deleted.
-   * @throws An `DeletionError` if the entity is not found.
-   */
-  public async deleteById(id: string): Promise<void> {
-    return this.queries.deleteById(id);
-  }
-}
 
 type SchemaRouterConfig = {
   /** Disable certain routes for the router. */
@@ -150,7 +77,7 @@ export default class SchemaRouter<
 
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
-    public readonly actions: SchemaActions<Key, CreateSchema, Schema>,
+    public readonly queries: SchemaQueries<Key, CreateSchema, Schema>,
     config: DeepPartial<SchemaRouterConfig> = {}
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
@@ -187,7 +114,11 @@ export default class SchemaRouter<
         koaPagination(),
         koaGuard({ response: schema.guard.array(), status: [200] }),
         async (ctx, next) => {
-          const [count, entities] = await actions.get(ctx.pagination);
+          const { limit, offset } = ctx.pagination;
+          const [count, entities] = await Promise.all([
+            queries.findTotalNumber(),
+            queries.findAll(limit, offset),
+          ]);
           ctx.pagination.totalCount = count;
           ctx.body = entities;
           return next();
@@ -199,13 +130,16 @@ export default class SchemaRouter<
       this.post(
         '/',
         koaGuard({
-          // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well for generic types
-          body: schema.createGuard.omit({ id: true }) as Guard<Omit<CreateSchema, 'id'>>,
+          body: schema.createGuard.omit({ id: true }),
           response: schema.guard,
           status: [201],
         }),
         async (ctx, next) => {
-          ctx.body = await actions.post(ctx.guard.body);
+          // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
+          ctx.body = await queries.insert({
+            id: generateStandardId(),
+            ...ctx.guard.body,
+          } as CreateSchema);
           ctx.status = 201;
           return next();
         }
@@ -221,7 +155,7 @@ export default class SchemaRouter<
           status: [200, 404],
         }),
         async (ctx, next) => {
-          ctx.body = await actions.getById(ctx.guard.params.id);
+          ctx.body = await queries.findById(ctx.guard.params.id);
           return next();
         }
       );
@@ -237,7 +171,7 @@ export default class SchemaRouter<
           status: [200, 404],
         }),
         async (ctx, next) => {
-          ctx.body = await actions.patchById(ctx.guard.params.id, ctx.guard.body);
+          ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);
           return next();
         }
       );
@@ -251,7 +185,7 @@ export default class SchemaRouter<
           status: [204, 404],
         }),
         async (ctx, next) => {
-          await actions.deleteById(ctx.guard.params.id);
+          await queries.deleteById(ctx.guard.params.id);
           ctx.status = 204;
           return next();
         }
@@ -315,7 +249,7 @@ export default class SchemaRouter<
         const { id } = ctx.guard.params;
 
         // Ensure that the main entry exists
-        await this.actions.getById(id);
+        await this.queries.findById(id);
 
         const [totalCount, entities] = await relationQueries.getEntities(
           relationSchema,
