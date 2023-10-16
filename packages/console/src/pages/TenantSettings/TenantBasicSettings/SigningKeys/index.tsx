@@ -27,8 +27,8 @@ function SigningKeys() {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.tenants.signing_keys' });
   const [activeTab, setActiveTab] = useState<LogtoOidcConfigKey>(LogtoOidcConfigKey.PrivateKeys);
-  const keyType = activeTab === LogtoOidcConfigKey.PrivateKeys ? 'private-keys' : 'cookie-keys';
-  const entities = activeTab === LogtoOidcConfigKey.PrivateKeys ? 'tokens' : 'cookies';
+  const isPrivateKey = activeTab === LogtoOidcConfigKey.PrivateKeys;
+  const keyType = isPrivateKey ? 'private-keys' : 'cookie-keys';
 
   const { data, error, mutate } = useSWR<OidcConfigKeysResponse[], RequestError>(
     `api/configs/oidc/${keyType}`
@@ -55,13 +55,13 @@ function SigningKeys() {
         dataIndex: 'status',
         colSpan: 4,
         render: (_: OidcConfigKeysResponse, rowIndex: number) => (
-          <Tag type="state" status={rowIndex === 0 ? 'success' : 'alert'}>
+          <Tag type="state" variant="plain" status={rowIndex === 0 ? 'success' : 'alert'}>
             {t(rowIndex === 0 ? 'status.current' : 'status.previous')}
           </Tag>
         ),
       },
       ...condArray(
-        activeTab === LogtoOidcConfigKey.PrivateKeys && [
+        isPrivateKey && [
           {
             title: t('table_column.algorithm'),
             dataIndex: 'signingKeyAlgorithm',
@@ -90,7 +90,7 @@ function SigningKeys() {
           ),
       },
     ],
-    [activeTab, t]
+    [isPrivateKey, t]
   );
 
   return (
@@ -113,7 +113,7 @@ function SigningKeys() {
           <DynamicT forKey="tenants.signing_keys.type.cookie_key" />
         </TabNavItem>
       </TabNav>
-      <FormField title="tenants.signing_keys.private_keys_in_use">
+      <FormField title={`tenants.signing_keys.${isPrivateKey ? 'private' : 'cookie'}_keys_in_use`}>
         <Table
           hasBorder
           isLoading={isLoadingKeys || isRotating}
@@ -138,13 +138,13 @@ function SigningKeys() {
           }
         />
       </FormField>
-      <FormField title="tenants.signing_keys.rotate_private_keys">
+      <FormField title={`tenants.signing_keys.rotate_${isPrivateKey ? 'private' : 'cookie'}_keys`}>
         <div className={styles.rotateKey}>
           <div className={styles.description}>
-            {t('rotate_private_keys_description', { entities })}
+            {t(`rotate_${isPrivateKey ? 'private' : 'cookie'}_keys_description`)}
           </div>
           <Button
-            title="tenants.signing_keys.rotate_private_keys"
+            title={`tenants.signing_keys.rotate_${isPrivateKey ? 'private' : 'cookie'}_keys`}
             type="default"
             onClick={() => {
               setShowRotateConfirmModal(true);
@@ -175,10 +175,10 @@ function SigningKeys() {
       >
         <span>
           <Trans components={{ strong: <strong /> }}>
-            {t('reminder.rotate', { key: activeTab, entities })}
+            {t(`reminder.rotate_${isPrivateKey ? 'private' : 'cookie'}_key`)}
           </Trans>
         </span>
-        {activeTab === LogtoOidcConfigKey.PrivateKeys && (
+        {isPrivateKey && (
           <FormField title="tenants.signing_keys.select_private_key_algorithm">
             <Select
               options={Object.values(SupportedSigningKeyAlgorithm).map((value) => ({
@@ -215,7 +215,7 @@ function SigningKeys() {
       >
         <span>
           <Trans components={{ strong: <strong /> }}>
-            {t('reminder.delete', { key: activeTab, entities })}
+            {t(`reminder.delete_${isPrivateKey ? 'private' : 'cookie'}_key`)}
           </Trans>
         </span>
       </DangerConfirmModal>

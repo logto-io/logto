@@ -78,12 +78,19 @@ const tenants = {
     /** UNTRANSLATED */
     private_keys_in_use: 'Private keys in use',
     /** UNTRANSLATED */
+    cookie_keys_in_use: 'Cookie keys in use',
+    /** UNTRANSLATED */
     rotate_private_keys: 'Rotate private keys',
     /** UNTRANSLATED */
-    rotate_private_keys_description:
-      'This will rotate the currently used private keys. Your {{entities}} with previous private keys will stay valid until you delete it.',
+    rotate_cookie_keys: 'Rotate cookie keys',
     /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for private keys',
+    rotate_private_keys_description:
+      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
+    /** UNTRANSLATED */
+    rotate_cookie_keys_description:
+      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
+    /** UNTRANSLATED */
+    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
     /** UNTRANSLATED */
     rotate_button: 'Rotate',
     table_column: {
@@ -102,17 +109,17 @@ const tenants = {
     },
     reminder: {
       /** UNTRANSLATED */
-      rotate:
-        'Are you sure you want to rotate the <strong>{{key}}</strong>? This will require all your apps and APIs to use the new signing key. Existing {{entities}} stay valid until you rotate again.',
+      rotate_private_key:
+        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
       /** UNTRANSLATED */
-      delete:
-        'Are you sure you want to delete the <strong>{{key}}</strong>? Existing {{entities}} signed with this signing key will no longer be valid.',
-    },
-    signed_entity: {
+      rotate_cookie_key:
+        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
       /** UNTRANSLATED */
-      tokens: 'JWT tokens',
+      delete_private_key:
+        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
       /** UNTRANSLATED */
-      cookies: 'cookies',
+      delete_cookie_key:
+        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
     },
   },
 };
