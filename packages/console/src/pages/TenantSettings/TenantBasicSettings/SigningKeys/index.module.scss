@@ -1,6 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .idWrapper {
+  display: inline-block;
   font: var(--font-body-2);
   font-family: 'Roboto Mono', monospace;
   color: var(--color-text);
