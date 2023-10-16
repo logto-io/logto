@@ -19,18 +19,15 @@ const MfaFactorList = ({ flow, factors }: Props) => {
   const navigate = useNavigate();
 
   const handleSelectFactor = useCallback(
-    async (factor: MfaFactor) => {
-      if (factor === MfaFactor.TOTP) {
-        if (flow === UserMfaFlow.MfaBinding) {
-          await startTotpBinding(factors);
-        }
-
-        if (flow === UserMfaFlow.MfaVerification) {
-          const state: MfaFactorsState = { availableFactors: factors };
-          navigate(`/${UserMfaFlow.MfaVerification}/${factor}`, { state });
-        }
+    (factor: MfaFactor) => {
+      if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
+        void startTotpBinding(factors);
+        return;
       }
-      // Todo @xiaoyijun implement other factors
+
+      navigate(`/${flow}/${factor}`, {
+        state: { availableFactors: factors } satisfies MfaFactorsState,
+      });
     },
     [factors, flow, navigate, startTotpBinding]
   );
@@ -43,7 +40,7 @@ const MfaFactorList = ({ flow, factors }: Props) => {
           factor={factor}
           isBinding={flow === UserMfaFlow.MfaBinding}
           onClick={() => {
-            void handleSelectFactor(factor);
+            handleSelectFactor(factor);
           }}
         />
       ))}

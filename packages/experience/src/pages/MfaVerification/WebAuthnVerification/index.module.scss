@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.verifyButton {
+  margin: _.unit(4) 0;
+}
