@@ -1,7 +1,10 @@
+import assert from 'node:assert';
+
 import { generateStandardId } from '@logto/shared';
 import { HTTPError } from 'got';
 
 import { createUser, deleteUser } from '#src/api/admin-user.js';
+import { roleApi } from '#src/api/organization-role.js';
 import { organizationApi } from '#src/api/organization.js';
 
 const randomId = () => generateStandardId(4);
@@ -121,6 +124,39 @@ describe('organization APIs', () => {
       const users = await organizationApi.getUsers(organization.id);
       expect(users).not.toContainEqual(user);
       await Promise.all([organizationApi.delete(organization.id), deleteUser(user.id)]);
+    });
+  });
+
+  describe('organization - user - organization role relation routes', () => {
+    it("should be able to add and get user's organization roles", async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await createUser({ username: 'test' + randomId() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        roleApi.create({ name: 'test' + randomId() }),
+      ]);
+
+      const response = await organizationApi
+        .addUserRoles(organization.id, user.id, [role1.id, role2.id])
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(422);
+      expect(JSON.parse(String(response.response.body))).toMatchObject(
+        expect.objectContaining({ code: 'organization.require_membership' })
+      );
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [role1.id, role2.id]);
+      const roles = await organizationApi.getUserRoles(organization.id, user.id);
+      expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
+      expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
+      await Promise.all([
+        organizationApi.delete(organization.id),
+        deleteUser(user.id),
+        roleApi.delete(role1.id),
+        roleApi.delete(role2.id),
+      ]);
     });
   });
 });

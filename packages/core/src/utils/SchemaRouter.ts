@@ -315,8 +315,7 @@ export default class SchemaRouter<
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
-        response: relationSchema.guard.array(),
-        status: [200, 404, 422],
+        status: [201, 404, 422],
       }),
       async (ctx, next) => {
         const {
@@ -327,8 +326,7 @@ export default class SchemaRouter<
         await relationQueries.insert(
           ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
         );
-
-        ctx.body = await relationQueries.getEntries(relationSchema, { [columns.schemaId]: id });
+        ctx.status = 201;
         return next();
       }
     );
