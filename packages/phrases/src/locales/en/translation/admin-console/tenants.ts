@@ -99,6 +99,10 @@ const tenants = {
       delete_cookie_key:
         'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
     },
+    messages: {
+      rotate_key_success: 'Signing keys rotated successfully.',
+      delete_key_success: 'Key deleted successfully.',
+    },
   },
 };
 

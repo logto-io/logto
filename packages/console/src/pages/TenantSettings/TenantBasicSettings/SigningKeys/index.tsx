@@ -5,6 +5,7 @@ import {
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -170,6 +171,7 @@ function SigningKeys() {
               })
               .json<OidcConfigKeysResponse[]>();
             void mutate(keys);
+            toast.success(t('messages.rotate_key_success'));
           } finally {
             setIsRotating(false);
           }
@@ -210,6 +212,7 @@ function SigningKeys() {
           try {
             await api.delete(`api/configs/oidc/${keyType}/${deletingKeyId}`);
             void mutate(data?.filter((key) => key.id !== deletingKeyId));
+            toast.success(t('messages.delete_key_success'));
           } finally {
             setDeletingKeyId(undefined);
           }
