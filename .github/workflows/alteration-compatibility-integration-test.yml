@@ -29,14 +29,13 @@ jobs:
         id: changes-detection
         run: |
           CHANGE_FILES=$(git diff --name-only HEAD..origin/master | grep 'packages/schemas/alterations/' && echo "true" || echo "false")
-
+          echo "::set-output name=has-alteration-changes::$CHANGE_FILES"
+          echo $CHANGE_FILES
           if [ "$CHANGE_FILES" = "false" ]; then
             echo "No alteration changes detected"
           else
             echo "Alteration changes detected"
           fi
-
-          echo "::set-output name=has-alteration-changes::$CHANGE_FILES"
 
   package:
     needs: check-alteration-changes
