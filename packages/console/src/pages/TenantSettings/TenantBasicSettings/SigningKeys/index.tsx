@@ -116,6 +116,7 @@ function SigningKeys() {
       <FormField title={`tenants.signing_keys.${isPrivateKey ? 'private' : 'cookie'}_keys_in_use`}>
         <Table
           hasBorder
+          isRowHoverEffectDisabled
           isLoading={isLoadingKeys || isRotating}
           errorMessage={error?.body?.message ?? error?.message}
           rowIndexKey="id"
