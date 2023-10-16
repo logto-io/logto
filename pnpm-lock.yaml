@@ -3265,6 +3265,9 @@ importers:
       pg-protocol:
         specifier: ^1.6.0
         version: 1.6.0
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       qrcode:
         specifier: ^1.5.3
         version: 1.5.3
@@ -3341,6 +3344,9 @@ importers:
       '@types/oidc-provider':
         specifier: ^8.0.0
         version: 8.0.0
+      '@types/pluralize':
+        specifier: ^0.0.31
+        version: 0.0.31
       '@types/qrcode':
         specifier: ^1.5.2
         version: 1.5.2
@@ -17311,7 +17317,6 @@ packages:
   /pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-    dev: true
 
   /pngjs@5.0.0:
     resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}

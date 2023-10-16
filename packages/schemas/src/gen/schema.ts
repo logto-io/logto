@@ -126,7 +126,13 @@ export const generateSchema = ({ name, comments, fields }: TableWithType) => {
     '',
     `export const ${camelcase(name, {
       pascalCase: true,
-    })}: GeneratedSchema<${modelName}Keys, ${databaseEntryType}, ${modelName}> = Object.freeze({`,
+    })}: GeneratedSchema<
+      ${modelName}Keys,
+      ${databaseEntryType},
+      ${modelName},
+      '${name}',
+      '${pluralize(name, 1)}'
+    > = Object.freeze({`,
     `  table: '${name}',`,
     `  tableSingular: '${pluralize(name, 1)}',`,
     '  fields: {',
