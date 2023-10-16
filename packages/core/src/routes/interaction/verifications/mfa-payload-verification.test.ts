@@ -2,6 +2,12 @@ import { InteractionEvent, MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
+import { mockUserWebAuthnMfaVerification } from '#src/__mocks__/user.js';
+import {
+  mockBindWebAuthn,
+  mockBindWebAuthnPayload,
+  mockWebAuthnVerificationPayload,
+} from '#src/__mocks__/webauthn.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -13,15 +19,36 @@ const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
 
 const findUserById = jest.fn();
+const updateUserById = jest.fn();
 
 const tenantContext = new MockTenant(undefined, {
   users: {
     findUserById,
+    updateUserById,
   },
 });
 
 const { validateTotpToken } = mockEsm('../utils/totp-validation.js', () => ({
   validateTotpToken: jest.fn().mockReturnValue(true),
+}));
+
+const { verifyWebAuthnAuthentication, verifyWebAuthnRegistration } = mockEsm(
+  '../utils/webauthn.js',
+  () => ({
+    verifyWebAuthnAuthentication: jest.fn(),
+    verifyWebAuthnRegistration: jest.fn().mockResolvedValue({
+      verified: true,
+      registrationInfo: {
+        credentialID: 'credentialId',
+        credentialPublicKey: 'publicKey',
+        counter: 0,
+      },
+    }),
+  })
+);
+
+mockEsm('@simplewebauthn/server/helpers', () => ({
+  isoBase64URL: { fromBuffer: jest.fn((value) => value) },
 }));
 
 const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await import(
@@ -101,6 +128,59 @@ describe('bindMfaPayloadVerification', () => {
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
     });
   });
+
+  describe('webauthn', () => {
+    it('should return result of BindMfa', async () => {
+      await expect(
+        bindMfaPayloadVerification(
+          baseCtx,
+          mockBindWebAuthnPayload,
+          {
+            ...interaction,
+            pendingMfa: {
+              type: MfaFactor.WebAuthn,
+              challenge: 'challenge',
+            },
+          },
+          additionalParameters
+        )
+      ).resolves.toMatchObject(mockBindWebAuthn);
+
+      expect(verifyWebAuthnRegistration).toHaveBeenCalled();
+    });
+
+    it('should reject when pendingMfa is missing', async () => {
+      await expect(
+        bindMfaPayloadVerification(
+          baseCtx,
+          mockBindWebAuthnPayload,
+          interaction,
+          additionalParameters
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.pending_info_not_found'));
+    });
+
+    it('should reject when webauthn faield', async () => {
+      verifyWebAuthnRegistration.mockResolvedValueOnce({
+        verified: false,
+      });
+
+      await expect(
+        bindMfaPayloadVerification(
+          baseCtx,
+          mockBindWebAuthnPayload,
+          {
+            ...interaction,
+            pendingMfa: {
+              type: MfaFactor.WebAuthn,
+              challenge: 'challenge',
+            },
+          },
+          additionalParameters
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.webauthn_verification_failed'));
+    });
+  });
 });
 
 describe('verifyMfaPayloadVerification', () => {
@@ -111,10 +191,15 @@ describe('verifyMfaPayloadVerification', () => {
       });
 
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).resolves.toMatchObject({
         type: MfaFactor.TOTP,
         id: 'id',
@@ -129,10 +214,15 @@ describe('verifyMfaPayloadVerification', () => {
         mfaVerifications: [],
       });
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
     });
 
@@ -143,11 +233,80 @@ describe('verifyMfaPayloadVerification', () => {
       validateTotpToken.mockReturnValueOnce(false);
 
       await expect(
-        verifyMfaPayloadVerification(tenantContext, 'accountId', {
-          type: MfaFactor.TOTP,
-          code: '123456',
-        })
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.TOTP,
+            code: '123456',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
+    });
+  });
+
+  describe('webauthn', () => {
+    it('should return result of VerifyMfaResult and update newCounter', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+      const result = { type: MfaFactor.WebAuthn, id: 'id' };
+      verifyWebAuthnAuthentication.mockResolvedValueOnce({
+        result,
+        newCounter: 1,
+      });
+
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          mockWebAuthnVerificationPayload,
+          {
+            event: InteractionEvent.SignIn,
+            pendingMfa: { type: MfaFactor.WebAuthn, challenge: 'challenge' },
+          },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).resolves.toMatchObject(result);
+
+      expect(updateUserById).toHaveBeenCalledWith('accountId', {
+        mfaVerifications: [{ ...mockUserWebAuthnMfaVerification, counter: 1 }],
+      });
+    });
+
+    it('should reject when pendingMfa can not be found', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          mockWebAuthnVerificationPayload,
+          {
+            event: InteractionEvent.SignIn,
+          },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.pending_info_not_found'));
+    });
+
+    it('should reject when webauthn result is false', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+      verifyWebAuthnAuthentication.mockReturnValueOnce({ result: false });
+
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          mockWebAuthnVerificationPayload,
+          {
+            event: InteractionEvent.SignIn,
+            pendingMfa: { type: MfaFactor.WebAuthn, challenge: 'challenge' },
+          },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.webauthn_verification_failed'));
     });
   });
 });

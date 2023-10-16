@@ -98,10 +98,12 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         })
       );
 
+      const { hostname, origin } = EnvSet.values.endpoint;
       const verifiedMfa = await verifyMfaPayloadVerification(
         tenant,
-        accountId,
-        verifyMfaPayloadGuard
+        verifyMfaPayloadGuard,
+        interactionStorage,
+        { accountId, rpId: hostname, origin }
       );
 
       await storeInteractionResult({ verifiedMfa }, ctx, provider, true);

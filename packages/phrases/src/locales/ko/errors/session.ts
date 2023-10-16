@@ -34,6 +34,8 @@ const session = {
     invalid_totp_code: 'Invalid TOTP code.',
     /** UNTRANSLATED */
     webauthn_verification_failed: 'WebAuthn verification failed.',
+    /** UNTRANSLATED */
+    webauthn_verification_not_found: 'WebAuthn verification not found.',
   },
 };
 

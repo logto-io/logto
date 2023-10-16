@@ -3,6 +3,7 @@ import {
   MfaFactor,
   requestVerificationCodePayloadGuard,
   webAuthnRegistrationOptionsGuard,
+  webAuthnAuthenticationOptionsGuard,
 } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
@@ -10,6 +11,7 @@ import qrcode from 'qrcode';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -28,7 +30,10 @@ import {
 import { createSocialAuthorizationUrl } from './utils/social-verification.js';
 import { generateTotpSecret } from './utils/totp-validation.js';
 import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
-import { generateWebAuthnRegistrationOptions } from './utils/webauthn.js';
+import {
+  generateWebAuthnAuthenticationOptions,
+  generateWebAuthnRegistrationOptions,
+} from './utils/webauthn.js';
 import { verifyIdentifier } from './verifications/index.js';
 import verifyProfile from './verifications/profile-verification.js';
 
@@ -211,6 +216,46 @@ export default function additionalRoutes<T extends IRouterParamContext>(
 
         return next();
       }
+    }
+  );
+
+  router.post(
+    `${interactionPrefix}/${verificationPath}/webauthn-authentication`,
+    koaGuard({
+      status: [200],
+      response: webAuthnAuthenticationOptionsGuard,
+    }),
+    async (ctx, next) => {
+      const { interactionDetails, createLog } = ctx;
+      // Check interaction exists
+      const interaction = getInteractionStorage(interactionDetails.result);
+      const { event, accountId } = interaction;
+      assertThat(
+        event === InteractionEvent.SignIn && accountId,
+        new RequestError({
+          code: 'session.mfa.mfa_sign_in_only',
+        })
+      );
+      createLog(`Interaction.${event}.Mfa.WebAuthn.Create`);
+
+      const { mfaVerifications } = await findUserById(accountId);
+      const options = await generateWebAuthnAuthenticationOptions({
+        rpId: EnvSet.values.endpoint.hostname,
+        mfaVerifications,
+      });
+
+      await storeInteractionResult(
+        {
+          pendingMfa: { type: MfaFactor.WebAuthn, challenge: options.challenge },
+        },
+        ctx,
+        provider,
+        true
+      );
+
+      ctx.body = options;
+
+      return next();
     }
   );
 }
