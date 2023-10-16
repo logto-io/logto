@@ -2,7 +2,7 @@ import { UniqueIntegrityConstraintViolationError } from 'slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { OrganizationScopeActions } from './organization-scopes.js';
+import { OrganizationScopeActions } from './scopes.js';
 
 describe('OrganizationScopeActions', () => {
   it('should throw RequestError if UniqueIntegrityConstraintViolationError is thrown inside', async () => {

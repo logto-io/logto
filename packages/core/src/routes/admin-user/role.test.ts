@@ -35,7 +35,7 @@ const { findRolesByRoleIds } = roles;
 
 const tenantContext = new MockTenant(undefined, { usersRoles, users, roles });
 
-const roleRoutes = await pickDefault(import('./admin-user-role.js'));
+const roleRoutes = await pickDefault(import('./role.js'));
 
 describe('user role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });

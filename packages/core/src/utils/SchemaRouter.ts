@@ -50,13 +50,15 @@ export class SchemaActions<
    *
    * @param pagination The request pagination info parsed from `koa-pagination`. The
    * function should honor the pagination info and return the correct entities.
-   * @returns A tuple of `[count, entities]`. `count` is the total count of entities
-   *  in the database; `entities` is the list of entities to be returned.
+   * @returns A tuple of `[totalCount, entities]`. `totalCount` is the total count of
+   * entities in the database; `entities` is the list of entities to be returned.
    */
   public async get({
     limit,
     offset,
-  }: Pick<Pagination, 'limit' | 'offset'>): Promise<[count: number, entities: readonly Schema[]]> {
+  }: Pick<Pagination, 'limit' | 'offset'>): Promise<
+    [totalCount: number, entries: readonly Schema[]]
+  > {
     return Promise.all([this.queries.findTotalNumber(), this.queries.findAll(limit, offset)]);
   }
 
@@ -289,9 +291,9 @@ export default class SchemaRouter<
       relationSchemaIds: camelCaseSchemaId(relationSchema) + 's',
     };
 
-    // TODO: Add pagination support
     this.get(
       `/:id/${pathname}`,
+      koaPagination(),
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         response: relationSchema.guard.array(),
@@ -303,9 +305,16 @@ export default class SchemaRouter<
         // Ensure that the main entry exists
         await this.actions.getById(id);
 
-        ctx.body = await relationQueries.getEntries(relationSchema, {
-          [columns.schemaId]: id,
-        });
+        const [totalCount, entities] = await relationQueries.getEntities(
+          relationSchema,
+          {
+            [columns.schemaId]: id,
+          },
+          ctx.pagination
+        );
+
+        ctx.pagination.totalCount = totalCount;
+        ctx.body = entities;
         return next();
       }
     );

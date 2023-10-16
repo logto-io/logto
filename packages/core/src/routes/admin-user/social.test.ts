@@ -70,7 +70,7 @@ const mockedConnectors = {
 
 const { findUserById, updateUserById, deleteUserIdentity } = mockedQueries.users;
 
-const adminUserSocialRoutes = await pickDefault(import('./admin-user-social.js'));
+const adminUserSocialRoutes = await pickDefault(import('./social.js'));
 
 describe('Admin user social identities APIs', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, mockedConnectors, {

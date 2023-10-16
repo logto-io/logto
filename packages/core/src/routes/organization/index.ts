@@ -3,18 +3,21 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
-import { type AuthedRouter, type RouterInitArgs } from './types.js';
+import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
-export default function organizationRoutes<T extends AuthedRouter>(
-  ...[
+import organizationRoleRoutes from './roles.js';
+import organizationScopeRoutes from './scopes.js';
+
+export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+  const [
     originalRouter,
     {
       queries: { organizations, users },
     },
-  ]: RouterInitArgs<T>
-) {
+  ] = args;
   const router = new SchemaRouter(Organizations, new SchemaActions(organizations));
 
   router.addRelationRoutes(organizations.relations.users);
@@ -26,22 +29,29 @@ export default function organizationRoutes<T extends AuthedRouter>(
 
   router.get(
     pathname,
+    koaPagination(),
     koaGuard({
       params: z.object(params),
       response: OrganizationRoles.guard.array(),
       status: [200, 404],
     }),
-    // TODO: Add pagination
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
 
       // Ensure both the organization and the role exist
       await Promise.all([organizations.findById(id), users.findUserById(userId)]);
 
-      ctx.body = await organizations.relations.rolesUsers.getEntries(OrganizationRoles, {
-        organizationId: id,
-        userId,
-      });
+      const [totalCount, entities] = await organizations.relations.rolesUsers.getEntities(
+        OrganizationRoles,
+        {
+          organizationId: id,
+          userId,
+        },
+        ctx.pagination
+      );
+
+      ctx.pagination.totalCount = totalCount;
+      ctx.body = entities;
       return next();
     }
   );
@@ -91,5 +101,10 @@ export default function organizationRoutes<T extends AuthedRouter>(
     }
   );
 
+  // MARK: Mount sub-routes
+  organizationRoleRoutes(...args);
+  organizationScopeRoutes(...args);
+
+  // Add routes to the router
   originalRouter.use(router.routes());
 }

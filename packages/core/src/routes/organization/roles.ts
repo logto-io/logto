@@ -11,7 +11,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SchemaRouter, { SchemaActions } from '#src/utils/SchemaRouter.js';
 
-import { type AuthedRouter, type RouterInitArgs } from './types.js';
+import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
 class OrganizationRoleActions extends SchemaActions<
   OrganizationRoleKeys,
