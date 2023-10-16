@@ -1,11 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { MfaPolicy, MfaFactor } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
-import { defaultSignUpMethod } from '#src/helpers/sign-in-experience.js';
+import { enableMandatoryMfaWithTotp, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import { generateUserId } from '#src/utils.js';
@@ -17,16 +16,17 @@ describe('MFA - TOTP', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
     await setSocialConnector();
     await updateSignInExperience({
-      signUp: defaultSignUpMethod,
-      mfa: {
-        policy: MfaPolicy.Mandatory,
-        factors: [MfaFactor.TOTP],
-      },
+      signUp: { identifiers: [], password: false, verify: false }, // Social only account creation
       signIn: {
         methods: [],
       },
       socialSignInConnectorTargets: ['mock-social'],
     });
+    await enableMandatoryMfaWithTotp();
+  });
+
+  afterAll(async () => {
+    await resetMfaSettings();
   });
 
   describe('social flow', () => {

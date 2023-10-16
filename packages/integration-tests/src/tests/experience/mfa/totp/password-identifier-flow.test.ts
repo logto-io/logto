@@ -1,10 +1,14 @@
-import { ConnectorType, MfaFactor, MfaPolicy, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
-import { defaultSignUpMethod } from '#src/helpers/sign-in-experience.js';
+import {
+  defaultSignUpMethod,
+  enableMandatoryMfaWithTotp,
+  resetMfaSettings,
+} from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import { generateUsername } from '#src/utils.js';
@@ -14,13 +18,11 @@ import TotpTestingContext from './totp-testing-context.js';
 describe('MFA - TOTP', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
-    await updateSignInExperience({
-      signUp: defaultSignUpMethod,
-      mfa: {
-        policy: MfaPolicy.Mandatory,
-        factors: [MfaFactor.TOTP],
-      },
-    });
+    await enableMandatoryMfaWithTotp();
+  });
+
+  afterAll(async () => {
+    await resetMfaSettings();
   });
 
   describe('username and password', () => {
@@ -28,6 +30,7 @@ describe('MFA - TOTP', () => {
 
     beforeAll(async () => {
       await updateSignInExperience({
+        signUp: defaultSignUpMethod,
         signIn: {
           methods: [
             {
@@ -110,6 +113,7 @@ describe('MFA - TOTP', () => {
 
     beforeAll(async () => {
       await updateSignInExperience({
+        signUp: defaultSignUpMethod,
         signIn: {
           methods: [
             {
@@ -162,6 +166,7 @@ describe('MFA - TOTP', () => {
 
     beforeAll(async () => {
       await updateSignInExperience({
+        signUp: defaultSignUpMethod,
         signIn: {
           methods: [
             {

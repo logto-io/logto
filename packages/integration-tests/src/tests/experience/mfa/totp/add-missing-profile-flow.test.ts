@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { MfaPolicy, MfaFactor, SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -9,6 +9,7 @@ import {
   setEmailConnector,
   setSmsConnector,
 } from '#src/helpers/connector.js';
+import { enableMandatoryMfaWithTotp, resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import { generateEmail, generatePhone, waitFor } from '#src/utils.js';
@@ -16,12 +17,11 @@ import { generateEmail, generatePhone, waitFor } from '#src/utils.js';
 describe('MFA - TOTP', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
-    await updateSignInExperience({
-      mfa: {
-        policy: MfaPolicy.Mandatory,
-        factors: [MfaFactor.TOTP],
-      },
-    });
+    await enableMandatoryMfaWithTotp();
+  });
+
+  afterAll(async () => {
+    await resetMfaSettings();
   });
 
   it('should add missing password before binding missing TOTP factor', async () => {
