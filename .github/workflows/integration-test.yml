@@ -34,7 +34,7 @@ jobs:
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
 
     steps:
-      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0_beta.2
+      - uses: silverhand-io/actions-run-logto-integration-tests@v1.0.0_beta.3
         with:
           logto_artifact: integration-test-${{ github.sha }}
           test_target: ${{ matrix.target }}
