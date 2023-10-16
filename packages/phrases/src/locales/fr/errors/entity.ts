@@ -6,6 +6,9 @@ const entity = {
   not_exists_with_id: "Le {{name}} avec l'ID `{{id}}` n'existe pas.",
   not_found: "La ressource n'existe pas.",
   /** UNTRANSLATED */
+  relation_foreign_key_not_found:
+    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
+  /** UNTRANSLATED */
   duplicate_value_of_unique_field: 'The value of the unique field `{{field}}` is duplicated.',
 };
 

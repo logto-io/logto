@@ -4,6 +4,8 @@ import { sql, type CommonQueryMethods } from 'slonik';
 import snakecaseKeys from 'snakecase-keys';
 import { type z } from 'zod';
 
+import { DeletionError } from '#src/errors/SlonikError/index.js';
+
 type AtLeast2<T extends unknown[]> = `${T['length']}` extends '0' | '1' ? never : T;
 
 type TableInfo<Table, TableSingular, Schema> = {
@@ -135,7 +137,7 @@ export default class RelationQueries<
    */
   async delete(data: CamelCaseIdObject<Schemas[number]['tableSingular']>) {
     const snakeCaseData = snakecaseKeys(data);
-    return this.pool.query(sql`
+    const { rowCount } = await this.pool.query(sql`
       delete from ${this.table}
       where ${sql.join(
         Object.entries(snakeCaseData).map(
@@ -144,6 +146,10 @@ export default class RelationQueries<
         sql` and `
       )};
     `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(this.relationTable);
+    }
   }
 
   /**

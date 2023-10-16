@@ -115,6 +115,24 @@ describe('organization APIs', () => {
       ]);
     });
 
+    it('should fail when try to add empty user list', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const response = await organizationApi
+        .addUsers(organization.id, [])
+        .catch((error: unknown) => error);
+      expect(response instanceof HTTPError && response.response.statusCode).toBe(400);
+      await organizationApi.delete(organization.id);
+    });
+
+    it('should fail when try to add user to an organization that does not exist', async () => {
+      const response = await organizationApi.addUsers('0', ['0']).catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(422);
+      expect(JSON.parse(String(response.response.body))).toMatchObject(
+        expect.objectContaining({ code: 'entity.relation_foreign_key_not_found' })
+      );
+    });
+
     it('should be able to delete organization user', async () => {
       const organization = await organizationApi.create({ name: 'test' });
       const user = await createUser({ username: 'test' + randomId() });
@@ -124,6 +142,12 @@ describe('organization APIs', () => {
       const users = await organizationApi.getUsers(organization.id);
       expect(users).not.toContainEqual(user);
       await Promise.all([organizationApi.delete(organization.id), deleteUser(user.id)]);
+    });
+
+    it('should fail when try to delete user from an organization that does not exist', async () => {
+      const response = await organizationApi.deleteUser('0', '0').catch((error: unknown) => error);
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(404);
     });
   });
 

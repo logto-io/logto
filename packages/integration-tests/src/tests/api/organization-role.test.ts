@@ -57,6 +57,23 @@ describe('organization role APIs', () => {
       await roleApi.delete(role.id);
     });
 
+    it('should fail to create a role with some scopes if the scopes do not exist', async () => {
+      const name = 'test' + randomId();
+      const organizationScopeIds = ['0'];
+      const response = await roleApi
+        .create({ name, organizationScopeIds })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+
+      const { statusCode, body: raw } = response.response;
+      const body: unknown = JSON.parse(String(raw));
+      expect(statusCode).toBe(422);
+      expect(isKeyInObject(body, 'code') && body.code).toBe(
+        'entity.relation_foreign_key_not_found'
+      );
+    });
+
     it('should get organization roles successfully', async () => {
       const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
       const createdRoles = await Promise.all([
@@ -165,6 +182,31 @@ describe('organization role APIs', () => {
       ]);
     });
 
+    it('should fail when try to add non-existent scopes to a role', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      const response = await roleApi
+        .addScopes(role.id, [scope1.id, scope2.id, '0'])
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(422);
+      expect(JSON.parse(String(response.response.body))).toMatchObject(
+        expect.objectContaining({
+          code: 'entity.relation_foreign_key_not_found',
+        })
+      );
+
+      await Promise.all([
+        roleApi.delete(role.id),
+        scopeApi.delete(scope1.id),
+        scopeApi.delete(scope2.id),
+      ]);
+    });
+
     it('should be able to remove scopes from a role', async () => {
       const [role, scope1, scope2] = await Promise.all([
         roleApi.create({ name: 'test' + randomId() }),
@@ -191,6 +233,17 @@ describe('organization role APIs', () => {
         scopeApi.delete(scope1.id),
         scopeApi.delete(scope2.id),
       ]);
+    });
+
+    it('should fail when try to remove non-existent scopes from a role', async () => {
+      const [role] = await Promise.all([roleApi.create({ name: 'test' + randomId() })]);
+
+      const response = await roleApi.deleteScope(role.id, '0').catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(404);
+
+      await Promise.all([roleApi.delete(role.id)]);
     });
   });
 });
