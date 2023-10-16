@@ -1,4 +1,3 @@
-import { MfaFactor } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { demoAppUrl } from '#src/constants.js';
@@ -22,7 +21,7 @@ export default class ExpectTotpExperience extends ExpectExperience {
     // Wait for the page to load
     await waitFor(500);
 
-    this.toBeAt(`mfa-binding/${MfaFactor.TOTP}`);
+    this.toBeAt('mfa-binding/Totp');
     // Expect the QR code rendered
     await expect(this.page).toMatchElement(`${dcls('qrCode')} img[src*="data:image"]`);
 
@@ -61,7 +60,7 @@ export default class ExpectTotpExperience extends ExpectExperience {
     // Wait for the page to load
     await waitFor(500);
 
-    this.toBeAt(`mfa-verification/${MfaFactor.TOTP}`);
+    this.toBeAt('mfa-verification/Totp');
 
     const code = authenticator.generate(secret);
 
