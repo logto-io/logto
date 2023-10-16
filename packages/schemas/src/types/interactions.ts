@@ -1,7 +1,7 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { z } from 'zod';
 
-import { MfaFactor, jsonObjectGuard } from '../foundations/index.js';
+import { MfaFactor, jsonObjectGuard, webAuthnTransportGuard } from '../foundations/index.js';
 
 import type {
   EmailVerificationCodePayload,
@@ -110,7 +110,36 @@ export const bindTotpPayloadGuard = z.object({
 
 export type BindTotpPayload = z.infer<typeof bindTotpPayloadGuard>;
 
-export const bindMfaPayloadGuard = bindTotpPayloadGuard;
+export const bindWebAuthnPayloadGuard = z.object({
+  type: z.literal(MfaFactor.WebAuthn),
+  id: z.string(),
+  rawId: z.string(),
+  response: z.object({
+    clientDataJSON: z.string(),
+    attestationObject: z.string(),
+    authenticatorData: z.string().optional(),
+    transports: webAuthnTransportGuard.array().optional(),
+    publicKeyAlgorithm: z.number().optional(),
+    publicKey: z.string().optional(),
+  }),
+  authenticatorAttachment: z.enum(['cross-platform', 'platform']).optional(),
+  clientExtensionResults: z.object({
+    appid: z.boolean().optional(),
+    crepProps: z
+      .object({
+        rk: z.boolean().optional(),
+      })
+      .optional(),
+    hmacCreateSecret: z.boolean().optional(),
+  }),
+});
+
+export type BindWebAuthnPayload = z.infer<typeof bindWebAuthnPayloadGuard>;
+
+export const bindMfaPayloadGuard = z.discriminatedUnion('type', [
+  bindTotpPayloadGuard,
+  bindWebAuthnPayloadGuard,
+]);
 
 export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
 
@@ -129,9 +158,19 @@ export const pendingTotpGuard = z.object({
 
 export type PendingTotp = z.infer<typeof pendingTotpGuard>;
 
+export const pendingWebAuthnGuard = z.object({
+  type: z.literal(MfaFactor.WebAuthn),
+  challenge: z.string(),
+});
+
+export type PendingWebAuthn = z.infer<typeof pendingWebAuthnGuard>;
+
 // Some information like TOTP secret should be generated in the backend
 // and stored in the interaction temporarily.
-export const pendingMfaGuard = pendingTotpGuard;
+export const pendingMfaGuard = z.discriminatedUnion('type', [
+  pendingTotpGuard,
+  pendingWebAuthnGuard,
+]);
 
 export type PendingMfa = z.infer<typeof pendingMfaGuard>;
 
@@ -139,8 +178,19 @@ export const bindTotpGuard = pendingTotpGuard;
 
 export type BindTotp = z.infer<typeof bindTotpGuard>;
 
+export const bindWebAuthnGuard = z.object({
+  type: z.literal(MfaFactor.WebAuthn),
+  credentialId: z.string(),
+  publicKey: z.string(),
+  transports: webAuthnTransportGuard.array(),
+  counter: z.number(),
+  agent: z.string(),
+});
+
+export type BindWebAuthn = z.infer<typeof bindWebAuthnGuard>;
+
 // The type for binding new mfa verification to a user, not always equals to the pending type.
-export const bindMfaGuard = bindTotpGuard;
+export const bindMfaGuard = z.discriminatedUnion('type', [bindTotpGuard, bindWebAuthnGuard]);
 
 export type BindMfa = z.infer<typeof bindMfaGuard>;
 

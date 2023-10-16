@@ -1,8 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { demoAppApplicationId, InteractionEvent } from '@logto/schemas';
+import { demoAppApplicationId, InteractionEvent, MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { mockUser } from '#src/__mocks__/user.js';
+import { mockWebAuthnCreationOptions } from '#src/__mocks__/webauthn.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -52,6 +54,21 @@ const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
   })
 );
 
+const { generateWebAuthnRegistrationOptions } = await mockEsmWithActual(
+  './utils/webauthn.js',
+  () => ({
+    generateWebAuthnRegistrationOptions: jest.fn().mockResolvedValue(mockWebAuthnCreationOptions),
+  })
+);
+
+const { verifyIdentifier, verifyProfile } = await mockEsmWithActual(
+  './verifications/index.js',
+  () => ({
+    verifyIdentifier: jest.fn().mockResolvedValue({}),
+    verifyProfile: jest.fn(),
+  })
+);
+
 const { createLog, prependAllLogEntries } = createMockLogContext();
 
 await mockEsmWithActual(
@@ -79,6 +96,9 @@ const tenantContext = new MockTenant(
     signInExperiences: {
       findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
     },
+    users: {
+      findUserById: jest.fn().mockResolvedValue(mockUser),
+    },
   },
   {
     getLogtoConnectorById: async (connectorId: string) => {
@@ -93,6 +113,11 @@ const tenantContext = new MockTenant(
 
       // @ts-expect-error
       return connector as LogtoConnector;
+    },
+  },
+  {
+    users: {
+      generateUserId: jest.fn().mockReturnValue('generated-id'),
     },
   }
 );
@@ -195,6 +220,69 @@ describe('interaction routes', () => {
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('secret');
       expect(response.body).toHaveProperty('secretQrCode');
+    });
+  });
+
+  describe('POST /verification/webauthn-registration', () => {
+    const path = `${interactionPrefix}/${verificationPath}/webauthn-registration`;
+
+    afterEach(() => {
+      getInteractionStorage.mockClear();
+    });
+
+    it('should return WebAuthn options for new user', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.Register,
+      });
+      verifyIdentifier.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      verifyProfile.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      const response = await sessionRequest.post(path).send();
+      expect(generateWebAuthnRegistrationOptions).toBeCalled();
+      expect(storeInteractionResult).toBeCalledWith(
+        {
+          pendingMfa: {
+            type: MfaFactor.WebAuthn,
+            challenge: mockWebAuthnCreationOptions.challenge,
+          },
+          pendingAccountId: 'generated-id',
+        },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+      expect(response.statusCode).toEqual(200);
+      expect(response.body).toMatchObject(mockWebAuthnCreationOptions);
+    });
+
+    it('should return WebAuthn options for existing user', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.SignIn,
+      });
+      verifyIdentifier.mockResolvedValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      verifyProfile.mockResolvedValueOnce({
+        event: InteractionEvent.SignIn,
+      });
+      const response = await sessionRequest.post(path).send();
+      expect(response.statusCode).toEqual(200);
+      expect(generateWebAuthnRegistrationOptions).toBeCalled();
+      expect(storeInteractionResult).toBeCalledWith(
+        {
+          pendingMfa: {
+            type: MfaFactor.WebAuthn,
+            challenge: mockWebAuthnCreationOptions.challenge,
+          },
+        },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+      expect(response.body).toMatchObject(mockWebAuthnCreationOptions);
     });
   });
 });

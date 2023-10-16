@@ -18,6 +18,8 @@ const session = {
   connector_validation_session_not_found: '找不到連接器用於驗證 token 的信息。',
   identifier_not_found: '找不到用戶標識符。請返回並重新登錄。',
   interaction_not_found: '找不到互動會話。請返回並重新開始會話。',
+  /** UNTRANSLATED */
+  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
     /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
@@ -27,6 +29,8 @@ const session = {
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
+    /** UNTRANSLATED */
+    webauthn_verification_failed: 'WebAuthn verification failed.',
   },
 };
 

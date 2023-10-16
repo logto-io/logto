@@ -28,6 +28,12 @@ const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await impor
   './mfa-payload-verification.js'
 );
 
+const additionalParameters = {
+  rpId: 'logto.io',
+  userAgent: 'userAgent',
+  origin: 'https://logto.io',
+};
+
 describe('bindMfaPayloadVerification', () => {
   const baseCtx = {
     ...createContextWithRouteParameters(),
@@ -54,7 +60,8 @@ describe('bindMfaPayloadVerification', () => {
               type: MfaFactor.TOTP,
               secret: 'secret',
             },
-          }
+          },
+          additionalParameters
         )
       ).resolves.toMatchObject({
         type: MfaFactor.TOTP,
@@ -66,7 +73,12 @@ describe('bindMfaPayloadVerification', () => {
 
     it('should reject when pendingMfa is missing', async () => {
       await expect(
-        bindMfaPayloadVerification(baseCtx, { type: MfaFactor.TOTP, code: '123456' }, interaction)
+        bindMfaPayloadVerification(
+          baseCtx,
+          { type: MfaFactor.TOTP, code: '123456' },
+          interaction,
+          additionalParameters
+        )
       ).rejects.toEqual(new RequestError('session.mfa.pending_info_not_found'));
     });
 
@@ -83,7 +95,8 @@ describe('bindMfaPayloadVerification', () => {
               type: MfaFactor.TOTP,
               secret: 'secret',
             },
-          }
+          },
+          additionalParameters
         )
       ).rejects.toEqual(new RequestError('session.mfa.invalid_totp_code'));
     });

@@ -42,6 +42,7 @@
     "@logto/schemas": "workspace:^1.10.0",
     "@logto/shared": "workspace:^3.0.0",
     "@silverhand/essentials": "^2.8.4",
+    "@simplewebauthn/server": "^8.2.0",
     "@withtyped/client": "^0.7.22",
     "chalk": "^5.0.0",
     "clean-deep": "^3.4.0",

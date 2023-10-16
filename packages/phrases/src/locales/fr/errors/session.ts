@@ -26,6 +26,8 @@ const session = {
     'Identifiant utilisateur introuvable. Veuillez retourner en arrière et vous connecter à nouveau.',
   interaction_not_found:
     "Session d'interaction introuvable. Veuillez retourner en arrière et recommencer la session.",
+  /** UNTRANSLATED */
+  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
     /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
@@ -35,6 +37,8 @@ const session = {
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
     /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
+    /** UNTRANSLATED */
+    webauthn_verification_failed: 'WebAuthn verification failed.',
   },
 };
 
