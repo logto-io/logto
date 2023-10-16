@@ -1,8 +1,3 @@
-import {
-  OrganizationRoleScopeRelations,
-  OrganizationRoles,
-  OrganizationScopes,
-} from '@logto/schemas';
 import type { CommonQueryMethods } from 'slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -16,8 +11,6 @@ import { createHooksQueries } from '#src/queries/hooks.js';
 import { createLogQueries } from '#src/queries/log.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createOidcModelInstanceQueries } from '#src/queries/oidc-model-instance.js';
-import OrganizationRoleQueries from '#src/queries/organization-roles.js';
-import OrganizationScopeQueries from '#src/queries/organization-scopes.js';
 import OrganizationQueries from '#src/queries/organizations.js';
 import { createPasscodeQueries } from '#src/queries/passcode.js';
 import { createResourceQueries } from '#src/queries/resource.js';
@@ -28,7 +21,6 @@ import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.j
 import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
-import RelationQueries from '#src/utils/RelationQueries.js';
 
 export default class Queries {
   applications = createApplicationQueries(this.pool);
@@ -51,16 +43,6 @@ export default class Queries {
   domains = createDomainsQueries(this.pool);
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
   organizations = new OrganizationQueries(this.pool);
-  /** Organization template scope queries. */
-  organizationScopes = new OrganizationScopeQueries(this.pool);
-  /** Organization template role queries. */
-  organizationRoles = new OrganizationRoleQueries(this.pool);
-  organizationRoleScopeRelations = new RelationQueries(
-    this.pool,
-    OrganizationRoleScopeRelations.table,
-    OrganizationRoles.table,
-    OrganizationScopes.table
-  );
 
   constructor(
     public readonly pool: CommonQueryMethods,

@@ -35,14 +35,13 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
   ...[
     originalRouter,
     {
-      queries: { organizationScopes },
+      queries: {
+        organizations: { scopes },
+      },
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new SchemaRouter(
-    OrganizationScopes,
-    new OrganizationScopeActions(organizationScopes)
-  );
+  const router = new SchemaRouter(OrganizationScopes, new OrganizationScopeActions(scopes));
 
   originalRouter.use(router.routes());
 }
