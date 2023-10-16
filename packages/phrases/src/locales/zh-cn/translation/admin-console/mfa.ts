@@ -14,11 +14,8 @@ const mfa = {
   backup_code_error_hint: '要使用备用代码进行多因素身份验证，必须启用其他因素以确保用户成功登录。',
   policy: '策略',
   two_step_sign_in_policy: '登录时的两步验证策略',
-  two_step_sign_in_policy_description: '为登录时的应用程序定义双重验证要求。',
-  user_controlled: '用户控制',
-  user_controlled_description: '默认情况下禁用且非强制，但用户可以单独启用它。',
-  mandatory: '强制',
-  mandatory_description: '要求所有用户在每次登录时进行多因素身份验证。',
+  user_controlled: '用户可以个人选择启用 MFA。',
+  mandatory: '每次登录时对所有用户强制执行 MFA。',
   unlock_reminder:
     '解锁多因素身份验证以通过升级到付费计划验证安全性。如果需要帮助，请随时<a>联系我们</a>。',
   view_plans: '查看计划',

@@ -1,5 +1,4 @@
 import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
-import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -24,8 +23,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { type MfaConfigForm, type MfaConfig } from '../types';
 
 import FactorLabel from './FactorLabel';
-import PolicyOptionTitle from './PolicyOptionTitle';
-import { policyOptionTitlePropsMap } from './constants';
+import { policyOptionTitleMap } from './constants';
 import * as styles from './index.module.scss';
 import { convertMfaFormToConfig, convertMfaConfigToForm, validateBackupCodeFactor } from './utils';
 
@@ -84,11 +82,8 @@ function MfaForm({ data, onMfaUpdated }: Props) {
         onSubmit={onSubmit}
         onDiscard={reset}
       >
-        <FormCard title="mfa.factors">
-          <FormField title="mfa.multi_factors">
-            <div className={styles.fieldDescription}>
-              <DynamicT forKey="mfa.multi_factors_description" />
-            </div>
+        <FormCard title="mfa.factors" description="mfa.multi_factors_description">
+          <FormField title="mfa.multi_factors" headlineSpacing="large">
             <div className={styles.factorField}>
               <Switch
                 disabled={isMfaDisabled}
@@ -101,7 +96,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
                 {...register('webAuthnEnabled')}
               />
               <div className={styles.backupCodeField}>
-                <div className={classNames(styles.fieldDescription, styles.backupCodeDescription)}>
+                <div className={styles.backupCodeDescription}>
                   <DynamicT forKey="mfa.backup_code_setup_hint" />
                 </div>
                 <Switch
@@ -137,25 +132,16 @@ function MfaForm({ data, onMfaUpdated }: Props) {
           )}
         </FormCard>
         <FormCard title="mfa.policy">
-          <FormField title="mfa.two_step_sign_in_policy">
-            <div className={styles.fieldDescription}>
-              <DynamicT forKey="mfa.two_step_sign_in_policy_description" />
-            </div>
+          <FormField title="mfa.two_step_sign_in_policy" headlineSpacing="large">
             <Controller
               control={control}
               name="policy"
               render={({ field: { onChange, value, name } }) => (
                 <RadioGroup name={name} value={value} onChange={onChange}>
                   {Object.values(MfaPolicy).map((policy) => {
-                    const titleProps = policyOptionTitlePropsMap[policy];
+                    const title = policyOptionTitleMap[policy];
                     return (
-                      <Radio
-                        key={policy}
-                        isDisabled={isMfaDisabled}
-                        className={styles.policyRadio}
-                        title={<PolicyOptionTitle {...titleProps} />}
-                        value={policy}
-                      />
+                      <Radio key={policy} isDisabled={isMfaDisabled} title={title} value={policy} />
                     );
                   })}
                 </RadioGroup>
