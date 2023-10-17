@@ -1,4 +1,4 @@
-import { type ConnectorFactory, buildRawConnector } from '@logto/cli/lib/connector/index.js';
+import { type ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import type router from '@logto/cloud/routes';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
 import { Connectors, ConnectorType, connectorResponseGuard, type JsonObject } from '@logto/schemas';
@@ -33,6 +33,8 @@ const guardConnectorsQuota = async (
   }
 };
 
+const passwordlessConnector = new Set([ConnectorType.Email, ConnectorType.Sms]);
+
 export default function connectorRoutes<T extends AuthedRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
@@ -44,7 +46,8 @@ export default function connectorRoutes<T extends AuthedRouter>(
     insertConnector,
     updateConnector,
   } = tenant.queries.connectors;
-  const { getLogtoConnectorById, getLogtoConnectors } = tenant.connectors;
+  const { getLogtoConnectorById, getLogtoConnectors, getLogtoConnectorByTargetAndPlatform } =
+    tenant.connectors;
   const {
     quota,
     signInExperiences: { removeUnavailableSocialConnectorTargets },
@@ -60,7 +63,13 @@ export default function connectorRoutes<T extends AuthedRouter>(
           metadata: true,
           syncProfile: true,
         })
-        .merge(Connectors.createGuard.pick({ id: true }).partial()), // `id` is optional
+        /* 
+          Currently the id can not be locked until the connector is successfully created.
+          Some connectors providers require a pre-generated id to complete the configuration at the IdP side.
+          Logto connector creation process currently has a hard dependency on the provider's config data.
+          A optional pre-generated id from the client side is required to complete the connector creation process.
+        */
+        .merge(Connectors.createGuard.pick({ id: true }).partial()),
       response: connectorResponseGuard,
       status: [200, 422],
     }),
@@ -84,34 +93,31 @@ export default function connectorRoutes<T extends AuthedRouter>(
 
       await guardConnectorsQuota(connectorFactory, quota);
 
-      assertThat(
-        connectorFactory.metadata.isStandard !== true || Boolean(metadata?.target),
-        'connector.should_specify_target'
-      );
-      assertThat(
-        connectorFactory.metadata.isStandard === true || metadata === undefined,
-        'connector.cannot_overwrite_metadata_for_non_standard_connector'
-      );
-
-      const { count } = await countConnectorByConnectorId(connectorId);
-      assertThat(
-        count === 0 || connectorFactory.metadata.isStandard === true,
-        new RequestError({
-          code: 'connector.multiple_instances_not_supported',
-          status: 422,
-        })
-      );
-
       if (connectorFactory.type === ConnectorType.Social) {
-        const connectors = await getLogtoConnectors();
-        const duplicateConnector = connectors
-          .filter(({ type }) => type === ConnectorType.Social)
-          .find(
-            ({ metadata: { target, platform } }) =>
-              target ===
-                (metadata ? cleanDeep(metadata).target : connectorFactory.metadata.target) &&
-              platform === connectorFactory.metadata.platform
-          );
+        assertThat(
+          connectorFactory.metadata.isStandard !== true || Boolean(metadata?.target),
+          'connector.should_specify_target'
+        );
+
+        assertThat(
+          connectorFactory.metadata.isStandard === true || metadata === undefined,
+          'connector.cannot_overwrite_metadata_for_non_standard_connector'
+        );
+
+        const { count } = await countConnectorByConnectorId(connectorId);
+        assertThat(
+          count === 0 || connectorFactory.metadata.isStandard === true,
+          new RequestError({
+            code: 'connector.multiple_instances_not_supported',
+            status: 422,
+          })
+        );
+
+        const duplicateConnector = await getLogtoConnectorByTargetAndPlatform(
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          metadata?.target || connectorFactory.metadata.target,
+          connectorFactory.metadata.platform
+        );
         assertThat(
           !duplicateConnector,
           new RequestError(
@@ -128,11 +134,11 @@ export default function connectorRoutes<T extends AuthedRouter>(
       }
 
       if (config) {
-        const { rawConnector } = await buildRawConnector(connectorFactory);
-        validateConfig(config, rawConnector.configGuard);
+        validateConfig(config, connectorFactory.configGuard);
       }
 
       const insertConnectorId = proposedId ?? generateStandardShortId();
+
       await insertConnector({
         id: insertConnectorId,
         connectorId,
@@ -142,11 +148,9 @@ export default function connectorRoutes<T extends AuthedRouter>(
       /**
        * We can have only one working email/sms connector:
        * once we insert a new one, old connectors with same type should be deleted.
+       * TODO: should using transaction to ensure the atomicity of the operation. LOG-7260
        */
-      if (
-        connectorFactory.type === ConnectorType.Sms ||
-        connectorFactory.type === ConnectorType.Email
-      ) {
+      if (passwordlessConnector.has(connectorFactory.type)) {
         const logtoConnectors = await getLogtoConnectors();
         const conflictingConnectorIds = logtoConnectors
           .filter(

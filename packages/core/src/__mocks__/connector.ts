@@ -59,6 +59,7 @@ export const mockConnectorFactory: ConnectorFactory<typeof router> = {
   metadata: mockMetadata,
   type: ConnectorType.Social,
   path: 'random_path',
+  configGuard: any(),
   createConnector: jest.fn(),
 };
 
