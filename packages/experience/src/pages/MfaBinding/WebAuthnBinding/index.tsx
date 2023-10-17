@@ -1,15 +1,16 @@
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
-import SectionLayout from '@/Layout/SectionLayout';
+import Button from '@/components/Button';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import TotpCodeVerification from '@/containers/TotpCodeVerification';
 import useMfaFactorsState from '@/hooks/use-mfa-factors-state';
+import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
-const TotpVerification = () => {
+const WebAuthnBinding = () => {
   const mfaFactorsState = useMfaFactorsState();
+  const bindWebAuthn = useWebAuthnOperation(UserMfaFlow.MfaBinding);
 
   if (!mfaFactorsState) {
     return <ErrorPage title="error.invalid_session" />;
@@ -18,22 +19,17 @@ const TotpVerification = () => {
   const { availableFactors } = mfaFactorsState;
 
   return (
-    <SecondaryPageLayout title="mfa.verify_mfa_factors">
-      <SectionLayout
-        title="mfa.enter_one_time_code"
-        description="mfa.enter_one_time_code_description"
-      >
-        <TotpCodeVerification flow={UserMfaFlow.MfaVerification} />
-      </SectionLayout>
+    <SecondaryPageLayout title="mfa.create_a_passkey" description="mfa.create_passkey_description">
+      <Button title="mfa.create_a_passkey" onClick={bindWebAuthn} />
       {availableFactors.length > 1 && (
         <SwitchMfaFactorsLink
-          flow={UserMfaFlow.MfaVerification}
+          flow={UserMfaFlow.MfaBinding}
           factors={availableFactors}
-          className={styles.switchFactorLink}
+          className={styles.switchLink}
         />
       )}
     </SecondaryPageLayout>
   );
 };
 
-export default TotpVerification;
+export default WebAuthnBinding;

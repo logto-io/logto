@@ -15,8 +15,10 @@ import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import MfaBinding from './pages/MfaBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
+import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
 import MfaVerification from './pages/MfaVerification';
 import TotpVerification from './pages/MfaVerification/TotpVerification';
+import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -80,6 +82,7 @@ const App = () => {
                         <Route path={UserMfaFlow.MfaBinding}>
                           <Route index element={<MfaBinding />} />
                           <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
                         </Route>
 
                         {/* Mfa verification */}
@@ -87,6 +90,7 @@ const App = () => {
                         <Route path={UserMfaFlow.MfaVerification}>
                           <Route index element={<MfaVerification />} />
                           <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
                         </Route>
                       </>
                     )}

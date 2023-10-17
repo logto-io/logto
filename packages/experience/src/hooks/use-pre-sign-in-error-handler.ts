@@ -4,9 +4,9 @@ import { useMemo } from 'react';
 import { isDevelopmentFeaturesEnabled } from '@/constants/env';
 
 import { type ErrorHandlers } from './use-error-handler';
-import useMfaVerificationErrorHandler, {
+import useMfaErrorHandler, {
   type Options as UseMfaVerificationErrorHandlerOptions,
-} from './use-mfa-verification-error-handler';
+} from './use-mfa-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
@@ -15,14 +15,14 @@ type Options = UseRequiredProfileErrorHandlerOptions & UseMfaVerificationErrorHa
 
 const usePreSignInErrorHandler = ({ replace, linkSocial }: Options = {}): ErrorHandlers => {
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({ replace, linkSocial });
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace });
+  const mfaErrorHandler = useMfaErrorHandler({ replace });
 
   return useMemo(
     () => ({
       ...requiredProfileErrorHandler,
-      ...conditional(isDevelopmentFeaturesEnabled && mfaVerificationErrorHandler),
+      ...conditional(isDevelopmentFeaturesEnabled && mfaErrorHandler),
     }),
-    [mfaVerificationErrorHandler, requiredProfileErrorHandler]
+    [mfaErrorHandler, requiredProfileErrorHandler]
   );
 };
 

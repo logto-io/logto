@@ -7,7 +7,7 @@ import { setUserPassword } from '@/apis/interaction';
 import SetPassword from '@/containers/SetPassword';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
-import useMfaVerificationErrorHandler from '@/hooks/use-mfa-verification-error-handler';
+import useMfaErrorHandler from '@/hooks/use-mfa-error-handler';
 import usePasswordAction, { type SuccessHandler } from '@/hooks/use-password-action';
 import { usePasswordPolicy, useSieMethods } from '@/hooks/use-sie';
 
@@ -23,7 +23,7 @@ const RegisterPassword = () => {
     setErrorMessage(undefined);
   }, []);
 
-  const mfaVerificationErrorHandler = useMfaVerificationErrorHandler({ replace: true });
+  const mfaErrorHandler = useMfaErrorHandler({ replace: true });
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -32,9 +32,9 @@ const RegisterPassword = () => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      ...mfaVerificationErrorHandler,
+      ...mfaErrorHandler,
     }),
-    [navigate, mfaVerificationErrorHandler, show]
+    [navigate, mfaErrorHandler, show]
   );
 
   const successHandler: SuccessHandler<typeof setUserPassword> = useCallback((result) => {

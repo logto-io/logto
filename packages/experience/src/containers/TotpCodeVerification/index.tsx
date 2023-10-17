@@ -8,13 +8,13 @@ import useTotpCodeVerification from './use-totp-code-verification';
 
 const totpCodeLength = 6;
 
-type Options = {
+type Props = {
   flow: UserMfaFlow;
 };
 
-const TotpCodeVerification = ({ flow }: Options) => {
+const TotpCodeVerification = ({ flow }: Props) => {
   const [code, setCode] = useState<string[]>([]);
-  const { errorMessage, onSubmit } = useTotpCodeVerification({ flow });
+  const { errorMessage, onSubmit } = useTotpCodeVerification(flow);
 
   return (
     <VerificationCodeInput
@@ -26,7 +26,7 @@ const TotpCodeVerification = ({ flow }: Options) => {
         setCode(code);
 
         if (code.length === totpCodeLength && code.every(Boolean)) {
-          void onSubmit(code.join(''));
+          onSubmit(code.join(''));
         }
       }}
     />

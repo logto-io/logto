@@ -71,17 +71,11 @@ const mfaFactorsGuard = s.array(
   ])
 );
 
-export const missingMfaFactorsErrorDataGuard = s.object({
+export const mfaErrorDataGuard = s.object({
   availableFactors: mfaFactorsGuard,
 });
 
-export const requireMfaFactorsErrorDataGuard = s.object({
-  availableFactors: mfaFactorsGuard,
-});
-
-export const mfaFactorsStateGuard = s.object({
-  availableFactors: mfaFactorsGuard,
-});
+export const mfaFactorsStateGuard = mfaErrorDataGuard;
 
 export type MfaFactorsState = s.Infer<typeof mfaFactorsStateGuard>;
 

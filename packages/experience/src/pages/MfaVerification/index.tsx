@@ -1,17 +1,12 @@
-import { useLocation } from 'react-router-dom';
-import { validate } from 'superstruct';
-
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import MfaFactorList from '@/containers/MfaFactorList';
+import useMfaFactorsState from '@/hooks/use-mfa-factors-state';
 import { UserMfaFlow } from '@/types';
-import { mfaFactorsStateGuard } from '@/types/guard';
 
 import ErrorPage from '../ErrorPage';
 
 const MfaVerification = () => {
-  const { state } = useLocation();
-  const [, mfaFactorsState] = validate(state, mfaFactorsStateGuard);
-  const { availableFactors } = mfaFactorsState ?? {};
+  const { availableFactors } = useMfaFactorsState() ?? {};
 
   if (!availableFactors || availableFactors.length === 0) {
     return <ErrorPage title="error.invalid_session" />;
