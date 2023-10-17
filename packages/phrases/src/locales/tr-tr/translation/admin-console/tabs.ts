@@ -6,6 +6,8 @@ const tabs = {
   sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
   webhooks: 'Webhooks',
+  /** UNTRANSLATED */
+  organizations: 'Organizations',
   users: 'Kullanıcı Yönetimi',
   audit_logs: 'Denetim Kayıtları',
   roles: 'Roller',

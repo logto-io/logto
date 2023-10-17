@@ -33,6 +33,8 @@ const general = {
   copied: '복사됨',
   required: '필수',
   add_another: '새로 추가',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: '정말로 {{title}}을/를 삭제할까요?',
   settings_nav: '설정',
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',
@@ -57,6 +59,10 @@ const general = {
   unknown_error: '알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요.',
   select: '선택',
   contact_us_action: '문의하기',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

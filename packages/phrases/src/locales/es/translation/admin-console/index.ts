@@ -17,6 +17,7 @@ import log_details from './log-details.js';
 import logs from './logs.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
+import organizations from './organizations.js';
 import permissions from './permissions.js';
 import profile from './profile.js';
 import role_details from './role-details.js';
@@ -75,6 +76,7 @@ const admin_console = {
   upsell,
   guide,
   mfa,
+  organizations,
 };
 
 export default Object.freeze(admin_console);

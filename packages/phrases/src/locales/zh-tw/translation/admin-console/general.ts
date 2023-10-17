@@ -33,6 +33,8 @@ const general = {
   copied: '已複製',
   required: '必填',
   add_another: '新增',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: '你確定要刪除這個 {{title}} 嗎?',
   settings_nav: '設置',
   unsaved_changes_warning: '還有未儲存的變更, 確定要離開嗎？',
@@ -57,6 +59,10 @@ const general = {
   unknown_error: '未知錯誤，請稍後重試。',
   select: '選擇',
   contact_us_action: '聯絡我們',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);
