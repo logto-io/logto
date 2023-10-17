@@ -14,21 +14,21 @@
 
 Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a seamless developer experience and is well-suited for individuals and growing companies.
 
-🧑‍💻 **Comprehensive Frontend-to-Backend Identity Solution**
+🧑‍💻 **Comprehensive frontend-to-backend identity solution**
 
 - Enables OIDC-based authentication and RBAC authorization.
 - Supports passwordless sign-in, along with various options like Email, Phone number, Username, Google, Facebook, and other social sign-in methods.
 - Offers beautiful UI components with customizable CSS to suit your business needs.
 
-📦 **Out-of-the-Box Infrastructure**
+📦 **Out-of-the-box infrastructure**
 
 - Includes a ready-to-use management API, serving as your authentication provider, thus eliminating the need for extra implementation.
 - Provides SDKs that seamlessly integrate your apps with Logto across multiple platforms and languages, tailored to your development environment.
 - Offers flexible connectors that can be scaled with community contributions and customized with SAML, OAuth, and OIDC protocols.
 
-💻 **Enterprise-Ready Solutions**
+💻 **Enterprise-ready solutions**
 
-- Implements RBAC for scalable role authorization, catering to a wide range of use cases.
+- Implements Role-Based Access Control (RBAC) for scalable role authorization, catering to a wide range of use cases.
 - Facilitates user management and provides audit logs for understanding identity-related user information and maintaining security.
 - Currently working on Single Sign-On (SSO), Organizations, and Multi-Factor Authentication (MFA) features. Stay tuned!
 
