@@ -1,4 +1,8 @@
-import { SupportedSigningKeyAlgorithm, type AdminConsoleData } from '@logto/schemas';
+import {
+  SupportedSigningKeyAlgorithm,
+  type AdminConsoleData,
+  LogtoOidcConfigKeyType,
+} from '@logto/schemas';
 
 import {
   deleteOidcKey,
@@ -33,8 +37,8 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should get OIDC keys successfully', async () => {
-    const privateKeys = await getOidcKeys('private-keys');
-    const cookieKeys = await getOidcKeys('cookie-keys');
+    const privateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
+    const cookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
 
     expect(privateKeys).toHaveLength(1);
     expect(privateKeys[0]).toMatchObject(
@@ -49,24 +53,27 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should not be able to delete the only private key', async () => {
-    const privateKeys = await getOidcKeys('private-keys');
+    const privateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
     expect(privateKeys).toHaveLength(1);
-    await expectRejects(deleteOidcKey('private-keys', privateKeys[0]!.id), {
+    await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, privateKeys[0]!.id), {
       code: 'oidc.key_required',
       statusCode: 422,
     });
 
-    const cookieKeys = await getOidcKeys('cookie-keys');
+    const cookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
     expect(cookieKeys).toHaveLength(1);
-    await expectRejects(deleteOidcKey('cookie-keys', cookieKeys[0]!.id), {
+    await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.CookieKeys, cookieKeys[0]!.id), {
       code: 'oidc.key_required',
       statusCode: 422,
     });
   });
 
   it('should rotate OIDC keys successfully', async () => {
-    const existingPrivateKeys = await getOidcKeys('private-keys');
-    const newPrivateKeys = await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
+    const existingPrivateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
+    const newPrivateKeys = await rotateOidcKeys(
+      LogtoOidcConfigKeyType.PrivateKeys,
+      SupportedSigningKeyAlgorithm.RSA
+    );
 
     expect(newPrivateKeys).toHaveLength(2);
     expect(newPrivateKeys).toMatchObject([
@@ -77,8 +84,8 @@ describe('admin console sign-in experience', () => {
     ]);
     expect(newPrivateKeys[1]?.id).toBe(existingPrivateKeys[0]?.id);
 
-    const existingCookieKeys = await getOidcKeys('cookie-keys');
-    const newCookieKeys = await rotateOidcKeys('cookie-keys');
+    const existingCookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
+    const newCookieKeys = await rotateOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
 
     expect(newCookieKeys).toHaveLength(2);
     expect(newCookieKeys).toMatchObject([
@@ -91,7 +98,7 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should only keep 2 recent OIDC keys', async () => {
-    const privateKeys = await rotateOidcKeys('private-keys'); // Defaults to 'EC' algorithm
+    const privateKeys = await rotateOidcKeys(LogtoOidcConfigKeyType.PrivateKeys); // Defaults to 'EC' algorithm
 
     expect(privateKeys).toHaveLength(2);
     expect(privateKeys).toMatchObject([
@@ -101,7 +108,10 @@ describe('admin console sign-in experience', () => {
       { id: expect.any(String), signingKeyAlgorithm: 'RSA', createdAt: expect.any(Number) },
     ]);
 
-    const privateKeys2 = await rotateOidcKeys('private-keys', SupportedSigningKeyAlgorithm.RSA);
+    const privateKeys2 = await rotateOidcKeys(
+      LogtoOidcConfigKeyType.PrivateKeys,
+      SupportedSigningKeyAlgorithm.RSA
+    );
 
     expect(privateKeys2).toHaveLength(2);
     expect(privateKeys2).toMatchObject([

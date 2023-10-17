@@ -2,6 +2,7 @@ import {
   SupportedSigningKeyAlgorithm,
   type AdminConsoleData,
   type OidcConfigKeysResponse,
+  type LogtoOidcConfigKeyType,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -16,14 +17,14 @@ export const updateAdminConsoleConfig = async (payload: Partial<AdminConsoleData
     })
     .json<AdminConsoleData>();
 
-export const getOidcKeys = async (keyType: 'private-keys' | 'cookie-keys') =>
+export const getOidcKeys = async (keyType: LogtoOidcConfigKeyType) =>
   authedAdminApi.get(`configs/oidc/${keyType}`).json<OidcConfigKeysResponse[]>();
 
-export const deleteOidcKey = async (keyType: 'private-keys' | 'cookie-keys', id: string) =>
+export const deleteOidcKey = async (keyType: LogtoOidcConfigKeyType, id: string) =>
   authedAdminApi.delete(`configs/oidc/${keyType}/${id}`);
 
 export const rotateOidcKeys = async (
-  keyType: 'private-keys' | 'cookie-keys',
+  keyType: LogtoOidcConfigKeyType,
   signingKeyAlgorithm: SupportedSigningKeyAlgorithm = SupportedSigningKeyAlgorithm.EC
 ) =>
   authedAdminApi
