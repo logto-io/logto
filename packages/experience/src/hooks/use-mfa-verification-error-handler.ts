@@ -27,23 +27,23 @@ const useMfaVerificationErrorHandler = ({ replace }: Options = {}) => {
     () => ({
       'user.missing_mfa': (error) => {
         const [_, data] = validate(error.data, missingMfaFactorsErrorDataGuard);
-        const missingFactors = data?.missingFactors ?? [];
+        const availableFactors = data?.availableFactors ?? [];
 
-        if (missingFactors.length === 0) {
+        if (availableFactors.length === 0) {
           setToast(error.message);
           return;
         }
 
-        if (missingFactors.length > 1) {
-          const state: MfaFactorsState = { availableFactors: missingFactors };
+        if (availableFactors.length > 1) {
+          const state: MfaFactorsState = { availableFactors };
           navigate({ pathname: `/${UserMfaFlow.MfaBinding}` }, { replace, state });
           return;
         }
 
-        const factor = missingFactors[0];
+        const factor = availableFactors[0];
 
         if (factor === MfaFactor.TOTP) {
-          void startTotpBinding(missingFactors);
+          void startTotpBinding(availableFactors);
         }
         // Todo: @xiaoyijun handle other factors
       },
