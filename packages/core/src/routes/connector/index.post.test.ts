@@ -2,6 +2,7 @@ import { ConnectorPlatform } from '@logto/connector-kit';
 import type { Connector } from '@logto/schemas';
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { type Nullable } from '@silverhand/essentials';
 import { any } from 'zod';
 
 import {
@@ -64,6 +65,20 @@ const tenantContext = new MockTenant(
       );
 
       return connector;
+    },
+    getLogtoConnectorByTargetAndPlatform: async (
+      target: string,
+      platform: Nullable<ConnectorPlatform>
+    ) => {
+      const connectors = await getLogtoConnectors();
+
+      return connectors.find(({ type, metadata }) => {
+        return (
+          type === ConnectorType.Social &&
+          metadata.target === target &&
+          metadata.platform === platform
+        );
+      });
     },
   },
   {

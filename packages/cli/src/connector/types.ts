@@ -8,7 +8,7 @@ export type ConnectorFactory<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Router<any, BaseRoutes, string>,
   U extends AllConnector = AllConnector,
-> = Pick<U, 'type' | 'metadata'> & {
+> = Pick<U, 'type' | 'metadata' | 'configGuard'> & {
   createConnector: CreateConnector<U, T>;
   path: string;
 };

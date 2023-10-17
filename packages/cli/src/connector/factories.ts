@@ -23,11 +23,13 @@ export const loadConnectorFactories = async (
       try {
         const createConnector = await loadConnector(packagePath, ignoreVersionMismatch);
         const rawConnector = await createConnector({ getConfig: notImplemented });
+
         validateConnectorModule(rawConnector);
 
         return {
           metadata: await parseMetadata(rawConnector.metadata, packagePath),
           type: rawConnector.type,
+          configGuard: rawConnector.configGuard,
           createConnector,
           path: packagePath,
         };

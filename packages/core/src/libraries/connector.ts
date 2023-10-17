@@ -1,7 +1,7 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
-import type { AllConnector } from '@logto/connector-kit';
-import { validateConfig, ServiceConnector } from '@logto/connector-kit';
-import { conditional, pick, trySafe } from '@silverhand/essentials';
+import type { AllConnector, ConnectorPlatform } from '@logto/connector-kit';
+import { validateConfig, ServiceConnector, ConnectorType } from '@logto/connector-kit';
+import { type Nullable, conditional, pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -119,10 +119,26 @@ export const createConnectorLibrary = (
     return pickedConnector;
   };
 
+  const getLogtoConnectorByTargetAndPlatform = async (
+    target: string,
+    platform: Nullable<ConnectorPlatform>
+  ) => {
+    const connectors = await getLogtoConnectors();
+
+    return connectors.find(({ type, metadata }) => {
+      return (
+        type === ConnectorType.Social &&
+        metadata.target === target &&
+        metadata.platform === platform
+      );
+    });
+  };
+
   return {
     getConnectorConfig,
     getLogtoConnectors,
     getLogtoConnectorsWellKnown,
     getLogtoConnectorById,
+    getLogtoConnectorByTargetAndPlatform,
   };
 };
