@@ -34,6 +34,7 @@ const mfa = {
   save_backup_code_description:
     'You can use one of these backup code to access your account if you have trouble during 2-step authentication in another ways. Each code may be used only once.',
   backup_code_hint: 'Make sure copy them and save in a safe place.',
+  enter_a_backup_code: 'Enter a backup code',
   enter_backup_code_description:
     'Enter the backup code you saved when the 2-step authentication was initially enabled.',
   create_a_passkey: 'Create a passkey',

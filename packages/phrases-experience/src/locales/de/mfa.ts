@@ -35,6 +35,7 @@ const mfa = {
     'Sie können einen dieser Backup-Codes verwenden, um auf Ihr Konto zuzugreifen, wenn Sie Probleme bei der 2-Stufen-Authentifizierung auf andere Weise haben. Jeder Code kann nur einmal verwendet werden.',
   backup_code_hint:
     'Stellen Sie sicher, dass Sie sie kopieren und an einem sicheren Ort aufbewahren.',
+  enter_a_backup_code: 'Geben Sie einen Sicherungscode ein',
   enter_backup_code_description:
     'Geben Sie den Backup-Code ein, den Sie gespeichert haben, als die 2-Stufen-Authentifizierung ursprünglich aktiviert wurde.',
   create_a_passkey: 'Passwort-Schlüssel erstellen',

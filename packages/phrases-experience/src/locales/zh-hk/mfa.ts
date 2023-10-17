@@ -31,6 +31,7 @@ const mfa = {
   save_backup_code_description:
     '如果您在其他方式的兩步驗證期間遇到問題，您可以使用這些備用碼之一來訪問您的帳戶。每個代碼只能使用一次。',
   backup_code_hint: '確保複製並儲存在安全的地方。',
+  enter_a_backup_code: '輸入備用碼',
   enter_backup_code_description: '在首次啟用兩步驗證時儲存的備用碼。',
   create_a_passkey: '建立 Passkey',
   create_passkey_description:

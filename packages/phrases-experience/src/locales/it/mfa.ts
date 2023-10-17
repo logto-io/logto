@@ -34,6 +34,7 @@ const mfa = {
   save_backup_code_description:
     "Puoi usare uno di questi codici di backup per accedere al tuo account se incontri problemi durante l'autenticazione a due fattori in altri modi. Ogni codice può essere utilizzato solo una volta.",
   backup_code_hint: 'Assicurati di copiarli e salvarli in un luogo sicuro.',
+  enter_a_backup_code: 'Inserisci un codice di backup',
   enter_backup_code_description:
     "Inserisci il codice di backup che hai salvato quando è stata attivata l'autenticazione a due fattori.",
   create_a_passkey: 'Crea una chiave di accesso',
