@@ -116,13 +116,13 @@ describe('submit action', () => {
     jest.clearAllMocks();
   });
 
-  describe('register with bindMfa', () => {
+  describe('register with bindMfas', () => {
     it('should handle totp', async () => {
       const interaction: VerifiedRegisterInteractionResult = {
         event: InteractionEvent.Register,
         profile,
         identifiers,
-        bindMfa: { type: MfaFactor.TOTP, secret: 'secret' },
+        bindMfas: [{ type: MfaFactor.TOTP, secret: 'secret' }],
       };
 
       await submitInteraction(interaction, ctx, tenant);
@@ -151,7 +151,7 @@ describe('submit action', () => {
         event: InteractionEvent.Register,
         profile,
         identifiers,
-        bindMfa: mockWebAuthnBind,
+        bindMfas: [mockWebAuthnBind],
         pendingAccountId: 'id',
       };
 
@@ -186,10 +186,12 @@ describe('submit action', () => {
         event: InteractionEvent.SignIn,
         accountId: 'foo',
         identifiers,
-        bindMfa: {
-          type: MfaFactor.TOTP,
-          secret: 'secret',
-        },
+        bindMfas: [
+          {
+            type: MfaFactor.TOTP,
+            secret: 'secret',
+          },
+        ],
       };
 
       await submitInteraction(interaction, ctx, tenant);
@@ -221,7 +223,7 @@ describe('submit action', () => {
         event: InteractionEvent.SignIn,
         accountId: 'foo',
         identifiers,
-        bindMfa: mockWebAuthnBind,
+        bindMfas: [mockWebAuthnBind],
       };
 
       await submitInteraction(interaction, ctx, tenant);

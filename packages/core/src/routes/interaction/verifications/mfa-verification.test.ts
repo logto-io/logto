@@ -88,14 +88,16 @@ describe('validateMandatoryBindMfa', () => {
       );
     });
 
-    it('bindMfa exists should pass', async () => {
+    it('bindMfas exists should pass', async () => {
       await expect(
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, {
           ...interaction,
-          bindMfa: {
-            type: MfaFactor.TOTP,
-            secret: 'foo',
-          },
+          bindMfas: [
+            {
+              type: MfaFactor.TOTP,
+              secret: 'foo',
+            },
+          ],
         })
       ).resolves.not.toThrow();
     });
@@ -130,15 +132,17 @@ describe('validateMandatoryBindMfa', () => {
       ).resolves.not.toThrow();
     });
 
-    it('user mfaVerifications missing, bindMfa existing and required should pass', async () => {
+    it('user mfaVerifications missing, bindMfas existing and required should pass', async () => {
       findUserById.mockResolvedValueOnce(mockUser);
       await expect(
         validateMandatoryBindMfa(tenantContext, mfaRequiredCtx, {
           ...signInInteraction,
-          bindMfa: {
-            type: MfaFactor.TOTP,
-            secret: 'foo',
-          },
+          bindMfas: [
+            {
+              type: MfaFactor.TOTP,
+              secret: 'foo',
+            },
+          ],
         })
       ).resolves.not.toThrow();
     });
@@ -161,10 +165,12 @@ describe('verifyBindMfa', () => {
     await expect(
       verifyBindMfa(tenantContext, {
         ...interaction,
-        bindMfa: {
-          type: MfaFactor.TOTP,
-          secret: 'foo',
-        },
+        bindMfas: [
+          {
+            type: MfaFactor.TOTP,
+            secret: 'foo',
+          },
+        ],
       })
     ).resolves.not.toThrow();
   });
@@ -174,10 +180,12 @@ describe('verifyBindMfa', () => {
     await expect(
       verifyBindMfa(tenantContext, {
         ...signInInteraction,
-        bindMfa: {
-          type: MfaFactor.TOTP,
-          secret: 'foo',
-        },
+        bindMfas: [
+          {
+            type: MfaFactor.TOTP,
+            secret: 'foo',
+          },
+        ],
       })
     ).resolves.not.toThrow();
   });
@@ -187,10 +195,12 @@ describe('verifyBindMfa', () => {
     await expect(
       verifyBindMfa(tenantContext, {
         ...signInInteraction,
-        bindMfa: {
-          type: MfaFactor.TOTP,
-          secret: 'foo',
-        },
+        bindMfas: [
+          {
+            type: MfaFactor.TOTP,
+            secret: 'foo',
+          },
+        ],
       })
     ).rejects.toMatchError(new RequestError({ code: 'user.totp_already_in_use', status: 422 }));
   });

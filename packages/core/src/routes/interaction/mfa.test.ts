@@ -93,7 +93,7 @@ describe('interaction routes (MFA verification)', () => {
     });
   });
 
-  describe('PUT /interaction/bind-mfa', () => {
+  describe('POST /interaction/bind-mfa', () => {
     const path = `${interactionPrefix}/bind-mfa`;
 
     it('should return 204 and store results in session', async () => {
@@ -104,13 +104,13 @@ describe('interaction routes (MFA verification)', () => {
         code: '123456',
       };
 
-      const response = await sessionRequest.put(path).send(body);
+      const response = await sessionRequest.post(path).send(body);
       expect(response.status).toEqual(204);
       expect(getInteractionStorage).toBeCalled();
       expect(verifyMfaSettings).toBeCalled();
       expect(bindMfaPayloadVerification).toBeCalled();
       expect(storeInteractionResult).toBeCalledWith(
-        { bindMfa: mockTotpBind },
+        { bindMfas: [mockTotpBind] },
         expect.anything(),
         expect.anything(),
         expect.anything()

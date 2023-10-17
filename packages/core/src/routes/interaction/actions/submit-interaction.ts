@@ -33,32 +33,37 @@ import { clearInteractionStorage } from '../utils/interaction.js';
 
 import { postAffiliateLogs, parseUserProfile } from './helpers.js';
 
-const parseBindMfa = ({
-  bindMfa,
-}: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult):
-  | User['mfaVerifications'][number]
-  | undefined => {
-  if (!bindMfa) {
-    return;
+const parseBindMfas = ({
+  bindMfas,
+}:
+  | VerifiedSignInInteractionResult
+  | VerifiedRegisterInteractionResult): User['mfaVerifications'] => {
+  if (!bindMfas) {
+    return [];
   }
 
-  if (bindMfa.type === MfaFactor.TOTP) {
-    return {
-      type: MfaFactor.TOTP,
-      key: bindMfa.secret,
-      id: generateStandardId(),
-      createdAt: new Date().toISOString(),
-    };
-  }
+  return bindMfas.map((bindMfa) => {
+    if (bindMfa.type === MfaFactor.TOTP) {
+      return {
+        type: MfaFactor.TOTP,
+        key: bindMfa.secret,
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+      };
+    }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (bindMfa.type === MfaFactor.WebAuthn) {
-    return {
-      ...bindMfa,
-      id: generateStandardId(),
-      createdAt: new Date().toISOString(),
-    };
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (bindMfa.type === MfaFactor.WebAuthn) {
+      return {
+        ...bindMfa,
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+      };
+    }
+
+    // Not expected to happen, the above if statements should cover all cases
+    throw new Error('Unsupported MFA factor');
+  });
 };
 
 const getInitialUserRoles = (
@@ -91,7 +96,7 @@ export default async function submitInteraction(
     const { pendingAccountId } = interaction;
     const id = pendingAccountId ?? (await generateUserId());
     const userProfile = await parseUserProfile(tenantContext, interaction);
-    const mfaVerification = parseBindMfa(interaction);
+    const mfaVerifications = parseBindMfas(interaction);
 
     const { client_id } = ctx.interactionDetails.params;
 
@@ -106,7 +111,11 @@ export default async function submitInteraction(
       {
         id,
         ...userProfile,
-        ...conditional(mfaVerification && { mfaVerifications: [mfaVerification] }),
+        ...conditional(
+          mfaVerifications.length > 0 && {
+            mfaVerifications,
+          }
+        ),
       },
       getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
     );
@@ -138,12 +147,14 @@ export default async function submitInteraction(
   if (event === InteractionEvent.SignIn) {
     const user = await findUserById(accountId);
     const updateUserProfile = await parseUserProfile(tenantContext, interaction, user);
-    const mfaVerification = parseBindMfa(interaction);
+    const mfaVerifications = parseBindMfas(interaction);
 
     await updateUserById(accountId, {
       ...updateUserProfile,
       ...conditional(
-        mfaVerification && { mfaVerifications: [...user.mfaVerifications, mfaVerification] }
+        mfaVerifications.length > 0 && {
+          mfaVerifications: [...user.mfaVerifications, ...mfaVerifications],
+        }
       ),
     });
     await assignInteractionResults(ctx, provider, { login: { accountId } });

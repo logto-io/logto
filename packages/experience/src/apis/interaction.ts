@@ -243,7 +243,7 @@ export const generateWebAuthnAuthnOptions = async () =>
     .json<WebAuthnAuthenticationOptions>();
 
 export const bindMfa = async (payload: BindMfaPayload) => {
-  await api.put(`${interactionPrefix}/bind-mfa`, { json: payload });
+  await api.post(`${interactionPrefix}/bind-mfa`, { json: payload });
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };

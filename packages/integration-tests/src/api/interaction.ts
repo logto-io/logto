@@ -69,9 +69,9 @@ export const putInteractionProfile = async (cookie: string, payload: Profile) =>
     })
     .json();
 
-export const putInteractionBindMfa = async (cookie: string, payload: BindMfaPayload) =>
+export const postInteractionBindMfa = async (cookie: string, payload: BindMfaPayload) =>
   api
-    .put('interaction/bind-mfa', {
+    .post('interaction/bind-mfa', {
       headers: { cookie },
       json: payload,
       followRedirect: false,

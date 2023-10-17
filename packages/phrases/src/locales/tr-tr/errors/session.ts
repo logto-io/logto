@@ -38,6 +38,8 @@ const session = {
     webauthn_verification_failed: 'WebAuthn verification failed.',
     /** UNTRANSLATED */
     webauthn_verification_not_found: 'WebAuthn verification not found.',
+    /** UNTRANSLATED */
+    bind_mfa_existed: 'MFA already exists.',
   },
 };
 

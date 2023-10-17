@@ -26,8 +26,8 @@ export default function mfaRoutes<T extends IRouterParamContext>(
 ) {
   const { provider, queries } = tenant;
 
-  // Update New MFA
-  router.put(
+  // Set New MFA
+  router.post(
     `${interactionPrefix}/bind-mfa`,
     koaGuard({
       body: bindMfaPayloadGuard,
@@ -52,6 +52,11 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         verifyMfaSettings(bindMfaPayload.type, signInExperience);
       }
 
+      const { bindMfas = [] } = interactionStorage;
+      // Only allow one factor for now,
+      // TODO @sijie: revisit when implementing backup code factor
+      assertThat(bindMfas.length === 0, 'session.mfa.bind_mfa_existed');
+
       const { hostname, origin } = EnvSet.values.endpoint;
       const bindMfa = await bindMfaPayloadVerification(ctx, bindMfaPayload, interactionStorage, {
         rpId: hostname,
@@ -61,7 +66,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
 
       log.append({ bindMfa, interactionStorage });
 
-      await storeInteractionResult({ bindMfa }, ctx, provider, true);
+      await storeInteractionResult({ bindMfas: [...bindMfas, bindMfa] }, ctx, provider, true);
 
       ctx.status = 204;
 
