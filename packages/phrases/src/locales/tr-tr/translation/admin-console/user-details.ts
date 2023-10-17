@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: 'Ayarlar',
   tab_roles: 'Roller',
   tab_logs: 'Kullanıcı kayıtları',
-  settings: 'Ayarlar',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     'Her kullanıcının, temel veriler, sosyal kimlikler ve özel verilerden oluşan tüm kullanıcı bilgilerini içeren bir profil vardır.',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: 'Eposta adresi',
   field_phone: 'Telefon numarası',
   field_username: 'Kullanıcı Adı',
@@ -33,14 +36,30 @@ const user_details = {
   field_custom_data_tip:
     'Kullanıcı tarafından tercih edilen renk ve dil gibi önceden tanımlanmış kullanıcı özelliklerinde listelenmeyen ek kullanıcı bilgileri.',
   field_connectors: 'Sosyal bağlayıcılar',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Özel veriler geçerli bir JSON nesnesi olmalıdır',
   connectors: {
     connectors: 'Bağlayıcılar',
     user_id: 'Kullanıcı IDsi',
     remove: 'Kaldır',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: 'Kullanıcı herhangi bir sosyal bağlayıcıya bağlı değil',
     deletion_confirmation:
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: 'Çok faktörlü kimlik doğrulama',

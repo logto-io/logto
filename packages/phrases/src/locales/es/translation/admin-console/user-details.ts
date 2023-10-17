@@ -22,9 +22,12 @@ const user_details = {
   tab_settings: 'Configuración',
   tab_roles: 'Roles',
   tab_logs: 'Registros de usuario',
-  settings: 'Configuración',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     'Cada usuario tiene un perfil que contiene toda la información del usuario. Consta de datos básicos, identidades sociales y datos personalizados.',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: 'Dirección de correo electrónico',
   field_phone: 'Número de teléfono',
   field_username: 'Nombre de usuario',
@@ -35,14 +38,30 @@ const user_details = {
   field_custom_data_tip:
     'Información adicional del usuario no incluida en las propiedades de usuario predefinidas, como el color y el idioma preferidos del usuario.',
   field_connectors: 'Conexiones sociales',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Los datos personalizados deben ser un objeto JSON válido',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID de usuario',
     remove: 'Eliminar',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: 'El usuario no está conectado a ningún conector social',
     deletion_confirmation:
       'Está eliminando la identidad de <name/> existente. ¿Está seguro de que desea hacer esto?',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: 'Autenticación de dos factores',

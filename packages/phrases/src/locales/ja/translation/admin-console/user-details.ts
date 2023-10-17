@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: '設定',
   tab_roles: '役割',
   tab_logs: 'ユーザーログ',
-  settings: '設定',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     '各ユーザーには、すべてのユーザー情報が含まれるプロファイルがあります。基本データ、ソーシャルアイデンティティ、およびカスタムデータで構成されています。',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: 'メールアドレス',
   field_phone: '電話番号',
   field_username: 'ユーザー名',
@@ -33,14 +36,30 @@ const user_details = {
   field_custom_data_tip:
     'プリディフィンドされたユーザープロパティにリストされていない、追加のユーザー情報（ユーザーが好みの色や言語など）。',
   field_connectors: 'ソーシャル接続',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'カスタムデータは有効なJSONオブジェクトである必要があります',
   connectors: {
     connectors: 'コネクタ',
     user_id: 'ユーザーID',
     remove: '削除',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: 'ユーザーはソーシャルコネクタに接続していません',
     deletion_confirmation:
       '既存の<name/>アイデンティティを削除しています。本当にそれをやり遂げますか？',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: '多要素認証',

@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: '设置',
   tab_roles: '角色',
   tab_logs: '用户日志',
-  settings: '设置',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     '每个用户都有一个包含所有用户信息的个人资料。它由基本数据、社交身份和自定义数据组成。',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: '邮箱地址',
   field_phone: '手机号码',
   field_username: '用户名',
@@ -32,13 +35,29 @@ const user_details = {
   field_custom_data: '自定义数据',
   field_custom_data_tip: '预定义属性之外的用户信息，例如用户偏好的颜色和语言。',
   field_connectors: '社交帐号',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: '自定义数据必须是有效的 JSON 对象',
   connectors: {
     connectors: '连接器',
     user_id: '用户ID',
     remove: '删除',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: '该用户还没有绑定社交帐号',
     deletion_confirmation: '你在正要删除现有的 <name /> 身份，是否确认？',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: '多因素认证',

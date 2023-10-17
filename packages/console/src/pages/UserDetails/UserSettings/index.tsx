@@ -99,8 +99,8 @@ function UserSettings() {
         onDiscard={reset}
       >
         <FormCard
-          title="user_details.settings"
-          description="user_details.settings_description"
+          title="user_details.authentication"
+          description="user_details.authentication_description"
           learnMoreLink={getDocumentationUrl('/docs/references/users')}
         >
           <FormField title="user_details.field_name">
