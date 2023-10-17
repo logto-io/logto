@@ -34,6 +34,7 @@ const mfa = {
   save_backup_code_description:
     'Başka bir şekilde iki faktörlü kimlik doğrulama sırasında sorun yaşarsanız bu yedek kodlardan birini kullanabilirsiniz. Her kod yalnızca bir kez kullanılabilir.',
   backup_code_hint: 'Onları kopyalayıp güvenli bir yerde sakladığınızdan emin olun.',
+  enter_a_backup_code: 'Yedekleme kodunu girin',
   enter_backup_code_description:
     'İki faktörlü kimlik doğrulama ilk etkinleştirildiğinde kaydettiğiniz yedek kodu girin.',
   create_a_passkey: 'Bir anahtar kodu oluşturun',
