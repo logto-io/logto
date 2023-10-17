@@ -10,6 +10,7 @@ import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
 import organizationRoleRoutes from './roles.js';
 import organizationScopeRoutes from './scopes.js';
+import { errorHandler } from './utils.js';
 
 export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
   const [
@@ -18,7 +19,9 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
       queries: { organizations, users },
     },
   ] = args;
-  const router = new SchemaRouter(Organizations, new SchemaActions(organizations));
+  const router = new SchemaRouter(Organizations, new SchemaActions(organizations), {
+    errorHandler,
+  });
 
   router.addRelationRoutes(organizations.relations.users);
 

@@ -90,7 +90,7 @@ export class SchemaActions<
    * @param id The ID of the entity to be updated.
    * @param data The data of the entity to be updated.
    * @returns The updated entity.
-   * @throws An `RequestError` with 404 status code if the entity is not found.
+   * @throws An `UpdateError` if the entity is not found.
    */
   public async patchById(id: string, data: Partial<Schema>): Promise<Readonly<Schema>> {
     return this.queries.updateById(id, data);
@@ -100,7 +100,7 @@ export class SchemaActions<
    * The function for `DELETE /:id` route to delete an entity by ID.
    *
    * @param id The ID of the entity to be deleted.
-   * @throws An `RequestError` with 404 status code if the entity is not found.
+   * @throws An `DeletionError` if the entity is not found.
    */
   public async deleteById(id: string): Promise<void> {
     return this.queries.deleteById(id);
@@ -121,6 +121,7 @@ type SchemaRouterConfig = {
     /** Disable `DELETE /:id` route. */
     deleteById: boolean;
   };
+  errorHandler?: (error: unknown) => void;
 };
 
 /**
@@ -166,6 +167,17 @@ export default class SchemaRouter<
       },
       config
     );
+
+    if (this.config.errorHandler) {
+      this.use(async (_, next) => {
+        try {
+          await next();
+        } catch (error: unknown) {
+          this.config.errorHandler?.(error);
+          throw error;
+        }
+      });
+    }
 
     const { disabled } = this.config;
 
@@ -324,7 +336,7 @@ export default class SchemaRouter<
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
-        status: [201, 404, 422],
+        status: [201, 422],
       }),
       async (ctx, next) => {
         const {
@@ -344,7 +356,8 @@ export default class SchemaRouter<
       `/:id/${pathname}/:relationId`,
       koaGuard({
         params: z.object({ id: z.string().min(1), relationId: z.string().min(1) }),
-        status: [204, 422],
+        // Should be 422 if the relation doesn't exist, update until we change the error handling
+        status: [204, 404],
       }),
       async (ctx, next) => {
         const {

@@ -6,6 +6,9 @@ const entity = {
   not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
   not_found: 'Kaynak mevcut değil.',
   /** UNTRANSLATED */
+  relation_foreign_key_not_found:
+    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
+  /** UNTRANSLATED */
   duplicate_value_of_unique_field: 'The value of the unique field `{{field}}` is duplicated.',
 };
 
