@@ -4,7 +4,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import SchemaQueries from './SchemaQueries.js';
-import SchemaRouter, { type SchemaActions } from './SchemaRouter.js';
+import SchemaRouter from './SchemaRouter.js';
 import { createRequester, createTestPool } from './test-utils.js';
 
 const { jest } = import.meta;
@@ -36,21 +36,26 @@ describe('SchemaRouter', () => {
     { id: '1', name: 'test' },
     { id: '2', name: 'test2' },
   ] as const satisfies readonly Schema[];
-  const actions: SchemaActions<'name', CreateSchema, Schema> = {
-    queries: new SchemaQueries(createTestPool(), schema),
-    get: jest.fn().mockResolvedValue([entities.length, entities]),
-    getById: jest.fn(async (id) => {
-      const entity = entities.find((entity) => entity.id === id);
-      if (!entity) {
-        throw new RequestError({ code: 'entity.not_found', status: 404 });
-      }
-      return entity;
-    }),
-    post: jest.fn(async () => ({ id: 'new', name: 'test_new' })),
-    patchById: jest.fn(async (id, data) => ({ id, name: 'name_patch_default', ...data })),
-    deleteById: jest.fn(),
-  };
-  const schemaRouter = new SchemaRouter(schema, actions);
+  const queries = new SchemaQueries(createTestPool(undefined, { id: '1' }), schema);
+
+  jest.spyOn(queries, 'findTotalNumber').mockResolvedValue(entities.length);
+  jest.spyOn(queries, 'findAll').mockResolvedValue(entities);
+  jest.spyOn(queries, 'findById').mockImplementation(async (id) => {
+    const entity = entities.find((entity) => entity.id === id);
+    if (!entity) {
+      throw new RequestError({ code: 'entity.not_found', status: 404 });
+    }
+    return entity;
+  });
+  jest.spyOn(queries, 'insert').mockResolvedValue({ id: 'new', name: 'test_new' });
+  jest.spyOn(queries, 'updateById').mockImplementation(async (id, data) => ({
+    id,
+    name: 'name_patch_default',
+    ...data,
+  }));
+  jest.spyOn(queries, 'deleteById');
+
+  const schemaRouter = new SchemaRouter(schema, queries);
   const request = createRequester({ authedRoutes: (router) => router.use(schemaRouter.routes()) });
   const baseRoute = `/${schema.table.replaceAll('_', '-')}`;
 
@@ -62,16 +67,16 @@ describe('SchemaRouter', () => {
     it('should be able to get all entities', async () => {
       const response = await request.get(baseRoute);
 
-      expect(actions.get).toHaveBeenCalledWith(
-        expect.objectContaining({ disabled: false, offset: 0, limit: 20 })
-      );
+      expect(queries.findAll).toHaveBeenCalledWith(20, 0);
+      expect(queries.findTotalNumber).toHaveBeenCalled();
       expect(response.body).toStrictEqual(entities);
     });
 
     it('should be able to get all entities with pagination', async () => {
       const response = await request.get(`${baseRoute}?page=1&page_size=10`);
 
-      expect(actions.get).toHaveBeenCalledWith(expect.objectContaining({ offset: 0, limit: 10 }));
+      expect(queries.findAll).toHaveBeenCalledWith(10, 0);
+      expect(queries.findTotalNumber).toHaveBeenCalled();
       expect(response.body).toStrictEqual(entities);
       expect(response.header).toHaveProperty('total-number', '2');
     });
@@ -81,7 +86,10 @@ describe('SchemaRouter', () => {
     it('should be able to create an entity', async () => {
       const response = await request.post(baseRoute).send({});
 
-      expect(actions.post).toHaveBeenCalledWith({});
+      expect(queries.insert).toHaveBeenCalledWith(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ id: expect.any(String) })
+      );
       expect(response.body).toStrictEqual({ id: 'new', name: 'test_new' });
     });
 
@@ -96,7 +104,7 @@ describe('SchemaRouter', () => {
     it('should be able to get an entity by id', async () => {
       const response = await request.get(`${baseRoute}/1`);
 
-      expect(actions.getById).toHaveBeenCalledWith('1');
+      expect(queries.findById).toHaveBeenCalledWith('1');
       expect(response.body).toStrictEqual(entities[0]);
     });
 
@@ -112,7 +120,7 @@ describe('SchemaRouter', () => {
     it('should be able to patch an entity by id', async () => {
       const response = await request.patch(`${baseRoute}/test`).send({ name: 'test_new' });
 
-      expect(actions.patchById).toHaveBeenCalledWith('test', { name: 'test_new' });
+      expect(queries.updateById).toHaveBeenCalledWith('test', { name: 'test_new' });
       expect(response.body).toStrictEqual({ id: 'test', name: 'test_new' });
       expect(response.status).toEqual(200);
     });
@@ -122,8 +130,41 @@ describe('SchemaRouter', () => {
     it('should be able to delete an entity by id', async () => {
       const response = await request.delete(`${baseRoute}/test`);
 
-      expect(actions.deleteById).toHaveBeenCalledWith('test');
+      expect(queries.deleteById).toHaveBeenCalledWith('test');
       expect(response.status).toEqual(204);
+    });
+  });
+
+  describe('disable routes', () => {
+    it('should be able to disable routes', async () => {
+      const disabledSchemaRouter = new SchemaRouter(schema, queries, {
+        disabled: { post: true, patchById: true, deleteById: true },
+      });
+      const disabledRequest = createRequester({
+        authedRoutes: (router) => router.use(disabledSchemaRouter.routes()),
+      });
+
+      await disabledRequest.post(baseRoute).send({});
+      expect(queries.insert).not.toHaveBeenCalled();
+
+      await disabledRequest.patch(`${baseRoute}/test`).send({ name: 'test_new' });
+      expect(queries.updateById).not.toHaveBeenCalled();
+
+      await disabledRequest.delete(`${baseRoute}/test`);
+      expect(queries.deleteById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('error handler', () => {
+    it('should be able to customize error handler', async () => {
+      const errorHandler = jest.fn();
+      const errorHandlerSchemaRouter = new SchemaRouter(schema, queries, { errorHandler });
+      const errorHandlerRequest = createRequester({
+        authedRoutes: (router) => router.use(errorHandlerSchemaRouter.routes()),
+      });
+
+      await errorHandlerRequest.get(`${baseRoute}/foo`);
+      expect(errorHandler).toHaveBeenCalled();
     });
   });
 });
