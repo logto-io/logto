@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: '설정',
   tab_roles: '역할',
   tab_logs: '사용자 기록',
-  settings: '설정',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     '각 사용자는 모든 사용자 정보를 포함하는 프로파일을 가지고 있어요. 프로파일은 기본 데이터, 소셜 ID, 사용자 정의 데이터로 구성되어 있어요.',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: '이메일 주소',
   field_phone: '휴대전화 번호',
   field_username: '사용자 이름',
@@ -33,13 +36,29 @@ const user_details = {
   field_custom_data_tip:
     '사용자 정의 색상 및 언어와 같은 미리 정의되지 않은 추가적인 사용자의 정보를 의미해요.',
   field_connectors: '연동된 소셜',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: '사용자 정의 데이터는 반드시 유효한 JSON 객체여야 해요.',
   connectors: {
     connectors: '연동',
     user_id: '사용자 ID',
     remove: '삭제',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
     deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: '다단계 인증',

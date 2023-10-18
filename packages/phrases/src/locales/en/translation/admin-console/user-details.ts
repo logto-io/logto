@@ -20,9 +20,10 @@ const user_details = {
   tab_settings: 'Settings',
   tab_roles: 'Roles',
   tab_logs: 'User logs',
-  settings: 'Settings',
-  settings_description:
+  authentication: 'Authentication',
+  authentication_description:
     'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
+  user_profile: 'User profile',
   field_email: 'Email address',
   field_phone: 'Phone number',
   field_username: 'Username',
@@ -33,14 +34,24 @@ const user_details = {
   field_custom_data_tip:
     'Additional user info not listed in the pre-defined user properties, such as user-preferred color and language.',
   field_connectors: 'Social connections',
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Custom data must be a valid JSON object',
   connectors: {
     connectors: 'Connectors',
     user_id: 'User ID',
     remove: 'Remove',
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: 'The user is not connected to any social connector',
     deletion_confirmation:
       'You are removing the existing <name/> identity. Are you sure you want to do that?',
+  },
+  sso_connectors: {
+    connectors: 'Connectors',
+    enterprise_id: 'Enterprise ID',
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: 'Multi-factor authentication',

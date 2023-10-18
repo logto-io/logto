@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: 'Настройки',
   tab_roles: 'Роли',
   tab_logs: 'Журналы пользователя',
-  settings: 'Настройки',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     'У каждого пользователя есть профиль, содержащий всю информацию о пользователе. Он состоит из основных данных, социальных идентификаторов и пользовательских данных.',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: 'Адрес электронной почты',
   field_phone: 'Номер телефона',
   field_username: 'Имя пользователя',
@@ -33,14 +36,30 @@ const user_details = {
   field_custom_data_tip:
     'Дополнительная информация о пользователе, не указанная в заранее определенных свойствах пользователя, таких как предпочтительный цвет и язык пользователя.',
   field_connectors: 'Социальные подключения',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: 'Пользовательские данные должны быть допустимым JSON-объектом',
   connectors: {
     connectors: 'Подключения',
     user_id: 'ID пользователя',
     remove: 'Удалить',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: 'Пользователь не подключен к социальным подключениям',
     deletion_confirmation:
       'Вы удаляете существующий идентификатор <name/>. Вы уверены, что хотите это сделать?',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: 'Двухфакторная аутентификация',

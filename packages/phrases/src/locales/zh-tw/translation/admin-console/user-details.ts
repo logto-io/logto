@@ -20,9 +20,12 @@ const user_details = {
   tab_settings: '設定',
   tab_roles: '角色',
   tab_logs: '用戶日誌',
-  settings: '設定',
-  settings_description:
+  /** UNTRANSLATED */
+  authentication: 'Authentication',
+  authentication_description:
     '每個用戶都有一個包含所有用戶資訊的個人資料。它由基本數據、社交身份和自定義數據組成。',
+  /** UNTRANSLATED */
+  user_profile: 'User profile',
   field_email: '電子郵箱',
   field_phone: '手機號碼',
   field_username: '用戶名',
@@ -32,13 +35,29 @@ const user_details = {
   field_custom_data: '自定義數據',
   field_custom_data_tip: '預定義屬性之外的用戶資訊，例如用戶偏好的顏色和語言。',
   field_connectors: '社交帳號',
+  /** UNTRANSLATED */
+  field_sso_connectors: 'Enterprise connections',
   custom_data_invalid: '自定義數據必須是有效的 JSON 對象',
   connectors: {
     connectors: '連接器',
     user_id: '用戶ID',
     remove: '刪除',
+    /** UNTRANSLATED */
+    connected: 'This user is connected with multiple social connectors.',
     not_connected: '該用戶還沒有綁定社交帳號',
     deletion_confirmation: '你在正要刪除現有的 <name /> 身份，是否確認？',
+  },
+  sso_connectors: {
+    /** UNTRANSLATED */
+    connectors: 'Connectors',
+    /** UNTRANSLATED */
+    enterprise_id: 'Enterprise ID',
+    /** UNTRANSLATED */
+    connected:
+      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
+    /** UNTRANSLATED */
+    not_connected:
+      'The user is not connected to any enterprise identity providers for Single Sign-On.',
   },
   mfa: {
     field_name: '多因素驗證',
