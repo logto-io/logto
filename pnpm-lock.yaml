@@ -86,8 +86,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -228,8 +228,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -242,334 +242,44 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-alipay-web:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
       dayjs:
         specifier: ^1.10.5
         version: 1.11.6
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
         version: 5.0.0
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-aliyun-dm:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-aliyun-sms:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-apple:
     dependencies:
@@ -579,82 +289,9 @@ importers:
       '@logto/shared':
         specifier: workspace:^3.0.0
         version: link:../../shared
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       jose:
         specifier: ^4.3.8
         version: 4.11.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-aws-ses:
     dependencies:
@@ -667,79 +304,6 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-azuread:
     dependencies:
@@ -749,1352 +313,112 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-discord:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-facebook:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-feishu-web:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-github:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       query-string:
         specifier: ^8.0.0
         version: 8.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-google:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-kakao:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-logto-email:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
       '@logto/cloud':
         specifier: 0.2.5-d434baa
         version: 0.2.5-d434baa(zod@3.22.3)
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-logto-sms:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-logto-social-demo:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-mailgun:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-mock-email:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-mock-email-alternative:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-mock-sms:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-mock-social:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-naver:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-oauth2:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       query-string:
         specifier: ^8.0.0
         version: 8.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-oidc:
     dependencies:
@@ -2104,729 +428,73 @@ importers:
       '@logto/shared':
         specifier: workspace:^3.0.0
         version: link:../../shared
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       jose:
         specifier: ^4.3.8
         version: 4.11.0
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-saml:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
       fast-xml-parser:
         specifier: ^4.2.5
         version: 4.2.5
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       samlify:
         specifier: 2.8.10
         version: 2.8.10
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-sendgrid-email:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-smsaero:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-smtp:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
     devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
       '@types/nodemailer':
         specifier: ^6.4.7
         version: 6.4.7
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-tencent-sms:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-twilio-sms:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-wechat-native:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/connectors/connector-wechat-web:
     dependencies:
       '@logto/connector-kit':
         specifier: workspace:^1.1.0
         version: link:../../toolkit/connector-kit
-      '@silverhand/essentials':
-        specifier: ^2.8.4
-        version: 2.8.4
-      got:
-        specifier: ^13.0.0
-        version: 13.0.0
-      snakecase-keys:
-        specifier: ^5.4.4
-        version: 5.4.4
-      zod:
-        specifier: ^3.22.3
-        version: 3.22.3
-    devDependencies:
-      '@jest/types':
-        specifier: ^29.5.0
-        version: 29.5.0
-      '@rollup/plugin-commonjs':
-        specifier: ^25.0.0
-        version: 25.0.7(rollup@4.1.4)
-      '@rollup/plugin-json':
-        specifier: ^6.0.0
-        version: 6.0.1(rollup@4.1.4)
-      '@rollup/plugin-node-resolve':
-        specifier: ^15.0.1
-        version: 15.2.3(rollup@4.1.4)
-      '@rollup/plugin-typescript':
-        specifier: ^11.0.0
-        version: 11.1.5(rollup@4.1.4)(typescript@5.0.2)
-      '@silverhand/eslint-config':
-        specifier: 4.0.1
-        version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
-      '@silverhand/ts-config':
-        specifier: 4.0.0
-        version: 4.0.0(typescript@5.0.2)
-      '@types/jest':
-        specifier: ^29.4.0
-        version: 29.4.0
-      '@types/node':
-        specifier: ^18.11.18
-        version: 18.11.18
-      '@types/supertest':
-        specifier: ^2.0.11
-        version: 2.0.11
-      eslint:
-        specifier: ^8.44.0
-        version: 8.44.0
-      jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
-      jest-matcher-specific-error:
-        specifier: ^1.0.0
-        version: 1.0.0
-      lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
-      nock:
-        specifier: ^13.2.2
-        version: 13.3.1
-      prettier:
-        specifier: ^3.0.0
-        version: 3.0.0
-      rollup:
-        specifier: ^4.0.0
-        version: 4.1.4
-      rollup-plugin-summary:
-        specifier: ^2.0.0
-        version: 2.0.0(rollup@4.1.4)
-      supertest:
-        specifier: ^6.2.2
-        version: 6.2.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.0.2
 
   packages/console:
     devDependencies:
@@ -3011,8 +679,8 @@ importers:
         specifier: ^1.9.49
         version: 1.9.49
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
@@ -3181,9 +849,6 @@ importers:
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
-      camelcase-keys:
-        specifier: ^9.0.0
-        version: 9.0.0
       chalk:
         specifier: ^5.0.0
         version: 5.1.2
@@ -3372,8 +1037,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       nock:
         specifier: ^13.3.1
         version: 13.3.1
@@ -3462,8 +1127,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       parcel:
         specifier: 2.9.3
         version: 2.9.3(postcss@8.4.31)
@@ -3636,8 +1301,8 @@ importers:
         specifier: ^1.9.49
         version: 1.9.49
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       parcel:
         specifier: 2.9.3
         version: 2.9.3(postcss@8.4.31)
@@ -3809,8 +1474,8 @@ importers:
         specifier: ^8.44.0
         version: 8.44.0
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3846,8 +1511,8 @@ importers:
         specifier: ^8.44.0
         version: 8.44.0
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3901,8 +1566,8 @@ importers:
         specifier: ^18.11.18
         version: 18.11.18
       '@types/pluralize':
-        specifier: ^0.0.31
-        version: 0.0.31
+        specifier: ^0.0.32
+        version: 0.0.32
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3916,8 +1581,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3977,8 +1642,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -4027,8 +1692,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -4089,8 +1754,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       postcss:
         specifier: ^8.4.31
         version: 8.4.31
@@ -4135,8 +1800,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0(@types/node@18.11.18)(ts-node@10.9.1)
       lint-staged:
-        specifier: ^15.0.0
-        version: 15.0.0
+        specifier: ^14.0.0
+        version: 14.0.0
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
@@ -6603,13 +4268,6 @@ packages:
       prettier: 2.8.4
     dev: true
 
-  /@colors/colors@1.5.0:
-    resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
-    engines: {node: '>=0.1.90'}
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@commitlint/cli@17.6.6:
     resolution: {integrity: sha512-sTKpr2i/Fjs9OmhU+beBxjPavpnLSqZaO6CzwKVq2Tc4UYVTMFgpKOslDhUBVlfAUBfjVO8ParxC/MXkIOevEA==}
     engines: {node: '>=v14'}
@@ -7246,13 +4904,6 @@ packages:
   /@jridgewell/set-array@1.1.2:
     resolution: {integrity: sha512-xnkseuNADM0gt2bs+BvhO0p78Mk762YnZdsuzFV018NoG1Sj1SCQvpSqa7XUaTam5vAGasABV9qXASMKnFMwMw==}
     engines: {node: '>=6.0.0'}
-    dev: true
-
-  /@jridgewell/source-map@0.3.5:
-    resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
-    dependencies:
-      '@jridgewell/gen-mapping': 0.3.2
-      '@jridgewell/trace-mapping': 0.3.18
     dev: true
 
   /@jridgewell/sourcemap-codec@1.4.14:
@@ -8823,185 +6474,6 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /@rollup/plugin-commonjs@25.0.7(rollup@4.1.4):
-    resolution: {integrity: sha512-nEvcR+LRjEjsaSsc4x3XZfCCvZIaSMenZu/OiwOKGN2UhQpAYI7ru7czFvyWbErlpoGjnSX3D5Ch5FcMA3kRWQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.68.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.5(rollup@4.1.4)
-      commondir: 1.0.1
-      estree-walker: 2.0.2
-      glob: 8.1.0
-      is-reference: 1.2.1
-      magic-string: 0.30.5
-      rollup: 4.1.4
-    dev: true
-
-  /@rollup/plugin-json@6.0.1(rollup@4.1.4):
-    resolution: {integrity: sha512-RgVfl5hWMkxN1h/uZj8FVESvPuBJ/uf6ly6GTj0GONnkfoBN5KC0MSz+PN2OLDgYXMhtG0mWpTrkiOjoxAIevw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.5(rollup@4.1.4)
-      rollup: 4.1.4
-    dev: true
-
-  /@rollup/plugin-node-resolve@15.2.3(rollup@4.1.4):
-    resolution: {integrity: sha512-j/lym8nf5E21LwBT4Df1VD6hRO2L2iwUeUmP7litikRsVp1H6NWx20NEp0Y7su+7XGc476GnXXc4kFeZNGmaSQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.78.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.5(rollup@4.1.4)
-      '@types/resolve': 1.20.2
-      deepmerge: 4.3.1
-      is-builtin-module: 3.2.1
-      is-module: 1.0.0
-      resolve: 1.22.2
-      rollup: 4.1.4
-    dev: true
-
-  /@rollup/plugin-typescript@11.1.5(rollup@4.1.4)(typescript@5.0.2):
-    resolution: {integrity: sha512-rnMHrGBB0IUEv69Q8/JGRD/n4/n6b3nfpufUu26axhUcboUzv/twfZU8fIBbTOphRAe0v8EyxzeDpKXqGHfyDA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0||^4.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 5.0.5(rollup@4.1.4)
-      resolve: 1.22.2
-      rollup: 4.1.4
-      typescript: 5.0.2
-    dev: true
-
-  /@rollup/pluginutils@5.0.5(rollup@4.1.4):
-    resolution: {integrity: sha512-6aEYR910NyP73oHiJglti74iRyOwgFU4x3meH/H8OJx6Ry0j6cOVZ5X/wTvub7G7Ao6qaHBEaNsV3GLJkSsF+Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-    dependencies:
-      '@types/estree': 1.0.3
-      estree-walker: 2.0.2
-      picomatch: 2.3.1
-      rollup: 4.1.4
-    dev: true
-
-  /@rollup/rollup-android-arm-eabi@4.1.4:
-    resolution: {integrity: sha512-WlzkuFvpKl6CLFdc3V6ESPt7gq5Vrimd2Yv9IzKXdOpgbH4cdDSS1JLiACX8toygihtH5OlxyQzhXOph7Ovlpw==}
-    cpu: [arm]
-    os: [android]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-android-arm64@4.1.4:
-    resolution: {integrity: sha512-D1e+ABe56T9Pq2fD+R3ybe1ylCDzu3tY4Qm2Mj24R9wXNCq35+JbFbOpc2yrroO2/tGhTobmEl2Bm5xfE/n8RA==}
-    cpu: [arm64]
-    os: [android]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-darwin-arm64@4.1.4:
-    resolution: {integrity: sha512-7vTYrgEiOrjxnjsgdPB+4i7EMxbVp7XXtS+50GJYj695xYTTEMn3HZVEvgtwjOUkAP/Q4HDejm4fIAjLeAfhtg==}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-darwin-x64@4.1.4:
-    resolution: {integrity: sha512-eGJVZScKSLZkYjhTAESCtbyTBq9SXeW9+TX36ki5gVhDqJtnQ5k0f9F44jNK5RhAMgIj0Ht9+n6HAgH0gUUyWQ==}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-linux-arm-gnueabihf@4.1.4:
-    resolution: {integrity: sha512-HnigYSEg2hOdX1meROecbk++z1nVJDpEofw9V2oWKqOWzTJlJf1UXVbDE6Hg30CapJxZu5ga4fdAQc/gODDkKg==}
-    cpu: [arm]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-linux-arm64-gnu@4.1.4:
-    resolution: {integrity: sha512-TzJ+N2EoTLWkaClV2CUhBlj6ljXofaYzF/R9HXqQ3JCMnCHQZmQnbnZllw7yTDp0OG5whP4gIPozR4QiX+00MQ==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-linux-arm64-musl@4.1.4:
-    resolution: {integrity: sha512-aVPmNMdp6Dlo2tWkAduAD/5TL/NT5uor290YvjvFvCv0Q3L7tVdlD8MOGDL+oRSw5XKXKAsDzHhUOPUNPRHVTQ==}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-linux-x64-gnu@4.1.4:
-    resolution: {integrity: sha512-77Fb79ayiDad0grvVsz4/OB55wJRyw9Ao+GdOBA9XywtHpuq5iRbVyHToGxWquYWlEf6WHFQQnFEttsAzboyKg==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-linux-x64-musl@4.1.4:
-    resolution: {integrity: sha512-/t6C6niEQTqmQTVTD9TDwUzxG91Mlk69/v0qodIPUnjjB3wR4UA3klg+orR2SU3Ux2Cgf2pWPL9utK80/1ek8g==}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-win32-arm64-msvc@4.1.4:
-    resolution: {integrity: sha512-ZY5BHHrOPkMbCuGWFNpJH0t18D2LU6GMYKGaqaWTQ3CQOL57Fem4zE941/Ek5pIsVt70HyDXssVEFQXlITI5Gg==}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-win32-ia32-msvc@4.1.4:
-    resolution: {integrity: sha512-XG2mcRfFrJvYyYaQmvCIvgfkaGinfXrpkBuIbJrTl9SaIQ8HumheWTIwkNz2mktCKwZfXHQNpO7RgXLIGQ7HXA==}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@rollup/rollup-win32-x64-msvc@4.1.4:
-    resolution: {integrity: sha512-ANFqWYPwkhIqPmXw8vm0GpBEHiPpqcm99jiiAp71DbCSqLDhrtr019C5vhD0Bw4My+LmMvciZq6IsWHqQpl2ZQ==}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@shopify/jest-koa-mocks@5.0.0:
     resolution: {integrity: sha512-keF5fgqAzWgC4O5uwUgQawp80IsDJdfyyMvWnIcsMaYw9CgURm4CW+v9NskUAn6AeaHd4Tkv+pWCFg/LRHHf4w==}
     engines: {node: ^14.17.0 || >=16.0.0}
@@ -9638,10 +7110,6 @@ packages:
       '@types/ms': 0.7.31
     dev: true
 
-  /@types/estree@1.0.3:
-    resolution: {integrity: sha512-CS2rOaoQ/eAgAfcTfq6amKG7bsN+EMcgGY4FAFQdvSj2y1ixvOZTUA9mOtCai7E1SYu283XNw7urKK30nP3wkQ==}
-    dev: true
-
   /@types/etag@1.8.1:
     resolution: {integrity: sha512-bsKkeSqN7HYyYntFRAmzcwx/dKW4Wa+KVMTInANlI72PWLQmOpZu96j0OqHZGArW4VQwCmJPteQlXaUDeOB0WQ==}
     dependencies:
@@ -9889,8 +7357,8 @@ packages:
       pg-types: 2.2.0
     dev: true
 
-  /@types/pluralize@0.0.31:
-    resolution: {integrity: sha512-MQh69PPwFlYAL2qz/Mw5Zc34VTdt7pTck0Xbb6pbPSzdt5oaLB87iyJJxEMS5Dco/s7lXHunEezAvQurZZdrsQ==}
+  /@types/pluralize@0.0.32:
+    resolution: {integrity: sha512-exDkoRIkWJlbRDRmtYDbI3ZUE28HwBwHe5VKn4mvpvMW7qIRDHO6URItErBsBSX7J8/PrDLSOHCcbUMFXwA6CA==}
     dev: true
 
   /@types/prettier@2.7.1:
@@ -9973,10 +7441,6 @@ packages:
     resolution: {integrity: sha512-qaIzpCuXNWomGR1Xq8SCFTtF4v8V27Y6f+b9+bzHiv087MylI/nTCqqdChNeWS7tslgROmYB7yeiruWX7WnqNg==}
     dependencies:
       '@types/react': 18.0.31
-    dev: true
-
-  /@types/resolve@1.20.2:
-    resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: true
 
   /@types/retry@0.12.2:
@@ -10795,12 +8259,6 @@ packages:
       concat-map: 0.0.1
     dev: true
 
-  /brace-expansion@2.0.1:
-    resolution: {integrity: sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==}
-    dependencies:
-      balanced-match: 1.0.2
-    dev: true
-
   /braces@3.0.2:
     resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
     engines: {node: '>=8'}
@@ -10812,13 +8270,6 @@ packages:
     resolution: {integrity: sha512-ex5W9DoOQ/LUEU3PMdLs9ua/CYZl1678NUkKOdUSi8Aw5F1idieaiRURCBFJCwVcrD1J8Iy3vfWSloaMwO2qFg==}
     dependencies:
       wcwidth: 1.0.1
-    dev: true
-
-  /brotli-size@4.0.0:
-    resolution: {integrity: sha512-uA9fOtlTRC0iqKfzff1W34DXUA3GyVqbUaeo3Rw3d4gd1eavKVCETXrn3NzO74W+UVkG3UHu8WxUi+XvKI/huA==}
-    engines: {node: '>= 10.16.0'}
-    dependencies:
-      duplexer: 0.1.1
     dev: true
 
   /browserslist@4.21.4:
@@ -10950,6 +8401,7 @@ packages:
       map-obj: 5.0.0
       quick-lru: 6.1.1
       type-fest: 4.2.0
+    dev: true
 
   /camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
@@ -11020,6 +8472,7 @@ packages:
   /chalk@5.3.0:
     resolution: {integrity: sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+    dev: true
 
   /char-regex@1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
@@ -11117,15 +8570,6 @@ packages:
     resolution: {integrity: sha512-qu3pN8Y3qHNgE2AFweciB1IfMnmZ/fsNTEE+NOFjmGB2F/7rLhnhzppvpCnN4FovtP26k8lHyy9ptEbNwWFLzw==}
     engines: {node: '>=6'}
     dev: false
-
-  /cli-table3@0.6.3:
-    resolution: {integrity: sha512-w5Jac5SykAeZJKntOxJCrm63Eg5/4dhMWIcuTbo9rpE+brgaSZo0RuNJZeOyMgsUdhDeojvgyQLmjI+K50ZGyg==}
-    engines: {node: 10.* || >= 12.*}
-    dependencies:
-      string-width: 4.2.3
-    optionalDependencies:
-      '@colors/colors': 1.5.0
-    dev: true
 
   /cli-truncate@3.1.0:
     resolution: {integrity: sha512-wfOBkjXteqSnI59oPcJkcPl/ZmwvMMOj340qUIY1SKZCv0B9Cf4D4fAucRkIKQmsIuYK3x1rrgU7MeGRruiuiA==}
@@ -11259,13 +8703,9 @@ packages:
     resolution: {integrity: sha512-G5yTt3KQN4Yn7Yk4ed73hlZ1evrFKXeUW3086p3PRFNp7m2vIjI6Pg+Kgb+oyzhd9F2qdcoj67+y3SdxL5XWsg==}
     dev: true
 
-  /commander@11.1.0:
-    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
+  /commander@11.0.0:
+    resolution: {integrity: sha512-9HMlXtt/BNoYr8ooyjjNRdIilOTkVJXB+GhxMTtOKwk0R4j4lS4NpjuqmRxroBfnfTSHQIHQB7wryHhXarNjmQ==}
     engines: {node: '>=16'}
-    dev: true
-
-  /commander@2.20.3:
-    resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
     dev: true
 
   /commander@5.1.0:
@@ -11276,10 +8716,6 @@ packages:
   /commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
-    dev: true
-
-  /commondir@1.0.1:
-    resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: true
 
   /compare-func@2.0.0:
@@ -12043,14 +9479,6 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /duplexer@0.1.1:
-    resolution: {integrity: sha512-sxNZ+ljy+RA1maXoUReeqBBpBC6RLKmg5ewzV+x+mSETmWNoKdZN6vcQjpFROemza23hGFskJtFNoUWUaQ+R4Q==}
-    dev: true
-
-  /duplexer@0.1.2:
-    resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
-    dev: true
-
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
@@ -12710,10 +10138,6 @@ packages:
     engines: {node: '>=4.0'}
     dev: true
 
-  /estree-walker@2.0.2:
-    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
-    dev: true
-
   /esutils@2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
@@ -12756,18 +10180,18 @@ packages:
       strip-final-newline: 2.0.0
     dev: true
 
-  /execa@8.0.1:
-    resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
-    engines: {node: '>=16.17'}
+  /execa@7.2.0:
+    resolution: {integrity: sha512-UduyVP7TLB5IcAQl+OzLyLcS/l32W/GLg+AhHJ+ow40FOk2U3SAllPwR44v4vmdFwIWqpdwxxpQbF1n5ta9seA==}
+    engines: {node: ^14.18.0 || ^16.14.0 || >=18.0.0}
     dependencies:
       cross-spawn: 7.0.3
-      get-stream: 8.0.1
-      human-signals: 5.0.0
+      get-stream: 6.0.1
+      human-signals: 4.3.1
       is-stream: 3.0.0
       merge-stream: 2.0.0
       npm-run-path: 5.1.0
       onetime: 6.0.0
-      signal-exit: 4.1.0
+      signal-exit: 3.0.7
       strip-final-newline: 3.0.0
     dev: true
 
@@ -12973,11 +10397,6 @@ packages:
     engines: {node: '>= 12'}
     dependencies:
       tslib: 2.5.0
-    dev: true
-
-  /filesize@10.1.0:
-    resolution: {integrity: sha512-GTLKYyBSDz3nPhlLVPjPWZCnhkd9TrrRArNcy8Z+J2cqScB7h2McAzR6NBX6nYOoWafql0roY8hrocxnZBv9CQ==}
-    engines: {node: '>= 10.4.0'}
     dev: true
 
   /fill-range@7.0.1:
@@ -13242,11 +10661,6 @@ packages:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
 
-  /get-stream@8.0.1:
-    resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
-    engines: {node: '>=16'}
-    dev: true
-
   /get-symbol-description@1.0.0:
     resolution: {integrity: sha512-2EmdH1YvIQiZpltCNgkuiUnyukzxM/R6NDJX31Ke3BG1Nq5b0S2PhX59UKi9vZpPDQVdqn+1IcaAwnzTT5vCjw==}
     engines: {node: '>= 0.4'}
@@ -13317,17 +10731,6 @@ packages:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
-    dev: true
-
-  /glob@8.1.0:
-    resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
-    engines: {node: '>=12'}
-    dependencies:
-      fs.realpath: 1.0.0
-      inflight: 1.0.6
-      inherits: 2.0.4
-      minimatch: 5.1.6
-      once: 1.4.0
     dev: true
 
   /global-dirs@0.1.1:
@@ -13462,13 +10865,6 @@ packages:
 
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
-    dev: true
-
-  /gzip-size@7.0.0:
-    resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      duplexer: 0.1.2
     dev: true
 
   /hard-rejection@2.1.0:
@@ -13842,9 +11238,9 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
-  /human-signals@5.0.0:
-    resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
-    engines: {node: '>=16.17.0'}
+  /human-signals@4.3.1:
+    resolution: {integrity: sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==}
+    engines: {node: '>=14.18.0'}
     dev: true
 
   /humanize-number@0.0.2:
@@ -14205,10 +11601,6 @@ packages:
     resolution: {integrity: sha512-6BEnpVn1rcf3ngfmViLM6vjUjGErbdrL4rwlv+u1NO1XO8kqT4YGL8+19Q+Z/bas8tY90BTWMk2+fW1g6hQjbA==}
     dev: true
 
-  /is-module@1.0.0:
-    resolution: {integrity: sha512-51ypPSPCoTEIN9dy5Oy+h4pShgJmPCygKfyRCISBI+JoWT/2oJvK8QPxmwv7b/p239jXrm9M1mlQbyKJ5A152g==}
-    dev: true
-
   /is-negative-zero@2.0.2:
     resolution: {integrity: sha512-dqJvarLawXsFbNDeJW7zAz8ItJ9cd28YufuuFzh0G8pNHjJMnY08Dv7sYX2uF5UpQOwieAeOExEYAWWfu7ZZUA==}
     engines: {node: '>= 0.4'}
@@ -14271,12 +11663,6 @@ packages:
     dependencies:
       lowercase-keys: 1.0.1
       proto-props: 2.0.0
-    dev: true
-
-  /is-reference@1.2.1:
-    resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
-    dependencies:
-      '@types/estree': 1.0.3
     dev: true
 
   /is-regex@1.1.4:
@@ -15447,28 +12833,34 @@ packages:
   /lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
-  /lint-staged@15.0.0:
-    resolution: {integrity: sha512-OdrAd/qZhO4MnPyNRehI1Fh6j8kcfQoGpjQ1Vw8dSkDkNONdqe/HpKXqtKpFIPCAYeF4/tfnE11MnjLYuLKjqA==}
-    engines: {node: '>=18.12.0'}
+  /lint-staged@14.0.0:
+    resolution: {integrity: sha512-0tLf0pqZYkar/wu3nTctk4rVIG+d7PanDYv4/IQR4qwdqfQkTDziLRFnqMcLuLBTuUqmcLwsHPD2EjQ18d/oaA==}
+    engines: {node: ^16.14.0 || >=18.0.0}
     hasBin: true
     dependencies:
       chalk: 5.3.0
-      commander: 11.1.0
+      commander: 11.0.0
       debug: 4.3.4
-      execa: 8.0.1
+      execa: 7.2.0
       lilconfig: 2.1.0
-      listr2: 7.0.1
+      listr2: 6.6.1
       micromatch: 4.0.5
       pidtree: 0.6.0
       string-argv: 0.3.2
-      yaml: 2.3.2
+      yaml: 2.3.1
     transitivePeerDependencies:
+      - enquirer
       - supports-color
     dev: true
 
-  /listr2@7.0.1:
-    resolution: {integrity: sha512-nz+7hwgbDp8eWNoDgzdl4hA/xDSLrNRzPu1TLgOYs6l5Y+Ma6zVWWy9Oyt9TQFONwKoSPoka3H50D3vD5EuNwg==}
+  /listr2@6.6.1:
+    resolution: {integrity: sha512-+rAXGHh0fkEWdXBmX+L6mmfmXmXvDGEKzkjxO+8mP3+nI/r/CWznVBvsibXdxda9Zz0OW2e2ikphN3OwCT/jSg==}
     engines: {node: '>=16.0.0'}
+    peerDependencies:
+      enquirer: '>= 2.3.0 < 3'
+    peerDependenciesMeta:
+      enquirer:
+        optional: true
     dependencies:
       cli-truncate: 3.1.0
       colorette: 2.0.20
@@ -15627,7 +13019,7 @@ packages:
     resolution: {integrity: sha512-l0x2DvrW294C9uDCoQe1VSU4gf529FkSZ6leBl4TiqZH/e+0R7hSfHQBNut2mNygDgHwvYHfFLn6Oxb3VWj2rA==}
     engines: {node: '>=12'}
     dependencies:
-      chalk: 5.3.0
+      chalk: 5.1.2
       is-unicode-supported: 1.3.0
     dev: false
 
@@ -15702,13 +13094,6 @@ packages:
     hasBin: true
     dev: true
 
-  /magic-string@0.30.5:
-    resolution: {integrity: sha512-7xlpfBaQaP/T6Vh8MO/EqXSW5En6INHEvEXQiuff7Gku0PWjU3uf6w/j9o7O+SpB5fOAkrI5HeoNgwjEO0pFsA==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
-    dev: true
-
   /make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -15738,6 +13123,7 @@ packages:
   /map-obj@5.0.0:
     resolution: {integrity: sha512-2L3MIgJynYrZ3TYMriLDLWocz15okFakV6J12HXvMXDHui2x/zgChzg1u9mFFGbbGWE+GsLpQByt4POb9Or+uA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: true
 
   /markdown-escapes@1.0.4:
     resolution: {integrity: sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==}
@@ -16322,13 +13708,6 @@ packages:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
     dependencies:
       brace-expansion: 1.1.11
-    dev: true
-
-  /minimatch@5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
-    engines: {node: '>=10'}
-    dependencies:
-      brace-expansion: 2.0.1
     dev: true
 
   /minimist-options@4.1.0:
@@ -18614,40 +15993,6 @@ packages:
       globalthis: 1.0.2
       semver-compare: 1.0.0
 
-  /rollup-plugin-summary@2.0.0(rollup@4.1.4):
-    resolution: {integrity: sha512-7Av6DQeCmVNpFmCdkkbMya1CneeGWhjSXXQ3B4yDO+BvN/Kbohqi3IEYXAvgHP3iIafSfMyOw+PBLFUlvf1ViA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.68.0||^3.0.0
-    dependencies:
-      brotli-size: 4.0.0
-      cli-table3: 0.6.3
-      filesize: 10.1.0
-      gzip-size: 7.0.0
-      rollup: 4.1.4
-      terser: 5.22.0
-    dev: true
-
-  /rollup@4.1.4:
-    resolution: {integrity: sha512-U8Yk1lQRKqCkDBip/pMYT+IKaN7b7UesK3fLSTuHBoBJacCE+oBqo/dfG/gkUdQNNB2OBmRP98cn2C2bkYZkyw==}
-    engines: {node: '>=18.0.0', npm: '>=8.0.0'}
-    hasBin: true
-    optionalDependencies:
-      '@rollup/rollup-android-arm-eabi': 4.1.4
-      '@rollup/rollup-android-arm64': 4.1.4
-      '@rollup/rollup-darwin-arm64': 4.1.4
-      '@rollup/rollup-darwin-x64': 4.1.4
-      '@rollup/rollup-linux-arm-gnueabihf': 4.1.4
-      '@rollup/rollup-linux-arm64-gnu': 4.1.4
-      '@rollup/rollup-linux-arm64-musl': 4.1.4
-      '@rollup/rollup-linux-x64-gnu': 4.1.4
-      '@rollup/rollup-linux-x64-musl': 4.1.4
-      '@rollup/rollup-win32-arm64-msvc': 4.1.4
-      '@rollup/rollup-win32-ia32-msvc': 4.1.4
-      '@rollup/rollup-win32-x64-msvc': 4.1.4
-      fsevents: 2.3.2
-    dev: true
-
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -18829,8 +16174,8 @@ packages:
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
-  /signal-exit@4.1.0:
-    resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
+  /signal-exit@4.0.2:
+    resolution: {integrity: sha512-MY2/qGx4enyjprQnFaZsHib3Yadh3IXyV2C321GY0pjGfVBu4un0uDJkwgdxqO+Rdx8JMT8IfJIRwbYVz3Ob3Q==}
     engines: {node: '>=14'}
     dev: true
 
@@ -19087,13 +16432,6 @@ packages:
       source-map: 0.6.1
     dev: true
 
-  /source-map-support@0.5.21:
-    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
-    dependencies:
-      buffer-from: 1.1.2
-      source-map: 0.6.1
-    dev: true
-
   /source-map@0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
     engines: {node: '>=0.10.0'}
@@ -19122,7 +16460,7 @@ packages:
     resolution: {integrity: sha512-YJRGf0loiLsHTQZztPSI5pb9RmlKE5y6Nvxko6dNtGrkra+1BaJ7PN86GQ1/2ldLZgMhMG9ITopkDJ+7lHkBYw==}
     engines: {node: '>=16'}
     dependencies:
-      signal-exit: 4.1.0
+      signal-exit: 4.0.2
       tree-kill: 1.2.2
     dev: true
 
@@ -19789,17 +17127,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /terser@5.22.0:
-    resolution: {integrity: sha512-hHZVLgRA2z4NWcN6aS5rQDc+7Dcy58HOf2zbYwmFcQ+ua3h6eEFf5lIDKTzbWwlazPyOZsFQO8V80/IjVNExEw==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      '@jridgewell/source-map': 0.3.5
-      acorn: 8.10.0
-      commander: 2.20.3
-      source-map-support: 0.5.21
-    dev: true
-
   /test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
@@ -20114,6 +17441,7 @@ packages:
   /type-fest@4.2.0:
     resolution: {integrity: sha512-5zknd7Dss75pMSED270A1RQS3KloqRJA9XbXLe0eCxyw7xXFb3rd+9B0UQ/0E+LQT6lnrLviEolYORlRWamn4w==}
     engines: {node: '>=16'}
+    dev: true
 
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -20578,7 +17906,7 @@ packages:
     dependencies:
       ansi-styles: 6.2.1
       string-width: 5.1.2
-      strip-ansi: 7.1.0
+      strip-ansi: 7.0.1
     dev: false
 
   /wrap-ansi@8.1.0:
@@ -20614,7 +17942,7 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     dependencies:
       imurmurhash: 0.1.4
-      signal-exit: 4.1.0
+      signal-exit: 4.0.2
     dev: true
 
   /ws@8.13.0:
@@ -20695,8 +18023,8 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  /yaml@2.3.2:
-    resolution: {integrity: sha512-N/lyzTPaJasoDmfV7YTrYCI0G/3ivm/9wdG0aHuheKowWQwGTsK0Eoiw6utmzAnI6pkJa0DUVygvp3spqqEKXg==}
+  /yaml@2.3.1:
+    resolution: {integrity: sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==}
     engines: {node: '>= 14'}
     dev: true
 
