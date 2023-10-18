@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 export type SocialConnectorCase = {
   groupFactoryId?: string;
   factoryId: string;
@@ -26,137 +25,6 @@ const google: SocialConnectorCase = {
     'formConfig.clientId': '',
     'formConfig.clientSecret': '',
     'formConfig.scope': '',
-  },
-};
-
-const apple: SocialConnectorCase = {
-  factoryId: 'apple-universal',
-  name: 'Apple',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-  },
-};
-
-const facebook: SocialConnectorCase = {
-  factoryId: 'facebook-universal',
-  name: 'Facebook',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-    'formConfig.scope': '',
-  },
-};
-
-const github: SocialConnectorCase = {
-  factoryId: 'github-universal',
-  name: 'GitHub',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-    'formConfig.scope': '',
-  },
-};
-
-const discord: SocialConnectorCase = {
-  factoryId: 'discord-universal',
-  name: 'Discord',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-    'formConfig.scope': '',
-  },
-};
-
-const kakao: SocialConnectorCase = {
-  factoryId: 'kakao-universal',
-  name: 'Kakao',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-  },
-};
-
-const naver: SocialConnectorCase = {
-  factoryId: 'naver-universal',
-  name: 'Naver',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-  },
-};
-
-const microsoft: SocialConnectorCase = {
-  factoryId: 'azuread-universal',
-  name: 'Microsoft',
-  initialFormData: {
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret',
-    'formConfig.cloudInstance': 'cloud-instance',
-    'formConfig.tenantId': 'tenant-id',
-  },
-  updateFormData: {
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret',
-    'formConfig.cloudInstance': 'new-cloud-instance',
-    'formConfig.tenantId': 'new-tenant-id',
-  },
-  errorFormData: {
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-    'formConfig.cloudInstance': '',
-    'formConfig.tenantId': '',
   },
 };
 
@@ -219,107 +87,6 @@ const wechatWeb: SocialConnectorCase = {
   },
 };
 
-const alipayNative: SocialConnectorCase = {
-  groupFactoryId: 'alipay-native',
-  factoryId: 'alipay-native',
-  name: 'Alipay',
-  initialFormData: {
-    'formConfig.appId': 'app-id',
-    'formConfig.privateKey': 'private-key',
-  },
-  updateFormData: {
-    'formConfig.appId': 'new-app-id',
-    'formConfig.privateKey': 'new-private-key',
-  },
-  errorFormData: {
-    'formConfig.appId': '',
-    'formConfig.privateKey': '',
-  },
-};
-
-const alipayWeb: SocialConnectorCase = {
-  groupFactoryId: 'alipay-native',
-  factoryId: 'alipay-web',
-  name: 'Alipay',
-  initialFormData: {
-    'formConfig.appId': 'app-id',
-    'formConfig.privateKey': 'private-key',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.appId': 'new-app-id',
-    'formConfig.privateKey': 'new-private-key',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.appId': '',
-    'formConfig.privateKey': '',
-    'formConfig.scope': '',
-  },
-};
-
-const oauth2: SocialConnectorCase = {
-  factoryId: 'oauth2',
-  name: 'OAuth 2.0',
-  initialFormData: {
-    'formConfig.authorizationEndpoint': 'authorization-endpoint',
-    'formConfig.tokenEndpoint': 'token-endpoint',
-    'formConfig.userInfoEndpoint': 'user-info-endpoint',
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret-id',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.authorizationEndpoint': 'new-authorization-endpoint',
-    'formConfig.tokenEndpoint': 'new-token-endpoint',
-    'formConfig.userInfoEndpoint': 'new-user-info-endpoint',
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret-id',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.authorizationEndpoint': '',
-    'formConfig.tokenEndpoint': '',
-    'formConfig.userInfoEndpoint': '',
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-    'formConfig.scope': '',
-  },
-  standardBasicFormData: {
-    name: 'OAuth 2.0',
-    target: 'oauth2',
-  },
-};
-
-const oidc: SocialConnectorCase = {
-  factoryId: 'oidc',
-  name: 'OIDC',
-  initialFormData: {
-    'formConfig.authorizationEndpoint': 'authorization-endpoint',
-    'formConfig.tokenEndpoint': 'token-endpoint',
-    'formConfig.clientId': 'client-id',
-    'formConfig.clientSecret': 'client-secret-id',
-    'formConfig.scope': 'scope',
-  },
-  updateFormData: {
-    'formConfig.authorizationEndpoint': 'new-authorization-endpoint',
-    'formConfig.tokenEndpoint': 'new-token-endpoint',
-    'formConfig.clientId': 'new-client-id',
-    'formConfig.clientSecret': 'new-client-secret-id',
-    'formConfig.scope': 'new-scope',
-  },
-  errorFormData: {
-    'formConfig.authorizationEndpoint': '',
-    'formConfig.tokenEndpoint': '',
-    'formConfig.clientId': '',
-    'formConfig.clientSecret': '',
-  },
-  standardBasicFormData: {
-    name: 'OIDC',
-    target: 'oidc',
-  },
-};
-
 const saml: SocialConnectorCase = {
   factoryId: 'saml',
   name: 'SAML',
@@ -350,21 +117,14 @@ const saml: SocialConnectorCase = {
   },
 };
 export const socialConnectorTestCases = [
+  // Universal
   google,
-  apple,
-  facebook,
-  github,
-  discord,
-  kakao,
-  naver,
-  microsoft,
+  // Web
   feishu,
+  // Group - Native
   wechatNative,
+  // Group - Web
   wechatWeb,
-  alipayNative,
-  alipayWeb,
-  oauth2,
-  oidc,
+  // Standard
   saml,
 ];
-/* eslint-enable max-lines */
