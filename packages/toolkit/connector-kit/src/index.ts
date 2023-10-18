@@ -1,8 +1,8 @@
 import type { ZodType, ZodTypeDef } from 'zod';
 
-import { ConnectorError, ConnectorErrorCodes } from './types.js';
+import { ConnectorError, ConnectorErrorCodes } from './types/index.js';
 
-export * from './types.js';
+export * from './types/index.js';
 
 export function validateConfig<Output, Input = Output>(
   config: unknown,
