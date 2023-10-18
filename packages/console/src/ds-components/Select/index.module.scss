@@ -16,6 +16,40 @@
   cursor: pointer;
   position: relative;
 
+  &.multiple {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: _.unit(2);
+    padding: _.unit(2) _.unit(3);
+    cursor: text;
+
+    .tag {
+      cursor: auto;
+      display: flex;
+      align-items: center;
+      gap: _.unit(1);
+    }
+
+    .close {
+      width: 16px;
+      height: 16px;
+    }
+
+    .delete {
+      width: 20px;
+      height: 20px;
+      margin-right: _.unit(-0.5);
+    }
+
+    input {
+      color: var(--color-text);
+      font: var(--font-body-2);
+      background: transparent;
+      flex-grow: 1;
+      padding: _.unit(0.5);
+    }
+  }
+
   .title {
     @include _.text-ellipsis;
   }
@@ -83,4 +117,10 @@
 .dropdown {
   padding: _.unit(1);
   max-height: 288px;
+}
+
+.noResult {
+  color: var(--color-placeholder);
+  font: var(--font-body-2);
+  padding: _.unit(2);
 }

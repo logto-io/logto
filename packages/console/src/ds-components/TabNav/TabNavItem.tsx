@@ -34,7 +34,9 @@ function TabNavItem<Paths extends string>({
 }: Props<Paths>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { match, getTo } = useMatchTenantPath();
-  const selected = href ? match(href) : isActive;
+  // `isActive` is used to override the default behavior of `match` when the
+  // tab is not a link or the link is a relative path.
+  const selected = isActive ?? (href ? match(href) : false);
 
   return (
     <div className={styles.item}>

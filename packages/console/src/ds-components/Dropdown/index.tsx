@@ -30,6 +30,8 @@ type Props = {
   titleClassName?: string;
   horizontalAlign?: HorizontalAlignment;
   hasOverflowContent?: boolean;
+  /** Set to `true` to directly render the dropdown without the overlay. */
+  noOverlay?: true;
 };
 
 function Div({
@@ -50,6 +52,7 @@ function Dropdown({
   titleClassName,
   horizontalAlign = 'end',
   hasOverflowContent,
+  noOverlay,
 }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -64,11 +67,15 @@ function Dropdown({
   const WrapperComponent = hasOverflowContent ? Div : OverlayScrollbar;
 
   return (
+    // Using `ReactModal` will cause accessibility issues for multi-select since the dropdown is
+    // not a child or sibling of the input element. Thus the tab order will be broken. Consider
+    // using something else instead.
     <ReactModal
       shouldCloseOnOverlayClick
       isOpen={isOpen}
       style={{
         content: {
+          zIndex: 103,
           width:
             isFullWidth && anchorRef.current
               ? anchorRef.current.getBoundingClientRect().width
@@ -77,8 +84,10 @@ function Dropdown({
           ...position,
         },
       }}
+      shouldFocusAfterRender={false}
       className={classNames(styles.content, positionState.verticalAlign === 'top' && styles.onTop)}
       overlayClassName={styles.overlay}
+      overlayElement={noOverlay && ((_, contentElement) => contentElement)}
       onRequestClose={(event) => {
         /**
          * Note:

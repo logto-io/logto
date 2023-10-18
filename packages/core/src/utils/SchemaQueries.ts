@@ -32,10 +32,11 @@ export default class SchemaQueries<
 
   constructor(
     public readonly pool: CommonQueryMethods,
-    public readonly schema: GeneratedSchema<Key | 'id', CreateSchema, Schema>
+    public readonly schema: GeneratedSchema<Key | 'id', CreateSchema, Schema>,
+    orderBy?: { field: Key | 'id'; order: 'asc' | 'desc' }
   ) {
     this.#findTotalNumber = buildGetTotalRowCountWithPool(this.pool, this.schema.table);
-    this.#findAll = buildFindAllEntitiesWithPool(this.pool)(this.schema);
+    this.#findAll = buildFindAllEntitiesWithPool(this.pool)(this.schema, orderBy && [orderBy]);
     this.#findById = buildFindEntityByIdWithPool(this.pool)(this.schema);
     this.#insert = buildInsertIntoWithPool(this.pool)(this.schema, { returning: true });
     this.#updateById = buildUpdateWhereWithPool(this.pool)(this.schema, true);

@@ -26,6 +26,7 @@ import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
+import Organizations from '@/pages/Organizations';
 import Profile from '@/pages/Profile';
 import ChangePasswordModal from '@/pages/Profile/containers/ChangePasswordModal';
 import LinkEmailModal from '@/pages/Profile/containers/LinkEmailModal';
@@ -149,6 +150,12 @@ function ConsoleContent() {
                 <Route path={RoleDetailsTabs.M2mApps} element={<RoleApplications />} />
               </Route>
             </Route>
+            {isDevFeaturesEnabled && (
+              <Route path="organizations">
+                <Route index element={<Organizations />} />
+                <Route path=":tab" element={<Organizations />} />
+              </Route>
+            )}
             <Route path="profile">
               <Route index element={<Profile />} />
               <Route path="verify-password" element={<VerifyPasswordModal />} />

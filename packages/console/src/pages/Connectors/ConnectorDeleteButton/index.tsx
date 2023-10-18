@@ -1,4 +1,3 @@
-import type { ConnectorResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -41,7 +40,7 @@ function ConnectorDeleteButton({ connectorGroup }: Props) {
     try {
       await Promise.all(
         connectors.map(async (connector) => {
-          await api.delete(`api/connectors/${connector.id}`).json<ConnectorResponse>();
+          await api.delete(`api/connectors/${connector.id}`);
         })
       );
 
