@@ -30,6 +30,9 @@ const session = {
     webauthn_verification_failed: 'WebAuthn verification failed.',
     webauthn_verification_not_found: 'WebAuthn verification not found.',
     bind_mfa_existed: 'MFA already exists.',
+    backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
+    backup_code_required: 'Backup code is required.',
+    invalid_backup_code: 'Invalid backup code.',
   },
 };
 
