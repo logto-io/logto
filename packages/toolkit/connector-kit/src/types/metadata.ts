@@ -41,6 +41,11 @@ export const socialConnectorMetadataGuard = z.object({
   isStandard: z.boolean().optional(),
 });
 
+export const ssoConnectorMetadataGuard = z.object({
+  restrictedSignInMethod: z.boolean(),
+  domains: z.array(z.string()),
+});
+
 export const connectorMetadataGuard = z
   .object({
     // Unique connector factory id
@@ -59,6 +64,7 @@ export const connectorMetadataGuard = z
     formItems: connectorConfigFormItemGuard.array().optional(),
   })
   .merge(socialConnectorMetadataGuard)
+  .merge(ssoConnectorMetadataGuard.partial())
   .catchall(z.unknown());
 
 export type ConnectorMetadata = z.infer<typeof connectorMetadataGuard>;
@@ -70,6 +76,8 @@ export const configurableConnectorMetadataGuard = connectorMetadataGuard
     name: true,
     logo: true,
     logoDark: true,
+    restrictedSignInMethod: true,
+    domains: true,
   })
   .partial();
 

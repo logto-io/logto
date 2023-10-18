@@ -1,4 +1,4 @@
-import { scopePostProcessor } from './types.js';
+import { scopePostProcessor } from './oidc.js';
 
 describe('scopePostProcessor', () => {
   it('`openid` will be added if not exists (with empty string)', () => {

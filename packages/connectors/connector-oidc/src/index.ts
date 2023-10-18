@@ -14,12 +14,13 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  idTokenProfileStandardClaimsGuard,
 } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { defaultMetadata } from './constant.js';
-import { idTokenProfileStandardClaimsGuard, oidcConfigGuard } from './types.js';
+import { oidcConfigGuard } from './types.js';
 import { getIdToken } from './utils.js';
 
 const generateNonce = () => generateStandardId();

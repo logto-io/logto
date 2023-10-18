@@ -1,19 +1,25 @@
-import { assert, pick } from '@silverhand/essentials';
+import { pick } from '@silverhand/essentials';
 import type { Response } from 'got';
 import { got, HTTPError } from 'got';
 import snakecaseKeys from 'snakecase-keys';
 
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  parseJson,
+  oidcAuthorizationResponseGuard,
+  oidcTokenResponseGuard,
+  type OidcTokenResponse,
+} from '@logto/connector-kit';
 
 import { defaultTimeout } from './constant.js';
-import type { AccessTokenResponse, OidcConfig } from './types.js';
-import { accessTokenResponseGuard, delimiter, authResponseGuard } from './types.js';
+import type { OidcConfig } from './types.js';
 
 export const accessTokenRequester = async (
   tokenEndpoint: string,
   queryParameters: Record<string, string>,
   timeout: number = defaultTimeout
-): Promise<AccessTokenResponse> => {
+): Promise<OidcTokenResponse> => {
   try {
     const httpResponse = await got.post({
       url: tokenEndpoint,
@@ -21,7 +27,7 @@ export const accessTokenRequester = async (
       timeout: { request: timeout },
     });
 
-    return await accessTokenResponseHandler(httpResponse);
+    return accessTokenResponseHandler(httpResponse);
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
       throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
@@ -30,31 +36,18 @@ export const accessTokenRequester = async (
   }
 };
 
-const accessTokenResponseHandler = async (
-  response: Response<string>
-): Promise<AccessTokenResponse> => {
-  const result = accessTokenResponseGuard.safeParse(parseJson(response.body));
+const accessTokenResponseHandler = (response: Response<string>): OidcTokenResponse => {
+  const result = oidcTokenResponseGuard.safeParse(parseJson(response.body));
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
   }
 
-  assert(
-    result.data.access_token,
-    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, {
-      message: 'Missing `access_token` in token response!',
-    })
-  );
-
   return result.data;
 };
 
-export const isIdTokenInResponseType = (responseType: string) => {
-  return responseType.split(delimiter).includes('id_token');
-};
-
 export const getIdToken = async (config: OidcConfig, data: unknown, redirectUri: string) => {
-  const result = authResponseGuard.safeParse(data);
+  const result = oidcAuthorizationResponseGuard.safeParse(data);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.General, data);

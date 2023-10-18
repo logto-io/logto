@@ -6,14 +6,19 @@ export enum ConnectorType {
   Email = 'Email',
   Sms = 'Sms',
   Social = 'Social',
+  SsoOidc = 'SsoOidc',
+  SsoSaml = 'SsoSaml',
 }
 
 /* 
   SocialConnector, EmailConnector, SmsConnector has dependency on BaseConnector,
   so BaseConnector need be defined separately.
 */
-export type BaseConnector<Type extends ConnectorType> = {
+export type BaseConnector<
+  Type extends ConnectorType,
+  MetadataType extends ConnectorMetadata = ConnectorMetadata,
+> = {
   type: Type;
-  metadata: ConnectorMetadata;
+  metadata: MetadataType;
   configGuard: ZodType;
 };

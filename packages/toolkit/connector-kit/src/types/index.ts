@@ -3,6 +3,7 @@ import type { BaseRoutes, Router } from '@withtyped/server';
 
 import { type SmsConnector, type EmailConnector } from './passwordless.js';
 import { type SocialConnector } from './social.js';
+import { type SsoOidcConnector } from './sso.js';
 
 export * from './config-form.js';
 export * from './error.js';
@@ -10,6 +11,8 @@ export * from './metadata.js';
 export * from './foundation.js';
 export * from './passwordless.js';
 export * from './social.js';
+export * from './sso.js';
+export * from './oidc.js';
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
@@ -27,7 +30,7 @@ export type CreateConnector<
   getCloudServiceClient?: GetCloudServiceClient<U>;
 }) => Promise<T>;
 
-export type AllConnector = SmsConnector | EmailConnector | SocialConnector;
+export type AllConnector = SmsConnector | EmailConnector | SocialConnector | SsoOidcConnector;
 
 export enum DemoConnector {
   Sms = 'logto-sms',

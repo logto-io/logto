@@ -3,6 +3,7 @@ import type { ZodType, ZodTypeDef } from 'zod';
 import { ConnectorError, ConnectorErrorCodes } from './types/index.js';
 
 export * from './types/index.js';
+export * from './utils/oidc.js';
 
 export function validateConfig<Output, Input = Output>(
   config: unknown,
