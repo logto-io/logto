@@ -57,7 +57,7 @@ export const expectToAddSignInMethod = async (page: Page, method: string, isAddA
 
   // Click Add another
   await expect(signInMethodsField).toClick('button span', {
-    text: isAddAnother ? 'Add Another' : 'Add Sign-in Method',
+    text: isAddAnother ? 'Add another' : 'Add sign-in method',
   });
 
   // Wait for the dropdown to be rendered in the correct position

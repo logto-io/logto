@@ -33,6 +33,8 @@ const general = {
   copied: 'コピーされました',
   required: '必須',
   add_another: 'もう一つ追加',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: '{{title}}を削除してよろしいですか？',
   settings_nav: '設定',
   unsaved_changes_warning: '変更を加えました。このページを離れてもよろしいですか？',
@@ -57,6 +59,10 @@ const general = {
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
   select: '選択する',
   contact_us_action: 'お問い合わせ',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

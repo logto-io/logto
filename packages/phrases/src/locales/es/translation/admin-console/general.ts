@@ -33,6 +33,8 @@ const general = {
   copied: 'Copiado',
   required: 'Requerido',
   add_another: 'Agregar Otro',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: '¿Está seguro que desea eliminar este {{title}}?',
   settings_nav: 'Configuración',
   unsaved_changes_warning:
@@ -58,6 +60,10 @@ const general = {
   unknown_error: 'Error desconocido, por favor inténtalo de nuevo más tarde.',
   select: 'Seleccionar',
   contact_us_action: 'Contáctanos',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

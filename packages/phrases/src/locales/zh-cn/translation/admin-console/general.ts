@@ -33,6 +33,8 @@ const general = {
   copied: '已复制',
   required: '必填',
   add_another: '新增',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: '你确定要删除这个 {{title}} 吗?',
   settings_nav: '设置',
   unsaved_changes_warning: '还有未保存的变更, 确定要离开吗？',
@@ -57,6 +59,10 @@ const general = {
   unknown_error: '未知错误，请稍后重试。',
   select: '选择',
   contact_us_action: '联系我们',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

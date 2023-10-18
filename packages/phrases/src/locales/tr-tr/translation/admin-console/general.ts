@@ -33,6 +33,8 @@ const general = {
   copied: 'Kopyalandı',
   required: 'Gerekli',
   add_another: 'Bir tane daha ekle',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: 'Bu dosyayı silmek istediğinize emin misiniz: {{title}}?',
   settings_nav: 'Ayarlar',
   unsaved_changes_warning:
@@ -58,6 +60,10 @@ const general = {
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
   select: 'Seç',
   contact_us_action: 'Bizimle İletişime Geçin',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

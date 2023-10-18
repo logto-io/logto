@@ -6,6 +6,8 @@ const tabs = {
   sign_in_experience: '登錄體驗',
   connectors: '連接器',
   webhooks: 'Webhooks',
+  /** UNTRANSLATED */
+  organizations: 'Organizations',
   users: '用戶管理',
   audit_logs: '審計日誌',
   roles: '角色',

@@ -33,6 +33,8 @@ const general = {
   copied: 'Скопировано',
   required: 'Обязательное',
   add_another: 'Добавить ещё',
+  /** UNTRANSLATED */
+  create_another: 'Create another',
   deletion_confirmation: 'Вы действительно хотите удалить этот {{title}}?',
   settings_nav: 'Настройки',
   unsaved_changes_warning: 'Вы внесли изменения. Вы действительно хотите покинуть эту страницу?',
@@ -57,6 +59,10 @@ const general = {
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
   select: 'Выбрать',
   contact_us_action: 'Связаться с нами',
+  /** UNTRANSLATED */
+  description: 'Description',
+  /** UNTRANSLATED */
+  name: 'Name',
 };
 
 export default Object.freeze(general);

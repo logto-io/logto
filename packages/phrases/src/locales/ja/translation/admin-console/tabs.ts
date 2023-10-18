@@ -6,6 +6,8 @@ const tabs = {
   sign_in_experience: 'サインイン',
   connectors: 'コネクタ',
   webhooks: 'Webhooks',
+  /** UNTRANSLATED */
+  organizations: 'Organizations',
   users: 'ユーザー管理',
   audit_logs: '監査ログ',
   roles: '役割',

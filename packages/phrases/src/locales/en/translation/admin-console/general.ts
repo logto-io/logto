@@ -32,7 +32,8 @@ const general = {
   copying: 'Copying',
   copied: 'Copied',
   required: 'Required',
-  add_another: 'Add Another',
+  add_another: 'Add another',
+  create_another: 'Create another',
   deletion_confirmation: 'Are you sure you want to delete this {{title}}?',
   settings_nav: 'Settings',
   unsaved_changes_warning: 'You have made some changes. Are you sure you want to leave this page?',
@@ -57,6 +58,8 @@ const general = {
   unknown_error: 'Unknown error, please try again later.',
   select: 'Select',
   contact_us_action: 'Contact Us',
+  description: 'Description',
+  name: 'Name',
 };
 
 export default Object.freeze(general);
