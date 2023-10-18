@@ -1,6 +1,5 @@
 import { authenticator } from 'otplib';
 
-import { demoAppUrl } from '#src/constants.js';
 import { waitFor, dcls } from '#src/utils.js';
 
 import ExpectExperience from './expect-experience.js';
@@ -35,10 +34,7 @@ export default class ExpectTotpExperience extends ExpectExperience {
 
     const code = authenticator.generate(secret);
 
-    for (const [index, char] of code.split('').entries()) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.toFillInput(`totpCode_${index}`, char);
-    }
+    await this.fillTotpCode(code);
 
     // Wait for the form to commit automatically
     await waitFor(500);
@@ -64,10 +60,7 @@ export default class ExpectTotpExperience extends ExpectExperience {
 
     const code = authenticator.generate(secret);
 
-    for (const [index, char] of code.split('').entries()) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.toFillInput(`totpCode_${index}`, char);
-    }
+    await this.fillTotpCode(code);
 
     // Wait for the form to commit automatically
     await waitFor(500);
@@ -76,17 +69,10 @@ export default class ExpectTotpExperience extends ExpectExperience {
     }
   }
 
-  /**
-   * Assert the page is at the demo app page and get the user ID from the page.
-   * @returns The user ID.
-   */
-  async getUserIdFromDemoAppPage() {
-    this.toMatchUrl(demoAppUrl);
-    const userIdDiv = await expect(this.page).toMatchElement([dcls('infoCard'), 'div'].join(' '), {
-      text: 'User ID: ',
-    });
-    const userIdSpan = await expect(userIdDiv).toMatchElement('span');
-
-    return (await userIdSpan.evaluate((element) => element.textContent)) ?? '';
+  private async fillTotpCode(code: string) {
+    for (const [index, char] of code.split('').entries()) {
+      // eslint-disable-next-line no-await-in-loop
+      await this.toFillInput(`totpCode_${index}`, char);
+    }
   }
 }
