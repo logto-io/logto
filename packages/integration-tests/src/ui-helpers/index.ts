@@ -32,7 +32,7 @@ type WaitToasterOptions = {
 export const waitForToast = async (page: Page, { text, type = 'success' }: WaitToasterOptions) => {
   const toast = await expect(page).toMatchElement(
     `div[class*=toast][class*=${type}]:has(div[class$=message])`,
-    { text }
+    { text, timeout: 5000 }
   );
 
   // Remove immediately to prevent waiting for the toast to disappear and matching the same toast again

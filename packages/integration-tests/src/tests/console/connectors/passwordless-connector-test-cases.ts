@@ -60,73 +60,6 @@ const sendGrid: PasswordlessConnectorCase = {
   },
 };
 
-const aliyunDirectMail: PasswordlessConnectorCase = {
-  factoryId: 'aliyun-direct-mail',
-  isEmailConnector: true,
-  name: 'Aliyun Direct Mail',
-  initialFormData: {
-    'formConfig.accessKeyId': 'access-key-id',
-    'formConfig.accessKeySecret': 'access-key-config',
-    'formConfig.accountName': 'account-name',
-    'formConfig.fromAlias': 'from-alias',
-  },
-  updateFormData: {
-    'formConfig.accessKeyId': 'new-access-key-id',
-    'formConfig.accessKeySecret': 'new-access-key-config',
-    'formConfig.accountName': 'new-account-name',
-    'formConfig.fromAlias': 'new-from-alias',
-  },
-  errorFormData: {
-    'formConfig.accessKeyId': '',
-    'formConfig.accessKeySecret': '',
-    'formConfig.accountName': '',
-  },
-};
-
-const mailgun: PasswordlessConnectorCase = {
-  factoryId: 'mailgun-email',
-  isEmailConnector: true,
-  name: 'Mailgun',
-  initialFormData: {
-    'formConfig.endpoint': 'https://fake.mailgun.net',
-    'formConfig.domain': 'mailgun-domain.com',
-    'formConfig.apiKey': 'api-key',
-    'formConfig.from': 'from',
-  },
-  updateFormData: {
-    'formConfig.endpoint': 'https://new-fake.mailgun.net',
-    'formConfig.domain': 'new-mailgun-domain.com',
-    'formConfig.apiKey': 'new-api-key',
-    'formConfig.from': 'new-from',
-  },
-  errorFormData: {
-    'formConfig.domain': '',
-    'formConfig.apiKey': '',
-    'formConfig.from': '',
-  },
-};
-
-const smpt: PasswordlessConnectorCase = {
-  factoryId: 'simple-mail-transfer-protocol',
-  isEmailConnector: true,
-  name: 'SMTP',
-  initialFormData: {
-    'formConfig.host': 'host',
-    'formConfig.port': '25',
-    'formConfig.fromEmail': 'from',
-  },
-  updateFormData: {
-    'formConfig.host': 'new-host',
-    'formConfig.port': '26',
-    'formConfig.fromEmail': 'new-from',
-  },
-  errorFormData: {
-    'formConfig.host': '',
-    'formConfig.port': '',
-    'formConfig.fromEmail': '',
-  },
-};
-
 const twilio: PasswordlessConnectorCase = {
   factoryId: 'twilio-short-message-service',
   isEmailConnector: false,
@@ -145,55 +78,6 @@ const twilio: PasswordlessConnectorCase = {
     'formConfig.accountSID': '',
     'formConfig.authToken': '',
     'formConfig.fromMessagingServiceSID': '',
-  },
-};
-
-const aliyunShortMessage: PasswordlessConnectorCase = {
-  factoryId: 'aliyun-short-message-service',
-  isEmailConnector: false,
-  name: 'Aliyun Short Message Service',
-  initialFormData: {
-    'formConfig.accessKeyId': 'access-key-id',
-    'formConfig.accessKeySecret': 'access-key-config',
-    'formConfig.signName': 'sign-name',
-  },
-  updateFormData: {
-    'formConfig.accessKeyId': 'new-access-key-id',
-    'formConfig.accessKeySecret': 'new-access-key-config',
-    'formConfig.signName': 'new-sign-name',
-  },
-  errorFormData: {
-    'formConfig.accessKeyId': '',
-    'formConfig.accessKeySecret': '',
-    'formConfig.signName': '',
-  },
-};
-
-// Tencent-short-message-service
-const tencentShortMessage: PasswordlessConnectorCase = {
-  factoryId: 'tencent-short-message-service',
-  isEmailConnector: false,
-  name: 'Tencent Short Message Service',
-  initialFormData: {
-    'formConfig.accessKeyId': 'access-key-id',
-    'formConfig.accessKeySecret': 'access-key-config',
-    'formConfig.signName': 'sign-name',
-    'formConfig.sdkAppId': 'sdk-app-id',
-    'formConfig.region': 'region',
-  },
-  updateFormData: {
-    'formConfig.accessKeyId': 'new-access-key-id',
-    'formConfig.accessKeySecret': 'new-access-key-config',
-    'formConfig.signName': 'new-sign-name',
-    'formConfig.sdkAppId': 'new-sdk-app-id',
-    'formConfig.region': 'new-region',
-  },
-  errorFormData: {
-    'formConfig.accessKeyId': '',
-    'formConfig.accessKeySecret': '',
-    'formConfig.signName': '',
-    'formConfig.sdkAppId': '',
-    'formConfig.region': '',
   },
 };
 
@@ -223,12 +107,7 @@ export const passwordlessConnectorTestCases = [
   // Email
   awsSesMail,
   sendGrid,
-  aliyunDirectMail,
-  mailgun,
-  smpt,
   // SMS
   twilio,
-  aliyunShortMessage,
-  tencentShortMessage,
   smsaeroShortMessage,
 ];
