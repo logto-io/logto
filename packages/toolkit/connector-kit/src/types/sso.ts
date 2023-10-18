@@ -14,8 +14,6 @@ export type SsoOidcConnector = BaseConnector<
   ConnectorType.SsoOidc,
   ConnectorMetadata & ssoConnectorOnlyMetadata
 > & {
-  /* Indicates if the connector config is valid */
-  isConfigValid: boolean;
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
   /* Get full OIDC config from the connector provider */
