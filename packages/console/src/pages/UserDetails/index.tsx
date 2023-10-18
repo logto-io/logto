@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import type { User } from '@logto/schemas';
+import type { UserProfileResponse, User } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -24,6 +24,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { buildUrl } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import UserAccountInformation from '../../components/UserAccountInformation';
@@ -46,7 +47,10 @@ function UserDetails() {
   const [isUpdatingSuspendState, setIsUpdatingSuspendState] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
 
-  const { data, error, mutate } = useSWR<User, RequestError>(id && `api/users/${id}`);
+  // Get user info with user's SSO identities in a single API call.
+  const { data, error, mutate } = useSWR<UserProfileResponse, RequestError>(
+    id && buildUrl(`api/users/${id}`, { includeSsoIdentities: 'true' })
+  );
   const { isSuspended: isSuspendedUser = false } = data ?? {};
   const isLoading = !data && !error;
   const api = useApi();

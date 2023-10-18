@@ -4,6 +4,7 @@ import {
   type UserSsoIdentity,
   UserSsoIdentities,
 } from '@logto/schemas';
+import { manyRows } from '@logto/shared';
 import { type Nullable } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from 'slonik';
 
@@ -24,9 +25,19 @@ export default class UserSsoIdentityQueries extends SchemaQueries<
   ): Promise<Nullable<UserSsoIdentity>> {
     return this.pool.maybeOne<UserSsoIdentity>(sql`
       select *
-      from ${UserSsoIdentities.table}
-      where ${UserSsoIdentities.fields.issuer} = ${issuer}
-      and  ${UserSsoIdentities.fields.identityId} = ${ssoIdentityId}
+      from ${sql.identifier([UserSsoIdentities.table])}
+      where ${sql.identifier([UserSsoIdentities.fields.issuer])} = ${issuer}
+      and ${sql.identifier([UserSsoIdentities.fields.identityId])} = ${ssoIdentityId}
     `);
+  }
+
+  async findUserSsoIdentitiesByUserId(userId: string): Promise<readonly UserSsoIdentity[]> {
+    return manyRows(
+      this.pool.query<UserSsoIdentity>(sql`
+        select *
+        from ${sql.identifier([UserSsoIdentities.table])}
+        where ${sql.identifier([UserSsoIdentities.fields.userId])} = ${userId}
+      `)
+    );
   }
 }

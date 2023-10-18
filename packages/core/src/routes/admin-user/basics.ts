@@ -1,6 +1,6 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
-import { conditional, pick } from '@silverhand/essentials';
+import { conditional, pick, yes } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -22,6 +22,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
       hasUserWithEmail,
       hasUserWithPhone,
     },
+    userSsoIdentities,
   } = queries;
   const {
     users: { checkIdentifierCollision, generateUserId, insertUser },
@@ -31,17 +32,27 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     '/users/:userId',
     koaGuard({
       params: object({ userId: string() }),
+      query: object({ includeSsoIdentities: string().optional() }),
       response: userProfileResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
       const {
         params: { userId },
+        query: { includeSsoIdentities },
       } = ctx.guard;
 
       const user = await findUserById(userId);
 
-      ctx.body = pick(user, ...userInfoSelectFields);
+      ctx.body = {
+        ...pick(user, ...userInfoSelectFields),
+        ...conditional(
+          includeSsoIdentities &&
+            yes(includeSsoIdentities) && {
+              ssoIdentities: await userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
+            }
+        ),
+      };
 
       return next();
     }
