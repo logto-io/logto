@@ -23,7 +23,7 @@ const sign_up_and_sign_in = {
     sign_in_identifier_and_auth: 'Identifier and authentication settings for sign-in',
     description:
       'Users can sign in using any of the options available. Adjust the layout by drag and dropping below options.',
-    add_sign_in_method: 'Add Sign-in Method',
+    add_sign_in_method: 'Add sign-in method',
     password_auth: 'Password',
     verification_code_auth: 'Verification code',
     auth_swap_tip: 'Swap the options below to determine which appears first in the flow.',

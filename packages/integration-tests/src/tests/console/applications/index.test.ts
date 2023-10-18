@@ -168,7 +168,7 @@ describe('applications', () => {
 
     // Add and remove redirect uri
     await expect(redirectUriFiled).toClick('div[class$=multilineInput]>button>span', {
-      text: 'Add Another',
+      text: 'Add another',
     });
 
     // Wait for the new redirect uri field
