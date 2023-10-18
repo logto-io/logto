@@ -8,7 +8,6 @@ import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
-import { type ConnectorWellKnown } from '#src/utils/connectors/types.js';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
@@ -24,17 +23,6 @@ export const createConnectorQueries = (
         order by ${fields.id} asc
       `)
     );
-  const findAllConnectorsWellKnown = wellKnownCache.memoize(
-    async () =>
-      manyRows(
-        pool.query<ConnectorWellKnown>(sql`
-          select ${sql.join([fields.id, fields.metadata, fields.connectorId], sql`, `)}
-          from ${table}
-          order by ${fields.id} asc
-        `)
-      ),
-    ['connectors-well-known']
-  );
   const findConnectorById = async (id: string) =>
     pool.one<Connector>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
@@ -85,8 +73,6 @@ export const createConnectorQueries = (
 
   return {
     findAllConnectors,
-    /** Find all connectors from database with no sensitive info. */
-    findAllConnectorsWellKnown,
     findConnectorById,
     countConnectorByConnectorId,
     deleteConnectorById,

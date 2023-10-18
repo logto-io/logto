@@ -1,13 +1,13 @@
 import { buildRawConnector, defaultConnectorMethods } from '@logto/cli/lib/connector/index.js';
 import type { AllConnector, ConnectorPlatform } from '@logto/connector-kit';
 import { validateConfig, ServiceConnector, ConnectorType } from '@logto/connector-kit';
-import { type Nullable, conditional, pick, trySafe } from '@silverhand/essentials';
+import { type Nullable, conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { loadConnectorFactories } from '#src/utils/connectors/index.js';
-import type { LogtoConnector, LogtoConnectorWellKnown } from '#src/utils/connectors/types.js';
+import type { LogtoConnector } from '#src/utils/connectors/types.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -17,7 +17,7 @@ export const createConnectorLibrary = (
   queries: Queries,
   cloudConnection: Pick<CloudConnectionLibrary, 'getClient'>
 ) => {
-  const { findAllConnectors, findAllConnectorsWellKnown } = queries.connectors;
+  const { findAllConnectors } = queries.connectors;
   const { getClient } = cloudConnection;
 
   const getConnectorConfig = async (id: string): Promise<unknown> => {
@@ -27,36 +27,6 @@ export const createConnectorLibrary = (
     assertThat(connector, new RequestError({ code: 'entity.not_found', id, status: 404 }));
 
     return connector.config;
-  };
-
-  const getLogtoConnectorsWellKnown = async (): Promise<LogtoConnectorWellKnown[]> => {
-    const databaseConnectors = await findAllConnectorsWellKnown();
-    const connectorFactories = await loadConnectorFactories();
-
-    const logtoConnectors = await Promise.all(
-      databaseConnectors.map(async (databaseEntry) => {
-        const { metadata, connectorId } = databaseEntry;
-        const connectorFactory = connectorFactories.find(
-          ({ metadata }) => metadata.id === connectorId
-        );
-
-        if (!connectorFactory) {
-          return;
-        }
-
-        return trySafe(async () => {
-          const { rawConnector, rawMetadata } = await buildRawConnector(connectorFactory);
-
-          return {
-            ...pick(rawConnector, 'type', 'metadata'),
-            metadata: { ...rawMetadata, ...metadata },
-            dbEntry: databaseEntry,
-          };
-        });
-      })
-    );
-
-    return logtoConnectors.filter(Boolean);
   };
 
   const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
@@ -137,7 +107,6 @@ export const createConnectorLibrary = (
   return {
     getConnectorConfig,
     getLogtoConnectors,
-    getLogtoConnectorsWellKnown,
     getLogtoConnectorById,
     getLogtoConnectorByTargetAndPlatform,
   };
