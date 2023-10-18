@@ -181,6 +181,39 @@ describe('bindMfaPayloadVerification', () => {
       ).rejects.toEqual(new RequestError('session.mfa.webauthn_verification_failed'));
     });
   });
+
+  describe('backup code', () => {
+    it('should return result of BindMfa', async () => {
+      await expect(
+        bindMfaPayloadVerification(
+          baseCtx,
+          { type: MfaFactor.BackupCode },
+          {
+            ...interaction,
+            pendingMfa: {
+              type: MfaFactor.BackupCode,
+              codes: ['code'],
+            },
+          },
+          additionalParameters
+        )
+      ).resolves.toMatchObject({
+        type: MfaFactor.BackupCode,
+        codes: ['code'],
+      });
+    });
+
+    it('should reject when pendingMfa is missing', async () => {
+      await expect(
+        bindMfaPayloadVerification(
+          baseCtx,
+          { type: MfaFactor.BackupCode },
+          interaction,
+          additionalParameters
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.pending_info_not_found'));
+    });
+  });
 });
 
 describe('verifyMfaPayloadVerification', () => {

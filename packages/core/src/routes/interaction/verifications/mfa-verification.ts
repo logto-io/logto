@@ -1,4 +1,6 @@
 import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { type Context } from 'koa';
+import type Provider from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -12,6 +14,8 @@ import {
   type VerifiedRegisterInteractionResult,
   type AccountVerifiedInteractionResult,
 } from '../types/index.js';
+import { generateBackupCodes } from '../utils/backup-code-validation.js';
+import { storeInteractionResult } from '../utils/interaction.js';
 
 export const verifyBindMfa = async (
   tenant: TenantContext,
@@ -120,4 +124,64 @@ export const validateMandatoryBindMfa = async (
   }
 
   return interaction;
+};
+
+/**
+ * Check if backup code is configured, if backup code is enabled in sign-in experience,
+ * and at least one MFA is configured, then backup code is required.
+ */
+export const validateBindMfaBackupCode = async (
+  tenant: TenantContext,
+  ctx: Context & WithInteractionSieContext & WithInteractionDetailsContext,
+  interaction: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult,
+  provider: Provider
+): Promise<VerifiedInteractionResult> => {
+  const {
+    mfa: { factors },
+  } = ctx.signInExperience;
+  const { bindMfas = [], event } = interaction;
+
+  if (
+    !factors.includes(MfaFactor.BackupCode) ||
+    bindMfas.length === 0 ||
+    bindMfas.some(({ type }) => type === MfaFactor.BackupCode)
+  ) {
+    return interaction;
+  }
+
+  if (event === InteractionEvent.SignIn) {
+    const { accountId } = interaction;
+    const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+
+    if (
+      mfaVerifications.some((verification) => {
+        return (
+          verification.type === MfaFactor.BackupCode &&
+          verification.codes.some((code) => !code.usedAt)
+        );
+      })
+    ) {
+      // Skip check if there is a backup code that is not used
+      return interaction;
+    }
+  }
+
+  const codes = generateBackupCodes();
+
+  await storeInteractionResult(
+    {
+      pendingMfa: { type: MfaFactor.BackupCode, codes },
+    },
+    ctx,
+    provider,
+    true
+  );
+
+  throw new RequestError(
+    {
+      code: 'session.mfa.backup_code_required',
+    },
+    // Send backup codes to client, so that user can download them
+    { codes }
+  );
 };

@@ -52,7 +52,6 @@ const parseBindMfas = ({
       };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (bindMfa.type === MfaFactor.WebAuthn) {
       return {
         ...bindMfa,
@@ -61,8 +60,12 @@ const parseBindMfas = ({
       };
     }
 
-    // Not expected to happen, the above if statements should cover all cases
-    throw new Error('Unsupported MFA factor');
+    return {
+      id: generateStandardId(),
+      createdAt: new Date().toISOString(),
+      type: MfaFactor.BackupCode,
+      codes: bindMfa.codes.map((code) => ({ code })),
+    };
   });
 };
 

@@ -51,8 +51,7 @@ export type MfaVerificationWebAuthn = z.infer<typeof mfaVerificationWebAuthn>;
 export const mfaVerificationBackupCode = z.object({
   type: z.literal(MfaFactor.BackupCode),
   ...baseMfaVerification,
-  code: z.string(),
-  usedAt: z.string().optional(),
+  codes: z.object({ code: z.string(), usedAt: z.string().optional() }).array(),
 });
 
 export type MfaVerificationBackupCode = z.infer<typeof mfaVerificationBackupCode>;

@@ -1,4 +1,4 @@
-import { MfaFactor, type BindMfa, type BindWebAuthn } from '@logto/schemas';
+import { MfaFactor, type BindMfa, type BindWebAuthn, type BindBackupCode } from '@logto/schemas';
 
 export const mockTotpBind: BindMfa = {
   type: MfaFactor.TOTP,
@@ -12,4 +12,9 @@ export const mockWebAuthnBind: BindWebAuthn = {
   counter: 0,
   agent: 'agent',
   transports: [],
+};
+
+export const mockBackupCodeBind: BindBackupCode = {
+  type: MfaFactor.BackupCode,
+  codes: ['code'],
 };

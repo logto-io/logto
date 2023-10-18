@@ -54,6 +54,7 @@ const {
   verifyProfile,
   validateMandatoryUserProfile,
   validateMandatoryBindMfa,
+  validateBindMfaBackupCode,
   verifyBindMfa,
   verifyMfa,
 } = await mockEsmWithActual('./verifications/index.js', () => ({
@@ -62,6 +63,7 @@ const {
   verifyProfile: jest.fn(),
   validateMandatoryUserProfile: jest.fn(),
   validateMandatoryBindMfa: jest.fn(),
+  validateBindMfaBackupCode: jest.fn(),
   verifyBindMfa: jest.fn(),
   verifyMfa: jest.fn(),
 }));
@@ -186,6 +188,9 @@ describe('interaction routes', () => {
       validateMandatoryUserProfile.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
       });
+      validateMandatoryBindMfa.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+      });
       verifyBindMfa.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
       });
@@ -201,6 +206,7 @@ describe('interaction routes', () => {
       expect(validateMandatoryUserProfile).toBeCalled();
       expect(verifyBindMfa).toBeCalled();
       expect(validateMandatoryBindMfa).toBeCalled();
+      expect(validateBindMfaBackupCode).toBeCalled();
       expect(submitInteraction).toBeCalled();
     });
 
@@ -244,6 +250,7 @@ describe('interaction routes', () => {
       expect(verifyProfile).toBeCalled();
       expect(validateMandatoryUserProfile).not.toBeCalled();
       expect(validateMandatoryBindMfa).not.toBeCalled();
+      expect(validateBindMfaBackupCode).not.toBeCalled();
       expect(submitInteraction).toBeCalled();
     });
   });
