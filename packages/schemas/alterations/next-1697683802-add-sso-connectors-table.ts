@@ -27,9 +27,9 @@ const alteration: AlterationScript = {
         config jsonb not null default '{}'::jsonb,
         domains jsonb not null default '[]'::jsonb,
         branding jsonb not null default '{}'::jsonb,
-        created_at timestamptz not null default(now()),
         sync_profile boolean not null default FALSE,
         sso_only boolean not null default FALSE,
+        created_at timestamptz not null default(now()),
         primary key (id)
       );
 
