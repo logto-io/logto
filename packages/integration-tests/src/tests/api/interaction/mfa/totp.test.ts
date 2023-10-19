@@ -13,6 +13,7 @@ import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableMandatoryMfaWithTotp,
+  enableUserControlledMfaWithTotp,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
 
@@ -158,6 +159,59 @@ describe('sign in and fulfill mfa (mandatory TOTP)', () => {
   it('should sign in and fulfill totp', async () => {
     const { id } = await registerWithMfa();
     await deleteUser(id);
+  });
+});
+
+describe('sign in and fulfill mfa (user-controlled TOTP)', () => {
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    });
+    await enableUserControlledMfaWithTotp();
+  });
+
+  it('should fail with missing_mfa error for normal sign in', async () => {
+    const { userProfile, user } = await generateNewUser({ username: true, password: true });
+    const client = await initClient();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
+      },
+    });
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      statusCode: 422,
+    });
+
+    await deleteUser(user.id);
+  });
+
+  it('should sign in and skip totp', async () => {
+    const { userProfile, user } = await generateNewUser({ username: true, password: true });
+    const client = await initClient();
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        username: userProfile.username,
+        password: userProfile.password,
+      },
+    });
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.missing_mfa',
+      statusCode: 422,
+    });
+
+    // Try again, should auto skip
+    await client.submitInteraction();
+    await deleteUser(user.id);
   });
 });
 

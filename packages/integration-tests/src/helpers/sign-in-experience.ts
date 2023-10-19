@@ -75,6 +75,14 @@ export const enableAllVerificationCodeSignInMethods = async (
     mfa: { factors: [], policy: MfaPolicy.UserControlled },
   });
 
+export const enableUserControlledMfaWithTotp = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.UserControlled,
+    },
+  });
+
 export const enableMandatoryMfaWithTotp = async () =>
   updateSignInExperience({
     mfa: {

@@ -22,10 +22,12 @@ const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
 const findUserById = jest.fn();
+const updateUserById = jest.fn();
 
 const tenantContext = new MockTenant(undefined, {
   users: {
     findUserById,
+    updateUserById,
   },
 });
 
@@ -48,7 +50,7 @@ const baseCtx = {
   signInExperience: {
     ...mockSignInExperience,
     mfa: {
-      factors: [],
+      factors: [MfaFactor.TOTP],
       policy: MfaPolicy.UserControlled,
     },
   },
@@ -150,8 +152,35 @@ describe('validateMandatoryBindMfa', () => {
       );
     });
 
-    it('user mfaVerifications and bindMfa missing and not required should pass', async () => {
+    it('user mfaVerifications and bindMfa missing, and not required should throw (for skip)', async () => {
       findUserById.mockResolvedValueOnce(mockUser);
+      await expect(
+        validateMandatoryBindMfa(tenantContext, baseCtx, signInInteraction)
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP], skippable: true }
+        )
+      );
+      expect(updateUserById).toHaveBeenCalledWith(signInInteraction.accountId, {
+        customData: {
+          mfa: {
+            skipped: true,
+          },
+        },
+      });
+    });
+
+    it('user mfaVerifications and bindMfa missing, mark skipped, and not required should pass', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        customData: {
+          mfa: { skipped: true },
+        },
+      });
       await expect(
         validateMandatoryBindMfa(tenantContext, baseCtx, signInInteraction)
       ).resolves.not.toThrow();
