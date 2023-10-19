@@ -13,10 +13,19 @@ const useTextHandler = () => {
     [setToast]
   );
 
-  // Todo: @xiaoyijun add download text file handler
+  const downloadText = useCallback((text: string, filename: string) => {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const downloadLink = document.createElement('a');
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    downloadLink.href = URL.createObjectURL(blob);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    downloadLink.download = filename;
+    downloadLink.click();
+  }, []);
 
   return {
     copyText,
+    downloadText,
   };
 };
 

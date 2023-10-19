@@ -14,9 +14,11 @@ import Continue from './pages/Continue';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import MfaBinding from './pages/MfaBinding';
+import BackupCodeBinding from './pages/MfaBinding/BackupCodeBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
 import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
 import MfaVerification from './pages/MfaVerification';
+import BackupCodeVerification from './pages/MfaVerification/BackupCodeVerification';
 import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import Register from './pages/Register';
@@ -83,6 +85,7 @@ const App = () => {
                           <Route index element={<MfaBinding />} />
                           <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
                           <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+                          <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
                         </Route>
 
                         {/* Mfa verification */}
@@ -91,6 +94,7 @@ const App = () => {
                           <Route index element={<MfaVerification />} />
                           <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
                           <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
+                          <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
                         </Route>
                       </>
                     )}
