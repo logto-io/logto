@@ -12,10 +12,6 @@ const getDatabaseName = async (pool: CommonQueryMethods) => {
   return currentDatabase.replaceAll('-', '_');
 };
 
-/**
- * Hight light fields
- */
-
 const alteration: AlterationScript = {
   up: async (pool) => {
     const database = await getDatabaseName(pool);
