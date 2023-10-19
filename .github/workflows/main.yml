@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'push-action/**'
+      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -100,7 +100,7 @@ jobs:
       # Fetch the current version by finding the latest tag starts with "v", e.g. "v1.0.0-beta.19"
       - id: version
         working-directory: ./fresh
-        run: echo "current=$(git describe --match "@logto/schemas@*" --abbrev=0)" >> $GITHUB_OUTPUT
+        run: echo "current=$(git describe --match "@logto/core@*" --abbrev=0)" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v4
         with:
