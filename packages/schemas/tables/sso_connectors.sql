@@ -1,5 +1,3 @@
-/* init_order = 1 */
-
 create table sso_connectors (
   tenant_id varchar(21) not null 
     references tenants (id) on update cascade on delete cascade,

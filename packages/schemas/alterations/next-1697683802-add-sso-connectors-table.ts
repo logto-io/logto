@@ -21,7 +21,7 @@ const alteration: AlterationScript = {
       create table sso_connectors (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
-        id varchar(21) not null,
+        id varchar(128) not null,
         provider_name varchar(128) not null,
         connector_name varchar(128) not null,
         config jsonb not null default '{}'::jsonb,
