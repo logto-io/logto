@@ -63,6 +63,12 @@ const general = {
   description: 'Description',
   /** UNTRANSLATED */
   name: 'Name',
+  /** UNTRANSLATED */
+  create_field: 'Create {{field}}',
+  /** UNTRANSLATED */
+  edit_field: 'Edit {{field}}',
+  /** UNTRANSLATED */
+  delete_field: 'Delete {{field}}',
 };
 
 export default Object.freeze(general);

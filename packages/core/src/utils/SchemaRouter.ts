@@ -9,7 +9,7 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
-import type RelationQueries from './RelationQueries.js';
+import { type TwoRelationsQueries } from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
 
 /**
@@ -219,14 +219,15 @@ export default class SchemaRouter<
    * @param relationQueries The queries class for the relation.
    * @param pathname The pathname of the relation. If not provided, it will be
    * the camel case of the relation schema's table name.
-   * @see {@link RelationQueries} for the `relationQueries` configuration.
+   * @see {@link TwoRelationsQueries} for the `relationQueries` configuration.
    */
   addRelationRoutes<
     RelationCreateSchema extends Partial<SchemaLike<string> & { id: string }>,
     RelationSchema extends SchemaLike<string> & { id: string },
   >(
-    relationQueries: RelationQueries<
-      [typeof this.schema, GeneratedSchema<string, RelationCreateSchema, RelationSchema>]
+    relationQueries: TwoRelationsQueries<
+      typeof this.schema,
+      GeneratedSchema<string, RelationCreateSchema, RelationSchema>
     >,
     pathname = tableToPathname(relationQueries.schemas[1].table)
   ) {
@@ -282,6 +283,25 @@ export default class SchemaRouter<
           ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
         );
         ctx.status = 201;
+        return next();
+      }
+    );
+
+    this.put(
+      `/:id/${pathname}`,
+      koaGuard({
+        params: z.object({ id: z.string().min(1) }),
+        body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
+        status: [204, 422],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { id },
+          body: { [columns.relationSchemaIds]: relationIds },
+        } = ctx.guard;
+
+        await relationQueries.replace(id, relationIds ?? []);
+        ctx.status = 204;
         return next();
       }
     );

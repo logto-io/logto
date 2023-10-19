@@ -60,6 +60,9 @@ const general = {
   contact_us_action: 'Contact Us',
   description: 'Description',
   name: 'Name',
+  create_field: 'Create {{field}}',
+  edit_field: 'Edit {{field}}',
+  delete_field: 'Delete {{field}}',
 };
 
 export default Object.freeze(general);
