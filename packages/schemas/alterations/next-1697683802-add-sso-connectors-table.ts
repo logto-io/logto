@@ -56,6 +56,8 @@ const alteration: AlterationScript = {
   },
   down: async (pool) => {
     await pool.query(sql`
+      drop policy sso_connectors_modification on sso_connectors;
+      drop policy sso_connectors_tenant_id on sso_connectors;
       drop table sso_connectors;
     `);
   },
