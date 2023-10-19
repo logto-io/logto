@@ -95,3 +95,25 @@ export const expectToConfirmConnectorDeletion = async (page: Page, redirectUri: 
 
   await waitForToast(page, { text: 'The connector has been successfully deleted' });
 };
+
+export const expectToTestConnectorConnection = async (
+  page: Page,
+  { skipConnectionTest, isEmailConnector }: PasswordlessConnectorCase
+) => {
+  if (skipConnectionTest) {
+    return;
+  }
+
+  await expect(page).toFill(
+    'input[name=sendTo]',
+    isEmailConnector ? 'fake@email.com' : '+1 555-123-4567'
+  );
+
+  await expect(page).toClick('div[class$=fields] div[class$=send] button span', {
+    text: 'Send',
+  });
+
+  await expect(page).toMatchElement('div[class*=tipBubble]', {
+    text: 'Test message sent',
+  });
+};

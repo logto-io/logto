@@ -2,15 +2,18 @@ export type PasswordlessConnectorCase = {
   factoryId: string;
   isEmailConnector: boolean;
   name: string;
-  initialFormData: Record<string, string>;
-  updateFormData: Record<string, string>;
-  errorFormData: Record<string, string>;
+  skipConnectionTest?: boolean; // Only for mock connectors
+  initialFormData?: Record<string, string>;
+  updateFormData?: Record<string, string>;
+  errorFormData?: Record<string, string>;
 };
 
 const awsSesMail: PasswordlessConnectorCase = {
   factoryId: 'aws-ses-mail',
   isEmailConnector: true,
   name: 'AWS Direct Mail',
+  // Skip connection test for real-world connectors since it will send request to the 3rd party service
+  skipConnectionTest: true,
   initialFormData: {
     'formConfig.accessKeyId': 'access-key-id',
     'formConfig.accessKeySecret': 'access-key-config',
@@ -40,30 +43,18 @@ const awsSesMail: PasswordlessConnectorCase = {
   },
 };
 
-const sendGrid: PasswordlessConnectorCase = {
-  factoryId: 'sendgrid-email-service',
+const mockMailConnector: PasswordlessConnectorCase = {
+  factoryId: 'mock-email-service',
   isEmailConnector: true,
-  name: 'SendGrid Email',
-  initialFormData: {
-    'formConfig.apiKey': 'api-key',
-    'formConfig.fromEmail': 'foo@example.com',
-    'formConfig.fromName': 'Logto',
-  },
-  updateFormData: {
-    'formConfig.apiKey': 'new-api-key',
-    'formConfig.fromEmail': 'new-foo@example.com',
-    'formConfig.fromName': 'new-Logto',
-  },
-  errorFormData: {
-    'formConfig.apiKey': '',
-    'formConfig.fromEmail': '',
-  },
+  name: 'Mock Mail Service',
 };
 
 const twilio: PasswordlessConnectorCase = {
   factoryId: 'twilio-short-message-service',
   isEmailConnector: false,
   name: 'Twilio SMS Service',
+  // Skip connection test for real-world connectors since it will send request to the 3rd party service
+  skipConnectionTest: true,
   initialFormData: {
     'formConfig.accountSID': 'account-sid',
     'formConfig.authToken': 'auth-token',
@@ -81,33 +72,17 @@ const twilio: PasswordlessConnectorCase = {
   },
 };
 
-// Smsaero-short-message-service
-const smsaeroShortMessage: PasswordlessConnectorCase = {
-  factoryId: 'smsaero-short-message-service',
+const mockSmsConnector: PasswordlessConnectorCase = {
+  factoryId: 'mock-short-message-service',
   isEmailConnector: false,
-  name: 'SMS Aero service',
-  initialFormData: {
-    'formConfig.email': 'fake@email.com',
-    'formConfig.apiKey': 'api-key',
-    'formConfig.senderName': 'sender-name',
-  },
-  updateFormData: {
-    'formConfig.email': 'new-fake@email.com',
-    'formConfig.apiKey': 'new-api-key',
-    'formConfig.senderName': 'new-sender-name',
-  },
-  errorFormData: {
-    'formConfig.email': '',
-    'formConfig.apiKey': '',
-    'formConfig.senderName': '',
-  },
+  name: 'Mock SMS Service',
 };
 
 export const passwordlessConnectorTestCases = [
   // Email
   awsSesMail,
-  sendGrid,
+  mockMailConnector,
   // SMS
   twilio,
-  smsaeroShortMessage,
+  mockSmsConnector,
 ];

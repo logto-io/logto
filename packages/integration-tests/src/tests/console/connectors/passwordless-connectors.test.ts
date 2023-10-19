@@ -15,6 +15,7 @@ import {
   expectToSelectConnector,
   findNextCompatibleConnector,
   waitForConnectorCreationGuide,
+  expectToTestConnectorConnection,
 } from './helpers.js';
 import {
   type PasswordlessConnectorCase,
@@ -67,25 +68,27 @@ describe('passwordless connectors', () => {
 
       await waitForConnectorCreationGuide(page, name);
 
-      await expect(page).toClick(
-        '.ReactModalPortal form div[class$=footer] button[type=submit] span',
-        {
-          text: 'Save and Done',
-        }
-      );
+      if (initialFormData) {
+        await expect(page).toClick(
+          '.ReactModalPortal form div[class$=footer] button[type=submit] span',
+          {
+            text: 'Save and Done',
+          }
+        );
 
-      // Display error input
-      await page.waitForSelector('form div[class$=field] div[class$=error]');
+        // Display error input
+        await page.waitForSelector('form div[class$=field] div[class$=error]');
 
-      await expect(page).toFillForm('.ReactModalPortal form', initialFormData);
+        await expect(page).toFillForm('.ReactModalPortal form', initialFormData);
 
-      // Try click test button
-      await expect(page).toClick('.ReactModalPortal div[class$=send] button span', {
-        text: 'Send',
-      });
+        // Try click test button
+        await expect(page).toClick('.ReactModalPortal div[class$=send] button span', {
+          text: 'Send',
+        });
 
-      // Display test input error
-      await page.waitForSelector('.ReactModalPortal div[class$=error]:has(input[name=sendTo])');
+        // Display test input error
+        await page.waitForSelector('.ReactModalPortal div[class$=error]:has(input[name=sendTo])');
+      }
 
       await expect(page).toClick(
         '.ReactModalPortal form div[class$=footer] button[type=submit] span',
@@ -100,33 +103,28 @@ describe('passwordless connectors', () => {
         text: name,
       });
 
-      // Try send test
-      await expect(page).toFill(
-        'input[name=sendTo]',
-        isEmailConnector ? 'fake@email.com' : '+1 555-123-4567'
-      );
+      await expectToTestConnectorConnection(page, connector);
 
-      await expect(page).toClick('div[class$=fields] div[class$=send] button span', {
-        text: 'Send',
-      });
+      // Test form on details page
+      if (errorFormData) {
+        // Fill incorrect form
+        await expect(page).toFillForm('form', errorFormData);
 
-      await waitForToast(page, { text: /error/i, type: 'error' });
+        await expectToSaveChanges(page);
 
-      // Fill incorrect form
-      await expect(page).toFillForm('form', errorFormData);
+        await page.waitForSelector('form div[class$=field] div[class$=error]');
+      }
 
-      await expectToSaveChanges(page);
+      if (updateFormData) {
+        // Update form
+        await expect(page).toFillForm('form', updateFormData);
 
-      await page.waitForSelector('form div[class$=field] div[class$=error]');
+        await expectUnsavedChangesAlert(page);
 
-      // Update form
-      await expect(page).toFillForm('form', updateFormData);
+        await expectToSaveChanges(page);
 
-      await expectUnsavedChangesAlert(page);
-
-      await expectToSaveChanges(page);
-
-      await waitForToast(page, { text: 'Saved' });
+        await waitForToast(page, { text: 'Saved' });
+      }
 
       // Change to next connector
       const nextConnector = findNextCompatibleConnector(connector);
@@ -144,7 +142,9 @@ describe('passwordless connectors', () => {
 
         await waitForConnectorCreationGuide(page, nextConnector.name);
 
-        await expect(page).toFillForm('.ReactModalPortal form', nextConnector.initialFormData);
+        if (nextConnector.initialFormData) {
+          await expect(page).toFillForm('.ReactModalPortal form', nextConnector.initialFormData);
+        }
 
         await expect(page).toClick(
           '.ReactModalPortal form div[class$=footer] button[type=submit] span',
