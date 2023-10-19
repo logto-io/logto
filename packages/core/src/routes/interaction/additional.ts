@@ -5,8 +5,10 @@ import {
   webAuthnRegistrationOptionsGuard,
   webAuthnAuthenticationOptionsGuard,
 } from '@logto/schemas';
+import { getUserDisplayName } from '@logto/shared';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
+import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
@@ -117,8 +119,17 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     async (ctx, next) => {
       const { interactionDetails, createLog } = ctx;
       // Check interaction exists
-      const { event } = getInteractionStorage(interactionDetails.result);
+      const interaction = getInteractionStorage(interactionDetails.result);
+      const { event } = interaction;
+      assertThat(
+        event !== InteractionEvent.ForgotPassword,
+        'session.not_supported_for_forgot_password'
+      );
       createLog(`Interaction.${event}.BindMfa.Totp.Create`);
+
+      const service = ctx.URL.hostname;
+      const accountVerifiedInteraction = await verifyIdentifier(ctx, tenant, interaction);
+      const profileVerifiedInteraction = await verifyProfile(tenant, accountVerifiedInteraction);
 
       const secret = generateTotpSecret();
       await storeInteractionResult(
@@ -128,10 +139,35 @@ export default function additionalRoutes<T extends IRouterParamContext>(
         true
       );
 
-      ctx.body = {
-        secret,
-        secretQrCode: await qrcode.toDataURL(`otpauth://totp/?secret=${secret}`),
-      };
+      if (isRegisterInteractionResult(profileVerifiedInteraction)) {
+        const {
+          username = null,
+          primaryEmail = null,
+          primaryPhone = null,
+          name = null,
+        } = await parseUserProfile(tenant, profileVerifiedInteraction);
+        const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
+        const keyUri = authenticator.keyuri(user, service, secret);
+
+        ctx.body = {
+          secret,
+          secretQrCode: await qrcode.toDataURL(keyUri),
+        };
+
+        return next();
+      }
+
+      if (isSignInInteractionResult(profileVerifiedInteraction)) {
+        const { accountId } = profileVerifiedInteraction;
+        const { username, primaryEmail, primaryPhone, name } = await findUserById(accountId);
+        const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
+        const keyUri = authenticator.keyuri(user, service, secret);
+
+        ctx.body = {
+          secret,
+          secretQrCode: await qrcode.toDataURL(keyUri),
+        };
+      }
 
       return next();
     }
