@@ -44,7 +44,6 @@ function TemplateTable<
         <Table
           hasBorder
           className={styles.table}
-          padding={0}
           rowGroups={[
             {
               key: 'data',

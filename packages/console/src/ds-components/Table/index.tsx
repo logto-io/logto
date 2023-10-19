@@ -37,12 +37,6 @@ export type Props<
   errorMessage?: string;
   hasBorder?: boolean;
   onRetry?: () => void;
-  /**
-   * The padding of the table container in px, excluding top padding.
-   *
-   * @default 12
-   */
-  padding?: number;
   /** A footer that will be rendered on the bottom-left of the table. */
   footer?: ReactNode;
 };
@@ -69,7 +63,6 @@ function Table<
   errorMessage,
   hasBorder,
   onRetry,
-  padding = 12,
   footer,
 }: Props<TFieldValues, TName>) {
   const totalColspan = columns.reduce((result, { colSpan }) => {
@@ -95,7 +88,6 @@ function Table<
             filter && styles.hideTopBorderRadius,
             headerTableClassName
           )}
-          style={{ padding: `0 ${padding}px` }}
         >
           <thead>
             <tr>
@@ -113,7 +105,6 @@ function Table<
             isEmpty && styles.empty,
             bodyTableWrapperClassName
           )}
-          style={{ padding: `0 ${padding}px ${padding}px` }}
         >
           <table>
             <tbody>
