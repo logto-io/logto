@@ -1,16 +1,18 @@
-import { type OrganizationRole } from '@logto/schemas';
+import { type OrganizationRoleWithScopes } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import DeleteButton from '@/components/DeleteButton';
 import FormField from '@/ds-components/FormField';
+import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
 import CreateRoleModal from '../CreateRoleModal';
 import TemplateTable, { pageSize } from '../TemplateTable';
-import * as styles from '../index.module.scss';
+
+import * as styles from './index.module.scss';
 
 /**
  * Renders the roles field that allows users to add, edit, and delete organization
@@ -22,7 +24,7 @@ function RolesField() {
     data: response,
     error,
     mutate,
-  } = useSWR<[OrganizationRole[], number], RequestError>(
+  } = useSWR<[OrganizationRoleWithScopes[], number], RequestError>(
     buildUrl('api/organization-roles', {
       page: String(page),
       page_size: String(pageSize),
@@ -59,13 +61,24 @@ function RolesField() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name }) => <div className={styles.permission}>{name}</div>,
+            render: ({ name }) => <div>{name}</div>,
           },
           {
             title: t('organizations.permission_other'),
             dataIndex: 'permissions',
             colSpan: 6,
-            render: ({ description }) => description ?? '-',
+            render: ({ scopes }) =>
+              scopes.length === 0 ? (
+                '-'
+              ) : (
+                <div className={styles.permissions}>
+                  {scopes.map(({ id, name }) => (
+                    <Tag key={id} variant="cell">
+                      {name}
+                    </Tag>
+                  ))}
+                </div>
+              ),
           },
           {
             title: null,

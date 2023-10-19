@@ -10,7 +10,6 @@ import { buildUrl } from '@/utils/url';
 
 import CreatePermissionModal from '../CreatePermissionModal';
 import TemplateTable, { pageSize } from '../TemplateTable';
-import * as styles from '../index.module.scss';
 
 /**
  * Renders the permissions field that allows users to add, edit, and delete organization
@@ -59,7 +58,7 @@ function PermissionsField() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name }) => <div className={styles.permission}>{name}</div>,
+            render: ({ name }) => <div>{name}</div>,
           },
           {
             title: t('general.description'),

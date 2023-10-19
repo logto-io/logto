@@ -33,7 +33,7 @@ export default class SchemaQueries<
   constructor(
     public readonly pool: CommonQueryMethods,
     public readonly schema: GeneratedSchema<Key | 'id', CreateSchema, Schema>,
-    orderBy?: { field: Key | 'id'; order: 'asc' | 'desc' }
+    protected readonly orderBy?: { field: Key | 'id'; order: 'asc' | 'desc' }
   ) {
     this.#findTotalNumber = buildGetTotalRowCountWithPool(this.pool, this.schema.table);
     this.#findAll = buildFindAllEntitiesWithPool(this.pool)(this.schema, orderBy && [orderBy]);

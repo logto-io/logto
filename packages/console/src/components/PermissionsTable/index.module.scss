@@ -19,10 +19,6 @@
     }
   }
 
-  .name {
-    @include _.tag;
-  }
-
   .description {
     @include _.text-ellipsis;
   }
