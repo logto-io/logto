@@ -1,10 +1,7 @@
-import { type ZodType } from 'zod';
+import { type SsoConnector } from '@logto/schemas';
 
 export abstract class SingleSignOn {
-  static providerName: SsoProviderName;
-  static configGuard: ZodType;
-  static logto: string;
-
+  abstract data: SsoConnector;
   abstract getConfig: () => Promise<unknown>;
 }
 
