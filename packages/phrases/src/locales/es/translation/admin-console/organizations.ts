@@ -14,6 +14,9 @@ const organizations = {
   /** UNTRANSLATED */
   organization_permission_other: 'Organization permissions',
   /** UNTRANSLATED */
+  organization_permission_delete_confirm:
+    'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
+  /** UNTRANSLATED */
   create_permission_placeholder: 'Read appointment history.',
   /** UNTRANSLATED */
   permission: 'Permission',
@@ -23,6 +26,9 @@ const organizations = {
   organization_role: 'Organization role',
   /** UNTRANSLATED */
   organization_role_other: 'Organization roles',
+  /** UNTRANSLATED */
+  organization_role_delete_confirm:
+    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
   /** UNTRANSLATED */
   role: 'Role',
   /** UNTRANSLATED */

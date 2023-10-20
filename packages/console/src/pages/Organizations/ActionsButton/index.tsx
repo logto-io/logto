@@ -1,5 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import { useCallback, useState, type ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Delete from '@/assets/icons/delete.svg';
@@ -7,6 +7,7 @@ import Edit from '@/assets/icons/edit.svg';
 import More from '@/assets/icons/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
 import ConfirmModal from '@/ds-components/ConfirmModal';
+import DynamicT from '@/ds-components/DynamicT';
 import useActionTranslation from '@/hooks/use-action-translation';
 
 import * as styles from './index.module.scss';
@@ -16,8 +17,8 @@ type Props = {
   onDelete: () => void | Promise<void>;
   /** A function that will be called when the user clicks the edit button. */
   onEdit: () => void | Promise<void>;
-  /** The text or content to display in the confirmation modal. */
-  content: ReactNode;
+  /** The translation key of the content that will be displayed in the confirmation modal. */
+  deleteConfirmation: AdminConsoleKey;
   /** The name of the field that is being operated. */
   fieldName: AdminConsoleKey;
 };
@@ -28,7 +29,7 @@ type Props = {
  * - Edit
  * - Delete
  */
-function ActionsButton({ onDelete, onEdit, content, fieldName }: Props) {
+function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,7 +73,7 @@ function ActionsButton({ onDelete, onEdit, content, fieldName }: Props) {
         }}
         onConfirm={handleDelete}
       >
-        {content}
+        <DynamicT forKey={deleteConfirmation} />
       </ConfirmModal>
     </>
   );
