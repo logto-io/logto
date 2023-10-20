@@ -78,7 +78,7 @@ export type VerifiedRegisterInteractionResult = {
   event: InteractionEvent.Register;
   profile?: Profile;
   identifiers?: Identifier[];
-  bindMfa?: BindMfa;
+  bindMfas?: BindMfa[];
   pendingAccountId?: string;
 };
 
@@ -87,7 +87,7 @@ export type VerifiedSignInInteractionResult = {
   accountId: string;
   identifiers: Identifier[];
   profile?: Profile;
-  bindMfa?: BindMfa;
+  bindMfas?: BindMfa[];
   verifiedMfa?: VerifyMfaResult;
 };
 

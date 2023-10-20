@@ -5,7 +5,7 @@ import {
   putInteraction,
   deleteUser,
   initTotp,
-  putInteractionBindMfa,
+  postInteractionBindMfa,
   putInteractionMfa,
 } from '#src/api/index.js';
 import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
@@ -31,7 +31,7 @@ const registerWithMfa = async () => {
   const { secret } = await client.send(initTotp);
   const code = authenticator.generate(secret);
 
-  await client.send(putInteractionBindMfa, {
+  await client.send(postInteractionBindMfa, {
     type: MfaFactor.TOTP,
     code,
   });
@@ -86,7 +86,7 @@ describe('register with mfa (mandatory TOTP)', () => {
 
     await client.send(initTotp);
     await expectRejects(
-      client.send(putInteractionBindMfa, {
+      client.send(postInteractionBindMfa, {
         type: MfaFactor.TOTP,
         code: '123456',
       }),
@@ -112,7 +112,7 @@ describe('register with mfa (mandatory TOTP)', () => {
     const { secret } = await client.send(initTotp);
     const code = authenticator.generate(secret);
 
-    await client.send(putInteractionBindMfa, {
+    await client.send(postInteractionBindMfa, {
       type: MfaFactor.TOTP,
       code,
     });

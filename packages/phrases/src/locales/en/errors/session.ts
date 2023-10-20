@@ -29,6 +29,7 @@ const session = {
     invalid_totp_code: 'Invalid TOTP code.',
     webauthn_verification_failed: 'WebAuthn verification failed.',
     webauthn_verification_not_found: 'WebAuthn verification not found.',
+    bind_mfa_existed: 'MFA already exists.',
   },
 };
 

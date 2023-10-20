@@ -17,15 +17,15 @@ export const verifyBindMfa = async (
   tenant: TenantContext,
   interaction: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult
 ): Promise<VerifiedInteractionResult> => {
-  const { bindMfa, event } = interaction;
+  const { bindMfas = [], event } = interaction;
 
-  if (!bindMfa || event !== InteractionEvent.SignIn) {
+  if (bindMfas.length === 0 || event !== InteractionEvent.SignIn) {
     return interaction;
   }
 
-  const { type } = bindMfa;
+  const totp = bindMfas.find(({ type }) => type === MfaFactor.TOTP);
 
-  if (type === MfaFactor.TOTP) {
+  if (totp) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
 
@@ -76,21 +76,27 @@ export const validateMandatoryBindMfa = async (
   const {
     mfa: { policy, factors },
   } = ctx.signInExperience;
-  const { event, bindMfa } = interaction;
+  const { event, bindMfas } = interaction;
+  const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
   if (policy !== MfaPolicy.Mandatory) {
     return interaction;
   }
 
+  const hasFactorInBind = Boolean(
+    bindMfas &&
+      availableFactors.some((factor) => bindMfas.some((bindMfa) => bindMfa.type === factor))
+  );
+
   if (event === InteractionEvent.Register) {
     assertThat(
-      bindMfa && factors.includes(bindMfa.type),
+      hasFactorInBind,
       new RequestError(
         {
           code: 'user.missing_mfa',
           status: 422,
         },
-        { availableFactors: factors.map((factor) => factor) }
+        { availableFactors }
       )
     );
   }
@@ -98,7 +104,6 @@ export const validateMandatoryBindMfa = async (
   if (event === InteractionEvent.SignIn) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
-    const hasFactorInBind = Boolean(bindMfa && factors.includes(bindMfa.type));
     const hasFactorInUser = factors.some((factor) =>
       mfaVerifications.some(({ type }) => type === factor)
     );
@@ -109,7 +114,7 @@ export const validateMandatoryBindMfa = async (
           code: 'user.missing_mfa',
           status: 422,
         },
-        { availableFactors: factors.map((factor) => factor) }
+        { availableFactors }
       )
     );
   }

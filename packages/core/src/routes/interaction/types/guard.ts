@@ -51,7 +51,7 @@ export const anonymousInteractionResultGuard = z.object({
   accountId: z.string().optional(),
   identifiers: z.array(identifierGuard).optional(),
   // The new mfa to be bound to the account
-  bindMfa: bindMfaGuard.optional(),
+  bindMfas: bindMfaGuard.array().optional(),
   // The pending mfa info, such as secret of TOTP
   pendingMfa: pendingMfaGuard.optional(),
   // The verified mfa
