@@ -5,7 +5,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 export const validateMfa = (mfa: Mfa) => {
   // TODO @sijie: remove this check when MFA is ready for production.
-  if (EnvSet.values.isProduction && !EnvSet.values.isIntegrationTest) {
+  if (!EnvSet.values.isDevFeaturesEnabled) {
     throw new Error('MFA is not ready for production yet.');
   }
 

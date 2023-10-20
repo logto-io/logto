@@ -1,7 +1,7 @@
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
-import { isDevelopmentFeaturesEnabled } from '@/constants/env';
+import { isDevFeaturesEnabled } from '@/constants/env';
 
 import { type ErrorHandlers } from './use-error-handler';
 import useMfaErrorHandler, {
@@ -20,7 +20,7 @@ const usePreSignInErrorHandler = ({ replace, linkSocial }: Options = {}): ErrorH
   return useMemo(
     () => ({
       ...requiredProfileErrorHandler,
-      ...conditional(isDevelopmentFeaturesEnabled && mfaErrorHandler),
+      ...conditional(isDevFeaturesEnabled && mfaErrorHandler),
     }),
     [mfaErrorHandler, requiredProfileErrorHandler]
   );

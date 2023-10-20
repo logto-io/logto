@@ -1,4 +1,7 @@
 import { yes } from '@silverhand/essentials';
 
-export const isDevelopmentFeaturesEnabled =
-  yes(process.env.DEV_FEATURES_ENABLED) || yes(process.env.INTEGRATION_TEST);
+// eslint-disable-next-line unicorn/prevent-abbreviations -- keep the same as in other packages
+export const isDevFeaturesEnabled =
+  process.env.NODE_ENV !== 'production' ||
+  yes(process.env.DEV_FEATURES_ENABLED) ||
+  yes(process.env.INTEGRATION_TEST);
