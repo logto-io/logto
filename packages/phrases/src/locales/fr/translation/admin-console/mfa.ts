@@ -9,9 +9,16 @@ const mfa = {
   totp: "OTP de l'application Authenticator",
   otp_description:
     'Liez Google Authenticator, etc., pour vérifier les mots de passe à usage unique.',
-  webauthn: 'WebAuthn',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
   webauthn_description:
-    "WebAuthn utilise la clé de passe pour vérifier le périphérique de l'utilisateur, y compris YubiKey.",
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: 'Code de secours',
   backup_code_description:
     'Générez 10 codes uniques, chacun utilisable pour une seule authentification.',

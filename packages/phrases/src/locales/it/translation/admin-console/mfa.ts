@@ -8,9 +8,16 @@ const mfa = {
     "Gli utenti devono verificare uno dei fattori abilitati per l'autenticazione a due passaggi.",
   totp: "OTP dell'app Authenticator",
   otp_description: 'Collega Google Authenticator, ecc., per verificare le password monouso.',
-  webauthn: 'WebAuthn',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
   webauthn_description:
-    "WebAuthn utilizza la chiave di passaggio per verificare il dispositivo dell'utente, inclusa YubiKey.",
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: 'Codice di backup',
   backup_code_description:
     'Genera 10 codici unici, ciascuno utilizzabile per una singola autenticazione.',

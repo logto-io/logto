@@ -8,9 +8,16 @@ const mfa = {
     'ユーザーは2段階認証のために有効になっている要因の1つを確認する必要があります。',
   totp: 'AuthenticatorアプリOTP',
   otp_description: 'Google Authenticatorなどをリンクしてワンタイムパスワードを確認します。',
-  webauthn: 'WebAuthn',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
   webauthn_description:
-    'WebAuthnはYubiKeyを含むユーザーのデバイスを確認するためにパスキーを使用します。',
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: 'バックアップコード',
   backup_code_description: '1回の認証に使用できる10個のユニークなコードを生成します。',
   backup_code_setup_hint: '単独で有効化できないバックアップ認証要因：',

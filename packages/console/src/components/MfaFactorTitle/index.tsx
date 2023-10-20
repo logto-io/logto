@@ -1,8 +1,12 @@
 import { MfaFactor } from '@logto/schemas';
+import { type ReactNode } from 'react';
 
 import FactorBackupCode from '@/assets/icons/factor-backup-code.svg';
 import FactorTotp from '@/assets/icons/factor-totp.svg';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg';
+import Tip from '@/assets/icons/tip.svg';
+import IconButton from '@/ds-components/IconButton';
+import { ToggleTip } from '@/ds-components/Tip';
 
 import MfaFactorName, { type Props as MfaFactorNameProps } from '../MfaFactorName';
 
@@ -14,13 +18,24 @@ const factorIcon: Record<MfaFactor, SvgComponent> = {
   [MfaFactor.BackupCode]: FactorBackupCode,
 };
 
-function MfaFactorTitle({ type }: MfaFactorNameProps) {
+type Props = MfaFactorNameProps & {
+  tooltip?: ReactNode;
+};
+
+function MfaFactorTitle({ type, tooltip }: Props) {
   const Icon = factorIcon[type];
 
   return (
     <div className={styles.factorTitle}>
       <Icon className={styles.factorIcon} />
       <MfaFactorName type={type} />
+      {tooltip && (
+        <ToggleTip anchorClassName={styles.factorTip} content={tooltip}>
+          <IconButton size="small">
+            <Tip />
+          </IconButton>
+        </ToggleTip>
+      )}
     </div>
   );
 }

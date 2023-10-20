@@ -7,9 +7,16 @@ const mfa = {
     '사용자는 두 단계 인증을 위해 활성화된 요소 중 하나를 확인해야 합니다.',
   totp: 'Authenticator 앱 OTP',
   otp_description: 'Google Authenticator 등을 연결하여 일회용 암호를 확인합니다.',
-  webauthn: 'WebAuthn',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
   webauthn_description:
-    'WebAuthn은 YubiKey를 포함한 사용자 장치를 확인하기 위해 패스키를 사용합니다.',
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: '백업 코드',
   backup_code_description: '한 번의 인증에 사용할 수 있는 고유한 10개의 코드를 생성합니다.',
   backup_code_setup_hint: '독립적으로 활성화할 수 없는 백업 인증 요소:',

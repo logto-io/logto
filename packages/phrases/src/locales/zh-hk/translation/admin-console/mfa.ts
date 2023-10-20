@@ -6,8 +6,16 @@ const mfa = {
   multi_factors_description: '用戶需要驗證啟用的一個因素以進行兩步驗證。',
   totp: 'Authenticator應用程式OTP',
   otp_description: '連接Google Authenticator等來驗證一次性密碼。',
-  webauthn: 'WebAuthn',
-  webauthn_description: 'WebAuthn使用通行密鑰驗證用戶設備，包括YubiKey。',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
+  webauthn_description:
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: '備用代碼',
   backup_code_description: '生成10個唯一的代碼，每個代碼可用於一次驗證。',
   backup_code_setup_hint: '不能單獨啟用的備用身份驗證因素：',

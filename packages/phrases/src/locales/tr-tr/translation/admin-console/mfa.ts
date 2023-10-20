@@ -9,9 +9,16 @@ const mfa = {
   totp: 'Authenticator uygulama OTP',
   otp_description:
     'Google Authenticator vb. bağlayarak tek kullanımlık şifreleri doğrulamak için kullanın.',
-  webauthn: 'WebAuthn',
+  /** UNTRANSLATED */
+  webauthn: 'WebAuthn(Passkey)',
+  /** UNTRANSLATED */
   webauthn_description:
-    'WebAuthn, YubiKey dahil olmak üzere kullanıcının cihazını doğrulamak için geçiş anahtarını kullanır.',
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  /** UNTRANSLATED */
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  /** UNTRANSLATED */
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: 'Yedek kod',
   backup_code_description:
     'Tek kullanımlık bir kimlik doğrulama için kullanılabilen 10 benzersiz kod üretin.',
