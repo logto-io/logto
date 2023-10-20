@@ -12,6 +12,19 @@ import { type BaseOidcConfig, type ConfigType } from '../types/oidc.js';
 
 import { fetchOidcConfig, fetchToken, getIdTokenClaims } from './utils.js';
 
+/**
+ * OIDC connector
+ *
+ * @remark General connector for OIDC provider.
+ * This class provides the basic functionality to connect with a OIDC provider.
+ * All the OIDC single sign-on connector should extend this class.
+ *  @see @logto/connector-kit.
+ *
+ * @property config The OIDC connector config
+ * @method getOidcConfig Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid
+ * @method getAuthorizationUrl Generate the authorization URL for the OIDC provider
+ * @method getUserInfo Handle the sign-in callback from the OIDC provider and return the user info
+ */
 class OidcConnector {
   constructor(private readonly config: ConfigType) {}
 
