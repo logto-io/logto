@@ -81,7 +81,7 @@ describe('M2M RBAC', () => {
         text: `The API resource ${apiResourceName} has been successfully created`,
       });
 
-      await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+      await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
         text: apiResourceName,
       });
     });
@@ -108,7 +108,7 @@ describe('M2M RBAC', () => {
         text: `The permission ${permissionName} has been successfully created`,
       });
 
-      await expect(page).toMatchElement('table tbody tr td div[class$=name]', {
+      await expect(page).toMatchElement('table tbody tr td div', {
         text: permissionName,
       });
     });
@@ -164,10 +164,9 @@ describe('M2M RBAC', () => {
         text: 'Permissions',
       });
 
-      const permissionRow = await expect(page).toMatchElement(
-        'table tbody tr:has(td div[class$=name])',
-        { text: permissionName }
-      );
+      const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
+        text: permissionName,
+      });
       await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
       await expectConfirmModalAndAct(page, {
@@ -188,7 +187,7 @@ describe('M2M RBAC', () => {
       await expectModalWithTitle(page, 'Assign permissions');
 
       await expect(page).toClick(
-        '.ReactModalPortal div[class$=resourceItem] div[class$=title] div[class$=name]',
+        '.ReactModalPortal div[class$=resourceItem] div[class$=title] div',
         {
           text: apiResourceName,
         }
@@ -207,7 +206,7 @@ describe('M2M RBAC', () => {
         text: 'The selected permissions were successfully assigned to this role',
       });
 
-      await expect(page).toMatchElement('table tbody tr:has(td div[class$=name])', {
+      await expect(page).toMatchElement('table tbody tr:has(td div)', {
         text: permissionName,
       });
     });
@@ -253,12 +252,9 @@ describe('M2M RBAC', () => {
         text: rbacTestAppname,
       });
 
-      await expect(page).toMatchElement(
-        'div[class$=header] > div[class$=metadata] div[class$=name]',
-        {
-          text: rbacTestAppname,
-        }
-      );
+      await expect(page).toMatchElement('div[class$=header] > div[class$=metadata] div', {
+        text: rbacTestAppname,
+      });
 
       // Go to roles tab
       await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
@@ -290,7 +286,7 @@ describe('M2M RBAC', () => {
       await expectModalWithTitle(page, `Assign roles to ${rbacTestAppname}`);
 
       await expect(page).toClick(
-        '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div[class$=name]',
+        '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div',
         {
           text: roleName,
         }
