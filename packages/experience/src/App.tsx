@@ -7,7 +7,7 @@ import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
-import { isDevelopmentFeaturesEnabled } from './constants/env';
+import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
