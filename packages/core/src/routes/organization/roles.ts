@@ -21,8 +21,8 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
 ) {
   const router = new SchemaRouter(OrganizationRoles, roles, {
     errorHandler,
+    searchFields: ['name'],
   });
-
   router.addRelationRoutes(rolesScopes, 'scopes');
 
   originalRouter.use(router.routes());

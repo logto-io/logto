@@ -8,6 +8,7 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildGetTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
+import { type SearchOptions } from '#src/database/utils.js';
 
 /**
  * Query class that contains all the necessary CRUD queries for a schema. It is
@@ -19,8 +20,16 @@ export default class SchemaQueries<
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
   Schema extends SchemaLike<Key> & { id: string },
 > {
-  #findTotalNumber: () => Promise<{ count: number }>;
-  #findAll: (limit: number, offset: number) => Promise<readonly Schema[]>;
+  #findTotalNumber: <SearchKey extends Key>(
+    search?: SearchOptions<SearchKey>
+  ) => Promise<{ count: number }>;
+
+  #findAll: <SearchKey extends Key>(
+    limit: number,
+    offset: number,
+    search?: SearchOptions<SearchKey>
+  ) => Promise<readonly Schema[]>;
+
   #findById: (id: string) => Promise<Readonly<Schema>>;
   #insert: (data: OmitAutoSetFields<CreateSchema>) => Promise<Readonly<Schema>>;
 
@@ -43,13 +52,12 @@ export default class SchemaQueries<
     this.#deleteById = buildDeleteByIdWithPool(this.pool, this.schema.table);
   }
 
-  async findTotalNumber(): Promise<number> {
-    const { count } = await this.#findTotalNumber();
-    return count;
-  }
-
-  async findAll(limit: number, offset: number): Promise<readonly Schema[]> {
-    return this.#findAll(limit, offset);
+  async findAll<SearchKey extends Key>(
+    limit: number,
+    offset: number,
+    search?: SearchOptions<SearchKey>
+  ): Promise<[totalNumber: number, rows: readonly Schema[]]> {
+    return Promise.all([this.findTotalNumber(search), this.#findAll(limit, offset, search)]);
   }
 
   async findById(id: string): Promise<Readonly<Schema>> {
@@ -70,5 +78,10 @@ export default class SchemaQueries<
 
   async deleteById(id: string): Promise<void> {
     await this.#deleteById(id);
+  }
+
+  protected async findTotalNumber(search?: SearchOptions<Key>): Promise<number> {
+    const { count } = await this.#findTotalNumber(search);
+    return count;
   }
 }

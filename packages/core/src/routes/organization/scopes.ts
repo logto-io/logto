@@ -16,7 +16,10 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const router = new SchemaRouter(OrganizationScopes, scopes, { errorHandler });
+  const router = new SchemaRouter(OrganizationScopes, scopes, {
+    errorHandler,
+    searchFields: ['name'],
+  });
 
   originalRouter.use(router.routes());
 }
