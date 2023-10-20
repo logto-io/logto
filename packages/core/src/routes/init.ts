@@ -27,6 +27,7 @@ import resourceRoutes from './resource.js';
 import roleRoutes from './role.js';
 import roleScopeRoutes from './role.scope.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
+import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
 import swaggerRoutes from './swagger.js';
 import type { AnonymousRouter, AuthedRouter } from './types.js';
@@ -59,6 +60,7 @@ const createRouters = (tenant: TenantContext) => {
   userAssetsRoutes(managementRouter, tenant);
   domainRoutes(managementRouter, tenant);
   organizationRoutes(managementRouter, tenant);
+  ssoConnectors(managementRouter, tenant);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, tenant);

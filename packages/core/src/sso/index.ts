@@ -16,7 +16,7 @@ export type SingleSignOnFactory<T extends SsoProviderName> = {
   constructor: SingleSignOnConstructor<T>;
 };
 
-const ssoConnectorFactories: {
+export const ssoConnectorFactories: {
   [key in SsoProviderName]: SingleSignOnFactory<key>;
 } = {
   [SsoProviderName.OIDC]: oidcSsoConnectorFactory,
