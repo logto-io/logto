@@ -14,13 +14,13 @@ const factorIcon: Record<MfaFactor, SvgComponent> = {
   [MfaFactor.BackupCode]: FactorBackupCode,
 };
 
-function MfaFactorTitle({ type, agent }: MfaFactorNameProps) {
+function MfaFactorTitle({ type }: MfaFactorNameProps) {
   const Icon = factorIcon[type];
 
   return (
     <div className={styles.factorTitle}>
       <Icon className={styles.factorIcon} />
-      <MfaFactorName type={type} agent={agent} />
+      <MfaFactorName type={type} />
     </div>
   );
 }

@@ -11,16 +11,10 @@ const factorNameLabel: Record<MfaFactor, AdminConsoleKey> = {
 
 export type Props = {
   type: MfaFactor;
-  agent?: string;
 };
 
-function MfaFactorName({ type, agent }: Props) {
-  return (
-    <>
-      <DynamicT forKey={factorNameLabel[type]} />
-      {agent && ` - ${agent}`}
-    </>
-  );
+function MfaFactorName({ type }: Props) {
+  return <DynamicT forKey={factorNameLabel[type]} />;
 }
 
 export default MfaFactorName;
