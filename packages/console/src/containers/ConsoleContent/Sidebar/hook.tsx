@@ -9,6 +9,7 @@ import Connection from '@/assets/icons/connection.svg';
 import Gear from '@/assets/icons/gear.svg';
 import Hook from '@/assets/icons/hook.svg';
 import List from '@/assets/icons/list.svg';
+import Organization from '@/assets/icons/organization.svg';
 import UserProfile from '@/assets/icons/profile.svg';
 import ResourceIcon from '@/assets/icons/resource.svg';
 import Role from '@/assets/icons/role.svg';
@@ -93,6 +94,11 @@ export const useSidebarMenuItems = (): {
     {
       title: 'users',
       items: [
+        {
+          Icon: Organization,
+          title: 'organizations',
+          isHidden: !isDevFeaturesEnabled,
+        },
         {
           Icon: UserProfile,
           title: 'users',

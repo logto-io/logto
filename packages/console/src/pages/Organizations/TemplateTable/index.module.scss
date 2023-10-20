@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.addButton {
+  margin-top: _.unit(3);
+}
+
+.table {
+  margin-top: _.unit(3);
+}

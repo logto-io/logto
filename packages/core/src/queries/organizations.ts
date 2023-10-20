@@ -88,9 +88,9 @@ export default class OrganizationQueries extends SchemaQueries<
   Organization
 > {
   /** Queries for roles in the organization template. */
-  roles = new SchemaQueries(this.pool, OrganizationRoles);
+  roles = new SchemaQueries(this.pool, OrganizationRoles, { field: 'name', order: 'asc' });
   /** Queries for scopes in the organization template. */
-  scopes = new SchemaQueries(this.pool, OrganizationScopes);
+  scopes = new SchemaQueries(this.pool, OrganizationScopes, { field: 'name', order: 'asc' });
 
   /** Queries for relations that connected with organization-related entities. */
   relations = {

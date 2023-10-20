@@ -37,6 +37,8 @@ export type Props<
   errorMessage?: string;
   hasBorder?: boolean;
   onRetry?: () => void;
+  /** A footer that will be rendered on the bottom-left of the table. */
+  footer?: ReactNode;
 };
 
 function Table<
@@ -61,6 +63,7 @@ function Table<
   errorMessage,
   hasBorder,
   onRetry,
+  footer,
 }: Props<TFieldValues, TName>) {
   const totalColspan = columns.reduce((result, { colSpan }) => {
     return result + (colSpan ?? 1);
@@ -160,7 +163,10 @@ function Table<
           </table>
         </OverlayScrollbar>
       </div>
-      {pagination && <Pagination className={styles.pagination} {...pagination} />}
+      <div className={styles.footer}>
+        {footer}
+        {pagination && <Pagination className={styles.pagination} {...pagination} />}
+      </div>
     </div>
   );
 }

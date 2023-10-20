@@ -9,7 +9,7 @@ import {
   expectConfirmModalAndAct,
   expectMainPageWithTitle,
 } from '#src/ui-helpers/index.js';
-import { appendPathname, expectNavigation } from '#src/utils.js';
+import { appendPathname, dcls, expectNavigation } from '#src/utils.js';
 
 import { expectToCreateWebhook } from './helpers.js';
 
@@ -97,13 +97,10 @@ describe('webhooks', () => {
     });
     await expectToClickModalAction(page, 'Disable webhook');
 
-    await expect(page).toMatchElement(
-      'div[class$=header] div[class$=metadata] div:nth-of-type(2) div[class$=outlined] div:nth-of-type(2)',
-      {
-        text: 'Not in use',
-        timeout: 1000,
-      }
-    );
+    await expect(page).toMatchElement([dcls('header'), dcls('metadata'), dcls('tag')].join(' '), {
+      text: 'Not in use',
+      timeout: 3000,
+    });
 
     // Reactivate webhook
     await expectToClickDetailsPageOption(page, 'Reactivate webhook');

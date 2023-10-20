@@ -96,3 +96,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/** Render a tag that has background color and border radius. */
+@mixin tag {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+  padding: unit(1) unit(2);
+  border-radius: 6px;
+  background: var(--color-neutral-95);
+  @include text-ellipsis;
+}

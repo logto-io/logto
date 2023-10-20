@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.tabs {
+  margin: _.unit(4) 0;
+}
+
+.permission {
+  @include _.tag;
+}

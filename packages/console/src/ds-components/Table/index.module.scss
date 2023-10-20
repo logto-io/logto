@@ -165,6 +165,12 @@
   }
 }
 
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .pagination {
   margin-top: _.unit(4);
 }

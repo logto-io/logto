@@ -27,6 +27,9 @@ function DropdownItem({
       className={classNames(styles.item, styles[type], className)}
       role="menuitem"
       tabIndex={0}
+      onMouseDown={(event) => {
+        event.preventDefault();
+      }}
       onKeyDown={onKeyDownHandler(onClick)}
       onClick={onClick}
     >

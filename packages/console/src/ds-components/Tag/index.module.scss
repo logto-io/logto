@@ -21,6 +21,16 @@
     color: var(--color-on-success-container);
   }
 
+  // Distinguish from the info status
+  &.cell {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 6px;
+    background: var(--color-neutral-variant-90);
+    padding: _.unit(0.5) _.unit(2);
+  }
+
   &.info {
     .icon {
       background: var(--color-on-info-container);
