@@ -30,7 +30,7 @@ export const i18nPhrasesGuard: ZodType<I18nPhrases> = z
     return true;
   });
 
-type I18nPhrases = { en: string } & {
+export type I18nPhrases = { en: string } & {
   [K in Exclude<LanguageTag, 'en'>]?: string;
 };
 
