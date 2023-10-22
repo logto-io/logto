@@ -105,9 +105,9 @@ function Webhooks() {
             title: <DynamicT forKey="webhooks.table.success_rate" />,
             dataIndex: 'successRate',
             colSpan: 3,
-            render: ({ enabled, executionStats: { successCount, requestCount } }) => {
+            render: ({ enabled, executionStats }) => {
               return enabled ? (
-                <SuccessRate successCount={successCount} totalCount={requestCount} />
+                <SuccessRate isNumberOnly stats={executionStats} />
               ) : (
                 <Tag type="state" status="info" variant="plain">
                   <DynamicT forKey="webhook_details.not_in_use" />

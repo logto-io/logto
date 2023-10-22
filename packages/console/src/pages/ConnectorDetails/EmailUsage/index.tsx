@@ -15,19 +15,24 @@ import * as styles from './index.module.scss';
 
 type Props = {
   usage: number;
+  isCompact?: boolean;
 };
 
-function EmailUsage({ usage }: Props) {
+function EmailUsage({ usage, isCompact }: Props) {
   const theme = useTheme();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
   return (
     <div className={styles.container}>
       {theme === Theme.Light ? <EmailSentIconLight /> : <EmailSentIconDark />}
-      <DynamicT
-        forKey="connector_details.logto_email.total_email_sent"
-        interpolation={{ value: usage }}
-      />
+      {isCompact ? (
+        usage
+      ) : (
+        <DynamicT
+          forKey="connector_details.logto_email.total_email_sent"
+          interpolation={{ value: usage }}
+        />
+      )}
       <ToggleTip
         content={(closeTipHandler) => (
           <Trans

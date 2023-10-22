@@ -1,7 +1,15 @@
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
-import type { MouseEventHandler } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type ForwardedRef,
+  type MouseEventHandler,
+  forwardRef,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Copy from '@/assets/icons/copy.svg';
@@ -17,6 +25,8 @@ import * as styles from './index.module.scss';
 type Props = {
   value: string;
   className?: string;
+  style?: CSSProperties;
+  valueStyle?: CSSProperties;
   variant?: 'text' | 'contained' | 'border' | 'icon';
   hasVisibilityToggle?: boolean;
   size?: 'default' | 'small';
@@ -25,14 +35,19 @@ type Props = {
 
 type CopyState = TFuncKey<'translation', 'admin_console.general'>;
 
-function CopyToClipboard({
-  value,
-  className,
-  hasVisibilityToggle,
-  variant = 'contained',
-  size = 'default',
-  isWordWrapAllowed = false,
-}: Props) {
+function CopyToClipboard(
+  {
+    value,
+    className,
+    style,
+    valueStyle,
+    hasVisibilityToggle,
+    variant = 'contained',
+    size = 'default',
+    isWordWrapAllowed = false,
+  }: Props,
+  ref: ForwardedRef<HTMLDivElement>
+) {
   const copyIconReference = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
@@ -64,9 +79,11 @@ function CopyToClipboard({
 
   return (
     <div
+      ref={ref}
       className={classNames(styles.container, styles[variant], styles[size], className)}
       role="button"
       tabIndex={0}
+      style={style}
       onKeyDown={onKeyDownHandler((event) => {
         event.stopPropagation();
       })}
@@ -76,7 +93,10 @@ function CopyToClipboard({
     >
       <div className={styles.row}>
         {variant !== 'icon' && (
-          <div className={classNames(styles.content, isWordWrapAllowed && styles.wrapContent)}>
+          <div
+            className={classNames(styles.content, isWordWrapAllowed && styles.wrapContent)}
+            style={valueStyle}
+          >
             {displayValue}
           </div>
         )}
@@ -112,4 +132,4 @@ function CopyToClipboard({
   );
 }
 
-export default CopyToClipboard;
+export default forwardRef(CopyToClipboard);

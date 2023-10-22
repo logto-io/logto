@@ -65,10 +65,7 @@ export const expectToDiscardChanges = async (page: Page) => {
 };
 
 export const expectToClickDetailsPageOption = async (page: Page, optionText: string) => {
-  await expect(page).toClick(
-    'div[class$=header] button[class$=withIcon]:last-of-type span[class$=icon]:has(svg)'
-  );
-
+  await expect(page).toClick('div[class$=header] div[class$=operations] div button span:has(svg)');
   await expect(page).toMatchElement(
     '.ReactModalPortal div[class$=dropdownContainer] div[class$=dropdownTitle]',
     {

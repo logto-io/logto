@@ -2,6 +2,7 @@ import { withAppInsights } from '@logto/app-insights/react';
 import { ServiceConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import type { ConnectorFactoryResponse, ConnectorResponse } from '@logto/schemas';
+import { condArray, conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -9,23 +10,21 @@ import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import More from '@/assets/icons/more.svg';
+import File from '@/assets/icons/file.svg';
 import Reset from '@/assets/icons/reset.svg';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import CreateConnectorForm from '@/components/CreateConnectorForm';
 import DeleteConnectorConfirmModal from '@/components/DeleteConnectorConfirmModal';
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader, {
+  type MenuItem as ActionMenuItemItem,
+} from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import Markdown from '@/components/Markdown';
 import PageMeta from '@/components/PageMeta';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { ConnectorsTabs } from '@/consts/page-tabs';
-import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import Button from '@/ds-components/Button';
-import Card from '@/ds-components/Card';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useConnectorApi from '@/hooks/use-connector-api';
@@ -122,117 +121,89 @@ function ConnectorDetails() {
       {isSocial && <ConnectorTabs target={data.target} connectorId={data.id} />}
       {data && (
         <>
-          <Card className={styles.header}>
-            <ConnectorLogo data={data} size="large" />
-            <div className={styles.metadata}>
-              <div>
-                <div className={styles.name}>
-                  <UnnamedTrans resource={data.name} />
-                </div>
-              </div>
-              <div>
-                <ConnectorTypeName type={data.type} />
-                <div className={styles.verticalBar} />
-                {connectorFactory && (
-                  <>
-                    <Tag>
-                      <UnnamedTrans resource={connectorFactory.name} />
-                    </Tag>
-                    <div className={styles.verticalBar} />
-                  </>
-                )}
-                <Tag type="state" status={inUse ? 'success' : 'info'}>
-                  {t(
-                    inUse
-                      ? 'connectors.connector_status_in_use'
-                      : 'connectors.connector_status_not_in_use'
-                  )}
-                </Tag>
-                <div className={styles.verticalBar} />
-                <div className={styles.text}>ID</div>
-                <CopyToClipboard size="small" value={data.id} />
-              </div>
-            </div>
-            <div className={styles.operations}>
-              {data.type === ConnectorType.Email && data.usage !== undefined && (
+          <DetailsPageHeader
+            icon={<ConnectorLogo data={data} size="large" />}
+            title={<UnnamedTrans resource={data.name} />}
+            primaryTag={<ConnectorTypeName type={data.type} />}
+            statusTag={{
+              status: inUse ? 'success' : 'info',
+              text: inUse
+                ? 'connectors.connector_status_in_use'
+                : 'connectors.connector_status_not_in_use',
+            }}
+            identifier={{ name: 'ID', value: data.id }}
+            additionalActionButton={conditional(
+              data.connectorId !== ServiceConnector.Email && {
+                title: 'connector_details.check_readme',
+                icon: <File />,
+                onClick: () => {
+                  setIsReadMeOpen(true);
+                },
+              }
+            )}
+            additionalCustomElement={conditional(
+              data.type === ConnectorType.Email && data.usage !== undefined && (
                 <EmailUsage usage={data.usage} />
-              )}
-              {/* Note: hide the 'Check README' button for the email service connector since it's provided by Logto and no setup guide is needed */}
-              {data.connectorId !== ServiceConnector.Email && (
-                <>
-                  <Button
-                    title="connector_details.check_readme"
-                    size="large"
-                    onClick={() => {
-                      setIsReadMeOpen(true);
-                    }}
-                  />
-                  <Drawer
-                    title="connectors.title"
-                    subtitle="connectors.subtitle"
-                    isOpen={isReadMeOpen}
-                    onClose={() => {
-                      setIsReadMeOpen(false);
-                    }}
-                  >
-                    <Markdown className={styles.readme}>{data.readme}</Markdown>
-                  </Drawer>
-                </>
-              )}
-              <ActionMenu
-                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                title={t('general.more_options')}
-              >
-                {!isSocial && (
-                  <ActionMenuItem
-                    icon={<Reset />}
-                    iconClassName={styles.resetIcon}
-                    onClick={() => {
-                      setIsSetupOpen(true);
-                    }}
-                  >
-                    {t(
+              )
+            )}
+            actionMenuItems={[
+              ...condArray(
+                !isSocial && [
+                  {
+                    title:
                       data.type === ConnectorType.Sms
                         ? 'connector_details.options_change_sms'
-                        : 'connector_details.options_change_email'
-                    )}
-                  </ActionMenuItem>
-                )}
-                <ActionMenuItem
-                  icon={<Delete />}
-                  type="danger"
-                  onClick={() => {
-                    setIsDeleteAlertOpen(true);
-                  }}
-                >
-                  {t('general.delete')}
-                </ActionMenuItem>
-              </ActionMenu>
-              <CreateConnectorForm
-                isOpen={isSetupOpen}
-                type={data.type}
-                onClose={async (connectorId?: string) => {
-                  setIsSetupOpen(false);
+                        : 'connector_details.options_change_email',
+                    icon: <Reset />,
+                    onClick: () => {
+                      setIsSetupOpen(true);
+                    },
+                  } satisfies ActionMenuItemItem,
+                ]
+              ),
+              {
+                type: 'danger',
+                title: 'general.delete',
+                icon: <Delete />,
+                onClick: () => {
+                  setIsDeleteAlertOpen(true);
+                },
+              },
+            ]}
+          />
+          <Drawer
+            title="connectors.title"
+            subtitle="connectors.subtitle"
+            isOpen={isReadMeOpen}
+            onClose={() => {
+              setIsReadMeOpen(false);
+            }}
+          >
+            <Markdown className={styles.readme}>{data.readme}</Markdown>
+          </Drawer>
+          <CreateConnectorForm
+            isOpen={isSetupOpen}
+            type={data.type}
+            onClose={async (connectorId?: string) => {
+              setIsSetupOpen(false);
 
-                  if (connectorId) {
-                    /**
-                     * Note:
-                     * The "Email Service Connector" is a built-in connector that can be directly created without the need for setup in the guide.
-                     */
-                    if (connectorId === ServiceConnector.Email) {
-                      const created = await createConnector({ connectorId });
-                      navigate(`/connectors/${ConnectorsTabs.Passwordless}/${created.id}`, {
-                        replace: true,
-                      });
-                      return;
-                    }
+              if (connectorId) {
+                /**
+                 * Note:
+                 * The "Email Service Connector" is a built-in connector that can be directly created without the need for setup in the guide.
+                 */
+                if (connectorId === ServiceConnector.Email) {
+                  const created = await createConnector({ connectorId });
+                  navigate(`/connectors/${ConnectorsTabs.Passwordless}/${created.id}`, {
+                    replace: true,
+                  });
+                  return;
+                }
 
-                    navigate(`${getConnectorsPathname(isSocial)}/guide/${connectorId}`);
-                  }
-                }}
-              />
-            </div>
-          </Card>
+                navigate(`${getConnectorsPathname(isSocial)}/guide/${connectorId}`);
+              }
+            }}
+          />
           <TabNav>
             <TabNavItem href={`${getConnectorsPathname(isSocial)}/${connectorId}`}>
               {t('general.settings_nav')}

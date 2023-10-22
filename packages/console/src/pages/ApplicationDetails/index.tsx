@@ -14,23 +14,19 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
-import More from '@/assets/icons/more.svg';
+import File from '@/assets/icons/file.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs } from '@/consts';
 import { openIdProviderConfigPath } from '@/consts/oidc';
-import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import Button from '@/ds-components/Button';
-import Card from '@/ds-components/Card';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
-import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -173,61 +169,49 @@ function ApplicationDetails() {
       <PageMeta titleKey="application_details.page_title" />
       {data && oidcConfig && (
         <>
-          <Card className={styles.header}>
-            <ApplicationIcon type={data.type} className={styles.icon} />
-            <div className={styles.metadata}>
-              <div className={styles.name}>{data.name}</div>
-              <div className={styles.row}>
-                <Tag>{t(`${applicationTypeI18nKey[data.type]}.title`)}</Tag>
-                <div className={styles.verticalBar} />
-                <div className={styles.text}>App ID</div>
-                <CopyToClipboard size="small" value={data.id} />
-              </div>
+          <DetailsPageHeader
+            icon={<ApplicationIcon type={data.type} />}
+            title={data.name}
+            primaryTag={t(`${applicationTypeI18nKey[data.type]}.title`)}
+            identifier={{ name: 'App ID', value: data.id }}
+            additionalActionButton={{
+              title: 'application_details.check_guide',
+              icon: <File />,
+              onClick: () => {
+                setIsReadmeOpen(true);
+              },
+            }}
+            actionMenuItems={[
+              {
+                type: 'danger',
+                title: 'general.delete',
+                icon: <Delete />,
+                onClick: () => {
+                  setIsDeleteFormOpen(true);
+                },
+              },
+            ]}
+          />
+          <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
+            <GuideDrawer app={data} onClose={onCloseDrawer} />
+          </Drawer>
+          <DeleteConfirmModal
+            isOpen={isDeleteFormOpen}
+            isLoading={isDeleting}
+            expectedInput={data.name}
+            inputPlaceholder={t('application_details.enter_your_application_name')}
+            className={styles.deleteConfirm}
+            onCancel={() => {
+              setIsDeleteFormOpen(false);
+            }}
+            onConfirm={onDelete}
+          >
+            <div className={styles.description}>
+              <Trans components={{ span: <span className={styles.highlight} /> }}>
+                {t('application_details.delete_description', { name: data.name })}
+              </Trans>
             </div>
-            <div className={styles.operations}>
-              <Button
-                title="application_details.check_guide"
-                size="large"
-                onClick={() => {
-                  setIsReadmeOpen(true);
-                }}
-              />
-              <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
-                <GuideDrawer app={data} onClose={onCloseDrawer} />
-              </Drawer>
-              <ActionMenu
-                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                title={t('general.more_options')}
-              >
-                <ActionMenuItem
-                  icon={<Delete />}
-                  type="danger"
-                  onClick={() => {
-                    setIsDeleteFormOpen(true);
-                  }}
-                >
-                  {t('general.delete')}
-                </ActionMenuItem>
-              </ActionMenu>
-              <DeleteConfirmModal
-                isOpen={isDeleteFormOpen}
-                isLoading={isDeleting}
-                expectedInput={data.name}
-                inputPlaceholder={t('application_details.enter_your_application_name')}
-                className={styles.deleteConfirm}
-                onCancel={() => {
-                  setIsDeleteFormOpen(false);
-                }}
-                onConfirm={onDelete}
-              >
-                <div className={styles.description}>
-                  <Trans components={{ span: <span className={styles.highlight} /> }}>
-                    {t('application_details.delete_description', { name: data.name })}
-                  </Trans>
-                </div>
-              </DeleteConfirmModal>
-            </div>
-          </Card>
+          </DeleteConfirmModal>
           <TabNav>
             <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Settings}`}>
               {t('application_details.settings')}

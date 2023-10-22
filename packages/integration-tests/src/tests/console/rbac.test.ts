@@ -71,7 +71,7 @@ describe('RBAC', () => {
       text: `The API resource ${apiResourceName} has been successfully created`,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
       text: apiResourceName,
     });
   });
@@ -173,7 +173,7 @@ describe('RBAC', () => {
     await expectModalWithTitle(page, 'Assign users');
     await expectToClickModalAction(page, 'Skip for now');
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
       text: roleName,
     });
   });
@@ -264,7 +264,7 @@ describe('RBAC', () => {
       text: rbacTestUsername,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=name]', {
       text: rbacTestUsername,
     });
 
@@ -337,7 +337,7 @@ describe('RBAC', () => {
       text: roleName,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
       text: roleName,
     });
 
@@ -370,7 +370,7 @@ describe('RBAC', () => {
       text: apiResourceName,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
       text: apiResourceName,
     });
 

@@ -10,17 +10,14 @@ import useSWR from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import Forbidden from '@/assets/icons/forbidden.svg';
-import More from '@/assets/icons/more.svg';
 import Reset from '@/assets/icons/reset.svg';
 import Shield from '@/assets/icons/shield.svg';
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
 import UserAvatar from '@/components/UserAvatar';
 import { UserDetailsTabs } from '@/consts/page-tabs';
-import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import Card from '@/ds-components/Card';
 import ConfirmModal from '@/ds-components/ConfirmModal';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
@@ -112,106 +109,86 @@ function UserDetails() {
       <PageMeta titleKey="user_details.page_title" />
       {data && (
         <>
-          <Card className={styles.header}>
-            <UserAvatar user={data} size="xlarge" />
-            <div className={styles.metadata}>
-              <div className={styles.title}>{getUserTitle(data)}</div>
-              <div>
-                {isSuspendedUser && <SuspendedTag />}
-                {userSubtitle && (
-                  <>
-                    <div className={styles.subtitle}>{userSubtitle}</div>
-                    <div className={styles.verticalBar} />
-                  </>
-                )}
-                <div className={styles.text}>User ID</div>
-                <CopyToClipboard size="small" value={data.id} />
-              </div>
-            </div>
-            <div>
-              <ActionMenu
-                buttonProps={{ icon: <More className={styles.icon} />, size: 'large' }}
-                title={t('general.more_options')}
-              >
-                <ActionMenuItem
-                  icon={<Reset />}
-                  iconClassName={styles.icon}
-                  onClick={() => {
-                    setIsResetPasswordFormOpen(true);
-                  }}
-                >
-                  {t('user_details.reset_password.reset_password')}
-                </ActionMenuItem>
-                <ActionMenuItem
-                  icon={isSuspendedUser ? <Shield /> : <Forbidden />}
-                  iconClassName={styles.icon}
-                  onClick={() => {
-                    setIsToggleSuspendFormOpen(true);
-                  }}
-                >
-                  {t(
-                    isSuspendedUser ? 'user_details.reactivate_user' : 'user_details.suspend_user'
-                  )}
-                </ActionMenuItem>
-                <ActionMenuItem
-                  icon={<Delete />}
-                  type="danger"
-                  onClick={() => {
-                    setIsDeleteFormOpen(true);
-                  }}
-                >
-                  {t('general.delete')}
-                </ActionMenuItem>
-              </ActionMenu>
-              <ReactModal
-                shouldCloseOnEsc
-                isOpen={isResetPasswordFormOpen}
-                className={modalStyles.content}
-                overlayClassName={modalStyles.overlay}
-                onRequestClose={() => {
-                  setIsResetPasswordFormOpen(false);
-                }}
-              >
-                <ResetPasswordForm
-                  userId={data.id}
-                  onClose={(password) => {
-                    setIsResetPasswordFormOpen(false);
+          <DetailsPageHeader
+            icon={<UserAvatar user={data} size="xlarge" />}
+            title={getUserTitle(data)}
+            subtitle={userSubtitle}
+            primaryTag={isSuspendedUser && <SuspendedTag />}
+            identifier={{ name: 'User ID', value: data.id }}
+            actionMenuItems={[
+              {
+                title: 'user_details.reset_password.reset_password',
+                icon: <Reset />,
+                onClick: () => {
+                  setIsResetPasswordFormOpen(true);
+                },
+              },
+              {
+                title: isSuspendedUser
+                  ? 'user_details.reactivate_user'
+                  : 'user_details.suspend_user',
+                icon: isSuspendedUser ? <Shield /> : <Forbidden />,
+                onClick: () => {
+                  setIsToggleSuspendFormOpen(true);
+                },
+              },
+              {
+                title: 'general.delete',
+                type: 'danger',
+                icon: <Delete />,
+                onClick: () => {
+                  setIsDeleteFormOpen(true);
+                },
+              },
+            ]}
+          />
+          <ReactModal
+            shouldCloseOnEsc
+            isOpen={isResetPasswordFormOpen}
+            className={modalStyles.content}
+            overlayClassName={modalStyles.overlay}
+            onRequestClose={() => {
+              setIsResetPasswordFormOpen(false);
+            }}
+          >
+            <ResetPasswordForm
+              userId={data.id}
+              onClose={(password) => {
+                setIsResetPasswordFormOpen(false);
 
-                    if (password) {
-                      setResetResult(password);
-                    }
-                  }}
-                />
-              </ReactModal>
-              <DeleteConfirmModal
-                isOpen={isDeleteFormOpen}
-                isLoading={isDeleting}
-                onCancel={() => {
-                  setIsDeleteFormOpen(false);
-                }}
-                onConfirm={onDelete}
-              >
-                <div>{t('user_details.delete_description')}</div>
-              </DeleteConfirmModal>
-              <ConfirmModal
-                isOpen={isToggleSuspendFormOpen}
-                isLoading={isUpdatingSuspendState}
-                confirmButtonText={
-                  isSuspendedUser ? 'user_details.reactivate_action' : 'user_details.suspend_action'
+                if (password) {
+                  setResetResult(password);
                 }
-                onCancel={() => {
-                  setIsToggleSuspendFormOpen(false);
-                }}
-                onConfirm={onToggleSuspendState}
-              >
-                {t(
-                  isSuspendedUser
-                    ? 'user_details.reactivate_user_reminder'
-                    : 'user_details.suspend_user_reminder'
-                )}
-              </ConfirmModal>
-            </div>
-          </Card>
+              }}
+            />
+          </ReactModal>
+          <DeleteConfirmModal
+            isOpen={isDeleteFormOpen}
+            isLoading={isDeleting}
+            onCancel={() => {
+              setIsDeleteFormOpen(false);
+            }}
+            onConfirm={onDelete}
+          >
+            <div>{t('user_details.delete_description')}</div>
+          </DeleteConfirmModal>
+          <ConfirmModal
+            isOpen={isToggleSuspendFormOpen}
+            isLoading={isUpdatingSuspendState}
+            confirmButtonText={
+              isSuspendedUser ? 'user_details.reactivate_action' : 'user_details.suspend_action'
+            }
+            onCancel={() => {
+              setIsToggleSuspendFormOpen(false);
+            }}
+            onConfirm={onToggleSuspendState}
+          >
+            {t(
+              isSuspendedUser
+                ? 'user_details.reactivate_user_reminder'
+                : 'user_details.suspend_user_reminder'
+            )}
+          </ConfirmModal>
           <TabNav>
             <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Settings}`}>
               {t('user_details.tab_settings')}

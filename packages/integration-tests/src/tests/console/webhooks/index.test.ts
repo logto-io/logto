@@ -34,12 +34,12 @@ describe('webhooks', () => {
     await expectToCreateWebhook(page);
 
     // Go to webhook details page
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'hook_name',
     });
 
     const hookId = await page.$eval(
-      'div[class$=main] div[class$=metadata] div[class$=row] div:first-of-type',
+      'div[class$=main] div[class$=metadata] div[class$=row] div[class$=content]',
       (element) => element.textContent
     );
     if (hookId) {
@@ -68,7 +68,7 @@ describe('webhooks', () => {
     await expect(page).toFill('input[name=name]', 'hook_name');
     await expect(page).toFill('input[name=url]', 'http://localhost/webhook');
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'hook_name',
     });
   });
@@ -107,7 +107,7 @@ describe('webhooks', () => {
 
     // Wait for the active webhook state info to appear
     await page.waitForSelector(
-      'div[class$=header] div[class$=metadata] div:nth-of-type(2) div[class$=state]'
+      'div[class$=header] div[class$=metadata] > div[class$=row] > div[class$=text]'
     );
   });
 

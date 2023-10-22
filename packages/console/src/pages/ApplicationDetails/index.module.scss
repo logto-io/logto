@@ -18,68 +18,6 @@
   @include _.form-text-field;
 }
 
-.header {
-  flex: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: _.unit(6);
-
-  > *:not(:first-child) {
-    margin-left: _.unit(6);
-  }
-
-  .icon {
-    margin-left: _.unit(2);
-    width: 60px;
-    height: 60px;
-  }
-
-  .operations {
-    display: flex;
-    align-items: center;
-
-    .moreIcon {
-      color: var(--color-text-secondary);
-    }
-
-    > :not(:first-child) {
-      margin-left: _.unit(3);
-    }
-  }
-
-  .metadata {
-    flex: 1;
-
-    .name {
-      font: var(--font-title-1);
-      color: var(--color-text);
-    }
-
-    .row {
-      white-space: nowrap;
-
-      > * {
-        display: inline-block;
-      }
-
-      > :not(:first-child) {
-        margin-left: _.unit(2);
-      }
-
-      .text {
-        font: var(--font-label-2);
-        color: var(--color-text-secondary);
-      }
-
-      .verticalBar {
-        @include _.vertical-bar;
-        height: 12px;
-      }
-    }
-  }
-}
-
 .customEndpointNotes {
   margin-top: _.unit(6);
   font: var(--font-body-2);

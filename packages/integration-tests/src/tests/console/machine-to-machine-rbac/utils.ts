@@ -60,7 +60,7 @@ export const createM2mRoleAndAssignPermissions = async (
   await expectModalWithTitle(page, 'Assign apps');
   await expectToClickModalAction(page, 'Skip for now');
 
-  await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+  await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div[class$=name]', {
     text: roleName,
   });
 };
