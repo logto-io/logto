@@ -203,6 +203,11 @@ declare module 'koa-router' {
       path: string | string[] | RegExp,
       ...middleware: Array<Router.IMiddleware<StateT, CustomT>>
     ): Router<StateT, CustomT>;
+    use<T, U>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware: Koa.Middleware<T, U>,
+      routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
+    ): Router<StateT & T, CustomT & U>;
 
     /**
      * HTTP get method

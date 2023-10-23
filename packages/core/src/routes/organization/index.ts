@@ -1,9 +1,12 @@
-import { OrganizationRoles, Organizations } from '@logto/schemas';
+import { OrganizationRoles, Organizations, userWithOrganizationRolesGuard } from '@logto/schemas';
+import { type Optional, cond } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { type SearchOptions } from '#src/database/utils.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { userSearchKeys } from '#src/queries/user.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -16,7 +19,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   const [
     originalRouter,
     {
-      queries: { organizations, users },
+      queries: { organizations },
     },
   ] = args;
   const router = new SchemaRouter(Organizations, organizations, {
@@ -24,12 +27,74 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     searchFields: ['name'],
   });
 
-  router.addRelationRoutes(organizations.relations.users);
+  // MARK: Organization - user relation routes
+  router.addRelationRoutes(organizations.relations.users, undefined, { disabled: { get: true } });
+
+  router.get(
+    '/:id/users',
+    // KoaPagination(),
+    koaGuard({
+      query: z.object({ q: z.string().optional() }),
+      params: z.object({ id: z.string().min(1) }),
+      response: userWithOrganizationRolesGuard.array(),
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const { q } = ctx.guard.query;
+      const search: Optional<SearchOptions<(typeof userSearchKeys)[number]>> = cond(
+        q && {
+          fields: userSearchKeys,
+          keyword: q,
+        }
+      );
+      ctx.body = await organizations.relations.users.getUsersByOrganizationId(
+        ctx.guard.params.id,
+        search
+      );
+      return next();
+    }
+  );
+
+  router.post(
+    '/:id/users/roles',
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: z.object({
+        userIds: z.string().min(1).array().nonempty(),
+        roleIds: z.string().min(1).array().nonempty(),
+      }),
+      status: [201, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      const { userIds, roleIds } = ctx.guard.body;
+
+      await organizations.relations.rolesUsers.insert(
+        ...roleIds.flatMap<[string, string, string]>((roleId) =>
+          userIds.map<[string, string, string]>((userId) => [id, roleId, userId])
+        )
+      );
+
+      ctx.status = 201;
+      return next();
+    }
+  );
 
   // Manually add these routes since I don't want to over-engineer the `SchemaRouter`
   // MARK: Organization - user - organization role relation routes
   const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
   const pathname = '/:id/users/:userId/roles';
+
+  router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
+    const { id, userId } = ctx.guard.params;
+
+    // Ensure membership
+    if (!(await organizations.relations.users.exists(id, userId))) {
+      throw new RequestError({ code: 'organization.require_membership', status: 422 });
+    }
+
+    return next();
+  });
 
   router.get(
     pathname,
@@ -37,13 +102,10 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     koaGuard({
       params: z.object(params),
       response: OrganizationRoles.guard.array(),
-      status: [200, 404],
+      status: [200, 422],
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
-
-      // Ensure both the organization and the role exist
-      await Promise.all([organizations.findById(id), users.findUserById(userId)]);
 
       const [totalCount, entities] = await organizations.relations.rolesUsers.getEntities(
         OrganizationRoles,
@@ -60,24 +122,37 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  router.put(
+    pathname,
+    koaGuard({
+      params: z.object(params),
+      body: z.object({ organizationRoleIds: z.string().min(1).array() }),
+      status: [204, 422],
+    }),
+    async (ctx, next) => {
+      const { id, userId } = ctx.guard.params;
+      const { organizationRoleIds } = ctx.guard.body;
+
+      await organizations.relations.rolesUsers.replace(id, userId, organizationRoleIds);
+
+      ctx.status = 204;
+      return next();
+    }
+  );
+
   router.post(
     pathname,
     koaGuard({
       params: z.object(params),
-      body: z.object({ roleIds: z.string().min(1).array().nonempty() }),
-      status: [201, 404, 422],
+      body: z.object({ organizationRoleIds: z.string().min(1).array().nonempty() }),
+      status: [201, 422],
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
-      const { roleIds } = ctx.guard.body;
-
-      // Ensure membership
-      if (!(await organizations.relations.users.exists(id, userId))) {
-        throw new RequestError({ code: 'organization.require_membership', status: 422 });
-      }
+      const { organizationRoleIds } = ctx.guard.body;
 
       await organizations.relations.rolesUsers.insert(
-        ...roleIds.map<[string, string, string]>((roleId) => [id, roleId, userId])
+        ...organizationRoleIds.map<[string, string, string]>((roleId) => [id, roleId, userId])
       );
 
       ctx.status = 201;
@@ -85,11 +160,12 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  // TODO: check if membership is required in this route
   router.delete(
     `${pathname}/:roleId`,
     koaGuard({
       params: z.object({ ...params, roleId: z.string().min(1) }),
-      status: [204, 404],
+      status: [204, 422, 404],
     }),
     async (ctx, next) => {
       const { id, roleId, userId } = ctx.guard.params;

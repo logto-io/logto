@@ -1,17 +1,26 @@
+import { type GeneratedSchema } from '@logto/schemas';
+import { type SchemaLike } from '@logto/shared';
 import type { CommonQueryMethods, IdentifierSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
 import { type SearchOptions, buildSearchSql } from './utils.js';
 
 export const buildGetTotalRowCountWithPool =
-  (pool: CommonQueryMethods, table: string) =>
-  async <SearchKeys extends string>(search?: SearchOptions<SearchKeys>) => {
+  <
+    Keys extends string,
+    CreateSchema extends Partial<SchemaLike<Keys>>,
+    Schema extends SchemaLike<Keys>,
+  >(
+    pool: CommonQueryMethods,
+    schema: GeneratedSchema<Keys, CreateSchema, Schema>
+  ) =>
+  async <SearchKeys extends Keys>(search?: SearchOptions<SearchKeys>) => {
     // Postgres returns a bigint for count(*), which is then converted to a string by query library.
     // We need to convert it to a number.
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
-      from ${sql.identifier([table])}
-      ${buildSearchSql(search)}
+      from ${sql.identifier([schema.table])}
+      ${buildSearchSql(schema, search)}
     `);
 
     return { count: Number(count) };

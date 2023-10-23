@@ -201,6 +201,7 @@ export default class RelationQueries<
         select count(*)
         ${mainSql}
       `),
+      // TODO: replace `.*` with explicit fields
       this.pool.query<InferSchema<S>>(sql`
         select ${forTable}.* ${mainSql}
         ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
@@ -264,21 +265,23 @@ export class TwoRelationsQueries<
     return this.pool.transaction(async (transaction) => {
       // Lock schema1 row
       await transaction.query(sql`
-        select *
+        select id
         from ${sql.identifier([this.schemas[0].table])}
         where id = ${schema1Id}
         for update
       `);
+
       // Delete old relations
       await transaction.query(sql`
         delete from ${this.table}
         where ${sql.identifier([this.schemas[0].tableSingular + '_id'])} = ${schema1Id}
       `);
 
+      // Insert new relations
       if (schema2Ids.length === 0) {
         return;
       }
-      // Insert new relations
+
       await transaction.query(sql`
         insert into ${this.table} (
           ${sql.identifier([this.schemas[0].tableSingular + '_id'])},

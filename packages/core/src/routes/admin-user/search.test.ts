@@ -20,15 +20,13 @@ const filterUsersWithSearch = (users: User[], search: string) =>
 
 const mockedQueries = {
   users: {
-    countUsers: jest.fn(async (search) => ({
+    countUsers: jest.fn(async ({ search }) => ({
       count: search
         ? filterUsersWithSearch(mockUserList, String(search)).length
         : mockUserList.length,
     })),
     findUsers: jest.fn(
-      async (limit, offset, search): Promise<User[]> =>
-        // For testing, type should be `Search` but we use `string` in `filterUsersWithSearch()` here
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      async (limit, offset, { search }): Promise<User[]> =>
         search ? filterUsersWithSearch(mockUserList, String(search)) : mockUserList
     ),
   },

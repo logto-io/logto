@@ -1,7 +1,8 @@
 import type { User, CreateUser } from '@logto/schemas';
-import { SearchJointMode, Users } from '@logto/schemas';
+import { Users } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { conditionalArray, pick } from '@silverhand/essentials';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
 
@@ -11,6 +12,26 @@ import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 
 const { table, fields } = convertToIdentifiers(Users);
+
+export type UserConditions = {
+  search?: Search;
+  relation?: {
+    table: string;
+    field: string;
+    value: string;
+    type: 'exists' | 'not exists';
+  };
+};
+
+export const userSearchKeys = Object.freeze([
+  'id',
+  'primaryEmail',
+  'primaryPhone',
+  'username',
+  'name',
+] as const);
+
+export const userSearchFields = Object.freeze(Object.values(pick(Users.fields, ...userSearchKeys)));
 
 export const createUserQueries = (pool: CommonQueryMethods) => {
   const findUserByUsername = async (username: string) =>
@@ -91,64 +112,46 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
-  const buildUserConditions = (search: Search, excludeUserIds: string[], userIds?: string[]) => {
-    const hasSearch = search.matches.length > 0;
-    const searchFields = [
-      Users.fields.id,
-      Users.fields.primaryEmail,
-      Users.fields.primaryPhone,
-      Users.fields.username,
-      Users.fields.name,
-    ];
+  const buildUserConditions = ({ search, relation }: UserConditions) => {
+    const hasSearch = search?.matches.length;
+    const id = sql.identifier;
+    const buildRelationCondition = () => {
+      if (!relation) {
+        return;
+      }
 
-    if (excludeUserIds.length > 0) {
-      // FIXME @sijie temp solution to filter out admin users,
-      // It is too complex to use join
+      const { table, field, type, value } = relation;
+
       return sql`
-        where ${fields.id} not in (${sql.join(excludeUserIds, sql`, `)})
-        ${conditionalSql(
-          hasSearch,
-          () => sql`and (${buildConditionsFromSearch(search, searchFields)})`
-        )}
+        ${type === 'exists' ? sql`exists` : sql`not exists`} (
+          select 1
+          from ${id([table])}
+          where ${id([table, field])} = ${value}
+          and ${id([table, 'user_id'])} = ${id([Users.table, Users.fields.id])}
+        )
       `;
-    }
+    };
 
-    if (userIds) {
-      return sql`
-        where ${fields.id} in (${userIds.length > 0 ? sql.join(userIds, sql`, `) : sql`null`})
-        ${conditionalSql(
-          hasSearch,
-          () => sql`and (${buildConditionsFromSearch(search, searchFields)})`
-        )}
-      `;
-    }
-
-    return conditionalSql(
-      hasSearch,
-      () => sql`where ${buildConditionsFromSearch(search, searchFields)}`
+    const conditions = conditionalArray(
+      buildRelationCondition(),
+      hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`
     );
+
+    if (conditions.length === 0) {
+      return sql``;
+    }
+
+    return sql`where ${sql.join(conditions, sql` and `)}`;
   };
 
-  const defaultUserSearch = { matches: [], isCaseSensitive: false, joint: SearchJointMode.Or };
-
-  const countUsers = async (
-    search: Search = defaultUserSearch,
-    excludeUserIds: string[] = [],
-    userIds?: string[]
-  ) =>
+  const countUsers = async (conditions: UserConditions) =>
     pool.one<{ count: number }>(sql`
       select count(*)
       from ${table}
-      ${buildUserConditions(search, excludeUserIds, userIds)}
+      ${buildUserConditions(conditions)}
     `);
 
-  const findUsers = async (
-    limit: number,
-    offset: number,
-    search: Search,
-    excludeUserIds: string[] = [],
-    userIds?: string[]
-  ) =>
+  const findUsers = async (limit: number, offset: number, conditions: UserConditions) =>
     pool.any<User>(
       sql`
         select ${sql.join(
@@ -156,7 +159,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
           sql`,`
         )}
         from ${table}
-        ${buildUserConditions(search, excludeUserIds, userIds)}
+        ${buildUserConditions(conditions)}
         order by ${fields.createdAt} desc
         limit ${limit}
         offset ${offset}

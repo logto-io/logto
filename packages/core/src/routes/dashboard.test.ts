@@ -60,7 +60,7 @@ describe('dashboardRoutes', () => {
   describe('GET /dashboard/users/total', () => {
     it('should call countUsers with no parameters', async () => {
       await logRequest.get('/dashboard/users/total');
-      expect(countUsers).toHaveBeenCalledWith();
+      expect(countUsers).toHaveBeenCalledWith({});
     });
 
     it('/dashboard/users/total should return correct response', async () => {

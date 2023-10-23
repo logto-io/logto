@@ -30,7 +30,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(
       status: [200],
     }),
     async (ctx, next) => {
-      const { count: totalUserCount } = await countUsers();
+      const { count: totalUserCount } = await countUsers({});
       ctx.body = { totalUserCount };
 
       return next();

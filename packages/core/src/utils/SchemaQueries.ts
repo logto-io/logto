@@ -44,7 +44,7 @@ export default class SchemaQueries<
     public readonly schema: GeneratedSchema<Key | 'id', CreateSchema, Schema>,
     protected readonly orderBy?: { field: Key | 'id'; order: 'asc' | 'desc' }
   ) {
-    this.#findTotalNumber = buildGetTotalRowCountWithPool(this.pool, this.schema.table);
+    this.#findTotalNumber = buildGetTotalRowCountWithPool(this.pool, this.schema);
     this.#findAll = buildFindAllEntitiesWithPool(this.pool)(this.schema, orderBy && [orderBy]);
     this.#findById = buildFindEntityByIdWithPool(this.pool)(this.schema);
     this.#insert = buildInsertIntoWithPool(this.pool)(this.schema, { returning: true });
