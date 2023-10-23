@@ -1,16 +1,35 @@
+import { generateStandardShortId } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
+
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { SsoProviderName } from '#src/sso/types/index.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
-import { connectorFactoriesResponseGuard, type ConnectorFactoryDetail } from './type.js';
-import { parseFactoryDetail } from './utils.js';
+import {
+  connectorFactoriesResponseGuard,
+  type ConnectorFactoryDetail,
+  ssoConnectorCreateGuard,
+} from './type.js';
+import { parseFactoryDetail, isSupportedSsoProvider } from './utils.js';
 
 export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
-  const [originalRouter] = args;
+  const [
+    router,
+    {
+      queries: { ssoConnectors },
+    },
+  ] = args;
 
-  originalRouter.get(
+  /**
+   * Get all supported single sign on connector factory details
+   *
+   * - standardConnectors: OIDC, SAML, etc.
+   * - providerConnectors: Google, Okta, etc.
+   */
+  router.get(
     '/sso-connector-factories',
     koaGuard({
       response: connectorFactoriesResponseGuard,
@@ -34,6 +53,66 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         standardConnectors: [...standardConnectors],
         providerConnectors: [...providerConnectors],
       };
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/sso-connectors',
+    koaGuard({
+      body: ssoConnectorCreateGuard,
+      status: [200, 422],
+    }),
+    async (ctx, next) => {
+      const { body } = ctx.guard;
+      const { providerName, connectorName, config, ...rest } = body;
+
+      // TODO: @simeng-li new SSO error code
+      if (!isSupportedSsoProvider(providerName)) {
+        throw new RequestError({
+          code: 'connector.not_found',
+          type: providerName,
+          status: 422,
+        });
+      }
+
+      const factory = ssoConnectorFactories[providerName];
+
+      /* 
+        Validate the connector config if it's provided.
+        Allow partial config DB insert
+       */
+      const parseConfig = () => {
+        if (!config) {
+          return;
+        }
+
+        const result = factory.configGuard.partial().safeParse(config);
+
+        if (!result.success) {
+          throw new RequestError({
+            code: 'connector.invalid_config',
+            status: 422,
+            details: result.error.flatten(),
+          });
+        }
+
+        return result.data;
+      };
+
+      const parsedConfig = parseConfig();
+      const connectorId = generateStandardShortId();
+
+      const connector = await ssoConnectors.insert({
+        id: connectorId,
+        providerName,
+        connectorName,
+        ...conditional(config && { config: parsedConfig }),
+        ...rest,
+      });
+
+      ctx.body = connector;
 
       return next();
     }
