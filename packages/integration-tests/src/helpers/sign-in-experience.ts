@@ -99,5 +99,13 @@ export const enableMandatoryMfaWithTotpAndBackupCode = async () =>
     },
   });
 
+export const enableMandatoryMfaWithWebAuthnAndBackupCode = async () =>
+  updateSignInExperience({
+    mfa: {
+      factors: [MfaFactor.WebAuthn, MfaFactor.BackupCode],
+      policy: MfaPolicy.Mandatory,
+    },
+  });
+
 export const resetMfaSettings = async () =>
   updateSignInExperience({ mfa: { policy: MfaPolicy.UserControlled, factors: [] } });

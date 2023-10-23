@@ -21,6 +21,7 @@ export type ExperiencePath =
   | `${ExperienceType}/verification-code`
   | `forgot-password/reset`
   | `mfa-binding/${MfaFactor}`
+  | 'mfa-verification'
   | `mfa-verification/${MfaFactor}`;
 
 export type ExpectExperienceOptions = {

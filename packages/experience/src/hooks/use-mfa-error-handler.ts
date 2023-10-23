@@ -4,7 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { UserMfaFlow } from '@/types';
-import { type MfaFactorsState, mfaErrorDataGuard } from '@/types/guard';
+import {
+  type MfaFactorsState,
+  mfaErrorDataGuard,
+  backupCodeErrorDataGuard,
+  type BackupCodeBindingState,
+} from '@/types/guard';
 
 import type { ErrorHandlers } from './use-error-handler';
 import useStartTotpBinding from './use-start-totp-binding';
@@ -63,12 +68,30 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     [handleMfaRedirect, setToast]
   );
 
+  const handleBackupCodeError = useCallback(
+    (error: RequestErrorBody) => {
+      const [_, data] = validate(error.data, backupCodeErrorDataGuard);
+
+      if (!data) {
+        setToast(error.message);
+        return;
+      }
+
+      navigate(
+        { pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.BackupCode}` },
+        { replace, state: data satisfies BackupCodeBindingState }
+      );
+    },
+    [navigate, replace, setToast]
+  );
+
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(
     () => ({
       'user.missing_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.require_mfa_verification': handleMfaError(UserMfaFlow.MfaVerification),
+      'session.mfa.backup_code_required': handleBackupCodeError,
     }),
-    [handleMfaError]
+    [handleBackupCodeError, handleMfaError]
   );
 
   return mfaVerificationErrorHandler;

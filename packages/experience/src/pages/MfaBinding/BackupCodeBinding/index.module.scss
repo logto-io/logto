@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  @include _.flex-column(center);
+  align-items: stretch;
+  gap: _.unit(4);
+  margin-bottom: _.unit(4);
+}
+
+.backupCodes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: _.unit(4);
+  font: var(--font-label-1);
+  text-align: center;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-layer-2);
+  color: var(--color-type-primary);
+}
+
+.actions {
+  @include _.flex-row;
+  gap: _.unit(4);
+}
+
+.hint {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
