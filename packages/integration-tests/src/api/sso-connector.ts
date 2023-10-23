@@ -1,3 +1,5 @@
+import { type CreateSsoConnector, type SsoConnector } from '@logto/schemas';
+
 import { authedAdminApi } from '#src/api/api.js';
 
 export type ConnectorFactoryDetail = {
@@ -13,3 +15,10 @@ export type ConnectorFactoryResponse = {
 
 export const getSsoConnectorFactories = async () =>
   authedAdminApi.get('sso-connector-factories').json<ConnectorFactoryResponse>();
+
+export const createSsoConnector = async (data: Partial<CreateSsoConnector>) =>
+  authedAdminApi
+    .post('sso-connectors', {
+      json: data,
+    })
+    .json<SsoConnector>();
