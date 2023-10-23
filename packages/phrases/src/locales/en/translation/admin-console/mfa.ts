@@ -8,8 +8,12 @@ const mfa = {
     'Users need to verify one of the enabled factors for 2-step authentication.',
   totp: 'Authenticator app OTP',
   otp_description: 'Link Google Authenticator, etc., to verify one-time passwords.',
-  webauthn: 'WebAuthn',
-  webauthn_description: 'WebAuthn uses the passkey to verify the user’s device including YubiKey.',
+  webauthn: 'WebAuthn(Passkey)',
+  webauthn_description:
+    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
+  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
+  webauthn_domain_tip:
+    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
   backup_code: 'Backup code',
   backup_code_description: 'Generate 10 unique codes, each usable for a single authentication.',
   backup_code_setup_hint: 'The backup authentication factor which can not be enabled alone:',

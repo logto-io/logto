@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.webauthnTipContent {
+  padding-inline-start: _.unit(4);
+  margin: 0;
+}
