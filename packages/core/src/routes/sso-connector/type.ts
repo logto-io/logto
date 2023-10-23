@@ -24,4 +24,5 @@ export const ssoConnectorCreateGuard = SsoConnectors.createGuard
     syncProfile: true,
     ssoOnly: true,
   })
+  // Provider name and connector name are required for creating a connector
   .merge(SsoConnectors.guard.pick({ providerName: true, connectorName: true }));

@@ -58,6 +58,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  /* Create a new single sign on connector */
   router.post(
     '/sso-connectors',
     koaGuard({
