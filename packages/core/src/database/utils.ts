@@ -10,6 +10,19 @@ export type SearchOptions<Keys extends string> = {
   keyword: string;
 };
 
+/**
+ * Build the SQL for searching for a string within a set of fields (case-insensitive) of a
+ * schema.
+ *
+ * - If `search` is `undefined`, it will return an empty SQL.
+ * - If `search` is defined, it will return a SQL that is wrapped in a pair of parentheses.
+ *
+ * @param schema The schema to search.
+ * @param search The search options.
+ * @param prefixSql The SQL to prefix the generated SQL. Defaults to `where `. Ignored if
+ * `search` is `undefined`.
+ * @returns The generated SQL.
+ */
 export const buildSearchSql = <
   Keys extends string,
   CreateSchema extends Partial<SchemaLike<Keys>>,

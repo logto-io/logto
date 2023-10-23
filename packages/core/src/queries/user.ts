@@ -13,6 +13,23 @@ import { buildConditionsFromSearch } from '#src/utils/search.js';
 
 const { table, fields } = convertToIdentifiers(Users);
 
+/**
+ * The conditions that connected with `and` operator for finding users. It supports the
+ * following:
+ *
+ * - `search`: The search conditions. It can be combined with various search fields and
+ * match modes.
+ * - `relation`: The relation conditions. It can be used to find users that have or don't
+ * have a relation with another table. Note that the relation field is the raw field name
+ * in the database, not the camel case one.
+ *
+ * @example
+ * ```ts
+ * // Find users that have a relation with the table `foo` and the field `bar` is `baz`.
+ * { relation: { table: 'foo', field: 'bar', value: 'baz', type: 'exists' } }
+ * ```
+ * @see {@link Search} for more information about the search conditions.
+ */
 export type UserConditions = {
   search?: Search;
   relation?: {
@@ -23,6 +40,10 @@ export type UserConditions = {
   };
 };
 
+/**
+ * The schema field keys that can be used for searching users. For the actual field names,
+ * see {@link Users.fields} and {@link userSearchFields}.
+ */
 export const userSearchKeys = Object.freeze([
   'id',
   'primaryEmail',
@@ -31,6 +52,10 @@ export const userSearchKeys = Object.freeze([
   'name',
 ] as const);
 
+/**
+ * The actual database field names that can be used for searching users. For the schema field
+ * keys, see {@link userSearchKeys}.
+ */
 export const userSearchFields = Object.freeze(Object.values(pick(Users.fields, ...userSearchKeys)));
 
 export const createUserQueries = (pool: CommonQueryMethods) => {
@@ -112,6 +137,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
+  /**
+   * Build the `where` clause for finding users with the given conditions joined with `and`.
+   *
+   * @see {@link UserConditions} for more information about the conditions.
+   */
   const buildUserConditions = ({ search, relation }: UserConditions) => {
     const hasSearch = search?.matches.length;
     const id = sql.identifier;

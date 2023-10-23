@@ -32,7 +32,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
 
   router.get(
     '/:id/users',
-    // KoaPagination(),
+    // TODO: support pagination
     koaGuard({
       query: z.object({ q: z.string().optional() }),
       params: z.object({ id: z.string().min(1) }),

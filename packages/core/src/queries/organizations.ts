@@ -55,6 +55,7 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     `);
   }
 
+  /** Get the users in an organization and their roles. */
   async getUsersByOrganizationId(
     organizationId: string,
     search?: SearchOptions<(typeof userSearchKeys)[number]>
@@ -82,6 +83,12 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     `);
   }
 
+  /**
+   * Build the SQL for aggregating the organization roles with basic information (id and name)
+   * into a JSON array.
+   *
+   * @param as The alias of the aggregated roles. Defaults to `roles`.
+   */
   #aggregateRoles(as = 'roles') {
     const roles = convertToIdentifiers(OrganizationRoles, true);
 
