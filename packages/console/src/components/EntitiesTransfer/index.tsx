@@ -7,13 +7,20 @@ import SourceEntitiesBox, { type Props as SourceProps } from './components/Sourc
 import TargetEntitiesBox from './components/TargetEntitiesBox';
 import * as styles from './index.module.scss';
 
-function EntitiesTransfer<T extends Identifiable>(props: SourceProps<T>) {
+type Props<T extends Identifiable> = SourceProps<T> & {
+  errorMessage?: string;
+};
+
+function EntitiesTransfer<T extends Identifiable>({ errorMessage, ...props }: Props<T>) {
   return (
-    <div className={classNames(transferLayout.container, styles.rolesTransfer)}>
-      <SourceEntitiesBox {...props} />
-      <div className={transferLayout.verticalBar} />
-      <TargetEntitiesBox {...props} />
-    </div>
+    <>
+      <div className={classNames(transferLayout.container, styles.rolesTransfer)}>
+        <SourceEntitiesBox {...props} />
+        <div className={transferLayout.verticalBar} />
+        <TargetEntitiesBox {...props} />
+      </div>
+      {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+    </>
   );
 }
 

@@ -27,12 +27,10 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const api = useApi();
-  const {
-    reset,
-    control,
-    handleSubmit,
-    formState: { errors }, // TODO: handle errors
-  } = useForm<{ users: User[]; scopes: Array<Option<string>> }>({
+  const { reset, control, handleSubmit } = useForm<{
+    users: User[];
+    scopes: Array<Option<string>>;
+  }>({
     defaultValues: { users: [], scopes: [] },
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -101,8 +99,17 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
           <Controller
             name="users"
             control={control}
-            render={({ field: { onChange, value } }) => (
+            rules={{
+              validate: (value) => {
+                if (value.length === 0) {
+                  return t('organization_details.at_least_one_user');
+                }
+                return true;
+              },
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
               <EntitiesTransfer
+                errorMessage={error?.message}
                 searchProps={{
                   pathname: 'api/users',
                   parameters: {
@@ -110,7 +117,7 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
                   },
                 }}
                 selectedEntities={value}
-                emptyPlaceholder="errors.email_pattern_error"
+                emptyPlaceholder="errors.empty"
                 renderEntity={(entity) => <UserItem entity={entity} />}
                 onChange={onChange}
               />

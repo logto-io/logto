@@ -145,7 +145,7 @@ function MultiSelect<T extends string>({
         className={styles.dropdown}
         anchorRef={selectRef}
       >
-        {filteredOptions.length === 0 && <div className={styles.noResult}>No result</div>}
+        {filteredOptions.length === 0 && <div className={styles.noResult}>{t('errors.empty')}</div>}
         {filteredOptions.map(({ value, title }) => (
           <DropdownItem
             key={value}
