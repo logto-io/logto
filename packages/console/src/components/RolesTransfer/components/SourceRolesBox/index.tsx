@@ -41,8 +41,7 @@ function SourceRolesBox({ entityId, type, selectedRoles, onChange }: Props) {
   const url = buildUrl('api/roles', {
     page: String(page),
     page_size: String(pageSize),
-    'search.type': type,
-    'mode.type': 'exact',
+    type,
     [type === RoleType.User ? 'excludeUserId' : 'excludeApplicationId']: entityId,
     ...conditional(keyword && { search: `%${keyword}%` }),
   });

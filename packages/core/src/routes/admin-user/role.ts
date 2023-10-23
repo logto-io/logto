@@ -44,8 +44,8 @@ export default function adminUserRoleRoutes<T extends AuthedRouter>(
           const usersRoles = await findUsersRolesByUserId(userId);
           const roleIds = usersRoles.map(({ roleId }) => roleId);
           const [{ count }, roles] = await Promise.all([
-            countRoles(search, { roleIds }),
-            findRoles(search, limit, offset, { roleIds }),
+            countRoles(search, { roleIds, type: RoleType.User }),
+            findRoles(search, limit, offset, { roleIds, type: RoleType.User }),
           ]);
 
           // Return totalCount to pagination middleware

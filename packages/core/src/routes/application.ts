@@ -21,6 +21,8 @@ import type { AuthedRouter, RouterInitArgs } from './types.js';
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
+const applicationTypeGuard = z.nativeEnum(ApplicationType);
+
 export default function applicationRoutes<T extends AuthedRouter>(
   ...[
     router,
@@ -51,12 +53,23 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications',
     koaPagination({ isOptional: true }),
     koaGuard({
+      query: object({
+        /**
+         * We treat the `types` query param as an array, but it will be parsed as string-typed
+         * value if only one type is specified, manually convert to ApplicationType array.
+         */
+        types: applicationTypeGuard
+          .array()
+          .or(applicationTypeGuard.transform((type) => [type]))
+          .optional(),
+      }),
       response: z.array(Applications.guard),
       status: 200,
     }),
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
       const { searchParams } = ctx.URL;
+      const { types } = ctx.guard.query;
 
       const search = parseSearchParamsForSearch(searchParams);
 
@@ -69,14 +82,14 @@ export default function applicationRoutes<T extends AuthedRouter>(
       );
 
       if (paginationDisabled) {
-        ctx.body = await findApplications(search, excludeApplicationIds);
+        ctx.body = await findApplications(search, excludeApplicationIds, types);
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications(search, excludeApplicationIds),
-        findApplications(search, excludeApplicationIds, limit, offset),
+        countApplications(search, excludeApplicationIds, types),
+        findApplications(search, excludeApplicationIds, types, limit, offset),
       ]);
 
       // Return totalCount to pagination middleware
