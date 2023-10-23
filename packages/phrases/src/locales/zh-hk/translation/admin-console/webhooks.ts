@@ -29,11 +29,11 @@ const webhooks = {
     name_placeholder: '輸入 webhook 名稱',
     endpoint_url: 'Endpoint URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      '輸入 Webhook 要發送到的 HTTPS URL，當事件發生時，Logto 會將 POST 請求發送到此處，以便收到最新的信息。',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: '創建 Webhook',
     missing_event_error: '您必須至少選擇一個事件。',
-    https_format_error: '出於安全原因，需要 HTTPS 格式。',
   },
   webhook_created: 'Webhook {{name}} 成功創建。',
 };

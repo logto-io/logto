@@ -24,7 +24,6 @@ const webhook_details = {
     events_description: 'Logto에서 POST request를 보낼 이벤트를 선택하세요.',
     name: '이름',
     endpoint_url: '엔드포인트 URL',
-    endpoint_url_tip: '웹훅 페이로드가 이벤트 발생시 전송되는 내 https 엔드포인트 URL 입력',
     signing_key: 'Signing key',
     signing_key_tip:
       'Logto에서 제공된 시크릿 키를 사용하여 엔드포인트에 요청 헤더로 추가하여 웹훅 페이로드의 진위성 보장',

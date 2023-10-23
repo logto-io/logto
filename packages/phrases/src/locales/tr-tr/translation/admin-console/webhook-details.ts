@@ -24,7 +24,6 @@ const webhook_details = {
     events_description: 'Logto’nun POST isteğini göndereceği tetikleyici olayları seçin.',
     name: 'İsim',
     endpoint_url: 'Uç nokta URL’si',
-    endpoint_url_tip: 'Olay gerçekleştiğinde webhook’un yükü gönderilen HTTPS URL’sini girin.',
     signing_key: 'İmza anahtarı',
     signing_key_tip:
       'Webhook’un yükü için kimliğinin doğruluğunu sağlamak için Logto tarafından sağlanan gizli anahtarın istek başlığı olarak uç noktanızda ekleyin.',

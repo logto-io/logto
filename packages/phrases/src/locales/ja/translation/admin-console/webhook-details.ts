@@ -24,8 +24,6 @@ const webhook_details = {
     events_description: 'LogtoがPOSTリクエストを送信するトリガーイベントを選択します。',
     name: '名前',
     endpoint_url: 'エンドポイントURL',
-    endpoint_url_tip:
-      'イベントが発生したときにWebhookのペイロードが送信されるHTTPS URLを入力します。',
     signing_key: '署名キー',
     signing_key_tip:
       'ログトから提供されたシークレットキーをエンドポイントにリクエストヘッダーとして追加して、Webhookのペイロードの正当性を保証します。',

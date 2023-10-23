@@ -31,10 +31,9 @@ const webhooks = {
     endpoint_url: 'Endpoint URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
     endpoint_url_tip:
-      'Enter the HTTPS URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Create webhook',
     missing_event_error: 'You have to select at least one event.',
-    https_format_error: 'HTTPS format required for security reasons.',
   },
   webhook_created: 'The webhook {{name}} has been successfully created.',
 };

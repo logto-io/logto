@@ -25,8 +25,6 @@ const webhook_details = {
       'Seleccione los eventos desencadenantes que Logto enviará como solicitud POST.',
     name: 'Nombre',
     endpoint_url: 'URL del Extremo',
-    endpoint_url_tip:
-      'Ingrese la URL HTTPS de su endpoint a la que se enviará el payload del webhook cuando ocurra el evento.',
     signing_key: 'Clave de firma',
     signing_key_tip:
       'Agregue la clave secreta proporcionada por Logto a su extremo como encabezado de solicitud para garantizar la autenticidad del payload del webhook.',

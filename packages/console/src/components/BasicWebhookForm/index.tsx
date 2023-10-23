@@ -64,12 +64,7 @@ function BasicWebhookForm() {
         <TextInput
           {...register('url', {
             required: true,
-            validate: (value) => {
-              if (!uriValidator(value)) {
-                return t('errors.invalid_uri_format');
-              }
-              return value.startsWith('https://') || t('webhooks.create_form.https_format_error');
-            },
+            validate: (value) => uriValidator(value) || t('errors.invalid_uri_format'),
           })}
           placeholder={t('webhooks.create_form.endpoint_url_placeholder')}
           error={errors.url?.type === 'required' ? true : errors.url?.message}

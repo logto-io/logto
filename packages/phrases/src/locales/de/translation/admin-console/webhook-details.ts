@@ -25,8 +25,6 @@ const webhook_details = {
       'Wählen Sie die Auslöserereignisse aus, die Logto die POST-Anforderung senden wird.',
     name: 'Name',
     endpoint_url: 'Endpunkt-URL',
-    endpoint_url_tip:
-      'Geben Sie die HTTPS-URL Ihres Endpunkts ein, an die die Nutzlast eines Webhooks gesendet wird, wenn das Ereignis eintritt.',
     signing_key: 'Signing Key',
     signing_key_tip:
       'Fügen Sie den von Logto bereitgestellten geheimen Schlüssel als Anforderungsheader zu Ihrem Endpunkt hinzu, um die Echtheit der Nutzlast des Webhooks sicherzustellen.',

@@ -52,24 +52,24 @@ describe('webhooks', () => {
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toFill('input[name=name]', 'hook_name');
-    await expect(page).toFill('input[name=url]', 'https://example.com/webhook');
+    await expect(page).toFill('input[name=url]', 'https://localhost/webhook');
     await expect(page).toClick('button[type=submit]');
     await expect(page).toMatchElement('.ReactModalPortal div[class$=errorMessage]', {
       text: 'You have to select at least one event.',
     });
   });
 
-  it('fails to create webhook if endpoint url is not an HTTPS url', async () => {
+  it('can create webhook if endpoint url is an HTTP url', async () => {
     await expectNavigation(page.goto(appendPathname('/console/webhooks', logtoConsoleUrl).href));
 
     await expect(page).toClick('div[class$=main] div[class$=headline] > button');
     await expect(page).toClick('span[class$=label]', { text: 'Create new account' });
     await expect(page).toClick('span[class$=label]', { text: 'Sign in' });
     await expect(page).toFill('input[name=name]', 'hook_name');
-    await expect(page).toFill('input[name=url]', 'http://example.com/webhook');
+    await expect(page).toFill('input[name=url]', 'http://localhost/webhook');
     await expect(page).toClick('button[type=submit]');
-    await expect(page).toMatchElement('.ReactModalPortal div[class$=errorMessage]', {
-      text: 'HTTPS format required for security reasons.',
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+      text: 'hook_name',
     });
   });
 
@@ -79,7 +79,7 @@ describe('webhooks', () => {
     await expectToCreateWebhook(page);
 
     await expect(page).toFill('input[name=name]', 'hook_name_updated');
-    await expect(page).toFill('input[name=url]', 'https://example.com/new-webhook');
+    await expect(page).toFill('input[name=url]', 'https://localhost/new-webhook');
 
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
