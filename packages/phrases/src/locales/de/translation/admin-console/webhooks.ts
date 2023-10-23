@@ -32,11 +32,11 @@ const webhooks = {
     name_placeholder: 'Webhook-Namen eingeben',
     endpoint_url: 'Endpunkt-URL',
     endpoint_url_placeholder: 'https://Ihre.webhook.endpunkt.url',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      'Geben Sie die HTTPS-URL Ihres Endpunkts ein, an den der Payload eines Webhooks gesendet wird, wenn das Ereignis eintritt.',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhook erstellen',
     missing_event_error: 'Sie müssen mindestens ein Ereignis auswählen.',
-    https_format_error: 'HTTPS-Format erforderlich aus Sicherheitsgründen.',
   },
   webhook_created: 'Der Webhook {{name}} wurde erfolgreich erstellt.',
 };

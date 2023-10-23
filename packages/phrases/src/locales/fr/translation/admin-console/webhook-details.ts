@@ -25,8 +25,6 @@ const webhook_details = {
       'Sélectionnez les événements déclencheurs que Logto enverra la requête POST.',
     name: 'Nom',
     endpoint_url: "URL de l'endpoint",
-    endpoint_url_tip:
-      "Entrez l'URL HTTPS de votre endpoint où la charge utile d'un webhook est envoyée lorsque l'événement se produit.",
     signing_key: 'Clé de signature',
     signing_key_tip:
       "Ajoutez la clé secrète fournie par Logto à votre endpoint en tant qu'en-tête de requête pour garantir l'authenticité de la charge utile du webhook.",

@@ -29,10 +29,11 @@ const webhooks = {
     name_placeholder: '输入 Webhook 名称',
     endpoint_url: 'Endpoint URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    endpoint_url_tip: '在事件发生时发送 Webhook 负载的 HTTPS URL 端点。',
+    /** UNTRANSLATED */
+    endpoint_url_tip:
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: '创建 Webhook',
     missing_event_error: '您必须至少选择一个事件。',
-    https_format_error: 'HTTPS 格式为安全性所必须。',
   },
   webhook_created: 'Webhook {{name}} 已成功创建。',
 };

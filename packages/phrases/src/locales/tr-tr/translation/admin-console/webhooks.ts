@@ -31,11 +31,11 @@ const webhooks = {
     name_placeholder: 'Webhook adını girin',
     endpoint_url: 'Uç Nokta URL’si',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      "Bir webhooks yükünün gerçekleştiği zaman gönderilen POST isteğinin HTTPS URL'ini girin.",
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhook Oluştur',
     missing_event_error: 'En az bir olay seçmeniz gerekiyor.',
-    https_format_error: 'Güvenliği nedeniyle HTTPS biçimi gereklidir.',
   },
   webhook_created: 'Webhook {{name}} başarıyla oluşturuldu.',
 };

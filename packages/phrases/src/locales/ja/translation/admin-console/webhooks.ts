@@ -30,11 +30,11 @@ const webhooks = {
     name_placeholder: 'Webhook名を入力してください',
     endpoint_url: 'エンドポイントURL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      'イベントが発生したときに webhook ペイロードが送信されるエンドポイントの HTTPS URLを入力します。',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhookを作成する',
     missing_event_error: '少なくとも1つのイベントを選択する必要があります。',
-    https_format_error: 'セキュリティ上の理由からHTTPS形式が必要です。',
   },
   webhook_created: 'Webhook {{name}}が正常に作成されました。',
 };

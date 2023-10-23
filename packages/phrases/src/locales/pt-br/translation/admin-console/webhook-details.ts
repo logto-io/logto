@@ -24,8 +24,6 @@ const webhook_details = {
     events_description: 'Selecione os eventos de gatilho que o Logto enviará a solicitação POST.',
     name: 'Nome',
     endpoint_url: 'URL do Endpoint',
-    endpoint_url_tip:
-      'Insira o URL HTTPS do seu endpoint onde o payload de um webhook é enviado quando o evento ocorre.',
     signing_key: 'Chave de assinatura',
     signing_key_tip:
       'Adicione a chave secreta fornecida pelo Logto ao seu endpoint como um cabeçalho de solicitação para garantir a autenticidade do payload do webhook.',

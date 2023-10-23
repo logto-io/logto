@@ -22,7 +22,6 @@ const webhook_details = {
     events_description: '選擇 Logto 將發送 POST 請求的觸發事件。',
     name: '名稱',
     endpoint_url: '端點 URL',
-    endpoint_url_tip: '輸入 HTTPS URL，用於 webhook 負載的事件發生時發送到的端點。',
     signing_key: '簽名密鑰',
     signing_key_tip:
       '添加 Logto 提供的秘密金鑰作為請求標題至您的端點，以確保 webhook 負載的真實性。',

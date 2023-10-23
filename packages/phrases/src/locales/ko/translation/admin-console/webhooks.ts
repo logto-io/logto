@@ -30,11 +30,11 @@ const webhooks = {
     name_placeholder: 'Webhook 이름 입력',
     endpoint_url: 'Endpoint URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      '이벤트가 발생할 때 웹훅의 payload가 전송되는 엔드포인트의 HTTPS URL을 입력합니다.',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhook 생성',
     missing_event_error: '하나 이상의 이벤트를 선택해야 합니다.',
-    https_format_error: '보안 상의 이유로 HTTPS 형식이 필요합니다.',
   },
   webhook_created: 'Webhook {{name}} 가 성공적으로 생성되었습니다.',
 };

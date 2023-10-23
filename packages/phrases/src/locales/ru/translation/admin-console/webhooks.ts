@@ -32,11 +32,11 @@ const webhooks = {
     name_placeholder: 'Введите имя вебхука',
     endpoint_url: 'URL-адрес конечной точки',
     endpoint_url_placeholder: 'https://ваш.url.адрес.вебхука',
+    /** UNTRANSLATED */
     endpoint_url_tip:
-      'Введите HTTPS URL вашей конечной точки, куда будет отправлено тело вебхука при наступлении события.',
+      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Создать вебхук',
     missing_event_error: 'Вы должны выбрать как минимум одно событие.',
-    https_format_error: 'Требуется формат HTTPS по соображениям безопасности.',
   },
   webhook_created: 'Вебхук {{name}} был успешно создан.',
 };
