@@ -1,9 +1,17 @@
 const organizations = {
   /** UNTRANSLATED */
+  page_title: 'Organizations',
+  /** UNTRANSLATED */
   title: 'Organizations',
   /** UNTRANSLATED */
   subtitle:
     'Represent the teams, business customers, and partner companies that access your applications as organizations.',
+  /** UNTRANSLATED */
+  create_organization: 'Create organization',
+  /** UNTRANSLATED */
+  organization_name_placeholder: 'My organization',
+  /** UNTRANSLATED */
+  organization_description_placeholder: 'A brief description of the organization.',
   /** UNTRANSLATED */
   access_control: 'Access control',
   /** UNTRANSLATED */
@@ -34,7 +42,7 @@ const organizations = {
   /** UNTRANSLATED */
   create_role_placeholder: 'Users with view-only permissions.',
   /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search for permissions.',
+  search_permission_placeholder: 'Type to search for permissions',
 };
 
 export default Object.freeze(organizations);
