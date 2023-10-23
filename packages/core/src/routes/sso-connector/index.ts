@@ -1,10 +1,13 @@
+import { SsoConnectors } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { SsoProviderName } from '#src/sso/types/index.js';
+import { tableToPathname } from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -13,7 +16,11 @@ import {
   type ConnectorFactoryDetail,
   ssoConnectorCreateGuard,
 } from './type.js';
-import { parseFactoryDetail, isSupportedSsoProvider } from './utils.js';
+import {
+  parseFactoryDetail,
+  isSupportedSsoProvider,
+  fetchConnectorProviderDetails,
+} from './utils.js';
 
 export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
   const [
@@ -22,6 +29,8 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       queries: { ssoConnectors },
     },
   ] = args;
+
+  const pathname = tableToPathname(SsoConnectors.table);
 
   /**
    * Get all supported single sign on connector factory details
@@ -60,9 +69,10 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
   /* Create a new single sign on connector */
   router.post(
-    '/sso-connectors',
+    pathname,
     koaGuard({
       body: ssoConnectorCreateGuard,
+      response: SsoConnectors.guard,
       status: [200, 422],
     }),
     async (ctx, next) => {
@@ -114,6 +124,32 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       });
 
       ctx.body = connector;
+
+      return next();
+    }
+  );
+
+  router.get(
+    pathname,
+    koaPagination(),
+    koaGuard({
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+
+      // Query all connectors with pagination from DB
+      const [count, entities] = await Promise.all([
+        ssoConnectors.findTotalNumber(),
+        ssoConnectors.findAll(limit, offset),
+      ]);
+
+      const connectorsWithProviderDetails = await Promise.all(
+        entities.map(async (connector) => fetchConnectorProviderDetails(connector))
+      );
+
+      ctx.pagination.totalCount = count;
+      ctx.body = connectorsWithProviderDetails;
 
       return next();
     }

@@ -20,7 +20,7 @@ import type SchemaQueries from './SchemaQueries.js';
  * tableToPathname('organization_role') // => 'organization-role'
  * ```
  */
-const tableToPathname = (tableName: string) => tableName.replaceAll('_', '-');
+export const tableToPathname = (tableName: string) => tableName.replaceAll('_', '-');
 
 /**
  * Generate the camel case schema ID column name.
