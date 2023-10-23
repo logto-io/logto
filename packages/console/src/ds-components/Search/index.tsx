@@ -52,7 +52,15 @@ function Search({
       />
       <Button title="general.search" onClick={handleClick} />
       {isClearable && (
-        <Button size="small" type="text" title="general.clear_result" onClick={onClearSearch} />
+        <Button
+          size="small"
+          type="text"
+          title="general.clear_result"
+          onClick={() => {
+            setInputValue('');
+            onClearSearch?.();
+          }}
+        />
       )}
     </div>
   );
