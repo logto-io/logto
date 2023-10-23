@@ -172,9 +172,17 @@ export const webAuthnVerificationPayloadGuard = bindWebAuthnPayloadGuard
 
 export type WebAuthnVerificationPayload = z.infer<typeof webAuthnVerificationPayloadGuard>;
 
+export const backupCodeVerificationPayloadGuard = z.object({
+  type: z.literal(MfaFactor.BackupCode),
+  code: z.string(),
+});
+
+export type BackupCodeVerificationPayload = z.infer<typeof backupCodeVerificationPayloadGuard>;
+
 export const verifyMfaPayloadGuard = z.discriminatedUnion('type', [
   totpVerificationPayloadGuard,
   webAuthnVerificationPayloadGuard,
+  backupCodeVerificationPayloadGuard,
 ]);
 
 export type VerifyMfaPayload = z.infer<typeof verifyMfaPayloadGuard>;
