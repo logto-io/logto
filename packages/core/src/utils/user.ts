@@ -7,10 +7,9 @@ export const transpileUserMfaVerifications = (
     const { id, createdAt, type } = verification;
 
     if (type === MfaFactor.BackupCode) {
-      const { usedAt } = verification;
-      const used = Boolean(usedAt);
+      const { codes } = verification;
 
-      return { id, createdAt, type, used };
+      return { id, createdAt, type, remainCodes: codes.filter((code) => !code.usedAt).length };
     }
 
     if (type === MfaFactor.WebAuthn) {

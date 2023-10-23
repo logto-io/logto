@@ -1,7 +1,7 @@
 import { demoAppApplicationId, InteractionEvent, MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
-import { mockTotpBind } from '#src/__mocks__/mfa-verification.js';
+import { mockBackupCodeBind, mockTotpBind } from '#src/__mocks__/mfa-verification.js';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import type koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -115,6 +115,50 @@ describe('interaction routes (MFA verification)', () => {
         expect.anything(),
         expect.anything()
       );
+    });
+
+    it('should throw for multiple non-backup-code', async () => {
+      getInteractionStorage.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+        bindMfas: [mockTotpBind],
+      });
+
+      const body = {
+        type: MfaFactor.TOTP,
+        code: '123456',
+      };
+
+      const response = await sessionRequest.post(path).send(body);
+      expect(response.status).toEqual(400);
+    });
+
+    it('should throw when backup code is the only item', async () => {
+      getInteractionStorage.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+        bindMfas: [],
+      });
+
+      const body = {
+        type: MfaFactor.BackupCode,
+      };
+
+      const response = await sessionRequest.post(path).send(body);
+      expect(response.status).toEqual(400);
+    });
+
+    it('should return 204 for totp and backup code combination', async () => {
+      getInteractionStorage.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+        bindMfas: [mockTotpBind],
+      });
+      bindMfaPayloadVerification.mockResolvedValueOnce(mockBackupCodeBind);
+
+      const body = {
+        type: MfaFactor.BackupCode,
+      };
+
+      const response = await sessionRequest.post(path).send(body);
+      expect(response.status).toEqual(204);
     });
   });
 

@@ -41,6 +41,7 @@ import {
   validateMandatoryBindMfa,
   verifyBindMfa,
   verifyMfa,
+  validateBindMfaBackupCode,
 } from './verifications/index.js';
 
 export type RouterContext<T> = T extends Router<unknown, infer Context> ? Context : never;
@@ -354,9 +355,15 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         ? mandatoryProfileVerifiedInteraction
         : await verifyBindMfa(tenant, mandatoryProfileVerifiedInteraction);
 
-      const interaction = isForgotPasswordInteractionResult(bindMfaVerifiedInteraction)
+      const mandatoryMfaVerifiedInteraction = isForgotPasswordInteractionResult(
+        bindMfaVerifiedInteraction
+      )
         ? bindMfaVerifiedInteraction
         : await validateMandatoryBindMfa(tenant, ctx, bindMfaVerifiedInteraction);
+
+      const interaction = isForgotPasswordInteractionResult(mandatoryMfaVerifiedInteraction)
+        ? mandatoryMfaVerifiedInteraction
+        : await validateBindMfaBackupCode(tenant, ctx, mandatoryMfaVerifiedInteraction, provider);
 
       await submitInteraction(interaction, ctx, tenant, log);
 

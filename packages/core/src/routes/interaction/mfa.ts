@@ -1,4 +1,9 @@
-import { InteractionEvent, bindMfaPayloadGuard, verifyMfaPayloadGuard } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  bindMfaPayloadGuard,
+  verifyMfaPayloadGuard,
+} from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -53,9 +58,15 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       }
 
       const { bindMfas = [] } = interactionStorage;
-      // Only allow one factor for now,
-      // TODO @sijie: revisit when implementing backup code factor
-      assertThat(bindMfas.length === 0, 'session.mfa.bind_mfa_existed');
+
+      if (bindMfaPayload.type === MfaFactor.BackupCode) {
+        assertThat(
+          bindMfas.some(({ type }) => type !== MfaFactor.BackupCode),
+          'session.mfa.backup_code_can_not_be_alone'
+        );
+      } else {
+        assertThat(bindMfas.length === 0, 'session.mfa.bind_mfa_existed');
+      }
 
       const { hostname, origin } = EnvSet.values.endpoint;
       const bindMfa = await bindMfaPayloadVerification(ctx, bindMfaPayload, interactionStorage, {

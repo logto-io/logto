@@ -141,9 +141,16 @@ export const bindWebAuthnPayloadGuard = z.object({
 
 export type BindWebAuthnPayload = z.infer<typeof bindWebAuthnPayloadGuard>;
 
+export const bindBackupCodePayloadGuard = z.object({
+  type: z.literal(MfaFactor.BackupCode),
+});
+
+export type BindBackupCodePayload = z.infer<typeof bindBackupCodePayloadGuard>;
+
 export const bindMfaPayloadGuard = z.discriminatedUnion('type', [
   bindTotpPayloadGuard,
   bindWebAuthnPayloadGuard,
+  bindBackupCodePayloadGuard,
 ]);
 
 export type BindMfaPayload = z.infer<typeof bindMfaPayloadGuard>;
@@ -186,11 +193,19 @@ export const pendingWebAuthnGuard = z.object({
 
 export type PendingWebAuthn = z.infer<typeof pendingWebAuthnGuard>;
 
+export const pendingBackupCodeGuard = z.object({
+  type: z.literal(MfaFactor.BackupCode),
+  codes: z.array(z.string()),
+});
+
+export type PendingBackupCode = z.infer<typeof pendingBackupCodeGuard>;
+
 // Some information like TOTP secret should be generated in the backend
 // and stored in the interaction temporarily.
 export const pendingMfaGuard = z.discriminatedUnion('type', [
   pendingTotpGuard,
   pendingWebAuthnGuard,
+  pendingBackupCodeGuard,
 ]);
 
 export type PendingMfa = z.infer<typeof pendingMfaGuard>;
@@ -210,8 +225,16 @@ export const bindWebAuthnGuard = z.object({
 
 export type BindWebAuthn = z.infer<typeof bindWebAuthnGuard>;
 
+export const bindBackupCodeGuard = pendingBackupCodeGuard;
+
+export type BindBackupCode = z.infer<typeof bindBackupCodeGuard>;
+
 // The type for binding new mfa verification to a user, not always equals to the pending type.
-export const bindMfaGuard = z.discriminatedUnion('type', [bindTotpGuard, bindWebAuthnGuard]);
+export const bindMfaGuard = z.discriminatedUnion('type', [
+  bindTotpGuard,
+  bindWebAuthnGuard,
+  bindBackupCodeGuard,
+]);
 
 export type BindMfa = z.infer<typeof bindMfaGuard>;
 

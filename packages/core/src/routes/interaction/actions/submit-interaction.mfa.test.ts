@@ -174,6 +174,35 @@ describe('submit action', () => {
         ['user']
       );
     });
+
+    it('should handle backup code', async () => {
+      const interaction: VerifiedRegisterInteractionResult = {
+        event: InteractionEvent.Register,
+        profile,
+        identifiers,
+        bindMfas: [{ type: MfaFactor.BackupCode, codes: ['code1', 'code2'] }],
+      };
+
+      await submitInteraction(interaction, ctx, tenant);
+      expect(generateUserId).toBeCalled();
+      expect(hasActiveUsers).not.toBeCalled();
+
+      expect(insertUser).toBeCalledWith(
+        {
+          id: 'uid',
+          mfaVerifications: [
+            {
+              type: MfaFactor.BackupCode,
+              codes: [{ code: 'code1' }, { code: 'code2' }],
+              id: 'uid',
+              createdAt: new Date(now).toISOString(),
+            },
+          ],
+          ...upsertProfile,
+        },
+        ['user']
+      );
+    });
   });
 
   describe('sign in with bindMfa', () => {
@@ -236,6 +265,43 @@ describe('submit action', () => {
             id: 'uid',
             createdAt: new Date(now).toISOString(),
             ...mockWebAuthnBind,
+          },
+        ],
+        lastSignInAt: now,
+      });
+      expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
+        login: { accountId: 'foo' },
+      });
+    });
+
+    it('should handle backup code', async () => {
+      getLogtoConnectorById.mockResolvedValueOnce({
+        metadata: { target: 'logto' },
+        dbEntry: { syncProfile: false },
+      });
+      const interaction: VerifiedSignInInteractionResult = {
+        event: InteractionEvent.SignIn,
+        accountId: 'foo',
+        identifiers,
+        bindMfas: [
+          {
+            type: MfaFactor.BackupCode,
+            codes: ['code'],
+          },
+        ],
+      };
+
+      await submitInteraction(interaction, ctx, tenant);
+
+      expect(getLogtoConnectorById).toBeCalledWith('logto');
+
+      expect(updateUserById).toBeCalledWith('foo', {
+        mfaVerifications: [
+          {
+            type: MfaFactor.BackupCode,
+            codes: [{ code: 'code' }],
+            id: 'uid',
+            createdAt: new Date(now).toISOString(),
           },
         ],
         lastSignInAt: now,

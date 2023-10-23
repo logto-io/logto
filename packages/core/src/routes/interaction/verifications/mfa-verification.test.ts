@@ -2,11 +2,14 @@ import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
+import { mockBackupCodeBind, mockTotpBind } from '#src/__mocks__/mfa-verification.js';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -16,6 +19,7 @@ import type {
 } from '../types/index.js';
 
 const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
 
 const findUserById = jest.fn();
 
@@ -25,9 +29,17 @@ const tenantContext = new MockTenant(undefined, {
   },
 });
 
-const { validateMandatoryBindMfa, verifyBindMfa, verifyMfa } = await import(
-  './mfa-verification.js'
-);
+const mockBackupCodes = ['foo'];
+await mockEsmWithActual('../utils/backup-code-validation.js', () => ({
+  generateBackupCodes: jest.fn().mockReturnValue(mockBackupCodes),
+}));
+
+const { storeInteractionResult } = await mockEsmWithActual('../utils/interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
+}));
+
+const { validateMandatoryBindMfa, verifyBindMfa, verifyMfa, validateBindMfaBackupCode } =
+  await import('./mfa-verification.js');
 
 const baseCtx = {
   ...createContextWithRouteParameters(),
@@ -57,6 +69,17 @@ const mfaRequiredCtx = {
   },
 };
 
+const backupCodeEnabledCtx = {
+  ...baseCtx,
+  signInExperience: {
+    ...mockSignInExperience,
+    mfa: {
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
+      policy: MfaPolicy.Mandatory,
+    },
+  },
+};
+
 const interaction: IdentifierVerifiedInteractionResult = {
   event: InteractionEvent.Register,
   identifiers: [{ key: 'accountId', value: 'foo' }],
@@ -67,6 +90,8 @@ const signInInteraction: AccountVerifiedInteractionResult = {
   identifiers: [{ key: 'accountId', value: 'foo' }],
   accountId: 'foo',
 };
+
+const provider = createMockProvider();
 
 describe('validateMandatoryBindMfa', () => {
   afterEach(() => {
@@ -233,5 +258,71 @@ describe('verifyMfa', () => {
         verifiedMfa: undefined,
       })
     ).rejects.toThrowError();
+  });
+});
+
+describe('validateBindMfaBackupCode', () => {
+  it('should pass if bindMfas is empty', async () => {
+    await expect(
+      validateBindMfaBackupCode(tenantContext, baseCtx, signInInteraction, provider)
+    ).resolves.not.toThrow();
+  });
+
+  it('should pass if backup code is not enabled', async () => {
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        mfaRequiredCtx,
+        {
+          ...signInInteraction,
+          bindMfas: [mockTotpBind],
+        },
+        provider
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it('should pass if backup code is set', async () => {
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        backupCodeEnabledCtx,
+        {
+          ...signInInteraction,
+          bindMfas: [mockTotpBind, mockBackupCodeBind],
+        },
+        provider
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it('should reject if backup code is not set', async () => {
+    findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
+
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        backupCodeEnabledCtx,
+        {
+          ...signInInteraction,
+          bindMfas: [mockTotpBind],
+        },
+        provider
+      )
+    ).rejects.toThrowError(
+      new RequestError(
+        { code: 'session.mfa.backup_code_required', status: 422 },
+        { codes: mockBackupCodes }
+      )
+    );
+
+    expect(storeInteractionResult).toHaveBeenCalledWith(
+      {
+        pendingMfa: { type: MfaFactor.BackupCode, codes: mockBackupCodes },
+      },
+      expect.anything(),
+      expect.anything(),
+      expect.anything()
+    );
   });
 });

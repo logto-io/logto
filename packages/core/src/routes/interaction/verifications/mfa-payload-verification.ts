@@ -13,6 +13,8 @@ import {
   type BindWebAuthnPayload,
   type MfaVerifications,
   type WebAuthnVerificationPayload,
+  type BindBackupCode,
+  type BindBackupCodePayload,
 } from '@logto/schemas';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
@@ -109,6 +111,23 @@ const verifyBindWebAuthn = async (
   };
 };
 
+const verifyBindBackupCode = async (
+  interactionStorage: AnonymousInteractionResult,
+  payload: BindBackupCodePayload,
+  ctx: WithLogContext
+): Promise<BindBackupCode> => {
+  const { event, pendingMfa } = interactionStorage;
+  ctx.createLog(`Interaction.${event}.BindMfa.BackupCode.Submit`);
+
+  assertThat(pendingMfa, 'session.mfa.pending_info_not_found');
+  assertThat(pendingMfa.type === MfaFactor.BackupCode, 'session.mfa.pending_info_not_found');
+
+  const { type } = payload;
+  const { codes } = pendingMfa;
+
+  return { type, codes };
+};
+
 export async function bindMfaPayloadVerification(
   ctx: WithLogContext,
   bindMfaPayload: BindMfaPayload,
@@ -127,7 +146,11 @@ export async function bindMfaPayloadVerification(
     return verifyBindTotp(interactionStorage, bindMfaPayload, ctx);
   }
 
-  return verifyBindWebAuthn(interactionStorage, bindMfaPayload, ctx, { rpId, userAgent, origin });
+  if (bindMfaPayload.type === MfaFactor.WebAuthn) {
+    return verifyBindWebAuthn(interactionStorage, bindMfaPayload, ctx, { rpId, userAgent, origin });
+  }
+
+  return verifyBindBackupCode(interactionStorage, bindMfaPayload, ctx);
 }
 
 async function verifyWebAuthn(
