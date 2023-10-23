@@ -40,6 +40,13 @@ export const mockUserWebAuthnMfaVerification = {
   agent: 'agent',
 } satisfies User['mfaVerifications'][number];
 
+export const mockUserBackupCodeMfaVerification = {
+  id: 'fake_backup_code_id',
+  type: MfaFactor.BackupCode,
+  createdAt: new Date().toISOString(),
+  codes: [{ code: 'code' }],
+} satisfies User['mfaVerifications'][number];
+
 export const mockUserWithMfaVerifications: User = {
   ...mockUser,
   mfaVerifications: [mockUserTotpMfaVerification],

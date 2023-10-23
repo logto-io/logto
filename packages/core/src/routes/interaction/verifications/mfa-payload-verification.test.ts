@@ -2,7 +2,10 @@ import { InteractionEvent, MfaFactor } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
-import { mockUserWebAuthnMfaVerification } from '#src/__mocks__/user.js';
+import {
+  mockUserBackupCodeMfaVerification,
+  mockUserWebAuthnMfaVerification,
+} from '#src/__mocks__/user.js';
 import {
   mockBindWebAuthn,
   mockBindWebAuthnPayload,
@@ -340,6 +343,81 @@ describe('verifyMfaPayloadVerification', () => {
           { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
         )
       ).rejects.toEqual(new RequestError('session.mfa.webauthn_verification_failed'));
+    });
+  });
+
+  describe('backup code', () => {
+    it('should return result of VerifyMfaResult and mark as used', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [mockUserBackupCodeMfaVerification],
+      });
+
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.BackupCode,
+            code: 'code',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).resolves.toMatchObject({
+        type: MfaFactor.BackupCode,
+        id: mockUserBackupCodeMfaVerification.id,
+      });
+
+      expect(findUserById).toHaveBeenCalled();
+      expect(updateUserById).toHaveBeenCalledWith('accountId', {
+        mfaVerifications: [
+          {
+            ...mockUserBackupCodeMfaVerification,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            codes: [{ code: 'code', usedAt: expect.anything() }],
+          },
+        ],
+      });
+    });
+
+    it('should reject when backup code can not be found in user mfaVerifications', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [],
+      });
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.BackupCode,
+            code: 'code',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.invalid_backup_code'));
+    });
+
+    it('should reject when code is used', async () => {
+      findUserById.mockResolvedValueOnce({
+        mfaVerifications: [
+          {
+            ...mockUserBackupCodeMfaVerification,
+            codes: [{ code: 'code', usedAt: new Date().toISOString() }],
+          },
+        ],
+      });
+      validateTotpToken.mockReturnValueOnce(false);
+
+      await expect(
+        verifyMfaPayloadVerification(
+          tenantContext,
+          {
+            type: MfaFactor.BackupCode,
+            code: 'code',
+          },
+          { event: InteractionEvent.SignIn },
+          { rpId: 'rpId', origin: 'origin', accountId: 'accountId' }
+        )
+      ).rejects.toEqual(new RequestError('session.mfa.invalid_backup_code'));
     });
   });
 });

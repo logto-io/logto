@@ -1,4 +1,5 @@
 import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import type Provider from 'oidc-provider';
 
@@ -63,7 +64,7 @@ export const verifyMfa = async (
           status: 403,
         },
         {
-          availableFactors: mfaVerifications.map(({ type }) => type),
+          availableFactors: deduplicate(mfaVerifications.map(({ type }) => type)),
         }
       )
     );

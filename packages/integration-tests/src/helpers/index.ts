@@ -56,19 +56,20 @@ type ExpectedErrorInfo = {
   messageIncludes?: string;
 };
 
-export const expectRejects = async (promise: Promise<unknown>, expected: ExpectedErrorInfo) => {
+export const expectRejects = async <T = void>(
+  promise: Promise<unknown>,
+  expected: ExpectedErrorInfo
+) => {
   try {
     await promise;
   } catch (error: unknown) {
-    expectRequestError(error, expected);
-
-    return;
+    return expectRequestError<T>(error, expected);
   }
 
   fail();
 };
 
-export const expectRequestError = (error: unknown, expected: ExpectedErrorInfo) => {
+export const expectRequestError = <T = void>(error: unknown, expected: ExpectedErrorInfo) => {
   const { code, statusCode, messageIncludes } = expected;
 
   if (!(error instanceof RequestError)) {
@@ -80,6 +81,7 @@ export const expectRequestError = (error: unknown, expected: ExpectedErrorInfo) 
   const body = JSON.parse(String(error.response?.body)) as {
     code: string;
     message: string;
+    data: T;
   };
 
   expect(body.code).toEqual(code);
@@ -89,6 +91,8 @@ export const expectRequestError = (error: unknown, expected: ExpectedErrorInfo) 
   if (messageIncludes) {
     expect(body.message.includes(messageIncludes)).toBeTruthy();
   }
+
+  return body.data;
 };
 
 const defaultRequestListener: RequestListener = (request, response) => {

@@ -15,7 +15,10 @@ import {
   type WebAuthnVerificationPayload,
   type BindBackupCode,
   type BindBackupCodePayload,
+  type MfaVerificationBackupCode,
+  type BackupCodeVerificationPayload,
 } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -128,6 +131,24 @@ const verifyBindBackupCode = async (
   return { type, codes };
 };
 
+const verifyBackupCode = async (
+  mfaVerifications: User['mfaVerifications'],
+  payload: BackupCodeVerificationPayload
+): Promise<VerifyMfaResult> => {
+  const backupCode = mfaVerifications.find(
+    (mfa): mfa is MfaVerificationBackupCode => mfa.type === MfaFactor.BackupCode
+  );
+
+  // To make Typescript happy, have to split into 2 assertions, otherwise `backupCode` can be undefined
+  assertThat(backupCode, 'session.mfa.invalid_backup_code');
+  assertThat(
+    backupCode.codes.some((code) => code.code === payload.code && !code.usedAt),
+    'session.mfa.invalid_backup_code'
+  );
+
+  return pick(backupCode, 'id', 'type');
+};
+
 export async function bindMfaPayloadVerification(
   ctx: WithLogContext,
   bindMfaPayload: BindMfaPayload,
@@ -200,7 +221,6 @@ export async function verifyMfaPayloadVerification(
     return verifyTotp(user.mfaVerifications, verifyMfaPayload);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (verifyMfaPayload.type === MfaFactor.WebAuthn) {
     const { result, newCounter } = await verifyWebAuthn(interactionStorage, user.mfaVerifications, {
       payload: verifyMfaPayload,
@@ -227,5 +247,30 @@ export async function verifyMfaPayloadVerification(
     return result;
   }
 
-  throw new Error('Unsupported MFA type');
+  const { id, type } = await verifyBackupCode(user.mfaVerifications, verifyMfaPayload);
+
+  // Mark the backup code as used
+  await tenant.queries.users.updateUserById(accountId, {
+    mfaVerifications: user.mfaVerifications.map((mfa) => {
+      if (mfa.id !== id || mfa.type !== MfaFactor.BackupCode) {
+        return mfa;
+      }
+
+      return {
+        ...mfa,
+        codes: mfa.codes.map((code) => {
+          if (code.code !== verifyMfaPayload.code) {
+            return code;
+          }
+
+          return {
+            ...code,
+            usedAt: new Date().toISOString(),
+          };
+        }),
+      };
+    }),
+  });
+
+  return { id, type };
 }
