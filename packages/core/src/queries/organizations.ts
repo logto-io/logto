@@ -68,7 +68,7 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     return this.pool.any<UserWithOrganizationRoles>(sql`
       select
         ${users.table}.*,
-        ${this.#aggregateRoles('organization_roles')}
+        ${this.#aggregateRoles()}
       from ${this.table}
       left join ${users.table}
         on ${fields.userId} = ${users.fields.id}
@@ -87,9 +87,9 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
    * Build the SQL for aggregating the organization roles with basic information (id and name)
    * into a JSON array.
    *
-   * @param as The alias of the aggregated roles. Defaults to `roles`.
+   * @param as The alias of the aggregated roles. Defaults to `organizationRoles`.
    */
-  #aggregateRoles(as = 'roles') {
+  #aggregateRoles(as = 'organizationRoles') {
     const roles = convertToIdentifiers(OrganizationRoles, true);
 
     return sql`

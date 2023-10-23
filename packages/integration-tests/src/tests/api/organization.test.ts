@@ -205,10 +205,10 @@ describe('organization APIs', () => {
       const organization1WithRoles = organizations.find((org) => org.id === organization1.id);
       assert(organization1WithRoles);
       expect(organization1WithRoles.id).toBe(organization1.id);
-      expect(organization1WithRoles.roles).toContainEqual(
+      expect(organization1WithRoles.organizationRoles).toContainEqual(
         expect.objectContaining({ id: role1.id })
       );
-      expect(organization1WithRoles.roles).not.toContainEqual(
+      expect(organization1WithRoles.organizationRoles).not.toContainEqual(
         expect.objectContaining({ id: role2.id })
       );
 
@@ -216,10 +216,10 @@ describe('organization APIs', () => {
       const organization2WithRoles = organizations.find((org) => org.id === organization2.id);
       assert(organization2WithRoles);
       expect(organization2WithRoles.id).toBe(organization2.id);
-      expect(organization2WithRoles.roles).toContainEqual(
+      expect(organization2WithRoles.organizationRoles).toContainEqual(
         expect.objectContaining({ id: role1.id })
       );
-      expect(organization2WithRoles.roles).toContainEqual(
+      expect(organization2WithRoles.organizationRoles).toContainEqual(
         expect.objectContaining({ id: role2.id })
       );
 
