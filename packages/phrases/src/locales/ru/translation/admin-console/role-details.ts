@@ -43,9 +43,11 @@ const role_details = {
     assign_title: 'Назначить пользователей',
     assign_subtitle:
       'Назначить пользователей на эту роль. Найдите подходящих пользователей, используя поиск по имени, электронной почте, номеру телефона или идентификатору пользователя.',
-    assign_users_field: 'Назначить пользователей',
+    /** UNTRANSLATED */
+    assign_field: 'Assign users',
     confirm_assign: 'Назначить пользователей',
-    users_assigned: 'Выбранные пользователи были успешно назначены на эту роль',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: 'Нет доступных пользователей',
   },
   applications: {
@@ -59,9 +61,11 @@ const role_details = {
     assign_title: 'Назначить приложения',
     assign_subtitle:
       'Назначить приложения на эту роль. Найдите подходящие приложения, используя поиск по имени, описанию или идентификатору приложения.',
-    assign_applications_field: 'Назначить приложения',
+    /** UNTRANSLATED */
+    assign_field: 'Assign applications',
     confirm_assign: 'Назначить приложения',
-    applications_assigned: 'Выбранные приложения были успешно назначены на эту роль',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: 'Нет доступных приложений',
   },
 };

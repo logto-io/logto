@@ -44,9 +44,11 @@ const role_details = {
     assign_title: 'Benutzer zuweisen',
     assign_subtitle:
       'Weisen Sie Benutzer dieser Rolle zu. Finden Sie geeignete Benutzer, indem Sie nach Name, E-Mail, Telefon oder Benutzer-ID suchen.',
-    assign_users_field: 'Benutzer zuweisen',
+    /** UNTRANSLATED */
+    assign_field: 'Assign users',
     confirm_assign: 'Benutzer zuweisen',
-    users_assigned: 'Die ausgewählten Benutzer wurden dieser Rolle erfolgreich zugewiesen',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: 'Kein Benutzer verfügbar',
   },
   applications: {
@@ -60,10 +62,11 @@ const role_details = {
     assign_title: 'Apps zuweisen',
     assign_subtitle:
       'Weisen Sie dieser Rolle Anwendungen zu. Finden Sie geeignete Anwendungen, indem Sie nach Name, Beschreibung oder App-ID suchen.',
-    assign_applications_field: 'Apps zuweisen',
+    /** UNTRANSLATED */
+    assign_field: 'Assign applications',
     confirm_assign: 'Apps zuweisen',
-    applications_assigned:
-      'Die ausgewählten Anwendungen wurden dieser Rolle erfolgreich zugewiesen',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: 'Keine Anwendung verfügbar',
   },
 };

@@ -42,9 +42,11 @@ const role_details = {
     assign_title: '사용자 할당',
     assign_subtitle:
       '사용자를 이 역할에 할당해요. 이름, 이메일, 전화번호, 사용자 ID 등을 이용하여 적절한 사용자를 찾아 보세요.',
-    assign_users_field: '사용자 할당',
+    /** UNTRANSLATED */
+    assign_field: 'Assign users',
     confirm_assign: '사용자 할당',
-    users_assigned: '선택된 이용자들이 이 역할에 성공적으로 할당되었어요.',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: '사용자 없음',
   },
   applications: {
@@ -56,9 +58,11 @@ const role_details = {
     deleted: '{{name}} 이(가) 이 역할에서 성공적으로 제거되었습니다.',
     assign_title: '앱 할당',
     assign_subtitle: '이 역할에 앱 할당 적절한 앱을 이름, 설명 또는 앱 ID로 검색하여 찾아보세요.',
-    assign_applications_field: '앱 할당',
+    /** UNTRANSLATED */
+    assign_field: 'Assign applications',
     confirm_assign: '앱 할당',
-    applications_assigned: '선택한 앱이이 역할에 성공적으로 할당되었습니다',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: '사용 가능한 앱 없음',
   },
 };

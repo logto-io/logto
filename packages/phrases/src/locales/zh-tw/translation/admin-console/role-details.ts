@@ -39,9 +39,11 @@ const role_details = {
     deleted: '{{name}} 已成功從此角色中刪除',
     assign_title: '分配用戶',
     assign_subtitle: '將用戶分配給此角色。通過搜索名稱、電子郵件、電話或用戶 ID 尋找適當的用戶。',
-    assign_users_field: '分配用戶',
+    /** UNTRANSLATED */
+    assign_field: 'Assign users',
     confirm_assign: '分配用戶',
-    users_assigned: '所選的用戶已成功分配給此角色',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: '無可用用戶',
   },
   applications: {
@@ -53,9 +55,11 @@ const role_details = {
     deleted: '{{name}} 已從此角色中成功刪除',
     assign_title: '分配應用',
     assign_subtitle: '將應用程式分配給此角色。通過搜索名稱、描述或應用程式 ID 尋找合適的應用程式。',
-    assign_applications_field: '分配應用',
+    /** UNTRANSLATED */
+    assign_field: 'Assign applications',
     confirm_assign: '分配應用',
-    applications_assigned: '已成功將所選的應用程式分配給此角色',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: '沒有可用的應用程式',
   },
 };
