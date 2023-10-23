@@ -1,12 +1,13 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
 import type { ButtonType } from '@/ds-components/Button';
 import Button from '@/ds-components/Button';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import type DangerousRaw from '../DangerousRaw';
 import ModalLayout from '../ModalLayout';
 import type { Props as ModalLayoutProps } from '../ModalLayout';
 
@@ -15,10 +16,10 @@ import * as styles from './index.module.scss';
 export type ConfirmModalProps = {
   children: ReactNode;
   className?: string;
-  title?: AdminConsoleKey;
+  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   confirmButtonType?: ButtonType;
-  confirmButtonText?: AdminConsoleKey;
-  cancelButtonText?: AdminConsoleKey;
+  confirmButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  cancelButtonText?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   isOpen: boolean;
   isConfirmButtonDisabled?: boolean;
   isLoading?: boolean;

@@ -164,7 +164,8 @@ function Table<
         </OverlayScrollbar>
       </div>
       <div className={styles.footer}>
-        {footer}
+        {/* Fall back to a div if footer is not provided to avoid layout shift. */}
+        {footer ?? <div />}
         {pagination && <Pagination className={styles.pagination} {...pagination} />}
       </div>
     </div>

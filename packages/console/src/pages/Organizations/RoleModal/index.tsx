@@ -1,37 +1,31 @@
-import {
-  type OrganizationRole,
-  type OrganizationRoleWithScopes,
-  type OrganizationScope,
-} from '@logto/schemas';
+import { type OrganizationRole, type OrganizationRoleWithScopes } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import useSWR from 'swr';
 
-import { defaultPageSize } from '@/consts';
+import OrganizationScopesSelect from '@/components/OrganizationScopesSelect';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
-import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
+import { type Option } from '@/ds-components/Select/MultiSelect';
 import TextInput from '@/ds-components/TextInput';
 import useActionTranslation from '@/hooks/use-action-translation';
-import useApi, { type RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { buildUrl } from '@/utils/url';
 
 const organizationRolePath = 'api/organization-roles';
 
 type Props = {
   isOpen: boolean;
   editData: Nullable<OrganizationRoleWithScopes>;
-  onFinish: () => void;
+  onClose: () => void;
 };
 
 /** A modal that allows users to create or edit an organization role. */
-function RoleModal({ isOpen, editData, onFinish }: Props) {
+function RoleModal({ isOpen, editData, onClose }: Props) {
   const api = useApi();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -43,26 +37,13 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
   } = useForm<Partial<OrganizationRole> & { scopes: Array<Option<string>> }>({
     defaultValues: { scopes: [] },
   });
-  const [keyword, setKeyword] = useState('');
-  const {
-    data: response,
-    error, // TODO: handle error
-    mutate,
-  } = useSWR<[OrganizationScope[], number], RequestError>(
-    buildUrl('api/organization-scopes', {
-      page: String(1),
-      page_size: String(defaultPageSize),
-      q: keyword,
-    }),
-    { revalidateOnFocus: false }
-  );
-  const [scopes] = response ?? [[], 0];
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const title = editData
     ? tAction('edit', 'organizations.organization_role')
     : tAction('create', 'organizations.organization_role');
   const action = editData ? t('general.save') : tAction('create', 'organizations.role');
+  const [keyword, setKeyword] = useState('');
 
   const submit = handleSubmit(async ({ scopes, ...json }) => {
     setIsLoading(true);
@@ -81,7 +62,7 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
       await api.put(`${organizationRolePath}/${id}/scopes`, {
         json: { organizationScopeIds: scopes.map(({ value }) => value) },
       });
-      onFinish();
+      onClose();
     } finally {
       setIsLoading(false);
     }
@@ -102,19 +83,12 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
     }
   }, [editData, isOpen, reset]);
 
-  // Initial fetch on open
-  useEffect(() => {
-    if (isOpen) {
-      void mutate();
-    }
-  }, [isOpen, mutate]);
-
   return (
     <ReactModal
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
-      onRequestClose={onFinish}
+      onRequestClose={onClose}
     >
       <ModalLayout
         title={<DangerousRaw>{title}</DangerousRaw>}
@@ -126,7 +100,7 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
             onClick={submit}
           />
         }
-        onClose={onFinish}
+        onClose={onClose}
       >
         <FormField isRequired title="general.name">
           <TextInput
@@ -149,12 +123,11 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
             name="scopes"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <MultiSelect
+              <OrganizationScopesSelect
+                keyword={keyword}
+                setKeyword={setKeyword}
                 value={value}
-                options={scopes.map(({ id, name }) => ({ value: id, title: name }))}
-                placeholder="organizations.search_permission_placeholder"
                 onChange={onChange}
-                onSearch={setKeyword}
               />
             )}
           />
@@ -163,4 +136,5 @@ function RoleModal({ isOpen, editData, onFinish }: Props) {
     </ReactModal>
   );
 }
+
 export default RoleModal;

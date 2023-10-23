@@ -11,8 +11,7 @@ import Plus from '@/assets/icons/plus.svg';
 import ApplicationName from '@/components/ApplicationName';
 import DateTime from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import ItemPreview from '@/components/ItemPreview';
-import UserAvatar from '@/components/UserAvatar';
+import UserPreview from '@/components/ItemPreview/UserPreview';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -24,9 +23,7 @@ import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import AssignRoleModal from '@/pages/Roles/components/AssignRoleModal';
-import SuspendedTag from '@/pages/Users/components/SuspendedTag';
 import { buildUrl, formatSearchKeyword } from '@/utils/url';
-import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import type { RoleDetailsOutletContext } from '../types';
 
@@ -93,19 +90,7 @@ function RoleUsers() {
             title: t('role_details.users.name_column'),
             dataIndex: 'name',
             colSpan: 5,
-            render: (user) => {
-              const { id, isSuspended } = user;
-
-              return (
-                <ItemPreview
-                  title={getUserTitle(user)}
-                  subtitle={getUserSubtitle(user)}
-                  icon={<UserAvatar size="large" user={user} />}
-                  to={`/users/${id}`}
-                  suffix={conditional(isSuspended && <SuspendedTag />)}
-                />
-              );
-            },
+            render: (user) => <UserPreview user={user} />,
           },
           {
             title: t('role_details.users.app_column'),
