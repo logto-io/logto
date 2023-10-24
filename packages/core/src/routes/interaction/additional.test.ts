@@ -221,6 +221,16 @@ describe('interaction routes', () => {
     const path = `${interactionPrefix}/${verificationPath}/totp`;
 
     it('should return the generated secret', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.SignIn,
+      });
+      verifyIdentifier.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      verifyProfile.mockResolvedValueOnce({
+        event: InteractionEvent.Register,
+      });
+      findUserById.mockResolvedValueOnce(mockUser);
       const response = await sessionRequest.post(path).send();
       expect(getInteractionStorage).toBeCalled();
       expect(storeInteractionResult).toBeCalled();
