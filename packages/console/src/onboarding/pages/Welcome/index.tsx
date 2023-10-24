@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Case from '@/assets/icons/case.svg';
+import ActionBar from '@/components/ActionBar';
 import PageMeta from '@/components/PageMeta';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -15,7 +16,6 @@ import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-import ActionBar from '../../components/ActionBar';
 import { CardSelector, MultiCardSelector } from '../../components/CardSelector';
 import type { Questionnaire } from '../../types';
 import { OnboardingPage, Project } from '../../types';
@@ -138,7 +138,7 @@ function Welcome() {
           </form>
         </div>
       </OverlayScrollbar>
-      <ActionBar step={1}>
+      <ActionBar step={1} totalSteps={2}>
         <Button title="general.next" type="primary" onClick={onNext} />
       </ActionBar>
     </div>

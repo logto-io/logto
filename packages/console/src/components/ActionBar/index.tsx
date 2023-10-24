@@ -6,12 +6,11 @@ import * as styles from './index.module.scss';
 
 type Props = {
   step: number;
+  totalSteps: number;
   children: ReactNode;
 };
 
-const totalSteps = 2;
-
-function ActionBar({ step, children }: Props) {
+function ActionBar({ step, totalSteps, children }: Props) {
   return (
     <div className={styles.container}>
       <ProgressBar currentStep={step} totalSteps={totalSteps} />

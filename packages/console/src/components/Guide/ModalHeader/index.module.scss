@@ -1,45 +1,11 @@
 @use '@/scss/underscore' as _;
 
-.header {
-  display: flex;
-  align-items: center;
-  background-color: var(--color-base);
-  width: 100%;
-  height: 64px;
-  padding: 0 _.unit(6);
-  flex-shrink: 0;
-
-  .separator {
-    @include _.vertical-bar;
-    height: 20px;
-    margin: 0 _.unit(5) 0 _.unit(4);
-  }
-
-  .closeIcon {
-    color: var(--color-text-secondary);
-  }
-
-  .githubToolTipAnchor {
-    margin-right: _.unit(4);
-  }
-
-  .githubIcon {
-    div {
-      display: flex;
-    }
-
-    svg {
-      color: var(--color-text);
-    }
-  }
-
-  .requestSdkButton {
-    margin-right: _.unit(15);
-  }
+.requestSdkButton {
+  margin-right: _.unit(15);
 }
 
 @media screen and (max-width: 918px) {
-  .header .requestSdkButton {
+  .requestSdkButton {
     margin-right: 0;
   }
 }
