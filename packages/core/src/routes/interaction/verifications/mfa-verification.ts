@@ -1,7 +1,8 @@
-import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, MfaPolicy, type JsonObject } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import type Provider from 'oidc-provider';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -73,6 +74,92 @@ export const verifyMfa = async (
   return interaction;
 };
 
+const userMfaDataKey = 'mfa';
+/**
+ * Check if the user has skipped MFA binding
+ */
+const isMfaSkipped = (customData: JsonObject): boolean => {
+  const userMfaDataGuard = z.object({
+    skipped: z.boolean().optional(),
+  });
+
+  const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(customData);
+
+  return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
+};
+
+const validateMandatoryBindMfaForSignIn = async (
+  tenant: TenantContext,
+  ctx: WithInteractionSieContext & WithInteractionDetailsContext,
+  interaction: VerifiedSignInInteractionResult
+): Promise<VerifiedInteractionResult> => {
+  const {
+    mfa: { policy, factors },
+  } = ctx.signInExperience;
+  const { bindMfas } = interaction;
+  const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
+
+  // No available MFA, skip check
+  if (availableFactors.length === 0) {
+    return interaction;
+  }
+
+  // If the user has linked new MFA in current interaction
+  const hasFactorInBindMfas = Boolean(
+    bindMfas &&
+      availableFactors.some((factor) => bindMfas.some((bindMfa) => bindMfa.type === factor))
+  );
+
+  const { accountId } = interaction;
+  const { mfaVerifications, customData } = await tenant.queries.users.findUserById(accountId);
+
+  // If the user has linked MFA before
+  const hasFactorInUser = factors.some((factor) =>
+    mfaVerifications.some(({ type }) => type === factor)
+  );
+
+  // MFA is bound in current interaction or MFA is bound before, skip check
+  if (hasFactorInBindMfas || hasFactorInUser) {
+    return interaction;
+  }
+
+  // Mandatory, can not skip, throw error
+  if (policy === MfaPolicy.Mandatory) {
+    throw new RequestError(
+      {
+        code: 'user.missing_mfa',
+        status: 422,
+      },
+      { availableFactors }
+    );
+  }
+
+  if (isMfaSkipped(customData)) {
+    return interaction;
+  }
+
+  if (!isMfaSkipped(customData)) {
+    // Update user custom data to skip MFA binding
+    // that means that this prompt is only shown once
+    await tenant.queries.users.updateUserById(accountId, {
+      customData: {
+        ...customData,
+        [userMfaDataKey]: {
+          skipped: true,
+        },
+      },
+    });
+  }
+
+  throw new RequestError(
+    {
+      code: 'user.missing_mfa',
+      status: 422,
+    },
+    { availableFactors, skippable: true }
+  );
+};
+
 export const validateMandatoryBindMfa = async (
   tenant: TenantContext,
   ctx: WithInteractionSieContext & WithInteractionDetailsContext,
@@ -84,7 +171,8 @@ export const validateMandatoryBindMfa = async (
   const { event, bindMfas } = interaction;
   const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
-  if (policy !== MfaPolicy.Mandatory) {
+  // No available MFA, skip check
+  if (availableFactors.length === 0) {
     return interaction;
   }
 
@@ -94,6 +182,10 @@ export const validateMandatoryBindMfa = async (
   );
 
   if (event === InteractionEvent.Register) {
+    if (policy !== MfaPolicy.Mandatory) {
+      return interaction;
+    }
+
     assertThat(
       hasFactorInBind,
       new RequestError(
@@ -107,21 +199,7 @@ export const validateMandatoryBindMfa = async (
   }
 
   if (event === InteractionEvent.SignIn) {
-    const { accountId } = interaction;
-    const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
-    const hasFactorInUser = factors.some((factor) =>
-      mfaVerifications.some(({ type }) => type === factor)
-    );
-    assertThat(
-      hasFactorInBind || hasFactorInUser,
-      new RequestError(
-        {
-          code: 'user.missing_mfa',
-          status: 422,
-        },
-        { availableFactors }
-      )
-    );
+    return validateMandatoryBindMfaForSignIn(tenant, ctx, interaction);
   }
 
   return interaction;
