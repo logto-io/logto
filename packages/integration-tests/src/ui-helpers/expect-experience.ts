@@ -20,6 +20,7 @@ export type ExperiencePath =
   | `${ExperienceType}/verify`
   | `${ExperienceType}/verification-code`
   | `forgot-password/reset`
+  | 'mfa-binding'
   | `mfa-binding/${MfaFactor}`
   | 'mfa-verification'
   | `mfa-verification/${MfaFactor}`;
