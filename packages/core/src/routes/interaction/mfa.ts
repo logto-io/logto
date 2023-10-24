@@ -7,7 +7,6 @@ import {
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -68,7 +67,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         assertThat(bindMfas.length === 0, 'session.mfa.bind_mfa_existed');
       }
 
-      const { hostname, origin } = EnvSet.values.endpoint;
+      const { hostname, origin } = ctx.URL;
       const bindMfa = await bindMfaPayloadVerification(ctx, bindMfaPayload, interactionStorage, {
         rpId: hostname,
         userAgent,
