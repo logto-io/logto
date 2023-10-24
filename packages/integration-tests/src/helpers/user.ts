@@ -51,7 +51,11 @@ export const generateNewUser = async <T extends NewUserProfileOptions>(options: 
 };
 
 export class UserApiTest {
-  protected users: User[] = [];
+  #users: User[] = [];
+
+  get users(): User[] {
+    return this.#users;
+  }
 
   async create(data: CreateUserPayload): Promise<User> {
     const user = await createUser(data);
@@ -67,6 +71,6 @@ export class UserApiTest {
   async cleanUp(): Promise<void> {
     // Use `trySafe` to avoid error when user is deleted by other tests.
     await Promise.all(this.users.map(async (user) => trySafe(deleteUser(user.id))));
-    this.users = [];
+    this.#users = [];
   }
 }

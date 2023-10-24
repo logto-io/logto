@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 
+import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import { type Page } from 'puppeteer';
 
@@ -105,3 +106,13 @@ export const cls = <C extends string>(className: C) => `[class*=_${className}]` 
  * @see {@link cls}
  */
 export const dcls = <C extends string>(className: C) => `div${cls(className)}` as const;
+
+/**
+ * Generate a random test name that starts with `test_` and followed by 4 random characters.
+ *
+ * @example
+ * ```ts
+ * generateTestName() // => 'test_abc1'
+ * ```
+ */
+export const generateTestName = () => `test_${generateStandardId(4)}`;

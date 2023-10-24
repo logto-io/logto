@@ -50,7 +50,7 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
           await api.post(`api/organizations/${organization.id}/users/roles`, {
             json: {
               userIds: data.users.map(({ id }) => id),
-              roleIds: data.scopes.map(({ value }) => value),
+              organizationRoleIds: data.scopes.map(({ value }) => value),
             },
           });
         }
