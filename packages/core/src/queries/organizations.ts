@@ -19,8 +19,11 @@ import {
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
-import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
-import RelationQueries, { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
+import { type SearchOptions, buildSearchSql, expandFields } from '#src/database/utils.js';
+import RelationQueries, {
+  type GetEntitiesOptions,
+  TwoRelationsQueries,
+} from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 
 import { type userSearchKeys } from './user.js';
@@ -37,10 +40,9 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
     const relations = convertToIdentifiers(OrganizationRoleUserRelations, true);
 
-    // TODO: replace `.*` with explicit fields
     return this.pool.any<OrganizationWithRoles>(sql`
       select
-        ${organizations.table}.*,
+        ${expandFields(Organizations, true)},
         ${this.#aggregateRoles()}
       from ${this.table}
       left join ${organizations.table}
@@ -58,29 +60,44 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
   /** Get the users in an organization and their roles. */
   async getUsersByOrganizationId(
     organizationId: string,
+    { limit, offset }: GetEntitiesOptions,
     search?: SearchOptions<(typeof userSearchKeys)[number]>
-  ): Promise<Readonly<UserWithOrganizationRoles[]>> {
+  ): Promise<[totalCount: number, entities: Readonly<UserWithOrganizationRoles[]>]> {
     const roles = convertToIdentifiers(OrganizationRoles, true);
     const users = convertToIdentifiers(Users, true);
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
     const relations = convertToIdentifiers(OrganizationRoleUserRelations, true);
 
-    return this.pool.any<UserWithOrganizationRoles>(sql`
-      select
-        ${users.table}.*,
-        ${this.#aggregateRoles()}
-      from ${this.table}
-      left join ${users.table}
-        on ${fields.userId} = ${users.fields.id}
-      left join ${relations.table}
-        on ${fields.userId} = ${relations.fields.userId}
-        and ${fields.organizationId} = ${relations.fields.organizationId}
-      left join ${roles.table}
-        on ${relations.fields.organizationRoleId} = ${roles.fields.id}
-      where ${fields.organizationId} = ${organizationId}
-      ${buildSearchSql(Users, search, sql`and `)}
-      group by ${users.table}.id
-    `);
+    const [{ count }, entities] = await Promise.all([
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        from ${this.table}
+        left join ${users.table}
+          on ${fields.userId} = ${users.fields.id}
+        where ${fields.organizationId} = ${organizationId}
+        ${buildSearchSql(Users, search, sql`and `)}
+      `),
+      this.pool.any<UserWithOrganizationRoles>(sql`
+        select
+          ${users.table}.*,
+          ${this.#aggregateRoles()}
+        from ${this.table}
+        left join ${users.table}
+          on ${fields.userId} = ${users.fields.id}
+        left join ${relations.table}
+          on ${fields.userId} = ${relations.fields.userId}
+          and ${fields.organizationId} = ${relations.fields.organizationId}
+        left join ${roles.table}
+          on ${relations.fields.organizationRoleId} = ${roles.fields.id}
+        where ${fields.organizationId} = ${organizationId}
+        ${buildSearchSql(Users, search, sql`and `)}
+        group by ${users.table}.id
+        limit ${limit}
+        offset ${offset}
+      `),
+    ]);
+
+    return [Number(count), entities];
   }
 
   /**

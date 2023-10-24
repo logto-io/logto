@@ -61,7 +61,7 @@ function OrganizationDetails() {
   }
 
   return (
-    <DetailsPage backLink={pathname} backLinkTitle="organizations.title">
+    <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
       <PageMeta titleKey="organization_details.page_title" />
       <Card className={styles.header}>
         <div className={styles.metadata}>

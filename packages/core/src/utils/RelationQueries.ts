@@ -1,28 +1,34 @@
-import { conditionalSql } from '@logto/shared';
+import { type Table, conditionalSql } from '@logto/shared';
 import { type KeysToCamelCase } from '@silverhand/essentials';
 import { sql, type CommonQueryMethods } from 'slonik';
 import snakecaseKeys from 'snakecase-keys';
 import { type z } from 'zod';
 
+import { expandFields } from '#src/database/utils.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 type AtLeast2<T extends unknown[]> = `${T['length']}` extends '0' | '1' ? never : T;
 
-type TableInfo<Table, TableSingular, Schema> = {
-  table: Table;
+type TableInfo<
+  TableName extends string,
+  TableSingular extends string,
+  Key extends string,
+  Schema,
+> = Table<Key, TableName> & {
   tableSingular: TableSingular;
   guard: z.ZodType<Schema, z.ZodTypeDef, unknown>;
 };
 
-type InferSchema<T> = T extends TableInfo<infer _, infer _, infer Schema> ? Schema : never;
+type InferSchema<T> = T extends TableInfo<infer _, infer _, infer _, infer Schema> ? Schema : never;
 
 type CamelCaseIdObject<T extends string> = KeysToCamelCase<{
   [Key in `${T}_id`]: string;
 }>;
 
-type GetEntitiesOptions = {
-  limit?: number;
-  offset?: number;
+/** Options for getting entities in a table. */
+export type GetEntitiesOptions = {
+  limit: number;
+  offset: number;
 };
 
 /**
@@ -59,7 +65,7 @@ type GetEntitiesOptions = {
  * group with the id `group-id-1`.
  */
 export default class RelationQueries<
-  Schemas extends Array<TableInfo<string, string, unknown>>,
+  Schemas extends Array<TableInfo<string, string, string, unknown>>,
   Length = AtLeast2<Schemas>['length'],
 > {
   protected get table() {
@@ -175,9 +181,9 @@ export default class RelationQueries<
   async getEntities<S extends Schemas[number]>(
     forSchema: S,
     where: CamelCaseIdObject<Exclude<Schemas[number]['tableSingular'], S['tableSingular']>>,
-    options: GetEntitiesOptions = {}
+    options?: GetEntitiesOptions
   ): Promise<[totalCount: number, entities: ReadonlyArray<InferSchema<S>>]> {
-    const { limit, offset } = options;
+    const { limit, offset } = options ?? {};
     const snakeCaseWhere = snakecaseKeys(where);
     const forTable = sql.identifier([forSchema.table]);
     const mainSql = sql`
@@ -201,9 +207,10 @@ export default class RelationQueries<
         select count(*)
         ${mainSql}
       `),
-      // TODO: replace `.*` with explicit fields
+
       this.pool.query<InferSchema<S>>(sql`
-        select ${forTable}.* ${mainSql}
+        select ${expandFields(forSchema, true)}
+        ${mainSql}
         ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
         ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
       `),
@@ -249,8 +256,8 @@ export default class RelationQueries<
  * @see {@link RelationQueries} for more information.
  */
 export class TwoRelationsQueries<
-  Schema1 extends TableInfo<string, string, unknown>,
-  Schema2 extends TableInfo<string, string, unknown>,
+  Schema1 extends TableInfo<string, string, string, unknown>,
+  Schema2 extends TableInfo<string, string, string, unknown>,
 > extends RelationQueries<[Schema1, Schema2]> {
   /**
    * Replace all relations for a specific `Schema1` entity with the given `Schema2` entities.

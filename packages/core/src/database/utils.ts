@@ -1,5 +1,5 @@
 import { type GeneratedSchema } from '@logto/schemas';
-import { type SchemaLike, conditionalSql, convertToIdentifiers } from '@logto/shared';
+import { type SchemaLike, conditionalSql, convertToIdentifiers, type Table } from '@logto/shared';
 import { type SqlSqlToken, sql } from 'slonik';
 
 /**
@@ -43,4 +43,16 @@ export const buildSearchSql = <
     );
     return sql`${prefixSql}(${searchSql})`;
   });
+};
+
+/**
+ * Expand the fields of a schema into a SQL list. Useful for `select` statements.
+ *
+ * @param schema The schema to expand.
+ * @param tablePrefix Whether to prefix the fields with the table name.
+ * @returns The generated SQL list separated by `, `.
+ */
+export const expandFields = <Keys extends string>(schema: Table<Keys>, tablePrefix = false) => {
+  const { fields } = convertToIdentifiers(schema, tablePrefix);
+  return sql.join(Object.values(fields), sql`, `);
 };

@@ -7,6 +7,7 @@ import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
 import DateTime from '@/components/DateTime';
 import UserPreview from '@/components/ItemPreview/UserPreview';
+import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import Search from '@/ds-components/Search';
@@ -20,6 +21,8 @@ import AddMembersToOrganization from './AddMembersToOrganization';
 import EditOrganizationRolesModal from './EditOrganizationRolesModal';
 import * as styles from './index.module.scss';
 
+const pageSize = defaultPageSize;
+
 type Props = {
   organization: Organization;
 };
@@ -27,8 +30,17 @@ type Props = {
 function Members({ organization }: Props) {
   const api = useApi();
   const [keyword, setKeyword] = useState('');
-  const { data, error, mutate } = useSWR<UserWithOrganizationRoles[], RequestError>(
-    buildUrl(`api/organizations/${organization.id}/users`, { q: keyword })
+  const [page, setPage] = useState(1);
+  const {
+    data: response,
+    error,
+    mutate,
+  } = useSWR<[UserWithOrganizationRoles[], number], RequestError>(
+    buildUrl(`api/organizations/${organization.id}/users`, {
+      q: keyword,
+      page: String(page),
+      page_size: String(pageSize),
+    })
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
@@ -39,13 +51,21 @@ function Members({ organization }: Props) {
     return null; // TODO: error handling
   }
 
-  if (!data) {
+  if (!response) {
     return null; // TODO: loading
   }
+
+  const [data, totalCount] = response;
 
   return (
     <>
       <Table
+        pagination={{
+          page,
+          totalCount,
+          pageSize,
+          onChange: setPage,
+        }}
         rowGroups={[{ key: 'data', data }]}
         columns={[
           {
@@ -113,9 +133,11 @@ function Members({ organization }: Props) {
               placeholder={t('organization_details.search_user_placeholder')}
               onSearch={(value) => {
                 setKeyword(value);
+                setPage(1);
               }}
               onClearSearch={() => {
                 setKeyword('');
+                setPage(1);
               }}
             />
             <Button

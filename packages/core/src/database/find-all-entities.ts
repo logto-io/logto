@@ -2,7 +2,7 @@ import { type GeneratedSchema, type SchemaLike } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
-import { buildSearchSql, type SearchOptions } from './utils.js';
+import { buildSearchSql, expandFields, type SearchOptions } from './utils.js';
 
 export const buildFindAllEntitiesWithPool =
   (pool: CommonQueryMethods) =>
@@ -26,7 +26,7 @@ export const buildFindAllEntitiesWithPool =
     ) =>
       manyRows(
         pool.query<Schema>(sql`
-          select ${sql.join(Object.values(fields), sql`, `)}
+          select ${expandFields(schema)}
           from ${table}
           ${buildSearchSql(schema, search)}
           ${conditionalSql(orderBy, (orderBy) => {
