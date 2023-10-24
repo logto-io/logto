@@ -4,7 +4,6 @@ import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import koaPagination from '#src/middleware/koa-pagination.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { SsoProviderName } from '#src/sso/types/index.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
@@ -15,6 +14,7 @@ import {
   connectorFactoriesResponseGuard,
   type ConnectorFactoryDetail,
   ssoConnectorCreateGuard,
+  ssoConnectorWithProviderConfigGuard,
 } from './type.js';
 import {
   parseFactoryDetail,
@@ -30,7 +30,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     },
   ] = args;
 
-  const pathname = tableToPathname(SsoConnectors.table);
+  const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
   /**
    * Get all supported single sign on connector factory details
@@ -131,25 +131,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
   router.get(
     pathname,
-    koaPagination(),
     koaGuard({
+      response: ssoConnectorWithProviderConfigGuard.array(),
       status: [200],
     }),
     async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
+      // Query all connectors
+      const entities = await ssoConnectors.findAll();
 
-      // Query all connectors with pagination from DB
-      const [count, entities] = await Promise.all([
-        ssoConnectors.findTotalNumber(),
-        ssoConnectors.findAll(limit, offset),
-      ]);
-
+      // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
         entities.map(async (connector) => fetchConnectorProviderDetails(connector))
       );
 
-      ctx.pagination.totalCount = count;
-      ctx.body = connectorsWithProviderDetails;
+      // Filter out unsupported connectors
+      ctx.body = connectorsWithProviderDetails.filter(Boolean);
 
       return next();
     }

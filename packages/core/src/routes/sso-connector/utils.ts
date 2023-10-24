@@ -5,6 +5,8 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SsoProviderName } from '#src/sso/types/index.js';
 
+import { type SsoConnectorWithProviderConfig } from './type.js';
+
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
 
@@ -25,11 +27,14 @@ export const parseFactoryDetail = (
   };
 };
 
-export const fetchConnectorProviderDetails = async (connector: SsoConnector) => {
+export const fetchConnectorProviderDetails = async (
+  connector: SsoConnector
+): Promise<SsoConnectorWithProviderConfig | undefined> => {
   const { providerName } = connector;
 
+  // Return undefined if the provider is not supported
   if (!isSupportedSsoProvider(providerName)) {
-    return connector;
+    return undefined;
   }
 
   const { logo, constructor } = ssoConnectorFactories[providerName];

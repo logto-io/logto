@@ -13,6 +13,11 @@ export type ConnectorFactoryResponse = {
   providerConnectors: ConnectorFactoryDetail[];
 };
 
+export type SsoConnectorWithProviderConfig = SsoConnector & {
+  providerLogo: string;
+  providerConfig?: Record<string, unknown>;
+};
+
 export const getSsoConnectorFactories = async () =>
   authedAdminApi.get('sso-connector-factories').json<ConnectorFactoryResponse>();
 
@@ -22,3 +27,6 @@ export const createSsoConnector = async (data: Partial<CreateSsoConnector>) =>
       json: data,
     })
     .json<SsoConnector>();
+
+export const getSsoConnectors = async () =>
+  authedAdminApi.get('sso-connectors').json<SsoConnectorWithProviderConfig[]>();

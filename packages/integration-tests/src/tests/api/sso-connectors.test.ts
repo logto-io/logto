@@ -1,6 +1,10 @@
 import { HTTPError } from 'got';
 
-import { getSsoConnectorFactories, createSsoConnector } from '#src/api/sso-connector.js';
+import {
+  getSsoConnectorFactories,
+  createSsoConnector,
+  getSsoConnectors,
+} from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -87,5 +91,29 @@ describe('post sso-connectos', () => {
     expect(response).toHaveProperty('domains', data.domains);
     expect(response).toHaveProperty('ssoOnly', data.ssoOnly);
     expect(response).toHaveProperty('syncProfile', false);
+  });
+});
+
+describe('get sso-connectors', () => {
+  it('should return sso connectors', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'test',
+    });
+
+    console.log(id);
+
+    const connectors = await getSsoConnectors();
+    expect(connectors.length).toBeGreaterThan(0);
+
+    console.log(connectors);
+
+    const connector = connectors.find((connector) => connector.id === id);
+
+    expect(connector).toBeDefined();
+    expect(connector?.providerLogo).toBeDefined();
+
+    // Invalid config
+    expect(connector?.providerConfig).toBeUndefined();
   });
 });
