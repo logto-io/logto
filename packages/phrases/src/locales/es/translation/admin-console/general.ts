@@ -65,6 +65,8 @@ const general = {
   /** UNTRANSLATED */
   name: 'Name',
   /** UNTRANSLATED */
+  add_field: 'Add {{field}}',
+  /** UNTRANSLATED */
   create_field: 'Create {{field}}',
   /** UNTRANSLATED */
   edit_field: 'Edit {{field}}',

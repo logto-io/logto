@@ -60,6 +60,7 @@ const general = {
   contact_us_action: 'Contact Us',
   description: 'Description',
   name: 'Name',
+  add_field: 'Add {{field}}',
   create_field: 'Create {{field}}',
   edit_field: 'Edit {{field}}',
   delete_field: 'Delete {{field}}',
