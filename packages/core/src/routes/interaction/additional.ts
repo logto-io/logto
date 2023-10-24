@@ -10,7 +10,6 @@ import { type IRouterParamContext } from 'koa-router';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -162,7 +161,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
         const newAccountId = await generateUserId();
         const newUserProfile = await parseUserProfile(tenant, profileVerifiedInteraction);
         const options = await generateWebAuthnRegistrationOptions({
-          rpId: EnvSet.values.endpoint.hostname,
+          rpId: ctx.URL.hostname,
           user: {
             id: newAccountId,
             username: newUserProfile.username ?? newAccountId,
@@ -193,7 +192,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
           accountId
         );
         const options = await generateWebAuthnRegistrationOptions({
-          rpId: EnvSet.values.endpoint.hostname,
+          rpId: ctx.URL.hostname,
           user: {
             id,
             username,
@@ -240,7 +239,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
 
       const { mfaVerifications } = await findUserById(accountId);
       const options = await generateWebAuthnAuthenticationOptions({
-        rpId: EnvSet.values.endpoint.hostname,
+        rpId: ctx.URL.hostname,
         mfaVerifications,
       });
 
