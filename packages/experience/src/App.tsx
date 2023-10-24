@@ -80,7 +80,6 @@ const App = () => {
                     {isDevelopmentFeaturesEnabled && (
                       <>
                         {/* Mfa binding */}
-                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
                         <Route path={UserMfaFlow.MfaBinding}>
                           <Route index element={<MfaBinding />} />
                           <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
@@ -89,7 +88,6 @@ const App = () => {
                         </Route>
 
                         {/* Mfa verification */}
-                        {/* Todo @xiaoyijun reorg these routes when factors are all implemented */}
                         <Route path={UserMfaFlow.MfaVerification}>
                           <Route index element={<MfaVerification />} />
                           <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
