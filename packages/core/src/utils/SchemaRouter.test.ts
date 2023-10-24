@@ -38,8 +38,7 @@ describe('SchemaRouter', () => {
   ] as const satisfies readonly Schema[];
   const queries = new SchemaQueries(createTestPool(undefined, { id: '1' }), schema);
 
-  jest.spyOn(queries, 'findTotalNumber').mockResolvedValue(entities.length);
-  jest.spyOn(queries, 'findAll').mockResolvedValue(entities);
+  jest.spyOn(queries, 'findAll').mockResolvedValue([entities.length, entities]);
   jest.spyOn(queries, 'findById').mockImplementation(async (id) => {
     const entity = entities.find((entity) => entity.id === id);
     if (!entity) {
@@ -67,16 +66,14 @@ describe('SchemaRouter', () => {
     it('should be able to get all entities', async () => {
       const response = await request.get(baseRoute);
 
-      expect(queries.findAll).toHaveBeenCalledWith(20, 0);
-      expect(queries.findTotalNumber).toHaveBeenCalled();
+      expect(queries.findAll).toHaveBeenCalledWith(20, 0, undefined);
       expect(response.body).toStrictEqual(entities);
     });
 
     it('should be able to get all entities with pagination', async () => {
       const response = await request.get(`${baseRoute}?page=1&page_size=10`);
 
-      expect(queries.findAll).toHaveBeenCalledWith(10, 0);
-      expect(queries.findTotalNumber).toHaveBeenCalled();
+      expect(queries.findAll).toHaveBeenCalledWith(10, 0, undefined);
       expect(response.body).toStrictEqual(entities);
       expect(response.header).toHaveProperty('total-number', '2');
     });

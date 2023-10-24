@@ -1,11 +1,12 @@
 import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { type DeepPartial } from '@silverhand/essentials';
+import { cond, type Optional, type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import Router, { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
+import { type SearchOptions } from '#src/database/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
@@ -34,7 +35,7 @@ const tableToPathname = (tableName: string) => tableName.replaceAll('_', '-');
 const camelCaseSchemaId = <T extends { tableSingular: Table }, Table extends string>(schema: T) =>
   `${camelcase(schema.tableSingular)}Id` as const;
 
-type SchemaRouterConfig = {
+type SchemaRouterConfig<Key extends string> = {
   /** Disable certain routes for the router. */
   disabled: {
     /** Disable `GET /` route. */
@@ -48,7 +49,10 @@ type SchemaRouterConfig = {
     /** Disable `DELETE /:id` route. */
     deleteById: boolean;
   };
+  /** A custom error handler for the router before throwing the error. */
   errorHandler?: (error: unknown) => void;
+  /** The fields that can be searched for the `GET /` route. */
+  searchFields: SearchOptions<Key>['fields'];
 };
 
 /**
@@ -63,8 +67,6 @@ type SchemaRouterConfig = {
  * - `DELETE /:id`: Delete an entity by ID.
  *
  * Browse the source code for more details about request/response validation.
- *
- * @see {@link SchemaActions} for the `actions` configuration.
  */
 export default class SchemaRouter<
   Key extends string,
@@ -73,16 +75,16 @@ export default class SchemaRouter<
   StateT = unknown,
   CustomT extends IRouterParamContext = IRouterParamContext,
 > extends Router<StateT, CustomT> {
-  public readonly config: SchemaRouterConfig;
+  public readonly config: SchemaRouterConfig<Key>;
 
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
     public readonly queries: SchemaQueries<Key, CreateSchema, Schema>,
-    config: DeepPartial<SchemaRouterConfig> = {}
+    config: DeepPartial<SchemaRouterConfig<Key>> = {}
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
-    this.config = deepmerge<SchemaRouterConfig, DeepPartial<SchemaRouterConfig>>(
+    this.config = deepmerge<typeof this.config, DeepPartial<typeof this.config>>(
       {
         disabled: {
           get: false,
@@ -91,6 +93,7 @@ export default class SchemaRouter<
           patchById: false,
           deleteById: false,
         },
+        searchFields: [],
       },
       config
     );
@@ -106,19 +109,29 @@ export default class SchemaRouter<
       });
     }
 
-    const { disabled } = this.config;
+    const { disabled, searchFields } = this.config;
 
     if (!disabled.get) {
       this.get(
         '/',
         koaPagination(),
-        koaGuard({ response: schema.guard.array(), status: [200] }),
+        koaGuard({
+          query: z.object({ q: z.string().optional() }),
+          response: schema.guard.array(),
+          status: [200],
+        }),
         async (ctx, next) => {
+          const { q } = ctx.guard.query;
+          const search: Optional<SearchOptions<Key>> = cond(
+            q &&
+              searchFields.length > 0 && {
+                fields: searchFields,
+                keyword: q,
+              }
+          );
           const { limit, offset } = ctx.pagination;
-          const [count, entities] = await Promise.all([
-            queries.findTotalNumber(),
-            queries.findAll(limit, offset),
-          ]);
+          const [count, entities] = await queries.findAll(limit, offset, search);
+
           ctx.pagination.totalCount = count;
           ctx.body = entities;
           return next();

@@ -101,8 +101,11 @@ class OrganizationRolesQueries extends SchemaQueries<
   override async findAll(
     limit: number,
     offset: number
-  ): Promise<Readonly<OrganizationRoleWithScopes[]>> {
-    return this.pool.any(this.#findWithScopesSql(undefined, limit, offset));
+  ): Promise<[totalNumber: number, rows: Readonly<OrganizationRoleWithScopes[]>]> {
+    return Promise.all([
+      this.findTotalNumber(),
+      this.pool.any(this.#findWithScopesSql(undefined, limit, offset)),
+    ]);
   }
 
   #findWithScopesSql(roleId?: string, limit = 1, offset = 0) {

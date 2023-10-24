@@ -21,6 +21,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   ] = args;
   const router = new SchemaRouter(Organizations, organizations, {
     errorHandler,
+    searchFields: ['name'],
   });
 
   router.addRelationRoutes(organizations.relations.users);
