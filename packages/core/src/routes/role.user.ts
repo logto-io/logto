@@ -1,4 +1,4 @@
-import { userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
+import { UsersRoles, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { pick, tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
@@ -6,6 +6,7 @@ import { object, string } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -19,7 +20,6 @@ export default function roleUserRoutes<T extends AuthedRouter>(
     usersRoles: {
       deleteUsersRolesByUserIdAndRoleId,
       findFirstUsersRolesByRoleIdAndUserIds,
-      findUsersRolesByRoleId,
       insertUsersRoles,
     },
   } = queries;
@@ -43,13 +43,19 @@ export default function roleUserRoutes<T extends AuthedRouter>(
 
       return tryThat(
         async () => {
-          const search = parseSearchParamsForSearch(searchParams);
-          const usersRoles = await findUsersRolesByRoleId(id);
-          const userIds = usersRoles.map(({ userId }) => userId);
+          const conditions: UserConditions = {
+            search: parseSearchParamsForSearch(searchParams),
+            relation: {
+              table: UsersRoles.table,
+              field: UsersRoles.fields.roleId,
+              value: id,
+              type: 'exists',
+            },
+          };
 
           const [{ count }, users] = await Promise.all([
-            countUsers(search, undefined, userIds),
-            findUsers(limit, offset, search, undefined, userIds),
+            countUsers(conditions),
+            findUsers(limit, offset, conditions),
           ]);
 
           ctx.pagination.totalCount = count;

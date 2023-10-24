@@ -1,13 +1,7 @@
-import { type Role, type Organization } from '@logto/schemas';
+import { type Role, type Organization, type OrganizationWithRoles } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
-
-type RoleEntity = {
-  id: string;
-  name: string;
-};
-type OrganizationWithRoles = Organization & { roles: RoleEntity[] };
 
 class OrganizationApi extends ApiFactory<Organization, { name: string; description?: string }> {
   constructor() {
@@ -26,8 +20,10 @@ class OrganizationApi extends ApiFactory<Organization, { name: string; descripti
     await authedAdminApi.delete(`${this.path}/${id}/users/${userId}`);
   }
 
-  async addUserRoles(id: string, userId: string, roleIds: string[]): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/users/${userId}/roles`, { json: { roleIds } });
+  async addUserRoles(id: string, userId: string, organizationRoleIds: string[]): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/users/${userId}/roles`, {
+      json: { organizationRoleIds },
+    });
   }
 
   async getUserRoles(id: string, userId: string): Promise<Role[]> {

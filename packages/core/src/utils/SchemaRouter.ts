@@ -55,6 +55,14 @@ type SchemaRouterConfig<Key extends string> = {
   searchFields: SearchOptions<Key>['fields'];
 };
 
+type RelationRoutesConfig = {
+  /** Disable certain routes for the relation. */
+  disabled: {
+    /** Disable `GET /:id/[pathname]` route. */
+    get: boolean;
+  };
+};
+
 /**
  * A standard RESTful router for a schema.
  *
@@ -242,7 +250,8 @@ export default class SchemaRouter<
       typeof this.schema,
       GeneratedSchema<string, RelationCreateSchema, RelationSchema>
     >,
-    pathname = tableToPathname(relationQueries.schemas[1].table)
+    pathname = tableToPathname(relationQueries.schemas[1].table),
+    { disabled }: Partial<RelationRoutesConfig> = {}
   ) {
     const relationSchema = relationQueries.schemas[1];
     const columns = {
@@ -251,33 +260,35 @@ export default class SchemaRouter<
       relationSchemaIds: camelCaseSchemaId(relationSchema) + 's',
     };
 
-    this.get(
-      `/:id/${pathname}`,
-      koaPagination(),
-      koaGuard({
-        params: z.object({ id: z.string().min(1) }),
-        response: relationSchema.guard.array(),
-        status: [200, 404],
-      }),
-      async (ctx, next) => {
-        const { id } = ctx.guard.params;
+    if (!disabled?.get) {
+      this.get(
+        `/:id/${pathname}`,
+        koaPagination(),
+        koaGuard({
+          params: z.object({ id: z.string().min(1) }),
+          response: relationSchema.guard.array(),
+          status: [200, 404],
+        }),
+        async (ctx, next) => {
+          const { id } = ctx.guard.params;
 
-        // Ensure that the main entry exists
-        await this.queries.findById(id);
+          // Ensure that the main entry exists
+          await this.queries.findById(id);
 
-        const [totalCount, entities] = await relationQueries.getEntities(
-          relationSchema,
-          {
-            [columns.schemaId]: id,
-          },
-          ctx.pagination
-        );
+          const [totalCount, entities] = await relationQueries.getEntities(
+            relationSchema,
+            {
+              [columns.schemaId]: id,
+            },
+            ctx.pagination
+          );
 
-        ctx.pagination.totalCount = totalCount;
-        ctx.body = entities;
-        return next();
-      }
-    );
+          ctx.pagination.totalCount = totalCount;
+          ctx.body = entities;
+          return next();
+        }
+      );
+    }
 
     this.post(
       `/:id/${pathname}`,
@@ -295,6 +306,7 @@ export default class SchemaRouter<
         await relationQueries.insert(
           ...(relationIds?.map<[string, string]>((relationId) => [id, relationId]) ?? [])
         );
+
         ctx.status = 201;
         return next();
       }

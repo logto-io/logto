@@ -1,7 +1,7 @@
+import { organizationWithOrganizationRolesGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
-import { organizationWithRolesGuard } from '#src/queries/organizations.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -12,7 +12,7 @@ export default function adminUserOrganizationRoutes<T extends AuthedRouter>(
     '/users/:userId/organizations',
     koaGuard({
       params: z.object({ userId: z.string() }),
-      response: organizationWithRolesGuard.array(),
+      response: organizationWithOrganizationRolesGuard.array(),
       status: [200, 404],
     }),
     async (ctx, next) => {

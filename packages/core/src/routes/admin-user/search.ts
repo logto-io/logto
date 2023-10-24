@@ -1,19 +1,49 @@
-import { userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
-import { pick, tryThat } from '@silverhand/essentials';
+import {
+  OrganizationUserRelations,
+  UsersRoles,
+  userInfoSelectFields,
+  userProfileResponseGuard,
+} from '@logto/schemas';
+import { type Nullable, pick, tryThat } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
+
+const getQueryRelation = (
+  excludeRoleId: Nullable<string>,
+  excludeOrganizationId: Nullable<string>
+): UserConditions['relation'] => {
+  if (excludeRoleId) {
+    return {
+      table: UsersRoles.table,
+      field: UsersRoles.fields.roleId,
+      value: excludeRoleId,
+      type: 'not exists',
+    };
+  }
+
+  if (excludeOrganizationId) {
+    return {
+      table: OrganizationUserRelations.table,
+      field: OrganizationUserRelations.fields.organizationId,
+      value: excludeOrganizationId,
+      type: 'not exists',
+    };
+  }
+
+  return undefined;
+};
 
 export default function adminUserSearchRoutes<T extends AuthedRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
     users: { findUsers, countUsers },
-    usersRoles: { findUsersRolesByRoleId },
   } = queries;
 
   router.get(
@@ -29,16 +59,26 @@ export default function adminUserSearchRoutes<T extends AuthedRouter>(
 
       return tryThat(
         async () => {
-          const search = parseSearchParamsForSearch(searchParams);
           const excludeRoleId = searchParams.get('excludeRoleId');
-          const excludeUsersRoles = excludeRoleId
-            ? await findUsersRolesByRoleId(excludeRoleId)
-            : [];
-          const excludeUserIds = excludeUsersRoles.map(({ userId }) => userId);
+          const excludeOrganizationId = searchParams.get('excludeOrganizationId');
+
+          if (excludeRoleId && excludeOrganizationId) {
+            throw new RequestError({
+              code: 'request.invalid_input',
+              status: 422,
+              details:
+                'Parameter `excludeRoleId` and `excludeOrganizationId` cannot be used at the same time.',
+            });
+          }
+
+          const conditions: UserConditions = {
+            search: parseSearchParamsForSearch(searchParams),
+            relation: getQueryRelation(excludeRoleId, excludeOrganizationId),
+          };
 
           const [{ count }, users] = await Promise.all([
-            countUsers(search, excludeUserIds),
-            findUsers(limit, offset, search, excludeUserIds),
+            countUsers(conditions),
+            findUsers(limit, offset, conditions),
           ]);
 
           ctx.pagination.totalCount = count;

@@ -28,7 +28,7 @@ export const buildFindAllEntitiesWithPool =
         pool.query<Schema>(sql`
           select ${sql.join(Object.values(fields), sql`, `)}
           from ${table}
-          ${buildSearchSql(search)}
+          ${buildSearchSql(schema, search)}
           ${conditionalSql(orderBy, (orderBy) => {
             const orderBySql = orderBy.map(({ field, order }) =>
               // Note: 'desc' and 'asc' are keywords, so we don't pass them as values

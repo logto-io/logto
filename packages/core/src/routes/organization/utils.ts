@@ -7,7 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 
 export const errorHandler = (error: unknown) => {
   if (error instanceof UniqueIntegrityConstraintViolationError) {
-    throw new RequestError({ code: 'entity.duplicate_value_of_unique_field', field: 'name' });
+    throw new RequestError({ code: 'entity.duplicate_value_of_unique_field', field: 'name' }); // TODO: specify field
   }
 
   if (error instanceof ForeignKeyIntegrityConstraintViolationError) {

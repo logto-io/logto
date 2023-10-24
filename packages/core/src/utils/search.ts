@@ -239,8 +239,8 @@ const showLowercase = (
  */
 export const buildConditionsFromSearch = (
   search: Search,
-  searchFields: string[],
-  fieldsTypeMapping?: Record<string, string>
+  searchFields: readonly string[],
+  fieldsTypeMapping?: Readonly<Record<string, string>>
 ) => {
   assertThat(searchFields.length > 0, new TypeError('No search field found.'));
 
