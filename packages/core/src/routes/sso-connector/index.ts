@@ -1,6 +1,7 @@
 import { SsoConnectors } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -32,12 +33,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
-  /**
-   * Get all supported single sign on connector factory details
-   *
-   * - standardConnectors: OIDC, SAML, etc.
-   * - providerConnectors: Google, Okta, etc.
-   */
+  /*
+    Get all supported single sign on connector factory details
+    - standardConnectors: OIDC, SAML, etc.
+    - providerConnectors: Google, Okta, etc.
+  */
   router.get(
     '/sso-connector-factories',
     koaGuard({
@@ -129,6 +129,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
+  /* Get all single sign on connectors */
   router.get(
     pathname,
     koaGuard({
@@ -146,6 +147,37 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       // Filter out unsupported connectors
       ctx.body = connectorsWithProviderDetails.filter(Boolean);
+
+      return next();
+    }
+  );
+
+  /* Get a single sign on connector by id */
+  router.get(
+    `${pathname}/:id`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      response: ssoConnectorWithProviderConfigGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      // Fetch the connector
+      const connector = await ssoConnectors.findById(id);
+
+      // Fetch provider details for the connector
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+
+      // Return 404 if the connector is not found
+      if (!connectorWithProviderDetails) {
+        throw new RequestError({
+          code: 'connector.not_found',
+          status: 404,
+        });
+      }
+
+      ctx.body = connectorWithProviderDetails;
 
       return next();
     }

@@ -4,6 +4,7 @@ import {
   getSsoConnectorFactories,
   createSsoConnector,
   getSsoConnectors,
+  getSsoConnectorById,
 } from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
@@ -17,7 +18,7 @@ describe('sso-connector library', () => {
   });
 });
 
-describe('post sso-connectos', () => {
+describe('post sso-connectors', () => {
   it('should throw error when providerName is not provided', async () => {
     await expect(
       createSsoConnector({
@@ -111,5 +112,28 @@ describe('get sso-connectors', () => {
 
     // Invalid config
     expect(connector?.providerConfig).toBeUndefined();
+  });
+});
+
+describe('get sso-connector by id', () => {
+  it('should return 404 if connector is not found', async () => {
+    await expect(getSsoConnectorById('invalid-id')).rejects.toThrow(HTTPError);
+  });
+
+  it('should return sso connector', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    const connector = await getSsoConnectorById(id);
+
+    expect(connector).toHaveProperty('id', id);
+    expect(connector).toHaveProperty('providerName', 'OIDC');
+    expect(connector).toHaveProperty('connectorName', 'integration_test connector');
+    expect(connector).toHaveProperty('config', {});
+    expect(connector).toHaveProperty('domains', []);
+    expect(connector).toHaveProperty('ssoOnly', false);
+    expect(connector).toHaveProperty('syncProfile', false);
   });
 });

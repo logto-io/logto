@@ -30,3 +30,6 @@ export const createSsoConnector = async (data: Partial<CreateSsoConnector>) =>
 
 export const getSsoConnectors = async () =>
   authedAdminApi.get('sso-connectors').json<SsoConnectorWithProviderConfig[]>();
+
+export const getSsoConnectorById = async (id: string) =>
+  authedAdminApi.get(`sso-connectors/${id}`).json<SsoConnectorWithProviderConfig>();
