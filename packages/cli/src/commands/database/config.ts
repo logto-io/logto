@@ -66,7 +66,7 @@ const validateRotateKey: ValidateRotateKeyFunction = (key) => {
 const validatePrivateKeyType: ValidatePrivateKeyTypeFunction = (key) => {
   // Using `.includes()` will result a type error
   // eslint-disable-next-line unicorn/prefer-includes
-  if (!validPrivateKeyTypes.some((element) => element === key.toUpperCase())) {
+  if (!validPrivateKeyTypes.some((element) => element === key)) {
     consoleLog.fatal(
       `Invalid private key type ${chalk.red(
         key
@@ -177,8 +177,9 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string; type
         default: 'ec',
       }),
   handler: async ({ key, tenantId, type }) => {
+    const keyType = type.toUpperCase();
     validateRotateKey(key);
-    validatePrivateKeyType(type);
+    validatePrivateKeyType(keyType);
 
     const pool = await createPoolFromConfig();
     const { rows } = await getRowsByKeys(pool, tenantId, [key]);
@@ -194,7 +195,7 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string; type
       // No need for default. It's already exhaustive
       switch (key) {
         case LogtoOidcConfigKey.PrivateKeys: {
-          return [await generateOidcPrivateKey(type), ...original];
+          return [await generateOidcPrivateKey(keyType), ...original];
         }
 
         case LogtoOidcConfigKey.CookieKeys: {
