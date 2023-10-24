@@ -7,6 +7,7 @@ import {
   getSsoConnectorById,
   deleteSsoConnectorById,
   patchSsoConnectorById,
+  patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
@@ -223,5 +224,44 @@ describe('patch sso-connector by id', () => {
       issuer: 'https://test.com',
     });
     expect(connector).toHaveProperty('syncProfile', true);
+  });
+});
+
+describe('patch sso-connector config by id', () => {
+  it('should return 404 if connector is not found', async () => {
+    await expect(patchSsoConnectorConfigById('invalid-id', {})).rejects.toThrow(HTTPError);
+  });
+
+  it('should throw if invalid config is provided', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    await expect(
+      patchSsoConnectorConfigById(id, {
+        issuer: 23,
+      })
+    ).rejects.toThrow(HTTPError);
+  });
+
+  it('should patch sso connector config', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    const connector = await patchSsoConnectorConfigById(id, {
+      clientId: 'foo',
+      issuer: 'https://test.com',
+    });
+
+    expect(connector).toHaveProperty('id', id);
+    expect(connector).toHaveProperty('providerName', 'OIDC');
+    expect(connector).toHaveProperty('connectorName', 'integration_test connector');
+    expect(connector).toHaveProperty('config', {
+      clientId: 'foo',
+      issuer: 'https://test.com',
+    });
   });
 });
