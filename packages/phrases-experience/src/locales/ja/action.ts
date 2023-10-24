@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: 'リンクして続行する',
   back: '戻る',
   nav_back: '戻る',
+  nav_skip: 'スキップ',
   agree: '同意する',
   got_it: 'わかりました',
   sign_in_with: '{{name}} で続ける',

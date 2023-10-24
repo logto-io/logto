@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: 'Verknüpfen und weiter',
   back: 'Gehe zurück',
   nav_back: 'Zurück',
+  nav_skip: 'Überspringen',
   agree: 'Zustimmen',
   got_it: 'Alles klar',
   sign_in_with: 'Mit {{name}} anmelden',

@@ -28,6 +28,17 @@
   cursor: pointer;
 }
 
+.skipButton {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font: var(--font-label-1);
+  cursor: pointer;
+  color: var(--color-type-link);
+  padding-right: _.unit(1);
+}
+
 :global(body.mobile) {
   .navButton > span {
     display: none;

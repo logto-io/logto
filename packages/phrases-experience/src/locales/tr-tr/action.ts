@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: 'Bağla ve devam et',
   back: 'Geri Dön',
   nav_back: 'Geri',
+  nav_skip: 'Atla',
   agree: 'Kabul Et',
   got_it: 'Anladım',
   sign_in_with: '{{name}} ile ilerle',

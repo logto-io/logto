@@ -73,18 +73,19 @@ const mfaFactorsGuard = s.array(
 
 export const mfaErrorDataGuard = s.object({
   availableFactors: mfaFactorsGuard,
+  skippable: s.optional(s.boolean()),
 });
 
-export const mfaFactorsStateGuard = mfaErrorDataGuard;
+export const mfaFlowStateGuard = mfaErrorDataGuard;
 
-export type MfaFactorsState = s.Infer<typeof mfaFactorsStateGuard>;
+export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
 
 export const totpBindingStateGuard = s.assign(
   s.object({
     secret: s.string(),
     secretQrCode: s.string(),
   }),
-  mfaFactorsStateGuard
+  mfaFlowStateGuard
 );
 
 export type TotpBindingState = s.Infer<typeof totpBindingStateGuard>;

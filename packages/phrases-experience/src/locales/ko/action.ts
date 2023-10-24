@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: '연동하고 계속하기',
   back: '뒤로 가기',
   nav_back: '뒤로',
+  nav_skip: '건너뛰기',
   agree: '동의',
   got_it: '알겠습니다',
   sign_in_with: '{{name}} 계속',

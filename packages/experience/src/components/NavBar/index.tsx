@@ -12,9 +12,10 @@ type Props = {
   title?: string;
   type?: 'back' | 'close';
   onClose?: () => void;
+  onSkip?: () => void;
 };
 
-const NavBar = ({ title, type = 'back', onClose }: Props) => {
+const NavBar = ({ title, type = 'back', onClose, onSkip }: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -49,6 +50,17 @@ const NavBar = ({ title, type = 'back', onClose }: Props) => {
         {!isClosable && <span>{t('action.nav_back')}</span>}
       </div>
       {title && <div className={styles.title}>{title}</div>}
+      {onSkip && (
+        <div
+          role="button"
+          tabIndex={0}
+          className={styles.skipButton}
+          onKeyDown={onKeyDownHandler(onSkip)}
+          onClick={onSkip}
+        >
+          <span>{t('action.nav_skip')}</span>
+        </div>
+      )}
     </div>
   );
 };

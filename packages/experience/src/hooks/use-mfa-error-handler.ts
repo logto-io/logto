@@ -5,7 +5,7 @@ import { validate } from 'superstruct';
 
 import { UserMfaFlow } from '@/types';
 import {
-  type MfaFactorsState,
+  type MfaFlowState,
   mfaErrorDataGuard,
   backupCodeErrorDataGuard,
   type BackupCodeBindingState,
@@ -25,13 +25,11 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const startTotpBinding = useStartTotpBinding({ replace });
 
   const handleMfaRedirect = useCallback(
-    (flow: UserMfaFlow, availableFactors: MfaFactor[]) => {
-      const mfaFactorsState: MfaFactorsState = {
-        availableFactors,
-      };
+    (flow: UserMfaFlow, state: MfaFlowState) => {
+      const { availableFactors } = state;
 
       if (availableFactors.length > 1) {
-        navigate({ pathname: `/${flow}` }, { replace, state: mfaFactorsState });
+        navigate({ pathname: `/${flow}` }, { replace, state });
         return;
       }
 
@@ -42,11 +40,11 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
       }
 
       if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
-        void startTotpBinding(availableFactors);
+        void startTotpBinding(state);
         return;
       }
 
-      navigate({ pathname: `/${flow}/${factor}` }, { replace, state: mfaFactorsState });
+      navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
     },
     [navigate, replace, startTotpBinding]
   );
@@ -56,13 +54,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
       return (error: RequestErrorBody) => {
         const [_, data] = validate(error.data, mfaErrorDataGuard);
         const availableFactors = data?.availableFactors ?? [];
+        const skippable = data?.skippable;
 
         if (availableFactors.length === 0) {
           setToast(error.message);
           return;
         }
 
-        handleMfaRedirect(flow, availableFactors);
+        handleMfaRedirect(flow, { availableFactors, skippable });
       };
     },
     [handleMfaRedirect, setToast]

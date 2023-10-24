@@ -8,7 +8,7 @@ import SectionLayout from '@/Layout/SectionLayout';
 import Button from '@/components/Button';
 import { InputField } from '@/components/InputFields';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import useMfaFactorsState from '@/hooks/use-mfa-factors-state';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
@@ -20,7 +20,7 @@ type FormState = {
 };
 
 const BackupCodeVerification = () => {
-  const mfaFactorsState = useMfaFactorsState();
+  const flowState = useMfaFlowState();
   const sendMfaPayload = useSendMfaPayload();
   const { register, handleSubmit } = useForm<FormState>({ defaultValues: { code: '' } });
 
@@ -36,11 +36,9 @@ const BackupCodeVerification = () => {
     [handleSubmit, sendMfaPayload]
   );
 
-  if (!mfaFactorsState) {
+  if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;
   }
-
-  const { availableFactors } = mfaFactorsState;
 
   return (
     <SecondaryPageLayout title="mfa.verify_mfa_factors">
@@ -57,13 +55,11 @@ const BackupCodeVerification = () => {
           <Button title="action.continue" htmlType="submit" />
         </form>
       </SectionLayout>
-      {availableFactors.length > 1 && (
-        <SwitchMfaFactorsLink
-          flow={UserMfaFlow.MfaVerification}
-          factors={availableFactors}
-          className={styles.switchFactorLink}
-        />
-      )}
+      <SwitchMfaFactorsLink
+        flow={UserMfaFlow.MfaVerification}
+        flowState={flowState}
+        className={styles.switchFactorLink}
+      />
     </SecondaryPageLayout>
   );
 };

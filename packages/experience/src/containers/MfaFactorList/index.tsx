@@ -5,36 +5,35 @@ import { useNavigate } from 'react-router-dom';
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import { UserMfaFlow } from '@/types';
-import { type MfaFactorsState } from '@/types/guard';
+import { type MfaFlowState } from '@/types/guard';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   flow: UserMfaFlow;
-  factors: MfaFactor[];
+  flowState: MfaFlowState;
 };
 
-const MfaFactorList = ({ flow, factors }: Props) => {
+const MfaFactorList = ({ flow, flowState }: Props) => {
   const startTotpBinding = useStartTotpBinding();
   const navigate = useNavigate();
+  const { availableFactors } = flowState;
 
   const handleSelectFactor = useCallback(
     (factor: MfaFactor) => {
       if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
-        void startTotpBinding(factors);
+        void startTotpBinding(flowState);
         return;
       }
 
-      navigate(`/${flow}/${factor}`, {
-        state: { availableFactors: factors } satisfies MfaFactorsState,
-      });
+      navigate(`/${flow}/${factor}`, { state: flowState });
     },
-    [factors, flow, navigate, startTotpBinding]
+    [flow, flowState, navigate, startTotpBinding]
   );
 
   return (
     <div className={styles.factorList}>
-      {factors.map((factor) => (
+      {availableFactors.map((factor) => (
         <MfaFactorButton
           key={factor}
           factor={factor}
