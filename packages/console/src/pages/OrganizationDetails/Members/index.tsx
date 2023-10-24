@@ -16,6 +16,7 @@ import useActionTranslation from '@/hooks/use-action-translation';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
+import AddMembersToOrganization from './AddMembersToOrganization';
 import EditOrganizationRolesModal from './EditOrganizationRolesModal';
 import * as styles from './index.module.scss';
 
@@ -140,14 +141,14 @@ function Members({ organization }: Props) {
           }}
         />
       )}
-      {/* <AddMembersToOrganization
+      <AddMembersToOrganization
         organization={organization}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           void mutate();
         }}
-      /> */}
+      />
     </>
   );
 }
