@@ -6,7 +6,7 @@ import { createTotpSecret } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { UserMfaFlow } from '@/types';
-import { type TotpBindingState } from '@/types/guard';
+import { type MfaFlowState, type TotpBindingState } from '@/types/guard';
 
 type Options = {
   replace?: boolean;
@@ -19,7 +19,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
   const handleError = useErrorHandler();
 
   return useCallback(
-    async (availableFactors: MfaFactor[]) => {
+    async (flowState: MfaFlowState) => {
       const [error, result] = await asyncCreateTotpSecret();
 
       if (error) {
@@ -33,7 +33,7 @@ const useStartTotpBinding = ({ replace }: Options = {}) => {
         const state: TotpBindingState = {
           secret,
           secretQrCode,
-          availableFactors,
+          ...flowState,
         };
         navigate({ pathname: `/${UserMfaFlow.MfaBinding}/${MfaFactor.TOTP}` }, { replace, state });
       }

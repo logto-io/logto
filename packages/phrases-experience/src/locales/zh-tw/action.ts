@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: '綁定並繼續',
   back: '返回',
   nav_back: '返回',
+  nav_skip: '跳過',
   agree: '同意',
   got_it: '知道了',
   sign_in_with: '通過 {{name}} 繼續',

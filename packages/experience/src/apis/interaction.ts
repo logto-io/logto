@@ -253,3 +253,6 @@ export const verifyMfa = async (payload: VerifyMfaPayload) => {
 
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
+
+export const submitInteraction = async () =>
+  api.post(`${interactionPrefix}/submit`).json<Response>();

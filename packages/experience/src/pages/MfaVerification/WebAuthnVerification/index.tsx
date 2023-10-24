@@ -2,7 +2,7 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
 import Button from '@/components/Button';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import useMfaFactorsState from '@/hooks/use-mfa-factors-state';
+import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
@@ -10,14 +10,12 @@ import { UserMfaFlow } from '@/types';
 import * as styles from './index.module.scss';
 
 const WebAuthnVerification = () => {
-  const mfaFactorsState = useMfaFactorsState();
+  const flowState = useMfaFlowState();
   const verifyWebAuthn = useWebAuthnOperation(UserMfaFlow.MfaVerification);
 
-  if (!mfaFactorsState) {
+  if (!flowState) {
     return <ErrorPage title="error.invalid_session" />;
   }
-
-  const { availableFactors } = mfaFactorsState;
 
   return (
     <SecondaryPageLayout title="mfa.verify_mfa_factors">
@@ -31,9 +29,7 @@ const WebAuthnVerification = () => {
           onClick={verifyWebAuthn}
         />
       </SectionLayout>
-      {availableFactors.length > 1 && (
-        <SwitchMfaFactorsLink flow={UserMfaFlow.MfaVerification} factors={availableFactors} />
-      )}
+      <SwitchMfaFactorsLink flow={UserMfaFlow.MfaVerification} flowState={flowState} />
     </SecondaryPageLayout>
   );
 };

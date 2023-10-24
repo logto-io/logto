@@ -1,9 +1,11 @@
+import { conditional } from '@silverhand/essentials';
 import { useLocation } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import Divider from '@/components/Divider';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import useSkipMfa from '@/hooks/use-skip-mfa';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { totpBindingStateGuard } from '@/types/guard';
@@ -15,15 +17,19 @@ import * as styles from './index.module.scss';
 const TotpBinding = () => {
   const { state } = useLocation();
   const [, totpBindingState] = validate(state, totpBindingStateGuard);
+  const skipMfa = useSkipMfa();
 
   if (!totpBindingState) {
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { availableFactors } = totpBindingState;
+  const { availableFactors, skippable } = totpBindingState;
 
   return (
-    <SecondaryPageLayout title="mfa.add_authenticator_app">
+    <SecondaryPageLayout
+      title="mfa.add_authenticator_app"
+      onSkip={conditional(skippable && skipMfa)}
+    >
       <div className={styles.container}>
         <SecretSection {...totpBindingState} />
         <Divider />
@@ -33,7 +39,7 @@ const TotpBinding = () => {
             <Divider />
             <SwitchMfaFactorsLink
               flow={UserMfaFlow.MfaBinding}
-              factors={availableFactors}
+              flowState={totpBindingState}
               className={styles.switchLink}
             />
           </>

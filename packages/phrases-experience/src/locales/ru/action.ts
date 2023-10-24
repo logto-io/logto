@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: 'Привязать и продолжить',
   back: 'Назад',
   nav_back: 'Назад',
+  nav_skip: 'Пропустить',
   agree: 'Согласен',
   got_it: 'Понял',
   sign_in_with: 'Войти через {{name}}',

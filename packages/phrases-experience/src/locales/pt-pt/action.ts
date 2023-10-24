@@ -12,6 +12,7 @@ const action = {
   bind_and_continue: 'Ligar e continuar',
   back: 'Voltar',
   nav_back: 'Anterior',
+  nav_skip: 'Saltar',
   agree: 'Aceito',
   got_it: 'Entendi',
   sign_in_with: 'Continuar com {{name}}',
