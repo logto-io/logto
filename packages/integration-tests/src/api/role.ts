@@ -58,8 +58,17 @@ export const assignScopesToRole = async (scopeIds: string[], roleId: string) =>
 export const deleteScopeFromRole = async (scopeId: string, roleId: string) =>
   authedAdminApi.delete(`roles/${roleId}/scopes/${scopeId}`);
 
-export const getRoleUsers = async (roleId: string) =>
-  authedAdminApi.get(`roles/${roleId}/users`).json<User[]>();
+/**
+ * Get users assigned to the role.
+ *
+ * @param roleId Concerned role id
+ * @param keyword Search among all users (on `id`, `name` and `description` fields) assigned to the role with `keyword`
+ * @returns All users which contains the keyword assigned to the role
+ */
+export const getRoleUsers = async (roleId: string, keyword?: string) => {
+  const searchParams = new URLSearchParams(keyword && [['search', `%${keyword}%`]]);
+  return authedAdminApi.get(`roles/${roleId}/users`, { searchParams }).json<User[]>();
+};
 
 export const assignUsersToRole = async (userIds: string[], roleId: string) =>
   authedAdminApi.post(`roles/${roleId}/users`, {
@@ -69,8 +78,17 @@ export const assignUsersToRole = async (userIds: string[], roleId: string) =>
 export const deleteUserFromRole = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`roles/${roleId}/users/${userId}`);
 
-export const getRoleApplications = async (roleId: string) =>
-  authedAdminApi.get(`roles/${roleId}/applications`).json<Application[]>();
+/**
+ * Get apps assigned to the role.
+ *
+ * @param roleId Concerned role id
+ * @param keyword Search among all m2m apps (on `id`, `name` and `description` fields) assigned to the role with `keyword`
+ * @returns All m2m apps which contains the keyword assigned to the role
+ */
+export const getRoleApplications = async (roleId: string, keyword?: string) => {
+  const searchParams = new URLSearchParams(keyword && [['search', `%${keyword}%`]]);
+  return authedAdminApi.get(`roles/${roleId}/applications`, { searchParams }).json<Application[]>();
+};
 
 export const assignApplicationsToRole = async (applicationIds: string[], roleId: string) =>
   authedAdminApi.post(`roles/${roleId}/applications`, {

@@ -40,6 +40,14 @@ describe('admin console application management (roles)', () => {
     expect(roles.length).toBe(2);
     expect(roles.find(({ id }) => id === role1.id)).toBeDefined();
     expect(roles.find(({ id }) => id === role2.id)).toBeDefined();
+
+    // Empty keyword should be ignored, all assigned roles should be returned
+    await expect(getApplicationRoles(application.id, '')).resolves.toHaveLength(2);
+
+    // Get right assigned roles with search keyword
+    const rolesWithSearchParams = await getApplicationRoles(application.id, role1.name);
+    expect(rolesWithSearchParams).toHaveLength(1);
+    expect(rolesWithSearchParams.find(({ id }) => id === role2.id)).toBeUndefined();
   });
 
   it('should fail when assign duplicated role to app', async () => {

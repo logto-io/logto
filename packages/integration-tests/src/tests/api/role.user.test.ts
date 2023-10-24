@@ -33,12 +33,32 @@ describe('roles users', () => {
 
   it('should assign users to role successfully', async () => {
     const role = await createRole({});
-    const user1 = await createUser(generateNewUserProfile({}));
-    const user2 = await createUser(generateNewUserProfile({}));
-    await assignUsersToRole([user1.id, user2.id], role.id);
-    const users = await getRoleUsers(role.id);
+    const user1 = await createUser({
+      username: 'username001',
+      name: 'user001',
+      primaryEmail: 'user001@logto.io',
+    });
+    const user2 = await createUser({ name: 'user002', primaryPhone: '123456789' });
+    const user3 = await createUser({ username: 'username3', primaryEmail: 'user3@logto.io' });
+    await assignUsersToRole([user1.id, user2.id, user3.id], role.id);
 
-    expect(users.length).toBe(2);
+    // No assigned users satisfy the search keyword
+    await expect(getRoleUsers(role.id, 'not-found')).resolves.toHaveLength(0);
+
+    // Get right assigned users with search keyword
+    const assignedUsersWithEmailDomainSuffix = await getRoleUsers(role.id, '@logto.io');
+    expect(assignedUsersWithEmailDomainSuffix).toHaveLength(2);
+    expect(assignedUsersWithEmailDomainSuffix.find(({ id }) => id === user2.id)).toBeUndefined();
+
+    const assignedUsersWithAnotherKeyword = await getRoleUsers(role.id, 'user00');
+    expect(assignedUsersWithAnotherKeyword).toHaveLength(2);
+    expect(assignedUsersWithAnotherKeyword.find(({ id }) => id === user3.id)).toBeUndefined();
+
+    // Empty search keyword should be ignored, all assigned users should be returned
+    await expect(getRoleUsers(role.id, '')).resolves.toHaveLength(3);
+
+    // Get all assigned users
+    await expect(getRoleUsers(role.id)).resolves.toHaveLength(3);
   });
 
   it('should throw when assigning users to m2m role', async () => {

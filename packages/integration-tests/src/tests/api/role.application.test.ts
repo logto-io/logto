@@ -32,12 +32,21 @@ describe('roles applications', () => {
 
   it('should assign applications to role successfully', async () => {
     const role = await createRole({ type: RoleType.MachineToMachine });
-    const m2mApp1 = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
-    const m2mApp2 = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
+    const m2mApp1 = await createApplication('m2m-app-001', ApplicationType.MachineToMachine);
+    const m2mApp2 = await createApplication('m2m-app-002', ApplicationType.MachineToMachine);
     await assignApplicationsToRole([m2mApp1.id, m2mApp2.id], role.id);
-    const applications = await getRoleApplications(role.id);
 
-    expect(applications.length).toBe(2);
+    // No assigned m2m apps satisfy the search keyword
+    await expect(getRoleApplications(role.id, 'not-found')).resolves.toHaveLength(0);
+
+    // Get right assigned m2m apps with search keyword
+    await expect(getRoleApplications(role.id, 'm2m-app')).resolves.toHaveLength(2);
+
+    // Empty search keyword should be ignored, all assigned m2m apps should be returned
+    await expect(getRoleApplications(role.id, '')).resolves.toHaveLength(2);
+
+    // Get all assigned m2m apps
+    await expect(getRoleApplications(role.id)).resolves.toHaveLength(2);
   });
 
   it('should fail when try to assign empty applications', async () => {

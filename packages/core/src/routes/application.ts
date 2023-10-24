@@ -14,6 +14,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
+import { consoleLog } from '#src/utils/console.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from './types.js';
@@ -71,7 +72,9 @@ export default function applicationRoutes<T extends AuthedRouter>(
       const { searchParams } = ctx.URL;
       const { types } = ctx.guard.query;
 
+      consoleLog.info('searchParams:', searchParams);
       const search = parseSearchParamsForSearch(searchParams);
+      consoleLog.info('search:', search);
 
       const excludeRoleId = searchParams.get('excludeRoleId');
       const excludeApplicationsRoles = excludeRoleId

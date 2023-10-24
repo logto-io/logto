@@ -1,16 +1,29 @@
 import { type Page } from 'puppeteer';
 
+import { logtoConsoleUrl } from '#src/constants.js';
 import {
   expectModalWithTitle,
   expectToClickModalAction,
   waitForToast,
 } from '#src/ui-helpers/index.js';
+import { expectNavigation, appendPathname } from '#src/utils.js';
 
+/**
+ * Create a machine-to-machine role and assign permissions to it by operating on the Web
+ *
+ * @param page The page to run the test on
+ * @param createRolePayload The payload to create the role
+ * @param apiResources The list of API resources which are going to be assigned to the role
+ * @param backToListingPage Whether to go back to the roles listing page after creating the role
+ */
 export const createM2mRoleAndAssignPermissions = async (
   page: Page,
-  { roleName, roleDescription }: { roleName: string; roleDescription: string },
-  apiResources: Array<{ apiResourceName: string; permissionName: string }>
+  createRolePayload: { roleName: string; roleDescription: string },
+  apiResources: Array<{ apiResourceName: string; permissionName: string }>,
+  backToListingPage = false
 ) => {
+  const { roleName, roleDescription } = createRolePayload;
+
   await expect(page).toClick('div[class$=headline] button span', {
     text: 'Create role',
   });
@@ -63,4 +76,17 @@ export const createM2mRoleAndAssignPermissions = async (
   await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div[class$=name]', {
     text: roleName,
   });
+
+  if (backToListingPage) {
+    await expectNavigation(
+      page.goto(appendPathname('/console/roles', new URL(logtoConsoleUrl)).href)
+    );
+
+    await expect(page).toMatchElement(
+      'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
+      {
+        text: 'Roles',
+      }
+    );
+  }
 };
