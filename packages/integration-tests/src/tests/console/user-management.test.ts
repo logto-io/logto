@@ -50,11 +50,11 @@ describe('user management', () => {
 
     // Go to user details page
     await expectToClickModalAction(page, 'Check user detail');
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'jdoe@gmail.com',
     });
     const userId = await page.$eval(
-      'div[class$=main] div[class$=metadata] div[class$=row] div:first-of-type',
+      'div[class$=main] div[class$=metadata] div[class$=row] div[class$=content]',
       (element) => element.textContent
     );
     if (userId) {
@@ -130,7 +130,7 @@ describe('user management', () => {
 
     // Go to the user details page
     await expectToClickModalAction(page, 'Check user detail');
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: username,
     });
 
@@ -147,14 +147,14 @@ describe('user management', () => {
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
     // Top userinfo card shows the updated user full name as the title
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: newFullName,
     });
 
     await expect(page).toFillForm('form', { name: '' });
     await expectToSaveChanges(page);
     // After removing full name, top userinfo card shows the email as the title
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: newEmail,
     });
 
@@ -162,7 +162,7 @@ describe('user management', () => {
     await expect(page).toFillForm('form', { primaryEmail: '' });
     await expectToSaveChanges(page);
     // After removing email, top userinfo card shows the phone number as the title
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: formatPhoneNumberToInternational(newPhone),
     });
     await page.waitForTimeout(500);
@@ -170,7 +170,7 @@ describe('user management', () => {
     await expect(page).toFillForm('form', { primaryPhone: '' });
     await expectToSaveChanges(page);
     // After removing phone number, top userinfo card shows the username as the title
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: newUsername,
     });
     await page.waitForTimeout(500);
@@ -183,7 +183,7 @@ describe('user management', () => {
     });
     await expectToClickModalAction(page, 'Confirm');
     // After all identifiers, top userinfo card shows 'Unnamed' as the title
-    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=title]', {
+    await expect(page).toMatchElement('div[class$=main] div[class$=metadata] div[class$=name]', {
       text: 'Unnamed',
     });
   });

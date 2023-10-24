@@ -11,10 +11,12 @@ type Props = {
 
 function FormCardLayout({ introduction, children }: Props) {
   return (
-    <Card className={styles.container}>
-      <div className={styles.introduction}>{introduction}</div>
-      <div className={styles.form}>{children}</div>
-    </Card>
+    <div className={styles.responsiveWrapper}>
+      <Card className={styles.container}>
+        <div className={styles.introduction}>{introduction}</div>
+        <div className={styles.form}>{children}</div>
+      </Card>
+    </div>
   );
 }
 

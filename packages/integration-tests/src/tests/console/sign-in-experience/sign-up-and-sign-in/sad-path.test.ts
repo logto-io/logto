@@ -26,6 +26,8 @@ import {
   expectToResetSignUpAndSignInConfig,
 } from './helpers.js';
 
+await page.setViewport({ width: 1920, height: 1080 });
+
 describe('sign-in experience(sad path): sign-up and sign-in', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
 

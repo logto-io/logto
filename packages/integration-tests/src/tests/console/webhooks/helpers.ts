@@ -7,5 +7,5 @@ export const expectToCreateWebhook = async (page: Page) => {
   await expect(page).toFill('input[name=name]', 'hook_name');
   await expect(page).toFill('input[name=url]', 'https://localhost/webhook');
   await expect(page).toClick('button[type=submit]');
-  await page.waitForSelector('div[class$=header] div[class$=metadata] div[class$=title]');
+  await page.waitForSelector('div[class$=header] div[class$=metadata] div[class$=name]');
 };

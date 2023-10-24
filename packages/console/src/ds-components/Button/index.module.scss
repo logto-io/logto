@@ -43,10 +43,7 @@
   .icon {
     display: flex;
     align-items: center;
-
-    &:not(:last-child) {
-      margin-right: _.unit(2);
-    }
+    gap: _.unit(2);
   }
 
   .trailingIcon {

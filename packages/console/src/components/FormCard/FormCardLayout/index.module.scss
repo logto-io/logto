@@ -1,34 +1,41 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  padding: _.unit(6) _.unit(8);
-  display: flex;
-}
+$gutter-width: 12px;
+$column-width: calc((100% - 23 * $gutter-width) / 24);
 
-.introduction {
-  width: 296px;
-  padding-bottom: _.unit(6);
-  margin-right: _.unit(14);
-  flex-shrink: 0;
+.responsiveWrapper {
+  width: 100%;
+  container-type: inline-size;
 
-  > :not(:first-child) {
-    margin-top: _.unit(2);
-  }
-}
-
-.form {
-  flex-grow: 1;
-  overflow: hidden;
-  padding: 0 _.unit(1);
-}
-
-@media screen and (max-width: 1080px) {
   .container {
-    flex-direction: column;
+    width: 100%;
+    padding: _.unit(6) _.unit(8);
+    display: flex;
+    justify-content: space-between;
+  }
 
-    .introduction {
+  .introduction {
+    width: calc($column-width * 7 + $gutter-width * 6);
+    display: flex;
+    flex-direction: column;
+    gap: _.unit(2);
+  }
+
+  .form {
+    width: calc($column-width * 16 + $gutter-width * 15);
+    overflow: hidden;
+  }
+
+  @container (max-width: 600px) {
+    .container {
+      flex-direction: column;
+      justify-content: unset;
+      gap: _.unit(4);
+    }
+
+    .introduction,
+    .form {
       width: 100%;
-      margin-right: unset;
     }
   }
 }

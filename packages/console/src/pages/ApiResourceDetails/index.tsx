@@ -11,20 +11,16 @@ import useSWR from 'swr';
 import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
 import ApiResource from '@/assets/icons/api-resource.svg';
 import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
 import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
 import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
-import More from '@/assets/icons/more.svg';
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
-import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import Button from '@/ds-components/Button';
-import Card from '@/ds-components/Card';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -113,69 +109,52 @@ function ApiResourceDetails() {
       {isLogtoManagementApiResource && <ManagementApiNotice />}
       {data && (
         <>
-          <Card className={styles.header}>
-            <div className={styles.info}>
-              <Icon className={styles.icon} />
-              <div className={styles.metadata}>
-                <div className={styles.name}>{data.name}</div>
-                <div className={styles.row}>
-                  {data.isDefault && (
-                    <>
-                      <Tag>{t('api_resources.default_api')}</Tag>
-                      <div className={styles.verticalBar} />
-                    </>
-                  )}
-                  <div className={styles.text}>API Identifier</div>
-                  <CopyToClipboard size="small" value={data.indicator} />
-                </div>
-              </div>
+          <DetailsPageHeader
+            icon={<Icon />}
+            title={data.name}
+            primaryTag={data.isDefault && t('api_resources.default_api')}
+            identifier={{
+              name: 'API Identifier',
+              value: data.indicator,
+            }}
+            additionalActionButton={{
+              icon: <File />,
+              title: 'application_details.check_guide',
+              onClick: () => {
+                setIsGuideDrawerOpen(true);
+              },
+            }}
+            actionMenuItems={[
+              {
+                icon: <Delete />,
+                title: 'general.delete',
+                type: 'danger',
+                onClick: () => {
+                  setIsDeleteFormOpen(true);
+                },
+              },
+            ]}
+          />
+          <Drawer isOpen={isGuideDrawerOpen} onClose={onCloseDrawer}>
+            <GuideDrawer apiResource={data} onClose={onCloseDrawer} />
+          </Drawer>
+          <DeleteConfirmModal
+            isOpen={isDeleteFormOpen}
+            isLoading={isDeleting}
+            expectedInput={data.name}
+            className={styles.deleteConfirm}
+            inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
+            onCancel={() => {
+              setIsDeleteFormOpen(false);
+            }}
+            onConfirm={onDelete}
+          >
+            <div className={styles.description}>
+              <Trans components={{ span: <span className={styles.highlight} /> }}>
+                {t('api_resource_details.delete_description', { name: data.name })}
+              </Trans>
             </div>
-            {!isLogtoManagementApiResource && (
-              <div className={styles.operations}>
-                <Button
-                  title="application_details.check_guide"
-                  size="large"
-                  onClick={() => {
-                    setIsGuideDrawerOpen(true);
-                  }}
-                />
-                <Drawer isOpen={isGuideDrawerOpen} onClose={onCloseDrawer}>
-                  <GuideDrawer apiResource={data} onClose={onCloseDrawer} />
-                </Drawer>
-                <ActionMenu
-                  buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                  title={t('general.more_options')}
-                >
-                  <ActionMenuItem
-                    icon={<Delete />}
-                    type="danger"
-                    onClick={() => {
-                      setIsDeleteFormOpen(true);
-                    }}
-                  >
-                    {t('general.delete')}
-                  </ActionMenuItem>
-                </ActionMenu>
-                <DeleteConfirmModal
-                  isOpen={isDeleteFormOpen}
-                  isLoading={isDeleting}
-                  expectedInput={data.name}
-                  className={styles.deleteConfirm}
-                  inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
-                  onCancel={() => {
-                    setIsDeleteFormOpen(false);
-                  }}
-                  onConfirm={onDelete}
-                >
-                  <div className={styles.description}>
-                    <Trans components={{ span: <span className={styles.highlight} /> }}>
-                      {t('api_resource_details.delete_description', { name: data.name })}
-                    </Trans>
-                  </div>
-                </DeleteConfirmModal>
-              </div>
-            )}
-          </Card>
+          </DeleteConfirmModal>
           <TabNav>
             <TabNavItem href={`/api-resources/${data.id}/${ApiResourceDetailsTabs.Settings}`}>
               {t('api_resource_details.settings_tab')}

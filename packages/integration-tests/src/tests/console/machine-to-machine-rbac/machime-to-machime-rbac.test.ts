@@ -81,7 +81,7 @@ describe('M2M RBAC', () => {
         text: `The API resource ${apiResourceName} has been successfully created`,
       });
 
-      await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
+      await expect(page).toMatchElement('div[class$=header] div[class$=metadata] div', {
         text: apiResourceName,
       });
     });
