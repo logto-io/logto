@@ -26,6 +26,7 @@ import Dashboard from '@/pages/Dashboard';
 import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
+import OrganizationDetails from '@/pages/OrganizationDetails';
 import Organizations from '@/pages/Organizations';
 import Profile from '@/pages/Profile';
 import ChangePasswordModal from '@/pages/Profile/containers/ChangePasswordModal';
@@ -155,6 +156,7 @@ function ConsoleContent() {
                 <Route index element={<Organizations />} />
                 <Route path="create" element={<Organizations />} />
                 <Route path="settings" element={<Organizations tab="settings" />} />
+                <Route path=":id/*" element={<OrganizationDetails />} />
               </Route>
             )}
             <Route path="profile">

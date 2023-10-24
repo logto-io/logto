@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.filter {
+  display: flex;
+  gap: _.unit(2);
+  justify-content: space-between;
+  align-items: center;
+}
