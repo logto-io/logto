@@ -153,7 +153,8 @@ function ConsoleContent() {
             {isDevFeaturesEnabled && (
               <Route path="organizations">
                 <Route index element={<Organizations />} />
-                <Route path=":tab" element={<Organizations />} />
+                <Route path="create" element={<Organizations />} />
+                <Route path="settings" element={<Organizations tab="settings" />} />
               </Route>
             )}
             <Route path="profile">

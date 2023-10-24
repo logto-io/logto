@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import ActionsButton from '@/components/ActionsButton';
 import FormField from '@/ds-components/FormField';
 import useApi, { type RequestError } from '@/hooks/use-api';
-import ActionsButton from '@/pages/Organizations/ActionsButton';
 import { buildUrl } from '@/utils/url';
 
 import PermissionModal from '../PermissionModal';
@@ -46,7 +46,7 @@ function PermissionsField() {
       <PermissionModal
         isOpen={isModalOpen}
         editData={editData}
-        onFinish={() => {
+        onClose={() => {
           setIsModalOpen(false);
           void mutate();
         }}

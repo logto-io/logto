@@ -1,5 +1,6 @@
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EmptyDark from '@/assets/images/table-empty-dark.svg';
@@ -9,7 +10,7 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: string;
+  title?: ReactNode;
   size?: 'large' | 'medium' | 'small';
   className?: string;
 };

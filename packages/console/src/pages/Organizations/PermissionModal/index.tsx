@@ -19,11 +19,11 @@ const organizationScopesPath = 'api/organization-scopes';
 type Props = {
   isOpen: boolean;
   editData: Nullable<OrganizationScope>;
-  onFinish: () => void;
+  onClose: () => void;
 };
 
 /** A modal that allows users to create or edit an organization scope. */
-function PermissionModal({ isOpen, editData, onFinish }: Props) {
+function PermissionModal({ isOpen, editData, onClose }: Props) {
   const api = useApi();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -49,7 +49,7 @@ function PermissionModal({ isOpen, editData, onFinish }: Props) {
         : api.post(organizationScopesPath, {
             json,
           }));
-      onFinish();
+      onClose();
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +67,7 @@ function PermissionModal({ isOpen, editData, onFinish }: Props) {
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
-      onRequestClose={onFinish}
+      onRequestClose={onClose}
     >
       <ModalLayout
         title={<DangerousRaw>{title}</DangerousRaw>}
@@ -79,7 +79,7 @@ function PermissionModal({ isOpen, editData, onFinish }: Props) {
             onClick={submit}
           />
         }
-        onClose={onFinish}
+        onClose={onClose}
       >
         <FormField isRequired title="general.name">
           <TextInput
