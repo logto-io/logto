@@ -114,7 +114,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         })
       );
 
-      const { hostname, origin } = EnvSet.values.endpoint;
+      const { hostname, origin } = ctx.URL;
       const verifiedMfa = await verifyMfaPayloadVerification(
         tenant,
         verifyMfaPayloadGuard,
