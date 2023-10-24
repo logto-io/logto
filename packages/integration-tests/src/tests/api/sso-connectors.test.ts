@@ -6,6 +6,7 @@ import {
   getSsoConnectors,
   getSsoConnectorById,
   deleteSsoConnectorById,
+  patchSsoConnectorById,
 } from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
@@ -155,5 +156,72 @@ describe('delete sso-connector by id', () => {
     await deleteSsoConnectorById(id);
 
     await expect(getSsoConnectorById(id)).rejects.toThrow(HTTPError);
+  });
+});
+
+describe('patch sso-connector by id', () => {
+  it('should return 404 if connector is not found', async () => {
+    await expect(getSsoConnectorById('invalid-id')).rejects.toThrow(HTTPError);
+  });
+
+  it('should patch sso connector without config', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    const connector = await patchSsoConnectorById(id, {
+      connectorName: 'integration_test connector updated',
+      domains: ['test.com'],
+      ssoOnly: true,
+    });
+
+    expect(connector).toHaveProperty('id', id);
+    expect(connector).toHaveProperty('providerName', 'OIDC');
+    expect(connector).toHaveProperty('connectorName', 'integration_test connector updated');
+    expect(connector).toHaveProperty('config', {});
+    expect(connector).toHaveProperty('domains', ['test.com']);
+    expect(connector).toHaveProperty('ssoOnly', true);
+    expect(connector).toHaveProperty('syncProfile', false);
+  });
+
+  it('should throw if invalid config is provided', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    await expect(
+      patchSsoConnectorById(id, {
+        config: {
+          issuer: 23,
+        },
+      })
+    ).rejects.toThrow(HTTPError);
+  });
+
+  it('should patch sso connector with config', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    const connector = await patchSsoConnectorById(id, {
+      connectorName: 'integration_test connector updated',
+      config: {
+        clientId: 'foo',
+        issuer: 'https://test.com',
+      },
+      syncProfile: true,
+    });
+
+    expect(connector).toHaveProperty('id', id);
+    expect(connector).toHaveProperty('providerName', 'OIDC');
+    expect(connector).toHaveProperty('connectorName', 'integration_test connector updated');
+    expect(connector).toHaveProperty('config', {
+      clientId: 'foo',
+      issuer: 'https://test.com',
+    });
+    expect(connector).toHaveProperty('syncProfile', true);
   });
 });
