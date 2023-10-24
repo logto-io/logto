@@ -101,12 +101,8 @@ describe('get sso-connectors', () => {
       connectorName: 'test',
     });
 
-    console.log(id);
-
     const connectors = await getSsoConnectors();
     expect(connectors.length).toBeGreaterThan(0);
-
-    console.log(connectors);
 
     const connector = connectors.find((connector) => connector.id === id);
 
