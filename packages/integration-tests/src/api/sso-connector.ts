@@ -33,3 +33,6 @@ export const getSsoConnectors = async () =>
 
 export const getSsoConnectorById = async (id: string) =>
   authedAdminApi.get(`sso-connectors/${id}`).json<SsoConnectorWithProviderConfig>();
+
+export const deleteSsoConnectorById = async (id: string) =>
+  authedAdminApi.delete(`sso-connectors/${id}`).json<void>();

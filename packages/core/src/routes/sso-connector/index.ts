@@ -182,4 +182,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       return next();
     }
   );
+
+  /* Delete a single sign on connector by id */
+  router.delete(
+    `${pathname}/:id`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      // Delete the connector
+      await ssoConnectors.deleteById(id);
+      ctx.status = 204;
+      return next();
+    }
+  );
 }

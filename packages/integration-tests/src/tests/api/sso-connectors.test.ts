@@ -5,6 +5,7 @@ import {
   createSsoConnector,
   getSsoConnectors,
   getSsoConnectorById,
+  deleteSsoConnectorById,
 } from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
@@ -135,5 +136,24 @@ describe('get sso-connector by id', () => {
     expect(connector).toHaveProperty('domains', []);
     expect(connector).toHaveProperty('ssoOnly', false);
     expect(connector).toHaveProperty('syncProfile', false);
+  });
+});
+
+describe('delete sso-connector by id', () => {
+  it('should return 404 if connector is not found', async () => {
+    await expect(getSsoConnectorById('invalid-id')).rejects.toThrow(HTTPError);
+  });
+
+  it('should delete sso connector', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    await expect(getSsoConnectorById(id)).resolves.toBeDefined();
+
+    await deleteSsoConnectorById(id);
+
+    await expect(getSsoConnectorById(id)).rejects.toThrow(HTTPError);
   });
 });
