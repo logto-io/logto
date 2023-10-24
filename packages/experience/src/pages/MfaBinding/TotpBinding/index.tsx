@@ -39,7 +39,7 @@ const TotpBinding = () => {
             <Divider />
             <SwitchMfaFactorsLink
               flow={UserMfaFlow.MfaBinding}
-              flowState={totpBindingState}
+              flowState={{ availableFactors, skippable }}
               className={styles.switchLink}
             />
           </>
