@@ -16,6 +16,7 @@ import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import type { Column } from '@/ds-components/Table/types';
+import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import { Tooltip } from '@/ds-components/Tip';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -68,7 +69,7 @@ function PermissionsTable({
     title: t('permissions.name_column'),
     dataIndex: 'name',
     colSpan: isApiColumnVisible ? 5 : 6,
-    render: ({ name }) => <div className={styles.name}>{name}</div>,
+    render: ({ name }) => <Tag variant="cell">{name}</Tag>,
   };
 
   const descriptionColumn: Column<ScopeResponse> = {

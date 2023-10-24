@@ -1,6 +1,7 @@
 import FormCard from '@/components/FormCard';
 
 import PermissionsField from '../PermissionsField';
+import RolesField from '../RolesField';
 
 export default function Settings() {
   return (
@@ -9,6 +10,7 @@ export default function Settings() {
       description="organizations.access_control_description"
     >
       <PermissionsField />
+      <RolesField />
     </FormCard>
   );
 }

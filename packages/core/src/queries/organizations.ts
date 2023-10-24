@@ -9,8 +9,12 @@ import {
   Users,
   OrganizationUserRelations,
   OrganizationRoleUserRelations,
+  type OrganizationRoleKeys,
+  type CreateOrganizationRole,
+  type OrganizationRole,
+  type OrganizationRoleWithScopes,
 } from '@logto/schemas';
-import { convertToIdentifiers } from '@logto/shared';
+import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 import { z } from 'zod';
 
@@ -54,30 +58,73 @@ class UserRelationQueries extends RelationQueries<[typeof Organizations, typeof 
   }
 
   async getOrganizationsByUserId(userId: string): Promise<Readonly<OrganizationWithRoles[]>> {
-    const organizationRoles = convertToIdentifiers(OrganizationRoles, true);
+    const roles = convertToIdentifiers(OrganizationRoles, true);
     const organizations = convertToIdentifiers(Organizations, true);
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
-    const oruRelations = convertToIdentifiers(OrganizationRoleUserRelations, true);
+    const relations = convertToIdentifiers(OrganizationRoleUserRelations, true);
 
     return this.pool.any<OrganizationWithRoles>(sql`
       select
         ${organizations.table}.*,
-        json_agg(
-          json_build_object(
-            'id', ${organizationRoles.fields.id},
-            'name', ${organizationRoles.fields.name})
-          )
-        as roles
+        coalesce(
+          json_agg(
+            json_build_object(
+              'id', ${roles.fields.id},
+              'name', ${roles.fields.name}
+            )
+          ) filter (where ${roles.fields.id} is not null), -- left join could produce nulls
+          '[]'
+        ) as roles
       from ${this.table}
-      join ${organizations.table}
+      left join ${organizations.table}
         on ${fields.organizationId} = ${organizations.fields.id}
-      left join ${oruRelations.table}
-        on ${fields.userId} = ${oruRelations.fields.userId}
-        and ${fields.organizationId} = ${oruRelations.fields.organizationId}
-      left join ${organizationRoles.table}
-        on ${oruRelations.fields.organizationRoleId} = ${organizationRoles.fields.id}
+      left join ${relations.table}
+        on ${fields.userId} = ${relations.fields.userId}
+        and ${fields.organizationId} = ${relations.fields.organizationId}
+      left join ${roles.table}
+        on ${relations.fields.organizationRoleId} = ${roles.fields.id}
       where ${fields.userId} = ${userId}
       group by ${organizations.table}.id
+    `);
+  }
+}
+
+class OrganizationRolesQueries extends SchemaQueries<
+  OrganizationRoleKeys,
+  CreateOrganizationRole,
+  OrganizationRole
+> {
+  async findAllWithScopes(
+    limit: number,
+    offset: number
+  ): Promise<Readonly<OrganizationRoleWithScopes[]>> {
+    const { table, fields } = convertToIdentifiers(OrganizationRoles, true);
+    const relations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
+    const scopes = convertToIdentifiers(OrganizationScopes, true);
+
+    return this.pool.any(sql`
+      select
+        ${table}.*,
+        coalesce(
+          json_agg(
+            json_build_object(
+              'id', ${scopes.fields.id},
+              'name', ${scopes.fields.name}
+            )
+          ) filter (where ${scopes.fields.id} is not null),
+          '[]'
+        ) as scopes -- left join could produce nulls as scopes
+      from ${table}
+      left join ${relations.table}
+        on ${relations.fields.organizationRoleId} = ${fields.id}
+      left join ${scopes.table}
+        on ${relations.fields.organizationScopeId} = ${scopes.fields.id}
+      group by ${fields.id}
+      ${conditionalSql(this.orderBy, ({ field, order }) => {
+        return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
+      })}
+      limit ${limit}
+      offset ${offset}
     `);
   }
 }
@@ -88,7 +135,11 @@ export default class OrganizationQueries extends SchemaQueries<
   Organization
 > {
   /** Queries for roles in the organization template. */
-  roles = new SchemaQueries(this.pool, OrganizationRoles, { field: 'name', order: 'asc' });
+  roles = new OrganizationRolesQueries(this.pool, OrganizationRoles, {
+    field: 'name',
+    order: 'asc',
+  });
+
   /** Queries for scopes in the organization template. */
   scopes = new SchemaQueries(this.pool, OrganizationScopes, { field: 'name', order: 'asc' });
 

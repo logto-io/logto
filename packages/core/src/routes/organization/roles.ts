@@ -1,8 +1,13 @@
-import { type CreateOrganizationRole, OrganizationRoles } from '@logto/schemas';
+import {
+  type CreateOrganizationRole,
+  OrganizationRoles,
+  organizationRoleWithScopesGuard,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -23,9 +28,29 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   ]: RouterInitArgs<T>
 ) {
   const router = new SchemaRouter(OrganizationRoles, roles, {
-    disabled: { post: true },
+    disabled: { get: true, post: true },
     errorHandler,
   });
+
+  router.get(
+    '/',
+    koaPagination(),
+    koaGuard({
+      response: organizationRoleWithScopesGuard.array(),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+      const [count, entities] = await Promise.all([
+        roles.findTotalNumber(),
+        roles.findAllWithScopes(limit, offset),
+      ]);
+
+      ctx.pagination.totalCount = count;
+      ctx.body = entities;
+      return next();
+    }
+  );
 
   /** Allows to carry an initial set of scopes for creating a new organization role. */
   type CreateOrganizationRolePayload = Omit<CreateOrganizationRole, 'id'> & {

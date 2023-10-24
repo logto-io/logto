@@ -18,8 +18,6 @@ function Organizations() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
 
-  console.log('tab', tab);
-
   return (
     <div className={pageLayout.container}>
       <div className={pageLayout.headline}>

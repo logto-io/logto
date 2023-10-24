@@ -71,7 +71,7 @@ describe('RBAC', () => {
       text: `The API resource ${apiResourceName} has been successfully created`,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
       text: apiResourceName,
     });
   });
@@ -98,7 +98,7 @@ describe('RBAC', () => {
       text: `The permission ${permissionName} has been successfully created`,
     });
 
-    await expect(page).toMatchElement('table tbody tr td div[class$=name]', {
+    await expect(page).toMatchElement('table tbody tr td div', {
       text: permissionName,
     });
   });
@@ -153,12 +153,9 @@ describe('RBAC', () => {
     });
 
     // Assign permission
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=resourceItem] div[class$=title] div[class$=name]',
-      {
-        text: apiResourceName,
-      }
-    );
+    await expect(page).toClick('.ReactModalPortal div[class$=resourceItem] div[class$=title] div', {
+      text: apiResourceName,
+    });
 
     await expect(page).toClick(
       '.ReactModalPortal div[class$=resourceItem] div[class$=sourceScopeItem] div[role=button]',
@@ -176,7 +173,7 @@ describe('RBAC', () => {
     await expectModalWithTitle(page, 'Assign users');
     await expectToClickModalAction(page, 'Skip for now');
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
       text: roleName,
     });
   });
@@ -186,10 +183,9 @@ describe('RBAC', () => {
       text: 'Permissions',
     });
 
-    const permissionRow = await expect(page).toMatchElement(
-      'table tbody tr:has(td div[class$=name])',
-      { text: permissionName }
-    );
+    const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
+      text: permissionName,
+    });
     await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
     await expectConfirmModalAndAct(page, {
@@ -209,12 +205,9 @@ describe('RBAC', () => {
 
     await expectModalWithTitle(page, 'Assign permissions');
 
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=resourceItem] div[class$=title] div[class$=name]',
-      {
-        text: apiResourceName,
-      }
-    );
+    await expect(page).toClick('.ReactModalPortal div[class$=resourceItem] div[class$=title] div', {
+      text: apiResourceName,
+    });
 
     await expect(page).toClick(
       '.ReactModalPortal div[class$=resourceItem] div[class$=sourceScopeItem] div[role=button]',
@@ -229,7 +222,7 @@ describe('RBAC', () => {
       text: 'The selected permissions were successfully assigned to this role',
     });
 
-    await expect(page).toMatchElement('table tbody tr:has(td div[class$=name])', {
+    await expect(page).toMatchElement('table tbody tr:has(td div)', {
       text: permissionName,
     });
   });
@@ -304,12 +297,9 @@ describe('RBAC', () => {
 
     await expectModalWithTitle(page, `Assign roles to ${rbacTestUsername}`);
 
-    await expect(page).toClick(
-      '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div[class$=name]',
-      {
-        text: roleName,
-      }
-    );
+    await expect(page).toClick('.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div', {
+      text: roleName,
+    });
 
     await expectToClickModalAction(page, 'Assign roles');
 
@@ -347,7 +337,7 @@ describe('RBAC', () => {
       text: roleName,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
       text: roleName,
     });
 
@@ -380,7 +370,7 @@ describe('RBAC', () => {
       text: apiResourceName,
     });
 
-    await expect(page).toMatchElement('div[class$=header] div[class$=info] div[class$=name]', {
+    await expect(page).toMatchElement('div[class$=header] div[class$=info] div', {
       text: apiResourceName,
     });
 
@@ -388,10 +378,9 @@ describe('RBAC', () => {
     await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
       text: 'Permissions',
     });
-    const permissionRow = await expect(page).toMatchElement(
-      'table tbody tr:has(td div[class$=name])',
-      { text: permissionName }
-    );
+    const permissionRow = await expect(page).toMatchElement('table tbody tr:has(td div)', {
+      text: permissionName,
+    });
     await expect(permissionRow).toClick('td[class$=deleteColumn] button');
 
     await expectConfirmModalAndAct(page, { title: 'Reminder', actionText: 'Delete' });
