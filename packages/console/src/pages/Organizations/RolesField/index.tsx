@@ -89,7 +89,7 @@ function RolesField() {
             render: (data) => (
               <ActionsButton
                 fieldName="organizations.role"
-                content="Delete at your own risk, mate."
+                deleteConfirmation="organizations.organization_role_delete_confirm"
                 onEdit={() => {
                   setEditData(data);
                   setIsModalOpen(true);

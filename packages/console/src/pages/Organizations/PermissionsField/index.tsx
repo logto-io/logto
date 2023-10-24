@@ -75,7 +75,7 @@ function PermissionsField() {
             render: (data) => (
               <ActionsButton
                 fieldName="organizations.permission"
-                content="Delete at your own risk, mate."
+                deleteConfirmation="organizations.organization_permission_delete_confirm"
                 onEdit={() => {
                   setEditData(data);
                   setIsModalOpen(true);
