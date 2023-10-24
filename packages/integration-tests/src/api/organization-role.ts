@@ -1,4 +1,8 @@
-import { type OrganizationScope, type OrganizationRole } from '@logto/schemas';
+import {
+  type OrganizationScope,
+  type OrganizationRole,
+  type OrganizationRoleWithScopes,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
@@ -9,6 +13,18 @@ class OrganizationRoleApi extends ApiFactory<
 > {
   constructor() {
     super('organization-roles');
+  }
+
+  override async getList(
+    params?: URLSearchParams | undefined
+  ): Promise<OrganizationRoleWithScopes[]> {
+    // eslint-disable-next-line no-restricted-syntax
+    return super.getList(params) as Promise<OrganizationRoleWithScopes[]>;
+  }
+
+  override async get(id: string): Promise<OrganizationRoleWithScopes> {
+    // eslint-disable-next-line no-restricted-syntax
+    return super.get(id) as Promise<OrganizationRoleWithScopes>;
   }
 
   async addScopes(id: string, organizationScopeIds: string[]): Promise<void> {

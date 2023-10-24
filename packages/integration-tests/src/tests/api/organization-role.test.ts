@@ -29,51 +29,6 @@ describe('organization role APIs', () => {
       await roleApi.delete(createdRole.id);
     });
 
-    it('should be able to create a role with some scopes', async () => {
-      const name = 'test' + randomId();
-      const scopes = await Promise.all(
-        Array.from({ length: 20 }).map(async () => scopeApi.create({ name: 'test' + randomId() }))
-      );
-      const organizationScopeIds = scopes.map((scope) => scope.id);
-      const role = await roleApi.create({ name, organizationScopeIds });
-
-      const roleScopes = await roleApi.getScopes(role.id);
-      expect(roleScopes).toHaveLength(20);
-
-      // Check pagination
-      const roleScopes2 = await roleApi.getScopes(
-        role.id,
-        new URLSearchParams({
-          page: '2',
-          page_size: '10',
-        })
-      );
-
-      expect(roleScopes2).toHaveLength(10);
-      expect(roleScopes2[0]?.id).not.toBeFalsy();
-      expect(roleScopes2[0]?.id).toBe(roleScopes[10]?.id);
-
-      await Promise.all(scopes.map(async (scope) => scopeApi.delete(scope.id)));
-      await roleApi.delete(role.id);
-    });
-
-    it('should fail to create a role with some scopes if the scopes do not exist', async () => {
-      const name = 'test' + randomId();
-      const organizationScopeIds = ['0'];
-      const response = await roleApi
-        .create({ name, organizationScopeIds })
-        .catch((error: unknown) => error);
-
-      assert(response instanceof HTTPError);
-
-      const { statusCode, body: raw } = response.response;
-      const body: unknown = JSON.parse(String(raw));
-      expect(statusCode).toBe(422);
-      expect(isKeyInObject(body, 'code') && body.code).toBe(
-        'entity.relation_foreign_key_not_found'
-      );
-    });
-
     it('should get organization roles successfully', async () => {
       const [name1, name2] = ['test' + randomId(), 'test' + randomId()];
       const createdRoles = await Promise.all([
@@ -114,7 +69,7 @@ describe('organization role APIs', () => {
 
     it('should be able to create and get organization roles by id', async () => {
       const createdRole = await roleApi.create({ name: 'test' + randomId() });
-      const role = await roleApi.get(createdRole.id);
+      const { scopes, ...role } = await roleApi.get(createdRole.id);
 
       expect(role).toStrictEqual(createdRole);
       await roleApi.delete(createdRole.id);

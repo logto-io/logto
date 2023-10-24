@@ -239,3 +239,56 @@ export default class RelationQueries<
     `);
   }
 }
+
+/**
+ * Query class for relation tables that connect two tables by their entity ids. It
+ * provides a {@link RelationQueries.replace} method that replaces all relations
+ * for a specific entity.
+ *
+ * @see {@link RelationQueries} for more information.
+ */
+export class TwoRelationsQueries<
+  Schema1 extends TableInfo<string, string, unknown>,
+  Schema2 extends TableInfo<string, string, unknown>,
+> extends RelationQueries<[Schema1, Schema2]> {
+  /**
+   * Replace all relations for a specific `Schema1` entity with the given `Schema2` entities.
+   * If `schema2Ids` is empty, all relations for the given `Schema1` entity will be deleted.
+   *
+   * @remarks This method is transactional.
+   * @param schema1Id The id of the `Schema1` entity.
+   * @param schema2Ids The ids of the `Schema2` entities to replace the relation s with.
+   * @returns A Promise that resolves to the query result.
+   */
+  async replace(schema1Id: string, schema2Ids: readonly string[]) {
+    return this.pool.transaction(async (transaction) => {
+      // Lock schema1 row
+      await transaction.query(sql`
+        select *
+        from ${sql.identifier([this.schemas[0].table])}
+        where id = ${schema1Id}
+        for update
+      `);
+      // Delete old relations
+      await transaction.query(sql`
+        delete from ${this.table}
+        where ${sql.identifier([this.schemas[0].tableSingular + '_id'])} = ${schema1Id}
+      `);
+
+      if (schema2Ids.length === 0) {
+        return;
+      }
+      // Insert new relations
+      await transaction.query(sql`
+        insert into ${this.table} (
+          ${sql.identifier([this.schemas[0].tableSingular + '_id'])},
+          ${sql.identifier([this.schemas[1].tableSingular + '_id'])}
+        )
+          values ${sql.join(
+            schema2Ids.map((schema2Id) => sql`(${schema1Id}, ${schema2Id})`),
+            sql`, `
+          )}
+      `);
+    });
+  }
+}

@@ -1,14 +1,15 @@
 import { type OrganizationScope } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import DeleteButton from '@/components/DeleteButton';
 import FormField from '@/ds-components/FormField';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import ActionsButton from '@/pages/Organizations/ActionsButton';
 import { buildUrl } from '@/utils/url';
 
-import CreatePermissionModal from '../CreatePermissionModal';
+import PermissionModal from '../PermissionModal';
 import TemplateTable, { pageSize } from '../TemplateTable';
 
 /**
@@ -32,6 +33,7 @@ function PermissionsField() {
   const api = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [editData, setEditData] = useState<Nullable<OrganizationScope>>(null);
 
   const isLoading = !response && !error;
 
@@ -40,9 +42,10 @@ function PermissionsField() {
   }
 
   return (
-    <FormField title="organizations.organization_permissions">
-      <CreatePermissionModal
+    <FormField title="organizations.organization_permission_other">
+      <PermissionModal
         isOpen={isModalOpen}
+        editData={editData}
         onFinish={() => {
           setIsModalOpen(false);
           void mutate();
@@ -69,11 +72,16 @@ function PermissionsField() {
           {
             title: null,
             dataIndex: 'delete',
-            render: ({ id }) => (
-              <DeleteButton
+            render: (data) => (
+              <ActionsButton
+                fieldName="organizations.permission"
                 content="Delete at your own risk, mate."
+                onEdit={() => {
+                  setEditData(data);
+                  setIsModalOpen(true);
+                }}
                 onDelete={async () => {
-                  await api.delete(`api/organization-scopes/${id}`);
+                  await api.delete(`api/organization-scopes/${data.id}`);
                   void mutate();
                 }}
               />
@@ -82,6 +90,7 @@ function PermissionsField() {
         ]}
         onPageChange={setPage}
         onAdd={() => {
+          setEditData(null);
           setIsModalOpen(true);
         }}
       />

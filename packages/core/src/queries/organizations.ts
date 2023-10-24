@@ -18,7 +18,7 @@ import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 import { z } from 'zod';
 
-import RelationQueries from '#src/utils/RelationQueries.js';
+import RelationQueries, { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 import SchemaQueries from '#src/utils/SchemaQueries.js';
 
 /**
@@ -52,7 +52,7 @@ export const organizationWithRolesGuard: z.ZodType<OrganizationWithRoles> =
       .array(),
   });
 
-class UserRelationQueries extends RelationQueries<[typeof Organizations, typeof Users]> {
+class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
   constructor(pool: CommonQueryMethods) {
     super(pool, OrganizationUserRelations.table, Organizations, Users);
   }
@@ -94,15 +94,23 @@ class OrganizationRolesQueries extends SchemaQueries<
   CreateOrganizationRole,
   OrganizationRole
 > {
-  async findAllWithScopes(
+  override async findById(id: string): Promise<Readonly<OrganizationRoleWithScopes>> {
+    return this.pool.one(this.#findWithScopesSql(id));
+  }
+
+  override async findAll(
     limit: number,
     offset: number
   ): Promise<Readonly<OrganizationRoleWithScopes[]>> {
+    return this.pool.any(this.#findWithScopesSql(undefined, limit, offset));
+  }
+
+  #findWithScopesSql(roleId?: string, limit = 1, offset = 0) {
     const { table, fields } = convertToIdentifiers(OrganizationRoles, true);
     const relations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
     const scopes = convertToIdentifiers(OrganizationScopes, true);
 
-    return this.pool.any(sql`
+    return sql<OrganizationRoleWithScopes>`
       select
         ${table}.*,
         coalesce(
@@ -110,7 +118,7 @@ class OrganizationRolesQueries extends SchemaQueries<
             json_build_object(
               'id', ${scopes.fields.id},
               'name', ${scopes.fields.name}
-            )
+            ) order by ${scopes.fields.name}
           ) filter (where ${scopes.fields.id} is not null),
           '[]'
         ) as scopes -- left join could produce nulls as scopes
@@ -119,13 +127,16 @@ class OrganizationRolesQueries extends SchemaQueries<
         on ${relations.fields.organizationRoleId} = ${fields.id}
       left join ${scopes.table}
         on ${relations.fields.organizationScopeId} = ${scopes.fields.id}
+      ${conditionalSql(roleId, (id) => {
+        return sql`where ${fields.id} = ${id}`;
+      })}
       group by ${fields.id}
       ${conditionalSql(this.orderBy, ({ field, order }) => {
         return sql`order by ${fields[field]} ${order === 'desc' ? sql`desc` : sql`asc`}`;
       })}
       limit ${limit}
       offset ${offset}
-    `);
+    `;
   }
 }
 
@@ -146,7 +157,7 @@ export default class OrganizationQueries extends SchemaQueries<
   /** Queries for relations that connected with organization-related entities. */
   relations = {
     /** Queries for organization role - organization scope relations. */
-    rolesScopes: new RelationQueries(
+    rolesScopes: new TwoRelationsQueries(
       this.pool,
       OrganizationRoleScopeRelations.table,
       OrganizationRoles,

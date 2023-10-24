@@ -10,11 +10,9 @@ const organizations = {
   access_control_description:
     'Authorization in a multi-tenancy applications is often designed to make sure that tenant isolation is maintained throughout an application and that tenants can access only their own resources.',
   /** UNTRANSLATED */
-  organization_permissions: 'Organization permissions',
+  organization_permission: 'Organization permission',
   /** UNTRANSLATED */
-  create_organization_permission: 'Create organization permission',
-  /** UNTRANSLATED */
-  create_permission: 'Create permission',
+  organization_permission_other: 'Organization permissions',
   /** UNTRANSLATED */
   create_permission_placeholder: 'Read appointment history.',
   /** UNTRANSLATED */
@@ -22,21 +20,15 @@ const organizations = {
   /** UNTRANSLATED */
   permission_other: 'Permissions',
   /** UNTRANSLATED */
-  organization_roles: 'Organization roles',
+  organization_role: 'Organization role',
   /** UNTRANSLATED */
-  create_organization_role: 'Create organization role',
+  organization_role_other: 'Organization roles',
   /** UNTRANSLATED */
   role: 'Role',
-  /** UNTRANSLATED */
-  create_role: 'Create role',
   /** UNTRANSLATED */
   create_role_placeholder: 'Users with view-only permissions.',
   /** UNTRANSLATED */
   search_permission_placeholder: 'Type to search for permissions.',
-  /** UNTRANSLATED */
-  edit_role: 'Edit role',
-  /** UNTRANSLATED */
-  delete_role: 'Delete role',
 };
 
 export default Object.freeze(organizations);

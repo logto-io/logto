@@ -1,15 +1,16 @@
 import { type OrganizationRoleWithScopes } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import DeleteButton from '@/components/DeleteButton';
 import FormField from '@/ds-components/FormField';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
+import ActionsButton from '@/pages/Organizations/ActionsButton';
 import { buildUrl } from '@/utils/url';
 
-import CreateRoleModal from '../CreateRoleModal';
+import RoleModal from '../RoleModal';
 import TemplateTable, { pageSize } from '../TemplateTable';
 
 import * as styles from './index.module.scss';
@@ -35,6 +36,7 @@ function RolesField() {
   const api = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [editData, setEditData] = useState<Nullable<OrganizationRoleWithScopes>>(null);
 
   const isLoading = !response && !error;
 
@@ -43,9 +45,10 @@ function RolesField() {
   }
 
   return (
-    <FormField title="organizations.organization_roles">
-      <CreateRoleModal
+    <FormField title="organizations.organization_role_other">
+      <RoleModal
         isOpen={isModalOpen}
+        editData={editData}
         onFinish={() => {
           setIsModalOpen(false);
           void mutate();
@@ -83,11 +86,16 @@ function RolesField() {
           {
             title: null,
             dataIndex: 'delete',
-            render: ({ id }) => (
-              <DeleteButton
+            render: (data) => (
+              <ActionsButton
+                fieldName="organizations.role"
                 content="Delete at your own risk, mate."
+                onEdit={() => {
+                  setEditData(data);
+                  setIsModalOpen(true);
+                }}
                 onDelete={async () => {
-                  await api.delete(`api/organization-roles/${id}`);
+                  await api.delete(`api/organization-roles/${data.id}`);
                   void mutate();
                 }}
               />
@@ -96,6 +104,7 @@ function RolesField() {
         ]}
         onPageChange={setPage}
         onAdd={() => {
+          setEditData(null);
           setIsModalOpen(true);
         }}
       />

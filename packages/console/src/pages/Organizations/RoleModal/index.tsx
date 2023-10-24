@@ -1,25 +1,37 @@
-import { type OrganizationScope } from '@logto/schemas';
+import {
+  type OrganizationRole,
+  type OrganizationRoleWithScopes,
+  type OrganizationScope,
+} from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import useSWR from 'swr';
 
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
 import TextInput from '@/ds-components/TextInput';
+import useActionTranslation from '@/hooks/use-action-translation';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { buildUrl } from '@/utils/url';
 
+const organizationRolePath = 'api/organization-roles';
+
 type Props = {
   isOpen: boolean;
+  editData: Nullable<OrganizationRoleWithScopes>;
   onFinish: () => void;
 };
 
-function CreateRoleModal({ isOpen, onFinish }: Props) {
+/** A modal that allows users to create or edit an organization role. */
+function RoleModal({ isOpen, editData, onFinish }: Props) {
   const api = useApi();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -28,8 +40,8 @@ function CreateRoleModal({ isOpen, onFinish }: Props) {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ name: string; description?: string; scopes: Array<Option<string>> }>({
-    defaultValues: { name: '', scopes: [] },
+  } = useForm<Partial<OrganizationRole> & { scopes: Array<Option<string>> }>({
+    defaultValues: { scopes: [] },
   });
   const [keyword, setKeyword] = useState('');
   const {
@@ -45,15 +57,29 @@ function CreateRoleModal({ isOpen, onFinish }: Props) {
     { revalidateOnFocus: false }
   );
   const [scopes] = response ?? [[], 0];
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const tAction = useActionTranslation();
+  const title = editData
+    ? tAction('edit', 'organizations.organization_role')
+    : tAction('create', 'organizations.organization_role');
+  const action = editData ? t('general.save') : tAction('create', 'organizations.role');
 
-  const addRole = handleSubmit(async ({ scopes, ...json }) => {
+  const submit = handleSubmit(async ({ scopes, ...json }) => {
     setIsLoading(true);
     try {
-      await api.post('api/organization-roles', {
-        json: {
-          ...json,
-          organizationScopeIds: scopes.map(({ value }) => value),
-        },
+      // Create or update role
+      const { id } = await (editData
+        ? api.patch(`${organizationRolePath}/${editData.id}`, {
+            json,
+          })
+        : api.post(organizationRolePath, {
+            json,
+          })
+      ).json<OrganizationRole>();
+
+      // Update scopes for role
+      await api.put(`${organizationRolePath}/${id}/scopes`, {
+        json: { organizationScopeIds: scopes.map(({ value }) => value) },
       });
       onFinish();
     } finally {
@@ -61,12 +87,20 @@ function CreateRoleModal({ isOpen, onFinish }: Props) {
     }
   });
 
-  // Reset form on close
+  // Reset form on open
   useEffect(() => {
-    if (!isOpen) {
-      reset();
+    if (isOpen) {
+      reset(
+        editData
+          ? {
+              ...editData,
+              scopes: editData.scopes.map(({ id, name }) => ({ value: id, title: name })),
+            }
+          : { scopes: [] }
+      );
+      setKeyword('');
     }
-  }, [isOpen, reset]);
+  }, [editData, isOpen, reset]);
 
   // Initial fetch on open
   useEffect(() => {
@@ -83,13 +117,13 @@ function CreateRoleModal({ isOpen, onFinish }: Props) {
       onRequestClose={onFinish}
     >
       <ModalLayout
-        title="organizations.create_organization_role"
+        title={<DangerousRaw>{title}</DangerousRaw>}
         footer={
           <Button
             type="primary"
-            title="organizations.create_role"
+            title={<DangerousRaw>{action}</DangerousRaw>}
             isLoading={isLoading}
-            onClick={addRole}
+            onClick={submit}
           />
         }
         onClose={onFinish}
@@ -129,4 +163,4 @@ function CreateRoleModal({ isOpen, onFinish }: Props) {
     </ReactModal>
   );
 }
-export default CreateRoleModal;
+export default RoleModal;
