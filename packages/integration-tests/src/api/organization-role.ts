@@ -7,9 +7,15 @@ import {
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
 
-class OrganizationRoleApi extends ApiFactory<
+export type CreateOrganizationRolePostData = {
+  name: string;
+  description?: string;
+  organizationScopeIds?: string[];
+};
+
+export class OrganizationRoleApi extends ApiFactory<
   OrganizationRole,
-  { name: string; description?: string; organizationScopeIds?: string[] }
+  CreateOrganizationRolePostData
 > {
   constructor() {
     super('organization-roles');
@@ -41,5 +47,3 @@ class OrganizationRoleApi extends ApiFactory<
     await authedAdminApi.delete(`${this.path}/${id}/scopes/${scopeId}`);
   }
 }
-
-export const roleApi = new OrganizationRoleApi();

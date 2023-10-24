@@ -2,7 +2,7 @@ import type { Identities, Role, User } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
-type CreateUserPayload = Partial<{
+export type CreateUserPayload = Partial<{
   primaryEmail: string;
   primaryPhone: string;
   username: string;
