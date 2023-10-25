@@ -4,11 +4,17 @@ import { generateStandardId } from '@logto/shared';
 import { isKeyInObject } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
-import { scopeApi } from '#src/api/organization-scope.js';
+import { OrganizationScopeApiTest } from '#src/helpers/organization.js';
 
 const randomId = () => generateStandardId(4);
 
-describe('organization scopes', () => {
+describe('organization scope APIs', () => {
+  const scopeApi = new OrganizationScopeApiTest();
+
+  afterEach(async () => {
+    await scopeApi.cleanUp();
+  });
+
   it('should fail if the name of the new organization scope already exists', async () => {
     const name = 'test' + randomId();
     await scopeApi.create({ name });

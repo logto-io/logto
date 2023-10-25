@@ -1,4 +1,7 @@
-import { createUser } from '#src/api/index.js';
+import { type User } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
+
+import { type CreateUserPayload, createUser, deleteUser } from '#src/api/index.js';
 import {
   generateUsername,
   generateEmail,
@@ -46,3 +49,24 @@ export const generateNewUser = async <T extends NewUserProfileOptions>(options: 
 
   return { user, userProfile };
 };
+
+export class UserApiTest {
+  protected users: User[] = [];
+
+  async create(data: CreateUserPayload): Promise<User> {
+    const user = await createUser(data);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.users.push(user);
+    return user;
+  }
+
+  /**
+   * Delete all created users. This method will ignore errors when deleting users to avoid error
+   * when they are deleted by other tests.
+   */
+  async cleanUp(): Promise<void> {
+    // Use `trySafe` to avoid error when user is deleted by other tests.
+    await Promise.all(this.users.map(async (user) => trySafe(deleteUser(user.id))));
+    this.users = [];
+  }
+}

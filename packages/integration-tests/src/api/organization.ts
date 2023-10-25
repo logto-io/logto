@@ -3,7 +3,10 @@ import { type Role, type Organization, type OrganizationWithRoles } from '@logto
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
 
-class OrganizationApi extends ApiFactory<Organization, { name: string; description?: string }> {
+export class OrganizationApi extends ApiFactory<
+  Organization,
+  { name: string; description?: string }
+> {
   constructor() {
     super('organizations');
   }
@@ -38,6 +41,3 @@ class OrganizationApi extends ApiFactory<Organization, { name: string; descripti
     return authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
   }
 }
-
-/** API methods for operating organizations. */
-export const organizationApi = new OrganizationApi();
