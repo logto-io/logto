@@ -72,7 +72,7 @@ export const verifyWebAuthnRegistration = async (
     expectedChallenge: challenge,
     expectedOrigin: origin,
     expectedRPID: rpId,
-    requireUserVerification: true,
+    requireUserVerification: false,
   };
   return verifyRegistrationResponse(options);
 };
