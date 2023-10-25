@@ -233,7 +233,6 @@ const showLowercase = (
  *
  * @param search The search config object.
  * @param searchFields Allowed and default search fields (columns).
- * @param isCaseSensitive Should perform case sensitive search or not.
  * @returns The SQL token that includes the all condition checks.
  * @throws TypeError error if fields in `search` do not match the `searchFields`, or invalid condition found (e.g. the value is empty).
  */

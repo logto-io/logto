@@ -25,7 +25,6 @@ type ApplicationItemProps = {
   entity: Application;
 };
 
-// eslint-disable-next-line import/no-unused-modules -- will use in the next pull request
 export function ApplicationItem({ entity }: ApplicationItemProps) {
   return (
     <>
