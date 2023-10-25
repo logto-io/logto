@@ -54,15 +54,11 @@ describe('parseFactoryDetail', () => {
 });
 
 describe('fetchConnectorProviderDetails', () => {
-  it('should return undefined for unsupported provider', async () => {
-    const connector = { ...mockSsoConnector, providerName: 'unknown-provider' };
-    const result = await fetchConnectorProviderDetails(connector);
-
-    expect(result).toBeUndefined();
-  });
-
   it('providerConfig should be undefined if connector config is invalid', async () => {
-    const connector = { ...mockSsoConnector, config: { clientId: 'foo' } };
+    const connector = {
+      ...mockSsoConnector,
+      config: { clientId: 'foo' },
+    };
     const result = await fetchConnectorProviderDetails(connector);
 
     expect(result).toEqual({

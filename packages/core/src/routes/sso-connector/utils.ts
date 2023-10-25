@@ -6,13 +6,17 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SsoProviderName } from '#src/sso/types/index.js';
 
-import { type SsoConnectorWithProviderConfig } from './type.js';
+import { type SsoConnectorWithProviderConfig, type SupportedSsoConnector } from './type.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
 
 export const isSupportedSsoProvider = (providerName: string): providerName is SsoProviderName =>
   providerName in ssoConnectorFactories;
+
+export const isSupportedSsoConnector = (
+  connector: SsoConnector
+): connector is SupportedSsoConnector => isSupportedSsoProvider(connector.providerName);
 
 export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
@@ -47,7 +51,7 @@ export const parseConnectorConfig = (
   if (!result.success) {
     throw new RequestError({
       code: 'connector.invalid_config',
-      status: 422,
+      status: 400,
       details: result.error.flatten(),
     });
   }
@@ -60,14 +64,9 @@ export const parseConnectorConfig = (
   Return undefined if failed to fetch or parse the config.
 */
 export const fetchConnectorProviderDetails = async (
-  connector: SsoConnector
-): Promise<SsoConnectorWithProviderConfig | undefined> => {
+  connector: SupportedSsoConnector
+): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
-
-  // Return undefined if the provider is not supported
-  if (!isSupportedSsoProvider(providerName)) {
-    return undefined;
-  }
 
   const { logo, constructor } = ssoConnectorFactories[providerName];
 
