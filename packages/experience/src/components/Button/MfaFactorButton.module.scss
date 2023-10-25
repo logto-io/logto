@@ -16,7 +16,7 @@
 .title {
   flex: 1;
   @include _.flex-column;
-  align-items: flex-start;
+  text-align: left;
 
   .name {
     font: var(--font-body-1);
