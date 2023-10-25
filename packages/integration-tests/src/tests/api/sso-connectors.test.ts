@@ -41,7 +41,7 @@ describe('post sso-connectors', () => {
   it('should throw error when providerName is not supported', async () => {
     await expect(
       createSsoConnector({
-        providerName: 'SAML',
+        providerName: 'dummy provider',
         connectorName: 'test',
       })
     ).rejects.toThrow(HTTPError);
