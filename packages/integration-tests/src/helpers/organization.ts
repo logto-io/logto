@@ -14,7 +14,11 @@ import { OrganizationApi } from '#src/api/organization.js';
  * delete them.
  */
 export class OrganizationRoleApiTest extends OrganizationRoleApi {
-  protected roles: OrganizationRole[] = [];
+  #roles: OrganizationRole[] = [];
+
+  get roles(): OrganizationRole[] {
+    return this.#roles;
+  }
 
   override async create(data: CreateOrganizationRolePostData): Promise<OrganizationRole> {
     const created = await super.create(data);
@@ -29,7 +33,7 @@ export class OrganizationRoleApiTest extends OrganizationRoleApi {
   async cleanUp(): Promise<void> {
     // Use `trySafe` to avoid error when role is deleted by other tests.
     await Promise.all(this.roles.map(async (role) => trySafe(this.delete(role.id))));
-    this.roles = [];
+    this.#roles = [];
   }
 }
 
@@ -38,7 +42,11 @@ export class OrganizationRoleApiTest extends OrganizationRoleApi {
  * delete them.
  */
 export class OrganizationScopeApiTest extends OrganizationScopeApi {
-  protected scopes: OrganizationScope[] = [];
+  #scopes: OrganizationScope[] = [];
+
+  get scopes(): OrganizationScope[] {
+    return this.#scopes;
+  }
 
   override async create(data: { name: string; description?: string }): Promise<OrganizationScope> {
     const created = await super.create(data);
@@ -53,7 +61,7 @@ export class OrganizationScopeApiTest extends OrganizationScopeApi {
   async cleanUp(): Promise<void> {
     // Use `trySafe` to avoid error when scope is deleted by other tests.
     await Promise.all(this.scopes.map(async (scope) => trySafe(this.delete(scope.id))));
-    this.scopes = [];
+    this.#scopes = [];
   }
 }
 
@@ -69,7 +77,11 @@ export class OrganizationApiTest extends OrganizationApi {
   roleApi = new OrganizationRoleApiTest();
   scopeApi = new OrganizationScopeApiTest();
 
-  protected organizations: Organization[] = [];
+  #organizations: Organization[] = [];
+
+  get organizations(): Organization[] {
+    return this.#organizations;
+  }
 
   override async create(data: { name: string; description?: string }): Promise<Organization> {
     const created = await super.create(data);
@@ -89,7 +101,7 @@ export class OrganizationApiTest extends OrganizationApi {
       // Use `trySafe` to avoid error when organization is deleted by other tests.
       this.organizations.map(async (organization) => trySafe(this.delete(organization.id)))
     );
-    this.organizations = [];
+    this.#organizations = [];
   }
 }
 /* eslint-enable @silverhand/fp/no-mutating-methods */

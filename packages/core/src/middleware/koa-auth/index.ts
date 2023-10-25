@@ -58,7 +58,10 @@ export const verifyBearerTokenFromRequest = async (
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
-    consoleLog.warn(`Found dev user ID ${userId}, skip token validation.`);
+    // This log is distracting in integration tests.
+    if (!isIntegrationTest) {
+      consoleLog.warn(`Found dev user ID ${userId}, skip token validation.`);
+    }
 
     return {
       sub: userId,

@@ -1,7 +1,18 @@
-import { type Role, type Organization, type OrganizationWithRoles } from '@logto/schemas';
+import {
+  type Role,
+  type Organization,
+  type OrganizationWithRoles,
+  type UserWithOrganizationRoles,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 import { ApiFactory } from './factory.js';
+
+type Query = {
+  q?: string;
+  page?: number;
+  page_size?: number;
+};
 
 export class OrganizationApi extends ApiFactory<
   Organization,
@@ -15,8 +26,12 @@ export class OrganizationApi extends ApiFactory<
     await authedAdminApi.post(`${this.path}/${id}/users`, { json: { userIds } });
   }
 
-  async getUsers(id: string): Promise<Organization[]> {
-    return authedAdminApi.get(`${this.path}/${id}/users`).json<Organization[]>();
+  async getUsers(
+    id: string,
+    query?: Query
+  ): Promise<[rows: UserWithOrganizationRoles[], totalCount: number]> {
+    const got = await authedAdminApi.get(`${this.path}/${id}/users`, { searchParams: query });
+    return [JSON.parse(got.body), Number(got.headers['total-number'] ?? 0)];
   }
 
   async deleteUser(id: string, userId: string): Promise<void> {
@@ -26,6 +41,12 @@ export class OrganizationApi extends ApiFactory<
   async addUserRoles(id: string, userId: string, organizationRoleIds: string[]): Promise<void> {
     await authedAdminApi.post(`${this.path}/${id}/users/${userId}/roles`, {
       json: { organizationRoleIds },
+    });
+  }
+
+  async addUsersRoles(id: string, userIds: string[], organizationRoleIds: string[]): Promise<void> {
+    await authedAdminApi.post(`${this.path}/${id}/users/roles`, {
+      json: { userIds, organizationRoleIds },
     });
   }
 

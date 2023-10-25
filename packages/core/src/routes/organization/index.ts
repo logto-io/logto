@@ -67,16 +67,16 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
       params: z.object({ id: z.string().min(1) }),
       body: z.object({
         userIds: z.string().min(1).array().nonempty(),
-        roleIds: z.string().min(1).array().nonempty(),
+        organizationRoleIds: z.string().min(1).array().nonempty(),
       }),
       status: [201, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      const { userIds, roleIds } = ctx.guard.body;
+      const { userIds, organizationRoleIds } = ctx.guard.body;
 
       await organizations.relations.rolesUsers.insert(
-        ...roleIds.flatMap<[string, string, string]>((roleId) =>
+        ...organizationRoleIds.flatMap<[string, string, string]>((roleId) =>
           userIds.map<[string, string, string]>((userId) => [id, roleId, userId])
         )
       );

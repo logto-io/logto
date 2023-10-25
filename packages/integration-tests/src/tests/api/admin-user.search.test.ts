@@ -1,9 +1,12 @@
 import type { IncomingHttpHeaders } from 'node:http';
 
-import type { User } from '@logto/schemas';
+import type { Role, User } from '@logto/schemas';
 
-import { authedAdminApi, deleteUser } from '#src/api/index.js';
+import { assignRolesToUser, authedAdminApi, createUser, deleteUser } from '#src/api/index.js';
+import { createRole, deleteRole } from '#src/api/role.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
+import { OrganizationApiTest } from '#src/helpers/organization.js';
+import { UserApiTest } from '#src/helpers/user.js';
 
 const getUsers = async <T>(
   init: string[][] | Record<string, string> | URLSearchParams
@@ -233,5 +236,136 @@ describe('admin console user search params', () => {
         }
       ),
     ]);
+  });
+});
+
+describe('admin console user search params - excludeRoleId', () => {
+  const users: User[] = [];
+  const roles: Role[] = [];
+  const userPrefix = `search_exclude_role_`;
+  const rolePrefix = `role_`;
+
+  beforeAll(async () => {
+    // Create users with different roles
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    users.push(
+      ...(await Promise.all([
+        createUser({ username: userPrefix + '1' }),
+        createUser({ username: userPrefix + '2' }),
+        createUser({ username: userPrefix + '3' }),
+      ]))
+    );
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    roles.push(
+      ...(await Promise.all([
+        createRole({ name: rolePrefix + '1' }),
+        createRole({ name: rolePrefix + '2' }),
+        createRole({ name: rolePrefix + '3' }),
+      ]))
+    );
+
+    // Assign roles to users
+    await Promise.all([
+      assignRolesToUser(users[0]!.id, [roles[0]!.id, roles[1]!.id]),
+      assignRolesToUser(users[1]!.id, [roles[1]!.id, roles[2]!.id]),
+      assignRolesToUser(users[2]!.id, [roles[2]!.id]),
+    ]);
+  });
+
+  afterAll(async () => {
+    await Promise.all(users.map(async ({ id }) => deleteUser(id)));
+    await Promise.all(roles.map(async ({ id }) => deleteRole(id)));
+  });
+
+  it('should be able to exclude users with a specific role (1)', async () => {
+    const { headers, json } = await getUsers<User[]>([
+      ['search.username', userPrefix + '%'],
+      ['excludeRoleId', roles[0]!.id],
+    ]);
+
+    expect(headers['total-number']).toEqual('2');
+    expect(json).toHaveLength(2);
+    expect(json).toContainEqual(expect.objectContaining({ id: users[1]!.id }));
+    expect(json).toContainEqual(expect.objectContaining({ id: users[2]!.id }));
+  });
+
+  it('should be able to exclude users with a specific role (2)', async () => {
+    const { headers, json } = await getUsers<User[]>([
+      ['search.username', userPrefix + '%'],
+      ['excludeRoleId', roles[1]!.id],
+    ]);
+
+    expect(headers['total-number']).toEqual('1');
+    expect(json).toHaveLength(1);
+    expect(json).toContainEqual(expect.objectContaining({ id: users[2]!.id }));
+  });
+});
+
+describe('admin console user search params - excludeOrganizationId', () => {
+  const organizationApi = new OrganizationApiTest();
+  const userApi = new UserApiTest();
+  const organizationPrefix = `search_exclude_organization_`;
+  const userPrefix = `search_exclude_organization_`;
+
+  beforeAll(async () => {
+    await Promise.all([
+      organizationApi.create({ name: organizationPrefix + '1' }),
+      organizationApi.create({ name: organizationPrefix + '2' }),
+      organizationApi.create({ name: organizationPrefix + '3' }),
+    ]);
+
+    await Promise.all([
+      userApi.create({ username: userPrefix + '1' }),
+      userApi.create({ username: userPrefix + '2' }),
+      userApi.create({ username: userPrefix + '3' }),
+    ]);
+
+    const { organizations } = organizationApi;
+    const { users } = userApi;
+
+    await Promise.all([
+      organizationApi.addUsers(organizations[0]!.id, [users[0]!.id, users[1]!.id]),
+      organizationApi.addUsers(organizations[1]!.id, [users[1]!.id, users[2]!.id]),
+      organizationApi.addUsers(organizations[2]!.id, [users[2]!.id]),
+    ]);
+  });
+
+  afterAll(async () => {
+    await organizationApi.cleanUp();
+    await userApi.cleanUp();
+  });
+
+  it('should be able to exclude users with a specific organization (1)', async () => {
+    const { headers, json } = await getUsers<User[]>([
+      ['search.username', userPrefix + '%'],
+      ['excludeOrganizationId', organizationApi.organizations[0]!.id],
+    ]);
+
+    expect(headers['total-number']).toEqual('1');
+    expect(json).toHaveLength(1);
+    expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[2]!.id }));
+  });
+
+  it('should be able to exclude users with a specific organization (2)', async () => {
+    const { headers, json } = await getUsers<User[]>([
+      ['search.username', userPrefix + '%'],
+      ['excludeOrganizationId', organizationApi.organizations[1]!.id],
+    ]);
+
+    expect(headers['total-number']).toEqual('1');
+    expect(json).toHaveLength(1);
+    expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[0]!.id }));
+  });
+
+  it('should be able to exclude users with a specific organization (3)', async () => {
+    const { headers, json } = await getUsers<User[]>([
+      ['search.username', userPrefix + '%'],
+      ['excludeOrganizationId', organizationApi.organizations[2]!.id],
+    ]);
+
+    expect(headers['total-number']).toEqual('2');
+    expect(json).toHaveLength(2);
+    expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[0]!.id }));
+    expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[1]!.id }));
   });
 });
