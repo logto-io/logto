@@ -11,12 +11,14 @@
     height: 1px;
     background: var(--color-line-divider);
 
-    &:first-child {
-      margin-right: _.unit(4);
-    }
+    &.withLabel {
+      &:first-child {
+        margin-right: _.unit(4);
+      }
 
-    &:last-child {
-      margin-left: _.unit(4);
+      &:last-child {
+        margin-left: _.unit(4);
+      }
     }
   }
 }
