@@ -4,7 +4,7 @@
   @include _.flex-column(center);
   align-items: stretch;
   gap: _.unit(4);
-  margin-bottom: _.unit(4);
+  padding-bottom: _.unit(6);
 }
 
 .backupCodes {
