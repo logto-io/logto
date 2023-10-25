@@ -30,19 +30,14 @@ export const parseFactoryDetail = (
 
 /* 
   Validate the connector config if it's provided.
-  Return undefined if the config is not provided.
   Throw error if the config is invalid.
   Partially validate the config if allowPartial is true.
 */
 export const parseConnectorConfig = (
   providerName: SsoProviderName,
-  config?: JsonObject,
+  config: JsonObject,
   allowPartial?: boolean
 ) => {
-  if (!config) {
-    return;
-  }
-
   const factory = ssoConnectorFactories[providerName];
 
   const result = allowPartial
