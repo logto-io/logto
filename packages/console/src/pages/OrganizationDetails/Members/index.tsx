@@ -46,16 +46,8 @@ function Members({ organization }: Props) {
   const tAction = useActionTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToBeEdited, setUserToBeEdited] = useState<UserWithOrganizationRoles>();
-
-  if (error) {
-    return null; // TODO: error handling
-  }
-
-  if (!response) {
-    return null; // TODO: loading
-  }
-
-  const [data, totalCount] = response;
+  const isLoading = !response && !error;
+  const [data, totalCount] = response ?? [];
 
   return (
     <>
@@ -66,6 +58,8 @@ function Members({ organization }: Props) {
           pageSize,
           onChange: setPage,
         }}
+        isLoading={isLoading}
+        errorMessage={error?.toString()}
         rowGroups={[{ key: 'data', data }]}
         columns={[
           {

@@ -39,6 +39,8 @@ const organization_details = {
   search_role_placeholder: 'Type to search for roles',
   /** UNTRANSLATED */
   search_user_placeholder: 'Type to search for users',
+  /** UNTRANSLATED */
+  at_least_one_user: 'At least one user is required.',
 };
 
 export default Object.freeze(organization_details);

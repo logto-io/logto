@@ -21,6 +21,7 @@ const organization_details = {
     'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
   search_role_placeholder: 'Type to search for roles',
   search_user_placeholder: 'Type to search for users',
+  at_least_one_user: 'At least one user is required.',
 };
 
 export default Object.freeze(organization_details);

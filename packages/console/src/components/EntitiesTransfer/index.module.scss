@@ -3,3 +3,9 @@
 .rolesTransfer {
   height: 360px;
 }
+
+.errorMessage {
+  font: var(--font-body-2);
+  color: var(--color-error);
+  margin-top: _.unit(1);
+}
