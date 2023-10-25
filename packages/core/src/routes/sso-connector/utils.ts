@@ -1,7 +1,8 @@
 import { type I18nPhrases } from '@logto/connector-kit';
-import { type SsoConnector } from '@logto/schemas';
+import { type JsonObject, type SsoConnector } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SsoProviderName } from '#src/sso/types/index.js';
 
@@ -25,6 +26,29 @@ export const parseFactoryDetail = (
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
     description: (isKeyOfI18nPhrases(locale, description) && description[locale]) || description.en,
   };
+};
+
+/* 
+  Validate and partially parse the connector config if it's provided.
+*/
+export const parseConnectorConfig = (providerName: SsoProviderName, config?: JsonObject) => {
+  if (!config) {
+    return;
+  }
+
+  const factory = ssoConnectorFactories[providerName];
+
+  const result = factory.configGuard.partial().safeParse(config);
+
+  if (!result.success) {
+    throw new RequestError({
+      code: 'connector.invalid_config',
+      status: 422,
+      details: result.error.flatten(),
+    });
+  }
+
+  return result.data;
 };
 
 export const fetchConnectorProviderDetails = async (

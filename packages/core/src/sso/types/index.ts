@@ -1,4 +1,4 @@
-import { type Json, type SsoConnector } from '@logto/schemas';
+import { type JsonObject, type SsoConnector } from '@logto/schemas';
 
 /**
  * Single sign-on connector interface
@@ -9,7 +9,7 @@ import { type Json, type SsoConnector } from '@logto/schemas';
  */
 export abstract class SingleSignOn {
   abstract data: SsoConnector;
-  abstract getConfig: () => Promise<Json>;
+  abstract getConfig: () => Promise<JsonObject>;
 }
 
 export enum SsoProviderName {

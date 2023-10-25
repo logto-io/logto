@@ -36,3 +36,17 @@ export const getSsoConnectorById = async (id: string) =>
 
 export const deleteSsoConnectorById = async (id: string) =>
   authedAdminApi.delete(`sso-connectors/${id}`).json<void>();
+
+export const patchSsoConnectorById = async (id: string, data: Partial<SsoConnector>) =>
+  authedAdminApi
+    .patch(`sso-connectors/${id}`, {
+      json: data,
+    })
+    .json<SsoConnectorWithProviderConfig>();
+
+export const patchSsoConnectorConfigById = async (id: string, data: Record<string, unknown>) =>
+  authedAdminApi
+    .patch(`sso-connectors/${id}/config`, {
+      json: data,
+    })
+    .json<SsoConnectorWithProviderConfig>();

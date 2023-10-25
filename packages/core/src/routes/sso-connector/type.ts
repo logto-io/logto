@@ -35,3 +35,14 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard.merge(
 );
 
 export type SsoConnectorWithProviderConfig = z.infer<typeof ssoConnectorWithProviderConfigGuard>;
+
+export const ssoConnectorPatchGuard = SsoConnectors.guard
+  .pick({
+    config: true,
+    domains: true,
+    branding: true,
+    syncProfile: true,
+    ssoOnly: true,
+    connectorName: true,
+  })
+  .partial();
