@@ -185,6 +185,25 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('syncProfile', false);
   });
 
+  it('should directly return if no changes are made', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'integration_test connector',
+    });
+
+    const connector = await patchSsoConnectorById(id, {
+      config: undefined,
+    });
+
+    expect(connector).toHaveProperty('id', id);
+    expect(connector).toHaveProperty('providerName', 'OIDC');
+    expect(connector).toHaveProperty('connectorName', 'integration_test connector');
+    expect(connector).toHaveProperty('config', {});
+    expect(connector).toHaveProperty('domains', []);
+    expect(connector).toHaveProperty('ssoOnly', false);
+    expect(connector).toHaveProperty('syncProfile', false);
+  });
+
   it('should throw if invalid config is provided', async () => {
     const { id } = await createSsoConnector({
       providerName: 'OIDC',

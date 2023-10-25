@@ -196,7 +196,8 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { body } = ctx.guard;
 
       // Fetch the connector
-      const { providerName } = await ssoConnectors.findById(id);
+      const originalConnector = await ssoConnectors.findById(id);
+      const { providerName } = originalConnector;
 
       // Return 422 if the connector provider is not supported
       if (!isSupportedSsoProvider(providerName)) {
@@ -212,11 +213,16 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       // Validate the connector config if it's provided
       const parsedConfig = parseConnectorConfig(providerName, config);
 
-      // Patch update the connector
-      const connector = await ssoConnectors.updateById(id, {
-        ...conditional(parsedConfig && { config: parsedConfig }),
-        ...rest,
-      });
+      // Check if there's any valid update
+      const hasValidUpdate = parsedConfig ?? Object.keys(rest).length > 0;
+
+      // Patch update the connector only if there's any valid update
+      const connector = hasValidUpdate
+        ? await ssoConnectors.updateById(id, {
+            ...conditional(parsedConfig && { config: parsedConfig }),
+            ...rest,
+          })
+        : originalConnector;
 
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
