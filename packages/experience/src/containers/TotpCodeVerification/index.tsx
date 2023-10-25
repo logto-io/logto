@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import VerificationCodeInput from '@/components/VerificationCode';
 import { type UserMfaFlow } from '@/types';
@@ -14,7 +14,11 @@ type Props = {
 
 const TotpCodeVerification = ({ flow }: Props) => {
   const [code, setCode] = useState<string[]>([]);
-  const { errorMessage, onSubmit } = useTotpCodeVerification(flow);
+  const errorCallback = useCallback(() => {
+    setCode([]);
+  }, []);
+
+  const { errorMessage, onSubmit } = useTotpCodeVerification(flow, errorCallback);
 
   return (
     <VerificationCodeInput
