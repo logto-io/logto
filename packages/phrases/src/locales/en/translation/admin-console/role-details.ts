@@ -43,9 +43,9 @@ const role_details = {
     assign_title: 'Assign users',
     assign_subtitle:
       'Assign users to this role. Find appropriate users by searching name, email, phone, or user ID.',
-    assign_users_field: 'Assign users',
+    assign_field: 'Assign users',
     confirm_assign: 'Assign users',
-    users_assigned: 'The selected users were successfully assigned to this role',
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: 'No user available',
   },
   applications: {
@@ -59,9 +59,9 @@ const role_details = {
     assign_title: 'Assign apps',
     assign_subtitle:
       'Assign applications to this role. Find appropriate applications by searching name, description or app ID.',
-    assign_applications_field: 'Assign applications',
+    assign_field: 'Assign applications',
     confirm_assign: 'Assign applications',
-    applications_assigned: 'The selected applications were successfully assigned to this role',
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: 'No application available',
   },
 };

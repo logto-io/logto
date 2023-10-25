@@ -42,9 +42,11 @@ const role_details = {
     assign_title: 'Kullanıcılar Ata',
     assign_subtitle:
       'Kullanıcıları bu role atayın. İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun.',
-    assign_users_field: 'Kullanıcıları Ata',
+    /** UNTRANSLATED */
+    assign_field: 'Assign users',
     confirm_assign: 'Kullanıcıları Ata',
-    users_assigned: 'Seçilen kullanıcılar bu role başarıyla atandı',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: 'Mevcut kullanıcı yok',
   },
   applications: {
@@ -58,9 +60,11 @@ const role_details = {
     assign_title: 'Uygulamaları Ata',
     assign_subtitle:
       'Bu role uygulamaları atayın. İsim, açıklama veya uygulama kimliği arayarak uygun uygulamaları bulun.',
-    assign_applications_field: 'Uygulamaları Ata',
+    /** UNTRANSLATED */
+    assign_field: 'Assign applications',
     confirm_assign: 'Uygulamaları Ata',
-    applications_assigned: 'Seçilen uygulamalar bu role başarıyla atandı',
+    /** UNTRANSLATED */
+    assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: 'Mevcut uygulama yok',
   },
 };
