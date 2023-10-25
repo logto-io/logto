@@ -1,4 +1,4 @@
-import { SsoConnectors } from '@logto/schemas';
+import { SsoConnectors, jsonObjectGuard } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -223,6 +223,51 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
             ...rest,
           })
         : originalConnector;
+
+      // Fetch provider details for the connector
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+
+      ctx.body = connectorWithProviderDetails;
+
+      return next();
+    }
+  );
+
+  /* Patch update a single sign on connector's config by id */
+  router.patch(
+    `${pathname}/:id/config`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: jsonObjectGuard,
+      response: ssoConnectorWithProviderConfigGuard,
+      status: [200, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      const { body } = ctx.guard;
+
+      // Fetch the connector
+      const { providerName, config } = await ssoConnectors.findById(id);
+
+      // Return 422 if the connector provider is not supported
+      if (!isSupportedSsoProvider(providerName)) {
+        throw new RequestError({
+          code: 'connector.not_found',
+          type: providerName,
+          status: 422,
+        });
+      }
+
+      // Validate the connector config
+      const parsedConfig = parseConnectorConfig(providerName, body);
+
+      // Patch update the connector config
+      const connector = await ssoConnectors.updateById(id, {
+        config: {
+          ...config,
+          ...parsedConfig,
+        },
+      });
 
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);

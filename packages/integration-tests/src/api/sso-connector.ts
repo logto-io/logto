@@ -43,3 +43,10 @@ export const patchSsoConnectorById = async (id: string, data: Partial<SsoConnect
       json: data,
     })
     .json<SsoConnectorWithProviderConfig>();
+
+export const patchSsoConnectorConfigById = async (id: string, data: Record<string, unknown>) =>
+  authedAdminApi
+    .patch(`sso-connectors/${id}/config`, {
+      json: data,
+    })
+    .json<SsoConnectorWithProviderConfig>();
