@@ -120,7 +120,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     }),
     async (ctx, next) => {
       // Query all connectors
-      const entities = await ssoConnectors.findAll();
+      const [_, entities] = await ssoConnectors.findAll();
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
