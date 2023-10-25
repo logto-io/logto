@@ -15,7 +15,7 @@ import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
-const organizationScopesPath = 'api/organization-scopes';
+export const organizationScopesPath = 'api/organization-scopes';
 
 type Props = {
   isOpen: boolean;

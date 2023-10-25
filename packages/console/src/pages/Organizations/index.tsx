@@ -47,7 +47,7 @@ function Organizations({ tab }: Props) {
           size="large"
           title="organizations.create_organization"
           onClick={() => {
-            navigate(createPathname);
+            navigate('/organization-guide');
           }}
         />
       </div>
