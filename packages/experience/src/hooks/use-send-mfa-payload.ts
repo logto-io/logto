@@ -31,7 +31,11 @@ const useSendMfaPayload = () => {
   const handleError = useErrorHandler();
 
   return useCallback(
-    async (apiOptions: SendMfaPayloadApiOptions, errorHandlers?: ErrorHandlers) => {
+    async (
+      apiOptions: SendMfaPayloadApiOptions,
+      errorHandlers?: ErrorHandlers,
+      errorCallback?: () => void
+    ) => {
       const [error, result] = await asyncSendMfaPayload(apiOptions);
 
       if (error) {
@@ -39,6 +43,7 @@ const useSendMfaPayload = () => {
           ...errorHandlers,
           ...preSignInErrorHandler,
         });
+        errorCallback?.();
         return;
       }
 
