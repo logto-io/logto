@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Tools from '@/assets/icons/tools.svg';
+import ActionBar from '@/components/ActionBar';
 import PageMeta from '@/components/PageMeta';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -20,7 +21,6 @@ import useApi from '@/hooks/use-api';
 import type { RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
-import ActionBar from '@/onboarding/components/ActionBar';
 import { CardSelector, MultiCardSelector } from '@/onboarding/components/CardSelector';
 import useUserOnboardingData from '@/onboarding/hooks/use-user-onboarding-data';
 import * as pageLayout from '@/onboarding/scss/layout.module.scss';
@@ -237,7 +237,7 @@ function SignInExperience() {
           <Preview className={styles.preview} signInExperience={previewSieConfig} />
         </div>
       </OverlayScrollbar>
-      <ActionBar step={2}>
+      <ActionBar step={2} totalSteps={2}>
         <div className={styles.continueActions}>
           <Button
             type="primary"
