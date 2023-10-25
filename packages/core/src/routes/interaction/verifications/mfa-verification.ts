@@ -222,8 +222,15 @@ export const validateBindMfaBackupCode = async (
 
   if (
     !factors.includes(MfaFactor.BackupCode) ||
-    bindMfas.length === 0 ||
     bindMfas.some(({ type }) => type === MfaFactor.BackupCode)
+  ) {
+    return interaction;
+  }
+
+  // Skip check if there is no other MFA
+  if (
+    event === InteractionEvent.Register &&
+    !bindMfas.some(({ type }) => type !== MfaFactor.BackupCode)
   ) {
     return interaction;
   }
@@ -231,6 +238,14 @@ export const validateBindMfaBackupCode = async (
   if (event === InteractionEvent.SignIn) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+
+    // Skip check if there is no new MFA and there is no existing MFA configured
+    if (
+      !bindMfas.some(({ type }) => type !== MfaFactor.BackupCode) &&
+      !mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode)
+    ) {
+      return interaction;
+    }
 
     if (
       mfaVerifications.some((verification) => {
