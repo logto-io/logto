@@ -1,5 +1,10 @@
 @use '@/scss/underscore' as _;
 
+.page {
+  height: 100%;
+  padding-bottom: _.unit(6);
+}
+
 .header {
   display: flex;
   justify-content: space-between;

@@ -32,7 +32,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
 
   router.get(
     '/:id/users',
-    // TODO: support pagination
+    koaPagination(),
     koaGuard({
       query: z.object({ q: z.string().optional() }),
       params: z.object({ id: z.string().min(1) }),
@@ -47,10 +47,16 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
           keyword: q,
         }
       );
-      ctx.body = await organizations.relations.users.getUsersByOrganizationId(
+
+      const [totalCount, entities] = await organizations.relations.users.getUsersByOrganizationId(
         ctx.guard.params.id,
+        ctx.pagination,
         search
       );
+
+      ctx.pagination.totalCount = totalCount;
+      ctx.body = entities;
+
       return next();
     }
   );
@@ -85,6 +91,9 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
   const pathname = '/:id/users/:userId/roles';
 
+  // The pathname of `.use()` will not match the end of the path, for example:
+  // `.use('/foo', ...)` will match both `/foo` and `/foo/bar`.
+  // See https://github.com/koajs/router/blob/02ad6eedf5ced6ec1eab2138380fd67c63e3f1d7/lib/router.js#L330-L333
   router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
     const { id, userId } = ctx.guard.params;
 
@@ -160,7 +169,6 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }
   );
 
-  // TODO: check if membership is required in this route
   router.delete(
     `${pathname}/:roleId`,
     koaGuard({

@@ -47,12 +47,15 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
             userIds: data.users.map(({ id }) => id),
           },
         });
-        await api.post(`api/organizations/${organization.id}/users/roles`, {
-          json: {
-            userIds: data.users.map(({ id }) => id),
-            roleIds: data.scopes.map(({ value }) => value),
-          },
-        });
+
+        if (data.scopes.length > 0) {
+          await api.post(`api/organizations/${organization.id}/users/roles`, {
+            json: {
+              userIds: data.users.map(({ id }) => id),
+              roleIds: data.scopes.map(({ value }) => value),
+            },
+          });
+        }
         onClose();
       } finally {
         setIsLoading(false);

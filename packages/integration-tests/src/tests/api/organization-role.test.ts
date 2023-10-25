@@ -21,10 +21,8 @@ describe('organization role APIs', () => {
 
       const { statusCode, body: raw } = response.response;
       const body: unknown = JSON.parse(String(raw));
-      expect(statusCode).toBe(400);
-      expect(isKeyInObject(body, 'code') && body.code).toBe(
-        'entity.duplicate_value_of_unique_field'
-      );
+      expect(statusCode).toBe(422);
+      expect(isKeyInObject(body, 'code') && body.code).toBe('entity.unique_integrity_violation');
 
       await roleApi.delete(createdRole.id);
     });
