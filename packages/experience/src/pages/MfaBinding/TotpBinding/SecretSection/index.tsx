@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import SectionLayout from '@/Layout/SectionLayout';
 import Button from '@/components/Button';
 import TextLink from '@/components/TextLink';
+import usePlatform from '@/hooks/use-platform';
 import useTextHandler from '@/hooks/use-text-handler';
 import { type TotpBindingState } from '@/types/guard';
 
@@ -11,7 +12,8 @@ import * as styles from './index.module.scss';
 
 const SecretSection = ({ secret, secretQrCode }: TotpBindingState) => {
   const { t } = useTranslation();
-  const [isQrCodeFormat, setIsQrCodeFormat] = useState(true);
+  const { isMobile } = usePlatform();
+  const [isQrCodeFormat, setIsQrCodeFormat] = useState(!isMobile);
   const { copyText } = useTextHandler();
 
   return (
