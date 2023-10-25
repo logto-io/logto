@@ -8,7 +8,7 @@ import { generateStandardId } from '@logto/shared/universal';
 import { assert, conditional } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type BaseOidcConfig, type ConfigType } from '../types/oidc.js';
+import { type BaseOidcConfig, type BasicOidcConnectorConfig } from '../types/oidc.js';
 
 import { fetchOidcConfig, fetchToken, getIdTokenClaims } from './utils.js';
 
@@ -26,7 +26,7 @@ import { fetchOidcConfig, fetchToken, getIdTokenClaims } from './utils.js';
  * @method getUserInfo Handle the sign-in callback from the OIDC provider and return the user info
  */
 class OidcConnector {
-  constructor(private readonly config: ConfigType) {}
+  constructor(private readonly config: BasicOidcConnectorConfig) {}
 
   /* Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid */
   getOidcConfig = async (): Promise<BaseOidcConfig> => {
