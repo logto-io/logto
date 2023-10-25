@@ -180,6 +180,11 @@ describe('M2M RBAC', () => {
     });
 
     it('assign a permission to a role on the role details page', async () => {
+      // Wait for the deletion confirmation modal to disappear.
+      await page.waitForSelector('.ReactModalPortal div[class$=header] div[class$=titleEllipsis]', {
+        hidden: true,
+      });
+
       await expect(page).toClick('div[class$=filter] button span', {
         text: 'Assign Permissions',
       });
