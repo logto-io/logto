@@ -4,12 +4,10 @@ import {
   type OrganizationRole,
   OrganizationRoles,
   type Organization,
-  type User,
   Organizations,
-  Users,
 } from '../db-entries/index.js';
 
-import { type FeaturedUser } from './user.js';
+import { type UserInfo, type FeaturedUser, userInfoGuard } from './user.js';
 
 export type OrganizationRoleWithScopes = OrganizationRole & {
   scopes: Array<{
@@ -60,13 +58,13 @@ export const organizationWithOrganizationRolesGuard: z.ZodType<OrganizationWithR
  * The user entity with the `organizationRoles` field that contains the roles of
  * the user in a specific organization.
  */
-export type UserWithOrganizationRoles = User & {
+export type UserWithOrganizationRoles = UserInfo & {
   /** The roles of the user in a specific organization. */
   organizationRoles: OrganizationRoleEntity[];
 };
 
 export const userWithOrganizationRolesGuard: z.ZodType<UserWithOrganizationRoles> =
-  Users.guard.extend({
+  userInfoGuard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
 
