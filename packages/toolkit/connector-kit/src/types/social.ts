@@ -32,6 +32,14 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
+export const socialUserInfoKeys = Object.freeze([
+  'id',
+  'email',
+  'phone',
+  'name',
+  'avatar',
+] satisfies Array<keyof SocialUserInfo>);
+
 export type GetUserInfo = (
   data: unknown,
   getSession: GetSession

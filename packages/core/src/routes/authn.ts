@@ -6,6 +6,8 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
+import { SsoProviderName } from '#src/sso/types/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   getConnectorSessionResultFromJti,
@@ -19,11 +21,12 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  */
 export default function authnRoutes<T extends AnonymousRouter>(
-  ...[router, { envSet, provider, libraries }]: RouterInitArgs<T>
+  ...[router, { id: tenantId, envSet, provider, libraries }]: RouterInitArgs<T>
 ) {
   const {
     users: { findUserRoles },
     socials: { getConnector },
+    ssoConnector: { getSsoConnectorById },
   } = libraries;
 
   const hasuraResponseGuard = z.object({
@@ -137,6 +140,59 @@ export default function authnRoutes<T extends AnonymousRouter>(
           message: 'Method `validateSamlAssertion()` is not implemented.',
         })
       );
+      const redirectTo = await validateSamlAssertion({ body }, getSession, setSession);
+
+      ctx.redirect(redirectTo);
+
+      return next();
+    }
+  );
+
+  // TODO: refactor this, this SAML API for SSO is quite similar to the one for normal social sign-in, most of the logics can be reused.
+  router.post(
+    '/authn/saml/sso/:ssoConnectorId',
+    /**
+     * The API does not care the type of the SAML assertion request body, simply pass this to
+     * SSO connector's built-in methods.
+     */
+    koaGuard({
+      body: jsonObjectGuard,
+      params: z.object({ ssoConnectorId: z.string().min(1) }),
+      status: 302,
+    }),
+    async (ctx, next) => {
+      const {
+        params: { ssoConnectorId },
+        body,
+      } = ctx.guard;
+      const ssoConnector = await getSsoConnectorById(ssoConnectorId);
+
+      const samlAssertionGuard = z.object({ SAMLResponse: z.string(), RelayState: z.string() });
+      const samlAssertionParseResult = samlAssertionGuard.safeParse(body);
+
+      if (!samlAssertionParseResult.success) {
+        throw new ConnectorError(
+          ConnectorErrorCodes.InvalidResponse,
+          samlAssertionParseResult.error
+        );
+      }
+
+      /**
+       * Since `RelayState` will be returned with value unchanged, we use it to pass `jti`
+       * to find the connector session we used to store essential information.
+       */
+      const { RelayState: jti } = samlAssertionParseResult.data;
+
+      const getSession = async () => getConnectorSessionResultFromJti(jti, provider);
+      const setSession = async (connectorSession: ConnectorSession) =>
+        assignConnectorSessionResultViaJti(jti, provider, connectorSession);
+
+      if (ssoConnector.providerName !== SsoProviderName.SAML) {
+        throw new RequestError({ code: 'sso_connector.saml_only' });
+      }
+
+      const { constructor } = ssoConnectorFactories[ssoConnector.providerName];
+      const { validateSamlAssertion } = new constructor(ssoConnector, tenantId);
       const redirectTo = await validateSamlAssertion({ body }, getSession, setSession);
 
       ctx.redirect(redirectTo);
