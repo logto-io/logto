@@ -61,16 +61,16 @@ const BackupCodeBinding = () => {
         <div className={styles.hint}>
           <DynamicT forKey="mfa.backup_code_hint" />
         </div>
+        <Button
+          title="action.continue"
+          onClick={() => {
+            void sendMfaPayload({
+              flow: UserMfaFlow.MfaBinding,
+              payload: { type: MfaFactor.BackupCode },
+            });
+          }}
+        />
       </div>
-      <Button
-        title="action.continue"
-        onClick={() => {
-          void sendMfaPayload({
-            flow: UserMfaFlow.MfaBinding,
-            payload: { type: MfaFactor.BackupCode },
-          });
-        }}
-      />
     </SecondaryPageLayout>
   );
 };
