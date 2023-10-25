@@ -44,7 +44,7 @@ describe('SMTP connector', () => {
 
     expect(sendMail).toHaveBeenCalledWith({
       from: '<notice@test.smtp>',
-      subject: 'Logto Register with SMTP',
+      subject: 'Logto register with SMTP',
       text: 'This is for register purposes only. Your verification code is 123456.',
       to: 'foo',
     });
@@ -60,7 +60,7 @@ describe('SMTP connector', () => {
 
     expect(sendMail).toHaveBeenCalledWith({
       from: '<notice@test.smtp>',
-      subject: 'Logto Sign-In with SMTP 234567',
+      subject: 'Logto sign-in with SMTP 234567',
       text: 'This is for sign-in purposes only. Your verification code is 234567.',
       to: 'bar',
     });

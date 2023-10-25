@@ -13,13 +13,13 @@ export const mockedConfig = {
     {
       contentType: 'text/plain',
       content: 'This is for sign-in purposes only. Your verification code is {{ code  }}.',
-      subject: 'Logto Sign-In with SMTP {{   code   }}',
+      subject: 'Logto sign-in with SMTP {{   code   }}',
       usageType: 'SignIn',
     },
     {
       contentType: 'text/plain',
       content: 'This is for register purposes only. Your verification code is {{code}}.',
-      subject: 'Logto Register with SMTP',
+      subject: 'Logto register with SMTP',
       usageType: 'Register',
     },
     {

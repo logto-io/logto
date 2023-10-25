@@ -1,10 +1,10 @@
 const log_details = {
-  page_title: 'Audit Log details',
-  back_to_logs: 'Back to Audit Logs',
+  page_title: 'Audit log details',
+  back_to_logs: 'Back to audit logs',
   back_to: 'Back to {{name}}',
   success: 'Success',
   failed: 'Failed',
-  event_key: 'Event Key',
+  event_key: 'Event key',
   application: 'Application',
   ip_address: 'IP address',
   user: 'User',

@@ -30,7 +30,7 @@ describe('sign-in experience: branding', () => {
 
     // Start & finish guide
     await expect(page).toClick('div[class$=container] div[class$=content] button span', {
-      text: 'Get Started',
+      text: 'Get started',
     });
 
     await expect(page).toClick(

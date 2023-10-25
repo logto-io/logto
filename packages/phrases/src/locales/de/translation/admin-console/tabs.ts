@@ -9,7 +9,7 @@ const tabs = {
   /** UNTRANSLATED */
   organizations: 'Organizations',
   users: 'Benutzerverwaltung',
-  audit_logs: 'Audit Logs',
+  audit_logs: 'Audit logs',
   roles: 'Rollen',
   docs: 'Dokumentation',
   tenant_settings: 'Einstellungen',

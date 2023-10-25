@@ -51,7 +51,7 @@ const connectors = {
     logo_dark: 'Logo URL for social sign-in button (Dark mode)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
-      'Set your connector’s logo for dark mode after enabling it in the Sign-in Experience of Admin Console.',
+      'Set your connector’s logo for dark mode after enabling it in the sign-in experience.',
     logo_dark_collapse: 'Collapse',
     logo_dark_show: 'Show logo setting for dark mode',
     target: 'Identity provider name',

@@ -49,13 +49,13 @@ export const expectUnsavedChangesAlert = async (page: Page) => {
     '.ReactModalPortal div[class$=content]::-p-text(You have made some changes. Are you sure you want to leave this page?)'
   );
 
-  await expectToClickModalAction(page, 'Stay on Page');
+  await expectToClickModalAction(page, 'Stay on page');
 };
 
 export const expectToSaveChanges = async (page: Page) => {
   // Wait for the action bar to finish animating
   await waitFor(500);
-  await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save Changes' });
+  await expect(page).toClick('div[class$=actionBar] button span', { text: 'Save changes' });
 };
 
 export const expectToDiscardChanges = async (page: Page) => {

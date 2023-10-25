@@ -3,11 +3,11 @@ const demo_app = {
   subtitle: 'Here is your log in information:',
   username: 'Username: ',
   user_id: 'User ID: ',
-  sign_out: 'Sign Out the Live Preview',
+  sign_out: 'Sign out the live preview',
   continue_explore: 'Or continue to explore',
-  customize_sign_in_experience: 'Customize Sign-in Experience',
-  enable_passwordless: 'Enable Passwordless',
-  add_social_connector: 'Add Social Connector',
+  customize_sign_in_experience: 'Customize sign-in experience',
+  enable_passwordless: 'Enable passwordless',
+  add_social_connector: 'Add social connector',
 };
 
 export default Object.freeze(demo_app);

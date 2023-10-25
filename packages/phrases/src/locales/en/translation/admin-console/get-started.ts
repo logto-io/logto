@@ -1,5 +1,5 @@
 const get_started = {
-  page_title: 'Get Started',
+  page_title: 'Get started',
   title: 'Something to help you succeed',
   subtitle: 'A few things you can do to quickly get value of Logto',
   develop: {

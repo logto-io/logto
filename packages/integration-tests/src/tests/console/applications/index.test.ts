@@ -68,7 +68,7 @@ describe('applications', () => {
     // Back to application list page
     await expectNavigation(
       expect(page).toClick('div[class$=main] a[class$=backLink]', {
-        text: 'Back to Applications',
+        text: 'Back to applications',
       })
     );
 
@@ -88,7 +88,7 @@ describe('applications', () => {
 
   it('can open the logto github repo issue page when click on the framework not found button', async () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
-      text: 'Create Application',
+      text: 'Create application',
     });
 
     await expectModalWithTitle(page, 'Start with SDK and guides');
@@ -110,7 +110,7 @@ describe('applications', () => {
 
   it('can create an application by framework from the app creation modal and modify its data', async () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
-      text: 'Create Application',
+      text: 'Create application',
     });
 
     await expectModalWithTitle(page, 'Start with SDK and guides');
@@ -138,7 +138,7 @@ describe('applications', () => {
     });
 
     // Check guide
-    await expect(page).toClick('div[class$=header] button span', { text: 'Check Guide' });
+    await expect(page).toClick('div[class$=header] button span', { text: 'Check guide' });
 
     // Wait for the guide drawer to be ready
     await page.waitForTimeout(500);
@@ -223,14 +223,14 @@ describe('applications', () => {
     'can create and modify a(n) $type application without framework',
     async (app: ApplicationMetadata) => {
       await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
-        text: 'Create Application',
+        text: 'Create application',
       });
 
       await expect(page).toClick('.ReactModalPortal nav[class$=actionBar] button span', {
         text: 'Create app without framework',
       });
 
-      await expectModalWithTitle(page, 'Create Application');
+      await expectModalWithTitle(page, 'Create application');
 
       await expect(page).toClick(`div[class*=radio][role=radio]:has(input[value=${app.type}])`);
 
@@ -238,7 +238,7 @@ describe('applications', () => {
         name: app.name,
         description: app.description,
       });
-      await expectToClickModalAction(page, 'Create Application');
+      await expectToClickModalAction(page, 'Create application');
 
       await waitForToast(page, { text: 'Application created successfully.' });
 

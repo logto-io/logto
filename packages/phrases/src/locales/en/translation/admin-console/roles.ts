@@ -3,7 +3,7 @@ const roles = {
   title: 'Roles',
   subtitle:
     'Roles include permissions that determine what a user can do. RBAC uses roles to give users access to resources for specific actions.',
-  create: 'Create Role',
+  create: 'Create role',
   role_name: 'Role name',
   role_type: 'Role type',
   show_role_type_button_text: 'Show more options',
@@ -22,10 +22,10 @@ const roles = {
   user_count: '{{count}} user',
   application_count: '{{count}} app',
   assign_permissions: 'Assign permissions',
-  create_role_title: 'Create Role',
+  create_role_title: 'Create role',
   create_role_description:
     'Create and manage roles for your applications. Roles contain collections of permissions and can be assigned to users.',
-  create_role_button: 'Create Role',
+  create_role_button: 'Create role',
   role_created: 'The role {{name}} has been successfully created.',
   search: 'Search by role name, description or ID',
   placeholder_title: 'Roles',

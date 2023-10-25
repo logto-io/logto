@@ -107,7 +107,7 @@ const useSocialSignInListener = (connectorId?: string) => {
     [asyncSignInWithSocial, handleError, signInWithSocialErrorHandlers]
   );
 
-  // Social Sign-In Callback Handler
+  // Social Sign-in Callback Handler
   useEffect(() => {
     if (!connectorId) {
       return;

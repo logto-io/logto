@@ -98,7 +98,7 @@ const verifySocialVerifiedIdentifier = async (
 
   const { connectorId } = payload;
 
-  // Sign-In with social verified email or phone requires a social identifier in the interaction result
+  // Sign-in with social verified email or phone requires a social identifier in the interaction result
   const socialIdentifierRecord = interactionRecord?.identifiers?.find(
     (entity): entity is SocialIdentifier =>
       entity.key === 'social' && entity.connectorId === connectorId
@@ -166,7 +166,7 @@ async function identifierPayloadVerification(
     return verifySocialIdentifier(identifierPayload, ctx, tenant);
   }
 
-  // Sign-In with social verified email or phone
+  // Sign-in with social verified email or phone
   return verifySocialVerifiedIdentifier(identifierPayload, ctx, interactionStorage);
 }
 

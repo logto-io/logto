@@ -1,6 +1,6 @@
 const user_details = {
   page_title: 'User details',
-  back_to_users: 'Back to User Management',
+  back_to_users: 'Back to user management',
   created_title: 'This user has been successfully created',
   created_guide: 'Here’s the information to assist the user with their sign-in process.',
   created_email: 'Email address:',

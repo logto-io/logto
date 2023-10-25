@@ -2,7 +2,7 @@
 
 The core backend service.
 
-## Get Started
+## Get started
 
 Copy proper `.env` to project root. (TBD: design the config process)
 
@@ -10,7 +10,7 @@ Copy proper `.env` to project root. (TBD: design the config process)
 pnpm i && pnpm dev
 ```
 
-## OpenAPI Doc
+## OpenAPI documentation
 
 OpenAPI (Swagger) json is available on `http(s)://your-domain/api/swagger.json`. If you are running locally, the default URL will be `http://localhost:3001/api/swagger.json`. Consume it in the way you like.
 
@@ -22,6 +22,6 @@ The doc website can be served by [redoc-cli](https://github.com/Redocly/redoc/bl
 npx redoc-cli serve http://localhost:3001/api/swagger.json
 ```
 
-### Using Swagger Editor
+### Using Swagger editor
 
 Copy the API output and paste it in the [Swagger Editor](https://editor.swagger.io/).

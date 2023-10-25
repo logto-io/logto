@@ -1,6 +1,6 @@
 const connector_details = {
   page_title: 'Connector details',
-  back_to_connectors: 'Back to Connectors',
+  back_to_connectors: 'Back to connectors',
   check_readme: 'Check README',
   settings: 'General settings',
   settings_description:

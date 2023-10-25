@@ -1,6 +1,6 @@
 const profile = {
-  page_title: 'Account Settings',
-  title: 'Account Settings',
+  page_title: 'Account settings',
+  title: 'Account settings',
   description:
     'Change your account settings and manage your personal information here to ensure your account security.',
   settings: {

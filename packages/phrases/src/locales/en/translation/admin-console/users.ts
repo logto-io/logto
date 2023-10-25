@@ -1,9 +1,9 @@
 const users = {
-  page_title: 'User Management',
-  title: 'User Management',
+  page_title: 'User management',
+  title: 'User management',
   subtitle:
     'Manage user identities including creating users, editing user information, viewing user logs, password resets and deleting users',
-  create: 'Add User',
+  create: 'Add user',
   create_subtitle: 'Provide at least one of the following fields to proceed.',
   error_missing_identifier: 'You must provide at least one identifier to create a user.',
   user_name: 'User',

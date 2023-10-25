@@ -1,5 +1,5 @@
 const guide = {
-  start_building: 'Start Building',
+  start_building: 'Start building',
   get_started: 'Beginnen Sie',
   categories: {
     featured: 'Beliebt und für dich',

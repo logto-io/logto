@@ -41,14 +41,14 @@ describe('RBAC', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
       {
-        text: 'API Resources',
+        text: 'API resources',
       }
     );
   });
 
   it('create an api resource', async () => {
     await expect(page).toClick('div[class$=headline] button span', {
-      text: 'Create API Resource',
+      text: 'Create API resource',
     });
 
     await expectModalWithTitle(page, 'Start with tutorials');
@@ -58,14 +58,14 @@ describe('RBAC', () => {
       text: 'Continue without tutorial',
     });
 
-    await expectModalWithTitle(page, 'Create API Resource');
+    await expectModalWithTitle(page, 'Create API resource');
 
     await expect(page).toFillForm('.ReactModalPortal form', {
       name: apiResourceName,
       indicator: apiResourceIndicator,
     });
 
-    await expectToClickModalAction(page, 'Create API Resource');
+    await expectToClickModalAction(page, 'Create API resource');
 
     await waitForToast(page, {
       text: `The API resource ${apiResourceName} has been successfully created`,
@@ -82,7 +82,7 @@ describe('RBAC', () => {
     });
 
     await expect(page).toClick('div[class$=filter] button[class$=createButton] span', {
-      text: 'Create Permission',
+      text: 'Create permission',
     });
 
     await expectModalWithTitle(page, 'Create permission');
@@ -108,21 +108,21 @@ describe('RBAC', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
       {
-        text: 'User Management',
+        text: 'User management',
       }
     );
   });
 
   it('create a user for rbac testing', async () => {
-    await expect(page).toClick('div[class$=headline] button span', { text: 'Add User' });
+    await expect(page).toClick('div[class$=headline] button span', { text: 'Add user' });
 
-    await expectModalWithTitle(page, 'Add User');
+    await expectModalWithTitle(page, 'Add user');
 
     await expect(page).toFillForm('.ReactModalPortal form', {
       username: rbacTestUsername,
     });
 
-    await expectToClickModalAction(page, 'Add User');
+    await expectToClickModalAction(page, 'Add user');
 
     await expectModalWithTitle(page, 'This user has been successfully created');
 
@@ -142,10 +142,10 @@ describe('RBAC', () => {
 
   it('create a role and assign permissions to the role', async () => {
     await expect(page).toClick('div[class$=headline] button span', {
-      text: 'Create Role',
+      text: 'Create role',
     });
 
-    await expectModalWithTitle(page, 'Create Role');
+    await expectModalWithTitle(page, 'Create role');
 
     await expect(page).toFillForm('.ReactModalPortal form', {
       name: roleName,
@@ -164,7 +164,7 @@ describe('RBAC', () => {
       }
     );
 
-    await expectToClickModalAction(page, 'Create Role');
+    await expectToClickModalAction(page, 'Create role');
 
     await waitForToast(page, {
       text: `The role ${roleName} has been successfully created.`,
@@ -200,7 +200,7 @@ describe('RBAC', () => {
 
   it('assign a permission to a role on the role details page', async () => {
     await expect(page).toClick('div[class$=filter] button span', {
-      text: 'Assign Permissions',
+      text: 'Assign permissions',
     });
 
     await expectModalWithTitle(page, 'Assign permissions');
@@ -216,7 +216,7 @@ describe('RBAC', () => {
       }
     );
 
-    await expectToClickModalAction(page, 'Assign Permissions');
+    await expectToClickModalAction(page, 'Assign permissions');
 
     await waitForToast(page, {
       text: 'The selected permissions were successfully assigned to this role',
@@ -233,7 +233,7 @@ describe('RBAC', () => {
     });
 
     await expect(page).toClick('div[class$=filter] button span', {
-      text: 'Assign Users',
+      text: 'Assign users',
     });
 
     await expectModalWithTitle(page, 'Assign users');
@@ -362,7 +362,7 @@ describe('RBAC', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
       {
-        text: 'API Resources',
+        text: 'API resources',
       }
     );
 
@@ -400,7 +400,7 @@ describe('RBAC', () => {
     await expectToClickModalAction(page, 'Delete');
 
     await waitForToast(page, {
-      text: `The API Resource ${apiResourceName} has been successfully deleted`,
+      text: `The API resource ${apiResourceName} has been successfully deleted`,
     });
 
     expect(page.url()).toBe(new URL(`console/api-resources`, logtoConsoleUrl).href);
