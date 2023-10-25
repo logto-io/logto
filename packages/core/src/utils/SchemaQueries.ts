@@ -25,8 +25,8 @@ export default class SchemaQueries<
   ) => Promise<{ count: number }>;
 
   #findAll: <SearchKey extends Key>(
-    limit: number,
-    offset: number,
+    limit?: number,
+    offset?: number,
     search?: SearchOptions<SearchKey>
   ) => Promise<readonly Schema[]>;
 
@@ -53,8 +53,8 @@ export default class SchemaQueries<
   }
 
   async findAll<SearchKey extends Key>(
-    limit: number,
-    offset: number,
+    limit?: number,
+    offset?: number,
     search?: SearchOptions<SearchKey>
   ): Promise<[totalNumber: number, rows: readonly Schema[]]> {
     return Promise.all([this.findTotalNumber(search), this.#findAll(limit, offset, search)]);
