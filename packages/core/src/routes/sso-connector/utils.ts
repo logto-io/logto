@@ -31,14 +31,20 @@ export const parseFactoryDetail = (
 /* 
   Validate and partially parse the connector config if it's provided.
 */
-export const parseConnectorConfig = (providerName: SsoProviderName, config?: JsonObject) => {
+export const parseConnectorConfig = (
+  providerName: SsoProviderName,
+  config?: JsonObject,
+  allowPartial?: boolean
+) => {
   if (!config) {
     return;
   }
 
   const factory = ssoConnectorFactories[providerName];
 
-  const result = factory.configGuard.partial().safeParse(config);
+  const result = allowPartial
+    ? factory.configGuard.partial().safeParse(config)
+    : factory.configGuard.safeParse(config);
 
   if (!result.success) {
     throw new RequestError({

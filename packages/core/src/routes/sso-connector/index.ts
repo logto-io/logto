@@ -92,9 +92,9 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       /* 
         Validate the connector config if it's provided.
-        Allow partial config DB insert
+        Allow partial config settings on create.
        */
-      const parsedConfig = parseConnectorConfig(providerName, config);
+      const parsedConfig = parseConnectorConfig(providerName, config, true);
       const connectorId = generateStandardShortId();
 
       const connector = await ssoConnectors.insert({
@@ -258,15 +258,15 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         });
       }
 
-      // Validate the connector config
-      const parsedConfig = parseConnectorConfig(providerName, body);
+      // Merge with existing config and revalidate
+      const parsedConfig = parseConnectorConfig(providerName, {
+        ...config,
+        ...body,
+      });
 
       // Patch update the connector config
       const connector = await ssoConnectors.updateById(id, {
-        config: {
-          ...config,
-          ...parsedConfig,
-        },
+        config: parsedConfig,
       });
 
       // Fetch provider details for the connector
