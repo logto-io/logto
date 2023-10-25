@@ -2,6 +2,7 @@
 
 .container {
   height: 80px;
+  flex-shrink: 0;
 
   .actions {
     height: 100%;
