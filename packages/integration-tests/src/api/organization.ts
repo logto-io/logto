@@ -3,6 +3,7 @@ import {
   type Organization,
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
+  type OrganizationWithFeatured,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -20,6 +21,11 @@ export class OrganizationApi extends ApiFactory<
 > {
   constructor() {
     super('organizations');
+  }
+
+  override async getList(query?: URLSearchParams): Promise<OrganizationWithFeatured[]> {
+    // eslint-disable-next-line no-restricted-syntax -- This API has different response type
+    return super.getList(query) as Promise<OrganizationWithFeatured[]>;
   }
 
   async addUsers(id: string, userIds: string[]): Promise<void> {

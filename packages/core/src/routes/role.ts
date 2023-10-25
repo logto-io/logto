@@ -1,7 +1,7 @@
 import type { RoleResponse } from '@logto/schemas';
-import { Applications, Roles, Users } from '@logto/schemas';
+import { Roles, featuredApplicationGuard, featuredUserGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { tryThat } from '@silverhand/essentials';
+import { pickState, tryThat } from '@silverhand/essentials';
 import { object, string, z, number } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -53,20 +53,9 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
         .merge(
           object({
             usersCount: number(),
-            featuredUsers: Users.guard
-              .pick({
-                avatar: true,
-                id: true,
-                name: true,
-              })
-              .array(),
+            featuredUsers: featuredUserGuard.array(),
             applicationsCount: number(),
-            featuredApplications: Applications.guard
-              .pick({
-                id: true,
-                name: true,
-              })
-              .array(),
+            featuredApplications: featuredApplicationGuard.array(),
           })
         )
         .array(),
@@ -113,15 +102,9 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
               return {
                 ...role,
                 usersCount,
-                featuredUsers: users.map(({ id, avatar, name, username, primaryEmail }) => ({
-                  id,
-                  avatar,
-                  name,
-                  username,
-                  primaryEmail,
-                })),
+                featuredUsers: users.map(pickState('id', 'avatar', 'name')),
                 applicationsCount,
-                featuredApplications: applications.map(({ id, name }) => ({ id, name })),
+                featuredApplications: applications.map(pickState('id', 'name', 'type')),
               };
             })
           );

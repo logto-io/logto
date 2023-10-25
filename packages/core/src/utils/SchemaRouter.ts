@@ -1,6 +1,6 @@
 import { type SchemaLike, type GeneratedSchema } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { cond, type Optional, type DeepPartial } from '@silverhand/essentials';
+import { type DeepPartial } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import Router, { type IRouterParamContext } from 'koa-router';
@@ -12,6 +12,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 
 import { type TwoRelationsQueries } from './RelationQueries.js';
 import type SchemaQueries from './SchemaQueries.js';
+import { parseSearchOptions } from './search.js';
 
 /**
  * Generate the pathname for from a table name.
@@ -129,14 +130,7 @@ export default class SchemaRouter<
           status: [200],
         }),
         async (ctx, next) => {
-          const { q } = ctx.guard.query;
-          const search: Optional<SearchOptions<Key>> = cond(
-            q &&
-              searchFields.length > 0 && {
-                fields: searchFields,
-                keyword: q,
-              }
-          );
+          const search = parseSearchOptions(searchFields, ctx.guard.query);
           const { limit, offset } = ctx.pagination;
           const [count, entities] = await queries.findAll(limit, offset, search);
 

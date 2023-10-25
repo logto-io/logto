@@ -1,8 +1,10 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
-import { yes, conditionalString, conditional } from '@silverhand/essentials';
+import { yes, conditionalString, conditional, cond } from '@silverhand/essentials';
 import { sql } from 'slonik';
 import { snakeCase } from 'snake-case';
+
+import { type SearchOptions } from '#src/database/utils.js';
 
 import assertThat from './assert-that.js';
 import { isEnum } from './type.js';
@@ -281,4 +283,28 @@ export const buildConditionsFromSearch = (
   }
 
   return sql.join(conditions, getJointModeSql(joint));
+};
+
+/**
+ * Parse the search query from the request query string and build the search options
+ * for certain search fields.
+ *
+ * @param searchFields Search fields to be included in the search options.
+ * @param guardedQuery The guarded query key-value object.
+ * @returns The search options object, or `undefined` if no search query is found.
+ */
+export const parseSearchOptions = <Key extends string>(
+  searchFields: readonly Key[],
+  guardedQuery: {
+    q?: string;
+  }
+): Optional<SearchOptions<Key>> => {
+  const { q } = guardedQuery;
+  return cond(
+    q &&
+      searchFields.length > 0 && {
+        fields: searchFields,
+        keyword: q,
+      }
+  );
 };
