@@ -14,6 +14,7 @@ type Props<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValue
   columns: Array<Column<TFieldValues>>;
   totalCount: number;
   page: number;
+  isLoading?: boolean;
   onPageChange: (page: number) => void;
   onAdd?: () => void;
 };
@@ -34,42 +35,42 @@ function TemplateTable<
   onAdd,
   totalCount,
   page,
+  isLoading,
   onPageChange,
 }: Props<TFieldValues, TName>) {
   const hasData = data.length > 0;
 
   return (
     <>
-      {hasData && (
-        <Table
-          hasBorder
-          className={styles.table}
-          rowGroups={[
-            {
-              key: 'data',
-              data,
-            },
-          ]}
-          columns={columns}
-          rowIndexKey={rowIndexKey}
-          pagination={{
-            page,
-            totalCount,
-            pageSize,
-            onChange: onPageChange,
-          }}
-          footer={
-            <Button
-              size="small"
-              type="text"
-              className={styles.addButton}
-              icon={<CirclePlus />}
-              title="general.create_another"
-              onClick={onAdd}
-            />
-          }
-        />
-      )}
+      <Table
+        hasBorder
+        isLoading={isLoading}
+        className={styles.table}
+        rowGroups={[
+          {
+            key: 'data',
+            data,
+          },
+        ]}
+        columns={columns}
+        rowIndexKey={rowIndexKey}
+        pagination={{
+          page,
+          totalCount,
+          pageSize,
+          onChange: onPageChange,
+        }}
+        footer={
+          <Button
+            size="small"
+            type="text"
+            className={styles.addButton}
+            icon={<CirclePlus />}
+            title="general.create_another"
+            onClick={onAdd}
+          />
+        }
+      />
       {onAdd && !hasData && (
         <Button
           className={styles.addButton}

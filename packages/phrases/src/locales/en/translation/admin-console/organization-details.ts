@@ -14,6 +14,7 @@ const organization_details = {
     'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
   add_with_organization_role: 'Add with organization role(s)',
   user: 'User',
+  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
   edit_organization_roles: 'Edit organization roles',
   edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
   remove_user_from_organization: 'Remove user from organization',

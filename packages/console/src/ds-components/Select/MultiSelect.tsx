@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
+import { Ring as Spinner } from '@/ds-components/Spinner';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
@@ -26,6 +27,7 @@ type Props<T> = {
   isReadOnly?: boolean;
   error?: string | boolean;
   placeholder?: AdminConsoleKey;
+  isOptionsLoading?: boolean;
 };
 
 function MultiSelect<T extends string>({
@@ -37,6 +39,7 @@ function MultiSelect<T extends string>({
   isReadOnly,
   error,
   placeholder,
+  isOptionsLoading,
 }: Props<T>) {
   const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -145,18 +148,25 @@ function MultiSelect<T extends string>({
         className={styles.dropdown}
         anchorRef={selectRef}
       >
-        {filteredOptions.length === 0 && <div className={styles.noResult}>{t('errors.empty')}</div>}
-        {filteredOptions.map(({ value, title }) => (
-          <DropdownItem
-            key={value}
-            onClick={(event) => {
-              event.preventDefault();
-              handleSelect({ value, title });
-            }}
-          >
-            {title ?? value}
-          </DropdownItem>
-        ))}
+        {isOptionsLoading && <Spinner className={styles.spinner} />}
+        {!isOptionsLoading && (
+          <>
+            {filteredOptions.length === 0 && (
+              <div className={styles.noResult}>{t('errors.empty')}</div>
+            )}
+            {filteredOptions.map(({ value, title }) => (
+              <DropdownItem
+                key={value}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleSelect({ value, title });
+                }}
+              >
+                {title ?? value}
+              </DropdownItem>
+            ))}
+          </>
+        )}
       </Dropdown>
     </div>
   );

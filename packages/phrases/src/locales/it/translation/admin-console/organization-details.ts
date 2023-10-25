@@ -27,6 +27,8 @@ const organization_details = {
   /** UNTRANSLATED */
   user: 'User',
   /** UNTRANSLATED */
+  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
+  /** UNTRANSLATED */
   edit_organization_roles: 'Edit organization roles',
   /** UNTRANSLATED */
   edit_organization_roles_of_user: 'Edit organization roles of {{name}}',

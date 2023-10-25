@@ -40,10 +40,6 @@ function RolesField() {
 
   const isLoading = !response && !error;
 
-  if (isLoading) {
-    return <>loading</>; // TODO: loading state
-  }
-
   return (
     <FormField title="organizations.organization_role_other">
       <RoleModal
@@ -56,6 +52,7 @@ function RolesField() {
       />
       <TemplateTable
         rowIndexKey="id"
+        isLoading={isLoading}
         page={page}
         totalCount={totalCount}
         data={data}

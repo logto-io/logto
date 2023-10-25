@@ -21,9 +21,7 @@ export class OrganizationRoleApi extends ApiFactory<
     super('organization-roles');
   }
 
-  override async getList(
-    params?: URLSearchParams | undefined
-  ): Promise<OrganizationRoleWithScopes[]> {
+  override async getList(params?: URLSearchParams): Promise<OrganizationRoleWithScopes[]> {
     // eslint-disable-next-line no-restricted-syntax
     return super.getList(params) as Promise<OrganizationRoleWithScopes[]>;
   }

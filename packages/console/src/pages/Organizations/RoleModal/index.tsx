@@ -15,6 +15,7 @@ import TextInput from '@/ds-components/TextInput';
 import useActionTranslation from '@/hooks/use-action-translation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 const organizationRolePath = 'api/organization-roles';
 
@@ -27,13 +28,12 @@ type Props = {
 /** A modal that allows users to create or edit an organization role. */
 function RoleModal({ isOpen, editData, onClose }: Props) {
   const api = useApi();
-  const [isLoading, setIsLoading] = useState(false);
   const {
     reset,
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Partial<OrganizationRole> & { scopes: Array<Option<string>> }>({
     defaultValues: { scopes: [] },
   });
@@ -45,10 +45,9 @@ function RoleModal({ isOpen, editData, onClose }: Props) {
   const action = editData ? t('general.save') : tAction('create', 'organizations.role');
   const [keyword, setKeyword] = useState('');
 
-  const submit = handleSubmit(async ({ scopes, ...json }) => {
-    setIsLoading(true);
-    try {
-      // Create or update role
+  const submit = handleSubmit(
+    trySubmitSafe(async ({ scopes, ...json }) => {
+      // Create or update rol e
       const { id } = await (editData
         ? api.patch(`${organizationRolePath}/${editData.id}`, {
             json,
@@ -63,10 +62,8 @@ function RoleModal({ isOpen, editData, onClose }: Props) {
         json: { organizationScopeIds: scopes.map(({ value }) => value) },
       });
       onClose();
-    } finally {
-      setIsLoading(false);
-    }
-  });
+    })
+  );
 
   // Reset form on open
   useEffect(() => {
@@ -96,7 +93,7 @@ function RoleModal({ isOpen, editData, onClose }: Props) {
           <Button
             type="primary"
             title={<DangerousRaw>{action}</DangerousRaw>}
-            isLoading={isLoading}
+            isLoading={isSubmitting}
             onClick={submit}
           />
         }

@@ -37,10 +37,6 @@ function PermissionsField() {
 
   const isLoading = !response && !error;
 
-  if (isLoading) {
-    return <>loading</>; // TODO: loading state
-  }
-
   return (
     <FormField title="organizations.organization_permission_other">
       <PermissionModal
@@ -53,6 +49,7 @@ function PermissionsField() {
       />
       <TemplateTable
         rowIndexKey="id"
+        isLoading={isLoading}
         page={page}
         totalCount={totalCount}
         data={data}

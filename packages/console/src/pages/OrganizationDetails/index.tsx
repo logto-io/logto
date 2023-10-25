@@ -1,13 +1,14 @@
 import { type Organization } from '@logto/schemas';
 import { useCallback, useState } from 'react';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
 import ActionsButton from '@/components/ActionsButton';
+import AppError from '@/components/AppError';
 import DetailsPage from '@/components/DetailsPage';
+import Skeleton from '@/components/DetailsPage/Skeleton';
 import PageMeta from '@/components/PageMeta';
 import ThemedIcon from '@/components/ThemedIcon';
 import Card from '@/ds-components/Card';
@@ -45,63 +46,65 @@ function OrganizationDetails() {
     try {
       await api.delete(`api/organizations/${id}`);
       navigate(pathname);
-    } catch (error) {
-      toast.error(String(error));
     } finally {
       setIsDeleting(false);
     }
   }, [api, id, isDeleting, navigate]);
 
-  if (!id || error) {
-    return null;
-  }
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
+  const isLoading = !data && !error;
 
   return (
     <DetailsPage backLink={pathname} backLinkTitle="organizations.title" className={styles.page}>
       <PageMeta titleKey="organization_details.page_title" />
-      <Card className={styles.header}>
-        <div className={styles.metadata}>
-          <ThemedIcon for={OrganizationIcon} size={60} />
-          <div>
-            <div className={styles.name}>{data.name}</div>
-            <div className={styles.row}>
-              <span className={styles.label}>{t('organization_details.organization_id')} </span>
-              <CopyToClipboard size="default" value={data.id} />
+      {isLoading && <Skeleton />}
+      {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
+      {data && (
+        <>
+          <Card className={styles.header}>
+            <div className={styles.metadata}>
+              <ThemedIcon for={OrganizationIcon} size={60} />
+              <div>
+                <div className={styles.name}>{data.name}</div>
+                <div className={styles.row}>
+                  <span className={styles.label}>{t('organization_details.organization_id')} </span>
+                  <CopyToClipboard size="default" value={data.id} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <ActionsButton
-          buttonProps={{
-            type: 'default',
-            size: 'large',
-          }}
-          deleteConfirmation="organization_details.delete_confirmation"
-          fieldName="organizations.title"
-          onDelete={deleteOrganization}
-        />
-      </Card>
-      <TabNav>
-        <TabNavItem href={`${pathname}/${id}/${tabs.settings}`}>Settings</TabNavItem>
-        <TabNavItem href={`${pathname}/${id}/${tabs.members}`}>Members</TabNavItem>
-      </TabNav>
-      <Routes>
-        <Route index element={<Navigate replace to={tabs.settings} />} />
-        <Route
-          path={tabs.settings}
-          element={
-            <Settings
-              isDeleting={isDeleting}
-              data={data}
-              onUpdated={async (data) => mutate(data)}
+            <ActionsButton
+              buttonProps={{
+                type: 'default',
+                size: 'large',
+              }}
+              deleteConfirmation="organization_details.delete_confirmation"
+              fieldName="organizations.title"
+              onDelete={deleteOrganization}
             />
-          }
-        />
-        <Route path={tabs.members} element={<Members organization={data} />} />
-      </Routes>
+          </Card>
+          <TabNav>
+            <TabNavItem href={`${pathname}/${data.id}/${tabs.settings}`}>
+              {t('general.settings_nav')}
+            </TabNavItem>
+            <TabNavItem href={`${pathname}/${data.id}/${tabs.members}`}>
+              {t('organizations.members')}
+            </TabNavItem>
+          </TabNav>
+          <Routes>
+            <Route index element={<Navigate replace to={tabs.settings} />} />
+            <Route
+              path={tabs.settings}
+              element={
+                <Settings
+                  isDeleting={isDeleting}
+                  data={data}
+                  onUpdated={async (data) => mutate(data)}
+                />
+              }
+            />
+            <Route path={tabs.members} element={<Members organization={data} />} />
+          </Routes>
+        </>
+      )}
     </DetailsPage>
   );
 }

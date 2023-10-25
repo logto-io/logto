@@ -9,7 +9,7 @@ import { type RequestError } from './use-api';
 const useSearchValues = <T>(pathname: string, keyword: string) => {
   const {
     data: response,
-    error, // TODO: handle error
+    error,
     mutate,
   } = useSWR<[T[], number], RequestError>(
     buildUrl(pathname, {
@@ -23,11 +23,12 @@ const useSearchValues = <T>(pathname: string, keyword: string) => {
 
   return useMemo(
     () => ({
+      isLoading: !response && !error,
       data,
       mutate,
       error,
     }),
-    [data, error, mutate]
+    [data, error, mutate, response]
   );
 };
 
