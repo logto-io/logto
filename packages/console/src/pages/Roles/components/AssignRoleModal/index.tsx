@@ -125,8 +125,8 @@ function AssignRoleModal<T extends Application | User>({
               parameters: {
                 excludeRoleId: roleId,
                 ...(isUser
-                  ? { 'search.type': ApplicationType.MachineToMachine, 'mode.type': 'exact' }
-                  : {}),
+                  ? {}
+                  : { 'search.type': ApplicationType.MachineToMachine, 'mode.type': 'exact' }),
               },
             }}
             selectedEntities={entities}
