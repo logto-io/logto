@@ -11,7 +11,7 @@ const scopeDelimiter = /[ +]/;
  *
  * @remark Forked from @logto/oidc-connector
  */
-export const scopePostProcessor = (scope: string) => {
+export const scopePostProcessor = (scope = '') => {
   const splitScopes = scope.split(scopeDelimiter).filter(Boolean);
 
   if (!splitScopes.includes(openidScope)) {
@@ -21,14 +21,14 @@ export const scopePostProcessor = (scope: string) => {
   return scope;
 };
 
-export const configGuard = z.object({
+export const basicOidcConnectorConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   issuer: z.string(),
-  scope: z.string().transform(scopePostProcessor),
+  scope: z.string().optional().transform(scopePostProcessor),
 });
 
-export type ConfigType = z.infer<typeof configGuard>;
+export type BasicOidcConnectorConfig = z.infer<typeof basicOidcConnectorConfigGuard>;
 
 export const oidcConfigResponseGuard = z.object({
   authorization_endpoint: z.string(),

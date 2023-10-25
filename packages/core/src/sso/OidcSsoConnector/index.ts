@@ -4,11 +4,11 @@ import { type SsoConnector } from '@logto/schemas';
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn, SsoProviderName } from '../types/index.js';
-import { configGuard } from '../types/oidc.js';
+import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 
 export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
   constructor(private readonly _data: SsoConnector) {
-    const parseConfigResult = configGuard.safeParse(_data.config);
+    const parseConfigResult = basicOidcConnectorConfigGuard.safeParse(_data.config);
 
     if (!parseConfigResult.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, parseConfigResult.error);
@@ -30,6 +30,6 @@ export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> 
   description: {
     en: ' This connector is used to connect with OIDC single sign-on identity provider.',
   },
-  configGuard,
+  configGuard: basicOidcConnectorConfigGuard,
   constructor: OidcSsoConnector,
 };
