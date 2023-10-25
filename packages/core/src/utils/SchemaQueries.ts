@@ -20,7 +20,7 @@ export default class SchemaQueries<
   Schema extends SchemaLike<Key> & { id: string },
 > {
   #findTotalNumber: () => Promise<{ count: number }>;
-  #findAll: (limit: number, offset: number) => Promise<readonly Schema[]>;
+  #findAll: (limit?: number, offset?: number) => Promise<readonly Schema[]>;
   #findById: (id: string) => Promise<Readonly<Schema>>;
   #insert: (data: OmitAutoSetFields<CreateSchema>) => Promise<Readonly<Schema>>;
 
@@ -48,7 +48,7 @@ export default class SchemaQueries<
     return count;
   }
 
-  async findAll(limit: number, offset: number): Promise<readonly Schema[]> {
+  async findAll(limit?: number, offset?: number): Promise<readonly Schema[]> {
     return this.#findAll(limit, offset);
   }
 
