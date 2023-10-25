@@ -29,7 +29,10 @@ export const parseFactoryDetail = (
 };
 
 /* 
-  Validate and partially parse the connector config if it's provided.
+  Validate the connector config if it's provided.
+  Return undefined if the config is not provided.
+  Throw error if the config is invalid.
+  Partially validate the config if allowPartial is true.
 */
 export const parseConnectorConfig = (
   providerName: SsoProviderName,
@@ -57,6 +60,10 @@ export const parseConnectorConfig = (
   return result.data;
 };
 
+/* 
+  Safely fetch and parse the detailed connector config from provider. 
+  Return undefined if failed to fetch or parse the config.
+*/
 export const fetchConnectorProviderDetails = async (
   connector: SsoConnector
 ): Promise<SsoConnectorWithProviderConfig | undefined> => {
@@ -69,10 +76,6 @@ export const fetchConnectorProviderDetails = async (
 
   const { logo, constructor } = ssoConnectorFactories[providerName];
 
-  /* 
-    Safely fetch and parse the detailed connector config from provider. 
-    Return undefined if failed to fetch or parse the config.
-  */
   const providerConfig = await trySafe(async () => {
     const instance = new constructor(connector);
     return instance.getConfig();
