@@ -1,4 +1,4 @@
-import { SsoConnectors } from '@logto/schemas';
+import { SsoConnectors, jsonObjectGuard } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -16,10 +16,12 @@ import {
   type ConnectorFactoryDetail,
   ssoConnectorCreateGuard,
   ssoConnectorWithProviderConfigGuard,
+  ssoConnectorPatchGuard,
 } from './type.js';
 import {
   parseFactoryDetail,
   isSupportedSsoProvider,
+  parseConnectorConfig,
   fetchConnectorProviderDetails,
 } from './utils.js';
 
@@ -88,31 +90,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         });
       }
 
-      const factory = ssoConnectorFactories[providerName];
-
       /* 
         Validate the connector config if it's provided.
         Allow partial config DB insert
        */
-      const parseConfig = () => {
-        if (!config) {
-          return;
-        }
-
-        const result = factory.configGuard.partial().safeParse(config);
-
-        if (!result.success) {
-          throw new RequestError({
-            code: 'connector.invalid_config',
-            status: 422,
-            details: result.error.flatten(),
-          });
-        }
-
-        return result.data;
-      };
-
-      const parsedConfig = parseConfig();
+      const parsedConfig = parseConnectorConfig(providerName, config);
       const connectorId = generateStandardShortId();
 
       const connector = await ssoConnectors.insert({
@@ -176,6 +158,119 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
           status: 404,
         });
       }
+
+      ctx.body = connectorWithProviderDetails;
+
+      return next();
+    }
+  );
+
+  /* Delete a single sign on connector by id */
+  router.delete(
+    `${pathname}/:id`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+
+      // Delete the connector
+      await ssoConnectors.deleteById(id);
+      ctx.status = 204;
+      return next();
+    }
+  );
+
+  /* Patch update a single sign on connector by id */
+  router.patch(
+    `${pathname}/:id`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: ssoConnectorPatchGuard,
+      response: ssoConnectorWithProviderConfigGuard,
+      status: [200, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      const { body } = ctx.guard;
+
+      // Fetch the connector
+      const originalConnector = await ssoConnectors.findById(id);
+      const { providerName } = originalConnector;
+
+      // Return 422 if the connector provider is not supported
+      if (!isSupportedSsoProvider(providerName)) {
+        throw new RequestError({
+          code: 'connector.not_found',
+          type: providerName,
+          status: 422,
+        });
+      }
+
+      const { config, ...rest } = body;
+
+      // Validate the connector config if it's provided
+      const parsedConfig = parseConnectorConfig(providerName, config);
+
+      // Check if there's any valid update
+      const hasValidUpdate = parsedConfig ?? Object.keys(rest).length > 0;
+
+      // Patch update the connector only if there's any valid update
+      const connector = hasValidUpdate
+        ? await ssoConnectors.updateById(id, {
+            ...conditional(parsedConfig && { config: parsedConfig }),
+            ...rest,
+          })
+        : originalConnector;
+
+      // Fetch provider details for the connector
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+
+      ctx.body = connectorWithProviderDetails;
+
+      return next();
+    }
+  );
+
+  /* Patch update a single sign on connector's config by id */
+  router.patch(
+    `${pathname}/:id/config`,
+    koaGuard({
+      params: z.object({ id: z.string().min(1) }),
+      body: jsonObjectGuard,
+      response: ssoConnectorWithProviderConfigGuard,
+      status: [200, 404, 422],
+    }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      const { body } = ctx.guard;
+
+      // Fetch the connector
+      const { providerName, config } = await ssoConnectors.findById(id);
+
+      // Return 422 if the connector provider is not supported
+      if (!isSupportedSsoProvider(providerName)) {
+        throw new RequestError({
+          code: 'connector.not_found',
+          type: providerName,
+          status: 422,
+        });
+      }
+
+      // Validate the connector config
+      const parsedConfig = parseConnectorConfig(providerName, body);
+
+      // Patch update the connector config
+      const connector = await ssoConnectors.updateById(id, {
+        config: {
+          ...config,
+          ...parsedConfig,
+        },
+      });
+
+      // Fetch provider details for the connector
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
 
       ctx.body = connectorWithProviderDetails;
 
