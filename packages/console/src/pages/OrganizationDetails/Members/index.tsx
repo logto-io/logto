@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import Plus from '@/assets/icons/plus.svg';
 import ActionsButton from '@/components/ActionsButton';
 import DateTime from '@/components/DateTime';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
@@ -52,6 +53,7 @@ function Members({ organization }: Props) {
   return (
     <>
       <Table
+        placeholder={<EmptyDataPlaceholder />}
         pagination={{
           page,
           totalCount,

@@ -222,6 +222,9 @@ function UserDetails() {
             <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Logs}`}>
               {t('user_details.tab_logs')}
             </TabNavItem>
+            <TabNavItem href={`/users/${data.id}/${UserDetailsTabs.Organizations}`}>
+              {t('user_details.tab_organizations')}
+            </TabNavItem>
           </TabNav>
           <Outlet
             context={

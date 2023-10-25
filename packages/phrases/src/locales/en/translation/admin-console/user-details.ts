@@ -20,6 +20,7 @@ const user_details = {
   tab_settings: 'Settings',
   tab_roles: 'Roles',
   tab_logs: 'User logs',
+  tab_organizations: 'Organizations',
   authentication: 'Authentication',
   authentication_description:
     'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
@@ -92,6 +93,8 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'User needs to have at least one of the sign-in identifiers (username, email, phone number or social) to sign in. Are you sure you want to continue?',
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);

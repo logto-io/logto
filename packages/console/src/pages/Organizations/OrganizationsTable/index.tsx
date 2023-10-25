@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ThemedIcon from '@/components/ThemedIcon';
 import { defaultPageSize } from '@/consts';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
@@ -19,9 +21,11 @@ const pathname = '/organizations';
 const apiPathname = 'api/organizations';
 
 function OrganizationsTable() {
+  const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const { data: response, error } = useSWR<[OrganizationWithFeatured[], number], RequestError>(
     buildUrl(apiPathname, {
+      q: keyword,
       showFeatured: '1',
       page: String(page),
       page_size: String(pageSize),
@@ -34,6 +38,7 @@ function OrganizationsTable() {
   return (
     <Table
       isLoading={isLoading}
+      placeholder={<EmptyDataPlaceholder />}
       rowGroups={[{ key: 'data', data }]}
       columns={[
         {
@@ -71,6 +76,21 @@ function OrganizationsTable() {
         pageSize,
         onChange: setPage,
       }}
+      filter={
+        <Search
+          defaultValue={keyword}
+          isClearable={Boolean(keyword)}
+          placeholder={t('organization_details.search_user_placeholder')}
+          onSearch={(value) => {
+            setKeyword(value);
+            setPage(1);
+          }}
+          onClearSearch={() => {
+            setKeyword('');
+            setPage(1);
+          }}
+        />
+      }
     />
   );
 }

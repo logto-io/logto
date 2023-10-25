@@ -21,6 +21,8 @@ const user_details = {
   tab_roles: 'Roller',
   tab_logs: 'Kullanıcı kayıtları',
   /** UNTRANSLATED */
+  tab_organizations: 'Organizations',
+  /** UNTRANSLATED */
   authentication: 'Authentication',
   authentication_description:
     'Her kullanıcının, temel veriler, sosyal kimlikler ve özel verilerden oluşan tüm kullanıcı bilgilerini içeren bir profil vardır.',
@@ -101,6 +103,9 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
+  /** UNTRANSLATED */
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);
