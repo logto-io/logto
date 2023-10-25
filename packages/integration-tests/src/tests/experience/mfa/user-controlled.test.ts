@@ -58,6 +58,8 @@ describe('MFA - User controlled', () => {
     // Wait for the TOTP page rendered
     await waitFor(1000);
     await experience.toClick('div[role=button][class$=skipButton]');
+    // Wait for the sign-in requests to be handled
+    await experience.page.waitForNetworkIdle();
     await experience.verifyThenEnd();
     await deleteUser(user.id);
   });
