@@ -98,7 +98,7 @@ function AssignRoleModal<T extends Application | User>({
               pathname: `api/${phraseKey}`,
               parameters: {
                 excludeRoleId: roleId,
-                ...(roleType === RoleType.MachineToMachine
+                ...(roleType === RoleType.User
                   ? {}
                   : { 'search.type': ApplicationType.MachineToMachine, 'mode.type': 'exact' }),
               },
