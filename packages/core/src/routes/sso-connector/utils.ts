@@ -1,22 +1,15 @@
 import { type I18nPhrases } from '@logto/connector-kit';
-import { type JsonObject, type SsoConnector } from '@logto/schemas';
+import { type JsonObject } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
-import { type SsoProviderName } from '#src/sso/types/index.js';
+import { type SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
 
-import { type SsoConnectorWithProviderConfig, type SupportedSsoConnector } from './type.js';
+import { type SsoConnectorWithProviderConfig } from './type.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
-
-export const isSupportedSsoProvider = (providerName: string): providerName is SsoProviderName =>
-  providerName in ssoConnectorFactories;
-
-export const isSupportedSsoConnector = (
-  connector: SsoConnector
-): connector is SupportedSsoConnector => isSupportedSsoProvider(connector.providerName);
 
 export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,

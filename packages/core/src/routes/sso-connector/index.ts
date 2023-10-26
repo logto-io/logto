@@ -6,7 +6,8 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { SsoProviderName } from '#src/sso/types/index.js';
+import { SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
+import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -14,15 +15,12 @@ import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 import {
   connectorFactoriesResponseGuard,
   type ConnectorFactoryDetail,
-  type SupportedSsoConnector,
   ssoConnectorCreateGuard,
   ssoConnectorWithProviderConfigGuard,
   ssoConnectorPatchGuard,
 } from './type.js';
 import {
   parseFactoryDetail,
-  isSupportedSsoProvider,
-  isSupportedSsoConnector,
   parseConnectorConfig,
   fetchConnectorProviderDetails,
 } from './utils.js';
@@ -200,16 +198,13 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { body } = ctx.guard;
 
       const originalConnector = await ssoConnectors.findById(id);
-      const { providerName } = originalConnector;
 
       assert(
-        isSupportedSsoProvider(providerName),
-        new RequestError({
-          code: 'connector.not_found',
-          status: 404,
-        })
+        isSupportedSsoConnector(originalConnector),
+        new RequestError({ code: 'connector.not_found', status: 404 })
       );
 
+      const { providerName } = originalConnector;
       const { config, ...rest } = body;
 
       // Validate the connector config if it's provided
@@ -253,16 +248,15 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { id } = ctx.guard.params;
       const { body } = ctx.guard;
 
-      const { providerName, config } = await ssoConnectors.findById(id);
+      const originalConnector = await ssoConnectors.findById(id);
 
-      // Return 422 if the connector provider is not supported
-      if (!isSupportedSsoProvider(providerName)) {
-        throw new RequestError({
-          code: 'connector.not_found',
-          type: providerName,
-          status: 404,
-        });
-      }
+      // Return 404 if the connector provider is not supported
+      assert(
+        isSupportedSsoConnector(originalConnector),
+        new RequestError({ code: 'connector.not_found', status: 404 })
+      );
+
+      const { providerName, config } = originalConnector;
 
       // Merge with existing config and revalidate
       const parsedConfig = parseConnectorConfig(providerName, {

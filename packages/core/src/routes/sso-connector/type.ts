@@ -1,4 +1,4 @@
-import { SsoConnectors, type SsoConnector } from '@logto/schemas';
+import { SsoConnectors } from '@logto/schemas';
 import { z } from 'zod';
 
 import { SsoProviderName } from '#src/sso/types/index.js';
@@ -46,7 +46,3 @@ export const ssoConnectorPatchGuard = SsoConnectors.guard
     connectorName: true,
   })
   .partial();
-
-export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
-  providerName: SsoProviderName;
-};
