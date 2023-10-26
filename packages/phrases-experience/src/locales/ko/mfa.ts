@@ -47,6 +47,8 @@ const mfa = {
     '디바이스 비밀번호 또는 생체 인증, QR 코드 스캔 또는 YubiKey와 같은 USB 보안 키를 사용하여 확인하기 위해 패스키를 사용하세요.',
   secret_key_copied: '비밀 키 복사됨.',
   backup_code_copied: '백업 코드 복사됨.',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

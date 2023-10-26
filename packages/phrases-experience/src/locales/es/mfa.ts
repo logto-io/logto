@@ -49,6 +49,8 @@ const mfa = {
     'Use la clave de acceso para verificar mediante la contraseña de su dispositivo o biometría, escanee el código QR o use una llave de seguridad USB como YubiKey.',
   secret_key_copied: 'Clave secreta copiada.',
   backup_code_copied: 'Código de respaldo copiado.',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

@@ -49,6 +49,20 @@ export default class ExpectWebAuthnExperience extends ExpectExperience {
     });
   }
 
+  async toCreatePasskey() {
+    this.toBeAt('mfa-binding/WebAuthn');
+    // Wait for the WebAuthn options have been prepared.
+    await this.page.waitForNetworkIdle();
+    await this.toClick('button', 'Create a passkey');
+  }
+
+  async toVerifyViaPasskey() {
+    this.toBeAt('mfa-verification/WebAuthn');
+    // Wait for the WebAuthn options have been prepared.
+    await this.page.waitForNetworkIdle();
+    await this.toClick('button', 'Verify via passkey');
+  }
+
   private async getCdpClient() {
     if (!this._cdpClient) {
       this._cdpClient = await this.page.target().createCDPSession();

@@ -44,6 +44,8 @@ const mfa = {
     '使用 Passkey 通过设备密码或生物识别、扫描 QR 码或使用类似 YubiKey 的 USB 安全密钥进行验证。',
   secret_key_copied: '已复制秘钥。',
   backup_code_copied: '已复制备用码。',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

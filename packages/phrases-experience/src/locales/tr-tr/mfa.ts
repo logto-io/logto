@@ -49,6 +49,8 @@ const mfa = {
     'Cihazınızın şifresi veya biyometrisi, QR kodunu tarayarak veya YubiKey gibi bir USB güvenlik anahtarı kullanarak doğrulama için anahtar kodunu kullanın.',
   secret_key_copied: 'Gizli anahtar kopyalandı.',
   backup_code_copied: 'Yedek kodu kopyalandı.',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

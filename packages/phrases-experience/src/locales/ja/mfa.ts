@@ -49,6 +49,8 @@ const mfa = {
     'デバイスのパスワードまたはバイオメトリック、QRコードのスキャン、YubiKeyなどのUSBセキュリティキーを使用して確認するためにパスキーを使用します。',
   secret_key_copied: 'シークレットキーがコピーされました。',
   backup_code_copied: 'バックアップコードがコピーされました。',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

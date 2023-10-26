@@ -49,6 +49,8 @@ const mfa = {
     'Użyj klucza dostępu do weryfikacji za pomocą hasła urządzenia lub biometrii, skanowania kodu QR lub użycia klucza bezpieczeństwa USB, takiego jak YubiKey.',
   secret_key_copied: 'Skopiowano klucz prywatny.',
   backup_code_copied: 'Skopiowano kod zapasowy.',
+  /** UNTRANSLATED */
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);
