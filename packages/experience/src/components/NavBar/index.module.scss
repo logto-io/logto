@@ -51,4 +51,12 @@
       text-decoration: underline;
     }
   }
+
+  .skipButton {
+    font: var(--font-label-2);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
