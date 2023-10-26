@@ -23,6 +23,8 @@ const user_details = {
   tab_roles: 'Funções',
   tab_logs: 'Registos do utilizador',
   /** UNTRANSLATED */
+  tab_organizations: 'Organizations',
+  /** UNTRANSLATED */
   authentication: 'Authentication',
   authentication_description:
     'Cada utilizador tem um perfil que contém todas as informações do utilizador. Consiste em dados básicos, identidades sociais e dados personalizados.',
@@ -102,6 +104,9 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O utilizador precisa de ter pelo menos um dos identificadores de início de sessão (nome de utilizador, e-mail, número de telefone ou redes sociais) para iniciar sessão. Tem a certeza de que quer continuar?',
+  /** UNTRANSLATED */
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);

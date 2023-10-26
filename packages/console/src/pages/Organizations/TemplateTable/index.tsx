@@ -2,6 +2,7 @@ import { type FieldValues, type FieldPath } from 'react-hook-form';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Plus from '@/assets/icons/plus.svg';
+import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import Button from '@/ds-components/Button';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
@@ -44,6 +45,7 @@ function TemplateTable<
     <>
       <Table
         hasBorder
+        placeholder={<EmptyDataPlaceholder />}
         isLoading={isLoading}
         className={styles.table}
         rowGroups={[

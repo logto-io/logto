@@ -21,6 +21,8 @@ const user_details = {
   tab_roles: 'Role',
   tab_logs: 'Logi użytkownika',
   /** UNTRANSLATED */
+  tab_organizations: 'Organizations',
+  /** UNTRANSLATED */
   authentication: 'Authentication',
   authentication_description:
     'Każdy użytkownik ma profil zawierający wszystkie informacje o użytkowniku. Składa się on z podstawowych danych, tożsamości społecznościowych i niestandardowych danych.',
@@ -99,6 +101,9 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Aby się zalogować, użytkownik musi mieć co najmniej jeden z identyfikatorów logowania (nazwa użytkownika, e-mail, numer telefonu lub konto społecznościowe). Czy na pewno chcesz kontynuować?',
+  /** UNTRANSLATED */
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);

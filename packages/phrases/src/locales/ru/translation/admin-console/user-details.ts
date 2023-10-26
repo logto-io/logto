@@ -21,6 +21,8 @@ const user_details = {
   tab_roles: 'Роли',
   tab_logs: 'Журналы пользователя',
   /** UNTRANSLATED */
+  tab_organizations: 'Organizations',
+  /** UNTRANSLATED */
   authentication: 'Authentication',
   authentication_description:
     'У каждого пользователя есть профиль, содержащий всю информацию о пользователе. Он состоит из основных данных, социальных идентификаторов и пользовательских данных.',
@@ -100,6 +102,9 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Пользователь должен иметь хотя бы один из идентификаторов входа (имя пользователя, электронная почта, номер телефона или социальная сеть), чтобы войти. Вы уверены, что хотите продолжить?',
+  /** UNTRANSLATED */
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);

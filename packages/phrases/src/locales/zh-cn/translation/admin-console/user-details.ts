@@ -21,6 +21,8 @@ const user_details = {
   tab_roles: '角色',
   tab_logs: '用户日志',
   /** UNTRANSLATED */
+  tab_organizations: 'Organizations',
+  /** UNTRANSLATED */
   authentication: 'Authentication',
   authentication_description:
     '每个用户都有一个包含所有用户信息的个人资料。它由基本数据、社交身份和自定义数据组成。',
@@ -95,6 +97,9 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '用户需要至少拥有一个登录标识（用户名、邮箱、手机号或社交账户）才能登录。确定要继续吗？',
+  /** UNTRANSLATED */
+  organization_roles_tooltip:
+    'Organization roles assigned to the current user in this organization.',
 };
 
 export default Object.freeze(user_details);

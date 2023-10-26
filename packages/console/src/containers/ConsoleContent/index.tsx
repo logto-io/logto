@@ -47,6 +47,7 @@ import TenantBasicSettings from '@/pages/TenantSettings/TenantBasicSettings';
 import TenantDomainSettings from '@/pages/TenantSettings/TenantDomainSettings';
 import UserDetails from '@/pages/UserDetails';
 import UserLogs from '@/pages/UserDetails/UserLogs';
+import UserOrganizations from '@/pages/UserDetails/UserOrganizations';
 import UserRoles from '@/pages/UserDetails/UserRoles';
 import UserSettings from '@/pages/UserDetails/UserSettings';
 import Users from '@/pages/Users';
@@ -130,6 +131,7 @@ function ConsoleContent() {
                 <Route path={UserDetailsTabs.Settings} element={<UserSettings />} />
                 <Route path={UserDetailsTabs.Roles} element={<UserRoles />} />
                 <Route path={UserDetailsTabs.Logs} element={<UserLogs />} />
+                <Route path={UserDetailsTabs.Organizations} element={<UserOrganizations />} />
               </Route>
               <Route
                 path={`:userId/${UserDetailsTabs.Logs}/:logId`}

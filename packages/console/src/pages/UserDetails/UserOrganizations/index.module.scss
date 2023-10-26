@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.rolesHeader {
+  display: flex;
+  align-items: center;
+  gap: _.unit(0.5);
+}
