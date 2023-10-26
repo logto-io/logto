@@ -13,6 +13,7 @@
   user-select: none;
   position: relative;
   text-decoration: none;
+  gap: _.unit(2);
 
   &.withIcon {
     display: inline-flex;
@@ -43,7 +44,6 @@
   .icon {
     display: flex;
     align-items: center;
-    gap: _.unit(2);
   }
 
   .trailingIcon {
