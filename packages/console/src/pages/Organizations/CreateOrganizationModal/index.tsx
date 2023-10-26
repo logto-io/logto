@@ -60,22 +60,24 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
         }
         onClose={onClose}
       >
-        <FormField isRequired title="general.name">
-          <TextInput
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            placeholder={t('organizations.organization_name_placeholder')}
-            error={Boolean(errors.name)}
-            {...register('name', { required: true })}
-          />
-        </FormField>
-        <FormField title="general.description">
-          <TextInput
-            error={Boolean(errors.description)}
-            placeholder={t('organizations.organization_description_placeholder')}
-            {...register('description')}
-          />
-        </FormField>
+        <form>
+          <FormField isRequired title="general.name">
+            <TextInput
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              placeholder={t('organizations.organization_name_placeholder')}
+              error={Boolean(errors.name)}
+              {...register('name', { required: true })}
+            />
+          </FormField>
+          <FormField title="general.description">
+            <TextInput
+              error={Boolean(errors.description)}
+              placeholder={t('organizations.organization_description_placeholder')}
+              {...register('description')}
+            />
+          </FormField>
+        </form>
       </ModalLayout>
     </ReactModal>
   );

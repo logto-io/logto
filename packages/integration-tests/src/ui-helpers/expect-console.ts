@@ -19,7 +19,7 @@ type ExpectConsoleOptions = {
   tenantId?: string;
 };
 
-export type ConsoleTitle = 'Sign-in experience';
+export type ConsoleTitle = 'Sign-in experience' | 'Organizations';
 
 export default class ExpectConsole extends ExpectPage {
   readonly options: Required<ExpectConsoleOptions>;
@@ -49,13 +49,78 @@ export default class ExpectConsole extends ExpectPage {
   }
 
   /**
+   * Alias for `expect(page).toMatchElement(...)`.
+   *
+   * @see {@link jest.Matchers.toMatchElement}
+   */
+  async toMatchElement(...args: Parameters<jest.Matchers<unknown>['toMatchElement']>) {
+    return expect(this.page).toMatchElement(...args);
+  }
+
+  /**
    * Navigate to a specific page in the Console.
    */
   async gotoPage(pathname: string, title: ConsoleTitle) {
     await this.navigateTo(this.buildUrl(path.join(this.options.tenantId, pathname)));
     await expect(this.page).toMatchElement(
-      [dcls('main'), dcls('container'), dcls('cardTitle')].join(' '),
+      [dcls('main'), dcls('container'), dcls('title')].join(' '),
       { text: title }
+    );
+  }
+
+  /**
+   * Expect navigation tabs with the given names to be rendered in the Console.
+   *
+   * @param tabNames The names of the tabs to expect, case-insensitive.
+   */
+  async toExpectTabs(...tabNames: string[]) {
+    await Promise.all(
+      tabNames.map(async (tabName) => {
+        return expect(this.page).toMatchElement(
+          ['nav', dcls('item'), dcls('link'), 'a'].join(' '),
+          { text: new RegExp(tabName, 'i'), visible: true }
+        );
+      })
+    );
+  }
+
+  /**
+   * Expect table headers with the given names to be rendered in the Console.
+   *
+   * @param headers The names of the table headers to expect, case-insensitive.
+   */
+  async toExpectTableHeaders(...headers: string[]) {
+    await Promise.all(
+      headers.map(async (header) => {
+        return expect(this.page).toMatchElement(
+          [`table${cls('headerTable')}`, 'thead', 'tr', 'th'].join(' '),
+          { text: new RegExp(header, 'i'), visible: true }
+        );
+      })
+    );
+  }
+
+  /**
+   * Expect a table cell with the given text to be rendered in the Console.
+   *
+   * @param text The text to expect, case-insensitive.
+   */
+  async toExpectTableCell(text: string) {
+    await expect(this.page).toMatchElement([`table`, 'tbody', 'tr', 'td'].join(' '), {
+      text: new RegExp(text, 'i'),
+      visible: true,
+    });
+  }
+
+  /**
+   * Expect a modal to appear with the given title.
+   *
+   * @param title The title of the modal to expect, case-insensitive.
+   */
+  async toExpectModal(title: string) {
+    await expect(this.page).toMatchElement(
+      ['div.ReactModalPortal', dcls('header'), dcls('title')].join(' '),
+      { text: new RegExp(title, 'i'), visible: true }
     );
   }
 

@@ -42,6 +42,17 @@ export default class ExpectPage {
   }
 
   /**
+   * Shortcut for {@link ExpectPage.toClick} with the selector `button` and the given text.
+   *
+   * @param text The text to match.
+   * @param shouldNavigate Whether the click should trigger a navigation. Defaults to `true`.
+   * @see {@link ExpectPage.toClick}
+   */
+  async toClickButton(text: string, shouldNavigate = true) {
+    return this.toClick('button', text, shouldNavigate);
+  }
+
+  /**
    * Click on the `<button type="submit">` element on the page.
    *
    * @param shouldNavigate Whether the click should trigger a navigation. Defaults to `true`.
@@ -62,6 +73,13 @@ export default class ExpectPage {
       form.submit();
     });
     return shouldNavigate ? expectNavigation(submitted, this.page) : submitted;
+  }
+
+  /**
+   * Alias for {@link jest.Matchers['toFill']}.
+   */
+  async toFill(...args: Parameters<jest.Matchers<unknown>['toFill']>) {
+    return expect(this.page).toFill(...args);
   }
 
   /**
@@ -116,9 +134,14 @@ export default class ExpectPage {
   /**
    * Expect the page's URL to match the given URL.
    *
-   * @param url The URL to match.
+   * @param url The URL to match, or a regular expression to match the URL against.
    */
-  toMatchUrl(url: URL | string) {
+  toMatchUrl(url: URL | string | RegExp) {
+    if (url instanceof RegExp) {
+      expect(this.page.url()).toMatch(url);
+      return;
+    }
+
     expect(this.page.url()).toBe(typeof url === 'string' ? url : url.href);
   }
 
