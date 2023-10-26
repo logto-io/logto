@@ -46,6 +46,10 @@ const mfa = {
   backup_code_copied: '已复制备用码。',
   /** UNTRANSLATED */
   webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
+  /** UNTRANSLATED */
+  webauthn_failed_to_create: 'Failed to create. Please try again.',
+  /** UNTRANSLATED */
+  webauthn_failed_to_verify: 'Failed to verify. Please try again.',
 };
 
 export default Object.freeze(mfa);

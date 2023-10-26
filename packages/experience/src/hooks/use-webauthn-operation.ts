@@ -43,17 +43,15 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
   const sendMfaPayload = useSendMfaPayload();
 
   const handleError = useErrorHandler();
-  const handleRawWebAuthnError = useCallback(
-    (error: unknown) => {
-      if (error instanceof Error) {
-        setToast(error.message);
-        return;
-      }
-
-      setToast(t('error.unknown'));
-    },
-    [setToast, t]
-  );
+  const handleRawWebAuthnError = useCallback(() => {
+    setToast(
+      t(
+        flow === UserMfaFlow.MfaBinding
+          ? 'mfa.webauthn_failed_to_create'
+          : 'mfa.webauthn_failed_to_verify'
+      )
+    );
+  }, [flow, setToast, t]);
 
   /**
    * Note:

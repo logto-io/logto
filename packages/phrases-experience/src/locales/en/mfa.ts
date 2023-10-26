@@ -50,6 +50,8 @@ const mfa = {
   secret_key_copied: 'Secret key copied.',
   backup_code_copied: 'Backup code copied.',
   webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
+  webauthn_failed_to_create: 'Failed to create. Please try again.',
+  webauthn_failed_to_verify: 'Failed to verify. Please try again.',
 };
 
 export default Object.freeze(mfa);
