@@ -27,37 +27,36 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const api = useApi();
-  const { reset, control, handleSubmit } = useForm<{
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<{
     users: User[];
     scopes: Array<Option<string>>;
   }>({
     defaultValues: { users: [], scopes: [] },
   });
-  const [isLoading, setIsLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {
-      setIsLoading(true);
-      try {
-        await api.post(`api/organizations/${organization.id}/users`, {
+      await api.post(`api/organizations/${organization.id}/users`, {
+        json: {
+          userIds: data.users.map(({ id }) => id),
+        },
+      });
+
+      if (data.scopes.length > 0) {
+        await api.post(`api/organizations/${organization.id}/users/roles`, {
           json: {
             userIds: data.users.map(({ id }) => id),
+            organizationRoleIds: data.scopes.map(({ value }) => value),
           },
         });
-
-        if (data.scopes.length > 0) {
-          await api.post(`api/organizations/${organization.id}/users/roles`, {
-            json: {
-              userIds: data.users.map(({ id }) => id),
-              organizationRoleIds: data.scopes.map(({ value }) => value),
-            },
-          });
-        }
-        onClose();
-      } finally {
-        setIsLoading(false);
       }
+      onClose();
     })
   );
 
@@ -86,7 +85,7 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
         subtitle="organization_details.add_members_to_organization_description"
         footer={
           <Button
-            isLoading={isLoading}
+            isLoading={isSubmitting}
             size="large"
             type="primary"
             title={<>{tAction('add', 'organization_details.member_other')}</>}

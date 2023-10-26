@@ -1,4 +1,4 @@
-import { type OrganizationRole, type UserWithOrganizationRoles } from '@logto/schemas';
+import { type UserWithOrganizationRoles } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -9,7 +9,6 @@ import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import { type Option } from '@/ds-components/Select/MultiSelect';
 import useApi from '@/hooks/use-api';
-import useSearchValues from '@/hooks/use-search-values';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { decapitalize } from '@/utils/string';
 
@@ -26,7 +25,6 @@ function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: P
   const [roles, setRoles] = useState<Array<Option<string>>>(
     user.organizationRoles.map(({ id, name }) => ({ value: id, title: name }))
   );
-  const { data } = useSearchValues<OrganizationRole>('api/organization-roles', keyword);
   const name = user.name ?? decapitalize(t('organization_details.user'));
   const [isLoading, setIsLoading] = useState(false);
   const api = useApi();
@@ -60,11 +58,7 @@ function EditOrganizationRolesModal({ organizationId, user, isOpen, onClose }: P
             })}
           </>
         }
-        subtitle={
-          <>
-            Authorize <b>{name}</b> to access the following roles
-          </>
-        }
+        subtitle={<>{t('organization_details.authorize_to_roles', { name })}</>}
         footer={
           <Button
             size="large"

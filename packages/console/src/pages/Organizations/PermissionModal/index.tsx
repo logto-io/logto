@@ -1,6 +1,6 @@
 import { type OrganizationScope } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -13,6 +13,7 @@ import TextInput from '@/ds-components/TextInput';
 import useActionTranslation from '@/hooks/use-action-translation';
 import useApi from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { trySubmitSafe } from '@/utils/form';
 
 const organizationScopesPath = 'api/organization-scopes';
 
@@ -25,12 +26,11 @@ type Props = {
 /** A modal that allows users to create or edit an organization scope. */
 function PermissionModal({ isOpen, editData, onClose }: Props) {
   const api = useApi();
-  const [isLoading, setIsLoading] = useState(false);
   const {
     reset,
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Partial<OrganizationScope>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
@@ -39,9 +39,8 @@ function PermissionModal({ isOpen, editData, onClose }: Props) {
     : tAction('create', 'organizations.organization_permission');
   const action = editData ? t('general.save') : tAction('create', 'organizations.permission');
 
-  const submit = handleSubmit(async (json) => {
-    setIsLoading(true);
-    try {
+  const submit = handleSubmit(
+    trySubmitSafe(async (json) => {
       await (editData
         ? api.patch(`${organizationScopesPath}/${editData.id}`, {
             json,
@@ -50,10 +49,8 @@ function PermissionModal({ isOpen, editData, onClose }: Props) {
             json,
           }));
       onClose();
-    } finally {
-      setIsLoading(false);
-    }
-  });
+    })
+  );
 
   // Reset form on open
   useEffect(() => {
@@ -75,7 +72,7 @@ function PermissionModal({ isOpen, editData, onClose }: Props) {
           <Button
             type="primary"
             title={<DangerousRaw>{action}</DangerousRaw>}
-            isLoading={isLoading}
+            isLoading={isSubmitting}
             onClick={submit}
           />
         }

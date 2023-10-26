@@ -119,6 +119,11 @@
   max-height: 288px;
 }
 
+.spinner {
+  color: var(--color-placeholder);
+  margin: _.unit(2);
+}
+
 .noResult {
   color: var(--color-placeholder);
   font: var(--font-body-2);

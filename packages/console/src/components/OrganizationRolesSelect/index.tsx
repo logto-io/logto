@@ -11,13 +11,17 @@ type Props = {
 };
 
 function OrganizationRolesSelect({ value, onChange, keyword, setKeyword }: Props) {
-  const { data: scopes } = useSearchValues<OrganizationScope>('api/organization-roles', keyword);
+  const { data: scopes, isLoading } = useSearchValues<OrganizationScope>(
+    'api/organization-roles',
+    keyword
+  );
 
   return (
     <MultiSelect
       value={value}
       options={scopes.map(({ id, name }) => ({ value: id, title: name }))}
       placeholder="organizations.search_permission_placeholder"
+      isOptionsLoading={isLoading}
       onChange={onChange}
       onSearch={setKeyword}
     />

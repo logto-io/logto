@@ -7,6 +7,10 @@ const organizations = {
   subtitle:
     'Represent the teams, business customers, and partner companies that access your applications as organizations.',
   /** UNTRANSLATED */
+  organization_id: 'Organization ID',
+  /** UNTRANSLATED */
+  members: 'Members',
+  /** UNTRANSLATED */
   create_organization: 'Create organization',
   /** UNTRANSLATED */
   organization_name_placeholder: 'My organization',

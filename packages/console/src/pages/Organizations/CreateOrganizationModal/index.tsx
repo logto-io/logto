@@ -1,5 +1,5 @@
 import { type Organization, type CreateOrganization } from '@logto/schemas';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -19,27 +19,21 @@ type Props = {
 
 function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
-  const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     reset,
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<Partial<CreateOrganization>>();
   const submit = handleSubmit(
     trySubmitSafe(async (json) => {
-      setIsLoading(true);
-      try {
-        const { id } = await api
-          .post('api/organizations', {
-            json,
-          })
-          .json<Organization>();
-        onClose(id);
-      } finally {
-        setIsLoading(false);
-      }
+      const { id } = await api
+        .post('api/organizations', {
+          json,
+        })
+        .json<Organization>();
+      onClose(id);
     })
   );
 
@@ -62,7 +56,7 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         footer={
-          <Button type="primary" title="general.create" isLoading={isLoading} onClick={submit} />
+          <Button type="primary" title="general.create" isLoading={isSubmitting} onClick={submit} />
         }
         onClose={onClose}
       >

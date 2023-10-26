@@ -1,6 +1,7 @@
 import { type Organization } from '@logto/schemas';
 import { joinPath } from '@silverhand/essentials';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
@@ -24,19 +25,17 @@ function OrganizationsTable() {
       page_size: String(pageSize),
     })
   );
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isLoading = !response && !error;
   const [data, totalCount] = response ?? [[], 0];
 
-  if (isLoading) {
-    return <div>Loading...</div>; // TODO: Add loading skeleton
-  }
-
   return (
     <Table
+      isLoading={isLoading}
       rowGroups={[{ key: 'data', data }]}
       columns={[
         {
-          title: 'Name',
+          title: t('general.name'),
           dataIndex: 'name',
           render: ({ name, id }) => (
             <ItemPreview
@@ -47,14 +46,14 @@ function OrganizationsTable() {
           ),
         },
         {
-          title: 'Organization ID',
+          title: t('organizations.organization_id'),
           dataIndex: 'id',
           render: ({ id }) => <CopyToClipboard value={id} variant="text" />,
         },
         {
-          title: 'Members',
+          title: t('organizations.members'),
           dataIndex: 'members',
-          render: () => 'members',
+          render: () => 'members', // TODO: render members
         },
       ]}
       rowIndexKey="id"

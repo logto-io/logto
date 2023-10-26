@@ -3,6 +3,8 @@ const organization = {
   title: 'Organizations',
   subtitle:
     'Represent the teams, business customers, and partner companies that access your applications as organizations.',
+  organization_id: 'Organization ID',
+  members: 'Members',
   create_organization: 'Create organization',
   organization_name_placeholder: 'My organization',
   organization_description_placeholder: 'A brief description of the organization.',

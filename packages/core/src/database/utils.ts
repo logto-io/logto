@@ -12,7 +12,7 @@ export type SearchOptions<Keys extends string> = {
 
 /**
  * Build the SQL for searching for a string within a set of fields (case-insensitive) of a
- * schema.
+ * schema. Fields are joined by `or`.
  *
  * - If `search` is `undefined`, it will return an empty SQL.
  * - If `search` is defined, it will return a SQL that is wrapped in a pair of parentheses.
