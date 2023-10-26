@@ -10,6 +10,8 @@ import {
   mockUser,
   mockUserWebAuthnMfaVerification,
   mockUserWithMfaVerifications,
+  mockUserTotpMfaVerification,
+  mockUserBackupCodeMfaVerification,
 } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -84,13 +86,13 @@ const mfaRequiredTotpOnlyCtx = {
   },
 };
 
-const backupCodeEnabledCtx = {
+const allFactorsEnabledCtx = {
   ...baseCtx,
   signInExperience: {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.UserControlled,
     },
   },
 };
@@ -347,5 +349,41 @@ describe('verifyMfa', () => {
         verifiedMfa: undefined,
       })
     ).rejects.toThrowError();
+  });
+
+  it('should reject and sort availableFactors', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUser,
+      mfaVerifications: [
+        {
+          ...mockUserWebAuthnMfaVerification,
+          lastUsedAt: new Date('2021-01-01').toISOString(),
+        },
+        {
+          ...mockUserBackupCodeMfaVerification,
+          lastUsedAt: new Date('2023-01-01').toISOString(),
+        },
+        {
+          ...mockUserTotpMfaVerification,
+          lastUsedAt: new Date('2022-01-01').toISOString(),
+        },
+      ],
+    });
+    await expect(
+      verifyMfa(allFactorsEnabledCtx, tenantContext, {
+        ...signInInteraction,
+        verifiedMfa: undefined,
+      })
+    ).rejects.toMatchError(
+      new RequestError(
+        {
+          code: 'session.mfa.require_mfa_verification',
+          status: 403,
+        },
+        {
+          availableFactors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
+        }
+      )
+    );
   });
 });

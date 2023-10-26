@@ -283,11 +283,15 @@ describe('verifyMfaPayloadVerification', () => {
   });
 
   describe('webauthn', () => {
+    beforeEach(() => {
+      updateUserById.mockClear();
+    });
+
     it('should return result of VerifyMfaResult and update newCounter', async () => {
       findUserById.mockResolvedValueOnce({
         mfaVerifications: [mockUserWebAuthnMfaVerification],
       });
-      const result = { type: MfaFactor.WebAuthn, id: 'id' };
+      const result = { type: MfaFactor.WebAuthn, id: mockUserWebAuthnMfaVerification.id };
       verifyWebAuthnAuthentication.mockResolvedValueOnce({
         result,
         newCounter: 1,

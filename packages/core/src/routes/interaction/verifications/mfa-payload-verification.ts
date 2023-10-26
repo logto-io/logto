@@ -232,7 +232,7 @@ export async function verifyMfaPayloadVerification(
       // Update the authenticator's counter in the DB to the newest count in the authentication
       await tenant.queries.users.updateUserById(accountId, {
         mfaVerifications: user.mfaVerifications.map((mfa) => {
-          if (mfa.type !== MfaFactor.WebAuthn) {
+          if (mfa.type !== MfaFactor.WebAuthn || mfa.id !== result.id) {
             return mfa;
           }
 
