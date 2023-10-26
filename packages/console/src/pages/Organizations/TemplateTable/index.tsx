@@ -4,6 +4,7 @@ import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Plus from '@/assets/icons/plus.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import Button from '@/ds-components/Button';
+import { Ring as Spinner } from '@/ds-components/Spinner';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
 
@@ -39,40 +40,46 @@ function TemplateTable<
   isLoading,
   onPageChange,
 }: Props<TFieldValues, TName>) {
-  const hasData = data.length > 0;
+  const hasData = !isLoading && data.length > 0;
+
+  if (isLoading) {
+    <Spinner className={styles.spinner} />;
+  }
 
   return (
     <>
-      <Table
-        hasBorder
-        placeholder={<EmptyDataPlaceholder />}
-        isLoading={isLoading}
-        className={styles.table}
-        rowGroups={[
-          {
-            key: 'data',
-            data,
-          },
-        ]}
-        columns={columns}
-        rowIndexKey={rowIndexKey}
-        pagination={{
-          page,
-          totalCount,
-          pageSize,
-          onChange: onPageChange,
-        }}
-        footer={
-          <Button
-            size="small"
-            type="text"
-            className={styles.addButton}
-            icon={<CirclePlus />}
-            title="general.create_another"
-            onClick={onAdd}
-          />
-        }
-      />
+      {hasData && (
+        <Table
+          hasBorder
+          placeholder={<EmptyDataPlaceholder />}
+          isLoading={isLoading}
+          className={styles.table}
+          rowGroups={[
+            {
+              key: 'data',
+              data,
+            },
+          ]}
+          columns={columns}
+          rowIndexKey={rowIndexKey}
+          pagination={{
+            page,
+            totalCount,
+            pageSize,
+            onChange: onPageChange,
+          }}
+          footer={
+            <Button
+              size="small"
+              type="text"
+              className={styles.addButton}
+              icon={<CirclePlus />}
+              title="general.create_another"
+              onClick={onAdd}
+            />
+          }
+        />
+      )}
       {onAdd && !hasData && (
         <Button
           className={styles.addButton}

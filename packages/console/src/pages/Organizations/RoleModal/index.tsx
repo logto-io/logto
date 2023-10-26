@@ -110,7 +110,7 @@ function RoleModal({ isOpen, editData, onClose }: Props) {
         </FormField>
         <FormField title="general.description">
           <TextInput
-            placeholder="organizations.create_role_placeholder"
+            placeholder={t('organizations.create_role_placeholder')}
             error={Boolean(errors.description)}
             {...register('description')}
           />
