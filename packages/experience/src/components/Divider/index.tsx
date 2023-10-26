@@ -11,13 +11,15 @@ type Props = {
 };
 
 const Divider = ({ className, label }: Props) => {
+  const lineStyle = classNames(styles.line, label && styles.withLabel);
+
   return (
     <div className={classNames(styles.divider, className)}>
-      <i className={styles.line} />
+      <i className={lineStyle} />
       {label && (
         <>
           <DynamicT forKey={label} />
-          <i className={styles.line} />
+          <i className={lineStyle} />
         </>
       )}
     </div>
