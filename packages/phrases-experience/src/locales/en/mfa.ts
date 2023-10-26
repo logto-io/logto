@@ -49,6 +49,7 @@ const mfa = {
     'Use passkey to verify by your device password or biometrics, scanning QR code, or using USB security key like YubiKey.',
   secret_key_copied: 'Secret key copied.',
   backup_code_copied: 'Backup code copied.',
+  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
 };
 
 export default Object.freeze(mfa);

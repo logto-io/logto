@@ -50,8 +50,7 @@ describe('MFA - WebAuthn', () => {
     await experience.toFillInput('identifier', username, { submit: true });
     experience.toBeAt('register/password');
     await experience.toFillNewPasswords(password);
-    experience.toBeAt('mfa-binding/WebAuthn');
-    await experience.toClick('button', 'Create a passkey');
+    await experience.toCreatePasskey();
     await experience.verifyThenEnd(false);
 
     await experience.startWith(demoAppUrl, 'sign-in');
@@ -64,8 +63,7 @@ describe('MFA - WebAuthn', () => {
     );
     // Wait for the page to process submitting request.
     await waitFor(500);
-    experience.toBeAt('mfa-verification/WebAuthn');
-    await experience.toClick('button', 'Verify via passkey');
+    await experience.toVerifyViaPasskey();
 
     await experience.clearVirtualAuthenticator();
     const userId = await experience.getUserIdFromDemoAppPage();
@@ -88,8 +86,7 @@ describe('MFA - WebAuthn', () => {
     );
     // Wait for the page to process submitting request.
     await waitFor(500);
-    experience.toBeAt('mfa-binding/WebAuthn');
-    await experience.toClick('button', 'Create a passkey');
+    await experience.toCreatePasskey();
 
     await experience.clearVirtualAuthenticator();
     await experience.verifyThenEnd();

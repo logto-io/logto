@@ -50,7 +50,7 @@ describe('MFA - Backup Code', () => {
     experience.toBeAt('register/password');
     await experience.toFillNewPasswords(password);
     experience.toBeAt('mfa-binding/WebAuthn');
-    await experience.toClick('button', 'Create a passkey');
+    await experience.toCreatePasskey();
 
     // Backup codes page
     const backupCodes = await experience.retrieveBackupCodes();

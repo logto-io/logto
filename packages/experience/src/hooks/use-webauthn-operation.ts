@@ -10,7 +10,7 @@ import type {
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
 } from '@simplewebauthn/typescript-types';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -33,6 +33,9 @@ const isAuthenticationResponseJSON = (
 const useWebAuthnOperation = (flow: UserMfaFlow) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
+  const [webAuthnOptions, setWebAuthnOptions] = useState<
+    WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions
+  >();
 
   const asyncCreateRegistrationOptions = useApi(createWebAuthnRegistrationOptions);
   const asyncGenerateAuthnOptions = useApi(generateWebAuthnAuthnOptions);
@@ -52,6 +55,45 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
     [setToast, t]
   );
 
+  /**
+   * Note:
+   * Due to limitations in the iOS system, user interaction is required for the use of the WebAuthn API.
+   * Therefore, we should avoid asynchronous operations before invoking the WebAuthn API.
+   * Otherwise, the operating system may consider the WebAuthn authorization is not initiated by the user.
+   * So, we need to prepare the necessary WebAuthn options before calling the WebAuthn API.
+   */
+  const prepareWebAuthnOptions = useCallback(async () => {
+    if (webAuthnOptions) {
+      return;
+    }
+
+    const [error, options] =
+      flow === UserMfaFlow.MfaBinding
+        ? await asyncCreateRegistrationOptions()
+        : await asyncGenerateAuthnOptions();
+
+    if (error) {
+      await handleError(error);
+      return;
+    }
+
+    setWebAuthnOptions(options);
+  }, [
+    asyncCreateRegistrationOptions,
+    asyncGenerateAuthnOptions,
+    flow,
+    handleError,
+    webAuthnOptions,
+  ]);
+
+  useEffect(() => {
+    if (webAuthnOptions) {
+      return;
+    }
+
+    void prepareWebAuthnOptions();
+  }, [prepareWebAuthnOptions, webAuthnOptions]);
+
   const handleWebAuthnProcess = useCallback(
     async (options: WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions) => {
       const parsedOptions = webAuthnRegistrationOptionsGuard.safeParse(options);
@@ -68,21 +110,17 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
   );
 
   return useCallback(async () => {
-    const [error, options] =
-      flow === UserMfaFlow.MfaBinding
-        ? await asyncCreateRegistrationOptions()
-        : await asyncGenerateAuthnOptions();
+    if (!webAuthnOptions) {
+      /**
+       * This error message is just for program robustness; in practice, this issue is unlikely to occur.
+       */
+      setToast(t('mfa.webauthn_not_ready'));
+      void prepareWebAuthnOptions();
 
-    if (error) {
-      await handleError(error);
       return;
     }
 
-    if (!options) {
-      return;
-    }
-
-    const response = await handleWebAuthnProcess(options);
+    const response = await handleWebAuthnProcess(webAuthnOptions);
 
     if (!response) {
       return;
@@ -96,14 +134,7 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
         ? { flow: UserMfaFlow.MfaVerification, payload: { ...response, type: MfaFactor.WebAuthn } }
         : { flow: UserMfaFlow.MfaBinding, payload: { ...response, type: MfaFactor.WebAuthn } }
     );
-  }, [
-    asyncCreateRegistrationOptions,
-    asyncGenerateAuthnOptions,
-    flow,
-    handleError,
-    handleWebAuthnProcess,
-    sendMfaPayload,
-  ]);
+  }, [handleWebAuthnProcess, prepareWebAuthnOptions, sendMfaPayload, setToast, t, webAuthnOptions]);
 };
 
 export default useWebAuthnOperation;
