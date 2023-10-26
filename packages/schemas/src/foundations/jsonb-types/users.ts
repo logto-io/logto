@@ -6,7 +6,7 @@ export const roleNamesGuard = z.string().array();
 
 const identityGuard = z.object({
   userId: z.string(),
-  details: z.object({}).optional(), // Connector's userinfo details, schemaless
+  details: z.record(z.unknown()).optional(), // Connector's userinfo details, schemaless
 });
 export const identitiesGuard = z.record(identityGuard);
 
