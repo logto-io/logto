@@ -32,6 +32,8 @@ const user = {
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   /** UNTRANSLATED */
   totp_already_in_use: 'TOTP is already in use.',
+  /** UNTRANSLATED */
+  backup_code_already_in_use: 'Backup code is already in use.',
 };
 
 export default Object.freeze(user);

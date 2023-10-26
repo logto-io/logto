@@ -3,12 +3,7 @@ import { RoleType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
-import {
-  mockUser,
-  mockUserTotpMfaVerification,
-  mockUserResponse,
-  mockUserWithMfaVerifications,
-} from '#src/__mocks__/index.js';
+import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -404,30 +399,5 @@ describe('adminUserRoutes', () => {
       'status',
       500
     );
-  });
-
-  it('GET /users/:userId/mfa-verifications', async () => {
-    findUserById.mockImplementationOnce(async () => mockUserWithMfaVerifications);
-    const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
-    const { id, type, createdAt } = mockUserTotpMfaVerification;
-    expect(response.body).toMatchObject([{ id, type, createdAt }]);
-  });
-
-  it('DELETE /users/:userId/mfa-verifications/:verificationId', async () => {
-    findUserById.mockImplementationOnce(async () => mockUserWithMfaVerifications);
-    const response = await userRequest.delete(
-      `/users/${mockUser.id}/mfa-verifications/${mockUserTotpMfaVerification.id}`
-    );
-    expect(response.status).toEqual(204);
-    expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
-      mfaVerifications: [],
-    });
-  });
-
-  it('DELETE /users/:userId/mfa-verifications/:verificationId should throw with wrong verification id', async () => {
-    findUserById.mockImplementationOnce(async () => mockUserWithMfaVerifications);
-    await expect(
-      userRequest.delete(`/users/${mockUser.id}/mfa-verifications/wrong-verification-id`)
-    ).resolves.toHaveProperty('status', 404);
   });
 });

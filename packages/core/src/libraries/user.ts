@@ -1,5 +1,5 @@
-import type { User, CreateUser, Scope } from '@logto/schemas';
-import { Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import type { User, CreateUser, Scope, BindMfa, MfaVerification } from '@logto/schemas';
+import { MfaFactor, Users, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { OmitAutoSetFields } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -47,13 +47,64 @@ export const verifyUserPassword = async (user: Nullable<User>, password: string)
   return user;
 };
 
+/**
+ * Convert bindMfa to mfaVerification, add common fields like "id" and "createdAt"
+ * and transpile formats like "codes" to "code" for backup code
+ */
+const converBindMfaToMfaVerification = (bindMfa: BindMfa): MfaVerification => {
+  const { type } = bindMfa;
+  const base = {
+    id: generateStandardId(),
+    createdAt: new Date().toISOString(),
+  };
+
+  if (type === MfaFactor.BackupCode) {
+    const { codes } = bindMfa;
+
+    return {
+      ...base,
+      type,
+      codes: codes.map((code) => ({ code })),
+    };
+  }
+
+  if (type === MfaFactor.TOTP) {
+    const { secret } = bindMfa;
+
+    return {
+      ...base,
+      type,
+      key: secret,
+    };
+  }
+
+  const { credentialId, counter, publicKey, transports, agent } = bindMfa;
+  return {
+    ...base,
+    type,
+    credentialId,
+    counter,
+    publicKey,
+    transports,
+    agent,
+  };
+};
+
 export type UserLibrary = ReturnType<typeof createUserLibrary>;
 
 export const createUserLibrary = (queries: Queries) => {
   const {
     pool,
     roles: { findRolesByRoleNames, findRoleByRoleName, findRolesByRoleIds },
-    users: { hasUser, hasUserWithEmail, hasUserWithId, hasUserWithPhone, findUsersByIds },
+    users: {
+      hasUser,
+      hasUserWithEmail,
+      hasUserWithId,
+      hasUserWithPhone,
+      findUsersByIds,
+      updateUserById,
+      findUserById,
+    },
     usersRoles: { findUsersRolesByRoleId, findUsersRolesByUserId },
     rolesScopes: { findRolesScopesByRoleIds },
     scopes: { findScopesByIdsAndResourceIndicator },
@@ -158,6 +209,14 @@ export const createUserLibrary = (queries: Queries) => {
     return roles;
   };
 
+  const addUserMfaVerification = async (userId: string, payload: BindMfa) => {
+    // TODO @sijie use jsonb array append
+    const { mfaVerifications } = await findUserById(userId);
+    await updateUserById(userId, {
+      mfaVerifications: [...mfaVerifications, converBindMfaToMfaVerification(payload)],
+    });
+  };
+
   return {
     generateUserId,
     insertUser,
@@ -165,5 +224,6 @@ export const createUserLibrary = (queries: Queries) => {
     findUsersByRoleName,
     findUserScopesForResourceIndicator,
     findUserRoles,
+    addUserMfaVerification,
   };
 };
