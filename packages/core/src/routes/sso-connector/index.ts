@@ -5,8 +5,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { ssoConnectorFactories } from '#src/sso/index.js';
-import { SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
+import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 
@@ -29,11 +28,13 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   const [
     router,
     {
+      libraries: { ssoConnector: ssoConnectorLibrary },
       queries: { ssoConnectors },
     },
   ] = args;
 
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
+  const { getSsoConnectorById, getSsoConnectors } = ssoConnectorLibrary;
 
   /*
     Get all supported single sign on connector factory details
@@ -53,7 +54,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const providerConnectors = new Set<ConnectorFactoryDetail>();
 
       for (const factory of factories) {
-        if ([SsoProviderName.OIDC].includes(factory.providerName)) {
+        if (standardSsoConnectorProviders.includes(factory.providerName)) {
           standardConnectors.add(parseFactoryDetail(factory, locale));
         } else {
           providerConnectors.add(parseFactoryDetail(factory, locale));
@@ -119,16 +120,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       status: [200],
     }),
     async (ctx, next) => {
-      const [_, entities] = await ssoConnectors.findAll();
-
-      // Filter out unsupported connectors
-      const filerSupportedConnectors = entities.filter(
-        (connector): connector is SupportedSsoConnector => isSupportedSsoConnector(connector)
-      );
+      const connectors = await getSsoConnectors();
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
-        filerSupportedConnectors.map(async (connector) => fetchConnectorProviderDetails(connector))
+        connectors.map(async (connector) => fetchConnectorProviderDetails(connector))
       );
 
       ctx.body = connectorsWithProviderDetails;
@@ -148,16 +144,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      const connector = await ssoConnectors.findById(id);
-
-      // Return 404 if the connector is not supported
-      assert(
-        isSupportedSsoConnector(connector),
-        new RequestError({
-          code: 'connector.not_found',
-          status: 404,
-        })
-      );
+      const connector = await getSsoConnectorById(id);
 
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
@@ -197,13 +184,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { id } = ctx.guard.params;
       const { body } = ctx.guard;
 
-      const originalConnector = await ssoConnectors.findById(id);
-
-      assert(
-        isSupportedSsoConnector(originalConnector),
-        new RequestError({ code: 'connector.not_found', status: 404 })
-      );
-
+      const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
       const { config, ...rest } = body;
 
@@ -248,15 +229,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { id } = ctx.guard.params;
       const { body } = ctx.guard;
 
-      const originalConnector = await ssoConnectors.findById(id);
-
-      // Return 404 if the connector provider is not supported
-      assert(
-        isSupportedSsoConnector(originalConnector),
-        new RequestError({ code: 'connector.not_found', status: 404 })
-      );
-
-      const { providerName, config } = originalConnector;
+      const { providerName, config } = await getSsoConnectorById(id);
 
       // Merge with existing config and revalidate
       const parsedConfig = parseConnectorConfig(providerName, {

@@ -25,3 +25,5 @@ export const ssoConnectorFactories: {
 } = {
   [SsoProviderName.OIDC]: oidcSsoConnectorFactory,
 };
+
+export const standardSsoConnectorProviders = Object.freeze([SsoProviderName.OIDC]);

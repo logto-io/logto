@@ -8,6 +8,7 @@ import { createPhraseLibrary } from '#src/libraries/phrase.js';
 import { createQuotaLibrary } from '#src/libraries/quota.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
+import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { createUserLibrary } from '#src/libraries/user.js';
 import { createVerificationStatusLibrary } from '#src/libraries/verification-status.js';
 
@@ -24,6 +25,7 @@ export default class Libraries {
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
+  ssoConnector = createSsoConnectorLibrary(this.queries);
 
   constructor(
     public readonly tenantId: string,
