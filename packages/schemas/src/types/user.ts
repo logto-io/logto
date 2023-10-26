@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Users } from '../db-entries/index.js';
+import { type User, Users } from '../db-entries/index.js';
 import { MfaFactor } from '../foundations/index.js';
 
 export const userInfoSelectFields = Object.freeze([
@@ -63,3 +63,16 @@ export enum AdminTenantRole {
 export enum PredefinedScope {
   All = 'all',
 }
+
+/**
+ * A user that is featured for display. Usually used in a list of resources that are related to
+ * a group of users.
+ */
+export type FeaturedUser = Pick<User, 'id' | 'avatar' | 'name'>;
+
+/** The guard for {@link FeaturedUser}. */
+export const featuredUserGuard = Users.guard.pick({
+  id: true,
+  avatar: true,
+  name: true,
+}) satisfies z.ZodType<FeaturedUser>;

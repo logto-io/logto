@@ -15,6 +15,7 @@ import {
   type OrganizationRoleWithScopes,
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
+  type FeaturedUser,
 } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
@@ -32,6 +33,35 @@ import { type userSearchKeys } from './user.js';
 class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
   constructor(pool: CommonQueryMethods) {
     super(pool, OrganizationUserRelations.table, Organizations, Users);
+  }
+
+  async getFeatured(
+    organizationId: string
+  ): Promise<[totalNumber: number, users: readonly FeaturedUser[]]> {
+    const users = convertToIdentifiers(Users, true);
+    const relations = convertToIdentifiers(OrganizationUserRelations, true);
+    const mainSql = sql`
+      from ${relations.table}
+      left join ${users.table}
+        on ${relations.fields.userId} = ${users.fields.id}
+      where ${relations.fields.organizationId} = ${organizationId}
+    `;
+    const [{ count }, data] = await Promise.all([
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        ${mainSql}
+      `),
+      this.pool.any<FeaturedUser>(sql`
+        select
+          ${users.fields.id},
+          ${users.fields.avatar},
+          ${users.fields.name}
+        ${mainSql}
+        limit 3
+      `),
+    ]);
+
+    return [Number(count), data];
   }
 
   async getOrganizationsByUserId(userId: string): Promise<Readonly<OrganizationWithRoles[]>> {
@@ -62,7 +92,7 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     organizationId: string,
     { limit, offset }: GetEntitiesOptions,
     search?: SearchOptions<(typeof userSearchKeys)[number]>
-  ): Promise<[totalCount: number, entities: Readonly<UserWithOrganizationRoles[]>]> {
+  ): Promise<[totalNumber: number, entities: Readonly<UserWithOrganizationRoles[]>]> {
     const roles = convertToIdentifiers(OrganizationRoles, true);
     const users = convertToIdentifiers(Users, true);
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);

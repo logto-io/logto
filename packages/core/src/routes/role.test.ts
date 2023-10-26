@@ -101,8 +101,6 @@ describe('role routes', () => {
             id: mockUser.id,
             avatar: mockUser.avatar,
             name: mockUser.name,
-            username: mockUser.username,
-            primaryEmail: mockUser.primaryEmail,
           },
         ],
         applicationsCount: 0,

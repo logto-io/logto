@@ -163,14 +163,18 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
-  const findApplicationsByIds = async (applicationIds: string[]) =>
-    applicationIds.length > 0
-      ? pool.any<Application>(sql`
-        select ${sql.join(Object.values(fields), sql`, `)}
-        from ${table}
-        where ${fields.id} in (${sql.join(applicationIds, sql`, `)})
-      `)
-      : [];
+  const findApplicationsByIds = async (
+    applicationIds: string[]
+  ): Promise<readonly Application[]> => {
+    if (applicationIds.length === 0) {
+      return [];
+    }
+    return pool.any<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in (${sql.join(applicationIds, sql`, `)})
+    `);
+  };
 
   const deleteApplicationById = async (id: string) => {
     const { rowCount } = await pool.query(sql`

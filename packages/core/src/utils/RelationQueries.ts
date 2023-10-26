@@ -167,7 +167,7 @@ export default class RelationQueries<
    * @param options Options for the query.
    * @param options.limit The maximum number of entities to return.
    * @param options.offset The number of entities to skip.
-   * @returns A Promise that resolves an array of entities of the given schema.
+   * @returns A Promise that resolves to the total number of entities and the entities.
    *
    * @example
    * ```ts
@@ -182,7 +182,7 @@ export default class RelationQueries<
     forSchema: S,
     where: CamelCaseIdObject<Exclude<Schemas[number]['tableSingular'], S['tableSingular']>>,
     options?: GetEntitiesOptions
-  ): Promise<[totalCount: number, entities: ReadonlyArray<InferSchema<S>>]> {
+  ): Promise<[totalNumber: number, entities: ReadonlyArray<InferSchema<S>>]> {
     const { limit, offset } = options ?? {};
     const snakeCaseWhere = snakecaseKeys(where);
     const forTable = sql.identifier([forSchema.table]);

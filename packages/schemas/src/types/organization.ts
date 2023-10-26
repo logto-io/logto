@@ -9,6 +9,8 @@ import {
   Users,
 } from '../db-entries/index.js';
 
+import { type FeaturedUser } from './user.js';
+
 export type OrganizationRoleWithScopes = OrganizationRole & {
   scopes: Array<{
     id: string;
@@ -67,3 +69,12 @@ export const userWithOrganizationRolesGuard: z.ZodType<UserWithOrganizationRoles
   Users.guard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
   });
+
+/**
+ * The organization entity with optional `usersCount` and `featuredUsers` fields.
+ * They are useful for displaying the organization list in the frontend.
+ */
+export type OrganizationWithFeatured = Organization & {
+  usersCount?: number;
+  featuredUsers?: FeaturedUser[];
+};

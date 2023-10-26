@@ -1,8 +1,11 @@
-import type { Application, Role, User } from '../db-entries/index.js';
+import type { Role } from '../db-entries/index.js';
+
+import { type FeaturedApplication } from './application.js';
+import { type FeaturedUser } from './user.js';
 
 export type RoleResponse = Role & {
   usersCount: number;
-  featuredUsers: Array<Pick<User, 'avatar' | 'id' | 'name' | 'username' | 'primaryEmail'>>;
+  featuredUsers: FeaturedUser[];
   applicationsCount: number;
-  featuredApplications: Array<Pick<Application, 'id' | 'name'>>;
+  featuredApplications: FeaturedApplication[];
 };
