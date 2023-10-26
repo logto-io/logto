@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
+  <a href="https://logto.io" target="_blank" alt="Logto Logo">
     <img src="./logo.png" height="120">
   </a>
 </p>
@@ -12,22 +12,38 @@
 [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
 [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Key Features](#key-features)
+3. [Getting Started](#getting-started)
+   - [Website and Documentation](#website-and-documentation)
+   - [Interactive Demo](#interactive-demo)
+   - [Launching Logto](#launching-logto)
+4. [Language Support](#language-support)
+5. [Web Compatibility](#web-compatibility)
+6. [Bug Reports, Feature Requests, and Feedback](#bug-reports-feature-requests-and-feedback)
+7. [Licensing](#licensing)
+8. [Contributing](#contributing)
+9. [Additional Resources](#additional-resources)
+
+## Introduction
+
 Logto[^info] is a cost-effective open-source alternative to Auth0. It offers a seamless developer experience and is well-suited for individuals and growing companies.
 
-🧑‍💻 **Comprehensive frontend-to-backend identity solution**
+## Key Features
 
+🧑‍💻 **Comprehensive frontend-to-backend identity solution**
 - Enables OIDC-based authentication and RBAC authorization.
 - Supports passwordless sign-in, along with various options like Email, Phone number, Username, Google, Facebook, and other social sign-in methods.
 - Offers beautiful UI components with customizable CSS to suit your business needs.
 
 📦 **Out-of-the-box infrastructure**
-
 - Includes a ready-to-use management API, serving as your authentication provider, thus eliminating the need for extra implementation.
 - Provides SDKs that seamlessly integrate your apps with Logto across multiple platforms and languages, tailored to your development environment.
 - Offers flexible connectors that can be scaled with community contributions and customized with SAML, OAuth, and OIDC protocols.
 
 💻 **Enterprise-ready solutions**
-
 - Implements Role-Based Access Control (RBAC) for scalable role authorization, catering to a wide range of use cases.
 - Facilitates user management and provides audit logs for understanding identity-related user information and maintaining security.
 - Currently working on Single Sign-On (SSO), Organizations, and Multi-Factor Authentication (MFA) features. Stay tuned!
@@ -36,16 +52,14 @@ In a more approachable way, we refer to this solution as "[Customer Identity Acc
 
 [Subscribe to us](https://logto.io/subscribe/?utm_source=github&utm_medium=repo_logto) now to stay updated with the latest information about the Logto Cloud (SaaS) and receive feature updates in real-time.
 
-
-## Get started
+## Getting Started
 
 - Visit our 🎨 [website](https://logto.io/?utm_source=github&utm_medium=repo_logto) for a brief introduction if you are new to Logto.
 - A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io/?utm_source=github&utm_medium=repo_logto).
 
-### Interactive demo
+### Interactive Demo
 
 - Try [Logto Cloud](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto) to have the same dev experience and zero deployment overhead.
-
 - If you launch Logto [via GitPod](https://gitpod.io/#https://github.com/logto-io/demo), please wait until you see the message like `App is running at https://3002-...gitpod.io` in the terminal, press Cmd (or Ctrl on Windows) and click the URL starts with `https://3002-` to continue your Logto journey.
 
 ### Launch Logto
@@ -57,6 +71,7 @@ Docker Compose CLI usually comes with [Docker Desktop](https://www.docker.com/pr
 ```bash
 curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml | \
 docker compose -p logto -f - up
+
 ```
 
 #### npm-init
