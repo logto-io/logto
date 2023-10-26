@@ -27,7 +27,7 @@ const SignInPassword = () => {
 
   const methodSetting = signInMethods.find((method) => method.identifier === identifier);
 
-  // Sign-In method not enabled
+  // Sign-in method not enabled
   if (!methodSetting?.password) {
     return <ErrorPage />;
   }

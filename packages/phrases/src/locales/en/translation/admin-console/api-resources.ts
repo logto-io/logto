@@ -1,8 +1,8 @@
 const api_resources = {
-  page_title: 'API Resources',
-  title: 'API Resources',
+  page_title: 'API resources',
+  title: 'API resources',
   subtitle: 'Define APIs that your authorized applications can utilize',
-  create: 'Create API Resource',
+  create: 'Create API resource',
   api_name: 'API name',
   api_name_placeholder: 'Enter your API name',
   api_identifier: 'API Identifier',

@@ -29,7 +29,7 @@ Senders indicate the addresses our verification code email will be sent from. In
 
 Starting from the [SendGrid console page](https://app.sendgrid.com/), go to "Settings" -> "Sender Authentication" from the sidebar.
 
-Domain Authentication is recommended but not obligatory. You can click "Get Started" in "Authenticate Your Domain" card and follow the upcoming guide to link and verify a sender to SendGrid.
+Domain Authentication is recommended but not obligatory. You can click "Get started" in "Authenticate Your Domain" card and follow the upcoming guide to link and verify a sender to SendGrid.
 
 By clicking the "Verify a Single Sender" button in the panel, you are now focusing on a form requiring some critical information to create a sender. Follow the guide, fill out all these fields, and hit the "Create" button.
 

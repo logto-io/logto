@@ -1,6 +1,6 @@
 const guide = {
-  start_building: 'Start Building',
-  get_started: 'Get Started',
+  start_building: 'Start building',
+  get_started: 'Get started',
   categories: {
     featured: 'Popular and for you',
     Traditional: 'Traditional web app',

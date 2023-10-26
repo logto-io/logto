@@ -12,10 +12,10 @@ export const createM2mRoleAndAssignPermissions = async (
   apiResources: Array<{ apiResourceName: string; permissionName: string }>
 ) => {
   await expect(page).toClick('div[class$=headline] button span', {
-    text: 'Create Role',
+    text: 'Create role',
   });
 
-  await expectModalWithTitle(page, 'Create Role');
+  await expectModalWithTitle(page, 'Create role');
 
   // Expand role type selection
   await expect(page).toClick('button[class$=roleTypeSelectionSwitch] span', {
@@ -51,7 +51,7 @@ export const createM2mRoleAndAssignPermissions = async (
   }
   /* eslint-enable no-await-in-loop */
 
-  await expectToClickModalAction(page, 'Create Role');
+  await expectToClickModalAction(page, 'Create role');
 
   await waitForToast(page, {
     text: `The role ${roleName} has been successfully created.`,

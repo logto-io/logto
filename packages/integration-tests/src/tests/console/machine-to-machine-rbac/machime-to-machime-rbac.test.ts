@@ -51,14 +51,14 @@ describe('M2M RBAC', () => {
       await expect(page).toMatchElement(
         'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
         {
-          text: 'API Resources',
+          text: 'API resources',
         }
       );
     });
 
     it('create an api resource', async () => {
       await expect(page).toClick('div[class$=headline] button span', {
-        text: 'Create API Resource',
+        text: 'Create API resource',
       });
 
       await expectModalWithTitle(page, 'Start with tutorials');
@@ -68,14 +68,14 @@ describe('M2M RBAC', () => {
         text: 'Continue without tutorial',
       });
 
-      await expectModalWithTitle(page, 'Create API Resource');
+      await expectModalWithTitle(page, 'Create API resource');
 
       await expect(page).toFillForm('.ReactModalPortal form', {
         name: apiResourceName,
         indicator: apiResourceIndicator,
       });
 
-      await expectToClickModalAction(page, 'Create API Resource');
+      await expectToClickModalAction(page, 'Create API resource');
 
       await waitForToast(page, {
         text: `The API resource ${apiResourceName} has been successfully created`,
@@ -92,7 +92,7 @@ describe('M2M RBAC', () => {
       });
 
       await expect(page).toClick('div[class$=filter] button[class$=createButton] span', {
-        text: 'Create Permission',
+        text: 'Create permission',
       });
 
       await expectModalWithTitle(page, 'Create permission');
@@ -181,7 +181,7 @@ describe('M2M RBAC', () => {
 
     it('assign a permission to a role on the role details page', async () => {
       await expect(page).toClick('div[class$=filter] button span', {
-        text: 'Assign Permissions',
+        text: 'Assign permissions',
       });
 
       await expectModalWithTitle(page, 'Assign permissions');
@@ -200,7 +200,7 @@ describe('M2M RBAC', () => {
         }
       );
 
-      await expectToClickModalAction(page, 'Assign Permissions');
+      await expectToClickModalAction(page, 'Assign permissions');
 
       await waitForToast(page, {
         text: 'The selected permissions were successfully assigned to this role',

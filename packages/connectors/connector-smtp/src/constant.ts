@@ -77,7 +77,7 @@ export const defaultMetadata: ConnectorMetadata = {
           contentType: 'text/plain',
           content:
             'Your Logto sign-up verification code is {{code}}. The code will remain active for 10 minutes.',
-          subject: 'Logto Register with SMTP',
+          subject: 'Logto register with SMTP',
           usageType: 'Register',
         },
         {

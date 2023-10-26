@@ -1,5 +1,5 @@
 const api_resource_details = {
-  page_title: 'API Resource details',
+  page_title: 'API resource details',
   back_to_api_resources: 'Back to API resources',
   settings_tab: 'Settings',
   permissions_tab: 'Permissions',
@@ -15,9 +15,9 @@ const api_resource_details = {
   delete_description:
     'This action cannot be undone. It will permanently delete the API resource. Please enter the api resource name <span>{{name}}</span> to confirm.',
   enter_your_api_resource_name: 'Enter your API resource name',
-  api_resource_deleted: 'The API Resource {{name}} has been successfully deleted',
+  api_resource_deleted: 'The API resource {{name}} has been successfully deleted',
   permission: {
-    create_button: 'Create Permission',
+    create_button: 'Create permission',
     create_title: 'Create permission',
     create_subtitle: 'Define the permissions (scopes) needed by this API.',
     confirm_create: 'Create permission',

@@ -1,5 +1,5 @@
 const role_details = {
-  back_to_roles: 'Back to Roles',
+  back_to_roles: 'Back to roles',
   identifier: 'Identifier',
   delete_description:
     'Doing so will remove the permissions associated with this role from the affected users and delete the mapping between roles, users, and permissions.',
@@ -16,7 +16,7 @@ const role_details = {
   type_m2m_role_tag: 'Machine-to-machine app role',
   type_user_role_tag: 'User role',
   permission: {
-    assign_button: 'Assign Permissions',
+    assign_button: 'Assign permissions',
     assign_title: 'Assign permissions',
     assign_subtitle:
       'Assign permissions to this role. The role will gain the added permissions, and users with this role will inherit these permissions.',
@@ -25,7 +25,7 @@ const role_details = {
     added_text_other: '{{count, number}} permissions added',
     api_permission_count_one: '{{count, number}} permission',
     api_permission_count_other: '{{count, number}} permissions',
-    confirm_assign: 'Assign Permissions',
+    confirm_assign: 'Assign permissions',
     permission_assigned: 'The selected permissions were successfully assigned to this role',
     deletion_description:
       'If this permission is removed, the affected user with this role will lose the access granted by this permission.',
@@ -33,7 +33,7 @@ const role_details = {
     empty: 'No permission available',
   },
   users: {
-    assign_button: 'Assign Users',
+    assign_button: 'Assign users',
     name_column: 'User',
     app_column: 'App',
     latest_sign_in_column: 'Latest sign in',

@@ -1,6 +1,6 @@
 const logs = {
-  page_title: 'Audit Logs',
-  title: 'Audit Logs',
+  page_title: 'Audit logs',
+  title: 'Audit logs',
   subtitle:
     'Anzeige der Log Daten von Authentifizierungsereignissen, die von Admins und Benutzern stammen',
   event: 'Event',

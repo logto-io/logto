@@ -63,7 +63,7 @@ describe('sign-in experience(happy path): sign-up and sign-in', () => {
   });
 
   it('navigate to sign-up and sign-in tab', async () => {
-    await expectToClickNavTab(page, 'Sign-up and Sign-in');
+    await expectToClickNavTab(page, 'Sign-up and sign-in');
 
     await waitForFormCard(page, 'SIGN UP');
     await waitForFormCard(page, 'SIGN IN');

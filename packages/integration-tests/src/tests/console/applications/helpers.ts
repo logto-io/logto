@@ -33,7 +33,7 @@ export const expectToChooseAndClickApplicationFramework = async (page: Page, fra
     }
   );
 
-  await expect(frameworkCard).toClick('button span', { text: 'Start Building' });
+  await expect(frameworkCard).toClick('button span', { text: 'Start building' });
 };
 
 export const expectFrameworkExists = async (page: Page, framework: string) => {
@@ -47,13 +47,13 @@ export const expectToProceedApplicationCreationFrom = async (
   { name, description }: { name: string; description: string }
 ) => {
   // Expect the creation form to be open
-  await expectModalWithTitle(page, 'Create Application');
+  await expectModalWithTitle(page, 'Create application');
 
   await expect(page).toFillForm('.ReactModalPortal form', {
     name,
     description,
   });
-  await expectToClickModalAction(page, 'Create Application');
+  await expectToClickModalAction(page, 'Create application');
 
   await waitForToast(page, { text: 'Application created successfully.' });
 };

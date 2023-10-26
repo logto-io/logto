@@ -8,7 +8,7 @@ const sign_in_exp = {
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
-    sign_up_and_sign_in: 'Sign-up and Sign-in',
+    sign_up_and_sign_in: 'Sign-up and sign-in',
     content: 'Content',
     password_policy: 'Password policy',
   },
@@ -16,7 +16,7 @@ const sign_in_exp = {
     title: 'Customize sign-in experience',
     description:
       'Get started fast with your first sign-in setup. This guide walks you through all the necessary settings.',
-    get_started: 'Get Started',
+    get_started: 'Get started',
     apply_remind:
       'Please note that sign-in experience will apply to all applications under this account.',
   },
@@ -45,8 +45,8 @@ const sign_in_exp = {
   },
   custom_css: {
     title: 'Custom CSS',
-    css_code_editor_title: 'Personalize your UI with Custom CSS',
-    css_code_editor_description1: 'See the example of Custom CSS.',
+    css_code_editor_title: 'Personalize your UI with custom CSS',
+    css_code_editor_description1: 'See the example of custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Learn more',
     css_code_editor_content_placeholder:

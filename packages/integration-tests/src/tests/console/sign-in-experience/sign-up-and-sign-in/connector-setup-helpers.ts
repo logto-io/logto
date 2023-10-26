@@ -71,7 +71,7 @@ export const expectToSetupPasswordlessConnector = async (
   );
 
   const setupConnectorButton = await expect(connectorItem).toMatchElement('button span', {
-    text: 'Set Up',
+    text: 'Set up',
   });
 
   await setupConnectorButton.click();

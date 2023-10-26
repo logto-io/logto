@@ -44,7 +44,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
   });
 
   it('navigate to sign-up and sign-in tab', async () => {
-    await expectToClickNavTab(page, 'Sign-up and Sign-in');
+    await expectToClickNavTab(page, 'Sign-up and sign-in');
 
     await waitForFormCard(page, 'SIGN UP');
     await waitForFormCard(page, 'SIGN IN');
@@ -72,7 +72,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignUpIdentifierSelectorError(page);
 
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
       });
@@ -88,7 +88,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '2 errors',
         });
 
@@ -102,7 +102,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '2 errors',
         });
       });
@@ -128,7 +128,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
         await expectSignUpIdentifierSelectorError(page);
 
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
       });
@@ -144,7 +144,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '2 errors',
         });
 
@@ -158,7 +158,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '2 errors',
         });
       });
@@ -219,7 +219,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
 
@@ -233,7 +233,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Phone number');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
       });
@@ -284,7 +284,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
 
@@ -298,7 +298,7 @@ describe('sign-in experience(sad path): sign-up and sign-in', () => {
 
         await expectSignInMethodError(page, 'Email address');
         await expectErrorsOnNavTab(page, {
-          tab: 'Sign-up and Sign-in',
+          tab: 'Sign-up and sign-in',
           error: '1 errors',
         });
       });

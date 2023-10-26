@@ -1,7 +1,7 @@
 const application_details = {
   page_title: 'Application details',
-  back_to_applications: 'Back to Applications',
-  check_guide: 'Check Guide',
+  back_to_applications: 'Back to applications',
+  check_guide: 'Check guide',
   settings: 'Settings',
   settings_description:
     'Applications are used to identify your applications in Logto for OIDC, sign-in experience, audit logs, etc.',

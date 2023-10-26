@@ -32,7 +32,7 @@ describe('user management', () => {
     await expect(page).toMatchElement(
       'div[class$=main] div[class$=headline] div[class$=titleEllipsis]',
       {
-        text: 'User Management',
+        text: 'User management',
       }
     );
   });

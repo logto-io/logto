@@ -24,7 +24,7 @@ const connectors = {
   },
   placeholder_title: 'Social connector',
   placeholder_description:
-    'Logto hat viele weit verbreitete Social-Sign-in-Connectors bereitgestellt. Inzwischen können Sie mit Standardprotokollen Ihre eigenen erstellen.',
+    'Logto hat viele weit verbreitete Social-Sign-In-Connectors bereitgestellt. Inzwischen können Sie mit Standardprotokollen Ihre eigenen erstellen.',
   save_and_done: 'Speichern und fertigstellen',
   type: {
     email: 'E-Mail Connector',
@@ -41,15 +41,15 @@ const connectors = {
     general_setting: 'Allgemeine Einstellungen',
     parameter_configuration: 'Parameterkonfiguration',
     test_connection: 'Verbindungstest',
-    name: 'Name für Social-Sign-in-Button',
-    name_placeholder: 'Geben Sie den Namen für den Social-Sign-in-Button ein',
+    name: 'Name für Social-Sign-In-Button',
+    name_placeholder: 'Geben Sie den Namen für den Social-Sign-In-Button ein',
     name_tip:
       'Der Name des Connector-Buttons wird als "Weiter mit {{name}}" angezeigt. Achten Sie darauf, dass der Name nicht zu lang wird.',
-    logo: 'Logo-URL für Social-Sign-in-Button',
+    logo: 'Logo-URL für Social-Sign-In-Button',
     logo_placeholder: 'https://your.cdn.domain/logo.png',
     logo_tip:
       'Das Logobild wird auf dem Connector angezeigt. Holen Sie sich einen öffentlich zugänglichen Bildlink und fügen Sie den Link hier ein.',
-    logo_dark: 'Logo-URL für Social-Sign-in-Button (Dark mode)',
+    logo_dark: 'Logo-URL für Social-Sign-In-Button (Dark mode)',
     logo_dark_placeholder: 'https://your.cdn.domain/logo.png',
     logo_dark_tip:
       'Legen Sie das Logo Ihres Connectors für den Dark-Modus fest, nachdem Sie ihn in der Anmeldeerfahrung der Admin Console aktiviert haben.',
