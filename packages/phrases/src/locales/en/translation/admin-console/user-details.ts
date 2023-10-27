@@ -44,7 +44,7 @@ const user_details = {
     connected: 'This user is connected with multiple social connectors.',
     not_connected: 'The user is not connected to any social connector',
     deletion_confirmation:
-      'You are removing the existing <name/> identity. Are you sure you want to do that?',
+      'You are removing the existing <name/> identity. Are you sure you want to continue?',
   },
   sso_connectors: {
     connectors: 'Connectors',
@@ -56,11 +56,11 @@ const user_details = {
   },
   mfa: {
     field_name: 'Multi-factor authentication',
-    field_description: 'This user has enabled 2-step authentication factors.',
+    field_description: 'This user has enabled 2-step verification factors.',
     name_column: 'Multi-Factor',
-    field_description_empty: 'This user has not enabled 2-step authentication factors.',
+    field_description_empty: 'This user has not enabled 2-step verification factors.',
     deletion_confirmation:
-      'You are removing the existing <name/> for the 2-step authenticator. Are you sure you want to do that?',
+      'You are removing the existing <name/> for the 2-step verification. Are you sure you want to continue?',
   },
   suspended: 'Suspended',
   suspend_user: 'Suspend user',

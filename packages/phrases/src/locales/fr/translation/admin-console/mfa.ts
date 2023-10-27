@@ -1,37 +1,38 @@
 const mfa = {
-  title: 'Authentification multi-facteurs',
+  title: 'Authentification à plusieurs facteurs',
   description:
-    'Ajoutez une authentification multi-facteurs pour renforcer la sécurité de votre expérience de connexion.',
+    'Ajoutez une authentification à plusieurs facteurs pour renforcer la sécurité de votre expérience de connexion.',
   factors: 'Facteurs',
   multi_factors: 'Multi-facteurs',
   multi_factors_description:
-    "Les utilisateurs doivent vérifier l'un des facteurs activés pour l'authentification à deux étapes.",
-  totp: "OTP de l'application Authenticator",
+    "Les utilisateurs doivent vérifier l'un des facteurs activés pour la vérification en deux étapes.",
+  totp: "OTP de l'application authentificatrice",
   otp_description:
     'Liez Google Authenticator, etc., pour vérifier les mots de passe à usage unique.',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+  webauthn: 'WebAuthn (Passkey)',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'Vérifiez via une méthode prise en charge par le navigateur : biométrie, scan de téléphone ou clé de sécurité, etc.',
+  webauthn_native_tip: "WebAuthn n'est pas pris en charge pour les applications natives.",
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    "WebAuthn lie les clés publiques au domaine spécifique. Modifier votre domaine de service bloquera les utilisateurs pour l'authentification via les passkeys existantes.",
   backup_code: 'Code de secours',
   backup_code_description:
-    'Générez 10 codes uniques, chacun utilisable pour une seule authentification.',
+    'Générez 10 codes de secours à usage unique après que les utilisateurs aient configuré une méthode de MFA.',
   backup_code_setup_hint:
-    "Le facteur d'authentification de secours qui ne peut pas être activé seul :",
+    "Quand les utilisateurs ne peuvent pas vérifier les facteurs MFA ci-dessus, utilisez l'option de secours.",
   backup_code_error_hint:
-    "Pour utiliser le code de secours pour l'authentification multi-facteurs, d'autres facteurs doivent être activés pour garantir la réussite de la connexion de vos utilisateurs.",
+    "Pour utiliser un code de secours, vous avez besoin d'au moins une autre méthode de MFA pour une authentification réussie de l'utilisateur.",
   policy: 'Politique',
-  two_step_sign_in_policy: "Politique d'authentification à deux étapes à la connexion",
-  user_controlled: "Les utilisateurs ont le choix d'activer eux-mêmes la MFA.",
-  mandatory: 'MFA obligatoire pour tous vos utilisateurs à chaque connexion.',
+  policy_description: "Définissez la politique de MFA pour les flux de connexion et d'inscription.",
+  two_step_sign_in_policy: 'Politique de vérification en deux étapes à la connexion',
+  user_controlled: 'Les utilisateurs peuvent activer ou désactiver MFA eux-mêmes',
+  user_controlled_tip:
+    "Les utilisateurs peuvent ignorer la configuration MFA la première fois à la connexion ou à l'inscription, ou l'activer/désactiver dans les paramètres du compte.",
+  mandatory: 'Les utilisateurs doivent toujours utiliser MFA à la connexion',
+  mandatory_tip:
+    "Les utilisateurs doivent configurer MFA la première fois à la connexion ou à l'inscription, et l'utiliser pour toutes les connexions futures.",
   unlock_reminder:
-    "Débloquez l'authentification multi-facteurs pour renforcer la sécurité en passant à un abonnement payant. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
+    "Déverrouillez MFA pour vérifier la sécurité en passant à un plan payant. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   view_plans: 'Voir les plans',
 };
 

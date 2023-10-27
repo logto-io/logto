@@ -68,7 +68,7 @@ describe('MFA - Multi factors', () => {
     await experience.toClickSwitchFactorsLink({ isBinding: true });
     experience.toBeAt('mfa-binding');
     await expect(experience.page).toMatchElement('div[class$=title]', {
-      text: 'Add 2-step authentication',
+      text: 'Add 2-step verification',
     });
 
     // Switch to WebAuthn
@@ -77,7 +77,7 @@ describe('MFA - Multi factors', () => {
     await experience.toClickSwitchFactorsLink({ isBinding: true });
     experience.toBeAt('mfa-binding');
     await expect(experience.page).toMatchElement('div[class$=title]', {
-      text: 'Add 2-step authentication',
+      text: 'Add 2-step verification',
     });
 
     // Bind WebAuthn

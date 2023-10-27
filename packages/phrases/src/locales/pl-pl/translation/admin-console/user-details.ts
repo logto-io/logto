@@ -48,7 +48,7 @@ const user_details = {
     /** UNTRANSLATED */
     connected: 'This user is connected with multiple social connectors.',
     not_connected: 'Użytkownik nie jest połączony z żadnym połączeniem społecznościowym',
-    deletion_confirmation: 'Usuwasz istniejącą tożsamość <name/>. Czy na pewno chcesz to zrobić?',
+    deletion_confirmation: 'Usuwasz istniejącą tożsamość <name/>. Czy na pewno chcesz kontynuować?',
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -68,7 +68,7 @@ const user_details = {
     name_column: 'Wieloetapowa autoryzacja',
     field_description_empty: 'Ten użytkownik nie włączył czynników uwierzytelniania dwuetapowego.',
     deletion_confirmation:
-      'Usuwasz istniejący <name/> dla autentykatora dwuetapowego. Czy na pewno chcesz to zrobić?',
+      'Usuwasz istniejące <name/> w celu weryfikacji dwustopniowej. Czy na pewno chcesz kontynuować?',
   },
   suspended: 'Zawieszony',
   suspend_user: 'Zawieś użytkownika',

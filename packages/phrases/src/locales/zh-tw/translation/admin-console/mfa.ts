@@ -1,31 +1,28 @@
 const mfa = {
-  title: '多因素驗證',
-  description: '添加多因素驗證以提升您的登錄體驗的安全性。',
+  title: '多因素身份驗證',
+  description: '添加多因素身份驗證以提升您登錄體驗的安全性。',
   factors: '因素',
   multi_factors: '多因素',
-  multi_factors_description: '用戶需要驗證啟用的一個因素以進行兩步驗證。',
-  totp: 'Authenticator應用程式OTP',
-  otp_description: '連接Google Authenticator等來驗證一次性密碼。',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
-  webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+  multi_factors_description: '用戶需要驗證啟用的其中一個因素以進行兩步驗證。',
+  totp: '身份驗證應用 OTP',
+  otp_description: '將 Google Authenticator 等連接起來，以驗證一次性密碼。',
+  webauthn: 'WebAuthn（通行證）',
+  webauthn_description: '通過瀏覽器支持的方法進行驗證：生物識別、手機掃描或安全密鑰等。',
+  webauthn_native_tip: '本地應用不支持 WebAuthn。',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
-  backup_code: '備用代碼',
-  backup_code_description: '生成10個唯一的代碼，每個代碼可用於一次驗證。',
-  backup_code_setup_hint: '不能單獨啟用的備用身份驗證因素：',
-  backup_code_error_hint: '要使用備用代碼進行多因子驗證，必須啟用其他因素以確保用戶成功登錄。',
+    'WebAuthn將公共密鑰綁定到特定域。修改服務域將阻止用戶通過現有通行證進行身份驗證。',
+  backup_code: '備份代碼',
+  backup_code_description: '在用戶設置任何MFA方法後生成10個一次性備份代碼。',
+  backup_code_setup_hint: '當用戶無法驗證上述MFA因素時，使用備份選項。',
+  backup_code_error_hint: '要使用備份代碼，您需要至少再添加一種MFA方法以成功進行用戶身份驗證。',
   policy: '策略',
-  two_step_sign_in_policy: '登錄時的雙重驗證策略',
-  user_controlled: '用戶可以個人選擇啟用MFA。',
-  mandatory: '每次登錄時對所有用戶強制執行MFA。',
-  unlock_reminder:
-    '解鎖多因子驗證以通過升級到付費計劃驗證安全性。如果需要幫助，請隨時<a>聯繫我們</a>。',
+  policy_description: '設置登錄和註冊流程的MFA策略。',
+  two_step_sign_in_policy: '登錄時的雙步驗證策略',
+  user_controlled: '用戶可以自行啟用或禁用MFA',
+  user_controlled_tip: '用戶可以在首次登錄或註冊時跳過MFA設置，或在帳戶設置中啟用/禁用它。',
+  mandatory: '用戶總是需要在登錄時使用MFA',
+  mandatory_tip: '用戶必須在首次登錄或註冊時設置MFA，並在以後的所有登錄中使用它。',
+  unlock_reminder: '升級到付費計劃以解鎖MFA以提高安全性。如果需要任何協助，請隨時<a>聯繫我們</a>。',
   view_plans: '查看計劃',
 };
 

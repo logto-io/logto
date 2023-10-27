@@ -47,7 +47,7 @@ const user_details = {
     /** UNTRANSLATED */
     connected: 'This user is connected with multiple social connectors.',
     not_connected: '該用戶還沒有綁定社交帳號',
-    deletion_confirmation: '你在正要刪除現有的 <name /> 身份，是否確認？',
+    deletion_confirmation: '您正在刪除現有的<name/>身份。你確定要繼續嗎？',
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -66,7 +66,7 @@ const user_details = {
     field_description: '這個用戶已啟用2步驗證因素。',
     name_column: '多因素驗證',
     field_description_empty: '此使用者尚未啟用兩步驗證因素。',
-    deletion_confirmation: '您正在移除現有的2步驗證器的<name/>。您確定要這樣做嗎？',
+    deletion_confirmation: '您正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
   },
   suspended: '已禁用',
   suspend_user: '禁用用戶',

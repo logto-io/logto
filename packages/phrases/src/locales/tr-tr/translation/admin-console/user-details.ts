@@ -49,7 +49,7 @@ const user_details = {
     connected: 'This user is connected with multiple social connectors.',
     not_connected: 'Kullanıcı herhangi bir sosyal bağlayıcıya bağlı değil',
     deletion_confirmation:
-      'Mevcut <name/> kimliğini kaldırıyorsunuz. Bunu yapmak istediğinizden emin misiniz?',
+      'Mevcut <name/> kimliğini kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -70,7 +70,7 @@ const user_details = {
     field_description_empty:
       'Bu kullanıcı 2 aşamalı kimlik doğrulama faktörlerini etkinleştirmedi.',
     deletion_confirmation:
-      '2 aşamalı kimlik doğrulama için mevcut olan <name/> kaldırıyorsunuz. Bunun yapmak istediğinizden emin misiniz?',
+      'Varolan 2 aşamalı doğrulama için <name/> kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
   },
   suspended: 'Askıya alınmış',
   suspend_user: 'Kullanıcıyı Askıya Al',

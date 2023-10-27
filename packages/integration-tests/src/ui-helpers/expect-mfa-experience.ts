@@ -27,7 +27,7 @@ export default class ExpectMfaExperience extends ExpectExperience {
   async toClickSwitchFactorsLink({ isBinding }: { isBinding: boolean }) {
     await this.toClick(
       'a',
-      isBinding ? 'Link another 2-step authentication' : 'Try another method to verify'
+      isBinding ? 'Switch to another method' : 'Try another method to verify'
     );
   }
 }

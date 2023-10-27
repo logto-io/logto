@@ -1,35 +1,37 @@
 const mfa = {
-  title: '多要素認証',
+  title: 'マルチファクタ認証',
   description:
-    'サインインエクスペリエンスのセキュリティを向上させるために、多要素認証を追加します。',
+    'サインインエクスペリエンスのセキュリティを向上させるためにマルチファクタ認証を追加します。',
   factors: '要因',
-  multi_factors: 'マルチファクター',
+  multi_factors: 'マルチファクタ',
   multi_factors_description:
-    'ユーザーは2段階認証のために有効になっている要因の1つを確認する必要があります。',
-  totp: 'AuthenticatorアプリOTP',
-  otp_description: 'Google Authenticatorなどをリンクしてワンタイムパスワードを確認します。',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+    'ユーザーは2段階認証のために有効になっている要因のうちの1つを検証する必要があります。',
+  totp: '認証アプリ OTP',
+  otp_description: 'Google Authenticatorなどをリンクしてワンタイムパスワードを検証します。',
+  webauthn: 'WebAuthn（パスキー）',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'ブラウザでサポートされている方法を使用して検証します：生体認証、電話のスキャン、またはセキュリティキーなど。',
+  webauthn_native_tip: 'WebAuthnはネイティブアプリケーションではサポートされていません。',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    'WebAuthnは公開鍵を特定のドメインにバインドします。サービスのドメインを変更すると、既存のパスキーを使用したユーザーの認証がブロックされます。',
   backup_code: 'バックアップコード',
-  backup_code_description: '1回の認証に使用できる10個のユニークなコードを生成します。',
-  backup_code_setup_hint: '単独で有効化できないバックアップ認証要因：',
+  backup_code_description:
+    'ユーザーが任意のMFAメソッドを設定した後に10個のワンタイムバックアップコードを生成します。',
+  backup_code_setup_hint: '上記のMFA要因を検証できない場合は、バックアップオプションを使用します。',
   backup_code_error_hint:
-    'MFAのバックアップコードを使用するには、他の要因を有効にする必要があり、ユーザーのサインインが成功することを確認します。',
+    'バックアップコードを使用するには、成功したユーザー認証のために少なくとも1つ以上のMFAメソッドが必要です。',
   policy: 'ポリシー',
+  policy_description: 'サインインおよびサインアップフローのためのMFAポリシーを設定します。',
   two_step_sign_in_policy: 'サインイン時の2段階認証ポリシー',
-  user_controlled: 'ユーザーは個人でMFAを有効にする選択肢があります。',
-  mandatory: 'すべてのユーザーに対するすべてのサインインでの義務MFA。',
+  user_controlled: 'ユーザーは自分でMFAを有効または無効にできます',
+  user_controlled_tip:
+    'ユーザーは最初のサインインまたはサインアップ時にMFAのセットアップをスキップしたり、アカウント設定で有効/無効にしたりできます。',
+  mandatory: 'ユーザーは常にサインイン時にMFAの使用が必要です',
+  mandatory_tip:
+    'ユーザーは最初のサインインまたはサインアップ時にMFAを設定し、将来のすべてのサインインでそれを使用する必要があります。',
   unlock_reminder:
-    'セキュリティの確認のためにMFAをロック解除して有料プランにアップグレードします。サポートが必要な場合はお気軽に<a>お問い合わせ</a>ください。',
-  view_plans: 'プランを表示',
+    'セキュリティを確認するためにMFAを解除して有料プランにアップグレードしてください。ご質問があれば、<a>お問い合わせください</a>。',
+  view_plans: 'プランを見る',
 };
 
 export default Object.freeze(mfa);
