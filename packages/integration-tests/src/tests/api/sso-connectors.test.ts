@@ -63,6 +63,8 @@ describe('post sso-connectors', () => {
     expect(response).toHaveProperty('domains', []);
     expect(response).toHaveProperty('ssoOnly', false);
     expect(response).toHaveProperty('syncProfile', false);
+
+    await deleteSsoConnectorById(response.id);
   });
 
   it('should throw if invalid config is provided', async () => {
@@ -98,6 +100,8 @@ describe('post sso-connectors', () => {
     expect(response).toHaveProperty('domains', data.domains);
     expect(response).toHaveProperty('ssoOnly', data.ssoOnly);
     expect(response).toHaveProperty('syncProfile', false);
+
+    await deleteSsoConnectorById(response.id);
   });
 });
 
@@ -118,6 +122,8 @@ describe('get sso-connectors', () => {
 
     // Invalid config
     expect(connector?.providerConfig).toBeUndefined();
+
+    await deleteSsoConnectorById(id);
   });
 });
 
@@ -141,6 +147,8 @@ describe('get sso-connector by id', () => {
     expect(connector).toHaveProperty('domains', []);
     expect(connector).toHaveProperty('ssoOnly', false);
     expect(connector).toHaveProperty('syncProfile', false);
+
+    await deleteSsoConnectorById(id);
   });
 });
 
@@ -165,7 +173,9 @@ describe('delete sso-connector by id', () => {
 
 describe('patch sso-connector by id', () => {
   it('should return 404 if connector is not found', async () => {
-    await expect(getSsoConnectorById('invalid-id')).rejects.toThrow(HTTPError);
+    await expect(patchSsoConnectorById('invalid-id', { connectorName: 'foo' })).rejects.toThrow(
+      HTTPError
+    );
   });
 
   it('should patch sso connector without config', async () => {
@@ -187,6 +197,8 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('domains', ['test.com']);
     expect(connector).toHaveProperty('ssoOnly', true);
     expect(connector).toHaveProperty('syncProfile', false);
+
+    await deleteSsoConnectorById(id);
   });
 
   it('should directly return if no changes are made', async () => {
@@ -206,6 +218,8 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('domains', []);
     expect(connector).toHaveProperty('ssoOnly', false);
     expect(connector).toHaveProperty('syncProfile', false);
+
+    await deleteSsoConnectorById(id);
   });
 
   it('should throw if invalid config is provided', async () => {
@@ -222,6 +236,8 @@ describe('patch sso-connector by id', () => {
         },
       })
     ).rejects.toThrow(HTTPError);
+
+    await deleteSsoConnectorById(id);
   });
 
   it('should patch sso connector with config', async () => {
@@ -251,6 +267,8 @@ describe('patch sso-connector by id', () => {
       scope: 'profile email openid', // Should merged with default scope openid
     });
     expect(connector).toHaveProperty('syncProfile', true);
+
+    await deleteSsoConnectorById(id);
   });
 });
 
@@ -273,6 +291,8 @@ describe('patch sso-connector config by id', () => {
         clientId: 'foo',
       })
     ).rejects.toThrow(HTTPError);
+
+    await deleteSsoConnectorById(id);
   });
 
   it('should patch sso connector config', async () => {
@@ -298,5 +318,7 @@ describe('patch sso-connector config by id', () => {
       issuer: logtoIssuer,
       scope: 'openid',
     });
+
+    await deleteSsoConnectorById(id);
   });
 });

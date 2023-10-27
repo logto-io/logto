@@ -7,8 +7,10 @@ import {
   socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
+  mockSsoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
 
 import { createConnectorLibrary } from '../connector.js';
 
@@ -32,7 +34,13 @@ const signInExperiences = {
 };
 const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
 
+const ssoConnectorLibrary = {
+  getSsoConnectors: jest.fn(),
+  getSsoConnectorById: jest.fn(),
+};
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
+
 const queries = new MockQueries({
   customPhrases,
   signInExperiences,
@@ -40,11 +48,12 @@ const queries = new MockQueries({
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
 });
+
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
-const { validateLanguageInfo, removeUnavailableSocialConnectorTargets } =
-  createSignInExperienceLibrary(queries, connectorLibrary);
+const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSignInExperience } =
+  createSignInExperienceLibrary(queries, connectorLibrary, ssoConnectorLibrary);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -116,5 +125,44 @@ describe('remove unavailable social connector targets', () => {
     expect(updateDefaultSignInExperience).toBeCalledWith({
       socialSignInConnectorTargets: [socialTarget01, socialTarget02],
     });
+  });
+});
+
+describe('get sso connectors', () => {
+  it('should filter out sso connectors that has invalid config', async () => {
+    ssoConnectorLibrary.getSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+
+    const { ssoConnectors } = await getFullSignInExperience();
+    expect(ssoConnectors).toEqual([]);
+  });
+
+  it('should return sso connectors with valid config', async () => {
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+
+    const ssoConnector = {
+      ...mockSsoConnector,
+      config: {
+        clientId: 'mockClientId',
+        clientSecret: 'mockClientSecret',
+        issuer: 'mockIssuer',
+      },
+    };
+
+    ssoConnectorLibrary.getSsoConnectors.mockResolvedValueOnce([ssoConnector]);
+
+    const { ssoConnectors } = await getFullSignInExperience();
+
+    expect(ssoConnectors).toEqual([
+      {
+        id: ssoConnector.id,
+        connectorName: ssoConnector.connectorName,
+        domains: ssoConnector.domains,
+        logo: ssoConnectorFactories[ssoConnector.providerName].logo,
+        darkLogo: undefined,
+      },
+    ]);
   });
 });

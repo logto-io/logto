@@ -1,7 +1,9 @@
-import { type SignInExperience, type Translation } from '@logto/schemas';
+import { type SignInExperience, type Translation, type SsoConnectorMetadata } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
+import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
+import { logtoUrl } from '#src/constants.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -51,5 +53,47 @@ describe('.well-known api', () => {
       .get('.well-known/phrases?lng=en')
       .json<{ translation: Translation }>();
     expect(updated.translation.demo_app).toHaveProperty('notification', notification);
+  });
+
+  describe('sso connectors in sign-in experience', () => {
+    const logtoIssuer = `${logtoUrl}/oidc`;
+
+    const newOIDCSsoConnector = {
+      providerName: 'OIDC',
+      connectorName: 'OIDC sso connector',
+      branding: {
+        logo: 'https://logto.io/oidc-logo.png',
+        darkLogo: 'https://logto.io/oidc-dark-logo.png',
+      },
+      config: {
+        clientId: 'client-id',
+        clientSecret: 'client-secret',
+        issuer: logtoIssuer,
+      },
+    };
+
+    it('should get the sso connectors in sign-in experience', async () => {
+      const { id, connectorName, domains } = await createSsoConnector(newOIDCSsoConnector);
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      expect(signInExperience.ssoConnectors.length).toBeGreaterThan(0);
+
+      const newCreatedConnector = signInExperience.ssoConnectors.find(
+        (connector) => connector.id === id
+      );
+
+      expect(newCreatedConnector).toMatchObject({
+        id,
+        connectorName,
+        domains,
+        logo: newOIDCSsoConnector.branding.logo,
+        darkLogo: newOIDCSsoConnector.branding.darkLogo,
+      });
+
+      await deleteSsoConnectorById(id);
+    });
   });
 });

@@ -16,7 +16,6 @@ import type Queries from './Queries.js';
 
 export default class Libraries {
   users = createUserLibrary(this.queries);
-  signInExperiences = createSignInExperienceLibrary(this.queries, this.connectors);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
@@ -26,6 +25,11 @@ export default class Libraries {
   domains = createDomainLibrary(this.queries);
   quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
   ssoConnector = createSsoConnectorLibrary(this.queries);
+  signInExperiences = createSignInExperienceLibrary(
+    this.queries,
+    this.connectors,
+    this.ssoConnector
+  );
 
   constructor(
     public readonly tenantId: string,

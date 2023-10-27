@@ -5,6 +5,8 @@ import { type SupportedSsoConnector } from '#src/sso/types/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
+export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
+
 export const createSsoConnectorLibrary = (queries: Queries) => {
   const { ssoConnectors } = queries;
 
