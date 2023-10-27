@@ -12,19 +12,7 @@ await mockEsmWithActual('#src/sso/OidcConnector/utils.js', () => ({
 }));
 
 const { ssoConnectorFactories } = await import('#src/sso/index.js');
-const { isSupportedSsoProvider, parseFactoryDetail, fetchConnectorProviderDetails } = await import(
-  './utils.js'
-);
-
-describe('isSupportedSsoProvider', () => {
-  it.each(Object.values(SsoProviderName))('should return true for %s', (providerName) => {
-    expect(isSupportedSsoProvider(providerName)).toBe(true);
-  });
-
-  it('should return false for unknown provider', () => {
-    expect(isSupportedSsoProvider('unknown-provider')).toBe(false);
-  });
-});
+const { parseFactoryDetail, fetchConnectorProviderDetails } = await import('./utils.js');
 
 describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))('should return correct detail for %s', (providerName) => {
@@ -54,15 +42,11 @@ describe('parseFactoryDetail', () => {
 });
 
 describe('fetchConnectorProviderDetails', () => {
-  it('should return undefined for unsupported provider', async () => {
-    const connector = { ...mockSsoConnector, providerName: 'unknown-provider' };
-    const result = await fetchConnectorProviderDetails(connector);
-
-    expect(result).toBeUndefined();
-  });
-
   it('providerConfig should be undefined if connector config is invalid', async () => {
-    const connector = { ...mockSsoConnector, config: { clientId: 'foo' } };
+    const connector = {
+      ...mockSsoConnector,
+      config: { clientId: 'foo' },
+    };
     const result = await fetchConnectorProviderDetails(connector);
 
     expect(result).toEqual({
