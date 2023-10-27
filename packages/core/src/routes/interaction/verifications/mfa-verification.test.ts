@@ -7,7 +7,11 @@ import type Provider from 'oidc-provider';
 
 import { mockBackupCodeBind, mockTotpBind } from '#src/__mocks__/mfa-verification.js';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
+import {
+  mockUser,
+  mockUserBackupCodeMfaVerification,
+  mockUserWithMfaVerifications,
+} from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -291,12 +295,6 @@ describe('verifyMfa', () => {
 });
 
 describe('validateBindMfaBackupCode', () => {
-  it('should pass if bindMfas is empty', async () => {
-    await expect(
-      validateBindMfaBackupCode(tenantContext, baseCtx, signInInteraction, provider)
-    ).resolves.not.toThrow();
-  });
-
   it('should pass if backup code is not enabled', async () => {
     await expect(
       validateBindMfaBackupCode(
@@ -311,7 +309,7 @@ describe('validateBindMfaBackupCode', () => {
     ).resolves.not.toThrow();
   });
 
-  it('should pass if backup code is set', async () => {
+  it('should pass if backup code is set in bindMfas', async () => {
     await expect(
       validateBindMfaBackupCode(
         tenantContext,
@@ -325,6 +323,72 @@ describe('validateBindMfaBackupCode', () => {
     ).resolves.not.toThrow();
   });
 
+  it('should pass if there is no other MFA for register', async () => {
+    await expect(
+      validateBindMfaBackupCode(tenantContext, backupCodeEnabledCtx, interaction, provider)
+    ).resolves.not.toThrow();
+  });
+
+  it('should pass if there is no other MFA for sign in', async () => {
+    findUserById.mockResolvedValueOnce(mockUser);
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        backupCodeEnabledCtx,
+        {
+          ...signInInteraction,
+        },
+        provider
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it('should pass if backup code is set in user mfaVerifications', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUser,
+      mfaVerifications: [mockUserBackupCodeMfaVerification],
+    });
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        backupCodeEnabledCtx,
+        {
+          ...signInInteraction,
+          bindMfas: [mockTotpBind],
+        },
+        provider
+      )
+    ).resolves.not.toThrow();
+  });
+
+  it('should reject if backup code is set in user mfaVerifications but used', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUser,
+      mfaVerifications: [
+        {
+          ...mockUserBackupCodeMfaVerification,
+          codes: [{ code: 'code', usedAt: new Date().toISOString() }],
+        },
+      ],
+    });
+    await expect(
+      validateBindMfaBackupCode(
+        tenantContext,
+        backupCodeEnabledCtx,
+        {
+          ...signInInteraction,
+          bindMfas: [mockTotpBind],
+        },
+        provider
+      )
+    ).rejects.toThrowError(
+      new RequestError(
+        { code: 'session.mfa.backup_code_required', status: 422 },
+        { codes: mockBackupCodes }
+      )
+    );
+  });
+
   it('should reject if backup code is not set', async () => {
     findUserById.mockResolvedValueOnce(mockUserWithMfaVerifications);
 
@@ -334,7 +398,7 @@ describe('validateBindMfaBackupCode', () => {
         backupCodeEnabledCtx,
         {
           ...signInInteraction,
-          bindMfas: [mockTotpBind],
+          bindMfas: [],
         },
         provider
       )
