@@ -50,6 +50,8 @@ const mfa = {
   /** UNTRANSLATED */
   webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
   /** UNTRANSLATED */
+  webauthn_not_supported: 'WebAuthn is not supported in this browser.',
+  /** UNTRANSLATED */
   webauthn_failed_to_create: 'Failed to create. Please try again.',
   /** UNTRANSLATED */
   webauthn_failed_to_verify: 'Failed to verify. Please try again.',

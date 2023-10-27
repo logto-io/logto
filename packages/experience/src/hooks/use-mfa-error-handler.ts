@@ -10,6 +10,7 @@ import {
   backupCodeErrorDataGuard,
   type BackupCodeBindingState,
 } from '@/types/guard';
+import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
 import useStartTotpBinding from './use-start-totp-binding';
@@ -66,13 +67,19 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     (flow: UserMfaFlow) => {
       return (error: RequestErrorBody) => {
         const [_, data] = validate(error.data, mfaErrorDataGuard);
-        const availableFactors = data?.availableFactors ?? [];
+        const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
 
-        if (availableFactors.length === 0) {
+        if (factors.length === 0) {
           setToast(error.message);
           return;
         }
+
+        const availableFactors =
+          // Hide the webauthn factor on native webview if the user has other options, since it's not supported.
+          isNativeWebview() && factors.length > 1
+            ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
+            : factors;
 
         handleMfaRedirect(flow, { availableFactors, skippable });
       };

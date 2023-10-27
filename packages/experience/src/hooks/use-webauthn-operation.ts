@@ -5,7 +5,11 @@ import {
   type WebAuthnRegistrationOptions,
 } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
+import {
+  browserSupportsWebAuthn,
+  startAuthentication,
+  startRegistration,
+} from '@simplewebauthn/browser';
 import type {
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
@@ -108,6 +112,11 @@ const useWebAuthnOperation = (flow: UserMfaFlow) => {
   );
 
   return useCallback(async () => {
+    if (!browserSupportsWebAuthn()) {
+      setToast(t('mfa.webauthn_not_supported'));
+      return;
+    }
+
     if (!webAuthnOptions) {
       /**
        * This error message is just for program robustness; in practice, this issue is unlikely to occur.
