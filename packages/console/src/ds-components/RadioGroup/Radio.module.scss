@@ -254,6 +254,21 @@
   }
 }
 
+.plain.disabled {
+  color: var(--color-text);
+
+  .content {
+    .indicator {
+      border-color: var(--color-border);
+
+      &::before {
+        background: var(--color-bg-state-unselected);
+        border-color: var(--color-bg-state-unselected);
+      }
+    }
+  }
+}
+
 .card.disabled {
   background-color: var(--color-layer-2);
   border-color: var(--color-layer-2);

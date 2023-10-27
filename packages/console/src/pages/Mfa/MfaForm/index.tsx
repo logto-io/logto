@@ -56,6 +56,14 @@ function MfaForm({ data, onMfaUpdated }: Props) {
     return validateBackupCodeFactor(factors);
   }, [formValues]);
 
+  const isPolicySettingsDisabled = useMemo(() => {
+    if (isMfaDisabled) {
+      return false;
+    }
+    const { factors } = convertMfaFormToConfig(formValues);
+    return factors.length === 0;
+  }, [formValues, isMfaDisabled]);
+
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
       const mfaConfig = convertMfaFormToConfig(formData);
@@ -141,7 +149,12 @@ function MfaForm({ data, onMfaUpdated }: Props) {
                   {Object.values(MfaPolicy).map((policy) => {
                     const title = policyOptionTitleMap[policy];
                     return (
-                      <Radio key={policy} isDisabled={isMfaDisabled} title={title} value={policy} />
+                      <Radio
+                        key={policy}
+                        isDisabled={isPolicySettingsDisabled}
+                        title={title}
+                        value={policy}
+                      />
                     );
                   })}
                 </RadioGroup>

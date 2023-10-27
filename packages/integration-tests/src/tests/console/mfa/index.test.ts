@@ -54,10 +54,10 @@ describe.skip('multi-factor authentication', () => {
   });
 
   it('reset mfa settings', async () => {
+    await expectToClickPolicyOption(page, 'UserControlled');
     await expectToClickFactor(page, 'backupCodeEnabled');
     await expectToClickFactor(page, 'webAuthnEnabled');
     await expectToClickFactor(page, 'totpEnabled');
-    await expectToClickPolicyOption(page, 'UserControlled');
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
   });
