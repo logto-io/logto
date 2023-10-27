@@ -44,11 +44,13 @@ const getLogtoConnectors = jest.fn(async () => {
     mockWechatNativeConnector,
   ];
 });
+const getSsoConnectors = jest.fn().mockResolvedValue([0, []]);
 const tenantContext = new MockTenant(
   provider,
   {
     signInExperiences: sieQueries,
     users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
+    ssoConnectors: { findAll: getSsoConnectors },
   },
   { getLogtoConnectors }
 );
@@ -74,6 +76,7 @@ describe('GET /.well-known/sign-in-exp', () => {
   it('should return github and facebook connector instances', async () => {
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(getLogtoConnectors).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toMatchObject({
       ...mockSignInExperience,
@@ -95,6 +98,7 @@ describe('GET /.well-known/sign-in-exp', () => {
           id: mockWechatNativeConnector.dbEntry.id,
         },
       ],
+      ssoConnectors: [],
     });
   });
 });
