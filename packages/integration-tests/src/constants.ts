@@ -22,6 +22,6 @@ export const signUpIdentifiers = {
   none: [],
 };
 
-export const consoleUsername = 'admin';
-export const consolePassword = 'some_random_password_123';
+export const consoleUsername = 'svhd';
+export const consolePassword = 'silverhandasd_1';
 export const mockSocialAuthPageUrl = 'http://mock.social.com';

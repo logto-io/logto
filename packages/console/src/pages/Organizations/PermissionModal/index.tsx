@@ -78,25 +78,27 @@ function PermissionModal({ isOpen, editData, onClose }: Props) {
         }
         onClose={onClose}
       >
-        <FormField isRequired title="general.name">
-          <TextInput
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            placeholder="read:appointment"
-            error={Boolean(errors.name)}
-            disabled={Boolean(editData)}
-            {...register('name', { required: true })}
-          />
-        </FormField>
-        <FormField title="general.description">
-          <TextInput
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus={Boolean(editData)}
-            placeholder={t('organizations.create_permission_placeholder')}
-            error={Boolean(errors.description)}
-            {...register('description')}
-          />
-        </FormField>
+        <form>
+          <FormField isRequired title="general.name">
+            <TextInput
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              placeholder="read:appointment"
+              error={Boolean(errors.name)}
+              disabled={Boolean(editData)}
+              {...register('name', { required: true })}
+            />
+          </FormField>
+          <FormField title="general.description">
+            <TextInput
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus={Boolean(editData)}
+              placeholder={t('organizations.create_permission_placeholder')}
+              error={Boolean(errors.description)}
+              {...register('description')}
+            />
+          </FormField>
+        </form>
       </ModalLayout>
     </ReactModal>
   );
