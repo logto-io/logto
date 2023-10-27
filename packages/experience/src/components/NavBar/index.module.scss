@@ -43,6 +43,10 @@
   .navButton > span {
     display: none;
   }
+
+  .navBar.hidden {
+    visibility: hidden;
+  }
 }
 
 :global(body.desktop) {
@@ -58,5 +62,9 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  .navBar.hidden {
+    display: none;
   }
 }

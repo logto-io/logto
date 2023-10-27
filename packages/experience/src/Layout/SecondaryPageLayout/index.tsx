@@ -14,9 +14,10 @@ type Props = {
   title: TFuncKey;
   description?: TFuncKey | ReactElement | '';
   titleProps?: Record<string, unknown>;
-  onSkip?: () => void;
   descriptionProps?: Record<string, unknown>;
   notification?: TFuncKey;
+  onSkip?: () => void;
+  isNavBarHidden?: boolean;
   children: React.ReactNode;
 };
 
@@ -24,9 +25,10 @@ const SecondaryPageLayout = ({
   title,
   description,
   titleProps,
-  onSkip,
   descriptionProps,
   notification,
+  onSkip,
+  isNavBarHidden,
   children,
 }: Props) => {
   const { isMobile } = usePlatform();
@@ -34,7 +36,7 @@ const SecondaryPageLayout = ({
   return (
     <div className={styles.wrapper}>
       <PageMeta titleKey={title} />
-      <NavBar onSkip={onSkip} />
+      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} />
       {isMobile && notification && (
         <InlineNotification message={notification} className={styles.notification} />
       )}
