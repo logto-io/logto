@@ -58,7 +58,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
 
   const isPolicySettingsDisabled = useMemo(() => {
     if (isMfaDisabled) {
-      return false;
+      return true;
     }
     const { factors } = convertMfaFormToConfig(formValues);
     return factors.length === 0;
