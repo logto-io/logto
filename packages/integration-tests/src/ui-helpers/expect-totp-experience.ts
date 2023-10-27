@@ -2,9 +2,9 @@ import { authenticator } from 'otplib';
 
 import { waitFor, dcls } from '#src/utils.js';
 
-import ExpectExperience from './expect-experience.js';
+import ExpectMfaExperience from './expect-mfa-experience.js';
 
-export default class ExpectTotpExperience extends ExpectExperience {
+export default class ExpectTotpExperience extends ExpectMfaExperience {
   constructor(thePage = global.page) {
     super(thePage);
   }

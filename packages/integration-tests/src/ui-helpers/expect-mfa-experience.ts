@@ -1,10 +1,11 @@
 import { cls } from '#src/utils.js';
 
-import ExpectWebAuthnExperience from './expect-webauthn-experience.js';
+import ExpectExperience from './expect-experience.js';
+
 /**
  * Note: The backup code tests are based on the WebAuthn experience flow since the backup code factor cannot be enabled alone.
  */
-export default class ExpectBackupCodeExperience extends ExpectWebAuthnExperience {
+export default class ExpectMfaExperience extends ExpectExperience {
   constructor(thePage = global.page) {
     super(thePage);
   }
@@ -20,6 +21,13 @@ export default class ExpectBackupCodeExperience extends ExpectWebAuthnExperience
       backupCodesSpanList.map(async (span) => {
         return span.evaluate((element) => element.textContent);
       })
+    );
+  }
+
+  async toClickSwitchFactorsLink({ isBinding }: { isBinding: boolean }) {
+    await this.toClick(
+      'a',
+      isBinding ? 'Link another 2-step authentication' : 'Try another method to verify'
     );
   }
 }

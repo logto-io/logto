@@ -28,6 +28,19 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     (flow: UserMfaFlow, state: MfaFlowState) => {
       const { availableFactors } = state;
 
+      if (flow === UserMfaFlow.MfaVerification) {
+        // In MFA verification flow, the user will be redirected to the last used factor which is the first one in the array.
+        const factor = availableFactors[0];
+
+        if (!factor) {
+          return;
+        }
+
+        navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
+        return;
+      }
+
+      // Binding flow
       if (availableFactors.length > 1) {
         navigate({ pathname: `/${flow}` }, { replace, state });
         return;
@@ -39,7 +52,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         return;
       }
 
-      if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
+      if (factor === MfaFactor.TOTP) {
         void startTotpBinding(state);
         return;
       }

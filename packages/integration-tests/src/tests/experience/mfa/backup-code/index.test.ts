@@ -9,8 +9,8 @@ import {
   enableMandatoryMfaWithWebAuthnAndBackupCode,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import ExpectBackupCodeExperience from '#src/ui-helpers/expect-backup-code-experience.js';
-import { generateUsername, waitFor } from '#src/utils.js';
+import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
+import { generateUsername } from '#src/utils.js';
 
 describe('MFA - Backup Code', () => {
   beforeAll(async () => {
@@ -43,7 +43,7 @@ describe('MFA - Backup Code', () => {
   const password = 'l0gt0_T3st_P@ssw0rd';
 
   it('should bind backup codes when registering and verify backup codes when signing in', async () => {
-    const experience = new ExpectBackupCodeExperience(await browser.newPage());
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
     await experience.setupVirtualAuthenticator();
     await experience.startWith(demoAppUrl, 'register');
     await experience.toFillInput('identifier', username, { submit: true });
@@ -68,9 +68,15 @@ describe('MFA - Backup Code', () => {
       },
       { submit: true }
     );
-    // Wait for the page to process submitting request.
-    await waitFor(500);
+
+    await experience.page.waitForNetworkIdle();
+    // Should navigate to the WebAuthn verification page
+    experience.toBeAt('mfa-verification/WebAuthn');
+    // Nav back to the list page
+    await experience.toClickSwitchFactorsLink({ isBinding: false });
     experience.toBeAt('mfa-verification');
+
+    // Select backup code
     await experience.toClick('button', 'Backup code');
     experience.toBeAt('mfa-verification/BackupCode');
     await experience.toFillInput('code', backupCodes.at(0) ?? '', { submit: true });

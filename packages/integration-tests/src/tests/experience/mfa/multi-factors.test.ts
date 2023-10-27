@@ -7,10 +7,10 @@ import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
+import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
 import { waitFor } from '#src/utils.js';
 
-describe('MFA - Factor switching', () => {
+describe('MFA - Multi factors', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
     await setSocialConnector();
@@ -41,12 +41,12 @@ describe('MFA - Factor switching', () => {
     await resetMfaSettings();
   });
 
-  it('should be able to switch between different factors', async () => {
+  it('should be able to complete MFA flow with multi factors', async () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
-    const experience = new ExpectTotpExperience(await browser.newPage());
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
-
+    await experience.setupVirtualAuthenticator();
     await experience.toFillForm(
       {
         identifier: userProfile.username,
@@ -65,22 +65,48 @@ describe('MFA - Factor switching', () => {
     experience.toBeAt('mfa-binding/Totp');
 
     // Navigate back
-    await experience.toClick('a[class*=switchLink');
+    await experience.toClickSwitchFactorsLink({ isBinding: true });
     experience.toBeAt('mfa-binding');
     await expect(experience.page).toMatchElement('div[class$=title]', {
       text: 'Add 2-step authentication',
     });
 
-    // Select WebAuthn
+    // Switch to WebAuthn
     await experience.toClick('button div[class$=name]', 'Passkey');
     experience.toBeAt('mfa-binding/WebAuthn');
-    await experience.toClick('a[class*=switchLink');
+    await experience.toClickSwitchFactorsLink({ isBinding: true });
     experience.toBeAt('mfa-binding');
     await expect(experience.page).toMatchElement('div[class$=title]', {
       text: 'Add 2-step authentication',
     });
 
-    await experience.page.close();
+    // Bind WebAuthn
+    await experience.toClick('button div[class$=name]', 'Passkey');
+    // Wait the WebAuthn to be prepared
+    await experience.page.waitForNetworkIdle();
+    experience.toBeAt('mfa-binding/WebAuthn');
+    await experience.toCreatePasskey();
+
+    // Backup codes page
+    await experience.toClick('button', 'Continue');
+    await experience.verifyThenEnd(false);
+
+    // Sign in with latest used factor
+    await experience.startWith(demoAppUrl, 'sign-in');
+    await experience.toFillForm(
+      {
+        identifier: userProfile.username,
+        password: userProfile.password,
+      },
+      { submit: true }
+    );
+
+    await experience.page.waitForNetworkIdle();
+    experience.toBeAt('mfa-verification/WebAuthn');
+    await experience.toVerifyViaPasskey();
+
+    await experience.clearVirtualAuthenticator();
+    await experience.verifyThenEnd();
     await deleteUser(user.id);
   });
 });

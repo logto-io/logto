@@ -1,8 +1,8 @@
 import { type CDPSession } from 'puppeteer';
 
-import ExpectExperience from './expect-experience.js';
+import ExpectMfaExperience from './expect-mfa-experience.js';
 
-export default class ExpectWebAuthnExperience extends ExpectExperience {
+export default class ExpectWebAuthnExperience extends ExpectMfaExperience {
   private authenticatorId?: string;
   private _cdpClient?: CDPSession;
 
