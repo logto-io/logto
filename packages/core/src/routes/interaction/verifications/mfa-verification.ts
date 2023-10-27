@@ -49,14 +49,22 @@ export const verifyBindMfa = async (
 };
 
 export const verifyMfa = async (
+  ctx: WithInteractionSieContext,
   tenant: TenantContext,
   interaction: AccountVerifiedInteractionResult
 ): Promise<AccountVerifiedInteractionResult> => {
+  const {
+    signInExperience: {
+      mfa: { factors },
+    },
+  } = ctx;
   const { accountId, verifiedMfa } = interaction;
 
   const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+  // Only allow MFA that is configured in sign-in experience
+  const availableUserVerifications = mfaVerifications.filter(({ type }) => factors.includes(type));
 
-  if (mfaVerifications.length > 0) {
+  if (availableUserVerifications.length > 0) {
     assertThat(
       verifiedMfa,
       new RequestError(
@@ -65,7 +73,7 @@ export const verifyMfa = async (
           status: 403,
         },
         {
-          availableFactors: deduplicate(mfaVerifications.map(({ type }) => type)),
+          availableFactors: deduplicate(availableUserVerifications.map(({ type }) => type)),
         }
       )
     );
@@ -113,8 +121,8 @@ const validateMandatoryBindMfaForSignIn = async (
   const { accountId } = interaction;
   const { mfaVerifications, customData } = await tenant.queries.users.findUserById(accountId);
 
-  // If the user has linked MFA before
-  const hasFactorInUser = factors.some((factor) =>
+  // If the user has linked currently available MFA before
+  const hasFactorInUser = availableFactors.some((factor) =>
     mfaVerifications.some(({ type }) => type === factor)
   );
 

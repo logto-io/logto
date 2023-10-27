@@ -337,7 +337,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
       const accountVerifiedInteraction = await verifyIdentifier(ctx, tenant, interactionStorage);
 
       const mfaVerifiedInteraction = isSignInInteractionResult(accountVerifiedInteraction)
-        ? await verifyMfa(tenant, accountVerifiedInteraction)
+        ? await verifyMfa(ctx, tenant, accountVerifiedInteraction)
         : accountVerifiedInteraction;
 
       const profileVerifiedInteraction = await verifyProfile(tenant, mfaVerifiedInteraction);
