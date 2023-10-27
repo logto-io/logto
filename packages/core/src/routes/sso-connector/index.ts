@@ -1,12 +1,12 @@
 import { SsoConnectors, jsonObjectGuard } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
-import { conditional } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { ssoConnectorFactories } from '#src/sso/index.js';
-import { SsoProviderName } from '#src/sso/types/index.js';
+import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
+import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -20,7 +20,6 @@ import {
 } from './type.js';
 import {
   parseFactoryDetail,
-  isSupportedSsoProvider,
   parseConnectorConfig,
   fetchConnectorProviderDetails,
 } from './utils.js';
@@ -29,11 +28,13 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   const [
     router,
     {
+      libraries: { ssoConnector: ssoConnectorLibrary },
       queries: { ssoConnectors },
     },
   ] = args;
 
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
+  const { getSsoConnectorById, getSsoConnectors } = ssoConnectorLibrary;
 
   /*
     Get all supported single sign on connector factory details
@@ -53,7 +54,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const providerConnectors = new Set<ConnectorFactoryDetail>();
 
       for (const factory of factories) {
-        if ([SsoProviderName.OIDC].includes(factory.providerName)) {
+        if (standardSsoConnectorProviders.includes(factory.providerName)) {
           standardConnectors.add(parseFactoryDetail(factory, locale));
         } else {
           providerConnectors.add(parseFactoryDetail(factory, locale));
@@ -81,7 +82,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { body } = ctx.guard;
       const { providerName, connectorName, config, ...rest } = body;
 
-      // TODO: @simeng-li new SSO error code
+      // Return 422 if the connector provider is not supported
       if (!isSupportedSsoProvider(providerName)) {
         throw new RequestError({
           code: 'connector.not_found',
@@ -92,9 +93,9 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       /* 
         Validate the connector config if it's provided.
-        Allow partial config DB insert
+        Allow partial config settings on create.
        */
-      const parsedConfig = parseConnectorConfig(providerName, config);
+      const parsedConfig = config && parseConnectorConfig(providerName, config, true);
       const connectorId = generateStandardShortId();
 
       const connector = await ssoConnectors.insert({
@@ -119,16 +120,14 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       status: [200],
     }),
     async (ctx, next) => {
-      // Query all connectors
-      const [_, entities] = await ssoConnectors.findAll();
+      const connectors = await getSsoConnectors();
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
-        entities.map(async (connector) => fetchConnectorProviderDetails(connector))
+        connectors.map(async (connector) => fetchConnectorProviderDetails(connector))
       );
 
-      // Filter out unsupported connectors
-      ctx.body = connectorsWithProviderDetails.filter(Boolean);
+      ctx.body = connectorsWithProviderDetails;
 
       return next();
     }
@@ -145,19 +144,10 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      // Fetch the connector
-      const connector = await ssoConnectors.findById(id);
+      const connector = await getSsoConnectorById(id);
 
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
-
-      // Return 404 if the connector is not found
-      if (!connectorWithProviderDetails) {
-        throw new RequestError({
-          code: 'connector.not_found',
-          status: 404,
-        });
-      }
 
       ctx.body = connectorWithProviderDetails;
 
@@ -175,7 +165,6 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     async (ctx, next) => {
       const { id } = ctx.guard.params;
 
-      // Delete the connector
       await ssoConnectors.deleteById(id);
       ctx.status = 204;
       return next();
@@ -195,23 +184,12 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { id } = ctx.guard.params;
       const { body } = ctx.guard;
 
-      // Fetch the connector
-      const originalConnector = await ssoConnectors.findById(id);
+      const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
-
-      // Return 422 if the connector provider is not supported
-      if (!isSupportedSsoProvider(providerName)) {
-        throw new RequestError({
-          code: 'connector.not_found',
-          type: providerName,
-          status: 422,
-        });
-      }
-
       const { config, ...rest } = body;
 
       // Validate the connector config if it's provided
-      const parsedConfig = parseConnectorConfig(providerName, config);
+      const parsedConfig = config && parseConnectorConfig(providerName, config);
 
       // Check if there's any valid update
       const hasValidUpdate = parsedConfig ?? Object.keys(rest).length > 0;
@@ -224,7 +202,12 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
           })
         : originalConnector;
 
-      // Fetch provider details for the connector
+      // Make the typescript happy
+      assert(
+        isSupportedSsoConnector(connector),
+        new RequestError({ code: 'connector.not_found', status: 404 })
+      );
+
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
 
       ctx.body = connectorWithProviderDetails;
@@ -246,28 +229,23 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { id } = ctx.guard.params;
       const { body } = ctx.guard;
 
-      // Fetch the connector
-      const { providerName, config } = await ssoConnectors.findById(id);
+      const { providerName, config } = await getSsoConnectorById(id);
 
-      // Return 422 if the connector provider is not supported
-      if (!isSupportedSsoProvider(providerName)) {
-        throw new RequestError({
-          code: 'connector.not_found',
-          type: providerName,
-          status: 422,
-        });
-      }
-
-      // Validate the connector config
-      const parsedConfig = parseConnectorConfig(providerName, body);
-
-      // Patch update the connector config
-      const connector = await ssoConnectors.updateById(id, {
-        config: {
-          ...config,
-          ...parsedConfig,
-        },
+      // Merge with existing config and revalidate
+      const parsedConfig = parseConnectorConfig(providerName, {
+        ...config,
+        ...body,
       });
+
+      const connector = await ssoConnectors.updateById(id, {
+        config: parsedConfig,
+      });
+
+      // Make the typescript happy
+      assert(
+        isSupportedSsoConnector(connector),
+        new RequestError({ code: 'connector.not_found', status: 404 })
+      );
 
       // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);

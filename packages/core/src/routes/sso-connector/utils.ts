@@ -1,18 +1,15 @@
 import { type I18nPhrases } from '@logto/connector-kit';
-import { type JsonObject, type SsoConnector } from '@logto/schemas';
+import { type JsonObject } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
-import { type SsoProviderName } from '#src/sso/types/index.js';
+import { type SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
 
 import { type SsoConnectorWithProviderConfig } from './type.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
-
-export const isSupportedSsoProvider = (providerName: string): providerName is SsoProviderName =>
-  providerName in ssoConnectorFactories;
 
 export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
@@ -29,21 +26,25 @@ export const parseFactoryDetail = (
 };
 
 /* 
-  Validate and partially parse the connector config if it's provided.
+  Validate the connector config if it's provided.
+  Throw error if the config is invalid.
+  Partially validate the config if allowPartial is true.
 */
-export const parseConnectorConfig = (providerName: SsoProviderName, config?: JsonObject) => {
-  if (!config) {
-    return;
-  }
-
+export const parseConnectorConfig = (
+  providerName: SsoProviderName,
+  config: JsonObject,
+  allowPartial?: boolean
+) => {
   const factory = ssoConnectorFactories[providerName];
 
-  const result = factory.configGuard.partial().safeParse(config);
+  const result = allowPartial
+    ? factory.configGuard.partial().safeParse(config)
+    : factory.configGuard.safeParse(config);
 
   if (!result.success) {
     throw new RequestError({
       code: 'connector.invalid_config',
-      status: 422,
+      status: 400,
       details: result.error.flatten(),
     });
   }
@@ -51,22 +52,17 @@ export const parseConnectorConfig = (providerName: SsoProviderName, config?: Jso
   return result.data;
 };
 
+/* 
+  Safely fetch and parse the detailed connector config from provider. 
+  Return undefined if failed to fetch or parse the config.
+*/
 export const fetchConnectorProviderDetails = async (
-  connector: SsoConnector
-): Promise<SsoConnectorWithProviderConfig | undefined> => {
+  connector: SupportedSsoConnector
+): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
-
-  // Return undefined if the provider is not supported
-  if (!isSupportedSsoProvider(providerName)) {
-    return undefined;
-  }
 
   const { logo, constructor } = ssoConnectorFactories[providerName];
 
-  /* 
-    Safely fetch and parse the detailed connector config from provider. 
-    Return undefined if failed to fetch or parse the config.
-  */
   const providerConfig = await trySafe(async () => {
     const instance = new constructor(connector);
     return instance.getConfig();

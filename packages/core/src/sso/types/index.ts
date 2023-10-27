@@ -15,3 +15,7 @@ export abstract class SingleSignOn {
 export enum SsoProviderName {
   OIDC = 'OIDC',
 }
+
+export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
+  providerName: SsoProviderName;
+};

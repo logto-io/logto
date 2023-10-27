@@ -1,9 +1,11 @@
 import { type SsoConnector } from '@logto/schemas';
 
-export const mockSsoConnector: SsoConnector = {
+import { SsoProviderName } from '#src/sso/types/index.js';
+
+export const mockSsoConnector = {
   id: 'mock-sso-connector',
   tenantId: 'mock-tenant',
-  providerName: 'OIDC',
+  providerName: SsoProviderName.OIDC,
   connectorName: 'mock-connector-name',
   config: {},
   domains: [],
@@ -11,4 +13,4 @@ export const mockSsoConnector: SsoConnector = {
   syncProfile: true,
   ssoOnly: true,
   createdAt: Date.now(),
-};
+} satisfies SsoConnector;

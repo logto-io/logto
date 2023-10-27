@@ -9,6 +9,9 @@ import {
   patchSsoConnectorById,
   patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
+import { logtoUrl } from '#src/constants.js';
+
+const logtoIssuer = `${logtoUrl}/oidc`;
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -214,7 +217,8 @@ describe('patch sso-connector by id', () => {
     await expect(
       patchSsoConnectorById(id, {
         config: {
-          issuer: 23,
+          clientId: 'foo',
+          issuer: logtoIssuer,
         },
       })
     ).rejects.toThrow(HTTPError);
@@ -230,7 +234,9 @@ describe('patch sso-connector by id', () => {
       connectorName: 'integration_test connector updated',
       config: {
         clientId: 'foo',
-        issuer: 'https://test.com',
+        clientSecret: 'bar',
+        issuer: logtoIssuer,
+        scope: 'profile email',
       },
       syncProfile: true,
     });
@@ -240,7 +246,9 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('connectorName', 'integration_test connector updated');
     expect(connector).toHaveProperty('config', {
       clientId: 'foo',
-      issuer: 'https://test.com',
+      clientSecret: 'bar',
+      issuer: logtoIssuer,
+      scope: 'profile email openid', // Should merged with default scope openid
     });
     expect(connector).toHaveProperty('syncProfile', true);
   });
@@ -255,11 +263,14 @@ describe('patch sso-connector config by id', () => {
     const { id } = await createSsoConnector({
       providerName: 'OIDC',
       connectorName: 'integration_test connector',
+      config: {
+        clientSecret: 'bar',
+      },
     });
 
     await expect(
       patchSsoConnectorConfigById(id, {
-        issuer: 23,
+        clientId: 'foo',
       })
     ).rejects.toThrow(HTTPError);
   });
@@ -268,11 +279,14 @@ describe('patch sso-connector config by id', () => {
     const { id } = await createSsoConnector({
       providerName: 'OIDC',
       connectorName: 'integration_test connector',
+      config: {
+        clientId: 'foo',
+      },
     });
 
     const connector = await patchSsoConnectorConfigById(id, {
-      clientId: 'foo',
-      issuer: 'https://test.com',
+      clientSecret: 'bar',
+      issuer: logtoIssuer,
     });
 
     expect(connector).toHaveProperty('id', id);
@@ -280,7 +294,9 @@ describe('patch sso-connector config by id', () => {
     expect(connector).toHaveProperty('connectorName', 'integration_test connector');
     expect(connector).toHaveProperty('config', {
       clientId: 'foo',
-      issuer: 'https://test.com',
+      clientSecret: 'bar',
+      issuer: logtoIssuer,
+      scope: 'openid',
     });
   });
 });
