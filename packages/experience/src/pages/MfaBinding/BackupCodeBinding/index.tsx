@@ -31,6 +31,7 @@ const BackupCodeBinding = () => {
 
   return (
     <SecondaryPageLayout
+      isNavBarHidden
       title="mfa.save_backup_code"
       description="mfa.save_backup_code_description"
     >

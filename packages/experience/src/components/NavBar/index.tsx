@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +12,12 @@ import * as styles from './index.module.scss';
 type Props = {
   title?: string;
   type?: 'back' | 'close';
+  isHidden?: boolean;
   onClose?: () => void;
   onSkip?: () => void;
 };
 
-const NavBar = ({ title, type = 'back', onClose, onSkip }: Props) => {
+const NavBar = ({ title, type = 'back', isHidden, onClose, onSkip }: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -38,7 +40,7 @@ const NavBar = ({ title, type = 'back', onClose, onSkip }: Props) => {
   }, [isClosable, navigate, onClose]);
 
   return (
-    <div className={styles.navBar}>
+    <div className={classNames(styles.navBar, isHidden && styles.hidden)}>
       <div
         role="button"
         tabIndex={0}
