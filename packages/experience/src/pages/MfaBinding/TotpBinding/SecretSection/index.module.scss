@@ -5,6 +5,8 @@
 
   .qrCode {
     border: 1px solid var(--color-line-divider);
+    border-radius: var(--radius);
+    overflow: hidden;
     margin: _.unit(4);
     height: 136px;
     width: 136px;
