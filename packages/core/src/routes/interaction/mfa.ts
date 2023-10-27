@@ -50,7 +50,9 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       } = ctx;
       const interactionStorage = getInteractionStorage(interactionDetails.result);
 
-      const log = createLog(`Interaction.${interactionStorage.event}.BindMfa.Totp.Submit`);
+      const log = createLog(
+        `Interaction.${interactionStorage.event}.BindMfa.${bindMfaPayload.type}.Submit`
+      );
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyMfaSettings(bindMfaPayload.type, signInExperience);
@@ -103,7 +105,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
           code: 'session.mfa.mfa_sign_in_only',
         })
       );
-      createLog(`Interaction.${interactionStorage.event}.Mfa.Totp.Submit`);
+      createLog(`Interaction.${interactionStorage.event}.Mfa.${verifyMfaPayloadGuard.type}.Submit`);
 
       const { accountId } = await verifyIdentifier(ctx, tenant, interactionStorage);
       assertThat(
