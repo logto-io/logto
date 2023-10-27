@@ -310,7 +310,7 @@ export default class SchemaRouter<
       `/:id/${pathname}`,
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
-        body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
+        body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array() }),
         status: [204, 422],
       }),
       async (ctx, next) => {
