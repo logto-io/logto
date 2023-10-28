@@ -1,10 +1,5 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
-import {
-  jsonObjectGuard,
-  userInfoSelectFields,
-  userMfaVerificationResponseGuard,
-  userProfileResponseGuard,
-} from '@logto/schemas';
+import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
 import { conditional, pick } from '@silverhand/essentials';
 import { boolean, literal, object, string } from 'zod';
 
@@ -12,7 +7,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
@@ -49,20 +43,6 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
-      return next();
-    }
-  );
-
-  router.get(
-    '/users/:userId/mfa-verifications',
-    koaGuard({
-      params: object({ userId: string() }),
-      response: userMfaVerificationResponseGuard,
-      status: [200, 404],
-    }),
-    async (ctx, next) => {
-      const user = await findUserById(ctx.guard.params.userId);
-      ctx.body = transpileUserMfaVerifications(user.mfaVerifications);
       return next();
     }
   );
@@ -314,38 +294,6 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
       }
 
       await deleteUserById(userId);
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.delete(
-    '/users/:userId/mfa-verifications/:verificationId',
-    koaGuard({
-      params: object({ userId: string() }),
-      status: [204, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
-
-      const { mfaVerifications } = await findUserById(userId);
-
-      const verification = mfaVerifications.find(({ id }) => id === ctx.params.verificationId);
-
-      if (!verification) {
-        throw new RequestError({
-          code: 'entity.not_found',
-          status: 404,
-        });
-      }
-
-      await updateUserById(userId, {
-        mfaVerifications: mfaVerifications.filter(({ id }) => id !== verification.id),
-      });
 
       ctx.status = 204;
 

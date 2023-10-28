@@ -1,4 +1,4 @@
-import type { Identities, Role, User } from '@logto/schemas';
+import type { Identities, MfaFactor, MfaVerification, Role, User } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -70,3 +70,17 @@ export const postUserIdentity = async (
 
 export const verifyUserPassword = async (userId: string, password: string) =>
   authedAdminApi.post(`users/${userId}/password/verify`, { json: { password } });
+
+export const getUserMfaVerifications = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/mfa-verifications`).json<MfaVerification[]>();
+
+export const deleteUserMfaVerification = async (userId: string, mfaVerificationId: string) =>
+  authedAdminApi.delete(`users/${userId}/mfa-verifications/${mfaVerificationId}`);
+
+export const createUserMfaVerification = async (userId: string, type: MfaFactor) =>
+  authedAdminApi
+    .post(`users/${userId}/mfa-verifications`, { json: { type } })
+    .json<
+      | { type: MfaFactor.TOTP; secret: string; secretQrCode: string }
+      | { type: MfaFactor.BackupCode; codes: string[] }
+    >();

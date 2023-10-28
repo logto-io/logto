@@ -31,6 +31,7 @@ const user = {
   invalid_role_type: 'Invalid role type, can not assign machine-to-machine role to user.',
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
+  backup_code_already_in_use: 'Backup code is already in use.',
 };
 
 export default Object.freeze(user);

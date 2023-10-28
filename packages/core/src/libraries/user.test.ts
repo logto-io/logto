@@ -1,4 +1,4 @@
-import { UsersPasswordEncryptionMethod } from '@logto/schemas';
+import { MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
 import { mockUser } from '#src/__mocks__/user.js';
@@ -9,8 +9,9 @@ const { jest } = import.meta;
 const { encryptUserPassword, createUserLibrary } = await import('./user.js');
 
 const hasUserWithId = jest.fn();
+const updateUserById = jest.fn();
 const queries = new MockQueries({
-  users: { hasUserWithId },
+  users: { hasUserWithId, findUserById: async () => mockUser, updateUserById },
   roles: { findRolesByRoleIds: async () => [mockAdminUserRole] },
   scopes: { findScopesByIdsAndResourceIndicator: async () => [mockScope] },
   usersRoles: { findUsersRolesByUserId: async () => [] },
@@ -82,5 +83,27 @@ describe('findUserRoles()', () => {
 
   it('returns user roles', async () => {
     await expect(findUserRoles(mockUser.id)).resolves.toEqual([mockAdminUserRole]);
+  });
+});
+
+describe('addUserMfaVerification()', () => {
+  const createdAt = new Date().toISOString();
+  const { addUserMfaVerification } = createUserLibrary(queries);
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(createdAt));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  it('update user with new mfa verification', async () => {
+    await addUserMfaVerification(mockUser.id, { type: MfaFactor.TOTP, secret: 'secret' });
+    expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      mfaVerifications: [{ type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt }],
+    });
   });
 });
