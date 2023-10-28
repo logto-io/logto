@@ -129,3 +129,29 @@
   font: var(--font-body-2);
   padding: _.unit(2);
 }
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+
+  .search {
+    margin-right: _.unit(2);
+    color: var(--color-text-secondary);
+    width: 20px;
+    height: 20px;
+  }
+
+  .searchInput {
+    height: 100%;
+    width: 100%;
+    appearance: none;
+    color: var(--color-text);
+    font: var(--font-body-2);
+    background: transparent;
+    padding: 0;
+
+    &::placeholder {
+      color: var(--color-placeholder);
+    }
+  }
+}
