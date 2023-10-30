@@ -24,13 +24,18 @@ export const createApplication = async (
     })
     .json<Application>();
 
-export const getApplications = async (types?: ApplicationType[]) => {
-  const searchParams = new URLSearchParams(
-    conditional(
-      types &&
-        types.length > 0 && [...types.map((type) => ['search.type', type]), ['mode.type', 'exact']]
-    )
-  );
+export const getApplications = async (
+  types?: ApplicationType[],
+  searchParameters?: Record<string, string>
+) => {
+  const searchParams = new URLSearchParams([
+    ...(conditional(types && types.length > 0 && types.map((type) => ['types', type])) ?? []),
+    ...(conditional(
+      searchParameters &&
+        Object.keys(searchParameters).length > 0 &&
+        Object.entries(searchParameters).map(([key, value]) => [key, value])
+    ) ?? []),
+  ]);
 
   return authedAdminApi.get('applications', { searchParams }).json<Application[]>();
 };
@@ -57,8 +62,17 @@ export const updateApplication = async (
 export const deleteApplication = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}`);
 
-export const getApplicationRoles = async (applicationId: string) =>
-  authedAdminApi.get(`applications/${applicationId}/roles`).json<Role[]>();
+/**
+ * Get roles assigned to the m2m app.
+ *
+ * @param applicationId Concerned m2m app id
+ * @param keyword Search among all roles (on `id`, `name` and `description` fields) assigned to the m2m app with `keyword`
+ * @returns All roles which contains the keyword assigned to the m2m app
+ */
+export const getApplicationRoles = async (applicationId: string, keyword?: string) => {
+  const searchParams = new URLSearchParams(conditional(keyword && [['search', `%${keyword}%`]]));
+  return authedAdminApi.get(`applications/${applicationId}/roles`, { searchParams }).json<Role[]>();
+};
 
 export const assignRolesToApplication = async (applicationId: string, roleIds: string[]) =>
   authedAdminApi.post(`applications/${applicationId}/roles`, {

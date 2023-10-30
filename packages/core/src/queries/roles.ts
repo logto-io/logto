@@ -1,10 +1,9 @@
-import type { CreateRole, Role } from '@logto/schemas';
+import type { CreateRole, Role, RoleType } from '@logto/schemas';
 import { internalRolePrefix, SearchJointMode, Roles } from '@logto/schemas';
 import type { OmitAutoSetFields } from '@logto/shared';
 import { conditionalArraySql, conditionalSql, convertToIdentifiers } from '@logto/shared';
 import type { CommonQueryMethods } from 'slonik';
 import { sql } from 'slonik';
-import { snakeCase } from 'snake-case';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -17,19 +16,11 @@ const { table, fields } = convertToIdentifiers(Roles);
 
 const buildRoleConditions = (search: Search) => {
   const hasSearch = search.matches.length > 0;
-  const searchFields = [
-    Roles.fields.id,
-    Roles.fields.name,
-    Roles.fields.description,
-    Roles.fields.type,
-  ];
+  const searchFields = [Roles.fields.id, Roles.fields.name, Roles.fields.description];
 
   return conditionalSql(
     hasSearch,
-    () =>
-      sql`and ${buildConditionsFromSearch(search, searchFields, {
-        [Roles.fields.type]: snakeCase('RoleType'),
-      })}`
+    () => sql`and ${buildConditionsFromSearch(search, searchFields)}`
   );
 };
 
@@ -38,7 +29,11 @@ export const defaultSearch = { matches: [], isCaseSensitive: false, joint: Searc
 export const createRolesQueries = (pool: CommonQueryMethods) => {
   const countRoles = async (
     search: Search = defaultSearch,
-    { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
+    {
+      excludeRoleIds = [],
+      roleIds,
+      type,
+    }: { excludeRoleIds?: string[]; roleIds?: string[]; type?: RoleType } = {}
   ) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
@@ -53,6 +48,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
         (value) =>
           sql`and ${fields.id} in (${value.length > 0 ? sql.join(value, sql`, `) : sql`null`})`
       )}
+      ${conditionalSql(type, (type) => sql`and ${fields.type}=${type}`)}
       ${buildRoleConditions(search)}
     `);
 
@@ -63,7 +59,11 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
     search: Search,
     limit?: number,
     offset?: number,
-    { excludeRoleIds = [], roleIds }: { excludeRoleIds?: string[]; roleIds?: string[] } = {}
+    {
+      excludeRoleIds = [],
+      roleIds,
+      type,
+    }: { excludeRoleIds?: string[]; roleIds?: string[]; type?: RoleType } = {}
   ) =>
     pool.any<Role>(
       sql`
@@ -79,6 +79,7 @@ export const createRolesQueries = (pool: CommonQueryMethods) => {
           (value) =>
             sql`and ${fields.id} in (${value.length > 0 ? sql.join(value, sql`, `) : sql`null`})`
         )}
+        ${conditionalSql(type, (type) => sql`and ${fields.type}=${type}`)}
         ${buildRoleConditions(search)}
         ${conditionalSql(limit, (value) => sql`limit ${value}`)}
         ${conditionalSql(offset, (value) => sql`offset ${value}`)}

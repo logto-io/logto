@@ -48,8 +48,17 @@ export const deleteUserIdentity = async (userId: string, connectorTarget: string
 export const assignRolesToUser = async (userId: string, roleIds: string[]) =>
   authedAdminApi.post(`users/${userId}/roles`, { json: { roleIds } });
 
-export const getUserRoles = async (userId: string) =>
-  authedAdminApi.get(`users/${userId}/roles`).json<Role[]>();
+/**
+ * Get roles assigned to the user.
+ *
+ * @param userId Concerned user id
+ * @param keyword Search among all roles (on `id`, `name` and `description` fields) assigned to the user with `keyword`
+ * @returns All roles which contains the keyword assigned to the user
+ */
+export const getUserRoles = async (userId: string, keyword?: string) => {
+  const searchParams = new URLSearchParams(keyword && [['search', `%${keyword}%`]]);
+  return authedAdminApi.get(`users/${userId}/roles`, { searchParams }).json<Role[]>();
+};
 
 export const deleteRoleFromUser = async (userId: string, roleId: string) =>
   authedAdminApi.delete(`users/${userId}/roles/${roleId}`);

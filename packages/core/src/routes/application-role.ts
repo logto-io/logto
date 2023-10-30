@@ -55,8 +55,8 @@ export default function applicationRoleRoutes<T extends AuthedRouter>(
           const applicationRoles = await findApplicationsRolesByApplicationId(applicationId);
           const roleIds = applicationRoles.map(({ roleId }) => roleId);
           const [{ count }, roles] = await Promise.all([
-            countRoles(search, { roleIds }),
-            findRoles(search, limit, offset, { roleIds }),
+            countRoles(search, { roleIds, type: RoleType.MachineToMachine }),
+            findRoles(search, limit, offset, { roleIds, type: RoleType.MachineToMachine }),
           ]);
 
           // Return totalCount to pagination middleware

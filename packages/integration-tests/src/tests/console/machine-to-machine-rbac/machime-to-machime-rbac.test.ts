@@ -34,6 +34,8 @@ describe('M2M RBAC', () => {
   const permissionDescription = 'Dummy permission description';
   const roleName = generateRoleName();
   const roleDescription = 'Dummy role description';
+  const anotherRoleName = generateRoleName();
+  const anotherRoleDescription = 'Another dummy role description';
 
   const rbacTestAppname = 'm2m-app-001';
   const m2mFramework = 'Machine-to-machine';
@@ -152,11 +154,37 @@ describe('M2M RBAC', () => {
       );
     });
 
-    it('create a m2m role and assign permissions to the role', async () => {
-      await createM2mRoleAndAssignPermissions(page, { roleName, roleDescription }, [
-        { apiResourceName, permissionName },
-        { apiResourceName: managementApiResourceName, permissionName: managementApiPermission },
-      ]);
+    it('create a m2m role and assign permissions to the role, then go back to role listing page', async () => {
+      await createM2mRoleAndAssignPermissions(
+        page,
+        { roleName, roleDescription },
+        [
+          { apiResourceName, permissionName },
+          { apiResourceName: managementApiResourceName, permissionName: managementApiPermission },
+        ],
+        true
+      );
+    });
+
+    it('create another m2m role and assign permissions to the role, then go back to role listing page', async () => {
+      await createM2mRoleAndAssignPermissions(
+        page,
+        { roleName: anotherRoleName, roleDescription: anotherRoleDescription },
+        [
+          { apiResourceName, permissionName },
+          { apiResourceName: managementApiResourceName, permissionName: managementApiPermission },
+        ],
+        true
+      );
+    });
+
+    it('search for a role and enter its details page', async () => {
+      await expect(page).toFill('div[class$=filter] input', roleName);
+      await expect(page).toClick('button', { text: 'Search' });
+
+      await expect(page).toClick('table tbody tr td div[class$=meta]:has(a[class$=title])', {
+        text: roleName,
+      });
     });
 
     it('delete a permission from a role on the role details page', async () => {
@@ -229,6 +257,7 @@ describe('M2M RBAC', () => {
 
       await expectModalWithTitle(page, 'Assign apps');
 
+      await expect(page).toFill('.ReactModalPortal input[type=text]', rbacTestAppname);
       await expect(page).toClick(
         '.ReactModalPortal div[class$=rolesTransfer] div[class$=item] div[class$=title]',
         {
@@ -248,30 +277,12 @@ describe('M2M RBAC', () => {
         }
       );
     });
-  });
 
-  describe('assign/remove a role to/from a m2m app (on m2m app details page)', () => {
-    it('remove a role form a m2m app on the app details page', async () => {
-      // Navigate to app details page
-      await expect(page).toClick('table tbody tr td a[class$=title]', {
+    it('remove m2m app from the role on the role details page', async () => {
+      const m2mAppRole = await expect(page).toMatchElement('table tbody tr:has(td div)', {
         text: rbacTestAppname,
       });
-
-      await expect(page).toMatchElement('div[class$=header] > div[class$=metadata] div', {
-        text: rbacTestAppname,
-      });
-
-      // Go to roles tab
-      await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
-        text: 'Roles',
-      });
-
-      const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=title])', {
-        text: roleName,
-      });
-
-      // Click remove button
-      await expect(roleRow).toClick('td:last-of-type button');
+      await expect(m2mAppRole).toClick('td > div[class$=anchor] > button');
 
       await expectConfirmModalAndAct(page, {
         title: 'Reminder',
@@ -279,11 +290,28 @@ describe('M2M RBAC', () => {
       });
 
       await waitForToast(page, {
-        text: `${roleName} was successfully removed from this user.`,
+        text: `${rbacTestAppname} was successfully removed from this role`,
+      });
+    });
+  });
+
+  describe('assign/remove a role to/from a m2m app (on m2m app details page)', () => {
+    it('navigate to application page and enter m2m app details page', async () => {
+      await expectNavigation(
+        page.goto(appendPathname('/console/applications', logtoConsoleUrl).href)
+      );
+
+      await expect(page).toClick('table tbody tr td a[class$=title]', {
+        text: rbacTestAppname,
       });
     });
 
     it('add a role to m2m app on the application details page', async () => {
+      // Go to roles tab
+      await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
+        text: 'Roles',
+      });
+
       await expect(page).toClick('div[class$=filter] button span', {
         text: 'Assign roles',
       });
@@ -301,6 +329,31 @@ describe('M2M RBAC', () => {
 
       await waitForToast(page, {
         text: 'Successfully assigned role(s)',
+      });
+    });
+
+    it('remove a role form a m2m app on the app details page', async () => {
+      await expect(page).toMatchElement(
+        'div[class$=header] > div[class$=metadata] > div[class$=name]',
+        {
+          text: rbacTestAppname,
+        }
+      );
+
+      const roleRow = await expect(page).toMatchElement('table tbody tr:has(td a[class$=title])', {
+        text: roleName,
+      });
+
+      // Click remove button
+      await expect(roleRow).toClick('td:last-of-type button');
+
+      await expectConfirmModalAndAct(page, {
+        title: 'Reminder',
+        actionText: 'Remove',
+      });
+
+      await waitForToast(page, {
+        text: `${roleName} was successfully removed from this user.`,
       });
     });
   });

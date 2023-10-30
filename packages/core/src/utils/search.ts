@@ -1,6 +1,6 @@
 import { SearchJointMode, SearchMatchMode } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
-import { yes, conditionalString, conditional, cond } from '@silverhand/essentials';
+import { yes, conditionalString, cond } from '@silverhand/essentials';
 import { sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
@@ -195,13 +195,9 @@ const getMatchModeOperator = (match: SearchMatchMode, isCaseSensitive: boolean) 
 const validateAndBuildValueExpression = (
   rawValues: string[],
   field: string,
-  shouldLowercase: boolean,
-  fieldsTypeMapping?: Record<string, string>
+  shouldLowercase: boolean
 ) => {
-  const values =
-    shouldLowercase && isLowercaseValid(field, fieldsTypeMapping)
-      ? rawValues.map((rawValue) => rawValue.toLowerCase())
-      : rawValues;
+  const values = shouldLowercase ? rawValues.map((rawValue) => rawValue.toLowerCase()) : rawValues;
 
   // Type check for the first value
   assertThat(
@@ -210,23 +206,9 @@ const validateAndBuildValueExpression = (
   );
 
   const valueExpression =
-    values.length === 1
-      ? sql`${values[0]}`
-      : sql`any(${sql.array(values, conditional(fieldsTypeMapping?.[field]) ?? 'varchar')})`;
+    values.length === 1 ? sql`${values[0]}` : sql`any(${sql.array(values, 'varchar')})`;
 
   return valueExpression;
-};
-
-const isLowercaseValid = (field: string, fieldsTypeMapping?: Record<string, string>) => {
-  return !conditional(fieldsTypeMapping?.[field]);
-};
-
-const showLowercase = (
-  shouldLowercase: boolean,
-  field: string,
-  fieldsTypeMapping?: Record<string, string>
-) => {
-  return shouldLowercase && isLowercaseValid(field, fieldsTypeMapping);
 };
 
 /**
@@ -238,11 +220,7 @@ const showLowercase = (
  * @returns The SQL token that includes the all condition checks.
  * @throws TypeError error if fields in `search` do not match the `searchFields`, or invalid condition found (e.g. the value is empty).
  */
-export const buildConditionsFromSearch = (
-  search: Search,
-  searchFields: readonly string[],
-  fieldsTypeMapping?: Readonly<Record<string, string>>
-) => {
+export const buildConditionsFromSearch = (search: Search, searchFields: readonly string[]) => {
   assertThat(searchFields.length > 0, new TypeError('No search field found.'));
 
   const { matches, joint, isCaseSensitive } = search;
@@ -259,15 +237,13 @@ export const buildConditionsFromSearch = (
     const fields = field ? [field] : searchFields;
 
     const getValueExpressionFor = (fieldName: string, shouldLowercase: boolean) =>
-      validateAndBuildValueExpression(values, fieldName, shouldLowercase, fieldsTypeMapping);
+      validateAndBuildValueExpression(values, fieldName, shouldLowercase);
 
     return sql`(${sql.join(
       fields.map(
         (field) =>
           sql`${
-            showLowercase(shouldLowercase, field, fieldsTypeMapping)
-              ? sql`lower(${sql.identifier([field])})`
-              : sql.identifier([field])
+            shouldLowercase ? sql`lower(${sql.identifier([field])})` : sql.identifier([field])
           } ${getMatchModeOperator(mode, isCaseSensitive)} ${getValueExpressionFor(
             field,
             shouldLowercase

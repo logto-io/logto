@@ -4,7 +4,6 @@ import type { OmitAutoSetFields } from '@logto/shared';
 import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logto/shared';
 import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
 import { sql } from 'slonik';
-import { snakeCase } from 'snake-case';
 
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
@@ -23,7 +22,6 @@ const buildApplicationConditions = (search: Search) => {
     Applications.fields.id,
     Applications.fields.name,
     Applications.fields.description,
-    Applications.fields.type,
   ];
 
   return conditionalSql(
@@ -33,9 +31,7 @@ const buildApplicationConditions = (search: Search) => {
        * Avoid specifying the DB column type when calling the API (which is meaningless).
        * Should specify the DB column type of enum type.
        */
-      sql`${buildConditionsFromSearch(search, searchFields, {
-        [Applications.fields.type]: snakeCase('ApplicationType'),
-      })}`
+      sql`${buildConditionsFromSearch(search, searchFields)}`
   );
 };
 
@@ -48,7 +44,19 @@ const buildConditionArray = (conditions: SqlSqlToken[]) => {
 };
 
 export const createApplicationQueries = (pool: CommonQueryMethods) => {
-  const countApplications = async (search: Search, excludeApplicationIds: string[]) => {
+  /**
+   * Get the number of applications that match the search conditions, conditions are joined in `and` mode.
+   *
+   * @param search The search config object, can apply to `id`, `name` and `description` field for application.
+   * @param excludeApplicationIds Exclude applications with these ids.
+   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
+   * @returns A Promise that resolves the number of applications that match the search conditions.
+   */
+  const countApplications = async (
+    search: Search,
+    excludeApplicationIds: string[],
+    types?: ApplicationType[]
+  ) => {
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from ${table}
@@ -56,6 +64,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
         excludeApplicationIds.length > 0
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
+        types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
         buildApplicationConditions(search),
       ])}
     `);
@@ -63,9 +72,20 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     return { count: Number(count) };
   };
 
+  /**
+   * Get the list of applications that match the search conditions, conditions are joined in `and` mode.
+   *
+   * @param search The search config object, can apply to `id`, `name` and `description` field for application
+   * @param excludeApplicationIds Exclude applications with these ids.
+   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
+   * @param limit Limit of the number of applications in each page.
+   * @param offset Offset of the applications in the result.
+   * @returns A Promise that resolves the list of applications that match the search conditions.
+   */
   const findApplications = async (
     search: Search,
     excludeApplicationIds: string[],
+    types?: ApplicationType[],
     limit?: number,
     offset?: number
   ) =>
@@ -76,6 +96,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
         excludeApplicationIds.length > 0
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
+        types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
         buildApplicationConditions(search),
       ])}
       order by ${fields.createdAt} desc

@@ -49,6 +49,10 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
     '/roles',
     koaPagination(),
     koaGuard({
+      query: object({
+        excludeUserId: string().optional(),
+        excludeApplicationId: string().optional(),
+      }).merge(Roles.guard.pick({ type: true }).partial()),
       response: Roles.guard
         .merge(
           object({
@@ -64,15 +68,14 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const { searchParams } = ctx.request.URL;
+      const { type, excludeUserId, excludeApplicationId } = ctx.guard.query;
 
       return tryThat(
         async () => {
           const search = parseSearchParamsForSearch(searchParams);
 
-          const excludeUserId = searchParams.get('excludeUserId');
           const usersRoles = excludeUserId ? await findUsersRolesByUserId(excludeUserId) : [];
 
-          const excludeApplicationId = searchParams.get('excludeApplicationId');
           const applicationsRoles = excludeApplicationId
             ? await findApplicationsRolesByApplicationId(excludeApplicationId)
             : [];
@@ -83,8 +86,8 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
           ];
 
           const [{ count }, roles] = await Promise.all([
-            countRoles(search, { excludeRoleIds }),
-            findRoles(search, limit, offset, { excludeRoleIds }),
+            countRoles(search, { excludeRoleIds, type }),
+            findRoles(search, limit, offset, { excludeRoleIds, type }),
           ]);
 
           const rolesResponse: RoleResponse[] = await Promise.all(
