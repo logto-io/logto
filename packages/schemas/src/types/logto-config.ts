@@ -48,6 +48,7 @@ export const logtoOidcConfigGuard: Readonly<{
 /* --- Logto tenant configs --- */
 export const adminConsoleDataGuard = z.object({
   signInExperienceCustomized: z.boolean(),
+  organizationCreated: z.boolean(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

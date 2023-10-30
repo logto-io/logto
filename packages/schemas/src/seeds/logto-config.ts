@@ -16,6 +16,7 @@ export const createDefaultAdminConsoleConfig = (
     key: LogtoTenantConfigKey.AdminConsole,
     value: {
       signInExperienceCustomized: false,
+      organizationCreated: false,
     },
   } satisfies CreateLogtoConfig);
 

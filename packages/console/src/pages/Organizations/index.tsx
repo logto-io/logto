@@ -6,6 +6,7 @@ import PageMeta from '@/components/PageMeta';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
+import useConfigs from '@/hooks/use-configs';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
@@ -16,6 +17,7 @@ import * as styles from './index.module.scss';
 
 const organizationsPathname = '/organizations';
 const createPathname = `${organizationsPathname}/create`;
+const organizationGuidePathname = '/organization-guide';
 
 const tabs = Object.freeze({
   settings: 'settings',
@@ -29,6 +31,7 @@ function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate, match } = useTenantPathname();
   const isCreating = match(createPathname);
+  const { configs } = useConfigs();
 
   return (
     <div className={pageLayout.container}>
@@ -47,7 +50,7 @@ function Organizations({ tab }: Props) {
           size="large"
           title="organizations.create_organization"
           onClick={() => {
-            navigate('/organization-guide');
+            navigate(configs?.organizationCreated ? createPathname : organizationGuidePathname);
           }}
         />
       </div>
