@@ -21,3 +21,4 @@ export * from './domain.js';
 export * from './sentinel.js';
 export * from './mfa.js';
 export * from './organization.js';
+export * from './sso-connector.js';

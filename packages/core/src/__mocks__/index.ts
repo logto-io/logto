@@ -20,6 +20,7 @@ export * from './sign-in-experience.js';
 export * from './cloud-connection.js';
 export * from './user.js';
 export * from './domain.js';
+export * from './sso.js';
 
 export const mockApplication: Application = {
   tenantId: 'fake_tenant',
