@@ -160,6 +160,7 @@ describe('get sso connectors', () => {
         id: ssoConnector.id,
         connectorName: ssoConnector.connectorName,
         domains: ssoConnector.domains,
+        ssoOnly: ssoConnector.ssoOnly,
         logo: ssoConnectorFactories[ssoConnector.providerName].logo,
         darkLogo: undefined,
       },

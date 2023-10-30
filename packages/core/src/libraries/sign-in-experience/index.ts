@@ -67,7 +67,7 @@ export const createSignInExperienceLibrary = (
 
     return ssoConnectors.reduce<SsoConnectorMetadata[]>(
       (previous, connector): SsoConnectorMetadata[] => {
-        const { providerName, connectorName, config, id, branding, domains } = connector;
+        const { providerName, connectorName, config, id, branding, domains, ssoOnly } = connector;
         const factory = ssoConnectorFactories[providerName];
 
         // Filter out sso connectors that has invalid config
@@ -82,6 +82,7 @@ export const createSignInExperienceLibrary = (
           id,
           connectorName,
           domains,
+          ssoOnly,
           logo: branding.logo ?? factory.logo,
           darkLogo: branding.darkLogo,
         };
