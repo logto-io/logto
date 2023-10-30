@@ -1,11 +1,13 @@
 import {
   InteractionEvent,
   MfaFactor,
+  MfaPolicy,
   bindMfaPayloadGuard,
   verifyMfaPayloadGuard,
 } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -18,7 +20,7 @@ import type { WithInteractionDetailsContext } from './middleware/koa-interaction
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
 import { verifyMfaSettings } from './utils/sign-in-experience-validation.js';
-import { verifyIdentifier } from './verifications/index.js';
+import { markMfaSkipped, verifyIdentifier } from './verifications/index.js';
 import {
   bindMfaPayloadVerification,
   verifyMfaPayloadVerification,
@@ -139,6 +141,50 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       });
 
       await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  // Update MFA skip
+  router.put(
+    `${interactionPrefix}/mfa-skipped`,
+    koaGuard({
+      body: z.object({
+        // Only allow to skip MFA binding
+        mfaSkipped: z.literal(true),
+      }),
+      status: [204, 400, 422],
+    }),
+    koaInteractionSie(queries),
+    async (ctx, next) => {
+      const {
+        signInExperience: {
+          mfa: { policy },
+        },
+        interactionDetails,
+      } = ctx;
+      const interaction = getInteractionStorage(interactionDetails.result);
+
+      assertThat(
+        policy === MfaPolicy.UserControlled,
+        new RequestError({
+          code: 'session.mfa.mfa_policy_not_user_controlled',
+          status: 422,
+        })
+      );
+
+      if (interaction.event === InteractionEvent.SignIn) {
+        const { accountId } = interaction;
+        // Update user custom data to skip MFA binding
+        if (accountId) {
+          await markMfaSkipped(tenant, accountId);
+        }
+      } else if (interaction.event === InteractionEvent.Register) {
+        await storeInteractionResult({ mfaSkipped: true }, ctx, provider, true);
+      }
 
       ctx.status = 204;
 

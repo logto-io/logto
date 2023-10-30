@@ -7,6 +7,7 @@ import {
   initTotp,
   postInteractionBindMfa,
   putInteractionMfa,
+  skipMfaBinding,
 } from '#src/api/index.js';
 import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -209,7 +210,8 @@ describe('sign in and fulfill mfa (user-controlled TOTP)', () => {
       statusCode: 422,
     });
 
-    // Try again, should auto skip
+    await client.successSend(skipMfaBinding);
+
     await client.submitInteraction();
     await deleteUser(user.id);
   });

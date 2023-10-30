@@ -135,6 +135,20 @@ const isMfaSkipped = (customData: JsonObject): boolean => {
 
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
 };
+/**
+ * Mark MFA as skipped in user custom data
+ */
+export const markMfaSkipped = async (tenant: TenantContext, accountId: string) => {
+  const { customData } = await tenant.queries.users.findUserById(accountId);
+  await tenant.queries.users.updateUserById(accountId, {
+    customData: {
+      ...customData,
+      [userMfaDataKey]: {
+        skipped: true,
+      },
+    },
+  });
+};
 
 const validateMandatoryBindMfaForSignIn = async (
   tenant: TenantContext,
@@ -186,19 +200,6 @@ const validateMandatoryBindMfaForSignIn = async (
     return interaction;
   }
 
-  if (!isMfaSkipped(customData)) {
-    // Update user custom data to skip MFA binding
-    // that means that this prompt is only shown once
-    await tenant.queries.users.updateUserById(accountId, {
-      customData: {
-        ...customData,
-        [userMfaDataKey]: {
-          skipped: true,
-        },
-      },
-    });
-  }
-
   throw new RequestError(
     {
       code: 'user.missing_mfa',
@@ -248,16 +249,6 @@ export const validateMandatoryBindMfa = async (
     if (mfaSkipped) {
       return interaction;
     }
-
-    // Auto mark MFA skipped for new users, will change to manual mark in the future
-    await storeInteractionResult(
-      {
-        mfaSkipped: true,
-      },
-      ctx,
-      tenant.provider,
-      true
-    );
 
     throw new RequestError(
       {

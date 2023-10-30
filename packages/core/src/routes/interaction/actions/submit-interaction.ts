@@ -122,8 +122,10 @@ export default async function submitInteraction(
         ),
         ...conditional(
           mfaSkipped && {
-            [userMfaDataKey]: {
-              skipped: true,
+            customData: {
+              [userMfaDataKey]: {
+                skipped: true,
+              },
             },
           }
         ),
