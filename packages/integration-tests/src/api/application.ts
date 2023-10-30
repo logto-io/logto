@@ -24,10 +24,18 @@ export const createApplication = async (
     })
     .json<Application>();
 
-export const getApplications = async (types?: ApplicationType[]) => {
-  const searchParams = new URLSearchParams(
-    conditional(types && types.length > 0 && types.map((type) => ['types', type]))
-  );
+export const getApplications = async (
+  types?: ApplicationType[],
+  searchParameters?: Record<string, string>
+) => {
+  const searchParams = new URLSearchParams([
+    ...(conditional(types && types.length > 0 && types.map((type) => ['types', type])) ?? []),
+    ...(conditional(
+      searchParameters &&
+        Object.keys(searchParameters).length > 0 &&
+        Object.entries(searchParameters).map(([key, value]) => [key, value])
+    ) ?? []),
+  ]);
 
   return authedAdminApi.get('applications', { searchParams }).json<Application[]>();
 };

@@ -2,7 +2,7 @@ import { ApplicationType, RoleType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { HTTPError } from 'got';
 
-import { createApplication } from '#src/api/index.js';
+import { assignRolesToApplication, createApplication } from '#src/api/index.js';
 import {
   assignApplicationsToRole,
   createRole,
@@ -104,5 +104,33 @@ describe('roles applications', () => {
       (error: unknown) => error
     );
     expect(response instanceof HTTPError && response.response.statusCode).toBe(404);
+  });
+
+  // This case tests GET operation on roles and filter by `type` parameter and `search` parameter.
+  it('search roles with specified keyword, type and other parameters', async () => {
+    const m2mRole1 = await createRole({
+      type: RoleType.MachineToMachine,
+      name: 'test-m2m-role-001',
+    });
+    await createRole({ type: RoleType.MachineToMachine, name: 'test-m2m-role-002' });
+    await createRole({ type: RoleType.User, name: 'test-user-role-001' });
+    await createRole({ type: RoleType.User, name: 'test-user-role-002' });
+
+    const m2mRoles = await getRoles({ type: RoleType.MachineToMachine, search: '%m2m-role-00%' });
+    expect(m2mRoles.length).toBe(2);
+    expect(m2mRoles.find(({ name }) => name === 'test-m2m-role-001')).toBeDefined();
+    expect(m2mRoles.find(({ name }) => name === 'test-m2m-role-002')).toBeDefined();
+
+    const m2mApp = await createApplication(generateStandardId(), ApplicationType.MachineToMachine);
+    await assignRolesToApplication(m2mApp.id, [m2mRole1.id]);
+    const roles = await getRoles({
+      excludeApplicationId: m2mApp.id,
+      type: RoleType.MachineToMachine,
+      search: '%m2m-role-00%',
+    });
+
+    expect(roles.length).toBe(1);
+    expect(roles.find(({ name }) => name === 'test-m2m-role-001')).toBeUndefined();
+    expect(roles.find(({ name }) => name === 'test-m2m-role-002')).toBeDefined();
   });
 });

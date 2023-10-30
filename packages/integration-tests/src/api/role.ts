@@ -5,7 +5,12 @@ import { generateRoleName } from '#src/utils.js';
 
 import { authedAdminApi } from './api.js';
 
-export type GetRoleOptions = { excludeUserId?: string; excludeApplicationId?: string };
+export type GetRoleOptions = {
+  excludeUserId?: string;
+  excludeApplicationId?: string;
+  type?: RoleType;
+  search?: string;
+};
 
 export const createRole = async ({
   name,
