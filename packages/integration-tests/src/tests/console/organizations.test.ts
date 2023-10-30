@@ -3,6 +3,7 @@ import { cls, dcls, generateTestName } from '#src/utils.js';
 
 const expectOrg = new ExpectOrganizations(await browser.newPage());
 
+// Temporarily skipping organization tests, will add them back later with the "guide" feature
 describe.skip('organizations: create, edit, and delete organization', () => {
   it('navigates to organizations page', async () => {
     await expectOrg.start();
