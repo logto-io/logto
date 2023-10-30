@@ -12,7 +12,6 @@ import {
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -37,6 +36,9 @@ const tenantContext = new MockTenant(undefined, {
 const mockBackupCodes = ['foo'];
 await mockEsmWithActual('../utils/backup-code-validation.js', () => ({
   generateBackupCodes: jest.fn().mockReturnValue(mockBackupCodes),
+}));
+const { storeInteractionResult } = await mockEsmWithActual('../utils/interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
 }));
 
 const { validateMandatoryBindMfa, verifyBindMfa, verifyMfa } = await import(
@@ -104,8 +106,6 @@ const signInInteraction: AccountVerifiedInteractionResult = {
   accountId: 'foo',
 };
 
-const provider = createMockProvider();
-
 describe('validateMandatoryBindMfa', () => {
   afterEach(() => {
     findUserById.mockReset();
@@ -140,9 +140,32 @@ describe('validateMandatoryBindMfa', () => {
       ).resolves.not.toThrow();
     });
 
-    it('bindMfa missing and not required should pass', async () => {
+    it('bindMfa missing and not required should throw (for skip)', async () => {
       await expect(
         validateMandatoryBindMfa(tenantContext, baseCtx, interaction)
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP], skippable: true }
+        )
+      );
+      expect(storeInteractionResult).toHaveBeenCalledWith(
+        { mfaSkipped: true },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+    });
+
+    it('bindMfa missing and not required, marked as skipped should pass', async () => {
+      await expect(
+        validateMandatoryBindMfa(tenantContext, baseCtx, {
+          ...interaction,
+          mfaSkipped: true,
+        })
       ).resolves.not.toThrow();
     });
   });

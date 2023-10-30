@@ -30,6 +30,7 @@ import type {
   VerifiedRegisterInteractionResult,
 } from '../types/index.js';
 import { clearInteractionStorage } from '../utils/interaction.js';
+import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
 import { postAffiliateLogs, parseUserProfile } from './helpers.js';
 
@@ -96,7 +97,7 @@ export default async function submitInteraction(
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {
-    const { pendingAccountId } = interaction;
+    const { pendingAccountId, mfaSkipped } = interaction;
     const id = pendingAccountId ?? (await generateUserId());
     const userProfile = await parseUserProfile(tenantContext, interaction);
     const mfaVerifications = parseBindMfas(interaction);
@@ -117,6 +118,13 @@ export default async function submitInteraction(
         ...conditional(
           mfaVerifications.length > 0 && {
             mfaVerifications,
+          }
+        ),
+        ...conditional(
+          mfaSkipped && {
+            [userMfaDataKey]: {
+              skipped: true,
+            },
           }
         ),
       },
