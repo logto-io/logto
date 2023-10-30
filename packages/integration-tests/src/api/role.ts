@@ -61,9 +61,9 @@ export const deleteScopeFromRole = async (scopeId: string, roleId: string) =>
 /**
  * Get users assigned to the role.
  *
- * @param roleId Concerned role id
- * @param keyword Search among all users (on `id`, `name` and `description` fields) assigned to the role with `keyword`
- * @returns All users which contains the keyword assigned to the role
+ * @param roleId Concerned role id.
+ * @param keyword Search among all users (on `id`, `name` and `description` fields) assigned to the role with `keyword`.
+ * @returns A Promise that resolves all users which contains the keyword assigned to the role.
  */
 export const getRoleUsers = async (roleId: string, keyword?: string) => {
   const searchParams = new URLSearchParams(keyword && [['search', `%${keyword}%`]]);
@@ -81,9 +81,9 @@ export const deleteUserFromRole = async (userId: string, roleId: string) =>
 /**
  * Get apps assigned to the role.
  *
- * @param roleId Concerned role id
- * @param keyword Search among all m2m apps (on `id`, `name` and `description` fields) assigned to the role with `keyword`
- * @returns All m2m apps which contains the keyword assigned to the role
+ * @param roleId Concerned role id.
+ * @param keyword Search among all m2m apps (on `id`, `name` and `description` fields) assigned to the role with `keyword`.
+ * @returns A Promise that resolves all m2m apps which contains the keyword assigned to the role.
  */
 export const getRoleApplications = async (roleId: string, keyword?: string) => {
   const searchParams = new URLSearchParams(keyword && [['search', `%${keyword}%`]]);

@@ -47,10 +47,10 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
   /**
    * Get the number of applications that match the search conditions, conditions are joined in `and` mode.
    *
-   * @param search The search config object, can apply to `id`, `name` and `description` field for application
-   * @param excludeApplicationIds Exclude applications with these ids
-   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included
-   * @returns The number of applications that match the search conditions
+   * @param search The search config object, can apply to `id`, `name` and `description` field for application.
+   * @param excludeApplicationIds Exclude applications with these ids.
+   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
+   * @returns A Promise that resolves the number of applications that match the search conditions.
    */
   const countApplications = async (
     search: Search,
@@ -76,11 +76,11 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
    * Get the list of applications that match the search conditions, conditions are joined in `and` mode.
    *
    * @param search The search config object, can apply to `id`, `name` and `description` field for application
-   * @param excludeApplicationIds Exclude applications with these ids
-   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included
-   * @param limit limit of the number of applications in each page
-   * @param offset offset of the applications in the result
-   * @returns The list of applications that match the search conditions
+   * @param excludeApplicationIds Exclude applications with these ids.
+   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
+   * @param limit Limit of the number of applications in each page.
+   * @param offset Offset of the applications in the result.
+   * @returns A Promise that resolves the list of applications that match the search conditions.
    */
   const findApplications = async (
     search: Search,
