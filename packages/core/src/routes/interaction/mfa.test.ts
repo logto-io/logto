@@ -55,9 +55,13 @@ const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await mockE
   })
 );
 
-const { verifyIdentifier } = await mockEsmWithActual('./verifications/index.js', () => ({
-  verifyIdentifier: jest.fn(),
-}));
+const { verifyIdentifier, markMfaSkipped } = await mockEsmWithActual(
+  './verifications/index.js',
+  () => ({
+    verifyIdentifier: jest.fn(),
+    markMfaSkipped: jest.fn(),
+  })
+);
 
 const baseProviderMock = {
   params: {},
