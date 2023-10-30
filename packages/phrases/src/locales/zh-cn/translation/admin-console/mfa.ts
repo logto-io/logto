@@ -1,31 +1,28 @@
 const mfa = {
   title: '多因素身份验证',
-  description: '添加多因素身份验证以提升您的登录体验的安全性。',
+  description: '添加多因素身份验证以提升您登录体验的安全性。',
   factors: '因素',
   multi_factors: '多因素',
-  multi_factors_description: '用户需要验证启用的一个因素以进行两步验证。',
-  totp: 'Authenticator应用程序OTP',
-  otp_description: '链接Google Authenticator等来验证一次性密码。',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
-  webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+  multi_factors_description: '用户需要验证启用的两步验证中的一个因素。',
+  totp: '身份验证器应用 OTP',
+  otp_description: '将Google Authenticator等链接，以验证一次性密码。',
+  webauthn: 'WebAuthn（通行证）',
+  webauthn_description: '通过浏览器支持的方法进行验证：生物识别、手机扫描或安全密钥等。',
+  webauthn_native_tip: 'WebAuthn不支持原生应用。',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
-  backup_code: '备用代码',
-  backup_code_description: '生成10个唯一的代码，每个代码可用于一次验证。',
-  backup_code_setup_hint: '不能单独启用的备用身份验证因素：',
-  backup_code_error_hint: '要使用备用代码进行多因素身份验证，必须启用其他因素以确保用户成功登录。',
+    'WebAuthn将公钥绑定到特定域。修改服务域将阻止用户通过现有的密码进行身份验证。',
+  backup_code: '备份代码',
+  backup_code_description: '用户设置任何MFA方法后生成10个一次性备份代码。',
+  backup_code_setup_hint: '当用户无法验证上述MFA因素时，请使用备份选项。',
+  backup_code_error_hint: '要使用备份代码，您需要至少再添加一种MFA方法以成功验证用户。',
   policy: '策略',
+  policy_description: '为登录和注册流程设置MFA策略。',
   two_step_sign_in_policy: '登录时的两步验证策略',
-  user_controlled: '用户可以个人选择启用 MFA。',
-  mandatory: '每次登录时对所有用户强制执行 MFA。',
-  unlock_reminder:
-    '解锁多因素身份验证以通过升级到付费计划验证安全性。如果需要帮助，请随时<a>联系我们</a>。',
+  user_controlled: '用户可以自行启用或禁用MFA',
+  user_controlled_tip: '用户可以在首次登录或注册时跳过MFA设置，或在账户设置中启用/禁用MFA。',
+  mandatory: '用户始终需要在登录时使用MFA',
+  mandatory_tip: '用户必须在首次登录或注册时设置MFA，并在所有未来的登录中使用它。',
+  unlock_reminder: '升级到付费计划以解锁MFA进行安全验证。如果需要任何帮助，请随时<a>联系我们</a>。',
   view_plans: '查看计划',
 };
 

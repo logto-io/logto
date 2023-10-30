@@ -48,7 +48,7 @@ const user_details = {
     /** UNTRANSLATED */
     connected: 'This user is connected with multiple social connectors.',
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
-    deletion_confirmation: '<name/> 신원을 삭제하려고 해요. 정말로 진행할까요?',
+    deletion_confirmation: '기존 <name/> 신원을 제거하고 있습니다. 계속 진행하시겠습니까?',
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -68,7 +68,7 @@ const user_details = {
     name_column: '다단계 인증',
     field_description_empty: '이 사용자는 2단계 인증 요소를 활성화하지 않았습니다.',
     deletion_confirmation:
-      '2단계 인증기에 대한 기존 <name/>을 제거하려고 합니다. 정말로 그렇게 하시겠습니까?',
+      '기존의 2단계 인증에서 <name/>을(를) 제거하고 있습니다. 계속 진행하시겠습니까?',
   },
   suspended: '정지됨',
   suspend_user: '사용자 정지',

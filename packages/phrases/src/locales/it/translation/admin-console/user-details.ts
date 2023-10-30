@@ -51,7 +51,7 @@ const user_details = {
     connected: 'This user is connected with multiple social connectors.',
     not_connected: "L'utente non è connesso a nessun connettore sociale",
     deletion_confirmation:
-      "Stai rimuovendo l'identità esistente <name/>. Sei sicuro di voler procedere?",
+      "Stai rimuovendo l'identità esistente <name/>. Sei sicuro di voler continuare?",
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -72,7 +72,7 @@ const user_details = {
     field_description_empty:
       'Questo utente non ha abilitato fattori di autenticazione a due fattori.',
     deletion_confirmation:
-      "Stai rimuovendo il <name/> esistente per l'autenticatore a due fattori. Sei sicuro di volerlo fare?",
+      "Stai rimuovendo l'esistente <name/> per la verifica in due passaggi. Sei sicuro di voler continuare?",
   },
   suspended: 'Sospeso',
   suspend_user: 'Sospendi utente',

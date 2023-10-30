@@ -1,36 +1,37 @@
 const mfa = {
-  title: 'Multi-Faktor-Authentifizierung',
+  title: 'Zwei-Faktor-Authentifizierung',
   description:
-    'Fügen Sie der Sicherheit Ihres Anmeldeerlebnisses die Multi-Faktor-Authentifizierung hinzu.',
+    'Fügen Sie der Sicherheit Ihrer Anmeldeerfahrung die Zwei-Faktor-Authentifizierung hinzu.',
   factors: 'Faktoren',
   multi_factors: 'Multi-Faktoren',
   multi_factors_description:
-    'Benutzer müssen einen der aktivierten Faktoren zur zweistufigen Authentifizierung überprüfen.',
+    'Benutzer müssen einen der aktivierten Faktoren für die Zwei-Schritt-Verifizierung überprüfen.',
   totp: 'Authenticator-App OTP',
   otp_description: 'Verknüpfen Sie Google Authenticator usw., um Einmalpasswörter zu überprüfen.',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+  webauthn: 'WebAuthn (Passwort)',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'Überprüfen Sie über browserunterstützte Methoden: Biometrie, Handy-Scan oder Sicherheitsschlüssel usw.',
+  webauthn_native_tip: 'WebAuthn wird für native Anwendungen nicht unterstützt.',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    'WebAuthn bindet öffentliche Schlüssel an die spezifische Domain. Das Ändern Ihrer Servicedomain blockiert Benutzer daran, sich über vorhandene Passwörter zu authentifizieren.',
   backup_code: 'Backup-Code',
   backup_code_description:
-    'Generieren Sie 10 eindeutige Codes, von denen jeder für eine einzige Authentifizierung verwendet werden kann.',
+    'Generieren Sie nach Einrichtung einer beliebigen MFA-Methode 10 einmalige Backup-Codes.',
   backup_code_setup_hint:
-    'Der Backup-Authentifizierungsfaktor, der nicht alleine aktiviert werden kann:',
+    'Wenn Benutzer die obigen MFA-Faktoren nicht überprüfen können, verwenden Sie die Backup-Option.',
   backup_code_error_hint:
-    'Um den Backup-Code für MFA zu verwenden, müssen andere Faktoren aktiviert sein, um die erfolgreiche Anmeldung Ihrer Benutzer sicherzustellen.',
+    'Um einen Backup-Code zu verwenden, benötigen Sie mindestens eine weitere MFA-Methode für eine erfolgreiche Benutzerauthentifizierung.',
   policy: 'Richtlinie',
-  two_step_sign_in_policy: 'Zwei-Schritt-Authentifizierungsrichtlinie bei der Anmeldung',
-  user_controlled: 'Benutzer haben die Wahl, MFA persönlich zu aktivieren.',
-  mandatory: 'Verpflichtendes MFA für alle Benutzer bei jeder Anmeldung.',
+  policy_description: 'Legen Sie die MFA-Richtlinie für Anmelde- und Anmeldevorgänge fest.',
+  two_step_sign_in_policy: 'Zwei-Schritt-Verifizierungspolitik bei der Anmeldung',
+  user_controlled: 'Benutzer können MFA selbst aktivieren oder deaktivieren',
+  user_controlled_tip:
+    'Benutzer können die MFA-Einrichtung beim ersten Mal bei der Anmeldung oder Anmeldung überspringen oder sie in den Kontoeinstellungen aktivieren/deaktivieren.',
+  mandatory: 'Benutzer müssen immer MFA bei der Anmeldung verwenden',
+  mandatory_tip:
+    'Benutzer müssen MFA beim ersten Mal bei der Anmeldung oder Anmeldung einrichten und es für alle zukünftigen Anmeldungen verwenden.',
   unlock_reminder:
-    'Entsperren Sie die MFA zur Sicherheitsüberprüfung durch ein Upgrade auf einen kostenpflichtigen Plan. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
+    'Schalten Sie MFA zur Sicherheitsüberprüfung frei, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
   view_plans: 'Pläne anzeigen',
 };
 

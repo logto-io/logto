@@ -1,37 +1,38 @@
 const mfa = {
-  title: 'Autenticazione multi-fattore',
+  title: 'Autenticazione a più fattori',
   description:
-    "Aggiungi l'autenticazione multi-fattore per aumentare la sicurezza della tua esperienza di accesso.",
+    "Aggiungi l'autenticazione a più fattori per elevare la sicurezza della tua esperienza di accesso.",
   factors: 'Fattori',
   multi_factors: 'Multi-fattori',
   multi_factors_description:
-    "Gli utenti devono verificare uno dei fattori abilitati per l'autenticazione a due passaggi.",
-  totp: "OTP dell'app Authenticator",
+    'Gli utenti devono verificare uno dei fattori abilitati per la verifica a due passaggi.',
+  totp: "OTP dell'app autenticatore",
   otp_description: 'Collega Google Authenticator, ecc., per verificare le password monouso.',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+  webauthn: 'WebAuthn (Passkey)',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'Verifica tramite un metodo supportato dal browser: biometria, scansione del telefono o chiave di sicurezza, ecc.',
+  webauthn_native_tip: 'WebAuthn non è supportato per le applicazioni native.',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    'WebAuthn lega le chiavi pubbliche al dominio specifico. Modificare il dominio del servizio impedirà agli utenti di autenticarsi tramite le passkey esistenti.',
   backup_code: 'Codice di backup',
   backup_code_description:
-    'Genera 10 codici unici, ciascuno utilizzabile per una singola autenticazione.',
+    'Genera 10 codici di backup monouso dopo che gli utenti hanno configurato qualsiasi metodo MFA.',
   backup_code_setup_hint:
-    'Il fattore di autenticazione di backup che non può essere attivato da solo:',
+    "Quando gli utenti non possono verificare i suddetti fattori MFA, utilizzare l'opzione di backup.",
   backup_code_error_hint:
-    "Per utilizzare il codice di backup per l'autenticazione multi-fattore, è necessario attivare altri fattori per garantire il successo dell'accesso dei tuoi utenti.",
+    "Per utilizzare un codice di backup, è necessario almeno un altro metodo MFA per un'autenticazione utente riuscita.",
   policy: 'Politica',
-  two_step_sign_in_policy: "Politica di autenticazione a due passaggi all'accesso",
-  user_controlled: 'Gli utenti hanno la possibilità di abilitare personalmente la MFA.',
-  mandatory: 'MFA obbligatorio per tutti gli utenti ad ogni accesso.',
+  policy_description: 'Imposta la politica MFA per i flussi di accesso e registrazione.',
+  two_step_sign_in_policy: "Politica di verifica a due passaggi all'accesso",
+  user_controlled: 'Gli utenti possono abilitare o disabilitare MFA autonomamente',
+  user_controlled_tip:
+    "Gli utenti possono saltare la configurazione MFA la prima volta all'accesso o alla registrazione, o abilitarla/disabilitarla nelle impostazioni dell'account.",
+  mandatory: "Gli utenti devono sempre utilizzare MFA all'accesso",
+  mandatory_tip:
+    "Gli utenti devono configurare MFA la prima volta all'accesso o alla registrazione, e usarlo per tutti gli accessi futuri.",
   unlock_reminder:
-    "Sblocca l'autenticazione multi-fattore per verificare la sicurezza passando a un piano a pagamento. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.",
-  view_plans: 'Visualizza i piani',
+    'Sblocca MFA per verificare la sicurezza passando a un piano a pagamento. Non esitare a <a>contattarci</a> se hai bisogno di assistenza.',
+  view_plans: 'Visualizza piani',
 };
 
 export default Object.freeze(mfa);

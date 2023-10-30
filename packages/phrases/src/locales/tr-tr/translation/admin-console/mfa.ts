@@ -1,37 +1,39 @@
 const mfa = {
-  title: 'Çoklu Faktör Kimlik Doğrulama',
+  title: 'Çok faktörlü kimlik doğrulama',
   description:
-    'Giriş deneyiminizin güvenliğini artırmak için çoklu faktör kimlik doğrulamayı ekleyin.',
+    'Kimlik doğrulama deneyiminizin güvenliğini artırmak için çok faktörlü kimlik doğrulamayı ekleyin.',
   factors: 'Faktörler',
   multi_factors: 'Çoklu faktörler',
   multi_factors_description:
-    'Kullanıcılar, iki aşamalı kimlik doğrulama için etkinleştirilen faktörlerden birini doğrulamalıdır.',
+    'Kullanıcılar, 2 aşamalı doğrulama için etkinleştirilmiş faktörlerden birini doğrulamalıdır.',
   totp: 'Authenticator uygulama OTP',
-  otp_description:
-    'Google Authenticator vb. bağlayarak tek kullanımlık şifreleri doğrulamak için kullanın.',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+  otp_description: 'Google Authenticator vb. bağlayarak tek kullanımlık şifreleri doğrulamak için.',
+  webauthn: 'WebAuthn (Pas anahtarı)',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'Tarayıcı tarafından desteklenen yöntemle doğrulama yapın: biyometri, telefon tarama veya güvenlik anahtarı vb.',
+  webauthn_native_tip: 'WebAuthn, Native uygulamalar için desteklenmiyor.',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    'WebAuthn, genel anahtarları belirli bir alanla ilişkilendirir. Hizmet alanınızı değiştirmek, kullanıcıların mevcut geçiş anahtarları aracılığıyla kimlik doğrulamasını engeller.',
   backup_code: 'Yedek kod',
   backup_code_description:
-    'Tek kullanımlık bir kimlik doğrulama için kullanılabilen 10 benzersiz kod üretin.',
-  backup_code_setup_hint: 'Tek başına etkinleştirilemeyen yedek kimlik doğrulama faktörü:',
+    'Kullanıcılar herhangi bir MFA yöntemini ayarladıktan sonra 10 tek kullanımlık yedek kod üretir.',
+  backup_code_setup_hint:
+    'Kullanıcılar yukarıdaki MFA faktörlerini doğrulayamadığında yedek seçeneğini kullanın.',
   backup_code_error_hint:
-    'Çoklu faktör kimlik doğrulamada yedek kodu kullanmak için kullanıcılarınızın başarılı giriş yapmalarını sağlamak için diğer faktörlerin etkinleştirilmiş olması gerekir.',
+    'Bir yedek kodu kullanmak için başarılı kullanıcı kimlik doğrulaması için en az bir daha fazla MFA yönteme ihtiyacınız vardır.',
   policy: 'Politika',
-  two_step_sign_in_policy: 'Giriş sırasında iki adımlı kimlik doğrulama politikası',
-  user_controlled: "Kullanıcılar MFA'yi kişisel olarak etkinleştirmeye karar verebilir.",
-  mandatory: 'Her girişte tüm kullanıcılar için zorunlu MFA.',
+  policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
+  two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',
+  user_controlled:
+    "Kullanıcılar MFA'yı kendi başlarına etkinleştirebilir veya devre dışı bırakabilir",
+  user_controlled_tip:
+    'Kullanıcılar, giriş veya kayıt sırasında ilk kez MFA kurulumunu atlayabilir veya hesap ayarlarında etkinleştirebilir/devre dışı bırakabilir.',
+  mandatory: 'Kullanıcılar her zaman girişte MFA kullanmak zorundadır',
+  mandatory_tip:
+    'Kullanıcılar, ilk kez giriş veya kayıt sırasında MFA kurmalı ve tüm gelecekteki girişlerde kullanmalıdır.',
   unlock_reminder:
-    'Güvenliği doğrulamak için çoklu faktör kimlik doğrulamayı kilit açmak için bir ücretli plana yükselterek etkinleştirin. Yardıma ihtiyacınız varsa çekinmeden <a>bizimle iletişime geçin</a>.',
-  view_plans: 'Planları görüntüle',
+    "Güvenliği kontrol etmek için MFA'yı bir ücretli plana geçerek kilidini açın. Yardıma ihtiyacınız olursa bize <a>iletişim kurmaktan</a> çekinmeyin.",
+  view_plans: 'Planları Görüntüle',
 };
 
 export default Object.freeze(mfa);

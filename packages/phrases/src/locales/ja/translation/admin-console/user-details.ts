@@ -48,8 +48,7 @@ const user_details = {
     /** UNTRANSLATED */
     connected: 'This user is connected with multiple social connectors.',
     not_connected: 'ユーザーはソーシャルコネクタに接続していません',
-    deletion_confirmation:
-      '既存の<name/>アイデンティティを削除しています。本当にそれをやり遂げますか？',
+    deletion_confirmation: '既存の<name/>アイデンティティを削除しています。本当に続行しますか？',
   },
   sso_connectors: {
     /** UNTRANSLATED */
@@ -68,7 +67,7 @@ const user_details = {
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
-    deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当にそれを行いたいですか？',
+    deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
   },
   suspended: '停止中',
   suspend_user: 'ユーザーを一時停止',

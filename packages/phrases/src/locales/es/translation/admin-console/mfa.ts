@@ -1,36 +1,38 @@
 const mfa = {
-  title: 'Autenticación multifactor',
+  title: 'Autenticación de múltiples factores',
   description:
-    'Agrega autenticación multifactor para elevar la seguridad de tu experiencia de inicio de sesión.',
+    'Agrega autenticación de múltiples factores para elevar la seguridad de tu experiencia de inicio de sesión.',
   factors: 'Factores',
-  multi_factors: 'Multifactores',
+  multi_factors: 'Múltiples factores',
   multi_factors_description:
-    'Los usuarios deben verificar uno de los factores habilitados para la autenticación de dos pasos.',
+    'Los usuarios deben verificar uno de los factores habilitados para la verificación de dos pasos.',
   totp: 'OTP de la aplicación autenticadora',
   otp_description: 'Vincula Google Authenticator, etc., para verificar contraseñas de un solo uso.',
-  /** UNTRANSLATED */
-  webauthn: 'WebAuthn(Passkey)',
-  /** UNTRANSLATED */
+  webauthn: 'WebAuthn (Clave de paso)',
   webauthn_description:
-    'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
-  /** UNTRANSLATED */
-  webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
-  /** UNTRANSLATED */
+    'Verifica a través de un método compatible con el navegador: biometría, escaneo de teléfono o clave de seguridad, etc.',
+  webauthn_native_tip: 'WebAuthn no es compatible con aplicaciones nativas.',
   webauthn_domain_tip:
-    'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
+    'WebAuthn vincula claves públicas al dominio específico. Modificar el dominio del servicio bloqueará a los usuarios para autenticarse mediante claves de paso existentes.',
   backup_code: 'Código de respaldo',
   backup_code_description:
-    'Genera 10 códigos únicos, cada uno utilizable para una sola autenticación.',
+    'Genera 10 códigos de respaldo de un solo uso después de que los usuarios configuren cualquier método de MFA.',
   backup_code_setup_hint:
-    'El factor de autenticación de respaldo que no se puede habilitar por sí solo:',
+    'Cuando los usuarios no pueden verificar los factores de MFA anteriores, utiliza la opción de respaldo.',
   backup_code_error_hint:
-    'Para usar el código de respaldo para la autenticación multifactor, deben estar habilitados otros factores para garantizar el inicio de sesión exitoso de tus usuarios.',
+    'Para usar un código de respaldo, necesitas al menos un método de MFA adicional para una autenticación exitosa del usuario.',
   policy: 'Política',
-  two_step_sign_in_policy: 'Política de autenticación de dos pasos al iniciar sesión',
-  user_controlled: 'Los usuarios tienen la opción de habilitar MFA personalmente.',
-  mandatory: 'MFA obligatorio para todos tus usuarios en cada inicio de sesión.',
+  policy_description:
+    'Establece la política de MFA para los flujos de inicio de sesión y registro.',
+  two_step_sign_in_policy: 'Política de verificación de dos pasos al iniciar sesión',
+  user_controlled: 'Los usuarios pueden habilitar o deshabilitar MFA por sí mismos',
+  user_controlled_tip:
+    'Los usuarios pueden omitir la configuración de MFA la primera vez al iniciar sesión o registrarse, o habilitar/deshabilitarla en la configuración de la cuenta.',
+  mandatory: 'Siempre se requiere que los usuarios usen MFA al iniciar sesión',
+  mandatory_tip:
+    'Los usuarios deben configurar MFA la primera vez al iniciar sesión o registrarse, y usarlo en todas las futuras sesiones de inicio de sesión.',
   unlock_reminder:
-    'Desbloquea la autenticación multifactor para mejorar la seguridad mediante la actualización a un plan de pago. No dudes en <a>contactarnos</a> si necesitas ayuda.',
+    'Desbloquea MFA para verificar la seguridad al actualizar a un plan pago. No dudes en <a>contactarnos</a> si necesitas ayuda.',
   view_plans: 'Ver planes',
 };
 
