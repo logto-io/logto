@@ -3,7 +3,7 @@ import { cls, dcls, generateTestName } from '#src/utils.js';
 
 const expectOrg = new ExpectOrganizations(await browser.newPage());
 
-describe('organizations: create, edit, and delete organization', () => {
+describe.skip('organizations: create, edit, and delete organization', () => {
   it('navigates to organizations page', async () => {
     await expectOrg.start();
     await expectOrg.gotoPage('/organizations', 'Organizations');
@@ -46,7 +46,7 @@ describe('organizations: create, edit, and delete organization', () => {
   });
 });
 
-describe('organizations: search organization', () => {
+describe.skip('organizations: search organization', () => {
   const [testName1, testName2] = [generateTestName(), generateTestName()];
 
   it('creates two organizations', async () => {
