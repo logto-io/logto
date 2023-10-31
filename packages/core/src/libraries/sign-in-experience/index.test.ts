@@ -7,7 +7,7 @@ import {
   socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
-  mockSsoConnector,
+  wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
@@ -130,28 +130,21 @@ describe('remove unavailable social connector targets', () => {
 });
 
 describe('get sso connectors', () => {
-  it('should return sso connectors with valid config', async () => {
+  it('should return sso connectors metadata', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
 
-    const ssoConnector = {
-      ...mockSsoConnector,
-      config: {
-        clientId: 'mockClientId',
-        clientSecret: 'mockClientSecret',
-        issuer: 'mockIssuer',
-      },
-    };
-
-    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([ssoConnector]);
+    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      wellConfiguredSsoConnector,
+    ]);
 
     const { ssoConnectors } = await getFullSignInExperience();
 
     expect(ssoConnectors).toEqual([
       {
-        id: ssoConnector.id,
-        connectorName: ssoConnector.connectorName,
-        logo: ssoConnectorFactories[ssoConnector.providerName].logo,
+        id: wellConfiguredSsoConnector.id,
+        connectorName: wellConfiguredSsoConnector.connectorName,
+        logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
         darkLogo: undefined,
       },
     ]);

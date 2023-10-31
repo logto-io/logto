@@ -1,4 +1,4 @@
-import { mockSsoConnector } from '#src/__mocks__/sso.js';
+import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -38,20 +38,39 @@ describe('SsoConnectorLibrary', () => {
   it('getAvailableSsoConnectors() should filter sso connectors with invalid config', async () => {
     const { getAvailableSsoConnectors } = ssoConnectorLibrary;
 
-    const wellSetSsoConnectors = {
-      ...mockSsoConnector,
-      config: {
-        clientId: 'foo',
-        clientSecret: 'bar',
-        issuer: 'https://foo.com',
-      },
-    };
-
-    findAllSsoConnectors.mockResolvedValueOnce([2, [mockSsoConnector, wellSetSsoConnectors]]);
+    findAllSsoConnectors.mockResolvedValueOnce([
+      2,
+      [
+        {
+          ...mockSsoConnector,
+          domains: ['foo.com'],
+        },
+        wellConfiguredSsoConnector,
+      ],
+    ]);
 
     const connectors = await getAvailableSsoConnectors();
 
-    expect(connectors).toEqual([wellSetSsoConnectors]);
+    expect(connectors).toEqual([wellConfiguredSsoConnector]);
+  });
+
+  it('getAvailableSsoConnectors() should filter sso connectors with empty domains', async () => {
+    const { getAvailableSsoConnectors } = ssoConnectorLibrary;
+
+    findAllSsoConnectors.mockResolvedValueOnce([
+      2,
+      [
+        {
+          ...mockSsoConnector,
+          config: wellConfiguredSsoConnector.config,
+        },
+        wellConfiguredSsoConnector,
+      ],
+    ]);
+
+    const connectors = await getAvailableSsoConnectors();
+
+    expect(connectors).toEqual([wellConfiguredSsoConnector]);
   });
 
   it('getSsoConnectorById() should throw 404 if the connector is not supported', async () => {

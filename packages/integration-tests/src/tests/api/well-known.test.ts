@@ -61,6 +61,7 @@ describe('.well-known api', () => {
     const newOIDCSsoConnector = {
       providerName: 'OIDC',
       connectorName: 'OIDC sso connector',
+      domains: ['logto.io'],
       branding: {
         logo: 'https://logto.io/oidc-logo.png',
         darkLogo: 'https://logto.io/oidc-dark-logo.png',

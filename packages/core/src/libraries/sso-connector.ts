@@ -22,10 +22,12 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
   const getAvailableSsoConnectors = async () => {
     const connectors = await getSsoConnectors();
 
-    return connectors.filter(({ providerName, config }) => {
+    return connectors.filter(({ providerName, config, domains }) => {
       const factory = ssoConnectorFactories[providerName];
+      const hasValidConfig = factory.configGuard.safeParse(config).success;
+      const hasValidDomains = domains.length > 0;
 
-      return factory.configGuard.safeParse(config).success;
+      return hasValidConfig && hasValidDomains;
     });
   };
 
