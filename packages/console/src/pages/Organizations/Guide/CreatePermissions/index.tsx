@@ -68,29 +68,28 @@ function CreatePermissions() {
 
   const { fields, append, remove } = useFieldArray({ control, name: 'permissions' });
 
-  const onSubmit = () => {
-    if (!isDirty) {
-      navigate(`../${steps.createRoles}`);
-      return;
-    }
-
-    void handleSubmit(
-      trySubmitSafe(async ({ permissions }) => {
-        if (data?.length) {
-          await Promise.all(
-            data.map(async ({ id }) => api.delete(`${organizationScopesPath}/${id}`))
-          );
-        }
-        await Promise.all(
-          permissions.map(async ({ name, description }) => {
-            await api.post(organizationScopesPath, { json: { name, description } });
-          })
-        );
-
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async ({ permissions }) => {
+      // If user has pre-saved data and no changes, skip submit and go directly to next step
+      if (data?.length && !isDirty) {
         navigate(`../${steps.createRoles}`);
-      })
-    )();
-  };
+        return;
+      }
+
+      if (data?.length) {
+        await Promise.all(
+          data.map(async ({ id }) => api.delete(`${organizationScopesPath}/${id}`))
+        );
+      }
+      await Promise.all(
+        permissions.map(async ({ name, description }) => {
+          await api.post(organizationScopesPath, { json: { name, description } });
+        })
+      );
+
+      navigate(`../${steps.createRoles}`);
+    })
+  );
 
   return (
     <>
