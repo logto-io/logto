@@ -149,6 +149,21 @@ describe('interaction routes (MFA verification)', () => {
       expect(response.status).toEqual(400);
     });
 
+    it('should pass when backup code is the only item in bindMfa, but is not in user mfaVerifications', async () => {
+      getInteractionStorage.mockReturnValueOnce({
+        event: InteractionEvent.SignIn,
+        bindMfas: [],
+        accountId: 'accountId',
+      });
+
+      const body = {
+        type: MfaFactor.BackupCode,
+      };
+
+      const response = await sessionRequest.post(path).send(body);
+      expect(response.status).toEqual(204);
+    });
+
     it('should return 204 for totp and backup code combination', async () => {
       getInteractionStorage.mockReturnValueOnce({
         event: InteractionEvent.SignIn,
