@@ -46,6 +46,8 @@ export const auditLogEventTitle: Record<string, Optional<string>> &
   'Interaction.Register.BindMfa.BackupCode.Submit': undefined,
   'Interaction.Register.BindMfa.WebAuthn.Create': undefined,
   'Interaction.Register.BindMfa.WebAuthn.Submit': undefined,
+  'Interaction.Register.SingleSignOn.Create': undefined,
+  'Interaction.Register.SingleSignOn.Submit': undefined,
   'Interaction.SignIn.Identifier.Password.Submit': 'Submit sign-in identifier with password',
   'Interaction.SignIn.Identifier.Social.Create': 'Create social sign-in authorization-url',
   'Interaction.SignIn.Identifier.Social.Submit': 'Authenticate and submit social identifier',
@@ -70,6 +72,8 @@ export const auditLogEventTitle: Record<string, Optional<string>> &
   'Interaction.SignIn.Mfa.BackupCode.Submit': undefined,
   'Interaction.SignIn.Mfa.WebAuthn.Create': undefined,
   'Interaction.SignIn.Mfa.WebAuthn.Submit': undefined,
+  'Interaction.SignIn.SingleSignOn.Create': 'Create single-sign-on authentication session',
+  'Interaction.SignIn.SingleSignOn.Submit': 'Submit single-sign-on authentication interaction',
   RevokeToken: undefined,
   Unknown: undefined,
 });

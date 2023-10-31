@@ -25,3 +25,8 @@ export const signUpIdentifiers = {
 export const consoleUsername = 'svhd';
 export const consolePassword = 'silverhandasd_1';
 export const mockSocialAuthPageUrl = 'http://mock.social.com';
+
+// @see {@link packages/core/src/sso/types}
+export enum ProviderName {
+  OIDC = 'OIDC',
+}

@@ -20,6 +20,7 @@ import koaInteractionDetails from './middleware/koa-interaction-details.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
+import singleSignOnRoutes from './single-sign-on.js';
 import {
   getInteractionStorage,
   storeInteractionResult,
@@ -374,4 +375,5 @@ export default function interactionRoutes<T extends AnonymousRouter>(
   consentRoutes(router, tenant);
   additionalRoutes(router, tenant);
   mfaRoutes(router, tenant);
+  singleSignOnRoutes(router, tenant);
 }
