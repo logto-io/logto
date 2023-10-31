@@ -11,6 +11,7 @@ export enum Field {
   Identifier = 'Identifier',
   Profile = 'Profile',
   BindMfa = 'BindMfa',
+  SingleSignOn = 'SingleSignOn',
   Mfa = 'Mfa',
 }
 
@@ -88,4 +89,7 @@ export type LogKey =
   | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`
   | `${Prefix}.${InteractionEvent.SignIn}.${Field.Mfa}.${MfaFactor}.${
       | Action.Submit
-      | Action.Create}`;
+      | Action.Create}`
+  | `${Prefix}.${InteractionEvent.SignIn | InteractionEvent.Register}.${Field.SingleSignOn}.${
+      | Action.Create
+      | Action.Submit}`;

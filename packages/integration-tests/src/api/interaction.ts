@@ -144,3 +144,13 @@ export const consent = async (api: Got, cookie: string) =>
       followRedirect: false,
     })
     .json<RedirectResponse>();
+
+export const createSingleSignOnAuthorizationUri = async (
+  cookie: string,
+  payload: SocialAuthorizationUriPayload
+) =>
+  api.post('interaction/verification/sso-authorization-uri', {
+    headers: { cookie },
+    json: payload,
+    followRedirect: false,
+  });

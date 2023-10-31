@@ -72,7 +72,7 @@ export const verifySocialIdentity = async (
   return userInfo;
 };
 
-const assignConnectorSessionResult = async (
+export const assignConnectorSessionResult = async (
   ctx: Context,
   provider: Provider,
   connectorSession: ConnectorSession
@@ -84,7 +84,7 @@ const assignConnectorSessionResult = async (
   });
 };
 
-const getConnectorSessionResult = async (
+export const getConnectorSessionResult = async (
   ctx: Context,
   provider: Provider
 ): Promise<ConnectorSession> => {
