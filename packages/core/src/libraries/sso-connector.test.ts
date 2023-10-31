@@ -35,6 +35,25 @@ describe('SsoConnectorLibrary', () => {
     expect(connectors).toEqual([mockSsoConnector]);
   });
 
+  it('getAvailableSsoConnectors() should filter sso connectors with invalid config', async () => {
+    const { getAvailableSsoConnectors } = ssoConnectorLibrary;
+
+    const wellSetSsoConnectors = {
+      ...mockSsoConnector,
+      config: {
+        clientId: 'foo',
+        clientSecret: 'bar',
+        issuer: 'https://foo.com',
+      },
+    };
+
+    findAllSsoConnectors.mockResolvedValueOnce([2, [mockSsoConnector, wellSetSsoConnectors]]);
+
+    const connectors = await getAvailableSsoConnectors();
+
+    expect(connectors).toEqual([wellSetSsoConnectors]);
+  });
+
   it('getSsoConnectorById() should throw 404 if the connector is not supported', async () => {
     const { getSsoConnectorById } = ssoConnectorLibrary;
 
