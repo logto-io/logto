@@ -65,6 +65,8 @@ const baseProviderMock = {
   client_id: demoAppApplicationId,
 };
 
+const updateUserById = jest.fn();
+
 const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   {
@@ -73,6 +75,7 @@ const tenantContext = new MockTenant(
     },
     users: {
       findUserById: jest.fn().mockResolvedValue(mockUserWithMfaVerifications),
+      updateUserById,
     },
   }
 );
@@ -216,6 +219,7 @@ describe('interaction routes (MFA verification)', () => {
       expect(response.status).toEqual(204);
       expect(getInteractionStorage).toBeCalled();
       expect(verifyMfaPayloadVerification).toBeCalled();
+      expect(updateUserById).toBeCalled();
       expect(storeInteractionResult).toBeCalledWith(
         {
           verifiedMfa: {

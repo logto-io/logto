@@ -123,6 +123,21 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         { accountId, rpId: hostname, origin }
       );
 
+      // Update last used time
+      const user = await queries.users.findUserById(accountId);
+      await queries.users.updateUserById(accountId, {
+        mfaVerifications: user.mfaVerifications.map((mfa) => {
+          if (mfa.id !== verifiedMfa.id) {
+            return mfa;
+          }
+
+          return {
+            ...mfa,
+            lastUsedAt: new Date().toISOString(),
+          };
+        }),
+      });
+
       await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
 
       ctx.status = 204;

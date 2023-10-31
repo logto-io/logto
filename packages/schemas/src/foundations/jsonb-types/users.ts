@@ -16,6 +16,7 @@ export type Identities = z.infer<typeof identitiesGuard>;
 export const baseMfaVerification = {
   id: z.string(),
   createdAt: z.string(),
+  lastUsedAt: z.string().optional(),
 };
 
 export const mfaVerificationTotp = z.object({

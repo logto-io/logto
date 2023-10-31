@@ -1,5 +1,10 @@
-import { InteractionEvent, MfaFactor, MfaPolicy, type JsonObject } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import {
+  InteractionEvent,
+  MfaFactor,
+  MfaPolicy,
+  type JsonObject,
+  type MfaVerification,
+} from '@logto/schemas';
 import { type Context } from 'koa';
 import type Provider from 'oidc-provider';
 import { z } from 'zod';
@@ -61,8 +66,43 @@ export const verifyMfa = async (
   const { accountId, verifiedMfa } = interaction;
 
   const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
-  // Only allow MFA that is configured in sign-in experience
-  const availableUserVerifications = mfaVerifications.filter(({ type }) => factors.includes(type));
+  const availableUserVerifications = mfaVerifications
+    .filter((verification) => {
+      // Only allow MFA that is configured in sign-in experience
+      if (!factors.includes(verification.type)) {
+        return false;
+      }
+
+      if (verification.type !== MfaFactor.BackupCode) {
+        return true;
+      }
+
+      // Skip backup code if it is used
+      return verification.codes.some((code) => !code.usedAt);
+    })
+    .reduce<MfaVerification[]>((factors, verification) => {
+      // Ingnore duplicated verification
+      if (factors.some(({ type }) => type === verification.type)) {
+        return factors;
+      }
+
+      return [...factors, verification];
+    }, [])
+    .slice()
+    .sort((factorA, factorB) => {
+      // Sort by last used time, the latest used factor is the first one, backup code is always the last one
+      if (factorA.type === MfaFactor.BackupCode) {
+        return 1;
+      }
+
+      if (factorB.type === MfaFactor.BackupCode) {
+        return -1;
+      }
+
+      return (
+        new Date(factorB.lastUsedAt ?? 0).getTime() - new Date(factorA.lastUsedAt ?? 0).getTime()
+      );
+    });
 
   if (availableUserVerifications.length > 0) {
     assertThat(
@@ -73,7 +113,7 @@ export const verifyMfa = async (
           status: 403,
         },
         {
-          availableFactors: deduplicate(availableUserVerifications.map(({ type }) => type)),
+          availableFactors: availableUserVerifications.map(({ type }) => type),
         }
       )
     );
