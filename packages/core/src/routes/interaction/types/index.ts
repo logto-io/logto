@@ -80,6 +80,7 @@ export type VerifiedRegisterInteractionResult = {
   identifiers?: Identifier[];
   bindMfas?: BindMfa[];
   pendingAccountId?: string;
+  mfaSkipped?: boolean;
 };
 
 export type VerifiedSignInInteractionResult = {

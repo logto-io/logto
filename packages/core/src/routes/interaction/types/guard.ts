@@ -59,6 +59,8 @@ export const anonymousInteractionResultGuard = z.object({
   // The user id to be used for register, if not provided, a new one will be generated
   // WebAuthn requires a user id to be provided, so we have to generate and know it before submit interaction
   pendingAccountId: z.string().optional(),
+  // The marks that the user has skip binding new MFA (for new users, they don't have database records yet)
+  mfaSkipped: z.boolean().optional(),
 });
 
 export const forgotPasswordProfileGuard = z.object({

@@ -82,7 +82,7 @@ export const verifyMfa = async (
   return interaction;
 };
 
-const userMfaDataKey = 'mfa';
+export const userMfaDataKey = 'mfa';
 /**
  * Check if the user has skipped MFA binding
  */
@@ -170,7 +170,7 @@ const validateMandatoryBindMfaForSignIn = async (
 
 export const validateMandatoryBindMfa = async (
   tenant: TenantContext,
-  ctx: WithInteractionSieContext & WithInteractionDetailsContext,
+  ctx: Context & WithInteractionSieContext & WithInteractionDetailsContext,
   interaction: VerifiedSignInInteractionResult | VerifiedRegisterInteractionResult
 ): Promise<VerifiedInteractionResult> => {
   const {
@@ -190,27 +190,45 @@ export const validateMandatoryBindMfa = async (
   );
 
   if (event === InteractionEvent.Register) {
-    if (policy !== MfaPolicy.Mandatory) {
+    if (hasFactorInBind) {
       return interaction;
     }
 
-    assertThat(
-      hasFactorInBind,
-      new RequestError(
+    if (policy === MfaPolicy.Mandatory) {
+      throw new RequestError(
         {
           code: 'user.missing_mfa',
           status: 422,
         },
         { availableFactors }
-      )
+      );
+    }
+
+    const { mfaSkipped } = interaction;
+    if (mfaSkipped) {
+      return interaction;
+    }
+
+    // Auto mark MFA skipped for new users, will change to manual mark in the future
+    await storeInteractionResult(
+      {
+        mfaSkipped: true,
+      },
+      ctx,
+      tenant.provider,
+      true
+    );
+
+    throw new RequestError(
+      {
+        code: 'user.missing_mfa',
+        status: 422,
+      },
+      { availableFactors, skippable: true }
     );
   }
 
-  if (event === InteractionEvent.SignIn) {
-    return validateMandatoryBindMfaForSignIn(tenant, ctx, interaction);
-  }
-
-  return interaction;
+  return validateMandatoryBindMfaForSignIn(tenant, ctx, interaction);
 };
 
 /**
