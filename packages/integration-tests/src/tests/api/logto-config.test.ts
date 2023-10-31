@@ -15,6 +15,7 @@ import { expectRejects } from '#src/helpers/index.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
+  organizationCreated: false,
 };
 
 describe('admin console sign-in experience', () => {

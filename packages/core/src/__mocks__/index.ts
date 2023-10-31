@@ -98,6 +98,7 @@ export const mockAdminUserRole3: Role = {
 
 export const mockAdminConsoleData: AdminConsoleData = {
   signInExperienceCustomized: false,
+  organizationCreated: false,
 };
 
 export const mockPrivateKeys: OidcConfigKey[] = [

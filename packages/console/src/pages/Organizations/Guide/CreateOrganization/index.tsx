@@ -13,6 +13,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import useConfigs from '@/hooks/use-configs';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { trySubmitSafe } from '@/utils/form';
@@ -30,6 +31,7 @@ function CreateOrganization() {
   const Icon = theme === Theme.Light ? OrganizationFeature : OrganizationFeatureDark;
   const { navigate } = useTenantPathname();
   const api = useApi();
+  const { updateConfigs } = useConfigs();
 
   const {
     register,
@@ -43,6 +45,7 @@ function CreateOrganization() {
   const onSubmit = handleSubmit(
     trySubmitSafe(async (json) => {
       await api.post(`api/organizations`, { json });
+      void updateConfigs({ organizationCreated: true });
       navigate(`/organizations`);
     })
   );
