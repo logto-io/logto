@@ -97,3 +97,12 @@ export const backupCodeErrorDataGuard = s.object({
 export const backupCodeBindingStateGuard = backupCodeErrorDataGuard;
 
 export type BackupCodeBindingState = s.Infer<typeof backupCodeBindingStateGuard>;
+
+export const webAuthnStateGuard = s.assign(
+  s.object({
+    options: s.record(s.string(), s.unknown()),
+  }),
+  mfaFlowStateGuard
+);
+
+export type WebAuthnState = s.Infer<typeof webAuthnStateGuard>;

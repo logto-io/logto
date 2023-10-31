@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
+import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 
@@ -16,19 +17,23 @@ type Props = {
 
 const MfaFactorList = ({ flow, flowState }: Props) => {
   const startTotpBinding = useStartTotpBinding();
+  const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const navigate = useNavigate();
   const { availableFactors } = flowState;
 
   const handleSelectFactor = useCallback(
-    (factor: MfaFactor) => {
+    async (factor: MfaFactor) => {
       if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
-        void startTotpBinding(flowState);
-        return;
+        return startTotpBinding(flowState);
+      }
+
+      if (factor === MfaFactor.WebAuthn) {
+        return startWebAuthnProcessing(flow, flowState);
       }
 
       navigate(`/${flow}/${factor}`, { state: flowState });
     },
-    [flow, flowState, navigate, startTotpBinding]
+    [flow, flowState, navigate, startTotpBinding, startWebAuthnProcessing]
   );
 
   return (
@@ -38,8 +43,8 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
           key={factor}
           factor={factor}
           isBinding={flow === UserMfaFlow.MfaBinding}
-          onClick={() => {
-            handleSelectFactor(factor);
+          onClick={async () => {
+            await handleSelectFactor(factor);
           }}
         />
       ))}
