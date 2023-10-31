@@ -30,6 +30,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
+import * as organizationToken from './grants/organization-token.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
@@ -335,6 +336,10 @@ export default function initOidc(
       throw error;
     }
   });
+  // Register custom grant types
+  oidc.registerGrantType(organizationToken.name, organizationToken.handler, [
+    ...organizationToken.parameters,
+  ]);
   /**
    * `oidc-provider` [strictly checks](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/shared/selective_body.js#L11)
    * the `content-type` header for further processing.

@@ -143,6 +143,14 @@
         "rules": {
           "import/no-unused-modules": "off"
         }
+      },
+      {
+        "files": [
+          "src/include.d/oidc-provider/**/*"
+        ],
+        "rules": {
+          "unicorn/filename-case": "off"
+        }
       }
     ]
   },

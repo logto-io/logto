@@ -1,0 +1,2 @@
+# OIDC uses `lib` as the source directory, we need to keep it for custom type definitions
+!src/include.d/oidc-provider/lib
