@@ -95,5 +95,39 @@ describe('.well-known api', () => {
 
       await deleteSsoConnectorById(id);
     });
+
+    it('should filter out the sso connectors with invalid config', async () => {
+      const { id } = await createSsoConnector({
+        ...newOIDCSsoConnector,
+        config: {},
+      });
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      const { ssoConnectors } = signInExperience;
+
+      expect(ssoConnectors.find((connector) => connector.id === id)).toBeUndefined();
+
+      await deleteSsoConnectorById(id);
+    });
+
+    it('should filter out the sso connectors with empty domains', async () => {
+      const { id } = await createSsoConnector({
+        ...newOIDCSsoConnector,
+        domains: [],
+      });
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      const { ssoConnectors } = signInExperience;
+
+      expect(ssoConnectors.find((connector) => connector.id === id)).toBeUndefined();
+
+      await deleteSsoConnectorById(id);
+    });
   });
 });

@@ -100,4 +100,35 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       return next();
     }
   );
+
+  // Get the available Sso connectors for the user to choose from
+  router.get(
+    `${interactionPrefix}/${ssoPath}/connectors`,
+    koaGuard({
+      query: z.object({
+        email: z.string().email(),
+      }),
+      status: [200, 400],
+      response: z.array(
+        z.object({
+          id: z.string(),
+          ssoOnly: z.boolean(),
+        })
+      ),
+    }),
+    async (ctx, next) => {
+      const { email } = ctx.guard.query;
+      const connectors = await ssoConnector.getAvailableSsoConnectors();
+
+      const domain = email.split('@')[1];
+
+      assertThat(domain, new RequestError({ code: 'guard.invalid_input', status: 400, email }));
+
+      const availableConnectors = connectors.filter(({ domains }) => domains.includes(domain));
+
+      ctx.body = availableConnectors.map(({ id, ssoOnly }) => ({ id, ssoOnly }));
+
+      return next();
+    }
+  );
 }

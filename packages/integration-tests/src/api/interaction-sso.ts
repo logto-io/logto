@@ -19,3 +19,19 @@ export const getSsoAuthorizationUrl = async (
     })
     .json<{ redirectTo: string }>();
 };
+
+export const getSsoConnectorsByEmail = async (
+  cookie: string,
+  data: {
+    email: string;
+  }
+) => {
+  return api
+    .get(`interaction/${ssoPath}/connectors`, {
+      headers: { cookie },
+      searchParams: {
+        email: data.email,
+      },
+    })
+    .json<Array<{ id: string; ssoOnly: boolean }>>();
+};
