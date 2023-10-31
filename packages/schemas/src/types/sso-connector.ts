@@ -6,7 +6,6 @@ import { z } from 'zod';
 export const ssoConnectorMetadataGuard = z.object({
   id: z.string(),
   connectorName: z.string(),
-  domains: z.array(z.string()),
   logo: z.string(),
   darkLogo: z.string().optional(),
 });

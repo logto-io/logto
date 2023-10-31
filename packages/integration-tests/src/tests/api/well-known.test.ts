@@ -73,7 +73,7 @@ describe('.well-known api', () => {
     };
 
     it('should get the sso connectors in sign-in experience', async () => {
-      const { id, connectorName, domains } = await createSsoConnector(newOIDCSsoConnector);
+      const { id, connectorName } = await createSsoConnector(newOIDCSsoConnector);
 
       const signInExperience = await api
         .get('.well-known/sign-in-exp')
@@ -88,7 +88,6 @@ describe('.well-known api', () => {
       expect(newCreatedConnector).toMatchObject({
         id,
         connectorName,
-        domains,
         logo: newOIDCSsoConnector.branding.logo,
         darkLogo: newOIDCSsoConnector.branding.darkLogo,
       });
