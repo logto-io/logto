@@ -183,7 +183,7 @@ describe('submit action', () => {
       {
         id: 'uid',
         ...upsertProfile,
-        customData: {
+        logtoConfig: {
           [userMfaDataKey]: {
             skipped: true,
           },
@@ -348,7 +348,7 @@ describe('submit action', () => {
         google: { userId: 'googleId', details: {} },
       },
       lastSignInAt: now,
-      customData: {
+      logtoConfig: {
         [userMfaDataKey]: {
           skipped: true,
         },

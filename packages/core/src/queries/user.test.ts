@@ -39,6 +39,7 @@ describe('user query', () => {
     ...mockUser,
     identities: JSON.stringify(mockUser.identities),
     customData: JSON.stringify(mockUser.customData),
+    logtoConfig: JSON.stringify(mockUser.logtoConfig),
     mfaVerifications: JSON.stringify(mockUser.mfaVerifications),
   };
 
@@ -272,6 +273,7 @@ describe('user query', () => {
       ...mockUser,
       identities: JSON.stringify(restIdentities),
       customData: JSON.stringify(mockUser.customData),
+      logtoConfig: JSON.stringify(mockUser.logtoConfig),
       mfaVerifications: JSON.stringify(mockUser.mfaVerifications),
     };
 

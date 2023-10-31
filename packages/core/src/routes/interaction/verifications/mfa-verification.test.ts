@@ -200,7 +200,7 @@ describe('validateMandatoryBindMfa', () => {
     it('user mfaVerifications and bindMfa missing, mark skipped, and not required should pass', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
-        customData: {
+        logtoConfig: {
           mfa: { skipped: true },
         },
       });
