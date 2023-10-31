@@ -26,7 +26,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     libraries: { ssoConnector },
   } = tenant;
 
-  // Create Sso authorization url for user interaction
+  // Create SSO authorization url for user interaction
   router.post(
     `${interactionPrefix}/${ssoPath}/:connectorId/authentication`,
     koaGuard({
@@ -101,7 +101,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     }
   );
 
-  // Get the available Sso connectors for the user to choose from
+  // Get the available SSO connectors for the user to choose from by a given email
   router.get(
     `${interactionPrefix}/${ssoPath}/connectors`,
     koaGuard({
