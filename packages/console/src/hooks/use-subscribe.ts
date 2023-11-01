@@ -6,13 +6,10 @@ import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
-import {
-  ReservedPlanId,
-  checkoutStateQueryKey,
-  checkoutSuccessCallbackPath,
-} from '@/consts/subscriptions';
-import { TenantsContext } from '@/contexts/TenantsProvider';
+import { ReservedPlanId, checkoutStateQueryKey } from '@/consts/subscriptions';
+import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
+import { dropLeadingSlash } from '@/utils/url';
 
 import useTenantPathname from './use-tenant-pathname';
 
@@ -44,7 +41,7 @@ const useSubscribe = () => {
     });
 
     const successCallbackUrl = getUrl(
-      `${checkoutSuccessCallbackPath}?${successSearchParam.toString()}`
+      `${dropLeadingSlash(GlobalRoute.CheckoutSuccessCallback)}?${successSearchParam.toString()}`
     ).href;
 
     const { redirectUri, sessionId } = await cloudApi.post('/api/checkout-session', {

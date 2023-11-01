@@ -25,7 +25,17 @@ export enum GlobalAnonymousRoute {
   SocialDemoCallback = '/social-demo-callback',
 }
 
-const anonymousRoutes: Readonly<string[]> = Object.freeze(Object.values(GlobalAnonymousRoute));
+/**
+ * The reserved routes that need tenant access.
+ */
+export enum GlobalRoute {
+  CheckoutSuccessCallback = '/checkout-success-callback',
+}
+
+const reservedRoutes: Readonly<string[]> = Object.freeze([
+  ...Object.values(GlobalAnonymousRoute),
+  ...Object.values(GlobalRoute),
+]);
 
 /**
  * The current tenant status of access validation. When it's `validated`, it indicates that a
@@ -128,7 +138,7 @@ function TenantsProvider({ children }: Props) {
       return defaultTenantId;
     }
 
-    if (!match || anonymousRoutes.includes(match.pathname)) {
+    if (!match || reservedRoutes.includes(match.pathname)) {
       return '';
     }
 

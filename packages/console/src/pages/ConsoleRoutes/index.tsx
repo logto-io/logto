@@ -5,16 +5,17 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { isCloud } from '@/consts/env';
-import { checkoutSuccessCallbackPath } from '@/consts/subscriptions';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import TenantAccess from '@/containers/TenantAccess';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Toast from '@/ds-components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import Callback from '@/pages/Callback';
 import Welcome from '@/pages/Welcome';
+import { dropLeadingSlash } from '@/utils/url';
 
 import CheckoutSuccessCallback from '../CheckoutSuccessCallback';
 import HandleSocialCallback from '../Profile/containers/HandleSocialCallback';
@@ -49,7 +50,10 @@ export function ConsoleRoutes() {
           <Route path="handle-social" element={<HandleSocialCallback />} />
           <Route element={<TenantAccess />}>
             {isCloud && (
-              <Route path={checkoutSuccessCallbackPath} element={<CheckoutSuccessCallback />} />
+              <Route
+                path={dropLeadingSlash(GlobalRoute.CheckoutSuccessCallback)}
+                element={<CheckoutSuccessCallback />}
+              />
             )}
             <Route element={<AppContent />}>
               <Route index element={<RedirectToFirstItem />} />

@@ -10,3 +10,5 @@ export const isInCallback = () =>
   ['/callback', '-callback'].some((path) => window.location.pathname.endsWith(path));
 
 export const isAbsoluteUrl = (url?: string) => Boolean(trySafe(() => url && new URL(url)));
+
+export const dropLeadingSlash = (path: string) => path.replace(/^\/+/, '');
