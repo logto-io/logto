@@ -15,6 +15,7 @@ import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
 import useStartTotpBinding from './use-start-totp-binding';
+import useStartWebAuthnProcessing from './use-start-webauthn-processing';
 import useToast from './use-toast';
 
 export type Options = {
@@ -26,6 +27,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const startTotpBinding = useStartTotpBinding({ replace });
+  const startWebAuthnProcessing = useStartWebAuthnProcessing({ replace });
 
   /**
    * Redirect the user to the corresponding MFA page.
@@ -45,7 +47,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
    *    - Verification: redirect to the last used specific factor page.
    */
   const handleMfaRedirect = useCallback(
-    (flow: UserMfaFlow, state: MfaFlowState) => {
+    async (flow: UserMfaFlow, state: MfaFlowState) => {
       const { availableFactors } = state;
 
       if (availableFactors.length > 1 && flow === UserMfaFlow.MfaBinding) {
@@ -74,8 +76,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         /**
          * Start TOTP binding process if only TOTP is available.
          */
-        void startTotpBinding(state);
-        return;
+        return startTotpBinding(state);
+      }
+
+      if (factor === MfaFactor.WebAuthn) {
+        /**
+         * Start WebAuthn processing if only TOTP is available.
+         */
+        return startWebAuthnProcessing(flow, state);
       }
 
       /**
@@ -83,12 +91,12 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
        */
       navigate({ pathname: `/${flow}/${factor}` }, { replace, state });
     },
-    [navigate, replace, setToast, startTotpBinding, t]
+    [navigate, replace, setToast, startTotpBinding, startWebAuthnProcessing, t]
   );
 
   const handleMfaError = useCallback(
     (flow: UserMfaFlow) => {
-      return (error: RequestErrorBody) => {
+      return async (error: RequestErrorBody) => {
         const [_, data] = validate(error.data, mfaErrorDataGuard);
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
@@ -104,7 +112,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
             ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
             : factors;
 
-        handleMfaRedirect(flow, { availableFactors, skippable });
+        await handleMfaRedirect(flow, { availableFactors, skippable });
       };
     },
     [handleMfaRedirect, setToast]

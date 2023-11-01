@@ -1,4 +1,11 @@
-import type { SignInExperience, ConnectorMetadata, SignInIdentifier, Theme } from '@logto/schemas';
+import type {
+  SignInExperience,
+  ConnectorMetadata,
+  SignInIdentifier,
+  Theme,
+  WebAuthnRegistrationOptions,
+  WebAuthnAuthenticationOptions,
+} from '@logto/schemas';
 
 export enum UserFlow {
   SignIn = 'sign-in',
@@ -45,3 +52,5 @@ export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType exten
 >
   ? ElementType
   : never;
+
+export type WebAuthnOptions = WebAuthnRegistrationOptions | WebAuthnAuthenticationOptions;
