@@ -71,6 +71,8 @@ const general = {
   edit_field: 'Edit {{field}}',
   /** UNTRANSLATED */
   delete_field: 'Delete {{field}}',
+  coming_soon: '近日公開予定',
+  beta: 'ベータ版',
 };
 
 export default Object.freeze(general);
