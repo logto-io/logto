@@ -9,15 +9,29 @@ const tenants = {
   },
   settings: {
     title: '설정',
+    description: '테넌트 이름을 설정하고 호스팅된 지역 및 환경 태그를 확인하세요.',
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
+    /** UNTRANSLATED */
+    tenant_region: 'Data hosted region',
+    /** UNTRANSLATED */
+    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag: '환경 태그',
     environment_tag_description:
       '태그는 서비스를 변경하지 않습니다. 단지 다양한 환경을 구별하는 데 도움을 줍니다.',
     environment_tag_development: '개발',
     environment_tag_staging: '스테이징',
     environment_tag_production: '프로드',
+    /** UNTRANSLATED */
+    development_description:
+      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
     tenant_info_saved: '세입자 정보가 성공적으로 저장되었습니다.',
+  },
+  full_env_tag: {
+    /** UNTRANSLATED */
+    development: 'Development',
+    /** UNTRANSLATED */
+    production: 'Production',
   },
   deletion_card: {
     title: '삭제',
@@ -29,8 +43,50 @@ const tenants = {
   create_modal: {
     title: '테넌트 만들기',
     subtitle: '자원 및 사용자를 분리하기 위한 새 테넌트를 만드세요.',
+    /** UNTRANSLATED */
+    subtitle_with_region:
+      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
+    /** UNTRANSLATED */
+    tenant_usage_purpose: 'What do you want to use this tenant for?',
+    /** UNTRANSLATED */
+    development_description:
+      'Development environment is mainly used for testing and should not use in production environment.',
+    /** UNTRANSLATED */
+    development_hint:
+      'Development environment is mainly used for testing and should not use in production environment.',
+    /** UNTRANSLATED */
+    production_description:
+      'Production is where live software is used by end-users and may require a paid subscription.',
+    /** UNTRANSLATED */
+    available_plan: 'Available plan:',
     create_button: '테넌트 만들기',
     tenant_name_placeholder: '내 테넌트',
+  },
+  notification: {
+    /** UNTRANSLATED */
+    allow_pro_features_title:
+      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
+    /** UNTRANSLATED */
+    allow_pro_features_description: "It's completely free, with no trial period – forever!",
+    /** UNTRANSLATED */
+    explore_all_features: 'Explore all features',
+    /** UNTRANSLATED */
+    impact_title: 'Does this have any impact on me?',
+    /** UNTRANSLATED */
+    staging_env_hint:
+      'Your tenant label has been updated from "Staging" to "Production," but this change will not impact your current setup.',
+    /** UNTRANSLATED */
+    paid_tenant_hint_1:
+      'As you subscribe to the Logto Hobby plan, your previous "dev" tenant tag will switch to "prod", and this won\'t affect your existing setup.',
+    /** UNTRANSLATED */
+    paid_tenant_hint_2:
+      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
+    /** UNTRANSLATED */
+    paid_tenant_hint_3:
+      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
+    /** UNTRANSLATED */
+    paid_tenant_hint_4:
+      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
   },
   delete_modal: {
     title: '테넌트 삭제',
