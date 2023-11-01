@@ -12,6 +12,7 @@ import type {
   VerifiedSignInInteractionResult,
   VerifiedForgotPasswordInteractionResult,
 } from '../types/index.js';
+import { userMfaDataKey } from '../verifications/mfa-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -169,6 +170,29 @@ describe('submit action', () => {
     });
   });
 
+  it('register with mfaSkipped', async () => {
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+      mfaSkipped: true,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        ...upsertProfile,
+        customData: {
+          [userMfaDataKey]: {
+            skipped: true,
+          },
+        },
+      },
+      ['user']
+    );
+  });
+
   it('register new social user', async () => {
     const interaction: VerifiedRegisterInteractionResult = {
       event: InteractionEvent.Register,
@@ -298,6 +322,37 @@ describe('submit action', () => {
     });
     expect(assignInteractionResults).toBeCalledWith(ctx, tenant.provider, {
       login: { accountId: 'foo' },
+    });
+  });
+
+  it('sign-in with mfaSkipped', async () => {
+    getLogtoConnectorById.mockResolvedValueOnce({
+      metadata: { target: 'logto' },
+      dbEntry: { syncProfile: false },
+    });
+    const interaction: VerifiedSignInInteractionResult = {
+      event: InteractionEvent.SignIn,
+      accountId: 'foo',
+      profile: { connectorId: 'logto', password: 'password' },
+      identifiers,
+      mfaSkipped: true,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(updateUserById).toBeCalledWith('foo', {
+      passwordEncrypted: 'passwordEncrypted',
+      passwordEncryptionMethod: 'plain',
+      identities: {
+        logto: { userId: userInfo.id, details: userInfo },
+        google: { userId: 'googleId', details: {} },
+      },
+      lastSignInAt: now,
+      customData: {
+        [userMfaDataKey]: {
+          skipped: true,
+        },
+      },
     });
   });
 

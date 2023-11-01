@@ -55,13 +55,9 @@ const { bindMfaPayloadVerification, verifyMfaPayloadVerification } = await mockE
   })
 );
 
-const { verifyIdentifier, markMfaSkipped } = await mockEsmWithActual(
-  './verifications/index.js',
-  () => ({
-    verifyIdentifier: jest.fn(),
-    markMfaSkipped: jest.fn(),
-  })
-);
+const { verifyIdentifier } = await mockEsmWithActual('./verifications/index.js', () => ({
+  verifyIdentifier: jest.fn(),
+}));
 
 const baseProviderMock = {
   params: {},
@@ -260,7 +256,7 @@ describe('interaction routes (MFA verification)', () => {
       expect(response.status).toEqual(422);
     });
 
-    it('should update interaction for register', async () => {
+    it('should update interaction', async () => {
       getInteractionStorage.mockReturnValue({
         event: InteractionEvent.Register,
       });
@@ -278,20 +274,6 @@ describe('interaction routes (MFA verification)', () => {
         expect.anything(),
         expect.anything()
       );
-    });
-
-    it('should update user info to mark as skipped for sign in', async () => {
-      getInteractionStorage.mockReturnValue({
-        event: InteractionEvent.SignIn,
-        accountId: 'id',
-      });
-
-      const response = await sessionRequest.put(path).send({
-        mfaSkipped: true,
-      });
-
-      expect(response.status).toEqual(204);
-      expect(markMfaSkipped).toBeCalledWith(tenantContext, 'id');
     });
   });
 });

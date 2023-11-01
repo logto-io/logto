@@ -135,79 +135,6 @@ const isMfaSkipped = (customData: JsonObject): boolean => {
 
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
 };
-/**
- * Mark MFA as skipped in user custom data
- */
-export const markMfaSkipped = async (tenant: TenantContext, accountId: string) => {
-  const { customData } = await tenant.queries.users.findUserById(accountId);
-  await tenant.queries.users.updateUserById(accountId, {
-    customData: {
-      ...customData,
-      [userMfaDataKey]: {
-        skipped: true,
-      },
-    },
-  });
-};
-
-const validateMandatoryBindMfaForSignIn = async (
-  tenant: TenantContext,
-  ctx: WithInteractionSieContext & WithInteractionDetailsContext,
-  interaction: VerifiedSignInInteractionResult
-): Promise<VerifiedInteractionResult> => {
-  const {
-    mfa: { policy, factors },
-  } = ctx.signInExperience;
-  const { bindMfas } = interaction;
-  const availableFactors = factors.filter((factor) => factor !== MfaFactor.BackupCode);
-
-  // No available MFA, skip check
-  if (availableFactors.length === 0) {
-    return interaction;
-  }
-
-  // If the user has linked new MFA in current interaction
-  const hasFactorInBindMfas = Boolean(
-    bindMfas &&
-      availableFactors.some((factor) => bindMfas.some((bindMfa) => bindMfa.type === factor))
-  );
-
-  const { accountId } = interaction;
-  const { mfaVerifications, customData } = await tenant.queries.users.findUserById(accountId);
-
-  // If the user has linked currently available MFA before
-  const hasFactorInUser = availableFactors.some((factor) =>
-    mfaVerifications.some(({ type }) => type === factor)
-  );
-
-  // MFA is bound in current interaction or MFA is bound before, skip check
-  if (hasFactorInBindMfas || hasFactorInUser) {
-    return interaction;
-  }
-
-  // Mandatory, can not skip, throw error
-  if (policy === MfaPolicy.Mandatory) {
-    throw new RequestError(
-      {
-        code: 'user.missing_mfa',
-        status: 422,
-      },
-      { availableFactors }
-    );
-  }
-
-  if (isMfaSkipped(customData)) {
-    return interaction;
-  }
-
-  throw new RequestError(
-    {
-      code: 'user.missing_mfa',
-      status: 422,
-    },
-    { availableFactors, skippable: true }
-  );
-};
 
 export const validateMandatoryBindMfa = async (
   tenant: TenantContext,
@@ -225,41 +152,46 @@ export const validateMandatoryBindMfa = async (
     return interaction;
   }
 
+  const { mfaSkipped } = interaction;
+  if (policy === MfaPolicy.UserControlled && mfaSkipped) {
+    return interaction;
+  }
+
   const hasFactorInBind = Boolean(
     bindMfas &&
       availableFactors.some((factor) => bindMfas.some((bindMfa) => bindMfa.type === factor))
   );
 
-  if (event === InteractionEvent.Register) {
-    if (hasFactorInBind) {
-      return interaction;
-    }
-
-    if (policy === MfaPolicy.Mandatory) {
-      throw new RequestError(
-        {
-          code: 'user.missing_mfa',
-          status: 422,
-        },
-        { availableFactors }
-      );
-    }
-
-    const { mfaSkipped } = interaction;
-    if (mfaSkipped) {
-      return interaction;
-    }
-
-    throw new RequestError(
-      {
-        code: 'user.missing_mfa',
-        status: 422,
-      },
-      { availableFactors, skippable: true }
-    );
+  if (hasFactorInBind) {
+    return interaction;
   }
 
-  return validateMandatoryBindMfaForSignIn(tenant, ctx, interaction);
+  if (event === InteractionEvent.SignIn) {
+    const { accountId } = interaction;
+    const { mfaVerifications, customData } = await tenant.queries.users.findUserById(accountId);
+
+    if (isMfaSkipped(customData)) {
+      return interaction;
+    }
+
+    // If the user has linked currently available MFA before
+    const hasFactorInUser = availableFactors.some((factor) =>
+      mfaVerifications.some(({ type }) => type === factor)
+    );
+
+    // MFA is bound in current interaction or MFA is bound before, skip check
+    if (hasFactorInUser) {
+      return interaction;
+    }
+  }
+
+  throw new RequestError(
+    {
+      code: 'user.missing_mfa',
+      status: 422,
+    },
+    policy === MfaPolicy.Mandatory ? { availableFactors } : { availableFactors, skippable: true }
+  );
 };
 
 /**

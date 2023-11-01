@@ -254,5 +254,8 @@ export const verifyMfa = async (payload: VerifyMfaPayload) => {
   return api.post(`${interactionPrefix}/submit`).json<Response>();
 };
 
-export const submitInteraction = async () =>
-  api.post(`${interactionPrefix}/submit`).json<Response>();
+export const skipMfa = async () => {
+  await api.put(`${interactionPrefix}/mfa-skipped`, { json: { mfaSkipped: true } });
+
+  return api.post(`${interactionPrefix}/submit`).json<Response>();
+};

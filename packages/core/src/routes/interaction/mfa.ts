@@ -20,7 +20,7 @@ import type { WithInteractionDetailsContext } from './middleware/koa-interaction
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
 import { verifyMfaSettings } from './utils/sign-in-experience-validation.js';
-import { markMfaSkipped, verifyIdentifier } from './verifications/index.js';
+import { verifyIdentifier } from './verifications/index.js';
 import {
   bindMfaPayloadVerification,
   verifyMfaPayloadVerification,
@@ -164,9 +164,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         signInExperience: {
           mfa: { policy },
         },
-        interactionDetails,
       } = ctx;
-      const interaction = getInteractionStorage(interactionDetails.result);
 
       assertThat(
         policy === MfaPolicy.UserControlled,
@@ -176,15 +174,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         })
       );
 
-      if (interaction.event === InteractionEvent.SignIn) {
-        const { accountId } = interaction;
-        // Update user custom data to skip MFA binding
-        if (accountId) {
-          await markMfaSkipped(tenant, accountId);
-        }
-      } else if (interaction.event === InteractionEvent.Register) {
-        await storeInteractionResult({ mfaSkipped: true }, ctx, provider, true);
-      }
+      await storeInteractionResult({ mfaSkipped: true }, ctx, provider, true);
 
       ctx.status = 204;
 
