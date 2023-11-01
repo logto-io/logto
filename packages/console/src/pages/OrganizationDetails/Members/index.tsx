@@ -8,6 +8,7 @@ import ActionsButton from '@/components/ActionsButton';
 import DateTime from '@/components/DateTime';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import UserPreview from '@/components/ItemPreview/UserPreview';
+import { RoleOption } from '@/components/OrganizationRolesSelect';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -83,7 +84,7 @@ function Members({ organization }: Props) {
                 <div className={styles.roles}>
                   {organizationRoles.map(({ id, name }) => (
                     <Tag key={id} variant="cell">
-                      {name}
+                      <RoleOption value={id} title={name} />
                     </Tag>
                   ))}
                 </div>

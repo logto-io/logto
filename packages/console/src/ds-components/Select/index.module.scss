@@ -47,6 +47,10 @@
       background: transparent;
       flex-grow: 1;
       padding: _.unit(0.5);
+
+      &::placeholder {
+        color: var(--color-placeholder);
+      }
     }
   }
 

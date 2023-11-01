@@ -58,21 +58,10 @@
   &.small {
     height: 30px;
     padding: 0 _.unit(3);
+    gap: _.unit(1);
 
     &.text {
       height: 24px;
-    }
-
-    .icon {
-      &:not(:last-child) {
-        margin-right: _.unit(1);
-      }
-    }
-
-    .trailingIcon {
-      &:not(:first-child) {
-        margin-left: _.unit(1);
-      }
     }
   }
 

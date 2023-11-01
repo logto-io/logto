@@ -1,15 +1,17 @@
 import { type OrganizationScope } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import ActionsButton from '@/components/ActionsButton';
 import FormField from '@/ds-components/FormField';
+import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
 import PermissionModal from '../PermissionModal';
+import { swrKey } from '../RolesField';
 import TemplateTable, { pageSize } from '../TemplateTable';
 
 /**
@@ -21,19 +23,24 @@ function PermissionsField() {
   const {
     data: response,
     error,
-    mutate,
+    mutate: mutatePermissions,
   } = useSWR<[OrganizationScope[], number], RequestError>(
     buildUrl('api/organization-scopes', {
       page: String(page),
       page_size: String(pageSize),
     })
   );
-
+  const { mutate: globalMutate } = useSWRConfig();
   const [data, totalCount] = response ?? [[], 0];
   const api = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [editData, setEditData] = useState<Nullable<OrganizationScope>>(null);
+  const mutate = useCallback(() => {
+    void mutatePermissions();
+    // Mutate roles field to update the permissions list
+    void globalMutate((key) => typeof key === 'string' && key.startsWith(swrKey));
+  }, [mutatePermissions, globalMutate]);
 
   const isLoading = !response && !error;
 
@@ -44,7 +51,7 @@ function PermissionsField() {
         editData={editData}
         onClose={() => {
           setIsModalOpen(false);
-          void mutate();
+          mutate();
         }}
       />
       <TemplateTable
@@ -58,7 +65,7 @@ function PermissionsField() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name }) => <div>{name}</div>,
+            render: ({ name }) => <Tag variant="cell">{name}</Tag>,
           },
           {
             title: t('general.description'),
@@ -79,7 +86,7 @@ function PermissionsField() {
                 }}
                 onDelete={async () => {
                   await api.delete(`api/organization-scopes/${data.id}`);
-                  void mutate();
+                  mutate();
                 }}
               />
             ),
