@@ -66,6 +66,12 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     async (ctx, next) => {
       // Check interaction exists
       const { event } = getInteractionStorage(ctx.interactionDetails.result);
+
+      assertThat(
+        event !== InteractionEvent.ForgotPassword,
+        'session.not_supported_for_forgot_password'
+      );
+
       const log = ctx.createLog(`Interaction.${event}.Identifier.Social.Create`);
 
       const { body: payload } = ctx.guard;

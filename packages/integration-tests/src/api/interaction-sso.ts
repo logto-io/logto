@@ -12,7 +12,7 @@ export const getSsoAuthorizationUrl = async (
 ) => {
   const { connectorId, ...payload } = data;
   return api
-    .post(`interaction/${ssoPath}/${connectorId}/authentication`, {
+    .post(`interaction/${ssoPath}/${connectorId}/authorization-url`, {
       headers: { cookie },
       json: payload,
       followRedirect: false,

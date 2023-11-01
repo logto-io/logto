@@ -11,7 +11,6 @@ export enum Field {
   Identifier = 'Identifier',
   Profile = 'Profile',
   BindMfa = 'BindMfa',
-  SingleSignOn = 'SingleSignOn',
   Mfa = 'Mfa',
 }
 
@@ -20,6 +19,7 @@ export enum Method {
   Password = 'Password',
   VerificationCode = 'VerificationCode',
   Social = 'Social',
+  SingleSignOn = 'SingleSignOn',
 }
 
 export enum Action {
@@ -79,17 +79,18 @@ export type LogKey =
       | Action.Update // PATCH profile
       | Action.Create // PUT profile
       | Action.Delete}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Method.VerificationCode | Method.Social}.${
+  | `${Prefix}.${Exclude<
+      InteractionEvent,
+      InteractionEvent.ForgotPassword
+    >}.${Field.Identifier}.${Exclude<Method, Method.Password>}.${Action.Create | Action.Submit}`
+  | `${Prefix}.${Exclude<
+      InteractionEvent,
+      InteractionEvent.ForgotPassword
+    >}.${Field.Identifier}.${Method.Password}.${Action.Submit}`
+  | `${Prefix}.${InteractionEvent.ForgotPassword}.${Field.Identifier}.${Method.VerificationCode}.${
       | Action.Create
       | Action.Submit}`
-  | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Exclude<
-      Method,
-      Method.VerificationCode | Method.Social
-    >}.${Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit | Action.Create}`
   | `${Prefix}.${InteractionEvent.SignIn}.${Field.Mfa}.${MfaFactor}.${
       | Action.Submit
-      | Action.Create}`
-  | `${Prefix}.${InteractionEvent.SignIn | InteractionEvent.Register}.${Field.SingleSignOn}.${
-      | Action.Create
-      | Action.Submit}`;
+      | Action.Create}`;

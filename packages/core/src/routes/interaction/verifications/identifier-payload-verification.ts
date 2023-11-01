@@ -1,5 +1,5 @@
 import {
-  type InteractionEvent,
+  InteractionEvent,
   type IdentifierPayload,
   type SocialConnectorPayload,
   type VerifyVerificationCodePayload,
@@ -44,6 +44,11 @@ const verifyPasswordIdentifier = async (
   tenant: TenantContext
 ): Promise<AccountIdIdentifier> => {
   const { password, ...identity } = identifier;
+
+  assertThat(
+    event !== InteractionEvent.ForgotPassword,
+    'session.not_supported_for_forgot_password'
+  );
 
   const log = ctx.createLog(`Interaction.${event}.Identifier.Password.Submit`);
   log.append({ ...identity });

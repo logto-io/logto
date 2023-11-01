@@ -9,10 +9,6 @@ export const auditLogEventTitle: Record<string, Optional<string>> &
   'ExchangeTokenBy.Unknown': undefined,
   'Interaction.Create': 'Interaction started',
   'Interaction.End': 'Interaction ended',
-  'Interaction.ForgotPassword.Identifier.Password.Submit':
-    'Submit forgot-password identifier with password',
-  'Interaction.ForgotPassword.Identifier.Social.Create': undefined,
-  'Interaction.ForgotPassword.Identifier.Social.Submit': undefined,
   'Interaction.ForgotPassword.Identifier.VerificationCode.Create':
     'Create and send forgot-password verification code',
   'Interaction.ForgotPassword.Identifier.VerificationCode.Submit':
@@ -72,8 +68,12 @@ export const auditLogEventTitle: Record<string, Optional<string>> &
   'Interaction.SignIn.Mfa.BackupCode.Submit': undefined,
   'Interaction.SignIn.Mfa.WebAuthn.Create': undefined,
   'Interaction.SignIn.Mfa.WebAuthn.Submit': undefined,
-  'Interaction.SignIn.SingleSignOn.Create': 'Create single-sign-on authentication session',
-  'Interaction.SignIn.SingleSignOn.Submit': 'Submit single-sign-on authentication interaction',
+  'Interaction.SignIn.Identifier.SingleSignOn.Create':
+    'Create single-sign-on authentication session',
+  'Interaction.SignIn.Identifier.SingleSignOn.Submit':
+    'Submit single-sign-on authentication interaction',
+  'Interaction.Register.Identifier.SingleSignOn.Create': undefined,
+  'Interaction.Register.Identifier.SingleSignOn.Submit': undefined,
   RevokeToken: undefined,
   Unknown: undefined,
 });

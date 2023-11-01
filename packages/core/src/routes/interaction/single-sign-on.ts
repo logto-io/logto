@@ -28,7 +28,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
   // Create SSO authorization url for user interaction
   router.post(
-    `${interactionPrefix}/${ssoPath}/:connectorId/authentication`,
+    `${interactionPrefix}/${ssoPath}/:connectorId/authorization-url`,
     koaGuard({
       params: z.object({
         connectorId: z.string(),
@@ -53,7 +53,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         'session.not_supported_for_forgot_password'
       );
 
-      const log = createLog(`Interaction.${event}.SingleSignOn.Create`);
+      const log = createLog(`Interaction.${event}.Identifier.SingleSignOn.Create`);
 
       const {
         params: { connectorId },
