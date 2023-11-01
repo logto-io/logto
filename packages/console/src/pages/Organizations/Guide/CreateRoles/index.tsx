@@ -68,37 +68,34 @@ function CreateRoles() {
 
   const { fields, append, remove } = useFieldArray({ control, name: 'roles' });
 
-  const onSubmit = () => {
-    if (!isDirty) {
-      navigate(`../${steps.createOrganization}`);
-      return;
-    }
-
-    void handleSubmit(
-      trySubmitSafe(async ({ roles }) => {
-        if (data?.length) {
-          await Promise.all(
-            data.map(async ({ id }) => api.delete(`${organizationRolePath}/${id}`))
-          );
-        }
-        await Promise.all(
-          roles.map(async ({ name, description, scopes }) => {
-            const { id } = await api
-              .post(organizationRolePath, { json: { name, description } })
-              .json<OrganizationRole>();
-
-            if (scopes.length > 0) {
-              await api.put(`${organizationRolePath}/${id}/scopes`, {
-                json: { organizationScopeIds: scopes.map(({ value }) => value) },
-              });
-            }
-          })
-        );
-
+  const onSubmit = handleSubmit(
+    trySubmitSafe(async ({ roles }) => {
+      // If user has pre-saved data and no changes, skip submit and go directly to next step
+      if (data?.length && !isDirty) {
         navigate(`../${steps.createOrganization}`);
-      })
-    )();
-  };
+        return;
+      }
+
+      if (data?.length) {
+        await Promise.all(data.map(async ({ id }) => api.delete(`${organizationRolePath}/${id}`)));
+      }
+      await Promise.all(
+        roles.map(async ({ name, description, scopes }) => {
+          const { id } = await api
+            .post(organizationRolePath, { json: { name, description } })
+            .json<OrganizationRole>();
+
+          if (scopes.length > 0) {
+            await api.put(`${organizationRolePath}/${id}/scopes`, {
+              json: { organizationScopeIds: scopes.map(({ value }) => value) },
+            });
+          }
+        })
+      );
+
+      navigate(`../${steps.createOrganization}`);
+    })
+  );
 
   const onNavigateBack = () => {
     reset();
