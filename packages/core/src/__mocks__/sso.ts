@@ -14,3 +14,20 @@ export const mockSsoConnector = {
   ssoOnly: true,
   createdAt: Date.now(),
 } satisfies SsoConnector;
+
+export const wellConfiguredSsoConnector = {
+  id: 'mock-well-configured-sso-connector',
+  tenantId: 'mock-tenant',
+  providerName: SsoProviderName.OIDC,
+  connectorName: 'mock-connector-name',
+  config: {
+    clientId: 'foo',
+    clientSecret: 'bar',
+    issuer: 'https://foo.com',
+  },
+  domains: ['foo.com'],
+  branding: {},
+  syncProfile: true,
+  ssoOnly: true,
+  createdAt: Date.now(),
+} satisfies SsoConnector;

@@ -21,7 +21,7 @@ export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLi
 export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
-  { getSsoConnectors }: SsoConnectorLibrary
+  { getAvailableSsoConnectors }: SsoConnectorLibrary
 ) => {
   const {
     customPhrases: { findAllCustomLanguageTags },
@@ -63,32 +63,19 @@ export const createSignInExperienceLibrary = (
       return [];
     }
 
-    const ssoConnectors = await getSsoConnectors();
+    const ssoConnectors = await getAvailableSsoConnectors();
 
-    return ssoConnectors.reduce<SsoConnectorMetadata[]>(
-      (previous, connector): SsoConnectorMetadata[] => {
-        const { providerName, connectorName, config, id, branding, domains } = connector;
+    return ssoConnectors.map(
+      ({ providerName, connectorName, id, branding }): SsoConnectorMetadata => {
         const factory = ssoConnectorFactories[providerName];
 
-        // Filter out sso connectors that has invalid config
-        const result = factory.configGuard.safeParse(config);
-
-        if (!result.success) {
-          return previous;
-        }
-
-        // Format the connector metadata for the client
-        const connectorMetadata: SsoConnectorMetadata = {
+        return {
           id,
           connectorName,
-          domains,
           logo: branding.logo ?? factory.logo,
           darkLogo: branding.darkLogo,
         };
-
-        return [...previous, connectorMetadata];
-      },
-      []
+      }
     );
   };
 

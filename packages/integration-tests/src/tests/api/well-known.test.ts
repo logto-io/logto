@@ -61,6 +61,7 @@ describe('.well-known api', () => {
     const newOIDCSsoConnector = {
       providerName: 'OIDC',
       connectorName: 'OIDC sso connector',
+      domains: ['logto.io'],
       branding: {
         logo: 'https://logto.io/oidc-logo.png',
         darkLogo: 'https://logto.io/oidc-dark-logo.png',
@@ -73,7 +74,7 @@ describe('.well-known api', () => {
     };
 
     it('should get the sso connectors in sign-in experience', async () => {
-      const { id, connectorName, domains } = await createSsoConnector(newOIDCSsoConnector);
+      const { id, connectorName } = await createSsoConnector(newOIDCSsoConnector);
 
       const signInExperience = await api
         .get('.well-known/sign-in-exp')
@@ -88,10 +89,43 @@ describe('.well-known api', () => {
       expect(newCreatedConnector).toMatchObject({
         id,
         connectorName,
-        domains,
         logo: newOIDCSsoConnector.branding.logo,
         darkLogo: newOIDCSsoConnector.branding.darkLogo,
       });
+
+      await deleteSsoConnectorById(id);
+    });
+
+    it('should filter out the sso connectors with invalid config', async () => {
+      const { id } = await createSsoConnector({
+        ...newOIDCSsoConnector,
+        config: {},
+      });
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      const { ssoConnectors } = signInExperience;
+
+      expect(ssoConnectors.find((connector) => connector.id === id)).toBeUndefined();
+
+      await deleteSsoConnectorById(id);
+    });
+
+    it('should filter out the sso connectors with empty domains', async () => {
+      const { id } = await createSsoConnector({
+        ...newOIDCSsoConnector,
+        domains: [],
+      });
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      const { ssoConnectors } = signInExperience;
+
+      expect(ssoConnectors.find((connector) => connector.id === id)).toBeUndefined();
 
       await deleteSsoConnectorById(id);
     });

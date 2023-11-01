@@ -26,7 +26,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     libraries: { ssoConnector },
   } = tenant;
 
-  // Create Sso authorization url for user interaction
+  // Create SSO authorization url for user interaction
   router.post(
     `${interactionPrefix}/${ssoPath}/:connectorId/authentication`,
     koaGuard({
@@ -96,6 +96,37 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
         throw error;
       }
+
+      return next();
+    }
+  );
+
+  // Get the available SSO connectors for the user to choose from by a given email
+  router.get(
+    `${interactionPrefix}/${ssoPath}/connectors`,
+    koaGuard({
+      query: z.object({
+        email: z.string().email(),
+      }),
+      status: [200, 400],
+      response: z.array(
+        z.object({
+          id: z.string(),
+          ssoOnly: z.boolean(),
+        })
+      ),
+    }),
+    async (ctx, next) => {
+      const { email } = ctx.guard.query;
+      const connectors = await ssoConnector.getAvailableSsoConnectors();
+
+      const domain = email.split('@')[1];
+
+      assertThat(domain, new RequestError({ code: 'guard.invalid_input', status: 400, email }));
+
+      const availableConnectors = connectors.filter(({ domains }) => domains.includes(domain));
+
+      ctx.body = availableConnectors.map(({ id, ssoOnly }) => ({ id, ssoOnly }));
 
       return next();
     }

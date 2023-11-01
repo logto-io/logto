@@ -1,6 +1,7 @@
 import { assert } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
 import { type SupportedSsoConnector } from '#src/sso/types/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -16,6 +17,18 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     return entities.filter((connector): connector is SupportedSsoConnector =>
       isSupportedSsoConnector(connector)
     );
+  };
+
+  const getAvailableSsoConnectors = async () => {
+    const connectors = await getSsoConnectors();
+
+    return connectors.filter(({ providerName, config, domains }) => {
+      const factory = ssoConnectorFactories[providerName];
+      const hasValidConfig = factory.configGuard.safeParse(config).success;
+      const hasValidDomains = domains.length > 0;
+
+      return hasValidConfig && hasValidDomains;
+    });
   };
 
   const getSsoConnectorById = async (id: string) => {
@@ -35,6 +48,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
 
   return {
     getSsoConnectors,
+    getAvailableSsoConnectors,
     getSsoConnectorById,
   };
 };

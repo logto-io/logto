@@ -7,7 +7,7 @@ import {
   socialTarget02,
   mockSignInExperience,
   mockSocialConnectors,
-  mockSsoConnector,
+  wellConfiguredSsoConnector,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
@@ -37,6 +37,7 @@ const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExp
 const ssoConnectorLibrary = {
   getSsoConnectors: jest.fn(),
   getSsoConnectorById: jest.fn(),
+  getAvailableSsoConnectors: jest.fn(),
 };
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
@@ -129,38 +130,21 @@ describe('remove unavailable social connector targets', () => {
 });
 
 describe('get sso connectors', () => {
-  it('should filter out sso connectors that has invalid config', async () => {
-    ssoConnectorLibrary.getSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
+  it('should return sso connectors metadata', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
 
-    const { ssoConnectors } = await getFullSignInExperience();
-    expect(ssoConnectors).toEqual([]);
-  });
-
-  it('should return sso connectors with valid config', async () => {
-    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
-    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
-
-    const ssoConnector = {
-      ...mockSsoConnector,
-      config: {
-        clientId: 'mockClientId',
-        clientSecret: 'mockClientSecret',
-        issuer: 'mockIssuer',
-      },
-    };
-
-    ssoConnectorLibrary.getSsoConnectors.mockResolvedValueOnce([ssoConnector]);
+    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      wellConfiguredSsoConnector,
+    ]);
 
     const { ssoConnectors } = await getFullSignInExperience();
 
     expect(ssoConnectors).toEqual([
       {
-        id: ssoConnector.id,
-        connectorName: ssoConnector.connectorName,
-        domains: ssoConnector.domains,
-        logo: ssoConnectorFactories[ssoConnector.providerName].logo,
+        id: wellConfiguredSsoConnector.id,
+        connectorName: wellConfiguredSsoConnector.connectorName,
+        logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
         darkLogo: undefined,
       },
     ]);
