@@ -29,11 +29,10 @@ const alteration: AlterationScript = {
         identity_id varchar(128) not null,
         detail jsonb not null default '{}'::jsonb,
         created_at timestamp not null default(now()),
-        primary key (id)
+        primary key (id),
+        constraint user_sso_identities__issuer__identity_id
+          unique (tenant_id, issuer, identity_id)
       );
-
-      create index user_sso_identities__issuer__identity_id 
-        on user_sso_identities (tenant_id, issuer, identity_id);
 
       create trigger set_tenant_id before insert on user_sso_identities
         for each row execute procedure set_tenant_id();
