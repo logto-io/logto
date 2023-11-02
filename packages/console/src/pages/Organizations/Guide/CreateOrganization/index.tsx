@@ -19,7 +19,7 @@ import useTheme from '@/hooks/use-theme';
 import { trySubmitSafe } from '@/utils/form';
 
 import { steps } from '../const';
-import styles from '../index.module.scss';
+import * as styles from '../index.module.scss';
 
 type OrganizationForm = {
   name: string;

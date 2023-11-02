@@ -1,16 +1,13 @@
-import FormCard from '@/components/FormCard';
+import PermissionsCard from '../PermissionsCard';
+import RolesCard from '../RolesCard';
 
-import PermissionsField from '../PermissionsField';
-import RolesField from '../RolesField';
+import * as styles from './index.module.scss';
 
 export default function Settings() {
   return (
-    <FormCard
-      title="organizations.access_control"
-      description="organizations.access_control_description"
-    >
-      <PermissionsField />
-      <RolesField />
-    </FormCard>
+    <div className={styles.content}>
+      <PermissionsCard />
+      <RolesCard />
+    </div>
   );
 }

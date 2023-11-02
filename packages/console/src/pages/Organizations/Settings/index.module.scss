@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  padding: _.unit(4) 0;
+
+  > div + div {
+    margin-top: _.unit(4);
+  }
+}
