@@ -22,6 +22,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
   tenant: TenantContext
 ) {
   const {
+    id: tenantId,
     provider,
     libraries: { ssoConnector },
   } = tenant;
@@ -43,7 +44,8 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       }),
     }),
     async (ctx, next) => {
-      const { interactionDetails, guard, createLog } = ctx;
+      const { interactionDetails, guard, createLog, req, res } = ctx;
+      const { jti } = await provider.interactionDetails(req, res);
 
       // Check interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
@@ -75,12 +77,13 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       try {
         // Will throw ConnectorError if the config is invalid
         const connectorInstance = new ssoConnectorFactories[connectorData.providerName].constructor(
-          connectorData
+          connectorData,
+          tenantId
         );
 
         // Will throw ConnectorError if failed to fetch the provider's config
         const redirectTo = await connectorInstance.getAuthorizationUrl(
-          { state, redirectUri },
+          { state, redirectUri, jti },
           async (connectorSession: ConnectorSession) =>
             assignConnectorSessionResult(ctx, provider, connectorSession)
         );

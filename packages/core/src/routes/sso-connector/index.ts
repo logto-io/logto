@@ -5,19 +5,20 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
-import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
-import { tableToPathname } from '#src/utils/SchemaRouter.js';
-
-import { type AuthedRouter, type RouterInitArgs } from '../types.js';
-
 import {
   connectorFactoriesResponseGuard,
   type ConnectorFactoryDetail,
   ssoConnectorCreateGuard,
   ssoConnectorWithProviderConfigGuard,
   ssoConnectorPatchGuard,
-} from './type.js';
+} from '#src/routes/sso-connector/type.js';
+import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
+import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
+import { tableToPathname } from '#src/utils/SchemaRouter.js';
+import { consoleLog } from '#src/utils/console.js';
+
+import { type AuthedRouter, type RouterInitArgs } from '../types.js';
+
 import {
   parseFactoryDetail,
   parseConnectorConfig,
@@ -28,13 +29,15 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   const [
     router,
     {
-      libraries: { ssoConnector: ssoConnectorLibrary },
+      id: tenantId,
       queries: { ssoConnectors },
+      libraries: {
+        ssoConnector: { getSsoConnectorById, getSsoConnectors },
+      },
     },
   ] = args;
 
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
-  const { getSsoConnectorById, getSsoConnectors } = ssoConnectorLibrary;
 
   /*
     Get all supported single sign on connector factory details
@@ -121,10 +124,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     }),
     async (ctx, next) => {
       const connectors = await getSsoConnectors();
+      consoleLog.info('connectors:', connectors);
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
-        connectors.map(async (connector) => fetchConnectorProviderDetails(connector))
+        connectors.map(async (connector) => fetchConnectorProviderDetails(connector, tenantId))
       );
 
       ctx.body = connectorsWithProviderDetails;
@@ -147,7 +151,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const connector = await getSsoConnectorById(id);
 
       // Fetch provider details for the connector
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
 
       ctx.body = connectorWithProviderDetails;
 
@@ -208,7 +212,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         new RequestError({ code: 'connector.not_found', status: 404 })
       );
 
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
 
       ctx.body = connectorWithProviderDetails;
 
@@ -248,7 +252,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       );
 
       // Fetch provider details for the connector
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector);
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
 
       ctx.body = connectorWithProviderDetails;
 

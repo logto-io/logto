@@ -2,14 +2,35 @@ import { type I18nPhrases } from '@logto/connector-kit';
 import { type JsonObject } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { mockBaseSamlConfig, mockBaseOidcConfig } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
-import { type SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
+import { type SupportedSsoConnector } from '#src/sso/types/index.js';
+import { SsoProviderName } from '#src/sso/types/index.js';
+import { basicSamlConnectorConfigPartialGuard } from '#src/sso/types/saml.js';
 
 import { type SsoConnectorWithProviderConfig } from './type.js';
 
+const {
+  EnvSet: {
+    values: { isIntegrationTest },
+  },
+} = await import('#src/env-set/index.js');
+
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
+
+const getPartialConfigGuard = (providerName: SsoProviderName, allowPartial?: boolean) => {
+  if (!allowPartial) {
+    return ssoConnectorFactories[providerName].configGuard;
+  }
+
+  if (providerName === SsoProviderName.SAML) {
+    return basicSamlConnectorConfigPartialGuard;
+  }
+
+  return ssoConnectorFactories[providerName].configGuard.partial();
+};
 
 export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
@@ -35,11 +56,8 @@ export const parseConnectorConfig = (
   config: JsonObject,
   allowPartial?: boolean
 ) => {
-  const factory = ssoConnectorFactories[providerName];
-
-  const result = allowPartial
-    ? factory.configGuard.partial().safeParse(config)
-    : factory.configGuard.safeParse(config);
+  const configGuard = getPartialConfigGuard(providerName, allowPartial);
+  const result = configGuard.safeParse(config);
 
   if (!result.success) {
     throw new RequestError({
@@ -57,14 +75,19 @@ export const parseConnectorConfig = (
   Return undefined if failed to fetch or parse the config.
 */
 export const fetchConnectorProviderDetails = async (
-  connector: SupportedSsoConnector
+  connector: SupportedSsoConnector,
+  tenantId: string
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
   const { logo, constructor } = ssoConnectorFactories[providerName];
 
   const providerConfig = await trySafe(async () => {
-    const instance = new constructor(connector);
+    const instance = new constructor(connector, tenantId);
+    // To avoid `getConfig()` being called in integration tests and throwing time out error.
+    if (isIntegrationTest) {
+      return providerName === SsoProviderName.OIDC ? mockBaseOidcConfig : mockBaseSamlConfig;
+    }
     return instance.getConfig();
   });
 
