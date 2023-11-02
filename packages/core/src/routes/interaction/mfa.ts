@@ -58,11 +58,15 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         verifyMfaSettings(bindMfaPayload.type, signInExperience);
       }
 
-      const { bindMfas = [] } = interactionStorage;
+      const { bindMfas = [], accountId } = interactionStorage;
 
       if (bindMfaPayload.type === MfaFactor.BackupCode) {
+        const { mfaVerifications } = accountId
+          ? await queries.users.findUserById(accountId)
+          : { mfaVerifications: [] };
         assertThat(
-          bindMfas.some(({ type }) => type !== MfaFactor.BackupCode),
+          bindMfas.some(({ type }) => type !== MfaFactor.BackupCode) ||
+            mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode),
           'session.mfa.backup_code_can_not_be_alone'
         );
       } else {
