@@ -1,19 +1,19 @@
 import { useCallback } from 'react';
 
-import { submitInteraction } from '@/apis/interaction';
+import { skipMfa } from '@/apis/interaction';
 
 import useApi from './use-api';
 import useErrorHandler from './use-error-handler';
 import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const useSkipMfa = () => {
-  const asyncSubmitInteraction = useApi(submitInteraction);
+  const asyncSkipMfa = useApi(skipMfa);
 
   const handleError = useErrorHandler();
   const preSignInErrorHandler = usePreSignInErrorHandler({ replace: true });
 
   return useCallback(async () => {
-    const [error, result] = await asyncSubmitInteraction();
+    const [error, result] = await asyncSkipMfa();
     if (error) {
       await handleError(error, preSignInErrorHandler);
       return;
@@ -22,7 +22,7 @@ const useSkipMfa = () => {
     if (result) {
       window.location.replace(result.redirectTo);
     }
-  }, [asyncSubmitInteraction, handleError, preSignInErrorHandler]);
+  }, [asyncSkipMfa, handleError, preSignInErrorHandler]);
 };
 
 export default useSkipMfa;

@@ -90,6 +90,7 @@ export type VerifiedSignInInteractionResult = {
   profile?: Profile;
   bindMfas?: BindMfa[];
   verifiedMfa?: VerifyMfaResult;
+  mfaSkipped?: boolean;
 };
 
 export type VerifiedForgotPasswordInteractionResult = {

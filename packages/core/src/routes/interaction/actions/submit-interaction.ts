@@ -81,99 +81,133 @@ const getInitialUserRoles = (
     isCreatingFirstAdminUser && isCloud && getManagementApiAdminName(adminTenantId)
   );
 
+async function handleSubmitRegister(
+  interaction: VerifiedRegisterInteractionResult,
+  ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
+  tenantContext: TenantContext,
+  log?: LogEntry
+) {
+  const { provider, libraries, queries, cloudConnection, id: tenantId } = tenantContext;
+  const { hasActiveUsers } = queries.users;
+  const { updateDefaultSignInExperience } = queries.signInExperiences;
+
+  const {
+    users: { generateUserId, insertUser },
+  } = libraries;
+
+  const { pendingAccountId, mfaSkipped } = interaction;
+  const id = pendingAccountId ?? (await generateUserId());
+  const userProfile = await parseUserProfile(tenantContext, interaction);
+  const mfaVerifications = parseBindMfas(interaction);
+
+  const { client_id } = ctx.interactionDetails.params;
+
+  const { isCloud } = EnvSet.values;
+  const isInAdminTenant = (await getTenantId(ctx.URL)) === adminTenantId;
+  const isCreatingFirstAdminUser =
+    isInAdminTenant && String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+
+  await insertUser(
+    {
+      id,
+      ...userProfile,
+      ...conditional(
+        mfaVerifications.length > 0 && {
+          mfaVerifications,
+        }
+      ),
+      ...conditional(
+        mfaSkipped && {
+          customData: {
+            [userMfaDataKey]: {
+              skipped: true,
+            },
+          },
+        }
+      ),
+    },
+    getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
+  );
+
+  // In OSS, we need to limit sign-in experience to "sign-in only" once
+  // the first admin has been create since we don't want other unexpected registrations
+  if (isCreatingFirstAdminUser) {
+    await updateDefaultSignInExperience({
+      signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
+    });
+  }
+
+  await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+  ctx.assignInteractionHookResult({ userId: id });
+
+  log?.append({ userId: id });
+  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
+  void trySafe(postAffiliateLogs(ctx, cloudConnection, id, tenantId), (error) => {
+    consoleLog.warn('Failed to post affiliate logs', error);
+    void appInsights.trackException(error);
+  });
+}
+
+async function handleSubmitSignIn(
+  interaction: VerifiedSignInInteractionResult,
+  ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
+  tenantContext: TenantContext,
+  log?: LogEntry
+) {
+  const { provider, queries } = tenantContext;
+  const { findUserById, updateUserById } = queries.users;
+
+  const { accountId } = interaction;
+  log?.append({ userId: accountId });
+
+  const user = await findUserById(accountId);
+  const updateUserProfile = await parseUserProfile(tenantContext, interaction, user);
+  const mfaVerifications = parseBindMfas(interaction);
+  const { mfaSkipped } = interaction;
+
+  await updateUserById(accountId, {
+    ...updateUserProfile,
+    ...conditional(
+      mfaVerifications.length > 0 && {
+        mfaVerifications: [...user.mfaVerifications, ...mfaVerifications],
+      }
+    ),
+    ...conditional(
+      mfaSkipped && {
+        customData: {
+          ...user.customData,
+          [userMfaDataKey]: {
+            skipped: true,
+          },
+        },
+      }
+    ),
+  });
+  await assignInteractionResults(ctx, provider, { login: { accountId } });
+  ctx.assignInteractionHookResult({ userId: accountId });
+
+  appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
+}
+
 export default async function submitInteraction(
   interaction: VerifiedInteractionResult,
   ctx: WithLogContext & WithInteractionDetailsContext & WithInteractionHooksContext,
   tenantContext: TenantContext,
   log?: LogEntry
 ) {
-  const { provider, libraries, queries, cloudConnection, id: tenantId } = tenantContext;
-  const { hasActiveUsers, findUserById, updateUserById } = queries.users;
-  const { updateDefaultSignInExperience } = queries.signInExperiences;
-
-  const {
-    users: { generateUserId, insertUser },
-  } = libraries;
+  const { provider, queries } = tenantContext;
+  const { updateUserById } = queries.users;
   const { event, profile } = interaction;
 
   if (event === InteractionEvent.Register) {
-    const { pendingAccountId, mfaSkipped } = interaction;
-    const id = pendingAccountId ?? (await generateUserId());
-    const userProfile = await parseUserProfile(tenantContext, interaction);
-    const mfaVerifications = parseBindMfas(interaction);
-
-    const { client_id } = ctx.interactionDetails.params;
-
-    const { isCloud } = EnvSet.values;
-    const isInAdminTenant = (await getTenantId(ctx.URL)) === adminTenantId;
-    const isCreatingFirstAdminUser =
-      isInAdminTenant &&
-      String(client_id) === adminConsoleApplicationId &&
-      !(await hasActiveUsers());
-
-    await insertUser(
-      {
-        id,
-        ...userProfile,
-        ...conditional(
-          mfaVerifications.length > 0 && {
-            mfaVerifications,
-          }
-        ),
-        ...conditional(
-          mfaSkipped && {
-            [userMfaDataKey]: {
-              skipped: true,
-            },
-          }
-        ),
-      },
-      getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
-    );
-
-    // In OSS, we need to limit sign-in experience to "sign-in only" once
-    // the first admin has been create since we don't want other unexpected registrations
-    if (isCreatingFirstAdminUser) {
-      await updateDefaultSignInExperience({
-        signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
-      });
-    }
-
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-    ctx.assignInteractionHookResult({ userId: id });
-
-    log?.append({ userId: id });
-    appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.Register) });
-    void trySafe(postAffiliateLogs(ctx, cloudConnection, id, tenantId), (error) => {
-      consoleLog.warn('Failed to post affiliate logs', error);
-      void appInsights.trackException(error);
-    });
-
-    return;
+    return handleSubmitRegister(interaction, ctx, tenantContext, log);
   }
 
   const { accountId } = interaction;
   log?.append({ userId: accountId });
 
   if (event === InteractionEvent.SignIn) {
-    const user = await findUserById(accountId);
-    const updateUserProfile = await parseUserProfile(tenantContext, interaction, user);
-    const mfaVerifications = parseBindMfas(interaction);
-
-    await updateUserById(accountId, {
-      ...updateUserProfile,
-      ...conditional(
-        mfaVerifications.length > 0 && {
-          mfaVerifications: [...user.mfaVerifications, ...mfaVerifications],
-        }
-      ),
-    });
-    await assignInteractionResults(ctx, provider, { login: { accountId } });
-    ctx.assignInteractionHookResult({ userId: accountId });
-
-    appInsights.client?.trackEvent({ name: getEventName(Component.Core, CoreEvent.SignIn) });
-
-    return;
+    return handleSubmitSignIn(interaction, ctx, tenantContext, log);
   }
 
   // Forgot Password

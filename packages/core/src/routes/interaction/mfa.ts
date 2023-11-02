@@ -1,11 +1,13 @@
 import {
   InteractionEvent,
   MfaFactor,
+  MfaPolicy,
   bindMfaPayloadGuard,
   verifyMfaPayloadGuard,
 } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -143,6 +145,40 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       });
 
       await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  // Update MFA skip
+  router.put(
+    `${interactionPrefix}/mfa-skipped`,
+    koaGuard({
+      body: z.object({
+        // Only allow to skip MFA binding
+        mfaSkipped: z.literal(true),
+      }),
+      status: [204, 400, 422],
+    }),
+    koaInteractionSie(queries),
+    async (ctx, next) => {
+      const {
+        signInExperience: {
+          mfa: { policy },
+        },
+      } = ctx;
+
+      assertThat(
+        policy === MfaPolicy.UserControlled,
+        new RequestError({
+          code: 'session.mfa.mfa_policy_not_user_controlled',
+          status: 422,
+        })
+      );
+
+      await storeInteractionResult({ mfaSkipped: true }, ctx, provider, true);
 
       ctx.status = 204;
 

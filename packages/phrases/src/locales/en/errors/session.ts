@@ -33,6 +33,7 @@ const session = {
     backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
     backup_code_required: 'Backup code is required.',
     invalid_backup_code: 'Invalid backup code.',
+    mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
 };
 

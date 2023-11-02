@@ -135,6 +135,15 @@ export const initTotp = async (cookie: string) =>
     })
     .json<{ secret: string }>();
 
+export const skipMfaBinding = async (cookie: string) =>
+  api.put('interaction/mfa-skipped', {
+    headers: { cookie },
+    json: {
+      mfaSkipped: true,
+    },
+    followRedirect: false,
+  });
+
 export const consent = async (api: Got, cookie: string) =>
   api
     .post('interaction/consent', {

@@ -154,12 +154,6 @@ describe('validateMandatoryBindMfa', () => {
           { availableFactors: [MfaFactor.TOTP], skippable: true }
         )
       );
-      expect(storeInteractionResult).toHaveBeenCalledWith(
-        { mfaSkipped: true },
-        expect.anything(),
-        expect.anything(),
-        expect.anything()
-      );
     });
 
     it('bindMfa missing and not required, marked as skipped should pass', async () => {
@@ -201,13 +195,6 @@ describe('validateMandatoryBindMfa', () => {
           { availableFactors: [MfaFactor.TOTP], skippable: true }
         )
       );
-      expect(updateUserById).toHaveBeenCalledWith(signInInteraction.accountId, {
-        customData: {
-          mfa: {
-            skipped: true,
-          },
-        },
-      });
     });
 
     it('user mfaVerifications and bindMfa missing, mark skipped, and not required should pass', async () => {

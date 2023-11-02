@@ -48,6 +48,8 @@ const session = {
     backup_code_required: 'Backup code is required.',
     /** UNTRANSLATED */
     invalid_backup_code: 'Invalid backup code.',
+    /** UNTRANSLATED */
+    mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
 };
 

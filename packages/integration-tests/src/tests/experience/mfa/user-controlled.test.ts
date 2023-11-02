@@ -11,7 +11,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { waitFor } from '#src/utils.js';
+import { generateUsername, waitFor } from '#src/utils.js';
 
 describe('MFA - User controlled', () => {
   beforeAll(async () => {
@@ -40,6 +40,39 @@ describe('MFA - User controlled', () => {
 
   afterAll(async () => {
     await resetMfaSettings();
+  });
+
+  it('can skip MFA binding when registering and no need to verify MFA when signing in', async () => {
+    const username = generateUsername();
+    const password = 'l0gt0_T3st_P@ssw0rd';
+
+    const experience = new ExpectTotpExperience(await browser.newPage());
+
+    // Register
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
+    experience.toBeAt('register/password');
+    await experience.toFillNewPasswords(password);
+
+    // Skip MFA
+    await experience.toClick('div[role=button][class$=skipButton]');
+    await experience.page.waitForNetworkIdle();
+    await experience.verifyThenEnd(false);
+
+    // Sign in
+    await experience.startWith(demoAppUrl, 'sign-in');
+    await experience.toFillForm(
+      {
+        identifier: username,
+        password,
+      },
+      { submit: true }
+    );
+
+    const userId = await experience.getUserIdFromDemoAppPage();
+    // Sign in successfully
+    await experience.verifyThenEnd();
+    await deleteUser(userId);
   });
 
   it('can skip MFA binding when signing in at the first time', async () => {

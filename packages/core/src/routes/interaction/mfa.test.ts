@@ -1,4 +1,4 @@
-import { demoAppApplicationId, InteractionEvent, MfaFactor } from '@logto/schemas';
+import { demoAppApplicationId, InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockBackupCodeBind, mockTotpBind } from '#src/__mocks__/mfa-verification.js';
@@ -66,12 +66,13 @@ const baseProviderMock = {
 };
 
 const updateUserById = jest.fn();
+const findDefaultSignInExperience = jest.fn().mockResolvedValue(mockSignInExperience);
 
 const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   {
     signInExperiences: {
-      findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      findDefaultSignInExperience,
     },
     users: {
       findUserById: jest.fn().mockResolvedValue(mockUserWithMfaVerifications),
@@ -241,6 +242,48 @@ describe('interaction routes (MFA verification)', () => {
             type: MfaFactor.TOTP,
             id: 'id',
           },
+        },
+        expect.anything(),
+        expect.anything(),
+        expect.anything()
+      );
+    });
+  });
+
+  describe('PUT /interaction/mfa-skipped', () => {
+    afterEach(() => {
+      findDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
+    });
+
+    const path = `${interactionPrefix}/mfa-skipped`;
+
+    it('should throw if is in mandatory mode', async () => {
+      findDefaultSignInExperience.mockResolvedValue({
+        ...mockSignInExperience,
+        mfa: {
+          policy: MfaPolicy.Mandatory,
+        },
+      });
+      const response = await sessionRequest.put(path).send({
+        mfaSkipped: true,
+      });
+
+      expect(response.status).toEqual(422);
+    });
+
+    it('should update interaction', async () => {
+      getInteractionStorage.mockReturnValue({
+        event: InteractionEvent.Register,
+      });
+
+      const response = await sessionRequest.put(path).send({
+        mfaSkipped: true,
+      });
+
+      expect(response.status).toEqual(204);
+      expect(storeInteractionResult).toBeCalledWith(
+        {
+          mfaSkipped: true,
         },
         expect.anything(),
         expect.anything(),
