@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
@@ -11,6 +12,8 @@ import TextInput from '@/ds-components/TextInput';
 
 import { type TenantSettingsForm } from '../types.js';
 
+import TenantEnvironment from './TenantEnvironment/index.js';
+import TenantRegion from './TenantRegion/index.js';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -41,6 +44,7 @@ function ProfileForm({ currentTenantId }: Props) {
     control,
     register,
     formState: { errors },
+    getValues,
   } = useFormContext<TenantSettingsForm>();
 
   return (
@@ -54,22 +58,34 @@ function ProfileForm({ currentTenantId }: Props) {
           error={Boolean(errors.profile?.name)}
         />
       </FormField>
-      <FormField title="tenants.settings.environment_tag">
-        <Controller
-          control={control}
-          name="profile.tag"
-          render={({ field: { onChange, value, name } }) => (
-            <RadioGroup type="small" value={value} name={name} onChange={onChange}>
-              {tagOptions.map(({ value: optionValue, title }) => (
-                <Radio key={optionValue} title={title} value={optionValue} />
-              ))}
-            </RadioGroup>
-          )}
-        />
-        <div className={styles.description}>
-          {t('tenants.settings.environment_tag_description')}
-        </div>
-      </FormField>
+      {isDevFeaturesEnabled && (
+        <FormField title="tenants.settings.tenant_region">
+          <TenantRegion />
+        </FormField>
+      )}
+      {!isDevFeaturesEnabled && (
+        <FormField title="tenants.settings.environment_tag">
+          <Controller
+            control={control}
+            name="profile.tag"
+            render={({ field: { onChange, value, name } }) => (
+              <RadioGroup type="small" value={value} name={name} onChange={onChange}>
+                {tagOptions.map(({ value: optionValue, title }) => (
+                  <Radio key={optionValue} title={title} value={optionValue} />
+                ))}
+              </RadioGroup>
+            )}
+          />
+          <div className={styles.description}>
+            {t('tenants.settings.environment_tag_description')}
+          </div>
+        </FormField>
+      )}
+      {isDevFeaturesEnabled && (
+        <FormField title="tenants.settings.environment_tag">
+          <TenantEnvironment tag={getValues('profile.tag')} />
+        </FormField>
+      )}
     </FormCard>
   );
 }
