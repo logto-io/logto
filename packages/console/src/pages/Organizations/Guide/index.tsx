@@ -7,8 +7,8 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import CreateOrganization from './CreateOrganization';
-import CreatePermissions from './CreatePermissions';
 import CreateRoles from './CreateRoles';
+import IntroductionAndPermissions from './IntroductionAndPermissions';
 import { steps } from './const';
 import * as styles from './index.module.scss';
 
@@ -29,7 +29,7 @@ function Guide() {
         />
         <Routes>
           <Route index element={<Navigate replace to={steps.createPermissions} />} />
-          <Route path={steps.createPermissions} element={<CreatePermissions />} />
+          <Route path={steps.createPermissions} element={<IntroductionAndPermissions />} />
           <Route path={steps.createRoles} element={<CreateRoles />} />
           <Route path={steps.createOrganization} element={<CreateOrganization />} />
         </Routes>

@@ -39,9 +39,14 @@ type PermissionForm = {
   permissions: Array<Omit<OrganizationScope, 'id' | 'tenantId'>>;
 };
 
+type Props = {
+  /* True if the guide is in the "Check guide" drawer of organization details page */
+  isReadonly?: boolean;
+};
+
 const defaultPermission = { name: '', description: '' };
 
-function CreatePermissions() {
+function IntroductionAndPermissions({ isReadonly }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations.guide' });
   const theme = useTheme();
   const { OrganizationIcon, PermissionIcon } = icons[theme];
@@ -100,41 +105,45 @@ function CreatePermissions() {
             <OrganizationIcon className={styles.icon} />
             <Introduction />
           </Card>
-          <Card className={styles.card}>
-            <PermissionIcon className={styles.icon} />
-            <div className={styles.title}>{t('step_1')}</div>
-            <form>
-              <DynamicFormFields
-                isLoading={!data && !error}
-                title="organizations.guide.organization_permissions"
-                fields={fields}
-                render={(index) => (
-                  <div className={styles.fieldGroup}>
-                    <FormField isRequired title="organizations.guide.permission_name">
-                      <TextInput
-                        {...register(`permissions.${index}.name`, { required: true })}
-                        error={Boolean(errors.permissions?.[index]?.name)}
-                      />
-                    </FormField>
-                    <FormField title="general.description">
-                      <TextInput {...register(`permissions.${index}.description`)} />
-                    </FormField>
-                  </div>
-                )}
-                onAdd={() => {
-                  append(defaultPermission);
-                }}
-                onRemove={remove}
-              />
-            </form>
-          </Card>
+          {!isReadonly && (
+            <Card className={styles.card}>
+              <PermissionIcon className={styles.icon} />
+              <div className={styles.title}>{t('step_1')}</div>
+              <form>
+                <DynamicFormFields
+                  isLoading={!data && !error}
+                  title="organizations.guide.organization_permissions"
+                  fields={fields}
+                  render={(index) => (
+                    <div className={styles.fieldGroup}>
+                      <FormField isRequired title="organizations.guide.permission_name">
+                        <TextInput
+                          {...register(`permissions.${index}.name`, { required: true })}
+                          error={Boolean(errors.permissions?.[index]?.name)}
+                        />
+                      </FormField>
+                      <FormField title="general.description">
+                        <TextInput {...register(`permissions.${index}.description`)} />
+                      </FormField>
+                    </div>
+                  )}
+                  onAdd={() => {
+                    append(defaultPermission);
+                  }}
+                  onRemove={remove}
+                />
+              </form>
+            </Card>
+          )}
         </div>
       </OverlayScrollbar>
-      <ActionBar step={1} totalSteps={3}>
-        <Button isLoading={isSubmitting} title="general.next" type="primary" onClick={onSubmit} />
-      </ActionBar>
+      {!isReadonly && (
+        <ActionBar step={1} totalSteps={3}>
+          <Button isLoading={isSubmitting} title="general.next" type="primary" onClick={onSubmit} />
+        </ActionBar>
+      )}
     </>
   );
 }
 
-export default CreatePermissions;
+export default IntroductionAndPermissions;

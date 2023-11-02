@@ -4,18 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Delete from '@/assets/icons/delete.svg';
+import File from '@/assets/icons/file.svg';
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
-import ActionsButton from '@/components/ActionsButton';
 import AppError from '@/components/AppError';
 import DetailsPage from '@/components/DetailsPage';
+import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/DetailsPage/Skeleton';
+import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import ThemedIcon from '@/components/ThemedIcon';
-import Card from '@/ds-components/Card';
-import CopyToClipboard from '@/ds-components/CopyToClipboard';
+import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+
+import IntroductionAndPermissions from '../Organizations/Guide/IntroductionAndPermissions';
 
 import Members from './Members';
 import Settings from './Settings';
@@ -35,6 +39,8 @@ function OrganizationDetails() {
     id && `api/organizations/${id}`
   );
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isGuideDrawerOpen, setIsGuideDrawerOpen] = useState(false);
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const api = useApi();
 
   const deleteOrganization = useCallback(async () => {
@@ -60,27 +66,46 @@ function OrganizationDetails() {
       {error && <AppError errorCode={error.body?.code} errorMessage={error.body?.message} />}
       {data && (
         <>
-          <Card className={styles.header}>
-            <div className={styles.metadata}>
-              <ThemedIcon for={OrganizationIcon} size={60} />
-              <div>
-                <div className={styles.name}>{data.name}</div>
-                <div className={styles.row}>
-                  <span className={styles.label}>{t('organization_details.organization_id')} </span>
-                  <CopyToClipboard size="default" value={data.id} />
-                </div>
-              </div>
-            </div>
-            <ActionsButton
-              buttonProps={{
-                type: 'default',
-                size: 'large',
-              }}
-              deleteConfirmation="organization_details.delete_confirmation"
-              fieldName="organizations.title"
-              onDelete={deleteOrganization}
-            />
-          </Card>
+          <DetailsPageHeader
+            icon={<ThemedIcon for={OrganizationIcon} size={60} />}
+            title={data.name}
+            identifier={{ name: t('organization_details.organization_id'), value: data.id }}
+            additionalActionButton={{
+              icon: <File />,
+              title: 'application_details.check_guide',
+              onClick: () => {
+                setIsGuideDrawerOpen(true);
+              },
+            }}
+            actionMenuItems={[
+              {
+                icon: <Delete />,
+                title: 'general.delete',
+                type: 'danger',
+                onClick: () => {
+                  setIsDeleteFormOpen(true);
+                },
+              },
+            ]}
+          />
+          <Drawer
+            isOpen={isGuideDrawerOpen}
+            onClose={() => {
+              setIsGuideDrawerOpen(false);
+            }}
+          >
+            <IntroductionAndPermissions isReadonly />
+          </Drawer>
+          <DeleteConfirmModal
+            isOpen={isDeleteFormOpen}
+            isLoading={isDeleting}
+            onCancel={() => {
+              setIsDeleteFormOpen(false);
+            }}
+            onConfirm={deleteOrganization}
+          >
+            {t('organization_details.delete_confirmation')}
+          </DeleteConfirmModal>
           <TabNav>
             <TabNavItem href={`${pathname}/${data.id}/${tabs.settings}`}>
               {t('general.settings_nav')}
