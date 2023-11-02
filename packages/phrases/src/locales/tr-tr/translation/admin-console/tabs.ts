@@ -5,6 +5,8 @@ const tabs = {
   api_resources: 'API Kaynakları',
   sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
+  /** UNTRANSLATED */
+  enterprise_sso: 'Enterprise SSO',
   webhooks: 'Webhooks',
   /** UNTRANSLATED */
   organizations: 'Organizations',

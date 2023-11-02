@@ -11,16 +11,22 @@ export type SsoConnectorLibrary = ReturnType<typeof createSsoConnectorLibrary>;
 export const createSsoConnectorLibrary = (queries: Queries) => {
   const { ssoConnectors } = queries;
 
-  const getSsoConnectors = async () => {
-    const [_, entities] = await ssoConnectors.findAll();
+  const getSsoConnectors = async (
+    limit?: number,
+    offset?: number
+  ): Promise<[number, readonly SupportedSsoConnector[]]> => {
+    const [count, entities] = await ssoConnectors.findAll(limit, offset);
 
-    return entities.filter((connector): connector is SupportedSsoConnector =>
-      isSupportedSsoConnector(connector)
-    );
+    return [
+      count,
+      entities.filter((connector): connector is SupportedSsoConnector =>
+        isSupportedSsoConnector(connector)
+      ),
+    ];
   };
 
   const getAvailableSsoConnectors = async () => {
-    const connectors = await getSsoConnectors();
+    const [_, connectors] = await getSsoConnectors();
 
     return connectors.filter(({ providerName, config, domains }) => {
       const factory = ssoConnectorFactories[providerName];

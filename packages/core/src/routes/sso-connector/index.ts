@@ -1,17 +1,17 @@
 import { SsoConnectors, jsonObjectGuard } from '@logto/schemas';
+import {
+  ssoConnectorFactoriesResponseGuard,
+  type SsoConnectorFactoryDetail,
+  ssoConnectorWithProviderConfigGuard,
+} from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
 import { conditional, assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import {
-  connectorFactoriesResponseGuard,
-  type ConnectorFactoryDetail,
-  ssoConnectorCreateGuard,
-  ssoConnectorWithProviderConfigGuard,
-  ssoConnectorPatchGuard,
-} from '#src/routes/sso-connector/type.js';
+import koaPagination from '#src/middleware/koa-pagination.js';
+import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
@@ -46,14 +46,14 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   router.get(
     '/sso-connector-factories',
     koaGuard({
-      response: connectorFactoriesResponseGuard,
+      response: ssoConnectorFactoriesResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
       const { locale } = ctx;
       const factories = Object.values(ssoConnectorFactories);
-      const standardConnectors = new Set<ConnectorFactoryDetail>();
-      const providerConnectors = new Set<ConnectorFactoryDetail>();
+      const standardConnectors = new Set<SsoConnectorFactoryDetail>();
+      const providerConnectors = new Set<SsoConnectorFactoryDetail>();
 
       for (const factory of factories) {
         if (standardSsoConnectorProviders.includes(factory.providerName)) {
@@ -117,12 +117,17 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   /* Get all single sign on connectors */
   router.get(
     pathname,
+    koaPagination({ isOptional: true }),
     koaGuard({
       response: ssoConnectorWithProviderConfigGuard.array(),
       status: [200],
     }),
     async (ctx, next) => {
-      const connectors = await getSsoConnectors();
+      const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
+      const [totalCount, connectors] = paginationDisabled
+        ? await getSsoConnectors()
+        : await getSsoConnectors(limit, offset);
+      ctx.pagination.totalCount = totalCount;
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(

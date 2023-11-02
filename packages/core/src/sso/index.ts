@@ -1,8 +1,9 @@
 import { type I18nPhrases } from '@logto/connector-kit';
 
+import { SsoProviderName } from '#src/sso/types/index.js';
+
 import { oidcSsoConnectorFactory, type OidcSsoConnector } from './OidcSsoConnector/index.js';
 import { type SamlSsoConnector, samlSsoConnectorFactory } from './SamlSsoConnector/index.js';
-import { SsoProviderName } from './types/index.js';
 import { type basicOidcConnectorConfigGuard } from './types/oidc.js';
 import { type samlConnectorConfigGuard } from './types/saml.js';
 

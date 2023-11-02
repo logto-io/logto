@@ -3,7 +3,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { getSsoAuthorizationUrl } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
-import { ProviderName } from '#src/constants.js';
+import { SsoProviderName } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 
 describe('Single Sign On Sad Path', () => {
@@ -28,7 +28,7 @@ describe('Single Sign On Sad Path', () => {
 
   it('should throw if connector config is invalid', async () => {
     const { id } = await createSsoConnector({
-      providerName: ProviderName.OIDC,
+      providerName: SsoProviderName.OIDC,
       connectorName: 'test-oidc',
       config: {
         clientId: 'foo',

@@ -3,7 +3,7 @@ import { InteractionEvent, type SsoConnectorMetadata } from '@logto/schemas';
 import { getSsoAuthorizationUrl, getSsoConnectorsByEmail } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
-import { ProviderName, logtoUrl } from '#src/constants.js';
+import { logtoUrl, SsoProviderName } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 
 describe('Single Sign On Happy Path', () => {
@@ -14,7 +14,7 @@ describe('Single Sign On Happy Path', () => {
 
   beforeAll(async () => {
     const { id, connectorName } = await createSsoConnector({
-      providerName: ProviderName.OIDC,
+      providerName: SsoProviderName.OIDC,
       connectorName: 'test-oidc',
       domains: ['foo.com'],
       config: {

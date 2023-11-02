@@ -1,12 +1,10 @@
 import { type I18nPhrases } from '@logto/connector-kit';
-import { type JsonObject } from '@logto/schemas';
+import { type JsonObject, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 import { type SupportedSsoConnector, type SsoProviderName } from '#src/sso/types/index.js';
-
-import { type SsoConnectorWithProviderConfig } from './type.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;

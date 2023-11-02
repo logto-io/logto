@@ -25,6 +25,7 @@ import AuditLogs from '@/pages/AuditLogs';
 import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
+import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
 import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
@@ -114,6 +115,9 @@ function ConsoleContent() {
               <Route path=":tab/guide/:factoryId" element={<Connectors />} />
               <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
             </Route>
+            {isDevFeaturesEnabled && (
+              <Route path="enterprise-sso" element={<EnterpriseSsoConnectors />} />
+            )}
             <Route path="webhooks">
               <Route index element={<Webhooks />} />
               <Route path="create" element={<Webhooks />} />

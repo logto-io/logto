@@ -5,6 +5,8 @@ const tabs = {
   api_resources: 'API 리소스',
   sign_in_experience: '로그인 경험',
   connectors: '연동',
+  /** UNTRANSLATED */
+  enterprise_sso: 'Enterprise SSO',
   webhooks: '웹훅',
   /** UNTRANSLATED */
   organizations: 'Organizations',

@@ -14,6 +14,7 @@ import UserProfile from '@/assets/icons/profile.svg';
 import ResourceIcon from '@/assets/icons/resource.svg';
 import Role from '@/assets/icons/role.svg';
 import SecurityLock from '@/assets/icons/security-lock.svg';
+import EnterpriseSso from '@/assets/icons/single-sign-on.svg';
 import Web from '@/assets/icons/web.svg';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -88,6 +89,11 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Connection,
           title: 'connectors',
+        },
+        {
+          Icon: EnterpriseSso,
+          title: 'enterprise_sso',
+          isHidden: !isDevFeaturesEnabled,
         },
       ],
     },
