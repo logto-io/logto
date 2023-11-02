@@ -51,7 +51,7 @@ describe('fetchConnectorProviderDetails', () => {
 
     expect(result).toEqual({
       ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName as SsoProviderName].logo,
+      providerLogo: ssoConnectorFactories[connector.providerName].logo,
     });
 
     expect(fetchOidcConfig).not.toBeCalled();
@@ -68,7 +68,7 @@ describe('fetchConnectorProviderDetails', () => {
 
     expect(result).toEqual({
       ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName as SsoProviderName].logo,
+      providerLogo: ssoConnectorFactories[connector.providerName].logo,
     });
 
     expect(fetchOidcConfig).toBeCalledWith(connector.config.issuer);
@@ -85,7 +85,7 @@ describe('fetchConnectorProviderDetails', () => {
 
     expect(result).toEqual({
       ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName as SsoProviderName].logo,
+      providerLogo: ssoConnectorFactories[connector.providerName].logo,
       providerConfig: {
         ...connector.config,
         scope: 'openid', // Default scope

@@ -40,6 +40,11 @@ class OidcConnector {
     };
   };
 
+  /** `Issuer` will be used by SSO identity to indicate the source of the identity */
+  async getIssuer() {
+    return this.config.issuer;
+  }
+
   /**
    * Generate the authorization URL for the OIDC provider
    *

@@ -25,6 +25,7 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@authenio/samlify-xsd-schema-validator": "^1.0.5",
     "@aws-sdk/client-s3": "^3.315.0",
     "@azure/storage-blob": "^12.13.0",
     "@google-cloud/storage": "^7.3.0",
@@ -80,6 +81,7 @@
     "redis": "^4.6.5",
     "roarr": "^7.11.0",
     "semver": "^7.3.8",
+    "samlify": "2.8.10",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
