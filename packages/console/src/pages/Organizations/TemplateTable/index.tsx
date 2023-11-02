@@ -53,7 +53,6 @@ function TemplateTable<
           hasBorder
           placeholder={<EmptyDataPlaceholder />}
           isLoading={isLoading}
-          className={styles.table}
           rowGroups={[
             {
               key: 'data',

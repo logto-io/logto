@@ -8,11 +8,10 @@ const organization = {
   create_organization: 'Create organization',
   organization_name_placeholder: 'My organization',
   organization_description_placeholder: 'A brief description of the organization.',
-  access_control: 'Access control',
-  access_control_description:
-    'Authorization in a multi-tenancy applications is often designed to make sure that tenant isolation is maintained throughout an application and that tenants can access only their own resources.',
   organization_permission: 'Organization permission',
   organization_permission_other: 'Organization permissions',
+  organization_permission_description:
+    'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
   organization_permission_delete_confirm:
     'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
   create_permission_placeholder: 'Read appointment history.',
@@ -20,6 +19,8 @@ const organization = {
   permission_other: 'Permissions',
   organization_role: 'Organization role',
   organization_role_other: 'Organization roles',
+  organization_role_description:
+    'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
   organization_role_delete_confirm:
     'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
   role: 'Role',

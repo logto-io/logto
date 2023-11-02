@@ -1,56 +1,60 @@
-import { type OrganizationRoleWithScopes } from '@logto/schemas';
+import { type OrganizationScope } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import ActionsButton from '@/components/ActionsButton';
-import { RoleOption } from '@/components/OrganizationRolesSelect';
-import FormField from '@/ds-components/FormField';
+import FormCard from '@/components/FormCard';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { buildUrl } from '@/utils/url';
 
-import RoleModal from '../RoleModal';
+import PermissionModal from '../PermissionModal';
+import { swrKey } from '../RolesCard';
 import TemplateTable, { pageSize } from '../TemplateTable';
 
-import * as styles from './index.module.scss';
-
-export const swrKey = 'api/organization-roles';
-
 /**
- * Renders the roles field that allows users to add, edit, and delete organization
- * roles.
+ * Renders the permissions card that allows users to add, edit, and delete organization
+ * permissions.
  */
-function RolesField() {
+function PermissionsCard() {
   const [page, setPage] = useState(1);
   const {
     data: response,
     error,
-    mutate,
-  } = useSWR<[OrganizationRoleWithScopes[], number], RequestError>(
-    buildUrl(swrKey, {
+    mutate: mutatePermissions,
+  } = useSWR<[OrganizationScope[], number], RequestError>(
+    buildUrl('api/organization-scopes', {
       page: String(page),
       page_size: String(pageSize),
     })
   );
-
+  const { mutate: globalMutate } = useSWRConfig();
   const [data, totalCount] = response ?? [[], 0];
   const api = useApi();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [editData, setEditData] = useState<Nullable<OrganizationRoleWithScopes>>(null);
+  const [editData, setEditData] = useState<Nullable<OrganizationScope>>(null);
+  const mutate = useCallback(() => {
+    void mutatePermissions();
+    // Mutate roles field to update the permissions list
+    void globalMutate((key) => typeof key === 'string' && key.startsWith(swrKey));
+  }, [mutatePermissions, globalMutate]);
 
   const isLoading = !response && !error;
 
   return (
-    <FormField title="organizations.organization_role_other">
-      <RoleModal
+    <FormCard
+      title="organizations.organization_permission_other"
+      description="organizations.organization_permission_description"
+    >
+      <PermissionModal
         isOpen={isModalOpen}
         editData={editData}
         onClose={() => {
           setIsModalOpen(false);
-          void mutate();
+          mutate();
         }}
       />
       <TemplateTable
@@ -64,39 +68,28 @@ function RolesField() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name, id }) => <RoleOption size="large" value={id} title={name} />,
+            render: ({ name }) => <Tag variant="cell">{name}</Tag>,
           },
           {
-            title: t('organizations.permission_other'),
-            dataIndex: 'permissions',
+            title: t('general.description'),
+            dataIndex: 'description',
             colSpan: 6,
-            render: ({ scopes }) =>
-              scopes.length === 0 ? (
-                '-'
-              ) : (
-                <div className={styles.permissions}>
-                  {scopes.map(({ id, name }) => (
-                    <Tag key={id} variant="cell">
-                      {name}
-                    </Tag>
-                  ))}
-                </div>
-              ),
+            render: ({ description }) => description ?? '-',
           },
           {
             title: null,
             dataIndex: 'delete',
             render: (data) => (
               <ActionsButton
-                fieldName="organizations.role"
-                deleteConfirmation="organizations.organization_role_delete_confirm"
+                fieldName="organizations.permission"
+                deleteConfirmation="organizations.organization_permission_delete_confirm"
                 onEdit={() => {
                   setEditData(data);
                   setIsModalOpen(true);
                 }}
                 onDelete={async () => {
-                  await api.delete(`api/organization-roles/${data.id}`);
-                  void mutate();
+                  await api.delete(`api/organization-scopes/${data.id}`);
+                  mutate();
                 }}
               />
             ),
@@ -108,8 +101,8 @@ function RolesField() {
           setIsModalOpen(true);
         }}
       />
-    </FormField>
+    </FormCard>
   );
 }
 
-export default RolesField;
+export default PermissionsCard;
