@@ -126,14 +126,28 @@ export const userMfaDataKey = 'mfa';
 /**
  * Check if the user has skipped MFA binding
  */
-const isMfaSkipped = (customData: JsonObject): boolean => {
+const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
   const userMfaDataGuard = z.object({
     skipped: z.boolean().optional(),
   });
 
-  const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(customData);
+  const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
 
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
+};
+/**
+ * Mark MFA as skipped in user custom data
+ */
+export const markMfaSkipped = async (tenant: TenantContext, accountId: string) => {
+  const { customData } = await tenant.queries.users.findUserById(accountId);
+  await tenant.queries.users.updateUserById(accountId, {
+    customData: {
+      ...customData,
+      [userMfaDataKey]: {
+        skipped: true,
+      },
+    },
+  });
 };
 
 export const validateMandatoryBindMfa = async (
@@ -168,9 +182,9 @@ export const validateMandatoryBindMfa = async (
 
   if (event === InteractionEvent.SignIn) {
     const { accountId } = interaction;
-    const { mfaVerifications, customData } = await tenant.queries.users.findUserById(accountId);
+    const { mfaVerifications, logtoConfig } = await tenant.queries.users.findUserById(accountId);
 
-    if (isMfaSkipped(customData)) {
+    if (isMfaSkipped(logtoConfig)) {
       return interaction;
     }
 

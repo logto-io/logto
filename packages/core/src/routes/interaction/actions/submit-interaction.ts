@@ -118,7 +118,7 @@ async function handleSubmitRegister(
       ),
       ...conditional(
         mfaSkipped && {
-          customData: {
+          logtoConfig: {
             [userMfaDataKey]: {
               skipped: true,
             },
@@ -174,8 +174,8 @@ async function handleSubmitSignIn(
     ),
     ...conditional(
       mfaSkipped && {
-        customData: {
-          ...user.customData,
+        logtoConfig: {
+          ...user.logtoConfig,
           [userMfaDataKey]: {
             skipped: true,
           },
