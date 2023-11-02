@@ -83,6 +83,10 @@ class OidcConnector {
     return `${oidcConfig.authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
+  get issuer() {
+    return this.config.issuer;
+  }
+
   /**
    * Handle the sign-in callback from the OIDC provider and return the user info
    *

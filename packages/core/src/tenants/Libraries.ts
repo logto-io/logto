@@ -24,11 +24,11 @@ export default class Libraries {
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   domains = createDomainLibrary(this.queries);
   quota = createQuotaLibrary(this.queries, this.cloudConnection, this.connectors);
-  ssoConnector = createSsoConnectorLibrary(this.queries);
+  ssoConnectors = createSsoConnectorLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
     this.queries,
     this.connectors,
-    this.ssoConnector,
+    this.ssoConnectors,
     this.cloudConnection
   );
 

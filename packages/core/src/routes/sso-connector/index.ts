@@ -29,6 +29,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     router,
     {
       id: tenantId,
+      libraries: { ssoConnectors: ssoConnectorLibrary },
       queries: { ssoConnectors },
       libraries: {
         ssoConnector: { getSsoConnectorById, getSsoConnectors },
