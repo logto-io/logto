@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import ActionsButton from '@/components/ActionsButton';
+import { RoleOption } from '@/components/OrganizationRolesSelect';
 import FormField from '@/ds-components/FormField';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -14,6 +15,8 @@ import RoleModal from '../RoleModal';
 import TemplateTable, { pageSize } from '../TemplateTable';
 
 import * as styles from './index.module.scss';
+
+export const swrKey = 'api/organization-roles';
 
 /**
  * Renders the roles field that allows users to add, edit, and delete organization
@@ -26,7 +29,7 @@ function RolesField() {
     error,
     mutate,
   } = useSWR<[OrganizationRoleWithScopes[], number], RequestError>(
-    buildUrl('api/organization-roles', {
+    buildUrl(swrKey, {
       page: String(page),
       page_size: String(pageSize),
     })
@@ -61,7 +64,7 @@ function RolesField() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name }) => <div>{name}</div>,
+            render: ({ name, id }) => <RoleOption size="large" value={id} title={name} />,
           },
           {
             title: t('organizations.permission_other'),

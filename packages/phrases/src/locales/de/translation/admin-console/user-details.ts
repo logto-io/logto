@@ -106,8 +106,7 @@ const user_details = {
   warning_no_sign_in_identifier:
     'Der Benutzer muss mindestens einen der Anmelde-Identifikatoren (Benutzername, E-Mail, Telefonnummer oder soziales Konto) haben, um sich anzumelden. Sind Sie sicher, dass Sie fortfahren möchten?',
   /** UNTRANSLATED */
-  organization_roles_tooltip:
-    'Organization roles assigned to the current user in this organization.',
+  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
 };
 
 export default Object.freeze(user_details);

@@ -106,8 +106,7 @@ const user_details = {
   warning_no_sign_in_identifier:
     "L'utente deve avere almeno uno degli identificatori di accesso (nome utente, email, numero di telefono, o social) per accedere. Sei sicuro di voler continuare?",
   /** UNTRANSLATED */
-  organization_roles_tooltip:
-    'Organization roles assigned to the current user in this organization.',
+  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
 };
 
 export default Object.freeze(user_details);

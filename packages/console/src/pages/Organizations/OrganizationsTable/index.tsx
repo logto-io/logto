@@ -13,11 +13,15 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Search from '@/ds-components/Search';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
 import { buildUrl } from '@/utils/url';
 
+/** The page size of the organizations table. */
 const pageSize = defaultPageSize;
+/** The organizations page root pathname. */
 const pathname = '/organizations';
+/** The organizations API pathname in the management API. */
 const apiPathname = 'api/organizations';
 
 function OrganizationsTable() {
@@ -34,12 +38,16 @@ function OrganizationsTable() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isLoading = !response && !error;
   const [data, totalCount] = response ?? [[], 0];
+  const { navigate } = useTenantPathname();
 
   return (
     <Table
       isLoading={isLoading}
       placeholder={<EmptyDataPlaceholder />}
       rowGroups={[{ key: 'data', data }]}
+      rowClickHandler={({ id }) => {
+        navigate(joinPath(pathname, id));
+      }}
       columns={[
         {
           title: t('general.name'),

@@ -1,4 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +29,7 @@ type Props<T> = {
   error?: string | boolean;
   placeholder?: AdminConsoleKey;
   isOptionsLoading?: boolean;
+  renderOption?: (option: Option<T>) => React.ReactNode;
 };
 
 function MultiSelect<T extends string>({
@@ -40,6 +42,7 @@ function MultiSelect<T extends string>({
   error,
   placeholder,
   isOptionsLoading,
+  renderOption = ({ title, value }) => title ?? value,
 }: Props<T>) {
   const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -103,17 +106,16 @@ function MultiSelect<T extends string>({
       }}
     >
       {value.map((option) => {
-        const { value, title } = option;
         return (
           <Tag
-            key={value}
+            key={option.value}
             variant="cell"
             className={styles.tag}
             onClick={(event) => {
               event.stopPropagation();
             }}
           >
-            {title ?? value}
+            {renderOption(option)}
             <IconButton
               className={styles.delete}
               size="small"
@@ -129,7 +131,7 @@ function MultiSelect<T extends string>({
       <input
         ref={inputRef}
         type="text"
-        placeholder={placeholder && String(t(placeholder))}
+        placeholder={cond(value.length === 0 && placeholder && String(t(placeholder)))}
         value={keyword}
         onChange={({ currentTarget: { value } }) => {
           setKeyword(value);
@@ -154,15 +156,15 @@ function MultiSelect<T extends string>({
             {filteredOptions.length === 0 && (
               <div className={styles.noResult}>{t('errors.empty')}</div>
             )}
-            {filteredOptions.map(({ value, title }) => (
+            {filteredOptions.map((option) => (
               <DropdownItem
-                key={value}
+                key={option.value}
                 onClick={(event) => {
                   event.preventDefault();
-                  handleSelect({ value, title });
+                  handleSelect(option);
                 }}
               >
-                {title ?? value}
+                {renderOption(option)}
               </DropdownItem>
             ))}
           </>

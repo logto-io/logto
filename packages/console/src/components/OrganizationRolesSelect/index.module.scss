@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.roleOption {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+
+  &.large {
+    gap: _.unit(3);
+  }
+
+  > span {
+    font: var(--font-label-2);
+  }
+}

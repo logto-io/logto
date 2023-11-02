@@ -98,8 +98,7 @@ const user_details = {
   warning_no_sign_in_identifier:
     '用戶需要至少擁有一個登錄標識（用戶名、電子郵件、電話號碼或社交帳號）才能登錄。確定要繼續嗎？',
   /** UNTRANSLATED */
-  organization_roles_tooltip:
-    'Organization roles assigned to the current user in this organization.',
+  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
 };
 
 export default Object.freeze(user_details);

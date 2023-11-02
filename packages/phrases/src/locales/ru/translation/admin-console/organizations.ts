@@ -46,7 +46,9 @@ const organizations = {
   /** UNTRANSLATED */
   create_role_placeholder: 'Users with view-only permissions.',
   /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search for permissions',
+  search_permission_placeholder: 'Type to search and select permissions',
+  /** UNTRANSLATED */
+  search_role_placeholder: 'Type to search and select roles',
   guide: {
     /** UNTRANSLATED */
     title: 'Start with guides',

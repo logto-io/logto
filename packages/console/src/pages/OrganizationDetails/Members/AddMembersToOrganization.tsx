@@ -75,6 +75,7 @@ function AddMembersToOrganization({ organization, isOpen, onClose }: Props) {
       onRequestClose={onClose}
     >
       <ModalLayout
+        size="large"
         title={
           <DangerousRaw>
             {t('organization_details.add_members_to_organization', {

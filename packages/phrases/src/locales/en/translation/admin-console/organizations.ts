@@ -24,7 +24,8 @@ const organization = {
     'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
   role: 'Role',
   create_role_placeholder: 'Users with view-only permissions.',
-  search_permission_placeholder: 'Type to search for permissions',
+  search_permission_placeholder: 'Type to search and select permissions',
+  search_role_placeholder: 'Type to search and select roles',
   guide: {
     title: 'Start with guides',
     subtitle: 'Jumpstart your app development process with our guides',
