@@ -55,11 +55,32 @@ const organizations = {
     title: 'Start with guides',
     /** UNTRANSLATED */
     subtitle: 'Jumpstart your app development process with our guides',
-    /** UNTRANSLATED */
-    brief_title: "First, let's understand how organizations works in Logto",
-    /** UNTRANSLATED */
-    brief_introduction:
-      "In a multi-tenant app, it's important to set clear authorization rules to keep each tenant's data separate. Think of each tenant of your product as its own Logto organization, and they should naturally share the same access control template by default. <a>Learn more</a>",
+    introduction: {
+      section_1: {
+        /** UNTRANSLATED */
+        title: "First, let's understand how organizations works in Logto",
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+      },
+      section_2: {
+        /** UNTRANSLATED */
+        title: 'Organization template consists of two parts',
+        /** UNTRANSLATED */
+        organization_permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
+        /** UNTRANSLATED */
+        organization_role_description:
+          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+      },
+      section_3: {
+        /** UNTRANSLATED */
+        title: 'Interact the illustration to see how everything connects',
+        /** UNTRANSLATED */
+        description:
+          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+      },
+    },
     /** UNTRANSLATED */
     step_1: 'Step 1: Define organization permissions',
     /** UNTRANSLATED */
@@ -94,6 +115,40 @@ const organizations = {
     role_name: 'Role name',
     /** UNTRANSLATED */
     organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    admin_description:
+      'Role "Admin" share the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    member_description:
+      'Role "Member" share the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    guest_description:
+      'Role "Guest" share the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    create_more_roles:
+      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
+    /** UNTRANSLATED */
+    read_resource: 'read:resource',
+    /** UNTRANSLATED */
+    edit_resource: 'edit:resource',
+    /** UNTRANSLATED */
+    delete_resource: 'delete:resource',
+    /** UNTRANSLATED */
+    ellipsis: '……',
+    /** UNTRANSLATED */
+    johnny:
+      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
+    /** UNTRANSLATED */
+    sarah:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+    /** UNTRANSLATED */
+    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
   },
 };
 

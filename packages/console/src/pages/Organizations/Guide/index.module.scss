@@ -27,6 +27,7 @@
     flex-direction: column;
     width: 100%;
     max-width: dim.$guide-main-content-max-width;
+    min-width: dim.$guide-content-min-width;
     padding: _.unit(12);
     gap: _.unit(6);
 

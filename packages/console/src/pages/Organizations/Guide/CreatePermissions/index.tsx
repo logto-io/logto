@@ -9,7 +9,6 @@ import OrganizationFeatureDark from '@/assets/icons/organization-feature-dark.sv
 import OrganizationFeature from '@/assets/icons/organization-feature.svg';
 import PermissionFeatureDark from '@/assets/icons/permission-feature-dark.svg';
 import PermissionFeature from '@/assets/icons/permission-feature.svg';
-import workflowImage from '@/assets/images/organization-workflow.webp';
 import ActionBar from '@/components/ActionBar';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -25,6 +24,8 @@ import { organizationScopesPath } from '../../PermissionModal';
 import DynamicFormFields from '../DynamicFormFields';
 import { steps } from '../const';
 import * as styles from '../index.module.scss';
+
+import Introduction from './Introduction';
 
 const icons = {
   [Theme.Light]: { OrganizationIcon: OrganizationFeature, PermissionIcon: PermissionFeature },
@@ -97,9 +98,7 @@ function CreatePermissions() {
         <div className={classNames(styles.content)}>
           <Card className={styles.card}>
             <OrganizationIcon className={styles.icon} />
-            <div className={styles.title}>{t('brief_title')}</div>
-            <img className={styles.image} src={workflowImage} alt="Organization workflow" />
-            <div className={styles.description}>{t('brief_introduction')}</div>
+            <Introduction />
           </Card>
           <Card className={styles.card}>
             <PermissionIcon className={styles.icon} />
