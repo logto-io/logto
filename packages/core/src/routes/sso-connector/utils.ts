@@ -4,7 +4,7 @@ import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
-import { type SsoProviderName, type SupportedSsoConnector } from '#src/sso/types/index.js';
+import { type SupportedSsoConnector, type SsoProviderName } from '#src/sso/types/index.js';
 
 import { type SsoConnectorWithProviderConfig } from './type.js';
 
@@ -57,14 +57,15 @@ export const parseConnectorConfig = (
   Return undefined if failed to fetch or parse the config.
 */
 export const fetchConnectorProviderDetails = async (
-  connector: SupportedSsoConnector
+  connector: SupportedSsoConnector,
+  tenantId: string
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
   const { logo, constructor } = ssoConnectorFactories[providerName];
 
   const providerConfig = await trySafe(async () => {
-    const instance = new constructor(connector);
+    const instance = new constructor(connector, tenantId);
     return instance.getConfig();
   });
 
