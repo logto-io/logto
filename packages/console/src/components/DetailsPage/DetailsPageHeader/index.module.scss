@@ -30,10 +30,12 @@
 
   .metadata {
     flex: 1;
+    overflow: hidden;
 
     .name {
       font: var(--font-title-1);
       color: var(--color-text);
+      @include _.text-ellipsis;
     }
 
     .row {
