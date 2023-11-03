@@ -1,5 +1,18 @@
 # Change Log
 
+## 1.10.1
+
+### Patch Changes
+
+- 46d0d4c0b: convert private signing key type from string to JSON object, in order to provide additional information such as key ID and creation timestamp.
+- Updated dependencies [46d0d4c0b]
+- Updated dependencies [87df417d1]
+- Updated dependencies [d24aaedf5]
+  - @logto/schemas@1.10.1
+  - @logto/phrases@1.6.0
+  - @logto/connector-kit@2.0.0
+  - @logto/shared@3.0.0
+
 ## 1.10.0
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.10.1
+
+### Patch Changes
+
+- 46d0d4c0b: convert private signing key type from string to JSON object, in order to provide additional information such as key ID and creation timestamp.
+- 1ab39d19b: fix 500 error when using search component in console to filter both roles and applications.
+- Updated dependencies [46d0d4c0b]
+- Updated dependencies [1ab39d19b]
+- Updated dependencies [87df417d1]
+- Updated dependencies [d24aaedf5]
+  - @logto/schemas@1.10.1
+  - @logto/cli@1.10.1
+  - @logto/console@1.9.0
+  - @logto/phrases@1.6.0
+  - @logto/connector-kit@2.0.0
+  - @logto/experience@1.2.1
+  - @logto/shared@3.0.0
+
 ## 1.10.0
 
 ### Minor Changes

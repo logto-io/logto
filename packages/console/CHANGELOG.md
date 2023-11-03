@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.9.0
+
+### Minor Changes
+
+- 87df417d1: feat: support HTTP for webhook requests
+
+### Patch Changes
+
+- 1ab39d19b: fix 500 error when using search component in console to filter both roles and applications.
+
 ## 1.8.0
 
 ### Minor Changes

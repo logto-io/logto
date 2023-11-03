@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-tencent-sms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tencent SMS connector implementation.",
   "author": "StringKe",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^1.1.0"
+    "@logto/connector-kit": "workspace:^2.0.0"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",

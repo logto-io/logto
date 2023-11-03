@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kit",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -39,7 +39,7 @@
     "@logto/language-kit": "workspace:^1.0.0",
     "@silverhand/essentials": "^2.8.4",
     "@withtyped/client": "^0.7.22",
-    "@withtyped/server":"^0.12.9"
+    "@withtyped/server": "^0.12.9"
   },
   "optionalDependencies": {
     "zod": "^3.22.3"
