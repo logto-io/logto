@@ -12,9 +12,7 @@ const tenants = {
     description: 'Set the tenant name and view your data hosted region and environment tag.',
     tenant_id: 'Tenant ID',
     tenant_name: 'Tenant Name',
-    /** UNTRANSLATED */
     tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag: 'Environment Tag',
     environment_tag_description:
@@ -22,15 +20,12 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
     development_description:
       'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
     tenant_info_saved: 'Tenant information saved successfully.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
     development: 'Development',
-    /** UNTRANSLATED */
     production: 'Production',
   },
   deletion_card: {
@@ -43,48 +38,33 @@ const tenants = {
   create_modal: {
     title: 'Create tenant',
     subtitle: 'Create a new tenant to separate resources and users.',
-    /** UNTRANSLATED */
     subtitle_with_region:
       'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
     tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
     development_description:
       'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
     development_hint:
       'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
     production_description:
       'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
     available_plan: 'Available plan:',
     create_button: 'Create tenant',
     tenant_name_placeholder: 'My tenant',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
       'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
     allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
     explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
     impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
     staging_env_hint:
-      'Your tenant label has been updated from "Staging" to "Production," but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "dev" tenant tag will switch to "prod", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
     paid_tenant_hint_2:
       "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
     paid_tenant_hint_3:
       "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
     paid_tenant_hint_4:
       "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
   },
