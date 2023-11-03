@@ -74,10 +74,10 @@ const tenants = {
     impact_title: 'Does this have any impact on me?',
     /** UNTRANSLATED */
     staging_env_hint:
-      'Your tenant label has been updated from "Staging" to "Production," but this change will not impact your current setup.',
+      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
     /** UNTRANSLATED */
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "dev" tenant tag will switch to "prod", and this won\'t affect your existing setup.',
+      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
     /** UNTRANSLATED */
     paid_tenant_hint_2:
       "If you're still in the development stage, you can create a new development tenant to access more pro features.",

@@ -73,7 +73,6 @@ const general = {
   /** UNTRANSLATED */
   delete_field: 'Delete {{field}}',
   coming_soon: 'Demnächst verfügbar',
-  beta: 'Beta',
 };
 
 export default Object.freeze(general);

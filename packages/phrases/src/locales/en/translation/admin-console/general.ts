@@ -65,7 +65,6 @@ const general = {
   edit_field: 'Edit {{field}}',
   delete_field: 'Delete {{field}}',
   coming_soon: 'Coming soon',
-  beta: 'Beta',
 };
 
 export default Object.freeze(general);
