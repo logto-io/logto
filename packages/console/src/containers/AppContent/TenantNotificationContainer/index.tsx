@@ -2,23 +2,29 @@ import { useContext } from 'react';
 
 import MauExceededModal from '@/components/MauExceededModal';
 import PaymentOverdueModal from '@/components/PaymentOverdueModal';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+
+import TenantEnvMigrationModal from './TenantEnvMigrationModal';
 
 function TenantNotificationContainer() {
   const { currentTenant, isDevTenant } = useContext(TenantsContext);
   const isTenantSuspended = currentTenant?.isSuspended;
 
-  // Todo @xiaoyijun remove isDevFeaturesEnabled when the dev tenant feature is ready
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (!isCloud || isTenantSuspended || isDevTenant) {
+  if (!isCloud || isTenantSuspended) {
     return null;
   }
 
   return (
     <>
-      <MauExceededModal />
-      <PaymentOverdueModal />
+      {/* Note: we won't check the MAU limit and payment for dev tenants */}
+      {!isDevTenant && (
+        <>
+          <MauExceededModal />
+          <PaymentOverdueModal />
+        </>
+      )}
+      {isDevFeaturesEnabled && <TenantEnvMigrationModal />}
     </>
   );
 }

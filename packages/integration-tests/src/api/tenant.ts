@@ -1,4 +1,5 @@
-import type { TenantInfo, TenantTag } from '@logto/schemas/models';
+import { type TenantTag } from '@logto/schemas';
+import type { TenantInfo } from '@logto/schemas/models';
 
 import { cloudApi } from './api.js';
 

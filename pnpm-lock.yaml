@@ -3052,6 +3052,9 @@ importers:
       react-color:
         specifier: ^2.19.3
         version: 2.19.3(react@18.2.0)
+      react-confetti:
+        specifier: ^6.1.0
+        version: 6.1.0(react@18.2.0)
       react-dnd:
         specifier: ^16.0.0
         version: 16.0.0(@types/node@18.11.18)(@types/react@18.0.31)(react@18.2.0)
@@ -18105,6 +18108,16 @@ packages:
       tinycolor2: 1.6.0
     dev: true
 
+  /react-confetti@6.1.0(react@18.2.0):
+    resolution: {integrity: sha512-7Ypx4vz0+g8ECVxr88W9zhcQpbeujJAVqL14ZnXJ3I23mOI9/oBVTQ3dkJhUmB0D6XOtCZEM6N0Gm9PMngkORw==}
+    engines: {node: '>=10.18'}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      tween-functions: 1.2.0
+    dev: true
+
   /react-device-detect@2.2.2(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-zSN1gIAztUekp5qUT/ybHwQ9fmOqVT1psxpSlTn1pe0CO+fnJHKRLOWWac5nKxOxvOpD/w84hk1I+EydrJp7SA==}
     peerDependencies:
@@ -20338,6 +20351,10 @@ packages:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
     dev: false
+
+  /tween-functions@1.2.0:
+    resolution: {integrity: sha512-PZBtLYcCLtEcjL14Fzb1gSxPBeL7nWvGhO5ZFPGqziCcr8uvHp0NDmdjBchp6KHL+tExcg0m3NISmKxhU394dA==}
+    dev: true
 
   /type-check@0.3.2:
     resolution: {integrity: sha512-ZCmOJdvOWDBYJlzAoFkC+Q0+bUyEOS1ltgp1MGU03fqHG+dbi9tBFU2Rd9QKiDZFAYrhPh2JUf7rZRIuHRKtOg==}

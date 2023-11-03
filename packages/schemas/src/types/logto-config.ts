@@ -1,6 +1,8 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { TenantTag } from './tenant.js';
+
 /**
  * Logto OIDC signing key types, used mainly in REST API routes.
  */
@@ -49,6 +51,13 @@ export const logtoOidcConfigGuard: Readonly<{
 export const adminConsoleDataGuard = z.object({
   signInExperienceCustomized: z.boolean(),
   organizationCreated: z.boolean(),
+  developmentTenantMigrationNotification: z
+    .object({
+      isPaidTenant: z.boolean(),
+      tag: z.nativeEnum(TenantTag),
+      readAt: z.number().optional(),
+    })
+    .optional(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

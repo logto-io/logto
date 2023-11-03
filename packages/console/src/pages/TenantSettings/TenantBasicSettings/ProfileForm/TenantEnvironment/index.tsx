@@ -1,4 +1,4 @@
-import { TenantTag } from '@logto/schemas/lib/models/tenants.js';
+import { TenantTag } from '@logto/schemas';
 import { Trans, useTranslation } from 'react-i18next';
 
 import TenantEnvTag from '@/components/TenantEnvTag';

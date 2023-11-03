@@ -1,6 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { Theme } from '@logto/schemas';
-import { TenantTag } from '@logto/schemas/models';
+import { Theme, TenantTag } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

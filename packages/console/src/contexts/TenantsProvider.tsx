@@ -1,5 +1,4 @@
-import { defaultManagementApi, defaultTenantId } from '@logto/schemas';
-import { TenantTag } from '@logto/schemas/models';
+import { defaultManagementApi, defaultTenantId, TenantTag } from '@logto/schemas';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
