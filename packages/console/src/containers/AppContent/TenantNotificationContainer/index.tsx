@@ -5,20 +5,25 @@ import PaymentOverdueModal from '@/components/PaymentOverdueModal';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
+import TenantEnvMigrationModal from './TenantEnvMigrationModal';
+
 function TenantNotificationContainer() {
   const { currentTenant, isDevTenant } = useContext(TenantsContext);
   const isTenantSuspended = currentTenant?.isSuspended;
 
-  // Todo @xiaoyijun remove isDevFeaturesEnabled when the dev tenant feature is ready
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  if (!isCloud || isTenantSuspended || (isDevFeaturesEnabled && isDevTenant)) {
+  if (!isCloud || isTenantSuspended) {
     return null;
   }
 
   return (
     <>
-      <MauExceededModal />
-      <PaymentOverdueModal />
+      {isDevFeaturesEnabled && !isDevTenant && (
+        <>
+          <MauExceededModal />
+          <PaymentOverdueModal />
+        </>
+      )}
+      {isDevFeaturesEnabled && <TenantEnvMigrationModal />}
     </>
   );
 }
