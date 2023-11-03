@@ -5,6 +5,9 @@
 
   .title {
     color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: _.unit(2);
   }
 
   .titleEllipsis {
