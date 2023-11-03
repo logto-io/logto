@@ -53,7 +53,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       /* 
         Create a new sign-in interaction directly. 
-        Unlike our existing interaction APIs, to simply the call stack, client side does not need to call the PUT interaction API ahead.
+        Unlike our existing interaction APIs, to simplify the call stack, client side does not need to call the PUT interaction API ahead.
         This step is necessary for our interaction hooks to work. As it reads the event from the interaction storage.
        */
       createLog(`Interaction.SignIn.Update`);
