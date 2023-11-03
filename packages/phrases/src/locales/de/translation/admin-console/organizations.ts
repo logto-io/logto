@@ -13,6 +13,13 @@ const organizations = {
   /** UNTRANSLATED */
   create_organization: 'Create organization',
   /** UNTRANSLATED */
+  setup_organization: 'Set up your organization',
+  /** UNTRANSLATED */
+  organization_list_placeholder_title: 'Organization',
+  /** UNTRANSLATED */
+  organization_list_placeholder_text:
+    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
+  /** UNTRANSLATED */
   organization_name_placeholder: 'My organization',
   /** UNTRANSLATED */
   organization_description_placeholder: 'A brief description of the organization.',

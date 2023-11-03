@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import OrganizationIcon from '@/assets/icons/organization-preview.svg';
-import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ThemedIcon from '@/components/ThemedIcon';
 import { defaultPageSize } from '@/consts';
@@ -15,7 +14,10 @@ import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
+import * as pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
+
+import EmptyDataPlaceholder from './EmptyDataPlaceholder';
 
 /** The page size of the organizations table. */
 const pageSize = defaultPageSize;
@@ -42,6 +44,7 @@ function OrganizationsTable() {
 
   return (
     <Table
+      className={pageLayout.table}
       isLoading={isLoading}
       placeholder={<EmptyDataPlaceholder />}
       rowGroups={[{ key: 'data', data }]}
