@@ -4,6 +4,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults } from '#src/libraries/session.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -17,19 +18,14 @@ import {
   oidcAuthorizationUrlPayloadGuard,
   getSsoAuthorizationUrl,
   getSsoAuthentication,
-  signInWithSsoAuthentication,
+  handleSsoAuthentication,
 } from './utils/single-sign-on.js';
 
 export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
-  const {
-    id: tenantId,
-    provider,
-    libraries,
-    queries: { userSsoIdentities: userSsoIdentitiesQueries },
-  } = tenant;
+  const { provider, libraries } = tenant;
 
   const { ssoConnectors: ssoConnectorsLibrary } = libraries;
 
@@ -88,7 +84,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     }),
     koaInteractionHooks(libraries),
     async (ctx, next) => {
-      const { guard, interactionDetails } = ctx;
+      const { guard, interactionDetails, assignInteractionHookResult } = ctx;
 
       // Check SSO interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
@@ -104,24 +100,17 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       // Get authenticated from the SSO provider
       const ssoAuthentication = await getSsoAuthentication(ctx, tenant, connectorData, data);
-      const { issuer, userInfo } = ssoAuthentication;
 
-      // Get logto user info
-      const userSsoIdentity = await userSsoIdentitiesQueries.findUserSsoIdentityBySsoIdentityId(
-        issuer,
-        userInfo.id
+      // Handle SSO authentication: sign-in or register the user
+      const accountId = await handleSsoAuthentication(
+        ctx,
+        tenant,
+        connectorData,
+        ssoAuthentication
       );
 
-      // SignIn Flow
-      if (userSsoIdentity) {
-        await signInWithSsoAuthentication(ctx, tenant, {
-          connectorData,
-          userSsoIdentity,
-          ssoAuthentication,
-        });
-      }
-
-      // Register Flow
+      await assignInteractionResults(ctx, provider, { login: { accountId } });
+      assignInteractionHookResult({ userId: accountId });
 
       return next();
     }
