@@ -9,6 +9,7 @@ import { type Optional, cond, yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { type SearchOptions } from '#src/database/utils.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -23,6 +24,11 @@ import organizationScopeRoutes from './scopes.js';
 import { errorHandler } from './utils.js';
 
 export default function organizationRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+  // Remove after the feature is ready
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
   const [
     originalRouter,
     {
