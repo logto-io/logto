@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.0
+
+### Minor Changes
+
+- 87df417d1: feat: support HTTP for webhook requests
+
 ## 1.5.0
 
 ### Minor Changes
