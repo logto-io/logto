@@ -7,7 +7,7 @@ import type { ClaimsParameterMember } from 'oidc-provider';
 import type Libraries from '#src/tenants/Libraries.js';
 
 const claimToUserKey: Readonly<
-  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles'>, keyof User>
+  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles' | 'organizations'>, keyof User>
 > = Object.freeze({
   name: 'name',
   picture: 'avatar',
@@ -38,6 +38,11 @@ export const getUserClaimData = async (
     return roles.map(({ name }) => name);
   }
 
+  if (claim === 'organizations') {
+    // TODO: Implementation
+    return ['foo'];
+  }
+
   return user[claimToUserKey[claim]];
 };
 
@@ -49,6 +54,7 @@ export const getUserClaims = (
   rejected: string[]
 ): UserClaim[] => {
   const scopes = scope.split(' ');
+  console.log('????????', scopes);
   const isUserinfo = use === 'userinfo';
   const allScopes = Object.values(UserScope);
 

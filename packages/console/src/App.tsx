@@ -89,6 +89,7 @@ function Providers() {
       UserScope.Email,
       UserScope.Identities,
       UserScope.CustomData,
+      UserScope.Organizations,
       PredefinedScope.All,
       ...conditionalArray(
         isCloud && cloudApi.scopes.CreateTenant,

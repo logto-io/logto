@@ -42,6 +42,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
     const { missingOIDCScope, missingResourceScopes } = PromptDetailsBody.parse(prompt.details);
 
     if (missingOIDCScope) {
+      console.log('missingOIDCScope', missingOIDCScope);
       grant.addOIDCScope(missingOIDCScope.join(' '));
     }
 

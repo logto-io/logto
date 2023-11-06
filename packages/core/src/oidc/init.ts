@@ -52,6 +52,8 @@ export default function initOidc(
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
 
+  console.log('???', userClaims);
+
   const cookieConfig = Object.freeze({
     sameSite: 'lax',
     path: '/',
@@ -337,7 +339,7 @@ export default function initOidc(
     }
   });
   // Register custom grant types
-  oidc.registerGrantType(organizationToken.name, organizationToken.handler, [
+  oidc.registerGrantType(organizationToken.grantType, organizationToken.handler, [
     ...organizationToken.parameters,
   ]);
   /**

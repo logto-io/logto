@@ -12,4 +12,5 @@ export enum GrantType {
   AuthorizationCode = 'authorization_code',
   RefreshToken = 'refresh_token',
   ClientCredentials = 'client_credentials',
+  OrganizationToken = 'urn:logto:grant-type:organization_token',
 }
