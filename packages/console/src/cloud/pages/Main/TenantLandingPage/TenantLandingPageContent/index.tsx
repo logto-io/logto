@@ -7,6 +7,7 @@ import TenantLandingPageImageDark from '@/assets/images/tenant-landing-page-dark
 import TenantLandingPageImage from '@/assets/images/tenant-landing-page.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import CreateTenantModal from '@/components/CreateTenantModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -52,7 +53,7 @@ function TenantLandingPageContent({ className }: Props) {
         />
       </div>
       <CreateTenantModal
-        skipPlanSelection
+        skipPlanSelection={!isDevFeaturesEnabled}
         isOpen={isCreateModalOpen}
         onClose={async (tenant?: TenantResponse) => {
           if (tenant) {

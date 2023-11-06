@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+  padding: _.unit(2.5) _.unit(3);
+}
+
+.tag {
+  align-self: flex-start;
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.hint {
+  font: var(--font-body-3);
+}
+
+.planNameTag {
+  margin-left: _.unit(1);
+}

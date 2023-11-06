@@ -275,6 +275,12 @@
   outline: unset;
 }
 
+.small.disabled {
+  cursor: not-allowed;
+  color: var(--color-text);
+  background-color: var(--color-bg-state-disabled);
+}
+
 .compact.disabled {
   cursor: not-allowed;
   background-color: var(--color-layer-2);
