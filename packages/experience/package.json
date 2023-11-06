@@ -89,7 +89,7 @@
     "tiny-cookie": "^2.4.1",
     "typescript": "^5.0.0",
     "use-debounced-loader": "^0.1.1",
-    "zod": "^3.22.3"
+    "zod": "^3.22.4"
   },
   "engines": {
     "node": "^18.12.0"

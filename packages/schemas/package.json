@@ -89,6 +89,6 @@
     "@withtyped/server": "^0.12.9"
   },
   "peerDependencies": {
-    "zod": "^3.22.3"
+    "zod": "^3.22.4"
   }
 }
