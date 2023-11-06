@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -8,6 +11,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import * as styles from './index.module.scss';
 
 function TenantSettings() {
+  const { isDevTenant } = useContext(TenantsContext);
   return (
     <div className={styles.container}>
       <CardTitle
@@ -22,12 +26,16 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
-        <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
-          <DynamicT forKey="tenants.tabs.subscription" />
-        </TabNavItem>
-        <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.BillingHistory}`}>
-          <DynamicT forKey="tenants.tabs.billing_history" />
-        </TabNavItem>
+        {(!isDevFeaturesEnabled || !isDevTenant) && (
+          <>
+            <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Subscription}`}>
+              <DynamicT forKey="tenants.tabs.subscription" />
+            </TabNavItem>
+            <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.BillingHistory}`}>
+              <DynamicT forKey="tenants.tabs.billing_history" />
+            </TabNavItem>
+          </>
+        )}
       </TabNav>
       <Outlet />
     </div>

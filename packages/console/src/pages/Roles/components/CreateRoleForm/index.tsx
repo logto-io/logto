@@ -222,8 +222,12 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                       title={<DynamicT forKey={key} />}
                       value={value}
                       trailingIcon={
-                        proTagCheck &&
-                        isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />
+                        proTagCheck && (
+                          <ProTag
+                            isVisibleInProdTenant={isM2mDisabledForCurrentPlan}
+                            className={styles.proTag}
+                          />
+                        )
                       }
                     />
                   ))}

@@ -101,7 +101,10 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       setFilterCategories(sortedValue);
                     }}
                   />
-                  {isM2mDisabledForCurrentPlan && <ProTag className={styles.proTag} />}
+                  <ProTag
+                    className={styles.proTag}
+                    isVisibleInProdTenant={isM2mDisabledForCurrentPlan}
+                  />
                 </div>
               </div>
             </div>

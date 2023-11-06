@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Navigate, Route, Routes, useOutletContext } from 'react-router-dom';
 
 import {
@@ -10,6 +11,7 @@ import {
   ApplicationDetailsTabs,
 } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserPreferences from '@/hooks/use-user-preferences';
 import ApiResourceDetails from '@/pages/ApiResourceDetails';
@@ -67,6 +69,7 @@ function ConsoleContent() {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
+  const { isDevTenant } = useContext(TenantsContext);
 
   return (
     <div className={styles.content}>
@@ -177,8 +180,12 @@ function ConsoleContent() {
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
-                <Route path={TenantSettingsTabs.BillingHistory} element={<BillingHistory />} />
+                {(!isDevFeaturesEnabled || !isDevTenant) && (
+                  <>
+                    <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
+                    <Route path={TenantSettingsTabs.BillingHistory} element={<BillingHistory />} />
+                  </>
+                )}
               </Route>
             )}
           </Routes>

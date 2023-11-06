@@ -1,4 +1,3 @@
-import { conditional } from '@silverhand/essentials';
 import { useContext, type ReactNode } from 'react';
 
 import PageMeta from '@/components/PageMeta';
@@ -24,7 +23,7 @@ function PageWrapper({ children }: Props) {
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         title="mfa.title"
-        titleTag={conditional(!isMfaEnabled && <ProTag />)}
+        titleTag={<ProTag isVisibleInProdTenant={!isMfaEnabled} />}
         subtitle="mfa.description"
         className={styles.cardTitle}
       />
