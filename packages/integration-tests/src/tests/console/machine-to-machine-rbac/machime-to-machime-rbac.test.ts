@@ -13,6 +13,7 @@ import {
   generateResourceIndicator,
   generateScopeName,
   generateRoleName,
+  dcls,
 } from '#src/utils.js';
 
 import {
@@ -209,7 +210,7 @@ describe('M2M RBAC', () => {
 
     it('assign a permission to a role on the role details page', async () => {
       // Wait for the deletion confirmation modal to disappear.
-      await page.waitForSelector('.ReactModalPortal div[class$=header] div[class$=titleEllipsis]', {
+      await page.waitForSelector(['.ReactModalPortal', dcls('header'), dcls('title')].join(' '), {
         hidden: true,
       });
 
