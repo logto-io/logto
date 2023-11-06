@@ -1,6 +1,8 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 
   .title {
