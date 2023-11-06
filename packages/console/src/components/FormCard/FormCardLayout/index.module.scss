@@ -23,7 +23,6 @@ $column-width: calc((100% - 23 * $gutter-width) / 24);
 
   .form {
     width: calc($column-width * 16 + $gutter-width * 15);
-    overflow: hidden;
   }
 
   @container (max-width: 600px) {

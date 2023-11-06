@@ -6,7 +6,6 @@ import Delete from '@/assets/icons/delete.svg';
 import Edit from '@/assets/icons/edit.svg';
 import More from '@/assets/icons/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/ds-components/ActionMenu';
-import type { Props as ButtonProps } from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import useActionTranslation from '@/hooks/use-action-translation';
@@ -14,11 +13,6 @@ import useActionTranslation from '@/hooks/use-action-translation';
 import * as styles from './index.module.scss';
 
 type Props = {
-  /**
-   * Props that will be passed to the button that opens the menu. It will override the
-   * default props.
-   */
-  buttonProps?: Partial<ButtonProps>;
   /** A function that will be called when the user confirms the deletion. */
   onDelete: () => void | Promise<void>;
   /**
@@ -47,14 +41,7 @@ type Props = {
  * - Edit (optional)
  * - Delete
  */
-function ActionsButton({
-  buttonProps,
-  onDelete,
-  onEdit,
-  deleteConfirmation,
-  fieldName,
-  textOverrides,
-}: Props) {
+function ActionsButton({ onDelete, onEdit, deleteConfirmation, fieldName, textOverrides }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tAction = useActionTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,17 +59,9 @@ function ActionsButton({
 
   return (
     <>
-      <ActionMenu
-        buttonProps={{
-          icon: <More className={styles.moreIcon} />,
-          size: 'small',
-          type: 'text',
-          ...buttonProps,
-        }}
-        title={t('general.more_options')}
-      >
+      <ActionMenu icon={<More className={styles.icon} />} title={t('general.more_options')}>
         {onEdit && (
-          <ActionMenuItem iconClassName={styles.moreIcon} icon={<Edit />} onClick={onEdit}>
+          <ActionMenuItem iconClassName={styles.icon} icon={<Edit />} onClick={onEdit}>
             {textOverrides?.edit ? (
               <DynamicT forKey={textOverrides.edit} />
             ) : (

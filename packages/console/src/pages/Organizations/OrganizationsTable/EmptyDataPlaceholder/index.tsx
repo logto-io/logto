@@ -6,17 +6,17 @@ import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
 import OrganizationEmpty from '@/assets/images/organization-empty.svg';
 import Button from '@/ds-components/Button';
 import useConfigs from '@/hooks/use-configs';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
-
-import { createPathname, guidePathname } from '../../consts';
 
 import * as styles from './index.module.scss';
 
-function EmptyDataPlaceholder() {
+type Props = {
+  onCreate: () => void;
+};
+
+function EmptyDataPlaceholder({ onCreate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });
   const { configs } = useConfigs();
-  const { navigate } = useTenantPathname();
   const theme = useTheme();
   const PlaceholderImage = theme === Theme.Light ? OrganizationEmpty : OrganizationEmptyDark;
   const isInitialSetup = !configs?.organizationCreated;
@@ -34,9 +34,7 @@ function EmptyDataPlaceholder() {
         title={
           isInitialSetup ? 'organizations.setup_organization' : 'organizations.create_organization'
         }
-        onClick={() => {
-          navigate(isInitialSetup ? guidePathname : createPathname);
-        }}
+        onClick={onCreate}
       />
     </div>
   );

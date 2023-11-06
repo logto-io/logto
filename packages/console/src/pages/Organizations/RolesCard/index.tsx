@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import ActionsButton from '@/components/ActionsButton';
+import Breakable from '@/components/Breakable';
 import FormCard from '@/components/FormCard';
 import { RoleOption } from '@/components/OrganizationRolesSelect';
 import Tag from '@/ds-components/Tag';
@@ -80,7 +81,7 @@ function RolesCard() {
                 <div className={styles.permissions}>
                   {scopes.map(({ id, name }) => (
                     <Tag key={id} variant="cell">
-                      {name}
+                      <Breakable>{name}</Breakable>
                     </Tag>
                   ))}
                 </div>
