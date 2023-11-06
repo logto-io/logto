@@ -10,3 +10,4 @@ export const reservationLink = buildUrl('https://calendly.com/logto/30min', {
   // Note: month format is YYYY-MM
   month: new Date().toISOString().slice(0, 7),
 });
+export const trustAndSecurityLink = 'https://logto.io/trust-and-security';

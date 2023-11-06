@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  padding: _.unit(5.5) _.unit(6);
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+}
+
+.description {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}

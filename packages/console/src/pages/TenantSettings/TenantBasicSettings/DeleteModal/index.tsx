@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
 import { type TenantResponse } from '@/cloud/types/router';
-import { tenantTagMap } from '@/components/TenantEnvTag';
+import { tenantAbbreviatedTagNameMap } from '@/components/TenantEnvTag';
 import { contactEmailLink } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TextLink from '@/ds-components/TextLink';
@@ -38,7 +38,7 @@ function DeleteModal({ isOpen, isLoading, onClose, onDelete, tenant }: Props) {
           <Trans components={{ span: <span className={styles.bold} /> }}>
             {t('tenants.delete_modal.description_line1', {
               name,
-              tag: t(tenantTagMap[tag], {}), // Referred to the use in DynamicT component.
+              tag: t(tenantAbbreviatedTagNameMap[tag], {}), // Referred to the use in DynamicT component.
             })}
           </Trans>
         </p>
