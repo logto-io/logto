@@ -15,7 +15,7 @@ const action = {
   nav_skip: 'Hoppa över',
   agree: 'Godkänn',
   got_it: 'Uppfattat',
-  sign_in_with: 'Fortsätt som {{name}}',
+  sign_in_with: 'Fortsätt med {{name}}',
   forgot_password: 'Glömt ditt lösenord?',
   switch_to: 'Byt till {{method}}',
   sign_in_via_passcode: 'Logga in med verifieringskod',
