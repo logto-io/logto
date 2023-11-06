@@ -12,6 +12,7 @@ import {
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 
+import { createCloudConnectionLibrary } from '../cloud-connection.js';
 import { createConnectorLibrary } from '../connector.js';
 
 const { jest } = import.meta;
@@ -49,12 +50,20 @@ const queries = new MockQueries({
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
 });
+const cloudConnection = createCloudConnectionLibrary({
+  getCloudConnectionData: jest.fn().mockResolvedValue({
+    appId: 'appId',
+    appSecret: 'appSecret',
+    resource: 'resource',
+  }),
+  getOidcConfigs: jest.fn(),
+});
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
 const { createSignInExperienceLibrary } = await import('./index.js');
 const { validateLanguageInfo, removeUnavailableSocialConnectorTargets, getFullSignInExperience } =
-  createSignInExperienceLibrary(queries, connectorLibrary, ssoConnectorLibrary);
+  createSignInExperienceLibrary(queries, connectorLibrary, ssoConnectorLibrary, cloudConnection);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -125,6 +134,37 @@ describe('remove unavailable social connector targets', () => {
     await removeUnavailableSocialConnectorTargets();
     expect(updateDefaultSignInExperience).toBeCalledWith({
       socialSignInConnectorTargets: [socialTarget01, socialTarget02],
+    });
+  });
+});
+
+describe('getFullSignInExperience()', () => {
+  it('should return full sign-in experience', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      wellConfiguredSsoConnector,
+    ]);
+
+    const fullSignInExperience = await getFullSignInExperience();
+
+    expect(fullSignInExperience).toStrictEqual({
+      ...mockSignInExperience,
+      socialConnectors: [],
+      socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
+      forgotPassword: {
+        email: false,
+        phone: false,
+      },
+      ssoConnectors: [
+        {
+          id: wellConfiguredSsoConnector.id,
+          connectorName: wellConfiguredSsoConnector.connectorName,
+          logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
+          darkLogo: undefined,
+        },
+      ],
+      isDevelopmentTenant: false,
     });
   });
 });

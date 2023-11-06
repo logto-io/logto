@@ -18,6 +18,7 @@ export type FullSignInExperience = SignInExperience & {
   socialConnectors: ConnectorMetadataWithId[];
   ssoConnectors: SsoConnectorMetadata[];
   forgotPassword: ForgotPassword;
+  isDevelopmentTenant: boolean;
 };
 
 export const guardFullSignInExperience: z.ZodType<FullSignInExperience> =
@@ -25,4 +26,5 @@ export const guardFullSignInExperience: z.ZodType<FullSignInExperience> =
     socialConnectors: connectorMetadataGuard.extend({ id: z.string() }).array(),
     ssoConnectors: ssoConnectorMetadataGuard.array(),
     forgotPassword: z.object({ phone: z.boolean(), email: z.boolean() }),
+    isDevelopmentTenant: z.boolean(),
   });
