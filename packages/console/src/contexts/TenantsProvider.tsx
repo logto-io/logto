@@ -49,6 +49,7 @@ type Tenants = {
   /** The current tenant ID parsed from the URL. */
   currentTenantId: string;
   currentTenant?: TenantResponse;
+  isDevTenant: boolean;
   /**
    * Indicates if the Access Token has been validated for use. Will be reset to `pending` when the current tenant changes.
    *
@@ -69,7 +70,7 @@ const { tenantId, indicator } = defaultManagementApi.resource;
 const defaultTenantResponse: TenantResponse = {
   id: tenantId,
   name: `tenant_${tenantId}`,
-  tag: TenantTag.Development,
+  tag: TenantTag.Production,
   indicator,
   subscription: {
     status: 'active',
@@ -96,6 +97,7 @@ export const TenantsContext = createContext<Tenants>({
   removeTenant: noop,
   updateTenant: noop,
   currentTenantId: '',
+  isDevTenant: false,
   currentTenantStatus: 'pending',
   setCurrentTenantStatus: noop,
   navigateTenant: noop,
@@ -169,6 +171,7 @@ function TenantsProvider({ children }: Props) {
       },
       isInitComplete,
       currentTenantId,
+      isDevTenant: currentTenant?.tag === TenantTag.Development,
       currentTenant,
       currentTenantStatus,
       setCurrentTenantStatus,
