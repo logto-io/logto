@@ -23,7 +23,7 @@ export default class UserSsoIdentityQueries extends SchemaQueries<
     ssoIdentityId: string
   ): Promise<Nullable<UserSsoIdentity>> {
     return this.pool.maybeOne<UserSsoIdentity>(sql`
-      select user_id
+      select *
       from ${UserSsoIdentities.table}
       where ${UserSsoIdentities.fields.issuer} = ${issuer}
       and  ${UserSsoIdentities.fields.identityId} = ${ssoIdentityId}

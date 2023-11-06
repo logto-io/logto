@@ -24,16 +24,15 @@ jest
 const { getSsoAuthorizationUrl } = await import('./single-sign-on.js');
 
 describe('Single sign on util methods tests', () => {
+  const mockContext: WithLogContext = {
+    ...createContextWithRouteParameters(),
+    ...createMockLogContext(),
+  };
+
+  const mockProvider = createMockProvider();
+  const tenant = new MockTenant(mockProvider);
+
   describe('getSsoAuthorizationUrl tests', () => {
-    const mockContext: WithLogContext = {
-      ...createContextWithRouteParameters(),
-      ...createMockLogContext(),
-    };
-
-    const mockProvider = createMockProvider();
-
-    const tenant = new MockTenant(mockProvider);
-
     it('should throw an error if the connector config is invalid', async () => {
       await expect(getSsoAuthorizationUrl(mockContext, tenant, mockSsoConnector)).rejects.toThrow(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
