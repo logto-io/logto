@@ -14,8 +14,6 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
-
 import { storeInteractionResult } from './interaction.js';
 import { assignConnectorSessionResult, getConnectorSessionResult } from './social-verification.js';
 
@@ -120,7 +118,7 @@ export const getSsoAuthentication = async (
 
 // Handle the SSO authentication result and return the user id
 export const handleSsoAuthentication = async (
-  ctx: WithLogContext & WithInteractionHooksContext,
+  ctx: WithLogContext,
   tenant: TenantContext,
   connectorData: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
@@ -166,7 +164,7 @@ export const handleSsoAuthentication = async (
 };
 
 const signInWithSsoAuthentication = async (
-  ctx: WithLogContext & WithInteractionHooksContext,
+  ctx: WithLogContext,
   { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
   {
     connectorData: { id: connectorId, syncProfile },
@@ -220,7 +218,7 @@ const signInWithSsoAuthentication = async (
 };
 
 const signInAndLinkWithSsoAuthentication = async (
-  ctx: WithLogContext & WithInteractionHooksContext,
+  ctx: WithLogContext,
   { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries }: Queries,
   {
     connectorData: { id: connectorId, syncProfile },
@@ -277,7 +275,7 @@ const signInAndLinkWithSsoAuthentication = async (
 };
 
 const registerWithSsoAuthentication = async (
-  ctx: WithLogContext & WithInteractionHooksContext,
+  ctx: WithLogContext,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
