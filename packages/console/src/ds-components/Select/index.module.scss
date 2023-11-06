@@ -28,6 +28,10 @@
       display: flex;
       align-items: center;
       gap: _.unit(1);
+
+      &.focused {
+        background: rgba(0, 0, 0, 12%);
+      }
     }
 
     .close {
