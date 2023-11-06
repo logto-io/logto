@@ -63,7 +63,7 @@ export default async function initApp(app: Koa): Promise<void> {
   if (isHttpsEnabled && httpsCert && httpsKey) {
     const createHttp2Server = async () =>
       http2.createSecureServer(
-        { cert: await fs.readFile(httpsCert), key: await fs.readFile(httpsKey) },
+        { cert: await fs.readFile(httpsCert), key: await fs.readFile(httpsKey), allowHTTP1: true },
         app.callback()
       );
 
