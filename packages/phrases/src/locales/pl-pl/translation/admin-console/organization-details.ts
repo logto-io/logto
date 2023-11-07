@@ -38,7 +38,7 @@ const organization_details = {
   remove_user_from_organization_description:
     'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
   /** UNTRANSLATED */
-  search_user_placeholder: 'Type to search and select users',
+  search_user_placeholder: 'Search by name, email, phone or user ID',
   /** UNTRANSLATED */
   at_least_one_user: 'At least one user is required.',
 };
