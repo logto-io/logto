@@ -8,6 +8,7 @@ import OrganizationIcon from '@/assets/icons/organization-preview.svg';
 import Tip from '@/assets/icons/tip.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import { RoleOption } from '@/components/OrganizationRolesSelect';
 import ThemedIcon from '@/components/ThemedIcon';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import IconButton from '@/ds-components/IconButton';
@@ -82,7 +83,7 @@ function UserOrganizations() {
             <div className={styles.roles}>
               {organizationRoles.map(({ id, name }) => (
                 <Tag key={id} variant="cell">
-                  {name}
+                  <RoleOption value={id} title={name} />
                 </Tag>
               ))}
             </div>
