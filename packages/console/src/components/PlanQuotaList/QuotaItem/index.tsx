@@ -10,6 +10,8 @@ import {
   quotaItemPhrasesMap,
   quotaItemLimitedPhrasesMap,
 } from '@/consts/quota-item-phrases';
+import DynamicT from '@/ds-components/DynamicT';
+import Tag from '@/ds-components/Tag';
 import { type SubscriptionPlanQuota } from '@/types/subscriptions';
 
 import * as styles from './index.module.scss';
@@ -19,9 +21,10 @@ type Props = {
   quotaKey: keyof SubscriptionPlanQuota;
   quotaValue: SubscriptionPlanQuota[keyof SubscriptionPlanQuota];
   isDiffItem?: boolean;
+  isComingSoonTagVisible?: boolean;
 };
 
-function QuotaItem({ hasIcon, quotaKey, quotaValue, isDiffItem }: Props) {
+function QuotaItem({ hasIcon, quotaKey, quotaValue, isDiffItem, isComingSoonTagVisible }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.subscription.quota_item' });
   const isUnlimited = quotaValue === null;
   const isNotCapable = quotaValue === 0 || quotaValue === false;
@@ -49,6 +52,11 @@ function QuotaItem({ hasIcon, quotaKey, quotaValue, isDiffItem }: Props) {
             </>
           )}
         </span>
+        {isComingSoonTagVisible && (
+          <Tag>
+            <DynamicT forKey="general.coming_soon" />
+          </Tag>
+        )}
       </span>
     </li>
   );

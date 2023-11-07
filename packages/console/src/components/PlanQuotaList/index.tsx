@@ -11,12 +11,20 @@ import * as styles from './index.module.scss';
 type Props = {
   quota: Partial<SubscriptionPlanQuota>;
   featuredQuotaKeys?: Array<keyof SubscriptionPlanQuota>;
+  comingSoonQuotaKeys?: Array<keyof SubscriptionPlanQuota>;
   className?: string;
   isDiff?: boolean;
   hasIcon?: boolean;
 };
 
-function PlanQuotaList({ quota, featuredQuotaKeys, isDiff, hasIcon, className }: Props) {
+function PlanQuotaList({
+  quota,
+  featuredQuotaKeys,
+  comingSoonQuotaKeys,
+  isDiff,
+  hasIcon,
+  className,
+}: Props) {
   const items = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
     const entries = Object.entries(quota) as Array<
@@ -43,6 +51,9 @@ function PlanQuotaList({ quota, featuredQuotaKeys, isDiff, hasIcon, className }:
           quotaKey={quotaKey}
           quotaValue={quotaValue}
           hasIcon={hasIcon}
+          isComingSoonTagVisible={
+            (quotaValue === null || Boolean(quotaValue)) && comingSoonQuotaKeys?.includes(quotaKey)
+          }
         />
       ))}
     </ul>

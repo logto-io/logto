@@ -6,6 +6,7 @@ import {
   type SubscriptionPlanTableGroupKeyMap,
   SubscriptionPlanTableGroupKey,
   ReservedPlanName,
+  type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
 
 import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './env';
@@ -79,6 +80,12 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
   [ReservedPlanId.pro]: 48,
 };
 
+export const organizationEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: false,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
+};
+
 /**
  * Note: this is only for display purpose.
  *
@@ -113,6 +120,7 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   hooksLimit: undefined,
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
+  organizationEnabled: true,
 };
 
 /**
@@ -150,9 +158,15 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'rolesLimit',
     'scopesPerRoleLimit',
   ],
+  [SubscriptionPlanTableGroupKey.organization]: ['organizationEnabled'],
   [SubscriptionPlanTableGroupKey.auditLogs]: ['auditLogsRetentionDays'],
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],
 }) satisfies SubscriptionPlanTableGroupKeyMap;
 
 export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();
+
+export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
+  'omniSignInEnabled',
+  'organizationEnabled',
+];

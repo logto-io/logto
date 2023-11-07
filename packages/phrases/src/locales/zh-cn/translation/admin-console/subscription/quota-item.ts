@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: '移除你的自定义域名',
   },
   omni_sign_in_enabled: {
-    name: 'Omni 登录',
-    limited: 'Omni 登录',
-    unlimited: 'Omni 登录',
-    not_eligible: '禁用你的 Omni 登录',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: '内置电子邮件连接器',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}}个 Webhooks',
     unlimited: '无限制的 Webhooks',
     not_eligible: '移除您的 Webhooks',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '审计日志保留',

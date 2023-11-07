@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Remove your custom domain',
   },
   omni_sign_in_enabled: {
-    name: 'Omni sign-in',
-    limited: 'Omni sign-in',
-    unlimited: 'Omni sign-in',
-    not_eligible: 'Disable your omni sign-in',
+    name: 'SSO',
+    limited: 'SSO',
+    unlimited: 'SSO',
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Built-in email connector',
@@ -92,6 +92,12 @@ const quota_item = {
     limited_other: '{{count, number}} webhooks',
     unlimited: 'Unlimited webhooks',
     not_eligible: 'Remove your webhooks',
+  },
+  organization_enabled: {
+    name: 'Organization',
+    limited: 'Organization',
+    unlimited: 'Organization',
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Audit logs retention',

@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: 'Rimuovi il tuo dominio personalizzato',
   },
   omni_sign_in_enabled: {
-    name: 'Omnisign-in',
-    limited: 'Omnisign-in',
-    unlimited: 'Omnisign-in',
-    not_eligible: 'Disabilita il tuo Omnisign-in',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Connettore email incorporato',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}} webhooks',
     unlimited: 'Webhook illimitati',
     not_eligible: 'Rimuovi i tuoi webhook',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Conservazione log di audit',

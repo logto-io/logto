@@ -13,8 +13,11 @@ export type SubscriptionPlanQuota = Omit<
   SubscriptionPlanResponse['quota'],
   'builtInEmailConnectorEnabled'
 > & {
+  // Support
   communitySupportEnabled: boolean;
   ticketSupportResponseTime: number;
+  // Organization
+  organizationEnabled: boolean;
 };
 
 export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {
@@ -54,6 +57,7 @@ export enum SubscriptionPlanTableGroupKey {
   roles = 'roles',
   auditLogs = 'auditLogs',
   hooks = 'hooks',
+  organization = 'organization',
   support = 'support',
 }
 

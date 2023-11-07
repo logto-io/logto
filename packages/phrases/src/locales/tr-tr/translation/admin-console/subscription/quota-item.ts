@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: 'Özel alan adınızı kaldirin',
   },
   omni_sign_in_enabled: {
-    name: 'Omni oturumu aç',
-    limited: 'Omni oturumu aç',
-    unlimited: 'Omni oturumu aç',
-    not_eligible: 'Omni oturumunu devre dışı bırakın',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Dahili e-posta bağlayıcı',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}} webhooks',
     unlimited: 'Sınırsız webhooklar',
     not_eligible: 'Webhooklarınızı kaldırın',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Denetim günlükleri saklama süresi',
