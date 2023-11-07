@@ -26,7 +26,7 @@
     "@silverhand/essentials": "^2.8.4",
     "got": "^13.0.0",
     "snakecase-keys": "^5.4.4",
-    "zod": "^3.22.3"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@jest/types": "^29.5.0",

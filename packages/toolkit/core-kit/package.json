@@ -48,7 +48,7 @@
     "color": "^4.2.3"
   },
   "optionalDependencies": {
-    "zod": "^3.22.3"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@jest/types": "^29.0.3",
