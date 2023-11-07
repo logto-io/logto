@@ -10,18 +10,24 @@ import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
+
+import { type CloudConnectionLibrary } from '../cloud-connection.js';
 
 import { type FullSignInExperience } from './types.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
 
+export const developmentTenantPlanId = 'dev-tenant';
+
 export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
 
 export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
-  { getAvailableSsoConnectors }: SsoConnectorLibrary
+  { getAvailableSsoConnectors }: SsoConnectorLibrary,
+  cloudConnection: CloudConnectionLibrary
 ) => {
   const {
     customPhrases: { findAllCustomLanguageTags },
@@ -79,12 +85,35 @@ export const createSignInExperienceLibrary = (
     );
   };
 
+  /**
+   * Query the tenant subscription plan to determine if the tenant is a development tenant.
+   */
+  const getIsDevelopmentTenant = async (): Promise<boolean> => {
+    const { isCloud, isIntegrationTest } = EnvSet.values;
+
+    // Cloud only feature, return false in non-cloud environments
+    if (!isCloud) {
+      return false;
+    }
+
+    // Disable in integration tests
+    if (isIntegrationTest) {
+      return false;
+    }
+
+    const plan = await getTenantSubscriptionPlan(cloudConnection);
+
+    return plan.id === developmentTenantPlanId;
+  };
+
   const getFullSignInExperience = async (): Promise<FullSignInExperience> => {
-    const [signInExperience, logtoConnectors, ssoConnectors] = await Promise.all([
-      findDefaultSignInExperience(),
-      getLogtoConnectors(),
-      getActiveSsoConnectors(),
-    ]);
+    const [signInExperience, logtoConnectors, ssoConnectors, isDevelopmentTenant] =
+      await Promise.all([
+        findDefaultSignInExperience(),
+        getLogtoConnectors(),
+        getActiveSsoConnectors(),
+        getIsDevelopmentTenant(),
+      ]);
 
     const forgotPassword = {
       phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
@@ -109,6 +138,7 @@ export const createSignInExperienceLibrary = (
       socialConnectors,
       ssoConnectors,
       forgotPassword,
+      isDevelopmentTenant,
     };
   };
 

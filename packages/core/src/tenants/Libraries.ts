@@ -28,7 +28,8 @@ export default class Libraries {
   signInExperiences = createSignInExperienceLibrary(
     this.queries,
     this.connectors,
-    this.ssoConnector
+    this.ssoConnector,
+    this.cloudConnection
   );
 
   constructor(
