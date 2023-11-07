@@ -11,5 +11,3 @@ export const reservedPlanIdOrder: string[] = [
 ];
 
 export const checkoutStateQueryKey = 'checkout-state';
-
-export const checkoutSuccessCallbackPath = 'checkout-success';

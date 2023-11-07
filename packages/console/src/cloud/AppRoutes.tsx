@@ -1,8 +1,10 @@
 import { Route, Routes } from 'react-router-dom';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
-import { GlobalAnonymousRoute } from '@/contexts/TenantsProvider';
+import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import Callback from '@/pages/Callback';
+import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 
 import * as styles from './AppRoutes.module.scss';
 import Main from './pages/Main';
@@ -16,6 +18,12 @@ function AppRoutes() {
         <Route path={GlobalAnonymousRoute.Callback} element={<Callback />} />
         <Route path={GlobalAnonymousRoute.SocialDemoCallback} element={<SocialDemoCallback />} />
         <Route element={<ProtectedRoutes />}>
+          {isDevFeaturesEnabled && (
+            <Route
+              path={GlobalRoute.CheckoutSuccessCallback}
+              element={<CheckoutSuccessCallback />}
+            />
+          )}
           <Route index element={<Main />} />
         </Route>
       </Routes>
