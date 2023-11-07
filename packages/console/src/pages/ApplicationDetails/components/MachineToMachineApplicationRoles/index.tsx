@@ -129,7 +129,6 @@ function MachineToMachineApplicationRoles({ application }: Props) {
         filter={
           <div className={styles.filter}>
             <Search
-              inputClassName={styles.searchInput}
               defaultValue={keyword}
               isClearable={Boolean(keyword)}
               placeholder={t('application_details.roles.search')}

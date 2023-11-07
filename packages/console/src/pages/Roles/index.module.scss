@@ -1,9 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.search {
-  width: 306px;
-}
-
 .type,
 .description {
   @include _.text-ellipsis;
