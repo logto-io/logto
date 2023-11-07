@@ -45,6 +45,7 @@ export default function initOidc(
   const {
     resources: { findResourceByIndicator, findDefaultResource },
     users: { findUserById },
+    organizations,
   } = queries;
   const { findUserScopesForResourceIndicator } = libraries.users;
   const { findApplicationScopesForResourceIndicator } = libraries.applications;
@@ -240,7 +241,10 @@ export default function initOidc(
                 await Promise.all(
                   getUserClaims(use, scope, claims, rejected).map(
                     async (claim) =>
-                      [claim, await getUserClaimData(user, claim, libraries.users)] as const
+                      [
+                        claim,
+                        await getUserClaimData(user, claim, libraries.users, organizations),
+                      ] as const
                   )
                 )
               ),
