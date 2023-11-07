@@ -62,7 +62,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     }),
     async (ctx, next) => {
       const { query } = ctx.guard;
-      const search = parseSearchOptions(['name'], query);
+      const search = parseSearchOptions(['id', 'name'], query);
       const { limit, offset } = ctx.pagination;
       const [count, entities] = await organizations.findAll(limit, offset, search);
 
