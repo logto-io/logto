@@ -3121,6 +3121,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@authenio/samlify-node-xmllint':
+        specifier: ^2.0.0
+        version: 2.0.0(samlify@2.8.10)
       '@aws-sdk/client-s3':
         specifier: ^3.315.0
         version: 3.315.0
@@ -3283,6 +3286,9 @@ importers:
       roarr:
         specifier: ^7.11.0
         version: 7.11.0
+      samlify:
+        specifier: 2.8.10
+        version: 2.8.10
       semver:
         specifier: ^7.3.8
         version: 7.3.8
@@ -4164,6 +4170,15 @@ packages:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.18
     dev: true
+
+  /@authenio/samlify-node-xmllint@2.0.0(samlify@2.8.10):
+    resolution: {integrity: sha512-V9cQ0CHqu3JwOmbSecGPUnzIES5kHxD00FEZKnWh90ksQUJG5/TscV2r9XLbKp7MlRMOSUfWxecM35xPSLFdSg==}
+    peerDependencies:
+      samlify: '>= 2.6.0'
+    dependencies:
+      node-xmllint: 1.0.0
+      samlify: 2.8.10
+    dev: false
 
   /@authenio/xml-encryption@2.0.2:
     resolution: {integrity: sha512-cTlrKttbrRHEw3W+0/I609A2Matj5JQaRvfLtEIGZvlN0RaPi+3ANsMeqAyCAVlH/lUIW2tmtBlSMni74lcXeg==}
@@ -16807,6 +16822,10 @@ packages:
     resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
     dependencies:
       asn1: 0.2.6
+    dev: false
+
+  /node-xmllint@1.0.0:
+    resolution: {integrity: sha512-71UV2HRUP+djvHpdyatiuv+Y1o8hI4ZI7bMfuuoACMLR1JJCErM4WXAclNeHd6BgHXkqeqnnAk3wpDkSQWmFXw==}
     dev: false
 
   /nodemailer@6.9.1:
