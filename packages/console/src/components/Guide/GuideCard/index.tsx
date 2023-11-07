@@ -75,7 +75,9 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {isSubscriptionRequired && <ProTag />}
+            {target === ApplicationType.MachineToMachine && (
+              <ProTag isVisibleInProdTenant={isSubscriptionRequired} />
+            )}
           </div>
           <div className={styles.description} title={description}>
             {description}

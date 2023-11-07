@@ -3,8 +3,6 @@ import { useContext, useRef } from 'react';
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import MauExceededModal from '@/components/MauExceededModal';
-import PaymentOverdueModal from '@/components/PaymentOverdueModal';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -14,6 +12,7 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 import { getPath } from '../ConsoleContent/Sidebar';
 import { useSidebarMenuItems } from '../ConsoleContent/Sidebar/hook';
 
+import TenantNotificationContainer from './TenantNotificationContainer';
 import TenantSuspendedPage from './TenantSuspendedPage';
 import * as styles from './index.module.scss';
 import { type AppContentOutletContext } from './types';
@@ -22,7 +21,6 @@ export default function AppContent() {
   const { isLoading } = useUserPreferences();
   const { currentTenant } = useContext(TenantsContext);
   const isTenantSuspended = isCloud && currentTenant?.isSuspended;
-  const shouldCheckSubscriptionState = isCloud && !currentTenant?.isSuspended;
 
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
@@ -40,12 +38,7 @@ export default function AppContent() {
           <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
         )}
       </div>
-      {shouldCheckSubscriptionState && (
-        <>
-          <MauExceededModal />
-          <PaymentOverdueModal />
-        </>
-      )}
+      <TenantNotificationContainer />
     </>
   );
 }

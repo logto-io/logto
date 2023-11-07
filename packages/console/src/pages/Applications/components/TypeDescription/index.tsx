@@ -31,7 +31,7 @@ function TypeDescription({
       <div className={styles.description}>{description}</div>
       {hasProTag && (
         <div className={styles.proTag}>
-          <ProTag />
+          <ProTag isVisibleInProdTenant />
         </div>
       )}
     </div>
