@@ -1,4 +1,4 @@
-import { cls } from '#src/utils.js';
+import { cls, waitFor } from '#src/utils.js';
 
 import ExpectExperience from './expect-experience.js';
 
@@ -25,6 +25,8 @@ export default class ExpectMfaExperience extends ExpectExperience {
   }
 
   async toClickSwitchFactorsLink({ isBinding }: { isBinding: boolean }) {
+    // Wait for the page to be fully rendered otherwise sometimes the link is rendered but not clickable.
+    await waitFor(500);
     await this.toClick(
       'a',
       isBinding ? 'Switch to another method' : 'Try another method to verify'
