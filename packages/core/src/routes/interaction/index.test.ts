@@ -125,6 +125,11 @@ const tenantContext = new MockTenant(
       // @ts-expect-error
       return connector as LogtoConnector;
     },
+  },
+  {
+    ssoConnectors: {
+      getAvailableSsoConnectors: jest.fn().mockResolvedValue([]),
+    },
   }
 );
 
