@@ -47,6 +47,7 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
 };
 
 export default Object.freeze(session);

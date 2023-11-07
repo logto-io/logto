@@ -51,6 +51,8 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled:
+    'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',
 };
 
 export default Object.freeze(session);

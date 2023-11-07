@@ -33,6 +33,7 @@ import {
   verifyIdentifierSettings,
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
+import { verifySsoOnlyEmailIdentifier } from './utils/single-sign-on.js';
 import { validatePassword } from './utils/validate-password.js';
 import {
   verifyIdentifierPayload,
@@ -82,6 +83,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       if (identifier && event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifier, signInExperience);
+        await verifySsoOnlyEmailIdentifier(libraries.ssoConnectors, identifier);
       }
 
       if (profile && event !== InteractionEvent.ForgotPassword) {
@@ -181,6 +183,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifierPayload, signInExperience);
+        await verifySsoOnlyEmailIdentifier(libraries.ssoConnectors, identifierPayload);
       }
 
       const verifiedIdentifier = await verifyIdentifierPayload(

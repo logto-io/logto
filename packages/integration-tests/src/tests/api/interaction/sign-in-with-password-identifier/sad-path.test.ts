@@ -1,17 +1,24 @@
 import { InteractionEvent, SignInMode } from '@logto/schemas';
 
-import { suspendUser } from '#src/api/admin-user.js';
+import { createUser, deleteUser, suspendUser } from '#src/api/admin-user.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { createSsoConnector } from '#src/api/sso-connector.js';
+import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
+import { clearSsoConnectors } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateName, generatePassword } from '#src/utils.js';
+import { generateEmail, generateName, generatePassword } from '#src/utils.js';
 
 describe('Sign-in flow sad path using password identifiers', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
+  });
+
+  afterAll(async () => {
+    await clearSsoConnectors();
   });
 
   it('Should fail to sign-in with password if sign-in mode is register only', async () => {
@@ -175,6 +182,31 @@ describe('Sign-in flow sad path using password identifiers', () => {
         statusCode: 422,
       }
     );
+  });
+
+  it('Should fail to sign-in with email and password if the email domain is enabled for SSO only', async () => {
+    const password = generatePassword();
+    const email = generateEmail('sso-sad-path.io');
+    const user = await createUser({ primaryEmail: email, password });
+
+    await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      domains: ['sso-sad-path.io'],
+    });
+
+    const client = await initClient();
+
+    await expectRejects(
+      client.send(putInteraction, {
+        event: InteractionEvent.SignIn,
+        identifier: { email, password },
+      }),
+      {
+        code: 'session.sso_enabled',
+        statusCode: 422,
+      }
+    );
+    await deleteUser(user.id);
   });
 
   it('Should fail to sign-in with username and password if the user is suspended', async () => {

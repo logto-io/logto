@@ -1,11 +1,18 @@
 import { type ConnectorSession, ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
-import { InteractionEvent, type User, type UserSsoIdentity } from '@logto/schemas';
+import {
+  type IdentifierPayload,
+  InteractionEvent,
+  type User,
+  type UserSsoIdentity,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
@@ -338,4 +345,41 @@ const registerWithSsoAuthentication = async (
   });
 
   return userId;
+};
+
+// Guard the SSO only email identifier
+export const verifySsoOnlyEmailIdentifier = async (
+  { getAvailableSsoConnectors }: SsoConnectorLibrary,
+  identifier: IdentifierPayload
+) => {
+  // TODO: @simeng-li remove the dev features check when the SSO feature is released
+  if (!('email' in identifier) || !EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
+  const { email } = identifier;
+  const availableSsoConnectors = await getAvailableSsoConnectors();
+  const domain = email.split('@')[1];
+
+  // Invalid email domain
+  if (!domain) {
+    return;
+  }
+
+  const availableConnectors = availableSsoConnectors.filter(
+    ({ domains, ssoOnly }) => domains.includes(domain) && ssoOnly
+  );
+
+  assertThat(
+    availableConnectors.length === 0,
+    new RequestError(
+      {
+        code: 'session.sso_enabled',
+        status: 422,
+      },
+      {
+        ssoConnectors: availableConnectors,
+      }
+    )
+  );
 };
