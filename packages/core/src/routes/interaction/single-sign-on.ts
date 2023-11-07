@@ -8,6 +8,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -22,6 +23,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
   tenant: TenantContext
 ) {
   const {
+    id: tenantId,
     provider,
     libraries: { ssoConnector },
   } = tenant;
@@ -74,20 +76,20 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       try {
         // Will throw ConnectorError if the config is invalid
-        const connectorInstance = new ssoConnectorFactories[connectorData.providerName].constructor(
-          connectorData
-        );
+        const factory = ssoConnectorFactories[connectorData.providerName];
+        const connectorInstance = new factory.constructor(connectorData, tenantId);
 
-        // Will throw ConnectorError if failed to fetch the provider's config
-        const redirectTo = await connectorInstance.getAuthorizationUrl(
-          { state, redirectUri },
-          async (connectorSession: ConnectorSession) =>
-            assignConnectorSessionResult(ctx, provider, connectorSession)
-        );
+        if (connectorInstance instanceof OidcSsoConnector) {
+          const redirectTo = await connectorInstance.getAuthorizationUrl(
+            { state, redirectUri },
+            async (connectorSession: ConnectorSession) =>
+              assignConnectorSessionResult(ctx, provider, connectorSession)
+          );
 
-        // TODO: Add SAML connector support later
+          ctx.body = { redirectTo };
+        }
 
-        ctx.body = { redirectTo };
+        // TODO: Add SAML `getSingleSignOnUrl` here
       } catch (error: unknown) {
         // Catch ConnectorError and re-throw as 500 RequestError
         if (error instanceof ConnectorError) {

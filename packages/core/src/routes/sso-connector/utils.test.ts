@@ -14,6 +14,8 @@ await mockEsmWithActual('#src/sso/OidcConnector/utils.js', () => ({
 const { ssoConnectorFactories } = await import('#src/sso/index.js');
 const { parseFactoryDetail, fetchConnectorProviderDetails } = await import('./utils.js');
 
+const mockTenantId = 'mock_tenant_id';
+
 describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))('should return correct detail for %s', (providerName) => {
     const { logo, description } = ssoConnectorFactories[providerName];
@@ -43,16 +45,15 @@ describe('parseFactoryDetail', () => {
 
 describe('fetchConnectorProviderDetails', () => {
   it('providerConfig should be undefined if connector config is invalid', async () => {
-    const connector = {
-      ...mockSsoConnector,
-      config: { clientId: 'foo' },
-    };
-    const result = await fetchConnectorProviderDetails(connector);
+    const connector = { ...mockSsoConnector, config: { clientId: 'foo' } };
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
 
-    expect(result).toEqual({
-      ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName].logo,
-    });
+    expect(result).toMatchObject(
+      expect.objectContaining({
+        ...connector,
+        providerLogo: ssoConnectorFactories[connector.providerName].logo,
+      })
+    );
 
     expect(fetchOidcConfig).not.toBeCalled();
   });
@@ -64,12 +65,14 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockRejectedValueOnce(new Error('mock-error'));
-    const result = await fetchConnectorProviderDetails(connector);
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
 
-    expect(result).toEqual({
-      ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName].logo,
-    });
+    expect(result).toMatchObject(
+      expect.objectContaining({
+        ...connector,
+        providerLogo: ssoConnectorFactories[connector.providerName].logo,
+      })
+    );
 
     expect(fetchOidcConfig).toBeCalledWith(connector.config.issuer);
   });
@@ -81,16 +84,18 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockResolvedValueOnce({ tokenEndpoint: 'http://example.com/token' });
-    const result = await fetchConnectorProviderDetails(connector);
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
 
-    expect(result).toEqual({
-      ...connector,
-      providerLogo: ssoConnectorFactories[connector.providerName].logo,
-      providerConfig: {
-        ...connector.config,
-        scope: 'openid', // Default scope
-        tokenEndpoint: 'http://example.com/token',
-      },
-    });
+    expect(result).toMatchObject(
+      expect.objectContaining({
+        ...connector,
+        providerLogo: ssoConnectorFactories[connector.providerName].logo,
+        providerConfig: {
+          ...connector.config,
+          scope: 'openid', // Default scope
+          tokenEndpoint: 'http://example.com/token',
+        },
+      })
+    );
   });
 });

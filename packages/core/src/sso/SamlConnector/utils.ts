@@ -1,4 +1,4 @@
-import * as validator from '@authenio/samlify-xsd-schema-validator';
+import * as validator from '@authenio/samlify-node-xmllint';
 import { ConnectorError, ConnectorErrorCodes, socialUserInfoGuard } from '@logto/connector-kit';
 import { type Optional, conditional } from '@silverhand/essentials';
 import { got } from 'got';

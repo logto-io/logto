@@ -14,7 +14,6 @@ import { samlConnectorConfigGuard } from '../types/saml.js';
  * @property data The SAML connector data from the database
  *
  * @method getConfig Get parsed SAML config along with it's metadata. Throws error if config is invalid.
- * @method getAuthorizationUrl Get SAML auth URL.
  * @method getUserInfo Get social user info.
  */
 export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
@@ -49,17 +48,6 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
    */
   async getUserInfo(assertion: Record<string, unknown>) {
     return this.parseSamlAssertion(assertion);
-  }
-
-  /**
-   * Get SAML auth URL.
-   *
-   * @param jti The current session id.
-   *
-   * @returns The SAML auth URL.
-   */
-  async getAuthorizationUrl(jti: string) {
-    return this.getSingleSignOnUrl(jti);
   }
 }
 
