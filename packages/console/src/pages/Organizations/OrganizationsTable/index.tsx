@@ -26,7 +26,11 @@ const pathname = '/organizations';
 /** The organizations API pathname in the management API. */
 const apiPathname = 'api/organizations';
 
-function OrganizationsTable() {
+type Props = {
+  onCreate: () => void;
+};
+
+function OrganizationsTable({ onCreate }: Props) {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const { data: response, error } = useSWR<[OrganizationWithFeatured[], number], RequestError>(
@@ -46,7 +50,7 @@ function OrganizationsTable() {
     <Table
       className={pageLayout.table}
       isLoading={isLoading}
-      placeholder={<EmptyDataPlaceholder />}
+      placeholder={<EmptyDataPlaceholder onCreate={onCreate} />}
       rowGroups={[{ key: 'data', data }]}
       rowClickHandler={({ id }) => {
         navigate(joinPath(pathname, id));

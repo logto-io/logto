@@ -9,7 +9,7 @@ import {
   logtoConsoleUrl as logtoConsoleUrlString,
 } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
-import { expectNavigation, waitFor } from '#src/utils.js';
+import { dcls, expectNavigation, waitFor } from '#src/utils.js';
 
 export const goToAdminConsole = async () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
@@ -90,7 +90,7 @@ export const expectToClickDetailsPageOption = async (page: Page, optionText: str
 
 export const expectModalWithTitle = async (page: Page, title: string | RegExp) => {
   await expect(page).toMatchElement(
-    '.ReactModalPortal div[class$=header] div[class$=titleEllipsis]',
+    ['.ReactModalPortal', dcls('header'), dcls('title')].join(' '),
     {
       text: title,
     }

@@ -1,4 +1,5 @@
-import { condString, joinPath } from '@silverhand/essentials';
+import { joinPath } from '@silverhand/essentials';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -15,7 +16,7 @@ import CreateOrganizationModal from './CreateOrganizationModal';
 import OrganizationsTable from './OrganizationsTable';
 import EmptyDataPlaceholder from './OrganizationsTable/EmptyDataPlaceholder';
 import Settings from './Settings';
-import { createPathname, organizationsPathname } from './consts';
+import { guidePathname, organizationsPathname } from './consts';
 import * as styles from './index.module.scss';
 
 const tabs = Object.freeze({
@@ -28,17 +29,29 @@ type Props = {
 
 function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate, match } = useTenantPathname();
-  const isCreating = match(createPathname);
+  const { navigate } = useTenantPathname();
+  const [isCreating, setIsCreating] = useState(false);
   const { configs } = useConfigs();
   const isInitialSetup = !configs?.organizationCreated;
+
+  const handleCreate = useCallback(() => {
+    if (isInitialSetup) {
+      navigate(organizationsPathname + guidePathname);
+      return;
+    }
+    setIsCreating(true);
+  }, [isInitialSetup, navigate]);
 
   return (
     <div className={pageLayout.container}>
       <CreateOrganizationModal
         isOpen={isCreating}
         onClose={(createdId?: string) => {
-          navigate(organizationsPathname + condString(createdId && `/${createdId}`));
+          if (createdId) {
+            navigate(organizationsPathname + `/${createdId}`);
+            return;
+          }
+          setIsCreating(false);
         }}
       />
       <PageMeta titleKey="organizations.page_title" />
@@ -50,15 +63,13 @@ function Organizations({ tab }: Props) {
             type="primary"
             size="large"
             title="organizations.create_organization"
-            onClick={() => {
-              navigate(createPathname);
-            }}
+            onClick={handleCreate}
           />
         )}
       </div>
       {isInitialSetup && (
         <Card className={styles.emptyCardContainer}>
-          <EmptyDataPlaceholder />
+          <EmptyDataPlaceholder onCreate={handleCreate} />
         </Card>
       )}
       {!isInitialSetup && (
@@ -74,7 +85,7 @@ function Organizations({ tab }: Props) {
               {t('general.settings_nav')}
             </TabNavItem>
           </TabNav>
-          {!tab && <OrganizationsTable />}
+          {!tab && <OrganizationsTable onCreate={handleCreate} />}
           {tab === 'settings' && <Settings />}
         </>
       )}

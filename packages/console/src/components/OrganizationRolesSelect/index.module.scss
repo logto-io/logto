@@ -9,7 +9,11 @@
     gap: _.unit(3);
   }
 
-  > span {
+  > svg {
+    flex-shrink: 0;
+  }
+
+  > div {
     font: var(--font-label-2);
   }
 }

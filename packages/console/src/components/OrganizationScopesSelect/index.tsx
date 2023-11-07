@@ -3,6 +3,8 @@ import { type OrganizationScope } from '@logto/schemas';
 import MultiSelect, { type Option } from '@/ds-components/Select/MultiSelect';
 import useSearchValues from '@/hooks/use-search-values';
 
+import Breakable from '../Breakable';
+
 type Props = {
   value: Array<Option<string>>;
   onChange: (value: Array<Option<string>>) => void;
@@ -22,6 +24,7 @@ function OrganizationScopesSelect({ value, onChange, keyword, setKeyword }: Prop
       options={scopes.map(({ id, name }) => ({ value: id, title: name }))}
       placeholder="organizations.search_permission_placeholder"
       isOptionsLoading={isLoading}
+      renderOption={({ title, value }) => <Breakable>{title ?? value}</Breakable>}
       onChange={onChange}
       onSearch={setKeyword}
     />

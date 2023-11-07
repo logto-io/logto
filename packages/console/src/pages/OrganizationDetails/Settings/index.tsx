@@ -27,7 +27,7 @@ function Settings({ isDeleting, data, onUpdated }: Props) {
     register,
     reset,
     handleSubmit,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
   } = useForm<Partial<Organization>>({
     defaultValues: data,
   });
@@ -59,10 +59,11 @@ function Settings({ isDeleting, data, onUpdated }: Props) {
         title="general.settings_nav"
         description="organization_details.settings_description"
       >
-        <FormField title="general.name">
+        <FormField isRequired title="general.name">
           <TextInput
             placeholder={t('organization_details.name_placeholder')}
-            {...register('name')}
+            error={Boolean(errors.name)}
+            {...register('name', { required: true })}
           />
         </FormField>
         <FormField title="general.description">

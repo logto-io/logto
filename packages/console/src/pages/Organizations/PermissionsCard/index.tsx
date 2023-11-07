@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
 import ActionsButton from '@/components/ActionsButton';
+import Breakable from '@/components/Breakable';
 import FormCard from '@/components/FormCard';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -68,13 +69,17 @@ function PermissionsCard() {
             title: t('general.name'),
             dataIndex: 'name',
             colSpan: 4,
-            render: ({ name }) => <Tag variant="cell">{name}</Tag>,
+            render: ({ name }) => (
+              <Tag variant="cell">
+                <Breakable>{name}</Breakable>
+              </Tag>
+            ),
           },
           {
             title: t('general.description'),
             dataIndex: 'description',
             colSpan: 6,
-            render: ({ description }) => description ?? '-',
+            render: ({ description }) => <Breakable>{description ?? '-'}</Breakable>,
           },
           {
             title: null,

@@ -6,41 +6,73 @@ import type { HorizontalAlignment } from '@/types/positioning';
 
 import type { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';
+import IconButton from '../IconButton';
 
 import ActionMenuButton from './ActionMenuButton';
 import * as styles from './index.module.scss';
 
 export { default as ActionMenuItem } from '../Dropdown/DropdownItem';
 
-type Props = {
+type BaseProps = {
   children: ReactNode;
-  buttonProps: ButtonProps;
   title?: ReactNode;
   dropdownHorizontalAlign?: HorizontalAlignment;
   dropdownClassName?: string;
   isDropdownFullWidth?: boolean;
 };
 
-function ActionMenu({
-  children,
-  buttonProps,
-  title,
-  dropdownHorizontalAlign,
-  dropdownClassName,
-  isDropdownFullWidth = false,
-}: Props) {
+type Props =
+  | (BaseProps & {
+      buttonProps: ButtonProps;
+    })
+  | (BaseProps & {
+      icon: ReactNode;
+    });
+
+/**
+ * A button that can be used to open and close a dropdown menu.
+ *
+ * @param props If `buttonProps` is provided, the button will be rendered using the `ActionMenuButton`
+ * component. Otherwise, `icon` will be required to render the button using the `IconButton`
+ * component.
+ * @see {@link ActionMenuButton} for the list of props that can be passed to the button.
+ * @see {@link IconButton} for how the button will be rendered if `icon` is provided.
+ */
+function ActionMenu(props: Props) {
+  const {
+    children,
+    title,
+    dropdownHorizontalAlign,
+    dropdownClassName,
+    isDropdownFullWidth = false,
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const anchorReference = useRef<HTMLDivElement>(null);
+  const anchorReference = useRef(null);
+  const hasButtonProps = 'buttonProps' in props;
 
   return (
     <div>
-      <ActionMenuButton
-        {...buttonProps}
-        ref={anchorReference}
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      />
+      {hasButtonProps && (
+        <ActionMenuButton
+          // eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking
+          {...props.buttonProps}
+          ref={anchorReference}
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        />
+      )}
+      {!hasButtonProps && (
+        <IconButton
+          ref={anchorReference}
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          {/* eslint-disable-next-line unicorn/consistent-destructuring -- cannot deconstruct before checking */}
+          {props.icon}
+        </IconButton>
+      )}
       <Dropdown
         title={title}
         titleClassName={styles.dropdownTitle}

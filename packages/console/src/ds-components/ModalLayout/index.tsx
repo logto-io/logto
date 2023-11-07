@@ -33,7 +33,7 @@ function ModalLayout({
       <div className={styles.header}>
         <div className={styles.iconAndTitle}>
           {headerIcon}
-          <CardTitle {...cardTitleProps} />
+          <CardTitle isWordWrapEnabled {...cardTitleProps} />
         </div>
         {onClose && (
           <IconButton
