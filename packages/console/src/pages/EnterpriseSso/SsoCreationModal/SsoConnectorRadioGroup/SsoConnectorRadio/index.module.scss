@@ -1,0 +1,46 @@
+@use '@/scss/underscore' as _;
+
+.ssoConnector {
+  font: var(--font-body-2);
+  display: flex;
+
+  .content {
+    flex: 1;
+    margin-left: _.unit(3);
+
+    .name {
+      font: var(--font-label-2);
+      @include _.multi-line-ellipsis(1);
+      padding-right: _.unit(3);
+    }
+
+    .description {
+      font: var(--font-body-3);
+      color: var(--color-text-secondary);
+      margin-top: _.unit(1);
+      @include _.multi-line-ellipsis(4);
+    }
+  }
+}
+
+.container {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: var(--color-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  > img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
