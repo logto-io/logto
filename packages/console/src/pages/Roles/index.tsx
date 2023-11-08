@@ -147,7 +147,6 @@ function Roles() {
         },
         filter: (
           <Search
-            inputClassName={styles.search}
             placeholder={t('roles.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}

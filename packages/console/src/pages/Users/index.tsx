@@ -26,7 +26,6 @@ import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import CreateForm from './components/CreateForm';
 import SuspendedTag from './components/SuspendedTag';
-import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const usersPathname = '/users';
@@ -110,7 +109,6 @@ function Users() {
         ],
         filter: (
           <Search
-            inputClassName={styles.searchInput}
             placeholder={t('users.search')}
             defaultValue={keyword}
             isClearable={Boolean(keyword)}
