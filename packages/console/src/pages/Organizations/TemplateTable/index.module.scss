@@ -2,6 +2,10 @@
 
 .addButton {
   margin-top: _.unit(3);
+
+  svg {
+    color: var(--color-text-secondary);
+  }
 }
 
 .spinner {
