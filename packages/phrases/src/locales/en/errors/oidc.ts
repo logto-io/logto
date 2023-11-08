@@ -1,10 +1,9 @@
 const oidc = {
   aborted: 'The end-user aborted interaction.',
-  invalid_scope: 'Scope {{scope}} is not supported.',
-  invalid_scope_plural: 'Scope {{scopes}} are not supported.',
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Invalid token provided.',
   invalid_client_metadata: 'Invalid client metadata provided.',
-  insufficient_scope: 'Access token missing requested scope {{scopes}}.',
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'Request is invalid.',
   invalid_grant: 'Grant request is invalid.',
   invalid_redirect_uri:

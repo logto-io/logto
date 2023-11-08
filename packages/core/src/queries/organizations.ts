@@ -16,6 +16,7 @@ import {
   type OrganizationWithRoles,
   type UserWithOrganizationRoles,
   type FeaturedUser,
+  type OrganizationScopeEntity,
 } from '@logto/schemas';
 import { conditionalSql, convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
@@ -226,6 +227,28 @@ class RoleUserRelationQueries extends RelationQueries<
 > {
   constructor(pool: CommonQueryMethods) {
     super(pool, OrganizationRoleUserRelations.table, Organizations, OrganizationRoles, Users);
+  }
+
+  /** Get the available scopes of a user in an organization. */
+  async getUserScopes(
+    organizationId: string,
+    userId: string
+  ): Promise<readonly OrganizationScopeEntity[]> {
+    const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
+    const roleScopeRelations = convertToIdentifiers(OrganizationRoleScopeRelations, true);
+    const scopes = convertToIdentifiers(OrganizationScopes, true);
+
+    return this.pool.any<OrganizationScopeEntity>(sql`
+      select distinct on (${scopes.fields.id})
+        ${scopes.fields.id}, ${scopes.fields.name}
+      from ${this.table}
+      join ${roleScopeRelations.table}
+        on ${roleScopeRelations.fields.organizationRoleId} = ${fields.organizationRoleId}
+      join ${scopes.table}
+        on ${scopes.fields.id} = ${roleScopeRelations.fields.organizationScopeId}
+      where ${fields.organizationId} = ${organizationId}
+      and ${fields.userId} = ${userId}
+    `);
   }
 
   /** Replace the roles of a user in an organization. */

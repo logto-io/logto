@@ -1,8 +1,7 @@
 import type { CustomClientMetadata, OidcClientMetadata } from '@logto/schemas';
 import { ApplicationType, customClientMetadataGuard, GrantType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import type { AllClientMetadata, ClientAuthMethod } from 'oidc-provider';
-import { errors } from 'oidc-provider';
+import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
 import type { EnvSet } from '#src/env-set/index.js';
 
@@ -30,7 +29,7 @@ export const getConstantClientMetadata = (
     grant_types:
       type === ApplicationType.MachineToMachine
         ? [GrantType.ClientCredentials]
-        : [GrantType.AuthorizationCode, GrantType.RefreshToken],
+        : [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.OrganizationToken],
     token_endpoint_auth_method: getTokenEndpointAuthMethod(),
     response_types: conditional(type === ApplicationType.MachineToMachine && []),
     // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use

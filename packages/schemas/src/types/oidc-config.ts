@@ -12,4 +12,10 @@ export enum GrantType {
   AuthorizationCode = 'authorization_code',
   RefreshToken = 'refresh_token',
   ClientCredentials = 'client_credentials',
+  /**
+   * The grant type for using refresh token to get organization access token.
+   *
+   * @see {@link https://github.com/logto-io/rfcs | RFC 0001} for more details.
+   */
+  OrganizationToken = 'urn:logto:grant-type:organization_token',
 }

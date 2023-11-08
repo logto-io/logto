@@ -69,6 +69,7 @@ const grantTypeToExchangeByType: Record<GrantType, token.ExchangeByType> = {
   [GrantType.AuthorizationCode]: token.ExchangeByType.AuthorizationCode,
   [GrantType.RefreshToken]: token.ExchangeByType.RefreshToken,
   [GrantType.ClientCredentials]: token.ExchangeByType.ClientCredentials,
+  [GrantType.OrganizationToken]: token.ExchangeByType.RefreshToken,
 };
 
 const getExchangeByType = (grantType: unknown): token.ExchangeByType => {

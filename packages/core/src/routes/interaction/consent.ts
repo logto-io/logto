@@ -12,7 +12,7 @@ import type { WithInteractionDetailsContext } from './middleware/koa-interaction
 
 export default function consentRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<T>>,
-  { provider, libraries, queries }: TenantContext
+  { provider, queries }: TenantContext
 ) {
   router.post(`${interactionPrefix}/consent`, async (ctx, next) => {
     const { interactionDetails } = ctx;

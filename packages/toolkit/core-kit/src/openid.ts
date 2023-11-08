@@ -1,6 +1,17 @@
+/** Scopes that reserved by Logto, which will be added to the auth request automatically. */
 export enum ReservedScope {
   OpenId = 'openid',
   OfflineAccess = 'offline_access',
+}
+
+/** Resources that reserved by Logto, which cannot be defined by users. */
+export enum ReservedResource {
+  /**
+   * The resource for organization template per RFC 0001.
+   *
+   * @see {@link https://github.com/logto-io/rfcs | RFC 0001} for more details.
+   */
+  Organization = 'urn:logto:resource:organizations',
 }
 
 export type UserClaim =
@@ -100,3 +111,48 @@ export const userClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freez
     ])
   ) as Record<UserScope, UserClaim[]>
 );
+
+/**
+ * The prefix of the URN (Uniform Resource Name) for the organization in Logto.
+ *
+ * @example
+ * ```
+ * urn:logto:organization:123 // organization with ID 123
+ * ```
+ * @see {@link https://en.wikipedia.org/wiki/Uniform_Resource_Name | Uniform Resource Name}
+ */
+export const organizationUrnPrefix = 'urn:logto:organization:';
+
+/**
+ * Build the URN (Uniform Resource Name) for the organization in Logto.
+ *
+ * @param organizationId The ID of the organization.
+ * @returns The URN for the organization.
+ * @see {@link organizationUrnPrefix} for the prefix of the URN.
+ * @example
+ * ```ts
+ * buildOrganizationUrn('1') // returns 'urn:logto:organization:1'
+ * ```
+ */
+export const buildOrganizationUrn = (organizationId: string): string =>
+  `${organizationUrnPrefix}${organizationId}`;
+
+/**
+ * Get the organization ID from the URN (Uniform Resource Name) for the organization in Logto.
+ *
+ * @param urn The URN for the organization. Must start with {@link organizationUrnPrefix}.
+ * @returns The ID of the organization.
+ * @throws {TypeError} If the URN is invalid.
+ * @example
+ * ```ts
+ * getOrganizationIdFromUrn('1') // throws TypeError
+ * getOrganizationIdFromUrn('urn:logto:organization:1') // returns '1'
+ * ```
+ */
+export const getOrganizationIdFromUrn = (urn: string): string => {
+  if (!urn.startsWith(organizationUrnPrefix)) {
+    throw new TypeError('Invalid organization URN.');
+  }
+
+  return urn.slice(organizationUrnPrefix.length);
+};

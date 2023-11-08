@@ -11,11 +11,16 @@ import {
 
 import { type FeaturedUser } from './user.js';
 
+/**
+ * The simplified organization scope entity that is returned for some endpoints.
+ */
+export type OrganizationScopeEntity = {
+  id: string;
+  name: string;
+};
+
 export type OrganizationRoleWithScopes = OrganizationRole & {
-  scopes: Array<{
-    id: string;
-    name: string;
-  }>;
+  scopes: OrganizationScopeEntity[];
 };
 
 export const organizationRoleWithScopesGuard: z.ZodType<OrganizationRoleWithScopes> =
