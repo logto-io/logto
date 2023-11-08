@@ -166,7 +166,11 @@ export default function koaGuard<
     if (response !== undefined) {
       const result = response.safeParse(ctx.body);
 
-      if (!result.success) {
+      if (result.success) {
+        // Overwrite the response body with the parsed one, since it will strip out
+        // the properties that are not defined in the schema.
+        ctx.body = result.data;
+      } else {
         if (!EnvSet.values.isProduction) {
           consoleLog.error('Invalid response:', result.error);
         }

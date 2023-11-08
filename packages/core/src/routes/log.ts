@@ -21,7 +21,7 @@ export default function logRoutes<T extends AuthedRouter>(
         applicationId: string().optional(),
         logKey: string().optional(),
       }),
-      response: Logs.guard.omit({ tenantId: true }).array(),
+      response: Logs.guard.array(),
       status: 200,
     }),
     async (ctx, next) => {

@@ -5,10 +5,9 @@ import {
   featuredUserGuard,
   userWithOrganizationRolesGuard,
 } from '@logto/schemas';
-import { type Optional, cond, yes } from '@silverhand/essentials';
+import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { type SearchOptions } from '#src/database/utils.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -94,13 +93,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
       status: [200, 404],
     }),
     async (ctx, next) => {
-      const { q } = ctx.guard.query;
-      const search: Optional<SearchOptions<(typeof userSearchKeys)[number]>> = cond(
-        q && {
-          fields: userSearchKeys,
-          keyword: q,
-        }
-      );
+      const search = parseSearchOptions(userSearchKeys, ctx.guard.query);
 
       const [totalCount, entities] = await organizations.relations.users.getUsersByOrganizationId(
         ctx.guard.params.id,

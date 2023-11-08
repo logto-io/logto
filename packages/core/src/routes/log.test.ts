@@ -9,7 +9,7 @@ const { jest } = import.meta;
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
 const mockLog: Log = { tenantId: 'fake_tenant', id: '1', ...mockBody };
-const mockLogs = [mockLog, { id: '2', ...mockBody }];
+const mockLogs = [mockLog, { tenantId: 'fake_tenant', id: '2', ...mockBody }];
 
 const logs = {
   countLogs: jest.fn().mockResolvedValue({
