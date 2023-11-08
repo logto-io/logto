@@ -44,6 +44,7 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
 };
 
 export default Object.freeze(session);

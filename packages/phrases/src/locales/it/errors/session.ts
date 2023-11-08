@@ -50,6 +50,7 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
 };
 
 export default Object.freeze(session);

@@ -6,7 +6,10 @@ import {
   patchInteractionIdentifiers,
   putInteractionProfile,
   deleteUser,
+  createUser,
 } from '#src/api/index.js';
+import { createSsoConnector } from '#src/api/sso-connector.js';
+import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { initClient, processSession, logoutClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -19,6 +22,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
+import { generatePassword, generateEmail } from '#src/utils.js';
 
 describe('Sign-in flow using password identifiers', () => {
   beforeAll(async () => {
@@ -61,6 +65,57 @@ describe('Sign-in flow using password identifiers', () => {
       identifier: {
         email: userProfile.primaryEmail,
         password: userProfile.password,
+      },
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    await deleteUser(user.id);
+  });
+
+  it('should allow sign-in with email and password with unmatched SSO connector domains', async () => {
+    const { userProfile, user } = await generateNewUser({ primaryEmail: true, password: true });
+    const client = await initClient();
+
+    // Create a new OIDC SSO connector with email domain 'example.com', it should not block the sign-in flow of email logto.io
+    await createSsoConnector(newOidcSsoConnectorPayload);
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        email: userProfile.primaryEmail,
+        password: userProfile.password,
+      },
+    });
+
+    const { redirectTo } = await client.submitInteraction();
+
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    await deleteUser(user.id);
+  });
+
+  it('should allow sign-in with email and password with SSO connector settings ssoOnly to false', async () => {
+    const password = generatePassword();
+    const email = generateEmail('sso-email-password-sign-in-happy-path.io');
+    const user = await createUser({ primaryEmail: email, password });
+    const client = await initClient();
+
+    await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      domains: ['sso-email-password-sign-in-happy-path.io'],
+      ssoOnly: false,
+    });
+
+    await client.successSend(putInteraction, {
+      event: InteractionEvent.SignIn,
+      identifier: {
+        email,
+        password,
       },
     });
 

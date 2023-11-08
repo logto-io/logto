@@ -48,6 +48,8 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled:
+    'Единый вход в систему включен для этого указанного адреса электронной почты. Войдите в систему с помощью SSO.',
 };
 
 export default Object.freeze(session);

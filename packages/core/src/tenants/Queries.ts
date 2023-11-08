@@ -19,6 +19,7 @@ import { createRolesQueries } from '#src/queries/roles.js';
 import { createScopeQueries } from '#src/queries/scope.js';
 import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
+import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
 import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import { createVerificationStatusQueries } from '#src/queries/verification-status.js';
@@ -45,6 +46,7 @@ export default class Queries {
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);
   organizations = new OrganizationQueries(this.pool);
   ssoConnectors = new SsoConnectorQueries(this.pool);
+  userSsoIdentities = new UserSsoIdentityQueries(this.pool);
 
   constructor(
     public readonly pool: CommonQueryMethods,

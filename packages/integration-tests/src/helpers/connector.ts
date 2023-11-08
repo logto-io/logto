@@ -9,11 +9,17 @@ import {
   mockSocialConnectorConfig,
 } from '#src/__mocks__/connectors-mock.js';
 import { listConnectors, deleteConnectorById, postConnector } from '#src/api/index.js';
+import { deleteSsoConnectorById, getSsoConnectors } from '#src/api/sso-connector.js';
 
 export const clearConnectorsByTypes = async (types: ConnectorType[]) => {
   const connectors = await listConnectors();
   const targetConnectors = connectors.filter((connector) => types.includes(connector.type));
   await Promise.all(targetConnectors.map(async (connector) => deleteConnectorById(connector.id)));
+};
+
+export const clearSsoConnectors = async () => {
+  const ssoConnectors = await getSsoConnectors();
+  await Promise.all(ssoConnectors.map(async (connector) => deleteSsoConnectorById(connector.id)));
 };
 
 export const clearConnectorById = async (id: string) => deleteConnectorById(id);
