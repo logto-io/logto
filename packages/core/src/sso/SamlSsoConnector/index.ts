@@ -30,6 +30,11 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
     super(parseConfigResult.data, tenantId, data.id);
   }
 
+  async getIssuer() {
+    const { entityId } = await this.getSamlConfig();
+    return entityId;
+  }
+
   /**
    * Get parsed SAML connector's config along with it's metadata. Throws error if config is invalid.
    *

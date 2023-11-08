@@ -44,6 +44,7 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
 };
 
 export default Object.freeze(session);

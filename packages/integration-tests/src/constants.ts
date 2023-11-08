@@ -1,4 +1,4 @@
-import { SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
+import { type CreateSsoConnector, SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
 import { appendPath, getEnv } from '@silverhand/essentials';
 
 export const logtoUrl = getEnv('INTEGRATION_TESTS_LOGTO_URL', 'http://localhost:3001');
@@ -30,3 +30,19 @@ export const mockSocialAuthPageUrl = 'http://mock.social.com';
 export enum ProviderName {
   OIDC = 'OIDC',
 }
+
+export const newOidcSsoConnectorPayload = {
+  providerName: ProviderName.OIDC,
+  connectorName: 'test-oidc',
+  domains: ['example.io'], // Auto-generated email domain
+  ssoOnly: true,
+  branding: {
+    logo: 'https://logto.io/oidc-logo.png',
+    darkLogo: 'https://logto.io/oidc-dark-logo.png',
+  },
+  config: {
+    clientId: 'foo',
+    clientSecret: 'bar',
+    issuer: `${logtoUrl}/oidc`,
+  },
+} satisfies Partial<CreateSsoConnector>;

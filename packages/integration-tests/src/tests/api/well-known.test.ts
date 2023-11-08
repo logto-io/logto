@@ -3,7 +3,7 @@ import { HTTPError } from 'got';
 
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
-import { logtoUrl } from '#src/constants.js';
+import { newOidcSsoConnectorPayload } from '#src/constants.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -56,25 +56,8 @@ describe('.well-known api', () => {
   });
 
   describe('sso connectors in sign-in experience', () => {
-    const logtoIssuer = `${logtoUrl}/oidc`;
-
-    const newOIDCSsoConnector = {
-      providerName: 'OIDC',
-      connectorName: 'OIDC sso connector',
-      domains: ['logto.io'],
-      branding: {
-        logo: 'https://logto.io/oidc-logo.png',
-        darkLogo: 'https://logto.io/oidc-dark-logo.png',
-      },
-      config: {
-        clientId: 'client-id',
-        clientSecret: 'client-secret',
-        issuer: logtoIssuer,
-      },
-    };
-
     it('should get the sso connectors in sign-in experience', async () => {
-      const { id, connectorName } = await createSsoConnector(newOIDCSsoConnector);
+      const { id, connectorName } = await createSsoConnector(newOidcSsoConnectorPayload);
 
       const signInExperience = await api
         .get('.well-known/sign-in-exp')
@@ -89,8 +72,8 @@ describe('.well-known api', () => {
       expect(newCreatedConnector).toMatchObject({
         id,
         connectorName,
-        logo: newOIDCSsoConnector.branding.logo,
-        darkLogo: newOIDCSsoConnector.branding.darkLogo,
+        logo: newOidcSsoConnectorPayload.branding.logo,
+        darkLogo: newOidcSsoConnectorPayload.branding.darkLogo,
       });
 
       await deleteSsoConnectorById(id);
@@ -98,7 +81,7 @@ describe('.well-known api', () => {
 
     it('should filter out the sso connectors with invalid config', async () => {
       const { id } = await createSsoConnector({
-        ...newOIDCSsoConnector,
+        ...newOidcSsoConnectorPayload,
         config: {},
       });
 
@@ -115,7 +98,7 @@ describe('.well-known api', () => {
 
     it('should filter out the sso connectors with empty domains', async () => {
       const { id } = await createSsoConnector({
-        ...newOIDCSsoConnector,
+        ...newOidcSsoConnectorPayload,
         domains: [],
       });
 

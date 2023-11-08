@@ -12,7 +12,8 @@ export const generatePassword = () => `pwd_${crypto.randomUUID()}`;
 
 export const generateResourceName = () => `res_${crypto.randomUUID()}`;
 export const generateResourceIndicator = () => `https://${crypto.randomUUID()}.logto.io`;
-export const generateEmail = () => `${crypto.randomUUID().toLowerCase()}@logto.io`;
+export const generateEmail = (domain = 'logto.io') =>
+  `${crypto.randomUUID().toLowerCase()}@${domain}`;
 export const generateScopeName = () => `sc:${crypto.randomUUID()}`;
 export const generateRoleName = () => `role_${crypto.randomUUID()}`;
 export const generateDomain = () => `${crypto.randomUUID().toLowerCase().slice(0, 5)}.example.com`;

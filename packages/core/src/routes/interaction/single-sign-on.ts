@@ -1,32 +1,33 @@
-import { ConnectorError, type ConnectorSession } from '@logto/connector-kit';
-import { validateRedirectUrl } from '@logto/core-kit';
 import { InteractionEvent } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { assignInteractionResults } from '#src/libraries/session.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
-import { ssoConnectorFactories } from '#src/sso/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { interactionPrefix, ssoPath } from './const.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
-import { getInteractionStorage } from './utils/interaction.js';
-import { assignConnectorSessionResult } from './utils/social-verification.js';
+import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
+import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
+import {
+  oidcAuthorizationUrlPayloadGuard,
+  getSsoAuthorizationUrl,
+  getSsoAuthentication,
+  handleSsoAuthentication,
+} from './utils/single-sign-on.js';
 
 export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
-  const {
-    id: tenantId,
-    provider,
-    libraries: { ssoConnector },
-  } = tenant;
+  const { provider, libraries } = tenant;
+
+  const { ssoConnectors: ssoConnectorsLibrary } = libraries;
 
   // Create SSO authorization url for user interaction
   router.post(
@@ -35,69 +36,81 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       params: z.object({
         connectorId: z.string(),
       }),
-      body: z.object({
-        state: z.string().min(1),
-        redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
-      }),
+      // Only required for OIDC
+      body: oidcAuthorizationUrlPayloadGuard.optional(),
       status: [200, 500, 404],
       response: z.object({
         redirectTo: z.string(),
       }),
     }),
     async (ctx, next) => {
-      const { interactionDetails, guard, createLog } = ctx;
-
-      // Check interaction exists
-      const { event } = getInteractionStorage(interactionDetails.result);
-
-      assertThat(
-        event !== InteractionEvent.ForgotPassword,
-        'session.not_supported_for_forgot_password'
-      );
-
-      const log = createLog(`Interaction.${event}.Identifier.SingleSignOn.Create`);
+      const { guard, createLog } = ctx;
 
       const {
         params: { connectorId },
+        body: payload,
       } = guard;
 
-      const { body: payload } = guard;
-
-      log.append({
-        connectorId,
-        ...payload,
-      });
-
-      const { state, redirectUri } = payload;
-      assertThat(state && redirectUri, 'session.insufficient_info');
+      /* 
+        Create a new sign-in interaction directly. 
+        Unlike our existing interaction APIs, to simplify the call stack, client side does not need to call the PUT interaction API ahead.
+        This step is necessary for our interaction hooks to work. As it reads the event from the interaction storage.
+       */
+      createLog(`Interaction.SignIn.Update`);
+      await storeInteractionResult({ event: InteractionEvent.SignIn }, ctx, provider);
 
       // Will throw 404 if connector not found, or not supported
-      const connectorData = await ssoConnector.getSsoConnectorById(connectorId);
+      const connectorData = await ssoConnectorsLibrary.getSsoConnectorById(connectorId);
 
-      try {
-        // Will throw ConnectorError if the config is invalid
-        const factory = ssoConnectorFactories[connectorData.providerName];
-        const connectorInstance = new factory.constructor(connectorData, tenantId);
+      const redirectTo = await getSsoAuthorizationUrl(ctx, tenant, connectorData, payload);
+      ctx.body = { redirectTo };
 
-        if (connectorInstance instanceof OidcSsoConnector) {
-          const redirectTo = await connectorInstance.getAuthorizationUrl(
-            { state, redirectUri },
-            async (connectorSession: ConnectorSession) =>
-              assignConnectorSessionResult(ctx, provider, connectorSession)
-          );
+      return next();
+    }
+  );
 
-          ctx.body = { redirectTo };
-        }
+  // Verify the user's single sign on identity and sign in the user
+  router.post(
+    `${interactionPrefix}/${ssoPath}/:connectorId/authentication`,
+    koaGuard({
+      params: z.object({
+        connectorId: z.string(),
+      }),
+      body: z.record(z.unknown()),
+      status: [200, 404],
+      response: z.object({
+        redirectTo: z.string(),
+      }),
+    }),
+    koaInteractionHooks(libraries),
+    async (ctx, next) => {
+      const { guard, interactionDetails, assignInteractionHookResult } = ctx;
 
-        // TODO: Add SAML `getSingleSignOnUrl` here
-      } catch (error: unknown) {
-        // Catch ConnectorError and re-throw as 500 RequestError
-        if (error instanceof ConnectorError) {
-          throw new RequestError({ code: `connector.${error.code}`, status: 500 }, error.data);
-        }
+      // Check SSO interaction exists
+      const { event } = getInteractionStorage(interactionDetails.result);
+      assertThat(event === InteractionEvent.SignIn, 'session.connector_session_not_found');
 
-        throw error;
-      }
+      const {
+        params: { connectorId },
+        body: data,
+      } = guard;
+
+      // Will throw 404 if connector not found, or not supported
+      const connectorData = await ssoConnectorsLibrary.getSsoConnectorById(connectorId);
+
+      // Get authenticated from the SSO provider
+      const ssoAuthentication = await getSsoAuthentication(ctx, tenant, connectorData, data);
+
+      // Handle SSO authentication: sign-in or register the user
+      const accountId = await handleSsoAuthentication(
+        ctx,
+        tenant,
+        connectorData,
+        ssoAuthentication
+      );
+
+      await assignInteractionResults(ctx, provider, { login: { accountId } });
+      assignInteractionHookResult({ userId: accountId });
 
       return next();
     }
@@ -120,7 +133,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     }),
     async (ctx, next) => {
       const { email } = ctx.guard.query;
-      const connectors = await ssoConnector.getAvailableSsoConnectors();
+      const connectors = await ssoConnectorsLibrary.getAvailableSsoConnectors();
 
       const domain = email.split('@')[1];
 

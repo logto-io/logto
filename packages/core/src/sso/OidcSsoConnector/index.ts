@@ -22,6 +22,7 @@ export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
   }
 
   getConfig = async () => this.getOidcConfig();
+  getIssuer = async () => this.issuer;
 }
 
 export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> = {

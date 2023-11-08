@@ -35,6 +35,7 @@ const session = {
     invalid_backup_code: 'Invalid backup code.',
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
 };
 
 export default Object.freeze(session);
