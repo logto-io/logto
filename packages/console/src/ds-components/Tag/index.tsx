@@ -11,6 +11,7 @@ export type Props = Pick<HTMLProps<HTMLDivElement>, 'className' | 'onClick'> & {
   type?: 'property' | 'state' | 'result';
   status?: 'info' | 'success' | 'alert' | 'error';
   variant?: 'plain' | 'outlined' | 'cell';
+  size?: 'medium' | 'small';
   children: ReactNode;
 };
 
@@ -23,6 +24,7 @@ function Tag({
   type = 'property',
   status = 'info',
   variant = 'outlined',
+  size = 'medium',
   className,
   children,
   ...rest
@@ -30,7 +32,10 @@ function Tag({
   const ResultIcon = conditional(type === 'result' && ResultIconMap[status]);
 
   return (
-    <div className={classNames(styles.tag, styles[status], styles[variant], className)} {...rest}>
+    <div
+      className={classNames(styles.tag, styles[status], styles[variant], styles[size], className)}
+      {...rest}
+    >
       {type === 'state' && <div className={styles.icon} />}
       {ResultIcon && <ResultIcon className={classNames(styles.icon, styles.resultIcon)} />}
       {children}

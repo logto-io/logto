@@ -78,4 +78,9 @@
       }
     }
   }
+
+  &.small {
+    font: var(--font-label-3);
+    padding: _.unit(0.25) _.unit(1.5);
+  }
 }
