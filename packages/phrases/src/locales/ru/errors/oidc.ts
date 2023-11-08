@@ -1,10 +1,11 @@
 const oidc = {
   aborted: 'Конечный пользователь прервал взаимодействие.',
-  invalid_scope: 'Scope {{scope}} не поддерживается.',
-  invalid_scope_plural: 'Scope {{scopes}} не поддерживаются.',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Недействительный токен.',
   invalid_client_metadata: 'Недопустимые метаданные клиента.',
-  insufficient_scope: 'Отсутствует токен доступа для запрошенного scope {{scopes}}.',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'Недопустимый запрос.',
   invalid_grant: 'Недопустимый запрос на предоставление прав.',
   invalid_redirect_uri:
