@@ -10,7 +10,7 @@ import { type JsonObject, type SsoConnector } from '@logto/schemas';
 export abstract class SingleSignOn {
   abstract data: SsoConnector;
   abstract getConfig: () => Promise<JsonObject>;
-  abstract getIssuer: () => string;
+  abstract getIssuer: () => Promise<string>;
 }
 
 export enum SsoProviderName {

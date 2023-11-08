@@ -1,5 +1,6 @@
 import { InteractionEvent, type SsoConnector } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
+import type Provider from 'oidc-provider';
 
 import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -9,6 +10,8 @@ import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
+
+import { type WithInteractionDetailsContext } from '../middleware/koa-interaction-details.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -43,9 +46,11 @@ const { getSsoAuthorizationUrl, getSsoAuthentication, handleSsoAuthentication } 
 );
 
 describe('Single sign on util methods tests', () => {
-  const mockContext: WithLogContext = {
+  const mockContext: WithLogContext & WithInteractionDetailsContext = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    interactionDetails: { jti: 'foo' } as Awaited<ReturnType<Provider['interactionDetails']>>,
   };
 
   const mockProvider = createMockProvider();
@@ -105,7 +110,7 @@ describe('Single sign on util methods tests', () => {
 
   describe('getSsoAuthentication tests', () => {
     it('should throw an error if the connector config is invalid', async () => {
-      await expect(getSsoAuthentication(mockContext, tenant, mockSsoConnector)).rejects.toThrow(
+      await expect(getSsoAuthentication(mockContext, tenant, mockSsoConnector, {})).rejects.toThrow(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         expect.objectContaining({ status: 500, code: `connector.invalid_config` })
       );
@@ -115,7 +120,12 @@ describe('Single sign on util methods tests', () => {
       getUserInfoMock.mockResolvedValueOnce({ id: 'id', email: 'email' });
       getIssuerMock.mockReturnValueOnce('https://example.com');
 
-      const result = await getSsoAuthentication(mockContext, tenant, wellConfiguredSsoConnector);
+      const result = await getSsoAuthentication(
+        mockContext,
+        tenant,
+        wellConfiguredSsoConnector,
+        {}
+      );
 
       expect(getIssuerMock).toBeCalled();
       expect(getUserInfoMock).toBeCalled();
@@ -197,6 +207,7 @@ describe('Single sign on util methods tests', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: expect.any(String),
         userId: 'foo',
+        ssoConnectorId: wellConfiguredSsoConnector.id,
         identityId: mockSsoUserInfo.id,
         issuer: mockIssuer,
         detail: mockSsoUserInfo,
@@ -252,6 +263,7 @@ describe('Single sign on util methods tests', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: expect.any(String),
         userId: 'foo',
+        ssoConnectorId: wellConfiguredSsoConnector.id,
         identityId: mockSsoUserInfo.id,
         issuer: mockIssuer,
         detail: mockSsoUserInfo,

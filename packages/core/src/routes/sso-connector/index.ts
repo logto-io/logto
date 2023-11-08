@@ -32,7 +32,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       libraries: { ssoConnectors: ssoConnectorLibrary },
       queries: { ssoConnectors },
       libraries: {
-        ssoConnector: { getSsoConnectorById, getSsoConnectors },
+        ssoConnectors: { getSsoConnectorById, getSsoConnectors },
       },
     },
   ] = args;

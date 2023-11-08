@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
+import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { type SupportedSsoConnector } from '#src/sso/types/index.js';
@@ -26,14 +27,17 @@ type OidcAuthorizationUrlPayload = z.infer<typeof oidcAuthorizationUrlPayloadGua
 
 // Get the authorization url for the SSO provider
 export const getSsoAuthorizationUrl = async (
-  ctx: WithLogContext,
-  { provider }: TenantContext,
+  ctx: WithLogContext & WithInteractionDetailsContext,
+  { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
   payload?: OidcAuthorizationUrlPayload
 ): Promise<string> => {
   const { id: connectorId, providerName } = connectorData;
 
-  const { createLog } = ctx;
+  const {
+    createLog,
+    interactionDetails: { jti },
+  } = ctx;
 
   const log = createLog(`Interaction.SignIn.Identifier.SingleSignOn.Create`);
   log.append({
@@ -43,8 +47,12 @@ export const getSsoAuthorizationUrl = async (
 
   try {
     // Will throw ConnectorError if the config is invalid
-    const connectorInstance = new ssoConnectorFactories[providerName].constructor(connectorData);
+    const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+      connectorData,
+      tenantId
+    );
 
+    // OIDC connectors
     if (connectorInstance instanceof OidcConnector) {
       // Only required for OIDC
       assertThat(payload, 'session.insufficient_info');
@@ -57,8 +65,8 @@ export const getSsoAuthorizationUrl = async (
       );
     }
 
-    // TODO: Implement SAML SSO providers logic
-    throw new Error('Not implemented');
+    // SAML connectors
+    return await connectorInstance.getSingleSignOnUrl(jti);
   } catch (error: unknown) {
     // Catch ConnectorError and re-throw as 500 RequestError
     if (error instanceof ConnectorError) {
@@ -77,9 +85,9 @@ type SsoAuthenticationResult = {
 // Get the user authentication result from the SSO provider
 export const getSsoAuthentication = async (
   ctx: WithLogContext,
-  { provider }: TenantContext,
+  { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
-  data?: unknown
+  data: Record<string, unknown>
 ): Promise<SsoAuthenticationResult> => {
   const { createLog } = ctx;
   const { id: connectorId, providerName } = connectorData;
@@ -89,9 +97,12 @@ export const getSsoAuthentication = async (
 
   try {
     // Will throw ConnectorError if the config is invalid
-    const connectorInstance = new ssoConnectorFactories[providerName].constructor(connectorData);
+    const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+      connectorData,
+      tenantId
+    );
 
-    const issuer = connectorInstance.getIssuer();
+    const issuer = await connectorInstance.getIssuer();
     const userInfo = await connectorInstance.getUserInfo(data, async () =>
       getConnectorSessionResult(ctx, provider)
     );
@@ -104,8 +115,6 @@ export const getSsoAuthentication = async (
     log.append({ issuer, userInfo });
 
     return result;
-
-    // TODO: Implement SAML SSO providers logic
   } catch (error: unknown) {
     // Catch ConnectorError and re-throw as 500 RequestError
     if (error instanceof ConnectorError) {
@@ -239,6 +248,7 @@ const signInAndLinkWithSsoAuthentication = async (
   // Insert new user SSO identity
   await userSsoIdentitiesQueries.insert({
     id: generateStandardId(),
+    ssoConnectorId: connectorId,
     userId,
     identityId,
     issuer,
@@ -280,7 +290,7 @@ const registerWithSsoAuthentication = async (
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
   }: TenantContext,
-  connectorData: SupportedSsoConnector,
+  { id: connectorId }: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
 ) => {
   const { createLog } = ctx;
@@ -308,6 +318,7 @@ const registerWithSsoAuthentication = async (
   await userSsoIdentitiesQueries.insert({
     id: generateStandardId(),
     userId,
+    ssoConnectorId: connectorId,
     identityId: userInfo.id,
     issuer,
     detail: userInfo,
@@ -318,9 +329,9 @@ const registerWithSsoAuthentication = async (
     interaction: {
       event: InteractionEvent.Register,
       ssoIdentity: {
-        connectorId: connectorData.id,
+        connectorId,
         issuer,
-        identityId: userInfo.id,
+        userInfo,
       },
       profile: syncingProfile,
     },
