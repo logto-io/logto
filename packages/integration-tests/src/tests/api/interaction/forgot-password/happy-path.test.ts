@@ -94,6 +94,7 @@ describe('reset password', () => {
     await logoutClient(client);
     await deleteUser(user.id);
   });
+
   it('reset password with phone', async () => {
     const { user, userProfile } = await generateNewUser({
       primaryPhone: true,

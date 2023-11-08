@@ -48,6 +48,8 @@ const session = {
     /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
+  sso_enabled:
+    'このメールアドレスではシングルサインオンが有効になっています。SSOでサインインしてください。',
 };
 
 export default Object.freeze(session);

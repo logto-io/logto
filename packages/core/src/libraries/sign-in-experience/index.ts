@@ -64,7 +64,7 @@ export const createSignInExperienceLibrary = (
   };
 
   const getActiveSsoConnectors = async (): Promise<SsoConnectorMetadata[]> => {
-    // TODO: @simeng-li Return empty array if dev features are not enabled
+    // TODO: @simeng-li Remove the dev feature check once SSO is fully released
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return [];
     }

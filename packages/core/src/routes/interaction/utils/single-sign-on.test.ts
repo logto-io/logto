@@ -26,6 +26,7 @@ const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
 const insertUserMock = jest.fn();
 const storeInteractionResultMock = jest.fn();
+const getAvailableSsoConnectorsMock = jest.fn();
 
 class MockOidcSsoConnector extends OidcSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
@@ -54,6 +55,7 @@ describe('Single sign on util methods tests', () => {
   };
 
   const mockProvider = createMockProvider();
+
   const tenant = new MockTenant(
     mockProvider,
     {
@@ -71,6 +73,9 @@ describe('Single sign on util methods tests', () => {
     {
       users: {
         insertUser: insertUserMock,
+      },
+      ssoConnectors: {
+        getAvailableSsoConnectors: getAvailableSsoConnectorsMock,
       },
     }
   );
