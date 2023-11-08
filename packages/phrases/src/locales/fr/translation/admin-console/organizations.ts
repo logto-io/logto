@@ -54,6 +54,8 @@ const organizations = {
   /** UNTRANSLATED */
   create_role_placeholder: 'Users with view-only permissions.',
   /** UNTRANSLATED */
+  search_placeholder: 'Search by organization name or ID',
+  /** UNTRANSLATED */
   search_permission_placeholder: 'Type to search and select permissions',
   /** UNTRANSLATED */
   search_role_placeholder: 'Type to search and select roles',

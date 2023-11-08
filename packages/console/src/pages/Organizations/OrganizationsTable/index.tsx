@@ -95,7 +95,7 @@ function OrganizationsTable({ onCreate }: Props) {
         <Search
           defaultValue={keyword}
           isClearable={Boolean(keyword)}
-          placeholder={t('organization_details.search_user_placeholder')}
+          placeholder={t('organizations.search_placeholder')}
           onSearch={(value) => {
             setKeyword(value);
             setPage(1);
