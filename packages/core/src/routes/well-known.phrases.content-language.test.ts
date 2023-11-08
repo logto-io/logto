@@ -50,6 +50,7 @@ describe('when auto-detect is not enabled', () => {
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: false,
+        // @ts-expect-error
         fallbackLanguage: unsupportedLanguageX,
       },
     });
@@ -90,6 +91,7 @@ describe('when auto-detect is enabled', () => {
       ...mockSignInExperience,
       languageInfo: {
         autoDetect: true,
+        // @ts-expect-error
         fallbackLanguage: unsupportedLanguageX,
       },
     });
