@@ -33,7 +33,7 @@ import {
   verifyIdentifierSettings,
   verifyProfileSettings,
 } from './utils/sign-in-experience-validation.js';
-import { verifySsoOnlyEmailIdentifier } from './utils/single-sign-on.js';
+import { verifySsoOnlyEmailIdentifier } from './utils/single-sign-on-guard.js';
 import { validatePassword } from './utils/validate-password.js';
 import {
   verifyIdentifierPayload,

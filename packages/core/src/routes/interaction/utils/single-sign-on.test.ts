@@ -3,7 +3,6 @@ import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
 import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
@@ -43,12 +42,9 @@ jest
   .spyOn(ssoConnectorFactories.OIDC, 'constructor')
   .mockImplementation((data: SsoConnector) => new MockOidcSsoConnector(data));
 
-const {
-  getSsoAuthorizationUrl,
-  getSsoAuthentication,
-  handleSsoAuthentication,
-  verifySsoOnlyEmailIdentifier,
-} = await import('./single-sign-on.js');
+const { getSsoAuthorizationUrl, getSsoAuthentication, handleSsoAuthentication } = await import(
+  './single-sign-on.js'
+);
 
 describe('Single sign on util methods tests', () => {
   const mockContext: WithLogContext & WithInteractionDetailsContext = {
@@ -277,74 +273,6 @@ describe('Single sign on util methods tests', () => {
         issuer: mockIssuer,
         detail: mockSsoUserInfo,
       });
-    });
-  });
-
-  describe('verifySsoOnlyEmailIdentifier tests', () => {
-    it('should return if the identifier is not an email', async () => {
-      await expect(
-        verifySsoOnlyEmailIdentifier(tenant.libraries.ssoConnectors, {
-          username: 'foo',
-          password: 'bar',
-        })
-      ).resolves.not.toThrow();
-    });
-    it('should return if no sso connectors found with the given email', async () => {
-      getAvailableSsoConnectorsMock.mockResolvedValueOnce([
-        {
-          ...wellConfiguredSsoConnector,
-          domains: ['example.com'],
-        },
-      ]);
-
-      await expect(
-        verifySsoOnlyEmailIdentifier(tenant.libraries.ssoConnectors, {
-          email: 'foo@bar.com',
-          password: 'bar',
-        })
-      ).resolves.not.toThrow();
-    });
-    it('should return if the connector is not sso only', async () => {
-      getAvailableSsoConnectorsMock.mockResolvedValueOnce([
-        {
-          ...wellConfiguredSsoConnector,
-          domains: ['example.com'],
-          ssoOnly: false,
-        },
-      ]);
-
-      await expect(
-        verifySsoOnlyEmailIdentifier(tenant.libraries.ssoConnectors, {
-          email: 'foo@example.com',
-          password: 'bar',
-        })
-      ).resolves.not.toThrow();
-    });
-
-    it('should throw an error if multiple sso connectors found with the given email', async () => {
-      const connector = {
-        ...wellConfiguredSsoConnector,
-        domains: ['example.com'],
-      };
-
-      getAvailableSsoConnectorsMock.mockResolvedValueOnce([connector]);
-
-      await expect(
-        verifySsoOnlyEmailIdentifier(tenant.libraries.ssoConnectors, {
-          email: 'foo@example.com',
-          verificationCode: 'bar',
-        })
-      ).rejects.toMatchError(
-        new RequestError(
-          {
-            code: 'session.sso_enabled',
-            status: 422,
-          },
-          {
-            ssoConnectors: [connector],
-          }
-        )
-      );
     });
   });
 });
