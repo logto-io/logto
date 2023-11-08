@@ -17,8 +17,6 @@
  * due to the lack of development type definitions in the `IdToken` class.
  */
 
-import assert from 'node:assert';
-
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
 import { isKeyInObject } from '@silverhand/essentials';
@@ -31,6 +29,7 @@ import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
 import type OrganizationQueries from '#src/queries/organizations.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../resource.js';
 
@@ -73,15 +72,15 @@ export const buildHandler: (
   queries: OrganizationQueries
   // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
-  validatePresence(ctx, ...requiredParameters);
-
   const providerInstance = instance(ctx.oidc.provider);
   const { rotateRefreshToken } = providerInstance.configuration();
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { RefreshToken, Account, AccessToken, Grant } = provider;
 
-  assert(client, new InvalidClient('client must be available'));
-  assert(params, new InvalidGrant('parameters must be available'));
+  assertThat(params, new InvalidGrant('parameters must be available'));
+  validatePresence(ctx, ...requiredParameters);
+
+  assertThat(client, new InvalidClient('client must be available'));
 
   // @gao: I believe the presence of the param is validated by required parameters of this grant.
   // Add `String` to make TS happy.
@@ -115,7 +114,7 @@ export const buildHandler: (
   /* === End RFC 0001 === */
 
   if (!refreshToken.grantId) {
-    throw new InvalidGrant('grant id not found');
+    throw new InvalidGrant('grantId not found');
   }
 
   const grant = await Grant.find(refreshToken.grantId, {
