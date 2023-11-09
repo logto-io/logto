@@ -1,13 +1,17 @@
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
-import type { User } from '@logto/schemas';
+import type { OrganizationClaimItem, User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
 import type Libraries from '#src/tenants/Libraries.js';
+import type Queries from '#src/tenants/Queries.js';
 
 const claimToUserKey: Readonly<
-  Record<Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles'>, keyof User>
+  Record<
+    Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles' | 'organizations'>,
+    keyof User
+  >
 > = Object.freeze({
   name: 'name',
   picture: 'avatar',
@@ -21,7 +25,8 @@ const claimToUserKey: Readonly<
 export const getUserClaimData = async (
   user: User,
   claim: UserClaim,
-  userLibrary: Libraries['users']
+  userLibrary: Libraries['users'],
+  organizationQueries: Queries['organizations']
 ): Promise<unknown> => {
   // LOG-4165: Change to proper key/function once profile fulfilling implemented
   if (claim === 'email_verified') {
@@ -36,6 +41,17 @@ export const getUserClaimData = async (
   if (claim === 'roles') {
     const roles = await userLibrary.findUserRoles(user.id);
     return roles.map(({ name }) => name);
+  }
+
+  if (claim === 'organizations') {
+    const data = await organizationQueries.relations.users.getOrganizationsByUserId(user.id);
+    return data.map(
+      ({ id, organizationRoles }) =>
+        ({
+          id,
+          roles: organizationRoles.map(({ name }) => name),
+        }) satisfies OrganizationClaimItem
+    );
   }
 
   return user[claimToUserKey[claim]];

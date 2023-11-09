@@ -64,6 +64,13 @@ class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, type
     return [Number(count), data];
   }
 
+  /**
+   * Find all organizations that the user is a member of.
+   *
+   * @returns A Promise that resolves to an array of organization with roles. Each item
+   * is an organization object with `organizationRoles` property.
+   * @see {@link OrganizationWithRoles} for the definition of an organization with roles.
+   */
   async getOrganizationsByUserId(userId: string): Promise<Readonly<OrganizationWithRoles[]>> {
     const roles = convertToIdentifiers(OrganizationRoles, true);
     const organizations = convertToIdentifiers(Organizations, true);
