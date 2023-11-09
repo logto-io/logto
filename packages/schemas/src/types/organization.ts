@@ -83,16 +83,3 @@ export type OrganizationWithFeatured = Organization & {
   usersCount?: number;
   featuredUsers?: FeaturedUser[];
 };
-
-/**
- * The item that describes a user's membership and roles in an organization. It is
- * designed to be used in the `organizations` claim of the ID token.
- *
- * @see {@link https://github.com/logto-io/rfcs | RFC 0001} for more details.
- */
-export type OrganizationClaimItem = {
-  /** The ID of the organization. */
-  id: string;
-  /** The role names of the user in the organization. */
-  roles: string[];
-};

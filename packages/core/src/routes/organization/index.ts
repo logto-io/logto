@@ -40,6 +40,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     errorHandler,
     searchFields: ['name'],
     disabled: { get: true },
+    idLength: 12,
   });
 
   router.get(

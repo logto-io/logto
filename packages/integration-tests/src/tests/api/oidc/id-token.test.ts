@@ -62,7 +62,7 @@ describe('OpenID Connect ID token', () => {
     });
   });
 
-  it('should be issued with `organizations` claim', async () => {
+  it('should be issued with `organizations` and `organization_roles` claims', async () => {
     const [org1, org2] = await Promise.all([
       organizationApi.create({ name: 'org1' }),
       organizationApi.create({ name: 'org2' }),
@@ -76,19 +76,23 @@ describe('OpenID Connect ID token', () => {
     const role = await organizationApi.roleApi.create({ name: 'member' });
     await organizationApi.addUserRoles(org1.id, userId, [role.id]);
 
+    // Organizations claim
     const idToken = await fetchIdToken(['urn:logto:scope:organizations']);
 
     // @ts-expect-error type definition needs to be updated
     const organizations = idToken.organizations as unknown;
 
     expect(organizations).toHaveLength(2);
-    expect(organizations).toContainEqual({
-      id: org1.id,
-      roles: ['member'],
-    });
-    expect(organizations).toContainEqual({
-      id: org2.id,
-      roles: [],
-    });
+    expect(organizations).toContainEqual(org1.id);
+    expect(organizations).toContainEqual(org2.id);
+
+    // Organization roles claim
+    const idToken2 = await fetchIdToken(['urn:logto:scope:organization_roles']);
+
+    // @ts-expect-error type definition needs to be updated
+    const organizationRoles = idToken2.organization_roles as unknown;
+
+    expect(organizationRoles).toHaveLength(1);
+    expect(organizationRoles).toContainEqual(`${org1.id}:${role.name}`);
   });
 });
