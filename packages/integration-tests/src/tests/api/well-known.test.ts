@@ -41,18 +41,18 @@ describe('.well-known api', () => {
 
   // Also test for Redis cache invalidation
   it('should be able to return updated phrases', async () => {
-    const notification = 'Big brother is watching you.';
+    const and = '&';
     const original = await api
       .get('.well-known/phrases?lng=en')
       .json<{ translation: Translation }>();
 
-    expect(original.translation.demo_app).not.toHaveProperty('notification', notification);
+    expect(original.translation.list).not.toHaveProperty('and', and);
 
-    await authedAdminApi.put('custom-phrases/en', { json: { demo_app: { notification } } });
+    await authedAdminApi.put('custom-phrases/en', { json: { list: { and } } });
     const updated = await api
       .get('.well-known/phrases?lng=en')
       .json<{ translation: Translation }>();
-    expect(updated.translation.demo_app).toHaveProperty('notification', notification);
+    expect(updated.translation.list).toHaveProperty('and', and);
   });
 
   describe('sso connectors in sign-in experience', () => {
