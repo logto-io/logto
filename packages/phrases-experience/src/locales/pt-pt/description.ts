@@ -66,6 +66,7 @@ const description = {
     character_types_other:
       'deve conter pelo menos {{count}} tipos de letras maiúsculas, letras minúsculas, dígitos e símbolos',
   },
+  use: 'Usar',
 };
 
 export default Object.freeze(description);

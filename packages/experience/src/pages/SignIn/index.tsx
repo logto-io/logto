@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -15,7 +16,8 @@ import Main from './Main';
 import * as styles from './index.module.scss';
 
 const SignIn = () => {
-  const { signInMethods, signUpMethods, socialConnectors, signInMode } = useSieMethods();
+  const { signInMethods, signUpMethods, socialConnectors, signInMode, ssoConnectors } =
+    useSieMethods();
   const { t } = useTranslation();
 
   if (!signInMode) {
@@ -29,6 +31,15 @@ const SignIn = () => {
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
       <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
+      {
+        // Single Sign On footer TODO: remove the dev feature check once SSO is ready
+        isDevFeaturesEnabled && ssoConnectors.length > 0 && (
+          <div className={styles.singleSignOn}>
+            {t('description.use')}{' '}
+            <TextLink to="/single-sign-on/email" text="action.single_sign_on" />
+          </div>
+        )
+      }
       {
         // Create Account footer
         signInMode === SignInMode.SignInAndRegister && signUpMethods.length > 0 && (

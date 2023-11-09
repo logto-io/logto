@@ -113,6 +113,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     verify: true,
   },
   socialConnectors,
+  ssoConnectors: [],
   signInMode: SignInMode.SignInAndRegister,
   forgotPassword: {
     email: true,

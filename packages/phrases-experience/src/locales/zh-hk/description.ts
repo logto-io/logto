@@ -58,6 +58,7 @@ const description = {
     character_types_one: '要求包含至少 {{count}} 類型的大寫字母，小寫字母，數字和符號',
     character_types_other: '要求包含至少 {{count}} 類型的大寫字母，小寫字母，數字和符號',
   },
+  use: '使用',
 };
 
 export default Object.freeze(description);

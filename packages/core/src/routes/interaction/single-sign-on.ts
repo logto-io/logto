@@ -124,12 +124,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         email: z.string().email(),
       }),
       status: [200, 400],
-      response: z.array(
-        z.object({
-          id: z.string(),
-          ssoOnly: z.boolean(),
-        })
-      ),
+      response: z.string().array(),
     }),
     async (ctx, next) => {
       const { email } = ctx.guard.query;
@@ -141,7 +136,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       const availableConnectors = connectors.filter(({ domains }) => domains.includes(domain));
 
-      ctx.body = availableConnectors.map(({ id, ssoOnly }) => ({ id, ssoOnly }));
+      ctx.body = availableConnectors.map(({ id }) => id);
 
       return next();
     }

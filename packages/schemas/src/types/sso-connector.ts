@@ -7,6 +7,7 @@ export const ssoConnectorMetadataGuard = z.object({
   id: z.string(),
   connectorName: z.string(),
   logo: z.string(),
+  ssoOnly: z.boolean(),
   darkLogo: z.string().optional(),
 });
 

@@ -33,5 +33,5 @@ export const getSsoConnectorsByEmail = async (
         email: data.email,
       },
     })
-    .json<Array<{ id: string; ssoOnly: boolean }>>();
+    .json<string[]>();
 };

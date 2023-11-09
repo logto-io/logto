@@ -66,6 +66,7 @@ const description = {
     character_types_other:
       'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
   },
+  use: 'Kullan',
 };
 
 export default Object.freeze(description);

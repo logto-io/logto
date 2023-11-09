@@ -5,3 +5,5 @@ export const isDevFeaturesEnabled =
   process.env.NODE_ENV !== 'production' ||
   yes(process.env.DEV_FEATURES_ENABLED) ||
   yes(process.env.INTEGRATION_TEST);
+
+export const singleSignOnPath = 'single-sign-on';

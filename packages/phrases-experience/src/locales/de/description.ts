@@ -71,6 +71,7 @@ const description = {
     character_types_other:
       'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
   },
+  use: 'Verwenden',
 };
 
 export default Object.freeze(description);

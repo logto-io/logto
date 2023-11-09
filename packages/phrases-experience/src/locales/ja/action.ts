@@ -28,6 +28,7 @@ const action = {
   copy: 'コピー',
   verify_via_passkey: 'パスキー経由で確認',
   download: 'ダウンロード',
+  single_sign_on: 'シングルサインオン',
 };
 
 export default Object.freeze(action);

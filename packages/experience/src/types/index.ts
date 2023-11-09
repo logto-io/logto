@@ -5,6 +5,7 @@ import type {
   Theme,
   WebAuthnRegistrationOptions,
   WebAuthnAuthenticationOptions,
+  SsoConnectorMetadata,
 } from '@logto/schemas';
 
 export enum UserFlow {
@@ -32,6 +33,7 @@ export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifi
 // Omit socialSignInConnectorTargets since it is being translated into socialConnectors
 export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConnectorTargets'> & {
   socialConnectors: ConnectorMetadata[];
+  ssoConnectors: SsoConnectorMetadata[];
   notification?: string;
   forgotPassword: {
     phone: boolean;

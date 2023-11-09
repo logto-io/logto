@@ -20,15 +20,11 @@ export const useSieMethods = () => {
         ({ password, verificationCode }) => password || verificationCode
       ) ?? [],
     socialConnectors: experienceSettings?.socialConnectors ?? [],
+    ssoConnectors: experienceSettings?.ssoConnectors ?? [],
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
+    customContent: experienceSettings?.customContent,
   };
-};
-
-export const useSignInExperience = () => {
-  const { experienceSettings } = useContext(PageContext);
-
-  return experienceSettings;
 };
 
 export const usePasswordPolicy = () => {

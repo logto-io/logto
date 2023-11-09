@@ -184,6 +184,7 @@ describe('get sso connectors', () => {
       {
         id: wellConfiguredSsoConnector.id,
         connectorName: wellConfiguredSsoConnector.connectorName,
+        ssoOnly: wellConfiguredSsoConnector.ssoOnly,
         logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
         darkLogo: undefined,
       },

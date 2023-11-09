@@ -67,6 +67,7 @@ const description = {
     character_types_one: '大文字、小文字、数字、記号のうち {{count}} 種類を含む必要があります',
     character_types_other: '大文字、小文字、数字、記号のうち {{count}} 種類を含む必要があります',
   },
+  use: '使用する',
 };
 
 export default Object.freeze(description);

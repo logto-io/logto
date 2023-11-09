@@ -28,6 +28,7 @@ const action = {
   copy: 'Copiar',
   verify_via_passkey: 'Verificar via chave de acesso',
   download: 'Baixar',
+  single_sign_on: 'Entrada única',
 };
 
 export default Object.freeze(action);

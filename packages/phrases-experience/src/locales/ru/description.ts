@@ -70,6 +70,7 @@ const description = {
     character_types_other:
       'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
   },
+  use: 'Использовать',
 };
 
 export default Object.freeze(description);

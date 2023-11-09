@@ -12,8 +12,9 @@
   font: var(--font-body-3);
 }
 
-.createAccount {
-  margin-top: _.unit(2);
+
+.createAccount,
+.singleSignOn {
   text-align: center;
   margin-bottom: _.unit(4);
 }

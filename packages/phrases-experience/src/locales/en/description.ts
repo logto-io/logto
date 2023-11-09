@@ -68,6 +68,7 @@ const description = {
     character_types_other:
       'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
   },
+  use: 'Use',
 };
 
 export default Object.freeze(description);

@@ -62,6 +62,7 @@ const description = {
     character_types_one: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
     character_types_other: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
   },
+  use: '사용',
 };
 
 export default Object.freeze(description);
