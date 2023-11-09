@@ -30,7 +30,8 @@
     }
   }
 
-  &:active {
+  &:active,
+  &:focus {
     background: var(--color-pressed);
   }
 

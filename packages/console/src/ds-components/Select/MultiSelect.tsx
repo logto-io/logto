@@ -1,5 +1,5 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import { cond } from '@silverhand/essentials';
+import { type Nullable, cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +48,8 @@ function MultiSelect<T extends string>({
   const selectRef = useRef<HTMLDivElement>(null);
   const [keyword, setKeyword] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(false);
+  // Used to focus on the last tag to perform deletion
+  const [focusedValue, setFocusedValue] = useState<Nullable<T>>(null);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   // Search on keyword changes
@@ -76,7 +78,7 @@ function MultiSelect<T extends string>({
     }
   }, []);
 
-  const isOpen = !isReadOnly && isInputFocused;
+  const isOpen = !isReadOnly && isInputFocused && !focusedValue;
   const filteredOptions = options.filter(({ value: current }) => {
     return !value.some(({ value }) => value === current);
   });
@@ -110,7 +112,7 @@ function MultiSelect<T extends string>({
           <Tag
             key={option.value}
             variant="cell"
-            className={styles.tag}
+            className={classNames(styles.tag, option.value === focusedValue && styles.focused)}
             onClick={(event) => {
               event.stopPropagation();
             }}
@@ -122,6 +124,9 @@ function MultiSelect<T extends string>({
               onClick={() => {
                 handleDelete(option);
               }}
+              onKeyDown={onKeyDownHandler(() => {
+                handleDelete(option);
+              })}
             >
               <Close className={styles.close} />
             </IconButton>
@@ -133,14 +138,27 @@ function MultiSelect<T extends string>({
         type="text"
         placeholder={cond(value.length === 0 && placeholder && String(t(placeholder)))}
         value={keyword}
+        onKeyDown={(event) => {
+          if (event.key === 'Backspace' && keyword === '') {
+            if (focusedValue) {
+              onChange(value.filter(({ value }) => value !== focusedValue));
+              setFocusedValue(null);
+            } else {
+              setFocusedValue(value.at(-1)?.value ?? null);
+            }
+            event.stopPropagation();
+          }
+        }}
         onChange={({ currentTarget: { value } }) => {
           setKeyword(value);
+          setFocusedValue(null);
         }}
         onFocus={() => {
           setIsInputFocused(true);
         }}
         onBlur={() => {
           setIsInputFocused(false);
+          setFocusedValue(null);
         }}
       />
       <Dropdown
