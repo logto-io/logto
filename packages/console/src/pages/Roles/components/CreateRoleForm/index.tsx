@@ -9,8 +9,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import FeatureTag from '@/components/FeatureTag';
 import PlanName from '@/components/PlanName';
-import ProTag from '@/components/ProTag';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import { isCloud } from '@/consts/env';
@@ -115,6 +115,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             <QuotaGuardFooter>
               <Trans
                 components={{
+                  b: <b />,
                   a: <ContactUsPhraseLink />,
                 }}
               >
@@ -222,11 +223,9 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                       title={<DynamicT forKey={key} />}
                       value={value}
                       trailingIcon={
-                        proTagCheck && (
-                          <ProTag
-                            isVisibleInProdTenant={isM2mDisabledForCurrentPlan}
-                            className={styles.proTag}
-                          />
+                        proTagCheck &&
+                        isM2mDisabledForCurrentPlan && (
+                          <FeatureTag for="upsell" plan="hobby" className={styles.proTag} />
                         )
                       }
                     />

@@ -53,6 +53,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
           {quota.machineToMachineLimit === 0 && planId === ReservedPlanId.free ? (
             <Trans
               components={{
+                b: <b />,
                 a: <ContactUsPhraseLink />,
               }}
             >

@@ -15,7 +15,7 @@ import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
-import ProTag from '../ProTag';
+import FeatureTag from '../FeatureTag';
 
 import ConnectorRadioGroup from './ConnectorRadioGroup';
 import Footer from './Footer';
@@ -155,7 +155,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              <ProTag isVisibleInProdTenant={isStandardConnectorDisabled} />
+              {isStandardConnectorDisabled && <FeatureTag for="upsell" plan="hobby" />}
             </div>
             <ConnectorRadioGroup
               name="group"

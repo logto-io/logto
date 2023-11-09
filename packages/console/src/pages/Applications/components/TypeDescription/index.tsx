@@ -2,7 +2,7 @@ import type { ApplicationType } from '@logto/schemas';
 import classNames from 'classnames';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
-import ProTag from '@/components/ProTag';
+import FeatureTag from '@/components/FeatureTag';
 
 import * as styles from './index.module.scss';
 
@@ -31,7 +31,7 @@ function TypeDescription({
       <div className={styles.description}>{description}</div>
       {hasProTag && (
         <div className={styles.proTag}>
-          <ProTag isVisibleInProdTenant />
+          <FeatureTag for="upsell" plan="hobby" />
         </div>
       )}
     </div>

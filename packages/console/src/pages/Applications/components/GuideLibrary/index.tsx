@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import ProTag from '@/components/ProTag';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
@@ -101,10 +101,9 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       setFilterCategories(sortedValue);
                     }}
                   />
-                  <ProTag
-                    className={styles.proTag}
-                    isVisibleInProdTenant={isM2mDisabledForCurrentPlan}
-                  />
+                  {isM2mDisabledForCurrentPlan && (
+                    <FeatureTag for="upsell" plan="hobby" className={styles.proTag} />
+                  )}
                 </div>
               </div>
             </div>

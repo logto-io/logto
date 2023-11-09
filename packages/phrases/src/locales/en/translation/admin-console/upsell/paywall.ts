@@ -4,7 +4,7 @@ const paywall = {
   applications_other:
     '{{count, number}} applications of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine_feature:
-    'Upgrade to a paid plan to create machine-to-machine application, along with access to all the premium features. For any assistance, feel free to <a>contact us</a>.',
+    'Upgrade to the <b>Hobby</b> plan to unlock 1 machine-to-machine application, or choose the <b>Pro</b> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine:
     '{{count, number}} machine-to-machine application of <planName/> limit reached. Upgrade plan to meet your team’s needs. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine_other:
@@ -18,13 +18,13 @@ const paywall = {
   scopes_per_resource_other:
     '{{count, number}} permissions per API resource of <planName/> limit reached. Upgrade now to expand. <a>Contact us</a> for any assistant.',
   custom_domain:
-    'Unlock custom domain functionality and a range of premium benefits by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    'Unlock custom domain functionality by upgrading to <b>Hobby</b> or <b>Pro</b> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   social_connectors:
     '{{count, number}} social connector of <planName/> limit reached. To meet your team’s needs, upgrade plan for additional social connectors and the ability to create your own connectors using OIDC, OAuth 2.0, and SAML protocols. Feel free to <a>contact us</a> if you need any assistance.',
   social_connectors_other:
     '{{count, number}} social connectors of <planName/> limit reached. To meet your team’s needs, upgrade plan for additional social connectors and the ability to create your own connectors using OIDC, OAuth 2.0, and SAML protocols. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors_feature:
-    'Upgrade to a paid plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
+    'Upgrade to the <b>Hobby</b> or <b>Pro</b> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors:
     '{{count, number}} social connector of <planName/> limit reached. To meet your team’s needs, upgrade plan for additional social connectors and the ability to create your own connectors using OIDC, OAuth 2.0, and SAML protocols. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors_other:

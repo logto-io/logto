@@ -3,8 +3,9 @@ const paywall = {
     '<planName/> limitine ulaşılan {{count, number}} başvuru. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
   applications_other:
     '<planName/> limitine ulaşılan {{count, number}} başvurular. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
+  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Makine-makine uygulaması oluşturmak ve tüm premium özelliklere erişim sağlamak için ücretli bir plana yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
+    'Upgrade to the <b>Hobby</b> plan to unlock 1 machine-to-machine application, or choose the <b>Pro</b> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine:
     '<planName/> limitine ulaşılan {{count, number}} makine-makine başvurusu. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
   machine_to_machine_other:
@@ -17,14 +18,16 @@ const paywall = {
     '{{count, number}} <planName/> API kaynağı başına izin sınırına ulaşıldı. Genişletmek için şimdi yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
   scopes_per_resource_other:
     '{{count, number}} <planName/> API kaynağı başına izin sınırına ulaşıldı. Genişletmek için şimdi yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+  /** UNTRANSLATED */
   custom_domain:
-    'Özel etki alanı işlevselliğini açığa çıkarın ve ücretli bir plana geçerek bir dizi premium avantajdan yararlanın. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+    'Unlock custom domain functionality by upgrading to <b>Hobby</b> or <b>Pro</b> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   social_connectors:
     '{{count, number}} <planName/> sosyal bağlayıcı sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin ve OIDC, OAuth 2.0 ve SAML protokolleri kullanarak kendi bağlayıcılarınızı oluşturma yeteneğine sahip olun. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
   social_connectors_other:
     '{{count, number}} <planName/> sosyal bağlayıcı sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin ve OIDC, OAuth 2.0 ve SAML protokolleri kullanarak kendi bağlayıcılarınızı oluşturma yeteneğine sahip olun. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+  /** UNTRANSLATED */
   standard_connectors_feature:
-    'OIDC, OAuth 2.0 ve SAML protokollerini kullanarak kendi bağlayıcılarınızı oluşturmak, sınırsız sosyal bağlayıcılar ve tüm premium özelliklere erişim sağlamak için ücretli bir plana geçin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+    'Upgrade to the <b>Hobby</b> or <b>Pro</b> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors:
     '{{count, number}} <planName/> sosyal bağlayıcı sınırına ulaşıldı. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin ve OIDC, OAuth 2.0 ve SAML protokolleri kullanarak kendi bağlayıcılarınızı oluşturma yeteneğine sahip olun. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
   standard_connectors_other:
