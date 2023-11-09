@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -11,6 +12,7 @@ import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
+import { pickupReservedPlans } from '@/utils/subscription';
 
 import { type CreateTenantData } from '../type';
 
@@ -27,7 +29,9 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const { subscribe } = useSubscribe();
   const cloudApi = useCloudApi({ hideErrorToast: true });
-  if (!subscriptionPlans || !tenantData) {
+  const reservedPlans = conditional(subscriptionPlans && pickupReservedPlans(subscriptionPlans));
+
+  if (!reservedPlans || !tenantData) {
     return null;
   }
 
@@ -75,7 +79,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         onClose={onClose}
       >
         <div className={styles.container}>
-          {subscriptionPlans.map((plan) => (
+          {reservedPlans.map((plan) => (
             <PlanCardItem
               key={plan.id}
               plan={plan}

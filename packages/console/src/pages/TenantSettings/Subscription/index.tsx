@@ -1,4 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
+import { conditionalArray } from '@silverhand/essentials';
 import { useContext } from 'react';
 
 import PageMeta from '@/components/PageMeta';
@@ -6,6 +7,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscription from '@/hooks/use-subscription';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import useSubscriptionUsage from '@/hooks/use-subscription-usage';
+import { pickupReservedPlans } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
@@ -28,6 +30,10 @@ function Subscription() {
   const isLoadingPlans = !subscriptionPlans && !fetchPlansError;
   const isLoadingSubscription = !currentSubscription && !fetchSubscriptionError;
   const isLoadingSubscriptionUsage = !subscriptionUsage && !fetchSubscriptionUsageError;
+
+  const reservedPlans = conditionalArray(
+    subscriptionPlans && pickupReservedPlans(subscriptionPlans)
+  );
 
   if (isLoadingPlans || isLoadingSubscription || isLoadingSubscriptionUsage) {
     return <Skeleton />;
@@ -53,10 +59,10 @@ function Subscription() {
         subscriptionPlan={currentSubscriptionPlan}
         subscriptionUsage={subscriptionUsage}
       />
-      <PlanQuotaTable subscriptionPlans={subscriptionPlans} />
+      <PlanQuotaTable subscriptionPlans={reservedPlans} />
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
-        subscriptionPlans={subscriptionPlans}
+        subscriptionPlans={reservedPlans}
         onSubscriptionUpdated={mutateSubscription}
       />
     </div>
