@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: '사용자 정의 도메인을 제거하십시오',
   },
   omni_sign_in_enabled: {
-    name: 'Omin 사인인',
-    limited: 'Omin 사인인',
-    unlimited: 'Omin 사인인',
-    not_eligible: 'Omin 사인인을 비활성화하세요',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: '내장된 이메일 커넥터',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}}개의 Webhooks',
     unlimited: '무제한 Webhooks',
     not_eligible: '웹훅을 삭제하세요',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '감사 로그 보존 기간',

@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: 'Удалите свой пользовательский домен',
   },
   omni_sign_in_enabled: {
-    name: 'Omni-вход',
-    limited: 'Omni-вход',
-    unlimited: 'Omni-вход',
-    not_eligible: 'Выключите свой Omni-вход',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Встроенный электронный коннектор',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}} webhooks',
     unlimited: 'Неограниченное количество вебхуков',
     not_eligible: 'Удалите ваши вебхуки',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: 'カスタムドメインを削除してください',
   },
   omni_sign_in_enabled: {
-    name: 'Omniサインイン',
-    limited: 'Omniサインイン',
-    unlimited: 'Omniサインイン',
-    not_eligible: 'Omniサインインを無効にしてください',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: '組込みメールコネクタ',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}}個のWebhooks',
     unlimited: '無制限のWebhooks',
     not_eligible: 'Webhookを削除してください',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '監査ログの保持期間',

@@ -26,7 +26,8 @@ const quota_table = {
   },
   user_authn: {
     title: 'Kullanıcı Kimlik Doğrulama',
-    omni_sign_in: 'Çoklu oturum açma',
+    /** UNTRANSLATED */
+    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'Parola',
     passwordless: 'Parolasız - E-posta ve SMS',
     email_connector: 'E-posta bağlayıcı',
@@ -49,6 +50,12 @@ const quota_table = {
   hooks: {
     title: 'Web Kancaları',
     hooks: 'Web Kancaları',
+  },
+  organization: {
+    /** UNTRANSLATED */
+    title: 'Organization',
+    /** UNTRANSLATED */
+    organization: 'Organization (Q4, 2023)',
   },
   support: {
     title: 'Destek',

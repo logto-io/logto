@@ -7,6 +7,7 @@ import ArrowRight from '@/assets/icons/arrow-right.svg';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanQuotaList from '@/components/PlanQuotaList';
+import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -23,6 +24,9 @@ const featuredQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
   'standardConnectorsLimit',
   'rolesLimit',
   'scopesPerRoleLimit',
+  'mfaEnabled',
+  'omniSignInEnabled',
+  'organizationEnabled',
   'auditLogsRetentionDays',
 ];
 
@@ -86,6 +90,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
           hasIcon
           quota={quota}
           featuredQuotaKeys={featuredQuotaKeys}
+          comingSoonQuotaKeys={comingSoonQuotaKeys}
           className={styles.list}
         />
         {isFreePlan && isFreeTenantExceeded && (

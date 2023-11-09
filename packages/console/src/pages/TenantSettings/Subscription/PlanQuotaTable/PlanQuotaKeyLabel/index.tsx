@@ -36,6 +36,7 @@ const planQuotaKeyPhraseMap: {
   auditLogsRetentionDays: 'audit_logs.retention',
   communitySupportEnabled: 'support.community',
   ticketSupportResponseTime: 'support.customer_ticket',
+  organizationEnabled: 'organization.organization',
 };
 
 type Props = {

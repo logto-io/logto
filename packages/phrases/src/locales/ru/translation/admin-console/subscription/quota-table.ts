@@ -26,7 +26,8 @@ const quota_table = {
   },
   user_authn: {
     title: 'Проверка подлинности пользователя',
-    omni_sign_in: 'Многочисленные входы',
+    /** UNTRANSLATED */
+    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'Пароль',
     passwordless: 'Без пароля - Электронная почта и SMS',
     email_connector: 'Подключение электронной почты',
@@ -49,6 +50,12 @@ const quota_table = {
   hooks: {
     title: 'Вебхуки',
     hooks: 'Вебхуки',
+  },
+  organization: {
+    /** UNTRANSLATED */
+    title: 'Organization',
+    /** UNTRANSLATED */
+    organization: 'Organization (Q4, 2023)',
   },
   support: {
     title: 'Поддержка',

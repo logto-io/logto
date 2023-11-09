@@ -47,10 +47,14 @@ const quota_item = {
     not_eligible: '移除您的自訂網域',
   },
   omni_sign_in_enabled: {
-    name: 'Omni sign-in',
-    limited: 'Omni sign-in',
-    unlimited: 'Omni sign-in',
-    not_eligible: '停用您的 Omni sign-in',
+    /** UNTRANSLATED */
+    name: 'SSO',
+    /** UNTRANSLATED */
+    limited: 'SSO',
+    /** UNTRANSLATED */
+    unlimited: 'SSO',
+    /** UNTRANSLATED */
+    not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
     name: '內建電子郵件連接程式',
@@ -92,6 +96,16 @@ const quota_item = {
     limited_other: '{{count, number}}個 Webhooks',
     unlimited: '無限制的 Webhooks',
     not_eligible: '移除您的 Webhooks',
+  },
+  organization_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organization',
+    /** UNTRANSLATED */
+    limited: 'Organization',
+    /** UNTRANSLATED */
+    unlimited: 'Organization',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '審計記錄保留期限',
