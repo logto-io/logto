@@ -175,6 +175,7 @@
   --color-tooltip-background: #34353f; // dark theme Surface-4
   --color-tooltip-text: var(--color-neutral-99);
   --color-overlay: rgba(0, 0, 0, 30%);
+  --color-overlay-default-focused: rgba(25, 28, 29, 16%);
   --color-drawer-overlay: rgba(0, 0, 0, 40%);
   --color-guide-dropdown-background: var(--color-white);
   --color-guide-dropdown-border: var(--color-border);
@@ -375,6 +376,7 @@
   --color-tooltip-background: var(--color-surface-4);
   --color-tooltip-text: var(--color-neutral-10);
   --color-overlay: rgba(0, 0, 0, 70%); // 70% Neutral-100
+  --color-overlay-default-focused: rgba(247, 248, 248, 16%);
   --color-drawer-overlay: rgba(0, 0, 0, 60%);
   --color-guide-dropdown-background: var(--color-neutral-variant-80);
   --color-guide-dropdown-border: var(--color-neutral-variant-70);

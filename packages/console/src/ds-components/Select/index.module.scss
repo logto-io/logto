@@ -28,9 +28,13 @@
       display: flex;
       align-items: center;
       gap: _.unit(1);
+      position: relative;
 
-      &.focused {
-        background: rgba(0, 0, 0, 12%);
+      &.focused::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--color-overlay-default-focused);
       }
     }
 
