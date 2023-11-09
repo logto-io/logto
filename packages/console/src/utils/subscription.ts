@@ -8,7 +8,8 @@ import {
   organizationEnabledMap,
   ticketSupportResponseTimeMap,
 } from '@/consts/plan-quotas';
-import { reservedPlanIdOrder } from '@/consts/subscriptions';
+import { reservedPlanIdOrder, reservedPlanIds } from '@/consts/subscriptions';
+import { type SubscriptionPlan } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
   const { id, quota } = subscriptionPlanResponse;
@@ -60,3 +61,6 @@ export const isExceededQuotaLimitError = async (error: unknown) => {
 
   return Boolean(message?.includes('Exceeded quota limit'));
 };
+
+export const pickupReservedPlans = (plans: SubscriptionPlan[]): SubscriptionPlan[] =>
+  plans.filter(({ id }) => reservedPlanIds.includes(id));

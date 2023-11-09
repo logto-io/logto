@@ -4,6 +4,8 @@ export enum ReservedPlanId {
   pro = 'pro',
 }
 
+export const reservedPlanIds: string[] = Object.values(ReservedPlanId);
+
 export const reservedPlanIdOrder: string[] = [
   ReservedPlanId.free,
   ReservedPlanId.hobby,
