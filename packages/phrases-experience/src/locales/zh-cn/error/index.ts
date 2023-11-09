@@ -18,6 +18,7 @@ const error = {
   invalid_session: '未找到会话，请返回并重新登录。',
   timeout: '请求超时，请稍后重试。',
   password_rejected,
+  sso_not_enabled: '此邮箱账户未启用单点登录。',
 };
 
 export default Object.freeze(error);

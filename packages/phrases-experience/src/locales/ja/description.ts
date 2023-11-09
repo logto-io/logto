@@ -68,6 +68,9 @@ const description = {
     character_types_other: '大文字、小文字、数字、記号のうち {{count}} 種類を含む必要があります',
   },
   use: '使用する',
+  single_sign_on_email_form: '企業のメールアドレスを入力してください',
+  single_sign_on_connectors_list:
+    'あなたの企業は、メールアカウント{{email}}に対してシングルサインオンを有効にしました。以下のSSOプロバイダーを使用してサインインを続けることができます。',
 };
 
 export default Object.freeze(description);

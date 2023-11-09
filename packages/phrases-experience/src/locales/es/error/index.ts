@@ -19,6 +19,8 @@ const error = {
   invalid_session: 'No se encontró la sesión. Por favor regrese e inicie sesión nuevamente.',
   timeout: 'Tiempo de espera de solicitud agotado. Por favor intente de nuevo más tarde.',
   password_rejected,
+  sso_not_enabled:
+    'El inicio de sesión único no está habilitado para esta cuenta de correo electrónico.',
 };
 
 export default Object.freeze(error);

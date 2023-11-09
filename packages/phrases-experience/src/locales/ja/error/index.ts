@@ -19,6 +19,7 @@ const error = {
   invalid_session: 'セッションが見つかりません。もう一度サインインしてください。',
   timeout: 'リクエストタイムアウト。後でもう一度お試しください。',
   password_rejected,
+  sso_not_enabled: 'このメールアカウントではシングルサインオンが有効になっていません。',
 };
 
 export default Object.freeze(error);

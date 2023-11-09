@@ -45,7 +45,10 @@ const SingleSignOnEmail = () => {
   );
 
   return (
-    <SecondaryPageLayout title="action.single_sign_on">
+    <SecondaryPageLayout
+      title="action.single_sign_on"
+      description="description.single_sign_on_email_form"
+    >
       <form className={styles.form} onSubmit={onSubmitHandler}>
         <Controller
           control={control}

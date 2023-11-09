@@ -59,6 +59,9 @@ const description = {
     character_types_other: '要求包含至少 {{count}} 類型的大寫字母，小寫字母，數字和符號',
   },
   use: '使用',
+  single_sign_on_email_form: '輸入你的企業電子郵件地址',
+  single_sign_on_connectors_list:
+    '您的企業已為電郵賬戶{{email}}啟用單一登入。您可以繼續使用以下的SSO供應商登入。',
 };
 
 export default Object.freeze(description);

@@ -18,6 +18,7 @@ const error = {
   invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
   timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
   password_rejected,
+  sso_not_enabled: 'Bu e-posta hesabı için tek oturum açma etkin değil.',
 };
 
 export default Object.freeze(error);

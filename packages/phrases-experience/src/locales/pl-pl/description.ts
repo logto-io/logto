@@ -68,6 +68,9 @@ const description = {
       'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
   },
   use: 'Użyj',
+  single_sign_on_email_form: 'Wpisz swój służbowy adres email',
+  single_sign_on_connectors_list:
+    'Twoja firma włączyła jednokrotne logowanie dla konta e-mail {{email}}. Możesz kontynuować logowanie za pomocą następujących dostawców SSO.',
 };
 
 export default Object.freeze(description);

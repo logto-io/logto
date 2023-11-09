@@ -1,5 +1,6 @@
 import { type SsoConnectorMetadata } from '@logto/schemas';
 import { useCallback, useState, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
@@ -8,6 +9,7 @@ import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 
 const useOnSubmit = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const request = useApi(getSingleSignOnConnectors);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -38,7 +40,7 @@ const useOnSubmit = () => {
         .filter((connector): connector is SsoConnectorMetadata => Boolean(connector));
 
       if (!connectors || connectors.length === 0) {
-        setErrorMessage('No SSO connectors found for this email');
+        setErrorMessage(t('error.sso_not_enabled'));
         return;
       }
 
@@ -47,7 +49,7 @@ const useOnSubmit = () => {
 
       navigate('/connectors');
     },
-    [availableSsoConnectorsMap, handleError, navigate, request, setEmail, setSsoConnectors]
+    [availableSsoConnectorsMap, handleError, navigate, request, setEmail, setSsoConnectors, t]
   );
 
   return {

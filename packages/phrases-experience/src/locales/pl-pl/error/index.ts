@@ -19,6 +19,7 @@ const error = {
   invalid_session: 'Sesja nie znaleziona. Proszę wróć i zaloguj się ponownie.',
   timeout: 'Czas żądania upłynął. Proszę spróbuj ponownie później.',
   password_rejected,
+  sso_not_enabled: 'Pojedyncze logowanie nie jest włączony dla tego konta e-mail.',
 };
 
 export default Object.freeze(error);
