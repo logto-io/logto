@@ -3,13 +3,7 @@ import * as styles from './index.module.scss';
 
 function Diagram() {
   return (
-    <svg
-      width="100%"
-      height="auto"
-      viewBox="0 0 762 630"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="100%" viewBox="0 0 762 630" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="762" height="629.523" fill="none" />
       <path d="M93.234 89.1221L279.704 89.589" stroke="#8E9192" strokeWidth="0.71719" />
       <path d="M283.131 89.561L278.11 93.0809L278.11 86.041L283.131 89.561Z" fill="#8E9192" />
