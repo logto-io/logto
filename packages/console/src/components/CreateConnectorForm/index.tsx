@@ -155,7 +155,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              {isStandardConnectorDisabled && <FeatureTag for="upsell" plan="hobby" />}
+              <FeatureTag isVisible={isStandardConnectorDisabled} for="upsell" plan="hobby" />
             </div>
             <ConnectorRadioGroup
               name="group"

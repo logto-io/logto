@@ -39,6 +39,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
     metadata: { target, name, description },
   } = data;
 
+  const hasPaywall = isCloud && target === ApplicationType.MachineToMachine;
   const isSubscriptionRequired = isM2mDisabled && target === ApplicationType.MachineToMachine;
   const buttonText = isSubscriptionRequired
     ? 'upsell.upgrade_plan'
@@ -75,7 +76,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {isSubscriptionRequired && <FeatureTag for="upsell" plan="hobby" />}
+            {hasPaywall && <FeatureTag isVisible={isM2mDisabled} for="upsell" plan="hobby" />}
           </div>
           <div className={styles.description} title={description}>
             {description}

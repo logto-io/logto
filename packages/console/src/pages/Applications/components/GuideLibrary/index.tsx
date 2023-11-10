@@ -40,7 +40,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
 
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
+  const isM2mDisabledForCurrentPlan = isCloud && !currentPlan?.quota.machineToMachineLimit;
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -101,9 +101,13 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       setFilterCategories(sortedValue);
                     }}
                   />
-                  {isM2mDisabledForCurrentPlan && (
-                    <FeatureTag for="upsell" plan="hobby" className={styles.proTag} />
-                  )}
+                  {/* TODO: must be refactored since there's no way to see the tag's intention */}
+                  <FeatureTag
+                    isVisible={isM2mDisabledForCurrentPlan}
+                    for="upsell"
+                    plan="hobby"
+                    className={styles.proTag}
+                  />
                 </div>
               </div>
             </div>

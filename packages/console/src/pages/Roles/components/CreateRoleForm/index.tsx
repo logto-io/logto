@@ -13,7 +13,6 @@ import FeatureTag from '@/components/FeatureTag';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -29,9 +28,11 @@ import { hasReachedQuotaLimit } from '@/utils/quota';
 
 import * as styles from './index.module.scss';
 
-const radioOptions: Array<{ key: AdminConsoleKey; value: RoleType; proTagCheck: boolean }> = [
-  { key: 'roles.type_user', value: RoleType.User, proTagCheck: false },
-  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine, proTagCheck: true },
+type RadioOption = { key: AdminConsoleKey; value: RoleType; hasPaywall: boolean };
+
+const radioOptions: RadioOption[] = [
+  { key: 'roles.type_user', value: RoleType.User, hasPaywall: false },
+  { key: 'roles.type_machine_to_machine', value: RoleType.MachineToMachine, hasPaywall: true },
 ];
 
 export type Props = {
@@ -52,7 +53,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
   const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
   const {
     control,
     handleSubmit,
@@ -217,15 +217,19 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                     onChange(value);
                   }}
                 >
-                  {radioOptions.map(({ key, value, proTagCheck }) => (
+                  {radioOptions.map(({ key, value, hasPaywall }) => (
                     <Radio
                       key={value}
                       title={<DynamicT forKey={key} />}
                       value={value}
                       trailingIcon={
-                        proTagCheck &&
-                        isM2mDisabledForCurrentPlan && (
-                          <FeatureTag for="upsell" plan="hobby" className={styles.proTag} />
+                        hasPaywall && (
+                          <FeatureTag
+                            isVisible={!currentPlan?.quota.machineToMachineLimit}
+                            for="upsell"
+                            plan="hobby"
+                            className={styles.proTag}
+                          />
                         )
                       }
                     />

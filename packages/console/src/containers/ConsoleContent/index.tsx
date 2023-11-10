@@ -180,7 +180,7 @@ function ConsoleContent() {
                 <Route index element={<Navigate replace to={TenantSettingsTabs.Settings} />} />
                 <Route path={TenantSettingsTabs.Settings} element={<TenantBasicSettings />} />
                 <Route path={TenantSettingsTabs.Domains} element={<TenantDomainSettings />} />
-                {(!isDevFeaturesEnabled || !isDevTenant) && (
+                {!isDevTenant && (
                   <>
                     <Route path={TenantSettingsTabs.Subscription} element={<Subscription />} />
                     <Route path={TenantSettingsTabs.BillingHistory} element={<BillingHistory />} />

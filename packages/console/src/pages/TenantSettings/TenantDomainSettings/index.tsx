@@ -41,7 +41,7 @@ function TenantDomainSettings() {
       <PageMeta titleKey={['tenants.tabs.domains', 'tenants.title']} />
       <FormCard
         title="domain.custom.custom_domain"
-        tag={!customDomainEnabled && <FeatureTag for="upsell" plan="hobby" />}
+        tag={<FeatureTag isVisible={!customDomainEnabled} for="upsell" plan="hobby" />}
         description="domain.custom.custom_domain_description"
         learnMoreLink={getDocumentationUrl('docs/recipes/custom-domain')}
       >
