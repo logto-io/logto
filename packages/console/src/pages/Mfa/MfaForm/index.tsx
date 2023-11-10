@@ -16,6 +16,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
@@ -39,6 +40,7 @@ function MfaForm({ data, onMfaUpdated }: Props) {
   const isMfaDisabled = isCloud && !currentPlan?.quota.mfaEnabled;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     register,
     reset,
@@ -90,7 +92,11 @@ function MfaForm({ data, onMfaUpdated }: Props) {
         onSubmit={onSubmit}
         onDiscard={reset}
       >
-        <FormCard title="mfa.factors" description="mfa.multi_factors_description">
+        <FormCard
+          title="mfa.factors"
+          description="mfa.multi_factors_description"
+          learnMoreLink={getDocumentationUrl('/docs/recipes/multi-factor-auth/config-mfa')}
+        >
           <FormField title="mfa.multi_factors" headlineSpacing="large">
             <div className={styles.factorField}>
               <Switch
