@@ -19,6 +19,7 @@ const error = {
   invalid_session: 'Sessão não encontrada. Volte e faça login novamente.',
   timeout: 'Tempo limite de sessão. Volte e faça login novamente.',
   password_rejected,
+  sso_not_enabled: 'O Single Sign-On não está habilitado para esta conta de e-mail.',
 };
 
 export default Object.freeze(error);

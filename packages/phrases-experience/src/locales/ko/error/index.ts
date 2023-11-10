@@ -18,6 +18,7 @@ const error = {
   invalid_session: '세션을 찾을 수 없어요. 다시 로그인해 주세요.',
   timeout: '요청 시간이 초과되었어요. 잠시 후에 다시 시도해 주세요.',
   password_rejected,
+  sso_not_enabled: '이 이메일 계정에 대해 단일 로그인이 활성화되지 않았어요.',
 };
 
 export default Object.freeze(error);

@@ -28,6 +28,7 @@ const action = {
   copy: '复制',
   verify_via_passkey: '通过 Passkey 验证',
   download: '下载',
+  single_sign_on: '单点登录',
 };
 
 export default Object.freeze(action);

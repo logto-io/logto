@@ -68,6 +68,10 @@ const description = {
     character_types_other:
       'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
   },
+  use: 'Use',
+  single_sign_on_email_form: 'Enter your enterprise email address',
+  single_sign_on_connectors_list:
+    'Your enterprise has enabled Single Sign-On for the email account {{email}}. You can continue to sign in with the following SSO providers.',
 };
 
 export default Object.freeze(description);

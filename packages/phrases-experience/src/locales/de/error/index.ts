@@ -18,6 +18,7 @@ const error = {
   invalid_session: 'Die Sitzung ist ungültig. Bitte melde dich erneut an.',
   timeout: 'Zeitüberschreitung. Bitte melde dich erneut an.',
   password_rejected,
+  sso_not_enabled: 'Single Sign-On ist für dieses E-Mail-Konto nicht aktiviert.',
 };
 
 export default Object.freeze(error);

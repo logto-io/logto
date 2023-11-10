@@ -20,6 +20,7 @@ const error = {
   invalid_session: 'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   timeout: "Délai d'attente de la requête dépassé. Veuillez réessayer plus tard.",
   password_rejected,
+  sso_not_enabled: "La authentification unique n'est pas activée pour ce compte de messagerie.",
 };
 
 export default Object.freeze(error);

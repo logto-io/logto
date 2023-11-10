@@ -71,6 +71,10 @@ const description = {
     character_types_other:
       'doit contenir au moins {{count}} types de lettres majuscules, lettres minuscules, chiffres et symboles',
   },
+  use: 'Utiliser',
+  single_sign_on_email_form: "Entrez votre adresse e-mail d'entreprise",
+  single_sign_on_connectors_list:
+    'Votre entreprise a activé la connexion unique (Single Sign-On) pour le compte email {{email}}. Vous pouvez continuer à vous connecter avec les fournisseurs SSO suivants.',
 };
 
 export default Object.freeze(description);

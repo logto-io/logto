@@ -19,6 +19,7 @@ const error = {
   invalid_session: 'Сессия не найдена. Пожалуйста, войдите снова.',
   timeout: 'Время ожидания истекло. Пожалуйста, повторите попытку позднее.',
   password_rejected,
+  sso_not_enabled: 'Односторонняя авторизация не включена для этого аккаунта электронной почты.',
 };
 
 export default Object.freeze(error);

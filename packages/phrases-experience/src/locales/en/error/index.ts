@@ -18,6 +18,7 @@ const error = {
   invalid_session: 'Session not found. Please go back and sign in again.',
   timeout: 'Request timeout. Please try again later.',
   password_rejected,
+  sso_not_enabled: 'Single Sign-On is not enabled for this email account.',
 };
 
 export default Object.freeze(error);

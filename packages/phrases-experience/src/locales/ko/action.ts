@@ -28,6 +28,7 @@ const action = {
   copy: '복사',
   verify_via_passkey: '패스키로 확인',
   download: '다운로드',
+  single_sign_on: '단일 로그인',
 };
 
 export default Object.freeze(action);

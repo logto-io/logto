@@ -1,4 +1,4 @@
-import type { SignInExperience, SignIn } from '@logto/schemas';
+import type { SignInExperience, SignIn, SsoConnectorMetadata } from '@logto/schemas';
 import {
   ConnectorPlatform,
   ConnectorType,
@@ -40,6 +40,15 @@ export const mockSocialConnectorData = {
   readme: '',
   configTemplate: '',
 };
+
+export const mockSsoConnectors: SsoConnectorMetadata[] = [
+  {
+    id: 'arbitrary-sso-connector',
+    connectorName: 'AzureAD',
+    ssoOnly: true,
+    logo: 'http://logto.dev/logto.png',
+  },
+];
 
 export const emailSignInMethod = {
   identifier: SignInIdentifier.Email,
@@ -113,6 +122,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     verify: true,
   },
   socialConnectors,
+  ssoConnectors: [],
   signInMode: SignInMode.SignInAndRegister,
   forgotPassword: {
     email: true,

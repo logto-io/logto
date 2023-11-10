@@ -18,6 +18,7 @@ const error = {
   invalid_session: '未找到會話，請返回並重新登錄。',
   timeout: '請求超時，請稍後重試。',
   password_rejected,
+  sso_not_enabled: '此郵箱帳戶未啟用單一登錄。',
 };
 
 export default Object.freeze(error);

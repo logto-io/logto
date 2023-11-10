@@ -14,6 +14,7 @@ export const sessionNotFoundPath = '/unknown-session';
 export const guardedPath = [
   '/sign-in',
   '/register',
+  '/single-sign-on',
   '/social/register',
   '/reset-password',
   '/forgot-password',

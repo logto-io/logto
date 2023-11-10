@@ -58,6 +58,10 @@ const description = {
     character_types_one: '应包含至少 {{count}} 种大写字母、小写字母、数字和符号',
     character_types_other: '应包含至少 {{count}} 种大写字母、小写字母、数字和符号',
   },
+  use: '使用',
+  single_sign_on_email_form: '输入你的企业电子邮件地址',
+  single_sign_on_connectors_list:
+    '你的企业已为电子邮件账户{{email}}启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
 };
 
 export default Object.freeze(description);

@@ -28,6 +28,7 @@ const action = {
   copy: 'Kopyala',
   verify_via_passkey: 'Parola ile doğrula',
   download: 'İndir',
+  single_sign_on: 'Tek oturum açma',
 };
 
 export default Object.freeze(action);

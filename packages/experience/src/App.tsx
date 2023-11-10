@@ -7,7 +7,11 @@ import AppBoundary from './Providers/AppBoundary';
 import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
-import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './constants/env';
+import SingleSignOnContextProvider from './Providers/SingleSignOnContextProvider';
+import {
+  isDevFeaturesEnabled as isDevelopmentFeaturesEnabled,
+  singleSignOnPath,
+} from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -26,6 +30,7 @@ import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
+import SingleSignOnEmail from './pages/SingleSignOnEmail';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignIn from './pages/SocialSignInCallback';
@@ -109,6 +114,13 @@ const App = () => {
                     </Route>
                     <Route path="callback/:connectorId" element={<Callback />} />
                   </Route>
+
+                  {/* Single sign on */}
+                  {isDevelopmentFeaturesEnabled && (
+                    <Route path={singleSignOnPath} element={<SingleSignOnContextProvider />}>
+                      <Route path="email" element={<SingleSignOnEmail />} />
+                    </Route>
+                  )}
 
                   <Route path="*" element={<ErrorPage />} />
                 </Route>

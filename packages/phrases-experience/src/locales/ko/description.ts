@@ -62,6 +62,10 @@ const description = {
     character_types_one: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
     character_types_other: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
   },
+  use: '사용',
+  single_sign_on_email_form: '기업 이메일 주소를 입력하세요',
+  single_sign_on_connectors_list:
+    '귀하의 기업은 {{email}} 이메일 계정에 대해 Single Sign-On을 활성화했습니다. 다음 SSO 제공업체를 사용하여 로그인을 계속할 수 있습니다.',
 };
 
 export default Object.freeze(description);

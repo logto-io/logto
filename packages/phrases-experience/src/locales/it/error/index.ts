@@ -18,6 +18,7 @@ const error = {
   invalid_session: 'Sessione non trovata. Si prega di tornare indietro e accedere di nuovo.',
   timeout: 'Timeout della richiesta. Si prega di riprovare più tardi.',
   password_rejected,
+  sso_not_enabled: 'Single sign-on non abilitato per questo account email.',
 };
 
 export default Object.freeze(error);

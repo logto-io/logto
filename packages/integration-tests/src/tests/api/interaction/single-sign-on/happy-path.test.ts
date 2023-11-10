@@ -7,7 +7,7 @@ import { ProviderName, logtoUrl } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 
 describe('Single Sign On Happy Path', () => {
-  const connectorIdMap = new Map<string, SsoConnectorMetadata & { ssoOnly: boolean }>();
+  const connectorIdMap = new Map<string, SsoConnectorMetadata>();
 
   const state = 'foo_state';
   const redirectUri = 'http://foo.dev/callback';
@@ -59,9 +59,8 @@ describe('Single Sign On Happy Path', () => {
 
     expect(response.length).toBeGreaterThan(0);
 
-    for (const connector of response) {
-      expect(connectorIdMap.has(connector.id)).toBe(true);
-      expect(connector.ssoOnly).toEqual(connectorIdMap.get(connector.id)!.ssoOnly);
+    for (const connectorId of response) {
+      expect(connectorIdMap.has(connectorId)).toBe(true);
     }
   });
 
