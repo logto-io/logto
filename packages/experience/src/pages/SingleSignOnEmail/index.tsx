@@ -1,7 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import Button from '@/components/Button';
@@ -19,7 +18,6 @@ type FormState = {
 };
 
 const SingleSignOnEmail = () => {
-  const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const {

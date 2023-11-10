@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import Register from '@/pages/Register';
 import type { SignInExperienceResponse } from '@/types';
 
@@ -72,5 +72,13 @@ describe('<Register />', () => {
       }
     );
     expect(queryByText('sign-in')).not.toBeNull();
+  });
+
+  test('render single sign on link', () => {
+    const { queryByText } = renderRegisterPage({
+      ssoConnectors: mockSsoConnectors,
+    });
+
+    expect(queryByText('action.single_sign_on')).not.toBeNull();
   });
 });

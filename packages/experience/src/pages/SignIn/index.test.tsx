@@ -3,7 +3,11 @@ import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings, mockSignInMethodSettingsTestCases } from '@/__mocks__/logto';
+import {
+  mockSignInExperienceSettings,
+  mockSignInMethodSettingsTestCases,
+  mockSsoConnectors,
+} from '@/__mocks__/logto';
 import SignIn from '@/pages/SignIn';
 
 jest.mock('i18next', () => ({
@@ -107,5 +111,13 @@ describe('<SignIn />', () => {
     );
 
     expect(queryByText('Register')).not.toBeNull();
+  });
+
+  test('render single sign on link', () => {
+    const { queryByText } = renderSignIn({
+      ssoConnectors: mockSsoConnectors,
+    });
+
+    expect(queryByText('action.single_sign_on')).not.toBeNull();
   });
 });
