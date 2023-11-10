@@ -16,7 +16,7 @@ type ConnectorMetadataWithId = ConnectorMetadata & { id: string };
 
 export type FullSignInExperience = SignInExperience & {
   socialConnectors: ConnectorMetadataWithId[];
-  ssoConnectors: SsoConnectorMetadata[];
+  ssoConnectors: Array<Omit<SsoConnectorMetadata, 'ssoOnly'>>;
   forgotPassword: ForgotPassword;
   isDevelopmentTenant: boolean;
 };
@@ -24,7 +24,7 @@ export type FullSignInExperience = SignInExperience & {
 export const guardFullSignInExperience: z.ZodType<FullSignInExperience> =
   SignInExperiences.guard.extend({
     socialConnectors: connectorMetadataGuard.extend({ id: z.string() }).array(),
-    ssoConnectors: ssoConnectorMetadataGuard.array(),
+    ssoConnectors: ssoConnectorMetadataGuard.omit({ ssoOnly: true }).array(),
     forgotPassword: z.object({ phone: z.boolean(), email: z.boolean() }),
     isDevelopmentTenant: z.boolean(),
   });

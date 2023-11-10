@@ -77,7 +77,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     pathname,
     koaGuard({
       body: ssoConnectorCreateGuard,
-      response: SsoConnectors.guard,
+      response: SsoConnectors.guard.omit({ ssoOnly: true }),
       status: [200, 422],
     }),
     async (ctx, next) => {
