@@ -31,7 +31,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
-import * as organizationToken from './grants/organization-token.js';
+import * as refreshToken from './grants/refresh-token.js';
 import { findResource, findResourceScopes, getSharedResourceServerData } from './resource.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
@@ -288,12 +288,10 @@ export default function initOidc(
 
   addOidcEventListeners(oidc, queries);
 
-  // Register custom grant types
-  oidc.registerGrantType(
-    GrantType.OrganizationToken,
-    organizationToken.buildHandler(envSet, organizations),
-    [...organizationToken.parameters]
-  );
+  // Override the default `refresh_token` grant
+  oidc.registerGrantType(GrantType.RefreshToken, refreshToken.buildHandler(envSet, organizations), [
+    ...refreshToken.parameters,
+  ]);
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

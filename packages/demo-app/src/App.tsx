@@ -101,7 +101,7 @@ const App = () => {
       config={{
         endpoint: window.location.origin,
         appId: demoAppApplicationId,
-        prompt: Prompt.Login,
+        prompt: Prompt.Consent,
         // Use enum values once JS SDK is updated
         scopes: ['urn:logto:scope:organizations', 'urn:logto:scope:organization_roles'],
         resources: ['urn:logto:resource:organizations'],
