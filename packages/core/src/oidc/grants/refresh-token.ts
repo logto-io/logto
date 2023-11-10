@@ -20,7 +20,7 @@
  */
 
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
-import { type Optional, cond, isKeyInObject } from '@silverhand/essentials';
+import { type Optional, isKeyInObject, cond } from '@silverhand/essentials';
 import type Provider from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import difference from 'oidc-provider/lib/helpers/_/difference.js';
@@ -53,7 +53,7 @@ const gty = 'refresh_token';
 
 /**
  * The valid parameters for the `organization_token` grant type. Note the `resource` parameter is
- * handled by oidc-provider so we don't need to include it here.
+ * not included here since it should be handled per configuration when registering the grant type.
  */
 export const parameters = Object.freeze(['refresh_token', 'organization_id', 'scope'] as const);
 
@@ -130,7 +130,9 @@ export const buildHandler: (
   }
 
   /* === RFC 0001 === */
-  if (params.organization_id) {
+  // The params object may have the key with `undefined` value, so we have to use `Boolean` to check.
+  const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
+  if (organizationId) {
     // Validate if the refresh token has the required scope from RFC 0001.
     if (!refreshToken.scopes.has(UserScope.Organizations)) {
       throw new InsufficientScope('refresh token missing required scope', UserScope.Organizations);
@@ -218,7 +220,6 @@ export const buildHandler: (
 
   /* === RFC 0001 === */
   // Check membership
-  const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
   if (
     organizationId &&
     !(await queries.relations.users.exists(organizationId, account.accountId))

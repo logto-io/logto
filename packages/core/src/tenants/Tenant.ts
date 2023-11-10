@@ -83,7 +83,7 @@ export default class Tenant implements TenantContext {
     app.use(koaSecurityHeaders(mountedApps, id));
 
     // Mount OIDC
-    const provider = initOidc(id, envSet, queries, libraries);
+    const provider = initOidc(envSet, queries, libraries);
     app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = {
