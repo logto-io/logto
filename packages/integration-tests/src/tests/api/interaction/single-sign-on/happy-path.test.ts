@@ -13,7 +13,7 @@ describe('Single Sign On Happy Path', () => {
   const redirectUri = 'http://foo.dev/callback';
 
   beforeAll(async () => {
-    const { id, connectorName, ssoOnly } = await createSsoConnector({
+    const { id, connectorName } = await createSsoConnector({
       providerName: ProviderName.OIDC,
       connectorName: 'test-oidc',
       domains: ['foo.com'],
@@ -24,7 +24,7 @@ describe('Single Sign On Happy Path', () => {
       },
     });
 
-    connectorIdMap.set(id, { id, connectorName, ssoOnly, logo: '' });
+    connectorIdMap.set(id, { id, connectorName, logo: '' });
   });
 
   afterAll(async () => {

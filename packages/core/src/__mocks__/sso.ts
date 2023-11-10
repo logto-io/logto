@@ -11,7 +11,6 @@ export const mockSsoConnector = {
   domains: [],
   branding: {},
   syncProfile: true,
-  ssoOnly: true,
   createdAt: Date.now(),
 } satisfies SsoConnector;
 
@@ -28,6 +27,5 @@ export const wellConfiguredSsoConnector = {
   domains: ['foo.com'],
   branding: {},
   syncProfile: true,
-  ssoOnly: true,
   createdAt: Date.now(),
 } satisfies SsoConnector;

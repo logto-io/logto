@@ -72,13 +72,12 @@ export const createSignInExperienceLibrary = (
     const ssoConnectors = await getAvailableSsoConnectors();
 
     return ssoConnectors.map(
-      ({ providerName, connectorName, id, branding, ssoOnly }): SsoConnectorMetadata => {
+      ({ providerName, connectorName, id, branding }): SsoConnectorMetadata => {
         const factory = ssoConnectorFactories[providerName];
 
         return {
           id,
           connectorName,
-          ssoOnly,
           logo: branding.logo ?? factory.logo,
           darkLogo: branding.darkLogo,
         };

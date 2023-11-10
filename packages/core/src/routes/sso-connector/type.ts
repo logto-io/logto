@@ -22,7 +22,6 @@ export const ssoConnectorCreateGuard = SsoConnectors.createGuard
     domains: true,
     branding: true,
     syncProfile: true,
-    ssoOnly: true,
   })
   // Provider name and connector name are required for creating a connector
   .merge(SsoConnectors.guard.pick({ providerName: true, connectorName: true }));
@@ -42,7 +41,6 @@ export const ssoConnectorPatchGuard = SsoConnectors.guard
     domains: true,
     branding: true,
     syncProfile: true,
-    ssoOnly: true,
     connectorName: true,
   })
   .partial();

@@ -68,7 +68,6 @@ describe('post sso-connectors', () => {
     expect(response).toHaveProperty('connectorName', 'test');
     expect(response).toHaveProperty('config', {});
     expect(response).toHaveProperty('domains', []);
-    expect(response).toHaveProperty('ssoOnly', false);
     expect(response).toHaveProperty('syncProfile', false);
 
     await deleteSsoConnectorById(response.id);
@@ -95,7 +94,6 @@ describe('post sso-connectors', () => {
         connectorName: 'test',
         config,
         domains: ['test.com'],
-        ssoOnly: true,
       };
 
       const response = await createSsoConnector(data);
@@ -105,7 +103,6 @@ describe('post sso-connectors', () => {
       expect(response).toHaveProperty('connectorName', 'test');
       expect(response).toHaveProperty('config', data.config);
       expect(response).toHaveProperty('domains', data.domains);
-      expect(response).toHaveProperty('ssoOnly', data.ssoOnly);
       expect(response).toHaveProperty('syncProfile', false);
 
       await deleteSsoConnectorById(response.id);
@@ -156,7 +153,6 @@ describe('get sso-connector by id', () => {
     expect(connector).toHaveProperty('connectorName', 'integration_test connector');
     expect(connector).toHaveProperty('config', {});
     expect(connector).toHaveProperty('domains', []);
-    expect(connector).toHaveProperty('ssoOnly', false);
     expect(connector).toHaveProperty('syncProfile', false);
 
     await deleteSsoConnectorById(id);
@@ -198,7 +194,6 @@ describe('patch sso-connector by id', () => {
     const connector = await patchSsoConnectorById(id, {
       connectorName: 'integration_test connector updated',
       domains: ['test.com'],
-      ssoOnly: true,
     });
 
     expect(connector).toHaveProperty('id', id);
@@ -206,7 +201,6 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('connectorName', 'integration_test connector updated');
     expect(connector).toHaveProperty('config', {});
     expect(connector).toHaveProperty('domains', ['test.com']);
-    expect(connector).toHaveProperty('ssoOnly', true);
     expect(connector).toHaveProperty('syncProfile', false);
 
     await deleteSsoConnectorById(id);
@@ -227,7 +221,6 @@ describe('patch sso-connector by id', () => {
     expect(connector).toHaveProperty('connectorName', 'integration_test connector');
     expect(connector).toHaveProperty('config', {});
     expect(connector).toHaveProperty('domains', []);
-    expect(connector).toHaveProperty('ssoOnly', false);
     expect(connector).toHaveProperty('syncProfile', false);
 
     await deleteSsoConnectorById(id);
