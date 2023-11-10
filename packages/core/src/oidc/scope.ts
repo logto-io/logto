@@ -1,6 +1,6 @@
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
-import type { OrganizationClaimItem, User } from '@logto/schemas';
+import { type User } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
@@ -9,7 +9,10 @@ import type Queries from '#src/tenants/Queries.js';
 
 const claimToUserKey: Readonly<
   Record<
-    Exclude<UserClaim, 'email_verified' | 'phone_number_verified' | 'roles' | 'organizations'>,
+    Exclude<
+      UserClaim,
+      'email_verified' | 'phone_number_verified' | 'roles' | 'organizations' | 'organization_roles'
+    >,
     keyof User
   >
 > = Object.freeze({
@@ -43,15 +46,14 @@ export const getUserClaimData = async (
     return roles.map(({ name }) => name);
   }
 
-  if (claim === 'organizations') {
+  if (claim === 'organizations' || claim === 'organization_roles') {
     const data = await organizationQueries.relations.users.getOrganizationsByUserId(user.id);
-    return data.map(
-      ({ id, organizationRoles }) =>
-        ({
-          id,
-          roles: organizationRoles.map(({ name }) => name),
-        }) satisfies OrganizationClaimItem
-    );
+
+    return claim === 'organizations'
+      ? data.map(({ id }) => id)
+      : data.flatMap(({ id, organizationRoles }) =>
+          organizationRoles.map(({ name }) => `${id}:${name}`)
+        );
   }
 
   return user[claimToUserKey[claim]];
