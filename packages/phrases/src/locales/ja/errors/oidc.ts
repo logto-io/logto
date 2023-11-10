@@ -1,10 +1,11 @@
 const oidc = {
   aborted: 'エンドユーザが操作を中止しました。',
-  invalid_scope: 'スコープ{{scope}}はサポートされていません。',
-  invalid_scope_plural: 'スコープ{{scopes}}はサポートされていません。',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: '提供されたトークンが無効です。',
   invalid_client_metadata: '提供されたクライアントメタデータが無効です。',
-  insufficient_scope: 'アクセストークンに要求されたスコープ{{scopes}}が含まれていません。',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'リクエストが無効です。',
   invalid_grant: '付与要求が無効です。',
   invalid_redirect_uri:

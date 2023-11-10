@@ -69,6 +69,11 @@ const grantTypeToExchangeByType: Record<GrantType, token.ExchangeByType> = {
   [GrantType.AuthorizationCode]: token.ExchangeByType.AuthorizationCode,
   [GrantType.RefreshToken]: token.ExchangeByType.RefreshToken,
   [GrantType.ClientCredentials]: token.ExchangeByType.ClientCredentials,
+  /**
+   * The organization token grant also uses refresh token to exchange for access token.
+   * See [RFC 0001](https://github.com/logto-io/rfcs) for more details.
+   */
+  [GrantType.OrganizationToken]: token.ExchangeByType.RefreshToken,
 };
 
 const getExchangeByType = (grantType: unknown): token.ExchangeByType => {

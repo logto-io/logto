@@ -1,10 +1,11 @@
 const oidc = {
   aborted: '用戶終止了交互。',
-  invalid_scope: '不支持的 scope: {{scopes}}',
-  invalid_scope_plural: '不支持的 scope: {{scopes}}',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Token 無效',
   invalid_client_metadata: '無效的客戶端元數據',
-  insufficient_scope: '請求 token 缺少權限: {{scopes}}',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: '請求無效',
   invalid_grant: '授權請求無效',
   invalid_redirect_uri: '無效返回鏈接, 該 redirect_uri 未被此應用注冊。',

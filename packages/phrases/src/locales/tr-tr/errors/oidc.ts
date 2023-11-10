@@ -1,10 +1,11 @@
 const oidc = {
   aborted: 'Son kullanıcı etkileşimi iptal etti.',
-  invalid_scope: '{{scope}} kapsamı desteklenmiyor.',
-  invalid_scope_plural: '{{scopes}} kapsamları desteklenmiyor.',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Sağlanan token geçersiz.',
   invalid_client_metadata: 'Sağlanan müşteri metadatası geçersiz.',
-  insufficient_scope: 'Erişim tokenı istenen {{scopes}} kapsamında eksik.',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'İstek geçersiz.',
   invalid_grant: 'Hibe talebi geçersiz.',
   invalid_redirect_uri:

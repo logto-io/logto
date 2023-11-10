@@ -1,10 +1,11 @@
 const oidc = {
   aborted: 'El usuario final abortó la interacción.',
-  invalid_scope: 'El alcance {{scope}} no es compatible.',
-  invalid_scope_plural: 'Los alcances {{scopes}} no son compatibles.',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Se proporcionó un token no válido.',
   invalid_client_metadata: 'Se proporcionaron metadatos de cliente no válidos.',
-  insufficient_scope: 'El token de acceso no tiene el alcance solicitado {{scopes}}.',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'La solicitud no es válida.',
   invalid_grant: 'La solicitud de concesión es incorrecta.',
   invalid_redirect_uri:

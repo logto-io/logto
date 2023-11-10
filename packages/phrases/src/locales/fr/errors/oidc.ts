@@ -1,10 +1,11 @@
 const oidc = {
   aborted: "L'utilisateur a abandonné l'interaction.",
-  invalid_scope: "Le scope {{scope}} n'est pas pris en charge.",
-  invalid_scope_plural: 'Les scopes {{scopes}} ne sont pas supportés.',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'Jeton fournis invalide.',
   invalid_client_metadata: 'Les métadonnées du client fournies sont invalides.',
-  insufficient_scope: "Jeton d'accès manquant pour les scopes {{scopes}}.",
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'La requête est invalide.',
   invalid_grant: 'Grant request is invalid.',
   invalid_redirect_uri:

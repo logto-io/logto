@@ -8,6 +8,7 @@ import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
   demoAppApplicationId,
+  GrantType,
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
@@ -15,7 +16,7 @@ import {
 import { conditional, tryThat } from '@silverhand/essentials';
 import i18next from 'i18next';
 import koaBody from 'koa-body';
-import Provider, { errors, type ResourceServer } from 'oidc-provider';
+import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
 import type { EnvSet } from '#src/env-set/index.js';
@@ -30,6 +31,8 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
+import * as organizationToken from './grants/organization-token.js';
+import { findResource, findResourceScopes, getSharedResourceServerData } from './resource.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
@@ -43,12 +46,10 @@ export default function initOidc(
   libraries: Libraries
 ): Provider {
   const {
-    resources: { findResourceByIndicator, findDefaultResource },
+    resources: { findDefaultResource },
     users: { findUserById },
     organizations,
   } = queries;
-  const { findUserScopesForResourceIndicator } = libraries.users;
-  const { findApplicationScopesForResourceIndicator } = libraries.applications;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
   const logoutSuccessSource = readFileSync('static/html/post-logout/index.html', 'utf8');
 
@@ -116,47 +117,19 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const resourceServer = await findResourceByIndicator(indicator);
-          const { oidc } = ctx;
+          const resourceServer = await findResource(queries, indicator);
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
           }
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
-          const result = {
-            accessTokenFormat: 'jwt',
+          const scopes = await findResourceScopes(queries, libraries, ctx, indicator);
+          return {
+            ...getSharedResourceServerData(envSet),
             accessTokenTTL,
-            jwt: {
-              sign: { alg: envSet.oidc.jwkSigningAlg },
-            },
-            scope: '',
-          } satisfies ResourceServer;
-
-          const userId = oidc.session?.accountId ?? oidc.entities.Account?.accountId;
-
-          if (userId) {
-            const scopes = await findUserScopesForResourceIndicator(userId, indicator);
-
-            return {
-              ...result,
-              scope: scopes.map(({ name }) => name).join(' '),
-            };
-          }
-
-          const clientId = oidc.entities.Client?.clientId;
-
-          // Machine to machine app
-          if (clientId) {
-            const scopes = await findApplicationScopesForResourceIndicator(clientId, indicator);
-
-            return {
-              ...result,
-              scope: scopes.map(({ name }) => name).join(' '),
-            };
-          }
-
-          return result;
+            scope: scopes.map(({ name }) => name).join(' '),
+          };
         },
       },
     },
@@ -314,6 +287,13 @@ export default function initOidc(
   });
 
   addOidcEventListeners(oidc, queries);
+
+  // Register custom grant types
+  oidc.registerGrantType(
+    GrantType.OrganizationToken,
+    organizationToken.buildHandler(envSet, organizations),
+    [...organizationToken.parameters]
+  );
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

@@ -1,10 +1,11 @@
 const oidc = {
   aborted: 'O utilizador final abortou a interação.',
-  invalid_scope: 'Scope {{scope}} não é suportado.',
-  invalid_scope_plural: 'Scope {{scopes}} não são suportados.',
+  /** UNTRANSLATED */
+  invalid_scope: 'Invalid scope: {{error_description}}.',
   invalid_token: 'O Token fornecido é inválido.',
   invalid_client_metadata: 'Metadados de cliente inválidos fornecidos.',
-  insufficient_scope: 'Token de acesso sem scope solicitado {{scopes}}.',
+  /** UNTRANSLATED */
+  insufficient_scope: 'Token missing scope `{{scope}}`.',
   invalid_request: 'Pedido inválido.',
   invalid_grant: 'Pedido Grant inválido.',
   invalid_redirect_uri: '`redirect_uri` não correspondeu a nenhum dos `redirect_uris` registados.',
