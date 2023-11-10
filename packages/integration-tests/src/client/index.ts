@@ -18,12 +18,11 @@ export const defaultConfig = {
 };
 export default class MockClient {
   public rawCookies: string[] = [];
-
   protected readonly config: LogtoConfig;
+  protected readonly storage: MemoryStorage;
+  protected readonly logto: LogtoClient;
 
   private navigateUrl?: string;
-  private readonly storage: MemoryStorage;
-  private readonly logto: LogtoClient;
   private readonly api: Got;
 
   constructor(config?: Partial<LogtoConfig>) {
