@@ -46,7 +46,7 @@ const issuer = defaultConfig.endpoint + '/oidc';
 
 class MockOrganizationClient extends MockClient {
   /** Perform the organization token grant. It may be replaced once our SDK supports it. */
-  async fetchOrganizationToken(organizationId?: string) {
+  async fetchOrganizationToken(organizationId?: string, scopes?: string[]) {
     const refreshToken = await this.getRefreshToken();
     try {
       const json = await got
@@ -56,6 +56,7 @@ class MockOrganizationClient extends MockClient {
             client_id: this.config.appId,
             refresh_token: refreshToken,
             organization_id: organizationId,
+            scope: scopes?.join(' '),
           }),
         })
         .json();
@@ -76,8 +77,7 @@ class MockOrganizationClient extends MockClient {
 const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object';
 
-// Next PR will update this test accordingly
-describe.skip('`refresh_token` grant (for organization tokens)', () => {
+describe('`refresh_token` grant (for organization tokens)', () => {
   const organizationApi = new OrganizationApiTest();
   const userApi = new UserApiTest();
   const username = generateUsername();
@@ -115,9 +115,10 @@ describe.skip('`refresh_token` grant (for organization tokens)', () => {
     expectation: {
       organizationId: string;
       scopes: string[];
+      idToken?: boolean;
     }
   ) => {
-    const { scopes, organizationId } = expectation;
+    const { scopes, organizationId, idToken = true } = expectation;
 
     // Expect response
     assert(isObject(response), new Error('response is not an object'));
@@ -129,7 +130,13 @@ describe.skip('`refresh_token` grant (for organization tokens)', () => {
       refresh_token: expect.any(String),
       token_type: 'Bearer',
     });
-    expect(response).not.toHaveProperty('id_token');
+
+    if (idToken) {
+      expect(response.id_token).toEqual(expect.any(String));
+    } else {
+      expect(response).not.toHaveProperty('id_token');
+    }
+
     expect(String(response.scope).split(' ').filter(Boolean).slice().sort()).toStrictEqual(
       scopes.slice().sort()
     );
@@ -210,11 +217,23 @@ describe.skip('`refresh_token` grant (for organization tokens)', () => {
       ]);
     });
 
-    it('should return error when organization id is not provided', async () => {
+    it('should perform the normal grant when organization id is not provided', async () => {
       const client = await initClient();
-      await expect(client.fetchOrganizationToken()).rejects.toMatchError(
-        grantErrorContaining('oidc.invalid_request', "missing required parameter 'organization_id'")
-      );
+      const response = await client.fetchOrganizationToken();
+
+      assert(isObject(response), new Error('response is not an object'));
+      /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+      expect(response).toMatchObject({
+        access_token: expect.any(String),
+        refresh_token: expect.any(String),
+        id_token: expect.any(String),
+        expires_in: expect.any(Number),
+        token_type: 'Bearer',
+      });
+      /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+
+      // The access token should not be a JWT
+      expect(response.access_token).not.toContain('.');
     });
 
     it('should return error when organizations scope is not requested', async () => {
@@ -324,7 +343,7 @@ describe.skip('`refresh_token` grant (for organization tokens)', () => {
       });
     });
 
-    it('should down-scope according to the refresh token', async () => {
+    it('should down-scope according to the refresh token and token request', async () => {
       const { orgs } = context;
       const client = await initClient({
         scopes: ['urn:logto:scope:organizations', 'scope1', 'scope2'],
@@ -336,6 +355,11 @@ describe.skip('`refresh_token` grant (for organization tokens)', () => {
       expectGrantResponse(await client.fetchOrganizationToken(orgs[1].id), {
         organizationId: orgs[1].id,
         scopes: ['scope1', 'scope2'],
+      });
+      expectGrantResponse(await client.fetchOrganizationToken(orgs[1].id, ['scope1']), {
+        organizationId: orgs[1].id,
+        scopes: ['scope1'],
+        idToken: false, // No ID token since no `openid` scope
       });
       expectGrantResponse(await client.fetchOrganizationToken(orgs[2].id), {
         organizationId: orgs[2].id,
