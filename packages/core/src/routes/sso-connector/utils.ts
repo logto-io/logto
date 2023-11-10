@@ -3,7 +3,11 @@ import { type JsonObject, type SsoConnectorWithProviderConfig } from '@logto/sch
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
+import {
+  type SingleSignOnFactory,
+  ssoConnectorFactories,
+  singleSignOnDomainBlackList,
+} from '#src/sso/index.js';
 import { type SupportedSsoConnector, type SsoProviderName } from '#src/sso/types/index.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
@@ -72,4 +76,59 @@ export const fetchConnectorProviderDetails = async (
     providerLogo: logo,
     ...conditional(providerConfig && { providerConfig }),
   };
+};
+
+/**
+ * Validate the connector domains using the domain blocklist.
+ * - Throw error if the domains are invalid.
+ * - Throw error if the domains are duplicated.
+ *
+ * @param domains
+ * @returns
+ */
+export const validateConnectorDomains = (domains?: string[]) => {
+  if (!domains || domains.length === 0) {
+    return;
+  }
+
+  const blackListSet = new Set(singleSignOnDomainBlackList);
+  const validDomainSet = new Set();
+  const duplicatedDomains = new Set();
+  const forbiddenDomains = new Set();
+
+  for (const domain of domains) {
+    if (blackListSet.has(domain)) {
+      forbiddenDomains.add(domain);
+    }
+
+    if (validDomainSet.has(domain)) {
+      duplicatedDomains.add(domain);
+    } else {
+      validDomainSet.add(domain);
+    }
+  }
+
+  if (forbiddenDomains.size > 0) {
+    throw new RequestError(
+      {
+        code: 'single_sign_on.forbidden_domains',
+        status: 422,
+      },
+      {
+        data: [...forbiddenDomains],
+      }
+    );
+  }
+
+  if (duplicatedDomains.size > 0) {
+    throw new RequestError(
+      {
+        code: 'single_sign_on.duplicated_domains',
+        status: 422,
+      },
+      {
+        data: [...duplicatedDomains],
+      }
+    );
+  }
 };

@@ -16,6 +16,7 @@ import role from './role.js';
 import scope from './scope.js';
 import session from './session.js';
 import sign_in_experiences from './sign-in-experiences.js';
+import single_sign_on from './single-sign-on.js';
 import storage from './storage.js';
 import subscription from './subscription.js';
 import swagger from './swagger.js';
@@ -46,6 +47,7 @@ const errors = {
   subscription,
   application,
   organization,
+  single_sign_on,
 };
 
 export default Object.freeze(errors);
