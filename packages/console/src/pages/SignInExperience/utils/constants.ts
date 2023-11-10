@@ -6,10 +6,9 @@ import { conditionalArray } from '@silverhand/essentials';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
 
-export const hiddenLocalePhraseGroups: readonly LocalePhraseGroupKey[] = [
-  'demo_app',
-  ...conditionalArray(!isDevFeaturesEnabled && 'mfa'),
-];
+export const hiddenLocalePhraseGroups: readonly LocalePhraseGroupKey[] = conditionalArray(
+  !isDevFeaturesEnabled && 'mfa'
+);
 
 export const hiddenLocalePhrases: readonly LocalePhraseKey[] = [
   ...conditionalArray(

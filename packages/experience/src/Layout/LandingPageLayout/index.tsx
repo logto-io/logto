@@ -9,8 +9,6 @@ import PageMeta from '@/components/PageMeta';
 import { layoutClassNames } from '@/utils/consts';
 import { getBrandingLogoUrl } from '@/utils/logo';
 
-import AppNotification from '../../containers/AppNotification';
-
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -44,7 +42,6 @@ const LandingPageLayout = ({ children, className, title }: Props) => {
         {children}
       </div>
       {platform === 'web' && <div className={styles.placeholderBottom} />}
-      <AppNotification />
     </>
   );
 };
