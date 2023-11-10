@@ -1,5 +1,7 @@
-import Provider from 'oidc-provider';
+import Provider, { type KoaContextWithOIDC } from 'oidc-provider';
 import Sinon from 'sinon';
+
+import createMockContext from './jest-koa-mocks/create-mock-context.js';
 
 const { jest } = import.meta;
 
@@ -45,4 +47,40 @@ export const createMockProvider = (
   }
 
   return provider;
+};
+
+/**
+ * Create an empty OIDC context with minimal required properties and a mock provider.
+ *
+ * @param override - Override the default OIDC context properties.
+ */
+export const createOidcContext = (override?: Partial<KoaContextWithOIDC['oidc']>) => {
+  const issuer = 'https://mock-issuer.com';
+  const provider = new Provider(issuer);
+  const context: KoaContextWithOIDC = {
+    ...createMockContext(),
+    oidc: {
+      route: '',
+      cookies: {
+        get: jest.fn(),
+        set: jest.fn(),
+      },
+      params: {},
+      entities: {},
+      claims: {},
+      issuer,
+      provider,
+      entity: jest.fn(),
+      promptPending: jest.fn(),
+      requestParamClaims: new Set(),
+      requestParamScopes: new Set(),
+      prompts: new Set(),
+      acr: '',
+      amr: [],
+      getAccessToken: jest.fn(),
+      clientJwtAuthExpectedAudience: jest.fn(),
+      ...override,
+    },
+  };
+  return context;
 };
