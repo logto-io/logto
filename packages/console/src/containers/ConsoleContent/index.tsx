@@ -106,7 +106,7 @@ function ConsoleContent() {
               <Route index element={<Navigate replace to={SignInExperienceTab.Branding} />} />
               <Route path=":tab" element={<SignInExperience />} />
             </Route>
-            {isDevFeaturesEnabled && <Route path="mfa" element={<Mfa />} />}
+            <Route path="mfa" element={<Mfa />} />
             <Route path="connectors">
               <Route index element={<Navigate replace to={ConnectorsTabs.Passwordless} />} />
               <Route path=":tab" element={<Connectors />} />

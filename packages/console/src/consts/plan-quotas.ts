@@ -1,5 +1,3 @@
-import { conditionalArray } from '@silverhand/essentials';
-
 import {
   type SubscriptionPlanTable,
   type SubscriptionPlanTableData,
@@ -9,7 +7,6 @@ import {
   type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
 
-import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './env';
 import { ReservedPlanId } from './subscriptions';
 
 type EnabledFeatureMap = Record<string, boolean | undefined>;
@@ -144,7 +141,7 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'i18nEnabled',
   ],
   [SubscriptionPlanTableGroupKey.userAuthentication]: [
-    ...conditionalArray(isDevelopmentFeaturesEnabled && 'mfaEnabled'),
+    'mfaEnabled',
     'omniSignInEnabled',
     'passwordSignInEnabled',
     'passwordlessSignInEnabled',
