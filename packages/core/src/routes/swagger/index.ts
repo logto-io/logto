@@ -17,7 +17,7 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
-import { buildTag, findSupplementFiles } from './utils/general.js';
+import { buildTag, findSupplementFiles, normalizePath } from './utils/general.js';
 import {
   type ParameterArray,
   buildParameters,
@@ -103,6 +103,20 @@ const isManagementApiRouter = ({ stack }: Router) =>
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
 
+// Add more components here to cover more ID parameters in paths. For example, if there is a
+// path `/foo/:barBazId`, then add `bar-baz` to the array.
+const identifiableEntityNames = [
+  'application',
+  'connector',
+  'resource',
+  'user',
+  'log',
+  'role',
+  'scope',
+  'hook',
+  'domain',
+];
+
 /**
  * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
  * management APIs.
@@ -123,14 +137,14 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       return (
         router.stack
           // Filter out universal routes (mostly like a proxy route to withtyped)
-          .filter(({ path }) => !path.includes('.*') && path.startsWith('/organization'))
+          .filter(({ path }) => !path.includes('.*'))
           .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
             methods
               .map((method) => method.toLowerCase())
               // There is no need to show the HEAD method.
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
-                const path = `/api${routerPath}`;
+                const path = normalizePath(routerPath);
                 const { pathParameters, ...operation } = buildOperation(
                   stack,
                   routerPath,
@@ -180,7 +194,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       paths: Object.fromEntries(pathMap),
       components: {
         schemas: translationSchemas,
-        parameters: ['organization', 'organization-role', 'organization-scope', 'user'].reduce(
+        parameters: identifiableEntityNames.reduce(
           (previous, entityName) => ({ ...previous, ...buildPathIdParameters(entityName) }),
           {}
         ),

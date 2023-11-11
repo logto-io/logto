@@ -336,8 +336,7 @@ export default class SchemaRouter<
       `/:id/${pathname}/:${camelCaseSchemaId(relationSchema)}`,
       koaGuard({
         params: z.object({ id: z.string().min(1), [relationSchemaId]: z.string().min(1) }),
-        // Should be 422 if the relation doesn't exist, update until we change the error handling
-        status: [204, 404],
+        status: [204, 422],
       }),
       async (ctx, next) => {
         const {
@@ -345,7 +344,9 @@ export default class SchemaRouter<
         } = ctx.guard;
 
         await relationQueries.delete({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `koaGuard()` ensures the value is not `undefined`
           [columns.schemaId]: id!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- `koaGuard()` ensures the value is not `undefined`
           [columns.relationSchemaId]: relationId!,
         });
 

@@ -8,7 +8,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
-const { default: swaggerRoutes, paginationParameters } = await import('./index.js');
+const { default: swaggerRoutes } = await import('./index.js');
+const { paginationParameters } = await import('./utils/parameters.js');
 
 const createSwaggerRequest = (
   allRouters: Router[],
@@ -79,7 +80,7 @@ describe('GET /swagger.json', () => {
         get: { tags: ['Mock'] },
       },
       '/api/.well-known': {
-        put: { tags: ['.well-known'] },
+        put: { tags: ['Well known'] },
       },
     });
   });
@@ -101,22 +102,18 @@ describe('GET /swagger.json', () => {
     const response = await swaggerRequest.get('/swagger.json');
     expect(response.body.paths).toMatchObject({
       '/api/mock/:id/:field': {
-        get: {
-          parameters: [
-            {
-              name: 'id',
-              in: 'path',
-              required: true,
-              schema: { type: 'number' },
-            },
-            {
-              name: 'field',
-              in: 'path',
-              required: true,
-              schema: { type: 'string' },
-            },
-          ],
-        },
+        parameters: [
+          {
+            $ref: '#/components/parameters/mocId:root',
+          },
+          {
+            name: 'field',
+            in: 'path',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        get: {},
       },
     });
   });
