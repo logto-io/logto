@@ -153,7 +153,7 @@ export default class SchemaRouter<
         koaGuard({
           body: schema.createGuard.omit({ id: true }),
           response: schema.guard,
-          status: [201],
+          status: [201], // TODO: 409/422 for conflict?
         }),
         async (ctx, next) => {
           // eslint-disable-next-line no-restricted-syntax -- `.omit()` doesn't play well with generics
@@ -189,7 +189,7 @@ export default class SchemaRouter<
           params: z.object({ id: z.string().min(1) }),
           body: schema.updateGuard,
           response: schema.guard,
-          status: [200, 404],
+          status: [200, 404], // TODO: 409/422 for conflict?
         }),
         async (ctx, next) => {
           ctx.body = await queries.updateById(ctx.guard.params.id, ctx.guard.body);

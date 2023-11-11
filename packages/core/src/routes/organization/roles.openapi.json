@@ -1,0 +1,167 @@
+{
+  "tags": [{
+    "name": "Organization roles",
+    "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B. To learn more about organization template and access control in organizations, see [this guide](/docs/rbac/organizations)."
+  }],
+  "paths": {
+    "/api/organization-roles": {
+      "get": {
+        "summary": "Get organization roles",
+        "description": "Get organization roles with pagination.",
+        "responses": {
+          "200": {
+            "description": "A list of organization roles."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new organization role",
+        "description": "Create a new organization role with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the organization role. It must be unique within the organization template."
+                  },
+                  "description": {
+                    "description": "The description of the organization role."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The organization role was created successfully."
+          },
+          "422": {
+            "description": "The organization role name is already in use."
+          }
+        }
+      }
+    },
+    "/api/organization-roles/:id": {
+      "get": {
+        "summary": "Get organization role by ID",
+        "description": "Get organization role details by ID.",
+        "responses": {
+          "200": {
+            "description": "Details of the organization role."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update organization role by ID",
+        "description": "Update organization role details by ID with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The updated name of the organization role. It must be unique within the organization template."
+                  },
+                  "description": {
+                    "description": "The updated description of the organization role."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The organization role was updated successfully."
+          },
+          "422": {
+            "description": "The organization role name is already in use."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete organization role by ID",
+        "description": "Delete organization role by ID.",
+        "responses": {
+          "204": {
+            "description": "The organization role was deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/organization-roles/:id/scopes": {
+      "get": {
+        "summary": "Get organization role scopes",
+        "description": "Get all organization scopes that are assigned to the specified organization role.",
+        "responses": {
+          "200": {
+            "description": "A list of organization scopes."
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign organization scopes to organization role",
+        "description": "Assign organization scopes to the specified organization role",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationScopeIds": {
+                    "description": "An array of organization scope IDs to be assigned."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Organization scopes were assigned successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is invalid. For example, the organization scope ID does not exist; or the organization scope has already been assigned to the organization role."
+          }
+        }
+      },
+      "put": {
+        "summary": "Replace organization scopes for organization role",
+        "description": "Replace all organization scopes that are assigned to the specified organization role with the given organization scopes. This effectively removes all existing organization scope assignments and replaces them with the new ones.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationScopeIds": {
+                    "description": "An array of organization scope IDs to replace existing scopes."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Organization scopes were replaced successfully."
+          },
+          "422": {
+            "description": "At least one of the IDs provided is invalid. For example, the organization scope ID does not exist."
+          }
+        }
+      }
+    },
+    "/api/organization-roles/:id/scopes/:organizationScopeId": {
+      "delete": {
+        "summary": "Remove organization scope",
+        "description": "Remove a organization scope assignment from the specified organization role.",
+        "responses": {
+          "204": {
+            "description": "Organization scope assignment was removed successfully."
+          }
+        }
+      }
+    }
+  }
+}

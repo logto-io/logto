@@ -91,6 +91,26 @@ describe('organization role APIs', () => {
       });
     });
 
+    it('should fail when try to update an organization role with a name that already exists', async () => {
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        roleApi.create({ name: 'test' + randomId() }),
+      ]);
+      const response = await roleApi
+        .update(role1.id, {
+          name: role2.name,
+        })
+        .catch((error: unknown) => error);
+
+      assert(response instanceof HTTPError);
+      expect(response.response.statusCode).toBe(422);
+      expect(JSON.parse(String(response.response.body))).toMatchObject(
+        expect.objectContaining({
+          code: 'entity.unique_integrity_violation',
+        })
+      );
+    });
+
     it('should be able to delete organization role', async () => {
       const createdRole = await roleApi.create({ name: 'test' + randomId() });
       await roleApi.delete(createdRole.id);

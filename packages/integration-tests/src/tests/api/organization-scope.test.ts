@@ -87,6 +87,26 @@ describe('organization scope APIs', () => {
     });
   });
 
+  it('should fail when try to update an organization scope with a name that already exists', async () => {
+    const [scope1, scope2] = await Promise.all([
+      scopeApi.create({ name: 'test' + randomId() }),
+      scopeApi.create({ name: 'test' + randomId() }),
+    ]);
+    const response = await scopeApi
+      .update(scope2.id, {
+        name: scope1.name,
+      })
+      .catch((error: unknown) => error);
+
+    assert(response instanceof HTTPError);
+    expect(response.response.statusCode).toBe(422);
+    expect(JSON.parse(String(response.response.body))).toMatchObject(
+      expect.objectContaining({
+        code: 'entity.unique_integrity_violation',
+      })
+    );
+  });
+
   it('should be able to delete organization scope', async () => {
     const createdScope = await scopeApi.create({ name: 'test' + randomId() });
     await scopeApi.delete(createdScope.id);
