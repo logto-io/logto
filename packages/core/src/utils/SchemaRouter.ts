@@ -254,10 +254,11 @@ export default class SchemaRouter<
     { disabled }: Partial<RelationRoutesConfig> = {}
   ) {
     const relationSchema = relationQueries.schemas[1];
+    const relationSchemaId = camelCaseSchemaId(relationSchema);
     const columns = {
       schemaId: camelCaseSchemaId(this.schema),
-      relationSchemaId: camelCaseSchemaId(relationSchema),
-      relationSchemaIds: camelCaseSchemaId(relationSchema) + 's',
+      relationSchemaId,
+      relationSchemaIds: relationSchemaId + 's',
     };
 
     if (!disabled?.get) {
@@ -332,20 +333,20 @@ export default class SchemaRouter<
     );
 
     this.delete(
-      `/:id/${pathname}/:relationId`,
+      `/:id/${pathname}/:${camelCaseSchemaId(relationSchema)}`,
       koaGuard({
-        params: z.object({ id: z.string().min(1), relationId: z.string().min(1) }),
+        params: z.object({ id: z.string().min(1), [relationSchemaId]: z.string().min(1) }),
         // Should be 422 if the relation doesn't exist, update until we change the error handling
         status: [204, 404],
       }),
       async (ctx, next) => {
         const {
-          params: { id, relationId },
+          params: { id, [relationSchemaId]: relationId },
         } = ctx.guard;
 
         await relationQueries.delete({
-          [columns.schemaId]: id,
-          [columns.relationSchemaId]: relationId,
+          [columns.schemaId]: id!,
+          [columns.relationSchemaId]: relationId!,
         });
 
         ctx.status = 204;

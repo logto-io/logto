@@ -8,7 +8,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
-const { default: swaggerRoutes, paginationParameters } = await import('./swagger.js');
+const { default: swaggerRoutes, paginationParameters } = await import('./index.js');
 
 const createSwaggerRequest = (
   allRouters: Router[],
