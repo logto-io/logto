@@ -43,7 +43,7 @@
         }
       }
     },
-    "/api/organization-scopes/:id": {
+    "/api/organization-scopes/{id}": {
       "get": {
         "summary": "Get organization scope by ID",
         "description": "Get organization scope details by ID.",

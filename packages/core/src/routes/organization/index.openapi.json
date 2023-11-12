@@ -47,7 +47,7 @@
         }
       }
     },
-    "/api/organizations/:id": {
+    "/api/organizations/{id}": {
       "get": {
         "summary": "Get organization by ID",
         "description": "Get organization details by ID.",
@@ -92,7 +92,7 @@
         }
       }
     },
-    "/api/organizations/:id/users": {
+    "/api/organizations/{id}/users": {
       "post": {
         "summary": "Add user members to organization",
         "description": "Add users as members to the specified organization with the given user IDs.",
@@ -160,7 +160,7 @@
         }
       }
     },
-    "/api/organizations/:id/users/:userId": {
+    "/api/organizations/{id}/users/{userId}": {
       "delete": {
         "summary": "Remove user member from organization",
         "description": "Remove a user's membership from the specified organization.",
@@ -174,7 +174,7 @@
         }
       }
     },
-    "/api/organizations/:id/users/roles": {
+    "/api/organizations/{id}/users/roles": {
       "post": {
         "summary": "Assign roles to organization user members",
         "description": "Assign roles to user members of the specified organization with the given data.",
@@ -204,7 +204,7 @@
         }
       }
     },
-    "/api/organizations/:id/users/:userId/roles": {
+    "/api/organizations/{id}/users/{userId}/roles": {
       "get": {
         "summary": "Get roles for a user in an organization",
         "description": "Get roles assigned to a user in the specified organization with pagination.",
@@ -268,7 +268,7 @@
         }
       }
     },
-    "/api/organizations/:id/users/:userId/roles/:roleId": {
+    "/api/organizations/{id}/users/{userId}/roles/{roleId}": {
       "delete": {
         "summary": "Remove a role from a user in an organization",
         "description": "Remove a role assignment from a user in the specified organization.",

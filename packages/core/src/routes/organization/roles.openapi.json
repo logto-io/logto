@@ -43,7 +43,7 @@
         }
       }
     },
-    "/api/organization-roles/:id": {
+    "/api/organization-roles/{id}": {
       "get": {
         "summary": "Get organization role by ID",
         "description": "Get organization role details by ID.",
@@ -91,7 +91,7 @@
         }
       }
     },
-    "/api/organization-roles/:id/scopes": {
+    "/api/organization-roles/{id}/scopes": {
       "get": {
         "summary": "Get organization role scopes",
         "description": "Get all organization scopes that are assigned to the specified organization role.",
@@ -152,7 +152,7 @@
         }
       }
     },
-    "/api/organization-roles/:id/scopes/:organizationScopeId": {
+    "/api/organization-roles/{id}/scopes/{organizationScopeId}": {
       "delete": {
         "summary": "Remove organization scope",
         "description": "Remove a organization scope assignment from the specified organization role.",
