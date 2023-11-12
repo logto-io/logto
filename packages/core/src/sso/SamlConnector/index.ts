@@ -35,6 +35,7 @@ import {
  * @property assertionConsumerServiceUrl The SAML connector's assertion consumer service URL {@link file://src/routes/authn.ts}
  * @property _samlIdpMetadataXml The cached raw SAML metadata (in XML-format) from the raw SAML SSO connector config
  *
+ * @method getSamlSpProperties Get the SAML service provider properties.
  * @method getSamlIdpMetadata Parse and return SAML config from the SAML connector config. Throws error if config is invalid.
  * @method parseSamlAssertion Parse and store the SAML assertion from IdP.
  * @method getSingleSignOnUrl Get the SAML SSO URL.
@@ -67,6 +68,13 @@ class SamlConnector {
       entityId: this.spEntityId,
       assertionConsumerServiceUrl: this.assertionConsumerServiceUrl,
     };
+  }
+
+  /**
+   * @returns Properties of the SAML service provider.
+   */
+  getSamlSpProperties() {
+    return this.serviceProviderMetadata;
   }
 
   /**

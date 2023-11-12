@@ -1,6 +1,11 @@
 import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
-import { InteractionEvent, type User, type UserSsoIdentity } from '@logto/schemas';
+import {
+  InteractionEvent,
+  type User,
+  type UserSsoIdentity,
+  type SupportedSsoConnector,
+} from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -9,10 +14,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import {
-  type SupportedSsoConnector,
-  type SingleSignOnConnectorSession,
-} from '#src/sso/types/index.js';
+import { type SingleSignOnConnectorSession } from '#src/sso/types/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';

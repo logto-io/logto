@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.copyToClipboard {
+  display: block;
+}
+
+.table {
+  width: 100%;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: _.unit(4);
+  padding-bottom: _.unit(3);
+
+  > td,
+  th {
+    width: calc((100% - _.unit(4)) / 2);
+  }
+}
+
+.header {
+  width: 100%;
+  font: var(--font-title-3);
+
+  > tr {
+    padding-bottom: _.unit(3);
+  }
+
+  * > th {
+    text-align: left;
+  }
+}
+
+.body {
+  width: 100%;
+}

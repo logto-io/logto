@@ -1,4 +1,9 @@
-import { type CreateSsoConnector, SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
+import {
+  type CreateSsoConnector,
+  SignInIdentifier,
+  demoAppApplicationId,
+  SsoProviderName,
+} from '@logto/schemas';
 import { appendPath, getEnv } from '@silverhand/essentials';
 
 export const logtoUrl = getEnv('INTEGRATION_TESTS_LOGTO_URL', 'http://localhost:3001');
@@ -25,11 +30,6 @@ export const signUpIdentifiers = {
 export const consoleUsername = 'svhd';
 export const consolePassword = 'silverhandasd_1';
 export const mockSocialAuthPageUrl = 'http://mock.social.com';
-
-export enum SsoProviderName {
-  OIDC = 'OIDC',
-  SAML = 'SAML',
-}
 
 export const newOidcSsoConnectorPayload = {
   providerName: SsoProviderName.OIDC,

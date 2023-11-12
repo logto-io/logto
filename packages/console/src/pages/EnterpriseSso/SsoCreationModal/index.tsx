@@ -1,4 +1,7 @@
-import { type SsoConnectorFactoriesResponse, type SsoConnector } from '@logto/schemas';
+import {
+  type SsoConnectorFactoriesResponse,
+  type SsoConnectorWithProviderConfig,
+} from '@logto/schemas';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +25,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   isOpen: boolean;
-  onClose: (ssoConnectorId?: string) => void;
+  onClose: (ssoConnector?: SsoConnectorWithProviderConfig) => void;
 };
 
 type FormType = {
@@ -61,10 +64,10 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   );
 
   // `rawOnClose` does not clean the state of the modal.
-  const onClose = (ssoConnectorId?: string) => {
+  const onClose = (ssoConnector?: SsoConnectorWithProviderConfig) => {
     setSelectedProviderName(undefined);
     reset();
-    rawOnClose(ssoConnectorId);
+    rawOnClose(ssoConnector);
   };
 
   const handleSsoSelection = (providerName: string) => {
@@ -79,9 +82,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
       const createdSsoConnector = await api
         .post(`api/sso-connectors`, { json: { ...formData, providerName: selectedProviderName } })
-        .json<SsoConnector>();
+        .json<SsoConnectorWithProviderConfig>();
 
-      onClose(createdSsoConnector.id);
+      onClose(createdSsoConnector);
     })
   );
 

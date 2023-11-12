@@ -1,8 +1,9 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoConnectorWithProviderConfig, Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -21,21 +22,24 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
+import Guide from './Guide';
 import SsoCreationModal from './SsoCreationModal';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';
 const createEnterpriseSsoPathname = `${enterpriseSsoPathname}/create`;
-const buildGuidePathname = (id: string) => `${enterpriseSsoPathname}/${id}/guide`;
 const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
+const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
 function EnterpriseSsoConnectors() {
   const theme = useTheme();
 
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
+  const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [connectorForGuide, setConnectorForGuide] = useState<SsoConnectorWithProviderConfig>();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -52,6 +56,15 @@ function EnterpriseSsoConnectors() {
   const isLoading = !data && !error;
   const [ssoConnectors, totalCount] = data ?? [];
 
+  useEffect(() => {
+    const selectedSsoConnector = ssoConnectors?.find(
+      ({ id: ssoConnectorId }) => ssoConnectorId === id
+    );
+    if (selectedSsoConnector) {
+      setConnectorForGuide(selectedSsoConnector);
+    }
+  }, [id, ssoConnectors]);
+
   return (
     <ListPage
       title={{
@@ -63,7 +76,7 @@ function EnterpriseSsoConnectors() {
         ssoConnectors?.length && {
           title: 'enterprise_sso.create',
           onClick: () => {
-            navigate({ pathname: createEnterpriseSsoPathname });
+            navigate(createEnterpriseSsoPathname);
           },
         }
       )}
@@ -159,7 +172,7 @@ function EnterpriseSsoConnectors() {
                 size="large"
                 icon={<Plus />}
                 onClick={() => {
-                  navigate({ pathname: createEnterpriseSsoPathname });
+                  navigate(createEnterpriseSsoPathname);
                 }}
               />
             }
@@ -168,17 +181,38 @@ function EnterpriseSsoConnectors() {
         onRetry: async () => mutate(undefined, true),
       }}
       widgets={
-        <SsoCreationModal
-          isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
-          onClose={async (id) => {
-            if (id) {
-              navigate(buildGuidePathname(id), { replace: true });
-              return;
-            }
+        <>
+          <SsoCreationModal
+            isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
+            onClose={async (ssoConnector) => {
+              if (ssoConnector) {
+                await mutate([[...(ssoConnectors ?? []), ssoConnector], totalCount ?? 0 + 1]);
+                navigate(buildGuidePathname(ssoConnector.id));
+                return;
+              }
 
-            navigate(enterpriseSsoPathname);
-          }}
-        />
+              navigate(enterpriseSsoPathname);
+            }}
+          />
+          {
+            /** Add this filter to make TypeScript happy, if `connectorForGuide` does not exist, the route will not come to this path. */
+            connectorForGuide && (
+              <Guide
+                isOpen={Boolean(pathname.endsWith(buildGuidePathname(connectorForGuide.id)))}
+                connector={connectorForGuide}
+                isReadOnly={connectorForGuide.providerName !== 'SAML'}
+                onClose={async (connectorId) => {
+                  if (connectorId) {
+                    navigate(buildDetailsPathname(connectorId), { replace: true });
+                    return;
+                  }
+
+                  navigate(enterpriseSsoPathname);
+                }}
+              />
+            )
+          }
+        </>
       }
     />
   );

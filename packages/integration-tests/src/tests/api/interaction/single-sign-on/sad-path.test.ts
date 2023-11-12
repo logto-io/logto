@@ -1,4 +1,4 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, SsoProviderName } from '@logto/schemas';
 
 import {
   partialConfigAndProviderNames,
@@ -7,7 +7,6 @@ import {
 import { getSsoAuthorizationUrl, postSamlAssertion } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
-import { SsoProviderName } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 

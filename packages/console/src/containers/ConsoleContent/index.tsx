@@ -119,6 +119,8 @@ function ConsoleContent() {
               <Route path="enterprise-sso">
                 <Route index element={<EnterpriseSsoConnectors />} />
                 <Route path="create" element={<EnterpriseSsoConnectors />} />
+                <Route path=":id/guide" element={<EnterpriseSsoConnectors />} />
+                <Route path=":id" element={<EnterpriseSsoConnectors />} />
               </Route>
             )}
             <Route path="webhooks">

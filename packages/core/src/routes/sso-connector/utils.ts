@@ -1,5 +1,10 @@
 import { type I18nPhrases } from '@logto/connector-kit';
-import { type JsonObject, type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import type {
+  JsonObject,
+  SsoConnectorWithProviderConfig,
+  SupportedSsoConnector,
+  SsoProviderName,
+} from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -8,7 +13,6 @@ import {
   ssoConnectorFactories,
   singleSignOnDomainBlackList,
 } from '#src/sso/index.js';
-import { type SupportedSsoConnector, type SsoProviderName } from '#src/sso/types/index.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -71,10 +75,16 @@ export const fetchConnectorProviderDetails = async (
     return instance.getConfig();
   });
 
+  const providerProperties = trySafe(() => {
+    const instance = new constructor(connector, tenantId);
+    return instance.getProperties();
+  });
+
   return {
     ...connector,
     providerLogo: logo,
     ...conditional(providerConfig && { providerConfig }),
+    ...conditional(providerProperties && { providerProperties }),
   };
 };
 

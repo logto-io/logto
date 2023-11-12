@@ -1,9 +1,9 @@
-import { InteractionEvent, type SsoConnectorMetadata } from '@logto/schemas';
+import { InteractionEvent, SsoProviderName, type SsoConnectorMetadata } from '@logto/schemas';
 
 import { getSsoAuthorizationUrl, getSsoConnectorsByEmail } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
-import { logtoUrl, SsoProviderName } from '#src/constants.js';
+import { logtoUrl } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 
 describe('Single Sign On Happy Path', () => {

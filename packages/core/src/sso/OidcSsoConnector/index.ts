@@ -1,7 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type SsoConnector } from '@logto/schemas';
-
-import { SsoProviderName } from '#src/sso/types/index.js';
+import { type SsoConnector, SsoProviderName } from '@logto/schemas';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
@@ -22,6 +20,10 @@ export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
   get data() {
     return this._data;
   }
+
+  // OIDC connector doesn't have additional properties.
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  getProperties = () => undefined;
 
   getConfig = async () => this.getOidcConfig();
   getIssuer = async () => this.issuer;

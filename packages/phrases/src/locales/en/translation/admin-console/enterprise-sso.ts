@@ -19,6 +19,56 @@ const enterprise_sso = {
     connector_name_field_placeholder: 'Name for the enterprise identity provider',
     create_button_text: 'Create connector',
   },
+  guide: {
+    subtitle: 'A step by step guide to connect the enterprise identity provider.',
+    finish_button_text: 'Continue',
+  },
+  basic_info: {
+    title: 'Configure your service in the IdP',
+    description:
+      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+    saml: {
+      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
+      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+    },
+    oidc: {
+      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+    },
+  },
+  attribute_mapping: {
+    title: 'Attribute mappings',
+    description:
+      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
+    col_sp_claims: 'Claim name of Logto',
+    col_idp_claims: 'Claim name of identity provider',
+    idp_claim_tooltip: 'The claim name of the identity provider',
+  },
+  metadata: {
+    title: 'Configure the IdP metadata',
+    description: 'Configure the metadata from the identity provider',
+    dropdown_trigger_text: 'Use another configuration method',
+    dropdown_title: 'select your configuration method',
+    metadata_format_url: 'Enter the metadata URL',
+    metadata_format_xml: 'Upload the metadata XML file',
+    metadata_format_manual: 'Enter metadata details manually',
+    saml: {
+      metadata_url_field_name: 'Metadata URL',
+      metadata_url_description:
+        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
+      metadata_xml_field_name: 'Metadata XML file',
+      metadata_xml_uploader_text: 'Upload metadata XML file',
+      sign_in_endpoint_field_name: 'Sign on URL',
+      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
+      certificate_field_name: 'Signing certificate',
+      certificate_placeholder: 'Copy and paste the x509 certificate',
+    },
+    oidc: {
+      client_id_field_name: 'Client ID',
+      client_secret_field_name: 'Client secret',
+      issuer_field_name: 'Issuer',
+      scope_field_name: 'Scope',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_sso);

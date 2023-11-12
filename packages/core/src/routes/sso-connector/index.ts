@@ -5,7 +5,7 @@ import {
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
-import { conditional, assert } from '@silverhand/essentials';
+import { conditional, assert, yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -235,21 +235,33 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     `${pathname}/:id/config`,
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
+      /**
+       * Allow partially validate the connector config, on the guide page after
+       * the SSO connector is created, we allow users to save incomplete config without validating it.
+       */
+      query: z.object({ partialValidateConfig: z.string().optional() }),
       body: jsonObjectGuard,
       response: ssoConnectorWithProviderConfigGuard,
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { id } = ctx.guard.params;
-      const { body } = ctx.guard;
+      const {
+        params: { id },
+        body,
+        query: { partialValidateConfig },
+      } = ctx.guard;
 
       const { providerName, config } = await getSsoConnectorById(id);
 
       // Merge with existing config and revalidate
-      const parsedConfig = parseConnectorConfig(providerName, {
-        ...config,
-        ...body,
-      });
+      const parsedConfig = parseConnectorConfig(
+        providerName,
+        {
+          ...config,
+          ...body,
+        },
+        yes(partialValidateConfig)
+      );
 
       const connector = await ssoConnectors.updateById(id, {
         config: parsedConfig,

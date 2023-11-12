@@ -1,8 +1,8 @@
+import { type SupportedSsoConnector } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { type SupportedSsoConnector } from '#src/sso/types/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 

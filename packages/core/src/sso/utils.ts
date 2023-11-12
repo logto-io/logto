@@ -1,6 +1,4 @@
-import type { SsoConnector } from '@logto/schemas';
-
-import type { SupportedSsoConnector, SsoProviderName } from '#src/sso/types/index.js';
+import type { SsoConnector, SupportedSsoConnector, SsoProviderName } from '@logto/schemas';
 
 import { ssoConnectorFactories } from './index.js';
 
