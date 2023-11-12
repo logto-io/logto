@@ -19,6 +19,7 @@ export type Props = {
   actionDescription?: string;
   onCompleted: (fileUrl: string) => void;
   onUploadErrorChange: (errorMessage?: string) => void;
+  className?: string;
 };
 
 function FileUploader({
@@ -27,6 +28,7 @@ function FileUploader({
   actionDescription,
   onCompleted,
   onUploadErrorChange,
+  className,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isUploading, setIsUploading] = useState(false);
@@ -114,7 +116,8 @@ function FileUploader({
       className={classNames(
         styles.uploader,
         Boolean(uploadError) && styles.uploaderError,
-        isDragActive && styles.dragActive
+        isDragActive && styles.dragActive,
+        className
       )}
     >
       <input {...getInputProps()} />

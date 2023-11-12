@@ -15,6 +15,8 @@
     align-items: center;
 
     .icon {
+      width: 20px;
+      height: 20px;
       color: var(--color-text-secondary);
     }
 
@@ -26,7 +28,7 @@
 
     .actionDescription {
       margin-top: _.unit(1);
-      font: var(--font-body-2);
+      font: var(--font-body-2); // With font height to be 20px.
       user-select: none;
     }
   }

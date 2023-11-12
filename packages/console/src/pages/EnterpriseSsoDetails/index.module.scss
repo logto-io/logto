@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.readme {
+  padding: 0 _.unit(6);
+  margin: _.unit(6);
+  background-color: var(--color-layer-1);
+  border-radius: 16px;
+}
+
+.container {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background-color: var(--color-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}

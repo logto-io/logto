@@ -9,6 +9,7 @@ import {
   WebhookDetailsTabs,
   TenantSettingsTabs,
   ApplicationDetailsTabs,
+  EnterpriseSsoDetailsTabs,
 } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -26,6 +27,7 @@ import ConnectorDetails from '@/pages/ConnectorDetails';
 import Connectors from '@/pages/Connectors';
 import Dashboard from '@/pages/Dashboard';
 import EnterpriseSsoConnectors from '@/pages/EnterpriseSso';
+import EnterpriseSsoConnectorDetails from '@/pages/EnterpriseSsoDetails';
 import GetStarted from '@/pages/GetStarted';
 import Mfa from '@/pages/Mfa';
 import NotFound from '@/pages/NotFound';
@@ -119,8 +121,14 @@ function ConsoleContent() {
               <Route path="enterprise-sso">
                 <Route index element={<EnterpriseSsoConnectors />} />
                 <Route path="create" element={<EnterpriseSsoConnectors />} />
-                <Route path=":id/guide" element={<EnterpriseSsoConnectors />} />
-                <Route path=":id" element={<EnterpriseSsoConnectors />} />
+                <Route path=":ssoConnectorId/guide" element={<EnterpriseSsoConnectors />} />
+                <Route path=":ssoConnectorId">
+                  <Route
+                    index
+                    element={<Navigate replace to={EnterpriseSsoDetailsTabs.Settings} />}
+                  />
+                  <Route path=":tab" element={<EnterpriseSsoConnectorDetails />} />
+                </Route>
               </Route>
             )}
             <Route path="webhooks">

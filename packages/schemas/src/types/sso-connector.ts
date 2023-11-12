@@ -21,6 +21,28 @@ export enum SsoProviderName {
   GOOGLE_WORKSPACE = 'GoogleWorkspace',
 }
 
+export const singleSignOnDomainBlackList = Object.freeze([
+  'gmail.com',
+  'yahoo.com',
+  'hotmail.com',
+  'outlook.com',
+  'live.com',
+  'icloud.com',
+  'aol.com',
+  'yandex.com',
+  'mail.com',
+  'protonmail.com',
+  'yanex.com',
+  'gmx.com',
+  'mail.ru',
+  'zoho.com',
+  'qq.com',
+  '163.com',
+  '126.com',
+  'sina.com',
+  'sohu.com',
+]);
+
 export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
   providerName: SsoProviderName;
 };

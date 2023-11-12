@@ -40,3 +40,8 @@ export enum TenantSettingsTabs {
   Subscription = 'subscription',
   BillingHistory = 'billing-history',
 }
+
+export enum EnterpriseSsoDetailsTabs {
+  Settings = 'settings',
+  Connection = 'connection',
+}
