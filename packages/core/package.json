@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "copyfiles": "copyfiles -u 1 src/routes/**/*.openapi.json build/",
     "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copyfiles",
-    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap",
+    "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap && pnpm run copyfiles",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",

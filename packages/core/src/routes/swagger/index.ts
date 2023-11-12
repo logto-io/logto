@@ -1,10 +1,10 @@
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
 import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
+import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
@@ -13,13 +13,13 @@ import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
 import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
+import assertThat from '#src/utils/assert-that.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
 import { buildTag, findSupplementFiles, normalizePath } from './utils/general.js';
 import {
-  type ParameterArray,
   buildParameters,
   paginationParameters,
   buildPathIdParameters,
@@ -30,15 +30,13 @@ type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
-  /** Path parameters for the operation. E.g. `/users/:id` has a path parameter `id`. */
-  pathParameters: ParameterArray;
 };
 
 const buildOperation = (
   stack: IMiddleware[],
   path: string,
   isAuthGuarded: boolean
-): OpenAPIV3.OperationObject & { pathParameters: ParameterArray } => {
+): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
@@ -91,8 +89,7 @@ const buildOperation = (
 
   return {
     tags: [buildTag(path)],
-    parameters: queryParameters,
-    pathParameters,
+    parameters: [...pathParameters, ...queryParameters],
     requestBody,
     responses,
   };
@@ -115,6 +112,9 @@ const identifiableEntityNames = [
   'scope',
   'hook',
   'domain',
+  'organization',
+  'organization-role',
+  'organization-scope',
 ];
 
 /**
@@ -145,16 +145,11 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
                 const path = normalizePath(routerPath);
-                const { pathParameters, ...operation } = buildOperation(
-                  stack,
-                  routerPath,
-                  isAuthGuarded
-                );
+                const operation = buildOperation(stack, routerPath, isAuthGuarded);
 
                 return {
                   path,
                   method: httpMethod,
-                  pathParameters,
                   operation,
                 };
               })
@@ -165,18 +160,17 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
 
     // Group routes by path
-    for (const { path, method, operation, pathParameters } of routes) {
-      // Use the first path parameters record as the shared definition for the path to avoid
-      // duplication.
-      if (!pathMap.has(path)) {
-        pathMap.set(path, { parameters: pathParameters });
-      }
-
+    for (const { path, method, operation } of routes) {
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
-    // Current path should be the root directory of routes files.
-    const supplementPaths = await findSupplementFiles(path.dirname(fileURLToPath(import.meta.url)));
+    const routesDirectory = await findUp('routes', {
+      type: 'directory',
+      cwd: fileURLToPath(import.meta.url),
+    });
+    assertThat(routesDirectory, new Error('Cannot find routes directory.'));
+
+    const supplementPaths = await findSupplementFiles(routesDirectory);
     const supplementDocuments = await Promise.all(
       supplementPaths.map(
         // eslint-disable-next-line no-restricted-syntax
@@ -187,8 +181,8 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const baseDocument: OpenAPIV3.Document = {
       openapi: '3.0.1',
       info: {
-        title: 'Logto Core',
-        description: 'Management APIs for Logto core service.',
+        title: 'Logto API references',
+        description: 'API references for Logto services.',
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),

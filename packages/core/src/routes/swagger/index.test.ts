@@ -101,19 +101,41 @@ describe('GET /swagger.json', () => {
 
     const response = await swaggerRequest.get('/swagger.json');
     expect(response.body.paths).toMatchObject({
-      '/api/mock/:id/:field': {
-        parameters: [
-          {
-            $ref: '#/components/parameters/mocId:root',
+      '/api/mock/{id}/{field}': {
+        get: {
+          parameters: [
+            {
+              $ref: '#/components/parameters/mocId:root',
+            },
+            {
+              name: 'field',
+              in: 'path',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+        },
+      },
+    });
+  });
+
+  it('should be able to find supplement files and merge them', async () => {
+    const swaggerRequest = createSwaggerRequest([mockRouter]);
+    const response = await swaggerRequest.get('/swagger.json');
+    // Partially match one of the supplement files `status.openapi.json`. Should update this test
+    // when the file is updated.
+    expect(response.body).toMatchObject({
+      paths: {
+        '/api/status': {
+          get: {
+            summary: 'Health check',
+            responses: {
+              '204': {
+                description: 'The Logto core service is healthy.',
+              },
+            },
           },
-          {
-            name: 'field',
-            in: 'path',
-            required: true,
-            schema: { type: 'string' },
-          },
-        ],
-        get: {},
+        },
       },
     });
   });
