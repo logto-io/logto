@@ -158,9 +158,16 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     });
 
     const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
+    const tags = new Set<string>();
 
     // Group routes by path
     for (const { path, method, operation } of routes) {
+      if (operation.tags) {
+        // Collect all tags for sorting
+        for (const tag of operation.tags) {
+          tags.add(tag);
+        }
+      }
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
@@ -193,12 +200,18 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           {}
         ),
       },
+      tags: [...tags].map((tag) => ({ name: tag })),
     };
 
-    ctx.body = supplementDocuments.reduce(
+    const data = supplementDocuments.reduce(
       (document, supplement) => deepmerge(document, supplement, { arrayMerge: mergeParameters }),
       baseDocument
     );
+
+    ctx.body = {
+      ...data,
+      tags: data.tags?.slice().sort((tagA, tagB) => tagA.name.localeCompare(tagB.name)),
+    };
 
     return next();
   });
