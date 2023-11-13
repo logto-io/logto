@@ -134,7 +134,7 @@ function SwitchPlanActionBar({
         );
       })}
       <div>
-        <a href={contactEmailLink} target="_blank" className={styles.buttonLink} rel="noopener">
+        <a href={contactEmailLink} className={styles.buttonLink} rel="noopener">
           <Button title="general.contact_us_action" type="primary" />
         </a>
       </div>

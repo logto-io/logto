@@ -30,9 +30,6 @@ const mfa = {
   mandatory: 'Benutzer müssen immer MFA bei der Anmeldung verwenden',
   mandatory_tip:
     'Benutzer müssen MFA beim ersten Mal bei der Anmeldung oder Anmeldung einrichten und es für alle zukünftigen Anmeldungen verwenden.',
-  unlock_reminder:
-    'Schalten Sie MFA zur Sicherheitsüberprüfung frei, indem Sie auf einen kostenpflichtigen Plan aktualisieren. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Unterstützung benötigen.',
-  view_plans: 'Pläne anzeigen',
 };
 
 export default Object.freeze(mfa);

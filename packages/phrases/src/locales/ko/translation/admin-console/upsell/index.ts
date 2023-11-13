@@ -3,6 +3,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: '플랜 업그레이드',
   compare_plans: '플랜 비교',
+  view_plans: '플랜 보기',
   create_tenant: {
     title: '테넌트 플랜 선택하기',
     description:

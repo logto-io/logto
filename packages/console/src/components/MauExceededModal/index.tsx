@@ -61,7 +61,7 @@ function MauExceededModal() {
         title="upsell.mau_exceeded_modal.title"
         footer={
           <>
-            <a href={contactEmailLink} target="_blank" className={styles.linkButton} rel="noopener">
+            <a href={contactEmailLink} className={styles.linkButton} rel="noopener">
               <Button title="general.contact_us_action" />
             </a>
             <Button

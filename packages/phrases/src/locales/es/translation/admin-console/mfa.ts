@@ -31,9 +31,6 @@ const mfa = {
   mandatory: 'Siempre se requiere que los usuarios usen MFA al iniciar sesión',
   mandatory_tip:
     'Los usuarios deben configurar MFA la primera vez al iniciar sesión o registrarse, y usarlo en todas las futuras sesiones de inicio de sesión.',
-  unlock_reminder:
-    'Desbloquea MFA para verificar la seguridad al actualizar a un plan pago. No dudes en <a>contactarnos</a> si necesitas ayuda.',
-  view_plans: 'Ver planes',
 };
 
 export default Object.freeze(mfa);

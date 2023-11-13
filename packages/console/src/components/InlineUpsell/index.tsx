@@ -1,21 +1,27 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { type TFuncKey } from 'i18next';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { contactEmailLink } from '@/consts';
 import InlineNotification from '@/ds-components/InlineNotification';
-import TextLink from '@/ds-components/TextLink';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
+
+import ContactUsPhraseLink from '../ContactUsPhraseLink';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
   for: TFuncKey<'translation', 'admin_console.upsell.paywall'>;
+  /**
+   * The text to be displayed on the clickable action button which links to the subscription page.
+   * @default 'upsell.compare_plans'
+   */
+  actionButtonText?: AdminConsoleKey;
 };
 
-/** Displays an inline notification that explains the paywall and links to the subscription page. */
-function InlineUpsell({ className, for: forFeature }: Props) {
+/** Displays an inline notification that explains the paywall and provides a clickable action button which links to the subscription page. */
+function InlineUpsell({ className, for: forFeature, actionButtonText }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const { navigate } = useTenantPathname();
 
@@ -23,7 +29,7 @@ function InlineUpsell({ className, for: forFeature }: Props) {
     <InlineNotification
       hasIcon={false}
       severity="info"
-      action="upsell.compare_plans"
+      action={actionButtonText ?? 'upsell.compare_plans'}
       className={classNames(styles.notification, className)}
       onClick={() => {
         navigate('/tenant-settings/subscription');
@@ -31,7 +37,7 @@ function InlineUpsell({ className, for: forFeature }: Props) {
     >
       <Trans
         components={{
-          a: <TextLink href={contactEmailLink} target="_blank" />,
+          a: <ContactUsPhraseLink />,
         }}
       >
         {t(forFeature)}

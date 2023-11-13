@@ -2,11 +2,11 @@ import { MfaFactor, MfaPolicy, type SignInExperience } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
+import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -18,7 +18,6 @@ import Switch from '@/ds-components/Switch';
 import useApi from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import { type MfaConfigForm, type MfaConfig } from '../types';
@@ -36,7 +35,6 @@ type Props = {
 function MfaForm({ data, onMfaUpdated }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const { navigate } = useTenantPathname();
   const isMfaDisabled = isCloud && !currentPlan?.quota.mfaEnabled;
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -128,21 +126,11 @@ function MfaForm({ data, onMfaUpdated }: Props) {
             </div>
           </FormField>
           {isMfaDisabled && (
-            <InlineNotification
+            <InlineUpsell
+              for="mfa"
               className={styles.unlockMfaNotice}
-              action="mfa.view_plans"
-              onClick={() => {
-                navigate('/tenant-settings/subscription');
-              }}
-            >
-              <Trans
-                components={{
-                  a: <ContactUsPhraseLink />,
-                }}
-              >
-                {t('mfa.unlock_reminder')}
-              </Trans>
-            </InlineNotification>
+              actionButtonText="upsell.view_plans"
+            />
           )}
         </FormCard>
         <FormCard title="mfa.policy">

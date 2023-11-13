@@ -45,6 +45,7 @@ const paywall = {
     '{{count, number}} webhook of <planName/> limit reached. Upgrade plan to create more webhooks. Feel free to <a>contact us</a> if you need any assistance.',
   hooks_other:
     '{{count, number}} webhooks of <planName/> limit reached. Upgrade plan to create more webhooks. Feel free to <a>contact us</a> if you need any assistance.',
+  mfa: 'Unlock MFA to verification security by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
 };
 
 export default Object.freeze(paywall);

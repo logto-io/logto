@@ -29,9 +29,6 @@ const mfa = {
   mandatory: 'ユーザーは常にサインイン時にMFAの使用が必要です',
   mandatory_tip:
     'ユーザーは最初のサインインまたはサインアップ時にMFAを設定し、将来のすべてのサインインでそれを使用する必要があります。',
-  unlock_reminder:
-    'セキュリティを確認するためにMFAを解除して有料プランにアップグレードしてください。ご質問があれば、<a>お問い合わせください</a>。',
-  view_plans: 'プランを見る',
 };
 
 export default Object.freeze(mfa);

@@ -27,9 +27,6 @@ const mfa = {
   mandatory: '사용자는 항상 로그인 시 MFA 사용이 필요합니다',
   mandatory_tip:
     '사용자는 처음 로그인 또는 가입 시에 MFA를 설정하고 모든 향후 로그인에서 그것을 사용해야 합니다.',
-  unlock_reminder:
-    '보안을 확인하기 위해 MFA를 잠금 해제하여 유료 플랜으로 업그레이드하세요. 궁금한 점이 있으면 <a>문의하세요</a>.',
-  view_plans: '플랜 보기',
 };
 
 export default Object.freeze(mfa);

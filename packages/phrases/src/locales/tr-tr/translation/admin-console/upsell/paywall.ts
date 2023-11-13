@@ -48,6 +48,7 @@ const paywall = {
     '{{count, number}} <planName/> webhook sınırına ulaşıldı. Daha fazla webhook oluşturmak için planı yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
   hooks_other:
     '{{count, number}} <planName/> webhook sınırına ulaşıldı. Daha fazla webhook oluşturmak için planı yükseltin. Yardıma ihtiyacınız olursa, <a>iletişime geçin</a>.',
+  mfa: "Güvenliği kontrol etmek için MFA'yı bir ücretli plana geçerek kilidini açın. Yardıma ihtiyacınız olursa bize <a>iletişim kurmaktan</a> çekinmeyin.",
 };
 
 export default Object.freeze(paywall);

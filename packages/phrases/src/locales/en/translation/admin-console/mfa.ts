@@ -28,9 +28,6 @@ const mfa = {
   mandatory: 'Users are always required to use MFA at sign-in',
   mandatory_tip:
     'Users must set up MFA the first time at sign-in or sign-up, and use it for all future sign-ins.',
-  unlock_reminder:
-    'Unlock MFA to verification security by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
-  view_plans: 'View plans',
 };
 
 export default Object.freeze(mfa);
