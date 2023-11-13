@@ -130,7 +130,8 @@ export const buildHandler: (
   }
 
   /* === RFC 0001 === */
-  // The params object may have the key with `undefined` value, so we have to use `Boolean` to check.
+  // The value type is `unknown`, which will swallow other type inferences. So we have to cast it
+  // to `Boolean` first.
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
   if (organizationId) {
     // Validate if the refresh token has the required scope from RFC 0001.
