@@ -73,6 +73,9 @@ const general = {
   /** UNTRANSLATED */
   delete_field: 'Delete {{field}}',
   coming_soon: 'Próximamente',
+  /** UNTRANSLATED */
+  beta_notice:
+    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
 };
 
 export default Object.freeze(general);

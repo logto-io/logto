@@ -25,6 +25,24 @@ type Props = {
   className?: string;
 };
 
+function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
+  switch (severity) {
+    case 'info':
+    case 'alert': {
+      return <Info />;
+    }
+    case 'success': {
+      return <Success />;
+    }
+    case 'error': {
+      return <Error />;
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
 function InlineNotification(
   {
     children,
@@ -51,9 +69,7 @@ function InlineNotification(
     >
       {hasIcon && (
         <div className={styles.icon}>
-          {(severity === 'info' || severity === 'alert') && <Info />}
-          {severity === 'success' && <Success />}
-          {severity === 'error' && <Error />}
+          <NotificationIcon severity={severity} />
         </div>
       )}
       <div className={styles.content}>{children}</div>
