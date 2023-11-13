@@ -54,7 +54,7 @@ type Props =
  * // In a dev tenant, the tag will always be visible even if `isVisible` is `false`
  * <FeatureTag for="upsell" isVisible={false} plan="pro" />
  *
- * // Fro conditionally rendering the tag, usually in an iteration on a list which contains
+ * // For conditionally rendering the tag, usually in an iteration on a list which contains
  * // both free and paid features
  * {features.map((feature) => (
  *   hasPaywall(feature) &&

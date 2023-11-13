@@ -1,6 +1,5 @@
-import { type LocalePhrase } from '@logto/phrases';
-import { type NormalizeKeyPaths } from '@silverhand/essentials';
 import classNames from 'classnames';
+import { type TFuncKey } from 'i18next';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { contactEmailLink } from '@/consts';
@@ -12,7 +11,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  for: NormalizeKeyPaths<LocalePhrase['translation']['admin_console']['upsell']['paywall']>;
+  for: TFuncKey<'translation', 'admin_console.upsell.paywall'>;
 };
 
 /** Displays an inline notification that explains the paywall and links to the subscription page. */
@@ -32,7 +31,6 @@ function InlineUpsell({ className, for: forFeature }: Props) {
     >
       <Trans
         components={{
-          b: <b />,
           a: <TextLink href={contactEmailLink} target="_blank" />,
         }}
       >

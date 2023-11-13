@@ -115,7 +115,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
             <QuotaGuardFooter>
               <Trans
                 components={{
-                  b: <b />,
                   a: <ContactUsPhraseLink />,
                 }}
               >

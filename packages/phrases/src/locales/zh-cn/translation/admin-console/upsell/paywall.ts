@@ -5,7 +5,7 @@ const paywall = {
     '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Upgrade to the <b>Hobby</b> plan to unlock 1 machine-to-machine application, or choose the <b>Pro</b> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
+    'Upgrade to the <strong>Hobby</strong> plan to unlock 1 machine-to-machine application, or choose the <strong>Pro</strong> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine:
     '已达到 <planName/> 的{{count, number}}个机器对机器应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   machine_to_machine_other:
@@ -20,14 +20,14 @@ const paywall = {
     '已达到<planName/>的{{count, number}}个 API 资源每个权限限制。立即升级以扩展。如需任何帮助，请<a>联系我们</a>。',
   /** UNTRANSLATED */
   custom_domain:
-    'Unlock custom domain functionality by upgrading to <b>Hobby</b> or <b>Pro</b> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   social_connectors:
     '已达到<planName/>的{{count, number}}个社交连接器限制。为满足您团队的需求，请升级计划以获取额外的社交连接器，并可以使用 OIDC、OAuth 2.0 和 SAML 协议创建您自己的连接器。如需任何帮助，请<a>联系我们</a>。',
   social_connectors_other:
     '已达到<planName/>的{{count, number}}个社交连接器限制。为满足您团队的需求，请升级计划以获取额外的社交连接器，并可以使用 OIDC、OAuth 2.0 和 SAML 协议创建您自己的连接器。如需任何帮助，请<a>联系我们</a>。',
   /** UNTRANSLATED */
   standard_connectors_feature:
-    'Upgrade to the <b>Hobby</b> or <b>Pro</b> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
+    'Upgrade to the <strong>Hobby</strong> or <strong>Pro</strong> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors:
     '已达到<planName/>的{{count, number}}个社交连接器限制。为满足您团队的需求，请升级计划以获取额外的社交连接器，并可以使用 OIDC、OAuth 2.0 和 SAML 协议创建您自己的连接器。如需任何帮助，请<a>联系我们</a>。',
   standard_connectors_other:

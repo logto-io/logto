@@ -71,7 +71,6 @@ function Footer({
         <QuotaGuardFooter>
           <Trans
             components={{
-              b: <b />,
               a: <ContactUsPhraseLink />,
               planName: <PlanName name={planName} />,
             }}
