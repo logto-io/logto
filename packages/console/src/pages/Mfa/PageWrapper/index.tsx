@@ -1,3 +1,4 @@
+import { cond } from '@silverhand/essentials';
 import { useContext, type ReactNode } from 'react';
 
 import PageMeta from '@/components/PageMeta';
@@ -20,7 +21,13 @@ function PageWrapper({ children }: Props) {
   return (
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
-      <CardTitle isBeta title="mfa.title" subtitle="mfa.description" className={styles.cardTitle} />
+      <CardTitle
+        isBeta
+        paywall={cond(!isMfaEnabled && 'hobby')}
+        title="mfa.title"
+        subtitle="mfa.description"
+        className={styles.cardTitle}
+      />
       {children}
     </div>
   );
