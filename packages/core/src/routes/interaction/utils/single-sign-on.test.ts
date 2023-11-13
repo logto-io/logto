@@ -85,19 +85,17 @@ describe('Single sign on util methods tests', () => {
   });
 
   describe('getSsoAuthorizationUrl tests', () => {
-    it('should throw an error if the connector config is invalid', async () => {
-      await expect(getSsoAuthorizationUrl(mockContext, tenant, mockSsoConnector)).rejects.toThrow(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        expect.objectContaining({ status: 500, code: `connector.invalid_config` })
-      );
-    });
+    const payload = {
+      state: 'state',
+      redirectUri: 'https://example.com',
+    };
 
-    it('should throw an error if OIDC connector is used without a proper payload', async () => {
+    it('should throw an error if the connector config is invalid', async () => {
       await expect(
-        getSsoAuthorizationUrl(mockContext, tenant, wellConfiguredSsoConnector)
+        getSsoAuthorizationUrl(mockContext, tenant, mockSsoConnector, payload)
       ).rejects.toThrow(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        expect.objectContaining({ status: 400, code: 'session.insufficient_info' })
+        expect.objectContaining({ status: 500, code: `connector.invalid_config` })
       );
     });
 
@@ -105,10 +103,7 @@ describe('Single sign on util methods tests', () => {
       getAuthorizationUrlMock.mockResolvedValueOnce('https://example.com');
 
       await expect(
-        getSsoAuthorizationUrl(mockContext, tenant, wellConfiguredSsoConnector, {
-          state: 'state',
-          redirectUri: 'https://example.com',
-        })
+        getSsoAuthorizationUrl(mockContext, tenant, wellConfiguredSsoConnector, payload)
       ).resolves.toBe('https://example.com');
     });
   });

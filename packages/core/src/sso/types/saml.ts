@@ -40,3 +40,7 @@ export const samlMetadataGuard = z
 export type SamlMetadata = z.infer<typeof samlMetadataGuard>;
 
 export type SamlConfig = SamlConnectorConfig & SamlMetadata;
+
+// Saml assertion returned user attribute value
+export const extendedSocialUserInfoGuard = socialUserInfoGuard.catchall(z.unknown());
+export type ExtendedSocialUserInfo = z.infer<typeof extendedSocialUserInfoGuard>;

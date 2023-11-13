@@ -1,5 +1,7 @@
 import { type JsonObject, type SsoConnector } from '@logto/schemas';
 
+export * from './session.js';
+
 /**
  * Single sign-on connector interface
  * @interface SingleSignOn

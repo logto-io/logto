@@ -36,8 +36,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       params: z.object({
         connectorId: z.string(),
       }),
-      // Only required for OIDC
-      body: oidcAuthorizationUrlPayloadGuard.optional(),
+      body: oidcAuthorizationUrlPayloadGuard,
       status: [200, 500, 404],
       response: z.object({
         redirectTo: z.string(),

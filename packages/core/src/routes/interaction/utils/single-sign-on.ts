@@ -1,4 +1,4 @@
-import { type ConnectorSession, ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
+import { ConnectorError, type SocialUserInfo } from '@logto/connector-kit';
 import { validateRedirectUrl } from '@logto/core-kit';
 import { InteractionEvent, type User, type UserSsoIdentity } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
@@ -10,13 +10,17 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import { type SupportedSsoConnector } from '#src/sso/types/index.js';
+import {
+  type SupportedSsoConnector,
+  type SingleSignOnConnectorSession,
+} from '#src/sso/types/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { storeInteractionResult } from './interaction.js';
-import { assignConnectorSessionResult, getConnectorSessionResult } from './social-verification.js';
+import { getSingleSignOnSessionResult } from './single-sign-on-guard.js';
+import { assignConnectorSessionResult } from './social-verification.js';
 
 export const oidcAuthorizationUrlPayloadGuard = z.object({
   state: z.string().min(1),
@@ -30,7 +34,7 @@ export const getSsoAuthorizationUrl = async (
   ctx: WithLogContext & WithInteractionDetailsContext,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
-  payload?: OidcAuthorizationUrlPayload
+  payload: OidcAuthorizationUrlPayload
 ): Promise<string> => {
   const { id: connectorId, providerName } = connectorData;
 
@@ -52,21 +56,27 @@ export const getSsoAuthorizationUrl = async (
       tenantId
     );
 
+    assertThat(payload, 'session.insufficient_info');
+
     // OIDC connectors
     if (connectorInstance instanceof OidcConnector) {
-      // Only required for OIDC
-      assertThat(payload, 'session.insufficient_info');
-
       // Will throw ConnectorError if failed to fetch the provider's config
       return await connectorInstance.getAuthorizationUrl(
-        payload,
-        async (connectorSession: ConnectorSession) =>
+        {
+          ...payload,
+          connectorId,
+        },
+        async (connectorSession: SingleSignOnConnectorSession) =>
           assignConnectorSessionResult(ctx, provider, connectorSession)
       );
     }
 
     // SAML connectors
-    return await connectorInstance.getSingleSignOnUrl(jti);
+    return await connectorInstance.getAuthorizationUrl(
+      { jti, ...payload, connectorId },
+      async (connectorSession: SingleSignOnConnectorSession) =>
+        assignConnectorSessionResult(ctx, provider, connectorSession)
+    );
   } catch (error: unknown) {
     // Catch ConnectorError and re-throw as 500 RequestError
     if (error instanceof ConnectorError) {
@@ -104,7 +114,7 @@ export const getSsoAuthentication = async (
 
     const issuer = await connectorInstance.getIssuer();
     const userInfo = await connectorInstance.getUserInfo(data, async () =>
-      getConnectorSessionResult(ctx, provider)
+      getSingleSignOnSessionResult(ctx, provider)
     );
 
     const result = {
