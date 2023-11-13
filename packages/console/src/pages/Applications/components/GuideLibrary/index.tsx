@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/assets/icons/search.svg';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import ProTag from '@/components/ProTag';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
@@ -40,7 +40,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
 
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isM2mDisabledForCurrentPlan = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
+  const isM2mDisabledForCurrentPlan = isCloud && !currentPlan?.quota.machineToMachineLimit;
 
   const structuredMetadata = useMemo(
     () => getStructuredAppGuideMetadata({ categories: filterCategories }),
@@ -101,9 +101,12 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                       setFilterCategories(sortedValue);
                     }}
                   />
-                  <ProTag
+                  {/* TODO: must be refactored since there's no way to see the tag's intention */}
+                  <FeatureTag
+                    isVisible={isM2mDisabledForCurrentPlan}
+                    for="upsell"
+                    plan="hobby"
                     className={styles.proTag}
-                    isVisibleInProdTenant={isM2mDisabledForCurrentPlan}
                   />
                 </div>
               </div>

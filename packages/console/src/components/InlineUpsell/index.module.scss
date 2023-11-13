@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.notification {
+  padding: _.unit(6);
+}

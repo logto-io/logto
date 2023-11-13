@@ -15,7 +15,7 @@ import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -110,7 +110,7 @@ function GetStarted() {
         <div className={styles.title}>{t('get_started.title')}</div>
         <div className={styles.subtitle}>{t('get_started.subtitle')}</div>
       </div>
-      {isDevFeaturesEnabled && isCloud && isDevTenant && <DevelopmentTenantNotification />}
+      {isCloud && isDevTenant && <DevelopmentTenantNotification />}
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.develop.title')}</div>
         <GuideCardGroup

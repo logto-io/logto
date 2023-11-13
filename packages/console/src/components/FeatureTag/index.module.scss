@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.tag {
+  font: var(--font-label-3);
+  letter-spacing: normal;
+  display: inline-block;
+  background-color: var(--color-specific-tag-upsell);
+  border-radius: 10px;
+  padding: _.unit(0.5) _.unit(2);
+  color: var(--color-white);
+  text-transform: capitalize;
+
+  &.beta {
+    background-color: var(--color-specific-tag-test);
+  }
+}

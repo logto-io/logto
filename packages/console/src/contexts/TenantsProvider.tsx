@@ -7,7 +7,7 @@ import { useCallback, useMemo, createContext, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
 
 import { type TenantResponse } from '@/cloud/types/router';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { ReservedPlanId } from '@/consts/subscriptions';
 
 /**
@@ -181,7 +181,7 @@ function TenantsProvider({ children }: Props) {
       },
       isInitComplete,
       currentTenantId,
-      isDevTenant: currentTenant?.tag === TenantTag.Development,
+      isDevTenant: isDevFeaturesEnabled && currentTenant?.tag === TenantTag.Development,
       currentTenant,
       currentTenantStatus,
       setCurrentTenantStatus,

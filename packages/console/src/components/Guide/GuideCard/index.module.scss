@@ -45,7 +45,7 @@
 
   .flexRow {
     display: flex;
-    align-items: center;
+    align-items: flex-start; // align name and the feature tag to the top
     justify-content: space-between;
   }
 

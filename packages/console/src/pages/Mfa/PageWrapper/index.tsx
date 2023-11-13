@@ -1,7 +1,6 @@
 import { useContext, type ReactNode } from 'react';
 
 import PageMeta from '@/components/PageMeta';
-import ProTag from '@/components/ProTag';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
@@ -21,12 +20,7 @@ function PageWrapper({ children }: Props) {
   return (
     <div className={styles.container}>
       <PageMeta titleKey="mfa.title" />
-      <CardTitle
-        title="mfa.title"
-        titleTag={<ProTag isVisibleInProdTenant={!isMfaEnabled} />}
-        subtitle="mfa.description"
-        className={styles.cardTitle}
-      />
+      <CardTitle isBeta title="mfa.title" subtitle="mfa.description" className={styles.cardTitle} />
       {children}
     </div>
   );

@@ -1,8 +1,7 @@
 import paywall from './paywall.js';
 
 const upsell = {
-  pro_tag: 'PRO',
-  upgrade_plan: 'Upgrade Plan',
+  upgrade_plan: 'Upgrade plan',
   compare_plans: 'Compare plans',
   create_tenant: {
     title: 'Select your tenant plan',

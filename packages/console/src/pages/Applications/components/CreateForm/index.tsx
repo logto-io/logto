@@ -118,9 +118,6 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
                       title={t(`${applicationTypeI18nKey[type]}.title`)}
                       subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
                       description={t(`${applicationTypeI18nKey[type]}.description`)}
-                      hasProTag={
-                        type === ApplicationType.MachineToMachine && isMachineToMachineDisabled
-                      }
                     />
                   </Radio>
                 ))}

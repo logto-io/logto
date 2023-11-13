@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Suspense, useCallback, useContext } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
-import ProTag from '@/components/ProTag';
+import FeatureTag from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -39,6 +39,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
     metadata: { target, name, description },
   } = data;
 
+  const hasPaywall = isCloud && target === ApplicationType.MachineToMachine;
   const isSubscriptionRequired = isM2mDisabled && target === ApplicationType.MachineToMachine;
   const buttonText = isSubscriptionRequired
     ? 'upsell.upgrade_plan'
@@ -75,9 +76,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {target === ApplicationType.MachineToMachine && (
-              <ProTag isVisibleInProdTenant={isSubscriptionRequired} />
-            )}
+            {hasPaywall && <FeatureTag isVisible={isM2mDisabled} for="upsell" plan="hobby" />}
           </div>
           <div className={styles.description} title={description}>
             {description}

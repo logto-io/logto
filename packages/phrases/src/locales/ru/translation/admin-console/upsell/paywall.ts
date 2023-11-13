@@ -3,8 +3,9 @@ const paywall = {
     'Достигнут лимит {{count, number}} приложения(й) для <planName/>. Обновите план, чтобы удовлетворить потребности вашей команды. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
   applications_other:
     'Достигнут лимит {{count, number}} приложений для <planName/>. Обновите план, чтобы удовлетворить потребности вашей команды. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
+  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Перейдите на платный план, чтобы создать машинное приложение и получить доступ ко всем премиум-функциям. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
+    'Upgrade to the <strong>Hobby</strong> plan to unlock 1 machine-to-machine application, or choose the <strong>Pro</strong> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine:
     'Достигнут лимит {{count, number}} машинных приложений для <planName/>. Обновите план, чтобы удовлетворить потребности вашей команды. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
   machine_to_machine_other:
@@ -17,14 +18,16 @@ const paywall = {
     'Достигнут лимит {{count, number}} разрешений на ресурс API в плане <planName/>. Повысьте план, чтобы увеличить количество разрешений. <a>Свяжитесь с нами</a> для получения помощи.',
   scopes_per_resource_other:
     'Достигнут лимит {{count, number}} разрешений на ресурс API в плане <planName/>. Повысьте план, чтобы увеличить количество разрешений. <a>Свяжитесь с нами</a> для получения помощи.',
+  /** UNTRANSLATED */
   custom_domain:
-    'Разблокируйте функциональность настраиваемого домена и ряд премиум-преимуществ, повысив до платного плана. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
+    'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
   social_connectors:
     'Достигнут лимит {{count, number}} социальных коннекторов в плане <planName/>. Для удовлетворения потребностей вашей команды повысьте план, чтобы получить дополнительные социальные коннекторы и возможность создания собственных коннекторов с использованием протоколов OIDC, OAuth 2.0 и SAML. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   social_connectors_other:
     'Достигнут лимит {{count, number}} социальных коннекторов в плане <planName/>. Для удовлетворения потребностей вашей команды повысьте план, чтобы получить дополнительные социальные коннекторы и возможность создания собственных коннекторов с использованием протоколов OIDC, OAuth 2.0 и SAML. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
+  /** UNTRANSLATED */
   standard_connectors_feature:
-    'Повысьте до платного плана, чтобы создавать свои собственные коннекторы с использованием протоколов OIDC, OAuth 2.0 и SAML, а также получить неограниченное количество социальных коннекторов и все премиум-функции. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
+    'Upgrade to the <strong>Hobby</strong> or <strong>Pro</strong> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
   standard_connectors:
     'Достигнут лимит {{count, number}} социальных коннекторов в плане <planName/>. Для удовлетворения потребностей вашей команды повысьте план, чтобы получить дополнительные социальные коннекторы и возможность создания собственных коннекторов с использованием протоколов OIDC, OAuth 2.0 и SAML. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   standard_connectors_other:
