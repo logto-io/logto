@@ -35,7 +35,6 @@ export const newOidcSsoConnectorPayload = {
   providerName: ProviderName.OIDC,
   connectorName: 'test-oidc',
   domains: ['example.io'], // Auto-generated email domain
-  ssoOnly: true,
   branding: {
     logo: 'https://logto.io/oidc-logo.png',
     darkLogo: 'https://logto.io/oidc-dark-logo.png',

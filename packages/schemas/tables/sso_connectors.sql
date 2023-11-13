@@ -16,8 +16,6 @@ create table sso_connectors (
   branding jsonb /* @use SsoBranding */ not null default '{}'::jsonb,
   /** Determines whether to synchronize the user's profile on each login. */
   sync_profile boolean not null default FALSE,
-  /** Determines whether SSO is the restricted sign-in method for users with the SSO registered email domains */
-  sso_only boolean not null default FALSE,
   /** When the SSO connector was created. */
   created_at timestamptz not null default(now()),
   primary key (id)

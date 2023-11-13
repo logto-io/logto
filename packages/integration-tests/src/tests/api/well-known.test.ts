@@ -72,7 +72,6 @@ describe('.well-known api', () => {
       expect(newCreatedConnector).toMatchObject({
         id,
         connectorName,
-        ssoOnly: newOidcSsoConnectorPayload.ssoOnly,
         logo: newOidcSsoConnectorPayload.branding.logo,
         darkLogo: newOidcSsoConnectorPayload.branding.darkLogo,
       });

@@ -14,7 +14,7 @@ const mockSsoConnectorLibrary: SsoConnectorLibrary = {
   getSsoConnectorById: jest.fn(),
 };
 
-describe('verifySsoOnlyEmailIdentifier tests', () => {
+describe('verifyEmailIdentifier tests', () => {
   it('should return if the identifier is not an email', async () => {
     await expect(
       verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
@@ -34,22 +34,6 @@ describe('verifySsoOnlyEmailIdentifier tests', () => {
     await expect(
       verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
         email: 'foo@bar.com',
-        password: 'bar',
-      })
-    ).resolves.not.toThrow();
-  });
-  it('should return if the connector is not sso only', async () => {
-    getAvailableSsoConnectorsMock.mockResolvedValueOnce([
-      {
-        ...wellConfiguredSsoConnector,
-        domains: ['example.com'],
-        ssoOnly: false,
-      },
-    ]);
-
-    await expect(
-      verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
-        email: 'foo@example.com',
         password: 'bar',
       })
     ).resolves.not.toThrow();

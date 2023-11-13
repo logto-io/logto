@@ -45,7 +45,6 @@ export const mockSsoConnectors: SsoConnectorMetadata[] = [
   {
     id: 'arbitrary-sso-connector',
     connectorName: 'AzureAD',
-    ssoOnly: true,
     logo: 'http://logto.dev/logto.png',
   },
 ];

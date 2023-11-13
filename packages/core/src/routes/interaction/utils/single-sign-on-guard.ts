@@ -24,8 +24,8 @@ export const verifySsoOnlyEmailIdentifier = async (
     return;
   }
 
-  const availableConnectors = availableSsoConnectors.filter(
-    ({ domains, ssoOnly }) => domains.includes(domain) && ssoOnly
+  const availableConnectors = availableSsoConnectors.filter(({ domains }) =>
+    domains.includes(domain)
   );
 
   assertThat(
