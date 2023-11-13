@@ -116,7 +116,10 @@ function ConsoleContent() {
               <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
             </Route>
             {isDevFeaturesEnabled && (
-              <Route path="enterprise-sso" element={<EnterpriseSsoConnectors />} />
+              <Route path="enterprise-sso">
+                <Route index element={<EnterpriseSsoConnectors />} />
+                <Route path="create" element={<EnterpriseSsoConnectors />} />
+              </Route>
             )}
             <Route path="webhooks">
               <Route index element={<Webhooks />} />

@@ -2,6 +2,7 @@ import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoConnectorWithProviderConfig, Theme } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -20,16 +21,19 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
+import SsoCreationModal from './SsoCreationModal';
 import * as styles from './index.module.scss';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';
 const createEnterpriseSsoPathname = `${enterpriseSsoPathname}/create`;
+const buildGuidePathname = (id: string) => `${enterpriseSsoPathname}/${id}/guide`;
 const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
 
 function EnterpriseSsoConnectors() {
   const theme = useTheme();
 
+  const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -163,6 +167,19 @@ function EnterpriseSsoConnectors() {
         ),
         onRetry: async () => mutate(undefined, true),
       }}
+      widgets={
+        <SsoCreationModal
+          isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
+          onClose={async (id) => {
+            if (id) {
+              navigate(buildGuidePathname(id), { replace: true });
+              return;
+            }
+
+            navigate(enterpriseSsoPathname);
+          }}
+        />
+      }
     />
   );
 }

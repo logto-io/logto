@@ -24,6 +24,18 @@ const enterprise_sso = {
   /** UNTRANSLATED */
   placeholder_description:
     'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+  create_modal: {
+    /** UNTRANSLATED */
+    title: 'Add enterprise connector',
+    /** UNTRANSLATED */
+    text_divider: 'Or you can customize your connector by a standard protocol.',
+    /** UNTRANSLATED */
+    connector_name_field_title: 'Connector name',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'Name for the enterprise identity provider',
+    /** UNTRANSLATED */
+    create_button_text: 'Create connector',
+  },
 };
 
 export default Object.freeze(enterprise_sso);
