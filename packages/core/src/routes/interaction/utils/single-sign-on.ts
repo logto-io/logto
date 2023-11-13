@@ -21,19 +21,19 @@ import { storeInteractionResult } from './interaction.js';
 import { getSingleSignOnSessionResult } from './single-sign-on-guard.js';
 import { assignConnectorSessionResult } from './social-verification.js';
 
-export const oidcAuthorizationUrlPayloadGuard = z.object({
+export const authorizationUrlPayloadGuard = z.object({
   state: z.string().min(1),
   redirectUri: z.string().refine((url) => validateRedirectUrl(url, 'web')),
 });
 
-type OidcAuthorizationUrlPayload = z.infer<typeof oidcAuthorizationUrlPayloadGuard>;
+type AuthorizationUrlPayload = z.infer<typeof authorizationUrlPayloadGuard>;
 
 // Get the authorization url for the SSO provider
 export const getSsoAuthorizationUrl = async (
   ctx: WithLogContext & WithInteractionDetailsContext,
   { provider, id: tenantId }: TenantContext,
   connectorData: SupportedSsoConnector,
-  payload: OidcAuthorizationUrlPayload
+  payload: AuthorizationUrlPayload
 ): Promise<string> => {
   const { id: connectorId, providerName } = connectorData;
 
