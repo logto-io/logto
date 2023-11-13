@@ -8,7 +8,8 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
-const { default: swaggerRoutes, paginationParameters } = await import('./swagger.js');
+const { default: swaggerRoutes } = await import('./index.js');
+const { paginationParameters } = await import('./utils/parameters.js');
 
 const createSwaggerRequest = (
   allRouters: Router[],
@@ -79,7 +80,7 @@ describe('GET /swagger.json', () => {
         get: { tags: ['Mock'] },
       },
       '/api/.well-known': {
-        put: { tags: ['.well-known'] },
+        put: { tags: ['Well known'] },
       },
     });
   });
@@ -100,14 +101,11 @@ describe('GET /swagger.json', () => {
 
     const response = await swaggerRequest.get('/swagger.json');
     expect(response.body.paths).toMatchObject({
-      '/api/mock/:id/:field': {
+      '/api/mock/{id}/{field}': {
         get: {
           parameters: [
             {
-              name: 'id',
-              in: 'path',
-              required: true,
-              schema: { type: 'number' },
+              $ref: '#/components/parameters/mocId:root',
             },
             {
               name: 'field',
@@ -116,6 +114,27 @@ describe('GET /swagger.json', () => {
               schema: { type: 'string' },
             },
           ],
+        },
+      },
+    });
+  });
+
+  it('should be able to find supplement files and merge them', async () => {
+    const swaggerRequest = createSwaggerRequest([mockRouter]);
+    const response = await swaggerRequest.get('/swagger.json');
+    // Partially match one of the supplement files `status.openapi.json`. Should update this test
+    // when the file is updated.
+    expect(response.body).toMatchObject({
+      paths: {
+        '/api/status': {
+          get: {
+            summary: 'Health check',
+            responses: {
+              '204': {
+                description: 'The Logto core service is healthy.',
+              },
+            },
+          },
         },
       },
     });

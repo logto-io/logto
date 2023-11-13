@@ -204,7 +204,9 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodObject) {
     // Type from Zod is any
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const entries = Object.entries(config.shape);
+    const entries = Object.entries(config.shape)
+      // `tenantId` is not editable for all routes
+      .filter(([key]) => key !== 'tenantId');
     const required = entries
       .filter(([, value]) => !(value instanceof ZodOptional))
       .map(([key]) => key);

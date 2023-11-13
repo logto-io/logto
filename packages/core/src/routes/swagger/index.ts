@@ -1,86 +1,35 @@
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
-import { conditionalArray, deduplicate, toTitle } from '@silverhand/essentials';
+import { conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
+import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
-import { ZodObject, ZodOptional } from 'zod';
 
 import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
 import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
-import { fallbackDefaultPageSize, isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
+import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
-import type { AnonymousRouter } from './types.js';
+import type { AnonymousRouter } from '../types.js';
+
+import { buildTag, findSupplementFiles, normalizePath } from './utils/general.js';
+import {
+  buildParameters,
+  paginationParameters,
+  buildPathIdParameters,
+  mergeParameters,
+} from './utils/parameters.js';
 
 type RouteObject = {
   path: string;
   method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
-};
-
-type MethodMap = {
-  [key in OpenAPIV3.HttpMethods]?: OpenAPIV3.OperationObject;
-};
-
-export const paginationParameters: OpenAPIV3.ParameterObject[] = [
-  {
-    name: 'page',
-    in: 'query',
-    required: false,
-    schema: {
-      type: 'integer',
-      minimum: 1,
-      default: 1,
-    },
-  },
-  {
-    name: 'page_size',
-    in: 'query',
-    required: false,
-    schema: {
-      type: 'integer',
-      minimum: 1,
-      default: fallbackDefaultPageSize,
-    },
-  },
-];
-
-// Parameter serialization: https://swagger.io/docs/specification/serialization
-const buildParameters = (
-  zodParameters: unknown,
-  inWhere: 'path' | 'query'
-): OpenAPIV3.ParameterObject[] => {
-  if (!zodParameters) {
-    return [];
-  }
-
-  assertThat(zodParameters instanceof ZodObject, 'swagger.not_supported_zod_type_for_params');
-
-  // Type from Zod is any
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  return Object.entries(zodParameters.shape).map(([key, value]) => ({
-    name: key,
-    in: inWhere,
-    required: !(value instanceof ZodOptional),
-    schema: zodTypeToSwagger(value),
-  }));
-};
-
-const buildTag = (path: string) => {
-  const root = path.split('/')[1];
-
-  if (root?.startsWith('.')) {
-    return root;
-  }
-
-  return toTitle(root ?? 'General');
 };
 
 const buildOperation = (
@@ -92,7 +41,7 @@ const buildOperation = (
     isGuardMiddleware(function_)
   );
   const { params, query, body, response, status } = guard?.config ?? {};
-  const pathParameters = buildParameters(params, 'path');
+  const pathParameters = buildParameters(params, 'path', path);
 
   const hasPagination = stack.some((function_) => isPaginationMiddleware(function_));
   const queryParameters = [
@@ -151,27 +100,30 @@ const isManagementApiRouter = ({ stack }: Router) =>
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
 
+// Add more components here to cover more ID parameters in paths. For example, if there is a
+// path `/foo/:barBazId`, then add `bar-baz` to the array.
+const identifiableEntityNames = [
+  'application',
+  'connector',
+  'resource',
+  'user',
+  'log',
+  'role',
+  'scope',
+  'hook',
+  'domain',
+  'organization',
+  'organization-role',
+  'organization-scope',
+];
+
 /**
- * Recursively find all supplement files (files end with `.openapi.json`) for the given
- * directory.
+ * Attach the `/swagger.json` route which returns the generated OpenAPI document for the
+ * management APIs.
+ *
+ * @param router The router to attach the route to.
+ * @param allRouters All management API routers. This is used to generate the OpenAPI document.
  */
-/* eslint-disable @silverhand/fp/no-mutating-methods, no-await-in-loop */
-const findSupplementFiles = async (directory: string) => {
-  const result: string[] = [];
-
-  for (const file of await fs.readdir(directory)) {
-    const stats = await fs.stat(path.join(directory, file));
-    if (stats.isDirectory()) {
-      result.push(...(await findSupplementFiles(path.join(directory, file))));
-    } else if (file.endsWith('.openapi.json')) {
-      result.push(path.join(directory, file));
-    }
-  }
-
-  return result;
-};
-/* eslint-enable @silverhand/fp/no-mutating-methods, no-await-in-loop */
-
 // Keep using `any` to accept various custom context types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
@@ -186,33 +138,46 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         router.stack
           // Filter out universal routes (mostly like a proxy route to withtyped)
           .filter(({ path }) => !path.includes('.*'))
-          .flatMap<RouteObject>(({ path: routerPath, stack, methods, name }) =>
+          .flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
             methods
               .map((method) => method.toLowerCase())
               // There is no need to show the HEAD method.
               .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
               .map((httpMethod) => {
-                const path = `/api${routerPath}`;
+                const path = normalizePath(routerPath);
+                const operation = buildOperation(stack, routerPath, isAuthGuarded);
 
                 return {
                   path,
                   method: httpMethod,
-                  operation: buildOperation(stack, routerPath, isAuthGuarded),
+                  operation,
                 };
               })
           )
       );
     });
 
-    const pathMap = new Map<string, MethodMap>();
+    const pathMap = new Map<string, OpenAPIV3.PathItemObject>();
+    const tags = new Set<string>();
 
     // Group routes by path
     for (const { path, method, operation } of routes) {
+      if (operation.tags) {
+        // Collect all tags for sorting
+        for (const tag of operation.tags) {
+          tags.add(tag);
+        }
+      }
       pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
-    // Current path should be the root directory of routes files.
-    const supplementPaths = await findSupplementFiles(path.dirname(fileURLToPath(import.meta.url)));
+    const routesDirectory = await findUp('routes', {
+      type: 'directory',
+      cwd: fileURLToPath(import.meta.url),
+    });
+    assertThat(routesDirectory, new Error('Cannot find routes directory.'));
+
+    const supplementPaths = await findSupplementFiles(routesDirectory);
     const supplementDocuments = await Promise.all(
       supplementPaths.map(
         // eslint-disable-next-line no-restricted-syntax
@@ -223,18 +188,30 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     const baseDocument: OpenAPIV3.Document = {
       openapi: '3.0.1',
       info: {
-        title: 'Logto Core',
-        description: 'Management APIs for Logto core service.',
+        title: 'Logto API references',
+        description: 'API references for Logto services.',
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
-      components: { schemas: translationSchemas },
+      components: {
+        schemas: translationSchemas,
+        parameters: identifiableEntityNames.reduce(
+          (previous, entityName) => ({ ...previous, ...buildPathIdParameters(entityName) }),
+          {}
+        ),
+      },
+      tags: [...tags].map((tag) => ({ name: tag })),
     };
 
-    ctx.body = supplementDocuments.reduce(
-      (document, supplement) => deepmerge(document, supplement),
+    const data = supplementDocuments.reduce(
+      (document, supplement) => deepmerge(document, supplement, { arrayMerge: mergeParameters }),
       baseDocument
     );
+
+    ctx.body = {
+      ...data,
+      tags: data.tags?.slice().sort((tagA, tagB) => tagA.name.localeCompare(tagB.name)),
+    };
 
     return next();
   });

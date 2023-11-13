@@ -29,7 +29,7 @@ import roleScopeRoutes from './role.scope.js';
 import signInExperiencesRoutes from './sign-in-experience/index.js';
 import ssoConnectors from './sso-connector/index.js';
 import statusRoutes from './status.js';
-import swaggerRoutes from './swagger.js';
+import swaggerRoutes from './swagger/index.js';
 import type { AnonymousRouter, AuthedRouter } from './types.js';
 import userAssetsRoutes from './user-assets.js';
 import verificationCodeRoutes from './verification-code.js';
