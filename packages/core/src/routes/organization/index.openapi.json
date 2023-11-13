@@ -1,7 +1,7 @@
 {
   "tags": [{
     "name": "Organizations",
-    "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations.\n\nSee [this guide](https://docs.logto.io/docs/recipes/organizations) to learn more about organizations."
+    "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations."
   }],
   "paths": {
     "/api/organizations": {
@@ -38,6 +38,11 @@
             "name": "q",
             "in": "query",
             "description": "The query to filter organizations. It can be a partial ID or name.\n\nIf not provided, all organizations will be returned."
+          },
+          {
+            "name": "showFeatured",
+            "in": "query",
+            "description": "Whether to show featured users in the organization. Featured users are randomly selected from the organization members.\n\nIf not provided, `featuredUsers` will not be included in the response."
           }
         ],
         "responses": {

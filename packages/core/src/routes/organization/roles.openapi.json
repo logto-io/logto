@@ -1,7 +1,7 @@
 {
   "tags": [{
     "name": "Organization roles",
-    "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B. To learn more about organization template and access control in organizations, see [this guide](/docs/rbac/organizations)."
+    "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B."
   }],
   "paths": {
     "/api/organization-roles": {
