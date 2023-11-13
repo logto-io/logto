@@ -5,7 +5,7 @@ import Sinon from 'sinon';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import { buildHandler } from './organization-token.js';
+import { buildHandler } from './refresh-token.js';
 
 const { jest } = import.meta;
 
@@ -147,11 +147,6 @@ afterAll(() => {
 });
 
 describe('organization token grant', () => {
-  it('should throw when required parameters are missing', async () => {
-    const ctx = createOidcContext();
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidRequest);
-  });
-
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
@@ -240,6 +235,21 @@ describe('organization token grant', () => {
     });
     stubGrant(ctx);
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidScope);
+  });
+
+  it('should throw when both `resource` and `organization_id` are present in request', async () => {
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      params: {
+        ...validOidcContext.params,
+        resource: 'some_resource',
+      },
+    });
+    stubRefreshToken(ctx);
+    stubGrant(ctx);
+    await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+      new errors.InvalidRequest('resource is not allowed when requesting organization token')
+    );
   });
 
   it('should throw when account cannot be found or account id mismatch', async () => {

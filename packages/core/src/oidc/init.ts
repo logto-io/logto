@@ -8,7 +8,6 @@ import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
   demoAppApplicationId,
-  GrantType,
   inSeconds,
   logtoCookieKey,
   type LogtoUiCookie,
@@ -19,7 +18,7 @@ import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import type { EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -31,7 +30,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import defaults from './defaults.js';
-import * as organizationToken from './grants/organization-token.js';
+import { registerGrants } from './grants/index.js';
 import { findResource, findResourceScopes, getSharedResourceServerData } from './resource.js';
 import { getUserClaimData, getUserClaims } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
@@ -39,12 +38,7 @@ import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-export default function initOidc(
-  tenantId: string,
-  envSet: EnvSet,
-  queries: Queries,
-  libraries: Libraries
-): Provider {
+export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Libraries): Provider {
   const {
     resources: { findDefaultResource },
     users: { findUserById },
@@ -288,12 +282,10 @@ export default function initOidc(
 
   addOidcEventListeners(oidc, queries);
 
-  // Register custom grant types
-  oidc.registerGrantType(
-    GrantType.OrganizationToken,
-    organizationToken.buildHandler(envSet, organizations),
-    [...organizationToken.parameters]
-  );
+  // DEV: Customized `refresh_token` grant
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    registerGrants(oidc, envSet, queries);
+  }
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

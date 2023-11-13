@@ -102,7 +102,7 @@ const App = () => {
         endpoint: window.location.origin,
         appId: demoAppApplicationId,
         prompt: Prompt.Login,
-        // Use enum values once JS SDK is updated
+        // TODO: Use enum values once JS SDK is updated
         scopes: ['urn:logto:scope:organizations', 'urn:logto:scope:organization_roles'],
         resources: ['urn:logto:resource:organizations'],
       }}
