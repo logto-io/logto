@@ -8,7 +8,6 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/routes/interaction/middleware/koa-interaction-details.js';
-import OidcConnector from '#src/sso/OidcConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import {
   type SupportedSsoConnector,
@@ -58,20 +57,6 @@ export const getSsoAuthorizationUrl = async (
 
     assertThat(payload, 'session.insufficient_info');
 
-    // OIDC connectors
-    if (connectorInstance instanceof OidcConnector) {
-      // Will throw ConnectorError if failed to fetch the provider's config
-      return await connectorInstance.getAuthorizationUrl(
-        {
-          ...payload,
-          connectorId,
-        },
-        async (connectorSession: SingleSignOnConnectorSession) =>
-          assignConnectorSessionResult(ctx, provider, connectorSession)
-      );
-    }
-
-    // SAML connectors
     return await connectorInstance.getAuthorizationUrl(
       { jti, ...payload, connectorId },
       async (connectorSession: SingleSignOnConnectorSession) =>
