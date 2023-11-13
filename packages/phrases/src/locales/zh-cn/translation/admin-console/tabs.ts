@@ -5,6 +5,8 @@ const tabs = {
   api_resources: 'API 资源',
   sign_in_experience: '登录体验',
   connectors: '连接器',
+  /** UNTRANSLATED */
+  enterprise_sso: 'Enterprise SSO',
   webhooks: 'Webhooks',
   /** UNTRANSLATED */
   organizations: 'Organizations',

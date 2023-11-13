@@ -5,6 +5,8 @@ const tabs = {
   api_resources: 'Recursos API',
   sign_in_experience: 'Experiência de login',
   connectors: 'Conectores',
+  /** UNTRANSLATED */
+  enterprise_sso: 'Enterprise SSO',
   webhooks: 'Webhooks',
   /** UNTRANSLATED */
   organizations: 'Organizations',

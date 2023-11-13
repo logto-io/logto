@@ -1,4 +1,5 @@
-import { SsoProviderName } from './types/index.js';
+import { SsoProviderName } from '#src/sso/types/index.js';
+
 import { isSupportedSsoProvider } from './utils.js';
 
 describe('isSupportedSsoProvider', () => {

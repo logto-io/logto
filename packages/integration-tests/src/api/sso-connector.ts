@@ -2,15 +2,15 @@ import { type CreateSsoConnector, type SsoConnector } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
 
-export type ConnectorFactoryDetail = {
+export type SsoConnectorFactoryDetail = {
   providerName: string;
   logo: string;
   description: string;
 };
 
 export type ConnectorFactoryResponse = {
-  standardConnectors: ConnectorFactoryDetail[];
-  providerConnectors: ConnectorFactoryDetail[];
+  standardConnectors: SsoConnectorFactoryDetail[];
+  providerConnectors: SsoConnectorFactoryDetail[];
 };
 
 export type SsoConnectorWithProviderConfig = SsoConnector & {

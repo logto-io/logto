@@ -1,9 +1,11 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type SsoConnector } from '@logto/schemas';
 
+import { SsoProviderName } from '#src/sso/types/index.js';
+
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type SingleSignOn, SsoProviderName } from '../types/index.js';
+import { type SingleSignOn } from '../types/index.js';
 import { samlConnectorConfigGuard } from '../types/saml.js';
 
 /**
@@ -58,7 +60,7 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
 
 export const samlSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.SAML> = {
   providerName: SsoProviderName.SAML,
-  logo: 'saml.svg',
+  logo: 'https://www.svgrepo.com/show/448246/saml.svg',
   description: {
     en: ' This connector is used to connect to SAML single sign-on identity provider.',
   },

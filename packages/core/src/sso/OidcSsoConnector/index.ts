@@ -1,9 +1,11 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type SsoConnector } from '@logto/schemas';
 
+import { SsoProviderName } from '#src/sso/types/index.js';
+
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type SingleSignOn, SsoProviderName } from '../types/index.js';
+import { type SingleSignOn } from '../types/index.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 
 export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
@@ -27,7 +29,7 @@ export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
 
 export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> = {
   providerName: SsoProviderName.OIDC,
-  logo: 'oidc.svg',
+  logo: 'https://freesvg.org/img/techtonik_OpenID.png',
   description: {
     en: ' This connector is used to connect with OIDC single sign-on identity provider.',
   },

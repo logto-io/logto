@@ -32,7 +32,7 @@ describe('SsoConnectorLibrary', () => {
 
     const connectors = await getSsoConnectors();
 
-    expect(connectors).toEqual([mockSsoConnector]);
+    expect(connectors).toEqual([2, [mockSsoConnector]]);
   });
 
   it('getAvailableSsoConnectors() should filter sso connectors with invalid config', async () => {

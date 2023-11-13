@@ -26,13 +26,13 @@ export const consoleUsername = 'svhd';
 export const consolePassword = 'silverhandasd_1';
 export const mockSocialAuthPageUrl = 'http://mock.social.com';
 
-// @see {@link packages/core/src/sso/types}
-export enum ProviderName {
+export enum SsoProviderName {
   OIDC = 'OIDC',
+  SAML = 'SAML',
 }
 
 export const newOidcSsoConnectorPayload = {
-  providerName: ProviderName.OIDC,
+  providerName: SsoProviderName.OIDC,
   connectorName: 'test-oidc',
   domains: ['example.io'], // Auto-generated email domain
   branding: {
