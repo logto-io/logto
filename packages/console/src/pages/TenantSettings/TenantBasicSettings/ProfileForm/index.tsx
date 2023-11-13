@@ -1,5 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 

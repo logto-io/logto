@@ -1,4 +1,4 @@
-import { TenantTag } from '@logto/schemas/models';
+import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';

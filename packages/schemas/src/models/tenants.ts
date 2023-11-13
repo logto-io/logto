@@ -2,11 +2,7 @@ import { createModel } from '@withtyped/server/model';
 import type { InferModelType } from '@withtyped/server/model';
 import { z } from 'zod';
 
-export enum TenantTag {
-  Development = 'development',
-  Staging = 'staging',
-  Production = 'production',
-}
+import { TenantTag } from '../types/tenant.js';
 
 export const Tenants = createModel(
   /* Sql */ `

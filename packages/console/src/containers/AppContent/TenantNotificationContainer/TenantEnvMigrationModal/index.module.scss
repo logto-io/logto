@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.modalLayoutWrapper {
+  position: relative;
+}
+
+.headerIcon {
+  width: 48px;
+  height: 48px;
+}
+
+.highlight {
+  color: var(--color-text-link);
+}
+
+.linkButton {
+  text-decoration: none;
+}
+
+.content {
+  padding: _.unit(6);
+  background-color: var(--color-layer-light);
+  border-radius: 12px;
+}
+
+.fireworks {
+  position: absolute;
+  top: 0;
+  pointer-events: none;
+
+  .fireworksImage {
+    transform: translateX(-10.5%) translateY(-17%);
+  }
+
+  .stagingFireworksImage {
+    transform: translateX(-10.5%) translateY(-38%);
+  }
+}
