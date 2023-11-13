@@ -31,8 +31,14 @@ const tenantProfileToForm = (tenant?: TenantResponse): TenantSettingsForm => {
 function TenantBasicSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useCloudApi();
-  const { currentTenant, currentTenantId, updateTenant, removeTenant, navigateTenant } =
-    useContext(TenantsContext);
+  const {
+    currentTenant,
+    currentTenantId,
+    isDevTenant,
+    updateTenant,
+    removeTenant,
+    navigateTenant,
+  } = useContext(TenantsContext);
   const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { show: showModal } = useConfirmModal();
@@ -76,8 +82,9 @@ function TenantBasicSettings() {
 
   const onClickDeletionButton = async () => {
     if (
-      currentTenant?.subscription.planId !== ReservedPlanId.free ||
-      currentTenant.openInvoices.length > 0
+      !isDevTenant &&
+      (currentTenant?.subscription.planId !== ReservedPlanId.free ||
+        currentTenant.openInvoices.length > 0)
     ) {
       await showModal({
         title: 'tenants.delete_modal.cannot_delete_title',
