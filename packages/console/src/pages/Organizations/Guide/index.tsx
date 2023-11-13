@@ -6,9 +6,9 @@ import DsModalHeader from '@/ds-components/ModalHeader';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import CreateOrganization from './CreateOrganization';
-import CreateRoles from './CreateRoles';
-import IntroductionAndPermissions from './IntroductionAndPermissions';
+import Introduction from './Introduction';
+import OrganizationInfo from './OrganizationInfo';
+import PermissionsAndRoles from './PermissionsAndRoles';
 import { steps } from './const';
 import * as styles from './index.module.scss';
 
@@ -28,10 +28,10 @@ function Guide() {
           onClose={onClose}
         />
         <Routes>
-          <Route index element={<Navigate replace to={steps.createPermissions} />} />
-          <Route path={steps.createPermissions} element={<IntroductionAndPermissions />} />
-          <Route path={steps.createRoles} element={<CreateRoles />} />
-          <Route path={steps.createOrganization} element={<CreateOrganization />} />
+          <Route index element={<Navigate replace to={steps.introduction} />} />
+          <Route path={steps.introduction} element={<Introduction />} />
+          <Route path={steps.permissionsAndRoles} element={<PermissionsAndRoles />} />
+          <Route path={steps.organizationInfo} element={<OrganizationInfo />} />
         </Routes>
       </div>
     </Modal>

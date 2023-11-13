@@ -11,14 +11,14 @@ const organization = {
   organization_list_placeholder_text:
     'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
   organization_name_placeholder: 'My organization',
-  organization_description_placeholder: 'A brief description of the organization.',
+  organization_description_placeholder: 'A brief description of the organization',
   organization_permission: 'Organization permission',
   organization_permission_other: 'Organization permissions',
   organization_permission_description:
     'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
   organization_permission_delete_confirm:
     'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
-  create_permission_placeholder: 'Read appointment history.',
+  create_permission_placeholder: 'Read appointment history',
   permission: 'Permission',
   permission_other: 'Permissions',
   organization_role: 'Organization role',
@@ -28,7 +28,7 @@ const organization = {
   organization_role_delete_confirm:
     'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
   role: 'Role',
-  create_role_placeholder: 'Users with view-only permissions.',
+  create_role_placeholder: 'Users with view-only permissions',
   search_placeholder: 'Search by organization name or ID',
   search_permission_placeholder: 'Type to search and select permissions',
   search_role_placeholder: 'Type to search and select roles',

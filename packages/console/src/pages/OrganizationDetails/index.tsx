@@ -19,7 +19,7 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
-import IntroductionAndPermissions from '../Organizations/Guide/IntroductionAndPermissions';
+import IntroductionAndPermissions from '../Organizations/Guide/Introduction';
 
 import Members from './Members';
 import Settings from './Settings';

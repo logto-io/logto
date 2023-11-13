@@ -25,8 +25,8 @@ type OrganizationForm = {
   name: string;
 };
 
-function CreateOrganization() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations.guide' });
+function OrganizationInfo() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });
   const theme = useTheme();
   const Icon = theme === Theme.Light ? OrganizationFeature : OrganizationFeatureDark;
   const { navigate } = useTenantPathname();
@@ -52,7 +52,7 @@ function CreateOrganization() {
 
   const onNavigateBack = () => {
     reset();
-    navigate(`../${steps.createRoles}`);
+    navigate(`../${steps.permissionsAndRoles}`);
   };
 
   return (
@@ -62,19 +62,23 @@ function CreateOrganization() {
           <Card className={styles.card}>
             <Icon className={styles.icon} />
             <div className={styles.section}>
-              <div className={styles.title}>{t('step_3')}</div>
-              <div className={styles.description}>{t('step_3_description')}</div>
+              <div className={styles.title}>{t('guide.step_3')}</div>
+              <div className={styles.description}>{t('guide.step_3_description')}</div>
             </div>
             <form>
               <FormField isRequired title="organizations.guide.organization_name">
-                <TextInput {...register('name', { required: true })} error={Boolean(errors.name)} />
+                <TextInput
+                  {...register('name', { required: true })}
+                  error={Boolean(errors.name)}
+                  placeholder={t('organization_name_placeholder')}
+                />
               </FormField>
             </form>
           </Card>
           <Card className={styles.card}>
             <div className={styles.section}>
-              <div className={styles.title}>{t('more_next_steps')}</div>
-              <div className={styles.subtitle}>{t('add_members')}</div>
+              <div className={styles.title}>{t('guide.more_next_steps')}</div>
+              <div className={styles.subtitle}>{t('guide.add_members')}</div>
               {/* eslint-disable-next-line no-warning-comments */}
               {/* TODO: @charles Documentation links will be updated later */}
               <ul>
@@ -84,11 +88,11 @@ function CreateOrganization() {
                     rel="noopener"
                     href="https://docs.logto.io/docs/tutorials/"
                   >
-                    {t('add_members_action')}
+                    {t('guide.add_members_action')}
                   </TextLink>
                 </li>
               </ul>
-              <div className={styles.subtitle}>{t('add_enterprise_connector')}</div>
+              <div className={styles.subtitle}>{t('guide.add_enterprise_connector')}</div>
               <ul>
                 <li>
                   <TextLink
@@ -96,7 +100,7 @@ function CreateOrganization() {
                     rel="noopener"
                     href="https://docs.logto.io/docs/tutorials/"
                   >
-                    {t('add_enterprise_connector_action')}
+                    {t('guide.add_enterprise_connector_action')}
                   </TextLink>
                 </li>
               </ul>
@@ -112,4 +116,4 @@ function CreateOrganization() {
   );
 }
 
-export default CreateOrganization;
+export default OrganizationInfo;

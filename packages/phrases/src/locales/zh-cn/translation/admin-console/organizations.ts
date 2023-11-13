@@ -22,7 +22,7 @@ const organizations = {
   /** UNTRANSLATED */
   organization_name_placeholder: 'My organization',
   /** UNTRANSLATED */
-  organization_description_placeholder: 'A brief description of the organization.',
+  organization_description_placeholder: 'A brief description of the organization',
   /** UNTRANSLATED */
   organization_permission: 'Organization permission',
   /** UNTRANSLATED */
@@ -34,7 +34,7 @@ const organizations = {
   organization_permission_delete_confirm:
     'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
   /** UNTRANSLATED */
-  create_permission_placeholder: 'Read appointment history.',
+  create_permission_placeholder: 'Read appointment history',
   /** UNTRANSLATED */
   permission: 'Permission',
   /** UNTRANSLATED */
@@ -52,7 +52,7 @@ const organizations = {
   /** UNTRANSLATED */
   role: 'Role',
   /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions.',
+  create_role_placeholder: 'Users with view-only permissions',
   /** UNTRANSLATED */
   search_placeholder: 'Search by organization name or ID',
   /** UNTRANSLATED */
