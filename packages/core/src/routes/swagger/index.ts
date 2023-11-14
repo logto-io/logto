@@ -2,13 +2,14 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 import { httpCodeToMessage } from '@logto/core-kit';
-import { conditionalArray, deduplicate } from '@silverhand/essentials';
+import { condString, conditionalArray, deduplicate } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { findUp } from 'find-up';
 import type { IMiddleware } from 'koa-router';
 import type Router from 'koa-router';
 import type { OpenAPIV3 } from 'openapi-types';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { isKoaAuthMiddleware } from '#src/middleware/koa-auth/index.js';
 import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
@@ -189,7 +190,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       openapi: '3.0.1',
       info: {
         title: 'Logto API references',
-        description: 'API references for Logto services.',
+        description:
+          'API references for Logto services. To learn more about how to interact with Logto APIs, see [Explore Management API](https://docs.logto.io/docs/tutorials/get-started/explore-management-api/).' +
+          condString(
+            EnvSet.values.isCloud &&
+              '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
+          ),
         version: 'Cloud',
       },
       paths: Object.fromEntries(pathMap),
