@@ -19,9 +19,9 @@ const tenants = {
     environment_tag: 'Tag do Ambiente',
     environment_tag_description:
       'As tags não alteram o serviço. Elas apenas ajudam a diferenciar vários ambientes.',
-    development: 'Dev',
-    staging: 'Homol',
-    production: 'Prod',
+    environment_tag_development: 'Dev',
+    environment_tag_staging: 'Homol',
+    environment_tag_production: 'Prod',
     development_description:
       "O ambiente de desenvolvimento é usado principalmente para testes e inclui todos os recursos profissionais, mas possui marcas d'água na experiência de login. <a>Learn more</a>",
     tenant_info_saved: 'As informações do locatário foram salvas com sucesso.',

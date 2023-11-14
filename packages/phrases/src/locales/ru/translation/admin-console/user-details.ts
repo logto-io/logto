@@ -30,7 +30,7 @@ const user_details = {
   field_username: 'Имя пользователя',
   field_name: 'Имя',
   field_avatar: 'URL изображения аватара',
-  field_avatar_placeholder: 'https:\\/\\/your.cdn.domain\\/avatar.png',
+  field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
   field_custom_data: 'Пользовательские данные',
   field_custom_data_tip:
     'Дополнительная информация о пользователе, не указанная в заранее определенных свойствах пользователя, таких как предпочтительный цвет и язык пользователя.',
