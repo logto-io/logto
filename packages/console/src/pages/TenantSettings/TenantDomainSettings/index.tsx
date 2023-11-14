@@ -5,6 +5,7 @@ import FeatureTag from '@/components/FeatureTag';
 import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import PageMeta from '@/components/PageMeta';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import FormField from '@/ds-components/FormField';
 import useCustomDomain from '@/hooks/use-custom-domain';
@@ -41,7 +42,9 @@ function TenantDomainSettings() {
       <PageMeta titleKey={['tenants.tabs.domains', 'tenants.title']} />
       <FormCard
         title="domain.custom.custom_domain"
-        tag={<FeatureTag isVisible={!customDomainEnabled} for="upsell" plan="hobby" />}
+        tag={
+          <FeatureTag isVisible={!customDomainEnabled} for="upsell" plan={ReservedPlanId.hobby} />
+        }
         description="domain.custom.custom_domain_description"
         learnMoreLink={getDocumentationUrl('docs/recipes/custom-domain')}
       >

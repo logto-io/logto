@@ -13,6 +13,7 @@ import FeatureTag from '@/components/FeatureTag';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -226,7 +227,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                           <FeatureTag
                             isVisible={!currentPlan?.quota.machineToMachineLimit}
                             for="upsell"
-                            plan="hobby"
+                            plan={ReservedPlanId.hobby}
                             className={styles.proTag}
                           />
                         )

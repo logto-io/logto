@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useContext } from 'react';
 
+import { type ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import * as styles from './index.module.scss';
@@ -20,7 +21,7 @@ type Props =
        */
       isVisible: boolean;
       /** The minimum plan required to use the feature. */
-      plan: 'pro' | 'hobby';
+      plan: Exclude<ReservedPlanId, ReservedPlanId.free>;
     })
   | (BaseProps & {
       /** What the tag is for. */
@@ -49,16 +50,16 @@ type Props =
  *
  * ```tsx
  * // In a production tenant, the tag will be visible when there's no access to the feature
- * <FeatureTag for="upsell" isVisible={noAccessToFeature} plan="pro" />
+ * <FeatureTag for="upsell" isVisible={noAccessToFeature} plan={ReservedPlanId.Pro} />
  *
  * // In a dev tenant, the tag will always be visible even if `isVisible` is `false`
- * <FeatureTag for="upsell" isVisible={false} plan="pro" />
+ * <FeatureTag for="upsell" isVisible={false} plan={ReservedPlanId.Pro} />
  *
  * // For conditionally rendering the tag, usually in an iteration on a list which contains
  * // both free and paid features
  * {features.map((feature) => (
  *   hasPaywall(feature) &&
- *     <FeatureTag for="upsell" isVisible={hasAccess(feature)} plan="hobby" />
+ *     <FeatureTag for="upsell" isVisible={hasAccess(feature)} plan={ReservedPlanId.Hobby} />
  * ))}
  * ```
  */

@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeatureTag from '@/components/FeatureTag';
+import { type ReservedPlanId } from '@/consts/subscriptions';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -20,6 +21,12 @@ export type Props = {
   className?: string;
   /** If a beta tag should be shown next to the title. */
   isBeta?: boolean;
+  /**
+   * If a paywall tag should be shown next to the title. The value is the plan type.
+   *
+   * If not provided, no paywall tag will be shown.
+   */
+  paywall?: Exclude<ReservedPlanId, ReservedPlanId.free>;
 };
 
 /**
@@ -33,6 +40,7 @@ function CardTitle({
   learnMoreLink,
   className,
   isBeta,
+  paywall,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -40,6 +48,7 @@ function CardTitle({
     <div className={classNames(styles.container, styles[size], className)}>
       <div className={classNames(styles.title, !isWordWrapEnabled && styles.titleEllipsis)}>
         {typeof title === 'string' ? <DynamicT forKey={title} /> : title}
+        {paywall && <FeatureTag isVisible for="upsell" plan={paywall} />}
         {isBeta && <FeatureTag for="beta" />}
       </div>
       {Boolean(subtitle ?? learnMoreLink) && (
