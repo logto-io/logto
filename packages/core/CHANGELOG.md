@@ -1,5 +1,37 @@
 # Change Log
 
+## 1.11.0
+
+### Minor Changes
+
+- 6727f629d: feature: introduce multi-factor authentication
+
+  We're excited to announce that Logto now supports multi-factor authentication (MFA) for your sign-in experience. Navigate to the "Multi-factor auth" tab to configure how you want to secure your users' accounts.
+
+  In this release, we introduce the following MFA methods:
+
+  - Authenticator app OTP: users can add any authenticator app that supports the TOTP standard, such as Google Authenticator, Duo, etc.
+  - WebAuthn (Passkey): users can use the standard WebAuthn protocol to register a hardware security key, such as biometric keys, Yubikey, etc.
+  - Backup codes：users can generate a set of backup codes to use when they don't have access to other MFA methods.
+
+  For a smooth transition, we also support to configure the MFA policy to require MFA for sign-in experience, or to allow users to opt-in to MFA.
+
+### Patch Changes
+
+- bbe7f0b8e: refactored swagger json api
+
+  - reuse parameter definitions, which reduces the size of the swagger response.
+  - tags are now in sentence case.
+  - path parameters now follow the swagger convention, using `{foo}` instead of `:foo`.
+
+- Updated dependencies [6727f629d]
+  - @logto/console@1.10.0
+  - @logto/experience@1.3.0
+  - @logto/phrases@1.7.0
+  - @logto/phrases-experience@1.4.0
+  - @logto/schemas@1.11.0
+  - @logto/cli@1.11.0
+
 ## 1.10.1
 
 ### Patch Changes
