@@ -1,14 +1,8 @@
 import { MfaFactor, type Mfa } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 export const validateMfa = (mfa: Mfa) => {
-  // TODO @sijie: remove this check when MFA is ready for production.
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    throw new Error('MFA is not ready for production yet.');
-  }
-
   assertThat(
     new Set(mfa.factors).size === mfa.factors.length,
     'sign_in_experiences.duplicated_mfa_factors'

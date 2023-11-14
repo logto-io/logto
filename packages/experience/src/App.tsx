@@ -82,25 +82,21 @@ const App = () => {
                     {/* Passwordless verification code */}
                     <Route path=":flow/verification-code" element={<VerificationCode />} />
 
-                    {isDevelopmentFeaturesEnabled && (
-                      <>
-                        {/* Mfa binding */}
-                        <Route path={UserMfaFlow.MfaBinding}>
-                          <Route index element={<MfaBinding />} />
-                          <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
-                          <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                        </Route>
+                    {/* Mfa binding */}
+                    <Route path={UserMfaFlow.MfaBinding}>
+                      <Route index element={<MfaBinding />} />
+                      <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                      <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+                      <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
+                    </Route>
 
-                        {/* Mfa verification */}
-                        <Route path={UserMfaFlow.MfaVerification}>
-                          <Route index element={<MfaVerification />} />
-                          <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
-                          <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
-                          <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
-                        </Route>
-                      </>
-                    )}
+                    {/* Mfa verification */}
+                    <Route path={UserMfaFlow.MfaVerification}>
+                      <Route index element={<MfaVerification />} />
+                      <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+                      <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
+                      <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
+                    </Route>
 
                     {/* Continue set up missing profile */}
                     <Route path="continue">

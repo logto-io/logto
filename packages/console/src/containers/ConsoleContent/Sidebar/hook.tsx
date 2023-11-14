@@ -84,7 +84,6 @@ export const useSidebarMenuItems = (): {
         {
           Icon: SecurityLock,
           title: 'mfa',
-          isHidden: !isDevFeaturesEnabled,
         },
         {
           Icon: Connection,
