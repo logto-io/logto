@@ -47,7 +47,7 @@ jobs:
           curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/07276574142455b3dfeace5d7f4a370447a112b3/git-file-size-diff.sh
           chmod +x git-file-size-diff.sh
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: message
         with:
           result-encoding: string
