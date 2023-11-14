@@ -7,12 +7,12 @@ import Button from '@/components/Button';
 import Divider from '@/components/Divider';
 import DynamicT from '@/components/DynamicT';
 import { useSieMethods } from '@/hooks/use-sie';
-import useBindSocialRelatedUser from '@/hooks/use-social-link-related-user';
 import useSocialRegister from '@/hooks/use-social-register';
 import type { SocialRelatedUserInfo } from '@/types/guard';
 import { maskEmail, maskPhone } from '@/utils/format';
 
 import * as styles from './index.module.scss';
+import useBindSocialRelatedUser from './use-social-link-related-user';
 
 type Props = {
   className?: string;
