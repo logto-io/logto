@@ -16,13 +16,23 @@ const useOnSubmit = () => {
   const { setEmail, setSsoConnectors, availableSsoConnectorsMap } = useContext(SingleSignOnContext);
 
   const handleError = useErrorHandler();
+
   const clearErrorMessage = useCallback(() => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     setErrorMessage(undefined);
   }, [setErrorMessage]);
 
+  // Should clear the context and storage if the user trying to resubmit the form
+  const clearContext = useCallback(() => {
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    setEmail(undefined);
+    setSsoConnectors([]);
+  }, [setEmail, setSsoConnectors]);
+
   const onSubmit = useCallback(
     async (email: string) => {
+      clearContext();
+
       const [error, result] = await request(email);
 
       if (error) {
@@ -47,9 +57,18 @@ const useOnSubmit = () => {
       setSsoConnectors(connectors);
       setEmail(email);
 
-      navigate('/connectors');
+      navigate('../connectors');
     },
-    [availableSsoConnectorsMap, handleError, navigate, request, setEmail, setSsoConnectors, t]
+    [
+      availableSsoConnectorsMap,
+      clearContext,
+      handleError,
+      navigate,
+      request,
+      setEmail,
+      setSsoConnectors,
+      t,
+    ]
   );
 
   return {
