@@ -19,7 +19,7 @@ import useSocialRegister from './use-social-register';
 import useTerms from './use-terms';
 import useToast from './use-toast';
 
-const useSocialSignInListener = (connectorId?: string) => {
+const useSocialSignInListener = (connectorId: string) => {
   const { setToast } = useToast();
   const { signInMode } = useSieMethods();
   const { t } = useTranslation();
@@ -39,10 +39,6 @@ const useSocialSignInListener = (connectorId?: string) => {
     async (error: RequestErrorBody) => {
       const [, data] = validate(error.data, socialAccountNotExistErrorDataGuard);
       const { relatedUser } = data ?? {};
-
-      if (!connectorId) {
-        return;
-      }
 
       if (relatedUser) {
         navigate(`/social/link/${connectorId}`, {
@@ -109,10 +105,6 @@ const useSocialSignInListener = (connectorId?: string) => {
 
   // Social Sign-in Callback Handler
   useEffect(() => {
-    if (!connectorId) {
-      return;
-    }
-
     if (isConsumed) {
       return;
     }
@@ -126,7 +118,6 @@ const useSocialSignInListener = (connectorId?: string) => {
 
     if (!state || !stateValidation(state, connectorId)) {
       setToast(t('error.invalid_connector_auth'));
-
       return;
     }
 

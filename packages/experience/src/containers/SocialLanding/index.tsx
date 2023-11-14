@@ -1,9 +1,7 @@
-import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext } from 'react';
 
-import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { LoadingIcon } from '@/components/LoadingLayer';
+import useConnectors from '@/hooks/use-connectors';
 
 import * as styles from './index.module.scss';
 
@@ -14,18 +12,14 @@ type Props = {
 };
 
 const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {
-  const { experienceSettings, theme } = useContext(PageContext);
-  const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
+  const { findConnectorById, getConnectorLogo } = useConnectors();
+  const result = findConnectorById(connectorId);
 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.connector}>
-        {connector ? (
-          <img
-            src={theme === Theme.Dark ? connector.logoDark ?? connector.logo : connector.logo}
-            alt="logo"
-            crossOrigin="anonymous"
-          />
+        {result ? (
+          <img src={getConnectorLogo(result)} alt="logo" crossOrigin="anonymous" />
         ) : (
           connectorId
         )}

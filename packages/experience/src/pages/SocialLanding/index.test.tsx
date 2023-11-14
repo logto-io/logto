@@ -11,6 +11,7 @@ import SocialLanding from '.';
 
 describe(`SocialLanding Page`, () => {
   const replace = jest.fn();
+
   it('Should set session storage and redirect', async () => {
     const callbackLink = 'logto:logto.android.com';
     const redirectUri = 'http://www.github.com';

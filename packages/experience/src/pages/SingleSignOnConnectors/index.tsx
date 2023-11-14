@@ -5,6 +5,7 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
+import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import { getLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
@@ -15,6 +16,9 @@ const SingleSignOnConnectors = () => {
   const { email, ssoConnectors } = useContext(SingleSignOnContext);
   const navigate = useNavigate();
   const onSubmit = useSingleSignOn();
+
+  // Listen to native message
+  useNativeMessageListener();
 
   // Return to the previous page if no email and no connectors are available in the context
   if (!email || ssoConnectors.length === 0) {

@@ -31,3 +31,10 @@ export const getSingleSignOnUrl = async (
 
   return redirectTo;
 };
+
+export const singleSignOnAuthorization = async (connectorId: string, payload: unknown) =>
+  api
+    .post(`${ssoPrefix}/${connectorId}/authentication`, {
+      json: payload,
+    })
+    .json<Response>();

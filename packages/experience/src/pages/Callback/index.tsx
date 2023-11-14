@@ -11,6 +11,9 @@ type Parameters = {
   connectorId: string;
 };
 
+/**
+ * Callback page for SocialSignIn and SingleSignOn
+ */
 const Callback = () => {
   const { connectorId } = useParams<Parameters>();
 
