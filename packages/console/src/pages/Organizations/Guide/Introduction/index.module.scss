@@ -1,25 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.container,
-.section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.container {
-  gap: _.unit(6);
-}
-
-.section {
-  gap: _.unit(3);
-}
-
 .title {
   font: var(--font-title-1);
 }
 
-.subtitle {
+.sectionTitle {
   font: var(--font-title-2);
 }
 
@@ -28,52 +13,18 @@
 }
 
 .panel {
-  border: 1px solid var(--color-on-info-container);
-  border-radius: 8px;
-
-  .header {
-    font: var(--font-title-2);
-    color: var(--color-white);
-    background: var(--color-on-info-container);
-    line-height: 36px;
-    text-align: center;
-  }
-
-  .body {
-    display: flex;
-    padding: _.unit(8);
-    gap: _.unit(5);
-
-    .cell {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: _.unit(2.5);
-      font-family: 'Roboto Mono', monospace;
-      min-height: 68px;
-      color: var(--color-text);
-      background: var(--color-surface-variant);
-      border-radius: 4px;
-      padding: _.unit(4) 0;
-
-      .cellTitle {
-        font: var(--font-title-2);
-      }
-
-      .items {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-        gap: inherit;
-        font: var(--font-body-2);
-      }
-    }
-  }
+  flex: 1;
 }
 
-.diagramText {
+.wire {
+  transform: translateY(_.unit(15));
+  flex-shrink: 0;
+}
+
+.vectorTextWrapper {
   fill: var(--color-layer-1);
+}
+
+.vectorText {
+  fill: var(--color-text-secondary);
 }

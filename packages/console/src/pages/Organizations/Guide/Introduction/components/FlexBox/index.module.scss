@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.flexBox {
+  display: flex;
+  width: 100%;
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.equallyDivided {
+    // Items equally divide the container space for horizontal layout
+    > * {
+      flex: 1;
+    }
+  }
+}

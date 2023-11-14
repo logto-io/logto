@@ -14,7 +14,14 @@ import useTheme from '@/hooks/use-theme';
 import { steps } from '../const';
 import * as parentStyles from '../index.module.scss';
 
-import Diagram from './Diagram';
+import JohnRelations from './JohnRelations';
+import SarahRelations from './SarahRelations';
+import FlexBox from './components/FlexBox';
+import Panel from './components/Panel';
+import Permission from './components/Permission';
+import Role from './components/Role';
+import Section from './components/Section';
+import User from './components/User';
 import * as styles from './index.module.scss';
 
 const icons = {
@@ -28,7 +35,7 @@ type Props = {
 };
 
 function Introduction({ isReadonly }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations.guide' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });
   const { navigate } = useTenantPathname();
   const theme = useTheme();
   const { OrganizationIcon } = icons[theme];
@@ -39,76 +46,115 @@ function Introduction({ isReadonly }: Props) {
         <div className={classNames(parentStyles.content)}>
           <Card className={parentStyles.card}>
             <OrganizationIcon className={parentStyles.icon} />
-            <div className={styles.container}>
-              <div className={styles.section}>
-                <div className={styles.title}>{t('introduction.section_1.title')}</div>
-                <div className={styles.description}>{t('introduction.section_1.description')}</div>
-              </div>
-              <div className={styles.title}>{t('introduction.section_2.title')}</div>
-              <div className={styles.section}>
-                <div className={styles.subtitle}>{t('organization_permissions')}</div>
+            <FlexBox type="column" gap={24}>
+              <div className={styles.title}>{t('guide.introduction.title')}</div>
+              <FlexBox type="column">
+                <div className={styles.sectionTitle}>{t('guide.introduction.section_1.title')}</div>
+                <Section
+                  title={t('organization_and_member')}
+                  description={t('organization_and_member_description')}
+                >
+                  <Panel label={t('organization')}>
+                    <FlexBox gap={20} style={{ justifyContent: 'center' }}>
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <User key={index} name={t('guide.member')} />
+                      ))}
+                      <User hasIcon={false} name="......" />
+                    </FlexBox>
+                  </Panel>
+                </Section>
+              </FlexBox>
+              <FlexBox type="column">
+                <div className={styles.sectionTitle}>{t('guide.introduction.section_2.title')}</div>
                 <div className={styles.description}>
-                  {t('introduction.section_2.organization_permission_description')}
+                  {t('guide.introduction.section_2.description')}
                 </div>
-                <div className={styles.panel}>
-                  <div className={styles.header}>{t('organization_permissions')}</div>
-                  <div className={styles.body}>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('read_resource')}</div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('edit_resource')}</div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('delete_resource')}</div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('ellipsis')}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.section}>
-                <div className={styles.subtitle}>{t('organization_roles')}</div>
+                <Section
+                  title={t('guide.organization_permissions')}
+                  description={t('guide.introduction.section_2.permission_description')}
+                >
+                  <FlexBox
+                    isEquallyDivided
+                    gap={20}
+                    style={{ padding: '12px 0', justifyContent: 'center' }}
+                  >
+                    <Permission name="read:resource" />
+                    <Permission name="edit:resource" />
+                    <Permission name="delete:resource" />
+                    <Permission name="......" isMonospace={false} />
+                  </FlexBox>
+                </Section>
+                <Section
+                  title={t('guide.organization_roles')}
+                  description={t('guide.introduction.section_2.role_description')}
+                >
+                  <FlexBox gap={20}>
+                    <Role
+                      label={t('guide.admin')}
+                      permissions={['read:resource', 'edit:resource', 'delete:resource']}
+                    />
+                    <Role
+                      label={t('guide.member')}
+                      permissions={['read:resource', 'edit:resource']}
+                    />
+                    <Role label={t('guide.guest')} permissions={['read:resource']} />
+                    <Role label="......" />
+                  </FlexBox>
+                </Section>
+              </FlexBox>
+              <FlexBox type="column">
+                <div className={styles.sectionTitle}>{t('guide.introduction.section_3.title')}</div>
                 <div className={styles.description}>
-                  {t('introduction.section_2.organization_role_description')}
+                  {t('guide.introduction.section_3.description')}
                 </div>
-                <div className={styles.panel}>
-                  <div className={styles.header}>{t('organization_roles')}</div>
-                  <div className={styles.body}>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('admin')}</div>
-                      <div className={styles.items}>
-                        <div>{t('read_resource')}</div>
-                        <div>{t('edit_resource')}</div>
-                        <div>{t('delete_resource')}</div>
-                      </div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('member')}</div>
-                      <div className={styles.items}>
-                        <div>{t('read_resource')}</div>
-                        <div>{t('edit_resource')}</div>
-                      </div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('guest')}</div>
-                      <div className={styles.items}>
-                        <div>{t('read_resource')}</div>
-                      </div>
-                    </div>
-                    <div className={styles.cell}>
-                      <div className={styles.cellTitle}>{t('ellipsis')}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.section}>
-                <div className={styles.title}>{t('introduction.section_3.title')}</div>
-                <div className={styles.description}>{t('introduction.section_3.description')}</div>
-                <Diagram />
-              </div>
-            </div>
+                <FlexBox type="column" gap={32} style={{ padding: '12px 0' }}>
+                  <FlexBox>
+                    <User variant="blue" name="John" />
+                    <JohnRelations />
+                    <Panel
+                      className={styles.panel}
+                      label={`${t('organization')} A`}
+                      size="small"
+                      variant="blue"
+                    >
+                      <FlexBox isEquallyDivided gap={10} style={{ marginBottom: '8px' }}>
+                        <Role size="small" label={`${t('role')}: Admin`} />
+                        <Role size="small" label={`${t('role')}: Member`} />
+                        <Role size="small" label={`${t('role')}: Guest`} />
+                        <Role size="small" label="..." />
+                      </FlexBox>
+                      <User size="small" variant="blue" name="John" />
+                    </Panel>
+                  </FlexBox>
+                  <FlexBox>
+                    <User variant="pink" name="Sarah" />
+                    <SarahRelations />
+                    <Panel
+                      className={styles.panel}
+                      label={`${t('organization')} B`}
+                      size="small"
+                      variant="purple"
+                    >
+                      <FlexBox isEquallyDivided gap={10} style={{ marginBottom: '8px' }}>
+                        <Role size="small" label={`${t('role')}: Admin`} />
+                        <Role size="small" label={`${t('role')}: Member`} />
+                        <Role size="small" label={`${t('role')}: Guest`} />
+                        <Role size="small" label="..." />
+                      </FlexBox>
+                      <FlexBox isEquallyDivided gap={10}>
+                        <div>
+                          <User variant="pink" name="Sarah" size="small" />
+                        </div>
+                        <div>
+                          <User variant="blue" name="John" size="small" />
+                        </div>
+                      </FlexBox>
+                    </Panel>
+                  </FlexBox>
+                </FlexBox>
+              </FlexBox>
+            </FlexBox>
           </Card>
         </div>
       </OverlayScrollbar>

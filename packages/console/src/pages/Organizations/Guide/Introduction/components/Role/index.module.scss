@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.role {
+  justify-content: center;
+  align-items: center;
+  padding: _.unit(4);
+  background: var(--color-layer-2);
+  border-radius: 8px;
+
+  .label {
+    font: var(--font-title-3);
+    white-space: nowrap;
+  }
+
+  .permissions {
+    flex: 1;
+  }
+
+  &.small {
+    padding: _.unit(4) 0;
+
+    .label {
+      font: var(--font-label-3);
+    }
+  }
+}

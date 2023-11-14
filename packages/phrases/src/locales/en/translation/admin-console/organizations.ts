@@ -1,4 +1,5 @@
 const organization = {
+  organization: 'Organization',
   page_title: 'Organizations',
   title: 'Organizations',
   subtitle:
@@ -32,27 +33,30 @@ const organization = {
   search_placeholder: 'Search by organization name or ID',
   search_permission_placeholder: 'Type to search and select permissions',
   search_role_placeholder: 'Type to search and select roles',
-  empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
+  organization_and_member: 'Organization and member',
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Start with guides',
     subtitle: 'Jumpstart your app development process with our guides',
     introduction: {
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: "First, let's understand how organizations works in Logto",
-        description:
-          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: 'Organization template consists of two parts',
-        organization_permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-        organization_role_description:
-          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+        title: 'Organization template is designed for multi-tenant apps access control',
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: 'Interact the illustration to see how everything connects',
         description:
-          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: 'Step 1: Define organization permissions',
@@ -74,25 +78,16 @@ const organization = {
     role_name: 'Role name',
     organization_name: 'Organization name',
     admin: 'Admin',
-    admin_description:
-      'Role "Admin" share the same organization template across different organizations.',
     member: 'Member',
-    member_description:
-      'Role "Member" share the same organization template across different organizations.',
     guest: 'Guest',
-    guest_description:
-      'Role "Guest" share the same organization template across different organizations.',
-    create_more_roles:
-      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
-    read_resource: 'read:resource',
-    edit_resource: 'edit:resource',
-    delete_resource: 'delete:resource',
-    ellipsis: '……',
-    johnny:
-      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
-    sarah:
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    john: 'John',
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    sarah: 'Sarah',
+    sarah_tip:
       'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
-    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
   },
 };
 

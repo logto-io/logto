@@ -1,4 +1,6 @@
 const organizations = {
+  /** UNTRANSLATED */
+  organization: 'Organization',
   page_title: 'Organizacje',
   title: 'Organizacje',
   subtitle:
@@ -26,33 +28,49 @@ const organizations = {
   organization_role_description:
     'Rola organizacji to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacji.',
   organization_role_delete_confirm:
-    'Spowoduje to usunięcie uprawnień związanych z tą rolą od dotkniętych użytkowników oraz usunięcie relacji między rolami organizacji, członkami organizacji i uprawnieniami organizacji.',
-  role: 'Rola',
-  create_role_placeholder: 'Użytkownicy z uprawnieniami tylko do odczytu',
-  search_placeholder: 'Wyszukaj według nazwy lub ID organizacji',
-  search_permission_placeholder: 'Wpisz, aby wyszukać i wybrać uprawnienia',
-  search_role_placeholder: 'Wpisz, aby wyszukać i wybrać role',
-  empty_placeholder: '🤔 Nie masz jeszcze ustawionego żadnego {{entity}}.',
+    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
+  /** UNTRANSLATED */
+  role: 'Role',
+  /** UNTRANSLATED */
+  create_role_placeholder: 'Users with view-only permissions',
+  /** UNTRANSLATED */
+  search_placeholder: 'Search by organization name or ID',
+  /** UNTRANSLATED */
+  search_permission_placeholder: 'Type to search and select permissions',
+  /** UNTRANSLATED */
+  search_role_placeholder: 'Type to search and select roles',
+  /** UNTRANSLATED */
+  organization_and_member: 'Organization and member',
+  /** UNTRANSLATED */
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Zacznij od przewodników',
     subtitle: 'Rozpocznij proces tworzenia aplikacji za pomocą naszych przewodników',
     introduction: {
+      /** UNTRANSLATED */
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: 'Najpierw zrozum, jak działają organizacje w Logto',
-        description:
-          'W aplikacjach wielomandantowych typu SaaS często tworzymy kilka organizacji z tym samym zestawem uprawnień i ról, ale w kontekście organizacji może to odgrywać ważną rolę w kontroli różnych poziomów dostępu. Użytkownik może myśleć o każdym najemcy jak o organizacji Logto i naturalnie dzielić się tą samą "szablonową" kontrolą dostępu. Nazywamy to "szablonem organizacji."',
+        /** UNTRANSLATED */
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: 'Szablon organizacji składa się z dwóch części',
-        organization_permission_description:
-          'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobu w kontekście organizacji. Uprawnienie organizacji powinno być reprezentowane jako znaczący ciąg znaków, stanowiący także nazwę i unikalny identyfikator.',
-        organization_role_description:
-          'Rola organizacji to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacji.',
+        /** UNTRANSLATED */
+        title: 'Organization template is designed for multi-tenant apps access control',
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        /** UNTRANSLATED */
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        /** UNTRANSLATED */
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: 'Wejdź w interakcję z ilustracją, aby zobaczyć, jak wszystko się łączy',
         description:
-          'Przyjrzyjmy się przykładowi. John, Sarah i Tony należą do różnych organizacji z różnymi rolami w kontekście różnych organizacji. Najedź kursorem na różne moduły i zobacz, co się stanie.',
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: 'Krok 1: Zdefiniuj uprawnienia organizacji',
@@ -61,38 +79,48 @@ const organizations = {
       '"Role organizacji" reprezentują zestaw ról nadanych każdej organizacji na początku. Role te są określone przez globalne uprawnienia, które ustawiłeś w poprzednim ekranie. Podobnie jak z uprawnieniami organizacji, po zakończeniu tego ustawienia pierwszy raz, nie będziesz musiał tego robić za każdym razem, gdy utworzysz nową organizację.',
     step_3: 'Krok 3: Utwórz swoją pierwszą organizację',
     step_3_description:
-      'Utwórz swoją pierwszą organizację. Ma ona unikalne ID i służy jako kontener do obsługi różnych bardziej skoncentrowanych na biznesie tożsamości, takich jak partnerzy, klienci i ich kontrola dostępu.',
-    more_next_steps: 'Więcej kolejnych kroków',
-    add_members: 'Dodaj członków do swojej organizacji',
-    add_members_action: 'Dodaj członków zbiorowo i przypisz role',
-    add_enterprise_connector: 'Dodaj łącznik przedsiębiorstwa SSO',
-    add_enterprise_connector_action: 'Skonfiguruj przedsiębiorstwo SSO',
-    organization_permissions: 'Uprawnienia organizacji',
-    permission_name: 'Nazwa uprawnienia',
-    permissions: 'Uprawnienia',
-    organization_roles: 'Role organizacji',
-    role_name: 'Nazwa roli',
-    organization_name: 'Nazwa organizacji',
-    admin: 'Administrator',
-    admin_description:
-      'Rola "Administrator" dzieli ten sam szablon organizacji między różnymi organizacjami.',
-    member: 'Członek',
-    member_description:
-      'Rola "Członek" dzieli ten sam szablon organizacji między różnymi organizacjami.',
-    guest: 'Gość',
-    guest_description:
-      'Rola "Gość" dzieli ten sam szablon organizacji między różnymi organizacjami.',
-    create_more_roles:
-      'Możesz utworzyć więcej ról w ustawieniach szablonu organizacji. Te role organizacji będą stosowane do różnych organizacji.',
-    read_resource: 'odczyt:zasób',
-    edit_resource: 'edycja:zasób',
-    delete_resource: 'usuwanie:zasób',
-    ellipsis: '……',
-    johnny:
-      'Johny należy do dwóch organizacji z adresem e-mail "john@email.com" jako jedynym identyfikatorem. Jest administratorem organizacji A oraz gościem organizacji B.',
-    sarah:
-      'Sarah należy do jednej organizacji z adresem e-mail "sarah@email.com" jako jedynym identyfikatorem. Jest administratorem organizacji B.',
-    tony: 'Tony należy do jednej organizacji z adresem e-mail "tony@email.com" jako jedynym identyfikatorem. Jest członkiem organizacji C.',
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+    /** UNTRANSLATED */
+    more_next_steps: 'More next steps',
+    /** UNTRANSLATED */
+    add_members: 'Add members to your organization',
+    /** UNTRANSLATED */
+    add_members_action: 'Bulk add members and assign roles',
+    /** UNTRANSLATED */
+    add_enterprise_connector: 'Add enterprise SSO',
+    /** UNTRANSLATED */
+    add_enterprise_connector_action: 'Set up enterprise SSO',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization permissions',
+    /** UNTRANSLATED */
+    permission_name: 'Permission name',
+    /** UNTRANSLATED */
+    permissions: 'Permissions',
+    /** UNTRANSLATED */
+    organization_roles: 'Organization roles',
+    /** UNTRANSLATED */
+    role_name: 'Role name',
+    /** UNTRANSLATED */
+    organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    john: 'John',
+    /** UNTRANSLATED */
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    /** UNTRANSLATED */
+    sarah: 'Sarah',
+    /** UNTRANSLATED */
+    sarah_tip:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
   },
 };
 
