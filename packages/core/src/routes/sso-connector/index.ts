@@ -22,6 +22,7 @@ import {
   parseFactoryDetail,
   parseConnectorConfig,
   fetchConnectorProviderDetails,
+  validateConnectorDomains,
 } from './utils.js';
 
 export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
@@ -92,6 +93,9 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
           status: 422,
         });
       }
+
+      // Validate the connector domains if it's provided
+      validateConnectorDomains(rest.domains);
 
       /* 
         Validate the connector config if it's provided.
@@ -194,6 +198,9 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
       const { config, ...rest } = body;
+
+      // Validate the connector domains if it's provided
+      validateConnectorDomains(rest.domains);
 
       // Validate the connector config if it's provided
       const parsedConfig = config && parseConnectorConfig(providerName, config);

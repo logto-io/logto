@@ -1,6 +1,7 @@
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSsoConnector } from '#src/__mocks__/sso.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { SsoProviderName } from '#src/sso/types/index.js';
 
 const { jest } = import.meta;
@@ -12,7 +13,8 @@ await mockEsmWithActual('#src/sso/OidcConnector/utils.js', () => ({
 }));
 
 const { ssoConnectorFactories } = await import('#src/sso/index.js');
-const { parseFactoryDetail, fetchConnectorProviderDetails } = await import('./utils.js');
+const { parseFactoryDetail, fetchConnectorProviderDetails, validateConnectorDomains } =
+  await import('./utils.js');
 
 const mockTenantId = 'mock_tenant_id';
 
@@ -96,6 +98,46 @@ describe('fetchConnectorProviderDetails', () => {
           tokenEndpoint: 'http://example.com/token',
         },
       })
+    );
+  });
+});
+
+describe('validateConnectorDomains', () => {
+  it('should directly return if domains are not provided', () => {
+    expect(() => {
+      validateConnectorDomains();
+    }).not.toThrow();
+  });
+
+  it('should directly return if domains are empty', () => {
+    expect(() => {
+      validateConnectorDomains([]);
+    }).not.toThrow();
+  });
+
+  it('should throw error if domains are duplicated', () => {
+    expect(() => {
+      validateConnectorDomains(['foo.io', 'bar.io', 'foo.io']);
+    }).toMatchError(
+      new RequestError(
+        { code: 'single_sign_on.duplicated_domains', status: 422 },
+        {
+          data: ['foo.io'],
+        }
+      )
+    );
+  });
+
+  it('should throw error if domains are in the blacklist', () => {
+    expect(() => {
+      validateConnectorDomains(['foo.io', 'bar.io', 'gmail.com']);
+    }).toMatchError(
+      new RequestError(
+        { code: 'single_sign_on.forbidden_domains', status: 422 },
+        {
+          data: ['gmail.com'],
+        }
+      )
     );
   });
 });
