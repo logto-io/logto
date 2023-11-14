@@ -80,7 +80,7 @@ describe('post sso-connectors', () => {
         connectorName: 'test',
         config: {
           issuer: 23,
-          entityId: 123,
+          signInEndpoint: 123,
         },
       })
     ).rejects.toThrow(HTTPError);
@@ -236,7 +236,7 @@ describe('patch sso-connector by id', () => {
       patchSsoConnectorById(id, {
         config: {
           issuer: 23,
-          entityId: 123,
+          signInEndpoint: 123,
         },
       })
     ).rejects.toThrow(HTTPError);
@@ -287,7 +287,7 @@ describe('patch sso-connector config by id', () => {
     await expect(
       patchSsoConnectorConfigById(id, {
         issuer: 23,
-        entityId: 123,
+        signInEndpoint: 123,
       })
     ).rejects.toThrow(HTTPError);
 

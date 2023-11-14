@@ -6,29 +6,27 @@ import * as saml from 'samlify';
 import { z } from 'zod';
 
 import {
-  samlMetadataGuard,
-  type SamlMetadata,
   type SamlConnectorConfig,
-  type SamlConfig,
   defaultAttributeMapping,
   type CustomizableAttributeMap,
   type AttributeMap,
   extendedSocialUserInfoGuard,
   type ExtendedSocialUserInfo,
+  type SamlIdentityProviderMetadata,
+  samlIdentityProviderMetadataGuard,
 } from '../types/saml.js';
 
 type ESamlHttpRequest = Parameters<saml.ServiceProviderInstance['parseLoginResponse']>[2];
 
 /**
- * Parse XML-format raw SAML metadata and return the parsed SAML metadata.
+ * Return the parsed SAML metadata using SAML identity provider initiated with SAML metadata.
  *
- * @param xml Raw SAML metadata in XML format.
- * @returns The parsed SAML metadata.
+ * @param idP SAML identity provider instance.
+ * @returns The parsed SAML IdP metadata.
  */
-export const parseXmlMetadata = (xml: string): SamlMetadata => {
-  // eslint-disable-next-line new-cap
-  const idP = saml.IdentityProvider({ metadata: xml });
-
+export const parseXmlMetadata = (
+  idP: saml.IdentityProviderInstance
+): SamlIdentityProviderMetadata => {
   // Used to check whether xml content is valid in format.
   saml.setSchemaValidator(validator);
 
@@ -58,7 +56,7 @@ export const parseXmlMetadata = (xml: string): SamlMetadata => {
   };
 
   // The return type of `samlify`
-  const result = samlMetadataGuard.safeParse(rawSamlMetadata);
+  const result = samlIdentityProviderMetadataGuard.safeParse(rawSamlMetadata);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
@@ -129,19 +127,16 @@ export const getExtendedUserInfoFromRawUserProfile = (
  * Handle the SAML assertion from the identity provider.
  *
  * @param request The SAML assertion sent by IdP (after getting the SAML auth request).
- * @param config The full config of the SAML SSO connector.
+ * @param identityProvider The SAML identity provider instance (where we can get parsed IdP metadata).
+ * @param metadata The selected part of metadata of the SAML SSO connector.
  * @returns The returned info contained in the SAML assertion.
  */
 export const handleSamlAssertion = async (
   request: ESamlHttpRequest,
-  config: SamlConfig & { idpMetadataXml: string }
+  identityProvider: saml.IdentityProviderInstance,
+  metadata: { entityId: string; x509Certificate: string }
 ): Promise<Record<string, unknown>> => {
-  const { entityId: entityID, x509Certificate, idpMetadataXml } = config;
-
-  // eslint-disable-next-line new-cap
-  const identityProvider = saml.IdentityProvider({
-    metadata: idpMetadataXml,
-  });
+  const { entityId: entityID, x509Certificate } = metadata;
 
   // eslint-disable-next-line new-cap
   const serviceProvider = saml.ServiceProvider({
@@ -185,3 +180,13 @@ export const attributeMappingPostProcessor = (
     ...conditional(attributeMapping && attributeMapping),
   };
 };
+
+/**
+ * Generate the entity id for the current SAML SSO connector using current tenant id and connector id.
+ *
+ * @param tenantId Current tenant id.
+ * @param connectorId Current connector id.
+ * @returns Entity id for the current SAML SSO connector.
+ */
+export const getEntityIdWith = (tenantId: string, connectorId: string) =>
+  `urn:logto:${tenantId}:sso:${connectorId}`;
