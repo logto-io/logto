@@ -20,14 +20,11 @@ const user_details = {
   tab_settings: 'Configurações',
   tab_roles: 'Funções',
   tab_logs: 'Registros',
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: 'Organizações',
+  authentication: 'Autenticação',
   authentication_description:
     'Cada usuário tem um perfil contendo todas as informações do usuário. Consiste em dados básicos, identidades sociais e dados personalizados.',
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: 'Perfil do usuário',
   field_email: 'Endereço de e-mail',
   field_phone: 'Número de telefone',
   field_username: 'Nome de usuário',
@@ -38,30 +35,24 @@ const user_details = {
   field_custom_data_tip:
     'Informações adicionais do usuário não listadas nas propriedades de usuário predefinidas, como cor e idioma preferidos do usuário.',
   field_connectors: 'Conectores de login sociais',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: 'Conexões empresariais',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
   connectors: {
     connectors: 'Conectores',
     user_id: 'ID do usuário',
     remove: 'Remover',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
+    connected: 'Este usuário está conectado com vários conectores sociais.',
     not_connected: 'O usuário não está conectado a nenhum conector social',
     deletion_confirmation:
       'Você está removendo a identidade existente <name/>. Tem certeza de que deseja continuar?',
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
+    connectors: 'Conectores',
+    enterprise_id: 'ID da empresa',
     connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
+      'Este usuário está conectado a vários fornecedores de identidade empresarial para Entrada Única.',
     not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+      'O usuário não está conectado a nenhum provedor de identidade empresarial para Entrada Única.',
   },
   mfa: {
     field_name: 'Autenticação de dois fatores',
@@ -102,8 +93,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'O usuário precisa ter pelo menos um dos identificadores de login (nome de usuário, e-mail, número de telefone ou social) para fazer login. Tem certeza de que deseja continuar?',
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: 'As funções atribuídas ao usuário dentro desta organização.',
 };
 
 export default Object.freeze(user_details);

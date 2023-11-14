@@ -1,29 +1,23 @@
 const oidc = {
   aborted: 'El usuario final abortó la interacción.',
-  /** UNTRANSLATED */
-  invalid_scope: 'Invalid scope: {{error_description}}.',
+  invalid_scope: 'Ámbito no válido: {{error_description}}.',
   invalid_token: 'Se proporcionó un token no válido.',
   invalid_client_metadata: 'Se proporcionaron metadatos de cliente no válidos.',
-  /** UNTRANSLATED */
-  insufficient_scope: 'Token missing scope `{{scope}}`.',
+  insufficient_scope: 'Falta el ámbito del token `{{scope}}`.',
   invalid_request: 'La solicitud no es válida.',
-  invalid_grant: 'La solicitud de concesión es incorrecta.',
+  invalid_grant: 'La concesión no es válida.',
   invalid_redirect_uri:
     'La `redirect_uri` no coincide con ninguna de las `redirect_uris` registradas del cliente.',
   access_denied: 'Acceso denegado.',
   invalid_target: 'Indicador de recurso no válido.',
-  unsupported_grant_type: 'Tipo de concesión no admitido solicitado.',
-  unsupported_response_mode: 'Modo de respuesta no compatible solicitado.',
-  unsupported_response_type: 'Tipo de respuesta no admitido solicitado.',
+  unsupported_grant_type: 'Se solicitó un tipo de concesión no admitido.',
+  unsupported_response_mode: 'Se solicitó un modo de respuesta no compatible.',
+  unsupported_response_type: 'Se solicitó un tipo de respuesta no admitido.',
   provider_error: 'Error interno de OIDC: {{message}}.',
-  /** UNTRANSLATED */
-  server_error: 'An unknown OIDC error occurred. Please try again later.',
-  /** UNTRANSLATED */
-  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
-  /** UNTRANSLATED */
-  key_required: 'At least one key is required.',
-  /** UNTRANSLATED */
-  key_not_found: 'Key with ID {{id}} is not found.',
+  server_error: 'Ocurrió un error desconocido de OIDC. Por favor, inténtelo de nuevo más tarde.',
+  provider_error_fallback: 'Ocurrió un error de OIDC: {{code}}.',
+  key_required: 'Se requiere al menos una clave.',
+  key_not_found: 'No se encuentra la clave con ID {{id}}.',
 };
 
 export default Object.freeze(oidc);

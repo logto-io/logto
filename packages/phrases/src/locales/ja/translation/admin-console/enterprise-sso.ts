@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
-  col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  page_title: 'エンタープライズSSO',
+  title: 'エンタープライズSSO',
+  subtitle:
+    '企業のアイデンティティプロバイダーとの接続を可能にし、SP主導のシングルサインオンを有効にします。',
+  create: 'エンタープライズコネクターを追加',
+  col_connector_name: 'コネクター名',
+  col_type: 'タイプ',
+  col_email_domain: 'メールドメイン',
+  col_status: 'ステータス',
+  col_status_in_use: '使用中',
+  col_status_invalid: '無効',
+  placeholder_title: 'エンタープライズコネクター',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logtoは多くの組み込み企業向けアイデンティティプロバイダーを提供しており、同時に標準プロトコルで独自のプロバイダーを作成することもできます。',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: 'エンタープライズコネクターを追加',
+    text_divider: 'または、標準プロトコルによってカスタマイズされたコネクターを作成できます。',
+    connector_name_field_title: 'コネクター名',
+    connector_name_field_placeholder: '企業向けアイデンティティプロバイダーの名前',
+    create_button_text: 'コネクターを作成',
   },
 };
 

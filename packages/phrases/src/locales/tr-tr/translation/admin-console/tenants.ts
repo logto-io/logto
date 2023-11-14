@@ -13,26 +13,22 @@ const tenants = {
       'Kiracı adını ayarlayın ve verilerinizin barındığı bölgeyi ve ortam etiketinizi görüntüleyin.',
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
-    /** UNTRANSLATED */
-    tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: 'Veriler barındırılan bölge',
+    tenant_region_tip:
+      'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a> Daha fazla bilgi </a>',
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
       'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
     environment_tag_development: 'Geliş',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      'Geliştirme ortamı genellikle test için kullanılır ve giriş deneyiminde filigranlar içerir. <a> Daha fazla bilgi </a>',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
-    development: 'Development',
-    /** UNTRANSLATED */
-    production: 'Production',
+    development: 'Geliştirme',
+    production: 'Prod',
   },
   deletion_card: {
     title: 'SİL',
@@ -44,59 +40,44 @@ const tenants = {
   create_modal: {
     title: 'Kiracı Oluştur',
     subtitle: 'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun.',
-    /** UNTRANSLATED */
     subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+      'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun. Bölge ve ortam etiketleri oluşturulduktan sonra değiştirilemez.',
+    tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Geliştirme ortamı genellikle test için kullanılır ve üretim ortamında kullanılmamalıdır.',
     development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Geliştirme ortamı genellikle test için kullanılır ve üretim ortamında kullanılmamalıdır.',
     production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+      'Prod, canlı yazılımın son kullanıcılar tarafından kullanıldığı ve ücretli bir aboneliğin gerekebileceği yerdir.',
+    available_plan: 'Mevcut plan:',
     create_button: 'Kiracı oluştur',
     tenant_name_placeholder: 'Benim kiracım',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+      "Artık geliştirme kiracınızda <span>Logto Pro'nun tüm özelliklerine</span> erişebilirsiniz!",
+    allow_pro_features_description:
+      'Tüm özelliklerinizi ücretsiz, deneme süresi olmadan kullanın - ebediyen!',
+    explore_all_features: 'Tüm özelliklere göz atın',
+    impact_title: 'Bunun benim üzerimde herhangi bir etkisi var mı?',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Kiracı etiketiniz "<strong>Staging</strong>" den "<strong>Prod</strong>" a güncellenmiştir, ancak bu değişiklik mevcut yapılandırmanızı etkilemeyecektir.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'Logto Hobby planına abone olduğunuzda, önceki "<strong>Geliştirme</strong>" kiracı etiketi "<strong>Prod</strong>" a geçecektir ve bu mevcut yapılandırmanızı etkilemeyecektir.',
     paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      'Eğer hala geliştirme aşamasındaysanız, daha fazla pro özelliklere erişmek için yeni bir geliştirme kiracısı oluşturabilirsiniz.',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
+      'Eğer üretim aşamasındaysanız veya bir üretim ortamında iseniz, spesifik bir plana abone olmanız gerekecektir, bu yüzden şu anda yapmanız gereken bir şey yok.',
     paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      "Yardıma ihtiyacınız olursa çekinmeden bizimle iletişime geçin! Logto'yu seçtiğiniz için teşekkür ederiz!",
   },
   delete_modal: {
     title: 'Kiracıyı Sil',
     description_line1:
-      'Ortam etiketi "<span>{{tag}}</span>" olan "<span>{{name}}</span>" kiracınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verilerinizin ve hesap bilgilerinizin kalıcı olarak silinmesine neden olur.',
+      'Ortam etiketi "{{tag}}" olan "{{name}}" kiracınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verilerinizin ve hesap bilgilerinizin kalıcı olarak silinmesine neden olur.',
     description_line2:
       'Hesabınızı silmeden önce size yardımcı olabiliriz. <span><a>E-posta yoluyla bize ulaşın</a></span>',
-    description_line3:
-      'Devam etmek isterseniz, "<span>{{name}}</span>" kiracı adını onaylamak için yazın.',
+    description_line3: 'Devam etmek isterseniz, "{{name}}" kiracı adını onaylamak için yazın.',
     delete_button: 'Kalıcı olarak sil',
     cannot_delete_title: 'Bu kiracı silinemez',
     cannot_delete_description:
@@ -121,67 +102,44 @@ const tenants = {
       'Daha fazla açıklama, endişeleriniz veya işlevselliği tamamen geri yüklemek ve kiracılarınızı engellemek isterseniz, lütfen derhal bizimle iletişime geçmekten çekinmeyin.',
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: 'İMZALAMA ANAHTARLARI',
+    description: 'Kiracınızda imzalama anahtarlarını güvenli bir şekilde yönetin.',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'OIDC özel anahtarları',
+      cookie_key: 'OIDC çerez anahtarları',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: 'Kullanılan özel anahtarlar',
+    cookie_keys_in_use: 'Kullanılan çerez anahtarları',
+    rotate_private_keys: 'Özel anahtarları döndür',
+    rotate_cookie_keys: 'Çerez anahtarlarını döndür',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      'Bu işlem yeni bir özel imzalama anahtarı oluşturacak, mevcut anahtarı döndürecek ve önceki anahtarınızı kaldıracak. Güncel anahtar ile imzalanmış JWT jetonlarınız silinene veya başka bir döndürme turuna kadar geçerli kalacaktır.',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      'Bu işlem yeni bir çerez anahtarı oluşturacak, mevcut anahtarı döndürecek ve önceki anahtarınızı kaldıracak. Güncel anahtar ile imzalanmış çerezleriniz silinene veya başka bir döndürme turuna kadar geçerli kalacaktır.',
+    select_private_key_algorithm: 'Yeni özel anahtar için imzalama anahtar algoritmasını seçin',
+    rotate_button: 'Döndür',
     table_column: {
-      /** UNTRANSLATED */
-      id: 'ID',
-      /** UNTRANSLATED */
-      status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      id: 'Kimlik',
+      status: 'Durum',
+      algorithm: 'İmzalama anahtar algoritması',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: 'Geçerli',
+      previous: 'Önceki',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        '<strong>OIDC özel anahtarlarını</strong> döndürmek istediğinizden emin misiniz? Yeni verilen JWT jetonları yeni anahtarla imzalanacaktır. Var olan JWT jetonları, tekrar döndürünceye kadar geçerli kalacaktır.',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        '<strong>OIDC çerez anahtarlarını</strong> döndürmek istediğinizden emin misiniz? Oturum açma oturumlarında yeni oluşturulan çerezler yeni çerez anahtarıyla imzalanacaktır. Var olan çerezler, tekrar döndürünceye kadar geçerli kalacaktır.',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        '<strong>OIDC özel anahtarını</strong> silmek istediğinizden emin misiniz? Bu özel imzalama anahtarı ile imzalanan mevcut JWT jetonları artık geçerli olmayacaktır.',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        '<strong>OIDC çerez anahtarını</strong> silmek istediğinizden emin misiniz? Bu çerez anahtarı ile imzalanan eski oturum açma oturumları artık geçerli olmayacaktır. Bu kullanıcılar için yeniden kimlik doğrulaması gereklidir.',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: 'İmzalama anahtarları başarıyla döndü',
+      delete_key_success: 'Anahtar başarıyla silindi',
     },
   },
 };

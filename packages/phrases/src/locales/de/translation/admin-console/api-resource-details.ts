@@ -8,14 +8,13 @@ const api_resource_details = {
     'API-Ressourcen, auch Ressourcenindikatoren genannt, geben die Ziel-Dienste oder Ressourcen an, die angefordert werden sollen. Häufig handelt es sich um eine URI-Formatvariable, die die Identität der Ressource darstellt.',
   management_api_settings_description:
     'Die Logto Management-API ist eine umfassende Sammlung von APIs, die Administratoren befähigen, eine Vielzahl von Aufgaben im Zusammenhang mit Identitäten zu verwalten, Sicherheitsrichtlinien durchzusetzen und Vorschriften und Standards einzuhalten.',
-  /** UNTRANSLATED */
   management_api_notice:
-    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
+    'Diese API repräsentiert die Logto-Entität und kann nicht geändert oder gelöscht werden. Sie können die Management-API für eine Vielzahl von identitätsbezogenen Aufgaben verwenden. <a>Informieren Sie sich</a>',
   token_expiration_time_in_seconds: 'Token-Ablaufzeit (in Sekunden)',
-  token_expiration_time_in_seconds_placeholder: 'Gib die Ablaufzeit des Tokens ein',
+  token_expiration_time_in_seconds_placeholder: 'Geben Sie die Ablaufzeit des Tokens ein',
   delete_description:
-    'Diese Aktion kann nicht rückgängig gemacht werden. Die API-Ressource wird permanent gelöscht. Bitte gib den API-Ressourcennamen <span>{{name}}</span> zur Bestätigung ein.',
-  enter_your_api_resource_name: 'Gib einen API-Ressourcennamen ein',
+    'Diese Aktion kann nicht rückgängig gemacht werden. Die API-Ressource wird permanent gelöscht. Bitte geben Sie den API-Ressourcennamen <span>{{name}}</span> zur Bestätigung ein.',
+  enter_your_api_resource_name: 'Geben Sie einen API-Ressourcennamen ein',
   api_resource_deleted: 'Die API-Ressource {{name}} wurde erfolgreich gelöscht',
   permission: {
     create_button: 'Berechtigung erstellen',

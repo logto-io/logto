@@ -8,9 +8,7 @@ const session = {
   connector_session_not_found: '無法找到連接器登錄信息，請嘗試重新登錄。',
   verification_session_not_found: '驗證失敗，請重新驗證。',
   verification_expired: '當前頁面已超時。為確保你的賬號安全，請重新驗證。',
-  /** UNTRANSLATED */
-  verification_blocked_too_many_attempts:
-    'Too many attempts in a short time. Please try again {{relativeTime}}.',
+  verification_blocked_too_many_attempts: '短時間內嘗試次數太多。請過一會再試 {{relativeTime}}。',
   unauthorized: '請先登錄',
   unsupported_prompt_name: '不支持的 prompt name',
   forgot_password_not_enabled: '忘記密碼功能沒有開啟。',
@@ -18,31 +16,19 @@ const session = {
   connector_validation_session_not_found: '找不到連接器用於驗證 token 的信息。',
   identifier_not_found: '找不到用戶標識符。請返回並重新登錄。',
   interaction_not_found: '找不到互動會話。請返回並重新開始會話。',
-  /** UNTRANSLATED */
-  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
+  not_supported_for_forgot_password: '此操作不支援忘記密碼。',
   mfa: {
-    /** UNTRANSLATED */
-    require_mfa_verification: 'Mfa verification is required to sign in.',
-    /** UNTRANSLATED */
-    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
-    /** UNTRANSLATED */
-    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
-    /** UNTRANSLATED */
-    invalid_totp_code: 'Invalid TOTP code.',
-    /** UNTRANSLATED */
-    webauthn_verification_failed: 'WebAuthn verification failed.',
-    /** UNTRANSLATED */
-    webauthn_verification_not_found: 'WebAuthn verification not found.',
-    /** UNTRANSLATED */
-    bind_mfa_existed: 'MFA already exists.',
-    /** UNTRANSLATED */
-    backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
-    /** UNTRANSLATED */
-    backup_code_required: 'Backup code is required.',
-    /** UNTRANSLATED */
-    invalid_backup_code: 'Invalid backup code.',
-    /** UNTRANSLATED */
-    mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
+    require_mfa_verification: '需要 MFA 驗證才能登錄。',
+    mfa_sign_in_only: 'MFA 只能用於登錄互動。',
+    pending_info_not_found: '未找到等待中的 MFA 資訊，請先啟動 MFA。',
+    invalid_totp_code: '無效的 TOTP 驗證碼。',
+    webauthn_verification_failed: 'WebAuthn 驗證失敗。',
+    webauthn_verification_not_found: '未找到 WebAuthn 驗證。',
+    bind_mfa_existed: 'MFA 已存在。',
+    backup_code_can_not_be_alone: '備用碼不能作為唯一 MFA。',
+    backup_code_required: '備用碼是必需的。',
+    invalid_backup_code: '無效的備用碼。',
+    mfa_policy_not_user_controlled: 'MFA 政策不受使用者控制。',
   },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
 };

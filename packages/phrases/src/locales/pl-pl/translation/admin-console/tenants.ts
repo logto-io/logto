@@ -12,9 +12,7 @@ const tenants = {
     description: 'Ustaw nazwę najemcy i zobacz region hostowania oraz znacznik środowiska.',
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
-    /** UNTRANSLATED */
     tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
     environment_tag: 'Tag Środowiska',
     environment_tag_description:
@@ -22,15 +20,12 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      'Środowisko development jest głównie przeznaczone do testowania i obejmuje wszystkie funkcje pro, ale ma znaki wodne w doświadczeniu logowania. <a>Learn more</a>',
     tenant_info_saved: 'Informacje o najemcy zostały pomyślnie zapisane.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
     development: 'Development',
-    /** UNTRANSLATED */
     production: 'Production',
   },
   deletion_card: {
@@ -43,50 +38,35 @@ const tenants = {
   create_modal: {
     title: 'Utwórz nowego najemcę',
     subtitle: 'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników.',
-    /** UNTRANSLATED */
     subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+      'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników. Region and environment tags can’t be modified after creation.',
+    tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Środowisko development jest głównie przeznaczone do testowania i nie powinno być używane w środowisku produkcyjnym.',
     development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Środowisko development jest głównie przeznaczone do testowania i nie powinno być używane w środowisku produkcyjnym.',
     production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+      'Produkcja to miejsce, gdzie projekt jest używany przez użytkowników końcowych i może wymagać płatnej subskrypcji.',
+    available_plan: 'Dostępny plan:',
     create_button: 'Utwórz najemcę',
     tenant_name_placeholder: 'Mój najemca',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+      'Możesz teraz korzystać z <span>wszystkich funkcji Logto Pro</span> w swoim środowisku development!',
+    allow_pro_features_description: 'Jest całkowicie bezpłatny, bez okresu próbnego - na zawsze!',
+    explore_all_features: 'Przeglądaj wszystkie funkcje',
+    impact_title: 'Czy to ma na mnie jakiś wpływ?',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Twój znacznik najemcy został zaktualizowany z „<strong>Staging</strong>” na „<strong>Production</strong>”, ale ta zmiana nie wpłynie na bieżące ustawienia.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'Po zasubskrybowaniu planu Logto Hobby, twój poprzedni znacznik środowiska „<strong>Development</strong>” zmieni się na „<strong>Production</strong>”, i to nie wpłynie na twoje istniejące ustawienia.',
     paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      'Jeśli nadal jesteś w fazie developmentu, możesz utworzyć nowy najemcę development, aby uzyskać dostęp do więcej funkcji pro.',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
+      'Jeśli jesteś w fazie produkcyjnej, lub w środowisku produkcyjnym, nadal musisz zasubskrybować określony plan, więc przez teraz nie musisz nic robić.',
     paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      'Nie wahaj się skontaktować z nami, jeśli potrzebujesz pomocy! Dziękujemy, że wybrałeś Logto!',
   },
   delete_modal: {
     title: 'Usuń najemcę',
@@ -120,67 +100,45 @@ const tenants = {
       'Jeśli potrzebujesz dalszych wyjaśnień, masz jakiekolwiek obawy lub chcesz przywrócić pełną funkcjonalność i odblokować swoje najemce, nie wahaj się skontaktować z nami natychmiast.',
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: 'ZARZĄDZANIE KLUCZAMI PODPISUJĄCYMI',
+    description: 'Bezpieczne zarządzanie kluczami podpisującymi w Twoim najemcy.',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'Klucze prywatne OIDC',
+      cookie_key: 'Klucze ciasteczek OIDC',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: 'Używane klucze prywatne',
+    cookie_keys_in_use: 'Używane klucze ciasteczek',
+    rotate_private_keys: 'Obróć klucze prywatne',
+    rotate_cookie_keys: 'Obróć klucze ciasteczek',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      'Ta akcja spowoduje utworzenie nowego klucza prywatnego do podpisywania, obrócenie bieżącego klucza i usunięcie poprzedniego klucza. Twoje tokeny JWT podpisane aktualnym kluczem pozostaną ważne do czasu usunięcia lub kolejnego obrotu.',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      'Ta akcja spowoduje utworzenie nowego klucza ciasteczka, obrócenie bieżącego klucza i usunięcie poprzedniego klucza. Twoje ciasteczka z aktualnym kluczem pozostaną ważne do czasu usunięcia lub kolejnego obrotu.',
+    select_private_key_algorithm:
+      'Wybierz algorytm podpisywania klucza dla nowego klucza prywatnego',
+    rotate_button: 'Obróć',
     table_column: {
-      /** UNTRANSLATED */
       id: 'ID',
-      /** UNTRANSLATED */
       status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      algorithm: 'Algorytm podpisywania klucza',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: 'Bieżący',
+      previous: 'Poprzedni',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Czy na pewno chcesz obrócić <strong>Klucze prywatne OIDC</strong>? Nowo wydane tokeny JWT będą podpisywane nowym kluczem. Istniejące tokeny JWT pozostają ważne do czasu ponownego obrotu.',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Czy na pewno chcesz obrócić <strong>Klucze ciasteczek OIDC</strong>? Nowo generowane ciasteczka w sesjach logowania będą podpisywane nowym kluczem ciasteczka. Istniejące ciasteczka pozostają ważne do czasu ponownego obrotu.',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        'Czy na pewno chcesz usunąć <strong>Klucz prywatny OIDC</strong>? Istniejące tokeny JWT podpisane tym kluczem prywatnym przestaną być ważne.',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        'Czy na pewno chcesz usunąć <strong>Klucz ciasteczka OIDC</strong>? Starsze sesje logowania z ciasteczkami podpisanymi tym kluczem ciasteczka przestaną być ważne. Wymagane będzie ponowne uwierzytelnienie tych użytkowników.',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: 'Klucze podpisu obrócone pomyślnie.',
+      delete_key_success: 'Klucz usunięty pomyślnie.',
     },
   },
 };

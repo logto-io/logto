@@ -26,7 +26,6 @@ const quota_table = {
   },
   user_authn: {
     title: 'Benutzerauthentifizierung',
-    /** UNTRANSLATED */
     omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'Passwort',
     passwordless: 'Passwortlos - E-Mail und SMS',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: 'Organisation',
+    organization: 'Organisation (Q4, 2023)',
   },
   support: {
     title: 'Support',
@@ -67,8 +64,8 @@ const quota_table = {
     '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
-  monthly_price: '${{value, number}}/mo',
-  mau_price: '${{value, number}}/MAU',
+  monthly_price: '$\\{{value, number}}/mo',
+  mau_price: '$\\{{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
   add_on: 'Zusatzleistung',

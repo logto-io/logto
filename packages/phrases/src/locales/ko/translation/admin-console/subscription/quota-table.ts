@@ -26,7 +26,6 @@ const quota_table = {
   },
   user_authn: {
     title: '사용자 인증',
-    /** UNTRANSLATED */
     omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: '비밀번호',
     passwordless: '비밀번호 없음 - 이메일과 SMS',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: '조직',
+    organization: '조직 (Q4, 2023)',
   },
   support: {
     title: '지원',

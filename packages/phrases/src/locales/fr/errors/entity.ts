@@ -5,11 +5,9 @@ const entity = {
   not_exists: "Le {{name}} n'existe pas.",
   not_exists_with_id: "Le {{name}} avec l'ID `{{id}}` n'existe pas.",
   not_found: "La ressource n'existe pas.",
-  /** UNTRANSLATED */
   relation_foreign_key_not_found:
-    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
-  /** UNTRANSLATED */
-  unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
+    'Impossible de trouver une ou plusieurs clés étrangères. Veuillez vérifier la saisie et vous assurer que toutes les entités référencées existent.',
+  unique_integrity_violation: "L'entité existe déjà. Veuillez vérifier la saisie et réessayer.",
 };
 
 export default Object.freeze(entity);

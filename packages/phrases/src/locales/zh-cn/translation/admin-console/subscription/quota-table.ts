@@ -26,8 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: '用户认证',
-    /** UNTRANSLATED */
-    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
+    omni_sign_in: '企业SSO（2023年第四季度）',
     password: '密码',
     passwordless: '免密码登录 - 电子邮件和短信',
     email_connector: '电子邮件连接器',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: '组织',
+    organization: '组织（2023年第四季度）',
   },
   support: {
     title: '支持',

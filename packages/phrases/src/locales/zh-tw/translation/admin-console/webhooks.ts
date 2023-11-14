@@ -17,7 +17,7 @@ const webhooks = {
   placeholder: {
     title: 'Webhook',
     description:
-      '創建 Webhook 以收到通過 POST 請求發送到您的端點 URL 的即時更新。保持資訊，對「創建帳戶」、「登錄」和「重置密碼」等事件立即採取行動。',
+      '創建 Webhook 以收到通過 POST 請求發送到您的端點 URL 的即時更新。保持資訊，對「創建帳戶」「登錄」和「重置密碼」等事件立即採取行動。',
     create_webhook: '創建 Webhook',
   },
   create_form: {
@@ -29,9 +29,7 @@ const webhooks = {
     name_placeholder: '輸入 webhook 名稱',
     endpoint_url: '端點 URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    /** UNTRANSLATED */
-    endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+    endpoint_url_tip: '輸入您的端點 URL，當事件發生時會將 Webhook 的載荷發送到該 URL。',
     create_webhook: '創建 webhook',
     missing_event_error: '您需要選擇至少一個事件。',
   },

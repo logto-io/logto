@@ -10,7 +10,6 @@ const session = {
     '검증을 실패했어요. 검증 과정을 다시 시작하고 다시 시도해 주세요.',
   verification_expired:
     '연결 시간이 초과되었어요. 검증을 다시 시작하고, 계정이 안전한지 확인해 주세요.',
-  /** UNTRANSLATED */
   verification_blocked_too_many_attempts:
     'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: '로그인을 먼저 해 주세요.',
@@ -20,31 +19,19 @@ const session = {
     '인증이 성공적으로 완료되지 않았어요. 처음부터 다시 인증 과정을 거쳐 주세요.',
   connector_validation_session_not_found: '연동 세션 유효성 검증을 위한 토큰을 찾을 수 없어요.',
   identifier_not_found: '사용자 식별자를 찾을 수 없어요. 처음부터 다시 로그인을 시도해 주세요.',
-  interaction_not_found: '인터렉션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
-  /** UNTRANSLATED */
+  interaction_not_found: '인터랙션 세션을 찾을 수 없어요. 처음부터 다시 세션을 시작해 주세요.',
   not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
-    /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
-    /** UNTRANSLATED */
     mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
-    /** UNTRANSLATED */
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
-    /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
-    /** UNTRANSLATED */
     webauthn_verification_failed: 'WebAuthn verification failed.',
-    /** UNTRANSLATED */
     webauthn_verification_not_found: 'WebAuthn verification not found.',
-    /** UNTRANSLATED */
     bind_mfa_existed: 'MFA already exists.',
-    /** UNTRANSLATED */
     backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
-    /** UNTRANSLATED */
     backup_code_required: 'Backup code is required.',
-    /** UNTRANSLATED */
     invalid_backup_code: 'Invalid backup code.',
-    /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',

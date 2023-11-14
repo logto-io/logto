@@ -10,9 +10,8 @@ const session = {
     'Верификация не прошла успешно. Перезапустите процесс верификации и попробуйте еще раз.',
   verification_expired:
     'Соединение истекло. Повторите верификацию, чтобы обеспечить безопасность вашей учетной записи.',
-  /** UNTRANSLATED */
   verification_blocked_too_many_attempts:
-    'Too many attempts in a short time. Please try again {{relativeTime}}.',
+    'Слишком много попыток за короткое время. Пожалуйста, попробуйте снова {{relativeTime}}.',
   unauthorized: 'Сначала войдите в систему.',
   unsupported_prompt_name: 'Неподдерживаемое имя подсказки.',
   forgot_password_not_enabled: 'Забыли пароль не включен.',
@@ -22,31 +21,21 @@ const session = {
   identifier_not_found:
     'Идентификатор пользователя не найден. Вернитесь и войдите в систему снова.',
   interaction_not_found: 'Сессия взаимодействия не найдена. Вернитесь и начните сессию заново.',
-  /** UNTRANSLATED */
-  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
+  not_supported_for_forgot_password: 'Эта операция не поддерживается для забытого пароля.',
   mfa: {
-    /** UNTRANSLATED */
-    require_mfa_verification: 'Mfa verification is required to sign in.',
-    /** UNTRANSLATED */
-    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
-    /** UNTRANSLATED */
-    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
-    /** UNTRANSLATED */
-    invalid_totp_code: 'Invalid TOTP code.',
-    /** UNTRANSLATED */
-    webauthn_verification_failed: 'WebAuthn verification failed.',
-    /** UNTRANSLATED */
-    webauthn_verification_not_found: 'WebAuthn verification not found.',
-    /** UNTRANSLATED */
-    bind_mfa_existed: 'MFA already exists.',
-    /** UNTRANSLATED */
-    backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
-    /** UNTRANSLATED */
-    backup_code_required: 'Backup code is required.',
-    /** UNTRANSLATED */
-    invalid_backup_code: 'Invalid backup code.',
-    /** UNTRANSLATED */
-    mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
+    require_mfa_verification: 'Требуется проверка MFA для входа в систему.',
+    mfa_sign_in_only: 'Mfa доступен только для взаимодействия при входе в систему.',
+    pending_info_not_found:
+      'Информация о ожидающем MFA не найдена, пожалуйста, сначала инициируйте MFA.',
+    invalid_totp_code: 'Недействительный код TOTP.',
+    webauthn_verification_failed: ' Проверка WebAuthn не удалась.',
+    webauthn_verification_not_found: 'Проверка WebAuthn не найдена.',
+    bind_mfa_existed: 'MFA уже существует.',
+    backup_code_can_not_be_alone: 'Резервный код не может быть единственным MFA.',
+    backup_code_required: 'Требуется резервный код.',
+    invalid_backup_code: 'Недействительный резервный код.',
+    mfa_policy_not_user_controlled:
+      'Политика многофакторной аутентификации не контролируется пользователем.',
   },
   sso_enabled:
     'Единый вход в систему включен для этого указанного адреса электронной почты. Войдите в систему с помощью SSO.',

@@ -1,163 +1,97 @@
 const organizations = {
-  /** UNTRANSLATED */
-  page_title: 'Organizations',
-  /** UNTRANSLATED */
-  title: 'Organizations',
-  /** UNTRANSLATED */
+  page_title: 'Organizacje',
+  title: 'Organizacje',
   subtitle:
-    'Represent the teams, business customers, and partner companies that access your applications as organizations.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  create_organization: 'Create organization',
-  /** UNTRANSLATED */
-  setup_organization: 'Set up your organization',
-  /** UNTRANSLATED */
-  organization_list_placeholder_title: 'Organization',
-  /** UNTRANSLATED */
+    'Reprezentują zespoły, klientów biznesowych i partnerów firm, którzy mają dostęp do aplikacji jako organizacje.',
+  organization_id: 'ID organizacji',
+  members: 'Członkowie',
+  create_organization: 'Utwórz organizację',
+  setup_organization: 'Skonfiguruj swoją organizację',
+  organization_list_placeholder_title: 'Organizacja',
   organization_list_placeholder_text:
-    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
-  /** UNTRANSLATED */
-  organization_name_placeholder: 'My organization',
-  /** UNTRANSLATED */
-  organization_description_placeholder: 'A brief description of the organization',
-  /** UNTRANSLATED */
-  organization_permission: 'Organization permission',
-  /** UNTRANSLATED */
-  organization_permission_other: 'Organization permissions',
-  /** UNTRANSLATED */
+    'Organizacja jest zazwyczaj stosowana w aplikacjach wielomandantowych typu SaaS lub podobnych. Funkcja organizacji umożliwia klientom B2B lepsze zarządzanie swoimi partnerami i klientami oraz dostosowywanie sposobów, w jakie końcowi użytkownicy mają dostęp do ich aplikacji.',
+  organization_name_placeholder: 'Moja organizacja',
+  organization_description_placeholder: 'Krótki opis organizacji',
+  organization_permission: 'Uprawnienie organizacji',
+  organization_permission_other: 'Uprawnienia organizacji',
   organization_permission_description:
-    'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-  /** UNTRANSLATED */
+    'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobu w kontekście organizacji. Uprawnienie organizacji powinno być reprezentowane jako znaczący ciąg znaków, stanowiący także nazwę i unikalny identyfikator.',
   organization_permission_delete_confirm:
-    'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
-  /** UNTRANSLATED */
-  create_permission_placeholder: 'Read appointment history',
-  /** UNTRANSLATED */
-  permission: 'Permission',
-  /** UNTRANSLATED */
-  permission_other: 'Permissions',
-  /** UNTRANSLATED */
-  organization_role: 'Organization role',
-  /** UNTRANSLATED */
-  organization_role_other: 'Organization roles',
-  /** UNTRANSLATED */
+    'Jeśli to uprawnienie zostanie usunięte, wszystkie role organizacji, w tym to uprawnienie, stracą to uprawnienie, a użytkownicy, którzy mieli to uprawnienie, stracą dostęp do niego.',
+  create_permission_placeholder: 'Odczyt historii spotkań',
+  permission: 'Uprawnienie',
+  permission_other: 'Uprawnienia',
+  organization_role: 'Rola organizacji',
+  organization_role_other: 'Role organizacji',
   organization_role_description:
-    'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
-  /** UNTRANSLATED */
+    'Rola organizacji to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacji.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'Spowoduje to usunięcie uprawnień związanych z tą rolą od dotkniętych użytkowników oraz usunięcie relacji między rolami organizacji, członkami organizacji i uprawnieniami organizacji.',
+  role: 'Rola',
+  create_role_placeholder: 'Użytkownicy z uprawnieniami tylko do odczytu',
+  search_placeholder: 'Wyszukaj według nazwy lub ID organizacji',
+  search_permission_placeholder: 'Wpisz, aby wyszukać i wybrać uprawnienia',
+  search_role_placeholder: 'Wpisz, aby wyszukać i wybrać role',
   guide: {
-    /** UNTRANSLATED */
-    title: 'Start with guides',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your app development process with our guides',
+    title: 'Zacznij od przewodników',
+    subtitle: 'Rozpocznij proces tworzenia aplikacji za pomocą naszych przewodników',
     introduction: {
       section_1: {
-        /** UNTRANSLATED */
-        title: "First, let's understand how organizations works in Logto",
-        /** UNTRANSLATED */
+        title: 'Najpierw zrozum, jak działają organizacje w Logto',
         description:
-          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+          'W aplikacjach wielomandantowych typu SaaS często tworzymy kilka organizacji z tym samym zestawem uprawnień i ról, ale w kontekście organizacji może to odgrywać ważną rolę w kontroli różnych poziomów dostępu. Użytkownik może myśleć o każdym najemcy jak o organizacji Logto i naturalnie dzielić się tą samą "szablonową" kontrolą dostępu. Nazywamy to "szablonem organizacji."',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template consists of two parts',
-        /** UNTRANSLATED */
+        title: 'Szablon organizacji składa się z dwóch części',
         organization_permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-        /** UNTRANSLATED */
+          'Uprawnienie organizacji odnosi się do autoryzacji dostępu do zasobu w kontekście organizacji. Uprawnienie organizacji powinno być reprezentowane jako znaczący ciąg znaków, stanowiący także nazwę i unikalny identyfikator.',
         organization_role_description:
-          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+          'Rola organizacji to grupowanie uprawnień, które można przypisać użytkownikom. Uprawnienia muszą pochodzić z wcześniej zdefiniowanych uprawnień organizacji.',
       },
       section_3: {
-        /** UNTRANSLATED */
-        title: 'Interact the illustration to see how everything connects',
-        /** UNTRANSLATED */
+        title: 'Wejdź w interakcję z ilustracją, aby zobaczyć, jak wszystko się łączy',
         description:
-          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Przyjrzyjmy się przykładowi. John, Sarah i Tony należą do różnych organizacji z różnymi rolami w kontekście różnych organizacji. Najedź kursorem na różne moduły i zobacz, co się stanie.',
       },
     },
-    /** UNTRANSLATED */
-    step_1: 'Step 1: Define organization permissions',
-    /** UNTRANSLATED */
-    step_2: 'Step 2: Define organization roles',
-    /** UNTRANSLATED */
+    step_1: 'Krok 1: Zdefiniuj uprawnienia organizacji',
+    step_2: 'Krok 2: Zdefiniuj role organizacji',
     step_2_description:
-      '"Organization roles" represent a set of roles given to each organization at the start. These roles are determined by the global permissions you have set in previous screen. Similar with org permission, once you finish this setting for the first time, you won’t need to do this every-time you create a new organization.',
-    /** UNTRANSLATED */
-    step_3: 'Step 3: Create your first organization',
-    /** UNTRANSLATED */
+      '"Role organizacji" reprezentują zestaw ról nadanych każdej organizacji na początku. Role te są określone przez globalne uprawnienia, które ustawiłeś w poprzednim ekranie. Podobnie jak z uprawnieniami organizacji, po zakończeniu tego ustawienia pierwszy raz, nie będziesz musiał tego robić za każdym razem, gdy utworzysz nową organizację.',
+    step_3: 'Krok 3: Utwórz swoją pierwszą organizację',
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
+      'Utwórz swoją pierwszą organizację. Ma ona unikalne ID i służy jako kontener do obsługi różnych bardziej skoncentrowanych na biznesie tożsamości, takich jak partnerzy, klienci i ich kontrola dostępu.',
+    more_next_steps: 'Więcej kolejnych kroków',
+    add_members: 'Dodaj członków do swojej organizacji',
+    add_members_action: 'Dodaj członków zbiorowo i przypisz role',
+    add_enterprise_connector: 'Dodaj łącznik przedsiębiorstwa SSO',
+    add_enterprise_connector_action: 'Skonfiguruj przedsiębiorstwo SSO',
+    organization_permissions: 'Uprawnienia organizacji',
+    permission_name: 'Nazwa uprawnienia',
+    permissions: 'Uprawnienia',
+    organization_roles: 'Role organizacji',
+    role_name: 'Nazwa roli',
+    organization_name: 'Nazwa organizacji',
+    admin: 'Administrator',
     admin_description:
-      'Role "Admin" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
+      'Rola "Administrator" dzieli ten sam szablon organizacji między różnymi organizacjami.',
+    member: 'Członek',
     member_description:
-      'Role "Member" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
+      'Rola "Członek" dzieli ten sam szablon organizacji między różnymi organizacjami.',
+    guest: 'Gość',
     guest_description:
-      'Role "Guest" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      'Rola "Gość" dzieli ten sam szablon organizacji między różnymi organizacjami.',
     create_more_roles:
-      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
-    /** UNTRANSLATED */
-    read_resource: 'read:resource',
-    /** UNTRANSLATED */
-    edit_resource: 'edit:resource',
-    /** UNTRANSLATED */
-    delete_resource: 'delete:resource',
-    /** UNTRANSLATED */
+      'Możesz utworzyć więcej ról w ustawieniach szablonu organizacji. Te role organizacji będą stosowane do różnych organizacji.',
+    read_resource: 'odczyt:zasób',
+    edit_resource: 'edycja:zasób',
+    delete_resource: 'usuwanie:zasób',
     ellipsis: '……',
-    /** UNTRANSLATED */
     johnny:
-      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
-    /** UNTRANSLATED */
+      'Johny należy do dwóch organizacji z adresem e-mail "john@email.com" jako jedynym identyfikatorem. Jest administratorem organizacji A oraz gościem organizacji B.',
     sarah:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
-    /** UNTRANSLATED */
-    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
+      'Sarah należy do jednej organizacji z adresem e-mail "sarah@email.com" jako jedynym identyfikatorem. Jest administratorem organizacji B.',
+    tony: 'Tony należy do jednej organizacji z adresem e-mail "tony@email.com" jako jedynym identyfikatorem. Jest członkiem organizacji C.',
   },
 };
 

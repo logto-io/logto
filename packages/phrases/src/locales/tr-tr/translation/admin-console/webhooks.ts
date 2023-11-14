@@ -31,7 +31,6 @@ const webhooks = {
     name_placeholder: 'Webhook adını girin',
     endpoint_url: 'Uç Nokta URL’si',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    /** UNTRANSLATED */
     endpoint_url_tip:
       'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhook Oluştur',

@@ -1,46 +1,28 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: 'Szczegóły organizacji',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    'Po usunięciu wszyscy członkowie stracą swoje członkostwo i role w tej organizacji. Tego działania nie można cofnąć.',
+  organization_id: 'ID organizacji',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    'Organizacja to grupa tożsamości (zazwyczaj użytkowników), która jest rozpoznawana przez wspólny identyfikator.\n\nKażda organizacja ma własny zestaw członków, ról i uprawnień, podczas gdy role i uprawnienia są określone przez szablon organizacji.',
+  name_placeholder: 'Nazwa organizacji, nie musi być unikalna.',
+  description_placeholder: 'Opis organizacji.',
+  member: 'Członek',
+  member_other: 'Członkowie',
+  add_members_to_organization: 'Dodaj członków do organizacji {{name}}',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    'Znajdź odpowiednich użytkowników, wyszukując nazwę, adres e-mail, numer telefonu lub identyfikator użytkownika. Istniejący członkowie nie są wyświetlani w wynikach wyszukiwania.',
+  add_with_organization_role: 'Dodaj z rolą(ami) organizacji',
+  user: 'Użytkownik',
+  authorize_to_roles: 'Autoryzuj {{name}} dostęp do następujących ról:',
+  edit_organization_roles: 'Edytuj role organizacji',
+  edit_organization_roles_of_user: 'Edytuj role organizacji użytkownika {{name}}',
+  remove_user_from_organization: 'Usuń użytkownika z organizacji',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    'Po usunięciu użytkownik straci swoje członkostwo i role w tej organizacji. Tego działania nie można cofnąć.',
+  search_user_placeholder:
+    'Wyszukaj według nazwy, adresu e-mail, numeru telefonu lub identyfikatora użytkownika',
+  at_least_one_user: 'Wymagany jest co najmniej jeden użytkownik.',
 };
 
 export default Object.freeze(organization_details);

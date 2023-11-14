@@ -42,11 +42,9 @@ const role_details = {
     assign_title: 'ユーザーを割り当てる',
     assign_subtitle:
       'ユーザーをこのロールに割り当てます。名前、電子メール、電話、またはユーザーIDで検索して適切なユーザーを見つけます。',
-    /** UNTRANSLATED */
-    assign_field: 'Assign users',
+    assign_field: 'ユーザーを割り当てる',
     confirm_assign: 'ユーザーを割り当てる',
-    /** UNTRANSLATED */
-    assigned_toast_text: 'The selected users were successfully assigned to this role',
+    assigned_toast_text: '選択したユーザーがこのロールに正常に割り当てられました',
     empty: '使用可能なユーザーはありません',
   },
   applications: {
@@ -59,11 +57,9 @@ const role_details = {
     assign_title: 'アプリケーションを割り当てる',
     assign_subtitle:
       'このロールにアプリケーションを割り当てます。名前、説明、またはアプリIDで検索して適切なアプリケーションを見つけます。',
-    /** UNTRANSLATED */
-    assign_field: 'Assign applications',
+    assign_field: 'アプリケーションを割り当てる',
     confirm_assign: 'アプリケーションを割り当てる',
-    /** UNTRANSLATED */
-    assigned_toast_text: 'The selected applications were successfully assigned to this role',
+    assigned_toast_text: '選択したアプリケーションがこのロールに正常に割り当てられました',
     empty: '利用可能なアプリケーションはありません',
   },
 };

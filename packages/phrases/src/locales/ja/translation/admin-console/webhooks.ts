@@ -30,7 +30,6 @@ const webhooks = {
     name_placeholder: 'Webhook名を入力してください',
     endpoint_url: 'エンドポイントURL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    /** UNTRANSLATED */
     endpoint_url_tip:
       'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Webhookを作成する',

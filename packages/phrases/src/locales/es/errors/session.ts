@@ -11,9 +11,8 @@ const session = {
     'La verificación no se completó correctamente. Reinicie el flujo de verificación e intente de nuevo.',
   verification_expired:
     'La conexión ha expirado. Verifique de nuevo para garantizar la seguridad de su cuenta.',
-  /** UNTRANSLATED */
   verification_blocked_too_many_attempts:
-    'Too many attempts in a short time. Please try again {{relativeTime}}.',
+    'Demasiados intentos en poco tiempo. Por favor, inténtelo de nuevo {{relativeTime}}.',
   unauthorized: 'Inicie sesión primero, por favor.',
   unsupported_prompt_name: 'Nombre de indicación no compatible.',
   forgot_password_not_enabled: 'Olvidé la contraseña no está habilitada.',
@@ -25,31 +24,21 @@ const session = {
     'Identificador de usuario no encontrado. Vuelva atrás e inicie sesión nuevamente.',
   interaction_not_found:
     'No se encuentra la sesión de interacción. Vuelva atrás y vuelva a iniciar la sesión.',
-  /** UNTRANSLATED */
-  not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
+  not_supported_for_forgot_password:
+    'Esta operación no es compatible para restablecer la contraseña.',
   mfa: {
-    /** UNTRANSLATED */
-    require_mfa_verification: 'Mfa verification is required to sign in.',
-    /** UNTRANSLATED */
-    mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
-    /** UNTRANSLATED */
-    pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
-    /** UNTRANSLATED */
-    invalid_totp_code: 'Invalid TOTP code.',
-    /** UNTRANSLATED */
-    webauthn_verification_failed: 'WebAuthn verification failed.',
-    /** UNTRANSLATED */
-    webauthn_verification_not_found: 'WebAuthn verification not found.',
-    /** UNTRANSLATED */
-    bind_mfa_existed: 'MFA already exists.',
-    /** UNTRANSLATED */
-    backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
-    /** UNTRANSLATED */
-    backup_code_required: 'Backup code is required.',
-    /** UNTRANSLATED */
-    invalid_backup_code: 'Invalid backup code.',
-    /** UNTRANSLATED */
-    mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
+    require_mfa_verification: 'Se requiere verificación de MFA para iniciar sesión.',
+    mfa_sign_in_only: 'MFA solo está disponible para la interacción de inicio de sesión.',
+    pending_info_not_found:
+      'Información de MFA pendiente no encontrada, por favor inicie MFA primero.',
+    invalid_totp_code: 'Código TOTP no válido.',
+    webauthn_verification_failed: 'Fallo en la verificación de WebAuthn.',
+    webauthn_verification_not_found: 'Verificación de WebAuthn no encontrada.',
+    bind_mfa_existed: 'MFA ya existe.',
+    backup_code_can_not_be_alone: 'El código de respaldo no puede ser el único MFA.',
+    backup_code_required: 'Se requiere el código de respaldo.',
+    invalid_backup_code: 'Código de respaldo no válido.',
+    mfa_policy_not_user_controlled: 'La política de MFA no está controlada por el usuario.',
   },
   sso_enabled:
     'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',

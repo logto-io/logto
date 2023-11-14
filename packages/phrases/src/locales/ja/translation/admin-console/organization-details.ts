@@ -1,46 +1,27 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: '組織の詳細',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    '削除すると、すべてのメンバーが組織内のメンバーシップとロールを失います。この操作は元に戻せません。',
+  organization_id: '組織ID',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    '組織は、一般的な識別子によって識別されるアイデンティティ（通常ユーザー）のグループです。\n\n各組織には独自のメンバー、役割、および権限があります。また、役割と権限は組織テンプレートによって定義されます。',
+  name_placeholder: '組織の名前。一意である必要はありません。',
+  description_placeholder: '組織の説明。',
+  member: 'メンバー',
+  member_other: 'メンバー',
+  add_members_to_organization: '組織 {{name}} にメンバーを追加',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    '名前、メール、電話、またはユーザーIDで検索して適切なユーザーを見つけます。検索結果には既存のメンバーは表示されません。',
+  add_with_organization_role: '組織の役割付きで追加',
+  user: 'ユーザー',
+  authorize_to_roles: '{{name}} に以下の役割へのアクセスを許可',
+  edit_organization_roles: '組織の役割を編集',
+  edit_organization_roles_of_user: '{{name}} の組織の役割を編集',
+  remove_user_from_organization: '組織からユーザーを削除',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    '削除すると、ユーザーは組織内のメンバーシップとロールを失います。この操作は元に戻せません。',
+  search_user_placeholder: '名前、メール、電話番号、またはユーザーIDで検索',
+  at_least_one_user: '少なくとも1人のユーザーが必要です。',
 };
 
 export default Object.freeze(organization_details);

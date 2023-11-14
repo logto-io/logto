@@ -1,11 +1,10 @@
 const paywall = {
   applications:
-    'Limite de {{count, number}} aplicação do <planName/> atingido. Atualize o plano para atender às necessidades da sua equipe. Para obter qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
+    'Limite de {{count, number}} aplicação do <planName/> atingido. Atualize o plano para atender às necessidades da sua equipa. Para obter qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   applications_other:
-    'Limite de {{count, number}} aplicações do <planName/> atingido. Atualize o plano para atender às necessidades da sua equipe. Para obter qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
-  /** UNTRANSLATED */
+    'Limite de {{count, number}} aplicações do <planName/> atingido. Atualize o plano para atender às necessidades da sua equipa. Para obter qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   machine_to_machine_feature:
-    'Upgrade to the <strong>Hobby</strong> plan to unlock 1 machine-to-machine application, or choose the <strong>Pro</strong> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
+    'Upgrade para o plano <strong>Hobby</strong> para desbloquear 1 aplicação de máquina a máquina, ou escolha o plano <strong>Pro</strong> para uso ilimitado. Para qualquer assistência, não hesite em <a>entrar em contato conosco</a>.',
   machine_to_machine:
     'Limite de {{count, number}} aplicação de máquina a máquina do <planName/> atingido. Atualize o plano para atender às necessidades da sua equipe. Para obter qualquer ajuda, sinta-se à vontade para <a>entrar em contato conosco</a>.',
   machine_to_machine_other:
@@ -18,16 +17,14 @@ const paywall = {
     'Atingiu o limite de {{count, number}} permissões por recurso de API de <planName/>. Atualize agora para expandir. <a>Contacte-nos</a> se precisar de assistência.',
   scopes_per_resource_other:
     'Atingiu o limite de {{count, number}} permissões por recurso de API de <planName/>. Atualize agora para expandir. <a>Contacte-nos</a> se precisar de assistência.',
-  /** UNTRANSLATED */
   custom_domain:
-    'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    'Desbloqueie a funcionalidade de domínio personalizado ao atualizar para o plano <strong>Hobby</strong> ou <strong>Pro</strong>. Não hesite em <a>entrar em contato conosco</a> se precisar de qualquer assistência.',
   social_connectors:
     'Atingiu o limite de {{count, number}} conectores sociais de <planName/>. Atualize o plano para obter conectores sociais adicionais e a capacidade de criar os seus próprios conectores usando os protocolos OIDC, OAuth 2.0 e SAML. Não hesite em <a>Contacte-nos</a> se precisar de ajuda.',
   social_connectors_other:
     'Atingiu o limite de {{count, number}} conectores sociais de <planName/>. Atualize o plano para obter conectores sociais adicionais e a capacidade de criar os seus próprios conectores usando os protocolos OIDC, OAuth 2.0 e SAML. Não hesite em <a>Contacte-nos</a> se precisar de ajuda.',
-  /** UNTRANSLATED */
   standard_connectors_feature:
-    'Upgrade to the <strong>Hobby</strong> or <strong>Pro</strong> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
+    'Upgrade para os planos <strong>Hobby</strong> ou <strong>Pro</strong> para criar os seus próprios conectores usando os protocolos OIDC, OAuth 2.0 e SAML, além de conectores sociais ilimitados e todos os recursos premium. Sinta-se à vontade para <a>entrar em contato conosco</a> se precisar de qualquer assistência.',
   standard_connectors:
     'Atingiu o limite de {{count, number}} conectores sociais de <planName/>. Atualize o plano para obter conectores sociais adicionais e a capacidade de criar os seus próprios conectores usando os protocolos OIDC, OAuth 2.0 e SAML. Não hesite em <a>Contacte-nos</a> se precisar de ajuda.',
   standard_connectors_other:

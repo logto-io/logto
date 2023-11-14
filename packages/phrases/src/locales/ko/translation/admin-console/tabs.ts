@@ -5,18 +5,15 @@ const tabs = {
   api_resources: 'API 리소스',
   sign_in_experience: '로그인 경험',
   connectors: '연동',
-  /** UNTRANSLATED */
-  enterprise_sso: 'Enterprise SSO',
+  enterprise_sso: '기업 SSO',
   webhooks: '웹훅',
-  /** UNTRANSLATED */
-  organizations: 'Organizations',
+  organizations: '조직',
   users: '사용자 관리',
   audit_logs: '감사 기록',
   roles: '역할',
   docs: '문서',
-  tenant_settings: '설정',
-  /** UNTRANSLATED */
-  mfa: 'Multi-factor auth',
+  tenant_settings: '테넌트 설정',
+  mfa: '다중 요소 인증',
 };
 
 export default Object.freeze(tabs);

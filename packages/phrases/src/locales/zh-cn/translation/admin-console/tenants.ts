@@ -12,25 +12,20 @@ const tenants = {
     description: '设置租户名称并查看托管数据的地区和环境标签。',
     tenant_id: '租户 ID',
     tenant_name: '租户名称',
-    /** UNTRANSLATED */
-    tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: '数据托管地区',
+    tenant_region_tip: '您的租户资源托管在 {{region}}。 <a>了解更多</a>',
     environment_tag: '环境标签',
     environment_tag_description: '标签不会改变服务。它们只是指导您区分不同的环境。',
     environment_tag_development: '开发',
     environment_tag_staging: '预发布',
     environment_tag_production: '产品',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      '开发环境主要用于测试，包括所有专业功能，但在登录体验中会有水印。 <a>了解更多</a>',
     tenant_info_saved: '租户信息成功保存。',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
-    development: 'Development',
-    /** UNTRANSLATED */
-    production: 'Production',
+    development: '开发',
+    production: '产品',
   },
   deletion_card: {
     title: '删除',
@@ -41,50 +36,28 @@ const tenants = {
   create_modal: {
     title: '创建租户',
     subtitle: '创建新的租户以分隔资源和用户。',
-    /** UNTRANSLATED */
-    subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
-    development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
-    development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
-    production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+    subtitle_with_region: '创建一个新的租户以分隔资源和用户。地区和环境标签在创建后将无法更改。',
+    tenant_usage_purpose: '您想要使用此租户做什么?',
+    development_description: '开发环境主要用于测试，不应在生产环境中使用。',
+    development_hint: '开发环境主要用于测试，不应在生产环境中使用。',
+    production_description: '产品是最终用户使用的实际软件，可能需要付费订阅。',
+    available_plan: '可用方案：',
     create_button: '创建租户',
     tenant_name_placeholder: '我的租户',
   },
   notification: {
-    /** UNTRANSLATED */
-    allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+    allow_pro_features_title: '您现在可以在您的开发租户中访问 <span>全部Logto Pro功能</span>！',
+    allow_pro_features_description: '完全免费，没有试用期-永远！',
+    explore_all_features: '探索所有功能',
+    impact_title: '这对我有影响吗？',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      '您的租户标签已从"<strong>预发布</strong>"更改为"<strong>产品</strong>"，但此更改不会影响您当前的设置。',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
-    paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      '当您订阅Logto Hobby计划时，您以前的"<strong>开发</strong>"租户标签将变更为"<strong>产品</strong>"，这不会影响您的现有设置。',
+    paid_tenant_hint_2: '如果您仍处于开发阶段，您可以创建一个新的开发租户以访问更多专业功能。',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
-    paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      '如果您处于生产阶段或生产环境中，您仍然需要订阅特定的计划，因此此时不需要进行任何操作。',
+    paid_tenant_hint_4: '如需帮助，请随时联系我们！感谢您选择Logto！',
   },
   delete_modal: {
     title: '删除租户',
@@ -99,13 +72,13 @@ const tenants = {
       '抱歉，您现在无法删除此租户。请确保您处于免费计划并已支付所有未结账单。',
   },
   tenant_landing_page: {
-    title: '你还没有创建租户',
+    title: '您还没有创建租户',
     description:
-      '要开始使用 Logto 配置项目，请创建一个新租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
+      '要开始使用Logto配置项目，请创建一个新的租户。如果您需要注销或删除您的帐户，只需单击右上角的头像按钮。',
     create_tenant_button: '创建租户',
   },
   status: {
-    mau_exceeded: '超出MAU限制',
+    mau_exceeded: '超出 MAU 限制',
     suspended: '已暂停',
     overdue: '逾期',
   },
@@ -117,67 +90,44 @@ const tenants = {
       '如果您需要进一步澄清、有任何疑虑或希望恢复全部功能并解锁您的租户，请立即联系我们。',
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: '签名密钥',
+    description: '在您的租户中安全管理签名密钥。',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'OIDC私钥',
+      cookie_key: 'OIDC Cookie密钥',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: '正在使用的私钥',
+    cookie_keys_in_use: '正在使用的 Cookie 密钥',
+    rotate_private_keys: '旋转私钥',
+    rotate_cookie_keys: '旋转 Cookie 密钥',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      '此操作将创建一个新的私钥，旋转当前密钥，并删除之前的密钥。使用当前密钥签名的JWT令牌将在删除或另一轮旋转之前保持有效。',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      '此操作将创建一个新的Cookie密钥，旋转当前密钥，并删除之前的密钥。使用当前密钥签名的Cookie将在删除或另一轮旋转之前保持有效。',
+    select_private_key_algorithm: '为新的私钥选择签名密钥算法',
+    rotate_button: '旋转',
     table_column: {
-      /** UNTRANSLATED */
       id: 'ID',
-      /** UNTRANSLATED */
-      status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      status: '状态',
+      algorithm: '签名密钥算法',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: '当前',
+      previous: '之前',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        '您确定要旋转<strong>OIDC私钥</strong>吗？新发布的JWT令牌将由新密钥签名。使用当前密钥签名的现有JWT令牌将在您再次旋转之前保持有效。',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        '您确定要旋转<strong>OIDC Cookie密钥</strong>吗？登录会话生成的新Cookie将由新Cookie密钥签名。使用当前密钥签名的现有Cookie将在您再次旋转之前保持有效。',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        '您确定要删除<strong>OIDC私钥</strong>吗？使用此私有签名密钥签名的现有JWT令牌将不再有效。',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        '您确定要删除<strong>OIDC Cookie密钥</strong>吗？用此Cookie密钥签名的旧登录会话将不再有效。这些用户需要重新验证。',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: '签名密钥旋转成功。',
+      delete_key_success: '密钥已成功删除。',
     },
   },
 };

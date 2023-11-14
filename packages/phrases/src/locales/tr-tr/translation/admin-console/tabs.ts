@@ -5,18 +5,15 @@ const tabs = {
   api_resources: 'API Kaynakları',
   sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
-  /** UNTRANSLATED */
-  enterprise_sso: 'Enterprise SSO',
+  enterprise_sso: 'Kurumsal SSO',
   webhooks: 'Webhooks',
-  /** UNTRANSLATED */
-  organizations: 'Organizations',
+  organizations: 'Organizasyonlar',
   users: 'Kullanıcı Yönetimi',
   audit_logs: 'Denetim Kayıtları',
   roles: 'Roller',
   docs: 'Dökümanlar',
   tenant_settings: 'Ayarlar',
-  /** UNTRANSLATED */
-  mfa: 'Multi-factor auth',
+  mfa: 'Çoklu faktörlü kimlik doğrulama',
 };
 
 export default Object.freeze(tabs);

@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
+  page_title: 'Jednolite logowanie dla przedsiębiorstw',
+  title: 'Jednolite logowanie dla przedsiębiorstw',
+  subtitle:
+    'Połącz dostawcę tożsamości przedsiębiorstwa i włącz jednostronne logowanie jednolitego.',
+  create: 'Dodaj łącznik przedsiębiorstwa',
+  col_connector_name: 'Nazwa łącznika',
+  col_type: 'Typ',
+  col_email_domain: 'Domena e-mail',
   col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  col_status_in_use: 'W użyciu',
+  col_status_invalid: 'Nieprawidłowy',
+  placeholder_title: 'Łącznik przedsiębiorstwa',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logto udostępniło wiele wbudowanych dostawców tożsamości przedsiębiorstw, możesz także stworzyć własnego zgodnego ze standardowymi protokołami.',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: 'Dodaj łącznik przedsiębiorstwa',
+    text_divider: 'Albo możesz dostosować swój łącznik za pomocą standardowego protokołu.',
+    connector_name_field_title: 'Nazwa łącznika',
+    connector_name_field_placeholder: 'Nazwa dostawcy tożsamości przedsiębiorstwa',
+    create_button_text: 'Stwórz łącznik',
   },
 };
 

@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
   page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
   title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
+  subtitle:
+    'Verbinden Sie den Unternehmensidentitätsanbieter und aktivieren Sie das SP-gesteuerte Single Sign-On.',
+  create: 'Unternehmensconnector hinzufügen',
+  col_connector_name: 'Connector-Name',
+  col_type: 'Typ',
+  col_email_domain: 'E-Mail-Domain',
   col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  col_status_in_use: 'In Verwendung',
+  col_status_invalid: 'Ungültig',
+  placeholder_title: 'Unternehmensconnector',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logto hat viele integrierte Unternehmensidentitätsanbieter zur Verbindung bereitgestellt. Gleichzeitig können Sie Ihren eigenen Anbieter mit Standardprotokollen erstellen.',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: 'Unternehmensconnector hinzufügen',
+    text_divider: 'Oder Sie können Ihren Connector mit einem Standardprotokoll anpassen.',
+    connector_name_field_title: 'Connector-Name',
+    connector_name_field_placeholder: 'Name für den Unternehmensidentitätsanbieter',
+    create_button_text: 'Connector erstellen',
   },
 };
 

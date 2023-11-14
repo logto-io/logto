@@ -20,14 +20,11 @@ const user_details = {
   tab_settings: '設定',
   tab_roles: '角色',
   tab_logs: '用戶日誌',
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: '組織',
+  authentication: '身份驗證',
   authentication_description:
     '每個用戶都有一個包含所有用戶資訊的個人資料。它由基本數據、社交身份和自定義數據組成。',
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: '使用者檔案',
   field_email: '電子郵箱',
   field_phone: '手機號碼',
   field_username: '用戶名',
@@ -37,29 +34,21 @@ const user_details = {
   field_custom_data: '自定義數據',
   field_custom_data_tip: '預定義屬性之外的用戶資訊，例如用戶偏好的顏色和語言。',
   field_connectors: '社交帳號',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: '企業連接',
   custom_data_invalid: '自定義數據必須是有效的 JSON 對象',
   connectors: {
     connectors: '連接器',
     user_id: '用戶ID',
     remove: '刪除',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
+    connected: '該用戶已連接多個社交連接器。',
     not_connected: '該用戶還沒有綁定社交帳號',
     deletion_confirmation: '您正在刪除現有的<name/>身份。你確定要繼續嗎？',
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
-    connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
-    not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+    connectors: '連接器',
+    enterprise_id: '企業ID',
+    connected: '該用戶已連接至多個企業身份提供者進行單一登錄。',
+    not_connected: '該用戶尚未連接到任何企業身份提供者進行單一登錄。',
   },
   mfa: {
     field_name: '多因素驗證',
@@ -97,8 +86,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '使用者需要至少擁有一個登入標識（使用者名稱、電子郵件、電話號碼或社交帳號）才能登入。確定要繼續嗎？',
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: '該組織中分配給該用戶的角色。',
 };
 
 export default Object.freeze(user_details);

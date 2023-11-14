@@ -20,14 +20,11 @@ const user_details = {
   tab_settings: '설정',
   tab_roles: '역할',
   tab_logs: '사용자 기록',
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: '조직',
+  authentication: '인증',
   authentication_description:
     '각 사용자는 모든 사용자 정보를 포함하는 프로파일을 가지고 있어요. 프로파일은 기본 데이터, 소셜 ID, 사용자 정의 데이터로 구성되어 있어요.',
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: '사용자 프로필',
   field_email: '이메일 주소',
   field_phone: '휴대전화 번호',
   field_username: '사용자 이름',
@@ -38,29 +35,21 @@ const user_details = {
   field_custom_data_tip:
     '사용자 정의 색상 및 언어와 같은 미리 정의되지 않은 추가적인 사용자의 정보를 의미해요.',
   field_connectors: '연동된 소셜',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: '기업 연결',
   custom_data_invalid: '사용자 정의 데이터는 반드시 유효한 JSON 객체여야 해요.',
   connectors: {
     connectors: '연동',
     user_id: '사용자 ID',
     remove: '삭제',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
+    connected: '이 사용자는 여러 소셜 연동에 연결되어 있어요.',
     not_connected: '이 사용자는 아직 소셜에 연동되지 않았아요.',
     deletion_confirmation: '기존 <name/> 신원을 제거하고 있습니다. 계속 진행하시겠습니까?',
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
-    connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
-    not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+    connectors: '연결',
+    enterprise_id: '기업 ID',
+    connected: '이 사용자는 단일 로그인을 위한 여러 기업 신원 제공자에 연결되어 있어요.',
+    not_connected: '이 사용자는 단일 로그인을 위한 어떤 기업 신원 제공자에도 연결되어 있지 않아요.',
   },
   mfa: {
     field_name: '다단계 인증',
@@ -101,8 +90,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     '사용자는 로그인 식별자(사용자 이름, 이메일, 전화 번호 또는 소셜) 중 적어도 하나를 갖고 로그인해야 합니다. 계속 하시겠습니까?',
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: '조직 내에서 사용자에게 할당된 역할.',
 };
 
 export default Object.freeze(user_details);

@@ -5,11 +5,10 @@ const entity = {
   not_exists: '{{name}}は存在しません。',
   not_exists_with_id: 'IDが`{{id}}`の{{name}}は存在しません。',
   not_found: 'リソースが存在しません。',
-  /** UNTRANSLATED */
   relation_foreign_key_not_found:
-    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
-  /** UNTRANSLATED */
-  unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
+    '外部キーが1つ以上見つかりません。入力を確認し、すべての参照先エンティティが存在することを確認してください。',
+  unique_integrity_violation:
+    'エンティティは既に存在します。入力を確認してもう一度お試しください。',
 };
 
 export default Object.freeze(entity);

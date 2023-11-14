@@ -20,14 +20,11 @@ const user_details = {
   tab_settings: '設定',
   tab_roles: '役割',
   tab_logs: 'ユーザーログ',
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: '組織',
+  authentication: '認証',
   authentication_description:
     '各ユーザーには、すべてのユーザー情報が含まれるプロファイルがあります。基本データ、ソーシャルアイデンティティ、およびカスタムデータで構成されています。',
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: 'ユーザープロファイル',
   field_email: 'メールアドレス',
   field_phone: '電話番号',
   field_username: 'ユーザー名',
@@ -38,29 +35,23 @@ const user_details = {
   field_custom_data_tip:
     'プリディフィンドされたユーザープロパティにリストされていない、追加のユーザー情報（ユーザーが好みの色や言語など）。',
   field_connectors: 'ソーシャル接続',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: 'エンタープライズ接続',
   custom_data_invalid: 'カスタムデータは有効なJSONオブジェクトである必要があります',
   connectors: {
     connectors: 'コネクタ',
     user_id: 'ユーザーID',
     remove: '削除',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
+    connected: 'このユーザーは複数のソーシャルコネクタに接続しています。',
     not_connected: 'ユーザーはソーシャルコネクタに接続していません',
     deletion_confirmation: '既存の<name/>アイデンティティを削除しています。本当に続行しますか？',
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
+    connectors: '接続',
+    enterprise_id: 'エンタープライズID',
     connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
+      'このユーザーはシングルサインオンのために複数のエンタープライズアイデンティティプロバイダに接続しています。',
     not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+      'ユーザーはシングルサインオンのためにいかなるエンタープライズアイデンティティプロバイダにも接続していません。',
   },
   mfa: {
     field_name: '多要素認証',
@@ -100,8 +91,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'ユーザーは、サインインに少なくとも1つの識別子（ユーザー名、メールアドレス、電話番号、またはソーシャル）を持っている必要があります。続行してよろしいですか？',
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: 'この組織内のユーザーに割り当てられた役割。',
 };
 
 export default Object.freeze(user_details);

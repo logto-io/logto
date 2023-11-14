@@ -47,13 +47,9 @@ const quota_item = {
     not_eligible: '刪除您的自定義網域',
   },
   omni_sign_in_enabled: {
-    /** UNTRANSLATED */
     name: 'SSO',
-    /** UNTRANSLATED */
     limited: 'SSO',
-    /** UNTRANSLATED */
     unlimited: 'SSO',
-    /** UNTRANSLATED */
     not_eligible: 'Disable your SSO',
   },
   built_in_email_connector_enabled: {
@@ -98,14 +94,10 @@ const quota_item = {
     not_eligible: '移除您的 Webhooks',
   },
   organization_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organization',
-    /** UNTRANSLATED */
-    limited: 'Organization',
-    /** UNTRANSLATED */
-    unlimited: 'Organization',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '組織',
+    limited: '組織',
+    unlimited: '組織',
+    not_eligible: '刪除您的組織',
   },
   audit_logs_retention_days: {
     name: '審計日誌保留',
@@ -115,10 +107,10 @@ const quota_item = {
     not_eligible: '無審計日誌',
   },
   community_support_enabled: {
-    name: '社群支援',
-    limited: '社群支援',
-    unlimited: '社群支援',
-    not_eligible: '無社群支援',
+    name: '社區支援',
+    limited: '社區支援',
+    unlimited: '社區支援',
+    not_eligible: '無社區支援',
   },
   customer_ticket_support: {
     name: '客戶工單支援',

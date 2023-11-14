@@ -26,7 +26,6 @@ const quota_table = {
   },
   user_authn: {
     title: 'ユーザー認証',
-    /** UNTRANSLATED */
     omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'パスワード',
     passwordless: 'パスワードレス - E-mailとSMS',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'ウェブフック',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: '組織',
+    organization: '組織 (Q4, 2023)',
   },
   support: {
     title: 'サポート',

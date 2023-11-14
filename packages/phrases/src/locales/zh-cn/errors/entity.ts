@@ -5,10 +5,8 @@ const entity = {
   not_exists: '该 {{name}} 不存在。',
   not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在。',
   not_found: '该资源不存在。',
-  /** UNTRANSLATED */
   relation_foreign_key_not_found:
-    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
-  /** UNTRANSLATED */
+    '无法找到一个或多个外键。请检查输入，并确保所有引用的实体都存在。',
   unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
 };
 

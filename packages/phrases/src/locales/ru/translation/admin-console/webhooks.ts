@@ -32,9 +32,8 @@ const webhooks = {
     name_placeholder: 'Введите имя вебхука',
     endpoint_url: 'URL-адрес конечной точки',
     endpoint_url_placeholder: 'https://ваш.url.адрес.вебхука',
-    /** UNTRANSLATED */
     endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+      'Введите URL вашей конечной точки, на который будет отправлено тело вебхука, когда произойдет событие.',
     create_webhook: 'Создать вебхук',
     missing_event_error: 'Вы должны выбрать как минимум одно событие.',
   },

@@ -33,8 +33,7 @@ const general = {
   copied: '복사됨',
   required: '필수',
   add_another: '새로 추가',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: '또 다른 것 만들기',
   deletion_confirmation: '정말로 {{title}}을/를 삭제할까요?',
   settings_nav: '설정',
   unsaved_changes_warning: '수정된 내용이 있어요. 정말로 현재 페이지를 벗어날까요?',
@@ -59,22 +58,15 @@ const general = {
   unknown_error: '알 수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요.',
   select: '선택',
   contact_us_action: '문의하기',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: '설명',
+  name: '이름',
+  add_field: '{{field}} 추가',
+  create_field: '{{field}} 만들기',
+  edit_field: '{{field}} 편집',
+  delete_field: '{{field}} 삭제',
   coming_soon: '곧 출시 예정',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}}는 현재 베타 버전입니다. 탐색하고 <ContactLink>피드백을 공유</ContactLink>해주세요.',
 };
 
 export default Object.freeze(general);

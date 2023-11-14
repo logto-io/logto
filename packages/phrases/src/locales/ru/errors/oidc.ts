@@ -1,11 +1,9 @@
 const oidc = {
   aborted: 'Конечный пользователь прервал взаимодействие.',
-  /** UNTRANSLATED */
-  invalid_scope: 'Invalid scope: {{error_description}}.',
+  invalid_scope: 'Недопустимая область: {{error_description}}.',
   invalid_token: 'Недействительный токен.',
   invalid_client_metadata: 'Недопустимые метаданные клиента.',
-  /** UNTRANSLATED */
-  insufficient_scope: 'Token missing scope `{{scope}}`.',
+  insufficient_scope: 'Отсутствует область токена `{{scope}}`.',
   invalid_request: 'Недопустимый запрос.',
   invalid_grant: 'Недопустимый запрос на предоставление прав.',
   invalid_redirect_uri:
@@ -16,14 +14,10 @@ const oidc = {
   unsupported_response_mode: 'Запрошенный response_mode не поддерживается.',
   unsupported_response_type: 'Запрошенный response_type не поддерживается.',
   provider_error: 'Внутренняя ошибка OIDC: {{message}}.',
-  /** UNTRANSLATED */
-  server_error: 'An unknown OIDC error occurred. Please try again later.',
-  /** UNTRANSLATED */
-  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
-  /** UNTRANSLATED */
-  key_required: 'At least one key is required.',
-  /** UNTRANSLATED */
-  key_not_found: 'Key with ID {{id}} is not found.',
+  server_error: 'Произошла неизвестная ошибка OIDC. Пожалуйста, попробуйте снова позже.',
+  provider_error_fallback: 'Произошла ошибка OIDC: {{code}}.',
+  key_required: 'Требуется как минимум один ключ.',
+  key_not_found: 'Ключ с идентификатором {{id}} не найден.',
 };
 
 export default Object.freeze(oidc);

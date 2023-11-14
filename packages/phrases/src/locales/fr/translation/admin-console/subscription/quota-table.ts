@@ -26,7 +26,6 @@ const quota_table = {
   },
   user_authn: {
     title: 'Authentification des utilisateurs',
-    /** UNTRANSLATED */
     omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'Mot de passe',
     passwordless: 'Sans mot de passe - Email et SMS',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: 'Organisation',
+    organization: 'Organisation (Q4, 2023)',
   },
   support: {
     title: 'Support',

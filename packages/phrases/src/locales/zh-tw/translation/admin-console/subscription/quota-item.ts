@@ -7,20 +7,20 @@ const quota_item = {
     not_eligible: '移除您的租戶',
   },
   mau_limit: {
-    name: 'Monthly active users',
+    name: '月活用戶',
     limited: '{{count, number}} 月活用戶',
     unlimited: '不限月活用戶數',
     not_eligible: '移除您的所有用戶',
   },
   applications_limit: {
-    name: 'Applications',
+    name: '應用程式',
     limited: '{{count, number}} 應用程式',
     limited_other: '{{count, number}} 應用程式',
     unlimited: '不限應用程式數',
     not_eligible: '移除您的應用程式',
   },
   machine_to_machine_limit: {
-    name: 'Machine to machine',
+    name: '機器對機器應用程式',
     limited: '{{count, number}} 機器對機器應用程式',
     limited_other: '{{count, number}} 機器對機器應用程式',
     unlimited: '不限機器對機器應用程式數',
@@ -47,14 +47,10 @@ const quota_item = {
     not_eligible: '移除您的自訂網域',
   },
   omni_sign_in_enabled: {
-    /** UNTRANSLATED */
     name: 'SSO',
-    /** UNTRANSLATED */
     limited: 'SSO',
-    /** UNTRANSLATED */
     unlimited: 'SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Disable your SSO',
+    not_eligible: '停用你的 SSO',
   },
   built_in_email_connector_enabled: {
     name: '內建電子郵件連接程式',
@@ -98,14 +94,10 @@ const quota_item = {
     not_eligible: '移除您的 Webhooks',
   },
   organization_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organization',
-    /** UNTRANSLATED */
-    limited: 'Organization',
-    /** UNTRANSLATED */
-    unlimited: 'Organization',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '組織',
+    limited: '組織',
+    unlimited: '組織',
+    not_eligible: '移除您的組織',
   },
   audit_logs_retention_days: {
     name: '審計記錄保留期限',

@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
-  col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  page_title: 'SSO Empresarial',
+  title: 'SSO Empresarial',
+  subtitle:
+    'Conecte o fornecedor de identidade empresarial e ative o Logon Único iniciado pelo SP.',
+  create: 'Adicionar conector empresarial',
+  col_connector_name: 'Nome do conector',
+  col_type: 'Tipo',
+  col_email_domain: 'Domínio do email',
+  col_status: 'Estado',
+  col_status_in_use: 'Em uso',
+  col_status_invalid: 'Inválido',
+  placeholder_title: 'Conector empresarial',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'O Logto forneceu muitos provedores de identidade empresarial integrados para conectar, ao mesmo tempo, você pode criar o seu próprio com protocolos padrão.',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: 'Adicionar conector empresarial',
+    text_divider: 'Ou você pode personalizar seu conector por um protocolo padrão.',
+    connector_name_field_title: 'Nome do conector',
+    connector_name_field_placeholder: 'Nome do provedor de identidade empresarial',
+    create_button_text: 'Criar conector',
   },
 };
 

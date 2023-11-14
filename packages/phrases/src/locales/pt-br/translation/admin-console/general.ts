@@ -1,5 +1,5 @@
 const general = {
-  placeholder: 'Placeholder',
+  placeholder: 'Espaço reservado',
   submit: 'Enviar',
   skip: 'Pular',
   next: 'Próximo',
@@ -33,8 +33,7 @@ const general = {
   copied: 'Copiado',
   required: 'Obrigatório',
   add_another: 'Adicionar outro',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Criar outro',
   deletion_confirmation: 'Tem certeza de que deseja excluir este {{title}}?',
   settings_nav: 'Configurações',
   unsaved_changes_warning:
@@ -60,22 +59,15 @@ const general = {
   unknown_error: 'Erro desconhecido, por favor tente novamente mais tarde.',
   select: 'Selecionar',
   contact_us_action: 'Contate-nos',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: 'Descrição',
+  name: 'Nome',
+  add_field: 'Adicionar {{field}}',
+  create_field: 'Criar {{field}}',
+  edit_field: 'Editar {{field}}',
+  delete_field: 'Excluir {{field}}',
   coming_soon: 'Em breve',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} está atualmente em beta. Bem-vindo para explorá-lo e <ContactLink>compartilhar seu feedback</ContactLink>.',
 };
 
 export default Object.freeze(general);
