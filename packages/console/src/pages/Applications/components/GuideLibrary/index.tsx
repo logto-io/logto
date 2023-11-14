@@ -10,6 +10,7 @@ import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import { isCloud } from '@/consts/env';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -105,7 +106,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <FeatureTag
                     isVisible={isM2mDisabledForCurrentPlan}
                     for="upsell"
-                    plan="hobby"
+                    plan={ReservedPlanId.hobby}
                     className={styles.proTag}
                   />
                 </div>

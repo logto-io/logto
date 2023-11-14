@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeatureTag from '@/components/FeatureTag';
+import { type ReservedPlanId } from '@/consts/subscriptions';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -25,7 +26,7 @@ export type Props = {
    *
    * If not provided, no paywall tag will be shown.
    */
-  paywall?: 'hobby' | 'pro';
+  paywall?: Exclude<ReservedPlanId, ReservedPlanId.free>;
 };
 
 /**

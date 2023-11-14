@@ -4,6 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PageMeta from '@/components/PageMeta';
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -27,7 +28,7 @@ function PageWrapper({ children }: Props) {
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         isBeta
-        paywall={cond(!isMfaEnabled && 'hobby')}
+        paywall={cond(!isMfaEnabled && ReservedPlanId.hobby)}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}

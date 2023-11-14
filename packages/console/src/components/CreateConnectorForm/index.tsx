@@ -7,6 +7,7 @@ import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -155,7 +156,11 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              <FeatureTag isVisible={isStandardConnectorDisabled} for="upsell" plan="hobby" />
+              <FeatureTag
+                isVisible={isStandardConnectorDisabled}
+                for="upsell"
+                plan={ReservedPlanId.hobby}
+              />
             </div>
             <ConnectorRadioGroup
               name="group"
