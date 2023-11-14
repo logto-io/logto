@@ -37,7 +37,7 @@ const application_details = {
   cors_allowed_origins: 'CORS zugelassene Ursprünge',
   cors_allowed_origins_placeholder: 'https://your.website.de',
   cors_allowed_origins_tip:
-    'Standardmäßig sind alle Umleitungs-URI-Ursprünge zulässig. Normalerweise ist dieses Feld nicht erforderlich. Siehe die <a>MDN-Dokumentation<a> für detaillierte Informationen.',
+    'Standardmäßig sind alle Umleitungs-URI-Ursprünge zulässig. Normalerweise ist dieses Feld nicht erforderlich. Siehe die <a>MDN-Dokumentation<a>für detaillierte Informationen.',
   token_endpoint: 'Token-Endpunkt',
   user_info_endpoint: 'Benutzerinformations-Endpunkt',
   enable_admin_access: 'Admin-Zugang aktivieren',

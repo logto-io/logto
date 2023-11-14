@@ -9,7 +9,7 @@ const api_resource_details = {
   management_api_settings_description:
     "Logto Yönetim API'si, yöneticilerin kimlikle ilgili birçok görevi yönetmelerine, güvenlik politikalarını uygulamalarına ve yönetmeliklere ve standartlara uyum sağlamalarına olanak tanıyan kapsamlı bir API koleksiyonudur.",
   management_api_notice:
-    "Bu API Logto varlığını temsil eder ve değiştirilemez veya silinemez. Geniş bir kimlikle ilgili görevler yelpazesi için yönetim API'sini kullanabilirsiniz. <a> Daha fazla bilgi </a>",
+    "Bu API Logto varlığını temsil eder ve değiştirilemez veya silinemez. Geniş bir kimlikle ilgili görevler yelpazesi için yönetim API'sini kullanabilirsiniz. <a>Daha fazla bilgi</a>",
   token_expiration_time_in_seconds: 'Token sona erme süresi (saniye)',
   token_expiration_time_in_seconds_placeholder: 'Token zaman aşım süresini giriniz',
   delete_description:

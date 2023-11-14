@@ -15,7 +15,7 @@ const tenants = {
     tenant_name: 'Mietername',
     tenant_region: 'Gehostete Region der Daten',
     tenant_region_tip:
-      'Ihre Mandantenressourcen werden in {{region}} gehostet. <a> Mehr erfahren </a>',
+      'Ihre Mandantenressourcen werden in {{region}} gehostet. <a>Mehr erfahren</a>',
     environment_tag: 'Umgebungsmarke',
     environment_tag_description:
       'Tags verändern den Service nicht. Sie dienen lediglich zur Unterscheidung verschiedener Umgebungen.',
@@ -23,7 +23,7 @@ const tenants = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     development_description:
-      'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und enthält alle Pro-Funktionen, weist jedoch Wasserzeichen im Anmeldeerlebnis auf. <a> Mehr erfahren </a>',
+      'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und enthält alle Pro-Funktionen, weist jedoch Wasserzeichen im Anmeldeerlebnis auf. <a>Mehr erfahren</a>',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
   },
   full_env_tag: {
@@ -75,7 +75,7 @@ const tenants = {
     description_line1:
       'Möchten Sie wirklich Ihren Mandanten "<span>{{name}}</span>" mit Umgebungssuffix-Tag "<span>{{tag}}</span>" löschen? Dieser Vorgang kann nicht rückgängig gemacht werden und führt zur dauerhaften Löschung aller Ihrer Daten und Kontoinformationen.',
     description_line2:
-      'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen. <span><a> Kontaktieren Sie uns per E-Mail </a></span>',
+      'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen. <span><a>Kontaktieren Sie uns per E-Mail</a></span>',
     description_line3:
       'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',

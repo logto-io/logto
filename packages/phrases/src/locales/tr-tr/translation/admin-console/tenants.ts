@@ -15,7 +15,7 @@ const tenants = {
     tenant_name: 'Kiracı Adı',
     tenant_region: 'Veriler barındırılan bölge',
     tenant_region_tip:
-      'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a> Daha fazla bilgi </a>',
+      'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a>Daha fazla bilgi</a>',
     environment_tag: 'Çevre Etiketi',
     environment_tag_description:
       'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
@@ -23,7 +23,7 @@ const tenants = {
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
     development_description:
-      'Geliştirme ortamı genellikle test için kullanılır ve giriş deneyiminde filigranlar içerir. <a> Daha fazla bilgi </a>',
+      'Geliştirme ortamı genellikle test için kullanılır ve giriş deneyiminde filigranlar içerir. <a>Daha fazla bilgi</a>',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   full_env_tag: {
