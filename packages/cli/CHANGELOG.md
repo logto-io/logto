@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.11.0
+
+### Patch Changes
+
+- Updated dependencies [6727f629d]
+  - @logto/phrases@1.7.0
+  - @logto/phrases-experience@1.4.0
+  - @logto/schemas@1.11.0
+
 ## 1.10.1
 
 ### Patch Changes
