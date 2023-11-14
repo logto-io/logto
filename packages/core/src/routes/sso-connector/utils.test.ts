@@ -128,7 +128,7 @@ describe('validateConnectorDomains', () => {
     );
   });
 
-  it('should throw error if domains are in the blocklist', () => {
+  it('should throw error if domains are in the blacklist', () => {
     expect(() => {
       validateConnectorDomains(['foo.io', 'bar.io', 'gmail.com']);
     }).toMatchError(

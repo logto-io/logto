@@ -79,7 +79,7 @@ export const fetchConnectorProviderDetails = async (
 };
 
 /**
- * Validate the connector domains using the domain blocklist.
+ * Validate the connector domains using the domain blacklist.
  * - Throw error if the domains are invalid.
  * - Throw error if the domains are duplicated.
  *
