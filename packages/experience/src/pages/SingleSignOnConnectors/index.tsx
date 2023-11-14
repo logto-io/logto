@@ -38,7 +38,7 @@ const SingleSignOnConnectors = () => {
           return (
             <SocialLinkButton
               key={id}
-              className={styles.socialLinkButton}
+              className={styles.ssoLinkButton}
               name={{ en: connectorName }} // I18n support for connectorName not supported yet, always display the plain text
               logo={getLogoUrl({ theme, logoUrl, darkLogoUrl })}
               target={connectorName}
