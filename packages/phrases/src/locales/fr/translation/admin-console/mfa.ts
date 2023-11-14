@@ -31,9 +31,6 @@ const mfa = {
   mandatory: 'Les utilisateurs doivent toujours utiliser MFA à la connexion',
   mandatory_tip:
     "Les utilisateurs doivent configurer MFA la première fois à la connexion ou à l'inscription, et l'utiliser pour toutes les connexions futures.",
-  unlock_reminder:
-    "Déverrouillez MFA pour vérifier la sécurité en passant à un plan payant. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  view_plans: 'Voir les plans',
 };
 
 export default Object.freeze(mfa);

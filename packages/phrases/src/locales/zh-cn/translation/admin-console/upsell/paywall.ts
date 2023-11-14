@@ -48,6 +48,7 @@ const paywall = {
     '已达到<planName/>的{{count, number}}个 Webhook 限制。升级计划以创建更多 Webhook。如需任何帮助，请<a>联系我们</a>。',
   hooks_other:
     '已达到<planName/>的{{count, number}}个 Webhook 限制。升级计划以创建更多 Webhook。如需任何帮助，请<a>联系我们</a>。',
+  mfa: '升级到付费计划以解锁MFA进行安全验证。如果需要任何帮助，请随时<a>联系我们</a>。',
 };
 
 export default Object.freeze(paywall);

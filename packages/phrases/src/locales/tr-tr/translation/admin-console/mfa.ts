@@ -31,9 +31,6 @@ const mfa = {
   mandatory: 'Kullanıcılar her zaman girişte MFA kullanmak zorundadır',
   mandatory_tip:
     'Kullanıcılar, ilk kez giriş veya kayıt sırasında MFA kurmalı ve tüm gelecekteki girişlerde kullanmalıdır.',
-  unlock_reminder:
-    "Güvenliği kontrol etmek için MFA'yı bir ücretli plana geçerek kilidini açın. Yardıma ihtiyacınız olursa bize <a>iletişim kurmaktan</a> çekinmeyin.",
-  view_plans: 'Planları Görüntüle',
 };
 
 export default Object.freeze(mfa);

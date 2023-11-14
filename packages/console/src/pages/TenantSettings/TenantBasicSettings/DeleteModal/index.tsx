@@ -2,10 +2,9 @@ import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 
 import { type TenantResponse } from '@/cloud/types/router';
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import { tenantAbbreviatedTagNameMap } from '@/components/TenantEnvTag';
-import { contactEmailLink } from '@/consts';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
-import TextLink from '@/ds-components/TextLink';
 
 import * as styles from './index.module.scss';
 
@@ -46,7 +45,7 @@ function DeleteModal({ isOpen, isLoading, onClose, onDelete, tenant }: Props) {
           <Trans
             components={{
               span: <span className={styles.highlight} />,
-              a: <TextLink href={contactEmailLink} target="_blank" />,
+              a: <ContactUsPhraseLink />,
             }}
           >
             {t('tenants.delete_modal.description_line2')}

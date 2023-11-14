@@ -3,6 +3,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: '升級計劃',
   compare_plans: '比較計劃',
+  view_plans: '查看計劃',
   create_tenant: {
     title: '選擇您的租戶計劃',
     description:

@@ -3,6 +3,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: 'Mettre à niveau le plan',
   compare_plans: 'Comparer les plans',
+  view_plans: 'Voir les plans',
   create_tenant: {
     title: 'Sélectionnez votre plan pour le locataire',
     description:

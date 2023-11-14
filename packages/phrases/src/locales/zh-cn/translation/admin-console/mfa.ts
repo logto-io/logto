@@ -22,8 +22,6 @@ const mfa = {
   user_controlled_tip: '用户可以在首次登录或注册时跳过MFA设置，或在账户设置中启用/禁用MFA。',
   mandatory: '用户始终需要在登录时使用MFA',
   mandatory_tip: '用户必须在首次登录或注册时设置MFA，并在所有未来的登录中使用它。',
-  unlock_reminder: '升级到付费计划以解锁MFA进行安全验证。如果需要任何帮助，请随时<a>联系我们</a>。',
-  view_plans: '查看计划',
 };
 
 export default Object.freeze(mfa);

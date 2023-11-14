@@ -22,8 +22,6 @@ const mfa = {
   user_controlled_tip: '用戶可以在首次登錄或註冊時跳過MFA設置，或在帳戶設置中啟用/禁用它。',
   mandatory: '用戶總是需要在登錄時使用MFA',
   mandatory_tip: '用戶必須在首次登錄或註冊時設置MFA，並在以後的所有登錄中使用它。',
-  unlock_reminder: '升級到付費計劃以解鎖MFA以提高安全性。如果需要任何協助，請隨時<a>聯繫我們</a>。',
-  view_plans: '查看計劃',
 };
 
 export default Object.freeze(mfa);
