@@ -20,14 +20,11 @@ const user_details = {
   tab_settings: 'Ayarlar',
   tab_roles: 'Roller',
   tab_logs: 'Kullanıcı kayıtları',
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: 'Organizasyonlar',
+  authentication: 'Kimlik doğrulama',
   authentication_description:
     'Her kullanıcının, temel veriler, sosyal kimlikler ve özel verilerden oluşan tüm kullanıcı bilgilerini içeren bir profil vardır.',
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: 'Kullanıcı profili',
   field_email: 'Eposta adresi',
   field_phone: 'Telefon numarası',
   field_username: 'Kullanıcı Adı',
@@ -38,30 +35,24 @@ const user_details = {
   field_custom_data_tip:
     'Kullanıcı tarafından tercih edilen renk ve dil gibi önceden tanımlanmış kullanıcı özelliklerinde listelenmeyen ek kullanıcı bilgileri.',
   field_connectors: 'Sosyal bağlayıcılar',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: 'İş bağlantıları',
   custom_data_invalid: 'Özel veriler geçerli bir JSON nesnesi olmalıdır',
   connectors: {
     connectors: 'Bağlayıcılar',
     user_id: 'Kullanıcı IDsi',
     remove: 'Kaldır',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
+    connected: 'Bu kullanıcı birden fazla sosyal bağlayıcıya bağlıdır.',
     not_connected: 'Kullanıcı herhangi bir sosyal bağlayıcıya bağlı değil',
     deletion_confirmation:
       'Mevcut <name/> kimliğini kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
+    connectors: 'Bağlayıcılar',
+    enterprise_id: 'Şirket ID',
     connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
+      'Bu kullanıcı, Tek Oturum Kimliği için birden çok kurumsal kimlik sağlayıcıya bağlıdır.',
     not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+      'Kullanıcı, Tek Oturum Kimliği için herhangi bir kurumsal kimlik sağlayıcıya bağlı değil.',
   },
   mfa: {
     field_name: 'Çok faktörlü kimlik doğrulama',
@@ -103,8 +94,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     'Kullanıcının giriş yapmak için en az bir oturum açma kimliği (kullanıcı adı, e-posta, telefon numarası, veya sosyal) olması gerekiyor. Devam etmek istediğinizden emin misiniz?',
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: 'Bu organizasyon içinde kullanıcıya atanan roller.',
 };
 
 export default Object.freeze(user_details);

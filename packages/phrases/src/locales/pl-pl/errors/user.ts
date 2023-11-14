@@ -30,11 +30,8 @@ const user = {
   missing_profile: 'Musisz podać dodatkowe informacje przed zalogowaniem.',
   role_exists: 'Identyfikator roli {{roleId}} jest już dodany do tego użytkownika',
   invalid_role_type: 'Nieprawidłowy typ roli, nie można przypisać roli maszynowej do użytkownika.',
-  /** UNTRANSLATED */
   missing_mfa: 'You need to bind additional MFA before signing-in.',
-  /** UNTRANSLATED */
   totp_already_in_use: 'TOTP is already in use.',
-  /** UNTRANSLATED */
   backup_code_already_in_use: 'Backup code is already in use.',
 };
 

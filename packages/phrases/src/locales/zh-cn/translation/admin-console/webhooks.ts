@@ -29,9 +29,7 @@ const webhooks = {
     name_placeholder: '输入 Webhook 名称',
     endpoint_url: 'Endpoint URL',
     endpoint_url_placeholder: 'https://your.webhook.endpoint.url',
-    /** UNTRANSLATED */
-    endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+    endpoint_url_tip: '输入您的端点 URL，在事件发生时 Webhook 的数据将被发送到该 URL。',
     create_webhook: '创建 Webhook',
     missing_event_error: '您必须至少选择一个事件。',
   },

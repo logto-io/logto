@@ -26,8 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: '使用者認證',
-    /** UNTRANSLATED */
-    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
+    omni_sign_in: '企業SSO（2023年第4季）',
     password: '密碼',
     passwordless: '免密碼登入 - 電子郵件和簡訊',
     email_connector: '電子郵件連接器',
@@ -35,7 +34,7 @@ const quota_table = {
     social_connectors: '社交連接器',
     standard_connectors: '標準連接器',
     built_in_email_connector: '內建電子郵件連接器',
-    mfa: 'MFA',
+    mfa: '多因素認證',
   },
   user_management: {
     title: '使用者管理',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: '組織',
+    organization: '組織（2023年第4季）',
   },
   support: {
     title: '支援',
@@ -69,8 +66,8 @@ const quota_table = {
   contact: '聯絡',
   monthly_price: '${{value, number}}/月',
   mau_price: '${{value, number}}/MAU',
-  days_one: '{{count, number}}天',
-  days_other: '{{count, number}}天',
+  days_one: '{{count, number}} 天',
+  days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
 };

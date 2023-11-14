@@ -32,9 +32,8 @@ const webhooks = {
     name_placeholder: 'Webhook-Namen eingeben',
     endpoint_url: 'Endpunkt-URL',
     endpoint_url_placeholder: 'https://Ihre.webhook.endpunkt.url',
-    /** UNTRANSLATED */
     endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+      'Geben Sie die URL Ihres Endpunkts ein, an die ein Payload Ihres Webooks gesendet wird, wenn das Ereignis eintritt.',
     create_webhook: 'Webhook erstellen',
     missing_event_error: 'Sie müssen mindestens ein Ereignis auswählen.',
   },

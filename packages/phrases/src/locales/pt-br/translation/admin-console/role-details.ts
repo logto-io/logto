@@ -43,11 +43,9 @@ const role_details = {
     assign_title: 'Atribuir usuários',
     assign_subtitle:
       'Atribuir usuários a este papel. Encontre usuários adequados pesquisando nome, e-mail, telefone ou ID do usuário.',
-    /** UNTRANSLATED */
-    assign_field: 'Assign users',
+    assign_field: 'Atribuir usuários',
     confirm_assign: 'Atribuir usuários',
-    /** UNTRANSLATED */
-    assigned_toast_text: 'The selected users were successfully assigned to this role',
+    assigned_toast_text: 'Os usuários selecionados foram atribuídos com sucesso a este papel',
     empty: 'Nenhum usuário disponível',
   },
   applications: {
@@ -61,11 +59,9 @@ const role_details = {
     assign_title: 'Atribuir aplicativos',
     assign_subtitle:
       'Atribuir aplicativos a este papel. Encontre os aplicativos adequados pesquisando por nome, descrição ou ID do aplicativo.',
-    /** UNTRANSLATED */
-    assign_field: 'Assign applications',
+    assign_field: 'Atribuir aplicativos',
     confirm_assign: 'Atribuir aplicativos',
-    /** UNTRANSLATED */
-    assigned_toast_text: 'The selected applications were successfully assigned to this role',
+    assigned_toast_text: 'Os aplicativos selecionados foram atribuídos com sucesso a este papel',
     empty: 'Nenhum aplicativo disponível',
   },
 };

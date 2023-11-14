@@ -33,8 +33,7 @@ const general = {
   copied: 'Скопировано',
   required: 'Обязательное',
   add_another: 'Добавить ещё',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Создать ещё',
   deletion_confirmation: 'Вы действительно хотите удалить этот {{title}}?',
   settings_nav: 'Настройки',
   unsaved_changes_warning: 'Вы внесли изменения. Вы действительно хотите покинуть эту страницу?',
@@ -59,22 +58,15 @@ const general = {
   unknown_error: 'Неизвестная ошибка, пожалуйста, попробуйте позже.',
   select: 'Выбрать',
   contact_us_action: 'Связаться с нами',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: 'Описание',
+  name: 'Имя',
+  add_field: 'Добавить {{field}}',
+  create_field: 'Создать {{field}}',
+  edit_field: 'Изменить {{field}}',
+  delete_field: 'Удалить {{field}}',
   coming_soon: 'Скоро',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} сейчас находится в бета-тестировании. Добро пожаловать, чтобы изучить его и <ContactLink>поделиться своими отзывами</ContactLink>.',
 };
 
 export default Object.freeze(general);

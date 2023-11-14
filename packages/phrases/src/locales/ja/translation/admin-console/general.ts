@@ -33,8 +33,7 @@ const general = {
   copied: 'コピーされました',
   required: '必須',
   add_another: 'もう一つ追加',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'もう一つ作成する',
   deletion_confirmation: '{{title}}を削除してよろしいですか？',
   settings_nav: '設定',
   unsaved_changes_warning: '変更を加えました。このページを離れてもよろしいですか？',
@@ -59,22 +58,15 @@ const general = {
   unknown_error: '不明なエラーが発生しました。後で再試行してください。',
   select: '選択する',
   contact_us_action: 'お問い合わせ',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: '説明',
+  name: '名前',
+  add_field: '{{field}}を追加',
+  create_field: '{{field}}を作成',
+  edit_field: '{{field}}を編集',
+  delete_field: '{{field}}を削除',
   coming_soon: '近日公開予定',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} は現在ベータ版です。お試しいただき、<ContactLink>フィードバックを共有</ContactLink>してください。',
 };
 
 export default Object.freeze(general);

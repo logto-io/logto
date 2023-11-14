@@ -1,11 +1,11 @@
 const user = {
-  username_already_in_use: 'Este nome de usuário já está em uso.',
+  username_already_in_use: 'Este nome de utilizador já está em uso.',
   email_already_in_use: 'Este email já está associado a uma conta existente.',
   phone_already_in_use: 'Este número de telefone já está associado a uma conta existente.',
   invalid_email: 'Endereço de email inválido.',
   invalid_phone: 'Número de telefone inválido.',
-  email_not_exist: 'O endereço de email ainda não foi registada.',
-  phone_not_exist: 'O numero do telefone ainda não foi registada.',
+  email_not_exist: 'O endereço de email ainda não foi registado.',
+  phone_not_exist: 'O número de telefone ainda não foi registado.',
   identity_not_exist: 'A conta social ainda não foi registada.',
   identity_already_in_use: 'A conta social foi registada.',
   social_account_exists_in_profile: 'A conta social já foi associada a este perfil.',
@@ -30,11 +30,8 @@ const user = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
   invalid_role_type:
     'Tipo de função inválido, não é possível atribuir uma função máquina a máquina ao utilizador.',
-  /** UNTRANSLATED */
   missing_mfa: 'You need to bind additional MFA before signing-in.',
-  /** UNTRANSLATED */
   totp_already_in_use: 'TOTP is already in use.',
-  /** UNTRANSLATED */
   backup_code_already_in_use: 'Backup code is already in use.',
 };
 

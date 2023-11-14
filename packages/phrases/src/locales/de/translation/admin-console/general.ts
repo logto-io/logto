@@ -33,8 +33,7 @@ const general = {
   copied: 'Kopiert',
   required: 'Erforderlich',
   add_another: 'Weitere hinzufügen',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Erstellen Sie ein anderes',
   deletion_confirmation: 'Willst du {{title}} wirklich löschen?',
   settings_nav: 'Einstellungen',
   unsaved_changes_warning:
@@ -60,22 +59,15 @@ const general = {
   unknown_error: 'Unbekannter Fehler, bitte versuchen Sie es später erneut.',
   select: 'Auswählen',
   contact_us_action: 'Kontaktiere uns',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
+  description: 'Beschreibung',
   name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  add_field: 'Füge {{field}} hinzu',
+  create_field: 'Erstelle {{field}}',
+  edit_field: 'Bearbeite {{field}}',
+  delete_field: 'Lösche {{field}}',
   coming_soon: 'Demnächst verfügbar',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} befindet sich derzeit in der Beta-Phase. Willkommen, es zu erkunden und <ContactLink>Geben Sie Ihr Feedback</ContactLink>.',
 };
 
 export default Object.freeze(general);

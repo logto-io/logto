@@ -5,18 +5,15 @@ const tabs = {
   api_resources: 'API 資源',
   sign_in_experience: '登入體驗',
   connectors: '連接器',
-  /** UNTRANSLATED */
   enterprise_sso: 'Enterprise SSO',
   webhooks: 'Webhooks',
-  /** UNTRANSLATED */
-  organizations: 'Organizations',
+  organizations: '組織',
   users: '使用者管理',
   audit_logs: '稽核日誌',
   roles: '角色',
   docs: '文件',
-  tenant_settings: '設定',
-  /** UNTRANSLATED */
-  mfa: 'Multi-factor auth',
+  tenant_settings: '租戶設定',
+  mfa: '多重認證',
 };
 
 export default Object.freeze(tabs);

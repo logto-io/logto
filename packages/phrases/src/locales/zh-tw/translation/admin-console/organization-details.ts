@@ -1,46 +1,26 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
-  delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+  page_title: '組織詳情',
+  delete_confirmation: '刪除後，所有成員將失去在這個組織中的成員資格和角色。此操作無法撤銷。',
+  organization_id: '組織編號',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    '組織是一組具有共同識別符的身分（通常是用戶）。每個組織都擁有自己的成員、角色和權限，而角色和權限則由組織模板定義。',
+  name_placeholder: '組織名稱，不需要是唯一的。',
+  description_placeholder: '組織的描述。',
+  member: '成員',
+  member_other: '成員',
+  add_members_to_organization: '將成員添加到 {{name}} 組織',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    '通過搜索名稱、電子郵件、電話或用戶ID來查找適合的用戶。現有成員不會顯示在搜索結果中。',
+  add_with_organization_role: '添加組織角色',
+  user: '用戶',
+  authorize_to_roles: '授權 {{name}} 訪問以下角色：',
+  edit_organization_roles: '編輯組織角色',
+  edit_organization_roles_of_user: '編輯 {{name}} 的組織角色',
+  remove_user_from_organization: '從組織中刪除用戶',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    '刪除後，用戶將失去在這個組織中的成員資格和角色。此操作無法撤銷。',
+  search_user_placeholder: '按名稱、電子郵件、電話或用戶ID搜尋',
+  at_least_one_user: '至少需要一個用戶。',
 };
 
 export default Object.freeze(organization_details);

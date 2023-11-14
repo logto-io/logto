@@ -13,26 +13,22 @@ const tenants = {
       'Defina o nome do locatário e veja a região de hospedagem e a etiqueta do ambiente.',
     tenant_id: 'ID do Locatário',
     tenant_name: 'Nome do Locatário',
-    /** UNTRANSLATED */
-    tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: 'Região de hospedagem',
+    tenant_region_tip:
+      'Seus recursos do locatário estão hospedados na região {{region}}. <a>Learn more</a>',
     environment_tag: 'Tag do Ambiente',
     environment_tag_description:
       'As tags não alteram o serviço. Elas apenas ajudam a diferenciar vários ambientes.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Homol',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      "O ambiente de desenvolvimento é usado principalmente para testes e inclui todos os recursos profissionais, mas possui marcas d'água na experiência de login. <a>Learn more</a>",
     tenant_info_saved: 'As informações do locatário foram salvas com sucesso.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
-    development: 'Development',
-    /** UNTRANSLATED */
-    production: 'Production',
+    development: 'Desenvolvimento',
+    production: 'Produção',
   },
   deletion_card: {
     title: 'EXCLUIR',
@@ -44,50 +40,35 @@ const tenants = {
   create_modal: {
     title: 'Criar inquilino',
     subtitle: 'Crie um novo inquilino para separar recursos e usuários.',
-    /** UNTRANSLATED */
     subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+      'Crie um novo locatário para separar recursos e usuários. Região e etiquetas de ambiente não podem ser modificadas após a criação.',
+    tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'O ambiente de desenvolvimento é usado principalmente para testes e não deve ser usado em um ambiente de produção.',
     development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'O ambiente de desenvolvimento é usado principalmente para testes e não deve ser usado em um ambiente de produção.',
     production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+      'Produção é onde o software ao vivo é usado pelos usuários finais e pode exigir uma assinatura paga.',
+    available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+      'Agora você pode acessar <span>todos os recursos do Logto Pro</span> em seu locatário de desenvolvimento!',
+    allow_pro_features_description: 'É completamente gratuito, sem período de teste - para sempre!',
+    explore_all_features: 'Explore todos os recursos',
+    impact_title: 'Isso tem algum impacto em mim?',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Sua etiqueta de locatário foi atualizada de "<strong>Homologação</strong>" para "<strong>Produção</strong>", mas essa mudança não afetará sua configuração atual.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'Ao assinar o plano Logto Hobby, sua etiqueta de locatário "<strong>Desenvolvimento</strong>" anterior mudará para "<strong>Produção</strong>", e isso não afetará sua configuração existente.',
     paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      'Se você ainda está em fase de desenvolvimento, pode criar um novo locatário de desenvolvimento para acessar mais recursos profissionais.',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
+      'Se você está em estágio de produção, ou em um ambiente de produção, ainda precisará assinar um plano específico, então não há nada que você precise fazer neste momento.',
     paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      'Não hesite em nos contactar se precisar de ajuda! Obrigado por escolher o Logto!',
   },
   delete_modal: {
     title: 'Excluir locatário',
@@ -100,7 +81,7 @@ const tenants = {
     delete_button: 'Excluir permanentemente',
     cannot_delete_title: 'Não é possível excluir este inquilino',
     cannot_delete_description:
-      'Desculpe, você não pode excluir este inquilino no momento. Certifique-se de estar no Plano Gratuito e ter pago todas as faturas pendentes.',
+      'Desculpe, você não pode excluir este locatário no momento. Certifique-se de estar no Plano Gratuito e ter pago todas as faturas pendentes.',
   },
   tenant_landing_page: {
     title: 'Você ainda não criou um inquilino',
@@ -121,67 +102,44 @@ const tenants = {
       'Se você precisa de mais esclarecimentos, tem alguma preocupação ou deseja restaurar a funcionalidade total e desbloquear seus locatários, não hesite em entrar em contato conosco imediatamente.',
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: 'CHAVES DE ASSINATURA',
+    description: 'Gerencie de forma segura as chaves de assinatura em seu locatário.',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'Chaves privadas do OIDC',
+      cookie_key: 'Chaves de cookie do OIDC',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: 'Chaves privadas em uso',
+    cookie_keys_in_use: 'Chaves de cookie em uso',
+    rotate_private_keys: 'Girar chaves privadas',
+    rotate_cookie_keys: 'Girar chaves de cookie',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      'Esta ação criará uma nova chave privada de assinatura, girará a chave atual e removerá sua chave anterior. Seus tokens JWT assinados com a chave atual permanecerão válidos até a exclusão ou outra rodada de rotação.',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      'Esta ação criará uma nova chave de cookie, girará a chave atual e removerá sua chave anterior. Seus cookies com a chave atual permanecerão válidos até a exclusão ou outra rodada de rotação.',
+    select_private_key_algorithm: 'Selecione o algoritmo de assinatura para a nova chave privada',
+    rotate_button: 'Girar',
     table_column: {
-      /** UNTRANSLATED */
       id: 'ID',
-      /** UNTRANSLATED */
       status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      algorithm: 'Algoritmo de assinatura',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: 'Atual',
+      previous: 'Anterior',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Tem certeza de que deseja girar as <strong>chaves privadas do OIDC</strong>? Os novos tokens JWT emitidos serão assinados pela nova chave. Os tokens JWT existentes permanecem válidos até você girar novamente.',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Tem certeza de que deseja girar as <strong>chaves de cookie do OIDC</strong>? Novos cookies gerados em sessões de login serão assinados pela nova chave de cookie. Os cookies existentes permanecem válidos até você girar novamente.',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        'Tem certeza de que deseja excluir a <strong>chave privada do OIDC</strong>? Tokens JWT existentes assinados com esta chave privada de assinatura não serão mais válidos.',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        'Tem certeza de que deseja excluir a <strong>chave de cookie do OIDC</strong>? As sessões de login mais antigas com cookies assinados com esta chave de cookie não serão mais válidas. Será necessária uma nova autenticação para esses usuários.',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: 'Chaves de assinatura giradas com sucesso.',
+      delete_key_success: 'Chave excluída com sucesso.',
     },
   },
 };

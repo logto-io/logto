@@ -1,40 +1,23 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
-  col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  page_title: '企业单点登录',
+  title: '企业单点登录',
+  subtitle: '连接企业身份提供者并启用SP启动的单点登录。',
+  create: '添加企业连接器',
+  col_connector_name: '连接器名称',
+  col_type: '类型',
+  col_email_domain: '电子邮件域',
+  col_status: '状态',
+  col_status_in_use: '正在使用',
+  col_status_invalid: '无效',
+  placeholder_title: '企业连接器',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logto已提供许多内置的企业身份提供者来连接，同时您可以使用标准协议创建您自己的提供者。',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: '添加企业连接器',
+    text_divider: '或者您可以通过标准协议自定义您的连接器。',
+    connector_name_field_title: '连接器名称',
+    connector_name_field_placeholder: '企业身份提供者的名称',
+    create_button_text: '创建连接器',
   },
 };
 

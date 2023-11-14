@@ -32,7 +32,6 @@ const webhooks = {
     name_placeholder: 'Wprowadź nazwę webhooka',
     endpoint_url: 'URL punktu końcowego',
     endpoint_url_placeholder: 'https://twoj.webhook.endpoint.url',
-    /** UNTRANSLATED */
     endpoint_url_tip:
       'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
     create_webhook: 'Utwórz webhook',

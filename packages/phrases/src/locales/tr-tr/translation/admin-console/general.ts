@@ -33,8 +33,7 @@ const general = {
   copied: 'Kopyalandı',
   required: 'Gerekli',
   add_another: 'Bir tane daha ekle',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Başka bir tane oluştur',
   deletion_confirmation: 'Bu dosyayı silmek istediğinize emin misiniz: {{title}}?',
   settings_nav: 'Ayarlar',
   unsaved_changes_warning:
@@ -60,22 +59,15 @@ const general = {
   unknown_error: 'Bilinmeyen hata, lütfen daha sonra tekrar deneyin.',
   select: 'Seç',
   contact_us_action: 'Bizimle İletişime Geçin',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: 'Açıklama',
+  name: 'Ad',
+  add_field: '{{field}} Ekle',
+  create_field: '{{field}} Oluştur',
+  edit_field: '{{field}} Düzenle',
+  delete_field: '{{field}} Sil',
   coming_soon: 'Yakında',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} şu anda beta sürümünde. Keşfetmeye hoş geldiniz ve <ContactLink>geri bildiriminizi paylaşın</ContactLink>.',
 };
 
 export default Object.freeze(general);

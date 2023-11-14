@@ -5,11 +5,9 @@ const entity = {
   not_exists: '{{name}}는 존재하지 않아요.',
   not_exists_with_id: '{{id}} ID를 가진 {{name}}는 존재하지 않아요.',
   not_found: '리소스가 존재하지 않아요.',
-  /** UNTRANSLATED */
   relation_foreign_key_not_found:
-    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
-  /** UNTRANSLATED */
-  unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
+    '하나 이상의 외래 키를 찾을 수 없어요. 입력을 확인하고 참조된 모든 엔티티가 있는지 확인해주세요.',
+  unique_integrity_violation: '엔티티가 이미 존재해요. 입력을 확인하고 다시 시도해주세요.',
 };
 
 export default Object.freeze(entity);

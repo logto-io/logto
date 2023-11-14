@@ -5,11 +5,9 @@ const entity = {
   not_exists: '{{name}} mevcut değil.',
   not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
   not_found: 'Kaynak mevcut değil.',
-  /** UNTRANSLATED */
   relation_foreign_key_not_found:
-    'Cannot find one or more foreign keys. Please check the input and ensure that all referenced entities exist.',
-  /** UNTRANSLATED */
-  unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
+    'Bir veya daha fazla yabancı anahtar bulunamıyor. Lütfen girişi kontrol edin ve tüm referans edilen varlıkların var olduğundan emin olun.',
+  unique_integrity_violation: 'Varlık zaten mevcut. Lütfen girişi kontrol edin ve tekrar deneyin.',
 };
 
 export default Object.freeze(entity);

@@ -28,12 +28,9 @@ const user = {
   missing_profile: '请于登录时提供必要的用户补充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用户',
   invalid_role_type: '无效的角色类型，无法将机器到机器角色分配给用户。',
-  /** UNTRANSLATED */
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  /** UNTRANSLATED */
-  totp_already_in_use: 'TOTP is already in use.',
-  /** UNTRANSLATED */
-  backup_code_already_in_use: 'Backup code is already in use.',
+  missing_mfa: '你需要在登录之前绑定额外的MFA。',
+  totp_already_in_use: 'TOTP已在使用中。',
+  backup_code_already_in_use: '备用代码已在使用中。',
 };
 
 export default Object.freeze(user);

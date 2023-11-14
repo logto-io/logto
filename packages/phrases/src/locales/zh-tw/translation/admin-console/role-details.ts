@@ -1,6 +1,6 @@
 const role_details = {
   back_to_roles: '返回角色',
-  identifier: '標識符',
+  identifier: '識別符',
   delete_description:
     '這樣做將從受影響的用戶中刪除與該角色關聯的權限，並刪除角色、用戶和權限之間的映射關係。',
   role_deleted: '{{name}} 已成功刪除。',
@@ -39,10 +39,8 @@ const role_details = {
     deleted: '{{name}} 已成功從此角色中刪除',
     assign_title: '分配用戶',
     assign_subtitle: '將用戶分配給此角色。通過搜索名稱、電子郵件、電話或用戶 ID 尋找適當的用戶。',
-    /** UNTRANSLATED */
-    assign_field: 'Assign users',
+    assign_field: '分配用戶',
     confirm_assign: '分配用戶',
-    /** UNTRANSLATED */
     assigned_toast_text: 'The selected users were successfully assigned to this role',
     empty: '無可用用戶',
   },
@@ -55,10 +53,8 @@ const role_details = {
     deleted: '{{name}} 已從此角色中成功刪除',
     assign_title: '分配應用',
     assign_subtitle: '將應用程式分配給此角色。通過搜索名稱、描述或應用程式 ID 尋找合適的應用程式。',
-    /** UNTRANSLATED */
-    assign_field: 'Assign applications',
+    assign_field: '分配應用',
     confirm_assign: '分配應用',
-    /** UNTRANSLATED */
     assigned_toast_text: 'The selected applications were successfully assigned to this role',
     empty: '沒有可用的應用程式',
   },

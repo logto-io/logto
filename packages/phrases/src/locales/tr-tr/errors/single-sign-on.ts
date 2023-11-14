@@ -1,8 +1,6 @@
 const single_sign_on = {
-  /** UNTRANSLATED */
-  forbidden_domains: 'Public email domains are not allowed.',
-  /** UNTRANSLATED */
-  duplicated_domains: 'There are duplicate domains.',
+  forbidden_domains: 'Genel e-posta alanı domainleri izin verilmiyor.',
+  duplicated_domains: 'Yinelenmiş domainler bulunmaktadır.',
 };
 
 export default Object.freeze(single_sign_on);

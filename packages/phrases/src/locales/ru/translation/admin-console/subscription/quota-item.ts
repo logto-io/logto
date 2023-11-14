@@ -47,14 +47,10 @@ const quota_item = {
     not_eligible: 'Удалите свой пользовательский домен',
   },
   omni_sign_in_enabled: {
-    /** UNTRANSLATED */
     name: 'SSO',
-    /** UNTRANSLATED */
     limited: 'SSO',
-    /** UNTRANSLATED */
     unlimited: 'SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Disable your SSO',
+    not_eligible: 'Отключите свой SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Встроенный электронный коннектор',
@@ -98,14 +94,10 @@ const quota_item = {
     not_eligible: 'Удалите ваши вебхуки',
   },
   organization_enabled: {
-    /** UNTRANSLATED */
     name: 'Organization',
-    /** UNTRANSLATED */
     limited: 'Organization',
-    /** UNTRANSLATED */
     unlimited: 'Organization',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    not_eligible: 'Удалите свои организации',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

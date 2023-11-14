@@ -30,11 +30,8 @@ const user = {
   missing_profile: 'Вы должны предоставить дополнительную информацию перед входом в систему.',
   role_exists: 'Идентификатор роли {{roleId}} уже добавлен в этого пользователя',
   invalid_role_type: 'Недопустимый тип роли, роль машины к машине нельзя назначить пользователю.',
-  /** UNTRANSLATED */
   missing_mfa: 'You need to bind additional MFA before signing-in.',
-  /** UNTRANSLATED */
   totp_already_in_use: 'TOTP is already in use.',
-  /** UNTRANSLATED */
   backup_code_already_in_use: 'Backup code is already in use.',
 };
 

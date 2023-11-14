@@ -1,46 +1,28 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: 'Детали организации',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    'После удаления все участники потеряют свою членство и роли в данной организации. Это действие нельзя отменить.',
+  organization_id: 'Идентификатор организации',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    'Организация - это группа идентификаторов (обычно пользователей), которые распознаются по общему идентификатору.\n\nУ каждой организации есть свой набор участников, ролей и разрешений, при этом роли и разрешения определяются шаблоном организации.',
+  name_placeholder: 'Название организации, не обязательно должно быть уникальным.',
+  description_placeholder: 'Описание организации.',
+  member: 'Участник',
+  member_other: 'Участники',
+  add_members_to_organization: 'Добавить участников в организацию {{name}}',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    'Найдите подходящих пользователей, выполнив поиск по имени, электронной почте, телефону или идентификатору пользователя. Существующие участники не отображаются в результатах поиска.',
+  add_with_organization_role: 'Добавить с ролями организации',
+  user: 'Пользователь',
+  authorize_to_roles: 'Разрешить {{name}} доступ к следующим ролям:',
+  edit_organization_roles: 'Редактирование ролей организации',
+  edit_organization_roles_of_user: 'Редактирование ролей организации для {{name}}',
+  remove_user_from_organization: 'Удалить пользователя из организации',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    'После удаления пользователь потеряет свое членство и роли в этой организации. Это действие нельзя отменить.',
+  search_user_placeholder:
+    'Поиск по имени, электронной почте, телефону или идентификатору пользователя',
+  at_least_one_user: 'Необходимо указать хотя бы одного пользователя.',
 };
 
 export default Object.freeze(organization_details);

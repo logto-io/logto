@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
+  page_title: "SSO d'entreprise",
+  title: "SSO d'entreprise",
+  subtitle:
+    "Connectez le fournisseur d'identité de l'entreprise et activez la connexion unique initiée par le fournisseur de services.",
+  create: "Ajouter un connecteur d'entreprise",
+  col_connector_name: 'Nom du connecteur',
   col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
-  col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  col_email_domain: 'Domaine de messagerie',
+  col_status: 'Statut',
+  col_status_in_use: 'Utilisé',
+  col_status_invalid: 'Invalide',
+  placeholder_title: "Connecteur d'entreprise",
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    "Logto a fourni de nombreux fournisseurs d'identité d'entreprise intégrés à connecter. Vous pouvez également créer le vôtre avec des protocoles standard.",
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: "Ajouter un connecteur d'entreprise",
+    text_divider: 'Ou vous pouvez personnaliser votre connecteur avec un protocole standard.',
+    connector_name_field_title: 'Nom du connecteur',
+    connector_name_field_placeholder: "Nom du fournisseur d'identité de l'entreprise",
+    create_button_text: 'Créer un connecteur',
   },
 };
 

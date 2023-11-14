@@ -1,163 +1,91 @@
 const organizations = {
-  /** UNTRANSLATED */
-  page_title: 'Organizations',
-  /** UNTRANSLATED */
-  title: 'Organizations',
-  /** UNTRANSLATED */
-  subtitle:
-    'Represent the teams, business customers, and partner companies that access your applications as organizations.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  create_organization: 'Create organization',
-  /** UNTRANSLATED */
-  setup_organization: 'Set up your organization',
-  /** UNTRANSLATED */
-  organization_list_placeholder_title: 'Organization',
-  /** UNTRANSLATED */
+  page_title: '組織',
+  title: '組織',
+  subtitle: '代表作為組織存取應用程式的團隊、商業客戶和合作夥伴公司。',
+  organization_id: '組織 ID',
+  members: '成員',
+  create_organization: '建立組織',
+  setup_organization: '設定您的組織',
+  organization_list_placeholder_title: '組織',
   organization_list_placeholder_text:
-    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
-  /** UNTRANSLATED */
-  organization_name_placeholder: 'My organization',
-  /** UNTRANSLATED */
-  organization_description_placeholder: 'A brief description of the organization',
-  /** UNTRANSLATED */
-  organization_permission: 'Organization permission',
-  /** UNTRANSLATED */
-  organization_permission_other: 'Organization permissions',
-  /** UNTRANSLATED */
+    '組織通常在 SaaS 或類似 SaaS 的多租戶應用程式中使用。組織功能使您的 B2B 客戶能夠更好地管理其合作夥伴和客戶，並自定應用程式最終用戶的訪問方式。',
+  organization_name_placeholder: '我的組織',
+  organization_description_placeholder: '組織的簡要描述',
+  organization_permission: '組織權限',
+  organization_permission_other: '組織權限',
   organization_permission_description:
-    'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-  /** UNTRANSLATED */
+    '組織權限指授權在組織上下文中存取資源的許可。組織權限應該以有意義的字串形式表示，同時作為名稱和唯一標識。',
   organization_permission_delete_confirm:
-    'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
-  /** UNTRANSLATED */
-  create_permission_placeholder: 'Read appointment history',
-  /** UNTRANSLATED */
-  permission: 'Permission',
-  /** UNTRANSLATED */
-  permission_other: 'Permissions',
-  /** UNTRANSLATED */
-  organization_role: 'Organization role',
-  /** UNTRANSLATED */
-  organization_role_other: 'Organization roles',
-  /** UNTRANSLATED */
+    '如果刪除此權限，所有包含此權限的組織角色都將失去此權限，具有此權限的用戶將失去其授予的訪問權限。',
+  create_permission_placeholder: '讀取預約歷史',
+  permission: '權限',
+  permission_other: '權限',
+  organization_role: '組織角色',
+  organization_role_other: '組織角色',
   organization_role_description:
-    'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
-  /** UNTRANSLATED */
+    '組織角色是可以分配給用戶的權限的分組。權限必須來自預定義的組織權限。',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    '這樣將從受影響的用戶身上刪除與此角色關聯的權限，並刪除組織角色、組織成員和組織權限之間的關係。',
+  role: '角色',
+  create_role_placeholder: '僅擁有檢視權限的用戶',
+  search_placeholder: '按組織名稱或 ID 搜索',
+  search_permission_placeholder: '輸入並搜索選擇權限',
+  search_role_placeholder: '輸入並搜索選擇角色',
   guide: {
-    /** UNTRANSLATED */
-    title: 'Start with guides',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your app development process with our guides',
+    title: '開始使用指南',
+    subtitle: '使用我們的指南快速開始應用程式開發流程',
     introduction: {
       section_1: {
-        /** UNTRANSLATED */
-        title: "First, let's understand how organizations works in Logto",
-        /** UNTRANSLATED */
+        title: '首先，讓我們了解 Logto 中組織的運作方式',
         description:
-          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+          '在多租戶 SaaS 應用程式中，我們經常製作具有相同權限和角色設定的多個組織，但在組織的上下文中，它在控制不同層級的存取權方面可以起著重要作用。每個租戶都像是 Logto 組織，它們自然共享相同的存取控制“範本”。我們稱這個為“組織範本”。',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template consists of two parts',
-        /** UNTRANSLATED */
+        title: '組織範本由兩部分組成',
         organization_permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-        /** UNTRANSLATED */
+          '組織權限指授權在組織上下文中存取資源的許可。組織權限應該以有意義的字串形式表示，同時作為名稱和唯一標識。',
         organization_role_description:
-          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+          '組織角色是可以分配給用戶的權限的分組。權限必須來自預定義的組織權限。',
       },
       section_3: {
-        /** UNTRANSLATED */
-        title: 'Interact the illustration to see how everything connects',
-        /** UNTRANSLATED */
+        title: '交互示意圖，看看它們之間的關係',
         description:
-          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '讓我們舉個例子。約翰、莎拉和托尼處於不同組織中，擁有不同的角色。將滑鼠懸停在不同區塊上，看看會發生什麼。',
       },
     },
-    /** UNTRANSLATED */
-    step_1: 'Step 1: Define organization permissions',
-    /** UNTRANSLATED */
-    step_2: 'Step 2: Define organization roles',
-    /** UNTRANSLATED */
+    step_1: '第 1 步：定義組織權限',
+    step_2: '第 2 步：定義組織角色',
     step_2_description:
-      '"Organization roles" represent a set of roles given to each organization at the start. These roles are determined by the global permissions you have set in previous screen. Similar with org permission, once you finish this setting for the first time, you won’t need to do this every-time you create a new organization.',
-    /** UNTRANSLATED */
-    step_3: 'Step 3: Create your first organization',
-    /** UNTRANSLATED */
+      '“組織角色”代表每個組織一開始就得到的一組角色。這些角色由您在前一步設置的全局權限所確定。類似組織權限，完成首次設置之後，您將無需每次創建新組織時都進行此設置。',
+    step_3: '第 3 步：創建您的第一個組織',
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    admin_description:
-      'Role "Admin" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    member_description:
-      'Role "Member" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    guest_description:
-      'Role "Guest" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    create_more_roles:
-      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
-    /** UNTRANSLATED */
-    read_resource: 'read:resource',
-    /** UNTRANSLATED */
-    edit_resource: 'edit:resource',
-    /** UNTRANSLATED */
-    delete_resource: 'delete:resource',
-    /** UNTRANSLATED */
+      '讓我們創建您的第一個組織。它具有唯一的 ID，作為處理各種更多面向業務的身份（例如合作夥伴、客戶）及其存取控制的容器。',
+    more_next_steps: '更多下一步',
+    add_members: '將成員新增到您的組織',
+    add_members_action: '批量新增成員並分配角色',
+    add_enterprise_connector: '添加企業 SSO',
+    add_enterprise_connector_action: '設定企業 SSO',
+    organization_permissions: '組織權限',
+    permission_name: '權限名稱',
+    permissions: '權限',
+    organization_roles: '組織角色',
+    role_name: '角色名稱',
+    organization_name: '組織名稱',
+    admin: '管理員',
+    admin_description: '“管理員”角色在不同組織中共享相同的組織範本。',
+    member: '成員',
+    member_description: '“成員”角色在不同組織中共享相同的組織範本。',
+    guest: '訪客',
+    guest_description: '“訪客”角色在不同組織中共享相同的組織範本。',
+    create_more_roles: '您可以在組織範本設定中創建更多角色。這些組織角色將適用於不同的組織。',
+    read_resource: '讀取:資源',
+    edit_resource: '編輯:資源',
+    delete_resource: '刪除:資源',
     ellipsis: '……',
-    /** UNTRANSLATED */
     johnny:
-      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
-    /** UNTRANSLATED */
-    sarah:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
-    /** UNTRANSLATED */
-    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
+      '約翰隸屬於兩個組織，電郵為 "john@email.com" 為唯一識別。他是組織 A 的管理員，也是組織 B 的訪客。',
+    sarah: '莎拉隸屬於一個組織，電郵為 "sarah@email.com" 為唯一識別。她是組織 B 的管理員。',
+    tony: '托尼隸屬於一個組織，電郵為 "tony@email.com" 為唯一識別。他是組織 C 的成員。',
   },
 };
 

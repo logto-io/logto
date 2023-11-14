@@ -31,12 +31,9 @@ const user = {
   role_exists: 'El id de rol {{roleId}} ya ha sido agregado a este usuario',
   invalid_role_type:
     'Tipo de rol no válido, no se puede asignar un rol de máquina a máquina a un usuario.',
-  /** UNTRANSLATED */
-  missing_mfa: 'You need to bind additional MFA before signing-in.',
-  /** UNTRANSLATED */
-  totp_already_in_use: 'TOTP is already in use.',
-  /** UNTRANSLATED */
-  backup_code_already_in_use: 'Backup code is already in use.',
+  missing_mfa: 'Debes vincular un MFA adicional antes de iniciar sesión.',
+  totp_already_in_use: 'TOTP ya está en uso.',
+  backup_code_already_in_use: 'El código de respaldo ya está en uso.',
 };
 
 export default Object.freeze(user);

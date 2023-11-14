@@ -8,9 +8,8 @@ const api_resource_details = {
     'API 資源，又稱資源指標，表示要請求的目標服務或資源，通常是表示資源身份的 URI 格式變數。',
   management_api_settings_description:
     'Logto 管理 API 是一個全面的 API 集合，使管理員能夠管理各種與身份有關的任務，執行安全策略，並遵守法規和標準。',
-  /** UNTRANSLATED */
   management_api_notice:
-    'This API represents Logto entity and cannot be modified or deleted. You can use management API for a wide range of identity related tasks. <a>Learn more</a>',
+    '這個 API 代表 Logto 實體，不能被修改或刪除。你可以使用管理 API 來執行多種與身份相關的任務。 <a>了解更多</a>',
   token_expiration_time_in_seconds: 'Token 過期時間（秒）',
   token_expiration_time_in_seconds_placeholder: '請輸入你的 token 過期時間',
   delete_description:

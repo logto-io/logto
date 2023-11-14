@@ -31,13 +31,12 @@ const webhooks = {
     name_placeholder: 'Digite o nome do webhook',
     endpoint_url: 'URL de endpoint',
     endpoint_url_placeholder: 'https://seu.url.endpoint.do.webhook',
-    /** UNTRANSLATED */
     endpoint_url_tip:
-      'Enter the URL of your endpoint where a webhook’s payload is sent to when the event occurs.',
+      'Insira o URL do seu ponto de extremidade para o qual a carga útil de um webhook é enviada quando o evento ocorre.',
     create_webhook: 'Criar webhook',
     missing_event_error: 'Você precisa selecionar pelo menos um evento.',
   },
-  webhook_created: 'O webhook {{name}foi criado com sucesso.',
+  webhook_created: 'O webhook {{name}} foi criado com sucesso.',
 };
 
 export default Object.freeze(webhooks);

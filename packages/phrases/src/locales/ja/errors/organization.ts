@@ -1,6 +1,5 @@
 const organization = {
-  /** UNTRANSLATED */
-  require_membership: 'The user must be a member of the organization to proceed.',
+  require_membership: 'ユーザーは組織のメンバーである必要があります。',
 };
 
 export default Object.freeze(organization);

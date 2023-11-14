@@ -1,6 +1,5 @@
 const organization = {
-  /** UNTRANSLATED */
-  require_membership: 'The user must be a member of the organization to proceed.',
+  require_membership: 'Kullanıcının devam etmek için organizasyonun bir üyesi olması gerekir.',
 };
 
 export default Object.freeze(organization);

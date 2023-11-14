@@ -12,26 +12,21 @@ const tenants = {
     description: 'Установите имя арендатора и просмотрите регион размещения данных и метку среды.',
     tenant_id: 'ID арендатора',
     tenant_name: 'Имя арендатора',
-    /** UNTRANSLATED */
-    tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: 'Регион размещения данных',
+    tenant_region_tip: 'Ваши ресурсы арендатора размещаются в {{region}}. <a>Узнайте больше</a>',
     environment_tag: 'Тег окружения',
     environment_tag_description:
       'Теги не изменяют сервис. Они просто помогают отличать различные среды.',
     environment_tag_development: 'Разр',
     environment_tag_staging: 'Предпр',
     environment_tag_production: 'Прод',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      'Среда разработки в основном используется для тестирования и включает все профессиональные функции, но содержит водяные знаки при входе. <a>Узнайте больше</a>',
     tenant_info_saved: 'Информация о квартиросъемщике успешно сохранена.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
-    development: 'Development',
-    /** UNTRANSLATED */
-    production: 'Production',
+    development: 'Разработка',
+    production: 'Производство',
   },
   deletion_card: {
     title: 'УДАЛИТЬ',
@@ -43,50 +38,35 @@ const tenants = {
   create_modal: {
     title: 'Создать арендатора',
     subtitle: 'Создайте нового арендатора для разделения ресурсов и пользователей.',
-    /** UNTRANSLATED */
     subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+      'Создайте новый арендатор для разделения ресурсов и пользователей. Регион и теги среды не могут быть изменены после создания.',
+    tenant_usage_purpose: 'Для чего вы хотите использовать этот арендатор?',
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Среда разработки в основном используется для тестирования и не должна использоваться в производственной среде.',
     development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      'Среда разработки в основном используется для тестирования и не должна использоваться в производственной среде.',
     production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+      'Производство - это место, где живое программное обеспечение используется конечными пользователями и может потребовать платной подписки.',
+    available_plan: 'Доступный план:',
     create_button: 'Создать арендатора',
     tenant_name_placeholder: 'Мой арендатор',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+      'Теперь вы можете получить <span>все функции Logto Pro</span> в своем арендаторе разработки!',
+    allow_pro_features_description: 'Это абсолютно бесплатно, без испытательного срока - навсегда!',
+    explore_all_features: 'Изучить все функции',
+    impact_title: 'Это повлияет на меня как-то?',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Ваша метка арендатора была обновлена с "<strong>Staging</strong>" на "<strong>Production</strong>", но это изменение не повлияет на вашу текущую настройку.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'Когда вы подписываетесь на план Logto Hobby, ваша предыдущая метка арендатора "<strong>Разработка</strong>" переключится на "<strong>Производство</strong>", и это не повлияет на вашу существующую настройку.',
     paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      'Если вы все еще находитесь в стадии разработки, вы можете создать новый арендатор разработки для доступа к дополнительным профессиональным функциям.',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
+      'Если вы находитесь в стадии производства или в производственной среде, вам все равно нужно подписаться на определенный план, поэтому сейчас необходимо ничего делать.',
     paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      'Не стесняйтесь обращаться, если вам нужна помощь! Спасибо, что выбрали Logto!',
   },
   delete_modal: {
     title: 'Удалить арендатора',
@@ -120,67 +100,44 @@ const tenants = {
       'Если вам нужна дополнительная информация или у вас возникли какие-либо вопросы или вы хотите восстановить полную функциональность и разблокировать своих арендаторов, не стесняйтесь немедленно связаться с нами.',
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: 'УПРАВЛЕНИЕ КЛЮЧАМИ ПОДПИСИ',
+    description: 'Безопасное управление ключами подписи в вашем арендаторе.',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'OIDC закрытые ключи',
+      cookie_key: 'Ключи cookie OIDC',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: 'Используемые закрытые ключи',
+    cookie_keys_in_use: 'Используемые ключи cookie',
+    rotate_private_keys: 'Повернуть закрытые ключи',
+    rotate_cookie_keys: 'Повернуть ключи cookie',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      'Это действие создаст новый закрытый ключ подписи, повернет текущий ключ и удалит предыдущий. Ваши JWT-токены, подписанные текущим ключом, останутся действительными до удаления или следующего раунда поворота.',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      'Это действие создаст новый ключ cookie, повернет текущий ключ и удалит предыдущий. Ваши файлы cookie с текущим ключом останутся действительными до удаления или следующего раунда поворота.',
+    select_private_key_algorithm: 'Выберите алгоритм подписи ключа для нового закрытого ключа',
+    rotate_button: 'Повернуть',
     table_column: {
-      /** UNTRANSLATED */
       id: 'ID',
-      /** UNTRANSLATED */
-      status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      status: 'Статус',
+      algorithm: 'Алгоритм подписи ключа',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: 'Текущий',
+      previous: 'Предыдущий',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Вы уверены, что хотите повернуть <strong>OIDC закрытые ключи</strong>? Новые выданные JWT-токены будут подписаны новым ключом. Существующие JWT-токены останутся действительными до следующего поворота.',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        'Вы уверены, что хотите повернуть <strong>Ключи cookie OIDC</strong>? Новые файлы cookie, созданные в сеансах входа в систему, будут подписаны новым ключом cookie. Существующие файлы cookie останутся действительными до следующего поворота.',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        'Вы уверены, что хотите удалить <strong>OIDC закрытый ключ</strong>? Существующие JWT-токены, подписанные этим закрытым ключом, больше не будут действительными.',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        'Вы уверены, что хотите удалить <strong>Ключ cookie OIDC</strong>? Более старые сеансы входа в систему с файлами cookie, подписанными этим ключом cookie, больше не будут действительными. Для этих пользователей требуется повторная авторизация.',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: 'Ключи подписи успешно повернуты.',
+      delete_key_success: 'Ключ успешно удален.',
     },
   },
 };

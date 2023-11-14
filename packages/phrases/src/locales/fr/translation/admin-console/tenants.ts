@@ -13,25 +13,21 @@ const tenants = {
       "Définissez le nom du locataire et consultez votre région d'hébergement et l'étiquette d'environnement.",
     tenant_id: 'ID du locataire',
     tenant_name: 'Nom du locataire',
-    /** UNTRANSLATED */
-    tenant_region: 'Data hosted region',
-    /** UNTRANSLATED */
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: "Région d'hébergement des données",
+    tenant_region_tip:
+      'Vos ressources de locataire sont hébergées dans {{region}}. <a>En savoir plus</a>',
     environment_tag: "Tag de l'environnement",
     environment_tag_description:
       'Les balises ne modifient pas le service. Elles servent simplement à différencier différents environnements.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      "L'environnement de développement est principalement utilisé pour les tests et inclut toutes les fonctionnalités professionnelles mais comporte des filigranes dans l'expérience de connexion. <a>En savoir plus</a>",
     tenant_info_saved: 'Les informations du locataire ont été enregistrées avec succès.',
   },
   full_env_tag: {
-    /** UNTRANSLATED */
-    development: 'Development',
-    /** UNTRANSLATED */
+    development: 'Développement',
     production: 'Production',
   },
   deletion_card: {
@@ -44,50 +40,36 @@ const tenants = {
   create_modal: {
     title: 'Créer un locataire',
     subtitle: 'Créez un nouveau locataire pour séparer les ressources et les utilisateurs.',
-    /** UNTRANSLATED */
     subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
-    /** UNTRANSLATED */
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+      "Créez un nouveau locataire pour séparer les ressources et les utilisateurs. La région et les balises d'environnement ne peuvent pas être modifiées après la création.",
+    tenant_usage_purpose: 'Dans quel but souhaitez-vous utiliser ce locataire?',
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      "L'environnement de développement est principalement utilisé pour les tests et ne doit pas être utilisé dans un environnement de production.",
     development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    /** UNTRANSLATED */
+      "L'environnement de développement est principalement utilisé pour les tests et ne doit pas être utilisé dans un environnement de production.",
     production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
-    /** UNTRANSLATED */
-    available_plan: 'Available plan:',
+      "La production est l'endroit où le logiciel en direct est utilisé par les utilisateurs finaux et peut nécessiter un abonnement payant.",
+    available_plan: 'Plan disponible :',
     create_button: 'Créer un locataire',
     tenant_name_placeholder: 'Mon locataire',
   },
   notification: {
-    /** UNTRANSLATED */
     allow_pro_features_title:
-      'You can now access <span>all features of Logto Pro</span> in your development tenant!',
-    /** UNTRANSLATED */
-    allow_pro_features_description: "It's completely free, with no trial period – forever!",
-    /** UNTRANSLATED */
-    explore_all_features: 'Explore all features',
-    /** UNTRANSLATED */
-    impact_title: 'Does this have any impact on me?',
-    /** UNTRANSLATED */
+      'Vous pouvez désormais accéder à <span>toutes les fonctionnalités de Logto Pro</span> dans votre locataire de développement !',
+    allow_pro_features_description:
+      "C'est entièrement gratuit, sans période d'essai - pour toujours !",
+    explore_all_features: 'Explorer toutes les fonctionnalités',
+    impact_title: 'Cela a-t-il un impact sur moi ?',
     staging_env_hint:
-      'Your tenant label has been updated from "<strong>Staging</strong>" to "<strong>Production</strong>", but this change will not impact your current setup.',
-    /** UNTRANSLATED */
+      'Votre étiquette de locataire a été mise à jour de "<strong>Staging</strong>" à "<strong>Production</strong>", mais ce changement n\'affectera pas votre configuration actuelle.',
     paid_tenant_hint_1:
-      'As you subscribe to the Logto Hobby plan, your previous "<strong>Development</strong>" tenant tag will switch to "<strong>Production</strong>", and this won\'t affect your existing setup.',
-    /** UNTRANSLATED */
+      'En souscrivant au plan Logto Hobby, votre balise de locataire "<strong>Développement</strong>" passera à "<strong>Production</strong>", et cela n\'affectera pas votre configuration existante.',
     paid_tenant_hint_2:
-      "If you're still in the development stage, you can create a new development tenant to access more pro features.",
-    /** UNTRANSLATED */
+      'Si vous êtes toujours au stade de développement, vous pouvez créer un nouveau locataire de développement pour accéder à davantage de fonctionnalités professionnelles.',
     paid_tenant_hint_3:
-      "If you're in the production stage, or a production environment, you still need to subscribe to a specific plan so there's nothing you need to do at this moment.",
-    /** UNTRANSLATED */
+      "Si vous vous trouvez au stade de production ou dans un environnement de production, vous devez toujours souscrire à un abonnement spécifique. Vous n'avez donc rien à faire pour le moment.",
     paid_tenant_hint_4:
-      "Don't hesitate to reach out if you require help! Thank you for choosing Logto!",
+      "N'hésitez pas à nous contacter si vous avez besoin d'aide! Merci d'avoir choisi Logto!",
   },
   delete_modal: {
     title: 'Supprimer le locataire',
@@ -114,74 +96,52 @@ const tenants = {
     overdue: 'En retard',
   },
   tenant_suspended_page: {
-    title: 'Tenant suspended. Contact us to restore access.',
+    title: "Locataire suspendu. Contactez-nous pour restaurer l'accès.",
     description_1:
-      'We deeply regret to inform you that your tenant account has been temporarily suspended due to improper use, including exceeding MAU limits, overdue payments, or other unauthorized actions.',
+      "Nous regrettons profondément de vous informer que votre compte de locataire a été temporairement suspendu en raison d'une utilisation abusive, y compris le dépassement des limites MAU, des paiements en retard ou d'autres actions non autorisées.",
     description_2:
-      'If you require further clarification, have any concerns, or wish to restore full functionality and unblock your tenants, please do not hesitate to contact us immediately.',
+      "Si vous avez besoin de clarifications supplémentaires, si vous avez des préoccupations ou si vous souhaitez restaurer la fonctionnalité complète et débloquer vos locataires, n'hésitez pas à nous contacter immédiatement.",
   },
   signing_keys: {
-    /** UNTRANSLATED */
-    title: 'SIGNING KEYS',
-    /** UNTRANSLATED */
-    description: 'Securely manage signing keys in your tenant.',
+    title: 'CLÉS DE SIGNATURE',
+    description: 'Gérez en toute sécurité les clés de signature dans votre locataire.',
     type: {
-      /** UNTRANSLATED */
-      private_key: 'OIDC private keys',
-      /** UNTRANSLATED */
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'Clés privées OIDC',
+      cookie_key: 'Clés de cookies OIDC',
     },
-    /** UNTRANSLATED */
-    private_keys_in_use: 'Private keys in use',
-    /** UNTRANSLATED */
-    cookie_keys_in_use: 'Cookie keys in use',
-    /** UNTRANSLATED */
-    rotate_private_keys: 'Rotate private keys',
-    /** UNTRANSLATED */
-    rotate_cookie_keys: 'Rotate cookie keys',
-    /** UNTRANSLATED */
+    private_keys_in_use: "Clés privées en cours d'utilisation",
+    cookie_keys_in_use: "Clés de cookies en cours d'utilisation",
+    rotate_private_keys: 'Faire tourner les clés privées',
+    rotate_cookie_keys: 'Faire tourner les clés de cookies',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
+      "Cette action créera une nouvelle clé de signature privée, fera tourner la clé actuelle et supprimera votre clé précédente. Vos jetons JWT signés avec la clé actuelle resteront valides jusqu'à leur suppression ou une nouvelle rotation.",
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    /** UNTRANSLATED */
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    /** UNTRANSLATED */
-    rotate_button: 'Rotate',
+      "Cette action créera une nouvelle clé de cookie, fera tourner la clé actuelle et supprimera votre clé précédente. Vos cookies avec la clé actuelle resteront valides jusqu'à leur suppression ou une nouvelle rotation.",
+    select_private_key_algorithm:
+      "Sélectionnez l'algorithme de clé de signature pour la nouvelle clé privée",
+    rotate_button: 'Faire tourner',
     table_column: {
-      /** UNTRANSLATED */
       id: 'ID',
-      /** UNTRANSLATED */
-      status: 'Status',
-      /** UNTRANSLATED */
-      algorithm: 'Signing key algorithm',
+      status: 'Statut',
+      algorithm: 'Algorithme de clé de signature',
     },
     status: {
-      /** UNTRANSLATED */
-      current: 'Current',
-      /** UNTRANSLATED */
-      previous: 'Previous',
+      current: 'Actuel',
+      previous: 'Précédent',
     },
     reminder: {
-      /** UNTRANSLATED */
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        "Êtes-vous sûr de vouloir faire tourner les <strong>clés privées OIDC</strong>? Les nouveaux jetons JWT émis seront signés par la nouvelle clé. Les jetons JWT existants resteront valides jusqu'à votre prochaine rotation.",
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
-      /** UNTRANSLATED */
+        "Êtes-vous sûr de vouloir faire tourner les <strong>clés de cookies OIDC</strong>? Les nouveaux cookies générés dans les sessions de connexion seront signés par la nouvelle clé de cookie. Les cookies existants resteront valides jusqu'à votre prochaine rotation.",
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
-      /** UNTRANSLATED */
+        'Êtes-vous sûr de vouloir supprimer la <strong>clé privée OIDC</strong>? Les jetons JWT existants signés avec cette clé de signature privée ne seront plus valides.',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        'Êtes-vous sûr de vouloir supprimer la <strong>clé de cookie OIDC</strong>? Les anciennes sessions de connexion avec des cookies signés avec cette clé de cookie ne seront plus valides. Une ré-authentification est requise pour ces utilisateurs.',
     },
     messages: {
-      /** UNTRANSLATED */
-      rotate_key_success: 'Signing keys rotated successfully.',
-      /** UNTRANSLATED */
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: 'Rotation des clés de signature effectuée avec succès.',
+      delete_key_success: 'Clé supprimée avec succès.',
     },
   },
 };

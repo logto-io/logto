@@ -22,14 +22,11 @@ const user_details = {
   tab_settings: 'Paramètres',
   tab_roles: 'Rôles',
   tab_logs: "Journaux de l'utilisateur",
-  /** UNTRANSLATED */
-  tab_organizations: 'Organizations',
-  /** UNTRANSLATED */
-  authentication: 'Authentication',
+  tab_organizations: 'Organisations',
+  authentication: 'Authentification',
   authentication_description:
     "Chaque utilisateur possède un profil contenant toutes les informations le concernant. Il se compose de données de base, d'identités sociales et de données personnalisées.",
-  /** UNTRANSLATED */
-  user_profile: 'User profile',
+  user_profile: 'Profil utilisateur',
   field_email: 'Adresse e-mail',
   field_phone: 'Numéro de téléphone',
   field_username: "Nom d'utilisateur",
@@ -40,30 +37,24 @@ const user_details = {
   field_custom_data_tip:
     "Informations supplémentaires sur l'utilisateur qui ne figurent pas dans les propriétés prédéfinies de l'utilisateur, telles que la couleur et la langue préférées de l'utilisateur.",
   field_connectors: 'Connecteurs sociaux',
-  /** UNTRANSLATED */
-  field_sso_connectors: 'Enterprise connections',
+  field_sso_connectors: "Connexions d'entreprise",
   custom_data_invalid: 'Les données personnalisées doivent être un objet JSON valide.',
   connectors: {
     connectors: 'Connecteurs',
     user_id: 'ID utilisateur',
     remove: 'Supprimer',
-    /** UNTRANSLATED */
-    connected: 'This user is connected with multiple social connectors.',
-    not_connected: "L'utilisateur n'est connecté à aucun connecteur social",
+    connected: 'Cet utilisateur est connecté à plusieurs connecteurs sociaux.',
+    not_connected: "L'utilisateur n'est connecté à aucun connecteur social.",
     deletion_confirmation:
       "Vous supprimez l'identité existante <name/>. Êtes-vous sûr de vouloir continuer ?",
   },
   sso_connectors: {
-    /** UNTRANSLATED */
-    connectors: 'Connectors',
-    /** UNTRANSLATED */
-    enterprise_id: 'Enterprise ID',
-    /** UNTRANSLATED */
+    connectors: 'Connecteurs',
+    enterprise_id: "ID de l'entreprise",
     connected:
-      'This user is connected to multiple enterprise identity providers for Single Sign-On.',
-    /** UNTRANSLATED */
+      "Cet utilisateur est connecté à plusieurs fournisseurs d'identité d'entreprise pour l'authentification unique.",
     not_connected:
-      'The user is not connected to any enterprise identity providers for Single Sign-On.',
+      "L'utilisateur n'est connecté à aucun fournisseur d'identité d'entreprise pour l'authentification unique.",
   },
   mfa: {
     field_name: 'Authentification à deux facteurs',
@@ -105,8 +96,7 @@ const user_details = {
   },
   warning_no_sign_in_identifier:
     "L'utilisateur doit avoir au moins l'un des identifiants de connexion (nom d'utilisateur, e-mail, numéro de téléphone ou compte social) pour se connecter. Êtes-vous sûr(e) de vouloir continuer?",
-  /** UNTRANSLATED */
-  organization_roles_tooltip: 'The roles assigned to the user within this organization.',
+  organization_roles_tooltip: "Les rôles attribués à l'utilisateur au sein de cette organisation.",
 };
 
 export default Object.freeze(user_details);

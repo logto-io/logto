@@ -11,7 +11,6 @@ const session = {
     'Doğrulama başarısız oldu. Lütfen doğrulama işlemini yeniden başlatın ve tekrar deneyin.',
   verification_expired:
     'Bağlantı zaman aşımına uğradı. Hesap güvenliğiniz için yeniden doğrulama yapın.',
-  /** UNTRANSLATED */
   verification_blocked_too_many_attempts:
     'Too many attempts in a short time. Please try again {{relativeTime}}.',
   unauthorized: 'Lütfen önce oturum açın.',
@@ -23,30 +22,18 @@ const session = {
   identifier_not_found: 'Kullanıcı kimliği bulunamadı. Lütfen geri gidin ve yeniden giriş yapın.',
   interaction_not_found:
     'Etkileşim oturumu bulunamadı. Lütfen geri gidin ve oturumu yeniden başlatın.',
-  /** UNTRANSLATED */
   not_supported_for_forgot_password: 'This operation is not supported for forgot password.',
   mfa: {
-    /** UNTRANSLATED */
     require_mfa_verification: 'Mfa verification is required to sign in.',
-    /** UNTRANSLATED */
     mfa_sign_in_only: 'Mfa is only available for sign-in interaction.',
-    /** UNTRANSLATED */
     pending_info_not_found: 'Pending MFA info not found, please initiate MFA first.',
-    /** UNTRANSLATED */
     invalid_totp_code: 'Invalid TOTP code.',
-    /** UNTRANSLATED */
     webauthn_verification_failed: 'WebAuthn verification failed.',
-    /** UNTRANSLATED */
     webauthn_verification_not_found: 'WebAuthn verification not found.',
-    /** UNTRANSLATED */
     bind_mfa_existed: 'MFA already exists.',
-    /** UNTRANSLATED */
     backup_code_can_not_be_alone: 'Backup code can not be the only MFA.',
-    /** UNTRANSLATED */
     backup_code_required: 'Backup code is required.',
-    /** UNTRANSLATED */
     invalid_backup_code: 'Invalid backup code.',
-    /** UNTRANSLATED */
     mfa_policy_not_user_controlled: 'MFA policy is not user controlled.',
   },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',

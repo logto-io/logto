@@ -1,163 +1,96 @@
 const organizations = {
-  /** UNTRANSLATED */
-  page_title: 'Organizations',
-  /** UNTRANSLATED */
-  title: 'Organizations',
-  /** UNTRANSLATED */
-  subtitle:
-    'Represent the teams, business customers, and partner companies that access your applications as organizations.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  create_organization: 'Create organization',
-  /** UNTRANSLATED */
-  setup_organization: 'Set up your organization',
-  /** UNTRANSLATED */
-  organization_list_placeholder_title: 'Organization',
-  /** UNTRANSLATED */
+  page_title: 'Kuruluşlar',
+  title: 'Kuruluşlar',
+  subtitle: 'Uygulamalarınıza erişen ekipleri, iş müşterilerini ve ortak şirketleri temsil edin.',
+  organization_id: 'Kuruluş Kimliği',
+  members: 'Üyeler',
+  create_organization: 'Kuruluş oluştur',
+  setup_organization: 'Kuruluşunuzu ayarlayın',
+  organization_list_placeholder_title: 'Kuruluş',
   organization_list_placeholder_text:
-    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
-  /** UNTRANSLATED */
-  organization_name_placeholder: 'My organization',
-  /** UNTRANSLATED */
-  organization_description_placeholder: 'A brief description of the organization',
-  /** UNTRANSLATED */
-  organization_permission: 'Organization permission',
-  /** UNTRANSLATED */
-  organization_permission_other: 'Organization permissions',
-  /** UNTRANSLATED */
+    'Kuruluş genellikle SaaS veya SaaS benzeri çok kiracılı uygulamalarda kullanılır. Kuruluşlar özelliği, B2B müşterilerinizin ortaklarını ve müşterilerini daha iyi yönetmelerine ve son kullanıcıların uygulamalarına erişim şekillerini özelleştirmelerine izin verir.',
+  organization_name_placeholder: 'Benim kuruluşum',
+  organization_description_placeholder: 'Kuruluşun kısa açıklaması',
+  organization_permission: 'Kuruluş izni',
+  organization_permission_other: 'Kuruluş izinleri',
   organization_permission_description:
-    'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-  /** UNTRANSLATED */
+    'Kuruluş izni, kuruluş bağlamında bir kaynağa erişim izni anlamına gelir. Bir kuruluş izni anlamlı bir dize olarak temsil edilmeli ve aynı zamanda adı ve benzersiz tanımlayıcısı olarak hizmet etmelidir.',
   organization_permission_delete_confirm:
-    'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
-  /** UNTRANSLATED */
-  create_permission_placeholder: 'Read appointment history',
-  /** UNTRANSLATED */
-  permission: 'Permission',
-  /** UNTRANSLATED */
-  permission_other: 'Permissions',
-  /** UNTRANSLATED */
-  organization_role: 'Organization role',
-  /** UNTRANSLATED */
-  organization_role_other: 'Organization roles',
-  /** UNTRANSLATED */
+    'Bu izin silinirse, bu izni içeren tüm kuruluş rolleri bu izni kaybedecek ve bu izne sahip olan kullanıcılar bu izinle sağlanan erişimi kaybedecek.',
+  create_permission_placeholder: 'Randevu geçmişini oku',
+  permission: 'İzin',
+  permission_other: 'İzinler',
+  organization_role: 'Kuruluş rolü',
+  organization_role_other: 'Kuruluş rolleri',
   organization_role_description:
-    'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
-  /** UNTRANSLATED */
+    'Kuruluş rolü, kullanıcılara atanabilen izinlerin bir gruplamasıdır. İzinler önceden tanımlanmış kuruluş izinlerinden gelmelidir.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'Bunu yapmak, etkilenen kullanıcılardan bu role ilişkilendirilmiş izinleri kaldıracak ve kuruluş rolleri arasındaki ilişkileri ve kuruluş izinleri arasındaki ilişkileri silecektir.',
+  role: 'Rol',
+  create_role_placeholder: 'Yalnızca görünüm izinleri olan kullanıcılar',
+  search_placeholder: 'Kuruluş adı veya kimliğine göre ara',
+  search_permission_placeholder: 'İzinleri arayın ve seçin',
+  search_role_placeholder: 'Rolleri arayın ve seçin',
   guide: {
-    /** UNTRANSLATED */
-    title: 'Start with guides',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your app development process with our guides',
+    title: 'Kılavuzlarla başlayın',
+    subtitle: 'Kılavuzlarımızla uygulama geliştirme sürecinize hızlı bir başlangıç yapın',
     introduction: {
       section_1: {
-        /** UNTRANSLATED */
-        title: "First, let's understand how organizations works in Logto",
-        /** UNTRANSLATED */
+        title: "İlk olarak, kuruluşların Logto'da nasıl çalıştığını anlayalım",
         description:
-          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+          'Çok kiracılı SaaS uygulamalarında genellikle aynı izin ve roller kümesine sahip birkaç organizasyon yapıyoruz, ancak bir organizasyon bağlamında farklı erişim düzeylerini denetlemek önemli bir rol oynayabilir. Her kiracıyı bir Logto kuruluşu gibi düşünün ve doğal olarak aynı erişim kontrol "şablonunu" paylaşırlar. Buna "kuruluş şablonu" diyoruz.',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template consists of two parts',
-        /** UNTRANSLATED */
+        title: 'Kuruluş şablonu iki parçadan oluşur',
         organization_permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-        /** UNTRANSLATED */
+          'Kuruluş izni, kuruluş bağlamında bir kaynağa erişim izni anlamına gelir. Bir kuruluş izni anlamlı bir dize olarak temsil edilmeli ve aynı zamanda adı ve benzersiz tanımlayıcısı olarak hizmet etmelidir.',
         organization_role_description:
-          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+          'Kuruluş rolü, kullanıcılara atanabilen izinlerin bir gruplamasıdır. İzinler önceden tanımlanmış kuruluş izinlerinden gelmelidir.',
       },
       section_3: {
-        /** UNTRANSLATED */
-        title: 'Interact the illustration to see how everything connects',
-        /** UNTRANSLATED */
+        title: 'Her şeyin nasıl bağlandığını görmek için illüstrasyonla etkileşim',
         description:
-          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Bir örnek alalım. John, Sarah ve Tony farklı organizasyonlara farklı rollerle dahil olan kullanıcılardır. Farklı modüllerin üzerine gelerek ne olacağını görün.',
       },
     },
-    /** UNTRANSLATED */
-    step_1: 'Step 1: Define organization permissions',
-    /** UNTRANSLATED */
-    step_2: 'Step 2: Define organization roles',
-    /** UNTRANSLATED */
+    step_1: 'Adım 1: Kuruluş izinlerini tanımlayın',
+    step_2: 'Adım 2: Kuruluş rollerini tanımlayın',
     step_2_description:
-      '"Organization roles" represent a set of roles given to each organization at the start. These roles are determined by the global permissions you have set in previous screen. Similar with org permission, once you finish this setting for the first time, you won’t need to do this every-time you create a new organization.',
-    /** UNTRANSLATED */
-    step_3: 'Step 3: Create your first organization',
-    /** UNTRANSLATED */
+      '"Kuruluş rolleri", her kuruluşa başlangıçta verilen bir dizi role karşılık gelir. Bu roller, önceki ekranda belirlediğiniz genel izinler tarafından belirlenir. Kuruluş izni ile benzer şekilde, bunu ilk kez ayarladıktan sonra her yeni kuruluş oluşturduğunuzda bunu her seferinde yapmanıza gerek kalmayacaksınız.',
+    step_3: 'Adım 3: İlk kuruluşunuzu oluşturun',
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
+      'İlk kuruluşunuzu oluşturalım. Benzersiz bir kimlikle gelir ve ortaklar, müşteriler ve onların erişim kontrolü gibi çeşitli daha fazla işe yönelik kimliklerle başa çıkmak için bir konteyner görevi görür.',
+    more_next_steps: 'Daha fazla sonraki adımlar',
+    add_members: 'Kuruluşunuza üyeler ekleyin',
+    add_members_action: 'Toplu üyeleri ekleyin ve roller atayın',
+    add_enterprise_connector: 'Kurumsal SSO ekleyin',
+    add_enterprise_connector_action: "Kurumsal SSO'yu yapılandırın",
+    organization_permissions: 'Kuruluş izinleri',
+    permission_name: 'İzin adı',
+    permissions: 'İzinler',
+    organization_roles: 'Kuruluş rolleri',
+    role_name: 'Rol adı',
+    organization_name: 'Kuruluş adı',
+    admin: 'Yönetici',
     admin_description:
-      'Role "Admin" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
+      'Yönetici rolü, farklı organizasyonlar arasında aynı kuruluş şablonunu paylaşır.',
+    member: 'Üye',
     member_description:
-      'Role "Member" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
+      'Üye rolü, farklı organizasyonlar arasında aynı kuruluş şablonunu paylaşır.',
+    guest: 'Misafir',
     guest_description:
-      'Role "Guest" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      'Misafir rolü, farklı organizasyonlar arasında aynı kuruluş şablonunu paylaşır.',
     create_more_roles:
-      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
-    /** UNTRANSLATED */
-    read_resource: 'read:resource',
-    /** UNTRANSLATED */
-    edit_resource: 'edit:resource',
-    /** UNTRANSLATED */
-    delete_resource: 'delete:resource',
-    /** UNTRANSLATED */
+      'Kuruluş şablonu ayarlarında daha fazla rol oluşturabilirsiniz. Bu kuruluş rolleri farklı organizasyonlara uygulanacaktır.',
+    read_resource: 'kaynağı oku',
+    edit_resource: 'kaynağı düzenle',
+    delete_resource: 'kaynağı sil',
     ellipsis: '……',
-    /** UNTRANSLATED */
     johnny:
-      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
-    /** UNTRANSLATED */
+      'Johny, "john@email.com" e-posta adresine sahip tek bir tanımlayıcı olarak iki organizasyona aittir. O, organizasyon A\'nın yöneticisi ve aynı zamanda organizasyon B\'nin misafiridir.',
     sarah:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
-    /** UNTRANSLATED */
-    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
+      'Sarah, "sarah@email.com" e-posta adresine sahip tek bir tanımlayıcı olarak bir organizasyona aittir. O, organizasyon B\'nin yöneticisidir.',
+    tony: 'Tony, "tony@email.com" e-posta adresine sahip tek bir tanımlayıcı olarak bir organizasyona aittir. O, organizasyon C\'nin üyesidir.',
   },
 };
 

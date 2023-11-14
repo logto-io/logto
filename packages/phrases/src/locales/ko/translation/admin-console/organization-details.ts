@@ -1,46 +1,27 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: '조직 세부 정보',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    '삭제하면 모든 회원이 이 조직에서 멤버십과 역할을 잃게 됩니다. 이 작업은 취소할 수 없습니다.',
+  organization_id: '조직 ID',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    '조직은 일반적으로 사용자로 인식되는 일련의 ID에 의해 인식되는 ID 그룹입니다.\n\n각 조직에는 해당 멤버, 역할 및 권한이 있지만 역할 및 권한은 조직 템플릿에 의해 정의됩니다.',
+  name_placeholder: '조직의 이름, 고유할 필요는 없습니다.',
+  description_placeholder: '조직에 대한 설명입니다.',
+  member: '멤버',
+  member_other: '멤버',
+  add_members_to_organization: '조직 {{name}}에 멤버 추가',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    '이름, 이메일, 전화 또는 사용자 ID를 검색하여 적절한 사용자를 찾습니다. 기존 멤버는 검색 결과에 표시되지 않습니다.',
+  add_with_organization_role: '조직 역할로 추가',
+  user: '사용자',
+  authorize_to_roles: '{{name}}에게 다음 역할에 대한 액세스 권한 부여:',
+  edit_organization_roles: '조직 역할 편집',
+  edit_organization_roles_of_user: '{{name}}의 조직 역할 편집',
+  remove_user_from_organization: '사용자를 조직에서 제거',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    '제거하면 사용자가 이 조직에서 멤버십과 역할을 잃습니다. 이 작업은 취소할 수 없습니다.',
+  search_user_placeholder: '이름, 이메일, 전화 또는 사용자 ID로 검색',
+  at_least_one_user: '최소한 한 명의 사용자가 필요합니다.',
 };
 
 export default Object.freeze(organization_details);

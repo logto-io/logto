@@ -5,18 +5,15 @@ const tabs = {
   api_resources: 'Recursos API',
   sign_in_experience: 'Experiência de login',
   connectors: 'Conectores',
-  /** UNTRANSLATED */
-  enterprise_sso: 'Enterprise SSO',
+  enterprise_sso: 'SSO empresarial',
   webhooks: 'Webhooks',
-  /** UNTRANSLATED */
-  organizations: 'Organizations',
+  organizations: 'Organizações',
   users: 'Gestão de utilizadores',
   audit_logs: 'Registos de auditoria',
-  roles: 'Papéis',
+  roles: 'Funções',
   docs: 'Documentação',
-  tenant_settings: 'Definições',
-  /** UNTRANSLATED */
-  mfa: 'Multi-factor auth',
+  tenant_settings: 'Definições do inquilino',
+  mfa: 'Autenticação multi-fator',
 };
 
 export default Object.freeze(tabs);

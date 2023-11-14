@@ -1,11 +1,9 @@
 const oidc = {
   aborted: 'Koniec interakcji z użytkownikiem.',
-  /** UNTRANSLATED */
-  invalid_scope: 'Invalid scope: {{error_description}}.',
+  invalid_scope: 'Nieprawidłowy zakres: {{error_description}}.',
   invalid_token: 'Podano nieprawidłowy token.',
   invalid_client_metadata: 'Podano nieprawidłowe metadane klienta.',
-  /** UNTRANSLATED */
-  insufficient_scope: 'Token missing scope `{{scope}}`.',
+  insufficient_scope: 'Token nie zawiera zakresu `{{scope}}`.',
   invalid_request: 'Żądanie jest nieprawidłowe.',
   invalid_grant: 'Żądanie przyznania jest nieprawidłowe.',
   invalid_redirect_uri:
@@ -16,14 +14,10 @@ const oidc = {
   unsupported_response_mode: 'Żądany tryb `response_mode` nie jest obsługiwany.',
   unsupported_response_type: 'Żądany typ `response_type` nie jest obsługiwany.',
   provider_error: 'Wewnętrzny błąd OIDC: {{message}}.',
-  /** UNTRANSLATED */
-  server_error: 'An unknown OIDC error occurred. Please try again later.',
-  /** UNTRANSLATED */
-  provider_error_fallback: 'An OIDC error occurred: {{code}}.',
-  /** UNTRANSLATED */
-  key_required: 'At least one key is required.',
-  /** UNTRANSLATED */
-  key_not_found: 'Key with ID {{id}} is not found.',
+  server_error: 'Wystąpił nieznany błąd OIDC. Spróbuj ponownie później.',
+  provider_error_fallback: 'Wystąpił błąd OIDC: {{code}}.',
+  key_required: 'Wymagany jest co najmniej jeden klucz.',
+  key_not_found: 'Nie znaleziono klucza o ID {{id}}.',
 };
 
 export default Object.freeze(oidc);

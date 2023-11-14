@@ -3,9 +3,8 @@ const paywall = {
     'Se ha alcanzado el límite de {{count, number}} aplicación de <planName/>. Actualiza el plan para satisfacer las necesidades de tu equipo. Para cualquier ayuda, no dudes en <a>contactarnos</a>.',
   applications_other:
     'Se ha alcanzado el límite de {{count, number}} aplicaciones de <planName/>. Actualiza el plan para satisfacer las necesidades de tu equipo. Para cualquier ayuda, no dudes en <a>contactarnos</a>.',
-  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Upgrade to the <strong>Hobby</strong> plan to unlock 1 machine-to-machine application, or choose the <strong>Pro</strong> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
+    'Actualiza al plan <strong>Hobby</strong> para desbloquear 1 aplicación de máquina a máquina, o elige el plan <strong>Pro</strong> para uso ilimitado. Para cualquier asistencia, no dudes en <a>contactarnos</a>.',
   machine_to_machine:
     'Se ha alcanzado el límite de {{count, number}} aplicación de máquina a máquina de <planName/>. Actualiza el plan para satisfacer las necesidades de tu equipo. Para cualquier ayuda, no dudes en <a>contactarnos</a>.',
   machine_to_machine_other:
@@ -18,16 +17,14 @@ const paywall = {
     'Has alcanzado el límite de {{count, number}} permisos por recurso de API de <planName/>. Actualiza ahora para expandirlo. <a>Contáctanos</a> si necesitas asistencia.',
   scopes_per_resource_other:
     'Has alcanzado el límite de {{count, number}} permisos por recurso de API de <planName/>. Actualiza ahora para expandirlo. <a>Contáctanos</a> si necesitas asistencia.',
-  /** UNTRANSLATED */
   custom_domain:
-    'Unlock custom domain functionality by upgrading to <strong>Hobby</strong> or <strong>Pro</strong> plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    'Desbloquea la funcionalidad de dominio personalizado al actualizar al plan <strong>Hobby</strong> o <strong>Pro</strong>. No dudes en <a>contactarnos</a> si necesitas ayuda.',
   social_connectors:
     'Has alcanzado el límite de {{count, number}} conectores sociales de <planName/>. Actualiza el plan para obtener conectores sociales adicionales y la capacidad de crear tus propios conectores usando los protocolos OIDC, OAuth 2.0 y SAML. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
   social_connectors_other:
     'Has alcanzado el límite de {{count, number}} conectores sociales de <planName/>. Actualiza el plan para obtener conectores sociales adicionales y la capacidad de crear tus propios conectores usando los protocolos OIDC, OAuth 2.0 y SAML. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
-  /** UNTRANSLATED */
   standard_connectors_feature:
-    'Upgrade to the <strong>Hobby</strong> or <strong>Pro</strong> plan to create your own connectors using OIDC, OAuth 2.0, and SAML protocols, plus unlimited social connectors and all the premium features. Feel free to <a>contact us</a> if you need any assistance.',
+    'Actualiza al plan <strong>Hobby</strong> o <strong>Pro</strong> para crear tus propios conectores usando los protocolos OIDC, OAuth 2.0 y SAML, además de conectores sociales ilimitados y todas las funciones premium. No dudes en <a>contactarnos</a> si necesitas ayuda.',
   standard_connectors:
     'Has alcanzado el límite de {{count, number}} conectores sociales de <planName/>. Actualiza el plan para obtener conectores sociales adicionales y la capacidad de crear tus propios conectores usando los protocolos OIDC, OAuth 2.0 y SAML. Si necesitas ayuda, no dudes en <a>contactarnos</a>.',
   standard_connectors_other:

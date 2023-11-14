@@ -1,163 +1,94 @@
 const organizations = {
-  /** UNTRANSLATED */
-  page_title: 'Organizations',
-  /** UNTRANSLATED */
-  title: 'Organizations',
-  /** UNTRANSLATED */
+  page_title: '組織',
+  title: '組織',
   subtitle:
-    'Represent the teams, business customers, and partner companies that access your applications as organizations.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
-  members: 'Members',
-  /** UNTRANSLATED */
-  create_organization: 'Create organization',
-  /** UNTRANSLATED */
-  setup_organization: 'Set up your organization',
-  /** UNTRANSLATED */
-  organization_list_placeholder_title: 'Organization',
-  /** UNTRANSLATED */
+    'チーム、ビジネス顧客、およびパートナー企業を表すものであり、組織としてアプリケーションにアクセスします。',
+  organization_id: '組織ID',
+  members: 'メンバー',
+  create_organization: '組織を作成',
+  setup_organization: '組織を設定',
+  organization_list_placeholder_title: '組織',
   organization_list_placeholder_text:
-    'Organization is usually used in SaaS or SaaS-like multi-tenancy apps. The Organizations feature allows your B2B customers to better manage their partners and customers, and to customize the ways that end-users access their applications.',
-  /** UNTRANSLATED */
-  organization_name_placeholder: 'My organization',
-  /** UNTRANSLATED */
-  organization_description_placeholder: 'A brief description of the organization',
-  /** UNTRANSLATED */
-  organization_permission: 'Organization permission',
-  /** UNTRANSLATED */
-  organization_permission_other: 'Organization permissions',
-  /** UNTRANSLATED */
+    '組織は、通常、SaaSまたはSaaSのようなマルチテナントアプリで使用されます。組織機能により、B2B顧客はパートナーや顧客をよりよく管理し、エンドユーザーがアプリケーションにアクセスする方法をカスタマイズできます。',
+  organization_name_placeholder: '私の組織',
+  organization_description_placeholder: '組織の簡単な説明',
+  organization_permission: '組織権限',
+  organization_permission_other: '組織権限',
   organization_permission_description:
-    'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-  /** UNTRANSLATED */
+    '組織権限とは、組織のコンテキストでリソースにアクセスするための承認を指します。組織権限は、意味のある文字列として表され、また名前および一意の識別子としても機能します。',
   organization_permission_delete_confirm:
-    'If this permission is deleted, all organization roles including this permission will lose this permission, and users who had this permission will lose the access granted by it.',
-  /** UNTRANSLATED */
-  create_permission_placeholder: 'Read appointment history',
-  /** UNTRANSLATED */
-  permission: 'Permission',
-  /** UNTRANSLATED */
-  permission_other: 'Permissions',
-  /** UNTRANSLATED */
-  organization_role: 'Organization role',
-  /** UNTRANSLATED */
-  organization_role_other: 'Organization roles',
-  /** UNTRANSLATED */
+    'この権限を削除すると、この権限を含むすべての組織ロールがこの権限を失い、この権限を持っていたユーザーはそのアクセスを失います。',
+  create_permission_placeholder: '任命履歴を読む',
+  permission: '権限',
+  permission_other: '権限',
+  organization_role: '組織役割',
+  organization_role_other: '組織役割',
   organization_role_description:
-    'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
-  /** UNTRANSLATED */
+    '組織役割は、ユーザーに割り当てることができる権限のグループ化です。権限は事前に定義された組織権限から取得する必要があります。',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'これを行うと、影響を受けるユーザーからこの役割に関連する権限が削除され、組織ロール、組織のメンバー、および組織権限の関係が削除されます。',
+  role: '役割',
+  create_role_placeholder: '閲覧のみの権限を持つユーザー',
+  search_placeholder: '組織名またはIDで検索',
+  search_permission_placeholder: '検索して権限を選択',
+  search_role_placeholder: '検索して役割を選択',
   guide: {
-    /** UNTRANSLATED */
-    title: 'Start with guides',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your app development process with our guides',
+    title: 'ガイドで始める',
+    subtitle: 'ガイドを使用してアプリの開発プロセスをスタートさせます',
     introduction: {
       section_1: {
-        /** UNTRANSLATED */
-        title: "First, let's understand how organizations works in Logto",
-        /** UNTRANSLATED */
+        title: 'まず、Logtoで組織がどのように機能するかを理解しましょう',
         description:
-          'In multi-tenant SaaS apps, we often make several organizations with the same set of permissions and roles, but within the context of an organization it can play an important part in controlling varying levels of access. Think of each tenant is like a Logto organization, and they naturally share the same access control “template”. We call this the "organization template."',
+          'マルチテナントのSaaSアプリでは、しばしば同じセットの権限と役割を持つ複数の組織を作成しますが、組織のコンテキストではさまざまなアクセスレベルを制御するのに重要な役割を果たすことができます。各テナントはLogto組織のようであり、自然に同じアクセス制御の「テンプレート」を共有します。これを「組織テンプレート」と呼びます。',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template consists of two parts',
-        /** UNTRANSLATED */
+        title: '組織テンプレートは2つの部分で構成されます',
         organization_permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization. An organization permission should be represented as a meaningful string, also serving as the name and unique identifier.',
-        /** UNTRANSLATED */
+          '組織権限とは、組織のコンテキストでリソースにアクセスするための承認を指します。組織権限は、意味のある文字列として表され、また名前および一意の識別子としても機能します。',
         organization_role_description:
-          'Organization role is a grouping of permissions that can be assigned to users. The permissions must come from the predefined organization permissions.',
+          '組織役割は、ユーザーに割り当てることができる権限のグループ化です。権限は事前に定義された組織権限から取得する必要があります。',
       },
       section_3: {
-        /** UNTRANSLATED */
-        title: 'Interact the illustration to see how everything connects',
-        /** UNTRANSLATED */
+        title: 'イラストを操作して、接続方法を確認してください',
         description:
-          "Let's take an example. John, Sarah and Tony are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '例を挙げましょう。ジョン、サラ、トニーはそれぞれ異なる組織に所属し、それぞれ異なる役割を持っています。異なる組織のコンテキストで、異なるアクセスを持っていることを確認してください。',
       },
     },
-    /** UNTRANSLATED */
-    step_1: 'Step 1: Define organization permissions',
-    /** UNTRANSLATED */
-    step_2: 'Step 2: Define organization roles',
-    /** UNTRANSLATED */
+    step_1: 'ステップ1：組織権限を定義する',
+    step_2: 'ステップ2：組織役割を定義する',
     step_2_description:
-      '"Organization roles" represent a set of roles given to each organization at the start. These roles are determined by the global permissions you have set in previous screen. Similar with org permission, once you finish this setting for the first time, you won’t need to do this every-time you create a new organization.',
-    /** UNTRANSLATED */
-    step_3: 'Step 3: Create your first organization',
-    /** UNTRANSLATED */
+      '「組織役割」は、最初に各組織に付与された一連の役割を表します。これらの役割は、前のスクリーンで設定したグローバルな権限によって決定されます。組織権限と同様に、初回設定が完了すると、新しい組織を作成するたびにこれを毎回行う必要はありません。',
+    step_3: 'ステップ3：最初の組織を作成する',
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    admin_description:
-      'Role "Admin" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    member_description:
-      'Role "Member" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    guest_description:
-      'Role "Guest" share the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      '最初の組織を作成しましょう。これには固有のIDが付いており、パートナーや顧客などさまざまなビジネス向けアイデンティティの取り扱いを行うためのコンテナとして機能します。',
+    more_next_steps: 'さらに次のステップ',
+    add_members: '組織にメンバーを追加する',
+    add_members_action: 'メンバーを一括追加して役割を割り当てる',
+    add_enterprise_connector: 'エンタープライズSSOを追加',
+    add_enterprise_connector_action: 'エンタープライズSSOを設定',
+    organization_permissions: '組織権限',
+    permission_name: '権限名',
+    permissions: '権限',
+    organization_roles: '組織役割',
+    role_name: '役割名',
+    organization_name: '組織名',
+    admin: '管理者',
+    admin_description: '役割「管理者」は、さまざまな組織で同じ組織テンプレートを共有します。',
+    member: 'メンバー',
+    member_description: '役割「メンバー」は、さまざまな組織で同じ組織テンプレートを共有します。',
+    guest: 'ゲスト',
+    guest_description: '役割「ゲスト」は、さまざまな組織で同じ組織テンプレートを共有します。',
     create_more_roles:
-      'You can create more roles in the organization template settings. Those organization roles will apply to different organizations.',
-    /** UNTRANSLATED */
+      '組織テンプレート設定でさらに多くの役割を作成できます。これらの組織役割は異なる組織に適用されます。',
     read_resource: 'read:resource',
-    /** UNTRANSLATED */
     edit_resource: 'edit:resource',
-    /** UNTRANSLATED */
     delete_resource: 'delete:resource',
-    /** UNTRANSLATED */
     ellipsis: '……',
-    /** UNTRANSLATED */
     johnny:
-      'Johny belongs to two organization with the email "john@email.com" as the single identifier. He is the admin of organization A as well as guest of organization B.',
-    /** UNTRANSLATED */
+      'ジョニーは、メールアドレス「john@email.com」を通じて2つの組織に所属しています。組織Aの管理者であり、組織Bのゲストです。',
     sarah:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
-    /** UNTRANSLATED */
-    tony: 'Tony belongs to one organization with the email "tony@email.com" as the single identifier. He is the member of organization C.',
+      'サラは、メールアドレス「sarah@email.com」を通じて1つの組織に所属しています。組織Bの管理者です。',
+    tony: 'トニーは、メールアドレス「tony@email.com」を通じて1つの組織に所属しています。組織Cのメンバーです。',
   },
 };
 

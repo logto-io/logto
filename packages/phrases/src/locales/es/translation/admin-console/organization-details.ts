@@ -1,46 +1,27 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: 'Detalles de la organización',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    'Una vez eliminada, todos los miembros perderán su membresía y roles en esta organización. Esta acción no se puede deshacer.',
+  organization_id: 'ID de la organización',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    'Una organización es un grupo de identidades (generalmente usuarios) que se reconocen por un identificador común.\n\nCada organización tiene su propio conjunto de miembros, roles y permisos, mientras que los roles y permisos son definidos por la plantilla de la organización.',
+  name_placeholder: 'El nombre de la organización, no es necesario que sea único.',
+  description_placeholder: 'Una descripción de la organización.',
+  member: 'Miembro',
+  member_other: 'Miembros',
+  add_members_to_organization: 'Agregar miembros a la organización {{name}}',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    'Encuentra usuarios apropiados buscando nombre, correo electrónico, teléfono o ID de usuario. Los miembros existentes no se muestran en los resultados de búsqueda.',
+  add_with_organization_role: 'Agregar con rol(es) de organización',
+  user: 'Usuario',
+  authorize_to_roles: 'Autorizar a {{name}} para acceder a los siguientes roles:',
+  edit_organization_roles: 'Editar roles de organización',
+  edit_organization_roles_of_user: 'Editar roles de organización de {{name}}',
+  remove_user_from_organization: 'Eliminar usuario de la organización',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    'Una vez eliminado, el usuario perderá su membresía y roles en esta organización. Esta acción no se puede deshacer.',
+  search_user_placeholder: 'Buscar por nombre, correo electrónico, teléfono o ID de usuario',
+  at_least_one_user: 'Se requiere al menos un usuario.',
 };
 
 export default Object.freeze(organization_details);

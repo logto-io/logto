@@ -5,17 +5,14 @@ const tabs = {
   api_resources: 'Ресурсы API',
   sign_in_experience: 'Опыт входа в систему',
   connectors: 'Коннекторы',
-  /** UNTRANSLATED */
-  enterprise_sso: 'Enterprise SSO',
+  enterprise_sso: 'Единый вход в систему предприятия',
   webhooks: 'Webhooks',
-  /** UNTRANSLATED */
-  organizations: 'Organizations',
+  organizations: 'Организации',
   users: 'Управление пользователями',
   audit_logs: 'Журналы аудита',
   roles: 'Роли',
   docs: 'Документация',
   tenant_settings: 'Настройки',
-  /** UNTRANSLATED */
   mfa: 'Multi-factor auth',
 };
 

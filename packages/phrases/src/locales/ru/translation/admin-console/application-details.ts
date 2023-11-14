@@ -17,18 +17,18 @@ const application_details = {
   config_endpoint: 'Конечная точка конфигурации OpenID Provider',
   authorization_endpoint: 'Конечная точка авторизации',
   authorization_endpoint_tip:
-    'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a> OpenID Connect </a>.',
+    'Конечная точка для аутентификации и авторизации. Он используется для аутентификации <a>OpenID Connect</a>.',
   logto_endpoint: 'Logto endpoint',
   application_id: 'ID приложения',
   application_id_tip:
-    'Уникальный идентификатор приложения, обычно генерируемый Logto. Он также означает «<a> client_id </a>» в OpenID Connect.',
+    'Уникальный идентификатор приложения, обычно генерируемый Logto. Он также означает «<a>client_id</a>» в OpenID Connect.',
   application_secret: 'Секрет приложения',
   redirect_uri: 'URI перенаправления',
   redirect_uris: 'URI перенаправления',
   redirect_uri_placeholder: 'https://ваш.вебсайт.com/приложение',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
-    'URI перенаправляется после входа пользователя (успешного или нет). См. OpenID Connect <a> AuthRequest </a> для получения дополнительной информации.',
+    'URI перенаправляется после входа пользователя (успешного или нет). См. OpenID Connect <a>AuthRequest</a> для получения дополнительной информации.',
   post_sign_out_redirect_uri: 'URI перенаправления после выхода из системы',
   post_sign_out_redirect_uris: 'URI перенаправления после выхода из системы',
   post_sign_out_redirect_uri_placeholder: 'https://ваш.вебсайт.com/домашняя страница',
@@ -37,7 +37,7 @@ const application_details = {
   cors_allowed_origins: 'Разрешенные источники CORS',
   cors_allowed_origins_placeholder: 'https://ваш.вебсайт.com',
   cors_allowed_origins_tip:
-    'По умолчанию разрешены все источники URI перенаправления. Обычно для этого поля не требуется никаких действий. См. <a> Документацию MDN </a> для получения подробной информации.',
+    'По умолчанию разрешены все источники URI перенаправления. Обычно для этого поля не требуется никаких действий. См. <a>Документацию MDN</a> для получения подробной информации.',
   token_endpoint: 'Конечная точка токена',
   user_info_endpoint: 'Конечная точка информации о пользователе',
   enable_admin_access: 'Включить доступ администратора',

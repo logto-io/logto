@@ -33,8 +33,7 @@ const general = {
   copied: 'Copié',
   required: 'Requis',
   add_another: 'Ajouter un autre',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Créer un autre',
   deletion_confirmation: 'Êtes-vous sûr de vouloir supprimer ce {{title}} ?',
   settings_nav: 'Paramètres',
   unsaved_changes_warning:
@@ -47,7 +46,7 @@ const general = {
   page_info: '{{min, number}}-{{max, number}} de {{total, number}}',
   learn_more: 'En savoir plus',
   tab_errors: '{{count, number}} erreurs',
-  skip_for_now: "Passer pour l'instant",
+  skip_for_now: 'Passer pour l`instant',
   remove: 'Supprimer',
   visit: 'Visiter',
   join: 'Rejoindre',
@@ -60,22 +59,15 @@ const general = {
   unknown_error: 'Erreur inconnue, veuillez réessayer ultérieurement.',
   select: 'Sélectionner',
   contact_us_action: 'Nous contacter',
-  /** UNTRANSLATED */
   description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  name: 'Nom',
+  add_field: 'Ajouter {{field}}',
+  create_field: 'Créer {{field}}',
+  edit_field: 'Modifier {{field}}',
+  delete_field: 'Supprimer {{field}}',
   coming_soon: 'Bientôt disponible',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} est actuellement en version bêta. Bienvenue pour l`explorer et <ContactLink>partager vos commentaires</ContactLink>.',
 };
 
 export default Object.freeze(general);

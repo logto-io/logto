@@ -33,8 +33,7 @@ const general = {
   copied: 'Copiado',
   required: 'Obrigatório',
   add_another: 'Adicionar outro',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: 'Criar outro',
   deletion_confirmation: 'Tem a certeza que deseja eliminar isso {{title}}?',
   settings_nav: 'Definições',
   unsaved_changes_warning: 'Fez algumas alterações. Tem a certeza que deseja sair desta página?',
@@ -59,22 +58,15 @@ const general = {
   unknown_error: 'Erro desconhecido, por favor tente novamente mais tarde.',
   select: 'Selecionar',
   contact_us_action: 'Contacte-nos',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: 'Descrição',
+  name: 'Nome',
+  add_field: 'Adicionar {{field}}',
+  create_field: 'Criar {{field}}',
+  edit_field: 'Editar {{field}}',
+  delete_field: 'Eliminar {{field}}',
   coming_soon: 'Em breve',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} está atualmente em beta. Bem-vindo para explorar e <ContactLink>partilhar o seu feedback</ContactLink>.',
 };
 
 export default Object.freeze(general);

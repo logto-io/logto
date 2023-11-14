@@ -26,7 +26,6 @@ const quota_table = {
   },
   user_authn: {
     title: 'Autenticação de usuário',
-    /** UNTRANSLATED */
     omni_sign_in: 'Enterprise SSO (Q4, 2023)',
     password: 'Senha',
     passwordless: 'Sem senha - E-mail e SMS',
@@ -52,10 +51,8 @@ const quota_table = {
     hooks: 'Webhooks',
   },
   organization: {
-    /** UNTRANSLATED */
-    title: 'Organization',
-    /** UNTRANSLATED */
-    organization: 'Organization (Q4, 2023)',
+    title: 'Organização',
+    organization: 'Organização (Q4, 2023)',
   },
   support: {
     title: 'Suporte',
@@ -67,12 +64,12 @@ const quota_table = {
     '* Seus usuários ativos mensais (MAU) são divididos em 3 níveis com base em quantas vezes eles fazem login durante o ciclo de faturamento. Cada nível tem um preço diferente por unidade de MAU.',
   unlimited: 'Ilimitado',
   contact: 'Contato',
-  monthly_price: '${{value, number}}/mês',
-  mau_price: '${{value, number}}/MAU',
-  days_one: '{{count, number}} dia',
-  days_other: '{{count, number}} dias',
+  monthly_price: '${ { value, number } }/mês',
+  mau_price: '${ { value, number } }/MAU',
+  days_one: '${ { count, number } } dia',
+  days_other: '${ { count, number } } dias',
   add_on: 'Adicional',
-  tier: 'Nível{{value, number}}: ',
+  tier: 'Nível${ { value, number } }: ',
 };
 
 export default Object.freeze(quota_table);

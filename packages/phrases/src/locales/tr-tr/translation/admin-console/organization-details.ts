@@ -1,46 +1,27 @@
 const organization_details = {
-  /** UNTRANSLATED */
-  page_title: 'Organization details',
-  /** UNTRANSLATED */
+  page_title: 'Kuruluş detayları',
   delete_confirmation:
-    'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  organization_id: 'Organization ID',
-  /** UNTRANSLATED */
+    'Silindiğinde, tüm üyeler bu kuruluştaki üyeliklerini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
+  organization_id: 'Kuruluş Kimliği',
   settings_description:
-    'An organization is a group of identities (usually users) that are recognized by a common identifier.\n\nEach organization has its own set of members, roles, and permissions, while the roles and permissions are defined by the organization template.',
-  /** UNTRANSLATED */
-  name_placeholder: 'The name of the organization, not required to be unique.',
-  /** UNTRANSLATED */
-  description_placeholder: 'A description of the organization.',
-  /** UNTRANSLATED */
-  member: 'Member',
-  /** UNTRANSLATED */
-  member_other: 'Members',
-  /** UNTRANSLATED */
-  add_members_to_organization: 'Add members to organization {{name}}',
-  /** UNTRANSLATED */
+    'Bir kuruluş, genellikle ortak bir tanımlayıcı tarafından tanınan kimliklerin (genellikle kullanıcılar) bir grubudur.\n\nHer kuruluşun kendi üye, rol ve izin seti vardır, roller ve izinler kuruluş şablonu tarafından tanımlanır.',
+  name_placeholder: 'Kuruluşun adı, benzersiz olması gerekli değildir.',
+  description_placeholder: 'Kuruluşun açıklaması.',
+  member: 'Üye',
+  member_other: 'Üyeler',
+  add_members_to_organization: 'Üyeleri "{{name}}" kuruluşuna ekle',
   add_members_to_organization_description:
-    'Find appropriate users by searching name, email, phone, or user ID. Existing members are not shown in the search results.',
-  /** UNTRANSLATED */
-  add_with_organization_role: 'Add with organization role(s)',
-  /** UNTRANSLATED */
-  user: 'User',
-  /** UNTRANSLATED */
-  authorize_to_roles: 'Authorize {{name}} to access the following roles:',
-  /** UNTRANSLATED */
-  edit_organization_roles: 'Edit organization roles',
-  /** UNTRANSLATED */
-  edit_organization_roles_of_user: 'Edit organization roles of {{name}}',
-  /** UNTRANSLATED */
-  remove_user_from_organization: 'Remove user from organization',
-  /** UNTRANSLATED */
+    'İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun. Var olan üyeler arama sonuçlarında gösterilmez.',
+  add_with_organization_role: 'Kuruluş rol(ler)i ile ekle',
+  user: 'Kullanıcı',
+  authorize_to_roles: "{{name}}'a aşağıdaki rolleri erişim yetkisi verin:",
+  edit_organization_roles: 'Kuruluş rollerini düzenle',
+  edit_organization_roles_of_user: "{{name}}'ın kuruluş rollerini düzenle",
+  remove_user_from_organization: 'Kullanıcıyı kuruluştan kaldır',
   remove_user_from_organization_description:
-    'Once removed, the user will lose their membership and roles in this organization. This action cannot be undone.',
-  /** UNTRANSLATED */
-  search_user_placeholder: 'Search by name, email, phone or user ID',
-  /** UNTRANSLATED */
-  at_least_one_user: 'At least one user is required.',
+    'Kaldırıldığında, kullanıcı bu kuruluşta üyeliğini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
+  search_user_placeholder: 'İsim, e-posta, telefon veya kullanıcı kimliği ile ara',
+  at_least_one_user: 'En az bir kullanıcı gereklidir.',
 };
 
 export default Object.freeze(organization_details);

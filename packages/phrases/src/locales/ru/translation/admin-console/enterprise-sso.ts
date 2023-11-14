@@ -1,40 +1,24 @@
 const enterprise_sso = {
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  subtitle: 'Connect the enterprise identity provider and enable SP-initiated Single Sign-On.',
-  /** UNTRANSLATED */
-  create: 'Add enterprise connector',
-  /** UNTRANSLATED */
-  col_connector_name: 'Connector name',
-  /** UNTRANSLATED */
-  col_type: 'Type',
-  /** UNTRANSLATED */
-  col_email_domain: 'Email domain',
-  /** UNTRANSLATED */
-  col_status: 'Status',
-  /** UNTRANSLATED */
-  col_status_in_use: 'In use',
-  /** UNTRANSLATED */
-  col_status_invalid: 'Invalid',
-  /** UNTRANSLATED */
-  placeholder_title: 'Enterprise connector',
-  /** UNTRANSLATED */
+  page_title: 'Единый вход в предприятие',
+  title: 'Единый вход в предприятие',
+  subtitle:
+    'Подключите поставщика идентификации предприятия и включите одностороннюю аутентификацию с инициацией службы.',
+  create: 'Добавить предприятий коннектор',
+  col_connector_name: 'Имя коннектора',
+  col_type: 'Тип',
+  col_email_domain: 'Домен электронной почты',
+  col_status: 'Статус',
+  col_status_in_use: 'Используется',
+  col_status_invalid: 'Недопустимый',
+  placeholder_title: 'Коннектор предприятия',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logto предоставил множество встроенных поставщиков идентификации предприятия для подключения, тем временем вы можете создать своего с использованием стандартных протоколов.',
   create_modal: {
-    /** UNTRANSLATED */
-    title: 'Add enterprise connector',
-    /** UNTRANSLATED */
-    text_divider: 'Or you can customize your connector by a standard protocol.',
-    /** UNTRANSLATED */
-    connector_name_field_title: 'Connector name',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
-    /** UNTRANSLATED */
-    create_button_text: 'Create connector',
+    title: 'Добавить коннектор предприятия',
+    text_divider: 'Или вы можете настроить свой коннектор по стандартному протоколу.',
+    connector_name_field_title: 'Имя коннектора',
+    connector_name_field_placeholder: 'Имя для поставщика идентификации предприятия',
+    create_button_text: 'Создать коннектор',
   },
 };
 

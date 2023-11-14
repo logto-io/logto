@@ -47,14 +47,10 @@ const quota_item = {
     not_eligible: 'Rimuovi il tuo dominio personalizzato',
   },
   omni_sign_in_enabled: {
-    /** UNTRANSLATED */
     name: 'SSO',
-    /** UNTRANSLATED */
     limited: 'SSO',
-    /** UNTRANSLATED */
     unlimited: 'SSO',
-    /** UNTRANSLATED */
-    not_eligible: 'Disable your SSO',
+    not_eligible: 'Disabilita il tuo SSO',
   },
   built_in_email_connector_enabled: {
     name: 'Connettore email incorporato',
@@ -98,14 +94,10 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi webhook',
   },
   organization_enabled: {
-    /** UNTRANSLATED */
     name: 'Organization',
-    /** UNTRANSLATED */
     limited: 'Organization',
-    /** UNTRANSLATED */
     unlimited: 'Organization',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    not_eligible: 'Rimuovi il tuo organisations',
   },
   audit_logs_retention_days: {
     name: 'Conservazione log di audit',

@@ -33,8 +33,7 @@ const general = {
   copied: '已複製',
   required: '必填',
   add_another: '新增',
-  /** UNTRANSLATED */
-  create_another: 'Create another',
+  create_another: '創建另一個',
   deletion_confirmation: '你確定要刪除這個 {{title}} 嗎?',
   settings_nav: '設置',
   unsaved_changes_warning: '還有未儲存的變更, 確定要離開嗎？',
@@ -59,22 +58,15 @@ const general = {
   unknown_error: '未知錯誤，請稍後重試。',
   select: '選擇',
   contact_us_action: '聯絡我們',
-  /** UNTRANSLATED */
-  description: 'Description',
-  /** UNTRANSLATED */
-  name: 'Name',
-  /** UNTRANSLATED */
-  add_field: 'Add {{field}}',
-  /** UNTRANSLATED */
-  create_field: 'Create {{field}}',
-  /** UNTRANSLATED */
-  edit_field: 'Edit {{field}}',
-  /** UNTRANSLATED */
-  delete_field: 'Delete {{field}}',
+  description: '描述',
+  name: '名稱',
+  add_field: '新增{{field}}',
+  create_field: '創建{{field}}',
+  edit_field: '編輯{{field}}',
+  delete_field: '刪除{{field}}',
   coming_soon: '即將上線',
-  /** UNTRANSLATED */
   beta_notice:
-    '🎉  {{feature}} is currently in beta. Welcome to explore it and <ContactLink>share your feedback</ContactLink>.',
+    '🎉  {{feature}} 目前正處於測試版。歡迎探索並 <ContactLink>分享您的反饋意見</ContactLink>。',
 };
 
 export default Object.freeze(general);
