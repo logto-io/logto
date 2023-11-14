@@ -30,6 +30,7 @@ import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
 import SignIn from './pages/SignIn';
 import SignInPassword from './pages/SignInPassword';
+import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
 import SingleSignOnEmail from './pages/SingleSignOnEmail';
 import SocialLanding from './pages/SocialLanding';
 import SocialLinkAccount from './pages/SocialLinkAccount';
@@ -115,6 +116,7 @@ const App = () => {
                   {isDevelopmentFeaturesEnabled && (
                     <Route path={singleSignOnPath} element={<SingleSignOnContextProvider />}>
                       <Route path="email" element={<SingleSignOnEmail />} />
+                      <Route path="connectors" element={<SingleSignOnConnectors />} />
                     </Route>
                   )}
 
