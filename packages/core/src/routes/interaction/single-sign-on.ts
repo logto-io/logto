@@ -15,7 +15,7 @@ import type { WithInteractionDetailsContext } from './middleware/koa-interaction
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
 import {
-  oidcAuthorizationUrlPayloadGuard,
+  authorizationUrlPayloadGuard,
   getSsoAuthorizationUrl,
   getSsoAuthentication,
   handleSsoAuthentication,
@@ -36,8 +36,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       params: z.object({
         connectorId: z.string(),
       }),
-      // Only required for OIDC
-      body: oidcAuthorizationUrlPayloadGuard.optional(),
+      body: authorizationUrlPayloadGuard,
       status: [200, 500, 404],
       response: z.object({
         redirectTo: z.string(),

@@ -1,5 +1,5 @@
 import * as validator from '@authenio/samlify-node-xmllint';
-import { ConnectorError, ConnectorErrorCodes, socialUserInfoGuard } from '@logto/connector-kit';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type Optional, conditional } from '@silverhand/essentials';
 import { got } from 'got';
 import * as saml from 'samlify';
@@ -13,13 +13,11 @@ import {
   defaultAttributeMapping,
   type CustomizableAttributeMap,
   type AttributeMap,
+  extendedSocialUserInfoGuard,
+  type ExtendedSocialUserInfo,
 } from '../types/saml.js';
 
 type ESamlHttpRequest = Parameters<saml.ServiceProviderInstance['parseLoginResponse']>[2];
-
-const extendedSocialUserInfoGuard = socialUserInfoGuard.catchall(z.unknown());
-
-type ExtendedSocialUserInfo = z.infer<typeof extendedSocialUserInfoGuard>;
 
 /**
  * Parse XML-format raw SAML metadata and return the parsed SAML metadata.

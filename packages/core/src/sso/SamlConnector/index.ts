@@ -126,11 +126,10 @@ class SamlConnector {
   /**
    * Get the SSO URL.
    *
-   * @param jti The current session id.
-   *
+   * @param relayState The relay state to be passed to the SAML identity provider. We use it to pass `jti` to find the connector session.
    * @returns The SSO URL.
    */
-  async getSingleSignOnUrl(jti: string) {
+  async getSingleSignOnUrl(relayState: string) {
     const {
       entityId: entityID,
       x509Certificate,
@@ -156,7 +155,7 @@ class SamlConnector {
       // eslint-disable-next-line new-cap
       const serviceProvider = saml.ServiceProvider({
         entityID,
-        relayState: jti,
+        relayState,
         nameIDFormat: nameIdFormat,
         signingCert: x509Certificate,
         authnRequestsSigned: true, // Sign auth request by default
