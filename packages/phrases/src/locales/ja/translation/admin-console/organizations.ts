@@ -28,17 +28,13 @@ const organizations = {
   organization_role_description:
     '組織役割は、ユーザーに割り当てることができる権限のグループ化です。権限は事前に定義された組織権限から取得する必要があります。',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'これを行うと、影響を受けるユーザーからこの役割に関連する権限が削除され、組織ロール、組織のメンバー、および組織権限の関係が削除されます。',
+  role: '役割',
+  create_role_placeholder: '閲覧のみの権限を持つユーザー',
+  search_placeholder: '組織名またはIDで検索',
+  search_permission_placeholder: '検索して権限を選択',
+  search_role_placeholder: '検索して役割を選択',
+  empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

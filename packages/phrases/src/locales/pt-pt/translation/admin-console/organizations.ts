@@ -28,17 +28,13 @@ const organizations = {
   organization_role_description:
     'O papel da organização é um agrupamento de permissões que podem ser atribuídas a utilizadores. As permissões devem provir das permissões de organização predefinidas.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'Fazê-lo removerá as permissões associadas a este papel dos usuários afetados e excluirá as relações entre os papéis da organização, os membros da organização e as permissões da organização.',
+  role: 'Função',
+  create_role_placeholder: 'Usuários com permissões somente leitura',
+  search_placeholder: 'Pesquisar por nome ou ID da organização',
+  search_permission_placeholder: 'Digite para pesquisar e selecionar permissões',
+  search_role_placeholder: 'Digite para pesquisar e selecionar funções',
+  empty_placeholder: '🤔 Você ainda não configurou nenhum {{entity}}.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

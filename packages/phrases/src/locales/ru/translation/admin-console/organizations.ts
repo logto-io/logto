@@ -28,17 +28,13 @@ const organizations = {
   organization_role_description:
     'Роль организации - это группировка разрешений, которые могут быть назначены пользователям. Разрешения должны быть взяты из предопределенных разрешений организации.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'При этом будут удалены разрешения, связанные с этой ролью, у затронутых пользователей, и будут удалены отношения между ролями организации, участниками в организации и разрешениями организации.',
+  role: 'Роль',
+  create_role_placeholder: 'Пользователи с правами только для просмотра',
+  search_placeholder: 'Поиск по названию организации или ID',
+  search_permission_placeholder: 'Начните вводить для поиска и выбора разрешений',
+  search_role_placeholder: 'Начните вводить для поиска и выбора ролей',
+  empty_placeholder: '🤔 У вас пока нет никаких {{entity}}.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

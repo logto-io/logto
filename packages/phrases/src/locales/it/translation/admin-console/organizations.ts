@@ -28,17 +28,13 @@ const organizations = {
   organization_role_description:
     'Il ruolo organizzativo è un raggruppamento di permessi che possono essere assegnati agli utenti. I permessi devono provenire dai permessi organizzativi predefiniti.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    "Fare ciò rimuoverà i permessi associati a questo ruolo dagli utenti interessati ed eliminerà le relazioni tra i ruoli dell'organizzazione, i membri dell'organizzazione e i permessi dell'organizzazione.",
+  role: 'Ruolo',
+  create_role_placeholder: 'Utenti con solo permessi di visualizzazione',
+  search_placeholder: "Cerca per nome o ID dell'organizzazione",
+  search_permission_placeholder: 'Digita per cercare e selezionare i permessi',
+  search_role_placeholder: 'Digita per cercare e selezionare i ruoli',
+  empty_placeholder: '🤔 Non hai ancora impostato nessun {{entity}}.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

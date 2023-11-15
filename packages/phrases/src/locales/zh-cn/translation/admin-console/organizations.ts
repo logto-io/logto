@@ -27,17 +27,13 @@ const organizations = {
   organization_role_description:
     '组织角色是可以分配给用户的权限组。这些权限必须来自预定义的组织权限。',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    '这样做将从受影响的用户那里删除与此角色相关的权限，并删除组织角色、组织成员和组织权限之间的关系。',
+  role: '角色',
+  create_role_placeholder: '仅查看权限的用户',
+  search_placeholder: '按组织名称或ID搜索',
+  search_permission_placeholder: '输入以搜索和选择权限',
+  search_role_placeholder: '输入以搜索和选择角色',
+  empty_placeholder: '🤔 你还没有设置任何{{entity}}。',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

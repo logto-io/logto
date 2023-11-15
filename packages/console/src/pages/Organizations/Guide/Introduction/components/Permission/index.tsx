@@ -12,7 +12,7 @@ type Props = {
 function Permission({ className, name, isMonospace = true }: Props) {
   return (
     <div className={classNames(styles.permission, isMonospace && styles.monoSpace, className)}>
-      <div className={styles.name}>{name}</div>
+      {name}
     </div>
   );
 }

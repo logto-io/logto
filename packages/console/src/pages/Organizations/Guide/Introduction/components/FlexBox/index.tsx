@@ -11,15 +11,19 @@ type Props = {
   style?: CSSProperties;
   /* If the children items should equally divide the container space. Defaults to `false` */
   isEquallyDivided?: boolean;
+  onMouseOver?: () => void;
+  onMouseOut?: () => void;
 };
 
 function FlexBox({
   className,
+  children,
   type = 'row',
   gap = 12,
   style,
   isEquallyDivided,
-  children,
+  onMouseOver,
+  onMouseOut,
 }: PropsWithChildren<Props>) {
   return (
     <div
@@ -30,6 +34,10 @@ function FlexBox({
         className
       )}
       style={{ gap: `${gap}px`, ...style }}
+      onFocus={onMouseOver}
+      onBlur={onMouseOut}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
     >
       {children}
     </div>

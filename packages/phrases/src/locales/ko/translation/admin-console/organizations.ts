@@ -28,17 +28,13 @@ const organizations = {
   organization_role_description:
     '조직 역할은 사용자에 할당할 수 있는 권한의 그룹화입니다. 권한은 미리 정의된 조직 권한에서 가져와야 합니다.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    '이렇게 하면 영향을 받는 사용자에서 이 역할과 관련된 권한이 제거되고 조직 역할, 조직 구성원 및 조직 권한 간의 관계가 삭제됩니다.',
+  role: '역할',
+  create_role_placeholder: '보기 전용 권한을 가진 사용자',
+  search_placeholder: '조직 이름 또는 ID로 검색',
+  search_permission_placeholder: '검색하여 권한 선택',
+  search_role_placeholder: '검색하여 역할 선택',
+  empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

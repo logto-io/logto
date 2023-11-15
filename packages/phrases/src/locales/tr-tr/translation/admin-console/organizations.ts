@@ -27,17 +27,13 @@ const organizations = {
   organization_role_description:
     'Kuruluş rolü, kullanıcılara atanabilen izinlerin bir gruplamasıdır. İzinler önceden tanımlanmış kuruluş izinlerinden gelmelidir.',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    'Bunu yapmak, etkilenen kullanıcılardan bu role ilişkilendirilmiş izinleri kaldıracak ve kuruluş rolleri arasındaki ilişkileri ve kuruluş izinleri arasındaki ilişkileri silecektir.',
+  role: 'Rol',
+  create_role_placeholder: 'Yalnızca görünüm izinleri olan kullanıcılar',
+  search_placeholder: 'Kuruluş adı veya kimliğine göre ara',
+  search_permission_placeholder: 'İzinleri arayın ve seçin',
+  search_role_placeholder: 'Rolleri arayın ve seçin',
+  empty_placeholder: '🤔 Herhangi bir {{entity}} henüz ayarlanmamış.',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

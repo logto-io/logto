@@ -12,6 +12,10 @@
   border-radius: 4px;
   background: var(--color-layer-2);
   color: var(--color-on-info-container);
+  cursor: default;
+  opacity: 30%;
+  transition: 0.3s ease-in-out;
+  transition-property: border-color, opacity;
 
   .avatar {
     width: 28px;
@@ -28,7 +32,7 @@
   }
 
   &.pink {
-    color: #ffb4a9; // Static orange color in both light and dark themes
+    color: #ff897a; // Static pink color in both light and dark themes
   }
 
   &.blue,
@@ -36,7 +40,7 @@
     width: 67px;
     height: 80px;
     flex: 0 0 67px;
-    margin-top: _.unit(8);
+    border: 1px solid transparent;
 
     &.small {
       width: 50px;
@@ -44,6 +48,22 @@
       flex: 0 0 50px;
       padding: _.unit(2);
       margin: 0;
+
+      .avatar {
+        height: 20px;
+      }
     }
+
+    &:hover {
+      border-color: var(--color-on-info-container);
+    }
+  }
+
+  &.active {
+    opacity: 100%;
+  }
+
+  &.interactive {
+    cursor: pointer;
   }
 }

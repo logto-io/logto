@@ -33,6 +33,7 @@ const organization = {
   search_placeholder: 'Search by organization name or ID',
   search_permission_placeholder: 'Type to search and select permissions',
   search_role_placeholder: 'Type to search and select roles',
+  empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
   organization_and_member: 'Organization and member',
   organization_and_member_description:
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
@@ -54,7 +55,7 @@ const organization = {
           'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
-        title: 'Interact the illustration to see how everything connects',
+        title: 'Interact with the illustration to see how everything connects',
         description:
           "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },

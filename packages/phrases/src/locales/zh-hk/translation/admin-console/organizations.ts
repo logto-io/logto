@@ -27,17 +27,13 @@ const organizations = {
   organization_role_description:
     '組織角色是可以分配給用戶的權限的分組。權限必須來自預定義的組織權限。',
   organization_role_delete_confirm:
-    'Doing so will remove the permissions associated with this role from the affected users and delete the relations among organization roles, members in the organization, and organization permissions.',
-  /** UNTRANSLATED */
-  role: 'Role',
-  /** UNTRANSLATED */
-  create_role_placeholder: 'Users with view-only permissions',
-  /** UNTRANSLATED */
-  search_placeholder: 'Search by organization name or ID',
-  /** UNTRANSLATED */
-  search_permission_placeholder: 'Type to search and select permissions',
-  /** UNTRANSLATED */
-  search_role_placeholder: 'Type to search and select roles',
+    '這樣將從受影響的用戶身上刪除與此角色關聯的權限，並刪除組織角色、組織成員和組織權限之間的關係。',
+  role: '角色',
+  create_role_placeholder: '僅擁有檢視權限的用戶',
+  search_placeholder: '按組織名稱或 ID 搜索',
+  search_permission_placeholder: '輸入並搜索選擇權限',
+  search_role_placeholder: '輸入並搜索選擇角色',
+  empty_placeholder: '🤔 你尚未設置任何 {{entity}}。',
   /** UNTRANSLATED */
   organization_and_member: 'Organization and member',
   /** UNTRANSLATED */

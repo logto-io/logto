@@ -14,9 +14,8 @@ import useTheme from '@/hooks/use-theme';
 import { steps } from '../const';
 import * as parentStyles from '../index.module.scss';
 
-import JohnRelations from './JohnRelations';
-import SarahRelations from './SarahRelations';
 import FlexBox from './components/FlexBox';
+import InteractiveDiagram from './components/InteractiveDiagram';
 import Panel from './components/Panel';
 import Permission from './components/Permission';
 import Role from './components/Role';
@@ -89,7 +88,7 @@ function Introduction({ isReadonly }: Props) {
                   title={t('guide.organization_roles')}
                   description={t('guide.introduction.section_2.role_description')}
                 >
-                  <FlexBox gap={20}>
+                  <FlexBox isEquallyDivided gap={20}>
                     <Role
                       label={t('guide.admin')}
                       permissions={['read:resource', 'edit:resource', 'delete:resource']}
@@ -108,51 +107,7 @@ function Introduction({ isReadonly }: Props) {
                 <div className={styles.description}>
                   {t('guide.introduction.section_3.description')}
                 </div>
-                <FlexBox type="column" gap={32} style={{ padding: '12px 0' }}>
-                  <FlexBox>
-                    <User variant="blue" name="John" />
-                    <JohnRelations />
-                    <Panel
-                      className={styles.panel}
-                      label={`${t('organization')} A`}
-                      size="small"
-                      variant="blue"
-                    >
-                      <FlexBox isEquallyDivided gap={10} style={{ marginBottom: '8px' }}>
-                        <Role size="small" label={`${t('role')}: Admin`} />
-                        <Role size="small" label={`${t('role')}: Member`} />
-                        <Role size="small" label={`${t('role')}: Guest`} />
-                        <Role size="small" label="..." />
-                      </FlexBox>
-                      <User size="small" variant="blue" name="John" />
-                    </Panel>
-                  </FlexBox>
-                  <FlexBox>
-                    <User variant="pink" name="Sarah" />
-                    <SarahRelations />
-                    <Panel
-                      className={styles.panel}
-                      label={`${t('organization')} B`}
-                      size="small"
-                      variant="purple"
-                    >
-                      <FlexBox isEquallyDivided gap={10} style={{ marginBottom: '8px' }}>
-                        <Role size="small" label={`${t('role')}: Admin`} />
-                        <Role size="small" label={`${t('role')}: Member`} />
-                        <Role size="small" label={`${t('role')}: Guest`} />
-                        <Role size="small" label="..." />
-                      </FlexBox>
-                      <FlexBox isEquallyDivided gap={10}>
-                        <div>
-                          <User variant="pink" name="Sarah" size="small" />
-                        </div>
-                        <div>
-                          <User variant="blue" name="John" size="small" />
-                        </div>
-                      </FlexBox>
-                    </Panel>
-                  </FlexBox>
-                </FlexBox>
+                <InteractiveDiagram />
               </FlexBox>
             </FlexBox>
           </Card>
