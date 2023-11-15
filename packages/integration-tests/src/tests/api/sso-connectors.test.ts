@@ -13,6 +13,7 @@ import {
   patchSsoConnectorById,
   patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
+import { SsoProviderName } from '#src/constants.js';
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -263,6 +264,11 @@ describe('patch sso-connector by id', () => {
       expect(connector).toHaveProperty('connectorName', 'integration_test connector updated');
       expect(connector).toHaveProperty('config', config);
       expect(connector).toHaveProperty('syncProfile', true);
+
+      // Since we've provided a valid metadata content, check if the `providerConfig` is returned.
+      if (providerName === SsoProviderName.SAML) {
+        expect(connector.providerConfig).toBeDefined();
+      }
 
       await deleteSsoConnectorById(id);
     }

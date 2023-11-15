@@ -1,5 +1,4 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
-import { type Json, jsonGuard } from '@logto/schemas';
 import { z } from 'zod';
 
 // Since the SAML SSO user info will extend the basic social user info (will contain extra info like `organization`, `role` etc.), but for now we haven't decide what should be included in extended user info, so we just use the basic social user info guard here to keep SSOT.
@@ -25,25 +24,23 @@ const samlServiceProviderMetadataGuard = z.object({
 
 export type SamlServiceProviderMetadata = z.infer<typeof samlServiceProviderMetadataGuard>;
 
-// `.catchall(jsonGuard)` can not infer the type of `Record<string, Json>`, define it in another way.
-export type SamlIdentityProviderMetadata = {
-  signInEndpoint: string;
-  x509Certificate: string;
-  metadataUrl?: string;
-  metadata?: string;
-} & Record<string, Json>;
+/**
+ * We only concern about the `entityId`, `signInEndpoint` and `x509Certificate` for now.
+ */
+export const samlIdentityProviderMetadataGuard = z.object({
+  entityId: z.string(),
+  signInEndpoint: z.string(),
+  x509Certificate: z.string(),
+});
 
-export const samlIdentityProviderMetadataGuard = z
-  .object({
-    signInEndpoint: z.string(),
-    x509Certificate: z.string(),
-    metadataUrl: z.string().optional(),
-    metadata: z.string().optional(),
-  })
-  .catchall(jsonGuard) satisfies z.ZodType<SamlIdentityProviderMetadata>; // Allow extra fields, also need to fit the `JsonObject` type.
+export type SamlIdentityProviderMetadata = z.infer<typeof samlIdentityProviderMetadataGuard>;
 
 export const samlConnectorConfigGuard = samlIdentityProviderMetadataGuard
-  .extend({ attributeMapping: customizableAttributeMappingGuard })
+  .extend({
+    attributeMapping: customizableAttributeMappingGuard,
+    metadata: z.string(),
+    metadataUrl: z.string(),
+  })
   .partial();
 
 export type SamlConnectorConfig = z.infer<typeof samlConnectorConfigGuard>;
