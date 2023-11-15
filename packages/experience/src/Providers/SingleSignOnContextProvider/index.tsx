@@ -1,13 +1,16 @@
 import { type SsoConnectorMetadata } from '@logto/schemas';
-import { useEffect, useMemo, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 
 import SingleSignOnContext, { type SingleSignOnContextType } from './SingleSignOnContext';
 
-const SingleSignOnContextProvider = () => {
+type Props = {
+  children: ReactNode;
+};
+
+const SingleSignOnContextProvider = ({ children }: Props) => {
   const { ssoConnectors } = useSieMethods();
   const { get, set, remove } = useSessionStorage();
   const [email, setEmail] = useState<string | undefined>(get(StorageKeys.SsoEmail));
@@ -51,7 +54,7 @@ const SingleSignOnContextProvider = () => {
 
   return (
     <SingleSignOnContext.Provider value={singleSignOnContext}>
-      <Outlet />
+      {children}
     </SingleSignOnContext.Provider>
   );
 };

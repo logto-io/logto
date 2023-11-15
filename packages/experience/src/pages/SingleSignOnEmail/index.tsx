@@ -9,10 +9,10 @@ import ErrorMessage from '@/components/ErrorMessage';
 import SmartInputField, {
   type IdentifierInputValue,
 } from '@/components/InputFields/SmartInputField';
+import useOnSubmit from '@/hooks/use-check-single-sign-on';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
-import useOnSubmit from './use-on-submit';
 
 type FormState = {
   identifier: IdentifierInputValue;

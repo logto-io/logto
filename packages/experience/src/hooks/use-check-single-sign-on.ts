@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
+import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 
-const useOnSubmit = () => {
+const useCheckSingleSignOn = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const request = useApi(getSingleSignOnConnectors);
@@ -29,6 +30,11 @@ const useOnSubmit = () => {
     setSsoConnectors([]);
   }, [setEmail, setSsoConnectors]);
 
+  /**
+   * Check if the email is registered with any SSO connectors
+   * @param {string} email
+   * @returns {Promise<boolean>} - true if the email is registered with any SSO connectors
+   */
   const onSubmit = useCallback(
     async (email: string) => {
       clearContext();
@@ -57,7 +63,8 @@ const useOnSubmit = () => {
       setSsoConnectors(connectors);
       setEmail(email);
 
-      navigate('../connectors');
+      navigate(`/${singleSignOnPath}/connectors`);
+      return true;
     },
     [
       availableSsoConnectorsMap,
@@ -78,4 +85,4 @@ const useOnSubmit = () => {
   };
 };
 
-export default useOnSubmit;
+export default useCheckSingleSignOn;

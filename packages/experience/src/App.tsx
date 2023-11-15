@@ -49,82 +49,84 @@ const App = () => {
     <BrowserRouter>
       <PageContextProvider>
         <SettingsProvider>
-          <AppBoundary>
-            <AppInsightsBoundary cloudRole="ui">
-              <Routes>
-                <Route path="sign-in/consent" element={<Consent />} />
-                <Route element={<AppLayout />}>
-                  <Route
-                    path="unknown-session"
-                    element={<ErrorPage message="error.invalid_session" />}
-                  />
-                  <Route path="springboard" element={<Springboard />} />
+          <SingleSignOnContextProvider>
+            <AppBoundary>
+              <AppInsightsBoundary cloudRole="ui">
+                <Routes>
+                  <Route path="sign-in/consent" element={<Consent />} />
+                  <Route element={<AppLayout />}>
+                    <Route
+                      path="unknown-session"
+                      element={<ErrorPage message="error.invalid_session" />}
+                    />
+                    <Route path="springboard" element={<Springboard />} />
 
-                  <Route element={<LoadingLayerProvider />}>
-                    {/* Sign-in */}
-                    <Route path="sign-in">
-                      <Route index element={<SignIn />} />
-                      <Route path="password" element={<SignInPassword />} />
-                      <Route path="social/:connectorId" element={<SocialSignIn />} />
+                    <Route element={<LoadingLayerProvider />}>
+                      {/* Sign-in */}
+                      <Route path="sign-in">
+                        <Route index element={<SignIn />} />
+                        <Route path="password" element={<SignInPassword />} />
+                        <Route path="social/:connectorId" element={<SocialSignIn />} />
+                      </Route>
+
+                      {/* Register */}
+                      <Route path="register">
+                        <Route index element={<Register />} />
+                        <Route path="password" element={<RegisterPassword />} />
+                      </Route>
+
+                      {/* Forgot password */}
+                      <Route path="forgot-password">
+                        <Route index element={<ForgotPassword />} />
+                        <Route path="reset" element={<ResetPassword />} />
+                      </Route>
+
+                      {/* Passwordless verification code */}
+                      <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                      {/* Mfa binding */}
+                      <Route path={UserMfaFlow.MfaBinding}>
+                        <Route index element={<MfaBinding />} />
+                        <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
+                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
+                        <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
+                      </Route>
+
+                      {/* Mfa verification */}
+                      <Route path={UserMfaFlow.MfaVerification}>
+                        <Route index element={<MfaVerification />} />
+                        <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
+                        <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
+                        <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
+                      </Route>
+
+                      {/* Continue set up missing profile */}
+                      <Route path="continue">
+                        <Route path=":method" element={<Continue />} />
+                      </Route>
+
+                      {/* Social sign-in pages */}
+                      <Route path="social">
+                        <Route path="link/:connectorId" element={<SocialLinkAccount />} />
+                        <Route path="landing/:connectorId" element={<SocialLanding />} />
+                      </Route>
+                      <Route path="callback/:connectorId" element={<Callback />} />
                     </Route>
 
-                    {/* Register */}
-                    <Route path="register">
-                      <Route index element={<Register />} />
-                      <Route path="password" element={<RegisterPassword />} />
-                    </Route>
+                    {/* Single sign on */}
+                    {isDevelopmentFeaturesEnabled && (
+                      <Route path={singleSignOnPath}>
+                        <Route path="email" element={<SingleSignOnEmail />} />
+                        <Route path="connectors" element={<SingleSignOnConnectors />} />
+                      </Route>
+                    )}
 
-                    {/* Forgot password */}
-                    <Route path="forgot-password">
-                      <Route index element={<ForgotPassword />} />
-                      <Route path="reset" element={<ResetPassword />} />
-                    </Route>
-
-                    {/* Passwordless verification code */}
-                    <Route path=":flow/verification-code" element={<VerificationCode />} />
-
-                    {/* Mfa binding */}
-                    <Route path={UserMfaFlow.MfaBinding}>
-                      <Route index element={<MfaBinding />} />
-                      <Route path={MfaFactor.TOTP} element={<TotpBinding />} />
-                      <Route path={MfaFactor.WebAuthn} element={<WebAuthnBinding />} />
-                      <Route path={MfaFactor.BackupCode} element={<BackupCodeBinding />} />
-                    </Route>
-
-                    {/* Mfa verification */}
-                    <Route path={UserMfaFlow.MfaVerification}>
-                      <Route index element={<MfaVerification />} />
-                      <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
-                      <Route path={MfaFactor.WebAuthn} element={<WebAuthnVerification />} />
-                      <Route path={MfaFactor.BackupCode} element={<BackupCodeVerification />} />
-                    </Route>
-
-                    {/* Continue set up missing profile */}
-                    <Route path="continue">
-                      <Route path=":method" element={<Continue />} />
-                    </Route>
-
-                    {/* Social sign-in pages */}
-                    <Route path="social">
-                      <Route path="link/:connectorId" element={<SocialLinkAccount />} />
-                      <Route path="landing/:connectorId" element={<SocialLanding />} />
-                    </Route>
-                    <Route path="callback/:connectorId" element={<Callback />} />
+                    <Route path="*" element={<ErrorPage />} />
                   </Route>
-
-                  {/* Single sign on */}
-                  {isDevelopmentFeaturesEnabled && (
-                    <Route path={singleSignOnPath} element={<SingleSignOnContextProvider />}>
-                      <Route path="email" element={<SingleSignOnEmail />} />
-                      <Route path="connectors" element={<SingleSignOnConnectors />} />
-                    </Route>
-                  )}
-
-                  <Route path="*" element={<ErrorPage />} />
-                </Route>
-              </Routes>
-            </AppInsightsBoundary>
-          </AppBoundary>
+                </Routes>
+              </AppInsightsBoundary>
+            </AppBoundary>
+          </SingleSignOnContextProvider>
         </SettingsProvider>
       </PageContextProvider>
     </BrowserRouter>
