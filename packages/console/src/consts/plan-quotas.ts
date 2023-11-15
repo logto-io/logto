@@ -83,6 +83,12 @@ export const organizationEnabledMap: EnabledFeatureMap = {
   [ReservedPlanId.pro]: true,
 };
 
+export const ssoEnabledMap: EnabledFeatureMap = {
+  [ReservedPlanId.free]: false,
+  [ReservedPlanId.hobby]: true,
+  [ReservedPlanId.pro]: true,
+};
+
 /**
  * Note: this is only for display purpose.
  *
@@ -118,6 +124,7 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
   organizationEnabled: true,
+  ssoEnabled: true,
 };
 
 /**
@@ -149,6 +156,7 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'smsConnectorsEnabled',
     'socialConnectorsLimit',
     'standardConnectorsLimit',
+    'ssoEnabled',
   ],
   [SubscriptionPlanTableGroupKey.roles]: [
     'userManagementEnabled',
@@ -164,6 +172,6 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
 export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();
 
 export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
-  'omniSignInEnabled',
+  'ssoEnabled',
   'organizationEnabled',
 ];

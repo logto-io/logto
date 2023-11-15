@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: 'Проверка подлинности пользователя',
-    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
+    omni_sign_in: 'Многочисленные входы',
     password: 'Пароль',
     passwordless: 'Без пароля - Электронная почта и SMS',
     email_connector: 'Подключение электронной почты',
@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: 'Стандартные подключения',
     built_in_email_connector: 'Встроенное подключение электронной почты',
     mfa: 'MFA',
+    sso: 'Единый вход в корпоративные системы (IV кв. 2023 г.)',
   },
   user_management: {
     title: 'Управление пользователями',

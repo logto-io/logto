@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Supprimez votre domaine personnalisé',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Désactivez votre SSO',
+    name: 'Connexion omni',
+    limited: 'Connexion omni',
+    unlimited: 'Connexion omni',
+    not_eligible: 'Désactivez votre connexion omni',
   },
   built_in_email_connector_enabled: {
     name: 'Connecteur de messagerie intégré',
@@ -124,6 +124,12 @@ const quota_item = {
     limited: 'MFA',
     unlimited: 'MFA',
     not_eligible: 'Désactivez votre MFA',
+  },
+  sso_enabled: {
+    name: 'SSO Entreprise',
+    limited: 'SSO Entreprise',
+    unlimited: 'SSO Entreprise',
+    not_eligible: 'Désactivez votre SSO Entreprise',
   },
 };
 

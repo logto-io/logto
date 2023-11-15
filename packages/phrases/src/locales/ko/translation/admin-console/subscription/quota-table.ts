@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: '사용자 인증',
-    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
+    omni_sign_in: '옴니 사인인',
     password: '비밀번호',
     passwordless: '비밀번호 없음 - 이메일과 SMS',
     email_connector: '이메일 커넥터',
@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: '표준 커넥터',
     built_in_email_connector: '내장 이메일 커넥터',
     mfa: 'MFA',
+    sso: '기업 SSO (2023년 Q4)',
   },
   user_management: {
     title: '사용자 관리',

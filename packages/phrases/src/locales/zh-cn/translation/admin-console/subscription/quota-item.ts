@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: '移除你的自定义域名',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: '禁用你的 SSO',
+    name: '全渠道登录',
+    limited: '全渠道登录',
+    unlimited: '全渠道登录',
+    not_eligible: '禁用全渠道登录',
   },
   built_in_email_connector_enabled: {
     name: '内置电子邮件连接器',
@@ -124,6 +124,12 @@ const quota_item = {
     limited: 'MFA',
     unlimited: 'MFA',
     not_eligible: '禁用你的 MFA',
+  },
+  sso_enabled: {
+    name: '企业SSO',
+    limited: '企业SSO',
+    unlimited: '企业SSO',
+    not_eligible: '禁用你的企业SSO',
   },
 };
 

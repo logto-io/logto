@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: 'Kullanıcı Kimlik Doğrulama',
-    omni_sign_in: 'Kurumsal SSO (Q4, 2023)',
+    omni_sign_in: 'Çoklu oturum açma',
     password: 'Parola',
     passwordless: 'Parolasız - E-posta ve SMS',
     email_connector: 'E-posta bağlayıcı',
@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: 'Standart bağlayıcılar',
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
     mfa: 'MFA',
+    sso: 'Kurumsal SSO (2023 Q4)',
   },
   user_management: {
     title: 'Kullanıcı Yönetimi',

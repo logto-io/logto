@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'カスタムドメインを削除してください',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Disable your SSO',
+    name: 'Omniサインイン',
+    limited: 'Omniサインイン',
+    unlimited: 'Omniサインイン',
+    not_eligible: 'Omniサインインを無効にしてください',
   },
   built_in_email_connector_enabled: {
     name: '組込みメールコネクタ',
@@ -124,6 +124,12 @@ const quota_item = {
     limited: 'MFA',
     unlimited: 'MFA',
     not_eligible: 'MFAを無効にする',
+  },
+  sso_enabled: {
+    name: 'エンタープライズSSO',
+    limited: 'エンタープライズSSO',
+    unlimited: 'エンタープライズSSO',
+    not_eligible: 'エンタープライズSSOを無効にする',
   },
 };
 

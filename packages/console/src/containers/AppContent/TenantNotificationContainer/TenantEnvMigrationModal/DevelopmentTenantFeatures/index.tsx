@@ -8,7 +8,7 @@ const featuredQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
   'mauLimit',
   'machineToMachineLimit',
   'mfaEnabled',
-  'omniSignInEnabled',
+  'ssoEnabled',
   'organizationEnabled',
   'rolesLimit',
   'scopesPerRoleLimit',

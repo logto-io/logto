@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: '用戶認證',
-    omni_sign_in: '企業SSO（Q4, 2023）',
+    omni_sign_in: '全渠道登錄',
     password: '密碼',
     passwordless: '免密碼登錄 - 電子郵件和短信',
     email_connector: '電子郵件連接器',
@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: '標準連接器',
     built_in_email_connector: '內置電子郵件連接器',
     mfa: 'MFA',
+    sso: '企業SSO（Q4, 2023）',
   },
   user_management: {
     title: '用戶管理',

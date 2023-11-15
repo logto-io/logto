@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: 'Autenticazione utente',
-    omni_sign_in: 'SSO Enterprise (Q4, 2023)',
+    omni_sign_in: 'Accesso onnicomprensivo',
     password: 'Password',
     passwordless: 'Senza password - E-mail e SMS',
     email_connector: 'Connettore e-mail',
@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: 'Connettori standard',
     built_in_email_connector: 'Connettore e-mail integrato',
     mfa: 'MFA',
+    sso: 'SSO aziendale (Q4, 2023)',
   },
   user_management: {
     title: 'Gestione utenti',
