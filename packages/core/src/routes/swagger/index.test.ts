@@ -97,6 +97,17 @@ describe('GET /swagger.json', () => {
       }),
       () => ({})
     );
+    // Test plural
+    queryParametersRouter.get(
+      '/mocks/:id/:field',
+      koaGuard({
+        params: object({
+          id: number(),
+          field: string(),
+        }),
+      }),
+      () => ({})
+    );
     const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
 
     const response = await swaggerRequest.get('/swagger.json');
@@ -105,7 +116,22 @@ describe('GET /swagger.json', () => {
         get: {
           parameters: [
             {
-              $ref: '#/components/parameters/mocId:root',
+              $ref: '#/components/parameters/mockId:root',
+            },
+            {
+              name: 'field',
+              in: 'path',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+        },
+      },
+      '/api/mocks/{id}/{field}': {
+        get: {
+          parameters: [
+            {
+              $ref: '#/components/parameters/mockId:root',
             },
             {
               name: 'field',
