@@ -3,8 +3,10 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
-import Button from '@/ds-components/Button';
+import { envTagsFeatureLink } from '@/consts';
+import { LinkButton } from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
@@ -13,6 +15,7 @@ function DevelopmentTenantNotification() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
   const Image = theme === Theme.Light ? Congrats : CongratsDark;
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   return (
     <div className={styles.container}>
@@ -27,14 +30,12 @@ function DevelopmentTenantNotification() {
           <DynamicT forKey="tenants.notification.allow_pro_features_description" />
         </div>
       </div>
-      <Button
+      <LinkButton
+        targetBlank
         title="general.learn_more"
         type="outline"
-        className={styles.button}
         size="large"
-        onClick={() => {
-          // Todo - PRD-591 @xiaoyijun navigate to related posts
-        }}
+        href={getDocumentationUrl(envTagsFeatureLink)}
       />
     </div>
   );
