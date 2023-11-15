@@ -55,7 +55,7 @@ export const verifySsoOnlyEmailIdentifier = async (
  * @param ctx
  * @param provider
  * @param connectorId
- * @returns The single sign on session data
+ * @returns SingleSignOnConnectorSession
  *
  * @remark Forked from ./social-verification.ts.
  * Use SingleSignOnSession guard instead of ConnectorSession guard.
