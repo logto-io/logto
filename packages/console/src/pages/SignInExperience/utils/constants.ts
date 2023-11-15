@@ -9,7 +9,7 @@ import {
  * Note:
  * - Not allowed customized phrases groups should be added here. Currently only the `development_tenant` group is not allowed.
  *
- * - WIP-features-related phrases groups keys should be added here and controlled by the `isDevFeaturesEnabled` flag.
+ * - Unreleased feature phrase group keys should be added here and controlled by the `isDevFeaturesEnabled` flag.
  * @example
  * ```ts
  * export const hiddenLocalePhraseGroups: readonly LocalePhraseGroupKey[] = [
@@ -24,8 +24,7 @@ export const hiddenLocalePhraseGroups: readonly LocalePhraseGroupKey[] = ['devel
  * List of locale phrase key that should be hidden from the experience UI language editor.
  *
  * Note:
- *
- * WIP-features-related phrases keys should be added here and controlled by the `isDevFeaturesEnabled` flag.
+ * Unreleased feature phrase keys should be added here and controlled by the `isDevFeaturesEnabled` flag.
  * @example
  * ```ts
  * export const hiddenLocalePhrases: readonly LocalePhraseKey[] = [
