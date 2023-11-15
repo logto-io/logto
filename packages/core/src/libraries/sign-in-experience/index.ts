@@ -19,7 +19,7 @@ import { type FullSignInExperience } from './types.js';
 export * from './sign-up.js';
 export * from './sign-in.js';
 
-export const developmentTenantPlanId = 'dev-tenant';
+export const developmentTenantPlanId = 'dev';
 
 export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
 
