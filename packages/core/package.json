@@ -17,7 +17,7 @@
     "build:test": "rm -rf build/ && tsc -p tsconfig.test.json --sourcemap && pnpm run copy:apidocs",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "dev": "rm -rf build/ && pnpm run copy:apidocs && nodemon",
+    "dev": "rm -rf build/ && nodemon",
     "start": "NODE_ENV=production node .",
     "test:only": "NODE_OPTIONS=\"--experimental-vm-modules --max_old_space_size=4096\" jest --logHeapUsage",
     "test": "pnpm build:test && pnpm test:only",
