@@ -134,6 +134,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     policy: MfaPolicy.UserControlled,
     factors: [],
   },
+  isDevelopmentTenant: false,
 };
 
 const usernameSettings = {

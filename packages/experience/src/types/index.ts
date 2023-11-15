@@ -39,6 +39,7 @@ export type SignInExperienceResponse = Omit<SignInExperience, 'socialSignInConne
     phone: boolean;
     email: boolean;
   };
+  isDevelopmentTenant: boolean;
 };
 
 export type PreviewConfig = {
