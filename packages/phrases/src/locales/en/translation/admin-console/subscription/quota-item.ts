@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: 'Disable your MFA',
   },
+  sso_enabled: {
+    name: 'Enterprise SSO',
+    limited: 'Enterprise SSO',
+    unlimited: 'Enterprise SSO',
+    not_eligible: 'Disable your Enterprise SSO',
+  },
 };
 
 export default Object.freeze(quota_item);

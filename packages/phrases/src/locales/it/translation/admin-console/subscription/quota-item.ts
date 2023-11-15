@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: 'Disabilita il tuo MFA',
   },
+  sso_enabled: {
+    name: 'SSO aziendale',
+    limited: 'SSO aziendale',
+    unlimited: 'SSO aziendale',
+    not_eligible: 'Disabilita il tuo SSO aziendale',
+  },
 };
 
 export default Object.freeze(quota_item);

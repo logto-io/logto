@@ -18,6 +18,8 @@ export type SubscriptionPlanQuota = Omit<
   ticketSupportResponseTime: number;
   // Organization
   organizationEnabled: boolean;
+  // SSO
+  ssoEnabled: boolean;
 };
 
 export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {

@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: 'MFA 비활성화',
   },
+  sso_enabled: {
+    name: '기업 SSO',
+    limited: '기업 SSO',
+    unlimited: '기업 SSO',
+    not_eligible: '기업 SSO 비활성화',
+  },
 };
 
 export default Object.freeze(quota_item);

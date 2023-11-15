@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: 'MFAを無効にする',
   },
+  sso_enabled: {
+    name: 'エンタープライズSSO',
+    limited: 'エンタープライズSSO',
+    unlimited: 'エンタープライズSSO',
+    not_eligible: 'エンタープライズSSOを無効にする',
+  },
 };
 
 export default Object.freeze(quota_item);

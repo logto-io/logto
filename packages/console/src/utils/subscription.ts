@@ -6,6 +6,7 @@ import { type SubscriptionPlanResponse } from '@/cloud/types/router';
 import {
   communitySupportEnabledMap,
   organizationEnabledMap,
+  ssoEnabledMap,
   ticketSupportResponseTimeMap,
 } from '@/consts/plan-quotas';
 import { reservedPlanIdOrder, reservedPlanIds } from '@/consts/subscriptions';
@@ -21,6 +22,7 @@ export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlan
       communitySupportEnabled: communitySupportEnabledMap[id] ?? false, // Fallback to not supported
       ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
       organizationEnabled: organizationEnabledMap[id] ?? false, // Fallback to not supported
+      ssoEnabled: ssoEnabledMap[id] ?? false, // Fallback to not supported
     },
   };
 };

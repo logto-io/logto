@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: 'Стандартные подключения',
     built_in_email_connector: 'Встроенное подключение электронной почты',
     mfa: 'MFA',
+    sso: 'Единый вход в корпоративные системы (IV кв. 2023 г.)',
   },
   user_management: {
     title: 'Управление пользователями',

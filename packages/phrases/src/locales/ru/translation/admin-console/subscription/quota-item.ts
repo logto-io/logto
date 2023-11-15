@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: 'Отключите свой MFA',
   },
+  sso_enabled: {
+    name: 'Ограниченная',
+    limited: 'Ограниченная',
+    unlimited: 'Ограниченная',
+    not_eligible: 'Отключить SSO',
+  },
 };
 
 export default Object.freeze(quota_item);

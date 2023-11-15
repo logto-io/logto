@@ -29,6 +29,7 @@ const planQuotaKeyPhraseMap: {
   socialConnectorsLimit: 'user_authn.social_connectors',
   standardConnectorsLimit: 'user_authn.standard_connectors',
   mfaEnabled: 'user_authn.mfa',
+  ssoEnabled: 'user_authn.sso',
   userManagementEnabled: 'user_management.user_management',
   rolesLimit: 'user_management.roles',
   scopesPerRoleLimit: 'user_management.scopes_per_role',

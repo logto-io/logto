@@ -35,6 +35,7 @@ const quota_table = {
     standard_connectors: '표준 커넥터',
     built_in_email_connector: '내장 이메일 커넥터',
     mfa: 'MFA',
+    sso: '기업 SSO (2023년 Q4)',
   },
   user_management: {
     title: '사용자 관리',

@@ -125,6 +125,12 @@ const quota_item = {
     unlimited: 'MFA',
     not_eligible: "MFA'nızı devre dışı bırakın",
   },
+  sso_enabled: {
+    name: 'Kurumsal SSO',
+    limited: 'Kurumsal SSO',
+    unlimited: 'Kurumsal SSO',
+    not_eligible: "Kurumsal SSO'nuzu devre dışı bırakın",
+  },
 };
 
 export default Object.freeze(quota_item);
