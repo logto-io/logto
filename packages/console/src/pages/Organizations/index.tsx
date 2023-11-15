@@ -36,7 +36,7 @@ function Organizations({ tab }: Props) {
 
   const handleCreate = useCallback(() => {
     if (isInitialSetup) {
-      navigate(organizationsPathname + guidePathname);
+      navigate(guidePathname);
       return;
     }
     setIsCreating(true);
