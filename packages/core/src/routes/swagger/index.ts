@@ -104,8 +104,12 @@ const isManagementApiRouter = ({ stack }: Router) =>
 // Add more components here to cover more ID parameters in paths. For example, if there is a
 // path `/foo/:barBazId`, then add `bar-baz` to the array.
 const identifiableEntityNames = [
+  'key',
+  'connector-factory',
+  'factory',
   'application',
   'connector',
+  'sso-connector',
   'resource',
   'user',
   'log',
@@ -113,6 +117,7 @@ const identifiableEntityNames = [
   'scope',
   'hook',
   'domain',
+  'verification',
   'organization',
   'organization-role',
   'organization-scope',
