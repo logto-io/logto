@@ -34,6 +34,7 @@ import {
   isPasswordIdentifier,
   isSocialIdentifier,
 } from '../utils/index.js';
+import { verifySsoOnlyEmailIdentifier } from '../utils/single-sign-on-guard.js';
 import { verifySocialIdentity } from '../utils/social-verification.js';
 import { verifyIdentifierByVerificationCode } from '../utils/verification-code-validation.js';
 
@@ -89,6 +90,11 @@ const verifySocialIdentifier = async (
   tenant: TenantContext
 ): Promise<SocialIdentifier> => {
   const userInfo = await verifySocialIdentity(identifier, ctx, tenant);
+
+  const {
+    libraries: { ssoConnectors },
+  } = tenant;
+  await verifySsoOnlyEmailIdentifier(ssoConnectors, userInfo);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
