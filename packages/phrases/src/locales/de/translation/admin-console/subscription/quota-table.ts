@@ -26,7 +26,7 @@ const quota_table = {
   },
   user_authn: {
     title: 'Benutzerauthentifizierung',
-    omni_sign_in: 'Enterprise SSO (Q4, 2023)',
+    omni_sign_in: 'Omni-Anmeldung',
     password: 'Passwort',
     passwordless: 'Passwortlos - E-Mail und SMS',
     email_connector: 'E-Mail-Connector',

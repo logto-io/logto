@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Entferne deine benutzerdefinierte Domain',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Deaktiviere dein SSO',
+    name: 'Omni-Anmeldung',
+    limited: 'Omni-Anmeldung',
+    unlimited: 'Omni-Anmeldung',
+    not_eligible: 'Deaktiviere deine Omni-Anmeldung',
   },
   built_in_email_connector_enabled: {
     name: 'Integrierter E-Mail-Connector',

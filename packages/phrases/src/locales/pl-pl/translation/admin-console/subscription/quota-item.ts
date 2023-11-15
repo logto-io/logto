@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Usuń swoją niestandardową domenę',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Wyłącz swoje SSO',
+    name: 'Omni logowanie',
+    limited: 'Omni logowanie',
+    unlimited: 'Omni logowanie',
+    not_eligible: 'Wyłącz swoje omni logowanie',
   },
   built_in_email_connector_enabled: {
     name: 'Wbudowany konektor e-mail',

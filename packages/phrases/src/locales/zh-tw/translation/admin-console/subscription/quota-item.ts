@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: '移除您的自訂網域',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: '停用你的 SSO',
+    name: '全渠道登入',
+    limited: '全渠道登入',
+    unlimited: '全渠道登入',
+    not_eligible: '停用全渠道登入',
   },
   built_in_email_connector_enabled: {
     name: '內建電子郵件連接程式',

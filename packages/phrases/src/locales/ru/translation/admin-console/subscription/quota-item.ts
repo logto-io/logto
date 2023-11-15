@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Удалите свой пользовательский домен',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Отключите свой SSO',
+    name: 'Omni-вход',
+    limited: 'Omni-вход',
+    unlimited: 'Omni-вход',
+    not_eligible: 'Выключите свой Omni-вход',
   },
   built_in_email_connector_enabled: {
     name: 'Встроенный электронный коннектор',

@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'カスタムドメインを削除してください',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: 'Disable your SSO',
+    name: 'Omniサインイン',
+    limited: 'Omniサインイン',
+    unlimited: 'Omniサインイン',
+    not_eligible: 'Omniサインインを無効にしてください',
   },
   built_in_email_connector_enabled: {
     name: '組込みメールコネクタ',

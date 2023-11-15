@@ -47,10 +47,10 @@ const quota_item = {
     not_eligible: 'Özel alan adınızı kaldırın',
   },
   omni_sign_in_enabled: {
-    name: 'SSO',
-    limited: 'SSO',
-    unlimited: 'SSO',
-    not_eligible: "SSO'nuzu devre dışı bırakın",
+    name: 'Omni oturumu aç',
+    limited: 'Omni oturumu aç',
+    unlimited: 'Omni oturumu aç',
+    not_eligible: 'Omni oturumunu devre dışı bırakın',
   },
   built_in_email_connector_enabled: {
     name: 'Dahili e-posta bağlayıcı',
