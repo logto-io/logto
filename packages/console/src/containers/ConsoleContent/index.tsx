@@ -169,7 +169,7 @@ function ConsoleContent() {
                 <Route path="organizations">
                   <Route index element={<Organizations />} />
                   <Route path="create" element={<Organizations />} />
-                  <Route path="settings" element={<Organizations tab="settings" />} />
+                  <Route path="template" element={<Organizations tab="template" />} />
                   <Route path=":id/*" element={<OrganizationDetails />} />
                 </Route>
                 <Route path="organization-guide/*" element={<OrganizationGuide />} />

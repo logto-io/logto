@@ -4,7 +4,7 @@ const organization_details = {
     '一旦删除，所有成员将失去他们在这个机构中的成员资格和角色。此操作将无法撤销。',
   organization_id: '机构编号',
   settings_description:
-    '一个组织是一组具有共同标识符的身份（通常是用户）。每个组织都有自己的成员、角色和权限集合，而这些角色和权限是由组织模板定义的。',
+    '一个机构是一个用户集合，包括团队、商业客户和合作伙伴公司，他们使用您的应用程序。',
   name_placeholder: '机构名称，不需要是唯一的。',
   description_placeholder: '机构的描述。',
   member: '成员',

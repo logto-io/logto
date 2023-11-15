@@ -31,6 +31,7 @@ const organizations = {
   search_placeholder: 'Kuruluş adı veya kimliğine göre ara',
   search_permission_placeholder: 'İzinleri arayın ve seçin',
   search_role_placeholder: 'Rolleri arayın ve seçin',
+  empty_placeholder: '🤔 Herhangi bir {{entity}} henüz ayarlanmamış.',
   guide: {
     title: 'Kılavuzlarla başlayın',
     subtitle: 'Kılavuzlarımızla uygulama geliştirme sürecinize hızlı bir başlangıç yapın',

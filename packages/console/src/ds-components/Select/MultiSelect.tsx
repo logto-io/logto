@@ -64,6 +64,7 @@ function MultiSelect<T extends string>({
       return;
     }
     onChange([...value, option]);
+    setKeyword('');
     inputRef.current?.focus();
   };
 

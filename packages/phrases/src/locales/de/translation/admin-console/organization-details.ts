@@ -4,7 +4,7 @@ const organization_details = {
     'Wenn gelöscht, verlieren alle Mitglieder ihre Mitgliedschaft und Rollen in dieser Organisation. Diese Aktion kann nicht rückgängig gemacht werden.',
   organization_id: 'Organisations-ID',
   settings_description:
-    'Eine Organisation ist eine Gruppe von Identitäten (normalerweise Benutzer), die durch einen gemeinsamen Bezeichner erkannt werden.\n\nJede Organisation hat ihren eigenen Satz von Mitgliedern, Rollen und Berechtigungen, während die Rollen und Berechtigungen von der Organisationsschablone definiert werden.',
+    'Eine Organisation ist eine Gruppe von Benutzern, zu der Teams, Geschäftskunden und Partnerunternehmen gehören, die Ihre Anwendungen nutzen.',
   name_placeholder: 'Der Name der Organisation, muss nicht eindeutig sein.',
   description_placeholder: 'Eine Beschreibung der Organisation.',
   member: 'Mitglied',

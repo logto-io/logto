@@ -4,7 +4,7 @@ const organization_details = {
     'Silindiğinde, tüm üyeler bu kuruluştaki üyeliklerini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
   organization_id: 'Kuruluş Kimliği',
   settings_description:
-    'Bir kuruluş, genellikle ortak bir tanımlayıcı tarafından tanınan kimliklerin (genellikle kullanıcılar) bir grubudur.\n\nHer kuruluşun kendi üye, rol ve izin seti vardır, roller ve izinler kuruluş şablonu tarafından tanımlanır.',
+    'Bir kuruluş, uygulamalarını kullanan ekipleri, iş müşterilerini ve ortak firmaları içeren kullanıcıların bir koleksiyonudur.',
   name_placeholder: 'Kuruluşun adı, benzersiz olması gerekli değildir.',
   description_placeholder: 'Kuruluşun açıklaması.',
   member: 'Üye',

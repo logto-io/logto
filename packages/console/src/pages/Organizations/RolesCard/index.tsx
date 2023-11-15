@@ -58,6 +58,7 @@ function RolesCard() {
         }}
       />
       <TemplateTable
+        name="organizations.organization_role"
         rowIndexKey="id"
         isLoading={isLoading}
         page={page}

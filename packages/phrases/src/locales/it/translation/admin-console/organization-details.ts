@@ -1,10 +1,10 @@
 const organization_details = {
   page_title: "Dettagli dell'organizzazione",
   delete_confirmation:
-    "Una volta eliminato, tutti i membri perderanno la loro iscrizione e ruoli in questa organizzazione. Quest'azione non può essere annullata.",
+    "Una volta eliminato, tutti i membri perderanno la loro iscrizione e ruoli in questa organizzazione. Quest\\'azione non può essere annullata.",
   organization_id: 'ID organizzazione',
   settings_description:
-    "Un'organizzazione è un gruppo di identità (di solito utenti) riconosciute da un identificatore comune.\n\nOgni organizzazione ha il suo insieme di membri, ruoli e autorizzazioni, mentre i ruoli e le autorizzazioni sono definiti dal modello di organizzazione.",
+    "Un'organizzazione è una collezione di utenti che include team, clienti business e società partner che utilizzano le tue applicazioni.",
   name_placeholder: "Il nome dell'organizzazione, non è necessario che sia univoco.",
   description_placeholder: "Una descrizione dell'organizzazione.",
   member: 'Membro',
@@ -19,7 +19,7 @@ const organization_details = {
   edit_organization_roles_of_user: "Modifica ruoli dell'organizzazione di {{name}}",
   remove_user_from_organization: "Rimuovi utente dall'organizzazione",
   remove_user_from_organization_description:
-    "Una volta rimosso, l'utente perderà la sua iscrizione e i ruoli in questa organizzazione. Quest'azione non può essere annullata.",
+    "Una volta rimosso, l'utente perderà la sua iscrizione e i ruoli in questa organizzazione. Quest\\'azione non può essere annullata.",
   search_user_placeholder: 'Cerca per nome, email, telefono o ID utente',
   at_least_one_user: 'È richiesto almeno un utente.',
 };

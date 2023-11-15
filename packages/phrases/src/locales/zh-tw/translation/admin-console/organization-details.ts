@@ -3,7 +3,7 @@ const organization_details = {
   delete_confirmation: '刪除後，所有成員將失去在這個組織中的成員資格和角色。此操作無法撤銷。',
   organization_id: '組織編號',
   settings_description:
-    '組織是一組具有共同識別符的身分（通常是用戶）。每個組織都擁有自己的成員、角色和權限，而角色和權限則由組織模板定義。',
+    '一個組織是包括團隊、商業客戶和合作夥伴公司的用戶集合，這些用戶使用您的應用程序。',
   name_placeholder: '組織名稱，不需要是唯一的。',
   description_placeholder: '組織的描述。',
   member: '成員',
