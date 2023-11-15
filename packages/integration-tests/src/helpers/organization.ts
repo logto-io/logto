@@ -1,4 +1,9 @@
-import { type OrganizationScope, type OrganizationRole, type Organization } from '@logto/schemas';
+import {
+  type OrganizationScope,
+  type OrganizationRole,
+  type Organization,
+  type OrganizationRoleWithScopes,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import {
@@ -20,10 +25,11 @@ export class OrganizationRoleApiTest extends OrganizationRoleApi {
     return this.#roles;
   }
 
-  override async create(data: CreateOrganizationRolePostData): Promise<OrganizationRole> {
+  override async create(data: CreateOrganizationRolePostData): Promise<OrganizationRoleWithScopes> {
     const created = await super.create(data);
     this.roles.push(created);
-    return created;
+    // eslint-disable-next-line no-restricted-syntax -- to override the type
+    return created as OrganizationRoleWithScopes;
   }
 
   /**

@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 
 import { generateStandardId } from '@logto/shared';
-import { isKeyInObject } from '@silverhand/essentials';
+import { isKeyInObject, pick } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
 import { OrganizationRoleApiTest, OrganizationScopeApiTest } from '#src/helpers/organization.js';
@@ -12,9 +12,10 @@ const randomId = () => generateStandardId(4);
 describe('organization role APIs', () => {
   describe('organization roles', () => {
     const roleApi = new OrganizationRoleApiTest();
+    const scopeApi = new OrganizationScopeApiTest();
 
     afterEach(async () => {
-      await roleApi.cleanUp();
+      await Promise.all([roleApi.cleanUp(), scopeApi.cleanUp()]);
     });
 
     it('should fail if the name of the new organization role already exists', async () => {
@@ -69,6 +70,28 @@ describe('organization role APIs', () => {
       const { scopes, ...role } = await roleApi.get(createdRole.id);
 
       expect(role).toStrictEqual(createdRole);
+    });
+
+    it('should be able to create a new organization with initial scopes', async () => {
+      const [scope1, scope2] = await Promise.all([
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+      const createdRole = await roleApi.create({
+        name: 'test' + randomId(),
+        description: 'test description.',
+        organizationScopeIds: [scope1.id, scope2.id],
+      });
+      const scopes = await roleApi.getScopes(createdRole.id);
+      const roles = await roleApi.getList();
+      const roleWithScopes = roles.find((role) => role.id === createdRole.id);
+
+      for (const scope of [scope1, scope2]) {
+        expect(roleWithScopes?.scopes).toContainEqual(
+          expect.objectContaining(pick(scope, 'id', 'name'))
+        );
+        expect(scopes).toContainEqual(expect.objectContaining(pick(scope, 'id', 'name')));
+      }
     });
 
     it('should fail when try to get an organization role that does not exist', async () => {
