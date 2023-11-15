@@ -227,5 +227,24 @@ describe('organization user APIs', () => {
       expect(user2Roles).toContainEqual(expect.objectContaining({ id: role1.id }));
       expect(user2Roles).toContainEqual(expect.objectContaining({ id: role2.id }));
     });
+
+    it('should automatically remove all roles when remove a user from an organization', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+      const [role1, role2] = await Promise.all([
+        roleApi.create({ name: generateTestName() }),
+        roleApi.create({ name: generateTestName() }),
+      ]);
+
+      await organizationApi.addUsers(organization.id, [user.id]);
+      await organizationApi.addUserRoles(organization.id, user.id, [role1.id, role2.id]);
+      expect(await organizationApi.getUserRoles(organization.id, user.id)).toHaveLength(2);
+
+      await organizationApi.deleteUser(organization.id, user.id);
+      const response = await organizationApi
+        .getUserRoles(organization.id, user.id)
+        .catch((error: unknown) => error);
+      expect(response instanceof HTTPError && response.response.statusCode).toBe(422); // Require membership
+    });
   });
 });
