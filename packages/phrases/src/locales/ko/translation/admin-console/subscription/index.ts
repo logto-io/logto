@@ -64,6 +64,8 @@ const subscription = {
   upgrade_success: '성공적으로 <name/>으로 업그레이드되었습니다.',
   downgrade_success: '성공적으로 <name/>으로 다운그레이드되었습니다.',
   subscription_check_timeout: '구독 확인이 타임아웃되었습니다. 나중에 다시 확인해주세요.',
+  /** UNTRANSLATED */
+  no_subscription: 'No subscription',
 };
 
 export default Object.freeze(subscription);

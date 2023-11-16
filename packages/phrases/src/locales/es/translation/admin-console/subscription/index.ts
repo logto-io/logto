@@ -67,6 +67,8 @@ const subscription = {
   downgrade_success: 'Degradado con éxito a <name/>',
   subscription_check_timeout:
     'La comprobación de suscripción expiró. Por favor, actualiza más tarde.',
+  /** UNTRANSLATED */
+  no_subscription: 'No subscription',
 };
 
 export default Object.freeze(subscription);

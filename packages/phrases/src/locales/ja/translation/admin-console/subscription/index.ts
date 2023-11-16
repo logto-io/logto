@@ -67,6 +67,8 @@ const subscription = {
   downgrade_success: '正常に<name/>にダウングレードされました',
   subscription_check_timeout:
     'サブスクリプションのチェックがタイムアウトしました。後でもう一度更新してください。',
+  /** UNTRANSLATED */
+  no_subscription: 'No subscription',
 };
 
 export default Object.freeze(subscription);
