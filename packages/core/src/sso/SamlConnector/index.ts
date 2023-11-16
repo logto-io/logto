@@ -29,7 +29,7 @@ import {
  * All the SAML single sign-on connector should extend this class.
  *
  * @property config The SAML connector config
- * @property acsUrl The SAML connector's assertion consumer service URL
+ * @property acsUrl The SAML connector's assertion consumer service URL {@link file://src/routes/authn.ts}
  * @property _rawSamlMetadata The cached raw SAML metadata (in XML-format) from the raw SAML SSO connector config
  * @property _parsedSamlMetadata The cached parsed SAML metadata from the raw SAML SSO connector config
  * @property _samlAssertionContent The cached parsed SAML assertion from IdP (with attribute mapping applied)

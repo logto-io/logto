@@ -157,6 +157,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
    * @param connectorId The connector id.
    * @property body The SAML assertion response body.
    * @property body.RelayState We use this to find the connector session.
+   *  RelayState is a SAML standard parameter that will be transmitted between the identity provider and the service provider.
    * @returns Redirect to the redirect uri find in the connector session storage.
    *
    * @remark
@@ -170,7 +171,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
     koaGuard({
       body: z.object({ RelayState: z.string() }).catchall(z.unknown()),
       params: z.object({ connectorId: z.string().min(1) }),
-      status: [302, 404, 500],
+      status: [302, 404],
     }),
     async (ctx, next) => {
       const {
@@ -202,7 +203,6 @@ export default function authnRoutes<T extends AnonymousRouter>(
         tenantId
       );
 
-      // Assert SAML connector instance
       assertThat(connectorInstance instanceof SamlConnector, 'connector.unexpected_type');
 
       const userInfo = await connectorInstance.parseSamlAssertion(body);
@@ -212,9 +212,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
         userInfo,
       });
 
+      // Client side will verify the state to prevent CSRF attack.
       const queryParameters = new URLSearchParams({ state });
+      const url = new URL(`${redirectUri}?${queryParameters.toString()}`);
 
-      ctx.redirect(`${redirectUri}?${queryParameters.toString()}`);
+      ctx.redirect(url.toString());
 
       return next();
     }

@@ -71,12 +71,10 @@ export const getConnectorSessionResultFromJti = async (
  *
  * @param jti The jti of the interaction session.
  * @param provider
- * @returns SingleSignOnConnectorSession
  *
  * @remark This method is used by the SSO SAML assertion consumer service endpoint.
  * Since we do not have the interaction ctx under SAML ACS endpoint, we need to get the session data by the jti.
- *
- * Forked from the above @see `getConnectorSessionResultFromJti` method, with more detailed SingleSignOnConnectorSession type guard.
+ * Forked from the above {@link getConnectorSessionResultFromJti} method, with more detailed SingleSignOnConnectorSession type guard.
  * The above method will be deprecated in the future.
  */
 export const getSingleSignOnSessionResultByJti = async (
@@ -99,9 +97,8 @@ export const getSingleSignOnSessionResultByJti = async (
 /**
  * Assign the SAML assertion result to the interaction single sign-on session storage by the jti.
  *
- * @param jti
+ * @param jti The jti of the interaction session.
  * @param provider
- * @param sessionResultWithAssertion The single sign-on session result with userInfo.
  */
 export const assignSamlAssertionResultViaJti = async (
   jti: string,

@@ -83,8 +83,7 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
    * @returns The social user info extracted from SAML assertion.
    *
    * @remarks For SAML connector, userInfo will be extracted from the SAML assertion by ACS callback endpoint.
-   * userInfo will be stored in the interaction session storage and will be retrieved by this method.
-   * Just need to validate the assertion and return the user info.
+   * This method only asserts the userInfo is not null and directly return it.
    */
   async getUserInfo({ userInfo }: SingleSignOnConnectorSession) {
     assertThat(userInfo, 'session.connector_validation_session_not_found');
