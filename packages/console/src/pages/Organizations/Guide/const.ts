@@ -1,5 +1,8 @@
 export const steps = Object.freeze({
   introduction: 'introduction',
-  permissionsAndRoles: 'permissions-and-roles',
+  permissions: 'permissions',
+  roles: 'roles',
   organizationInfo: 'organization-info',
 });
+
+export const totalStepCount = Object.keys(steps).length;

@@ -18,7 +18,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import { trySubmitSafe } from '@/utils/form';
 
-import { steps } from '../const';
+import { steps, totalStepCount } from '../const';
 import * as styles from '../index.module.scss';
 
 type OrganizationForm = {
@@ -52,7 +52,7 @@ function OrganizationInfo() {
 
   const onNavigateBack = () => {
     reset();
-    navigate(`../${steps.permissionsAndRoles}`);
+    navigate(`../${steps.roles}`);
   };
 
   return (
@@ -108,7 +108,7 @@ function OrganizationInfo() {
           </Card>
         </div>
       </OverlayScrollbar>
-      <ActionBar step={3} totalSteps={3}>
+      <ActionBar step={4} totalSteps={totalStepCount}>
         <Button isLoading={isSubmitting} title="general.done" type="primary" onClick={onSubmit} />
         <Button title="general.back" onClick={onNavigateBack} />
       </ActionBar>
