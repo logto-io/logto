@@ -34,6 +34,7 @@ import { steps } from '../const';
 import * as styles from '../index.module.scss';
 
 type Form = {
+  /* Organization permissions, a.k.a organization scopes */
   permissions: Array<Omit<OrganizationScope, 'id' | 'tenantId'>>;
   roles: Array<Omit<OrganizationRole, 'tenantId' | 'id'> & { scopes: Array<Option<string>> }>;
 };
@@ -115,9 +116,11 @@ function PermissionsAndRoles() {
       // Create new permissions
       if (permissions.length > 0) {
         await Promise.all(
-          permissions.map(async ({ name, description }) => {
-            await api.post(organizationScopesPath, { json: { name, description } });
-          })
+          permissions
+            .filter(({ name }) => name)
+            .map(async ({ name, description }) => {
+              await api.post(organizationScopesPath, { json: { name, description } });
+            })
         );
       }
 
@@ -130,17 +133,19 @@ function PermissionsAndRoles() {
       // Create new roles
       if (roles.length > 0) {
         await Promise.all(
-          roles.map(async ({ name, description, scopes }) => {
-            const { id } = await api
-              .post(organizationRolePath, { json: { name, description } })
-              .json<OrganizationRole>();
+          roles
+            .filter(({ name }) => name)
+            .map(async ({ name, description, scopes }) => {
+              const { id } = await api
+                .post(organizationRolePath, { json: { name, description } })
+                .json<OrganizationRole>();
 
-            if (scopes.length > 0) {
-              await api.put(`${organizationRolePath}/${id}/scopes`, {
-                json: { organizationScopeIds: scopes.map(({ value }) => value) },
-              });
-            }
-          })
+              if (scopes.length > 0) {
+                await api.put(`${organizationRolePath}/${id}/scopes`, {
+                  json: { organizationScopeIds: scopes.map(({ value }) => value) },
+                });
+              }
+            })
         );
       }
 
