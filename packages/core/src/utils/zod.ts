@@ -49,9 +49,11 @@ export const translationSchemas: Record<string, OpenAPIV3.SchemaObject> = {
       {
         type: 'string',
       },
-      {
-        $ref: '#/components/schemas/Translation',
-      },
+      // {
+      //   // This self-reference is OK, but it's not supported by Swagger UI
+      //   // See https://github.com/swagger-api/swagger-ui/issues/3325
+      //   $ref: '#/components/schemas/TranslationObject',
+      // },
     ],
   },
 };

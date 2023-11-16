@@ -1,6 +1,7 @@
 import camelcase from 'camelcase';
 import deepmerge from 'deepmerge';
 import { type OpenAPIV3 } from 'openapi-types';
+import pluralize from 'pluralize';
 import { z } from 'zod';
 
 import { fallbackDefaultPageSize } from '#src/middleware/koa-pagination.js';
@@ -87,7 +88,7 @@ export const buildParameters: BuildParameters = (
       if (key === 'id') {
         if (rootComponent) {
           return {
-            $ref: `#/components/parameters/${rootComponent.slice(0, -1)}Id:root`,
+            $ref: `#/components/parameters/${pluralize(rootComponent, 1)}Id:root`,
           };
         }
 
