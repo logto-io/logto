@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.permission {
+  background: var(--color-bg-info-tag);
+  border-radius: 6px;
+  font: var(--font-title-3);
+  color: var(--color-text);
+  padding: _.unit(1) _.unit(2);
+  text-align: center;
+
+  &.monoSpace {
+    font-weight: normal;
+    font-family: 'Roboto Mono', monospace;
+  }
+}

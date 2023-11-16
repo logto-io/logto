@@ -1,4 +1,6 @@
 const organizations = {
+  /** UNTRANSLATED */
+  organization: 'Organization',
   page_title: 'Organizzazioni',
   title: 'Organizzazioni',
   subtitle:
@@ -33,26 +35,38 @@ const organizations = {
   search_permission_placeholder: 'Digita per cercare e selezionare i permessi',
   search_role_placeholder: 'Digita per cercare e selezionare i ruoli',
   empty_placeholder: '🤔 Non hai ancora impostato nessun {{entity}}.',
+  /** UNTRANSLATED */
+  organization_and_member: 'Organization and member',
+  /** UNTRANSLATED */
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Inizia con le guide',
     subtitle: "Avvia il processo di sviluppo dell'app con le nostre guide",
     introduction: {
+      /** UNTRANSLATED */
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: 'Innanzitutto, capiamo come funzionano le organizzazioni in Logto',
-        description:
-          'Nei SaaS multi-inquilino, spesso creiamo diverse organizzazioni con lo stesso set di permessi e ruoli, ma nel contesto di un\'organizzazione possono svolgere un ruolo importante nel controllo dei diversi livelli di accesso. Pensate che ogni inquilino sia come un\'organizzazione di Logto, e condividono naturalmente lo stesso "modello" di controllo degli accessi. Chiamiamo questo il "modello organizzativo".',
+        /** UNTRANSLATED */
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: 'Il modello organizzativo è composto da due parti',
-        organization_permission_description:
-          "Il permesso organizzativo si riferisce all'autorizzazione per accedere a una risorsa nel contesto dell'organizzazione. Un permesso organizzativo dovrebbe essere rappresentato come una stringa significativa, servendo anche come nome e identificatore univoco.",
-        organization_role_description:
-          'Il ruolo organizzativo è un raggruppamento di permessi che possono essere assegnati agli utenti. I permessi devono provenire dai permessi organizzativi predefiniti.',
+        /** UNTRANSLATED */
+        title: 'Organization template is designed for multi-tenant apps access control',
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        /** UNTRANSLATED */
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        /** UNTRANSLATED */
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: "Interagisci con l'illustrazione per vedere come tutto si collega",
         description:
-          'Prendiamo un esempio. John, Sarah e Tony sono in diverse organizzazioni con ruoli diversi nel contesto di diverse organizzazioni. Passa il mouse sui diversi moduli e vedi cosa succede.',
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: "Passo 1: Definire i permessi dell'organizzazione",
@@ -61,38 +75,48 @@ const organizations = {
       '"Ruoli organizzativi" rappresentano un insieme di ruoli assegnati a ciascuna organizzazione all\'inizio. Questi ruoli sono determinati dai permessi globali che hai impostato nella schermata precedente. Similmente al permesso dell\'organizzazione, una volta completata questa impostazione per la prima volta, non sarà più necessario farlo ogni volta che crei una nuova organizzazione.',
     step_3: 'Passo 3: Crea la tua prima organizzazione',
     step_3_description:
-      'Creiamo la tua prima organizzazione. Viene fornita con un ID univoco e funge da contenitore per gestire vari identità più orientate al business, come partner, clienti e il loro controllo degli accessi.',
-    more_next_steps: 'Altri passi successivi',
-    add_members: 'Aggiungi membri alla tua organizzazione',
-    add_members_action: 'Aggiungi membri massivamente e assegna ruoli',
-    add_enterprise_connector: 'Aggiungi connettore enterprise SSO',
-    add_enterprise_connector_action: "Configura l'SSO enterprise",
-    organization_permissions: 'Permessi organizzazione',
-    permission_name: 'Nome permesso',
-    permissions: 'Permessi',
-    organization_roles: 'Ruoli organizzazione',
-    role_name: 'Nome ruolo',
-    organization_name: 'Nome organizzazione',
-    admin: 'Amministratore',
-    admin_description:
-      'Il ruolo "Admin" condivide lo stesso modello organizzativo in diverse organizzazioni.',
-    member: 'Membro',
-    member_description:
-      'Il ruolo "Membro" condivide lo stesso modello organizzativo in diverse organizzazioni.',
-    guest: 'Ospite',
-    guest_description:
-      'Il ruolo "Ospite" condivide lo stesso modello organizzativo in diverse organizzazioni.',
-    create_more_roles:
-      "È possibile creare altri ruoli nelle impostazioni del modello organizzativo. Questi ruoli dell'organizzazione si applicheranno a diverse organizzazioni.",
-    read_resource: 'leggi:risorsa',
-    edit_resource: 'modifica:risorsa',
-    delete_resource: 'elimina:risorsa',
-    ellipsis: '……',
-    johnny:
-      "Johny appartiene a due organizzazioni con l'indirizzo email \"john@email.com\" come singolo identificatore. Egli è l'amministratore dell'organizzazione A e ospite dell'organizzazione B.",
-    sarah:
-      "Sarah appartiene a un'organizzazione con l'indirizzo email \"sarah@email.com\" come singolo identificatore. Lei è l'amministratore dell'organizzazione B.",
-    tony: "Tony appartiene a un'organizzazione con l'indirizzo email \"tony@email.com\" come singolo identificatore. Egli è membro dell'organizzazione C.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+    /** UNTRANSLATED */
+    more_next_steps: 'More next steps',
+    /** UNTRANSLATED */
+    add_members: 'Add members to your organization',
+    /** UNTRANSLATED */
+    add_members_action: 'Bulk add members and assign roles',
+    /** UNTRANSLATED */
+    add_enterprise_connector: 'Add enterprise SSO',
+    /** UNTRANSLATED */
+    add_enterprise_connector_action: 'Set up enterprise SSO',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization permissions',
+    /** UNTRANSLATED */
+    permission_name: 'Permission name',
+    /** UNTRANSLATED */
+    permissions: 'Permissions',
+    /** UNTRANSLATED */
+    organization_roles: 'Organization roles',
+    /** UNTRANSLATED */
+    role_name: 'Role name',
+    /** UNTRANSLATED */
+    organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    john: 'John',
+    /** UNTRANSLATED */
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    /** UNTRANSLATED */
+    sarah: 'Sarah',
+    /** UNTRANSLATED */
+    sarah_tip:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
   },
 };
 

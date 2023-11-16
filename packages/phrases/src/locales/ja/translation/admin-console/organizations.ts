@@ -1,4 +1,6 @@
 const organizations = {
+  /** UNTRANSLATED */
+  organization: 'Organization',
   page_title: '組織',
   title: '組織',
   subtitle:
@@ -33,26 +35,38 @@ const organizations = {
   search_permission_placeholder: '検索して権限を選択',
   search_role_placeholder: '検索して役割を選択',
   empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
+  /** UNTRANSLATED */
+  organization_and_member: 'Organization and member',
+  /** UNTRANSLATED */
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'ガイドで始める',
     subtitle: 'ガイドを使用してアプリの開発プロセスをスタートさせます',
     introduction: {
+      /** UNTRANSLATED */
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: 'まず、Logtoで組織がどのように機能するかを理解しましょう',
-        description:
-          'マルチテナントのSaaSアプリでは、しばしば同じセットの権限と役割を持つ複数の組織を作成しますが、組織のコンテキストではさまざまなアクセスレベルを制御するのに重要な役割を果たすことができます。各テナントはLogto組織のようであり、自然に同じアクセス制御の「テンプレート」を共有します。これを「組織テンプレート」と呼びます。',
+        /** UNTRANSLATED */
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: '組織テンプレートは2つの部分で構成されます',
-        organization_permission_description:
-          '組織権限とは、組織のコンテキストでリソースにアクセスするための承認を指します。組織権限は、意味のある文字列として表され、また名前および一意の識別子としても機能します。',
-        organization_role_description:
-          '組織役割は、ユーザーに割り当てることができる権限のグループ化です。権限は事前に定義された組織権限から取得する必要があります。',
+        /** UNTRANSLATED */
+        title: 'Organization template is designed for multi-tenant apps access control',
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        /** UNTRANSLATED */
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        /** UNTRANSLATED */
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: 'イラストを操作して、接続方法を確認してください',
         description:
-          '例を挙げましょう。ジョン、サラ、トニーはそれぞれ異なる組織に所属し、それぞれ異なる役割を持っています。異なる組織のコンテキストで、異なるアクセスを持っていることを確認してください。',
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: 'ステップ1：組織権限を定義する',
@@ -61,35 +75,48 @@ const organizations = {
       '「組織役割」は、最初に各組織に付与された一連の役割を表します。これらの役割は、前のスクリーンで設定したグローバルな権限によって決定されます。組織権限と同様に、初回設定が完了すると、新しい組織を作成するたびにこれを毎回行う必要はありません。',
     step_3: 'ステップ3：最初の組織を作成する',
     step_3_description:
-      '最初の組織を作成しましょう。これには固有のIDが付いており、パートナーや顧客などさまざまなビジネス向けアイデンティティの取り扱いを行うためのコンテナとして機能します。',
-    more_next_steps: 'さらに次のステップ',
-    add_members: '組織にメンバーを追加する',
-    add_members_action: 'メンバーを一括追加して役割を割り当てる',
-    add_enterprise_connector: 'エンタープライズSSOを追加',
-    add_enterprise_connector_action: 'エンタープライズSSOを設定',
-    organization_permissions: '組織権限',
-    permission_name: '権限名',
-    permissions: '権限',
-    organization_roles: '組織役割',
-    role_name: '役割名',
-    organization_name: '組織名',
-    admin: '管理者',
-    admin_description: '役割「管理者」は、さまざまな組織で同じ組織テンプレートを共有します。',
-    member: 'メンバー',
-    member_description: '役割「メンバー」は、さまざまな組織で同じ組織テンプレートを共有します。',
-    guest: 'ゲスト',
-    guest_description: '役割「ゲスト」は、さまざまな組織で同じ組織テンプレートを共有します。',
-    create_more_roles:
-      '組織テンプレート設定でさらに多くの役割を作成できます。これらの組織役割は異なる組織に適用されます。',
-    read_resource: 'read:resource',
-    edit_resource: 'edit:resource',
-    delete_resource: 'delete:resource',
-    ellipsis: '……',
-    johnny:
-      'ジョニーは、メールアドレス「john@email.com」を通じて2つの組織に所属しています。組織Aの管理者であり、組織Bのゲストです。',
-    sarah:
-      'サラは、メールアドレス「sarah@email.com」を通じて1つの組織に所属しています。組織Bの管理者です。',
-    tony: 'トニーは、メールアドレス「tony@email.com」を通じて1つの組織に所属しています。組織Cのメンバーです。',
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+    /** UNTRANSLATED */
+    more_next_steps: 'More next steps',
+    /** UNTRANSLATED */
+    add_members: 'Add members to your organization',
+    /** UNTRANSLATED */
+    add_members_action: 'Bulk add members and assign roles',
+    /** UNTRANSLATED */
+    add_enterprise_connector: 'Add enterprise SSO',
+    /** UNTRANSLATED */
+    add_enterprise_connector_action: 'Set up enterprise SSO',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization permissions',
+    /** UNTRANSLATED */
+    permission_name: 'Permission name',
+    /** UNTRANSLATED */
+    permissions: 'Permissions',
+    /** UNTRANSLATED */
+    organization_roles: 'Organization roles',
+    /** UNTRANSLATED */
+    role_name: 'Role name',
+    /** UNTRANSLATED */
+    organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    john: 'John',
+    /** UNTRANSLATED */
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    /** UNTRANSLATED */
+    sarah: 'Sarah',
+    /** UNTRANSLATED */
+    sarah_tip:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
   },
 };
 

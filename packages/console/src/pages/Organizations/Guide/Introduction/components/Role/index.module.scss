@@ -1,0 +1,47 @@
+@use '@/scss/underscore' as _;
+
+.role {
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: _.unit(4);
+  background: var(--color-bg-float);
+  border: 1px solid var(--color-on-info-container);
+  border-radius: 8px;
+  cursor: default;
+  opacity: 30%;
+  transition: 0.3s ease-in-out;
+  transition-property: border-color, opacity;
+
+  .label {
+    font: var(--font-title-3);
+    white-space: nowrap;
+  }
+
+  .permissions {
+    flex: 1;
+    align-items: center;
+  }
+
+  &.small {
+    background: var(--color-layer-2);
+    padding: _.unit(4) 0;
+    border-color: transparent;
+
+    .label {
+      font: var(--font-label-3);
+    }
+  }
+
+  &.active {
+    opacity: 100%;
+  }
+
+  &.interactive {
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--color-on-info-container);
+    }
+  }
+}

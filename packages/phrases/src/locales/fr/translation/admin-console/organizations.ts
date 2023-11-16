@@ -1,4 +1,6 @@
 const organizations = {
+  /** UNTRANSLATED */
+  organization: 'Organization',
   page_title: 'Organisations',
   title: 'Organisations',
   subtitle:
@@ -26,33 +28,45 @@ const organizations = {
   organization_role_description:
     "Le rôle d'organisation est un regroupement d'autorisations pouvant être attribuées aux utilisateurs. Les autorisations doivent provenir des autorisations d'organisation prédéfinies.",
   organization_role_delete_confirm:
-    "Cela supprimera les autorisations associées à ce rôle des utilisateurs concernés et supprimera les relations entre les rôles d'organisation, les membres de l'organisation et les autorisations d'organisation.",
+    "Si cette autorisation est supprimée, tous les rôles d'organisation incluant cette autorisation perdront cette autorisation, et les utilisateurs ayant cette autorisation perdront l'accès qui en découle.",
   role: 'Rôle',
   create_role_placeholder: 'Utilisateurs avec des autorisations en lecture seule',
   search_placeholder: "Rechercher par nom ou ID de l'organisation",
   search_permission_placeholder: 'Tapez pour rechercher et sélectionner des autorisations',
   search_role_placeholder: 'Tapez pour rechercher et sélectionner des rôles',
   empty_placeholder: "🤔 Vous n'avez pas encore configuré {{entity}}.",
+  /** UNTRANSLATED */
+  organization_and_member: 'Organization and member',
+  /** UNTRANSLATED */
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Commencez avec les guides',
     subtitle: "Démarrez votre processus de développement d'application avec nos guides",
     introduction: {
+      /** UNTRANSLATED */
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: "Tout d'abord, comprenez comment fonctionnent les organisations dans Logto",
-        description:
-          "Dans les applications SaaS multi-locataires, nous créons souvent plusieurs organisations avec le même ensemble d'autorisations et de rôles, mais dans le contexte d'une organisation cela peut jouer un rôle important dans le contrôle de différents niveaux d'accès. Pensez à chaque locataire comme une organisation Logto et elles partagent naturellement le même \"modèle\" de contrôle d'accès. Nous appelons cela le \"modèle d'organisation.\"",
+        /** UNTRANSLATED */
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: "Le modèle d'organisation se compose de deux parties",
-        organization_permission_description:
-          "L'autorisation d'organisation se réfère à l'autorisation d'accéder à une ressource dans le contexte de l'organisation. Une autorisation d'organisation doit être représentée par une chaîne significative, servant également de nom et d'identifiant unique.",
-        organization_role_description:
-          "Le rôle d'organisation est un regroupement d'autorisations pouvant être attribuées aux utilisateurs. Les autorisations doivent provenir des autorisations d'organisation prédéfinies.",
+        /** UNTRANSLATED */
+        title: 'Organization template is designed for multi-tenant apps access control',
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        /** UNTRANSLATED */
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        /** UNTRANSLATED */
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: "Interagissez avec l'illustration pour voir comment tout est connecté",
         description:
-          'Prenons un exemple. John, Sarah et Tony sont dans des organisations différentes avec des rôles différents dans le contexte de différentes organisations. Survolez les différents modules et voyez ce qui se passe.',
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: "Étape 1 : Définir les autorisations d'organisation",
@@ -61,38 +75,48 @@ const organizations = {
       "\"Les rôles d'organisation\" représentent un ensemble de rôles attribués à chaque organisation au début. Ces rôles sont déterminés par les autorisations globales que vous avez définies à l'écran précédent. De la même manière qu'avec l'autorisation d'organisation, une fois que vous avez terminé ce paramétrage pour la première fois, vous n'aurez pas besoin de le refaire à chaque création d'une nouvelle organisation.",
     step_3: 'Étape 3 : Créer votre première organisation',
     step_3_description:
-      "Créons votre première organisation. Elle est livrée avec un ID unique et sert de conteneur pour gérer diverses identités davantage orientées vers les entreprises, telles que des partenaires, des clients et leur contrôle d'accès.",
-    more_next_steps: 'Autres étapes suivantes',
-    add_members: 'Ajouter des membres à votre organisation',
-    add_members_action: 'Ajouter en masse des membres et attribuer des rôles',
-    add_enterprise_connector: "Ajouter une SSO d'entreprise",
-    add_enterprise_connector_action: "Configurer la SSO d'entreprise",
-    organization_permissions: "Autorisations de l'organisation",
-    permission_name: "Nom de l'autorisation",
-    permissions: 'Autorisations',
-    organization_roles: "Rôles de l'organisation",
-    role_name: 'Nom du rôle',
-    organization_name: "Nom de l'organisation",
-    admin: 'Administrateur',
-    admin_description:
-      'Le rôle "Administrateur" partage le même modèle d\'organisation dans différentes organisations.',
-    member: 'Membre',
-    member_description:
-      'Le rôle "Membre" partage le même modèle d\'organisation dans différentes organisations.',
-    guest: 'Invité',
-    guest_description:
-      'Le rôle "Invité" partage le même modèle d\'organisation dans différentes organisations.',
-    create_more_roles:
-      "Vous pouvez créer d'autres rôles dans les paramètres du modèle d'organisation. Ces rôles d'organisation s'appliqueront à différentes organisations.",
-    read_resource: 'lire:ressource',
-    edit_resource: 'éditer:ressource',
-    delete_resource: 'supprimer:ressource',
-    ellipsis: '……',
-    johnny:
-      "Johnny appartient à deux organisations avec l'adresse électronique \"{{email}}\" comme identifiant unique. Il est l'administrateur de l'organisation A ainsi que l'invité de l'organisation B.",
-    sarah:
-      "Sarah appartient à une organisation avec l'adresse électronique \"{{email}}\" comme identifiant unique. Elle est l'administratrice de l'organisation B.",
-    tony: 'Tony appartient à une organisation avec l\'adresse électronique "{{email}}" comme identifiant unique. Il est membre de l\'organisation C.',
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+    /** UNTRANSLATED */
+    more_next_steps: 'More next steps',
+    /** UNTRANSLATED */
+    add_members: 'Add members to your organization',
+    /** UNTRANSLATED */
+    add_members_action: 'Bulk add members and assign roles',
+    /** UNTRANSLATED */
+    add_enterprise_connector: 'Add enterprise SSO',
+    /** UNTRANSLATED */
+    add_enterprise_connector_action: 'Set up enterprise SSO',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization permissions',
+    /** UNTRANSLATED */
+    permission_name: 'Permission name',
+    /** UNTRANSLATED */
+    permissions: 'Permissions',
+    /** UNTRANSLATED */
+    organization_roles: 'Organization roles',
+    /** UNTRANSLATED */
+    role_name: 'Role name',
+    /** UNTRANSLATED */
+    organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    john: 'John',
+    /** UNTRANSLATED */
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    /** UNTRANSLATED */
+    sarah: 'Sarah',
+    /** UNTRANSLATED */
+    sarah_tip:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
   },
 };
 

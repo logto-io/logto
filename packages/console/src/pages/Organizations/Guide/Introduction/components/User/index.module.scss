@@ -1,0 +1,69 @@
+@use '@/scss/underscore' as _;
+
+.user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  gap: _.unit(1);
+  padding: _.unit(4);
+  border-radius: 4px;
+  background: var(--color-layer-2);
+  color: var(--color-on-info-container);
+  cursor: default;
+  opacity: 30%;
+  transition: 0.3s ease-in-out;
+  transition-property: border-color, opacity;
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .name {
+    font: var(--font-label-3);
+    color: var(--color-text);
+  }
+
+  &.blue {
+    color: #579dff; // Static blue color in both light and dark themes
+  }
+
+  &.pink {
+    color: #ff897a; // Static pink color in both light and dark themes
+  }
+
+  &.blue,
+  &.pink {
+    width: 67px;
+    height: 80px;
+    flex: 0 0 67px;
+    border: 1px solid transparent;
+
+    &.small {
+      width: 50px;
+      height: 56px;
+      flex: 0 0 50px;
+      padding: _.unit(2);
+      margin: 0;
+
+      .avatar {
+        height: 20px;
+      }
+    }
+
+    &:hover {
+      border-color: var(--color-on-info-container);
+    }
+  }
+
+  &.active {
+    opacity: 100%;
+  }
+
+  &.interactive {
+    cursor: pointer;
+  }
+}

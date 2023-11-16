@@ -1,0 +1,47 @@
+@use '@/scss/underscore' as _;
+
+.panel {
+  border: 1px solid var(--color-on-info-container);
+  border-radius: 8px;
+  overflow: hidden;
+
+  .header {
+    font: var(--font-title-2);
+    color: var(--color-white);
+    background: var(--color-on-info-container);
+    line-height: 36px;
+    text-align: center;
+  }
+
+  .body {
+    padding: _.unit(8);
+    background: var(--color-layer-1);
+  }
+
+  &.small {
+    .header {
+      font: var(--font-label-3);
+      line-height: 24px;
+    }
+
+    .body {
+      padding: _.unit(6);
+    }
+  }
+
+  &.blue {
+    border-color: #579dff;
+
+    .header {
+      background: #579dff; // Static blue color in both light and dark themes
+    }
+  }
+
+  &.purple {
+    border-color: #947dff;
+
+    .header {
+      background: #947dff; // Static purple color in both light and dark themes
+    }
+  }
+}

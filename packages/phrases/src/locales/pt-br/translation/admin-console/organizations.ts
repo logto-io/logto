@@ -1,4 +1,6 @@
 const organizations = {
+  /** UNTRANSLATED */
+  organization: 'Organization',
   page_title: 'Organizações',
   title: 'Organizações',
   subtitle:
@@ -33,26 +35,38 @@ const organizations = {
   search_permission_placeholder: 'Digite para pesquisar e selecionar permissões',
   search_role_placeholder: 'Digite para pesquisar e selecionar funções',
   empty_placeholder: '🤔 Você ainda não configurou nenhum {{entity}}.',
+  /** UNTRANSLATED */
+  organization_and_member: 'Organization and member',
+  /** UNTRANSLATED */
+  organization_and_member_description:
+    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Comece com guias',
     subtitle: 'Inicie o processo de desenvolvimento do seu aplicativo com nossos guias',
     introduction: {
+      /** UNTRANSLATED */
+      title: "Let's understand how organization works in Logto",
       section_1: {
-        title: 'Primeiro, entenda como as organizações funcionam no Logto',
-        description:
-          'Em aplicativos SaaS de vários inquilinos, muitas vezes fazemos várias organizações com o mesmo conjunto de permissões e funções, mas no contexto de uma organização, ela pode desempenhar um papel importante no controle de diferentes níveis de acesso. Pense em cada inquilino como uma organização Logto e elas naturalmente compartilham o mesmo "modelo" de controle de acesso.',
+        /** UNTRANSLATED */
+        title: 'An organization is a group of users (identities)',
       },
       section_2: {
-        title: 'O modelo de organização consiste em duas partes',
-        organization_permission_description:
-          'A permissão de organização se refere à autorização para acessar um recurso no contexto da organização. Uma permissão de organização deve ser representada como uma string significativa, servindo também como nome e identificador exclusivo.',
-        organization_role_description:
-          'O papel da organização é um agrupamento de permissões que podem ser atribuídas aos usuários. As permissões devem vir das permissões de organização predefinidas.',
+        /** UNTRANSLATED */
+        title: 'Organization template is designed for multi-tenant apps access control',
+        /** UNTRANSLATED */
+        description:
+          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
+        /** UNTRANSLATED */
+        permission_description:
+          'Organization permission refers to the authorization to access a resource in the context of organization.',
+        /** UNTRANSLATED */
+        role_description:
+          'Organization role is a grouping of organization permissions that can be assigned to members.',
       },
       section_3: {
         title: 'Interaja com a ilustração para ver como tudo se conecta',
         description:
-          'Vamos dar um exemplo. John, Sarah e Tony estão em diferentes organizações com papéis diferentes no contexto de organizações diferentes. Passe o mouse sobre os diferentes módulos e veja o que acontece.',
+          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
       },
     },
     step_1: 'Etapa 1: Definir permissões da organização',
@@ -61,38 +75,48 @@ const organizations = {
       '"Papéis da organização" representam um conjunto de papéis dados a cada organização no início. Esses papéis são determinados pelas permissões globais que você definiu na tela anterior. Semelhante à permissão de organização, uma vez que você terminar esta configuração pela primeira vez, não será necessário fazer isso toda vez que criar uma nova organização.',
     step_3: 'Etapa 3: Criar sua primeira organização',
     step_3_description:
-      'Vamos criar sua primeira organização. Ela vem com um ID único e serve como um contêiner para lidar com várias identidades mais direcionadas aos negócios, como parceiros, clientes e seu controle de acesso.',
-    more_next_steps: 'Mais próximas etapas',
-    add_members: 'Adicionar membros à sua organização',
-    add_members_action: 'Adicionar membros em massa e atribuir funções',
-    add_enterprise_connector: 'Adicionar SSO empresarial',
-    add_enterprise_connector_action: 'Configurar SSO empresarial',
-    organization_permissions: 'Permissões da organização',
-    permission_name: 'Nome da permissão',
-    permissions: 'Permissões',
-    organization_roles: 'Papéis da organização',
-    role_name: 'Nome do papel',
-    organization_name: 'Nome da organização',
-    admin: 'Administrador',
-    admin_description:
-      'O papel "Administrador" compartilha o mesmo modelo de organização em diferentes organizações.',
-    member: 'Membro',
-    member_description:
-      'O papel "Membro" compartilha o mesmo modelo de organização em diferentes organizações.',
-    guest: 'Convidado',
-    guest_description:
-      'O papel "Convidado" compartilha o mesmo modelo de organização em diferentes organizações.',
-    create_more_roles:
-      'Você pode criar mais papéis nas configurações de modelo da organização. Esses papéis da organização se aplicarão a diferentes organizações.',
-    read_resource: 'ler:recurso',
-    edit_resource: 'editar:recurso',
-    delete_resource: 'excluir:recurso',
-    ellipsis: '...',
-    johnny:
-      'Johnny pertence a duas organizações com o email "john@email.com" como único identificador. Ele é o administrador da organização A e convidado da organização B.',
-    sarah:
-      'Sarah pertence a uma organização com o email "sarah@email.com" como único identificador. Ela é a administradora da organização B.',
-    tony: 'Tony pertence a uma organização com o email "tony@email.com" como único identificador. Ele é membro da organização C.',
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+    /** UNTRANSLATED */
+    more_next_steps: 'More next steps',
+    /** UNTRANSLATED */
+    add_members: 'Add members to your organization',
+    /** UNTRANSLATED */
+    add_members_action: 'Bulk add members and assign roles',
+    /** UNTRANSLATED */
+    add_enterprise_connector: 'Add enterprise SSO',
+    /** UNTRANSLATED */
+    add_enterprise_connector_action: 'Set up enterprise SSO',
+    /** UNTRANSLATED */
+    organization_permissions: 'Organization permissions',
+    /** UNTRANSLATED */
+    permission_name: 'Permission name',
+    /** UNTRANSLATED */
+    permissions: 'Permissions',
+    /** UNTRANSLATED */
+    organization_roles: 'Organization roles',
+    /** UNTRANSLATED */
+    role_name: 'Role name',
+    /** UNTRANSLATED */
+    organization_name: 'Organization name',
+    /** UNTRANSLATED */
+    admin: 'Admin',
+    /** UNTRANSLATED */
+    member: 'Member',
+    /** UNTRANSLATED */
+    guest: 'Guest',
+    /** UNTRANSLATED */
+    role_description:
+      'Role "{{role}}" shares the same organization template across different organizations.',
+    /** UNTRANSLATED */
+    john: 'John',
+    /** UNTRANSLATED */
+    john_tip:
+      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
+    /** UNTRANSLATED */
+    sarah: 'Sarah',
+    /** UNTRANSLATED */
+    sarah_tip:
+      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
   },
 };
 
