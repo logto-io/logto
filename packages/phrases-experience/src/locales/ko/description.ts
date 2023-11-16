@@ -66,6 +66,7 @@ const description = {
   single_sign_on_email_form: '기업 이메일 주소를 입력하세요',
   single_sign_on_connectors_list:
     '귀하의 기업은 {{email}} 이메일 계정에 대해 Single Sign-On을 활성화했습니다. 다음 SSO 제공업체를 사용하여 로그인을 계속할 수 있습니다.',
+  single_sign_on_enabled: '이 계정에는 Single Sign-On이 활성화되어 있습니다.',
 };
 
 export default Object.freeze(description);

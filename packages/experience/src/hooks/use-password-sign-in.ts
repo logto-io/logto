@@ -24,6 +24,9 @@ const usePasswordSignIn = () => {
       'session.invalid_credentials': (error) => {
         setErrorMessage(error.message);
       },
+      'session.sso_enabled': (_error) => {
+        // Hide the toast and do nothing
+      },
       ...preSignInErrorHandler,
     }),
     [preSignInErrorHandler]

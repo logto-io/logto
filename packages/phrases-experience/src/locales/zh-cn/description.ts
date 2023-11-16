@@ -62,6 +62,7 @@ const description = {
   single_sign_on_email_form: '输入你的企业电子邮件地址',
   single_sign_on_connectors_list:
     '你的企业已为电子邮件账户{{email}}启用了单点登录。你可以继续使用以下SSO提供商进行登录。',
+  single_sign_on_enabled: '该帐户已启用单点登录',
 };
 
 export default Object.freeze(description);

@@ -71,6 +71,7 @@ const description = {
   single_sign_on_email_form: 'Wpisz swój służbowy adres email',
   single_sign_on_connectors_list:
     'Twoja firma włączyła jednokrotne logowanie dla konta e-mail {{email}}. Możesz kontynuować logowanie za pomocą następujących dostawców SSO.',
+  single_sign_on_enabled: 'To konto ma włączone jednokrotne logowanie.',
 };
 
 export default Object.freeze(description);

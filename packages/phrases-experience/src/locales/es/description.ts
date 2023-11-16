@@ -73,6 +73,8 @@ const description = {
   single_sign_on_email_form: 'Ingrese su dirección de correo electrónico corporativo',
   single_sign_on_connectors_list:
     'Su empresa ha habilitado el inicio de sesión único (Single Sign-On) para la cuenta de correo electrónico {{email}}. Puede continuar iniciando sesión con los siguientes proveedores de SSO.',
+  single_sign_on_enabled:
+    'El inicio de sesión único (Single Sign-On) está habilitado para esta cuenta',
 };
 
 export default Object.freeze(description);
