@@ -29,7 +29,7 @@ function User({
   onMouseOut,
 }: Props) {
   return (
-    <Tooltip content={tooltip} placement="bottom">
+    <Tooltip content={tooltip}>
       <div
         className={classNames(
           styles.user,
