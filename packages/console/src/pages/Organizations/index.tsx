@@ -20,7 +20,7 @@ import { guidePathname, organizationsPathname } from './consts';
 import * as styles from './index.module.scss';
 
 const tabs = Object.freeze({
-  settings: 'settings',
+  template: 'template',
 });
 
 type Props = {
@@ -79,14 +79,14 @@ function Organizations({ tab }: Props) {
               {t('organizations.title')}
             </TabNavItem>
             <TabNavItem
-              href={joinPath('/organizations', tabs.settings)}
-              isActive={tab === 'settings'}
+              href={joinPath('/organizations', tabs.template)}
+              isActive={tab === 'template'}
             >
               {t('general.settings_nav')}
             </TabNavItem>
           </TabNav>
           {!tab && <OrganizationsTable onCreate={handleCreate} />}
-          {tab === 'settings' && <Settings />}
+          {tab === 'template' && <Settings />}
         </>
       )}
     </div>

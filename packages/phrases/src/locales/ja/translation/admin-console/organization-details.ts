@@ -4,7 +4,7 @@ const organization_details = {
     '削除すると、すべてのメンバーが組織内のメンバーシップとロールを失います。この操作は元に戻せません。',
   organization_id: '組織ID',
   settings_description:
-    '組織は、一般的な識別子によって識別されるアイデンティティ（通常ユーザー）のグループです。\n\n各組織には独自のメンバー、役割、および権限があります。また、役割と権限は組織テンプレートによって定義されます。',
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
   name_placeholder: '組織の名前。一意である必要はありません。',
   description_placeholder: '組織の説明。',
   member: 'メンバー',

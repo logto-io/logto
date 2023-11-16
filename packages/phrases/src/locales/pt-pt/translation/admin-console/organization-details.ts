@@ -4,7 +4,7 @@ const organization_details = {
     'Uma vez eliminada, todos os membros perderão a sua adesão e funções nesta organização. Esta ação não pode ser desfeita.',
   organization_id: 'ID da organização',
   settings_description:
-    'Uma organização é um grupo de identidades (normalmente utilizadores) que são reconhecidas por um identificador comum.\n\nCada organização tem o seu conjunto de membros, funções e permissões, enquanto as funções e permissões são definidas pelo modelo da organização.',
+    'Uma organização é uma coleção de utilizadores que inclui equipas, clientes empresariais e empresas parceiras que usam as suas aplicações.',
   name_placeholder: 'O nome da organização, não é necessário ser único.',
   description_placeholder: 'Uma descrição da organização.',
   member: 'Membro',

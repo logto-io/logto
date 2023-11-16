@@ -59,6 +59,7 @@ function PermissionsCard() {
         }}
       />
       <TemplateTable
+        name="organizations.organization_permission"
         rowIndexKey="id"
         isLoading={isLoading}
         page={page}

@@ -31,6 +31,7 @@ const organizations = {
   search_placeholder: '按組織名稱或 ID 搜索',
   search_permission_placeholder: '輸入並搜索選擇權限',
   search_role_placeholder: '輸入並搜索選擇角色',
+  empty_placeholder: '🤔 你尚未設置任何 {{entity}}。',
   guide: {
     title: '開始使用指南',
     subtitle: '使用我們的指南快速開始應用程式開發流程',
@@ -56,7 +57,7 @@ const organizations = {
     step_1: '第 1 步：定義組織權限',
     step_2: '第 2 步：定義組織角色',
     step_2_description:
-      '“組織角色”代表每個組織一開始就得到的一組角色。這些角色由您在前一步設置的全局權限所確定。類似組織權限，完成首次設置之後，您將無需每次創建新組織時都進行此設置。',
+      '“組織角色”代表每個組織一開始就得到的一組角色。這些角色由您在前一步設置的全局權限所確定。類似組織權限，完成首次設置之後，您將無需每次創建新組繹時都進行此設置。',
     step_3: '第 3 步：創建您的第一個組織',
     step_3_description:
       '讓我們創建您的第一個組織。它具有唯一的 ID，作為處理各種更多面向業務的身份（例如合作夥伴、客戶）及其存取控制的容器。',
@@ -83,9 +84,9 @@ const organizations = {
     delete_resource: '刪除:資源',
     ellipsis: '……',
     johnny:
-      '約翰隸屬於兩個組織，電郵為 "john@email.com" 為唯一識別。他是組織 A 的管理員，也是組織 B 的訪客。',
-    sarah: '莎拉隸屬於一個組織，電郵為 "sarah@email.com" 為唯一識別。她是組織 B 的管理員。',
-    tony: '托尼隸屬於一個組織，電郵為 "tony@email.com" 為唯一識別。他是組織 C 的成員。',
+      '約翰隸屬於兩個組織，電郵為 "john@email.com" 為唯一識別。他是組繹 A 的管理員，也是組繹 B 的訪客。',
+    sarah: '莎拉隸屬於一個組繹，電郵為 "sarah@email.com" 為唯一識別。她是組繹 B 的管理員。',
+    tony: '托尼隸屬於一個組繹，電郵為 "tony@email.com" 為唯一識別。他是組繹 C 的成員。',
   },
 };
 

@@ -4,7 +4,7 @@ const organization_details = {
     'Po usunięciu wszyscy członkowie stracą swoje członkostwo i role w tej organizacji. Tego działania nie można cofnąć.',
   organization_id: 'ID organizacji',
   settings_description:
-    'Organizacja to grupa tożsamości (zazwyczaj użytkowników), która jest rozpoznawana przez wspólny identyfikator.\n\nKażda organizacja ma własny zestaw członków, ról i uprawnień, podczas gdy role i uprawnienia są określone przez szablon organizacji.',
+    'Organizacja to zbiór użytkowników, który obejmuje zespoły, klientów biznesowych i firmy partnerskie, które korzystają z Twoich aplikacji.',
   name_placeholder: 'Nazwa organizacji, nie musi być unikalna.',
   description_placeholder: 'Opis organizacji.',
   member: 'Członek',

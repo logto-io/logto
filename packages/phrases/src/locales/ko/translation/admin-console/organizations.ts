@@ -32,6 +32,7 @@ const organizations = {
   search_placeholder: '조직 이름 또는 ID로 검색',
   search_permission_placeholder: '검색하여 권한 선택',
   search_role_placeholder: '검색하여 역할 선택',
+  empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
   guide: {
     title: '가이드로 시작',
     subtitle: '가이드와 함께 앱 개발 프로세스 시작하기',

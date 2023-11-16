@@ -32,6 +32,7 @@ const organizations = {
   search_placeholder: 'Buscar por nombre de organización o ID',
   search_permission_placeholder: 'Escribe para buscar y seleccionar permisos',
   search_role_placeholder: 'Escribe para buscar y seleccionar roles',
+  empty_placeholder: '🤔 No has configurado ningún {{entity}} todavía.',
   guide: {
     title: 'Comience con guías',
     subtitle: 'Inicie su proceso de desarrollo de aplicaciones con nuestras guías',

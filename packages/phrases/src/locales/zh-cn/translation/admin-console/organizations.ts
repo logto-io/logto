@@ -31,6 +31,7 @@ const organizations = {
   search_placeholder: '按组织名称或ID搜索',
   search_permission_placeholder: '输入以搜索和选择权限',
   search_role_placeholder: '输入以搜索和选择角色',
+  empty_placeholder: '🤔 你还没有设置任何{{entity}}。',
   guide: {
     title: '从指南开始',
     subtitle: '使用我们的指南快速开始应用程序开发过程',
