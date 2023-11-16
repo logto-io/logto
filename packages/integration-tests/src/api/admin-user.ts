@@ -1,4 +1,12 @@
-import type { Identities, MfaFactor, MfaVerification, Role, User } from '@logto/schemas';
+import type {
+  Identities,
+  MfaFactor,
+  MfaVerification,
+  Role,
+  User,
+  UserSsoIdentity,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import { authedAdminApi } from './api.js';
 
@@ -17,7 +25,15 @@ export const createUser = async (payload: CreateUserPayload = {}) =>
     })
     .json<User>();
 
-export const getUser = async (userId: string) => authedAdminApi.get(`users/${userId}`).json<User>();
+export const getUser = async (userId: string, withSsoIdentities = false) =>
+  authedAdminApi
+    .get(
+      `users/${userId}`,
+      conditional(
+        withSsoIdentities && { searchParams: new URLSearchParams({ includeSsoIdentities: 'true' }) }
+      )
+    )
+    .json<User & { ssoIdentities?: UserSsoIdentity[] }>();
 
 export const getUsers = async () => authedAdminApi.get('users').json<User[]>();
 

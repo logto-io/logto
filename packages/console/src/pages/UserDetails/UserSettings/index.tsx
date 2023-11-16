@@ -10,6 +10,7 @@ import { useOutletContext } from 'react-router-dom';
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -21,11 +22,12 @@ import { safeParseJsonObject } from '@/utils/json';
 import { parsePhoneNumber } from '@/utils/phone';
 import { uriValidator } from '@/utils/validator';
 
-import type { UserDetailsForm, UserDetailsOutletContext } from '../types';
+import { type UserDetailsForm, type UserDetailsOutletContext } from '../types';
 import { userDetailsParser } from '../utils';
 
 import UserMfaVerifications from './UserMfaVerifications';
 import UserSocialIdentities from './components/UserSocialIdentities';
+import UserSsoIdentities from './components/UserSsoIdentities';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -102,9 +104,6 @@ function UserSettings() {
           description="user_details.authentication_description"
           learnMoreLink={getDocumentationUrl('/docs/references/users')}
         >
-          <FormField title="user_details.field_name">
-            <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
-          </FormField>
           <FormField title="user_details.field_email">
             <TextInput
               {...register('primaryEmail', {
@@ -142,16 +141,6 @@ function UserSettings() {
               placeholder={t('users.placeholder_username')}
             />
           </FormField>
-          <FormField title="user_details.field_avatar">
-            <TextInput
-              {...register('avatar', {
-                validate: (value) =>
-                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
-              })}
-              error={errors.avatar?.message}
-              placeholder={t('user_details.field_avatar_placeholder')}
-            />
-          </FormField>
           <FormField title="user_details.field_connectors">
             <UserSocialIdentities
               userId={user.id}
@@ -161,8 +150,28 @@ function UserSettings() {
               }}
             />
           </FormField>
+          {isDevFeaturesEnabled && (
+            <FormField title="user_details.field_sso_connectors">
+              <UserSsoIdentities ssoIdentities={user.ssoIdentities ?? []} />
+            </FormField>
+          )}
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
+          </FormField>
+        </FormCard>
+        <FormCard title="user_details.user_profile">
+          <FormField title="user_details.field_name">
+            <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
+          </FormField>
+          <FormField title="user_details.field_avatar">
+            <TextInput
+              {...register('avatar', {
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
+              })}
+              error={errors.avatar?.message}
+              placeholder={t('user_details.field_avatar_placeholder')}
+            />
           </FormField>
           <FormField
             isRequired

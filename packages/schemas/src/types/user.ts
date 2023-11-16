@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type User, Users } from '../db-entries/index.js';
+import { type User, Users, UserSsoIdentities } from '../db-entries/index.js';
 import { MfaFactor } from '../foundations/index.js';
 
 export const userInfoSelectFields = Object.freeze([
@@ -26,6 +26,7 @@ export type UserInfo = z.infer<typeof userInfoGuard>;
 
 export const userProfileResponseGuard = userInfoGuard.extend({
   hasPassword: z.boolean().optional(),
+  ssoIdentities: z.array(UserSsoIdentities.guard).optional(),
 });
 
 export type UserProfileResponse = z.infer<typeof userProfileResponseGuard>;

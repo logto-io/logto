@@ -1,8 +1,9 @@
 @use '@/scss/underscore' as _;
 
-.empty {
+.description {
   color: var(--color-text-secondary);
   font: var(--font-body-2);
+  margin-bottom: _.unit(1);
 }
 
 .connectorName {
@@ -21,7 +22,7 @@
   }
 }
 
-.connectorId {
+.userId {
   display: flex;
   align-items: center;
   font: var(--font-body-2);

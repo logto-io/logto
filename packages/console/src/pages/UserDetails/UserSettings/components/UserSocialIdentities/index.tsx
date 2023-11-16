@@ -34,8 +34,12 @@ function ConnectorName({ name }: { name: DisplayConnector['name'] }) {
 
 function UserSocialIdentities({ userId, identities, onDelete }: Props) {
   const api = useApi();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
+
   const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
+
   const [deletingConnector, setDeletingConnector] = useState<DisplayConnector>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -77,13 +81,16 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
     });
   }, [connectorGroups, identities, t]);
 
-  if (Object.keys(identities).length === 0) {
-    return <div className={styles.empty}>{t('user_details.connectors.not_connected')}</div>;
-  }
-
   return (
     <div>
-      {displayConnectors && (
+      <div className={styles.description}>
+        {t(
+          displayConnectors && displayConnectors.length > 0
+            ? 'user_details.connectors.connected'
+            : 'user_details.connectors.not_connected'
+        )}
+      </div>
+      {displayConnectors && displayConnectors.length > 0 && (
         <Table
           hasBorder
           rowGroups={[{ key: 'identities', data: displayConnectors }]}
@@ -109,7 +116,7 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
               dataIndex: 'userId',
               colSpan: 8,
               render: ({ userId = '' }) => (
-                <div className={styles.connectorId}>
+                <div className={styles.userId}>
                   <span>{userId || '-'}</span>
                   {userId && <CopyToClipboard variant="icon" value={userId} />}
                 </div>

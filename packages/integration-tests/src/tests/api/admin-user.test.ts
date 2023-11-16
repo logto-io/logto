@@ -25,8 +25,14 @@ describe('admin console user management', () => {
   it('should create and get user successfully', async () => {
     const user = await createUserByAdmin();
 
+    // `ssoIdentities` field is undefined if not specified.
     const userDetails = await getUser(user.id);
     expect(userDetails.id).toBe(user.id);
+    expect(userDetails.ssoIdentities).toBeUndefined();
+
+    // `ssoIdentities` field should be array type is specified that return user info with `includeSsoIdentities`.
+    const userDetailsWithSsoIdentities = await getUser(user.id, true);
+    expect(userDetailsWithSsoIdentities.ssoIdentities).toStrictEqual([]);
   });
 
   it('should fail when create user with conflict identifiers', async () => {
