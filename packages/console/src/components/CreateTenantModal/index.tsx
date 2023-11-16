@@ -119,7 +119,11 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
     >
       <ModalLayout
         title="tenants.create_modal.title"
-        subtitle="tenants.create_modal.subtitle"
+        subtitle={
+          isDevFeaturesEnabled
+            ? 'tenants.create_modal.subtitle'
+            : 'tenants.create_modal.subtitle_deprecated'
+        }
         headerIcon={
           theme === Theme.Light ? <CreateTenantHeaderIcon /> : <CreateTenantHeaderIconDark />
         }

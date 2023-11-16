@@ -39,9 +39,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Crea nuovo tenant',
-    subtitle: 'Crea un nuovo tenant per separare risorse e utenti.',
-    subtitle_with_region:
-      "Crea un nuovo tenant per separare risorse e utenti. La regione e i tag dell'ambiente non possono essere modificati dopo la creazione.",
+    subtitle_deprecated: 'Crea un nuovo tenant per separare risorse e utenti.',
+    subtitle:
+      'Crea un nuovo inquilino con risorse e utenti isolati. Le regioni dei dati ospitati e i tipi di inquilino non possono essere modificati dopo la creazione.',
     tenant_usage_purpose: 'Per cosa desideri utilizzare questo tenant?',
     development_description:
       "L'ambiente di sviluppo viene principalmente utilizzato per i test e non dovrebbe essere utilizzato nell'ambiente di produzione.",

@@ -39,9 +39,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Crear inquilino',
-    subtitle: 'Cree un nuevo inquilino para separar recursos y usuarios.',
-    subtitle_with_region:
-      'Cree un nuevo inquilino para separar recursos y usuarios. La región y las etiquetas de entorno no se pueden modificar después de la creación.',
+    subtitle_deprecated: 'Cree un nuevo inquilino para separar recursos y usuarios.',
+    subtitle:
+      'Cree un nuevo inquilino que tenga recursos y usuarios aislados. La región de datos alojados y los tipos de inquilinos no se pueden modificar después de la creación.',
     tenant_usage_purpose: '¿Para qué desea usar este inquilino?',
     development_description:
       'El entorno de desarrollo se utiliza principalmente para pruebas y no debe utilizarse en el entorno de producción.',

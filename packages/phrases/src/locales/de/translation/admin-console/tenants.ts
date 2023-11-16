@@ -39,9 +39,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Mieter erstellen',
-    subtitle: 'Erstellen Sie einen neuen Mieter, um Ressourcen und Benutzer zu trennen.',
-    subtitle_with_region:
-      'Erstellen Sie einen neuen Mandanten, um Ressourcen und Benutzer zu trennen. Region und Umgebungsmarkierungen können nach der Erstellung nicht geändert werden.',
+    subtitle_deprecated: 'Erstellen Sie einen neuen Mieter, um Ressourcen und Benutzer zu trennen.',
+    subtitle:
+      'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
     development_description:
       'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und sollte nicht in einer Produktionsumgebung verwendet werden.',

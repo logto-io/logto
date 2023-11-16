@@ -39,9 +39,10 @@ const tenants = {
   },
   create_modal: {
     title: 'Créer un locataire',
-    subtitle: 'Créez un nouveau locataire pour séparer les ressources et les utilisateurs.',
-    subtitle_with_region:
-      "Créez un nouveau locataire pour séparer les ressources et les utilisateurs. La région et les balises d'environnement ne peuvent pas être modifiées après la création.",
+    subtitle_deprecated:
+      'Créez un nouveau locataire pour séparer les ressources et les utilisateurs.',
+    subtitle:
+      "Créez un nouveau locataire disposant de ressources et d'utilisateurs isolés. Les régions de données hébergées et les types de locataires ne peuvent pas être modifiés après la création.",
     tenant_usage_purpose: 'Dans quel but souhaitez-vous utiliser ce locataire?',
     development_description:
       "L'environnement de développement est principalement utilisé pour les tests et ne doit pas être utilisé dans un environnement de production.",

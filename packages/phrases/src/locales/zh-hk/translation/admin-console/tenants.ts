@@ -35,8 +35,8 @@ const tenants = {
   },
   create_modal: {
     title: '創建租戶',
-    subtitle: '創建新租戶來區分資源及使用者。',
-    subtitle_with_region: '創建新租戶以區分資源和使用者。地區和環境標籤在創建後無法修改。',
+    subtitle_deprecated: '創建新租戶來區分資源及使用者。',
+    subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望使用此租戶做什麼？',
     development_description: '開發環境主要用於測試，不應在生產環境中使用。',
     development_hint: '開發環境主要用於測試，不應在生產環境中使用。',
