@@ -42,8 +42,8 @@ function Introduction({ isReadonly }: Props) {
   return (
     <>
       <OverlayScrollbar className={parentStyles.stepContainer}>
-        <div className={classNames(parentStyles.content)}>
-          <Card className={parentStyles.card}>
+        <div className={classNames(parentStyles.content, styles.container)}>
+          <Card className={classNames(parentStyles.card, isReadonly && styles.compact)}>
             <OrganizationIcon className={parentStyles.icon} />
             <FlexBox type="column" gap={24}>
               <div className={styles.title}>{t('guide.introduction.title')}</div>
