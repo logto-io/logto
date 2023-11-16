@@ -37,9 +37,9 @@ const tenants = {
   },
   create_modal: {
     title: 'テナントを作成する',
-    subtitle: 'リソースとユーザーを分離するには、新しいテナントを作成します。',
-    subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
+    subtitle_deprecated: 'リソースとユーザーを分離するには、新しいテナントを作成します。',
+    subtitle:
+      '分離されたリソースとユーザーを持つ新しいテナントを作成します。データがホストされる地域とテナントの種類は作成後に変更できません。',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       'Development environment is mainly used for testing and should not use in production environment.',

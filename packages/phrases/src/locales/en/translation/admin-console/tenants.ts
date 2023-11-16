@@ -37,9 +37,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Create tenant',
-    subtitle: 'Create a new tenant to separate resources and users.',
-    subtitle_with_region:
-      'Create a new tenant to separate resources and users. Region and environment tags can’t be modified after creation.',
+    subtitle_deprecated: 'Create a new tenant to separate resources and users.',
+    subtitle:
+      'Create a new tenant that has isolated resources and users. Data hosted region and tenant types can’t be modified after creation.',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       'Development environment is mainly used for testing and should not use in production environment.',

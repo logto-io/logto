@@ -37,9 +37,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
-    subtitle: 'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników.',
-    subtitle_with_region:
-      'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników. Region and environment tags can’t be modified after creation.',
+    subtitle_deprecated: 'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników.',
+    subtitle:
+      'Utwórz nowego najemcę, który ma izolowane zasoby i użytkowników. Dane hostowanej regionu i typy najemców nie mogą być modyfikowane po utworzeniu.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
     development_description:
       'Środowisko development jest głównie przeznaczone do testowania i nie powinno być używane w środowisku produkcyjnym.',

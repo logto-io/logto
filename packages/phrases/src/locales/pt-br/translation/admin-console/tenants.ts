@@ -39,9 +39,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Criar inquilino',
-    subtitle: 'Crie um novo inquilino para separar recursos e usuários.',
-    subtitle_with_region:
-      'Crie um novo locatário para separar recursos e usuários. Região e etiquetas de ambiente não podem ser modificadas após a criação.',
+    subtitle_deprecated: 'Crie um novo inquilino para separar recursos e usuários.',
+    subtitle:
+      'Crie um novo locatário que tenha recursos e usuários isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
       'O ambiente de desenvolvimento é usado principalmente para testes e não deve ser usado em um ambiente de produção.',

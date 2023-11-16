@@ -39,9 +39,9 @@ const tenants = {
   },
   create_modal: {
     title: 'Kiracı Oluştur',
-    subtitle: 'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun.',
-    subtitle_with_region:
-      'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun. Bölge ve ortam etiketleri oluşturulduktan sonra değiştirilemez.',
+    subtitle_deprecated: 'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun.',
+    subtitle:
+      'İzole kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun. Verilerin barındırıldığı bölge ve kiracı türleri oluşturulduktan sonra değiştirilemez.',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
       'Geliştirme ortamı genellikle test için kullanılır ve üretim ortamında kullanılmamalıdır.',
