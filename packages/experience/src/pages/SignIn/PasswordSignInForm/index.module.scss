@@ -10,7 +10,8 @@
   .inputField,
   .link,
   .terms,
-  .formErrors {
+  .formErrors,
+  .message {
     margin-bottom: _.unit(4);
   }
 
@@ -18,6 +19,10 @@
     margin-top: _.unit(-1);
     align-self: start;
     width: auto;
+  }
+
+  .message {
+    @include _.text-hint;
   }
 
   .formErrors {

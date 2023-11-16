@@ -106,6 +106,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           />
         )}
       />
+      {showSingleSignOn && (
+        <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
+      )}
 
       {!showSingleSignOn && (
         <PasswordInputField
