@@ -9,7 +9,7 @@ const tenants = {
   },
   settings: {
     title: 'SETTINGS',
-    description: 'Set the tenant name and view your data hosted region and environment tag.',
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Tenant ID',
     tenant_name: 'Tenant Name',
     tenant_region: 'Data hosted region',
@@ -20,8 +20,11 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    tenant_type: 'Tenant type',
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'Tenant information saved successfully.',
   },
   full_env_tag: {

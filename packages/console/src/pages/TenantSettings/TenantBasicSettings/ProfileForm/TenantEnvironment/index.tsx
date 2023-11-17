@@ -34,7 +34,7 @@ function TenantEnvironment({ tag }: Props) {
           {t(
             tag === TenantTag.Development
               ? 'tenants.settings.development_description'
-              : 'tenants.create_modal.production_description'
+              : 'tenants.settings.production_description'
           )}
         </Trans>
       </div>

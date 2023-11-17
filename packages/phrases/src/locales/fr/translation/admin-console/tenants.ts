@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'PARAMÈTRES',
-    description:
-      "Définissez le nom du locataire et consultez votre région d'hébergement et l'étiquette d'environnement.",
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'ID du locataire',
     tenant_name: 'Nom du locataire',
     tenant_region: "Région d'hébergement des données",
@@ -22,8 +22,14 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      "L'environnement de développement est principalement utilisé pour les tests et inclut toutes les fonctionnalités professionnelles mais comporte des filigranes dans l'expérience de connexion. <a>En savoir plus</a>",
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'Les informations du locataire ont été enregistrées avec succès.',
   },
   full_env_tag: {

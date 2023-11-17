@@ -9,7 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'USTAWIENIA',
-    description: 'Ustaw nazwę najemcy i zobacz region hostowania oraz znacznik środowiska.',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
     tenant_region: 'Data hosted region',
@@ -20,8 +21,14 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      'Środowisko development jest głównie przeznaczone do testowania i obejmuje wszystkie funkcje pro, ale ma znaki wodne w doświadczeniu logowania. <a>Learn more</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'Informacje o najemcy zostały pomyślnie zapisane.',
   },
   full_env_tag: {

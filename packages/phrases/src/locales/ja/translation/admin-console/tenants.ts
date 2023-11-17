@@ -9,7 +9,8 @@ const tenants = {
   },
   settings: {
     title: '設定',
-    description: 'テナント名を設定し、データがホストされている地域と環境のタグを表示します。',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'テナントID',
     tenant_name: 'テナント名',
     tenant_region: 'データがホストされている地域',
@@ -20,8 +21,14 @@ const tenants = {
     environment_tag_development: '開発',
     environment_tag_staging: 'ステージング',
     environment_tag_production: '本番',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and include all pro features but have watermarks in the sign in experience. <a>Learn more</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'テナント情報は正常に保存されました。',
   },
   full_env_tag: {

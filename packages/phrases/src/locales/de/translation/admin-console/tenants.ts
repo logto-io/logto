@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'EINSTELLUNGEN',
-    description:
-      'Geben Sie den Mandanten-Namen ein und sehen Sie Ihre Daten in der gehosteten Region und mit dem Umgebungstag an.',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
     tenant_region: 'Gehostete Region der Daten',
@@ -22,8 +22,14 @@ const tenants = {
     environment_tag_development: 'Entw',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und enthält alle Pro-Funktionen, weist jedoch Wasserzeichen im Anmeldeerlebnis auf. <a>Mehr erfahren</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
   },
   full_env_tag: {

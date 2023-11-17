@@ -9,7 +9,8 @@ const tenants = {
   },
   settings: {
     title: '설정',
-    description: '테넌트 이름을 설정하고 호스팅된 지역 및 환경 태그를 확인하세요.',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
     tenant_region: '데이터 호스팅 영역',
@@ -20,8 +21,14 @@ const tenants = {
     environment_tag_development: '개발',
     environment_tag_staging: '스테이징',
     environment_tag_production: '프로드',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      '개발 환경은 주로 테스트 용도로 사용되며 모든 Pro 기능이 포함되지만 로그인 환경에 워터마크가 있습니다. <a>자세히 알아보기</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: '테넌트 정보가 성공적으로 저장되었습니다.',
   },
   full_env_tag: {

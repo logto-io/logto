@@ -10,8 +10,8 @@ const tenants = {
   },
   settings: {
     title: 'IMPOSTAZIONI',
-    description:
-      "Imposta il nome del tenant e visualizza la tua regione di hosting e l'etichetta dell'ambiente.",
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'ID Tenant',
     tenant_name: 'Nome Tenant',
     tenant_region: 'Regione di hosting',
@@ -22,8 +22,14 @@ const tenants = {
     environment_tag_development: 'Svil',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      "L'ambiente di sviluppo viene principalmente utilizzato per i test e include tutte le funzionalità professionali, ma presenta filigrane durante l'esperienza di accesso. <a>Scopri di più</a>",
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
   },
   full_env_tag: {
