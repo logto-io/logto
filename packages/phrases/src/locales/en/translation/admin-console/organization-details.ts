@@ -4,7 +4,7 @@ const organization_details = {
     'Once deleted, all members will lose their membership and roles in this organization. This action cannot be undone.',
   organization_id: 'Organization ID',
   settings_description:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: 'The name of the organization, not required to be unique.',
   description_placeholder: 'A description of the organization.',
   member: 'Member',

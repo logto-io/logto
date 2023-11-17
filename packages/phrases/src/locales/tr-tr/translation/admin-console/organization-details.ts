@@ -3,8 +3,9 @@ const organization_details = {
   delete_confirmation:
     'Silindiğinde, tüm üyeler bu kuruluştaki üyeliklerini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
   organization_id: 'Kuruluş Kimliği',
+  /** UNTRANSLATED */
   settings_description:
-    'Bir kuruluş, uygulamalarını kullanan ekipleri, iş müşterilerini ve ortak firmaları içeren kullanıcıların bir koleksiyonudur.',
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: 'Kuruluşun adı, benzersiz olması gerekli değildir.',
   description_placeholder: 'Kuruluşun açıklaması.',
   member: 'Üye',

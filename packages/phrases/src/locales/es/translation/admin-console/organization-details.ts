@@ -3,8 +3,9 @@ const organization_details = {
   delete_confirmation:
     'Una vez eliminada, todos los miembros perderán su membresía y roles en esta organización. Esta acción no se puede deshacer.',
   organization_id: 'ID de la organización',
+  /** UNTRANSLATED */
   settings_description:
-    'Una organización es una colección de usuarios que incluye equipos, clientes comerciales y empresas asociadas que utilizan sus aplicaciones.',
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: 'El nombre de la organización, no es necesario que sea único.',
   description_placeholder: 'Una descripción de la organización.',
   member: 'Miembro',

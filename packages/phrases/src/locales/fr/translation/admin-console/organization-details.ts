@@ -3,8 +3,9 @@ const organization_details = {
   delete_confirmation:
     'Une fois supprimée, tous les membres perdront leur adhésion et leurs rôles dans cette organisation. Cette action ne peut pas être annulée.',
   organization_id: "Identifiant de l'organisation",
+  /** UNTRANSLATED */
   settings_description:
-    "Une organisation est un ensemble d'utilisateurs, y compris des équipes, des clients professionnels et des sociétés partenaires qui utilisent vos applications.",
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: "Le nom de l'organisation, pas nécessairement unique.",
   description_placeholder: "Une description de l'organisation.",
   member: 'Membre',

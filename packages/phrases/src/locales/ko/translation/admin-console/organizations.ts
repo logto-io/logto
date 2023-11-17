@@ -3,8 +3,11 @@ const organizations = {
   organization: 'Organization',
   page_title: '조직',
   title: '조직',
+  /** UNTRANSLATED */
   subtitle:
-    '팀, 비즈니스 고객 및 파트너 기업을 해당 조직으로 접근하는 애플리케이션에 대해 표현합니다.',
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  /** UNTRANSLATED */
+  organization_template: 'Organization template',
   organization_id: '조직 ID',
   members: '회원',
   create_organization: '조직 만들기',
@@ -42,7 +45,8 @@ const organizations = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: '가이드로 시작',
-    subtitle: '가이드와 함께 앱 개발 프로세스 시작하기',
+    /** UNTRANSLATED */
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       /** UNTRANSLATED */
       title: "Let's understand how organization works in Logto",
@@ -71,21 +75,16 @@ const organizations = {
     },
     step_1: '단계 1: 조직 권한 정의',
     step_2: '단계 2: 조직 역할 정의',
-    step_2_description:
-      '"조직 역할"은 각 조직에 제공된 일련의 역할을 나타냅니다. 이러한 역할은 이전 화면에서 설정한 전역 권한에 따라 결정됩니다. 조직 권한과 유사하게, 처음으로 이 설정을 완료하면 새로운 조직을 만들 때마다 이것을 매번 수행할 필요가 없게 됩니다.',
     step_3: '단계 3: 첫 번째 조직 생성하기',
+    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     /** UNTRANSLATED */
     more_next_steps: 'More next steps',
     /** UNTRANSLATED */
     add_members: 'Add members to your organization',
     /** UNTRANSLATED */
     add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     /** UNTRANSLATED */
     organization_permissions: 'Organization permissions',
     /** UNTRANSLATED */

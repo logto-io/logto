@@ -3,8 +3,9 @@ const organization_details = {
   delete_confirmation:
     '삭제하면 모든 회원이 이 조직에서 멤버십과 역할을 잃게 됩니다. 이 작업은 취소할 수 없습니다.',
   organization_id: '조직 ID',
+  /** UNTRANSLATED */
   settings_description:
-    '조직은 사용자 그룹으로, 팀, 비즈니스 고객, 및 당신의 응용 프로그램을 사용하는 파트너 기관이 포함됩니다.',
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: '조직의 이름, 고유할 필요는 없습니다.',
   description_placeholder: '조직에 대한 설명입니다.',
   member: '멤버',

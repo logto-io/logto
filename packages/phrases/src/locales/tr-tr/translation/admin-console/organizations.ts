@@ -3,7 +3,11 @@ const organizations = {
   organization: 'Organization',
   page_title: 'Kuruluşlar',
   title: 'Kuruluşlar',
-  subtitle: 'Uygulamalarınıza erişen ekipleri, iş müşterilerini ve ortak şirketleri temsil edin.',
+  /** UNTRANSLATED */
+  subtitle:
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  /** UNTRANSLATED */
+  organization_template: 'Organization template',
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
   create_organization: 'Kuruluş oluştur',
@@ -41,7 +45,8 @@ const organizations = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Kılavuzlarla başlayın',
-    subtitle: 'Kılavuzlarımızla uygulama geliştirme sürecinize hızlı bir başlangıç yapın',
+    /** UNTRANSLATED */
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       /** UNTRANSLATED */
       title: "Let's understand how organization works in Logto",
@@ -70,21 +75,16 @@ const organizations = {
     },
     step_1: 'Adım 1: Kuruluş izinlerini tanımlayın',
     step_2: 'Adım 2: Kuruluş rollerini tanımlayın',
-    step_2_description:
-      '"Kuruluş rolleri", her kuruluşa başlangıçta verilen bir dizi role karşılık gelir. Bu roller, önceki ekranda belirlediğiniz genel izinler tarafından belirlenir. Kuruluş izni ile benzer şekilde, bunu ilk kez ayarladıktan sonra her yeni kuruluş oluşturduğunuzda bunu her seferinde yapmanıza gerek kalmayacaksınız.',
     step_3: 'Adım 3: İlk kuruluşunuzu oluşturun',
+    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     /** UNTRANSLATED */
     more_next_steps: 'More next steps',
     /** UNTRANSLATED */
     add_members: 'Add members to your organization',
     /** UNTRANSLATED */
     add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     /** UNTRANSLATED */
     organization_permissions: 'Organization permissions',
     /** UNTRANSLATED */

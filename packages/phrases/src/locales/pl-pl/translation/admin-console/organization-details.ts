@@ -3,8 +3,9 @@ const organization_details = {
   delete_confirmation:
     'Po usunięciu wszyscy członkowie stracą swoje członkostwo i role w tej organizacji. Tego działania nie można cofnąć.',
   organization_id: 'ID organizacji',
+  /** UNTRANSLATED */
   settings_description:
-    'Organizacja to zbiór użytkowników, który obejmuje zespoły, klientów biznesowych i firmy partnerskie, które korzystają z Twoich aplikacji.',
+    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
   name_placeholder: 'Nazwa organizacji, nie musi być unikalna.',
   description_placeholder: 'Opis organizacji.',
   member: 'Członek',

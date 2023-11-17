@@ -3,7 +3,11 @@ const organizations = {
   organization: 'Organization',
   page_title: '組織',
   title: '組織',
-  subtitle: '代表團隊、商業客戶和合作夥伴公司作為組織訪問您的應用程式。',
+  /** UNTRANSLATED */
+  subtitle:
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  /** UNTRANSLATED */
+  organization_template: 'Organization template',
   organization_id: '組織 ID',
   members: '成員',
   create_organization: '建立組織',
@@ -41,7 +45,8 @@ const organizations = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: '從指南開始',
-    subtitle: '使用我們的指南來快速啟動應用程式開發流程',
+    /** UNTRANSLATED */
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       /** UNTRANSLATED */
       title: "Let's understand how organization works in Logto",
@@ -70,21 +75,16 @@ const organizations = {
     },
     step_1: '步驟1：定義組繹權限',
     step_2: '步驟2: 定義組繹角色',
-    step_2_description:
-      '“組繹角色”代表每個組繹最開始授予的一組角色。這些角色由您在上一個畫面中設定的全局權限來確定。與組繹權限相似，一旦您第一次完成此設置，您將不需要每次創建新組繹時都進行此設置。',
     step_3: '步驟3：創建您的第一個組繹',
+    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     /** UNTRANSLATED */
     more_next_steps: 'More next steps',
     /** UNTRANSLATED */
     add_members: 'Add members to your organization',
     /** UNTRANSLATED */
     add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     /** UNTRANSLATED */
     organization_permissions: 'Organization permissions',
     /** UNTRANSLATED */
