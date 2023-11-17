@@ -13,7 +13,7 @@ const sync: CommandModule<{ path?: string }, { path?: string }> = {
   describe:
     'Translate all untranslated phrases using ChatGPT. Note the environment variable `OPENAI_API_KEY` is required to work.',
   handler: async ({ path: inputPath }) => {
-    const queue = new PQueue({ concurrency: 1 });
+    const queue = new PQueue({ concurrency: 5 });
     const instancePath = await inquireInstancePath(inputPath);
 
     for (const languageTag of Object.keys(languages)) {
