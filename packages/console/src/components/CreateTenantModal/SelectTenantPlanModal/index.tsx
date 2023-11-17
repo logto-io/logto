@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 
 import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
+import { pricingLink } from '@/consts';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -67,9 +68,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         subtitle={
           <DangerousRaw>
             <Trans
-              components={{
-                a: <TextLink href="https://logto.io/pricing" target="_blank" />,
-              }}
+              components={{ a: <TextLink href={pricingLink} target="_blank" rel="noopener" /> }}
             >
               {t('upsell.create_tenant.description')}
             </Trans>
