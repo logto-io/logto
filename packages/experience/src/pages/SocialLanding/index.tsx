@@ -11,6 +11,12 @@ type Parameters = {
   connectorId: string;
 };
 
+/**
+ * SocialLanding page
+ * Used for both SocialSignIn and SingleSignOn
+ * Only used for native app out of the app webview sign-in flow
+ * Store the native callback url in the session storage before redirect to the IdP
+ */
 const SocialLanding = () => {
   const { connectorId } = useParams<Parameters>();
   const { loading, socialLandingHandler } = useSocialLandingHandler();

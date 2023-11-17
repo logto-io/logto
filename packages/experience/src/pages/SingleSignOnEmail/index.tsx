@@ -1,8 +1,9 @@
 import { SignInIdentifier } from '@logto/schemas';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import SmartInputField, {
@@ -19,6 +20,7 @@ type FormState = {
 
 const SingleSignOnEmail = () => {
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
+  const { email } = useContext(SingleSignOnContext);
 
   const {
     handleSubmit,
@@ -70,6 +72,7 @@ const SingleSignOnEmail = () => {
               className={styles.inputField}
               {...field}
               isDanger={!!errors.identifier}
+              defaultValue={email}
               errorMessage={errors.identifier?.message}
               enabledTypes={[SignInIdentifier.Email]}
             />

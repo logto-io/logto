@@ -1,10 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.socialLinkList {
+.ssoLinkList {
   @include _.flex-column;
 }
 
-.socialLinkButton {
+.ssoLinkButton {
   margin-bottom: _.unit(4);
 
   &:last-child {
