@@ -9,7 +9,8 @@ const tenants = {
   },
   settings: {
     title: '設定',
-    description: '設置租戶名稱並查看托管數據的地區和環境標籤。',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: '租户ID',
     tenant_name: '租户名称',
     tenant_region: '數據托管區域',
@@ -19,8 +20,14 @@ const tenants = {
     environment_tag_development: '開發',
     environment_tag_staging: '預備',
     environment_tag_production: '產品',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      '開發環境主要用於測試，並包括所有專業功能，但登錄體驗中會有浮水印。 <a>了解更多</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: '租戶信息成功保存。',
   },
   full_env_tag: {

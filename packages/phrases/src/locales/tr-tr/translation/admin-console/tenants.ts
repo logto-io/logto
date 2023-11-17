@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'AYARLAR',
-    description:
-      'Kiracı adını ayarlayın ve verilerinizin barındığı bölgeyi ve ortam etiketinizi görüntüleyin.',
+    /** UNTRANSLATED */
+    description: 'Set the tenant name and view your data hosted region and tenant type.',
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
     tenant_region: 'Veriler barındırılan bölge',
@@ -22,8 +22,14 @@ const tenants = {
     environment_tag_development: 'Geliş',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
+    /** UNTRANSLATED */
+    tenant_type: 'Tenant type',
+    /** UNTRANSLATED */
     development_description:
-      'Geliştirme ortamı genellikle test için kullanılır ve giriş deneyiminde filigranlar içerir. <a>Daha fazla bilgi</a>',
+      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
+    /** UNTRANSLATED */
+    production_description:
+      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   full_env_tag: {
