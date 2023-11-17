@@ -11,7 +11,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
-import { steps } from '../const';
+import { steps, totalStepCount } from '../const';
 import * as parentStyles from '../index.module.scss';
 
 import FlexBox from './components/FlexBox';
@@ -114,12 +114,12 @@ function Introduction({ isReadonly }: Props) {
         </div>
       </OverlayScrollbar>
       {!isReadonly && (
-        <ActionBar step={1} totalSteps={3}>
+        <ActionBar step={1} totalSteps={totalStepCount}>
           <Button
             title="general.next"
             type="primary"
             onClick={() => {
-              navigate(`../${steps.permissionsAndRoles}`);
+              navigate(`../${steps.permissions}`);
             }}
           />
         </ActionBar>

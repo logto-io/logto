@@ -8,7 +8,8 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import Introduction from './Introduction';
 import OrganizationInfo from './OrganizationInfo';
-import PermissionsAndRoles from './PermissionsAndRoles';
+import OrganizationPermissions from './OrganizationPermissions';
+import OrganizationRoles from './OrganizationRoles';
 import { steps } from './const';
 import * as styles from './index.module.scss';
 
@@ -30,7 +31,8 @@ function Guide() {
         <Routes>
           <Route index element={<Navigate replace to={steps.introduction} />} />
           <Route path={steps.introduction} element={<Introduction />} />
-          <Route path={steps.permissionsAndRoles} element={<PermissionsAndRoles />} />
+          <Route path={steps.permissions} element={<OrganizationPermissions />} />
+          <Route path={steps.roles} element={<OrganizationRoles />} />
           <Route path={steps.organizationInfo} element={<OrganizationInfo />} />
         </Routes>
       </div>
