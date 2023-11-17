@@ -41,12 +41,13 @@ const tenants = {
     subtitle:
       'Utwórz nowego najemcę, który ma izolowane zasoby i użytkowników. Dane hostowanej regionu i typy najemców nie mogą być modyfikowane po utworzeniu.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
+    /** UNTRANSLATED */
     development_description:
-      'Środowisko development jest głównie przeznaczone do testowania i nie powinno być używane w środowisku produkcyjnym.',
-    development_hint:
-      'Środowisko development jest głównie przeznaczone do testowania i nie powinno być używane w środowisku produkcyjnym.',
-    production_description:
-      'Produkcja to miejsce, gdzie projekt jest używany przez użytkowników końcowych i może wymagać płatnej subskrypcji.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Dostępny plan:',
     create_button: 'Utwórz najemcę',
     tenant_name_placeholder: 'Mój najemca',

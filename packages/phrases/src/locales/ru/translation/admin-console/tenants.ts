@@ -41,12 +41,13 @@ const tenants = {
     subtitle:
       'Создайте нового арендатора, чтобы разделить ресурсы и пользователей. Данные, размещенные в регионе, и типы арендаторов не могут быть изменены после создания.',
     tenant_usage_purpose: 'Для чего вы хотите использовать этот арендатор?',
+    /** UNTRANSLATED */
     development_description:
-      'Среда разработки в основном используется для тестирования и не должна использоваться в производственной среде.',
-    development_hint:
-      'Среда разработки в основном используется для тестирования и не должна использоваться в производственной среде.',
-    production_description:
-      'Производство - это место, где живое программное обеспечение используется конечными пользователями и может потребовать платной подписки.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Доступный план:',
     create_button: 'Создать арендатора',
     tenant_name_placeholder: 'Мой арендатор',

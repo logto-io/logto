@@ -43,12 +43,13 @@ const tenants = {
     subtitle:
       'İzole kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun. Verilerin barındırıldığı bölge ve kiracı türleri oluşturulduktan sonra değiştirilemez.',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
+    /** UNTRANSLATED */
     development_description:
-      'Geliştirme ortamı genellikle test için kullanılır ve üretim ortamında kullanılmamalıdır.',
-    development_hint:
-      'Geliştirme ortamı genellikle test için kullanılır ve üretim ortamında kullanılmamalıdır.',
-    production_description:
-      'Prod, canlı yazılımın son kullanıcılar tarafından kullanıldığı ve ücretli bir aboneliğin gerekebileceği yerdir.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Mevcut plan:',
     create_button: 'Kiracı oluştur',
     tenant_name_placeholder: 'Benim kiracım',

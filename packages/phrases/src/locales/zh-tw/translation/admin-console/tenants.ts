@@ -38,9 +38,13 @@ const tenants = {
     subtitle_deprecated: '建立新租戶以區分資源和使用者。',
     subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望將此租戶用於什麼目的？',
-    development_description: '開發環境主要用於測試，不適用於生產環境。',
-    development_hint: '開發環境主要用於測試，不適用於生產環境。',
-    production_description: '產品環境用於最終用戶使用的即時軟體，可能需要付費訂閱。',
+    /** UNTRANSLATED */
+    development_description:
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: '可用方案：',
     create_button: '建立租戶',
     tenant_name_placeholder: '我的租戶',

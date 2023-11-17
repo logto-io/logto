@@ -43,12 +43,13 @@ const tenants = {
     subtitle:
       'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
+    /** UNTRANSLATED */
     development_description:
-      'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und sollte nicht in einer Produktionsumgebung verwendet werden.',
-    development_hint:
-      'Die Entwicklungsumgebung wird hauptsächlich zum Testen verwendet und sollte nicht in einer Produktionsumgebung verwendet werden.',
-    production_description:
-      'Produktion ist der Ort, an dem Live-Software von Endbenutzern verwendet wird und möglicherweise ein kostenpflichtiges Abonnement erfordert.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Verfügbare Pläne:',
     create_button: 'Mieter erstellen',
     tenant_name_placeholder: 'Mein Mieter',
