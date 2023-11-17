@@ -60,22 +60,27 @@ const tenants = {
     create_button: 'Mieter erstellen',
     tenant_name_placeholder: 'Mein Mieter',
   },
-  notification: {
-    allow_pro_features_title:
-      'Sie können jetzt auf <span>alle Funktionen von Logto Pro</span> in Ihrer Entwicklungsumgebung zugreifen!',
-    allow_pro_features_description: 'Es ist komplett kostenlos, ohne Testphase – für immer!',
-    explore_all_features: 'Alle Funktionen erkunden',
-    impact_title: 'Hat das Auswirkungen auf mich?',
-    staging_env_hint:
-      'Ihr Mandanten-Label wurde von "<strong>Staging</strong>" in "<strong>Produktion</strong>" geändert, aber diese Änderung hat keine Auswirkungen auf Ihr aktuelles Setup.',
-    paid_tenant_hint_1:
-      'Wenn Sie sich für den Logto Hobbyplan anmelden, wird Ihr vorheriges "<strong>Entwicklung</strong>"-Mandanten-Tag in "<strong>Produktion</strong>" geändert, und dies hat keine Auswirkung auf Ihr bestehendes Setup.',
-    paid_tenant_hint_2:
-      'Wenn Sie sich noch in der Entwicklungsphase befinden, können Sie einen neuen Entwicklungsmandanten erstellen, um auf mehr Pro-Funktionen zuzugreifen.',
-    paid_tenant_hint_3:
-      'Wenn Sie sich in der Produktionsphase oder in einer Produktionsumgebung befinden, müssen Sie sich immer noch für einen spezifischen Plan anmelden. Sie müssen also im Moment nichts tun.',
-    paid_tenant_hint_4:
-      'Zögern Sie nicht, uns zu kontaktieren, wenn Sie Hilfe benötigen! Vielen Dank, dass Sie Logto gewählt haben!',
+  dev_tenant_migration: {
+    /** UNTRANSLATED */
+    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    /** UNTRANSLATED */
+    affect_title: 'How does this affect you?',
+    /** UNTRANSLATED */
+    hint_1:
+      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
+    /** UNTRANSLATED */
+    hint_2:
+      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
+    /** UNTRANSLATED */
+    hint_3: "Don't worry, all your other settings will remain the same.",
+    /** UNTRANSLATED */
+    about_tenant_type: 'About tenant type',
+  },
+  dev_tenant_notification: {
+    /** UNTRANSLATED */
+    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    /** UNTRANSLATED */
+    description: "It's completely free, with no trial period – forever!",
   },
   delete_modal: {
     title: 'Mieter löschen',

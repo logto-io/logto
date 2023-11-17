@@ -22,12 +22,12 @@ function DevelopmentTenantNotification() {
       <Image className={styles.image} />
       <div className={styles.content}>
         <div className={styles.title}>
-          <Trans components={{ span: <span className={styles.highlight} /> }}>
-            {t('tenants.notification.allow_pro_features_title')}
+          <Trans components={{ a: <span className={styles.highlight} /> }}>
+            {t('tenants.dev_tenant_notification.title')}
           </Trans>
         </div>
         <div className={styles.description}>
-          <DynamicT forKey="tenants.notification.allow_pro_features_description" />
+          <DynamicT forKey="tenants.dev_tenant_notification.description" />
         </div>
       </div>
       <LinkButton

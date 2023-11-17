@@ -1,4 +1,4 @@
-import { Theme, TenantTag } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import { useCallback } from 'react';
 import Confetti from 'react-confetti';
 import { Trans, useTranslation } from 'react-i18next';
@@ -7,22 +7,16 @@ import ReactModal from 'react-modal';
 import CongratsDark from '@/assets/images/congrats-dark.svg';
 import Congrats from '@/assets/images/congrats.svg';
 import Fireworks from '@/assets/images/tenant-modal-fireworks.svg';
-import { contactEmailLink } from '@/consts';
-import Button from '@/ds-components/Button';
-import DangerousRaw from '@/ds-components/DangerousRaw';
+import { envTagsFeatureLink } from '@/consts';
+import Button, { LinkButton } from '@/ds-components/Button';
+import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import useConfigs from '@/hooks/use-configs';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTheme from '@/hooks/use-theme';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import DevelopmentTenantFeatures from './DevelopmentTenantFeatures';
-import DevelopmentTenantMigrationHint from './DevelopmentTenantMigrationHint';
 import * as styles from './index.module.scss';
-
-const isFreeTenantWithDevelopmentOrProductionEnvTag = (
-  originalTenantTag: TenantTag,
-  isPaidTenant: boolean
-) => !isPaidTenant && [TenantTag.Development, TenantTag.Production].includes(originalTenantTag);
 
 /**
  * This modal is used to notify the user that the tenant env has been migrated.
@@ -30,11 +24,7 @@ const isFreeTenantWithDevelopmentOrProductionEnvTag = (
  * In our new development tenant feature, the old tenant env `staging` is deprecated,
  * we migrated the existing paid tenant's env to 'production', and the existing free 'staging' tenant's env to 'production'.
  *
- * For the original free tenant:
- *  - If the tenant env is 'dev' or 'production', we will show the development tenant's available feature list.
- *  - If the tenant env is 'staging', we will show the migration hint to notify the user that the tenant env has been migrated to 'production'.
- *
- * For the original paid tenant, we will show the migration hint to notify the user that the tenant env has been migrated to 'production'.
+ * For the original paid and free staging tenants, we will show the migration hint to notify the user that the tenant env has been migrated to 'production'.
  */
 function TenantEnvMigrationModal() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -42,6 +32,7 @@ function TenantEnvMigrationModal() {
   const HeaderIcon = theme === Theme.Light ? Congrats : CongratsDark;
   const { configs, updateConfigs } = useConfigs();
   const { developmentTenantMigrationNotification: migrationData } = configs ?? {};
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const onClose = useCallback(async () => {
     if (!migrationData) {
@@ -59,13 +50,6 @@ function TenantEnvMigrationModal() {
     return null;
   }
 
-  const { tag: originalTenantTag, isPaidTenant } = migrationData;
-
-  const shouldDisplayDevelopmentTenantFeatureList = isFreeTenantWithDevelopmentOrProductionEnvTag(
-    originalTenantTag,
-    isPaidTenant
-  );
-
   return (
     <ReactModal
       isOpen
@@ -78,54 +62,41 @@ function TenantEnvMigrationModal() {
         <ModalLayout
           isWordWrapEnabled
           headerIcon={<HeaderIcon className={styles.headerIcon} />}
-          title={
-            <DangerousRaw>
-              <Trans components={{ span: <span className={styles.highlight} /> }}>
-                {t('tenants.notification.allow_pro_features_title')}
-              </Trans>
-            </DangerousRaw>
-          }
-          subtitle="tenants.notification.allow_pro_features_description"
+          title="tenants.dev_tenant_migration.title"
           footer={
             <>
-              {!shouldDisplayDevelopmentTenantFeatureList && (
-                <a href={contactEmailLink} className={styles.linkButton} rel="noopener">
-                  <Button title="general.contact_us_action" size="large" />
-                </a>
-              )}
-              <Button
-                title={
-                  shouldDisplayDevelopmentTenantFeatureList
-                    ? 'tenants.notification.explore_all_features'
-                    : 'general.got_it'
-                }
+              <LinkButton
+                targetBlank
+                title="tenants.dev_tenant_migration.about_tenant_type"
                 size="large"
-                type="primary"
-                onClick={onClose}
+                href={getDocumentationUrl(envTagsFeatureLink)}
               />
+              <Button title="general.got_it" size="large" type="primary" onClick={onClose} />
             </>
           }
           onClose={onClose}
         >
           <div className={styles.content}>
-            {isPaidTenant && <DevelopmentTenantMigrationHint type="paidTenant" />}
-            {!isPaidTenant &&
-              [TenantTag.Development, TenantTag.Production].includes(originalTenantTag) && (
-                <DevelopmentTenantFeatures />
-              )}
-            {!isPaidTenant && originalTenantTag === TenantTag.Staging && (
-              <DevelopmentTenantMigrationHint type="freeStagingTenant" />
-            )}
+            <div className={styles.title}>
+              <DynamicT forKey="tenants.dev_tenant_migration.affect_title" />
+            </div>
+            <div className={styles.hint}>
+              <div>
+                <Trans components={{ strong: <span className={styles.strong} /> }}>
+                  {t('tenants.dev_tenant_migration.hint_1')}
+                </Trans>
+              </div>
+              <div>
+                <Trans components={{ strong: <span className={styles.strong} /> }}>
+                  {t('tenants.dev_tenant_migration.hint_2')}
+                </Trans>
+              </div>
+              <div>{t('tenants.dev_tenant_migration.hint_3')}</div>
+            </div>
           </div>
         </ModalLayout>
         <div className={styles.fireworks}>
-          <Fireworks
-            className={
-              !isPaidTenant && originalTenantTag === TenantTag.Staging
-                ? styles.stagingFireworksImage
-                : styles.fireworksImage
-            }
-          />
+          <Fireworks className={styles.fireworksImage} />
         </div>
       </div>
       <Confetti recycle={false} />

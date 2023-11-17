@@ -60,22 +60,27 @@ const tenants = {
     create_button: 'Crea tenant',
     tenant_name_placeholder: 'Il mio tenant',
   },
-  notification: {
-    allow_pro_features_title:
-      'Ora puoi accedere a <span>tutte le funzionalità di Logto Pro</span> nel tuo tenant di sviluppo!',
-    allow_pro_features_description: 'È completamente gratuito, senza periodo di prova, per sempre!',
-    explore_all_features: 'Esplora tutte le funzionalità',
-    impact_title: 'Questo ha un impatto su di me?',
-    staging_env_hint:
-      'L\'etichetta del tuo inquilino è stata aggiornata da "<strong>Staging</strong>" a "<strong>Produzione</strong>", ma questa modifica non influenzerà la tua configurazione attuale.',
-    paid_tenant_hint_1:
-      'Con l\'iscrizione al piano Logto Hobby, l\'etichetta precedente dell\'inquilino "<strong>Sviluppo</strong>" passerà a "<strong>Produzione</strong>", senza alcun effetto sulla configurazione esistente.',
-    paid_tenant_hint_2:
-      'Se sei ancora nella fase di sviluppo, puoi creare un nuovo tenant di sviluppo per accedere a più funzionalità professionali.',
-    paid_tenant_hint_3:
-      "Se sei nella fase di produzione o in un ambiente di produzione, è necessario sottoscrivere un piano specifico, quindi non c'è nulla che devi fare in questo momento.",
-    paid_tenant_hint_4:
-      'Non esitare a contattarci se hai bisogno di aiuto! Grazie per aver scelto Logto!',
+  dev_tenant_migration: {
+    /** UNTRANSLATED */
+    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    /** UNTRANSLATED */
+    affect_title: 'How does this affect you?',
+    /** UNTRANSLATED */
+    hint_1:
+      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
+    /** UNTRANSLATED */
+    hint_2:
+      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
+    /** UNTRANSLATED */
+    hint_3: "Don't worry, all your other settings will remain the same.",
+    /** UNTRANSLATED */
+    about_tenant_type: 'About tenant type',
+  },
+  dev_tenant_notification: {
+    /** UNTRANSLATED */
+    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    /** UNTRANSLATED */
+    description: "It's completely free, with no trial period – forever!",
   },
   delete_modal: {
     title: 'Elimina tenant',
