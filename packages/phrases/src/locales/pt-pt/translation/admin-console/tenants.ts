@@ -43,12 +43,13 @@ const tenants = {
     subtitle:
       'Crie um novo locatário que tenha recursos e utilizadores isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que pretende utilizar este inquilino?',
+    /** UNTRANSLATED */
     development_description:
-      'O ambiente de desenvolvimento é principalmente utilizado para testes e não deve ser utilizado em ambiente de produção.',
-    development_hint:
-      'O ambiente de desenvolvimento é principalmente utilizado para testes e não deve ser utilizado em ambiente de produção.',
-    production_description:
-      'A produção é onde o software ao vivo é utilizado pelos utilizadores finais e pode exigir uma subscrição paga.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',

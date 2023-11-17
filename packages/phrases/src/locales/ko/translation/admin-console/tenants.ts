@@ -41,12 +41,13 @@ const tenants = {
     subtitle:
       '분리된 리소스와 사용자를 가진 새 테넌트를 만듭니다. 데이터가 호스팅되는 지역 및 테넌트 유형은 생성 후에 수정할 수 없습니다.',
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',
+    /** UNTRANSLATED */
     development_description:
-      '개발 환경은 주로 테스트 용도로 사용되며 프로덕션 환경에서 사용해서는 안됩니다.',
-    development_hint:
-      '개발 환경은 주로 테스트 용도로 사용되며 프로덕션 환경에서 사용해서는 안됩니다.',
-    production_description:
-      '프로덕션은 실제 사용자에 의해 사용되는 라이브 소프트웨어가 포함되며 유료 구독이 필요할 수 있습니다.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: '사용 가능한 요금제:',
     create_button: '테넌트 만들기',
     tenant_name_placeholder: '내 테넌트',

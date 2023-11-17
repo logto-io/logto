@@ -41,12 +41,13 @@ const tenants = {
     subtitle:
       '分離されたリソースとユーザーを持つ新しいテナントを作成します。データがホストされる地域とテナントの種類は作成後に変更できません。',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
+    /** UNTRANSLATED */
     development_description:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    development_hint:
-      'Development environment is mainly used for testing and should not use in production environment.',
-    production_description:
-      'Production is where live software is used by end-users and may require a paid subscription.',
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: 'Available plan:',
     create_button: 'テナントを作成する',
     tenant_name_placeholder: '私のテナント',

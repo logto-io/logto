@@ -38,9 +38,13 @@ const tenants = {
     subtitle_deprecated: '创建新的租户以分隔资源和用户。',
     subtitle: '创建一个具有隔离资源和用户的新租户。数据托管的区域和租户类型在创建后无法修改。',
     tenant_usage_purpose: '您想要使用此租户做什么?',
-    development_description: '开发环境主要用于测试，不应在生产环境中使用。',
-    development_hint: '开发环境主要用于测试，不应在生产环境中使用。',
-    production_description: '产品是最终用户使用的实际软件，可能需要付费订阅。',
+    /** UNTRANSLATED */
+    development_description:
+      "For testing only and shouldn't be used in production. No subscription is required.",
+    /** UNTRANSLATED */
+    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
+    /** UNTRANSLATED */
+    production_description: 'For use by end-users and may require a paid subscription.',
     available_plan: '可用方案：',
     create_button: '创建租户',
     tenant_name_placeholder: '我的租户',
