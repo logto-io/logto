@@ -7,6 +7,7 @@ import ArrowRight from '@/assets/icons/arrow-right.svg';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanQuotaList from '@/components/PlanQuotaList';
+import { pricingLink } from '@/consts';
 import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
 import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -102,9 +103,10 @@ function PlanCardItem({ plan, onSelect }: Props) {
           <div className={styles.tip}>
             <TextLink
               isTrailingIcon
-              href="https://logto.io/pricing"
+              href={pricingLink}
               icon={<ArrowRight className={styles.linkIcon} />}
               target="_blank"
+              rel="noopener"
               className={styles.link}
             >
               <DynamicT forKey="upsell.create_tenant.view_all_features" />

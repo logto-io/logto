@@ -16,28 +16,21 @@ type Props = AnchorHTMLAttributes<HTMLAnchorElement> &
 function TextLink({ to, children, icon, isTrailingIcon = false, className, ...rest }: Props) {
   const { getTo } = useTenantPathname();
 
+  const styleClassNames = classNames(styles.link, isTrailingIcon && styles.trailingIcon, className);
+
   if (to) {
     return (
-      <Link
-        to={getTo(to)}
-        className={classNames(styles.link, isTrailingIcon && styles.trailingIcon, className)}
-        {...rest}
-      >
+      <Link to={getTo(to)} className={styleClassNames} {...rest}>
         {icon}
-        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-        <>{children}</>
+        {children}
       </Link>
     );
   }
 
   return (
-    <a
-      className={classNames(styles.link, isTrailingIcon && styles.trailingIcon, className)}
-      {...rest}
-    >
+    <a className={styleClassNames} {...rest}>
       {icon}
-      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-      <>{children}</>
+      {children}
     </a>
   );
 }
