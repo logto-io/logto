@@ -1,6 +1,6 @@
-import useSocialSignInListener from '@/hooks/use-social-sign-in-listener';
-
 import SignIn from '../SignIn';
+
+import useSocialSignInListener from './use-social-sign-in-listener';
 
 /**
  * Social sign in callback page

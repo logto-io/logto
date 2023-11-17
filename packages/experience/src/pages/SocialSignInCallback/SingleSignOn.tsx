@@ -1,6 +1,6 @@
-import useSingleSignOnListener from '@/hooks/use-single-sign-on-listener';
-
 import SignIn from '../SignIn';
+
+import useSingleSignOnListener from './use-single-sign-on-listener';
 
 /**
  * Single sign-on callback page

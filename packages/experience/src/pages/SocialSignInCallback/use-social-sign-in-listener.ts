@@ -6,18 +6,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
 
 import { signInWithSocial } from '@/apis/interaction';
+import useApi from '@/hooks/use-api';
+import useErrorHandler from '@/hooks/use-error-handler';
+import type { ErrorHandlers } from '@/hooks/use-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
+import { useSieMethods } from '@/hooks/use-sie';
+import useSocialRegister from '@/hooks/use-social-register';
+import useTerms from '@/hooks/use-terms';
+import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
-
-import useApi from './use-api';
-import useErrorHandler from './use-error-handler';
-import type { ErrorHandlers } from './use-error-handler';
-import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
-import { useSieMethods } from './use-sie';
-import useSocialRegister from './use-social-register';
-import useTerms from './use-terms';
-import useToast from './use-toast';
 
 const useSocialSignInListener = (connectorId: string) => {
   const { setToast } = useToast();

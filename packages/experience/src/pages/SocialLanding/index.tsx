@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import SocialLandingContainer from '@/containers/SocialLanding';
-import useSocialLandingHandler from '@/hooks/use-social-landing-handler';
 
 import * as styles from './index.module.scss';
+import useSocialLandingHandler from './use-social-landing-handler';
 
 type Parameters = {
   connectorId: string;

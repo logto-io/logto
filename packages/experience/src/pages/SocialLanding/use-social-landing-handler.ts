@@ -1,11 +1,10 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import useToast from '@/hooks/use-toast';
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 import { storeCallbackLink } from '@/utils/social-connectors';
-
-import useToast from './use-toast';
 
 const useSocialLandingHandler = () => {
   const [loading, setLoading] = useState(true);

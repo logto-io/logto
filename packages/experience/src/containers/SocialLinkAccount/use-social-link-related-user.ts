@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 
 import { bindSocialRelatedUser } from '@/apis/interaction';
-
-import useApi from './use-api';
-import useErrorHandler from './use-error-handler';
-import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
+import useApi from '@/hooks/use-api';
+import useErrorHandler from '@/hooks/use-error-handler';
+import usePreSignInErrorHandler from '@/hooks/use-pre-sign-in-error-handler';
 
 const useBindSocialRelatedUser = () => {
   const handleError = useErrorHandler();

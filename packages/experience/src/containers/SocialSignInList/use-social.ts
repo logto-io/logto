@@ -3,11 +3,10 @@ import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getSocialAuthorizationUrl } from '@/apis/interaction';
+import useApi from '@/hooks/use-api';
+import useErrorHandler from '@/hooks/use-error-handler';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
-
-import useApi from './use-api';
-import useErrorHandler from './use-error-handler';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);

@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
 import { singleSignOnAuthorization } from '@/apis/single-sign-on';
+import useApi from '@/hooks/use-api';
+import useErrorHandler from '@/hooks/use-error-handler';
+import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
-
-import useApi from './use-api';
-import useErrorHandler from './use-error-handler';
-import useToast from './use-toast';
 
 /**
  * Single Sign On authentication callback handler.

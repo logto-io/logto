@@ -3,10 +3,10 @@ import classNames from 'classnames';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
-import useSocial from '@/hooks/use-social';
 import { getLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
+import useSocial from './use-social';
 
 type Props = {
   className?: string;
