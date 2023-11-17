@@ -13,6 +13,7 @@ import {
   patchSsoConnectorById,
   patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
+import { SsoProviderName } from '#src/constants.js';
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -80,7 +81,7 @@ describe('post sso-connectors', () => {
         connectorName: 'test',
         config: {
           issuer: 23,
-          entityId: 123,
+          signInEndpoint: 123,
         },
       })
     ).rejects.toThrow(HTTPError);
@@ -236,7 +237,7 @@ describe('patch sso-connector by id', () => {
       patchSsoConnectorById(id, {
         config: {
           issuer: 23,
-          entityId: 123,
+          signInEndpoint: 123,
         },
       })
     ).rejects.toThrow(HTTPError);
@@ -264,6 +265,11 @@ describe('patch sso-connector by id', () => {
       expect(connector).toHaveProperty('config', config);
       expect(connector).toHaveProperty('syncProfile', true);
 
+      // Since we've provided a valid metadata content, check if the `providerConfig` is returned.
+      if (providerName === SsoProviderName.SAML) {
+        expect(connector.providerConfig).toBeDefined();
+      }
+
       await deleteSsoConnectorById(id);
     }
   );
@@ -287,7 +293,7 @@ describe('patch sso-connector config by id', () => {
     await expect(
       patchSsoConnectorConfigById(id, {
         issuer: 23,
-        entityId: 123,
+        signInEndpoint: 123,
       })
     ).rejects.toThrow(HTTPError);
 

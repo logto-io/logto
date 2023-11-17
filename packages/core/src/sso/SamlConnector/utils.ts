@@ -1,34 +1,36 @@
 import * as validator from '@authenio/samlify-node-xmllint';
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type Optional, conditional } from '@silverhand/essentials';
+import { type GlobalValues } from '@logto/shared';
+import { type Optional, conditional, appendPath } from '@silverhand/essentials';
 import { got } from 'got';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
+import { ssoPath } from '#src/routes/interaction/const.js';
+
 import {
-  samlMetadataGuard,
-  type SamlMetadata,
   type SamlConnectorConfig,
-  type SamlConfig,
   defaultAttributeMapping,
   type CustomizableAttributeMap,
   type AttributeMap,
   extendedSocialUserInfoGuard,
   type ExtendedSocialUserInfo,
+  type SamlIdentityProviderMetadata,
+  samlIdentityProviderMetadataGuard,
 } from '../types/saml.js';
 
 type ESamlHttpRequest = Parameters<saml.ServiceProviderInstance['parseLoginResponse']>[2];
 
 /**
- * Parse XML-format raw SAML metadata and return the parsed SAML metadata.
+ * Return the parsed SAML metadata using SAML identity provider initiated with SAML metadata.
  *
- * @param xml Raw SAML metadata in XML format.
- * @returns The parsed SAML metadata.
+ * @param idP SAML identity provider instance.
+ *
+ * @returns The parsed SAML IdP metadata.
  */
-export const parseXmlMetadata = (xml: string): SamlMetadata => {
-  // eslint-disable-next-line new-cap
-  const idP = saml.IdentityProvider({ metadata: xml });
-
+export const parseXmlMetadata = (
+  idP: saml.IdentityProviderInstance
+): SamlIdentityProviderMetadata => {
   // Used to check whether xml content is valid in format.
   saml.setSchemaValidator(validator);
 
@@ -45,20 +47,15 @@ export const parseXmlMetadata = (xml: string): SamlMetadata => {
 
   const rawSamlMetadata = {
     entityId: idP.entityMeta.getEntityID(),
-    /**
-     * See implementation in `samlify` {@link https://github.com/tngan/samlify/blob/55f845da60b18d40668885c7f7e71ed0967ef67f/src/entity.ts#L88}.
-     */
-    nameIdFormat: idP.entitySetting.nameIDFormat,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     signInEndpoint: singleSignOnService,
-    signingAlgorithm: idP.entitySetting.requestSignatureAlgorithm,
     // The type inference of the return type of `getX509Certificate` is any, will be guarded by later zod parser if it is not string-typed.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     x509Certificate: idP.entityMeta.getX509Certificate(saml.Constants.wording.certUse.signing),
   };
 
   // The return type of `samlify`
-  const result = samlMetadataGuard.safeParse(rawSamlMetadata);
+  const result = samlIdentityProviderMetadataGuard.safeParse(rawSamlMetadata);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
@@ -73,7 +70,7 @@ export const parseXmlMetadata = (xml: string): SamlMetadata => {
  * @param config The raw SAML SSO connector config.
  * @returns The corresponding IdP's raw SAML metadata (in XML format).
  */
-export const getRawSamlMetadata = async (
+export const getSamlMetadataXml = async (
   config: SamlConnectorConfig
 ): Promise<Optional<string>> => {
   const { metadata, metadataUrl } = config;
@@ -129,19 +126,16 @@ export const getExtendedUserInfoFromRawUserProfile = (
  * Handle the SAML assertion from the identity provider.
  *
  * @param request The SAML assertion sent by IdP (after getting the SAML auth request).
- * @param config The full config of the SAML SSO connector.
+ * @param identityProvider The SAML identity provider instance (where we can get parsed IdP metadata).
+ * @param metadata The selected part of metadata of the SAML SSO connector.
  * @returns The returned info contained in the SAML assertion.
  */
 export const handleSamlAssertion = async (
   request: ESamlHttpRequest,
-  config: SamlConfig & { idpMetadataXml: string }
+  identityProvider: saml.IdentityProviderInstance,
+  metadata: { entityId: string; x509Certificate: string }
 ): Promise<Record<string, unknown>> => {
-  const { entityId: entityID, x509Certificate, idpMetadataXml } = config;
-
-  // eslint-disable-next-line new-cap
-  const identityProvider = saml.IdentityProvider({
-    metadata: idpMetadataXml,
-  });
+  const { entityId: entityID, x509Certificate } = metadata;
 
   // eslint-disable-next-line new-cap
   const serviceProvider = saml.ServiceProvider({
@@ -185,3 +179,37 @@ export const attributeMappingPostProcessor = (
     ...conditional(attributeMapping && attributeMapping),
   };
 };
+
+/**
+ * Generate the entity id for the current SAML SSO connector using admin console path, current tenant id and connector id.
+ * Used URL-like entity id here since some identity providers will check the format of the entity id.
+ * See {@link https://spaces.at.internet2.edu/display/federation/saml-metadata-entityid} to know more details about how should `entityId` look like.
+ *
+ * @param globalValues Global setups
+ * @param tenantId Current tenant id.
+ * @param connectorId Current connector id.
+ *
+ * @returns Entity id for the current SAML SSO connector.
+ */
+export const buildSpEntityId = (
+  globalValues: GlobalValues,
+  tenantId: string,
+  connectorId: string
+) => {
+  const { isCloud, cloudUrlSet, adminUrlSet } = globalValues;
+  return appendPath(
+    isCloud ? cloudUrlSet.endpoint : adminUrlSet.endpoint,
+    tenantId,
+    `/enterprise-sso/${connectorId}`
+  ).toString();
+};
+
+/**
+ * Generate the assertion consumer service url for the current SAML SSO connector using current base url and connector id.
+ *
+ * @param baseUrl Base endpoint for the current service
+ * @param ssoConnectorId Current enterprise SSO connector id
+ * @returns
+ */
+export const buildAssertionConsumerServiceUrl = (baseUrl: URL, ssoConnectorId: string) =>
+  appendPath(baseUrl, `api/authn/${ssoPath}/saml/${ssoConnectorId}`).toString();
