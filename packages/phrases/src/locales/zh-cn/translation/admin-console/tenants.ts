@@ -56,19 +56,27 @@ const tenants = {
     create_button: '创建租户',
     tenant_name_placeholder: '我的租户',
   },
-  notification: {
-    allow_pro_features_title: '您现在可以在您的开发租户中访问 <span>全部Logto Pro功能</span>！',
-    allow_pro_features_description: '完全免费，没有试用期-永远！',
-    explore_all_features: '探索所有功能',
-    impact_title: '这对我有影响吗？',
-    staging_env_hint:
-      '您的租户标签已从"<strong>预发布</strong>"更改为"<strong>产品</strong>"，但此更改不会影响您当前的设置。',
-    paid_tenant_hint_1:
-      '当您订阅Logto Hobby计划时，您以前的"<strong>开发</strong>"租户标签将变更为"<strong>产品</strong>"，这不会影响您的现有设置。',
-    paid_tenant_hint_2: '如果您仍处于开发阶段，您可以创建一个新的开发租户以访问更多专业功能。',
-    paid_tenant_hint_3:
-      '如果您处于生产阶段或生产环境中，您仍然需要订阅特定的计划，因此此时不需要进行任何操作。',
-    paid_tenant_hint_4: '如需帮助，请随时联系我们！感谢您选择Logto！',
+  dev_tenant_migration: {
+    /** UNTRANSLATED */
+    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    /** UNTRANSLATED */
+    affect_title: 'How does this affect you?',
+    /** UNTRANSLATED */
+    hint_1:
+      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
+    /** UNTRANSLATED */
+    hint_2:
+      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
+    /** UNTRANSLATED */
+    hint_3: "Don't worry, all your other settings will remain the same.",
+    /** UNTRANSLATED */
+    about_tenant_type: 'About tenant type',
+  },
+  dev_tenant_notification: {
+    /** UNTRANSLATED */
+    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    /** UNTRANSLATED */
+    description: "It's completely free, with no trial period – forever!",
   },
   delete_modal: {
     title: '删除租户',

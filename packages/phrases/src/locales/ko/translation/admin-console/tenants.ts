@@ -59,21 +59,27 @@ const tenants = {
     create_button: '테넌트 만들기',
     tenant_name_placeholder: '내 테넌트',
   },
-  notification: {
-    allow_pro_features_title:
-      '이제 개발 테넌트에서 <span>Logto Pro의 모든 기능</span>에 액세스할 수 있습니다!',
-    allow_pro_features_description: '완전히 무료이며 평생 무료로 이용할 수 있습니다!',
-    explore_all_features: '모든 기능 살펴보기',
-    impact_title: '이게 나에게 어떤 영향을 미칠까요?',
-    staging_env_hint:
-      '테넌트 라벨이 "<strong>스테이징</strong>"에서 "<strong>프로드</strong>"로 업데이트되었지만, 이 변경으로 현재 설정에 영향을주지는 않습니다.',
-    paid_tenant_hint_1:
-      'Logto Hobby 플랜에 가입하면 이전의 "<strong>개발</strong>" 테넌트 태그가 "<strong>프로드</strong>"로 전환되며 현재 설정에는 영향을 주지 않습니다.',
-    paid_tenant_hint_2:
-      '아직 개발 중이면 새로운 개발 테넌트를 만들어 더 많은 프로 기능에 액세스할 수 있습니다.',
-    paid_tenant_hint_3:
-      '프로덕션 단계이거나 프로덕션 환경에서는 특정 플랜에 가입해야 하므로이 시점에서 할 일이 없습니다.',
-    paid_tenant_hint_4: '도움이 필요하면 언제든지 문의해주세요! Logto 선택해 주셔서 감사합니다!',
+  dev_tenant_migration: {
+    /** UNTRANSLATED */
+    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    /** UNTRANSLATED */
+    affect_title: 'How does this affect you?',
+    /** UNTRANSLATED */
+    hint_1:
+      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
+    /** UNTRANSLATED */
+    hint_2:
+      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
+    /** UNTRANSLATED */
+    hint_3: "Don't worry, all your other settings will remain the same.",
+    /** UNTRANSLATED */
+    about_tenant_type: 'About tenant type',
+  },
+  dev_tenant_notification: {
+    /** UNTRANSLATED */
+    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    /** UNTRANSLATED */
+    description: "It's completely free, with no trial period – forever!",
   },
   delete_modal: {
     title: '테넌트 삭제',

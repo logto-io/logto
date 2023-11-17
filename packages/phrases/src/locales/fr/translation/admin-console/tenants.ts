@@ -61,23 +61,27 @@ const tenants = {
     create_button: 'Créer un locataire',
     tenant_name_placeholder: 'Mon locataire',
   },
-  notification: {
-    allow_pro_features_title:
-      'Vous pouvez désormais accéder à <span>toutes les fonctionnalités de Logto Pro</span> dans votre locataire de développement !',
-    allow_pro_features_description:
-      "C'est entièrement gratuit, sans période d'essai - pour toujours !",
-    explore_all_features: 'Explorer toutes les fonctionnalités',
-    impact_title: 'Cela a-t-il un impact sur moi ?',
-    staging_env_hint:
-      'Votre étiquette de locataire a été mise à jour de "<strong>Staging</strong>" à "<strong>Production</strong>", mais ce changement n\'affectera pas votre configuration actuelle.',
-    paid_tenant_hint_1:
-      'En souscrivant au plan Logto Hobby, votre balise de locataire "<strong>Développement</strong>" passera à "<strong>Production</strong>", et cela n\'affectera pas votre configuration existante.',
-    paid_tenant_hint_2:
-      'Si vous êtes toujours au stade de développement, vous pouvez créer un nouveau locataire de développement pour accéder à davantage de fonctionnalités professionnelles.',
-    paid_tenant_hint_3:
-      "Si vous vous trouvez au stade de production ou dans un environnement de production, vous devez toujours souscrire à un abonnement spécifique. Vous n'avez donc rien à faire pour le moment.",
-    paid_tenant_hint_4:
-      "N'hésitez pas à nous contacter si vous avez besoin d'aide! Merci d'avoir choisi Logto!",
+  dev_tenant_migration: {
+    /** UNTRANSLATED */
+    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    /** UNTRANSLATED */
+    affect_title: 'How does this affect you?',
+    /** UNTRANSLATED */
+    hint_1:
+      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
+    /** UNTRANSLATED */
+    hint_2:
+      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
+    /** UNTRANSLATED */
+    hint_3: "Don't worry, all your other settings will remain the same.",
+    /** UNTRANSLATED */
+    about_tenant_type: 'About tenant type',
+  },
+  dev_tenant_notification: {
+    /** UNTRANSLATED */
+    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    /** UNTRANSLATED */
+    description: "It's completely free, with no trial period – forever!",
   },
   delete_modal: {
     title: 'Supprimer le locataire',
