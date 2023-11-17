@@ -1,3 +1,4 @@
+import { type SocialUserInfo } from '@logto/connector-kit';
 import { type IdentifierPayload } from '@logto/schemas';
 import { type Context } from 'koa';
 import type Provider from 'oidc-provider';
@@ -15,10 +16,14 @@ import assertThat from '#src/utils/assert-that.js';
 // Guard the SSO only email identifier
 export const verifySsoOnlyEmailIdentifier = async (
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  identifier: IdentifierPayload
+  identifier: IdentifierPayload | SocialUserInfo
 ) => {
   // TODO: @simeng-li remove the dev features check when the SSO feature is released
-  if (!('email' in identifier) || !EnvSet.values.isDevFeaturesEnabled) {
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
+  if (!('email' in identifier) || !identifier.email) {
     return;
   }
 

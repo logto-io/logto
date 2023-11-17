@@ -17,6 +17,10 @@ await mockEsmWithActual('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
+const { verifySsoOnlyEmailIdentifier } = mockEsm('../utils/single-sign-on-guard.js', () => ({
+  verifySsoOnlyEmailIdentifier: jest.fn(),
+}));
+
 const { verifyIdentifierByVerificationCode } = mockEsm(
   '../utils/verification-code-validation.js',
   () => ({
@@ -176,6 +180,22 @@ describe('identifier verification', () => {
       connectorId: identifier.connectorId,
       userInfo: { id: 'foo' },
     });
+  });
+
+  it('should throw if social email is SSO only', async () => {
+    const identifier = { connectorId: 'logto', connectorData: {} };
+    const useInfo = { id: 'foo', email: 'foo@example.com' };
+
+    verifySsoOnlyEmailIdentifier.mockRejectedValueOnce(new RequestError('session.sso_enabled'));
+    verifySocialIdentity.mockResolvedValueOnce(useInfo);
+
+    await expect(async () =>
+      identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
+    ).rejects.toMatchError(new RequestError('session.sso_enabled'));
+
+    expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, tenant);
+    expect(verifySsoOnlyEmailIdentifier).toBeCalledWith(tenant.libraries.ssoConnectors, useInfo);
+    expect(findUserByIdentifier).not.toBeCalled();
   });
 
   it('verified social email', async () => {
