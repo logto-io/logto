@@ -1,14 +1,17 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
 
+import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
+import { useSieMethods } from '@/hooks/use-sie';
 import { UserFlow } from '@/types';
 
 import useRegisterWithUsername from './use-register-with-username';
 
-// TODO: extract the errorMessage and clear method from useRegisterWithUsername and useSendVerificationCode
-
 const useOnSubmit = () => {
+  const { ssoConnectors } = useSieMethods();
+  const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
+
   const {
     errorMessage: usernameRegisterErrorMessage,
     clearErrorMessage: clearUsernameRegisterErrorMessage,
@@ -34,9 +37,18 @@ const useOnSubmit = () => {
         return;
       }
 
+      // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
+      if (identifier === SignInIdentifier.Email && ssoConnectors.length > 0) {
+        const result = await checkSingleSignOn(value);
+
+        if (result) {
+          return;
+        }
+      }
+
       await sendVerificationCode({ identifier, value });
     },
-    [registerWithUsername, sendVerificationCode]
+    [checkSingleSignOn, registerWithUsername, sendVerificationCode, ssoConnectors.length]
   );
 
   return {
