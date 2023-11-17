@@ -4,8 +4,14 @@ import * as saml from 'samlify';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { ssoPath } from '#src/routes/interaction/const.js';
 
-import { type SamlConfig, type SamlConnectorConfig, samlMetadataGuard } from '../types/saml.js';
+import {
+  type SamlConfig,
+  type SamlConnectorConfig,
+  samlMetadataGuard,
+  type ExtendedSocialUserInfo,
+} from '../types/saml.js';
 
 import {
   parseXmlMetadata,
@@ -23,7 +29,7 @@ import {
  * All the SAML single sign-on connector should extend this class.
  *
  * @property config The SAML connector config
- * @property acsUrl The SAML connector's assertion consumer service URL
+ * @property acsUrl The SAML connector's assertion consumer service URL {@link file://src/routes/authn.ts}
  * @property _rawSamlMetadata The cached raw SAML metadata (in XML-format) from the raw SAML SSO connector config
  * @property _parsedSamlMetadata The cached parsed SAML metadata from the raw SAML SSO connector config
  * @property _samlAssertionContent The cached parsed SAML assertion from IdP (with attribute mapping applied)
@@ -45,8 +51,7 @@ class SamlConnector {
   ) {
     this.acsUrl = appendPath(
       getTenantEndpoint(tenantId, EnvSet.values),
-      // TODO: update this endpoint
-      `api/authn/saml/sso/${ssoConnectorId}`
+      `api/authn/${ssoPath}/saml/${ssoConnectorId}`
     ).toString();
   }
 
@@ -93,7 +98,7 @@ class SamlConnector {
    *
    * @returns The parsed SAML assertion from IdP (with attribute mapping applied).
    */
-  async parseSamlAssertion(assertion: Record<string, unknown>) {
+  async parseSamlAssertion(assertion: Record<string, unknown>): Promise<ExtendedSocialUserInfo> {
     const parsedConfig = await this.getSamlConfig();
     const profileMap = attributeMappingPostProcessor(parsedConfig.attributeMapping);
     const idpMetadataXml = await this.getIdpXmlMetadata();
@@ -149,16 +154,15 @@ class SamlConnector {
 
       // eslint-disable-next-line new-cap
       const identityProvider = saml.IdentityProvider({
-        wantAuthnRequestsSigned: true, // Sign auth request by default
         metadata: idpMetadataXml,
       });
+
       // eslint-disable-next-line new-cap
       const serviceProvider = saml.ServiceProvider({
-        entityID,
+        entityID, // FIXME: @darcyYe
         relayState,
         nameIDFormat: nameIdFormat,
         signingCert: x509Certificate,
-        authnRequestsSigned: true, // Sign auth request by default
         requestSignatureAlgorithm: signingAlgorithm,
         assertionConsumerService: [
           {

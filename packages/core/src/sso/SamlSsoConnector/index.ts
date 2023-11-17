@@ -2,12 +2,16 @@ import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type SsoConnector } from '@logto/schemas';
 
 import { SsoProviderName } from '#src/sso/types/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn } from '../types/index.js';
 import { samlConnectorConfigGuard } from '../types/saml.js';
-import { type CreateSingleSignOnSession } from '../types/session.js';
+import {
+  type SingleSignOnConnectorSession,
+  type CreateSingleSignOnSession,
+} from '../types/session.js';
 
 /**
  * SAML SSO connector
@@ -75,12 +79,16 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   /**
    * Get social user info.
    *
-   * @param assertion The SAML assertion from IdP.
-   *
+   * @param connectorSession The connector session data from interaction session storage.
    * @returns The social user info extracted from SAML assertion.
+   *
+   * @remarks For SAML connector, userInfo will be extracted from the SAML assertion by ACS callback endpoint.
+   * This method only asserts the userInfo is not null and directly return it.
    */
-  async getUserInfo(assertion: Record<string, unknown>) {
-    return this.parseSamlAssertion(assertion);
+  async getUserInfo({ userInfo }: SingleSignOnConnectorSession) {
+    assertThat(userInfo, 'session.connector_validation_session_not_found');
+
+    return userInfo;
   }
 }
 

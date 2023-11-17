@@ -90,6 +90,8 @@ export const getSsoAuthentication = async (
   const log = createLog(`Interaction.SignIn.Identifier.SingleSignOn.Submit`);
   log.append({ connectorId, data });
 
+  const singleSignOnSession = await getSingleSignOnSessionResult(ctx, provider);
+
   try {
     // Will throw ConnectorError if the config is invalid
     const connectorInstance = new ssoConnectorFactories[providerName].constructor(
@@ -98,9 +100,7 @@ export const getSsoAuthentication = async (
     );
 
     const issuer = await connectorInstance.getIssuer();
-    const userInfo = await connectorInstance.getUserInfo(data, async () =>
-      getSingleSignOnSessionResult(ctx, provider)
-    );
+    const userInfo = await connectorInstance.getUserInfo(singleSignOnSession, data);
 
     const result = {
       issuer,

@@ -3,6 +3,7 @@ import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
 import { mockSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
@@ -27,6 +28,7 @@ const findUserByEmailMock = jest.fn();
 const insertUserMock = jest.fn();
 const storeInteractionResultMock = jest.fn();
 const getAvailableSsoConnectorsMock = jest.fn();
+const getSingleSignOnSessionResultMock = jest.fn();
 
 class MockOidcSsoConnector extends OidcSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
@@ -36,6 +38,10 @@ class MockOidcSsoConnector extends OidcSsoConnector {
 
 mockEsm('./interaction.js', () => ({
   storeInteractionResult: storeInteractionResultMock,
+}));
+
+mockEsm('./single-sign-on-guard.js', () => ({
+  getSingleSignOnSessionResult: getSingleSignOnSessionResultMock,
 }));
 
 jest
@@ -110,6 +116,20 @@ describe('Single sign on util methods tests', () => {
 
   describe('getSsoAuthentication tests', () => {
     it('should throw an error if the connector config is invalid', async () => {
+      getSingleSignOnSessionResultMock.mockRejectedValueOnce(
+        new RequestError('session.connector_validation_session_not_found')
+      );
+
+      await expect(getSsoAuthentication(mockContext, tenant, mockSsoConnector, {})).rejects.toThrow(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        expect.objectContaining({
+          status: 400,
+          code: `session.connector_validation_session_not_found`,
+        })
+      );
+    });
+
+    it('should throw an error if the connector config is invalid', async () => {
       await expect(getSsoAuthentication(mockContext, tenant, mockSsoConnector, {})).rejects.toThrow(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         expect.objectContaining({ status: 500, code: `connector.invalid_config` })
@@ -117,6 +137,19 @@ describe('Single sign on util methods tests', () => {
     });
 
     it('should return the authentication result', async () => {
+      const session = {
+        connectorId: 'connectorId',
+        jti: 'jti',
+        redirectUri: 'https://example.com',
+        state: 'state',
+      };
+
+      const payload = {
+        code: 'code',
+      };
+
+      getSingleSignOnSessionResultMock.mockResolvedValueOnce(session);
+
       getUserInfoMock.mockResolvedValueOnce({ id: 'id', email: 'email' });
       getIssuerMock.mockReturnValueOnce('https://example.com');
 
@@ -124,11 +157,11 @@ describe('Single sign on util methods tests', () => {
         mockContext,
         tenant,
         wellConfiguredSsoConnector,
-        {}
+        payload
       );
 
       expect(getIssuerMock).toBeCalled();
-      expect(getUserInfoMock).toBeCalled();
+      expect(getUserInfoMock).toBeCalledWith(session, payload);
 
       expect(result).toStrictEqual({
         issuer: 'https://example.com',

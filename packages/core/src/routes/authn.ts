@@ -6,12 +6,17 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   getConnectorSessionResultFromJti,
   assignConnectorSessionResultViaJti,
+  getSingleSignOnSessionResultByJti,
+  assignSamlAssertionResultViaJti,
 } from '#src/utils/saml-assertion-handler.js';
 
+import { ssoPath } from './interaction/const.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';
 
 /**
@@ -19,11 +24,12 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  */
 export default function authnRoutes<T extends AnonymousRouter>(
-  ...[router, { envSet, provider, libraries }]: RouterInitArgs<T>
+  ...[router, { envSet, provider, libraries, id: tenantId }]: RouterInitArgs<T>
 ) {
   const {
     users: { findUserRoles },
     socials: { getConnector },
+    ssoConnectors: ssoConnectorsLibrary,
   } = libraries;
 
   const hasuraResponseGuard = z.object({
@@ -90,7 +96,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // Create an specialized API to handle SAML assertion
+  /**
+   * Standard SAML social connector's assertion consumer service endpoint
+   * @deprecated
+   * Will be replaced by the SSO SAML assertion consumer service endpoint bellow.
+   */
   router.post(
     '/authn/saml/:connectorId',
     /**
@@ -140,6 +150,76 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const redirectTo = await validateSamlAssertion({ body }, getSession, setSession);
 
       ctx.redirect(redirectTo);
+
+      return next();
+    }
+  );
+
+  /**
+   * SAML SSO connector's assertion consumer service endpoint
+   *
+   * @param connectorId The connector id.
+   * @property body The SAML assertion response body.
+   * @property body.RelayState We use this to find the connector session.
+   *  RelayState is a SAML standard parameter that will be transmitted between the identity provider and the service provider.
+   * @returns Redirect to the redirect uri find in the connector session storage.
+   *
+   * @remark
+   * This API is used to handle SSO SAML assertion from the identity provider.
+   * Validate and parse the SAML assertion, then store the assertion data to the connector session storage.
+   * Redirect to the redirect uri find in the connector session storage.
+   */
+  router.post(
+    `/authn/${ssoPath}/saml/:connectorId`,
+    koaGuard({
+      body: z.object({ RelayState: z.string() }).catchall(z.unknown()),
+      params: z.object({ connectorId: z.string().min(1) }),
+      status: [302, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { connectorId },
+        body,
+      } = ctx.guard;
+
+      // Will throw 404 if connector not found, or not supported
+      const connectorData = await ssoConnectorsLibrary.getSsoConnectorById(connectorId);
+      const { providerName } = connectorData;
+
+      // Get relay state from the request body. We need to use it to find the connector session.
+      // All the rest of the request body will be validated and parsed by the connector.
+      const { RelayState: jti } = body;
+
+      // Retrieve the single sign on session data using the jti
+      const singleSignOnSession = await getSingleSignOnSessionResultByJti(jti, provider);
+
+      const { redirectUri, state, connectorId: sessionConnectorId } = singleSignOnSession;
+
+      assertThat(
+        connectorId === sessionConnectorId,
+        'session.connector_validation_session_not_found'
+      );
+
+      // Will throw ConnectorError if the config is invalid
+      const connectorInstance = new ssoConnectorFactories[providerName].constructor(
+        connectorData,
+        tenantId
+      );
+
+      assertThat(connectorInstance instanceof SamlConnector, 'connector.unexpected_type');
+
+      const userInfo = await connectorInstance.parseSamlAssertion(body);
+
+      await assignSamlAssertionResultViaJti(jti, provider, {
+        ...singleSignOnSession,
+        userInfo,
+      });
+
+      // Client side will verify the state to prevent CSRF attack.
+      const url = new URL(redirectUri);
+      url.searchParams.append('state', state);
+
+      ctx.redirect(url.toString());
 
       return next();
     }

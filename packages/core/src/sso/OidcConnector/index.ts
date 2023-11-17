@@ -4,7 +4,10 @@ import { assert, conditional } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
 import { type BaseOidcConfig, type BasicOidcConnectorConfig } from '../types/oidc.js';
-import { type CreateSingleSignOnSession, type GetSingleSignOnSession } from '../types/session.js';
+import {
+  type SingleSignOnConnectorSession,
+  type CreateSingleSignOnSession,
+} from '../types/session.js';
 
 import { fetchOidcConfig, fetchToken, getIdTokenClaims } from './utils.js';
 
@@ -91,21 +94,14 @@ class OidcConnector {
    * Handle the sign-in callback from the OIDC provider and return the user info
    *
    * @param data unknown oidc authorization response
-   * @param getSession Get the connector session data from the oidc provider session storage. @see @logto/connector-kit
+   * @param connectorSession The connector session data from the oidc provider session storage
    * @returns The user info from the OIDC provider
    * @remark Forked from @logto/oidc-connector
    *
    */
-  getUserInfo = async (data: unknown, getSession: GetSingleSignOnSession) => {
-    assert(
-      getSession,
-      new ConnectorError(ConnectorErrorCodes.NotImplemented, {
-        message: 'Connector session storage not found',
-      })
-    );
-
+  getUserInfo = async (connectorSession: SingleSignOnConnectorSession, data: unknown) => {
     const oidcConfig = await this.getOidcConfig();
-    const { nonce, redirectUri } = await getSession();
+    const { nonce, redirectUri } = connectorSession;
 
     // Fetch token from the OIDC provider using authorization code
     const { idToken } = await fetchToken(oidcConfig, data, redirectUri);
