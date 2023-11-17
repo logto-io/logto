@@ -216,8 +216,8 @@ export default function authnRoutes<T extends AnonymousRouter>(
       });
 
       // Client side will verify the state to prevent CSRF attack.
-      const queryParameters = new URLSearchParams({ state });
-      const url = new URL(`${redirectUri}?${queryParameters.toString()}`);
+      const url = new URL(redirectUri);
+      url.searchParams.append('state', state);
 
       ctx.redirect(url.toString());
 
