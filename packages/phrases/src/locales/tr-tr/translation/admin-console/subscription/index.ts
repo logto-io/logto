@@ -69,6 +69,8 @@ const subscription = {
   downgrade_success: 'Successfully downgraded to <name/>',
   subscription_check_timeout:
     'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
+  /** UNTRANSLATED */
+  no_subscription: 'No subscription',
 };
 
 export default Object.freeze(subscription);

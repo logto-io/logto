@@ -67,6 +67,8 @@ const subscription = {
   downgrade_success: 'Degrado effettuato con successo a <name/>',
   subscription_check_timeout:
     "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
+  /** UNTRANSLATED */
+  no_subscription: 'No subscription',
 };
 
 export default Object.freeze(subscription);
