@@ -96,7 +96,11 @@ export default function authnRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // Create an specialized API to handle SAML assertion
+  /**
+   * Standard SAML social connector's assertion consumer service endpoint
+   * @deprecated
+   * Will be replaced by the SSO SAML assertion consumer service endpoint bellow.
+   */
   router.post(
     '/authn/saml/:connectorId',
     /**
@@ -164,7 +168,6 @@ export default function authnRoutes<T extends AnonymousRouter>(
    * This API is used to handle SSO SAML assertion from the identity provider.
    * Validate and parse the SAML assertion, then store the assertion data to the connector session storage.
    * Redirect to the redirect uri find in the connector session storage.
-   * The above endpoint will be deprecated in the future.
    */
   router.post(
     `/authn/${ssoPath}/saml/:connectorId`,

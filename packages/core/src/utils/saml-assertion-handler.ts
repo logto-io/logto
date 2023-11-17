@@ -44,6 +44,11 @@ export const assignConnectorSessionResultViaJti = async (
   });
 };
 
+/**
+ * Used by the standard SAML social connectors ACS endpoint.
+ * @deprecated
+ * Will be cleaned once the old SAML social connectors are removed.
+ */
 export const getConnectorSessionResultFromJti = async (
   jti: string,
   provider: Provider
@@ -74,7 +79,6 @@ export const getConnectorSessionResultFromJti = async (
  * @remark This method is used by the SSO SAML assertion consumer service endpoint.
  * Since we do not have the interaction ctx under SAML ACS endpoint, we need to get the session data by the jti.
  * Forked from the above {@link getConnectorSessionResultFromJti} method, with more detailed SingleSignOnConnectorSession type guard.
- * The above method will be deprecated in the future.
  */
 export const getSingleSignOnSessionResultByJti = async (
   jti: string,
