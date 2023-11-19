@@ -29,18 +29,16 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
 
   if (providerName === SsoProviderName.OIDC) {
     return (
-      <div>
-        <FormField title="enterprise_sso.basic_info.oidc.redirect_uri_field_name">
-          {/* Generated and passed in by Admin console. */}
-          <CopyToClipboard
-            className={styles.copyToClipboard}
-            variant="border"
-            value={applyCustomDomain(
-              new URL(`/callback/${ssoConnectorId}`, tenantEndpoint).toString()
-            )}
-          />
-        </FormField>
-      </div>
+      <FormField title="enterprise_sso.basic_info.oidc.redirect_uri_field_name">
+        {/* Generated and passed in by Admin console. */}
+        <CopyToClipboard
+          className={styles.copyToClipboard}
+          variant="border"
+          value={applyCustomDomain(
+            new URL(`/callback/${ssoConnectorId}`, tenantEndpoint).toString()
+          )}
+        />
+      </FormField>
     );
   }
 
@@ -51,7 +49,7 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
    * TODO: @darcyYe refactor to remove the manual guard.
    */
   return (
-    <div>
+    <>
       <FormField title="enterprise_sso.basic_info.saml.acs_url_field_name">
         <CopyToClipboard
           className={styles.copyToClipboard}
@@ -72,7 +70,7 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
           )}
         />
       </FormField>
-    </div>
+    </>
   );
 }
 

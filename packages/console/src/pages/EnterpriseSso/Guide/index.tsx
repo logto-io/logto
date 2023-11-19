@@ -18,14 +18,13 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
 import { splitMarkdownByTitle } from '../../Connectors/utils.js';
-import { type GuideFormType } from '../types.js';
+import { type GuideFormType, type SsoConnectorWithProviderConfigWithGeneric } from '../types.js';
 
 import BasicInfo from './BasicInfo';
 import OidcMetadataForm from './OidcMetadataForm';
 import SamlAttributeMapping from './SamlAttributeMapping';
 import SamlMetadataForm from './SamlMetadataForm';
 import * as styles from './index.module.scss';
-import { type SsoConnectorWithProviderConfigWithGeneric } from './types.js';
 
 type Props<T extends SsoProviderName> = {
   isOpen: boolean;
@@ -39,9 +38,10 @@ type GuideCardProps = {
   children: ReactNode;
   title: AdminConsoleKey;
   description: AdminConsoleKey;
+  className?: string;
 };
 
-function GuideCard({ cardOrder, title, description, children }: GuideCardProps) {
+function GuideCard({ cardOrder, title, description, children, className }: GuideCardProps) {
   return (
     <div className={styles.block}>
       <div className={styles.blockTitle}>
@@ -53,7 +53,7 @@ function GuideCard({ cardOrder, title, description, children }: GuideCardProps) 
           <DynamicT forKey={description} />
         </div>
       </div>
-      {children}
+      <div className={className}>{children}</div>
     </div>
   );
 }
@@ -147,7 +147,7 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
                     title="enterprise_sso.metadata.title"
                     description="enterprise_sso.metadata.description"
                   >
-                    <OidcMetadataForm />
+                    <OidcMetadataForm isGuidePage />
                   </GuideCard>
                 ) : (
                   <>
@@ -162,8 +162,9 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
                       cardOrder={3}
                       title="enterprise_sso.metadata.title"
                       description="enterprise_sso.metadata.description"
+                      className={styles.samlMetadataForm}
                     >
-                      <SamlMetadataForm />
+                      <SamlMetadataForm isGuidePage />
                     </GuideCard>
                   </>
                 )}
