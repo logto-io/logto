@@ -1,8 +1,8 @@
+import { SsoProviderName } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { SsoProviderName } from '#src/sso/types/index.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);

@@ -1,13 +1,13 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type SsoConnector } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
 
-import { SsoProviderName } from '#src/sso/types/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn } from '../types/index.js';
-import { samlConnectorConfigGuard } from '../types/saml.js';
+import { type SamlServiceProviderMetadata, samlConnectorConfigGuard } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -20,6 +20,7 @@ import {
  *
  * @property data The SAML connector data from the database
  *
+ * @method getProperties Get the SAML service provider properties.
  * @method getConfig Get parsed SAML config along with it's metadata. Throws error if config is invalid.
  * @method getUserInfo Get social user info.
  */
@@ -42,6 +43,13 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
       serviceProvider: { entityId },
     } = await this.getSamlConfig();
     return entityId;
+  }
+
+  /**
+   * @returns Properties of the SAML service provider.
+   */
+  getProperties(): SamlServiceProviderMetadata {
+    return this.getSamlSpProperties();
   }
 
   /**

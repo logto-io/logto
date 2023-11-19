@@ -1,3 +1,5 @@
+import { SsoProviderName } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
 import {
@@ -13,7 +15,6 @@ import {
   patchSsoConnectorById,
   patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
-import { SsoProviderName } from '#src/constants.js';
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -299,6 +300,33 @@ describe('patch sso-connector config by id', () => {
 
     await deleteSsoConnectorById(id);
   });
+
+  it.each(providerNames)(
+    'should successfully patch incomplete config if `partialValidateConfig` query parameter is specified',
+    async (providerName) => {
+      const { id } = await createSsoConnector({
+        providerName,
+        connectorName: 'integration_test connector',
+        config: {
+          clientSecret: 'bar',
+          metadataType: 'URL',
+        },
+      });
+
+      await expect(
+        patchSsoConnectorConfigById(
+          id,
+          {
+            ...conditional(providerName === SsoProviderName.OIDC && { issuer: 'issuer' }),
+            ...conditional(providerName === SsoProviderName.SAML && { entityId: 'entity_id' }),
+          },
+          true
+        )
+      ).resolves.not.toThrow();
+
+      await deleteSsoConnectorById(id);
+    }
+  );
 
   it.each(partialConfigAndProviderNames)(
     'should patch sso connector config',

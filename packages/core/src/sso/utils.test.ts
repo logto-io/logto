@@ -1,4 +1,4 @@
-import { SsoProviderName } from '#src/sso/types/index.js';
+import { SsoProviderName } from '@logto/schemas';
 
 import { isSupportedSsoProvider } from './utils.js';
 

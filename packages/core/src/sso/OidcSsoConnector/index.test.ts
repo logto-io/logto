@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { SsoProviderName } from '@logto/schemas';
 
 import { mockSsoConnector } from '#src/__mocks__/sso.js';
-import { SsoProviderName } from '#src/sso/types/index.js';
 
 import { oidcSsoConnectorFactory } from './index.js';
 

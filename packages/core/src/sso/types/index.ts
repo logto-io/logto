@@ -1,4 +1,5 @@
 import { type JsonObject, type SsoConnector } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 
 export * from './session.js';
 
@@ -13,13 +14,5 @@ export abstract class SingleSignOn {
   abstract data: SsoConnector;
   abstract getConfig: () => Promise<JsonObject>;
   abstract getIssuer: () => Promise<string>;
+  abstract getProperties: () => Optional<JsonObject>;
 }
-
-export enum SsoProviderName {
-  OIDC = 'OIDC',
-  SAML = 'SAML',
-}
-
-export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
-  providerName: SsoProviderName;
-};

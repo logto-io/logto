@@ -1,6 +1,4 @@
-import { type SsoConnector } from '@logto/schemas';
-
-import { SsoProviderName } from '#src/sso/types/index.js';
+import { type SsoConnector, SsoProviderName } from '@logto/schemas';
 
 export const mockSsoConnector = {
   id: 'mock-sso-connector',
