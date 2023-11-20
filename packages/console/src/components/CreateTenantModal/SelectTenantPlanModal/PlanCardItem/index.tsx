@@ -1,4 +1,4 @@
-import { maxFreeTenantLimit, adminTenantId } from '@logto/schemas';
+import { maxFreeTenantLimit, adminTenantId, ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -9,7 +9,6 @@ import PlanName from '@/components/PlanName';
 import PlanQuotaList from '@/components/PlanQuotaList';
 import { pricingLink } from '@/consts';
 import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -56,13 +55,13 @@ function PlanCardItem({ plan, onSelect }: Props) {
     return prices.length > 0 ? prices.join(' ') : '$0.00';
   }, [stripeProducts]);
 
-  const isFreePlan = planId === ReservedPlanId.free;
+  const isFreePlan = planId === ReservedPlanId.Free;
 
   const isFreeTenantExceeded = useMemo(
     () =>
       /** Should not block admin tenant owners from creating more than three tenants */
       !tenants.some(({ id }) => id === adminTenantId) &&
-      tenants.filter(({ planId }) => planId === ReservedPlanId.free).length >= maxFreeTenantLimit,
+      tenants.filter(({ planId }) => planId === ReservedPlanId.Free).length >= maxFreeTenantLimit,
     [tenants]
   );
 
@@ -127,7 +126,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
           onClick={onSelect}
         />
       </div>
-      {planId === ReservedPlanId.pro && (
+      {planId === ReservedPlanId.Pro && (
         <div className={styles.mostPopularTag}>{t('most_popular')}</div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { Suspense, useCallback, useContext } from 'react';
 
@@ -6,7 +6,6 @@ import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import FeatureTag from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
@@ -78,7 +77,7 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
             {hasPaywall && (
-              <FeatureTag isVisible={isM2mDisabled} for="upsell" plan={ReservedPlanId.hobby} />
+              <FeatureTag isVisible={isM2mDisabled} for="upsell" plan={ReservedPlanId.Hobby} />
             )}
           </div>
           <div className={styles.description} title={description}>

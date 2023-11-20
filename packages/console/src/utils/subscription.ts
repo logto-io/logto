@@ -9,7 +9,7 @@ import {
   ssoEnabledMap,
   ticketSupportResponseTimeMap,
 } from '@/consts/plan-quotas';
-import { reservedPlanIdOrder, reservedPlanIds } from '@/consts/subscriptions';
+import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlanResponse) => {
@@ -28,9 +28,9 @@ export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlan
 };
 
 const getSubscriptionPlanOrderById = (id: string) => {
-  const index = reservedPlanIdOrder.indexOf(id);
+  const index = featuredPlanIdOrder.indexOf(id);
 
-  // Note: if the plan id is not in the reservedPlanIdOrder, it will be treated as the highest priority
+  // Note: if the plan id is not in the featuredPlanIdOrder, it will be treated as the highest priority
   return index === -1 ? Number.POSITIVE_INFINITY : index;
 };
 
@@ -64,5 +64,5 @@ export const isExceededQuotaLimitError = async (error: unknown) => {
   return Boolean(message?.includes('Exceeded quota limit'));
 };
 
-export const pickupReservedPlans = (plans: SubscriptionPlan[]): SubscriptionPlan[] =>
-  plans.filter(({ id }) => reservedPlanIds.includes(id));
+export const pickupFeaturedPlans = (plans: SubscriptionPlan[]): SubscriptionPlan[] =>
+  plans.filter(({ id }) => featuredPlanIds.includes(id));

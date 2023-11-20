@@ -7,7 +7,7 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscription from '@/hooks/use-subscription';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import useSubscriptionUsage from '@/hooks/use-subscription-usage';
-import { pickupReservedPlans } from '@/utils/subscription';
+import { pickupFeaturedPlans } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
 
@@ -32,7 +32,7 @@ function Subscription() {
   const isLoadingSubscriptionUsage = !subscriptionUsage && !fetchSubscriptionUsageError;
 
   const reservedPlans = conditionalArray(
-    subscriptionPlans && pickupReservedPlans(subscriptionPlans)
+    subscriptionPlans && pickupFeaturedPlans(subscriptionPlans)
   );
 
   if (isLoadingPlans || isLoadingSubscription || isLoadingSubscriptionUsage) {

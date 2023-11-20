@@ -1,3 +1,5 @@
+import { ReservedPlanId } from '@logto/schemas';
+
 import {
   type SubscriptionPlanTable,
   type SubscriptionPlanTableData,
@@ -7,86 +9,84 @@ import {
   type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
 
-import { ReservedPlanId } from './subscriptions';
-
 type EnabledFeatureMap = Record<string, boolean | undefined>;
 
 export const customCssEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const appLogoAndFaviconEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const darkModeEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const i18nEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const passwordSignInEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const passwordlessSignInEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const emailConnectorsEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const smsConnectorsEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const userManagementEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const communitySupportEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: true,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: true,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const ticketSupportResponseTimeMap: Record<string, number | undefined> = {
-  [ReservedPlanId.free]: 0,
-  [ReservedPlanId.hobby]: 72,
-  [ReservedPlanId.pro]: 48,
+  [ReservedPlanId.Free]: 0,
+  [ReservedPlanId.Hobby]: 72,
+  [ReservedPlanId.Pro]: 48,
 };
 
 export const organizationEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: false,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 export const ssoEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.free]: false,
-  [ReservedPlanId.hobby]: true,
-  [ReservedPlanId.pro]: true,
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: true,
 };
 
 /**

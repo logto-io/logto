@@ -1,15 +1,15 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 
-import { ReservedPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 
 const registeredPlanDescriptionPhrasesMap: Record<
   string,
   TFuncKey<'translation', 'admin_console.subscription'> | undefined
 > = {
-  [ReservedPlanId.free]: 'free_plan_description',
-  [ReservedPlanId.hobby]: 'hobby_plan_description',
-  [ReservedPlanId.pro]: 'pro_plan_description',
+  [ReservedPlanId.Free]: 'free_plan_description',
+  [ReservedPlanId.Hobby]: 'hobby_plan_description',
+  [ReservedPlanId.Pro]: 'pro_plan_description',
 };
 
 type Props = { planId: string };

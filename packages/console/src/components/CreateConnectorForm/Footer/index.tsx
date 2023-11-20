@@ -2,6 +2,7 @@ import {
   ConnectorType,
   type ConnectorResponse,
   type ConnectorFactoryResponse,
+  ReservedPlanId,
 } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -9,7 +10,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
@@ -78,7 +78,7 @@ function Footer({
             {quota.standardConnectorsLimit === 0
               ? t('standard_connectors_feature')
               : t(
-                  planId === ReservedPlanId.pro ? 'standard_connectors_pro' : 'standard_connectors',
+                  planId === ReservedPlanId.Pro ? 'standard_connectors_pro' : 'standard_connectors',
                   {
                     count: quota.standardConnectorsLimit ?? 0,
                   }

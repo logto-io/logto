@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -10,7 +11,6 @@ import {
   quotaItemLimitedPhrasesMap,
   quotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
@@ -64,7 +64,7 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
         >
           {t(isDowngrade ? 'downgrade_description' : 'upgrade_description')}
         </Trans>
-        {!isDowngrade && id === ReservedPlanId.hobby && t('upgrade_pro_tip')}
+        {!isDowngrade && id === ReservedPlanId.Hobby && t('upgrade_pro_tip')}
       </div>
       <ul className={styles.list}>
         {orderedEntries.map(([quotaKey, quotaValue]) => {

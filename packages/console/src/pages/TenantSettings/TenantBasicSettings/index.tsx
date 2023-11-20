@@ -1,4 +1,4 @@
-import { TenantTag } from '@logto/schemas';
+import { ReservedPlanId, TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -10,7 +10,6 @@ import { type TenantResponse } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { trySubmitSafe } from '@/utils/form';
@@ -83,7 +82,7 @@ function TenantBasicSettings() {
   const onClickDeletionButton = async () => {
     if (
       !isDevTenant &&
-      (currentTenant?.subscription.planId !== ReservedPlanId.free ||
+      (currentTenant?.subscription.planId !== ReservedPlanId.Free ||
         currentTenant.openInvoices.length > 0)
     ) {
       await showModal({

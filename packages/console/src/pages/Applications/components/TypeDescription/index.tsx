@@ -1,11 +1,10 @@
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
 import FeatureTag from '@/components/FeatureTag';
 import { isCloud } from '@/consts/env';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
@@ -35,7 +34,7 @@ function TypeDescription({ title, subtitle, description, type, size = 'large' }:
           <FeatureTag
             isVisible={!currentPlan?.quota.machineToMachineLimit}
             for="upsell"
-            plan={ReservedPlanId.hobby}
+            plan={ReservedPlanId.Hobby}
           />
         </div>
       )}

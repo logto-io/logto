@@ -2,7 +2,7 @@ export const sortBy = (order: string[]) => {
   return (previous: string, next: string) => {
     const preIndex = order.indexOf(previous);
     const nextIndex = order.indexOf(next);
-    // Note: If both plan ids not present in the order array, sort them in default order
+    // Note: If both items not present in the order array, sort them in default order
     if (preIndex === -1 && nextIndex === -1) {
       return 0;
     }

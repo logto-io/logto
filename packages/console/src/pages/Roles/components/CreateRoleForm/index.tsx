@@ -1,6 +1,6 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Role, ScopeResponse } from '@logto/schemas';
-import { RoleType, internalRolePrefix } from '@logto/schemas';
+import { ReservedPlanId, RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,7 +13,6 @@ import FeatureTag from '@/components/FeatureTag';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -227,7 +226,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                           <FeatureTag
                             isVisible={!currentPlan?.quota.machineToMachineLimit}
                             for="upsell"
-                            plan={ReservedPlanId.hobby}
+                            plan={ReservedPlanId.Hobby}
                             className={styles.proTag}
                           />
                         )

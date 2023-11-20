@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -5,7 +6,6 @@ import Modal from 'react-modal';
 import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import { pricingLink } from '@/consts';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
@@ -13,7 +13,7 @@ import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { type SubscriptionPlan } from '@/types/subscriptions';
-import { pickupReservedPlans } from '@/utils/subscription';
+import { pickupFeaturedPlans } from '@/utils/subscription';
 
 import { type CreateTenantData } from '../type';
 
@@ -30,7 +30,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const { subscribe } = useSubscribe();
   const cloudApi = useCloudApi({ hideErrorToast: true });
-  const reservedPlans = conditional(subscriptionPlans && pickupReservedPlans(subscriptionPlans));
+  const reservedPlans = conditional(subscriptionPlans && pickupFeaturedPlans(subscriptionPlans));
 
   if (!reservedPlans || !tenantData) {
     return null;
@@ -39,7 +39,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
   const handleSelectPlan = async (plan: SubscriptionPlan) => {
     const { id: planId } = plan;
     try {
-      if (planId === ReservedPlanId.free) {
+      if (planId === ReservedPlanId.Free) {
         const { name, tag } = tenantData;
         const newTenant = await cloudApi.post('/api/tenants', { body: { name, tag } });
 
