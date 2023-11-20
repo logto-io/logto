@@ -169,15 +169,13 @@ describe('UsernamePasswordSignInForm', () => {
       fireEvent.submit(submitButton);
     });
 
-    act(() => {
-      void waitFor(() => {
-        expect(signInWithPasswordIdentifier).toBeCalledWith({
-          [type]:
-            type === SignInIdentifier.Phone
-              ? `${getDefaultCountryCallingCode()}${identifier}`
-              : identifier,
-          password: 'password',
-        });
+    await waitFor(() => {
+      expect(signInWithPasswordIdentifier).toBeCalledWith({
+        [type]:
+          type === SignInIdentifier.Phone
+            ? `${getDefaultCountryCallingCode()}${identifier}`
+            : identifier,
+        password: 'password',
       });
     });
   });
