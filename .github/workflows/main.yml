@@ -43,7 +43,7 @@ jobs:
         run: pnpm ci:stylelint
 
   main-test:
-    runs-on: buildjet-4vcpu-ubuntu-2204
+    runs-on: dimerun-k4-ubuntu2204
 
     steps:
       - uses: actions/checkout@v4
