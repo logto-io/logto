@@ -15,9 +15,6 @@ const tenants = {
     tenant_name: '테넌트 이름',
     tenant_region: '데이터 호스팅 영역',
     tenant_region_tip: '당신의 테넌트 자원은 {{region}}에 호스팅됩니다. <a>자세히 알아보기</a>',
-    environment_tag: '환경 태그',
-    environment_tag_description:
-      '태그는 서비스를 변경하지 않습니다. 단지 다양한 환경을 구별하는 데 도움을 줍니다.',
     environment_tag_development: '개발',
     environment_tag_staging: '스테이징',
     environment_tag_production: '프로드',
@@ -44,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: '테넌트 만들기',
-    subtitle_deprecated: '자원 및 사용자를 분리하기 위한 새 테넌트를 만드세요.',
     subtitle:
       '분리된 리소스와 사용자를 가진 새 테넌트를 만듭니다. 데이터가 호스팅되는 지역 및 테넌트 유형은 생성 후에 수정할 수 없습니다.',
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',

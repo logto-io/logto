@@ -14,9 +14,6 @@ const tenants = {
     tenant_name: 'Tenant Name',
     tenant_region: 'Data hosted region',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
-    environment_tag: 'Environment Tag',
-    environment_tag_description:
-      "Tags don't alter the service. They simply guide you to differentiate various environments.",
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -40,7 +37,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Create tenant',
-    subtitle_deprecated: 'Create a new tenant to separate resources and users.',
     subtitle:
       'Create a new tenant that has isolated resources and users. Data hosted region and tenant types can’t be modified after creation.',
     tenant_usage_purpose: 'What do you want to use this tenant for?',

@@ -16,9 +16,6 @@ const tenants = {
     tenant_region: "Région d'hébergement des données",
     tenant_region_tip:
       'Vos ressources de locataire sont hébergées dans {{region}}. <a>En savoir plus</a>',
-    environment_tag: "Tag de l'environnement",
-    environment_tag_description:
-      'Les balises ne modifient pas le service. Elles servent simplement à différencier différents environnements.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -45,8 +42,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Créer un locataire',
-    subtitle_deprecated:
-      'Créez un nouveau locataire pour séparer les ressources et les utilisateurs.',
     subtitle:
       "Créez un nouveau locataire disposant de ressources et d'utilisateurs isolés. Les régions de données hébergées et les types de locataires ne peuvent pas être modifiés après la création.",
     tenant_usage_purpose: 'Dans quel but souhaitez-vous utiliser ce locataire?',

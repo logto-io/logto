@@ -15,9 +15,6 @@ const tenants = {
     tenant_name: 'テナント名',
     tenant_region: 'データがホストされている地域',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
-    environment_tag: '環境タグ',
-    environment_tag_description:
-      'タグはサービスを変更しません。単にさまざまな環境を区別するためのガイドです。',
     environment_tag_development: '開発',
     environment_tag_staging: 'ステージング',
     environment_tag_production: '本番',
@@ -44,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: 'テナントを作成する',
-    subtitle_deprecated: 'リソースとユーザーを分離するには、新しいテナントを作成します。',
     subtitle:
       '分離されたリソースとユーザーを持つ新しいテナントを作成します。データがホストされる地域とテナントの種類は作成後に変更できません。',
     tenant_usage_purpose: 'What do you want to use this tenant for?',

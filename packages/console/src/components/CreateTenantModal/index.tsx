@@ -1,4 +1,3 @@
-import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme, TenantTag } from '@logto/schemas';
 import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -9,7 +8,6 @@ import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -27,30 +25,11 @@ import { type CreateTenantData } from './type';
 type Props = {
   isOpen: boolean;
   onClose: (tenant?: TenantResponse) => void;
-  // Todo @xiaoyijun delete this prop when dev tenant feature is ready
-  // eslint-disable-next-line react/boolean-prop-naming
-  skipPlanSelection?: boolean;
 };
-
-// Todo @xiaoyijun remove when dev tenant feature is ready
-const tagOptions: Array<{ title: AdminConsoleKey; value: TenantTag }> = [
-  {
-    title: 'tenants.settings.environment_tag_development',
-    value: TenantTag.Development,
-  },
-  {
-    title: 'tenants.settings.environment_tag_staging',
-    value: TenantTag.Staging,
-  },
-  {
-    title: 'tenants.settings.environment_tag_production',
-    value: TenantTag.Production,
-  },
-];
 
 const availableTags = [TenantTag.Development, TenantTag.Production];
 
-function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props) {
+function CreateTenantModal({ isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [tenantData, setTenantData] = useState<CreateTenantData>();
   const theme = useTheme();
@@ -77,23 +56,6 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
   };
 
   const onCreateClick = handleSubmit(async (data: CreateTenantData) => {
-    /**
-     * Todo @xiaoyijun remove the original logic when dev tenant feature is ready
-     */
-    if (!isDevFeaturesEnabled) {
-      /**
-       * Note: create tenant directly if it's from landing page,
-       * since we want the user to get into the console as soon as possible
-       */
-      if (skipPlanSelection) {
-        await createTenant(data);
-        return;
-      }
-
-      setTenantData(data);
-      return;
-    }
-
     const { tag } = data;
     if (tag === TenantTag.Development) {
       await createTenant(data);
@@ -119,11 +81,7 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
     >
       <ModalLayout
         title="tenants.create_modal.title"
-        subtitle={
-          isDevFeaturesEnabled
-            ? 'tenants.create_modal.subtitle'
-            : 'tenants.create_modal.subtitle_deprecated'
-        }
+        subtitle="tenants.create_modal.subtitle"
         headerIcon={
           theme === Theme.Light ? <CreateTenantHeaderIcon /> : <CreateTenantHeaderIconDark />
         }
@@ -149,75 +107,52 @@ function CreateTenantModal({ isOpen, onClose, skipPlanSelection = false }: Props
               error={Boolean(errors.name)}
             />
           </FormField>
-          {isDevFeaturesEnabled && (
-            <FormField title="tenants.settings.tenant_region">
-              <RadioGroup type="small" value="eu" name="region">
-                <Radio
-                  title={
-                    <DangerousRaw>
-                      <span className={styles.regionOptions}>🇪🇺 EU</span>
-                    </DangerousRaw>
-                  }
-                  value="eu"
-                />
-                <Radio
-                  isDisabled
-                  title={
-                    <DangerousRaw>
-                      <span className={styles.regionOptions}>
-                        🇺🇸 US
-                        <span className={styles.comingSoon}>{`(${t('general.coming_soon')})`}</span>
-                      </span>
-                    </DangerousRaw>
-                  }
-                  value="us"
-                />
-              </RadioGroup>
-            </FormField>
-          )}
-          {!isDevFeaturesEnabled && (
-            <FormField title="tenants.settings.environment_tag">
-              <Controller
-                control={control}
-                name="tag"
-                rules={{ required: true }}
-                render={({ field: { onChange, value, name } }) => (
-                  <RadioGroup type="small" value={value} name={name} onChange={onChange}>
-                    {tagOptions.map(({ value: optionValue, title }) => (
-                      <Radio key={optionValue} title={title} value={optionValue} />
-                    ))}
-                  </RadioGroup>
-                )}
+          <FormField title="tenants.settings.tenant_region">
+            <RadioGroup type="small" value="eu" name="region">
+              <Radio
+                title={
+                  <DangerousRaw>
+                    <span className={styles.regionOptions}>🇪🇺 EU</span>
+                  </DangerousRaw>
+                }
+                value="eu"
               />
-              <div className={styles.description}>
-                {t('tenants.settings.environment_tag_description')}
-              </div>
-            </FormField>
-          )}
-          {isDevFeaturesEnabled && (
-            <FormField title="tenants.create_modal.tenant_usage_purpose">
-              <Controller
-                control={control}
-                name="tag"
-                rules={{ required: true }}
-                render={({ field: { onChange, value, name } }) => (
-                  <RadioGroup
-                    type="card"
-                    className={styles.envTagRadioGroup}
-                    value={value}
-                    name={name}
-                    onChange={onChange}
-                  >
-                    {availableTags.map((tag) => (
-                      <Radio key={tag} value={tag}>
-                        <EnvTagOptionContent tag={tag} />
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                )}
+              <Radio
+                isDisabled
+                title={
+                  <DangerousRaw>
+                    <span className={styles.regionOptions}>
+                      🇺🇸 US
+                      <span className={styles.comingSoon}>{`(${t('general.coming_soon')})`}</span>
+                    </span>
+                  </DangerousRaw>
+                }
+                value="us"
               />
-            </FormField>
-          )}
+            </RadioGroup>
+          </FormField>
+          <FormField title="tenants.create_modal.tenant_usage_purpose">
+            <Controller
+              control={control}
+              name="tag"
+              rules={{ required: true }}
+              render={({ field: { onChange, value, name } }) => (
+                <RadioGroup
+                  type="card"
+                  className={styles.envTagRadioGroup}
+                  value={value}
+                  name={name}
+                  onChange={onChange}
+                >
+                  {availableTags.map((tag) => (
+                    <Radio key={tag} value={tag}>
+                      <EnvTagOptionContent tag={tag} />
+                    </Radio>
+                  ))}
+                </RadioGroup>
+              )}
+            />
+          </FormField>
         </FormProvider>
         <SelectTenantPlanModal
           tenantData={tenantData}

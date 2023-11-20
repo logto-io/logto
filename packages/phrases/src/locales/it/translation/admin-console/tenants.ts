@@ -16,9 +16,6 @@ const tenants = {
     tenant_name: 'Nome Tenant',
     tenant_region: 'Regione di hosting',
     tenant_region_tip: 'I tuoi risorse inquilino sono ospitate in {{region}}. <a>Scopri di più</a>',
-    environment_tag: 'Tag Ambiente',
-    environment_tag_description:
-      'I tag non alterano il servizio. Semplicemente ti guidano a distinguere vari ambienti.',
     environment_tag_development: 'Svil',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -45,7 +42,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Crea nuovo tenant',
-    subtitle_deprecated: 'Crea un nuovo tenant per separare risorse e utenti.',
     subtitle:
       'Crea un nuovo inquilino con risorse e utenti isolati. Le regioni dei dati ospitati e i tipi di inquilino non possono essere modificati dopo la creazione.',
     tenant_usage_purpose: 'Per cosa desideri utilizzare questo tenant?',

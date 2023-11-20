@@ -15,9 +15,6 @@ const tenants = {
     tenant_name: 'Имя арендатора',
     tenant_region: 'Регион размещения данных',
     tenant_region_tip: 'Ваши ресурсы арендатора размещаются в {{region}}. <a>Узнайте больше</a>',
-    environment_tag: 'Тег окружения',
-    environment_tag_description:
-      'Теги не изменяют сервис. Они просто помогают отличать различные среды.',
     environment_tag_development: 'Разр',
     environment_tag_staging: 'Предпр',
     environment_tag_production: 'Прод',
@@ -44,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Создать арендатора',
-    subtitle_deprecated: 'Создайте нового арендатора для разделения ресурсов и пользователей.',
     subtitle:
       'Создайте нового арендатора, чтобы разделить ресурсы и пользователей. Данные, размещенные в регионе, и типы арендаторов не могут быть изменены после создания.',
     tenant_usage_purpose: 'Для чего вы хотите использовать этот арендатор?',

@@ -16,9 +16,6 @@ const tenants = {
     tenant_region: 'Gehostete Region der Daten',
     tenant_region_tip:
       'Ihre Mandantenressourcen werden in {{region}} gehostet. <a>Mehr erfahren</a>',
-    environment_tag: 'Umgebungsmarke',
-    environment_tag_description:
-      'Tags verändern den Service nicht. Sie dienen lediglich zur Unterscheidung verschiedener Umgebungen.',
     environment_tag_development: 'Entw',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -45,7 +42,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Mieter erstellen',
-    subtitle_deprecated: 'Erstellen Sie einen neuen Mieter, um Ressourcen und Benutzer zu trennen.',
     subtitle:
       'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
