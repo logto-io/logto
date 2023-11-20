@@ -14,4 +14,4 @@ export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
 
 /** Docs link */
-export const envTagsFeatureLink = '/docs/recipes/environment-tags';
+export const envTagsFeatureLink = '/docs/recipes/tenant-type';
