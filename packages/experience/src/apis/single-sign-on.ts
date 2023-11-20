@@ -18,13 +18,13 @@ export const getSingleSignOnConnectors = async (email: string) =>
 export const getSingleSignOnUrl = async (
   connectorId: string,
   state: string,
-  callbackUri: string
+  redirectUri: string
 ) => {
   const { redirectTo } = await api
     .post(`${ssoPrefix}/${connectorId}/authorization-url`, {
       json: {
         state,
-        callbackUri,
+        redirectUri,
       },
     })
     .json<Response>();

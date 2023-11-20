@@ -25,8 +25,13 @@ export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
   // eslint-disable-next-line unicorn/no-useless-undefined
   getProperties = () => undefined;
 
-  getConfig = async () => this.getOidcConfig();
-  getIssuer = async () => this.issuer;
+  async getConfig() {
+    return this.getOidcConfig();
+  }
+
+  async getIssuer() {
+    return this.issuer;
+  }
 }
 
 export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> = {

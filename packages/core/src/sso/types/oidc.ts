@@ -1,7 +1,12 @@
 import { type CamelCaseKeys } from 'camelcase-keys';
 import { z } from 'zod';
 
-const openidScope = 'openid' as const;
+export enum RequiredOidcScope {
+  OPEN_ID = 'openid',
+  PROFILE = 'profile',
+  EMAIL = 'email',
+}
+
 const scopeDelimiter = /[ +]/;
 /**
  * Scope config processor for OIDC connector. openid scope is required to retrieve id_token
@@ -13,19 +18,20 @@ const scopeDelimiter = /[ +]/;
  */
 export const scopePostProcessor = (scope = '') => {
   const splitScopes = scope.split(scopeDelimiter).filter(Boolean);
+  const defaultScopes = Object.values(RequiredOidcScope);
+  const parsedScopes = new Set([...defaultScopes, ...splitScopes]);
 
-  if (!splitScopes.includes(openidScope)) {
-    return [...splitScopes, openidScope].join(' ');
-  }
-
-  return scope;
+  return Array.from(parsedScopes).join(' ');
 };
 
 export const basicOidcConnectorConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   issuer: z.string(),
-  scope: z.string().optional().transform(scopePostProcessor),
+  scope: z
+    .string()
+    .optional()
+    .transform((scope) => scopePostProcessor(scope)),
 });
 
 export type BasicOidcConnectorConfig = z.infer<typeof basicOidcConnectorConfigGuard>;
@@ -48,7 +54,6 @@ export type BaseOidcConfig = CamelCaseKeys<OidcConfigResponse> & {
 
 export const oidcAuthorizationResponseGuard = z.object({
   code: z.string(),
-  state: z.string(),
 });
 
 export const oidcTokenResponseGuard = z.object({

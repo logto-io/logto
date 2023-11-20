@@ -4,6 +4,7 @@ import { assert, conditional } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
 import { type BaseOidcConfig, type BasicOidcConnectorConfig } from '../types/oidc.js';
+import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -28,7 +29,7 @@ class OidcConnector {
   constructor(private readonly config: BasicOidcConnectorConfig) {}
 
   /* Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid */
-  getOidcConfig = async (): Promise<BaseOidcConfig> => {
+  async getOidcConfig(): Promise<BaseOidcConfig> {
     const { issuer } = this.config;
 
     const oidcConfig = await fetchOidcConfig(issuer);
@@ -37,11 +38,6 @@ class OidcConnector {
       ...this.config,
       ...oidcConfig,
     };
-  };
-
-  /** `Issuer` will be used by SSO identity to indicate the source of the identity */
-  async getIssuer() {
-    return this.config.issuer;
   }
 
   /**
@@ -52,14 +48,14 @@ class OidcConnector {
    * @param oidcQueryParams.redirectUri The redirect uri for the OIDC provider
    * @param setSession Set the connector session data to the oidc provider session storage.
    */
-  getAuthorizationUrl = async (
+  async getAuthorizationUrl(
     {
       state,
       redirectUri,
       connectorId,
     }: { state: string; redirectUri: string; connectorId: string },
     setSession: CreateSingleSignOnSession
-  ) => {
+  ) {
     assert(
       setSession,
       new ConnectorError(ConnectorErrorCodes.NotImplemented, {
@@ -84,7 +80,7 @@ class OidcConnector {
     });
 
     return `${oidcConfig.authorizationEndpoint}?${queryParameters.toString()}`;
-  };
+  }
 
   get issuer() {
     return this.config.issuer;
@@ -99,7 +95,10 @@ class OidcConnector {
    * @remark Forked from @logto/oidc-connector
    *
    */
-  getUserInfo = async (connectorSession: SingleSignOnConnectorSession, data: unknown) => {
+  async getUserInfo(
+    connectorSession: SingleSignOnConnectorSession,
+    data: unknown
+  ): Promise<ExtendedSocialUserInfo> {
     const oidcConfig = await this.getOidcConfig();
     const { nonce, redirectUri } = connectorSession;
 
@@ -112,12 +111,12 @@ class OidcConnector {
 
     return {
       id: sub,
-      name: conditional(name),
-      avatar: conditional(picture),
-      email: conditional(email_verified && email),
-      phone: conditional(phone_verified && phone),
+      ...conditional(name && { name }),
+      ...conditional(picture && { avatar: picture }),
+      ...conditional(email && email_verified && { email }),
+      ...conditional(phone && phone_verified && { phone }),
     };
-  };
+  }
 }
 
 export default OidcConnector;
