@@ -11,7 +11,11 @@ import {
   quotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
 import DynamicT from '@/ds-components/DynamicT';
-import { type SubscriptionPlan, type SubscriptionPlanQuota } from '@/types/subscriptions';
+import {
+  type SubscriptionPlanQuotaEntries,
+  type SubscriptionPlan,
+  type SubscriptionPlanQuota,
+} from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 
 import * as styles from './index.module.scss';
@@ -36,9 +40,7 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
 
   const orderedEntries = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
-    const entries = Object.entries(quota) as Array<
-      [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
-    >;
+    const entries = Object.entries(quota) as SubscriptionPlanQuotaEntries;
     return entries
       .slice()
       .sort(([preQuotaKey], [nextQuotaKey]) =>
