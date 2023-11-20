@@ -1,8 +1,8 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { subscriptionPage } from '@/consts/pages';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -26,7 +26,7 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
-    () => subscriptionPlans?.find(({ id }) => id === ReservedPlanId.pro),
+    () => subscriptionPlans?.find(({ id }) => id === ReservedPlanId.Pro),
     [subscriptionPlans]
   );
 

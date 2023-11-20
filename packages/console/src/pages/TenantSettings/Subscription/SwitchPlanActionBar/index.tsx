@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -6,7 +7,6 @@ import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import PlanName from '@/components/PlanName';
 import { contactEmailLink } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Spacer from '@/ds-components/Spacer';
@@ -65,7 +65,7 @@ function SwitchPlanActionBar({
 
     try {
       setCurrentLoadingPlanId(targetPlanId);
-      if (targetPlanId === ReservedPlanId.free) {
+      if (targetPlanId === ReservedPlanId.Free) {
         await cancelSubscription(currentTenantId);
         onSubscriptionUpdated();
         toast.success(

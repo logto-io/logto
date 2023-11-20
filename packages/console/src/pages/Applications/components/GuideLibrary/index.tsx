@@ -1,4 +1,4 @@
-import { type Application } from '@logto/schemas';
+import { ReservedPlanId, type Application } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,6 @@ import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
 import { isCloud } from '@/consts/env';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -106,7 +105,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <FeatureTag
                     isVisible={isM2mDisabledForCurrentPlan}
                     for="upsell"
-                    plan={ReservedPlanId.hobby}
+                    plan={ReservedPlanId.Hobby}
                     className={styles.proTag}
                   />
                 </div>

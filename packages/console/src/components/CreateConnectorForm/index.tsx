@@ -2,12 +2,12 @@ import {
   ConnectorType,
   type ConnectorFactoryResponse,
   type ConnectorResponse,
+  ReservedPlanId,
 } from '@logto/schemas';
 import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -159,7 +159,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
               <FeatureTag
                 isVisible={isStandardConnectorDisabled}
                 for="upsell"
-                plan={ReservedPlanId.hobby}
+                plan={ReservedPlanId.Hobby}
               />
             </div>
             <ConnectorRadioGroup

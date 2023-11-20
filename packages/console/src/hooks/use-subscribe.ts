@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useContext } from 'react';
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type CreateTenantData } from '@/components/CreateTenantModal/type';
-import { ReservedPlanId, checkoutStateQueryKey } from '@/consts/subscriptions';
+import { checkoutStateQueryKey } from '@/consts/subscriptions';
 import { GlobalRoute, TenantsContext } from '@/contexts/TenantsProvider';
 import { createLocalCheckoutSession } from '@/utils/checkout';
 import { dropLeadingSlash } from '@/utils/url';
@@ -81,10 +82,10 @@ const useSubscribe = () => {
      * since the cancel subscription flow will not redirect to the stripe payment page.
      */
     updateTenant(tenantId, {
-      planId: ReservedPlanId.free,
+      planId: ReservedPlanId.Free,
       subscription: {
         status: 'active',
-        planId: ReservedPlanId.free,
+        planId: ReservedPlanId.Free,
         currentPeriodStart: dayjs().toDate(),
         currentPeriodEnd: dayjs().add(1, 'month').toDate(),
       },

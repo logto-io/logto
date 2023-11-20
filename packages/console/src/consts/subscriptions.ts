@@ -1,15 +1,21 @@
-export enum ReservedPlanId {
-  free = 'free',
-  hobby = 'hobby',
-  pro = 'pro',
-}
+import { ReservedPlanId } from '@logto/schemas';
 
-export const reservedPlanIds: string[] = Object.values(ReservedPlanId);
+/**
+ * In console, only featured plans are shown in the plan selection component.
+ */
+export const featuredPlanIds: string[] = [
+  ReservedPlanId.Free,
+  ReservedPlanId.Hobby,
+  ReservedPlanId.Pro,
+];
 
-export const reservedPlanIdOrder: string[] = [
-  ReservedPlanId.free,
-  ReservedPlanId.hobby,
-  ReservedPlanId.pro,
+/**
+ * The order of featured plans in the plan selection content component.
+ */
+export const featuredPlanIdOrder: string[] = [
+  ReservedPlanId.Free,
+  ReservedPlanId.Hobby,
+  ReservedPlanId.Pro,
 ];
 
 export const checkoutStateQueryKey = 'checkout-state';

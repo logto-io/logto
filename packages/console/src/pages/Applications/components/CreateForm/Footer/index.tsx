@@ -1,4 +1,4 @@
-import { type Application, ApplicationType } from '@logto/schemas';
+import { type Application, ApplicationType, ReservedPlanId } from '@logto/schemas';
 import { useContext, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -6,7 +6,6 @@ import useSWR from 'swr';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PlanName from '@/components/PlanName';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
@@ -50,7 +49,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
     if (selectedType === ApplicationType.MachineToMachine && isM2mAppsReachLimit) {
       return (
         <QuotaGuardFooter>
-          {quota.machineToMachineLimit === 0 && planId === ReservedPlanId.free ? (
+          {quota.machineToMachineLimit === 0 && planId === ReservedPlanId.Free ? (
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,

@@ -1,7 +1,7 @@
+import { type ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext } from 'react';
 
-import { type ReservedPlanId } from '@/consts/subscriptions';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import * as styles from './index.module.scss';
@@ -21,7 +21,7 @@ type Props =
        */
       isVisible: boolean;
       /** The minimum plan required to use the feature. */
-      plan: Exclude<ReservedPlanId, ReservedPlanId.free>;
+      plan: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
     })
   | (BaseProps & {
       /** What the tag is for. */

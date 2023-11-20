@@ -1,4 +1,4 @@
-import { defaultManagementApi, defaultTenantId, TenantTag } from '@logto/schemas';
+import { defaultManagementApi, defaultTenantId, ReservedPlanId, TenantTag } from '@logto/schemas';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
@@ -7,7 +7,6 @@ import { useMatch, useNavigate } from 'react-router-dom';
 
 import { type TenantResponse } from '@/cloud/types/router';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { ReservedPlanId } from '@/consts/subscriptions';
 
 /**
  * The routes don't start with a tenant ID.
@@ -83,7 +82,7 @@ const defaultTenantResponse: TenantResponse = {
   indicator,
   subscription: {
     status: 'active',
-    planId: ReservedPlanId.free,
+    planId: ReservedPlanId.Free,
     currentPeriodStart: dayjs().toDate(),
     currentPeriodEnd: dayjs().add(1, 'month').toDate(),
   },
@@ -93,7 +92,7 @@ const defaultTenantResponse: TenantResponse = {
   },
   openInvoices: [],
   isSuspended: false,
-  planId: ReservedPlanId.free, // Reserved for compatibility with cloud
+  planId: ReservedPlanId.Free, // Reserved for compatibility with cloud
 };
 
 const initialTenants = Object.freeze(conditionalArray(!isCloud && defaultTenantResponse));

@@ -1,10 +1,10 @@
 import type { AdminConsoleKey } from '@logto/phrases';
+import { type ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeatureTag from '@/components/FeatureTag';
-import { type ReservedPlanId } from '@/consts/subscriptions';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -26,7 +26,7 @@ export type Props = {
    *
    * If not provided, no paywall tag will be shown.
    */
-  paywall?: Exclude<ReservedPlanId, ReservedPlanId.free>;
+  paywall?: Exclude<ReservedPlanId, ReservedPlanId.Free | ReservedPlanId.Development>;
 };
 
 /**
