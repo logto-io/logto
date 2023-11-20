@@ -17,7 +17,7 @@ type Props = {
 };
 
 function PageWrapper({ children }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
+  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   // Note: fallback to true for OSS version
@@ -28,7 +28,7 @@ function PageWrapper({ children }: Props) {
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         isBeta
-        paywall={cond(!isMfaEnabled && ReservedPlanId.hobby)}
+        paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.hobby)}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}
