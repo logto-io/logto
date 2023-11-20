@@ -93,6 +93,10 @@
     border-width: 1px;
     border-style: solid;
 
+    .icon {
+      color: var(--color-text-secondary);
+    }
+
     &:disabled {
       border-color: var(--color-border);
       color: var(--color-neutral-70);
