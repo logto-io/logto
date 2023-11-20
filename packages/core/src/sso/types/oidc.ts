@@ -28,10 +28,7 @@ export const basicOidcConnectorConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   issuer: z.string(),
-  scope: z
-    .string()
-    .optional()
-    .transform((scope) => scopePostProcessor(scope)),
+  scope: z.string().optional().transform(scopePostProcessor),
 });
 
 export type BasicOidcConnectorConfig = z.infer<typeof basicOidcConnectorConfigGuard>;
