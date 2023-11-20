@@ -2,7 +2,10 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 
 import { planQuotaItemOrder } from '@/consts/plan-quotas';
-import { type SubscriptionPlanQuota } from '@/types/subscriptions';
+import {
+  type SubscriptionPlanQuotaEntries,
+  type SubscriptionPlanQuota,
+} from '@/types/subscriptions';
 import { sortBy } from '@/utils/sort';
 
 import QuotaItem from './QuotaItem';
@@ -27,9 +30,7 @@ function PlanQuotaList({
 }: Props) {
   const items = useMemo(() => {
     // eslint-disable-next-line no-restricted-syntax
-    const entries = Object.entries(quota) as Array<
-      [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
-    >;
+    const entries = Object.entries(quota) as SubscriptionPlanQuotaEntries;
 
     const featuredEntries = featuredQuotaKeys
       ? entries.filter(([key]) => featuredQuotaKeys.includes(key))

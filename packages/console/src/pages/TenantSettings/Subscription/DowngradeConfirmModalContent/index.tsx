@@ -3,7 +3,12 @@ import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
-import { type SubscriptionPlan } from '@/types/subscriptions';
+import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
+import {
+  type SubscriptionPlanQuota,
+  type SubscriptionPlan,
+  type SubscriptionPlanQuotaEntries,
+} from '@/types/subscriptions';
 
 import PlanQuotaDiffCard from './PlanQuotaDiffCard';
 import * as styles from './index.module.scss';
@@ -11,6 +16,14 @@ import * as styles from './index.module.scss';
 type Props = {
   currentPlan: SubscriptionPlan;
   targetPlan: SubscriptionPlan;
+};
+
+const excludeComingSoonFeatures = (
+  quotaDiff: Partial<SubscriptionPlanQuota>
+): Partial<SubscriptionPlanQuota> => {
+  // eslint-disable-next-line no-restricted-syntax
+  const entries = Object.entries(quotaDiff) as SubscriptionPlanQuotaEntries;
+  return Object.fromEntries(entries.filter(([key]) => !comingSoonQuotaKeys.includes(key)));
 };
 
 function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
@@ -21,12 +34,12 @@ function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
   const { quota: targetQuota, name: targetPlanName } = targetPlan;
 
   const currentQuotaDiff = useMemo(
-    () => diff(targetQuota, currentQuota),
+    () => excludeComingSoonFeatures(diff(targetQuota, currentQuota)),
     [currentQuota, targetQuota]
   );
 
   const targetQuotaDiff = useMemo(
-    () => diff(currentQuota, targetQuota),
+    () => excludeComingSoonFeatures(diff(currentQuota, targetQuota)),
     [currentQuota, targetQuota]
   );
 

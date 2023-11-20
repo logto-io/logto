@@ -22,6 +22,10 @@ export type SubscriptionPlanQuota = Omit<
   ssoEnabled: boolean;
 };
 
+export type SubscriptionPlanQuotaEntries = Array<
+  [keyof SubscriptionPlanQuota, SubscriptionPlanQuota[keyof SubscriptionPlanQuota]]
+>;
+
 export type SubscriptionPlan = Omit<SubscriptionPlanResponse, 'quota'> & {
   quota: SubscriptionPlanQuota;
 };
