@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 
 import PlanQuotaDiffCard from './PlanQuotaDiffCard';
@@ -17,19 +16,9 @@ type Props = {
 function DowngradeConfirmModalContent({ currentPlan, targetPlan }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const {
-    quota: currentFullQuota,
-    quota: { mfaEnabled: currentMfaEnabled, ...currentQuotaWithoutMfa },
-    name: currentPlanName,
-  } = currentPlan;
-  const currentQuota = isDevFeaturesEnabled ? currentFullQuota : currentQuotaWithoutMfa;
+  const { quota: currentQuota, name: currentPlanName } = currentPlan;
 
-  const {
-    quota: targetFullQuota,
-    quota: { mfaEnabled: targetMfaEnabled, ...targetQuotaWithoutMfa },
-    name: targetPlanName,
-  } = targetPlan;
-  const targetQuota = isDevFeaturesEnabled ? targetFullQuota : targetQuotaWithoutMfa;
+  const { quota: targetQuota, name: targetPlanName } = targetPlan;
 
   const currentQuotaDiff = useMemo(
     () => diff(targetQuota, currentQuota),
