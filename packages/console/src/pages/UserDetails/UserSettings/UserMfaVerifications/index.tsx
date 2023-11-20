@@ -61,7 +61,7 @@ function UserMfaVerifications({ userId }: Props) {
           {t(mfaVerifications?.length ? 'field_description' : 'field_description_empty')}
         </div>
       )}
-      {(Boolean(mfaVerifications?.length) || error) && (
+      {(isLoading || Boolean(mfaVerifications?.length) || error) && (
         <Table
           hasBorder
           rowGroups={[{ key: 'mfaVerifications', data: mfaVerifications }]}

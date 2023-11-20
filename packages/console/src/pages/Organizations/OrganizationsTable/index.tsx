@@ -27,10 +27,11 @@ const pathname = '/organizations';
 const apiPathname = 'api/organizations';
 
 type Props = {
+  isLoading: boolean;
   onCreate: () => void;
 };
 
-function OrganizationsTable({ onCreate }: Props) {
+function OrganizationsTable({ isLoading, onCreate }: Props) {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const { data: response, error } = useSWR<[OrganizationWithFeatured[], number], RequestError>(
@@ -42,14 +43,14 @@ function OrganizationsTable({ onCreate }: Props) {
     })
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const isLoading = !response && !error;
+  const isTableLoading = isLoading || (!response && !error);
   const [data, totalCount] = response ?? [[], 0];
   const { navigate } = useTenantPathname();
 
   return (
     <Table
       className={pageLayout.table}
-      isLoading={isLoading}
+      isLoading={isTableLoading}
       placeholder={<EmptyDataPlaceholder onCreate={onCreate} />}
       rowGroups={[{ key: 'data', data }]}
       rowClickHandler={({ id }) => {

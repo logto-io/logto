@@ -55,18 +55,20 @@ function UserSsoIdentities({ ssoIdentities }: Props) {
     );
   }, [data, ssoIdentities]);
 
-  const hasLinkedSsoIdentities = displaySsoConnectors && displaySsoConnectors.length > 0;
+  const hasLinkedSsoIdentities = Boolean(displaySsoConnectors && displaySsoConnectors.length > 0);
 
   return (
     <div>
-      <div className={styles.description}>
-        {t(
-          hasLinkedSsoIdentities
-            ? 'user_details.sso_connectors.connected'
-            : 'user_details.sso_connectors.not_connected'
-        )}
-      </div>
-      {hasLinkedSsoIdentities && (
+      {!isLoading && !error && (
+        <div className={styles.description}>
+          {t(
+            hasLinkedSsoIdentities
+              ? 'user_details.sso_connectors.connected'
+              : 'user_details.sso_connectors.not_connected'
+          )}
+        </div>
+      )}
+      {(isLoading || hasLinkedSsoIdentities || error) && (
         <Table
           hasBorder
           rowGroups={[{ key: 'ssoIdentity', data: displaySsoConnectors }]}

@@ -124,21 +124,6 @@ function SigningKeys() {
           rowIndexKey="id"
           rowGroups={[{ key: 'signing_keys', data }]}
           columns={tableColumns}
-          loadingSkeleton={
-            <>
-              {Array.from({ length: 2 }).map((_, rowIndex) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <tr key={`skeleton-row-${rowIndex}`}>
-                  {tableColumns.map(({ colSpan }, columnIndex) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <td key={columnIndex} colSpan={colSpan}>
-                      <div className={styles.bone} />
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </>
-          }
         />
       </FormField>
       <FormField title={`tenants.signing_keys.rotate_${isPrivateKey ? 'private' : 'cookie'}_keys`}>

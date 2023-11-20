@@ -9,9 +9,9 @@ import Pagination from '@/ds-components/Pagination';
 
 import OverlayScrollbar from '../OverlayScrollbar';
 
+import Skeleton from './Skeleton';
 import TableEmptyWrapper from './TableEmptyWrapper';
 import TableError from './TableError';
-import TableLoading from './TableLoading';
 import * as styles from './index.module.scss';
 import type { Column, RowGroup } from './types';
 
@@ -35,6 +35,7 @@ export type Props<
   placeholder?: ReactNode;
   loadingSkeleton?: ReactNode;
   errorMessage?: string;
+  /** The inline style table that is usually embedded in other card containers, has rounded-corner border */
   hasBorder?: boolean;
   onRetry?: () => void;
   /** A footer that will be rendered on the bottom-left of the table. */
@@ -110,7 +111,10 @@ function Table<
             <tbody>
               {isLoading &&
                 (loadingSkeleton ?? (
-                  <TableLoading columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)} />
+                  <Skeleton
+                    isCompact={hasBorder}
+                    columnSpans={columns.map(({ colSpan }) => colSpan ?? 1)}
+                  />
                 ))}
               {hasError && (
                 <TableError columns={columns.length} content={errorMessage} onRetry={onRetry} />
