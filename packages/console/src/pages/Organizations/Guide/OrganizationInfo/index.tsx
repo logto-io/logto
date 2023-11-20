@@ -92,18 +92,6 @@ function OrganizationInfo() {
                   </TextLink>
                 </li>
               </ul>
-              <div className={styles.subtitle}>{t('guide.add_enterprise_connector')}</div>
-              <ul>
-                <li>
-                  <TextLink
-                    target="blank"
-                    rel="noopener"
-                    href="https://docs.logto.io/docs/tutorials/"
-                  >
-                    {t('guide.add_enterprise_connector_action')}
-                  </TextLink>
-                </li>
-              </ul>
             </div>
           </Card>
         </div>

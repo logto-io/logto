@@ -3,7 +3,8 @@ const organization = {
   page_title: 'Organizations',
   title: 'Organizations',
   subtitle:
-    'Represent the teams, business customers, and partner companies that access your applications as organizations.',
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  organization_template: 'Organization template',
   organization_id: 'Organization ID',
   members: 'Members',
   create_organization: 'Create organization',
@@ -39,7 +40,7 @@ const organization = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Start with guides',
-    subtitle: 'Jumpstart your app development process with our guides',
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       title: "Let's understand how organization works in Logto",
       section_1: {
@@ -62,16 +63,12 @@ const organization = {
     },
     step_1: 'Step 1: Define organization permissions',
     step_2: 'Step 2: Define organization roles',
-    step_2_description:
-      '"Organization roles" represent a set of roles given to each organization at the start. These roles are determined by the global permissions you have set in previous screen. Similar with org permission, once you finish this setting for the first time, you won’t need to do this every-time you create a new organization.',
     step_3: 'Step 3: Create your first organization',
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     more_next_steps: 'More next steps',
     add_members: 'Add members to your organization',
     add_members_action: 'Bulk add members and assign roles',
-    add_enterprise_connector: 'Add enterprise SSO',
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     organization_permissions: 'Organization permissions',
     permission_name: 'Permission name',
     permissions: 'Permissions',

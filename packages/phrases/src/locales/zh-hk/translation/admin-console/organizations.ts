@@ -3,7 +3,11 @@ const organizations = {
   organization: 'Organization',
   page_title: '組織',
   title: '組織',
-  subtitle: '代表作為組織存取應用程式的團隊、商業客戶和合作夥伴公司。',
+  /** UNTRANSLATED */
+  subtitle:
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  /** UNTRANSLATED */
+  organization_template: 'Organization template',
   organization_id: '組織 ID',
   members: '成員',
   create_organization: '建立組織',
@@ -41,7 +45,8 @@ const organizations = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: '開始使用指南',
-    subtitle: '使用我們的指南快速開始應用程式開發流程',
+    /** UNTRANSLATED */
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       /** UNTRANSLATED */
       title: "Let's understand how organization works in Logto",
@@ -70,21 +75,16 @@ const organizations = {
     },
     step_1: '第 1 步：定義組織權限',
     step_2: '第 2 步：定義組織角色',
-    step_2_description:
-      '“組織角色”代表每個組織一開始就得到的一組角色。這些角色由您在前一步設置的全局權限所確定。類似組織權限，完成首次設置之後，您將無需每次創建新組繹時都進行此設置。',
     step_3: '第 3 步：創建您的第一個組織',
+    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     /** UNTRANSLATED */
     more_next_steps: 'More next steps',
     /** UNTRANSLATED */
     add_members: 'Add members to your organization',
     /** UNTRANSLATED */
     add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     /** UNTRANSLATED */
     organization_permissions: 'Organization permissions',
     /** UNTRANSLATED */

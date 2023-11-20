@@ -117,7 +117,6 @@ function OrganizationRoles() {
             <RbacIcon className={styles.icon} />
             <div className={styles.section}>
               <div className={styles.title}>{t('guide.step_2')}</div>
-              <div className={styles.description}>{t('guide.step_2_description')}</div>
             </div>
             <form>
               <DynamicFormFields

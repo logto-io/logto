@@ -3,8 +3,11 @@ const organizations = {
   organization: 'Organization',
   page_title: 'Organizaciones',
   title: 'Organizaciones',
+  /** UNTRANSLATED */
   subtitle:
-    'Representan los equipos, clientes comerciales y empresas asociadas que acceden a tus aplicaciones como organizaciones.',
+    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
+  /** UNTRANSLATED */
+  organization_template: 'Organization template',
   organization_id: 'ID de la organización',
   members: 'Miembros',
   create_organization: 'Crear organización',
@@ -41,7 +44,8 @@ const organizations = {
     'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
   guide: {
     title: 'Comience con guías',
-    subtitle: 'Inicie su proceso de desarrollo de aplicaciones con nuestras guías',
+    /** UNTRANSLATED */
+    subtitle: 'Jumpstart your organization settings with our guides',
     introduction: {
       /** UNTRANSLATED */
       title: "Let's understand how organization works in Logto",
@@ -70,21 +74,16 @@ const organizations = {
     },
     step_1: 'Paso 1: Definir permisos de organización',
     step_2: 'Paso 2: Definir roles de organización',
-    step_2_description:
-      '"Roles de organización" representan un conjunto de roles dados a cada organización al principio. Estos roles están determinados por los permisos globales que ha establecido en la pantalla anterior. Similar al permiso de organización, una vez que termine esta configuración por primera vez, no necesitará hacer esto cada vez que cree una nueva organización.',
     step_3: 'Paso 3: Cree su primera organización',
+    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities, such as partners, customers, and their access control.",
+      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
     /** UNTRANSLATED */
     more_next_steps: 'More next steps',
     /** UNTRANSLATED */
     add_members: 'Add members to your organization',
     /** UNTRANSLATED */
     add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    add_enterprise_connector: 'Add enterprise SSO',
-    /** UNTRANSLATED */
-    add_enterprise_connector_action: 'Set up enterprise SSO',
     /** UNTRANSLATED */
     organization_permissions: 'Organization permissions',
     /** UNTRANSLATED */

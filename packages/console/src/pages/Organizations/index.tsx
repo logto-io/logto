@@ -82,7 +82,7 @@ function Organizations({ tab }: Props) {
               href={joinPath('/organizations', tabs.template)}
               isActive={tab === 'template'}
             >
-              {t('general.settings_nav')}
+              {t('organizations.organization_template')}
             </TabNavItem>
           </TabNav>
           {!tab && <OrganizationsTable onCreate={handleCreate} />}
