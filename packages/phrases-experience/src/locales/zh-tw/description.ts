@@ -62,6 +62,7 @@ const description = {
   single_sign_on_email_form: '輸入你的企業電子郵件地址',
   single_sign_on_connectors_list:
     '您的企業已為電子郵件帳戶{{email}}啟用單一登入。您可以繼續使用以下的SSO供應商登入。',
+  single_sign_on_enabled: '該帳戶已啟用單一登入',
 };
 
 export default Object.freeze(description);

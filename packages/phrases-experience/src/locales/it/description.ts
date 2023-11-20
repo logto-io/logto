@@ -71,6 +71,7 @@ const description = {
   single_sign_on_email_form: 'Inserisci il tuo indirizzo email aziendale',
   single_sign_on_connectors_list:
     "La tua azienda ha abilitato il Single Sign-On per l'account email {{email}}. Puoi continuare ad accedere con i seguenti fornitori di SSO.",
+  single_sign_on_enabled: 'Il Single Sign-On è abilitato per questo account',
 };
 
 export default Object.freeze(description);

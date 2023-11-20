@@ -71,6 +71,7 @@ const description = {
   single_sign_on_email_form: '企業のメールアドレスを入力してください',
   single_sign_on_connectors_list:
     'あなたの企業は、メールアカウント{{email}}に対してシングルサインオンを有効にしました。以下のSSOプロバイダーを使用してサインインを続けることができます。',
+  single_sign_on_enabled: 'このアカウントではシングル サインオンが有効になっています',
 };
 
 export default Object.freeze(description);

@@ -70,6 +70,7 @@ const description = {
   single_sign_on_email_form: 'Insira o endereço de email corporativo',
   single_sign_on_connectors_list:
     'A sua empresa ativou o Single Sign-On para a conta de email {{email}}. Pode continuar a iniciar sessão com os seguintes fornecedores de SSO.',
+  single_sign_on_enabled: 'Esta conta tem o Single Sign-On ativado.',
 };
 
 export default Object.freeze(description);

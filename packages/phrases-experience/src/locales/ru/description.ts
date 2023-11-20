@@ -74,6 +74,7 @@ const description = {
   single_sign_on_email_form: 'Введите корпоративный адрес электронной почты',
   single_sign_on_connectors_list:
     'Ваше предприятие включило функцию единого входа для электронной почты {{email}}. Вы можете продолжить вход в систему с помощью следующих провайдеров SSO.',
+  single_sign_on_enabled: 'Единый вход в систему включен для этой учетной записи',
 };
 
 export default Object.freeze(description);

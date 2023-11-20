@@ -3,10 +3,12 @@ import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
+import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
+import { singleSignOnPath } from '@/constants/env';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -17,10 +19,22 @@ jest.mock('react-device-detect', () => ({
   isMobile: true,
 }));
 
+const mockedNavigate = jest.fn();
+const getSingleSignOnConnectorsMock = jest.fn();
+
 jest.mock('i18next', () => ({
   ...jest.requireActual('i18next'),
   language: 'en',
   t: (key: string) => key,
+}));
+
+jest.mock('@/apis/single-sign-on', () => ({
+  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedNavigate,
 }));
 
 describe('UsernamePasswordSignInForm', () => {
@@ -34,7 +48,9 @@ describe('UsernamePasswordSignInForm', () => {
   ) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
-        <PasswordSignInForm signInMethods={signInMethods} />
+        <SingleSignOnContextProvider>
+          <PasswordSignInForm signInMethods={signInMethods} />
+        </SingleSignOnContextProvider>
       </SettingsProvider>
     );
 
@@ -163,6 +179,85 @@ describe('UsernamePasswordSignInForm', () => {
           password: 'password',
         });
       });
+    });
+  });
+
+  test('should switch to single sign on form when single sign on is enabled for a give email', async () => {
+    const { getByText, queryByText, container } = renderPasswordSignInForm(
+      [SignInIdentifier.Username, SignInIdentifier.Email],
+      {
+        ssoConnectors: mockSsoConnectors,
+      }
+    );
+
+    const passwordFormAssertion = () => {
+      expect(container.querySelector('input[name="password"]')).not.toBeNull();
+      expect(queryByText('action.sign_in')).not.toBeNull();
+    };
+
+    const singleSignOnFormAssertion = () => {
+      expect(container.querySelector('input[name="password"]')).toBeNull();
+      expect(queryByText('action.sign_in')).toBeNull();
+      expect(queryByText('action.single_sign_on')).not.toBeNull();
+    };
+
+    const identifierInput = container.querySelector('input[name="identifier"]');
+    assert(identifierInput, new Error('identifier input should exist'));
+
+    // Default
+    passwordFormAssertion();
+
+    // Username
+    act(() => {
+      fireEvent.change(identifierInput, { target: { value: 'foo' } });
+    });
+    passwordFormAssertion();
+
+    // Invalid email
+    act(() => {
+      fireEvent.change(identifierInput, { target: { value: 'foo@l' } });
+    });
+    passwordFormAssertion();
+    expect(getSingleSignOnConnectorsMock).not.toBeCalled();
+
+    // Valid email with empty response
+    const email = 'foo@logto.io';
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce([]);
+    act(() => {
+      fireEvent.change(identifierInput, { target: { value: email } });
+    });
+
+    await waitFor(() => {
+      expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+    });
+
+    passwordFormAssertion();
+
+    // Valid email with response
+    const email2 = 'foo@bar.io';
+    getSingleSignOnConnectorsMock.mockClear();
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
+
+    act(() => {
+      fireEvent.change(identifierInput, { target: { value: email2 } });
+    });
+
+    await waitFor(() => {
+      expect(getSingleSignOnConnectorsMock).toBeCalledWith(email2);
+    });
+
+    await waitFor(() => {
+      singleSignOnFormAssertion();
+    });
+
+    const submitButton = getByText('action.single_sign_on');
+
+    act(() => {
+      fireEvent.submit(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
     });
   });
 });

@@ -70,6 +70,7 @@ const description = {
   single_sign_on_email_form: 'Kurumsal e-posta adresinizi girin',
   single_sign_on_connectors_list:
     'Şirketiniz, {{email}} e-posta hesabı için Tekli Oturum Açmayı (Single Sign-On) etkinleştirdi. Aşağıdaki SSO sağlayıcıları ile oturum açmaya devam edebilirsiniz.',
+  single_sign_on_enabled: 'Bu hesapta Tekli Oturum Açma etkinleştirildi.',
 };
 
 export default Object.freeze(description);

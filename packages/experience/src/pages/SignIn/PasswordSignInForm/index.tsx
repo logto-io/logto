@@ -14,6 +14,7 @@ import { useForgotPasswordSettings } from '@/hooks/use-sie';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
+import useSingleSignOnWatch from './use-single-sign-on-watch';
 
 type Props = {
   className?: string;
@@ -22,7 +23,7 @@ type Props = {
   signInMethods: SignInIdentifier[];
 };
 
-type FormState = {
+export type FormState = {
   identifier: IdentifierInputValue;
   password: string;
 };
@@ -47,11 +48,18 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     },
   });
 
+  const { showSingleSignOn, navigateToSingleSignOn } = useSingleSignOnWatch(control);
+
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value }, password }) => {
+        if (showSingleSignOn) {
+          navigateToSingleSignOn();
+          return;
+        }
+
         if (!type) {
           return;
         }
@@ -62,7 +70,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, navigateToSingleSignOn, onSubmit, showSingleSignOn]
   );
 
   useEffect(() => {
@@ -98,19 +106,24 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           />
         )}
       />
+      {showSingleSignOn && (
+        <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
+      )}
 
-      <PasswordInputField
-        className={styles.inputField}
-        autoComplete="current-password"
-        placeholder={t('input.password')}
-        isDanger={!!errors.password}
-        errorMessage={errors.password?.message}
-        {...register('password', { required: t('error.password_required') })}
-      />
+      {!showSingleSignOn && (
+        <PasswordInputField
+          className={styles.inputField}
+          autoComplete="current-password"
+          placeholder={t('input.password')}
+          isDanger={!!errors.password}
+          errorMessage={errors.password?.message}
+          {...register('password', { required: t('error.password_required') })}
+        />
+      )}
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      {isForgotPasswordEnabled && (
+      {isForgotPasswordEnabled && !showSingleSignOn && (
         <ForgotPasswordLink
           className={styles.link}
           identifier={watch('identifier').type}
@@ -118,7 +131,11 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         />
       )}
 
-      <Button name="submit" title="action.sign_in" htmlType="submit" />
+      <Button
+        name="submit"
+        title={showSingleSignOn ? 'action.single_sign_on' : 'action.sign_in'}
+        htmlType="submit"
+      />
 
       <input hidden type="submit" />
     </form>
