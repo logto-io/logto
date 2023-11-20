@@ -1,5 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type Optional } from '@silverhand/essentials';
+import { trySafe, type Optional } from '@silverhand/essentials';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
@@ -84,7 +84,7 @@ class SamlConnector {
    */
   async getSamlConfig(): Promise<SamlMetadata> {
     const serviceProvider = this.serviceProviderMetadata;
-    const identityProvider = await this.getSamlIdpMetadata();
+    const identityProvider = await trySafe(async () => this.getSamlIdpMetadata());
     return { serviceProvider, identityProvider };
   }
 

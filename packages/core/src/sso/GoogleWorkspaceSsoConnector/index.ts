@@ -25,10 +25,6 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
     });
   }
 
-  // OIDC connector doesn't have additional properties.
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  getProperties = () => undefined;
-
   async getConfig() {
     return this.getOidcConfig();
   }

@@ -17,10 +17,6 @@ export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
     super(parseConfigResult.data);
   }
 
-  // OIDC connector doesn't have additional properties.
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  getProperties = () => undefined;
-
   async getConfig() {
     return this.getOidcConfig();
   }

@@ -5,7 +5,7 @@ import type {
   SupportedSsoConnector,
   SsoProviderName,
 } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
@@ -75,16 +75,10 @@ export const fetchConnectorProviderDetails = async (
     return instance.getConfig();
   });
 
-  const providerProperties = trySafe(() => {
-    const instance = new constructor(connector, tenantId);
-    return instance.getProperties();
-  });
-
   return {
     ...connector,
     providerLogo: logo,
-    ...conditional(providerConfig && { providerConfig }),
-    ...conditional(providerProperties && { providerProperties }),
+    providerConfig,
   };
 };
 
