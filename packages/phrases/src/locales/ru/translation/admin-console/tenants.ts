@@ -61,7 +61,8 @@ const tenants = {
   },
   dev_tenant_migration: {
     /** UNTRANSLATED */
-    title: 'You can now try our Pro features for free by creating a new "Development tenant"!',
+    title:
+      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
     /** UNTRANSLATED */
     affect_title: 'How does this affect you?',
     /** UNTRANSLATED */
@@ -77,7 +78,8 @@ const tenants = {
   },
   dev_tenant_notification: {
     /** UNTRANSLATED */
-    title: 'You can now access <a>all features of Logto Pro</a> in your development tenant!',
+    title:
+      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
     /** UNTRANSLATED */
     description: "It's completely free, with no trial period – forever!",
   },
