@@ -7,12 +7,42 @@ import ts from 'typescript';
 
 import { consoleLog } from '../../../utils.js';
 
+const getValue = (property: ts.PropertyAssignment): string => {
+  if (
+    ts.isStringLiteral(property.initializer) ||
+    ts.isNoSubstitutionTemplateLiteral(property.initializer)
+  ) {
+    return property.initializer.getText();
+  }
+
+  consoleLog.fatal('Unsupported property:', property.getFullText());
+};
+
+const hasLeadingUntranslatedComment = (fullText: string) => {
+  const commentRanges = ts.getLeadingCommentRanges(fullText, 0);
+
+  if (commentRanges?.[0]) {
+    if (commentRanges.length > 1) {
+      consoleLog.fatal('Multiple comments found for property.');
+    }
+
+    const commentRange = commentRanges[0];
+    const comment = fullText.slice(commentRange.pos, commentRange.end);
+    if (comment.includes(untranslatedMark)) {
+      return true;
+    }
+    consoleLog.warn('Unsupported comment:', comment);
+  }
+
+  return false;
+};
+
 type FileStructure = {
-  [key: string]: { filePath?: string; structure: FileStructure };
+  [key: string | number]: { filePath?: string; structure: FileStructure };
 };
 
 type NestedPhraseObject = {
-  [key: string]: [phrase: string, isTranslated: boolean] | NestedPhraseObject;
+  [key: string | number]: [phrase: string, isTranslated: boolean] | NestedPhraseObject;
 };
 
 const untranslatedMark = 'UNTRANSLATED';
@@ -118,35 +148,32 @@ export const parseLocaleFiles = (filePath: string): ParsedTuple => {
           nestedObject[key] = phrases;
           fileStructure[key] = { structure };
           /* eslint-enable @silverhand/fp/no-mutation */
-        } else if (
-          ts.isStringLiteral(property.initializer) ||
-          ts.isNoSubstitutionTemplateLiteral(property.initializer)
-        ) {
-          const value = property.initializer.getText();
-
-          const commentRanges = ts.getLeadingCommentRanges(property.getFullText(), 0);
-
-          if (commentRanges?.[0]) {
-            if (commentRanges.length > 1) {
-              consoleLog.fatal('Multiple comments found for property:', property);
+        } else if (ts.isArrayLiteralExpression(property.initializer)) {
+          const elements = property.initializer.elements.map((element) => {
+            if (ts.isStringLiteralLike(element)) {
+              return [
+                [element.getText(), !hasLeadingUntranslatedComment(element.getFullText())],
+                {},
+              ];
             }
 
-            const commentRange = commentRanges[0];
-            const comment = property.getFullText().slice(commentRange.pos, commentRange.end);
-            if (comment.includes(untranslatedMark)) {
-              // eslint-disable-next-line @silverhand/fp/no-mutation
-              nestedObject[key] = [value, false];
-            } else {
-              // eslint-disable-next-line @silverhand/fp/no-mutation
-              nestedObject[key] = [value, true];
-              consoleLog.warn('Unsupported comment:', comment);
-            }
-          } else {
-            // eslint-disable-next-line @silverhand/fp/no-mutation
-            nestedObject[key] = [value, true];
-          }
+            return traverseNode(element, {}, {});
+          });
+
+          /* eslint-disable @silverhand/fp/no-mutation */
+          nestedObject[key] = Object.fromEntries(
+            elements.map(([phrases], index) => [index, phrases])
+          );
+          fileStructure[key] = {
+            structure: Object.fromEntries(
+              elements.map(([, structure], index) => [index, { structure }])
+            ),
+          };
+          /* eslint-enable @silverhand/fp/no-mutation */
         } else {
-          consoleLog.fatal('Unsupported property:', property);
+          const value = getValue(property);
+          // eslint-disable-next-line @silverhand/fp/no-mutation
+          nestedObject[key] = [value, !hasLeadingUntranslatedComment(property.getFullText())];
         }
       }
     };
@@ -260,15 +287,18 @@ const traverseNode = async (
 
   // Recursively traverse the nested object of phrases and the file structure
   // of the baseline language
+  // eslint-disable-next-line complexity
   const traverseObject = async (
     baseline: ParsedTuple,
     targetObject: NestedPhraseObject,
     tabSize: number
   ) => {
     const [baselineObject, baselineStructure] = baseline;
+    const isBaselineArray = 0 in baselineObject;
 
     for (const [key, value] of Object.entries(baselineObject)) {
       const existingValue = targetObject[key];
+      const keyOutput = isBaselineArray ? '' : `${key}: `;
 
       if (Array.isArray(value)) {
         const [phrase] = value;
@@ -280,11 +310,11 @@ const traverseNode = async (
         if (Array.isArray(existingValue) && existingValue[1]) {
           await fs.appendFile(
             targetFilePath,
-            `${' '.repeat(tabSize)}${key}: ${existingValue[0]},\n`
+            `${' '.repeat(tabSize)}${keyOutput}${existingValue[0]},\n`
           );
         } else {
           await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}/** ${untranslatedMark} */\n`);
-          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: ${phrase},\n`);
+          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${keyOutput}${phrase},\n`);
         }
       }
       // Not a string, treat it as a nested object or an import
@@ -301,15 +331,22 @@ const traverseNode = async (
             path.join(targetDirectory, keyStructure.filePath)
           );
         }
-        // Otherwise, treat it as a nested object.
+        // Otherwise, treat it as a nested object or array.
         else {
-          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}${key}: {\n`);
+          const isValueArray = 0 in value;
+          await fs.appendFile(
+            targetFilePath,
+            `${' '.repeat(tabSize)}${keyOutput}${isValueArray ? '[' : '{'}\n`
+          );
           await traverseObject(
             [value, keyStructure?.structure ?? {}],
             Array.isArray(existingValue) ? {} : existingValue ?? {},
             tabSize + 2
           );
-          await fs.appendFile(targetFilePath, `${' '.repeat(tabSize)}},\n`);
+          await fs.appendFile(
+            targetFilePath,
+            `${' '.repeat(tabSize)}${isValueArray ? ']' : '}'},\n`
+          );
         }
       }
     }
