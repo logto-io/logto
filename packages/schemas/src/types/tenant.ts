@@ -3,6 +3,6 @@ export enum TenantTag {
   Development = 'development',
   /* @deprecated */
   Staging = 'staging',
-  /* Production tenants have several subscription plans */
+  /* A production tenant must have an associated subscription plan, even if it's a free plan */
   Production = 'production',
 }
