@@ -28,10 +28,15 @@ const excludedQuotaKeys = new Set<keyof SubscriptionPlanQuota>([
 
 type Props = {
   targetPlan: SubscriptionPlan;
+  exceededQuotaKeys: Array<keyof SubscriptionPlanQuota>;
   isDowngrade?: boolean;
 };
 
-function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: Props) {
+function NotEligibleSwitchPlanModalContent({
+  targetPlan,
+  exceededQuotaKeys,
+  isDowngrade = false,
+}: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.subscription.not_eligible_modal',
   });
@@ -42,11 +47,12 @@ function NotEligibleSwitchPlanModalContent({ targetPlan, isDowngrade = false }: 
     // eslint-disable-next-line no-restricted-syntax
     const entries = Object.entries(quota) as SubscriptionPlanQuotaEntries;
     return entries
+      .filter(([quotaKey]) => exceededQuotaKeys.includes(quotaKey))
       .slice()
       .sort(([preQuotaKey], [nextQuotaKey]) =>
         sortBy(planQuotaItemOrder)(preQuotaKey, nextQuotaKey)
       );
-  }, [quota]);
+  }, [quota, exceededQuotaKeys]);
 
   return (
     <div className={styles.container}>
