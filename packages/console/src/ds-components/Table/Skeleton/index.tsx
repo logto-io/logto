@@ -1,15 +1,34 @@
-import * as styles from './TableLoading.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   columnSpans: number[];
+  /** For the compact inline style table */
+  isCompact?: boolean;
 };
 
-function TableLoading({ columnSpans }: Props) {
+function Skeleton({ columnSpans, isCompact }: Props) {
+  if (isCompact) {
+    return (
+      <>
+        {Array.from({ length: 2 }).map((_, rowIndex) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <tr key={`row-${rowIndex}`}>
+            {columnSpans.map((colSpan, columnIndex) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <td key={columnIndex} colSpan={colSpan}>
+                <div className={styles.rect} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </>
+    );
+  }
   return (
     <>
       {Array.from({ length: 8 }).map((_, rowIndex) => (
         // eslint-disable-next-line react/no-array-index-key
-        <tr key={`row-${rowIndex}`} className={styles.loading}>
+        <tr key={`row-${rowIndex}`} className={styles.row}>
           <td colSpan={columnSpans[0]}>
             <div className={styles.itemPreview}>
               <div className={styles.avatar} />
@@ -31,4 +50,4 @@ function TableLoading({ columnSpans }: Props) {
   );
 }
 
-export default TableLoading;
+export default Skeleton;

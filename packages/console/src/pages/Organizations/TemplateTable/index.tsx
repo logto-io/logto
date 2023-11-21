@@ -1,14 +1,11 @@
 import { type AdminConsoleKey } from '@logto/phrases';
-import classNames from 'classnames';
 import { type FieldValues, type FieldPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg';
 import Plus from '@/assets/icons/plus.svg';
-import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
-import { Ring as Spinner } from '@/ds-components/Spinner';
 import Table from '@/ds-components/Table';
 import { type Column } from '@/ds-components/Table/types';
 
@@ -49,12 +46,8 @@ function TemplateTable<
   isLoading,
   onPageChange,
 }: Props<TFieldValues, TName>) {
-  const hasData = !isLoading && data.length > 0;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  if (isLoading) {
-    <Spinner className={styles.spinner} />;
-  }
+  const noData = !isLoading && data.length === 0;
 
   return (
     <section className={styles.section}>
@@ -63,10 +56,19 @@ function TemplateTable<
           <DynamicT forKey={name} interpolation={{ count: 2 }} />
         </header>
       )}
-      {hasData && (
+      {onAdd && noData && (
+        <>
+          {name && (
+            <div className={styles.empty}>
+              {t('organizations.empty_placeholder', { entity: String(t(name)).toLowerCase() })}
+            </div>
+          )}
+          <Button icon={<Plus />} title="general.add" onClick={onAdd} />
+        </>
+      )}
+      {!noData && (
         <Table
           hasBorder
-          placeholder={<EmptyDataPlaceholder />}
           isLoading={isLoading}
           rowGroups={[
             {
@@ -93,16 +95,6 @@ function TemplateTable<
             />
           }
         />
-      )}
-      {onAdd && !hasData && (
-        <>
-          {name && (
-            <div className={classNames(styles.empty)}>
-              {t('organizations.empty_placeholder', { entity: String(t(name)).toLowerCase() })}
-            </div>
-          )}
-          <Button icon={<Plus />} title="general.add" onClick={onAdd} />
-        </>
       )}
     </section>
   );

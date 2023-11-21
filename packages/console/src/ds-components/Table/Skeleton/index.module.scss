@@ -1,6 +1,12 @@
 @use '@/scss/underscore' as _;
 
-.loading {
+.rect {
+  @include _.shimmering-animation;
+  height: 26px;
+  max-width: 344px;
+}
+
+.row {
   .itemPreview {
     display: flex;
     align-items: center;
@@ -31,8 +37,6 @@
   }
 
   .rect {
-    @include _.shimmering-animation;
     height: 32px;
-    max-width: 344px;
   }
 }

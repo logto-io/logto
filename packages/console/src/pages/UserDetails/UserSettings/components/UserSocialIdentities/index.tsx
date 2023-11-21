@@ -81,16 +81,20 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
     });
   }, [connectorGroups, identities, t]);
 
+  const hasConnectors = Boolean(displayConnectors && displayConnectors.length > 0);
+
   return (
     <div>
-      <div className={styles.description}>
-        {t(
-          displayConnectors && displayConnectors.length > 0
-            ? 'user_details.connectors.connected'
-            : 'user_details.connectors.not_connected'
-        )}
-      </div>
-      {displayConnectors && displayConnectors.length > 0 && (
+      {!isLoading && !error && (
+        <div className={styles.description}>
+          {t(
+            hasConnectors
+              ? 'user_details.connectors.connected'
+              : 'user_details.connectors.not_connected'
+          )}
+        </div>
+      )}
+      {(isLoading || hasConnectors || error) && (
         <Table
           hasBorder
           rowGroups={[{ key: 'identities', data: displayConnectors }]}

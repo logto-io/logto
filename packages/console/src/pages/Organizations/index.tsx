@@ -31,8 +31,8 @@ function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
-  const { configs } = useConfigs();
-  const isInitialSetup = !configs?.organizationCreated;
+  const { configs, isLoading: isLoadingConfigs } = useConfigs();
+  const isInitialSetup = !isLoadingConfigs && !configs?.organizationCreated;
 
   const handleCreate = useCallback(() => {
     if (isInitialSetup) {
@@ -85,7 +85,7 @@ function Organizations({ tab }: Props) {
               {t('organizations.organization_template')}
             </TabNavItem>
           </TabNav>
-          {!tab && <OrganizationsTable onCreate={handleCreate} />}
+          {!tab && <OrganizationsTable isLoading={isLoadingConfigs} onCreate={handleCreate} />}
           {tab === 'template' && <Settings />}
         </>
       )}
