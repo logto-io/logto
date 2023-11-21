@@ -171,7 +171,9 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
 
 export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();
 
-export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
-  'ssoEnabled',
-  'organizationEnabled',
-];
+/**
+ * Unreleased quota keys will be added here, and it will effect the following:
+ * - Related quota items will have a "Coming soon" tag in the plan selection component.
+ * - Related quota items will be hidden from the downgrade plan notification modal.
+ */
+export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = ['ssoEnabled'];
