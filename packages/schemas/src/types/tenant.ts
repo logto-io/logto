@@ -1,5 +1,5 @@
 export enum TenantTag {
-  /* Development tenants are free to use and are not meant to be used in production */
+  /* Development tenants are free to use but are not meant to be used as production environment */
   Development = 'development',
   /* @deprecated */
   Staging = 'staging',
