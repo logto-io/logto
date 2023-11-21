@@ -51,9 +51,10 @@ const quota_table = {
     title: 'ウェブフック',
     hooks: 'ウェブフック',
   },
-  organization: {
+  organizations: {
     title: '組織',
-    organization: '組織',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: 'サポート',

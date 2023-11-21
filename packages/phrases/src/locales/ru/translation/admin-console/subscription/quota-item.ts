@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: 'Неограниченное количество вебхуков',
     not_eligible: 'Удалите ваши вебхуки',
   },
-  organization_enabled: {
-    name: 'Organization',
-    limited: 'Organization',
-    unlimited: 'Organization',
-    not_eligible: 'Удалите свои организации',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

@@ -51,9 +51,10 @@ const quota_table = {
     title: 'Webhooks',
     hooks: 'Webhooks',
   },
-  organization: {
+  organizations: {
     title: '組織',
-    organization: '組織',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: '支援',

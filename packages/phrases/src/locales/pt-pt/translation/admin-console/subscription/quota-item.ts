@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: 'Webhooks ilimitados',
     not_eligible: 'Remova os seus webhooks',
   },
-  organization_enabled: {
-    name: 'Organização',
-    limited: 'Organização',
-    unlimited: 'Organização',
-    not_eligible: 'Remover as tuas organizações',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Conservação de registos de auditoria',

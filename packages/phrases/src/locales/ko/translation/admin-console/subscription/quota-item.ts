@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: '무제한 Webhooks',
     not_eligible: '웹훅을 삭제하세요',
   },
-  organization_enabled: {
-    name: '조직',
-    limited: '조직',
-    unlimited: '조직',
-    not_eligible: '조직을 제거하십시오',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '감사 로그 보존 기간',

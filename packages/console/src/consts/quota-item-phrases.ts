@@ -22,7 +22,7 @@ export const quotaItemPhrasesMap: Record<
   communitySupportEnabled: 'community_support_enabled.name',
   ticketSupportResponseTime: 'customer_ticket_support.name',
   mfaEnabled: 'mfa_enabled.name',
-  organizationEnabled: 'organization_enabled.name',
+  organizationsEnabled: 'organizations_enabled.name',
   ssoEnabled: 'sso_enabled.name',
 };
 
@@ -46,7 +46,7 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   communitySupportEnabled: 'community_support_enabled.unlimited',
   ticketSupportResponseTime: 'customer_ticket_support.unlimited',
   mfaEnabled: 'mfa_enabled.unlimited',
-  organizationEnabled: 'organization_enabled.unlimited',
+  organizationsEnabled: 'organizations_enabled.unlimited',
   ssoEnabled: 'sso_enabled.unlimited',
 };
 
@@ -70,7 +70,7 @@ export const quotaItemLimitedPhrasesMap: Record<
   communitySupportEnabled: 'community_support_enabled.limited',
   ticketSupportResponseTime: 'customer_ticket_support.limited',
   mfaEnabled: 'mfa_enabled.limited',
-  organizationEnabled: 'organization_enabled.limited',
+  organizationsEnabled: 'organizations_enabled.limited',
   ssoEnabled: 'sso_enabled.limited',
 };
 
@@ -94,6 +94,6 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   communitySupportEnabled: 'community_support_enabled.not_eligible',
   ticketSupportResponseTime: 'customer_ticket_support.not_eligible',
   mfaEnabled: 'mfa_enabled.not_eligible',
-  organizationEnabled: 'organization_enabled.not_eligible',
+  organizationsEnabled: 'organizations_enabled.not_eligible',
   ssoEnabled: 'sso_enabled.not_eligible',
 };

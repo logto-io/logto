@@ -51,7 +51,11 @@ function OrganizationsTable({ isLoading, onCreate }: Props) {
     <Table
       className={pageLayout.table}
       isLoading={isTableLoading}
-      placeholder={<EmptyDataPlaceholder onCreate={onCreate} />}
+      placeholder={
+        <EmptyDataPlaceholder
+          buttonProps={{ title: 'organizations.create_organization', onClick: onCreate }}
+        />
+      }
       rowGroups={[{ key: 'data', data }]}
       rowClickHandler={({ id }) => {
         navigate(joinPath(pathname, id));

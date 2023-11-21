@@ -51,9 +51,10 @@ const quota_table = {
     title: 'Hooks',
     hooks: 'Hooks',
   },
-  organization: {
+  organizations: {
     title: 'Organização',
-    organization: 'Organização',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: 'Suporte',

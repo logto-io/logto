@@ -26,7 +26,7 @@ const featuredQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
   'scopesPerRoleLimit',
   'mfaEnabled',
   'ssoEnabled',
-  'organizationEnabled',
+  'organizationsEnabled',
   'auditLogsRetentionDays',
 ];
 
