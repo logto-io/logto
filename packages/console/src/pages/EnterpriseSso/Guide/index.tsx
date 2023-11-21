@@ -63,7 +63,7 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
     id: ssoConnectorId,
     connectorName: ssoConnectorName,
     providerName,
-    providerProperties,
+    providerConfig,
   } = connector;
 
   const api = useApi();
@@ -138,7 +138,7 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
                   <BasicInfo
                     ssoConnectorId={ssoConnectorId}
                     providerName={providerName}
-                    providerProperties={providerProperties}
+                    providerConfig={providerConfig}
                   />
                 </GuideCard>
                 {providerName === SsoProviderName.OIDC ? (
