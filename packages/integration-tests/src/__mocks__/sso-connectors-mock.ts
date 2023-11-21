@@ -61,7 +61,7 @@ export const partialConfigAndProviderNames: Array<{
       clientId: 'foo',
       clientSecret: 'foo',
       issuer: logtoIssuer,
-      scope: 'openid',
+      scope: 'openid profile email',
     },
   },
   {
