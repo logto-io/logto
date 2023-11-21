@@ -1,9 +1,10 @@
 /**
  * Provides a hook to access the session storage.
  */
-import { type SsoConnectorMetadata } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import { useCallback } from 'react';
+import * as s from 'superstruct';
+
+import { ssoConnectorMetadataGuard } from '@/types/guard';
 
 const logtoStorageKeyPrefix = `logto:${window.location.origin}`;
 
@@ -12,19 +13,16 @@ export enum StorageKeys {
   SsoConnectors = 'sso-connectors',
 }
 
-const valueType = Object.freeze({
-  [StorageKeys.SsoEmail]: 'string',
-  [StorageKeys.SsoConnectors]: 'object',
-} satisfies { [key in StorageKeys]: 'string' | 'object' });
+const valueGuard = Object.freeze({
+  [StorageKeys.SsoEmail]: s.string(),
+  [StorageKeys.SsoConnectors]: s.array(ssoConnectorMetadataGuard),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- we  don't care about the superstruct details
+} satisfies { [key in StorageKeys]: s.Struct<any> });
 
-type StorageValue<K extends StorageKeys> = K extends StorageKeys.SsoEmail
-  ? string
-  : K extends StorageKeys.SsoConnectors
-  ? SsoConnectorMetadata[]
-  : never;
+type StorageValueType<K extends StorageKeys> = s.Infer<(typeof valueGuard)[K]>;
 
 const useSessionStorage = () => {
-  const set = useCallback(<T extends StorageKeys>(key: T, value: StorageValue<T>) => {
+  const set = useCallback(<T extends StorageKeys>(key: T, value: StorageValueType<T>) => {
     if (typeof value === 'object') {
       sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, JSON.stringify(value));
       return;
@@ -33,27 +31,39 @@ const useSessionStorage = () => {
     sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, value);
   }, []);
 
-  const get = useCallback(<T extends StorageKeys>(key: T): StorageValue<T> | undefined => {
-    const value = sessionStorage.getItem(`${logtoStorageKeyPrefix}:${key}`);
-
-    if (value === null) {
-      return;
-    }
-
-    if (valueType[key] === 'object') {
-      return trySafe(
-        // eslint-disable-next-line no-restricted-syntax
-        () => JSON.parse(value) as StorageValue<T>
-      );
-    }
-
-    // eslint-disable-next-line no-restricted-syntax
-    return value as StorageValue<T>;
-  }, []);
-
   const remove = useCallback((key: StorageKeys) => {
     sessionStorage.removeItem(`${logtoStorageKeyPrefix}:${key}`);
   }, []);
+
+  const get = useCallback(
+    <T extends StorageKeys>(key: T): StorageValueType<T> | undefined => {
+      const value = sessionStorage.getItem(`${logtoStorageKeyPrefix}:${key}`);
+
+      if (value === null) {
+        return;
+      }
+
+      const [error, rawValue] = valueGuard[key].validate(
+        (() => {
+          try {
+            // eslint-disable-next-line no-restricted-syntax -- we use superstruct to validate the value
+            return JSON.parse(value) as unknown;
+          } catch {
+            return value;
+          }
+        })()
+      );
+
+      if (error) {
+        // Clear the invalid value
+        remove(key);
+        return;
+      }
+
+      return rawValue;
+    },
+    [remove]
+  );
 
   return { set, get, remove };
 };
