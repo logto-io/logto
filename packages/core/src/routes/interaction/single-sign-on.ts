@@ -14,11 +14,13 @@ import { interactionPrefix, ssoPath } from './const.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
+import { getSingleSignOnAuthenticationResult } from './utils/single-sign-on-session.js';
 import {
   authorizationUrlPayloadGuard,
   getSsoAuthorizationUrl,
   getSsoAuthentication,
   handleSsoAuthentication,
+  registerWithSsoAuthentication,
 } from './utils/single-sign-on.js';
 
 export default function singleSignOnRoutes<T extends IRouterParamContext>(
@@ -107,6 +109,49 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         connectorData,
         ssoAuthentication
       );
+
+      await assignInteractionResults(ctx, provider, { login: { accountId } });
+      assignInteractionHookResult({ userId: accountId });
+
+      return next();
+    }
+  );
+
+  // Register a new user with the given SSO connector authentication result
+  router.post(
+    `${interactionPrefix}/${ssoPath}/:connectorId/registration`,
+    koaGuard({
+      params: z.object({
+        connectorId: z.string(),
+      }),
+      status: [200, 404],
+      response: z.object({
+        redirectTo: z.string(),
+      }),
+    }),
+    koaInteractionHooks(libraries),
+    async (ctx, next) => {
+      const {
+        createLog,
+        assignInteractionHookResult,
+        guard: { params },
+      } = ctx;
+
+      const registerEventUpdateLog = createLog(`Interaction.Register.Update`);
+      registerEventUpdateLog.append({ event: 'register' });
+
+      // Update the interaction session event to register if no related user account found.
+      // Set the merge flag to true to merge the register event with the existing sso interaction session
+      await storeInteractionResult({ event: InteractionEvent.Register }, ctx, provider, true);
+
+      // Throw 404 if no related session found
+      const authenticationResult = await getSingleSignOnAuthenticationResult(
+        ctx,
+        provider,
+        params.connectorId
+      );
+
+      const accountId = await registerWithSsoAuthentication(ctx, tenant, authenticationResult);
 
       await assignInteractionResults(ctx, provider, { login: { accountId } });
       assignInteractionHookResult({ userId: accountId });

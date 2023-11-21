@@ -1,4 +1,4 @@
-import { InteractionEvent, type SsoConnector } from '@logto/schemas';
+import { type SsoConnector } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -27,9 +27,7 @@ const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
 const insertUserMock = jest.fn();
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
-const storeInteractionResultMock = jest.fn();
 const getAvailableSsoConnectorsMock = jest.fn();
-const getSingleSignOnSessionResultMock = jest.fn();
 
 class MockOidcSsoConnector extends OidcSsoConnector {
   override getAuthorizationUrl = getAuthorizationUrlMock;
@@ -37,21 +35,28 @@ class MockOidcSsoConnector extends OidcSsoConnector {
   override getUserInfo = getUserInfoMock;
 }
 
-mockEsm('./interaction.js', () => ({
-  storeInteractionResult: storeInteractionResultMock,
+const { storeInteractionResult: storeInteractionResultMock } = mockEsm('./interaction.js', () => ({
+  storeInteractionResult: jest.fn(),
 }));
 
-mockEsm('./single-sign-on-guard.js', () => ({
+const {
   getSingleSignOnSessionResult: getSingleSignOnSessionResultMock,
+  assignSingleSignOnAuthenticationResult: assignSingleSignOnAuthenticationResultMock,
+} = mockEsm('./single-sign-on-session.js', () => ({
+  getSingleSignOnSessionResult: jest.fn(),
+  assignSingleSignOnAuthenticationResult: jest.fn(),
 }));
 
 jest
   .spyOn(ssoConnectorFactories.OIDC, 'constructor')
   .mockImplementation((data: SsoConnector) => new MockOidcSsoConnector(data));
 
-const { getSsoAuthorizationUrl, getSsoAuthentication, handleSsoAuthentication } = await import(
-  './single-sign-on.js'
-);
+const {
+  getSsoAuthorizationUrl,
+  getSsoAuthentication,
+  handleSsoAuthentication,
+  registerWithSsoAuthentication,
+} = await import('./single-sign-on.js');
 
 describe('Single sign on util methods tests', () => {
   const mockContext: WithLogContext & WithInteractionDetailsContext = {
@@ -87,6 +92,14 @@ describe('Single sign on util methods tests', () => {
       },
     }
   );
+
+  const mockIssuer = 'https://example.com';
+  const mockSsoUserInfo = {
+    id: 'identityId',
+    email: 'foo@logto.io',
+    name: 'foo',
+    avatar: 'https://example.com',
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -140,7 +153,7 @@ describe('Single sign on util methods tests', () => {
 
     it('should return the authentication result', async () => {
       const session = {
-        connectorId: 'connectorId',
+        connectorId: wellConfiguredSsoConnector.id,
         jti: 'jti',
         redirectUri: 'https://example.com',
         state: 'state',
@@ -169,18 +182,15 @@ describe('Single sign on util methods tests', () => {
         issuer: 'https://example.com',
         userInfo: { id: 'id', email: 'email' },
       });
+
+      expect(assignSingleSignOnAuthenticationResultMock).toBeCalledWith(mockContext, mockProvider, {
+        connectorId: wellConfiguredSsoConnector.id,
+        ...result,
+      });
     });
   });
 
   describe('handleSsoAuthentication tests', () => {
-    const mockIssuer = 'https://example.com';
-    const mockSsoUserInfo = {
-      id: 'identityId',
-      email: 'foo@logto.io',
-      name: 'foo',
-      avatar: 'https://example.com',
-    };
-
     it('should signIn directly if the user is found', async () => {
       findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce({
         id: 'ssoIdentityId',
@@ -255,29 +265,38 @@ describe('Single sign on util methods tests', () => {
       });
     });
 
-    it('should register if no related user account found', async () => {
+    it('should throw if no related user account found', async () => {
       findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce(null);
       findUserByEmailMock.mockResolvedValueOnce(null);
-      insertUserMock.mockResolvedValueOnce({ id: 'foo' });
 
-      const accountId = await handleSsoAuthentication(
-        mockContext,
-        tenant,
-        wellConfiguredSsoConnector,
-        {
+      await expect(async () =>
+        handleSsoAuthentication(mockContext, tenant, mockSsoConnector, {
           issuer: mockIssuer,
           userInfo: mockSsoUserInfo,
-        }
+        })
+      ).rejects.toMatchObject(
+        new RequestError(
+          {
+            code: 'user.identity_not_exist',
+            status: 422,
+          },
+          {}
+        )
       );
+    });
+  });
+
+  describe('registerWithSsoAuthentication tests', () => {
+    it('should register if no related user account found', async () => {
+      insertUserMock.mockResolvedValueOnce({ id: 'foo' });
+
+      const accountId = await registerWithSsoAuthentication(mockContext, tenant, {
+        connectorId: wellConfiguredSsoConnector.id,
+        issuer: mockIssuer,
+        userInfo: mockSsoUserInfo,
+      });
 
       expect(accountId).toBe('foo');
-
-      // Should update the interaction session event to register
-      expect(storeInteractionResultMock).toBeCalledWith(
-        { event: InteractionEvent.Register },
-        mockContext,
-        mockProvider
-      );
 
       // Should create new user
       expect(insertUserMock).toBeCalledWith(

@@ -1,13 +1,44 @@
+import { SignInMode } from '@logto/schemas';
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
-import { singleSignOnAuthorization } from '@/apis/single-sign-on';
+import { singleSignOnAuthorization, singleSignOnRegistration } from '@/apis/single-sign-on';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import { useSieMethods } from '@/hooks/use-sie';
+import useTerms from '@/hooks/use-terms';
 import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
 import { stateValidation } from '@/utils/social-connectors';
+
+const useSingleSignOnRegister = () => {
+  const handleError = useErrorHandler();
+  const request = useApi(singleSignOnRegistration);
+  const { termsValidation } = useTerms();
+
+  return useCallback(
+    async (connectorId: string) => {
+      // Agree to terms and conditions first before proceeding
+      if (!(await termsValidation())) {
+        return;
+      }
+
+      const [error, result] = await request(connectorId);
+
+      if (error) {
+        await handleError(error);
+
+        return;
+      }
+
+      if (result?.redirectTo) {
+        window.location.replace(result.redirectTo);
+      }
+    },
+    [handleError, request, termsValidation]
+  );
+};
 
 /**
  * Single Sign On authentication callback handler.
@@ -24,10 +55,12 @@ const useSingleSignOnListener = (connectorId: string) => {
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
   const { setToast } = useToast();
+  const { signInMode } = useSieMethods();
 
   const handleError = useErrorHandler();
 
   const singleSignOnAuthorizationRequest = useApi(singleSignOnAuthorization);
+  const registerSingleSignOnIdentity = useSingleSignOnRegister();
 
   const singleSignOnHandler = useCallback(
     async (connectorId: string, data: Record<string, unknown>) => {
@@ -38,7 +71,18 @@ const useSingleSignOnListener = (connectorId: string) => {
       });
 
       if (error) {
-        await handleError(error);
+        await handleError(error, {
+          'user.identity_not_exist': async (error) => {
+            // Should not let user register new social account under sign-in only mode
+            if (signInMode === SignInMode.SignIn) {
+              setToast(error.message);
+
+              return;
+            }
+
+            await registerSingleSignOnIdentity(connectorId);
+          },
+        });
         return;
       }
 
@@ -46,7 +90,13 @@ const useSingleSignOnListener = (connectorId: string) => {
         window.location.replace(result.redirectTo);
       }
     },
-    [handleError, singleSignOnAuthorizationRequest]
+    [
+      handleError,
+      registerSingleSignOnIdentity,
+      setToast,
+      signInMode,
+      singleSignOnAuthorizationRequest,
+    ]
   );
 
   // Single Sign On Callback Handler
