@@ -10,7 +10,7 @@ export const azureAdSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.AZU
   providerName: SsoProviderName.AZURE_AD,
   logo: 'https://logtoeu.blob.core.windows.net/public-blobs/risa4g/aAYaRZOiGoxS/2023/09/03/zqdr28er/azure.png',
   description: {
-    en: ' This connector is used to connect with Azure AD Single Sign-On.',
+    en: 'This connector is used to connect with Azure AD Single Sign-On.',
   },
   configGuard: samlConnectorConfigGuard,
   constructor: AzureAdSsoConnector,
