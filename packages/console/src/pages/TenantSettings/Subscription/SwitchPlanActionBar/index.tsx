@@ -14,7 +14,7 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useSubscribe from '@/hooks/use-subscribe';
 import NotEligibleSwitchPlanModalContent from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
 import { type SubscriptionPlan } from '@/types/subscriptions';
-import { isDowngradePlan, isExceededQuotaLimitError } from '@/utils/subscription';
+import { isDowngradePlan, parseExceededQuotaLimitError } from '@/utils/subscription';
 
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
@@ -85,10 +85,16 @@ function SwitchPlanActionBar({
       });
     } catch (error: unknown) {
       setCurrentLoadingPlanId(undefined);
-      if (await isExceededQuotaLimitError(error)) {
+      const [result, exceededQuotaKeys] = await parseExceededQuotaLimitError(error);
+
+      if (result) {
         await show({
           ModalContent: () => (
-            <NotEligibleSwitchPlanModalContent targetPlan={targetPlan} isDowngrade={isDowngrade} />
+            <NotEligibleSwitchPlanModalContent
+              targetPlan={targetPlan}
+              isDowngrade={isDowngrade}
+              exceededQuotaKeys={exceededQuotaKeys}
+            />
           ),
           title: isDowngrade
             ? 'subscription.not_eligible_modal.downgrade_title'

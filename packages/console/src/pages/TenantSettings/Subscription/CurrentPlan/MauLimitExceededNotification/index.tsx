@@ -11,7 +11,7 @@ import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
 import NotEligibleSwitchPlanModalContent from '@/pages/TenantSettings/components/NotEligibleSwitchPlanModalContent';
 import { type SubscriptionPlan } from '@/types/subscriptions';
-import { isExceededQuotaLimitError } from '@/utils/subscription';
+import { parseExceededQuotaLimitError } from '@/utils/subscription';
 
 type Props = {
   activeUsers: number;
@@ -59,10 +59,16 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
           setIsLoading(false);
         } catch (error: unknown) {
           setIsLoading(false);
+          const [result, exceededQuotaKeys] = await parseExceededQuotaLimitError(error);
 
-          if (await isExceededQuotaLimitError(error)) {
+          if (result) {
             await show({
-              ModalContent: () => <NotEligibleSwitchPlanModalContent targetPlan={proPlan} />,
+              ModalContent: () => (
+                <NotEligibleSwitchPlanModalContent
+                  targetPlan={proPlan}
+                  exceededQuotaKeys={exceededQuotaKeys}
+                />
+              ),
               title: 'subscription.not_eligible_modal.upgrade_title',
               confirmButtonText: 'general.got_it',
               confirmButtonType: 'primary',
