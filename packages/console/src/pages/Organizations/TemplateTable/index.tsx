@@ -97,16 +97,11 @@ function TemplateTable<
       {onAdd && !hasData && (
         <>
           {name && (
-            <div className={classNames(styles.empty, styles.secondary)}>
+            <div className={classNames(styles.empty)}>
               {t('organizations.empty_placeholder', { entity: String(t(name)).toLowerCase() })}
             </div>
           )}
-          <Button
-            className={styles.secondary}
-            icon={<Plus />}
-            title="general.add"
-            onClick={onAdd}
-          />
+          <Button icon={<Plus />} title="general.add" onClick={onAdd} />
         </>
       )}
     </section>
