@@ -26,6 +26,7 @@ const insertUserSsoIdentityMock = jest.fn();
 const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
 const insertUserMock = jest.fn();
+const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const storeInteractionResultMock = jest.fn();
 const getAvailableSsoConnectorsMock = jest.fn();
 const getSingleSignOnSessionResultMock = jest.fn();
@@ -79,6 +80,7 @@ describe('Single sign on util methods tests', () => {
     {
       users: {
         insertUser: insertUserMock,
+        generateUserId: generateUserIdMock,
       },
       ssoConnectors: {
         getAvailableSsoConnectors: getAvailableSsoConnectorsMock,

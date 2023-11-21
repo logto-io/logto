@@ -94,7 +94,7 @@ describe('fetchConnectorProviderDetails', () => {
         providerLogo: ssoConnectorFactories[connector.providerName].logo,
         providerConfig: {
           ...connector.config,
-          scope: 'openid', // Default scope
+          scope: 'openid profile email', // Default scope
           tokenEndpoint: 'http://example.com/token',
         },
       })

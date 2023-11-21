@@ -304,7 +304,7 @@ const registerWithSsoAuthentication = async (
   // Insert new user
   const { id: userId } = await usersLibrary.insertUser(
     {
-      id: generateStandardId(),
+      id: await usersLibrary.generateUserId(),
       ...syncingProfile,
       lastSignInAt: Date.now(),
     },

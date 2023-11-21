@@ -17,6 +17,8 @@ export type SsoConnectorMetadata = z.infer<typeof ssoConnectorMetadataGuard>;
 export enum SsoProviderName {
   OIDC = 'OIDC',
   SAML = 'SAML',
+  AZURE_AD = 'AzureAD',
+  GOOGLE_WORKSPACE = 'GoogleWorkspace',
 }
 
 export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {

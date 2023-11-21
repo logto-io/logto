@@ -1,15 +1,19 @@
-import { scopePostProcessor } from './oidc.js';
+import { scopePostProcessor, RequiredOidcScope } from './oidc.js';
 
 describe('scopePostProcessor', () => {
-  it('`openid` will be added if not exists (with empty string)', () => {
-    expect(scopePostProcessor('')).toEqual('openid');
+  const defaultScopes = Object.values(RequiredOidcScope);
+
+  it('`RequiredOidcScopes` will be added if not exists (with empty string)', () => {
+    for (const scope of defaultScopes) {
+      expect(scopePostProcessor('')).toContain(scope);
+    }
   });
 
-  it('`openid` will be added if not exists (with non-empty string)', () => {
-    expect(scopePostProcessor('profile')).toEqual('profile openid');
-  });
-
-  it('return original input if openid exists', () => {
-    expect(scopePostProcessor('profile openid')).toEqual('profile openid');
+  it('`RequiredOidcScopes` will be added if not exists (with non-empty string)', () => {
+    const scopes = scopePostProcessor('read');
+    for (const scope of defaultScopes) {
+      expect(scopePostProcessor('read')).toContain(scope);
+    }
+    expect(scopes).toContain('read');
   });
 });
