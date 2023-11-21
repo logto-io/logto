@@ -35,7 +35,7 @@ const useNativeMessageListener = (bypass = false) => {
     return () => {
       window.removeEventListener('message', nativeMessageHandler);
     };
-  }, [setToast]);
+  }, [bypass, setToast]);
 };
 
 export default useNativeMessageListener;
