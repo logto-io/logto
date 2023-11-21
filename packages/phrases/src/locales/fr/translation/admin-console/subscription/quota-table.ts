@@ -53,7 +53,7 @@ const quota_table = {
   },
   organization: {
     title: 'Organisation',
-    organization: 'Organisation (Q4, 2023)',
+    organization: 'Organisation',
   },
   support: {
     title: 'Support',
