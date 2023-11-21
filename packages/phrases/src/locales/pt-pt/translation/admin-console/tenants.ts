@@ -16,9 +16,6 @@ const tenants = {
     tenant_region: 'Região de hospedagem',
     tenant_region_tip:
       'Os recursos do seu inquilino são hospedados na região {{region}}. <a>Learn more</a>',
-    environment_tag: 'Tag de Ambiente',
-    environment_tag_description:
-      'As etiquetas não alteram o serviço. Simplesmente guiam-no para diferenciar vários ambientes.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -45,7 +42,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Criar inquilino',
-    subtitle_deprecated: 'Crie um novo inquilino para separar recursos e utilizadores.',
     subtitle:
       'Crie um novo locatário que tenha recursos e utilizadores isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que pretende utilizar este inquilino?',

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import MauExceededModal from '@/components/MauExceededModal';
 import PaymentOverdueModal from '@/components/PaymentOverdueModal';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
 import TenantEnvMigrationModal from './TenantEnvMigrationModal';
@@ -24,7 +24,7 @@ function TenantNotificationContainer() {
           <PaymentOverdueModal />
         </>
       )}
-      {isDevFeaturesEnabled && <TenantEnvMigrationModal />}
+      <TenantEnvMigrationModal />
     </>
   );
 }

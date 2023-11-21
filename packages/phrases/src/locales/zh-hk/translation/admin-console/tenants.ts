@@ -15,8 +15,6 @@ const tenants = {
     tenant_name: '租户名称',
     tenant_region: '數據托管區域',
     tenant_region_tip: '您的租戶資源托管在{{region}}。 <a>了解更多</a>',
-    environment_tag: '環境標識',
-    environment_tag_description: '標籤不會改變服務。它們只是協助您區分不同的環境。',
     environment_tag_development: '開發',
     environment_tag_staging: '預備',
     environment_tag_production: '產品',
@@ -42,7 +40,6 @@ const tenants = {
   },
   create_modal: {
     title: '創建租戶',
-    subtitle_deprecated: '創建新租戶來區分資源及使用者。',
     subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望使用此租戶做什麼？',
     /** UNTRANSLATED */

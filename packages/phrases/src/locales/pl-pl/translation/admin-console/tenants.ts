@@ -15,9 +15,6 @@ const tenants = {
     tenant_name: 'Nazwa Najemcy',
     tenant_region: 'Data hosted region',
     tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
-    environment_tag: 'Tag Środowiska',
-    environment_tag_description:
-      'Tagi nie zmieniają usługi. Po prostu pomagają odróżnić różne środowiska.',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -44,7 +41,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Utwórz nowego najemcę',
-    subtitle_deprecated: 'Utwórz nowego najemcę aby oddzielić zasoby i użytkowników.',
     subtitle:
       'Utwórz nowego najemcę, który ma izolowane zasoby i użytkowników. Dane hostowanej regionu i typy najemców nie mogą być modyfikowane po utworzeniu.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',

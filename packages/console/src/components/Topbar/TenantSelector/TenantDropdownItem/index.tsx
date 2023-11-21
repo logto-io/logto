@@ -6,7 +6,6 @@ import Tick from '@/assets/icons/tick.svg';
 import { type TenantResponse } from '@/cloud/types/router';
 import PlanName from '@/components/PlanName';
 import TenantEnvTag from '@/components/TenantEnvTag';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { DropdownItem } from '@/ds-components/Dropdown';
 import DynamicT from '@/ds-components/DynamicT';
 import useSubscriptionPlans from '@/hooks/use-subscription-plans';
@@ -47,8 +46,7 @@ function TenantDropdownItem({ tenantData, isSelected, onClick }: Props) {
           />
         </div>
         <div className={styles.planName}>
-          {/* Todo: @xiaoyijun remove dev tenant feature switch */}
-          {isDevFeaturesEnabled && tag === TenantTag.Development ? (
+          {tag === TenantTag.Development ? (
             <DynamicT forKey="subscription.no_subscription" />
           ) : (
             <PlanName name={tenantPlan.name} />

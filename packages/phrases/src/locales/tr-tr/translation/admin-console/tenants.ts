@@ -16,9 +16,6 @@ const tenants = {
     tenant_region: 'Veriler barındırılan bölge',
     tenant_region_tip:
       'Kiracı kaynaklarınız {{region}} bölgesinde barındırılır. <a>Daha fazla bilgi</a>',
-    environment_tag: 'Çevre Etiketi',
-    environment_tag_description:
-      'Etiketler hizmeti değiştirmez. Sadece farklı ortamları ayırt etmek için rehberlik eder.',
     environment_tag_development: 'Geliş',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
@@ -45,7 +42,6 @@ const tenants = {
   },
   create_modal: {
     title: 'Kiracı Oluştur',
-    subtitle_deprecated: 'Kaynakları ve kullanıcıları ayırmak için yeni bir kiracı oluşturun.',
     subtitle:
       'İzole kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun. Verilerin barındırıldığı bölge ve kiracı türleri oluşturulduktan sonra değiştirilemez.',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',

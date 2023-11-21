@@ -7,19 +7,17 @@ import { SignInIdentifier } from '@logto/schemas';
 import i18next from 'i18next';
 
 import { getSignInExperience } from '@/apis/settings';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import type { SignInExperienceResponse } from '@/types';
 import { filterSocialConnectors } from '@/utils/social-connectors';
 
 const parseSignInExperienceResponse = (
   response: SignInExperienceResponse
 ): SignInExperienceResponse => {
-  const { socialConnectors, isDevelopmentTenant, ...rest } = response;
+  const { socialConnectors, ...rest } = response;
 
   return {
     ...rest,
     socialConnectors: filterSocialConnectors(socialConnectors),
-    isDevelopmentTenant: isDevFeaturesEnabled && isDevelopmentTenant,
   };
 };
 
