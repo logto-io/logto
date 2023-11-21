@@ -19,6 +19,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 
 type Props = BaseProps & {
   title: TFuncKey;
+  icon?: React.ReactNode;
   i18nProps?: Record<string, string>;
 };
 
@@ -30,6 +31,7 @@ const Button = ({
   i18nProps,
   className,
   isDisabled = false,
+  icon,
   onClick,
   ...rest
 }: Props) => {
@@ -47,6 +49,7 @@ const Button = ({
       onClick={onClick}
       {...rest}
     >
+      {icon && <span className={styles.icon}>{icon}</span>}
       <DynamicT forKey={title} interpolation={i18nProps} />
     </button>
   );

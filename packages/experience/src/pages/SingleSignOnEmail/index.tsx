@@ -4,6 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
+import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import SmartInputField, {
@@ -81,7 +82,7 @@ const SingleSignOnEmail = () => {
 
         {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-        <Button title="action.single_sign_on" htmlType="submit" />
+        <Button title="action.single_sign_on" htmlType="submit" icon={<LockIcon />} />
 
         <input hidden type="submit" />
       </form>

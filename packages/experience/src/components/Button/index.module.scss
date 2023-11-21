@@ -3,6 +3,7 @@
 .button {
   @include _.flex-row;
   justify-content: center;
+  align-items: center;
   height: 44px;
   padding: 0 _.unit(4);
   border-radius: var(--radius);
@@ -14,6 +15,12 @@
   transition: background 0.2s ease-in-out;
   user-select: none;
   overflow: hidden;
+
+  .icon {
+    font-size: 0;
+    line-height: normal;
+    margin-right: _.unit(2);
+  }
 }
 
 .large {
