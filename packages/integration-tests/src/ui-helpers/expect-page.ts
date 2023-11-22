@@ -26,6 +26,11 @@ export default class ExpectPage {
    */
   async toStart(initialUrl: URL) {
     await expectNavigation(this.page.goto(initialUrl.href), this.page);
+    /**
+     * Wait for the network to be idle before assert the page element
+     * since the page needs to fetch data from the backend.
+     */
+    await this.page.waitForNetworkIdle();
     await expect(this.page).toMatchElement('#app');
   }
 
