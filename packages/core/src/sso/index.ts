@@ -11,6 +11,7 @@ import {
   type googleWorkspaceSsoConnectorConfigGuard,
 } from './GoogleWorkspaceSsoConnector/index.js';
 import { oidcSsoConnectorFactory, type OidcSsoConnector } from './OidcSsoConnector/index.js';
+import { oktaSsoConnectorFactory, type OktaSsoConnector } from './OktaSsoConnector/index.js';
 import { type SamlSsoConnector, samlSsoConnectorFactory } from './SamlSsoConnector/index.js';
 import { type basicOidcConnectorConfigGuard } from './types/oidc.js';
 import { type samlConnectorConfigGuard } from './types/saml.js';
@@ -20,6 +21,7 @@ type SingleSignOnConstructor = {
   [SsoProviderName.SAML]: typeof SamlSsoConnector;
   [SsoProviderName.AZURE_AD]: typeof AzureAdSsoConnector;
   [SsoProviderName.GOOGLE_WORKSPACE]: typeof GoogleWorkspaceSsoConnector;
+  [SsoProviderName.OKTA]: typeof OktaSsoConnector;
 };
 
 type SingleSignOnConnectorConfig = {
@@ -27,6 +29,7 @@ type SingleSignOnConnectorConfig = {
   [SsoProviderName.SAML]: typeof samlConnectorConfigGuard;
   [SsoProviderName.AZURE_AD]: typeof samlConnectorConfigGuard;
   [SsoProviderName.GOOGLE_WORKSPACE]: typeof googleWorkspaceSsoConnectorConfigGuard;
+  [SsoProviderName.OKTA]: typeof basicOidcConnectorConfigGuard;
 };
 
 export type SingleSignOnFactory<T extends SsoProviderName> = {
@@ -44,6 +47,7 @@ export const ssoConnectorFactories: {
   [SsoProviderName.SAML]: samlSsoConnectorFactory,
   [SsoProviderName.AZURE_AD]: azureAdSsoConnectorFactory,
   [SsoProviderName.GOOGLE_WORKSPACE]: googleWorkSpaceSsoConnectorFactory,
+  [SsoProviderName.OKTA]: oktaSsoConnectorFactory,
 };
 
 export const standardSsoConnectorProviders = Object.freeze([
