@@ -1,4 +1,4 @@
-const organization = {
+const organizations = {
   organization: 'Organization',
   page_title: 'Organizations',
   title: 'Organizations',
@@ -89,4 +89,4 @@ const organization = {
   },
 };
 
-export default Object.freeze(organization);
+export default Object.freeze(organizations);

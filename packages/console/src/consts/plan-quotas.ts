@@ -77,12 +77,6 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
   [ReservedPlanId.Pro]: 48,
 };
 
-export const organizationEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.Free]: false,
-  [ReservedPlanId.Hobby]: true,
-  [ReservedPlanId.Pro]: true,
-};
-
 export const ssoEnabledMap: EnabledFeatureMap = {
   [ReservedPlanId.Free]: false,
   [ReservedPlanId.Hobby]: true,
@@ -123,7 +117,7 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   hooksLimit: undefined,
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
-  organizationEnabled: true,
+  organizationsEnabled: true,
   ssoEnabled: true,
 };
 
@@ -163,7 +157,7 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'rolesLimit',
     'scopesPerRoleLimit',
   ],
-  [SubscriptionPlanTableGroupKey.organization]: ['organizationEnabled'],
+  [SubscriptionPlanTableGroupKey.organizations]: ['organizationsEnabled'],
   [SubscriptionPlanTableGroupKey.auditLogs]: ['auditLogsRetentionDays'],
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],

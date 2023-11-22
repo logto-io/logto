@@ -51,9 +51,10 @@ const quota_table = {
     title: 'Вебхуки',
     hooks: 'Вебхуки',
   },
-  organization: {
+  organizations: {
     title: 'Организация',
-    organization: 'Организация',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: 'Поддержка',

@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: 'Webhooks illimités',
     not_eligible: 'Supprimez vos webhooks',
   },
-  organization_enabled: {
-    name: 'Organisation',
-    limited: 'Organisation',
-    unlimited: 'Organisation',
-    not_eligible: 'Supprimez vos organisations',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: "Conservation des journaux d'audit",

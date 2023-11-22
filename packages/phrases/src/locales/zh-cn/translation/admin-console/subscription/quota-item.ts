@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: '无限制的 Webhooks',
     not_eligible: '移除你的 Webhooks',
   },
-  organization_enabled: {
-    name: '组织',
-    limited: '组织',
-    unlimited: '组织',
-    not_eligible: '移除你的组织',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '审计日志保留',

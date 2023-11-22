@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: 'Sınırsız webhooklar',
     not_eligible: 'Webhooklarınızı kaldırın',
   },
-  organization_enabled: {
-    name: 'Organization',
-    limited: 'Organization',
-    unlimited: 'Organization',
-    not_eligible: 'Organizasyonlarınızı kaldırın',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: 'Denetim günlükleri saklama süresi',

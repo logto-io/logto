@@ -16,8 +16,6 @@ export type SubscriptionPlanQuota = Omit<
   // Support
   communitySupportEnabled: boolean;
   ticketSupportResponseTime: number;
-  // Organization
-  organizationEnabled: boolean;
   // SSO
   ssoEnabled: boolean;
 };
@@ -63,7 +61,7 @@ export enum SubscriptionPlanTableGroupKey {
   roles = 'roles',
   auditLogs = 'auditLogs',
   hooks = 'hooks',
-  organization = 'organization',
+  organizations = 'organizations',
   support = 'support',
 }
 

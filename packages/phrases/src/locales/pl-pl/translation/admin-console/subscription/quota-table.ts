@@ -51,9 +51,10 @@ const quota_table = {
     title: 'Webhooki',
     hooks: 'Webhooki',
   },
-  organization: {
+  organizations: {
     title: 'Organizacja',
-    organization: 'Organizacja',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: 'Wsparcie',

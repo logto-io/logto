@@ -1,14 +1,18 @@
-import { joinPath } from '@silverhand/essentials';
-import { useCallback, useState } from 'react';
+import { ReservedPlanId } from '@logto/schemas';
+import { cond, conditional, joinPath } from '@silverhand/essentials';
+import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
+import { subscriptionPage } from '@/consts/pages';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import CardTitle from '@/ds-components/CardTitle';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useConfigs from '@/hooks/use-configs';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
 
@@ -29,10 +33,18 @@ type Props = {
 
 function Organizations({ tab }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+
   const { navigate } = useTenantPathname();
   const [isCreating, setIsCreating] = useState(false);
   const { configs, isLoading: isLoadingConfigs } = useConfigs();
   const isInitialSetup = !isLoadingConfigs && !configs?.organizationCreated;
+  const isOrganizationsDisabled = currentPlan?.id === ReservedPlanId.Free;
+
+  const upgradePlan = useCallback(() => {
+    navigate(subscriptionPage);
+  }, [navigate]);
 
   const handleCreate = useCallback(() => {
     if (isInitialSetup) {
@@ -56,7 +68,12 @@ function Organizations({ tab }: Props) {
       />
       <PageMeta titleKey="organizations.page_title" />
       <div className={pageLayout.headline}>
-        <CardTitle title="organizations.title" subtitle="organizations.subtitle" />
+        <CardTitle
+          isBeta
+          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Hobby)}
+          title="organizations.title"
+          subtitle="organizations.subtitle"
+        />
         {!isInitialSetup && (
           <Button
             icon={<Plus />}
@@ -69,7 +86,15 @@ function Organizations({ tab }: Props) {
       </div>
       {isInitialSetup && (
         <Card className={styles.emptyCardContainer}>
-          <EmptyDataPlaceholder onCreate={handleCreate} />
+          <EmptyDataPlaceholder
+            buttonProps={{
+              title: isOrganizationsDisabled
+                ? 'upsell.upgrade_plan'
+                : 'organizations.setup_organization',
+              onClick: isOrganizationsDisabled ? upgradePlan : handleCreate,
+              ...conditional(isOrganizationsDisabled && { icon: undefined }),
+            }}
+          />
         </Card>
       )}
       {!isInitialSetup && (

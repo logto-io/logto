@@ -4,17 +4,18 @@ import { useTranslation } from 'react-i18next';
 import Plus from '@/assets/icons/plus.svg';
 import OrganizationEmptyDark from '@/assets/images/organization-empty-dark.svg';
 import OrganizationEmpty from '@/assets/images/organization-empty.svg';
-import Button from '@/ds-components/Button';
+import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import useConfigs from '@/hooks/use-configs';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  onCreate: () => void;
+  /** Override the default button properties in the placeholder */
+  buttonProps?: ButtonProps;
 };
 
-function EmptyDataPlaceholder({ onCreate }: Props) {
+function EmptyDataPlaceholder({ buttonProps }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.organizations' });
   const { configs } = useConfigs();
   const theme = useTheme();
@@ -34,7 +35,7 @@ function EmptyDataPlaceholder({ onCreate }: Props) {
         title={
           isInitialSetup ? 'organizations.setup_organization' : 'organizations.create_organization'
         }
-        onClick={onCreate}
+        {...buttonProps}
       />
     </div>
   );

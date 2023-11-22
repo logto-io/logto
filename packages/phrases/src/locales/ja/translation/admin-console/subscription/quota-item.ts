@@ -93,11 +93,15 @@ const quota_item = {
     unlimited: '無制限のWebhooks',
     not_eligible: 'Webhookを削除してください',
   },
-  organization_enabled: {
-    name: '組織',
-    limited: '組織',
-    unlimited: '組織',
-    not_eligible: '組織を削除してください',
+  organizations_enabled: {
+    /** UNTRANSLATED */
+    name: 'Organizations',
+    /** UNTRANSLATED */
+    limited: 'Organizations',
+    /** UNTRANSLATED */
+    unlimited: 'Organizations',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your organizations',
   },
   audit_logs_retention_days: {
     name: '監査ログの保持期間',

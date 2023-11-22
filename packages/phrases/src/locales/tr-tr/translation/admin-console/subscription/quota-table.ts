@@ -51,9 +51,10 @@ const quota_table = {
     title: 'Web Kancaları',
     hooks: 'Web Kancaları',
   },
-  organization: {
+  organizations: {
     title: 'Organizasyon',
-    organization: 'Organization',
+    /** UNTRANSLATED */
+    organizations: 'Organizations',
   },
   support: {
     title: 'Destek',
