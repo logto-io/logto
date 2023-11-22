@@ -100,6 +100,8 @@ class SamlConnector {
     const profileMap = attributeMappingPostProcessor(this.config.attributeMapping);
 
     const identityProvider = await this.getIdentityProvider();
+
+    // HandleSamlAssertion takes a HTTPResponse-like object, need to wrap body in a object.
     const samlAssertionContent = await handleSamlAssertion({ body }, identityProvider, {
       x509Certificate,
       entityId: this.spEntityId,
