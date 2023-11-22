@@ -54,6 +54,7 @@ function Members({ organization }: Props) {
   return (
     <>
       <Table
+        isRowHoverEffectDisabled
         placeholder={<EmptyDataPlaceholder />}
         pagination={{
           page,
