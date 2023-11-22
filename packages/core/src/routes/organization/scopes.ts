@@ -1,5 +1,6 @@
 import { OrganizationScopes } from '@logto/schemas';
 
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -13,6 +14,7 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
       queries: {
         organizations: { scopes },
       },
+      libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -20,6 +22,8 @@ export default function organizationScopeRoutes<T extends AuthedRouter>(
     errorHandler,
     searchFields: ['name'],
   });
+
+  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   originalRouter.use(router.routes());
 }

@@ -11,6 +11,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { userSearchKeys } from '#src/queries/user.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
@@ -26,6 +27,7 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
     originalRouter,
     {
       queries: { organizations },
+      libraries: { quota },
     },
   ] = args;
 
@@ -234,6 +236,8 @@ export default function organizationRoutes<T extends AuthedRouter>(...args: Rout
   // MARK: Mount sub-routes
   organizationRoleRoutes(...args);
   organizationScopeRoutes(...args);
+
+  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   // Add routes to the router
   originalRouter.use(router.routes());

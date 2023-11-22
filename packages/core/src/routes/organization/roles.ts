@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
@@ -24,6 +25,7 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
           relations: { rolesScopes },
         },
       },
+      libraries: { quota },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -86,6 +88,8 @@ export default function organizationRoleRoutes<T extends AuthedRouter>(
   );
 
   router.addRelationRoutes(rolesScopes, 'scopes');
+
+  router.use(koaQuotaGuard({ key: 'organizationsEnabled', quota, methods: ['POST', 'PUT'] }));
 
   originalRouter.use(router.routes());
 }
