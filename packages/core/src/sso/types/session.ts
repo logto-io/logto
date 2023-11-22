@@ -44,9 +44,9 @@ export type GetSingleSignOnSession = () => Promise<SingleSignOnConnectorSession>
  *
  * @remark this session is used to store the authentication result from the identity provider. {@link /packages/core/src/routes/interaction/utils/single-sign-on.ts}
  * This session is needed because we need to split the authentication process into sign in and sign up two parts.
- * If the sso identifier is found in DB we will directly sign in the user.
- * If the sso identifier is not found in DB we will throw an error and let the client to create a new user.
- * In the SSO registration endpoint we will validate this session data and create a new user accordingly.
+ * If the SSO identity is found in DB we will directly sign in the user.
+ * If the SSO identity is not found in DB we will throw an error and let the client to create a new user.
+ * In the SSO registration endpoint, we will validate this session data and create a new user accordingly.
  */
 export const singleSignOnInteractionIdentifierResultGuard = z.object({
   singleSignOnIdentifier: z.object({
