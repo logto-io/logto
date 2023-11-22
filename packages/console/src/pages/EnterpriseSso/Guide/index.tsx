@@ -89,6 +89,8 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
       await api
         .patch(`api/sso-connectors/${ssoConnectorId}/config`, {
           json: cleanDeep(formData),
+          // Do not check whether the config is complete on guide page.
+          searchParams: new URLSearchParams({ partialValidateConfig: 'true' }),
         })
         .json<SsoConnectorWithProviderConfig>();
 
