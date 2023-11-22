@@ -69,6 +69,7 @@ function TemplateTable<
       {!noData && (
         <Table
           hasBorder
+          isRowHoverEffectDisabled
           isLoading={isLoading}
           rowGroups={[
             {
