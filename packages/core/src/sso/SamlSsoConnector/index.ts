@@ -1,6 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type SsoConnector } from '@logto/schemas';
-import { SsoProviderName } from '@logto/schemas';
+import { type SsoConnector, SsoProviderName } from '@logto/schemas';
 
 import assertThat from '#src/utils/assert-that.js';
 
@@ -39,10 +38,16 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   }
 
   async getIssuer() {
-    const {
-      identityProvider: { entityId },
-    } = await this.getSamlConfig();
-    return entityId;
+    const { identityProvider } = await this.getSamlConfig();
+
+    if (!identityProvider?.entityId) {
+      throw new ConnectorError(
+        ConnectorErrorCodes.InvalidConfig,
+        'Can not get `entityId` from metadata config!'
+      );
+    }
+
+    return identityProvider.entityId;
   }
 
   /**

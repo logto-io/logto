@@ -5,14 +5,11 @@ import type {
   SupportedSsoConnector,
   SsoProviderName,
 } from '@logto/schemas';
+import { findDuplicatedOrBlockedEmailDomains } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  type SingleSignOnFactory,
-  ssoConnectorFactories,
-  singleSignOnDomainBlackList,
-} from '#src/sso/index.js';
+import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -91,26 +88,7 @@ export const fetchConnectorProviderDetails = async (
  * @returns
  */
 export const validateConnectorDomains = (domains?: string[]) => {
-  if (!domains || domains.length === 0) {
-    return;
-  }
-
-  const blackListSet = new Set(singleSignOnDomainBlackList);
-  const validDomainSet = new Set();
-  const duplicatedDomains = new Set();
-  const forbiddenDomains = new Set();
-
-  for (const domain of domains) {
-    if (blackListSet.has(domain)) {
-      forbiddenDomains.add(domain);
-    }
-
-    if (validDomainSet.has(domain)) {
-      duplicatedDomains.add(domain);
-    } else {
-      validDomainSet.add(domain);
-    }
-  }
+  const { duplicatedDomains, forbiddenDomains } = findDuplicatedOrBlockedEmailDomains(domains);
 
   if (forbiddenDomains.size > 0) {
     throw new RequestError(

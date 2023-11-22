@@ -37,7 +37,7 @@ function EnterpriseSsoConnectors() {
 
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
-  const { id } = useParams();
+  const { ssoConnectorId: id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [connectorForGuide, setConnectorForGuide] = useState<SsoConnectorWithProviderConfig>();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
@@ -99,9 +99,9 @@ function EnterpriseSsoConnectors() {
                     containerClassName={styles.container}
                     alt="logo"
                     src={
-                      theme === Theme.Dark && branding.darkLogo
+                      (theme === Theme.Dark && branding.darkLogo
                         ? branding.darkLogo
-                        : branding.logo ?? providerLogo
+                        : branding.logo) ?? providerLogo
                     }
                   />
                 }

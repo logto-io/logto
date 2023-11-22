@@ -9,6 +9,7 @@ import connectors from './connectors.js';
 import contact from './contact.js';
 import dashboard from './dashboard.js';
 import domain from './domain.js';
+import enterprise_sso_details from './enterprise-sso-details.js';
 import enterprise_sso from './enterprise-sso.js';
 import errors from './errors.js';
 import general from './general.js';
@@ -54,6 +55,7 @@ const admin_console = {
   connectors,
   connector_details,
   enterprise_sso,
+  enterprise_sso_details,
   get_started,
   users,
   user_details,

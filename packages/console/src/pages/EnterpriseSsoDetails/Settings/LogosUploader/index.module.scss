@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.uploader {
+  display: flex;
+
+  .logoUploader {
+    flex: 1;
+
+    .frame {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  .logoDarkUploader {
+    flex: 1;
+
+    .frameDark {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(1);
+}
+
+.error {
+  color: var(--color-error);
+}
