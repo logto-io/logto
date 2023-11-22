@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { Theme, type SsoProviderName } from '@logto/schemas';
+import { Theme, SsoProviderName } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,10 @@ import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
-import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso/types';
+import {
+  type SsoConnectorWithProviderConfigWithGeneric,
+  type ParsedSsoIdentityProviderConfig,
+} from '../EnterpriseSso/types';
 
 import Connection from './Connection';
 import Settings from './Settings';
@@ -52,7 +55,17 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     { keepPreviousData: true }
   );
 
-  const inUse = Boolean(ssoConnector?.providerConfig);
+  const inUse =
+    ssoConnector &&
+    (ssoConnector.providerName === SsoProviderName.OIDC
+      ? Boolean(ssoConnector.providerConfig)
+      : Boolean(
+          ssoConnector.providerConfig &&
+            // eslint-disable-next-line no-restricted-syntax
+            (ssoConnector.providerConfig as ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>)
+              .identityProvider
+        ));
+
   const isLoading = !ssoConnector && !requestError;
 
   const api = useApi();
