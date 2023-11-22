@@ -95,12 +95,14 @@ class SamlConnector {
    *
    * @returns The parsed SAML assertion from IdP (with attribute mapping applied).
    */
-  async parseSamlAssertion(assertion: Record<string, unknown>): Promise<ExtendedSocialUserInfo> {
+  async parseSamlAssertion(body: Record<string, unknown>): Promise<ExtendedSocialUserInfo> {
     const { x509Certificate } = await this.getSamlIdpMetadata();
     const profileMap = attributeMappingPostProcessor(this.config.attributeMapping);
 
     const identityProvider = await this.getIdentityProvider();
-    const samlAssertionContent = await handleSamlAssertion(assertion, identityProvider, {
+
+    // HandleSamlAssertion takes a HTTPResponse-like object, need to wrap body in a object.
+    const samlAssertionContent = await handleSamlAssertion({ body }, identityProvider, {
       x509Certificate,
       entityId: this.spEntityId,
     });

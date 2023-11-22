@@ -40,7 +40,7 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
 
   async getIssuer() {
     const {
-      serviceProvider: { entityId },
+      identityProvider: { entityId },
     } = await this.getSamlConfig();
     return entityId;
   }
