@@ -18,7 +18,7 @@ import koaBody from 'koa-body';
 import Provider, { errors } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
@@ -281,11 +281,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
   });
 
   addOidcEventListeners(oidc, queries);
-
-  // DEV: Customized `refresh_token` grant
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    registerGrants(oidc, envSet, queries);
-  }
+  registerGrants(oidc, envSet, queries);
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
