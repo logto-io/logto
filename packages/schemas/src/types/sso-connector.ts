@@ -47,7 +47,6 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
       providerName: z.nativeEnum(SsoProviderName),
       providerLogo: z.string(),
       providerConfig: z.record(z.unknown()).optional(),
-      providerProperties: z.record(z.unknown()).optional(),
     })
   );
 

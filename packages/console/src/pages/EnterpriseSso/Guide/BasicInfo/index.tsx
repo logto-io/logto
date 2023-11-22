@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   ssoConnectorId: string;
-} & Pick<SsoConnectorWithProviderConfig, 'providerName' | 'providerProperties'>;
+} & Pick<SsoConnectorWithProviderConfig, 'providerName' | 'providerConfig'>;
 
 /**
  * TODO: Should align this with the guard `samlServiceProviderMetadataGuard` defined in {@link logto/core/src/sso/types/saml.ts}.
@@ -23,7 +23,7 @@ const providerPropertiesGuard = z.object({
   entityId: z.string().min(1),
 });
 
-function BasicInfo({ ssoConnectorId, providerName, providerProperties }: Props) {
+function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { applyDomain: applyCustomDomain } = useCustomDomain();
 
@@ -44,7 +44,7 @@ function BasicInfo({ ssoConnectorId, providerName, providerProperties }: Props) 
     );
   }
 
-  const result = providerPropertiesGuard.safeParse(providerProperties);
+  const result = providerPropertiesGuard.safeParse(providerConfig);
 
   /**
    * Used fallback to show the default value anyways but the cases should not happen.

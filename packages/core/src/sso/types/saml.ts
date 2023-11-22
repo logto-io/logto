@@ -47,7 +47,7 @@ export type SamlConnectorConfig = z.infer<typeof samlConnectorConfigGuard>;
 
 const samlMetadataGuard = z.object({
   serviceProvider: samlServiceProviderMetadataGuard,
-  identityProvider: samlIdentityProviderMetadataGuard,
+  identityProvider: samlIdentityProviderMetadataGuard.optional(),
 });
 
 export type SamlMetadata = z.infer<typeof samlMetadataGuard>;

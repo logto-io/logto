@@ -7,7 +7,7 @@ import assertThat from '#src/utils/assert-that.js';
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn } from '../types/index.js';
-import { type SamlServiceProviderMetadata, samlConnectorConfigGuard } from '../types/saml.js';
+import { samlConnectorConfigGuard } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -43,13 +43,6 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
       serviceProvider: { entityId },
     } = await this.getSamlConfig();
     return entityId;
-  }
-
-  /**
-   * @returns Properties of the SAML service provider.
-   */
-  getProperties(): SamlServiceProviderMetadata {
-    return this.getSamlSpProperties();
   }
 
   /**
