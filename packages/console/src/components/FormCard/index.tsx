@@ -11,12 +11,21 @@ type Props = {
   title: AdminConsoleKey;
   tag?: ReactNode;
   description?: AdminConsoleKey;
+  descriptionInterpolation?: Record<string, unknown>;
   learnMoreLink?: string;
   learnMoreLinkText?: AdminConsoleKey;
   children: ReactNode;
 };
 
-function FormCard({ title, tag, description, learnMoreLink, learnMoreLinkText, children }: Props) {
+function FormCard({
+  title,
+  tag,
+  description,
+  descriptionInterpolation,
+  learnMoreLink,
+  learnMoreLinkText,
+  children,
+}: Props) {
   return (
     <FormCardLayout
       introduction={
@@ -27,7 +36,7 @@ function FormCard({ title, tag, description, learnMoreLink, learnMoreLinkText, c
           </div>
           {description && (
             <div className={styles.description}>
-              <DynamicT forKey={description} />
+              <DynamicT forKey={description} interpolation={descriptionInterpolation} />
               {learnMoreLink && (
                 <>
                   {' '}

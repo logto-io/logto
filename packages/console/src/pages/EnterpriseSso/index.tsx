@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoConnectorWithProviderConfig, Theme } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig, Theme, type SsoProviderName } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import { buildUrl } from '@/utils/url';
 import Guide from './Guide';
 import SsoCreationModal from './SsoCreationModal';
 import * as styles from './index.module.scss';
+import { type SsoConnectorWithProviderConfigWithGeneric } from './types';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';
@@ -199,7 +200,10 @@ function EnterpriseSsoConnectors() {
             connectorForGuide && (
               <Guide
                 isOpen={Boolean(pathname.endsWith(buildGuidePathname(connectorForGuide.id)))}
-                connector={connectorForGuide}
+                connector={
+                  // eslint-disable-next-line no-restricted-syntax
+                  connectorForGuide as SsoConnectorWithProviderConfigWithGeneric<SsoProviderName>
+                }
                 isReadOnly={connectorForGuide.providerName !== 'SAML'}
                 onClose={async (connectorId) => {
                   if (connectorId) {

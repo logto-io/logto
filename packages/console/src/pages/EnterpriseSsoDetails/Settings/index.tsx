@@ -28,10 +28,15 @@ import LogosUploader from './LogosUploader';
 import MultiInput, { type Option as MultiInputOption } from './MultiInput';
 import * as styles from './index.module.scss';
 
+type DataType = Pick<
+  SsoConnectorWithProviderConfig,
+  'branding' | 'connectorName' | 'domains' | 'syncProfile' | 'id'
+>;
+
 type Props = {
   isDeleted: boolean;
-  data: SsoConnectorWithProviderConfig;
-  onUpdated: (data: SsoConnectorWithProviderConfig) => void;
+  data: DataType;
+  onUpdated: (data: DataType) => void;
 };
 
 export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> & {
@@ -42,7 +47,7 @@ export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> & {
 const duplicatedDomainsErrorCode = 'single_sign_on.duplicated_domains';
 const forbiddenDomainsErrorCode = 'single_sign_on.forbidden_domains';
 
-const dataToFormParser = (data: SsoConnectorWithProviderConfig) => {
+const dataToFormParser = (data: DataType) => {
   const { branding, connectorName, domains, syncProfile } = data;
   return {
     branding,

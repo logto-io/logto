@@ -1,6 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { Theme } from '@logto/schemas';
-import type { SsoConnectorWithProviderConfig } from '@logto/schemas';
+import { Theme, type SsoProviderName } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +23,9 @@ import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
+import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso/types';
+
+import Connection from './Connection';
 import Settings from './Settings';
 import * as styles from './index.module.scss';
 
@@ -31,7 +33,7 @@ const enterpriseSsoPathname = '/enterprise-sso';
 const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseSsoDetailsTabs) =>
   `${enterpriseSsoPathname}/${ssoConnectorId}/${tab}`;
 
-function EnterpriseSsoConnectorDetails() {
+function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
   const theme = useTheme();
 
   const { pathname } = useLocation();
@@ -45,7 +47,7 @@ function EnterpriseSsoConnectorDetails() {
     data: ssoConnector,
     error: requestError,
     mutate,
-  } = useSWR<SsoConnectorWithProviderConfig, RequestError>(
+  } = useSWR<SsoConnectorWithProviderConfigWithGeneric<T>, RequestError>(
     ssoConnectorId && `api/sso-connectors/${ssoConnectorId}`,
     { keepPreviousData: true }
   );
@@ -72,7 +74,7 @@ function EnterpriseSsoConnectorDetails() {
     try {
       await api
         .delete(`api/sso-connectors/${ssoConnectorId}`)
-        .json<SsoConnectorWithProviderConfig>();
+        .json<SsoConnectorWithProviderConfigWithGeneric<T>>();
 
       setIsDeleted(true);
 
@@ -173,6 +175,15 @@ function EnterpriseSsoConnectorDetails() {
           </TabNav>
           {tab === EnterpriseSsoDetailsTabs.Settings && (
             <Settings
+              data={ssoConnector}
+              isDeleted={isDeleted}
+              onUpdated={() => {
+                void mutate();
+              }}
+            />
+          )}
+          {tab === EnterpriseSsoDetailsTabs.Connection && (
+            <Connection
               data={ssoConnector}
               isDeleted={isDeleted}
               onUpdated={(ssoConnector) => {

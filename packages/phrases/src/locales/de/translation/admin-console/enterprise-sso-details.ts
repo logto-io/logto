@@ -62,6 +62,51 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   delete_confirm_modal_content:
     'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
+  /** UNTRANSLATED */
+  upload_idp_metadata_title: 'Upload IdP metadata',
+  /** UNTRANSLATED */
+  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
+  /** UNTRANSLATED */
+  upload_saml_idp_metadata_info_text_url:
+    'Paste the metadata URL from the identity provider to connect.',
+  /** UNTRANSLATED */
+  upload_saml_idp_metadata_info_text_xml:
+    'Paste the metadata from the identity provider to connect.',
+  /** UNTRANSLATED */
+  upload_saml_idp_metadata_info_text_manual:
+    'Fill in the metadata from the identity provider to connect.',
+  /** UNTRANSLATED */
+  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
+  /** UNTRANSLATED */
+  service_provider_property_title: 'Configure your service in the IdP',
+  /** UNTRANSLATED */
+  service_provider_property_description:
+    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
+  /** UNTRANSLATED */
+  attribute_mapping_title: 'Attribute mapping',
+  /** UNTRANSLATED */
+  attribute_mapping_description:
+    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+  saml_preview: {
+    /** UNTRANSLATED */
+    sign_on_url: 'Sign on URL',
+    /** UNTRANSLATED */
+    entity_id: 'Issuer',
+    /** UNTRANSLATED */
+    x509_certificate: 'Signing certificate',
+  },
+  oidc_preview: {
+    /** UNTRANSLATED */
+    authorization_endpoint: 'Authorization endpoint',
+    /** UNTRANSLATED */
+    token_endpoint: 'Token endpoint',
+    /** UNTRANSLATED */
+    userinfo_endpoint: 'User information endpoint',
+    /** UNTRANSLATED */
+    jwks_uri: 'JSON web key set endpoint',
+    /** UNTRANSLATED */
+    issuer: 'Issuer',
+  },
 };
 
 export default Object.freeze(enterprise_sso_details);

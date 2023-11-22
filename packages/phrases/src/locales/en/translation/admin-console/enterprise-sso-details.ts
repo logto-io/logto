@@ -33,6 +33,33 @@ const enterprise_sso_details = {
   delete_confirm_modal_title: 'Delete enterprise SSO connector',
   delete_confirm_modal_content:
     'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
+  upload_idp_metadata_title: 'Upload IdP metadata',
+  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
+  upload_saml_idp_metadata_info_text_url:
+    'Paste the metadata URL from the identity provider to connect.',
+  upload_saml_idp_metadata_info_text_xml:
+    'Paste the metadata from the identity provider to connect.',
+  upload_saml_idp_metadata_info_text_manual:
+    'Fill in the metadata from the identity provider to connect.',
+  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
+  service_provider_property_title: 'Configure your service in the IdP',
+  service_provider_property_description:
+    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
+  attribute_mapping_title: 'Attribute mapping',
+  attribute_mapping_description:
+    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+  saml_preview: {
+    sign_on_url: 'Sign on URL',
+    entity_id: 'Issuer',
+    x509_certificate: 'Signing certificate',
+  },
+  oidc_preview: {
+    authorization_endpoint: 'Authorization endpoint',
+    token_endpoint: 'Token endpoint',
+    userinfo_endpoint: 'User information endpoint',
+    jwks_uri: 'JSON web key set endpoint',
+    issuer: 'Issuer',
+  },
 };
 
 export default Object.freeze(enterprise_sso_details);

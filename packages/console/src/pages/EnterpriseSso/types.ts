@@ -3,7 +3,7 @@
  * @logto/core and can not be imported here, should align with SAML config types.
  * See {@link @logto/core/packages/core/src/sso/SamlConnector/index.ts}.
  */
-import { type SsoProviderName } from '@logto/schemas';
+import { type SsoProviderName, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 
 export type AttributeMapping = {
   id?: string;
@@ -42,3 +42,44 @@ export type GuideFormType<T extends SsoProviderName> = T extends SsoProviderName
   : T extends SsoProviderName.SAML
   ? SamlGuideFormType
   : never;
+
+/**
+ * This type aligned with the type of `SamlIdentityProviderMetadata` (packages/core/src/sso/types/saml.ts)
+ * and `OidcConfigResponse` (packages/core/src/sso/types/oidc.ts).
+ *
+ * Since these types are defined in @logto/core, we can't import them directly here.
+ */
+export type ParsedSsoIdentityProviderConfig<T extends SsoProviderName> =
+  T extends SsoProviderName.OIDC
+    ? {
+        authorizationEndpoint: string;
+        tokenEndpoint: string;
+        userinfoEndpoint: string;
+        jwksUri: string;
+        issuer: string;
+      }
+    : T extends SsoProviderName.SAML
+    ? {
+        serviceProvider: {
+          entityId: string;
+          assertionConsumerServiceUrl: string;
+        };
+        identityProvider?: {
+          entityId: string;
+          signInEndpoint: string;
+          x509Certificate: string;
+        };
+      }
+    : never;
+
+export type SsoConnectorConfig<T extends SsoProviderName> = GuideFormType<T>;
+
+// Help the Guide component type to be inferred from the connector's type.
+export type SsoConnectorWithProviderConfigWithGeneric<T extends SsoProviderName> = Omit<
+  SsoConnectorWithProviderConfig,
+  'config' | 'providerName' | 'providerConfig'
+> & {
+  providerName: T;
+  providerConfig?: ParsedSsoIdentityProviderConfig<T>;
+  config: SsoConnectorConfig<T>;
+};
