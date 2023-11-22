@@ -38,3 +38,6 @@ export const singleSignOnAuthorization = async (connectorId: string, payload: un
       json: payload,
     })
     .json<Response>();
+
+export const singleSignOnRegistration = async (connectorId: string) =>
+  api.post(`${ssoPrefix}/${connectorId}/registration`).json<Response>();

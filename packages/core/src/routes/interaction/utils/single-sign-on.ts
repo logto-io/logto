@@ -19,8 +19,10 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { storeInteractionResult } from './interaction.js';
-import { getSingleSignOnSessionResult } from './single-sign-on-guard.js';
+import {
+  getSingleSignOnSessionResult,
+  assignSingleSignOnAuthenticationResult,
+} from './single-sign-on-session.js';
 import { assignConnectorSessionResult } from './social-verification.js';
 
 export const authorizationUrlPayloadGuard = z.object({
@@ -109,6 +111,12 @@ export const getSsoAuthentication = async (
       userInfo,
     };
 
+    // Assign the single sign on authentication to the interaction result
+    await assignSingleSignOnAuthenticationResult(ctx, provider, {
+      connectorId,
+      ...result,
+    });
+
     log.append({ issuer, userInfo });
 
     return result;
@@ -160,13 +168,13 @@ export const handleSsoAuthentication = async (
     });
   }
 
-  // Update the interaction session event to register if no related user account found
-  const registerEventUpdateLog = createLog(`Interaction.Register.Update`);
-  registerEventUpdateLog.append({ event: 'register' });
-  await storeInteractionResult({ event: InteractionEvent.Register }, ctx, provider);
-
-  // Register
-  return registerWithSsoAuthentication(ctx, tenant, connectorData, ssoAuthentication);
+  throw new RequestError(
+    {
+      code: 'user.identity_not_exist',
+      status: 422,
+    },
+    {}
+  );
 };
 
 const signInWithSsoAuthentication = async (
@@ -281,18 +289,17 @@ const signInAndLinkWithSsoAuthentication = async (
   return userId;
 };
 
-const registerWithSsoAuthentication = async (
+export const registerWithSsoAuthentication = async (
   ctx: WithLogContext,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
   }: TenantContext,
-  { id: connectorId }: SupportedSsoConnector,
-  ssoAuthentication: SsoAuthenticationResult
+  ssoAuthentication: SsoAuthenticationResult & { connectorId: string }
 ) => {
   const { createLog } = ctx;
   const log = createLog(`Interaction.Register.Submit`);
-  const { issuer, userInfo } = ssoAuthentication;
+  const { issuer, userInfo, connectorId } = ssoAuthentication;
 
   // Only sync the name, avatar and email (conflict email account will be guarded ahead)
   const syncingProfile = {
