@@ -113,8 +113,7 @@ Here is an example of using cURL to send a GET request to get items in your shop
 </pre>
 
 </Step>
-{ isDevFeaturesEnabled ? (
-  <Step title="Enable admin access" subtitle="(optional)">
+<Step title="Enable admin access" subtitle="(optional)">
 
   ### Accessing Logto Management API
 
@@ -138,16 +137,5 @@ Here is an example of using cURL to send a GET request to get items in your shop
     style={{ borderRadius: '6px' }}
   />
 
-  </Step>
-) : (
-  <Step title="Enable admin access" subtitle="(optional)">
-
-  ### Accessing Logto Management API
-
-  If you want to use this m2m app to access Logto [Management API](https://docs.logto.io/docs/references/core/#management-api), you will also need to enable "admin access" for you application.
-
-  <EnableAdminAccess />
-
-  </Step>
-)}
+</Step>
 </Steps>
