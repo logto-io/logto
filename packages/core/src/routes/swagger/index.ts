@@ -196,7 +196,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       info: {
         title: 'Logto API references',
         description:
-          'API references for Logto services. To learn more about how to interact with Logto APIs, see [Explore Management API](https://docs.logto.io/docs/tutorials/get-started/explore-management-api/).' +
+          'API references for Logto services. To learn more about how to interact with Logto APIs, see [Interact with Management API](https://docs.logto.io/docs/recipes/interact-with-management-api/).' +
           condString(
             EnvSet.values.isCloud &&
               '\n\nNote: The documentation is for Logto Cloud. If you are using Logto OSS, please refer to the response of `/api/swagger.json` endpoint on your Logto instance.'
