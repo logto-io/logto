@@ -4,6 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField, PasswordInputField } from '@/components/InputFields';
@@ -134,6 +135,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
       <Button
         name="submit"
         title={showSingleSignOn ? 'action.single_sign_on' : 'action.sign_in'}
+        icon={showSingleSignOn ? <LockIcon /> : undefined}
         htmlType="submit"
       />
 
