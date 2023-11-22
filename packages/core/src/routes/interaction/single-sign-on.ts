@@ -1,4 +1,4 @@
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, SignInMode } from '@logto/schemas';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
@@ -13,6 +13,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { interactionPrefix, ssoPath } from './const.js';
 import type { WithInteractionDetailsContext } from './middleware/koa-interaction-details.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
+import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
 import { getSingleSignOnAuthenticationResult } from './utils/single-sign-on-session.js';
 import {
@@ -27,7 +28,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
-  const { provider, libraries } = tenant;
+  const { provider, libraries, queries } = tenant;
 
   const { ssoConnectors: ssoConnectorsLibrary } = libraries;
 
@@ -124,11 +125,12 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       params: z.object({
         connectorId: z.string(),
       }),
-      status: [200, 404],
+      status: [200, 404, 403],
       response: z.object({
         redirectTo: z.string(),
       }),
     }),
+    koaInteractionSie(queries),
     koaInteractionHooks(libraries),
     async (ctx, next) => {
       const {
@@ -136,6 +138,14 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
         assignInteractionHookResult,
         guard: { params },
       } = ctx;
+      const {
+        signInExperience: { signInMode },
+      } = ctx;
+
+      assertThat(
+        signInMode !== SignInMode.SignIn,
+        new RequestError({ code: 'auth.forbidden', status: 403 })
+      );
 
       const registerEventUpdateLog = createLog(`Interaction.Register.Update`);
       registerEventUpdateLog.append({ event: 'register' });
