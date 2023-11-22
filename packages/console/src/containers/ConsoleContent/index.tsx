@@ -174,17 +174,13 @@ function ConsoleContent() {
                 <Route path={RoleDetailsTabs.M2mApps} element={<RoleApplications />} />
               </Route>
             </Route>
-            {isDevFeaturesEnabled && (
-              <>
-                <Route path="organizations">
-                  <Route index element={<Organizations />} />
-                  <Route path="create" element={<Organizations />} />
-                  <Route path="template" element={<Organizations tab="template" />} />
-                  <Route path=":id/*" element={<OrganizationDetails />} />
-                </Route>
-                <Route path="organization-guide/*" element={<OrganizationGuide />} />
-              </>
-            )}
+            <Route path="organizations">
+              <Route index element={<Organizations />} />
+              <Route path="create" element={<Organizations />} />
+              <Route path="template" element={<Organizations tab="template" />} />
+              <Route path=":id/*" element={<OrganizationDetails />} />
+            </Route>
+            <Route path="organization-guide/*" element={<OrganizationGuide />} />
             <Route path="profile">
               <Route index element={<Profile />} />
               <Route path="verify-password" element={<VerifyPasswordModal />} />
