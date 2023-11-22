@@ -153,6 +153,23 @@ class SamlConnector {
   }
 
   /**
+   * Get SAML IdP config along with parsed metadata from raw SAML SSO connector config.
+   *
+   * @remarks If this function can successfully get the SAML metadata, then it guarantees that the SAML identity provider instance is initiated.
+   *
+   * @returns Parsed SAML config along with it's parsed metadata.
+   */
+  protected async getSamlIdpMetadata(): Promise<SamlIdentityProviderMetadata> {
+    if (this._samlIdpMetadata) {
+      return this._samlIdpMetadata;
+    }
+
+    const identityProvider = await this.getIdentityProvider();
+    this._samlIdpMetadata = parseXmlMetadata(identityProvider);
+    return this._samlIdpMetadata;
+  }
+
+  /**
    * Get the raw SAML metadata (in XML-format) from the raw SAML SSO connector config.
    *
    * @returns The raw SAML metadata in XML-format.
@@ -219,23 +236,6 @@ class SamlConnector {
       ],
     });
     return this._identityProvider;
-  }
-
-  /**
-   * Get SAML IdP config along with parsed metadata from raw SAML SSO connector config.
-   *
-   * @remarks If this function can successfully get the SAML metadata, then it guarantees that the SAML identity provider instance is initiated.
-   *
-   * @returns Parsed SAML config along with it's parsed metadata.
-   */
-  private async getSamlIdpMetadata(): Promise<SamlIdentityProviderMetadata> {
-    if (this._samlIdpMetadata) {
-      return this._samlIdpMetadata;
-    }
-
-    const identityProvider = await this.getIdentityProvider();
-    this._samlIdpMetadata = parseXmlMetadata(identityProvider);
-    return this._samlIdpMetadata;
   }
 }
 
