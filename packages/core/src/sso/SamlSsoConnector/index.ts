@@ -38,16 +38,9 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   }
 
   async getIssuer() {
-    const { identityProvider } = await this.getSamlConfig();
+    const { entityId } = await this.getSamlIdpMetadata();
 
-    if (!identityProvider?.entityId) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.InvalidConfig,
-        'Can not get `entityId` from metadata config!'
-      );
-    }
-
-    return identityProvider.entityId;
+    return entityId;
   }
 
   /**
