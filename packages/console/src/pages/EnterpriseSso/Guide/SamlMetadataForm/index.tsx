@@ -1,6 +1,6 @@
 import { type SsoProviderName } from '@logto/schemas';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/ds-components/FormField';
@@ -12,6 +12,8 @@ import {
   type SamlGuideFormType,
   type SsoConnectorConfig,
 } from '@/pages/EnterpriseSso/types.js';
+
+import XmlFileReader from '../XmlFileReader';
 
 import ParsedConfigPreview from './ParsedConfigPreview';
 import SwitchFormatButton, { FormFormat } from './SwitchFormatButton';
@@ -37,6 +39,7 @@ function SamlMetadataFormFields({
 }: SamlMetadataFormFieldsProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
+    control,
     register,
     formState: { errors },
   } = useFormContext<SamlGuideFormType>();
@@ -79,14 +82,13 @@ function SamlMetadataFormFields({
     case FormFormat.Xml: {
       return (
         <>
-          <FormField
-            isRequired={isFieldCheckRequired}
-            title="enterprise_sso.metadata.saml.metadata_xml_field_name"
-          >
-            <Textarea
-              rows={5}
-              {...register('metadata', { required: isFieldCheckRequired })}
-              error={Boolean(errors.metadata)}
+          <FormField title="enterprise_sso.metadata.saml.metadata_xml_field_name">
+            <Controller
+              control={control}
+              name="metadata"
+              render={({ field: { onChange, value } }) => (
+                <XmlFileReader value={value} onChange={onChange} />
+              )}
             />
           </FormField>
           {/* Since we will reset all other fields except for the current one when switching to another configuration form format, we only show parsed config preview when the result comes from the current form format. */}

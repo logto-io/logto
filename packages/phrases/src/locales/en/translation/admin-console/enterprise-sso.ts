@@ -55,7 +55,7 @@ const enterprise_sso = {
       metadata_url_field_name: 'Metadata URL',
       metadata_url_description:
         'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      metadata_xml_field_name: 'Metadata XML file',
+      metadata_xml_field_name: 'IdP metadata XML file',
       metadata_xml_uploader_text: 'Upload metadata XML file',
       sign_in_endpoint_field_name: 'Sign on URL',
       idp_entity_id_field_name: 'IdP entity ID (Issuer)',

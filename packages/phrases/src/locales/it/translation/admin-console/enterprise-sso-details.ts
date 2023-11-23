@@ -67,6 +67,8 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
   /** UNTRANSLATED */
+  upload_idp_metadata_button_text: 'Upload metadata XML file',
+  /** UNTRANSLATED */
   upload_saml_idp_metadata_info_text_url:
     'Paste the metadata URL from the identity provider to connect.',
   /** UNTRANSLATED */

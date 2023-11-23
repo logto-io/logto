@@ -35,6 +35,7 @@ const enterprise_sso_details = {
     'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
   upload_idp_metadata_title: 'Upload IdP metadata',
   upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
+  upload_idp_metadata_button_text: 'Upload metadata XML file',
   upload_saml_idp_metadata_info_text_url:
     'Paste the metadata URL from the identity provider to connect.',
   upload_saml_idp_metadata_info_text_xml:
