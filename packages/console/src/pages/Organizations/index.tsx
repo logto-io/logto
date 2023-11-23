@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
+import { isCloud } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -40,7 +41,7 @@ function Organizations({ tab }: Props) {
   const [isCreating, setIsCreating] = useState(false);
   const { configs, isLoading: isLoadingConfigs } = useConfigs();
   const isInitialSetup = !isLoadingConfigs && !configs?.organizationCreated;
-  const isOrganizationsDisabled = currentPlan?.id === ReservedPlanId.Free;
+  const isOrganizationsDisabled = isCloud && !currentPlan?.quota.organizationsEnabled;
 
   const upgradePlan = useCallback(() => {
     navigate(subscriptionPage);

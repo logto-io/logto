@@ -1,14 +1,19 @@
 import { type Organization, type CreateOrganization } from '@logto/schemas';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
+import QuotaGuardFooter from '@/components/QuotaGuardFooter';
+import { isCloud } from '@/consts/env';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 
@@ -20,6 +25,10 @@ type Props = {
 function CreateOrganizationModal({ isOpen, onClose }: Props) {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+  const isOrganizationsDisabled = isCloud && !currentPlan?.quota.organizationsEnabled;
+
   const {
     reset,
     register,
@@ -56,7 +65,24 @@ function CreateOrganizationModal({ isOpen, onClose }: Props) {
       <ModalLayout
         title="organizations.create_organization"
         footer={
-          <Button type="primary" title="general.create" isLoading={isSubmitting} onClick={submit} />
+          isOrganizationsDisabled ? (
+            <QuotaGuardFooter>
+              <Trans
+                components={{
+                  a: <ContactUsPhraseLink />,
+                }}
+              >
+                {t('upsell.paywall.organizations')}
+              </Trans>
+            </QuotaGuardFooter>
+          ) : (
+            <Button
+              type="primary"
+              title="general.create"
+              isLoading={isSubmitting}
+              onClick={submit}
+            />
+          )
         }
         onClose={onClose}
       >

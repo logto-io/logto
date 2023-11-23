@@ -46,6 +46,9 @@ const paywall = {
   hooks_other:
     'Достигнут лимит {{count, number}} вебхуков в плане <planName/>. Повысьте план, чтобы создать больше вебхуков. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   mfa: 'Разблокируйте MFA для повышения безопасности с помощью перехода на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
+  /** UNTRANSLATED */
+  organizations:
+    'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
 };
 
 export default Object.freeze(paywall);
