@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.copyToClipboard {
+  display: block;
+}
+
+.oidcConfigPreview {
+  margin-top: _.unit(3);
+}

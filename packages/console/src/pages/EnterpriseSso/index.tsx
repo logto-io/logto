@@ -139,10 +139,13 @@ function EnterpriseSsoConnectors() {
             dataIndex: 'status',
             colSpan: 186,
             render: ({ providerConfig, providerName }) => {
-              const inUse =
-                providerName === SsoProviderName.OIDC
-                  ? Boolean(providerConfig)
-                  : Boolean(providerConfig?.identityProvider);
+              const inUse = [
+                SsoProviderName.OIDC,
+                SsoProviderName.GOOGLE_WORKSPACE,
+                SsoProviderName.OKTA,
+              ].includes(providerName)
+                ? Boolean(providerConfig)
+                : Boolean(providerConfig?.identityProvider);
               return (
                 <Tag type="state" status={inUse ? 'success' : 'error'} variant="plain">
                   {t(
@@ -208,7 +211,6 @@ function EnterpriseSsoConnectors() {
                   // eslint-disable-next-line no-restricted-syntax
                   connectorForGuide as SsoConnectorWithProviderConfigWithGeneric<SsoProviderName>
                 }
-                isReadOnly={connectorForGuide.providerName !== 'SAML'}
                 onClose={async (connectorId) => {
                   if (connectorId) {
                     navigate(buildDetailsPathname(connectorId), { replace: true });

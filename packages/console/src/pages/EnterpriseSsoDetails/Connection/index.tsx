@@ -86,10 +86,13 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
           title="enterprise_sso_details.upload_idp_metadata_title"
           description="enterprise_sso_details.upload_idp_metadata_description"
         >
-          {providerName === SsoProviderName.OIDC ? (
+          {[SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
+            providerName
+          ) ? (
             // Can not infer the type by narrowing down the value of `providerName`, so we need to cast it.
             <OidcMetadataForm
               isGuidePage={false}
+              providerName={providerName}
               // eslint-disable-next-line no-restricted-syntax
               config={config as SsoConnectorConfig<SsoProviderName.OIDC>}
               providerConfig={
@@ -127,7 +130,7 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
             providerConfig={providerConfig}
           />
         </FormCard>
-        {providerName === SsoProviderName.SAML && (
+        {[SsoProviderName.SAML, SsoProviderName.AZURE_AD].includes(providerName) && (
           <FormCard
             title="enterprise_sso_details.attribute_mapping_title"
             description="enterprise_sso_details.attribute_mapping_description"

@@ -1,7 +1,8 @@
-import { type SsoProviderName } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextInput from '@/ds-components/TextInput';
@@ -12,15 +13,17 @@ import {
 } from '@/pages/EnterpriseSso/types.js';
 
 import ParsedConfigPreview from './ParsedConfigPreview';
+import * as styles from './index.module.scss';
 
 type Props = {
   isGuidePage?: boolean;
   providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>;
   config?: SsoConnectorConfig<SsoProviderName.OIDC>;
+  providerName: SsoProviderName;
 };
 
 // Do not show inline notification and parsed config preview if it is on guide page.
-function OidcMetadataForm({ isGuidePage, providerConfig, config }: Props) {
+function OidcMetadataForm({ isGuidePage, providerConfig, config, providerName }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
@@ -56,22 +59,35 @@ function OidcMetadataForm({ isGuidePage, providerConfig, config }: Props) {
         />
       </FormField>
       <FormField
-        isRequired={isFieldCheckRequired}
+        isRequired={isFieldCheckRequired && providerName !== SsoProviderName.GOOGLE_WORKSPACE}
         title="enterprise_sso.metadata.oidc.issuer_field_name"
       >
-        <TextInput
-          {...register('issuer', { required: isFieldCheckRequired })}
-          error={Boolean(errors.issuer)}
-        />
-        {isFieldCheckRequired && providerConfig && config?.issuer && (
-          <ParsedConfigPreview providerConfig={providerConfig} />
+        {providerName === SsoProviderName.GOOGLE_WORKSPACE ? (
+          <CopyToClipboard
+            className={styles.copyToClipboard}
+            variant="border"
+            // TODO: this hard-coded value should align with the `googleIssuer` value defined in `packages/core/src/sso/GoogleWorkspaceSsoConnector/index.ts`.
+            value={providerConfig?.issuer ?? 'https://accounts.google.com'}
+          />
+        ) : (
+          <TextInput
+            {...register('issuer', {
+              required: isFieldCheckRequired,
+            })}
+            error={Boolean(errors.issuer)}
+          />
         )}
+        {isFieldCheckRequired &&
+          providerConfig &&
+          (config?.issuer ?? providerName === SsoProviderName.GOOGLE_WORKSPACE) && (
+            <ParsedConfigPreview
+              className={styles.oidcConfigPreview}
+              providerConfig={providerConfig}
+            />
+          )}
       </FormField>
       <FormField title="enterprise_sso.metadata.oidc.scope_field_name">
-        <TextInput
-          {...register('scope', { required: isFieldCheckRequired })}
-          error={Boolean(errors.scope)}
-        />
+        <TextInput {...register('scope')} error={Boolean(errors.scope)} />
       </FormField>
     </>
   );

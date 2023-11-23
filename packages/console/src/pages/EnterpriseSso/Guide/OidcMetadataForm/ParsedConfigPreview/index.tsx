@@ -1,4 +1,5 @@
 import { type SsoProviderName } from '@logto/schemas';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import { type ParsedSsoIdentityProviderConfig } from '@/pages/EnterpriseSso/types.js';
@@ -7,16 +8,17 @@ import * as styles from './index.module.scss';
 
 type Props = {
   providerConfig: ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>;
+  className?: string;
 };
 
-function ParsedConfigPreview({ providerConfig }: Props) {
+function ParsedConfigPreview({ providerConfig, className }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.enterprise_sso_details.oidc_preview',
   });
   const { authorizationEndpoint, tokenEndpoint, userinfoEndpoint, jwksUri, issuer } =
     providerConfig;
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <div>
         <div className={styles.title}>{t('authorization_endpoint')}</div>
         <div className={styles.content}>{authorizationEndpoint}</div>
