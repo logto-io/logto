@@ -19,8 +19,10 @@ type Props = {
  * This only applies to SAML SSO connectors.
  */
 const providerPropertiesGuard = z.object({
-  assertionConsumerServiceUrl: z.string().min(1),
-  entityId: z.string().min(1),
+  serviceProvider: z.object({
+    assertionConsumerServiceUrl: z.string().min(1),
+    entityId: z.string().min(1),
+  }),
 });
 
 function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
@@ -55,8 +57,9 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
           className={styles.copyToClipboard}
           variant="border"
           value={applyCustomDomain(
-            conditional(result.success && result.data.assertionConsumerServiceUrl) ??
-              new URL(`/api/authn/saml/sso/${ssoConnectorId}`, tenantEndpoint).toString()
+            conditional(
+              result.success && result.data.serviceProvider.assertionConsumerServiceUrl
+            ) ?? new URL(`/api/authn/saml/sso/${ssoConnectorId}`, tenantEndpoint).toString()
           )}
         />
       </FormField>
@@ -65,7 +68,7 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
           className={styles.copyToClipboard}
           variant="border"
           value={applyCustomDomain(
-            conditional(result.success && result.data.entityId) ??
+            conditional(result.success && result.data.serviceProvider.entityId) ??
               new URL(`/api/sso-connector/${ssoConnectorId}`, tenantEndpoint).toString()
           )}
         />

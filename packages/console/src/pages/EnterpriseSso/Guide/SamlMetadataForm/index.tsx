@@ -210,7 +210,7 @@ function SamlMetadataForm({ config, isGuidePage, providerConfig }: SamlMetadataF
 
   return (
     <>
-      {!identityProviderConfig && isConfigEmpty && (
+      {isFieldCheckRequired && !identityProviderConfig && isConfigEmpty && (
         <InlineNotification severity="alert">
           {t(
             formFormat === FormFormat.Url
