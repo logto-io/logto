@@ -77,9 +77,13 @@ export const expectNavigation = async <T>(
   action: Promise<T>,
   page: Page = global.page
 ): Promise<T> => {
-  const [result] = await Promise.all([
-    action,
+  const [_, result] = await Promise.all([
+    /**
+     * We should call `waitForNavigation` before the action or the `waitForNavigation` will encounter a timeout error randomly,
+     * since sometimes the action is too fast and the `waitForNavigation` is not called before the navigation is completed.
+     */
     page.waitForNavigation({ waitUntil: 'networkidle0' }),
+    action,
   ]);
   return result;
 };
