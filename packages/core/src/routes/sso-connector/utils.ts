@@ -33,16 +33,10 @@ export const parseFactoryDetail = (
   Throw error if the config is invalid.
   Partially validate the config if allowPartial is true.
 */
-export const parseConnectorConfig = (
-  providerName: SsoProviderName,
-  config: JsonObject,
-  allowPartial?: boolean
-) => {
+export const parseConnectorConfig = (providerName: SsoProviderName, config: JsonObject) => {
   const factory = ssoConnectorFactories[providerName];
 
-  const result = allowPartial
-    ? factory.configGuard.partial().safeParse(config)
-    : factory.configGuard.safeParse(config);
+  const result = factory.configGuard.safeParse(config);
 
   if (!result.success) {
     throw new RequestError({

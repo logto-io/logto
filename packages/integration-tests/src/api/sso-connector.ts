@@ -1,5 +1,4 @@
 import { type CreateSsoConnector, type SsoConnector } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
 
@@ -42,17 +41,5 @@ export const patchSsoConnectorById = async (id: string, data: Partial<SsoConnect
   authedAdminApi
     .patch(`sso-connectors/${id}`, {
       json: data,
-    })
-    .json<SsoConnectorWithProviderConfig>();
-
-export const patchSsoConnectorConfigById = async (
-  id: string,
-  data: Record<string, unknown>,
-  partialValidate = false
-) =>
-  authedAdminApi
-    .patch(`sso-connectors/${id}/config`, {
-      json: data,
-      ...conditional(partialValidate && { searchParams: { partialValidateConfig: 'true' } }),
     })
     .json<SsoConnectorWithProviderConfig>();

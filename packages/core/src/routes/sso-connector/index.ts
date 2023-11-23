@@ -1,11 +1,11 @@
-import { SsoConnectors, jsonObjectGuard } from '@logto/schemas';
+import { SsoConnectors } from '@logto/schemas';
 import {
   ssoConnectorFactoriesResponseGuard,
   type SsoConnectorFactoryDetail,
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
-import { conditional, assert, yes } from '@silverhand/essentials';
+import { conditional, assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -97,13 +97,10 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       // Validate the connector domains if it's provided
       validateConnectorDomains(rest.domains);
 
-      /* 
-        Validate the connector config if it's provided.
-        Allow partial config settings on create.
-       */
-      const parsedConfig = config && parseConnectorConfig(providerName, config, true);
-      const connectorId = generateStandardShortId();
+      // Validate the connector config if it's provided
+      const parsedConfig = config && parseConnectorConfig(providerName, config);
 
+      const connectorId = generateStandardShortId();
       const connector = await ssoConnectors.insert({
         id: connectorId,
         providerName,
@@ -222,58 +219,6 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         new RequestError({ code: 'connector.not_found', status: 404 })
       );
 
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
-
-      ctx.body = connectorWithProviderDetails;
-
-      return next();
-    }
-  );
-
-  /* Patch update a single sign on connector's config by id */
-  router.patch(
-    `${pathname}/:id/config`,
-    koaGuard({
-      params: z.object({ id: z.string().min(1) }),
-      /**
-       * Allow partially validate the connector config, on the guide page after
-       * the SSO connector is created, we allow users to save incomplete config without validating it.
-       */
-      query: z.object({ partialValidateConfig: z.string().optional() }),
-      body: jsonObjectGuard,
-      response: ssoConnectorWithProviderConfigGuard,
-      status: [200, 404, 422],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { id },
-        body,
-        query: { partialValidateConfig },
-      } = ctx.guard;
-
-      const { providerName, config } = await getSsoConnectorById(id);
-
-      // Merge with existing config and revalidate
-      const parsedConfig = parseConnectorConfig(
-        providerName,
-        {
-          ...config,
-          ...body,
-        },
-        yes(partialValidateConfig)
-      );
-
-      const connector = await ssoConnectors.updateById(id, {
-        config: parsedConfig,
-      });
-
-      // Make the typescript happy
-      assert(
-        isSupportedSsoConnector(connector),
-        new RequestError({ code: 'connector.not_found', status: 404 })
-      );
-
-      // Fetch provider details for the connector
       const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
 
       ctx.body = connectorWithProviderDetails;
