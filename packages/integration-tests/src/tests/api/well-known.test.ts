@@ -82,7 +82,7 @@ describe('.well-known api', () => {
     it('should filter out the sso connectors with invalid config', async () => {
       const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
-        config: {},
+        config: undefined,
       });
 
       const signInExperience = await api

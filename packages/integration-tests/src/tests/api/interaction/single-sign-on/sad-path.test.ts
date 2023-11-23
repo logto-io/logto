@@ -35,10 +35,6 @@ describe('Single Sign On Sad Path', () => {
       const { id } = await createSsoConnector({
         providerName: SsoProviderName.OIDC,
         connectorName: 'test-oidc',
-        config: {
-          clientId: 'foo',
-          clientSecret: 'bar',
-        },
       });
 
       const client = await initClient();
