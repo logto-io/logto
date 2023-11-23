@@ -139,10 +139,13 @@ function EnterpriseSsoConnectors() {
             dataIndex: 'status',
             colSpan: 186,
             render: ({ providerConfig, providerName }) => {
-              const inUse =
-                providerName === SsoProviderName.OIDC
-                  ? Boolean(providerConfig)
-                  : Boolean(providerConfig?.identityProvider);
+              const inUse = [
+                SsoProviderName.OIDC,
+                SsoProviderName.OKTA,
+                SsoProviderName.GOOGLE_WORKSPACE,
+              ].includes(providerName)
+                ? Boolean(providerConfig)
+                : Boolean(providerConfig?.identityProvider);
               return (
                 <Tag type="state" status={inUse ? 'success' : 'error'} variant="plain">
                   {t(
