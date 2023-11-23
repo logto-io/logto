@@ -30,7 +30,6 @@ type Props<T extends SsoProviderName> = {
   isOpen: boolean;
   connector: SsoConnectorWithProviderConfigWithGeneric<T>;
   onClose: (ssoConnectorId?: string) => void;
-  isReadOnly?: boolean;
 };
 
 type GuideCardProps = {
@@ -58,7 +57,7 @@ function GuideCard({ cardOrder, title, description, children, className }: Guide
   );
 }
 
-function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOnly }: Props<T>) {
+function Guide<T extends SsoProviderName>({ isOpen, connector, onClose }: Props<T>) {
   const {
     id: ssoConnectorId,
     connectorName: ssoConnectorName,
@@ -143,13 +142,17 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
                     providerConfig={providerConfig}
                   />
                 </GuideCard>
-                {providerName === SsoProviderName.OIDC ? (
+                {[
+                  SsoProviderName.OIDC,
+                  SsoProviderName.GOOGLE_WORKSPACE,
+                  SsoProviderName.OKTA,
+                ].includes(providerName) ? (
                   <GuideCard
                     cardOrder={2}
                     title="enterprise_sso.metadata.title"
                     description="enterprise_sso.metadata.description"
                   >
-                    <OidcMetadataForm isGuidePage />
+                    <OidcMetadataForm isGuidePage providerName={providerName} />
                   </GuideCard>
                 ) : (
                   <>
@@ -158,7 +161,7 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose, isReadOn
                       title="enterprise_sso.attribute_mapping.title"
                       description="enterprise_sso.attribute_mapping.description"
                     >
-                      <SamlAttributeMapping isReadOnly={isReadOnly} />
+                      <SamlAttributeMapping />
                     </GuideCard>
                     <GuideCard
                       cardOrder={3}

@@ -57,7 +57,9 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
 
   const inUse =
     ssoConnector &&
-    (ssoConnector.providerName === SsoProviderName.OIDC
+    ([SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
+      ssoConnector.providerName
+    )
       ? Boolean(ssoConnector.providerConfig)
       : Boolean(
           ssoConnector.providerConfig &&
