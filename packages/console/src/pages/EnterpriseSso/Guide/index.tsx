@@ -154,7 +154,7 @@ function Guide<T extends SsoProviderName>({ isOpen, connector, onClose }: Props<
                     title="enterprise_sso.metadata.title"
                     description="enterprise_sso.metadata.description"
                   >
-                    <OidcMetadataForm isGuidePage />
+                    <OidcMetadataForm isGuidePage ssoProviderName={providerName} />
                   </GuideCard>
                 ) : (
                   <>

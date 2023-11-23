@@ -96,6 +96,7 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
               isGuidePage={false}
               // eslint-disable-next-line no-restricted-syntax
               config={config as SsoConnectorConfig<SsoProviderName.OIDC>}
+              ssoProviderName={providerName}
               providerConfig={
                 // eslint-disable-next-line no-restricted-syntax
                 providerConfig as Optional<ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>>
