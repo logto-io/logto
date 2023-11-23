@@ -3,6 +3,7 @@ import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { got, HTTPError } from 'got';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
+import { z } from 'zod';
 
 import {
   type BaseOidcConfig,
@@ -115,5 +116,36 @@ export const getIdTokenClaims = async (
       throw error;
     }
     throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, error);
+  }
+};
+
+/**
+ * Get the user info from the userinfo endpoint incase id token does not contain sufficient user claims.
+ */
+export const getUserInfo = async (accessToken: string, userinfoEndpoint: string) => {
+  try {
+    const httpResponse = await got.get(userinfoEndpoint, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: 'json',
+    });
+
+    const result = idTokenProfileStandardClaimsGuard
+      .catchall(z.unknown())
+      .safeParse(httpResponse.body);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    }
+
+    const { data } = result;
+
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof HTTPError) {
+      throw new ConnectorError(ConnectorErrorCodes.General, error.response.body);
+    }
+    throw error;
   }
 };
