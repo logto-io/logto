@@ -9,8 +9,7 @@ const tenants = {
   },
   settings: {
     title: 'AYARLAR',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description: 'Kiracı adını ayarlayın ve barındırılan veri bölgenizi görüntüleyin.',
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
     tenant_region: 'Veriler barındırılan bölge',
@@ -19,14 +18,11 @@ const tenants = {
     environment_tag_development: 'Geliş',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Kiracı türü',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Yalnızca testlerde kullanılır ve üretimde kullanılmamalıdır. Abonelik gerekmez.',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Son kullanıcılar tarafından kullanılan uygulamalar için tasarlanmış olup ücretli bir aboneliğe ihtiyaç duyabilir.',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
   },
   full_env_tag: {
@@ -44,41 +40,31 @@ const tenants = {
     title: 'Kiracı Oluştur',
     subtitle:
       'İzole kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun. Verilerin barındırıldığı bölge ve kiracı türleri oluşturulduktan sonra değiştirilemez.',
-    tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Yalnızca testlerde kullanılır ve üretimde kullanılmamalıdır. Abonelik gerekmez.',
+    development_hint:
+      'Tüm pro özelliklere sahiptir ancak oturum açma banner gibi bazı kısıtlamalara sahiptir.',
+    production_description:
+      'Son kullanıcılar tarafından kullanılmak üzere tasarlanmıştır ve ücretli bir aboneliğe ihtiyaç duyabilir.',
     available_plan: 'Mevcut plan:',
     create_button: 'Kiracı oluştur',
     tenant_name_placeholder: 'Benim kiracım',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Yeni "Geliştirme kiracısı" oluşturarak Hobby ve Pro özelliklerimizi ücretsiz deneyebilirsiniz!',
+    affect_title: 'Bu size nasıl etki eder?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Eski <strong>ortam etiketlerini</strong> iki yeni kiracı türüyle: <strong>“Geliş”</strong> ve <strong>“Prod”</strong> değiştiriyoruz.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Sorunsuz bir geçiş ve kesintisiz işlevsellik için, tüm önceden oluşturulmuş kiracılarınız önceki abonelikleri ile birlikte <strong>Prod</strong> kiracı tipine yükseltilecektir.',
+    hint_3: 'Endişelenmeyin, diğer tüm ayarlarınız aynı kalır.',
+    about_tenant_type: 'Kiracı türü hakkında',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Artık geliştirme kiracınızda <a>Logto Hobby ve Pro tüm özelliklerine</a> erişebilirsiniz!',
+    description: 'Bu tamamen ücretsizdir ve deneme süresi olmaksızın sürekli geçerlidir!',
   },
   delete_modal: {
     title: 'Kiracıyı Sil',

@@ -3,7 +3,7 @@ import quota_table from './quota-table.js';
 
 const subscription = {
   free_plan: '免费计划',
-  free_plan_description: '适用于边项目和初始 Logto 试用，无需信用卡。',
+  free_plan_description: '适用于个别项目和最初的 Logto 试用，无需信用卡。',
   hobby_plan: '爱好计划',
   hobby_plan_description: '适用于个人开发者或小型工程团队。',
   pro_plan: '专业计划',
@@ -63,8 +63,7 @@ const subscription = {
   upgrade_success: '成功升级到 <name/>',
   downgrade_success: '成功降级到 <name/>',
   subscription_check_timeout: '订阅检查超时，请稍后刷新。',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: '无订阅',
 };
 
 export default Object.freeze(subscription);

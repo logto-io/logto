@@ -2,9 +2,7 @@ const organization_details = {
   page_title: '組織詳情',
   delete_confirmation: '刪除後，所有成員將失去在這個組織中的成員資格和角色。此操作無法撤銷。',
   organization_id: '組織編號',
-  /** UNTRANSLATED */
-  settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+  settings_description: '組織代表可以訪問您的應用的團隊、商業客戶和合作夥伴公司。',
   name_placeholder: '組織名稱，不需要是唯一的。',
   description_placeholder: '組織的描述。',
   member: '成員',

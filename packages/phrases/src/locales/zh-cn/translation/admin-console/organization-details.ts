@@ -3,9 +3,7 @@ const organization_details = {
   delete_confirmation:
     '一旦删除，所有成员将失去他们在这个机构中的成员资格和角色。此操作将无法撤销。',
   organization_id: '机构编号',
-  /** UNTRANSLATED */
-  settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+  settings_description: '组织代表团队、商业客户和合作伙伴公司，可以访问您的应用程序。',
   name_placeholder: '机构名称，不需要是唯一的。',
   description_placeholder: '机构的描述。',
   member: '成员',

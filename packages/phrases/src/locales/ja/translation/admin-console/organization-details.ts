@@ -3,9 +3,8 @@ const organization_details = {
   delete_confirmation:
     '削除すると、すべてのメンバーが組織内のメンバーシップとロールを失います。この操作は元に戻せません。',
   organization_id: '組織ID',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    '組織は、アプリケーションにアクセスできるチーム、ビジネス顧客、およびパートナー企業を表します。',
   name_placeholder: '組織の名前。一意である必要はありません。',
   description_placeholder: '組織の説明。',
   member: 'メンバー',

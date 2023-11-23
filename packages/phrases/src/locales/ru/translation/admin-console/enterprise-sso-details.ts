@@ -1,111 +1,66 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_settings: 'Settings',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General Settings',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Custom Branding',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: 'Вернуться к единому входу в систему предприятия',
+  page_title: 'Детали коннектора единого входа в систему предприятия',
+  readme_drawer_title: 'Единый вход в систему предприятия',
+  readme_drawer_subtitle:
+    'Настройте коннекторы единого входа в систему предприятия для включения единого входа для конечных пользователей',
+  tab_settings: 'Настройки',
+  tab_connection: 'Соединение',
+  general_settings_title: 'Общие настройки',
+  custom_branding_title: 'Настраиваемый брендинг',
   custom_branding_description:
-    'Customize enterprise IdP display information for sign-in button and other scenarios.',
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    'Настройте отображение информации о предприятии для кнопки входа и других сценариев.',
+  email_domain_field_name: 'Домен электронной почты предприятия',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please ensure the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    'Пользователи с этим доменом электронной почты могут использовать единый вход для аутентификации. Пожалуйста, убедитесь, что домен принадлежит предприятию.',
+  email_domain_field_placeholder: 'Домен электронной почты',
+  sync_profile_field_name: 'Синхронизировать информацию профиля с поставщиком идентификации',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: 'Синхронизировать только при первом входе',
+    each_sign_in: 'Всегда синхронизировать при каждом входе',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Connector logo',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
-  branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_readme: 'Check README',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  connector_name_field_name: 'Имя коннектора',
+  connector_logo_field_name: 'Логотип коннектора',
+  branding_logo_context: 'Загрузить логотип',
+  branding_logo_error: 'Ошибка загрузки логотипа: {{error}}',
+  branding_logo_field_name: 'Логотип',
+  branding_logo_field_placeholder: 'https://ваш.домен/логотип.png',
+  branding_dark_logo_context: 'Загрузить логотип для темного режима',
+  branding_dark_logo_error: 'Ошибка загрузки логотипа для темного режима: {{error}}',
+  branding_dark_logo_field_name: 'Логотип (темный режим)',
+  branding_dark_logo_field_placeholder: 'https://ваш.домен/логотип-темного-режима.png',
+  check_readme: 'Проверить README',
+  enterprise_sso_deleted: 'Коннектор единого входа в систему предприятия был успешно удален',
+  delete_confirm_modal_title: 'Удалить коннектор единого входа в систему предприятия',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title: 'Upload IdP metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
+    'Вы уверены, что хотите удалить этот коннектор предприятия? Пользователи от поставщиков идентификации не смогут использовать единый вход в систему.',
+  upload_idp_metadata_title: 'Загрузить метаданные поставщика идентификации',
+  upload_idp_metadata_description:
+    'Настройте метаданные, скопированные с поставщика идентификации.',
   upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
+    'Вставьте URL метаданных с поставщика идентификации для подключения.',
   upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
+    'Вставьте метаданные с поставщика идентификации для подключения.',
   upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure your service in the IdP',
-  /** UNTRANSLATED */
+    'Заполните метаданные с поставщика идентификации для подключения.',
+  upload_oidc_idp_info_text: 'Заполните информацию с поставщика идентификации для подключения.',
+  service_provider_property_title: 'Настройте свою службу в поставщике идентификации',
   service_provider_property_description:
-    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mapping',
-  /** UNTRANSLATED */
+    'Создайте новую интеграцию приложения по протоколу {{protocol}} в своей {{name}}. Затем вставьте следующие данные Службы предприятия для настройки {{protocol}}.',
+  attribute_mapping_title: 'Сопоставление атрибутов',
   attribute_mapping_description:
-    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+    'Для синхронизации профиля пользователя с поставщика идентификации требуются `id` и `email` пользователя. Введите следующее имя и значение в {{name}}.',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
+    sign_on_url: 'URL входа',
+    entity_id: 'Издатель',
+    x509_certificate: 'Сертификат подписи',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: 'Конечная точка авторизации',
+    token_endpoint: 'Конечная точка токена',
+    userinfo_endpoint: 'Конечная точка информации о пользователе',
+    jwks_uri: 'Конечная точка набора ключей JSON веб-токенов',
+    issuer: 'Издатель',
   },
 };
 

@@ -53,8 +53,7 @@ const quota_table = {
   },
   organizations: {
     title: '組織',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
+    organizations: '組織',
   },
   support: {
     title: '支援',
@@ -68,8 +67,8 @@ const quota_table = {
   contact: '聯絡',
   monthly_price: '${{value, number}}/月',
   mau_price: '${{value, number}}/MAU',
-  days_one: '{{count, number}}天',
-  days_other: '{{count, number}}天',
+  days_one: '{{count, number}} 天',
+  days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
 };

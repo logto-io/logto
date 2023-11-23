@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'НАСТРОЙКИ',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Установите имя арендатора и просмотрите регион хостинга ваших данных и тип арендатора.',
     tenant_id: 'ID арендатора',
     tenant_name: 'Имя арендатора',
     tenant_region: 'Регион размещения данных',
@@ -18,15 +18,12 @@ const tenants = {
     environment_tag_development: 'Разр',
     environment_tag_staging: 'Предпр',
     environment_tag_production: 'Прод',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Тип арендатора',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Только для тестирования и не должен использоваться в производстве. Подписка не требуется. У него есть все профессиональные функции, но есть ограничения, такие как баннер входа. <a>Узнайте больше</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
-    tenant_info_saved: 'Информация о квартиросъемщике успешно сохранена.',
+      'Предназначен для приложений, используемых конечными пользователями и может потребовать платной подписки. <a>Узнайте больше</a>',
+    tenant_info_saved: 'Информация об арендаторе успешно сохранена.',
   },
   full_env_tag: {
     development: 'Разработка',
@@ -44,40 +41,31 @@ const tenants = {
     subtitle:
       'Создайте нового арендатора, чтобы разделить ресурсы и пользователей. Данные, размещенные в регионе, и типы арендаторов не могут быть изменены после создания.',
     tenant_usage_purpose: 'Для чего вы хотите использовать этот арендатор?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Только для тестирования и не должен использоваться в производстве. Подписка не требуется.',
+    development_hint:
+      'У него есть все профессиональные функции, но есть ограничения, такие как баннер входа.',
+    production_description:
+      'Предназначен для использования конечными пользователями и может потребовать платной подписки.',
     available_plan: 'Доступный план:',
     create_button: 'Создать арендатора',
     tenant_name_placeholder: 'Мой арендатор',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Теперь вы можете попробовать наши функции Hobby и Pro бесплатно, создав новый "Тестовый арендатор"!',
+    affect_title: 'Как это повлияет на вас?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Мы заменяем старые <strong>теги среды</strong> двумя новыми типами арендаторов: <strong>“Тестовый”</strong> и <strong>“Производственный”</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Чтобы обеспечить плавный переход и бесперебойную функциональность, все ранее созданные арендаторы будут переведены в тип арендатора <strong>Производственный</strong> вместе с вашей предыдущей подпиской.',
+    hint_3: 'Не волнуйтесь, все ваши другие настройки останутся прежними.',
+    about_tenant_type: 'О типе арендатора',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Теперь вы можете получить <a>все функции Logto Hobby и Pro</a> в своем тестовом арендаторе!',
+    description: 'Это полностью бесплатно, без пробного периода – навсегда!',
   },
   delete_modal: {
     title: 'Удалить арендатора',

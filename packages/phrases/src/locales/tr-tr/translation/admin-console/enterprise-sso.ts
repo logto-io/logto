@@ -21,84 +21,53 @@ const enterprise_sso = {
     create_button_text: 'Bağlayıcı Oluştur',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: 'Kurumsal kimlik sağlayıcısını bağlamak için adım adım rehber',
+    finish_button_text: 'Devam',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: "İdP'nizde hizmetinizi yapılandırın",
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      '{{name}} kimlik sağlayıcınızda SAML 2.0 ile yeni bir uygulama entegrasyonunu oluşturun. Daha sonra aşağıdaki değeri yapıştırın.',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: "Assertion tüketici hizmet URL'si (Cevap URL'si)",
+      audience_uri_field_name: "Hedef URI'si (SP Varlık ID'si)",
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: "Yönlendirme URI'si (Geri çağrı URL'si)",
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: 'Özellik eşlemeleri',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      "`id` ve `email` kullanıcı profilini IdP'den eşitlenmelidir. IdP'nizde aşağıdaki iddianame adı ve değerini giriniz.",
+    col_sp_claims: "Logto'nun İddianame Adı",
+    col_idp_claims: 'Kimlik sağlayıcının iddianame adı',
+    idp_claim_tooltip: 'Kimlik sağlayıcının iddianame adı',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: 'İdP metadatasını yapılandırın',
+    description: 'Kimlik sağlayıcıdan metadatasını yapılandırın',
+    dropdown_trigger_text: 'Başka bir yapılandırma yöntemi kullan',
+    dropdown_title: 'yapılandırma yönteminizi seçin',
+    metadata_format_url: "Metadatası URL'sini girin",
+    metadata_format_xml: 'Metadatası XML dosyasını yükle',
+    metadata_format_manual: 'Metadatayı el ile girin',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: "Metadatası URL'si",
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'Metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
+        "Verileri dinamik olarak metadatası URL'si'ndan alın ve sertifikayı güncel tutun.",
+      metadata_xml_field_name: 'Metadatası XML dosyası',
+      metadata_xml_uploader_text: 'Metadatası XML dosyasını yükle',
+      sign_in_endpoint_field_name: "Oturum açma URL'si",
+      idp_entity_id_field_name: "IdP varlık ID'si (İhraççı)",
+      certificate_field_name: 'İmza sertifikası',
+      certificate_placeholder: 'x509 sertifikasını kopyalayıp yapıştırın',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: "Müşteri ID'si",
+      client_secret_field_name: 'Müşteri sırrı',
+      issuer_field_name: 'İhraççı',
+      scope_field_name: 'Kapsam',
     },
   },
 };

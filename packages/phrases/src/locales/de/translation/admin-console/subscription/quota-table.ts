@@ -53,8 +53,7 @@ const quota_table = {
   },
   organizations: {
     title: 'Organisation',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
+    organizations: 'Organisationen',
   },
   support: {
     title: 'Support',
@@ -66,7 +65,7 @@ const quota_table = {
     '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
-  monthly_price: '${{value, number}}/mo',
+  monthly_price: '${{value, number}}/Monat',
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',

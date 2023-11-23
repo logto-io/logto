@@ -94,19 +94,15 @@ const quota_item = {
     not_eligible: 'Supprimez vos webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organisations',
+    limited: 'Organisations',
+    unlimited: 'Organisations',
+    not_eligible: 'Supprimez vos organisations',
   },
   audit_logs_retention_days: {
     name: "Conservation des journaux d'audit",
-    limited: "Conservation des journaux d'audit: {{count, number}} jour",
-    limited_other: "Conservation des journaux d'audit: {{count, number}} jours",
+    limited: "Conservation des journaux d'audit : {{count, number}} jour",
+    limited_other: "Conservation des journaux d'audit : {{count, number}} jours",
     unlimited: 'Jours illimités',
     not_eligible: "Pas de journalisation d'audit",
   },

@@ -53,8 +53,7 @@ const quota_table = {
   },
   organizations: {
     title: 'Organizasyon',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
+    organizations: 'Organizasyonlar',
   },
   support: {
     title: 'Destek',

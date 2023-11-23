@@ -1,111 +1,65 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_settings: 'Settings',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General Settings',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Custom Branding',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: 'Voltar para conectores de SSO empresarial',
+  page_title: 'Detalhes do conector de SSO empresarial',
+  readme_drawer_title: 'SSO empresarial',
+  readme_drawer_subtitle:
+    'Configurar conectores de SSO empresarial para permitir o SSO dos usuários finais',
+  tab_settings: 'Configurações',
+  tab_connection: 'Conexão',
+  general_settings_title: 'Configurações gerais',
+  custom_branding_title: 'Marca personalizada',
   custom_branding_description:
-    'Customize enterprise IdP display information for sign-in button and other scenarios.',
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    'Personalize informações de exibição do IdP empresarial para o botão de login e outros cenários.',
+  email_domain_field_name: 'Domínio de e-mail empresarial',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please ensure the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    'Usuários com este domínio de e-mail podem usar o SSO para autenticação. Por favor, certifique-se de que o domínio pertence à empresa.',
+  email_domain_field_placeholder: 'Domínio de e-mail',
+  sync_profile_field_name: 'Sincronizar informações do perfil do provedor de identidade',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: 'Apenas sincronizar no primeiro login',
+    each_sign_in: 'Sempre sincronizar a cada login',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Connector logo',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
+  connector_name_field_name: 'Nome do conector',
+  connector_logo_field_name: 'Logo do conector',
+  branding_logo_context: 'Enviar logo',
+  branding_logo_error: 'Erro ao enviar a logo: {{error}}',
   branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
-  branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_readme: 'Check README',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  branding_logo_field_placeholder: 'https://seu.domínio/logo.png',
+  branding_dark_logo_context: 'Enviar logo para modo escuro',
+  branding_dark_logo_error: 'Erro ao enviar a logo para modo escuro: {{error}}',
+  branding_dark_logo_field_name: 'Logo (modo escuro)',
+  branding_dark_logo_field_placeholder: 'https://seu.domínio/logo-modo-escuro.png',
+  check_readme: 'Verificar leitura',
+  enterprise_sso_deleted: 'O conector de SSO empresarial foi excluído com sucesso',
+  delete_confirm_modal_title: 'Excluir conector de SSO empresarial',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title: 'Upload IdP metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
+    'Tem certeza de que deseja excluir este conector empresarial? Os usuários dos provedores de identidade não utilizarão o Logon Único.',
+  upload_idp_metadata_title: 'Enviar metadados IdP',
+  upload_idp_metadata_description: 'Configurar os metadados copiados do provedor de identidade.',
   upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
+    'Cole a URL dos metadados do provedor de identidade para conectar.',
   upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
+    'Cole os metadados do provedor de identidade para conectar.',
   upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure your service in the IdP',
-  /** UNTRANSLATED */
+    'Preencha os metadados do provedor de identidade para conectar.',
+  upload_oidc_idp_info_text: 'Preencha as informações do provedor de identidade para conectar.',
+  service_provider_property_title: 'Configurar seu serviço no IdP',
   service_provider_property_description:
-    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mapping',
-  /** UNTRANSLATED */
+    'Crie uma nova integração de aplicativo por {{protocol}} em seu {{name}}. Em seguida, cole os seguintes detalhes do provedor de serviços para configurar {{protocol}}.',
+  attribute_mapping_title: 'Mapeamento de atributos',
   attribute_mapping_description:
-    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+    'O `id` e o `e-mail` do usuário são necessários para sincronizar o perfil do usuário do IdP. Insira o seguinte nome e valor em {{name}}.',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
+    sign_on_url: 'URL de logon',
+    entity_id: 'Emissor',
+    x509_certificate: 'Certificado de assinatura',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: 'Ponto de autorização',
+    token_endpoint: 'Ponto de token',
+    userinfo_endpoint: 'Ponto de informações do usuário',
+    jwks_uri: 'Ponto de conjunto de chaves da web JSON',
+    issuer: 'Emissor',
   },
 };
 

@@ -1,13 +1,10 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: 'Organização',
   page_title: 'Organizações',
   title: 'Organizações',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+    'Uma organização é um conjunto de utilizadores que inclui equipas, clientes empresariais e empresas parceiras que utilizam as suas aplicações.',
+  organization_template: 'Modelo de organização',
   organization_id: 'ID da organização',
   members: 'Membros',
   create_organization: 'Criar organização',
@@ -37,85 +34,59 @@ const organizations = {
   search_placeholder: 'Pesquisar por nome ou ID da organização',
   search_permission_placeholder: 'Digite para pesquisar e selecionar permissões',
   search_role_placeholder: 'Digite para pesquisar e selecionar funções',
-  empty_placeholder: '🤔 Você ainda não configurou nenhum {{entity}}.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  empty_placeholder: '🤔 Ainda não configurou nenhum {{entity}}.',
+  organization_and_member: 'Organização e membro',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    'Uma organização é um grupo de utilizadores e pode representar as equipas, clientes empresariais e empresas parceiras, estando cada utilizador a ser um "Membro". Estes podem ser entidades fundamentais para lidar com os seus requisitos multi-inquilinos.',
   guide: {
     title: 'Comece com guias',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: 'Inicie as definições da sua organização com os nossos guias',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: 'Vamos entender como funciona a organização no Logto',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: 'Uma organização é um grupo de utilizadores (identidades)',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title:
+          'O modelo de organização é projetado para o controle de acesso de aplicações multi-inquilinos',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
+          'Em aplicações SaaS multi-inquilinos, várias organizações frequentemente partilham o mesmo modelo de controlo de acesso, que inclui permissões e funções. No Logto, chamamos-lhe "modelo de organização".',
         permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
+          'A permissão de organização refere-se à autorização para aceder a um recurso no contexto da organização.',
         role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          'O papel da organização é um agrupamento de permissões de organização que podem ser atribuídas aos membros.',
       },
       section_3: {
         title: 'Interaja com a ilustração para ver como tudo está conectado',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Vamos pegar um exemplo. John, Sarah estão em diferentes organizações com funções diferentes no contexto de diferentes organizações. Passe o cursor sobre os diferentes módulos e veja o que acontece.',
       },
     },
     step_1: 'Passo 1: Definir as permissões da organização',
     step_2: 'Passo 2: Definir as funções da organização',
     step_3: 'Passo 3: Crie a sua primeira organização',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
+      'Vamos criar a sua primeira organização. Ela vem com um ID único e serve como contentor para lidar com várias identidades mais direcionadas para os negócios.',
+    more_next_steps: 'Mais próximos passos',
+    add_members: 'Adicionar membros à sua organização',
+    add_members_action: 'Adicionar em massa membros e atribuir funções',
+    organization_permissions: 'Permissões da organização',
+    permission_name: 'Nome da permissão',
+    permissions: 'Permissões',
+    organization_roles: 'Funções da organização',
+    role_name: 'Nome do papel',
+    organization_name: 'Nome da organização',
     admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
+    member: 'Membro',
+    guest: 'Convidado',
     role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      'O papel "{{role}}" partilha o mesmo modelo de organização em diferentes organizações.',
     john: 'John',
-    /** UNTRANSLATED */
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
+      'John pertence a duas organizações com o e-mail "john@email.com" como identificador único. Ele é o administrador da organização A, bem como o convidado da organização B.',
     sarah: 'Sarah',
-    /** UNTRANSLATED */
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      'Sarah pertence a uma organização com o e-mail "sarah@email.com" como identificador único. Ela é a administradora da organização B.',
   },
 };
 

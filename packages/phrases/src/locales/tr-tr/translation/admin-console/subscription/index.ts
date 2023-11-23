@@ -22,7 +22,7 @@ const subscription = {
   manage_payment: 'Ödemeleri düzenle',
   overfill_quota_warning:
     'Kota sınırınıza ulaştınız. Herhangi bir sorunu önlemek için planı yükseltin.',
-  upgrade_pro: "Pro'ya yükselt",
+  upgrade_pro: "Pro'a yükselt",
   update_payment: 'Ödemeyi Güncelle',
   payment_error:
     'Ödeme hatası tespit edildi. Önceki döngü için ${{price, number}} işlenemedi. Logto hizmeti askıya alınmasını önlemek için ödemeleri güncelleyin.',
@@ -69,8 +69,7 @@ const subscription = {
   downgrade_success: 'Successfully downgraded to <name/>',
   subscription_check_timeout:
     'Abonelik kontrolü zaman aşımına uğradı. Lütfen daha sonra yenileyin.',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Abonelik yok',
 };
 
 export default Object.freeze(subscription);

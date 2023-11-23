@@ -1,111 +1,59 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_settings: 'Settings',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General Settings',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Custom Branding',
-  /** UNTRANSLATED */
-  custom_branding_description:
-    'Customize enterprise IdP display information for sign-in button and other scenarios.',
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: '返回企业SSO',
+  page_title: '企业SSO连接器详情',
+  readme_drawer_title: '企业SSO',
+  readme_drawer_subtitle: '设置企业SSO连接器以启用终端用户SSO',
+  tab_settings: '设置',
+  tab_connection: '连接',
+  general_settings_title: '常规设置',
+  custom_branding_title: '自定义品牌',
+  custom_branding_description: '自定义企业IdP显示信息以进行登录按钮和其他情境的设置。',
+  email_domain_field_name: '企业电子邮件域',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please ensure the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    '具有此电子邮件域的用户可以使用SSO进行身份验证。请确保该域属于企业。',
+  email_domain_field_placeholder: '电子邮件域',
+  sync_profile_field_name: '从身份提供方同步个人资料信息',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: '仅在首次登录时同步',
+    each_sign_in: '每次登录时始终同步',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Connector logo',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
+  connector_name_field_name: '连接器名称',
+  connector_logo_field_name: '连接器标识',
+  branding_logo_context: '上传标识',
+  branding_logo_error: '上传标识错误: {{error}}',
+  branding_logo_field_name: '标识',
   branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
+  branding_dark_logo_context: '上传深色模式标识',
+  branding_dark_logo_error: '上传深色模式标识错误: {{error}}',
+  branding_dark_logo_field_name: '标识（深色模式）',
   branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_readme: 'Check README',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
-  delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title: 'Upload IdP metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure your service in the IdP',
-  /** UNTRANSLATED */
+  check_readme: '查看README',
+  enterprise_sso_deleted: '企业SSO连接器已成功删除',
+  delete_confirm_modal_title: '删除企业SSO连接器',
+  delete_confirm_modal_content: '您确定要删除此企业连接器吗？身份提供方的用户将不会使用单点登录。',
+  upload_idp_metadata_title: '上传IdP元数据',
+  upload_idp_metadata_description: '配置从身份提供方复制的元数据。',
+  upload_saml_idp_metadata_info_text_url: '粘贴从身份提供方复制的元数据URL以进行连接。',
+  upload_saml_idp_metadata_info_text_xml: '粘贴从身份提供方复制的元数据以进行连接。',
+  upload_saml_idp_metadata_info_text_manual: '填写来自身份提供方的元数据以进行连接。',
+  upload_oidc_idp_info_text: '填写来自身份提供方的信息以进行连接。',
+  service_provider_property_title: '在IdP中配置您的服务',
   service_provider_property_description:
-    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mapping',
-  /** UNTRANSLATED */
+    '通过{{protocol}}在您的{{name}}中创建一个新的应用集成。然后粘贴以下服务提供商细节以配置{{protocol}}。',
+  attribute_mapping_title: '属性映射',
   attribute_mapping_description:
-    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+    '需要用户的`id`和`email`来同步用户配置文件从IdP。在{{name}}中输入以下名称和值。',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
+    sign_on_url: '登录URL',
+    entity_id: '发行者',
+    x509_certificate: '签名证书',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: '授权端点',
+    token_endpoint: '令牌端点',
+    userinfo_endpoint: '用户信息端点',
+    jwks_uri: 'JSON网络密钥集端点',
+    issuer: '发行者',
   },
 };
 

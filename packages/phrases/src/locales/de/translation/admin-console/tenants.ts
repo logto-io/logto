@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'EINSTELLUNGEN',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Legen Sie den Mandantennamen fest und sehen Sie sich Ihre gehostete Datenregion und den Mandantentyp an.',
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
     tenant_region: 'Gehostete Region der Daten',
@@ -19,15 +19,12 @@ const tenants = {
     environment_tag_development: 'Entw',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Mandantentyp',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Nur für Tests gedacht und sollte nicht in Produktion verwendet werden. Es ist kein Abonnement erforderlich. Es verfügt über alle Profi-Funktionen, aber es gibt Einschränkungen wie ein Anmeldebanner. <a>Weitere Informationen</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
-    tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
+      'Für Apps, die von Endbenutzern verwendet werden und möglicherweise ein kostenpflichtiges Abonnement erfordern. <a>Weitere Informationen</a>',
+    tenant_info_saved: 'Mandanteninformationen wurden erfolgreich gespeichert.',
   },
   full_env_tag: {
     development: 'Entwicklung',
@@ -45,40 +42,31 @@ const tenants = {
     subtitle:
       'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Nur für Tests gedacht und sollte nicht in Produktion verwendet werden. Es ist kein Abonnement erforderlich.',
+    development_hint:
+      'Es verfügt über alle Profi-Funktionen, aber es gibt Einschränkungen wie ein Anmeldebanner.',
+    production_description:
+      'Für die Nutzung durch Endbenutzer und möglicherweise ein kostenpflichtiges Abonnement.',
     available_plan: 'Verfügbare Pläne:',
     create_button: 'Mieter erstellen',
     tenant_name_placeholder: 'Mein Mieter',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Sie können jetzt unsere Hobby- und Pro-Funktionen kostenlos ausprobieren, indem Sie einen neuen "Entwicklungsmieter" erstellen!',
+    affect_title: 'Wie betrifft Sie das?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Wir ersetzen die alten <strong>Umwelttags</strong> durch zwei neue Mandantentypen: <strong>„Entwicklung“</strong> und <strong>„Produktion“</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Um einen reibungslosen Übergang und eine unterbrechungsfreie Funktionalität sicherzustellen, werden alle früh erstellten Mandanten in den Mandantentyp <strong>Produktion</strong> und Ihr vorheriges Abonnement überführt.',
+    hint_3: 'Keine Sorge, alle anderen Einstellungen bleiben gleich.',
+    about_tenant_type: 'Über Mandantentyp',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Sie können jetzt auf <a>alle Funktionen von Logto Hobby und Pro</a> in Ihrem Entwicklungsmieter zugreifen!',
+    description: 'Es ist komplett kostenlos, ohne Testzeitraum – für immer!',
   },
   delete_modal: {
     title: 'Mieter löschen',
@@ -87,17 +75,17 @@ const tenants = {
     description_line2:
       'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen. <span><a>Kontaktieren Sie uns per E-Mail</a></span>',
     description_line3:
-      'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
+      'Wenn Sie fortfahren möchten, geben Sie bitte den Mandanten-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',
     cannot_delete_title: 'Diesen Mandanten kann nicht gelöscht werden',
     cannot_delete_description:
       'Entschuldigung, Sie können diesen Mandanten momentan nicht löschen. Stellen Sie sicher, dass Sie sich im kostenlosen Tarif befinden und alle ausstehenden Rechnungen bezahlt haben.',
   },
   tenant_landing_page: {
-    title: 'Du hast noch keinen Mandanten erstellt',
+    title: 'Du hast noch keinen Mieter erstellt',
     description:
       'Um Ihr Projekt mit Logto zu konfigurieren, erstellen Sie bitte einen neuen Mandanten. Wenn Sie sich abmelden oder Ihr Konto löschen möchten, klicken Sie einfach auf die Avatar-Taste in der oberen rechten Ecke.',
-    create_tenant_button: 'Mandanten erstellen',
+    create_tenant_button: 'Mieter erstellen',
   },
   status: {
     mau_exceeded: 'MAU überschritten',
@@ -113,7 +101,7 @@ const tenants = {
   },
   signing_keys: {
     title: 'SIGNIERUNGSSCHLÜSSEL',
-    description: 'Sicherer Umgang mit Signierungsschlüsseln in Ihrem Mandanten.',
+    description: 'Sicherer Umgang mit Signierungsschlüsseln in Ihrem Mieter.',
     type: {
       private_key: 'OIDC-Private Keys',
       cookie_key: 'OIDC-Cookie-Keys',

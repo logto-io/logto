@@ -9,8 +9,7 @@ const tenants = {
   },
   settings: {
     title: '設定',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description: '設置租戶名稱並檢視您的資料托管區域和租戶類型。',
     tenant_id: '租戶 ID',
     tenant_name: '租戶名稱',
     tenant_region: '資料托管地區',
@@ -18,14 +17,10 @@ const tenants = {
     environment_tag_development: '開發',
     environment_tag_staging: '預置',
     environment_tag_production: '產品',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: '租戶類型',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
-    production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      '僅供測試，不應用於生產。無需訂閱。具有所有專業功能，但有限制，如登入橫幅。 <a>了解更多</a>',
+    production_description: '適用於最終用戶使用的應用程式，可能需要付費訂閱。 <a>了解更多</a>',
     tenant_info_saved: '租戶資訊成功儲存。',
   },
   full_env_tag: {
@@ -42,40 +37,26 @@ const tenants = {
     title: '建立客戶',
     subtitle: '創建一個具有隔離資源和用戶的新租戶。數據托管的區域和租戶類型在創建後無法修改。',
     tenant_usage_purpose: '您希望將此租戶用於什麼目的？',
-    /** UNTRANSLATED */
-    development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+    development_description: '僅供測試，不應用於生產。無需訂閱。',
+    development_hint: '具有所有專業功能，但有限制，如登入橫幅。',
+    production_description: '供最終用戶使用，可能需要付費訂閱。',
     available_plan: '可用方案：',
     create_button: '建立租戶',
     tenant_name_placeholder: '我的租戶',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
-    title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+    title: '現在您可以通過創建新的“開發租戶”免費試用我們的業餘和專業功能！',
+    affect_title: '這對您有什麼影響？',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      '我們將舊的 <strong>環境標籤</strong> 替換為兩種新的租戶類型：<strong>“開發”</strong> 和 <strong>“產品”</strong>。',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      '為確保順暢過渡和功能不中斷，所有早期創建的租戶將升級為<strong>產品</strong>租戶類型並保留您之前的訂閱。',
+    hint_3: '別擔心，您的其他設置將保持不變。',
+    about_tenant_type: '關於租戶類型',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
-    title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+    title: '您現在可以在您的開發租戶中訪問<a>Logto業餘和專業的所有功能</a>了！',
+    description: '完全免費，無試用期 - 永久免費！',
   },
   delete_modal: {
     title: '刪除租戶',
@@ -108,8 +89,8 @@ const tenants = {
       '如果您需要進一步的說明、有任何疑慮或希望恢復全部功能並解鎖您的租戶，請立即聯絡我們。',
   },
   signing_keys: {
-    title: '签名密钥',
-    description: '在您的租戶中安全管理签名密钥。',
+    title: '簽名密鑰',
+    description: '在您的租戶中安全管理簽名密鑰。',
     type: {
       private_key: 'OIDC 私鑰',
       cookie_key: 'OIDC Cookie 密鑰',

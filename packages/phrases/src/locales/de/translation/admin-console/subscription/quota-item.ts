@@ -94,19 +94,15 @@ const quota_item = {
     not_eligible: 'Entferne deine Webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organisationen',
+    limited: 'Organisationen',
+    unlimited: 'Organisationen',
+    not_eligible: 'Entferne deine Organisationen',
   },
   audit_logs_retention_days: {
-    name: 'Audit-Log-Retention',
-    limited: 'Audit-Log-Retention: {{count, number}} Tag',
-    limited_other: 'Audit-Log-Retention: {{count, number}} Tage',
+    name: 'Audit-Log-Aufbewahrung',
+    limited: 'Audit-Log-Aufbewahrung: {{count, number}} Tag',
+    limited_other: 'Audit-Log-Aufbewahrung: {{count, number}} Tage',
     unlimited: 'Unbegrenzte Tage',
     not_eligible: 'Keine Audit-Logs',
   },

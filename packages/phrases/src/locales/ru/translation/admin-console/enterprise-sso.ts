@@ -21,84 +21,53 @@ const enterprise_sso = {
     create_button_text: 'Создать коннектор',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: 'Пошаговое руководство по подключению поставщика идентификации предприятия.',
+    finish_button_text: 'Продолжить',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: 'Настройка вашего сервиса в IdP',
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      'Создайте новую интеграцию приложения с помощью SAML 2.0 в вашем провайдере идентификации {{name}}. Затем вставьте следующее значение в него.',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: 'URL службы потребителя утверждения (URL ответа)',
+      audience_uri_field_name: 'URI аудитории (SP Entity ID)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: 'URL перенаправления (URL обратного вызова)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: 'Отображения атрибутов',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      '`id` и `email` обязательны для синхронизации профиля пользователя из IdP. Введите следующее имя и значение утверждения в вашем IdP.',
+    col_sp_claims: 'Имя утверждения Logto',
+    col_idp_claims: 'Имя утверждения провайдера идентификации',
+    idp_claim_tooltip: 'Имя утверждения провайдера идентификации',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: 'Настройка метаданных IdP',
+    description: 'Настройте метаданные от провайдера идентификации',
+    dropdown_trigger_text: 'Использовать другой метод конфигурации',
+    dropdown_title: 'выберите ваш метод конфигурации',
+    metadata_format_url: 'Введите URL метаданных',
+    metadata_format_xml: 'Загрузить файл метаданных XML',
+    metadata_format_manual: 'Ввести детали метаданных вручную',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: 'URL метаданных',
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'Metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
+        'Динамически извлекать данные из URL метаданных и поддерживать сертификат в актуальном состоянии.',
+      metadata_xml_field_name: 'Файл метаданных XML',
+      metadata_xml_uploader_text: 'Загрузить файл метаданных XML',
+      sign_in_endpoint_field_name: 'URL входа',
+      idp_entity_id_field_name: 'Идентификатор сущности IdP (Издатель)',
+      certificate_field_name: 'Сертификат подписи',
+      certificate_placeholder: 'Скопируйте и вставьте сертификат x509',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: 'Идентификатор клиента',
+      client_secret_field_name: 'Секрет клиента',
+      issuer_field_name: 'Издатель',
+      scope_field_name: 'Текущий область применения',
     },
   },
 };

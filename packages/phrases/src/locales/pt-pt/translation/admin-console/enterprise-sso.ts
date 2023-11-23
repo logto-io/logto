@@ -12,7 +12,7 @@ const enterprise_sso = {
   col_status_invalid: 'Inválido',
   placeholder_title: 'Conector empresarial',
   placeholder_description:
-    'O Logto forneceu muitos provedores de identidade empresarial integrados para conectar, ao mesmo tempo, você pode criar o seu próprio com protocolos padrão.',
+    'Logto forneceu muitos provedores de identidade empresarial integrados para conectar, ao mesmo tempo, você pode criar o seu próprio com protocolos padrão.',
   create_modal: {
     title: 'Adicionar conector empresarial',
     text_divider: 'Ou você pode personalizar seu conector por um protocolo padrão.',
@@ -21,84 +21,53 @@ const enterprise_sso = {
     create_button_text: 'Criar conector',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: 'Um guia passo a passo para conectar o fornecedor de identidade empresarial.',
+    finish_button_text: 'Continuar',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: 'Configure o seu serviço no IdP',
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      'Crie uma nova integração de aplicação por SAML 2.0 no seu fornecedor de identidade {{name}}. Depois cole o seguinte valor nele.',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: 'URL do serviço de consumidor de afirmações (URL de resposta)',
+      audience_uri_field_name: 'URI da audiência (ID da entidade do SP)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: 'URI de redirecionamento (URL de retorno)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: 'Mapeamento de atributos',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      '`id` e `email` são necessários para sincronizar o perfil do utilizador do IdP. Insira o nome da reivindicação e o valor a seguir no seu IdP.',
+    col_sp_claims: 'Nome da reivindicação do Logto',
+    col_idp_claims: 'Nome da reivindicação do fornecedor de identidade',
+    idp_claim_tooltip: 'O nome da reivindicação do fornecedor de identidade',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: 'Configure os metadados do IdP',
+    description: 'Configure os metadados do fornecedor de identidade',
+    dropdown_trigger_text: 'Usar outro método de configuração',
+    dropdown_title: 'selecione o seu método de configuração',
+    metadata_format_url: 'Introduza o URL dos metadados',
+    metadata_format_xml: 'Carregue o ficheiro XML dos metadados',
+    metadata_format_manual: 'Introduza os detalhes dos metadados manualmente',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: 'URL dos metadados',
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'Metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
+        'Obtenha dinamicamente os dados a partir do URL dos metadados e mantenha o certificado atualizado.',
+      metadata_xml_field_name: 'Ficheiro XML dos metadados',
+      metadata_xml_uploader_text: 'Carregar ficheiro XML dos metadados',
+      sign_in_endpoint_field_name: 'URL de início de sessão',
+      idp_entity_id_field_name: 'ID da entidade do IdP (Emissor)',
+      certificate_field_name: 'Certificado de assinatura',
+      certificate_placeholder: 'Copie e cole o certificado x509',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: 'ID do cliente',
+      client_secret_field_name: 'Segredo do cliente',
+      issuer_field_name: 'Emissor',
+      scope_field_name: 'Âmbito',
     },
   },
 };

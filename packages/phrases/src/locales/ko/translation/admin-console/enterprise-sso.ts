@@ -20,84 +20,53 @@ const enterprise_sso = {
     create_button_text: '커넥터 생성',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: '기업 신원 공급자를 연결하기 위한 단계별 안내서',
+    finish_button_text: '계속',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: 'IdP에서 서비스 구성',
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      '귀하의 {{name}} 신원 제공자에서 SAML 2.0으로 새 응용 프로그램 통합을 생성합니다. 그런 다음 다음 값을 붙여넣습니다.',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: '단언 소비자 서비스 URL (응답 URL)',
+      audience_uri_field_name: '수용 체계 URI (SP 엔터티 ID)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: '리디렉트 URI (콜백 URL)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: '속성 매핑',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      'ID 및 이메일은 IdP에서 사용자 프로필 동기화에 필요합니다. IdP에서 다음 클레임 이름과 값을 입력합니다.',
+    col_sp_claims: 'Logto의 클레임 이름',
+    col_idp_claims: '신원 제공자의 클레임 이름',
+    idp_claim_tooltip: '신원 공급자의 클레임 이름',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: 'IdP 메타데이터 구성',
+    description: '신원 공급자의 메타데이터를 구성합니다',
+    dropdown_trigger_text: '다른 구성 방법 사용',
+    dropdown_title: '구성 방법 선택',
+    metadata_format_url: '메타데이터 URL 입력',
+    metadata_format_xml: '메타데이터 XML 파일 업로드',
+    metadata_format_manual: '메타데이터 세부 정보 수동 입력',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: '메타데이터 URL',
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'Metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
+        '메타데이터 URL에서 데이터를 동적으로 가져와 인증서를 최신 상태로 유지합니다.',
+      metadata_xml_field_name: '메타데이터 XML 파일',
+      metadata_xml_uploader_text: '메타데이터 XML 파일 업로드',
+      sign_in_endpoint_field_name: '로그인 URL',
+      idp_entity_id_field_name: 'IdP 엔터티 ID (발급자)',
+      certificate_field_name: '서명 인증서',
+      certificate_placeholder: 'x509 인증서를 복사하여 붙여넣기',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: '클라이언트 ID',
+      client_secret_field_name: '클라이언트 비밀',
+      issuer_field_name: '발급자',
+      scope_field_name: '범위',
     },
   },
 };

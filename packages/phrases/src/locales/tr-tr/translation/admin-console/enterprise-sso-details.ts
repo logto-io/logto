@@ -1,111 +1,63 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_settings: 'Settings',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General Settings',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Custom Branding',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: "Kurumsal SSO'ya geri dön",
+  page_title: 'Kurumsal SSO bağlayıcı ayrıntıları',
+  readme_drawer_title: 'Kurumsal SSO',
+  readme_drawer_subtitle:
+    "Son kullanıcıların SSO'yu etkinleştirmek için kurumsal SSO bağlayıcılarını yapılandırın",
+  tab_settings: 'Ayarlar',
+  tab_connection: 'Bağlantı',
+  general_settings_title: 'Genel Ayarlar',
+  custom_branding_title: 'Özel Markalama',
   custom_branding_description:
-    'Customize enterprise IdP display information for sign-in button and other scenarios.',
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    'Oturum açma düğmesi ve diğer senaryolar için kurumsal IdP görüntü bilgilerini özelleştirin.',
+  email_domain_field_name: 'Kurumsal e-posta etki alanı',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please ensure the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    "Bu e-posta etki alanına sahip kullanıcılar SSO'yu kimlik doğrulaması için kullanabilir. Lütfen etki alanının kuruluşa ait olduğundan emin olun.",
+  email_domain_field_placeholder: 'E-posta etki alanı',
+  sync_profile_field_name: 'Kimlik sağlayıcıdan profil bilgisi senkronize et',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: 'Yalnızca ilk oturum açmada senkronize et',
+    each_sign_in: 'Her oturum açmada her zaman senkronize et',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Connector logo',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
+  connector_name_field_name: 'Bağlayıcı adı',
+  connector_logo_field_name: 'Bağlayıcı logosu',
+  branding_logo_context: 'Logo yükle',
+  branding_logo_error: 'Logo yükleme hatası: {{error}}',
   branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
   branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
+  branding_dark_logo_context: 'Koyu mod logosu yükle',
+  branding_dark_logo_error: 'Koyu mod logosu yükleme hatası: {{error}}',
+  branding_dark_logo_field_name: 'Logo (koyu mod)',
   branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_readme: 'Check README',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  check_readme: "README'yi kontrol et",
+  enterprise_sso_deleted: 'Kurumsal SSO bağlayıcısı başarıyla silindi',
+  delete_confirm_modal_title: 'Kurumsal SSO bağlayıcısını sil',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title: 'Upload IdP metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
+    "Bu kurumsal bağlayıcıyı silmek istediğinizden emin misiniz? Kimlik sağlayıcılardan gelen kullanıcılar Tek Oturum Açma'yı kullanmayacak.",
+  upload_idp_metadata_title: 'IdP meta verisi yükle',
+  upload_idp_metadata_description: 'Kimlik sağlayıcıdan kopyalanan meta veriyi yapılandırın.',
   upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure your service in the IdP',
-  /** UNTRANSLATED */
+    "Kimlik sağlayıcıdan meta veri URL'sini yapıştırarak bağlanın.",
+  upload_saml_idp_metadata_info_text_xml: 'Kimlik sağlayıcıdan meta veriyi yapıştırarak bağlanın.',
+  upload_saml_idp_metadata_info_text_manual: 'Kimlik sağlayıcıdan meta veriyi doldurarak bağlanın.',
+  upload_oidc_idp_info_text: 'Bağlanmak için kimlik sağlayıcıdan bilgiyi doldurun.',
+  service_provider_property_title: "Hizmetinizi IdP'de yapılandırın",
   service_provider_property_description:
-    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mapping',
-  /** UNTRANSLATED */
+    "{{protocol}} ile kendi {{name}}'nızın uygulama entegrasyonunu oluşturun. Ardından aşağıdaki Servis Sağlayıcı ayrıntılarını yapılandırmak için {{protocol}}'ü nasıl yapacağınızı yapıştırın.",
+  attribute_mapping_title: 'Öznitelik eşleme',
   attribute_mapping_description:
-    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+    "Kullanıcının `id` ve `e-posta`sının IdP'den kullanıcı profili senkronizasyonu için gerekli olduğu. Aşağıdaki adı ve değeri {{name}} içine girin.",
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
+    sign_on_url: "Oturum açma URL'si",
+    entity_id: 'Veren',
+    x509_certificate: 'İmza sertifikası',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: 'Yetkilendirme noktası',
+    token_endpoint: 'Belirteç noktası',
+    userinfo_endpoint: 'Kullanıcı bilgi noktası',
+    jwks_uri: 'JSON web anahtarı seti noktası',
+    issuer: 'Veren',
   },
 };
 

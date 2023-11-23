@@ -8,7 +8,7 @@ const subscription = {
   hobby_plan: 'Plano Hobby',
   hobby_plan_description: 'Para desenvolvedores individuais ou pequenas equipes de engenharia.',
   pro_plan: 'Plano Pro',
-  pro_plan_description: 'Para empresas se beneficiarem tranquilo com o Logto.',
+  pro_plan_description: 'Para empresas se beneficiarem tranquilamente com o Logto.',
   enterprise: 'Empresa',
   current_plan: 'Plano Atual',
   current_plan_description:
@@ -67,8 +67,7 @@ const subscription = {
   downgrade_success: 'Downgrade realizado com sucesso para <name/>',
   subscription_check_timeout:
     'A verificação de assinatura expirou. Por favor, atualize mais tarde.',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Nenhuma assinatura',
 };
 
 export default Object.freeze(subscription);

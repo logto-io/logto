@@ -3,9 +3,8 @@ const organization_details = {
   delete_confirmation:
     'После удаления все участники потеряют свою членство и роли в данной организации. Это действие нельзя отменить.',
   organization_id: 'Идентификатор организации',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    'Организации представляют команды, бизнес-клиентов и партнерские компании, которые могут получить доступ к вашим приложениям.',
   name_placeholder: 'Название организации, не обязательно должно быть уникальным.',
   description_placeholder: 'Описание организации.',
   member: 'Участник',

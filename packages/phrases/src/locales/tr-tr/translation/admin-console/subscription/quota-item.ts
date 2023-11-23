@@ -1,6 +1,6 @@
 const quota_item = {
   tenant_limit: {
-    name: 'Kiracilar',
+    name: 'Kiracılar',
     limited: '{{count, number}} kiracı',
     limited_other: '{{count, number}} kiracılar',
     unlimited: 'Sınırsız kiracılar',
@@ -94,14 +94,10 @@ const quota_item = {
     not_eligible: 'Webhooklarınızı kaldırın',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Kuruluşlar',
+    limited: 'Kuruluşlar',
+    unlimited: 'Kuruluşlar',
+    not_eligible: 'Kuruluşlarınızı kaldırın',
   },
   audit_logs_retention_days: {
     name: 'Denetim günlükleri saklama süresi',
@@ -127,13 +123,13 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: "MFA'nızı devre dışı bırakın",
+    not_eligible: "MFA'nızı Devre Dışı Bırakın",
   },
   sso_enabled: {
     name: 'Kurumsal SSO',
     limited: 'Kurumsal SSO',
     unlimited: 'Kurumsal SSO',
-    not_eligible: "Kurumsal SSO'nuzu devre dışı bırakın",
+    not_eligible: "Kurumsal SSO'nuzu Devre Dışı Bırakın",
   },
 };
 

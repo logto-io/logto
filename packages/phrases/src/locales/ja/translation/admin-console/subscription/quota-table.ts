@@ -53,8 +53,7 @@ const quota_table = {
   },
   organizations: {
     title: '組織',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
+    organizations: '組織',
   },
   support: {
     title: 'サポート',

@@ -94,14 +94,10 @@ const quota_item = {
     not_eligible: 'Usuń swoje webhooki',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organizacje',
+    limited: 'Organizacje',
+    unlimited: 'Organizacje',
+    not_eligible: 'Usuń swoje organizacje',
   },
   audit_logs_retention_days: {
     name: 'Przechowywanie dzienników audytowych',

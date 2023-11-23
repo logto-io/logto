@@ -1,11 +1,10 @@
 const organization_details = {
   page_title: "Dettagli dell'organizzazione",
   delete_confirmation:
-    "Una volta eliminato, tutti i membri perderanno la loro iscrizione e ruoli in questa organizzazione. Quest\\'azione non può essere annullata.",
+    "Una volta eliminato, tutti i membri perderanno la loro iscrizione e ruoli in questa organizzazione. Quest'azione non può essere annullata.",
   organization_id: 'ID organizzazione',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    'Le organizzazioni rappresentano i team, i clienti commerciali e le aziende partner che possono accedere alle tue applicazioni.',
   name_placeholder: "Il nome dell'organizzazione, non è necessario che sia univoco.",
   description_placeholder: "Una descrizione dell'organizzazione.",
   member: 'Membro',
@@ -20,7 +19,7 @@ const organization_details = {
   edit_organization_roles_of_user: "Modifica ruoli dell'organizzazione di {{name}}",
   remove_user_from_organization: "Rimuovi utente dall'organizzazione",
   remove_user_from_organization_description:
-    "Una volta rimosso, l'utente perderà la sua iscrizione e i ruoli in questa organizzazione. Quest\\'azione non può essere annullata.",
+    "Una volta rimosso, l'utente perderà la sua iscrizione e i ruoli in questa organizzazione. Quest'azione non può essere annullata.",
   search_user_placeholder: 'Cerca per nome, email, telefono o ID utente',
   at_least_one_user: 'È richiesto almeno un utente.',
 };

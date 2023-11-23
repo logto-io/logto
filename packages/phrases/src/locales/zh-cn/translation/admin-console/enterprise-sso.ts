@@ -20,84 +20,52 @@ const enterprise_sso = {
     create_button_text: '创建连接器',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: '连接企业身份提供者的分步指南',
+    finish_button_text: '继续',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: '在 IdP 中配置您的服务',
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      '在您的 {{name}} 身份提供者中创建一个 SAML 2.0 的新应用集成。 然后将以下值粘贴到它。',
     saml: {
-      /** UNTRANSLATED */
       acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
       audience_uri_field_name: 'Audience URI (SP Entity ID)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: '重定向 URI (回调 URL)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: '属性映射',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      '`id` 和 `email` 是同步用户配置文件来自 IdP 的所需信息。 在您的 IdP 中输入以下声明名称和值。',
+    col_sp_claims: 'Logto 的声明名称',
+    col_idp_claims: '身份提供者的声明名称',
+    idp_claim_tooltip: '身份提供者的声明名称',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: '配置 IdP 元数据',
+    description: '从身份提供者配置元数据',
+    dropdown_trigger_text: '使用另一种配置方法',
+    dropdown_title: '选择您的配置方法',
+    metadata_format_url: '输入元数据网址',
+    metadata_format_xml: '上传元数据 XML 文件',
+    metadata_format_manual: '手动输入元数据详情',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
-      metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'Metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
+      metadata_url_field_name: '元数据网址',
+      metadata_url_description: '动态获取元数据网址的数据并保持证书最新。',
+      metadata_xml_field_name: '元数据 XML 文件',
+      metadata_xml_uploader_text: '上传元数据 XML 文件',
+      sign_in_endpoint_field_name: '登录 URL',
+      idp_entity_id_field_name: 'IdP 实体标识 (发行者)',
+      certificate_field_name: '签名证书',
+      certificate_placeholder: '复制并粘贴 x509 证书',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: '客户端 ID',
+      client_secret_field_name: '客户端密钥',
+      issuer_field_name: '发行者',
+      scope_field_name: '范围',
     },
   },
 };

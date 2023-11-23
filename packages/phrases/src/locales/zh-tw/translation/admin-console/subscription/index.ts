@@ -63,8 +63,7 @@ const subscription = {
   upgrade_success: '已成功升級到 <name/>',
   downgrade_success: '已成功降級到 <name/>',
   subscription_check_timeout: '訂閱檢查已逾時，請稍後重新刷新。',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: '沒有訂閱',
 };
 
 export default Object.freeze(subscription);

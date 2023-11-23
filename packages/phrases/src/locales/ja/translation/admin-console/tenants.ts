@@ -9,23 +9,19 @@ const tenants = {
   },
   settings: {
     title: '設定',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description: 'テナント名を設定し、データがホストされている地域とテナントタイプを表示します。',
     tenant_id: 'テナントID',
     tenant_name: 'テナント名',
     tenant_region: 'データがホストされている地域',
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region_tip: 'テナントのリソースは{{region}}にホストされています。 <a>さらに詳しく</a>',
     environment_tag_development: '開発',
     environment_tag_staging: 'ステージング',
     environment_tag_production: '本番',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'テナントタイプ',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'テスト用であり、本番で使用されるべきではありません。サブスクリプションは不要です。すべてのプロの機能を備えていますが、サインインバナーなどの制限があります。 <a>さらに詳しく</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'エンドユーザーが使用するアプリ向けに作成され、有料サブスクリプションを必要とする場合があります。 <a>さらに詳しく</a>',
     tenant_info_saved: 'テナント情報は正常に保存されました。',
   },
   full_env_tag: {
@@ -43,46 +39,34 @@ const tenants = {
     title: 'テナントを作成する',
     subtitle:
       '分離されたリソースとユーザーを持つ新しいテナントを作成します。データがホストされる地域とテナントの種類は作成後に変更できません。',
-    tenant_usage_purpose: 'What do you want to use this tenant for?',
-    /** UNTRANSLATED */
+    tenant_usage_purpose: 'このテナントを使用する目的は？',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
-    available_plan: 'Available plan:',
+      'テスト用であり、本番で使用されるべきではありません。サブスクリプションは不要です。',
+    development_hint: 'すべてのプロの機能を備えていますが、サインインバナーなどの制限があります。',
+    production_description:
+      'エンドユーザーが使用し、有料サブスクリプションが必要な場合があります。',
+    available_plan: '利用可能なプラン:',
     create_button: 'テナントを作成する',
     tenant_name_placeholder: '私のテナント',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
-    title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+    title: '「開発テナント」を作成してログトのホビーやプロの機能を無料でお試しいただけます！',
+    affect_title: 'これがあなたにどのように影響するか？',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      '古い<strong>環境タグ</strong>を新しいテナントタイプ<strong>「開発」</strong>および<strong>「本番」</strong>に置き換える予定です。',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'シームレスな移行と機能の中断なくするため、過去に作成されたすべてのテナントは、既存のサブスクリプションと共に<strong>「本番」</strong>テナントタイプに昇格します。',
+    hint_3: '他のすべての設定は変わりませんので、安心してください。',
+    about_tenant_type: 'テナントタイプについて',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
-    title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+    title: '開発テナントで今すぐ<a>ログトのホビーやプロのすべての機能</a>にアクセスできます！',
+    description: '試用期間なしで完全に無料です！',
   },
   delete_modal: {
     title: 'テナントを削除します',
     description_line1:
-      '"<span>{{name}}</span>" というテナント ("<span>{{tag}}</span>" の環境タグを持つ) を削除してもよろしいですか？ このアクションは元に戻せません。これにより、すべてのデータとアカウント情報が永久に削除されます。',
+      '"<span>{{name}}</span>" というテナント（"<span>{{tag}}</span>" の環境タグを持つ）を削除してもよろしいですか？ このアクションは元に戻せません。これにより、すべてのデータとアカウント情報が永久に削除されます。',
     description_line2:
       'アカウントの削除前に、お手伝いできるかもしれません。 <span><a>メールでお問い合わせください</a></span>。',
     description_line3:
@@ -95,7 +79,7 @@ const tenants = {
   tenant_landing_page: {
     title: 'まだテナントを作成していません',
     description:
-      'Logto でプロジェクトを設定するには、新しいテナントを作成してください。ログアウトまたはアカウントを削除する必要がある場合は、右上隅のアバターボタンをクリックしてください。',
+      'ログトでプロジェクトを設定するには、新しいテナントを作成してください。ログアウトまたはアカウントを削除する必要がある場合は、右上隅のアバターボタンをクリックしてください。',
     create_tenant_button: 'テナントを作成',
   },
   status: {
@@ -112,43 +96,43 @@ const tenants = {
   },
   signing_keys: {
     title: 'SIGNING KEYS',
-    description: 'Securely manage signing keys in your tenant.',
+    description: 'テナント内で署名キーを安全に管理します。',
     type: {
-      private_key: 'OIDC private keys',
-      cookie_key: 'OIDC cookie keys',
+      private_key: 'OIDCプライベートキー',
+      cookie_key: 'OIDCクッキーキー',
     },
-    private_keys_in_use: 'Private keys in use',
-    cookie_keys_in_use: 'Cookie keys in use',
-    rotate_private_keys: 'Rotate private keys',
-    rotate_cookie_keys: 'Rotate cookie keys',
+    private_keys_in_use: '使用中のプライベートキー',
+    cookie_keys_in_use: '使用中のクッキーキー',
+    rotate_private_keys: 'プライベートキーを回転',
+    rotate_cookie_keys: 'クッキーキーを回転',
     rotate_private_keys_description:
-      'This action will create a new private signing key, rotate the current key, and remove your previous key. Your JWT tokens signed with the current key will remain valid until deletion or another round of rotation.',
+      'この操作は新しいプライベート署名キーを作成し、現在のキーを回転させ、以前のキーを削除します。現在のキーで署名されたJWTトークンは削除または回転の再度実行まで有効です。',
     rotate_cookie_keys_description:
-      'This action will create a new cookie key, rotate the current key, and remove your previous key. Your cookies with the current key will remain valid until deletion or another round of rotation.',
-    select_private_key_algorithm: 'Select signing key algorithm for the new private key',
-    rotate_button: 'Rotate',
+      'この操作は新しいクッキーキーを作成し、現在のキーを回転させ、以前のキーを削除します。現在のキーで生成されたクッキーは削除または回転の再度実行まで有効です。',
+    select_private_key_algorithm: '新しいプライベートキーの署名キーアルゴリズムを選択',
+    rotate_button: '回転',
     table_column: {
       id: 'ID',
-      status: 'Status',
-      algorithm: 'Signing key algorithm',
+      status: 'ステータス',
+      algorithm: '署名キーアルゴリズム',
     },
     status: {
-      current: 'Current',
-      previous: 'Previous',
+      current: '現在の',
+      previous: '以前の',
     },
     reminder: {
       rotate_private_key:
-        'Are you sure you want to rotate the <strong>OIDC private keys</strong>? New issued JWT tokens will be signed by the new key. Existing JWT tokens stay valid until you rotate again.',
+        'OIDCプライベートキー</strong>を回転しますか？新しく発行されるJWTトークンは新しいキーで署名されます。既存のJWTトークンは、再度回転するまで有効です。',
       rotate_cookie_key:
-        'Are you sure you want to rotate the <strong>OIDC cookie keys</strong>? New cookies generated in sign-in sessions will be signed by the new cookie key. Existing cookies stay valid until you rotate again.',
+        'OIDCクッキーキー</strong>を回転しますか？サインインセッションで生成された新しいクッキーは新しいクッキーキーで署名されます。既存のクッキーは、再度回転するまで有効です。',
       delete_private_key:
-        'Are you sure you want to delete the <strong>OIDC private key</strong>? Existing JWT tokens signed with this private signing key will no longer be valid.',
+        'OIDCプライベートキー</strong>を削除しますか？このプライベート署名キーで署名された既存のJWTトークンは無効になります。',
       delete_cookie_key:
-        'Are you sure you want to delete the <strong>OIDC cookie key</strong>? Older sign-in sessions with cookies signed with this cookie key will no longer be valid. A re-authentication is required for these users.',
+        'OIDCクッキーキー</strong>を削除しますか？このクッキーキーで署名された過去のサインインセッションのクッキーは無効になります。これらのユーザーには再認証が必要です。',
     },
     messages: {
-      rotate_key_success: 'Signing keys rotated successfully.',
-      delete_key_success: 'Key deleted successfully.',
+      rotate_key_success: '署名キーは正常に回転しました。',
+      delete_key_success: 'キーは正常に削除されました。',
     },
   },
 };

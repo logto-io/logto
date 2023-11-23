@@ -14,7 +14,7 @@ const subscription = {
   current_plan_description:
     "Voici votre plan actuel. Vous pouvez facilement consulter l'utilisation de votre plan, vérifier votre prochaine facture et apporter des modifications à votre plan si nécessaire.",
   plan_usage: 'Utilisation du plan',
-  plan_cycle: "Cycle du plan: {{period}}. L'utilisation est renouvelée le {{renewDate}}.",
+  plan_cycle: "Cycle du plan : {{period}}. L'utilisation est renouvelée le {{renewDate}}.",
   next_bill: 'Votre prochaine facture',
   next_bill_hint: 'Pour en savoir plus sur le calcul, veuillez vous référer à cet <a>article</a>.',
   next_bill_tip:
@@ -47,8 +47,8 @@ const subscription = {
     title: 'Êtes-vous sûr de vouloir passer à un Plan Inférieur?',
     description:
       "Si vous choisissez de passer au <targetName/> , notez que vous n'aurez plus accès aux quotas et fonctionnalités qui se trouvaient auparavant dans <currentName/>. ",
-    before: 'Avant: <name/>',
-    after: 'Après: <name />',
+    before: 'Avant : <name/>',
+    after: 'Après : <name />',
     downgrade: 'Passer à un Plan Inférieur',
   },
   not_eligible_modal: {
@@ -67,8 +67,7 @@ const subscription = {
   downgrade_success: 'Rétrogradé avec succès à <name/>',
   subscription_check_timeout:
     "La vérification d'abonnement a expiré. Veuillez actualiser ultérieurement.",
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Aucun abonnement',
 };
 
 export default Object.freeze(subscription);

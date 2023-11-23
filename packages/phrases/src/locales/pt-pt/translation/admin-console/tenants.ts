@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'DEFINIÇÕES',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Defina o nome do inquilino e veja a região onde os seus dados estão hospedados e o tipo de inquilino.',
     tenant_id: 'ID do Inquilino',
     tenant_name: 'Nome do Inquilino',
     tenant_region: 'Região de hospedagem',
@@ -19,15 +19,12 @@ const tenants = {
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Tipo de inquilino',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Apenas para testes e não deve ser utilizado em produção. Não é necessário um tipo de subscrição. Possui todas as funcionalidades profissionais, mas tem limitações, como um banner de início de sessão. <a>Learn more</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
-    tenant_info_saved: 'A informação do arrendatário foi guardada com sucesso.',
+      'Destinado a aplicações utilizadas por utilizadores finais e que podem requerer uma subscrição paga. <a>Learn more</a>',
+    tenant_info_saved: 'As informações do inquilino foram guardadas com sucesso.',
   },
   full_env_tag: {
     development: 'Desenvolvimento',
@@ -45,40 +42,31 @@ const tenants = {
     subtitle:
       'Crie um novo locatário que tenha recursos e utilizadores isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que pretende utilizar este inquilino?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Apenas para testes e não deve ser utilizado em produção. Não é necessária uma subscrição.',
+    development_hint:
+      'Possui todas as funcionalidades profissionais, mas tem limitações, como um banner de início de sessão.',
+    production_description:
+      'Destinado a uso por utilizadores finais e pode requerer uma subscrição paga.',
     available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Agora pode experimentar as nossas funcionalidades Hobby e Pro gratuitamente, criando um novo "Inquilino de Desenvolvimento"!',
+    affect_title: 'Como isso o afeta?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Estamos a substituir as antigas <strong>etiquetas de ambiente</strong> por dois novos tipos de inquilino: <strong>“Desenvolvimento”</strong> e <strong>“Produção”</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Para garantir uma transição perfeita e funcionalidade ininterrupta, todos os inquilinos criados antecipadamente serão promovidos ao tipo de inquilino <strong>Produção</strong> juntamente com a sua subscrição anterior.',
+    hint_3: 'Não se preocupe, todas as outras configurações permanecerão as mesmas.',
+    about_tenant_type: 'Sobre o tipo de inquilino',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Agora pode aceder <a>todas as funcionalidades Logto Hobby e Pro</a> no seu inquilino de desenvolvimento!',
+    description: 'É completamente gratuito, sem período de avaliação - para sempre!',
   },
   delete_modal: {
     title: 'Eliminar inquilino',

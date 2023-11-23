@@ -1,13 +1,10 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: 'Kuruluş',
   page_title: 'Kuruluşlar',
   title: 'Kuruluşlar',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+    'Bir kuruluş, uygulamalarını kullanan takımları, iş müşterilerini ve ortak firmaları içeren kullanıcıların bir koleksiyonudur.',
+  organization_template: 'Kuruluş şablonu',
   organization_id: 'Kuruluş Kimliği',
   members: 'Üyeler',
   create_organization: 'Kuruluş oluştur',
@@ -38,84 +35,55 @@ const organizations = {
   search_permission_placeholder: 'İzinleri arayın ve seçin',
   search_role_placeholder: 'Rolleri arayın ve seçin',
   empty_placeholder: '🤔 Herhangi bir {{entity}} henüz ayarlanmamış.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: 'Kuruluş ve üye',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    'Kuruluş, bir grup kullanıcıdır ve takımları, iş müşterilerini ve ortak firmaları temsil edebilir. Her bir kullanıcı "Üye"dir. Bunlar, çok kiracılı gereksinimlerinizi ele alma temel varlıklar olabilir.',
   guide: {
     title: 'Kılavuzlarla başlayın',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: 'Kılavuzlarımızla kuruluş ayarlarınızı hızlı bir şekilde başlatın',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: "Logto'da kuruluşun nasıl çalıştığını anlayalım",
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: 'Bir kuruluş, bir grup kullanıcıdır (kimlikler)',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: 'Kuruluş şablonu, çok kiracılı uygulamalarda erişim denetimi için tasarlanmıştır',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
+          'Çok kiracılı SaaS uygulamalarında, birden çok kuruluş genellikle izinler ve rolleri içeren aynı erişim denetim şablonunu paylaşır. Logto\'da buna "kuruluş şablonu" diyoruz.',
         permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
-        role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          'Kuruluş izni, kuruluş bağlamında bir kaynağa erişim yetkisi anlamına gelir.',
+        role_description: 'Kuruluş rolü, üyelere atanabilen kuruluş izinlerinin bir gruplamasıdır.',
       },
       section_3: {
-        title: 'Her şeyin nasıl bağlandığını görmek için illüstrasyonla etkileşim',
+        title: 'İllüstrasyonla farklı herşeyin nasıl bağlandığını anlamak için etkileşime geçin',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Bir örnek alalım. John, Sarah, farklı kuruluşlarda ve farklı rollerde farklı organizasyonlarda. Farklı modüllere gelerek birbirleriyle ilişkilerini görebilirsiniz.',
       },
     },
     step_1: 'Adım 1: Kuruluş izinlerini tanımlayın',
     step_2: 'Adım 2: Kuruluş rollerini tanımlayın',
     step_3: 'Adım 3: İlk kuruluşunuzu oluşturun',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      'İlk kuruluşunuzu oluşturalım. Bu, farklı işe yönelik kimliklerle başa çıkmanın bir konteyneri olarak benzersiz bir kimlikle gelir.',
+    more_next_steps: 'Daha fazla adım',
+    add_members: 'Kuruluşunuza üye ekleyin',
+    add_members_action: 'Üyeleri topluca ekleyin ve roller atayın',
+    organization_permissions: 'Kuruluş izinleri',
+    permission_name: 'İzin adı',
+    permissions: 'İzinler',
+    organization_roles: 'Kuruluş rolleri',
+    role_name: 'Rol adı',
+    organization_name: 'Kuruluş adı',
+    admin: 'Yönetici',
+    member: 'Üye',
+    guest: 'Misafir',
+    role_description: 'Rol "{{role}}" farklı kuruluşlar arasında aynı kuruluş şablonunu paylaşır.',
     john: 'John',
-    /** UNTRANSLATED */
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
+      'John "john@email.com" e-postasıyla tek bir kimlik olarak iki farklı kuruluşa aittir. Birinde yönetici, diğerinde misafir olarak yer alır.',
     sarah: 'Sarah',
-    /** UNTRANSLATED */
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      'Sarah, "sarah@email.com" e-postasıyla tek bir kimlikle bir kuruluşa aittir. Bu kuruluşta yöneticidir.',
   },
 };
 

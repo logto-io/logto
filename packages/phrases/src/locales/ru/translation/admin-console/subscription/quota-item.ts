@@ -85,23 +85,19 @@ const quota_item = {
     limited_other: '{{count, number}} разрешений на роль',
     unlimited: 'Неограниченное количество разрешений на роль',
     not_eligible: 'Удалите свои разрешения роли',
-  },
-  hooks_limit: {
-    name: 'Webhooks',
-    limited: '{{count, number}} webhook',
-    limited_other: '{{count, number}} webhooks',
-    unlimited: 'Неограниченное количество вебхуков',
-    not_eligible: 'Удалите ваши вебхуки',
+    hooks_limit: {
+      name: 'Webhooks',
+      limited: '{{count, number}} webhook',
+      limited_other: '{{count, number}} webhooks',
+      unlimited: 'Неограниченное количество вебхуков',
+      not_eligible: 'Удалите ваши вебхуки',
+    },
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Организации',
+    limited: 'Организации',
+    unlimited: 'Организации',
+    not_eligible: 'Удалите свои организации',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

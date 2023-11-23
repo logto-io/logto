@@ -1,20 +1,16 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: '組織',
   page_title: '組織',
   title: '組織',
-  /** UNTRANSLATED */
-  subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
-  organization_id: '組織 ID',
+  subtitle: '組繹是一個用戶的集合，其中包括使用您應用程式的團隊、商業客戶和合作夥伴公司。',
+  organization_template: '組繹範本',
+  organization_id: '組繹 ID',
   members: '成員',
   create_organization: '建立組織',
   setup_organization: '設立您的組織',
   organization_list_placeholder_title: '組織',
   organization_list_placeholder_text:
-    '組織通常用於SaaS或類似SaaS的多租戶應用程式。組織功能允許您的B2B客戶更好地管理其合作夥伴和客戶，並自定義最終用戶訪問其應用程式的方式。',
+    '組繹通常用於 SaaS 或類似 SaaS 的多租戶應用程式。組繹功能允許您的 B2B 客戶更好地管理其合作夥伴和客戶，並自定義最終用戶訪問其應用程式的方式。',
   organization_name_placeholder: '我的組織',
   organization_description_placeholder: '組繹的簡要描述',
   organization_permission: '組繹權限',
@@ -34,88 +30,58 @@ const organizations = {
     '這將從受影響的用戶中刪除與此角色相關的權限，並刪除組繹角色、組繹成員和組繹權限之間的關係。',
   role: '角色',
   create_role_placeholder: '只擁有查看權限的用戶',
-  search_placeholder: '按組繹名稱或ID搜索',
+  search_placeholder: '按組繹名稱或 ID 搜索',
   search_permission_placeholder: '輸入搜索並選擇權限',
   search_role_placeholder: '輸入搜索並選擇角色',
   empty_placeholder: '🤔 你目前尚未設置任何 {{entity}} 。',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: '組繹和成員',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    '組繹是一組用戶，可以代表團隊、商業客戶和合作夥伴公司，每個用戶都是"成員"。這些可以是處理您的多租戶要求的基本實體。',
   guide: {
     title: '從指南開始',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: '使用我們的指南來啟動組繹設置',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: '讓我們了解在 Logto 中如何運作組繹',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: '組繹是一組用戶(身份)/* UNTRANSLATED */',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: '組繹範本是為多租戶應用程式設計的存取控制/* UNTRANSLATED */',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
-        permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
-        role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          '在多租戶 SaaS 應用程式中，多個組繹通常共享相同的存取控制範本，其中包括權限和角色。在 Logto 中，我們稱之為 "組繹範本"。',
+        permission_description: '組繹權限指的是在組繹上下文中訪問資源的授權。',
+        role_description: '組繹角色是可以分配給成員的組繹權限的分組。',
       },
       section_3: {
         title: '與插圖互動，查看所有連結如何互相連接',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '讓我們舉個例子。約翰、莎拉在不同組繹中擁有不同的角色，屬於不同組繹的上下文。將鼠標懸停在不同的模塊上，看看會發生什麼。',
       },
     },
     step_1: '步驟1：定義組繹權限',
     step_2: '步驟2: 定義組繹角色',
     step_3: '步驟3：創建您的第一個組繹',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    john: 'John',
-    /** UNTRANSLATED */
+      '让我们来创建您的第一个組繹。它具有独特的 ID，并且可以作为用於处理各种面向业务的标识的容器。',
+    more_next_steps: '更多下一步',
+    add_members: '將成員添加到您的組繹',
+    add_members_action: '批量添加成員並分配角色',
+    organization_permissions: '組繹權限',
+    permission_name: '權限名稱',
+    permissions: '權限',
+    organization_roles: '組繹角色',
+    role_name: '角色名稱',
+    organization_name: '組繹名稱',
+    admin: '管理員',
+    member: '成員',
+    guest: '訪客',
+    role_description: '角色 "{{role}}" 在不同組繹之間共享相同的組繹範本。',
+    john: '約翰',
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
-    sarah: 'Sarah',
-    /** UNTRANSLATED */
+      '約翰隸屬於兩個組繹，使用 "john@email.com" 電子郵件作為唯一標識。他是組繹 A 的管理員，也是組繹 B 的訪客。',
+    sarah: '莎拉',
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      '莎拉隸屬於一個組繹，使用 "sarah@email.com" 電子郵件作為唯一標識。她是組繹 B 的管理員。',
   },
 };
 
