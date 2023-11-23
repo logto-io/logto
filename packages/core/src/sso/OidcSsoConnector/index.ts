@@ -34,4 +34,5 @@ export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> 
   },
   configGuard: basicOidcConnectorConfigGuard,
   constructor: OidcSsoConnector,
+  defaultAttributeMapping: undefined,
 };

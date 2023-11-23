@@ -2,7 +2,7 @@ import { SsoProviderName } from '@logto/schemas';
 
 import { SamlSsoConnector } from '../SamlSsoConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { samlConnectorConfigGuard } from '../types/saml.js';
+import { samlConnectorConfigGuard, defaultAttributeMapping } from '../types/saml.js';
 
 export class AzureAdSsoConnector extends SamlSsoConnector {}
 
@@ -14,4 +14,5 @@ export const azureAdSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.AZU
   },
   configGuard: samlConnectorConfigGuard,
   constructor: AzureAdSsoConnector,
+  defaultAttributeMapping, // Use default SAML attribute mapping for now, will updated if needed.
 };

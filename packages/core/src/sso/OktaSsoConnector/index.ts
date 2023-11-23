@@ -60,4 +60,5 @@ export const oktaSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OKTA> 
   },
   configGuard: basicOidcConnectorConfigGuard,
   constructor: OktaSsoConnector,
+  defaultAttributeMapping: undefined,
 };

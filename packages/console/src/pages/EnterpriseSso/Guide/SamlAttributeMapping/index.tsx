@@ -1,23 +1,22 @@
+import type { AttributeMapping } from '@logto/connector-kit';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TextInput from '@/ds-components/TextInput';
 
-import { type SamlGuideFormType, type AttributeMapping, attributeKeys } from '../../types.js';
+import { type SamlGuideFormType, attributeKeys } from '../../types.js';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  isReadOnly?: boolean;
+  defaultAttributeMapping: AttributeMapping;
 };
 
 const primaryKey = 'attributeMapping';
 
-function SamlAttributeMapping({ isReadOnly }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+function SamlAttributeMapping({ defaultAttributeMapping }: Props) {
   const { watch, register } = useFormContext<SamlGuideFormType>();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const attributeMapping = watch(primaryKey) ?? {};
@@ -46,15 +45,11 @@ function SamlAttributeMapping({ isReadOnly }: Props) {
                 <CopyToClipboard className={styles.copyToClipboard} variant="border" value={key} />
               </td>
               <td>
-                {isReadOnly ? (
-                  <CopyToClipboard
-                    className={styles.copyToClipboard}
-                    variant="border"
-                    value={value ?? ''}
-                  />
-                ) : (
-                  <TextInput {...register(`${primaryKey}.${key}`)} placeholder={key} />
-                )}
+                <TextInput
+                  {...register(`${primaryKey}.${key}`)}
+                  placeholder={defaultAttributeMapping[key]}
+                  value={value}
+                />
               </td>
             </tr>
           );

@@ -61,7 +61,7 @@ export const fetchConnectorProviderDetails = async (
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
-  const { logo, constructor } = ssoConnectorFactories[providerName];
+  const { logo, defaultAttributeMapping, constructor } = ssoConnectorFactories[providerName];
 
   /* 
     Safely fetch and parse the detailed connector config from provider. 
@@ -76,6 +76,7 @@ export const fetchConnectorProviderDetails = async (
     ...connector,
     providerLogo: logo,
     providerConfig,
+    defaultAttributeMapping,
   };
 };
 

@@ -208,7 +208,6 @@ function EnterpriseSsoConnectors() {
                   // eslint-disable-next-line no-restricted-syntax
                   connectorForGuide as SsoConnectorWithProviderConfigWithGeneric<SsoProviderName>
                 }
-                isReadOnly={connectorForGuide.providerName !== 'SAML'}
                 onClose={async (connectorId) => {
                   if (connectorId) {
                     navigate(buildDetailsPathname(connectorId), { replace: true });

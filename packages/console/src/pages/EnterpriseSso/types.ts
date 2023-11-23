@@ -3,15 +3,8 @@
  * @logto/core and can not be imported here, should align with SAML config types.
  * See {@link @logto/core/packages/core/src/sso/SamlConnector/index.ts}.
  */
+import type { AttributeMapping, CustomizableAttributeMapping } from '@logto/connector-kit';
 import { type SsoProviderName, type SsoConnectorWithProviderConfig } from '@logto/schemas';
-
-export type AttributeMapping = {
-  id?: string;
-  email?: string;
-  phone?: string;
-  name?: string;
-  avatar?: string;
-};
 
 export const attributeKeys = Object.freeze([
   'id',
@@ -27,7 +20,7 @@ export type SamlGuideFormType = {
   signInEndpoint?: string;
   entityId?: string;
   x509Certificate?: string;
-  attributeMapping?: AttributeMapping;
+  attributeMapping?: CustomizableAttributeMapping;
 };
 
 export type OidcGuideFormType = {
@@ -37,9 +30,12 @@ export type OidcGuideFormType = {
   scope?: string;
 };
 
-export type GuideFormType<T extends SsoProviderName> = T extends SsoProviderName.OIDC
+export type GuideFormType<T extends SsoProviderName> = T extends
+  | SsoProviderName.OIDC
+  | SsoProviderName.GOOGLE_WORKSPACE
+  | SsoProviderName.OKTA
   ? OidcGuideFormType
-  : T extends SsoProviderName.SAML
+  : T extends SsoProviderName.SAML | SsoProviderName.AZURE_AD
   ? SamlGuideFormType
   : never;
 
@@ -49,28 +45,30 @@ export type GuideFormType<T extends SsoProviderName> = T extends SsoProviderName
  *
  * Since these types are defined in @logto/core, we can't import them directly here.
  */
-export type ParsedSsoIdentityProviderConfig<T extends SsoProviderName> =
-  T extends SsoProviderName.OIDC
-    ? {
-        authorizationEndpoint: string;
-        tokenEndpoint: string;
-        userinfoEndpoint: string;
-        jwksUri: string;
-        issuer: string;
-      }
-    : T extends SsoProviderName.SAML
-    ? {
-        serviceProvider: {
-          entityId: string;
-          assertionConsumerServiceUrl: string;
-        };
-        identityProvider?: {
-          entityId: string;
-          signInEndpoint: string;
-          x509Certificate: string;
-        };
-      }
-    : never;
+export type ParsedSsoIdentityProviderConfig<T extends SsoProviderName> = T extends
+  | SsoProviderName.OIDC
+  | SsoProviderName.GOOGLE_WORKSPACE
+  | SsoProviderName.OKTA
+  ? {
+      authorizationEndpoint: string;
+      tokenEndpoint: string;
+      userinfoEndpoint: string;
+      jwksUri: string;
+      issuer: string;
+    }
+  : T extends SsoProviderName.SAML | SsoProviderName.AZURE_AD
+  ? {
+      serviceProvider: {
+        entityId: string;
+        assertionConsumerServiceUrl: string;
+      };
+      identityProvider?: {
+        entityId: string;
+        signInEndpoint: string;
+        x509Certificate: string;
+      };
+    }
+  : never;
 
 export type SsoConnectorConfig<T extends SsoProviderName> = GuideFormType<T>;
 

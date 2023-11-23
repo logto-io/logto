@@ -1,3 +1,4 @@
+import { attributeMappingGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
 import { SsoConnectors, type SsoConnector } from '../db-entries/sso-connector.js';
@@ -70,6 +71,7 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
       providerName: z.nativeEnum(SsoProviderName),
       providerLogo: z.string(),
       providerConfig: z.record(z.unknown()).optional(),
+      defaultAttributeMapping: attributeMappingGuard.optional(),
     })
   );
 

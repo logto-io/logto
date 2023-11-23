@@ -1,4 +1,4 @@
-import { type I18nPhrases } from '@logto/connector-kit';
+import { type AttributeMapping, type I18nPhrases } from '@logto/connector-kit';
 import { SsoProviderName } from '@logto/schemas';
 
 import {
@@ -32,12 +32,21 @@ type SingleSignOnConnectorConfig = {
   [SsoProviderName.OKTA]: typeof basicOidcConnectorConfigGuard;
 };
 
+type DefaultAttributeMapping = {
+  [SsoProviderName.OIDC]: undefined;
+  [SsoProviderName.SAML]: AttributeMapping;
+  [SsoProviderName.AZURE_AD]: AttributeMapping;
+  [SsoProviderName.GOOGLE_WORKSPACE]: undefined;
+  [SsoProviderName.OKTA]: undefined;
+};
+
 export type SingleSignOnFactory<T extends SsoProviderName> = {
   providerName: T;
   logo: string;
   description: I18nPhrases;
   configGuard: SingleSignOnConnectorConfig[T];
   constructor: SingleSignOnConstructor[T];
+  defaultAttributeMapping: DefaultAttributeMapping[T];
 };
 
 export const ssoConnectorFactories: {

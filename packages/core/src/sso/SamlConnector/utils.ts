@@ -10,8 +10,8 @@ import { ssoPath } from '#src/routes/interaction/const.js';
 import {
   type SamlConnectorConfig,
   defaultAttributeMapping,
-  type CustomizableAttributeMap,
-  type AttributeMap,
+  type AttributeMapping,
+  type CustomizableAttributeMapping,
   extendedSocialUserInfoGuard,
   type ExtendedSocialUserInfo,
   type SamlIdentityProviderMetadata,
@@ -102,7 +102,7 @@ export const getSamlMetadataXml = async (
  */
 export const getExtendedUserInfoFromRawUserProfile = (
   rawUserProfile: Record<string, unknown>,
-  keyMapping: AttributeMap
+  keyMapping: AttributeMapping
 ): ExtendedSocialUserInfo => {
   const keyMap = new Map(
     Object.entries(keyMapping).map(([destination, source]) => [source, destination])
@@ -171,8 +171,8 @@ export const handleSamlAssertion = async (
  * @returns Full attribute mapping with default values.
  */
 export const attributeMappingPostProcessor = (
-  attributeMapping?: CustomizableAttributeMap
-): AttributeMap => {
+  attributeMapping?: CustomizableAttributeMapping
+): AttributeMapping => {
   return {
     ...defaultAttributeMapping,
     ...conditional(attributeMapping && attributeMapping),

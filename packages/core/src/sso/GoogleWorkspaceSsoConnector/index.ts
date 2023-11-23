@@ -47,4 +47,5 @@ export const googleWorkSpaceSsoConnectorFactory: SingleSignOnFactory<SsoProvider
     },
     configGuard: googleWorkspaceSsoConnectorConfigGuard,
     constructor: GoogleWorkspaceSsoConnector,
+    defaultAttributeMapping: undefined,
   };

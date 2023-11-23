@@ -6,7 +6,7 @@ import assertThat from '#src/utils/assert-that.js';
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn } from '../types/index.js';
-import { samlConnectorConfigGuard } from '../types/saml.js';
+import { samlConnectorConfigGuard, defaultAttributeMapping } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -101,4 +101,5 @@ export const samlSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.SAML> 
   },
   configGuard: samlConnectorConfigGuard,
   constructor: SamlSsoConnector,
+  defaultAttributeMapping,
 };

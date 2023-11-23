@@ -32,6 +32,14 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
+export const customizableAttributeMappingGuard = socialUserInfoGuard.partial();
+
+export type CustomizableAttributeMapping = z.infer<typeof customizableAttributeMappingGuard>;
+
+export const attributeMappingGuard = socialUserInfoGuard.required();
+
+export type AttributeMapping = z.infer<typeof attributeMappingGuard>;
+
 export type GetUserInfo = (
   data: unknown,
   getSession: GetSession
