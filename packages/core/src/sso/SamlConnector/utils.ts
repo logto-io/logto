@@ -1,6 +1,5 @@
 import * as validator from '@authenio/samlify-node-xmllint';
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type GlobalValues } from '@logto/shared';
 import { type Optional, conditional, appendPath } from '@silverhand/essentials';
 import { got } from 'got';
 import * as saml from 'samlify';
@@ -181,27 +180,17 @@ export const attributeMappingPostProcessor = (
 };
 
 /**
- * Generate the entity id for the current SAML SSO connector using admin console path, current tenant id and connector id.
+ * Generate the entity id for the current SAML SSO connector using tenant endpoint path and connector id.
  * Used URL-like entity id here since some identity providers will check the format of the entity id.
  * See {@link https://spaces.at.internet2.edu/display/federation/saml-metadata-entityid} to know more details about how should `entityId` look like.
  *
- * @param globalValues Global setups
- * @param tenantId Current tenant id.
+ * @param baseUrl Base endpoint for the current service
  * @param connectorId Current connector id.
  *
  * @returns Entity id for the current SAML SSO connector.
  */
-export const buildSpEntityId = (
-  globalValues: GlobalValues,
-  tenantId: string,
-  connectorId: string
-) => {
-  const { isCloud, cloudUrlSet, adminUrlSet } = globalValues;
-  return appendPath(
-    isCloud ? cloudUrlSet.endpoint : adminUrlSet.endpoint,
-    tenantId,
-    `/enterprise-sso/${connectorId}`
-  ).toString();
+export const buildSpEntityId = (baseUrl: URL, connectorId: string) => {
+  return appendPath(baseUrl, `/enterprise-sso/${connectorId}`).toString();
 };
 
 /**

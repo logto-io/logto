@@ -57,12 +57,14 @@ class SamlConnector {
     tenantId: string,
     ssoConnectorId: string
   ) {
+    const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
+
     this.assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(
-      getTenantEndpoint(tenantId, EnvSet.values),
+      tenantEndpoint,
       ssoConnectorId
     );
 
-    this.spEntityId = buildSpEntityId(EnvSet.values, tenantId, ssoConnectorId);
+    this.spEntityId = buildSpEntityId(tenantEndpoint, ssoConnectorId);
 
     this.serviceProviderMetadata = {
       entityId: this.spEntityId,
