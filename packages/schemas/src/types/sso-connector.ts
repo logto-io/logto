@@ -23,6 +23,17 @@ export enum SsoProviderName {
   OKTA = 'Okta',
 }
 
+export const samlBasedProviderNames = Object.freeze([
+  SsoProviderName.SAML,
+  SsoProviderName.AZURE_AD,
+]);
+
+export const oidcBasedProviderNames = Object.freeze([
+  SsoProviderName.OIDC,
+  SsoProviderName.GOOGLE_WORKSPACE,
+  SsoProviderName.OKTA,
+]);
+
 export const singleSignOnDomainBlackList = Object.freeze([
   'gmail.com',
   'yahoo.com',

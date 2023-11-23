@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { Theme, SsoProviderName } from '@logto/schemas';
+import { oidcBasedProviderNames, Theme, type SsoProviderName } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -57,9 +57,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
 
   const inUse =
     ssoConnector &&
-    ([SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
-      ssoConnector.providerName
-    )
+    (oidcBasedProviderNames.includes(ssoConnector.providerName)
       ? Boolean(ssoConnector.providerConfig)
       : Boolean(
           ssoConnector.providerConfig &&

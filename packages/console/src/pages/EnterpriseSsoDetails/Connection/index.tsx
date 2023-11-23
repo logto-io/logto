@@ -1,5 +1,9 @@
 import { type AttributeMapping } from '@logto/connector-kit';
-import { SsoProviderName } from '@logto/schemas';
+import {
+  type SsoProviderName,
+  samlBasedProviderNames,
+  oidcBasedProviderNames,
+} from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
 import { useEffect } from 'react';
@@ -88,9 +92,7 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
           title="enterprise_sso_details.upload_idp_metadata_title"
           description="enterprise_sso_details.upload_idp_metadata_description"
         >
-          {[SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
-            providerName
-          ) ? (
+          {oidcBasedProviderNames.includes(providerName) ? (
             // Can not infer the type by narrowing down the value of `providerName`, so we need to cast it.
             <OidcMetadataForm
               isGuidePage={false}
@@ -132,7 +134,7 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
             providerConfig={providerConfig}
           />
         </FormCard>
-        {[SsoProviderName.SAML, SsoProviderName.AZURE_AD].includes(providerName) && (
+        {samlBasedProviderNames.includes(providerName) && (
           <FormCard
             title="enterprise_sso_details.attribute_mapping_title"
             description="enterprise_sso_details.attribute_mapping_description"

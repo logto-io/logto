@@ -1,4 +1,4 @@
-import { SsoProviderName, type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import { oidcBasedProviderNames, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { z } from 'zod';
@@ -29,11 +29,7 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { applyDomain: applyCustomDomain } = useCustomDomain();
 
-  if (
-    [SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
-      providerName
-    )
-  ) {
+  if (oidcBasedProviderNames.includes(providerName)) {
     return (
       <FormField title="enterprise_sso.basic_info.oidc.redirect_uri_field_name">
         {/* Generated and passed in by Admin console. */}
