@@ -14,7 +14,7 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
           <TextLink
             target="blank"
             rel="noopener"
-            href="https://docs.logto.io/docs/tutorials/get-started/customize-sign-in-experience"
+            href="https://docs.logto.io/docs/recipes/customize-sie/"
           >
             Customize sign-in experience
           </TextLink>
@@ -23,25 +23,7 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
           <TextLink
             target="blank"
             rel="noopener"
-            href="https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-sms-or-email-passwordless-sign-in"
-          >
-            Enable SMS or email passwordless sign-in
-          </TextLink>
-        </li>
-        <li>
-          <TextLink
-            target="blank"
-            rel="noopener"
-            href="https://docs.logto.io/docs/tutorials/get-started/passwordless-sign-in-by-adding-connectors#enable-social-sign-in"
-          >
-            Enable social sign-in
-          </TextLink>
-        </li>
-        <li>
-          <TextLink
-            target="blank"
-            rel="noopener"
-            href="https://docs.logto.io/docs/recipes/protect-your-api"
+            href="https://docs.logto.io/docs/recipes/protect-your-api/"
           >
             Protect your API
           </TextLink>

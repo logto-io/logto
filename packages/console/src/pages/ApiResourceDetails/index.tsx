@@ -23,6 +23,7 @@ import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
@@ -41,6 +42,7 @@ function ApiResourceDetails() {
   const { pathname } = useLocation();
   const { id, guideId } = useParams();
   const { navigate, match } = useTenantPathname();
+  const { getDocumentationUrl } = useDocumentationUrl();
   const isGuideView = !!id && !!guideId && match(`/api-resources/${id}/guide/${guideId}`);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -121,7 +123,14 @@ function ApiResourceDetails() {
               icon: <File />,
               title: 'application_details.check_guide',
               onClick: () => {
-                setIsGuideDrawerOpen(true);
+                if (isLogtoManagementApiResource) {
+                  window.open(
+                    getDocumentationUrl('/docs/recipes/interact-with-management-api/'),
+                    '_blank'
+                  );
+                } else {
+                  setIsGuideDrawerOpen(true);
+                }
               },
             }}
             actionMenuItems={[

@@ -73,8 +73,8 @@ function ApiResourceSettings() {
           }
           learnMoreLink={getDocumentationUrl(
             isLogtoManagementApiResource
-              ? '/docs/tutorials/get-started/explore-management-api'
-              : '/docs/recipes/protect-your-api'
+              ? '/docs/recipes/interact-with-management-api/'
+              : '/docs/recipes/protect-your-api/'
           )}
         >
           <FormField isRequired title="api_resources.api_name">
