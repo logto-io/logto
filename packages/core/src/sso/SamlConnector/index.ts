@@ -1,5 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { trySafe, type Optional } from '@silverhand/essentials';
+import { type Optional } from '@silverhand/essentials';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
@@ -9,14 +9,13 @@ import {
   type SamlConnectorConfig,
   type ExtendedSocialUserInfo,
   type SamlServiceProviderMetadata,
-  type SamlMetadata,
   type SamlIdentityProviderMetadata,
   samlIdentityProviderMetadataGuard,
 } from '../types/saml.js';
 
 import {
   parseXmlMetadata,
-  getSamlMetadataXml,
+  fetchSamlMetadataXml,
   handleSamlAssertion,
   attributeMappingPostProcessor,
   getExtendedUserInfoFromRawUserProfile,
@@ -31,11 +30,15 @@ import {
  * This class provides the basic functionality to connect with a SAML IdP.
  * All the SAML single sign-on connector should extend this class.
  *
- * @property config The SAML connector config
- * @property assertionConsumerServiceUrl The SAML connector's assertion consumer service URL {@link file://src/routes/authn.ts}
- * @property _samlIdpMetadataXml The cached raw SAML metadata (in XML-format) from the raw SAML SSO connector config
+ * @property _idpConfig The input SAML connector config
+ * @property idpConfig The parsed SAML connector config, throws error if _idpConfig input is invalid
+ * @property serviceProviderMetadata The SAML service provider metadata
+ * @property serviceProviderMetadata.assertionConsumerServiceUrl The SAML connector's SP assertion consumer service URL {@link file://src/routes/authn.ts}
+ * @property serviceProviderMetadata.entityId spEntityId
  *
- * @method getSamlSpProperties Get the SAML service provider properties.
+ * @property _samlIdpMetadata The parsed SAML IdP metadata cache from the SAML IdP instance
+ * @property _identityProvider The SAML identity provider instance cache
+ *
  * @method getSamlIdpMetadata Parse and return SAML config from the SAML connector config. Throws error if config is invalid.
  * @method parseSamlAssertion Parse and store the SAML assertion from IdP.
  * @method getSingleSignOnUrl Get the SAML SSO URL.
@@ -43,51 +46,47 @@ import {
  * @method getIdpMetadataJson Get manually configured IdP SAML metadata from the raw SAML SSO connector config.
  */
 class SamlConnector {
-  private readonly assertionConsumerServiceUrl: string;
-  private readonly spEntityId: string;
-  private readonly serviceProviderMetadata: SamlServiceProviderMetadata;
-
-  private _samlIdpMetadataXml: Optional<string>;
+  readonly serviceProviderMetadata: SamlServiceProviderMetadata;
 
   private _samlIdpMetadata: Optional<SamlIdentityProviderMetadata>;
   private _identityProvider: Optional<saml.IdentityProviderInstance>;
 
+  // Allow _idpConfig input to be undefined when constructing the connector.
   constructor(
-    private readonly config: SamlConnectorConfig,
     tenantId: string,
-    ssoConnectorId: string
+    ssoConnectorId: string,
+    private readonly _idpConfig: SamlConnectorConfig | undefined
   ) {
     const tenantEndpoint = getTenantEndpoint(tenantId, EnvSet.values);
 
-    this.assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(
+    const assertionConsumerServiceUrl = buildAssertionConsumerServiceUrl(
       tenantEndpoint,
       ssoConnectorId
     );
 
-    this.spEntityId = buildSpEntityId(tenantEndpoint, ssoConnectorId);
+    const spEntityId = buildSpEntityId(tenantEndpoint, ssoConnectorId);
 
     this.serviceProviderMetadata = {
-      entityId: this.spEntityId,
-      assertionConsumerServiceUrl: this.assertionConsumerServiceUrl,
+      entityId: spEntityId,
+      assertionConsumerServiceUrl,
     };
   }
 
   /**
-   * @returns Properties of the SAML service provider.
-   */
-  getSamlSpProperties() {
-    return this.serviceProviderMetadata;
-  }
-
-  /**
-   * Return parsed SAML metadata.
    *
-   * @returns Parsed SAML metadata (contains both SP and IdP metadata).
+   * @remarks
+   * Since the SP config does not depend on the connector config,
+   * we allow the idpConfig to be undefined when constructing the connector.
+   *
+   * However, the connector config is required when getting the SAML IdP metadata.
+   * Therefore, we provide a getter to get the valid SAML connector config.
    */
-  async getSamlConfig(): Promise<SamlMetadata> {
-    const serviceProvider = this.serviceProviderMetadata;
-    const identityProvider = await trySafe(async () => this.getSamlIdpMetadata());
-    return { serviceProvider, identityProvider };
+  get idpConfig() {
+    if (!this._idpConfig) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'config not found');
+    }
+
+    return this._idpConfig;
   }
 
   /**
@@ -98,15 +97,13 @@ class SamlConnector {
    * @returns The parsed SAML assertion from IdP (with attribute mapping applied).
    */
   async parseSamlAssertion(body: Record<string, unknown>): Promise<ExtendedSocialUserInfo> {
-    const { x509Certificate } = await this.getSamlIdpMetadata();
-    const profileMap = attributeMappingPostProcessor(this.config.attributeMapping);
-
     const identityProvider = await this.getIdentityProvider();
+    const { x509Certificate } = await this.getSamlIdpMetadata();
 
     // HandleSamlAssertion takes a HTTPResponse-like object, need to wrap body in a object.
     const samlAssertionContent = await handleSamlAssertion({ body }, identityProvider, {
       x509Certificate,
-      entityId: this.spEntityId,
+      entityId: this.serviceProviderMetadata.entityId,
     });
 
     const userProfileGuard = z.record(z.string().or(z.array(z.string())));
@@ -118,6 +115,7 @@ class SamlConnector {
 
     const rawUserProfile = rawProfileParseResult.data;
 
+    const profileMap = attributeMappingPostProcessor(this.idpConfig.attributeMapping);
     return getExtendedUserInfoFromRawUserProfile(rawUserProfile, profileMap);
   }
 
@@ -128,19 +126,20 @@ class SamlConnector {
    * @returns The SSO URL.
    */
   async getSingleSignOnUrl(relayState: string) {
-    const { x509Certificate } = await this.getSamlIdpMetadata();
     const identityProvider = await this.getIdentityProvider();
+    const { x509Certificate } = await this.getSamlIdpMetadata();
+    const { entityId, assertionConsumerServiceUrl } = this.serviceProviderMetadata;
 
     try {
       // eslint-disable-next-line new-cap
       const serviceProvider = saml.ServiceProvider({
-        entityID: this.spEntityId,
+        entityID: entityId,
         relayState,
         signingCert: x509Certificate,
         authnRequestsSigned: identityProvider.entityMeta.isWantAuthnRequestsSigned(), // Should align with IdP setting.
         assertionConsumerService: [
           {
-            Location: this.assertionConsumerServiceUrl,
+            Location: assertionConsumerServiceUrl,
             Binding: saml.Constants.BindingNamespace.Post,
           },
         ],
@@ -161,13 +160,15 @@ class SamlConnector {
    *
    * @returns Parsed SAML config along with it's parsed metadata.
    */
-  protected async getSamlIdpMetadata(): Promise<SamlIdentityProviderMetadata> {
+  async getSamlIdpMetadata(): Promise<SamlIdentityProviderMetadata> {
     if (this._samlIdpMetadata) {
       return this._samlIdpMetadata;
     }
 
     const identityProvider = await this.getIdentityProvider();
+
     this._samlIdpMetadata = parseXmlMetadata(identityProvider);
+
     return this._samlIdpMetadata;
   }
 
@@ -177,12 +178,13 @@ class SamlConnector {
    * @returns The raw SAML metadata in XML-format.
    */
   private async getIdpMetadataXml() {
-    if (this._samlIdpMetadataXml) {
-      return this._samlIdpMetadataXml;
+    if ('metadataUrl' in this.idpConfig) {
+      return fetchSamlMetadataXml(this.idpConfig.metadataUrl);
     }
 
-    this._samlIdpMetadataXml = await getSamlMetadataXml(this.config);
-    return this._samlIdpMetadataXml;
+    if ('metadata' in this.idpConfig) {
+      return this.idpConfig.metadata;
+    }
   }
 
   /**
@@ -192,7 +194,7 @@ class SamlConnector {
    */
   private getIdpMetadataJson() {
     // Required fields of metadata should not be undefined.
-    const result = samlIdentityProviderMetadataGuard.safeParse(this.config);
+    const result = samlIdentityProviderMetadataGuard.safeParse(this.idpConfig);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
@@ -211,7 +213,9 @@ class SamlConnector {
       return this._identityProvider;
     }
 
+    // If `metadataUrl` or `metadata` is provided, we use it to construct the identity provider.
     const idpMetadataXml = await this.getIdpMetadataXml();
+
     if (idpMetadataXml) {
       // eslint-disable-next-line new-cap
       this._identityProvider = saml.IdentityProvider({
@@ -220,8 +224,9 @@ class SamlConnector {
       return this._identityProvider;
     }
 
-    const idpMetadataJson = this.getIdpMetadataJson();
-    const { entityId: entityID, signInEndpoint, x509Certificate } = idpMetadataJson;
+    // If `metadataUrl` and `metadata` are not provided, we use get metadata from the idpConfig directly
+    const { entityId: entityID, signInEndpoint, x509Certificate } = this.getIdpMetadataJson();
+
     // eslint-disable-next-line new-cap
     this._identityProvider = saml.IdentityProvider({
       entityID,

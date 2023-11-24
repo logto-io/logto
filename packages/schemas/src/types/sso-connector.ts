@@ -63,6 +63,7 @@ export const ssoConnectorFactoriesResponseGuard = z.object({
 
 export type SsoConnectorFactoriesResponse = z.infer<typeof ssoConnectorFactoriesResponseGuard>;
 
+// API response guard for all the SSO connectors CRUD APIs
 export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
   .omit({ providerName: true })
   .merge(

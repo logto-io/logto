@@ -8,7 +8,6 @@ import { z } from 'zod';
 import { ssoPath } from '#src/routes/interaction/const.js';
 
 import {
-  type SamlConnectorConfig,
   defaultAttributeMapping,
   type CustomizableAttributeMap,
   type AttributeMap,
@@ -57,7 +56,7 @@ export const parseXmlMetadata = (
   const result = samlIdentityProviderMetadataGuard.safeParse(rawSamlMetadata);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+    throw new ConnectorError(ConnectorErrorCodes.InvalidMetadata, result.error);
   }
 
   return result.data;
@@ -69,28 +68,21 @@ export const parseXmlMetadata = (
  * @param config The raw SAML SSO connector config.
  * @returns The corresponding IdP's raw SAML metadata (in XML format).
  */
-export const getSamlMetadataXml = async (
-  config: SamlConnectorConfig
-): Promise<Optional<string>> => {
-  const { metadata, metadataUrl } = config;
-  if (metadataUrl) {
-    try {
-      const { body } = await got.get(metadataUrl);
+export const fetchSamlMetadataXml = async (metadataUrl: string): Promise<Optional<string>> => {
+  try {
+    const { body } = await got.get(metadataUrl);
 
-      const result = z.string().safeParse(body);
+    const result = z.string().safeParse(body);
 
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-      }
-
-      return result.data;
-    } catch (error: unknown) {
-      // HTTP request error
-      throw new ConnectorError(ConnectorErrorCodes.General, error);
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
 
-  return metadata;
+    return result.data;
+  } catch (error: unknown) {
+    // HTTP request error
+    throw new ConnectorError(ConnectorErrorCodes.General, error);
+  }
 };
 
 /**

@@ -32,17 +32,24 @@ export const samlIdentityProviderMetadataGuard = z.object({
   signInEndpoint: z.string(),
   x509Certificate: z.string(),
 });
-
 export type SamlIdentityProviderMetadata = z.infer<typeof samlIdentityProviderMetadataGuard>;
 
-export const samlConnectorConfigGuard = samlIdentityProviderMetadataGuard
-  .extend({
-    attributeMapping: customizableAttributeMappingGuard,
-    metadata: z.string(),
+export const samlConnectorConfigGuard = z.union([
+  // Config using Metadata URL
+  z.object({
     metadataUrl: z.string(),
-  })
-  .partial();
-
+    attributeMapping: customizableAttributeMappingGuard.optional(),
+  }),
+  // Config using Metadata XML
+  z.object({
+    metadata: z.string(),
+    attributeMapping: customizableAttributeMappingGuard.optional(),
+  }),
+  // Config using Metadata detail
+  samlIdentityProviderMetadataGuard.extend({
+    attributeMapping: customizableAttributeMappingGuard.optional(),
+  }),
+]);
 export type SamlConnectorConfig = z.infer<typeof samlConnectorConfigGuard>;
 
 const samlMetadataGuard = z.object({

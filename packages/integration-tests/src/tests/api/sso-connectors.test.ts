@@ -1,5 +1,4 @@
 import { SsoProviderName } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
 import {
@@ -13,7 +12,6 @@ import {
   getSsoConnectorById,
   deleteSsoConnectorById,
   patchSsoConnectorById,
-  patchSsoConnectorConfigById,
 } from '#src/api/sso-connector.js';
 
 describe('sso-connector library', () => {
@@ -75,41 +73,29 @@ describe('post sso-connectors', () => {
     await deleteSsoConnectorById(response.id);
   });
 
-  it.each(providerNames)('should throw if invalid config is provided', async (providerName) => {
+  it('OIDC connector should throw error if insufficient config is provided', async () => {
     await expect(
       createSsoConnector({
-        providerName,
+        providerName: SsoProviderName.OIDC,
         connectorName: 'test',
         config: {
-          issuer: 23,
-          signInEndpoint: 123,
+          clientId: 'logto.io',
         },
       })
     ).rejects.toThrow(HTTPError);
   });
 
-  it.each(partialConfigAndProviderNames)(
-    'should create a new sso connector with partial configs',
-    async ({ providerName, config }) => {
-      const data = {
-        providerName,
+  it('SAML connector should throw error if invalid config is provided', async () => {
+    await expect(
+      createSsoConnector({
+        providerName: SsoProviderName.SAML,
         connectorName: 'test',
-        config,
-        domains: ['test.com'],
-      };
-
-      const response = await createSsoConnector(data);
-
-      expect(response).toHaveProperty('id');
-      expect(response).toHaveProperty('providerName', providerName);
-      expect(response).toHaveProperty('connectorName', 'test');
-      expect(response).toHaveProperty('config', data.config);
-      expect(response).toHaveProperty('domains', data.domains);
-      expect(response).toHaveProperty('syncProfile', false);
-
-      await deleteSsoConnectorById(response.id);
-    }
-  );
+        config: {
+          entityId: 123,
+        },
+      })
+    ).rejects.toThrow(HTTPError);
+  });
 });
 
 describe('get sso-connectors', () => {
@@ -270,78 +256,6 @@ describe('patch sso-connector by id', () => {
       if (providerName === SsoProviderName.SAML) {
         expect(connector.providerConfig).toBeDefined();
       }
-
-      await deleteSsoConnectorById(id);
-    }
-  );
-});
-
-describe('patch sso-connector config by id', () => {
-  it('should return 404 if connector is not found', async () => {
-    await expect(patchSsoConnectorConfigById('invalid-id', {})).rejects.toThrow(HTTPError);
-  });
-
-  it.each(providerNames)('should throw if invalid config is provided', async (providerName) => {
-    const { id } = await createSsoConnector({
-      providerName,
-      connectorName: 'integration_test connector',
-      config: {
-        clientSecret: 'bar',
-        metadataType: 'URL',
-      },
-    });
-
-    await expect(
-      patchSsoConnectorConfigById(id, {
-        issuer: 23,
-        signInEndpoint: 123,
-      })
-    ).rejects.toThrow(HTTPError);
-
-    await deleteSsoConnectorById(id);
-  });
-
-  it.each(providerNames)(
-    'should successfully patch incomplete config if `partialValidateConfig` query parameter is specified',
-    async (providerName) => {
-      const { id } = await createSsoConnector({
-        providerName,
-        connectorName: 'integration_test connector',
-        config: {
-          clientSecret: 'bar',
-          metadataType: 'URL',
-        },
-      });
-
-      await expect(
-        patchSsoConnectorConfigById(
-          id,
-          {
-            ...conditional(providerName === SsoProviderName.OIDC && { issuer: 'issuer' }),
-            ...conditional(providerName === SsoProviderName.SAML && { entityId: 'entity_id' }),
-          },
-          true
-        )
-      ).resolves.not.toThrow();
-
-      await deleteSsoConnectorById(id);
-    }
-  );
-
-  it.each(partialConfigAndProviderNames)(
-    'should patch sso connector config',
-    async ({ providerName, config }) => {
-      const { id } = await createSsoConnector({
-        providerName,
-        connectorName: 'integration_test connector',
-      });
-
-      const connector = await patchSsoConnectorConfigById(id, config);
-
-      expect(connector).toHaveProperty('id', id);
-      expect(connector).toHaveProperty('providerName', providerName);
-      expect(connector).toHaveProperty('connectorName', 'integration_test connector');
-      expect(connector).toHaveProperty('config', config);
 
       await deleteSsoConnectorById(id);
     }

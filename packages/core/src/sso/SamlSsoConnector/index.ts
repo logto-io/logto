@@ -1,12 +1,12 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type SsoConnector, SsoProviderName } from '@logto/schemas';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import assertThat from '#src/utils/assert-that.js';
 
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn } from '../types/index.js';
-import { samlConnectorConfigGuard } from '../types/saml.js';
+import { samlConnectorConfigGuard, type SamlMetadata } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -18,10 +18,11 @@ import {
  * This class extends the basic SAML connector class and add some business related utils methods.
  *
  * @property data The SAML connector data from the database
+ * @property inValidConnectorConfig Whether the connector config is invalid
  *
- * @method getProperties Get the SAML service provider properties.
- * @method getConfig Get parsed SAML config along with it's metadata. Throws error if config is invalid.
- * @method getUserInfo Get social user info.
+ * @method getConfig Get the SP and IdP metadata
+ * @method getUserInfo Get user info from the SAML assertion.
+ * @method getAuthorizationUrl Get the SAML SSO URL.
  */
 export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   constructor(
@@ -30,11 +31,8 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   ) {
     const parseConfigResult = samlConnectorConfigGuard.safeParse(data.config);
 
-    if (!parseConfigResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, parseConfigResult.error);
-    }
-
-    super(parseConfigResult.data, tenantId, data.id);
+    // Fallback to undefined if config is invalid
+    super(tenantId, data.id, conditional(parseConfigResult.success && parseConfigResult.data));
   }
 
   async getIssuer() {
@@ -44,12 +42,17 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   }
 
   /**
-   * Get parsed SAML connector's config along with it's metadata. Throws error if config is invalid.
-   *
-   * @returns Parsed SAML connector config and it's metadata.
+   * ServiceProvider: SP metadata
+   * identityProvider: IdP metadata. Returns undefined if the idp config is invalid.
    */
-  async getConfig() {
-    return this.getSamlConfig();
+  async getConfig(): Promise<SamlMetadata> {
+    const serviceProvider = this.serviceProviderMetadata;
+    const identityProvider = await trySafe(async () => this.getSamlIdpMetadata());
+
+    return {
+      serviceProvider,
+      identityProvider,
+    };
   }
 
   /**
