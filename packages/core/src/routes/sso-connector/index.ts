@@ -23,6 +23,7 @@ import {
   parseConnectorConfig,
   fetchConnectorProviderDetails,
   validateConnectorDomains,
+  validateConnectorConfigConnectionStatus,
 } from './utils.js';
 
 export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
@@ -83,7 +84,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-      const { providerName, connectorName, config, ...rest } = body;
+      const { providerName, connectorName, config, domains, ...rest } = body;
 
       // Return 422 if the connector provider is not supported
       if (!isSupportedSsoProvider(providerName)) {
@@ -95,12 +96,27 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       }
 
       // Validate the connector domains if it's provided
-      validateConnectorDomains(rest.domains);
+      if (domains) {
+        validateConnectorDomains(domains);
+      }
 
       // Validate the connector config if it's provided
       const parsedConfig = config && parseConnectorConfig(providerName, config);
 
       const connectorId = generateStandardShortId();
+
+      // Check the connection status of the connector config if it's provided
+      if (parsedConfig) {
+        await validateConnectorConfigConnectionStatus(
+          {
+            id: connectorId,
+            providerName,
+            config: parsedConfig,
+          },
+          tenantId
+        );
+      }
+
       const connector = await ssoConnectors.insert({
         id: connectorId,
         providerName,
@@ -194,13 +210,27 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
-      const { config, ...rest } = body;
+      const { config, domains, ...rest } = body;
 
       // Validate the connector domains if it's provided
-      validateConnectorDomains(rest.domains);
+      if (domains) {
+        validateConnectorDomains(domains);
+      }
 
       // Validate the connector config if it's provided
       const parsedConfig = config && parseConnectorConfig(providerName, config);
+
+      // Check the connection status of the connector config if it's provided
+      if (parsedConfig) {
+        await validateConnectorConfigConnectionStatus(
+          {
+            id,
+            providerName,
+            config: parsedConfig,
+          },
+          tenantId
+        );
+      }
 
       // Check if there's any valid update
       const hasValidUpdate = parsedConfig ?? Object.keys(rest).length > 0;

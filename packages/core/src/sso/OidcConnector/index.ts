@@ -1,6 +1,5 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { generateStandardId } from '@logto/shared/universal';
-import { assert, conditional } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
 import {
@@ -62,13 +61,6 @@ class OidcConnector {
     setSession: CreateSingleSignOnSession,
     prompt?: 'login' | 'consent' | 'none' | 'select_account'
   ) {
-    assert(
-      setSession,
-      new ConnectorError(ConnectorErrorCodes.NotImplemented, {
-        message: 'Connector session storage is not implemented.',
-      })
-    );
-
     const oidcConfig = await this.getOidcConfig();
     const nonce = generateStandardId();
 

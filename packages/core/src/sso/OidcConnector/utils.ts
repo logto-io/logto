@@ -1,10 +1,15 @@
-import { ConnectorError, ConnectorErrorCodes, parseJson } from '@logto/connector-kit';
+import { parseJson } from '@logto/connector-kit';
 import { assert } from '@silverhand/essentials';
 import camelcaseKeys, { type CamelCaseKeys } from 'camelcase-keys';
 import { got, HTTPError } from 'got';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
 import { z } from 'zod';
 
+import {
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+  SsoConnectorConfigErrorCodes,
+} from '../types/error.js';
 import {
   type BaseOidcConfig,
   type OidcConfigResponse,
@@ -26,15 +31,24 @@ export const fetchOidcConfig = async (
     const result = oidcConfigResponseGuard.safeParse(body);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: { issuer },
+        message: SsoConnectorConfigErrorCodes.InvalidConfigResponse,
+        error: result.error.flatten(),
+      });
     }
 
     return camelcaseKeys(result.data);
   } catch (error: unknown) {
-    if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, error.response.body);
+    if (error instanceof SsoConnectorError) {
+      throw error;
     }
-    throw error;
+
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+      config: { issuer },
+      message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
+      error: error instanceof HTTPError ? error.response.body : error,
+    });
   }
 };
 
@@ -46,7 +60,11 @@ export const fetchToken = async (
   const result = oidcAuthorizationResponseGuard.safeParse(data);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.General, result.error);
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidRequestParameters, {
+      url: tokenEndpoint,
+      params: data,
+      error: result.error.flatten(),
+    });
   }
 
   const { code } = result.data;
@@ -66,15 +84,23 @@ export const fetchToken = async (
     const result = oidcTokenResponseGuard.safeParse(parseJson(httpResponse.body));
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Invalid token response',
+        response: httpResponse.body,
+        error: result.error.flatten(),
+      });
     }
 
     return camelcaseKeys(result.data);
   } catch (error: unknown) {
-    if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, error.response.body);
+    if (error instanceof SsoConnectorError) {
+      throw error;
     }
-    throw error;
+
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Fail to fetch token',
+      error: error instanceof HTTPError ? error.response.body : error,
+    });
   }
 };
 
@@ -92,13 +118,19 @@ export const getIdTokenClaims = async (
     });
 
     if (Math.abs((payload.iat ?? 0) - Date.now() / 1000) > issuedAtTimeTolerance) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, 'id_token is expired');
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'id_token is expired',
+        response: payload,
+      });
     }
 
     const result = idTokenProfileStandardClaimsGuard.safeParse(payload);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'invalid id_token',
+        response: payload,
+      });
     }
 
     const { data } = result;
@@ -106,16 +138,21 @@ export const getIdTokenClaims = async (
     if (data.nonce) {
       assert(
         data.nonce === nonceFromSession,
-        new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, 'nonce claim not match')
+        new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+          message: 'nonce does not match',
+        })
       );
     }
 
     return data;
   } catch (error: unknown) {
-    if (error instanceof ConnectorError) {
+    if (error instanceof SsoConnectorError) {
       throw error;
     }
-    throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid, error);
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Fail to verify id_token',
+      error,
+    });
   }
 };
 
@@ -136,16 +173,24 @@ export const getUserInfo = async (accessToken: string, userinfoEndpoint: string)
       .safeParse(httpResponse.body);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Invalid user info response',
+        response: httpResponse.body,
+        error: result.error.flatten(),
+      });
     }
 
     const { data } = result;
 
     return data;
   } catch (error: unknown) {
-    if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, error.response.body);
+    if (error instanceof SsoConnectorError) {
+      throw error;
     }
-    throw error;
+
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Fail to fetch user info',
+      error: error instanceof HTTPError ? error.response.body : error,
+    });
   }
 };

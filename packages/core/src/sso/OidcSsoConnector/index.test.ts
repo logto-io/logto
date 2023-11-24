@@ -1,7 +1,12 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { SsoProviderName } from '@logto/schemas';
 
 import { mockSsoConnector } from '#src/__mocks__/sso.js';
+
+import {
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+  SsoConnectorConfigErrorCodes,
+} from '../types/error.js';
 
 import { oidcSsoConnectorFactory } from './index.js';
 
@@ -23,7 +28,11 @@ describe('OidcSsoConnector', () => {
     };
 
     expect(createOidcSsoConnector).toThrow(
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error)
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: mockSsoConnector.config,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error: result.error.flatten(),
+      })
     );
   });
 });

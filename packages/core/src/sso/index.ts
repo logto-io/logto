@@ -24,7 +24,7 @@ type SingleSignOnConstructor = {
   [SsoProviderName.OKTA]: typeof OktaSsoConnector;
 };
 
-type SingleSignOnConnectorConfig = {
+export type SingleSignOnConnectorConfig = {
   [SsoProviderName.OIDC]: typeof basicOidcConnectorConfigGuard;
   [SsoProviderName.SAML]: typeof samlConnectorConfigGuard;
   [SsoProviderName.AZURE_AD]: typeof samlConnectorConfigGuard;

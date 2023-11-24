@@ -1,8 +1,12 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { SsoProviderName } from '@logto/schemas';
 
 import { mockSsoConnector as _mockSsoConnector } from '#src/__mocks__/sso.js';
 
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import { type SamlConnectorConfig } from '../types/saml.js';
 
 import { samlSsoConnectorFactory } from './index.js';
@@ -35,7 +39,10 @@ describe('SamlSsoConnector', () => {
     const connector = new samlSsoConnectorFactory.constructor(mockSsoConnector, 'default_tenant');
 
     await expect(async () => connector.getSamlIdpMetadata()).rejects.toThrow(
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'config not found')
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: undefined,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+      })
     );
   });
 

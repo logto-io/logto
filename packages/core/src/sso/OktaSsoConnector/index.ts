@@ -1,4 +1,3 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { SsoProviderName } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
@@ -8,6 +7,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { fetchToken, getUserInfo, getIdTokenClaims } from '../OidcConnector/utils.js';
 import { OidcSsoConnector } from '../OidcSsoConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
+import { SsoConnectorError, SsoConnectorErrorCodes } from '../types/error.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
@@ -33,7 +33,9 @@ export class OktaSsoConnector extends OidcSsoConnector {
 
     assertThat(
       accessToken,
-      new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, 'access_token is empty.')
+      new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'The access token is missing from the response.',
+      })
     );
 
     // Verify the id token and get the user id

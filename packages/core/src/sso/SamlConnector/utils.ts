@@ -1,12 +1,16 @@
 import * as validator from '@authenio/samlify-node-xmllint';
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type Optional, conditional, appendPath } from '@silverhand/essentials';
-import { got } from 'got';
+import { HTTPError, got } from 'got';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
 import { ssoPath } from '#src/routes/interaction/const.js';
 
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import {
   defaultAttributeMapping,
   type CustomizableAttributeMap,
@@ -56,7 +60,11 @@ export const parseXmlMetadata = (
   const result = samlIdentityProviderMetadataGuard.safeParse(rawSamlMetadata);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidMetadata, result.error);
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+      message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+      metadata: rawSamlMetadata,
+      error: result.error,
+    });
   }
 
   return result.data;
@@ -75,13 +83,23 @@ export const fetchSamlMetadataXml = async (metadataUrl: string): Promise<Optiona
     const result = z.string().safeParse(body);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+        message: SsoConnectorConfigErrorCodes.InvalidConfigResponse,
+        metadata: body,
+        error: result.error,
+      });
     }
 
     return result.data;
   } catch (error: unknown) {
-    // HTTP request error
-    throw new ConnectorError(ConnectorErrorCodes.General, error);
+    if (error instanceof SsoConnectorError) {
+      throw error;
+    }
+
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+      message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
+      error: error instanceof HTTPError ? error.response.body : error,
+    });
   }
 };
 
@@ -107,7 +125,11 @@ export const getExtendedUserInfoFromRawUserProfile = (
   const result = extendedSocialUserInfoGuard.safeParse(mappedUserProfile);
 
   if (!result.success) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Invalid SAML assertion',
+      response: mappedUserProfile,
+      error: result.error.flatten(),
+    });
   }
 
   return result.data;
@@ -152,7 +174,10 @@ export const handleSamlAssertion = async (
       ...assertionResult.extract.attributes,
     };
   } catch (error: unknown) {
-    throw new ConnectorError(ConnectorErrorCodes.General, String(error));
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Invalid SAML assertion',
+      error,
+    });
   }
 };
 

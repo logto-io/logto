@@ -1,9 +1,13 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type SsoConnector, SsoProviderName } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type CreateSingleSignOnSession, type SingleSignOn } from '../types/index.js';
+import {
+  type CreateSingleSignOnSession,
+  type SingleSignOn,
+  type SingleSignOnConnectorData,
+} from '../types/index.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 
 // Google use static issue endpoint.
@@ -12,7 +16,7 @@ const googleIssuer = 'https://accounts.google.com';
 export class GoogleWorkspaceSsoConnector extends OidcConnector implements SingleSignOn {
   static googleIssuer = googleIssuer;
 
-  constructor(readonly data: SsoConnector) {
+  constructor(readonly data: SingleSignOnConnectorData) {
     const parseConfigResult = googleWorkspaceSsoConnectorConfigGuard.safeParse(data.config);
 
     if (!parseConfigResult.success) {

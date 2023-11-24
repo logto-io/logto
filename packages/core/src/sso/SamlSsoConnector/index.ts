@@ -1,11 +1,16 @@
-import { type SsoConnector, SsoProviderName } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import assertThat from '#src/utils/assert-that.js';
 
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type SingleSignOn } from '../types/index.js';
+import {
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+  SsoConnectorSessionErrorCodes,
+} from '../types/error.js';
+import { type SingleSignOn, type SingleSignOnConnectorData } from '../types/index.js';
 import { samlConnectorConfigGuard, type SamlMetadata } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
@@ -26,7 +31,7 @@ import {
  */
 export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   constructor(
-    readonly data: SsoConnector,
+    readonly data: SingleSignOnConnectorData,
     tenantId: string
   ) {
     const parseConfigResult = samlConnectorConfigGuard.safeParse(data.config);
@@ -90,7 +95,12 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
    * This method only asserts the userInfo is not null and directly return it.
    */
   async getUserInfo({ userInfo }: SingleSignOnConnectorSession) {
-    assertThat(userInfo, 'session.connector_validation_session_not_found');
+    assertThat(
+      userInfo,
+      new SsoConnectorError(SsoConnectorErrorCodes.SessionNotFound, {
+        message: SsoConnectorSessionErrorCodes.SessionNotFound,
+      })
+    );
 
     return userInfo;
   }
