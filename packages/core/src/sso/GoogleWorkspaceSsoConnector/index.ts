@@ -25,6 +25,7 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
     });
   }
 
+  // Always use select_account prompt for Google Workspace SSO.
   override async getAuthorizationUrl(
     payload: { state: string; redirectUri: string; connectorId: string },
     setSession: CreateSingleSignOnSession
