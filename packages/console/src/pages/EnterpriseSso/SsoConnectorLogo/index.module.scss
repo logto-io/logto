@@ -1,0 +1,11 @@
+.container {
+  background-color: var(--color-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo {
+  flex-shrink: 0;
+}

@@ -20,12 +20,13 @@ const mockTenantId = 'mock_tenant_id';
 
 describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))('should return correct detail for %s', (providerName) => {
-    const { logo, description } = ssoConnectorFactories[providerName];
+    const { logo, logoDark, description } = ssoConnectorFactories[providerName];
     const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'en');
 
     expect(detail).toEqual({
       providerName,
       logo,
+      logoDark,
       description: description.en,
     });
   });
@@ -33,12 +34,13 @@ describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))(
     'should return correct detail for %s with unknown locale',
     (providerName) => {
-      const { logo, description } = ssoConnectorFactories[providerName];
+      const { logo, logoDark, description } = ssoConnectorFactories[providerName];
       const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'zh');
 
       expect(detail).toEqual({
         providerName,
         logo,
+        logoDark,
         description: description.en,
       });
     }
@@ -92,6 +94,7 @@ describe('fetchConnectorProviderDetails', () => {
       expect.objectContaining({
         ...connector,
         providerLogo: ssoConnectorFactories[connector.providerName].logo,
+        providerLogoDark: ssoConnectorFactories[connector.providerName].logoDark,
         providerConfig: {
           ...connector.config,
           scope: 'openid profile email', // Default scope

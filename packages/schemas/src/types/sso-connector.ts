@@ -51,6 +51,7 @@ export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
 const ssoConnectorFactoryDetailGuard = z.object({
   providerName: z.nativeEnum(SsoProviderName),
   logo: z.string(),
+  logoDark: z.string(),
   description: z.string(),
 });
 
@@ -69,6 +70,7 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
     z.object({
       providerName: z.nativeEnum(SsoProviderName),
       providerLogo: z.string(),
+      providerLogoDark: z.string(),
       providerConfig: z.record(z.unknown()).optional(),
     })
   );

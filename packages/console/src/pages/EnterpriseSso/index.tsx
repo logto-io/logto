@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoConnectorWithProviderConfig, Theme, SsoProviderName } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig, SsoProviderName } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,16 +13,15 @@ import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
 import Button from '@/ds-components/Button';
-import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import useTheme from '@/hooks/use-theme';
 import { buildUrl } from '@/utils/url';
 
 import Guide from './Guide';
+import SsoConnectorLogo from './SsoConnectorLogo';
 import SsoCreationModal from './SsoCreationModal';
 import * as styles from './index.module.scss';
 import { type SsoConnectorWithProviderConfigWithGeneric } from './types';
@@ -34,8 +33,6 @@ const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
 const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
 function EnterpriseSsoConnectors() {
-  const theme = useTheme();
-
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { ssoConnectorId: id } = useParams();
@@ -91,19 +88,14 @@ function EnterpriseSsoConnectors() {
             title: t('enterprise_sso.col_connector_name'),
             dataIndex: 'name',
             colSpan: 256,
-            render: ({ id, connectorName, providerLogo, branding }) => (
+            render: ({ id, connectorName, ...rest }) => (
               <ItemPreview
                 title={connectorName}
                 icon={
-                  <ImageWithErrorFallback
+                  <SsoConnectorLogo
                     className={styles.logo}
                     containerClassName={styles.container}
-                    alt="logo"
-                    src={
-                      (theme === Theme.Dark && branding.darkLogo
-                        ? branding.darkLogo
-                        : branding.logo) ?? providerLogo
-                    }
+                    data={rest}
                   />
                 }
                 to={buildDetailsPathname(id)}

@@ -18,11 +18,12 @@ export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
   locale: string
 ) => {
-  const { providerName, logo, description } = factory;
+  const { providerName, logo, logoDark, description } = factory;
 
   return {
     providerName,
     logo,
+    logoDark,
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
     description: (isKeyOfI18nPhrases(locale, description) && description[locale]) || description.en,
   };
@@ -61,7 +62,7 @@ export const fetchConnectorProviderDetails = async (
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
-  const { logo, constructor } = ssoConnectorFactories[providerName];
+  const { logo, logoDark, constructor } = ssoConnectorFactories[providerName];
 
   /* 
     Safely fetch and parse the detailed connector config from provider. 
@@ -75,6 +76,7 @@ export const fetchConnectorProviderDetails = async (
   return {
     ...connector,
     providerLogo: logo,
+    providerLogoDark: logoDark,
     providerConfig,
   };
 };

@@ -16,6 +16,7 @@ export type ConnectorFactoryResponse = {
 
 export type SsoConnectorWithProviderConfig = SsoConnector & {
   providerLogo: string;
+  providerLogoDark: string;
   providerConfig?: Record<string, unknown>;
 };
 

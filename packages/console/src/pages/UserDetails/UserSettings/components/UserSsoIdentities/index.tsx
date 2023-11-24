@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
-import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
+import useTheme from '@/hooks/use-theme';
+import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 
 import * as styles from '../UserSocialIdentities/index.module.scss';
 
@@ -15,13 +16,16 @@ type Props = {
 };
 
 type DisplayConnector = {
-  logo: SsoConnectorWithProviderConfig['providerLogo'];
+  providerLogo: SsoConnectorWithProviderConfig['providerLogo'];
+  providerLogoDark: SsoConnectorWithProviderConfig['providerLogoDark'];
+  branding: SsoConnectorWithProviderConfig['branding'];
   name: SsoConnectorWithProviderConfig['connectorName'];
   userIdentity: UserSsoIdentity['identityId'];
   issuer: UserSsoIdentity['issuer'];
 };
 
 function UserSsoIdentities({ ssoIdentities }: Props) {
+  const theme = useTheme();
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -40,15 +44,18 @@ function UserSsoIdentities({ ssoIdentities }: Props) {
     return (
       ssoIdentities
         .map((identity) => {
-          const { providerLogo: logo, connectorName: name } =
-            data.find((ssoConnector) => ssoConnector.id === identity.ssoConnectorId) ?? {};
+          const {
+            providerLogo,
+            providerLogoDark,
+            connectorName: name,
+          } = data.find((ssoConnector) => ssoConnector.id === identity.ssoConnectorId) ?? {};
           const { identityId: userIdentity, issuer } = identity;
 
-          if (!(logo && name)) {
+          if (!(providerLogo && providerLogoDark && name)) {
             return;
           }
 
-          return { logo, name, userIdentity, issuer };
+          return { providerLogo, providerLogoDark, name, userIdentity, issuer };
         })
         // eslint-disable-next-line unicorn/prefer-native-coercion-functions
         .filter((identity): identity is DisplayConnector => Boolean(identity))
@@ -80,9 +87,9 @@ function UserSsoIdentities({ ssoIdentities }: Props) {
               title: t('user_details.sso_connectors.connectors'),
               dataIndex: 'name',
               colSpan: 5,
-              render: ({ logo, name }) => (
+              render: ({ providerLogo, providerLogoDark, branding, name }) => (
                 <div className={styles.connectorName}>
-                  <ImageWithErrorFallback className={styles.icon} src={logo} alt="logo" />
+                  <SsoConnectorLogo data={{ providerLogo, providerLogoDark, branding }} />
                   <div className={styles.name}>
                     <span>{name}</span>
                   </div>

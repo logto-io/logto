@@ -79,7 +79,7 @@ export const createSignInExperienceLibrary = (
           id,
           connectorName,
           logo: branding.logo ?? factory.logo,
-          darkLogo: branding.darkLogo,
+          darkLogo: branding.darkLogo ?? factory.logoDark,
         };
       }
     );
