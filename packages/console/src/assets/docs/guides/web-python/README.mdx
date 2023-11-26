@@ -199,6 +199,8 @@ Now, you can test your application:
 Now, you have a working sign-in flow, but your routes are still unprotected. Per the framework you use, you can create a decorator such as `@authenticated` to protect your routes. For example:
 
 ```python
+from functools import wraps
+
 def authenticated(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
