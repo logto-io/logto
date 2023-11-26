@@ -37,6 +37,7 @@ export type SingleSignOnFactory<T extends SsoProviderName> = {
   logo: string;
   logoDark: string;
   description: I18nPhrases;
+  name: I18nPhrases; // This `name` is for console and experience display use, while `providerName` is for internal use.
   configGuard: SingleSignOnConnectorConfig[T];
   constructor: SingleSignOnConstructor[T];
 };

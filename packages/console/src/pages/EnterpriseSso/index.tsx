@@ -106,7 +106,11 @@ function EnterpriseSsoConnectors() {
             title: t('enterprise_sso.col_type'),
             dataIndex: 'type',
             colSpan: 256,
-            render: ({ providerName }) => <div className={styles.type}>{providerName}</div>,
+            render: ({ name }) => (
+              <div className={styles.type}>
+                <span>{name}</span>
+              </div>
+            ),
           },
           {
             title: t('enterprise_sso.col_email_domain'),

@@ -104,6 +104,9 @@ export const samlSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.SAML> 
   description: {
     en: 'This connector is used to connect to SAML single sign-on identity provider.',
   },
+  name: {
+    en: 'SAML',
+  },
   configGuard: samlConnectorConfigGuard,
   constructor: SamlSsoConnector,
 };

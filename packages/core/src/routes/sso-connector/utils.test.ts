@@ -20,7 +20,7 @@ const mockTenantId = 'mock_tenant_id';
 
 describe('parseFactoryDetail', () => {
   it.each(Object.values(SsoProviderName))('should return correct detail for %s', (providerName) => {
-    const { logo, logoDark, description } = ssoConnectorFactories[providerName];
+    const { logo, logoDark, description, name } = ssoConnectorFactories[providerName];
     const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'en');
 
     expect(detail).toEqual({
@@ -28,13 +28,14 @@ describe('parseFactoryDetail', () => {
       logo,
       logoDark,
       description: description.en,
+      name: name.en,
     });
   });
 
   it.each(Object.values(SsoProviderName))(
     'should return correct detail for %s with unknown locale',
     (providerName) => {
-      const { logo, logoDark, description } = ssoConnectorFactories[providerName];
+      const { logo, logoDark, description, name } = ssoConnectorFactories[providerName];
       const detail = parseFactoryDetail(ssoConnectorFactories[providerName], 'zh');
 
       expect(detail).toEqual({
@@ -42,6 +43,7 @@ describe('parseFactoryDetail', () => {
         logo,
         logoDark,
         description: description.en,
+        name: name.en,
       });
     }
   );
@@ -50,7 +52,7 @@ describe('parseFactoryDetail', () => {
 describe('fetchConnectorProviderDetails', () => {
   it('providerConfig should be undefined if connector config is invalid', async () => {
     const connector = { ...mockSsoConnector, config: { clientId: 'foo' } };
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
 
     expect(result).toMatchObject(
       expect.objectContaining({
@@ -69,7 +71,7 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockRejectedValueOnce(new Error('mock-error'));
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
 
     expect(result).toMatchObject(
       expect.objectContaining({
@@ -88,7 +90,7 @@ describe('fetchConnectorProviderDetails', () => {
     };
 
     fetchOidcConfig.mockResolvedValueOnce({ tokenEndpoint: 'http://example.com/token' });
-    const result = await fetchConnectorProviderDetails(connector, mockTenantId);
+    const result = await fetchConnectorProviderDetails(connector, mockTenantId, 'en');
 
     expect(result).toMatchObject(
       expect.objectContaining({

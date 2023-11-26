@@ -10,7 +10,7 @@ type Props = {
   data: SsoConnectorFactoryDetail;
 };
 
-function SsoConnectorRadio({ data: { providerName, logo, logoDark, description } }: Props) {
+function SsoConnectorRadio({ data: { logo, logoDark, description, name } }: Props) {
   const theme = useTheme();
   return (
     <div className={styles.ssoConnector}>
@@ -22,7 +22,7 @@ function SsoConnectorRadio({ data: { providerName, logo, logoDark, description }
       />
       <div className={styles.content}>
         <div className={classNames(styles.name)}>
-          <span>{providerName}</span>
+          <span>{name}</span>
         </div>
         <div className={styles.description}>
           <span>{description}</span>

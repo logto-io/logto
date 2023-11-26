@@ -61,6 +61,9 @@ export const oktaSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OKTA> 
   description: {
     en: 'This connector is used to connect with Okta Single Sign-On.',
   },
+  name: {
+    en: 'Okta',
+  },
   configGuard: basicOidcConnectorConfigGuard,
   constructor: OktaSsoConnector,
 };

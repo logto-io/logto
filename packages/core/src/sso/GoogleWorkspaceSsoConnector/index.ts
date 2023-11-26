@@ -55,6 +55,9 @@ export const googleWorkSpaceSsoConnectorFactory: SingleSignOnFactory<SsoProvider
     description: {
       en: 'This connector is used to connect with Google Workspace Single Sign-On.',
     },
+    name: {
+      en: 'Google Workspace',
+    },
     configGuard: googleWorkspaceSsoConnectorConfigGuard,
     constructor: GoogleWorkspaceSsoConnector,
   };

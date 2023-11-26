@@ -18,7 +18,7 @@ export const parseFactoryDetail = (
   factory: SingleSignOnFactory<SsoProviderName>,
   locale: string
 ) => {
-  const { providerName, logo, logoDark, description } = factory;
+  const { providerName, logo, logoDark, description, name } = factory;
 
   return {
     providerName,
@@ -26,6 +26,8 @@ export const parseFactoryDetail = (
     logoDark,
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
     description: (isKeyOfI18nPhrases(locale, description) && description[locale]) || description.en,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
+    name: (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en,
   };
 };
 
@@ -52,11 +54,12 @@ export const parseConnectorConfig = (providerName: SsoProviderName, config: Json
 
 export const fetchConnectorProviderDetails = async (
   connector: SupportedSsoConnector,
-  tenantId: string
+  tenantId: string,
+  locale: string
 ): Promise<SsoConnectorWithProviderConfig> => {
   const { providerName } = connector;
 
-  const { logo, logoDark, constructor } = ssoConnectorFactories[providerName];
+  const { logo, logoDark, constructor, name } = ssoConnectorFactories[providerName];
 
   /* 
     Safely fetch and parse the detailed connector config from provider. 
@@ -69,6 +72,8 @@ export const fetchConnectorProviderDetails = async (
 
   return {
     ...connector,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- falsy value expected
+    name: (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en,
     providerLogo: logo,
     providerLogoDark: logoDark,
     providerConfig,

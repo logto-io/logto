@@ -132,7 +132,9 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       // Fetch provider details for each connector
       const connectorsWithProviderDetails = await Promise.all(
-        connectors.map(async (connector) => fetchConnectorProviderDetails(connector, tenantId))
+        connectors.map(async (connector) =>
+          fetchConnectorProviderDetails(connector, tenantId, ctx.locale)
+        )
       );
 
       ctx.body = connectorsWithProviderDetails;
@@ -150,12 +152,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       status: [200, 404],
     }),
     async (ctx, next) => {
-      const { id } = ctx.guard.params;
+      const {
+        guard: {
+          params: { id },
+        },
+        locale,
+      } = ctx;
 
       const connector = await getSsoConnectorById(id);
 
       // Fetch provider details for the connector
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(
+        connector,
+        tenantId,
+        locale
+      );
 
       ctx.body = connectorWithProviderDetails;
 
@@ -189,8 +200,13 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { id } = ctx.guard.params;
-      const { body } = ctx.guard;
+      const {
+        guard: {
+          body,
+          params: { id },
+        },
+        locale,
+      } = ctx;
 
       const originalConnector = await getSsoConnectorById(id);
       const { providerName } = originalConnector;
@@ -219,7 +235,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         new RequestError({ code: 'connector.not_found', status: 404 })
       );
 
-      const connectorWithProviderDetails = await fetchConnectorProviderDetails(connector, tenantId);
+      const connectorWithProviderDetails = await fetchConnectorProviderDetails(
+        connector,
+        tenantId,
+        locale
+      );
 
       ctx.body = connectorWithProviderDetails;
 
