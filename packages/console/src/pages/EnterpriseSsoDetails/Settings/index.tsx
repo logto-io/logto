@@ -25,7 +25,7 @@ import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
 import LogosUploader from './LogosUploader';
-import MultiInput, { type Option as MultiInputOption } from './MultiInput';
+import MultiInput, { type Option as MultiInputOption, domainRegExp } from './MultiInput';
 import * as styles from './index.module.scss';
 
 type DataType = Pick<
@@ -46,6 +46,7 @@ export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> & {
 
 const duplicatedDomainsErrorCode = 'single_sign_on.duplicated_domains';
 const forbiddenDomainsErrorCode = 'single_sign_on.forbidden_domains';
+const invalidDomainFormatErrorCode = 'single_sign_on.invalid_domain_format';
 
 const dataToFormParser = (data: DataType) => {
   const { branding, connectorName, domains, syncProfile } = data;
@@ -163,15 +164,23 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
                   onChange={(values) => {
                     const { duplicatedDomains, forbiddenDomains } =
                       findDuplicatedOrBlockedEmailDomains(values.map((domain) => domain.value));
+                    const isAnyDomainInvalid = values.some(
+                      ({ value }) => !domainRegExp.test(value)
+                    );
 
                     // Show error message and update the inputs' status for error display.
-                    if (duplicatedDomains.size > 0 || forbiddenDomains.size > 0) {
+                    if (
+                      duplicatedDomains.size > 0 ||
+                      forbiddenDomains.size > 0 ||
+                      isAnyDomainInvalid
+                    ) {
                       onChange(
                         values.map(({ status, ...rest }) => ({
                           ...rest,
                           ...conditional(
                             (duplicatedDomains.has(rest.value) ||
-                              forbiddenDomains.has(rest.value)) && {
+                              forbiddenDomains.has(rest.value) ||
+                              !domainRegExp.test(rest.value)) && {
                               status: 'info',
                             }
                           ),
@@ -187,6 +196,10 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
                           conditionalString(
                             forbiddenDomains.size > 0 &&
                               globalTranslate(`errors:${forbiddenDomainsErrorCode}`)
+                          ),
+                          conditionalString(
+                            isAnyDomainInvalid &&
+                              globalTranslate(`errors:${invalidDomainFormatErrorCode}`)
                           )
                         ).join(' '),
                       });

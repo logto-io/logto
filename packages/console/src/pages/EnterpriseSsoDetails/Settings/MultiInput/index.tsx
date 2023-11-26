@@ -2,7 +2,7 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
@@ -37,7 +37,7 @@ type Props = {
 
 // RegExp to domain string.
 // eslint-disable-next-line prefer-regex-literals
-const domainRegExp = new RegExp('\\S+[\\.]{1}\\S+');
+export const domainRegExp = new RegExp('\\S+[\\.]{1}\\S+');
 
 function MultiInput({ className, values, onChange, error, placeholder }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -45,12 +45,15 @@ function MultiInput({ className, values, onChange, error, placeholder }: Props) 
   const [currentValue, setCurrentValue] = useState('');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const isCurrentValueValidDomain = useMemo(() => {
-    return domainRegExp.test(currentValue);
-  }, [currentValue]);
-
   const handleAdd = (value: string) => {
-    const newValues = [...values, { value, id: generateStandardShortId() }];
+    const newValues: Option[] = [
+      ...values,
+      {
+        value,
+        id: generateStandardShortId(),
+        ...conditional(!domainRegExp.test(value) && { status: 'info' }),
+      },
+    ];
     onChange(newValues);
     setCurrentValue('');
     inputRef.current?.focus();
@@ -123,13 +126,9 @@ function MultiInput({ className, values, onChange, error, placeholder }: Props) 
             }
             inputRef.current?.focus();
           }
-          if (event.key === 'Space') {
-            // Do not react to "Space", since a valid domain does not contain spaces.
-            event.preventDefault();
-          }
-          if (event.key === 'Enter') {
+          if (event.key === ' ' || event.code === 'Space' || event.key === 'Enter') {
             // Focusing on input
-            if (isCurrentValueValidDomain && document.activeElement === inputRef.current) {
+            if (currentValue !== '' && document.activeElement === inputRef.current) {
               handleAdd(currentValue);
             }
             // Do not react to "Enter"
@@ -144,6 +143,9 @@ function MultiInput({ className, values, onChange, error, placeholder }: Props) 
           inputRef.current?.focus();
         }}
         onBlur={() => {
+          if (currentValue !== '') {
+            handleAdd(currentValue);
+          }
           setFocusedValueId(null);
         }}
       />
