@@ -18,7 +18,9 @@ create table sso_connectors (
   sync_profile boolean not null default FALSE,
   /** When the SSO connector was created. */
   created_at timestamptz not null default(now()),
-  primary key (id)
+  primary key (id),
+  constraint sso_connectors__connector_name__unique
+    unique (tenant_id, connector_name)
 );
 
 create index sso_connectors__id
