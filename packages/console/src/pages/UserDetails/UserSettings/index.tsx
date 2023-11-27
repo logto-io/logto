@@ -1,5 +1,6 @@
 import { emailRegEx, usernameRegEx } from '@logto/core-kit';
 import type { User } from '@logto/schemas';
+import { parsePhoneNumber } from '@logto/shared/universal';
 import { trySafe } from '@silverhand/essentials';
 import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import { useForm, useController } from 'react-hook-form';
@@ -18,7 +19,6 @@ import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 import { safeParseJsonObject } from '@/utils/json';
-import { parsePhoneNumber } from '@/utils/phone';
 import { uriValidator } from '@/utils/validator';
 
 import { type UserDetailsForm, type UserDetailsOutletContext } from '../types';

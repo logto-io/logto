@@ -1,4 +1,5 @@
 import type { User } from '@logto/schemas';
+import { getUserDisplayName, formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import DefaultAvatar from '@/assets/images/default-avatar.svg';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import { Tooltip } from '@/ds-components/Tip';
-import { formatToInternationalPhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
 
@@ -84,7 +84,7 @@ function UserAvatar({ className, size = 'medium', user, hasTooltip = false }: Pr
     );
   }
 
-  const nameToDisplay = (name ?? username ?? primaryEmail)?.toLocaleUpperCase();
+  const nameToDisplay = getUserDisplayName({ name, username, primaryEmail })?.toLocaleUpperCase();
 
   const color = conditional(
     nameToDisplay &&

@@ -63,6 +63,7 @@
     "@silverhand/essentials": "^2.8.4",
     "chalk": "^5.0.0",
     "find-up": "^6.3.0",
+    "libphonenumber-js": "^1.9.49",
     "nanoid": "^5.0.1",
     "slonik": "^30.0.0"
   }

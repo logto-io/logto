@@ -1,6 +1,7 @@
 import { ServiceConnector } from '@logto/connector-kit';
 import { emailRegEx, phoneInputRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
+import { parsePhoneNumber } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { useForm, useFormContext } from 'react-hook-form';
@@ -13,7 +14,6 @@ import { Tooltip } from '@/ds-components/Tip';
 import useApi from '@/hooks/use-api';
 import { onKeyDownHandler } from '@/utils/a11y';
 import { trySubmitSafe } from '@/utils/form';
-import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
 
