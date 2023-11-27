@@ -127,7 +127,7 @@ describe('IdentifierSignInForm', () => {
           await waitFor(() => {
             expect(sendVerificationCodeApi).not.toBeCalled();
             expect(mockedNavigate).toBeCalledWith(
-              { pathname: 'password' },
+              { pathname: '/sign-in/password' },
               { state: { identifier: SignInIdentifier.Username, value } }
             );
           });
@@ -145,7 +145,7 @@ describe('IdentifierSignInForm', () => {
           await waitFor(() => {
             expect(sendVerificationCodeApi).not.toBeCalled();
             expect(mockedNavigate).toBeCalledWith(
-              { pathname: 'password' },
+              { pathname: '/sign-in/password' },
               {
                 state: {
                   identifier,
@@ -199,7 +199,7 @@ describe('IdentifierSignInForm', () => {
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).not.toBeCalled();
         expect(mockedNavigate).toBeCalledWith(
-          { pathname: 'password' },
+          { pathname: '/sign-in/password' },
           { state: { identifier: SignInIdentifier.Username, value: username } }
         );
       });
@@ -224,7 +224,7 @@ describe('IdentifierSignInForm', () => {
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).not.toBeCalled();
         expect(mockedNavigate).toBeCalledWith(
-          { pathname: 'password' },
+          { pathname: '/sign-in/password' },
           { state: { identifier: SignInIdentifier.Email, value: email } }
         );
       });
@@ -254,7 +254,7 @@ describe('IdentifierSignInForm', () => {
       await waitFor(() => {
         expect(getSingleSignOnConnectorsMock).toBeCalled();
         expect(mockedNavigate).toBeCalledWith(
-          { pathname: 'password' },
+          { pathname: '/sign-in/password' },
           { state: { identifier: SignInIdentifier.Email, value: email } }
         );
       });

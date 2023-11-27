@@ -17,7 +17,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
     (identifier: SignInIdentifier, value: string) => {
       navigate(
         {
-          pathname: 'password',
+          pathname: `/${UserFlow.SignIn}/password`,
         },
         { state: { identifier, value } }
       );
