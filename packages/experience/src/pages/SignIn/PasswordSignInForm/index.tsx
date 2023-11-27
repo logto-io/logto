@@ -55,13 +55,13 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier: { type, value }, password }) => {
-        if (showSingleSignOn) {
-          navigateToSingleSignOn();
+      await handleSubmit(async ({ identifier: { type, value }, password }) => {
+        if (!type) {
           return;
         }
 
-        if (!type) {
+        if (showSingleSignOn) {
+          await navigateToSingleSignOn();
           return;
         }
 
