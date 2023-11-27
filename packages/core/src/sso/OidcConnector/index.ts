@@ -3,7 +3,11 @@ import { generateStandardId } from '@logto/shared/universal';
 import { assert, conditional } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
-import { type BaseOidcConfig, type BasicOidcConnectorConfig } from '../types/oidc.js';
+import {
+  type BaseOidcConfig,
+  type BasicOidcConnectorConfig,
+  scopePostProcessor,
+} from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
@@ -30,13 +34,14 @@ class OidcConnector {
 
   /* Fetch the full-list of OIDC config from the issuer. Throws error if config is invalid */
   async getOidcConfig(): Promise<BaseOidcConfig> {
-    const { issuer } = this.config;
+    const { issuer, scope } = this.config;
 
     const oidcConfig = await fetchOidcConfig(issuer);
 
     return {
       ...this.config,
       ...oidcConfig,
+      scope: scopePostProcessor(scope),
     };
   }
 
