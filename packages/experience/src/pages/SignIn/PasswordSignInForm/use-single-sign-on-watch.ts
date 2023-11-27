@@ -7,15 +7,18 @@ import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleS
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
 import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
+import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { validateEmail } from '@/utils/form';
 
 import type { FormState } from './index';
 
 const useSingleSignOnWatch = (control: Control<FormState>) => {
   const navigate = useNavigate();
-  const { setEmail, setSsoConnectors, availableSsoConnectorsMap } = useContext(SingleSignOnContext);
+  const { setEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
+    useContext(SingleSignOnContext);
   const [showSingleSignOn, setShowSingleSignOn] = useState(false);
   const request = useApi(getSingleSignOnConnectors);
+  const singleSignOn = useSingleSignOn();
 
   const isSsoEnabled = availableSsoConnectorsMap.size > 0;
 
@@ -51,9 +54,28 @@ const useSingleSignOnWatch = (control: Control<FormState>) => {
     [availableSsoConnectorsMap, request, setEmail, setSsoConnectors]
   );
 
-  const navigateToSingleSignOn = useCallback(() => {
+  // Reset the ssoContext
+  useEffect(() => {
+    if (!showSingleSignOn) {
+      setSsoConnectors([]);
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      setEmail(undefined);
+    }
+  }, [setEmail, setSsoConnectors, showSingleSignOn]);
+
+  const navigateToSingleSignOn = useCallback(async () => {
+    if (!showSingleSignOn) {
+      return;
+    }
+
+    // If there is only one connector, we can directly invoke the SSO flow
+    if (ssoConnectors.length === 1 && ssoConnectors[0]?.id) {
+      await singleSignOn(ssoConnectors[0].id);
+      return;
+    }
+
     navigate(`/${singleSignOnPath}/connectors`);
-  }, [navigate]);
+  }, [navigate, showSingleSignOn, singleSignOn, ssoConnectors]);
 
   useEffect(() => {
     if (!isSsoEnabled) {

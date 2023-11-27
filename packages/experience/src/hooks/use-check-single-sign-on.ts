@@ -9,12 +9,15 @@ import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 
+import useSingleSignOn from './use-single-sign-on';
+
 const useCheckSingleSignOn = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const request = useApi(getSingleSignOnConnectors);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const { setEmail, setSsoConnectors, availableSsoConnectorsMap } = useContext(SingleSignOnContext);
+  const singleSignOn = useSingleSignOn();
 
   const handleError = useErrorHandler();
 
@@ -59,6 +62,12 @@ const useCheckSingleSignOn = () => {
       setSsoConnectors(connectors);
       setEmail(email);
 
+      // If there is only one connector, we can directly invoke the SSO flow
+      if (connectors.length === 1 && connectors[0]?.id) {
+        await singleSignOn(connectors[0].id);
+        return true;
+      }
+
       navigate(`/${singleSignOnPath}/connectors`);
       return true;
     },
@@ -70,6 +79,7 @@ const useCheckSingleSignOn = () => {
       request,
       setEmail,
       setSsoConnectors,
+      singleSignOn,
       t,
     ]
   );

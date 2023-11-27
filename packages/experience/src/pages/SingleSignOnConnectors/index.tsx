@@ -6,10 +6,10 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
+import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { getLogoUrl } from '@/utils/logo';
 
 import * as styles from './index.module.scss';
-import useSingleSignOn from './use-single-sign-on';
 
 const SingleSignOnConnectors = () => {
   const { theme } = useContext(PageContext);
