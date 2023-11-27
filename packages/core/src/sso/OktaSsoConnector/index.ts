@@ -12,6 +12,8 @@ import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
 
+import { logoBase64, logoDarkBase64 } from './consts.js';
+
 export class OktaSsoConnector extends OidcSsoConnector {
   /**
    * Override the getUserInfo method from the OidcSsoConnector class
@@ -54,7 +56,8 @@ export class OktaSsoConnector extends OidcSsoConnector {
 
 export const oktaSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OKTA> = {
   providerName: SsoProviderName.OKTA,
-  logo: 'https://logtodev.blob.core.windows.net/public-blobs/admin/r2a6qctI3lmG/2023/11/22/8bvg68e7/OKTA.D.png',
+  logo: logoBase64,
+  logoDark: logoDarkBase64,
   description: {
     en: 'This connector is used to connect with Okta Single Sign-On.',
   },

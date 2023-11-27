@@ -35,6 +35,7 @@ type SingleSignOnConnectorConfig = {
 export type SingleSignOnFactory<T extends SsoProviderName> = {
   providerName: T;
   logo: string;
+  logoDark: string;
   description: I18nPhrases;
   configGuard: SingleSignOnConnectorConfig[T];
   constructor: SingleSignOnConstructor[T];

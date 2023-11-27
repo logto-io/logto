@@ -7,18 +7,18 @@
 .container {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  background-color: var(--color-hover);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  border-radius: _.unit(2);
+
+  > img {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .logo {
-  width: 40px;
-  height: 40px;
   flex-shrink: 0;
+  width: 28px;
+  height: 28px;
 }
 
 .domains {

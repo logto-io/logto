@@ -1,5 +1,6 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { Theme, SsoProviderName } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
+import { pick } from '@silverhand/essentials';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,13 +17,13 @@ import PageMeta from '@/components/PageMeta';
 import { EnterpriseSsoDetailsTabs } from '@/consts';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
-import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
+import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
 import {
   type SsoConnectorWithProviderConfigWithGeneric,
   type ParsedSsoIdentityProviderConfig,
@@ -119,15 +120,10 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
         <>
           <DetailsPageHeader
             icon={
-              <ImageWithErrorFallback
+              <SsoConnectorLogo
                 className={styles.logo}
                 containerClassName={styles.container}
-                alt="logo"
-                src={
-                  (theme === Theme.Dark && ssoConnector.branding.darkLogo
-                    ? ssoConnector.branding.darkLogo
-                    : ssoConnector.branding.logo) ?? ssoConnector.providerLogo
-                }
+                data={pick(ssoConnector, 'providerLogo', 'providerLogoDark', 'branding')}
               />
             }
             title={ssoConnector.connectorName}

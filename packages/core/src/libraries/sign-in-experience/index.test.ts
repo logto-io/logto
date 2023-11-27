@@ -161,7 +161,7 @@ describe('getFullSignInExperience()', () => {
           id: wellConfiguredSsoConnector.id,
           connectorName: wellConfiguredSsoConnector.connectorName,
           logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
-          darkLogo: undefined,
+          darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
         },
       ],
       isDevelopmentTenant: false,
@@ -185,7 +185,7 @@ describe('get sso connectors', () => {
         id: wellConfiguredSsoConnector.id,
         connectorName: wellConfiguredSsoConnector.connectorName,
         logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
-        darkLogo: undefined,
+        darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
       },
     ]);
   });

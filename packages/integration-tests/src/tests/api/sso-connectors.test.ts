@@ -112,6 +112,7 @@ describe('get sso-connectors', () => {
 
     expect(connector).toBeDefined();
     expect(connector?.providerLogo).toBeDefined();
+    expect(connector?.providerLogoDark).toBeDefined();
 
     // Empty config object is a valid SAML config.
     if (providerName === 'OIDC') {

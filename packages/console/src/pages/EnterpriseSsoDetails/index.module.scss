@@ -10,16 +10,15 @@
 .container {
   width: 60px;
   height: 60px;
-  border-radius: 12px;
-  background-color: var(--color-hover);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  border-radius: _.unit(3);
+
+  > img {
+    width: 42px;
+    height: 42px;
+  }
 }
 
 .logo {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
 }

@@ -8,12 +8,6 @@
   padding: _.unit(6) _.unit(8);
   gap: _.unit(6);
 
-  .icon {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-  }
-
   .copyId {
     flex: 1;
   }
@@ -55,4 +49,10 @@
       }
     }
   }
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
 }
