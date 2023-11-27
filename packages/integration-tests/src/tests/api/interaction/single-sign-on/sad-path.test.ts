@@ -102,7 +102,7 @@ describe('Single Sign On Sad Path', () => {
       await expectRejects(
         postSamlAssertion({ connectorId, RelayState, SAMLResponse: samlAssertion }),
         {
-          code: 'connector.general',
+          code: 'connector.authorization_failed',
           statusCode: 400,
         }
       );

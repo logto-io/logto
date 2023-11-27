@@ -122,6 +122,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
         providerName,
         connectorName,
         ...conditional(config && { config: parsedConfig }),
+        ...conditional(domains && { domains }),
         ...rest,
       });
 
@@ -239,6 +240,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const connector = hasValidUpdate
         ? await ssoConnectors.updateById(id, {
             ...conditional(parsedConfig && { config: parsedConfig }),
+            ...conditional(domains && { domains }),
             ...rest,
           })
         : originalConnector;
