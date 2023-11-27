@@ -103,7 +103,7 @@ describe('Single Sign On Sad Path', () => {
         postSamlAssertion({ connectorId, RelayState, SAMLResponse: samlAssertion }),
         {
           code: 'connector.authorization_failed',
-          statusCode: 400,
+          statusCode: 401,
         }
       );
     });
