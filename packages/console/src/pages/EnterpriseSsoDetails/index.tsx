@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { SsoProviderName } from '@logto/schemas';
+import { type SsoProviderName } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -25,10 +25,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 
 import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
-import {
-  type SsoConnectorWithProviderConfigWithGeneric,
-  type ParsedSsoIdentityProviderConfig,
-} from '../EnterpriseSso/types';
+import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso/types';
 
 import Connection from './Connection';
 import Settings from './Settings';
@@ -58,19 +55,6 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     ssoConnectorId && `api/sso-connectors/${ssoConnectorId}`,
     { keepPreviousData: true }
   );
-
-  const inUse =
-    ssoConnector &&
-    ([SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
-      ssoConnector.providerName
-    )
-      ? Boolean(ssoConnector.providerConfig)
-      : Boolean(
-          ssoConnector.providerConfig &&
-            // eslint-disable-next-line no-restricted-syntax
-            (ssoConnector.providerConfig as ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>)
-              .identityProvider
-        ));
 
   const isLoading = isSsoConnectorLoading || isUserAssetServiceLoading;
 
@@ -132,12 +116,6 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             }
             title={ssoConnector.connectorName}
             primaryTag={ssoConnector.name}
-            statusTag={{
-              status: inUse ? 'success' : 'error',
-              text: inUse
-                ? 'enterprise_sso.col_status_in_use'
-                : 'enterprise_sso.col_status_invalid',
-            }}
             identifier={{ name: 'ID', value: ssoConnector.id }}
             additionalActionButton={{
               title: 'enterprise_sso_details.check_readme',

@@ -7,9 +7,7 @@ const enterprise_sso = {
   col_connector_name: 'Имя коннектора',
   col_type: 'Тип',
   col_email_domain: 'Домен электронной почты',
-  col_status: 'Статус',
-  col_status_in_use: 'Используется',
-  col_status_invalid: 'Недопустимый',
+
   placeholder_title: 'Коннектор предприятия',
   placeholder_description:
     'Logto предоставил множество встроенных поставщиков идентификации предприятия для подключения, тем временем вы можете создать своего с использованием стандартных протоколов.',
