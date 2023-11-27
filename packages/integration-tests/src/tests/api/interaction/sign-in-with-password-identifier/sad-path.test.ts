@@ -10,7 +10,12 @@ import { clearSsoConnectors } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateEmail, generateName, generatePassword } from '#src/utils.js';
+import {
+  generateEmail,
+  generateName,
+  generatePassword,
+  generateSsoConnectorName,
+} from '#src/utils.js';
 
 describe('Sign-in flow sad path using password identifiers', () => {
   beforeAll(async () => {
@@ -191,6 +196,7 @@ describe('Sign-in flow sad path using password identifiers', () => {
 
     await createSsoConnector({
       ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
       domains: ['sso-sad-path.io'],
     });
 

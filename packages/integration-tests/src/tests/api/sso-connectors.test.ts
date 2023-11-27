@@ -13,6 +13,7 @@ import {
   deleteSsoConnectorById,
   patchSsoConnectorById,
 } from '#src/api/sso-connector.js';
+import { expectRejects } from '#src/helpers/index.js';
 
 describe('sso-connector library', () => {
   it('should return sso-connector-factories', async () => {
@@ -55,6 +56,23 @@ describe('post sso-connectors', () => {
         connectorName: 'test',
       })
     ).rejects.toThrow(HTTPError);
+  });
+
+  it('should throw error when connectorName is not unique', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'test connector name',
+    });
+
+    await expectRejects(
+      createSsoConnector({
+        providerName: 'OIDC',
+        connectorName: 'test connector name',
+      }),
+      { code: 'single_sign_on.duplicate_connector_name', statusCode: 400 }
+    );
+
+    await deleteSsoConnectorById(id);
   });
 
   it.each(providerNames)('should create a new sso connector', async (providerName) => {
@@ -172,6 +190,28 @@ describe('patch sso-connector by id', () => {
     await expect(patchSsoConnectorById('invalid-id', { connectorName: 'foo' })).rejects.toThrow(
       HTTPError
     );
+  });
+
+  it('should throw error if connector name is not unique', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'test connector name',
+    });
+
+    const { id: id2 } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'test connector name 2',
+    });
+
+    await expectRejects(
+      patchSsoConnectorById(id2, {
+        connectorName: 'test connector name',
+      }),
+      { code: 'single_sign_on.duplicate_connector_name', statusCode: 400 }
+    );
+
+    await deleteSsoConnectorById(id);
+    await deleteSsoConnectorById(id2);
   });
 
   it.each(providerNames)('should patch sso connector without config', async (providerName) => {

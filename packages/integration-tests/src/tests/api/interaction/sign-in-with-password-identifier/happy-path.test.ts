@@ -21,6 +21,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile } from '#src/helpers/user.js';
+import { generateSsoConnectorName } from '#src/utils.js';
 
 describe('Sign-in flow using password identifiers', () => {
   beforeAll(async () => {
@@ -79,7 +80,10 @@ describe('Sign-in flow using password identifiers', () => {
     const client = await initClient();
 
     // Create a new OIDC SSO connector with email domain 'example.com', it should not block the sign-in flow of email logto.io
-    await createSsoConnector(newOidcSsoConnectorPayload);
+    await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
+    });
 
     await client.successSend(putInteraction, {
       event: InteractionEvent.SignIn,

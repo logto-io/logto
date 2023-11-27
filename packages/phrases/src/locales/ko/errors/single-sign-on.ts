@@ -3,6 +3,8 @@ const single_sign_on = {
   duplicated_domains: '중복된 도메인이 있습니다.',
   /** UNTRANSLATED */
   invalid_domain_format: 'Invalid domain format.',
+  /** UNTRANSLATED */
+  duplicate_connector_name: 'Connector name already exists. Please choose a different name.',
 };
 
 export default Object.freeze(single_sign_on);

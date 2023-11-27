@@ -4,6 +4,7 @@ import { HTTPError } from 'got';
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
+import { generateSsoConnectorName } from '#src/utils.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -57,7 +58,10 @@ describe('.well-known api', () => {
 
   describe('sso connectors in sign-in experience', () => {
     it('should get the sso connectors in sign-in experience', async () => {
-      const { id, connectorName } = await createSsoConnector(newOidcSsoConnectorPayload);
+      const { id } = await createSsoConnector({
+        ...newOidcSsoConnectorPayload,
+        connectorName: generateSsoConnectorName(),
+      });
 
       const signInExperience = await api
         .get('.well-known/sign-in-exp')
@@ -71,7 +75,7 @@ describe('.well-known api', () => {
 
       expect(newCreatedConnector).toMatchObject({
         id,
-        connectorName,
+        connectorName: newOidcSsoConnectorPayload.branding.displayName,
         logo: newOidcSsoConnectorPayload.branding.logo,
         darkLogo: newOidcSsoConnectorPayload.branding.darkLogo,
       });
@@ -82,6 +86,7 @@ describe('.well-known api', () => {
     it('should filter out the sso connectors with invalid config', async () => {
       const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
+        connectorName: generateSsoConnectorName(),
         config: undefined,
       });
 
@@ -99,6 +104,7 @@ describe('.well-known api', () => {
     it('should filter out the sso connectors with empty domains', async () => {
       const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
+        connectorName: generateSsoConnectorName(),
         domains: [],
       });
 

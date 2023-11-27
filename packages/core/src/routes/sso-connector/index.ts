@@ -16,6 +16,7 @@ import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso
 import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { type AuthedRouter, type RouterInitArgs } from '../types.js';
 
@@ -108,6 +109,12 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
 
       // Validate the connector config if it's provided
       const parsedConfig = config && parseConnectorConfig(providerName, config);
+
+      // Validate the connector name is unique
+      if (connectorName) {
+        const duplicateConnector = await ssoConnectors.findByConnectorName(connectorName);
+        assertThat(!duplicateConnector, 'single_sign_on.duplicate_connector_name');
+      }
 
       const connectorId = generateStandardShortId();
 
@@ -222,6 +229,12 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       // Validate the connector domains if it's provided
       if (domains) {
         validateConnectorDomains(domains);
+      }
+
+      // Validate the connector name is unique
+      if (rest.connectorName) {
+        const duplicateConnector = await ssoConnectors.findByConnectorName(rest.connectorName);
+        assertThat(!duplicateConnector, 'single_sign_on.duplicate_connector_name');
       }
 
       // Validate the connector config if it's provided

@@ -20,7 +20,12 @@ import {
 import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateEmail, generatePassword, generatePhone } from '#src/utils.js';
+import {
+  generateEmail,
+  generatePassword,
+  generatePhone,
+  generateSsoConnectorName,
+} from '#src/utils.js';
 
 describe('Sign-in flow sad path using verification-code identifiers', () => {
   beforeAll(async () => {
@@ -220,6 +225,7 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
 
     await createSsoConnector({
       ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
       domains: ['sso-sad-path.io'],
     });
 
