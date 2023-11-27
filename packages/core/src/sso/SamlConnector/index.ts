@@ -21,10 +21,10 @@ import {
   parseXmlMetadata,
   fetchSamlMetadataXml,
   handleSamlAssertion,
-  attributeMappingPostProcessor,
   getExtendedUserInfoFromRawUserProfile,
   buildSpEntityId,
   buildAssertionConsumerServiceUrl,
+  attributeMappingPostProcessor,
 } from './utils.js';
 
 /**
@@ -127,6 +127,7 @@ class SamlConnector {
     const rawUserProfile = rawProfileParseResult.data;
 
     const profileMap = attributeMappingPostProcessor(this.idpConfig.attributeMapping);
+
     return getExtendedUserInfoFromRawUserProfile(rawUserProfile, profileMap);
   }
 

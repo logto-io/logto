@@ -1,5 +1,6 @@
 import * as validator from '@authenio/samlify-node-xmllint';
-import { type Optional, conditional, appendPath } from '@silverhand/essentials';
+import { type Optional, appendPath } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
 import * as saml from 'samlify';
 import { z } from 'zod';
@@ -13,11 +14,11 @@ import {
 } from '../types/error.js';
 import {
   defaultAttributeMapping,
-  type CustomizableAttributeMap,
-  type AttributeMap,
   extendedSocialUserInfoGuard,
+  type AttributeMap,
   type ExtendedSocialUserInfo,
   type SamlIdentityProviderMetadata,
+  type CustomizableAttributeMap,
   samlIdentityProviderMetadataGuard,
 } from '../types/saml.js';
 
@@ -107,15 +108,16 @@ export const fetchSamlMetadataXml = async (metadataUrl: string): Promise<Optiona
  * Get the user info from the raw user profile extracted from IdP SAML assertion.
  *
  * @param rawUserProfile The raw user profile extracted from IdP SAML assertion.
- * @param keyMapping The full attribute mapping with default values.
+ * @param attributeMapping The full attribute mapping with default values.
+ *
  * @returns The mapped social user info.
  */
 export const getExtendedUserInfoFromRawUserProfile = (
   rawUserProfile: Record<string, unknown>,
-  keyMapping: AttributeMap
+  attributeMapping: AttributeMap
 ): ExtendedSocialUserInfo => {
   const keyMap = new Map(
-    Object.entries(keyMapping).map(([destination, source]) => [source, destination])
+    Object.entries(attributeMapping).map(([destination, source]) => [source, destination])
   );
 
   const mappedUserProfile = Object.fromEntries(
@@ -169,7 +171,8 @@ export const handleSamlAssertion = async (
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return {
       ...(Boolean(assertionResult.extract.nameID) && {
-        id: assertionResult.extract.nameID,
+        // Usually identity provider DOES NOT allow the configuration of `nameID` claim name.
+        nameID: assertionResult.extract.nameID,
       }),
       ...assertionResult.extract.attributes,
     };

@@ -49,7 +49,7 @@ const enterprise_sso = {
     description:
       '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
     /** UNTRANSLATED */
-    col_sp_claims: 'Claim name of Logto',
+    col_sp_claims: 'Value of service provider (Logto)',
     /** UNTRANSLATED */
     col_idp_claims: 'Claim name of identity provider',
     /** UNTRANSLATED */

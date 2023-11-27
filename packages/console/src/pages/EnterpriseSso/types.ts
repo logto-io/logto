@@ -5,21 +5,15 @@
  */
 import { type SsoProviderName, type SsoConnectorWithProviderConfig } from '@logto/schemas';
 
-export type AttributeMapping = {
+type AttributeMapping = {
   id?: string;
   email?: string;
-  phone?: string;
   name?: string;
-  avatar?: string;
 };
 
-export const attributeKeys = Object.freeze([
-  'id',
-  'email',
-  'phone',
-  'name',
-  'avatar',
-]) satisfies ReadonlyArray<keyof AttributeMapping>;
+export const attributeKeys = Object.freeze(['id', 'email', 'name']) satisfies ReadonlyArray<
+  keyof AttributeMapping
+>;
 
 export type SamlGuideFormType = {
   metadataUrl?: string;
@@ -60,6 +54,7 @@ export type ParsedSsoIdentityProviderConfig<T extends SsoProviderName> =
       }
     : T extends SsoProviderName.SAML
     ? {
+        defaultAttributeMapping: AttributeMapping;
         serviceProvider: {
           entityId: string;
           assertionConsumerServiceUrl: string;

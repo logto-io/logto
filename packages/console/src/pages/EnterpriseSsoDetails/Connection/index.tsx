@@ -132,8 +132,11 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
           <FormCard
             title="enterprise_sso_details.attribute_mapping_title"
             description="enterprise_sso_details.attribute_mapping_description"
+            descriptionInterpolation={{
+              name: ssoConnectorName,
+            }}
           >
-            <SamlAttributeMapping />
+            <SamlAttributeMapping providerConfig={providerConfig} />
           </FormCard>
         )}
       </DetailsForm>
