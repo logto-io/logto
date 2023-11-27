@@ -4,14 +4,9 @@ import { type JsonObject } from '@logto/schemas';
 export enum SsoConnectorErrorCodes {
   InvalidMetadata = 'invalid_metadata',
   InvalidConfig = 'invalid_config',
-  SessionNotFound = 'session_not_found',
-  InvalidResponse = 'invalid_response',
   AuthorizationFailed = 'authorization_failed',
+  InvalidResponse = 'invalid_response',
   InvalidRequestParameters = 'invalid_request_parameters',
-}
-
-export enum SsoConnectorSessionErrorCodes {
-  SessionNotFound = 'session_not_found',
 }
 
 export enum SsoConnectorConfigErrorCodes {
@@ -23,7 +18,6 @@ export enum SsoConnectorConfigErrorCodes {
 const connectorErrorCodeMap: { [key in SsoConnectorErrorCodes]: ConnectorErrorCodes } = {
   [SsoConnectorErrorCodes.InvalidMetadata]: ConnectorErrorCodes.InvalidMetadata,
   [SsoConnectorErrorCodes.InvalidConfig]: ConnectorErrorCodes.InvalidConfig,
-  [SsoConnectorErrorCodes.SessionNotFound]: ConnectorErrorCodes.NotImplemented,
   [SsoConnectorErrorCodes.InvalidResponse]: ConnectorErrorCodes.InvalidResponse,
   [SsoConnectorErrorCodes.InvalidRequestParameters]: ConnectorErrorCodes.InvalidRequestParameters,
   [SsoConnectorErrorCodes.AuthorizationFailed]: ConnectorErrorCodes.AuthorizationFailed,
@@ -59,19 +53,14 @@ export class SsoConnectorError extends ConnectorError {
   );
 
   constructor(
-    code: SsoConnectorErrorCodes.SessionNotFound,
-    data: { message: SsoConnectorSessionErrorCodes }
-  );
-
-  constructor(
     code: SsoConnectorErrorCodes.AuthorizationFailed,
     data: { message: string; response?: unknown; error?: unknown }
   );
 
-  constructor(code: SsoConnectorErrorCodes, data?: unknown) {
+  constructor(code: SsoConnectorErrorCodes, data?: Record<string, unknown>) {
     super(connectorErrorCodeMap[code], {
       ssoErrorCode: code,
-      details: data,
+      ...data,
     });
   }
 }

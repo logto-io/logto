@@ -1,15 +1,11 @@
 import { SsoProviderName } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import {
-  SsoConnectorError,
-  SsoConnectorErrorCodes,
-  SsoConnectorSessionErrorCodes,
-} from '../types/error.js';
 import { type SingleSignOn, type SingleSignOnConnectorData } from '../types/index.js';
 import { samlConnectorConfigGuard, type SamlMetadata } from '../types/saml.js';
 import {
@@ -95,12 +91,7 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
    * This method only asserts the userInfo is not null and directly return it.
    */
   async getUserInfo({ userInfo }: SingleSignOnConnectorSession) {
-    assertThat(
-      userInfo,
-      new SsoConnectorError(SsoConnectorErrorCodes.SessionNotFound, {
-        message: SsoConnectorSessionErrorCodes.SessionNotFound,
-      })
-    );
+    assertThat(userInfo, new RequestError('session.connector_session_not_found'));
 
     return userInfo;
   }
