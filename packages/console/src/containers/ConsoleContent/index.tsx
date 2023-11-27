@@ -121,11 +121,10 @@ function ConsoleContent() {
               <Route path="enterprise-sso">
                 <Route index element={<EnterpriseSsoConnectors />} />
                 <Route path="create" element={<EnterpriseSsoConnectors />} />
-                <Route path=":ssoConnectorId/guide" element={<EnterpriseSsoConnectors />} />
                 <Route path=":ssoConnectorId">
                   <Route
                     index
-                    element={<Navigate replace to={EnterpriseSsoDetailsTabs.Settings} />}
+                    element={<Navigate replace to={EnterpriseSsoDetailsTabs.Connection} />}
                   />
                   <Route path=":tab" element={<EnterpriseSsoConnectorDetails />} />
                 </Route>

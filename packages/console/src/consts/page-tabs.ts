@@ -42,6 +42,6 @@ export enum TenantSettingsTabs {
 }
 
 export enum EnterpriseSsoDetailsTabs {
-  Settings = 'settings',
   Connection = 'connection',
+  Experience = 'experience',
 }

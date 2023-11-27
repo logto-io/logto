@@ -8,7 +8,7 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
   /** UNTRANSLATED */
-  tab_settings: 'Settings',
+  tab_experience: 'Experience',
   /** UNTRANSLATED */
   tab_connection: 'Connection',
   /** UNTRANSLATED */

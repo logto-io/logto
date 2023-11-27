@@ -16,50 +16,39 @@ import ParsedConfigPreview from './ParsedConfigPreview';
 import * as styles from './index.module.scss';
 
 type Props = {
-  isGuidePage?: boolean;
   providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>;
   config?: SsoConnectorConfig<SsoProviderName.OIDC>;
   providerName: SsoProviderName;
 };
 
 // Do not show inline notification and parsed config preview if it is on guide page.
-function OidcMetadataForm({ isGuidePage, providerConfig, config, providerName }: Props) {
+function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     register,
     formState: { errors },
   } = useFormContext<OidcGuideFormType>();
 
-  const isFieldCheckRequired = !isGuidePage;
   const isConfigEmpty = !config || Object.keys(config).length === 0;
 
   return (
     <>
-      {isFieldCheckRequired && !providerConfig && isConfigEmpty && (
+      {!providerConfig && isConfigEmpty && (
         <InlineNotification severity="alert">
           {t('enterprise_sso_details.upload_oidc_idp_info_text')}
         </InlineNotification>
       )}
-      <FormField
-        isRequired={isFieldCheckRequired}
-        title="enterprise_sso.metadata.oidc.client_id_field_name"
-      >
-        <TextInput
-          {...register('clientId', { required: isFieldCheckRequired })}
-          error={Boolean(errors.clientId)}
-        />
+      <FormField isRequired title="enterprise_sso.metadata.oidc.client_id_field_name">
+        <TextInput {...register('clientId', { required: true })} error={Boolean(errors.clientId)} />
       </FormField>
-      <FormField
-        isRequired={isFieldCheckRequired}
-        title="enterprise_sso.metadata.oidc.client_secret_field_name"
-      >
+      <FormField isRequired title="enterprise_sso.metadata.oidc.client_secret_field_name">
         <TextInput
-          {...register('clientSecret', { required: isFieldCheckRequired })}
+          {...register('clientSecret', { required: true })}
           error={Boolean(errors.clientSecret)}
         />
       </FormField>
       <FormField
-        isRequired={isFieldCheckRequired && providerName !== SsoProviderName.GOOGLE_WORKSPACE}
+        isRequired={providerName !== SsoProviderName.GOOGLE_WORKSPACE}
         title="enterprise_sso.metadata.oidc.issuer_field_name"
       >
         {providerName === SsoProviderName.GOOGLE_WORKSPACE ? (
@@ -72,13 +61,12 @@ function OidcMetadataForm({ isGuidePage, providerConfig, config, providerName }:
         ) : (
           <TextInput
             {...register('issuer', {
-              required: isFieldCheckRequired,
+              required: true,
             })}
             error={Boolean(errors.issuer)}
           />
         )}
-        {isFieldCheckRequired &&
-          providerConfig &&
+        {providerConfig &&
           (config?.issuer ?? providerName === SsoProviderName.GOOGLE_WORKSPACE) && (
             <ParsedConfigPreview
               className={styles.oidcConfigPreview}

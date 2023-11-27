@@ -10,10 +10,6 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
-import BasicInfo from '@/pages/EnterpriseSso/Guide/BasicInfo';
-import OidcMetadataForm from '@/pages/EnterpriseSso/Guide/OidcMetadataForm';
-import SamlAttributeMapping from '@/pages/EnterpriseSso/Guide/SamlAttributeMapping';
-import SamlMetadataForm from '@/pages/EnterpriseSso/Guide/SamlMetadataForm';
 import {
   type SsoConnectorWithProviderConfigWithGeneric,
   type ParsedSsoIdentityProviderConfig,
@@ -22,6 +18,10 @@ import {
 } from '@/pages/EnterpriseSso/types';
 import { trySubmitSafe } from '@/utils/form';
 
+import BasicInfo from './BasicInfo';
+import OidcMetadataForm from './OidcMetadataForm';
+import SamlAttributeMapping from './SamlAttributeMapping';
+import SamlMetadataForm from './SamlMetadataForm';
 import * as styles from './index.module.scss';
 
 type Props<T extends SsoProviderName> = {
@@ -91,7 +91,6 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
           ) ? (
             // Can not infer the type by narrowing down the value of `providerName`, so we need to cast it.
             <OidcMetadataForm
-              isGuidePage={false}
               providerName={providerName}
               // eslint-disable-next-line no-restricted-syntax
               config={config as SsoConnectorConfig<SsoProviderName.OIDC>}
@@ -105,7 +104,6 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
             // Modify spacing between form fields and switch button of SAML metadata form.
             <div className={styles.samlMetadataForm}>
               <SamlMetadataForm
-                isGuidePage={false}
                 // eslint-disable-next-line no-restricted-syntax
                 config={config as SsoConnectorConfig<SsoProviderName.SAML>}
                 providerConfig={

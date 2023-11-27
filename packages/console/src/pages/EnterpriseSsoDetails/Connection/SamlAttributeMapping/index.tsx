@@ -1,12 +1,15 @@
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TextInput from '@/ds-components/TextInput';
 
-import { type SamlGuideFormType, type AttributeMapping, attributeKeys } from '../../types.js';
+import {
+  type SamlGuideFormType,
+  type AttributeMapping,
+  attributeKeys,
+} from '../../../EnterpriseSso/types.js';
 
 import * as styles from './index.module.scss';
 
@@ -17,7 +20,6 @@ type Props = {
 const primaryKey = 'attributeMapping';
 
 function SamlAttributeMapping({ isReadOnly }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, register } = useFormContext<SamlGuideFormType>();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const attributeMapping = watch(primaryKey) ?? {};
