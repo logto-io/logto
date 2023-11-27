@@ -3,6 +3,7 @@ import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -28,6 +29,11 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
   tenant: TenantContext
 ) {
+  // FIXME: @simeng-li should remove this check after the feature is enabled in production
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    return;
+  }
+
   const { provider, libraries, queries } = tenant;
 
   const { ssoConnectors: ssoConnectorsLibrary } = libraries;
