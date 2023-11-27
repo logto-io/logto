@@ -54,7 +54,8 @@ class OidcConnector {
       redirectUri,
       connectorId,
     }: { state: string; redirectUri: string; connectorId: string },
-    setSession: CreateSingleSignOnSession
+    setSession: CreateSingleSignOnSession,
+    prompt?: 'login' | 'consent' | 'none' | 'select_account'
   ) {
     assert(
       setSession,
@@ -76,6 +77,7 @@ class OidcConnector {
         responseType: 'code',
         redirectUri,
       }),
+      ...conditional(prompt && { prompt }),
       scope: oidcConfig.scope,
     });
 

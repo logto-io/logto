@@ -3,7 +3,7 @@ import { type SsoConnector, SsoProviderName } from '@logto/schemas';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type SingleSignOn } from '../types/index.js';
+import { type CreateSingleSignOnSession, type SingleSignOn } from '../types/index.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 
 // Google use static issue endpoint.
@@ -23,6 +23,14 @@ export class GoogleWorkspaceSsoConnector extends OidcConnector implements Single
       ...parseConfigResult.data,
       issuer: googleIssuer,
     });
+  }
+
+  // Always use select_account prompt for Google Workspace SSO.
+  override async getAuthorizationUrl(
+    payload: { state: string; redirectUri: string; connectorId: string },
+    setSession: CreateSingleSignOnSession
+  ) {
+    return super.getAuthorizationUrl(payload, setSession, 'select_account');
   }
 
   async getConfig() {
