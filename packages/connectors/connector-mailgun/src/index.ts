@@ -88,7 +88,7 @@ const sendMessage = (getConfig: GetConnectorConfig): SendMessageFunction => {
   };
 };
 
-const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+const createMailgunMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
     type: ConnectorType.Email,
@@ -97,4 +97,4 @@ const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({ ge
   };
 };
 
-export default createSendGridMailConnector;
+export default createMailgunMailConnector;
