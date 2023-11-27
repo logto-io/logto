@@ -47,6 +47,11 @@ export const mockSsoConnectors: SsoConnectorMetadata[] = [
     connectorName: 'AzureAD',
     logo: 'http://logto.dev/logto.png',
   },
+  {
+    id: 'Google-sso-connector',
+    connectorName: 'Google',
+    logo: 'http://logto.dev/logto.png',
+  },
 ];
 
 export const emailSignInMethod = {
