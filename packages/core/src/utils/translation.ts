@@ -1,3 +1,4 @@
+import { type I18nPhrases } from '@logto/connector-kit';
 import type { Translation } from '@logto/schemas';
 
 /**
@@ -23,3 +24,6 @@ export const isStrictlyPartial = (
     return typeof fullValue === typeof value;
   });
 };
+
+export const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
+  key in phrases;
