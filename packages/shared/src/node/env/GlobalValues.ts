@@ -104,6 +104,9 @@ export default class GlobalValues {
   /** Maximum number of clients to keep in a single database pool (i.e. per `Tenant` class). */
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
+  /** Case insensitive username */
+  public readonly isCaseInsensitiveUsername = yes(getEnv('CASE_INSENSITIVE_USERNAME'));
+
   /**
    * The Redis endpoint (optional). If it's set, the central cache mechanism will be automatically enabled.
    *
