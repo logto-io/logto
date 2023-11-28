@@ -6,6 +6,7 @@ import {
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional, conditionalArray, conditionalString } from '@silverhand/essentials';
+import cleanDeep from 'clean-deep';
 import { t as globalTranslate } from 'i18next';
 import { HTTPError } from 'ky';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
@@ -107,7 +108,10 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
 
       try {
         const updatedSsoConnector = await api
-          .patch(`api/sso-connectors/${data.id}`, { json: formDataToSsoConnectorParser(formData) })
+          // Only keep non-empty values since PATCH operation performs a merge scheme.
+          .patch(`api/sso-connectors/${data.id}`, {
+            json: cleanDeep(formDataToSsoConnectorParser(formData)),
+          })
           .json<SsoConnectorWithProviderConfig>();
 
         reset(dataToFormParser(updatedSsoConnector));

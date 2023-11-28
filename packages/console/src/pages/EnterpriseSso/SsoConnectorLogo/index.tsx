@@ -13,15 +13,22 @@ type Props = {
   data: Pick<SsoConnectorWithProviderConfig, 'providerLogo' | 'providerLogoDark' | 'branding'>;
 };
 
+/**
+ * Prioritize `branding` configuration:
+ *   - Even if it's in light mode and have `branding.darkLogo` configured, use `branding.darkLogo`.
+ */
 const pickLogoForCurrentTheme = (
   isDarkMode: boolean,
   { logo, logoDark }: { logo: string; logoDark: string },
   branding: SsoConnectorWithProviderConfig['branding']
 ): string => {
-  if (isDarkMode) {
-    return branding.darkLogo ?? logoDark;
-  }
-  return branding.logo ?? logo;
+  // Need to use `||` here since `??` operator can not avoid empty strings.
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const configuredLogo = isDarkMode ? branding.darkLogo : branding.logo || branding.darkLogo;
+  const builtInLogo = isDarkMode ? logoDark : logo || logoDark;
+
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  return configuredLogo || builtInLogo;
 };
 
 function SsoConnectorLogo({ className, containerClassName, data }: Props) {
