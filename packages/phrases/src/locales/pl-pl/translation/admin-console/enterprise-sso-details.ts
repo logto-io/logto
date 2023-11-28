@@ -36,6 +36,8 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   connector_name_field_name: 'Connector name',
   /** UNTRANSLATED */
+  display_name_field_name: 'Display name',
+  /** UNTRANSLATED */
   connector_logo_field_name: 'Connector logo',
   /** UNTRANSLATED */
   branding_logo_context: 'Upload logo',

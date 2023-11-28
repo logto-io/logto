@@ -250,7 +250,11 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       // Validate the connector name is unique
       if (rest.connectorName) {
         const duplicateConnector = await ssoConnectors.findByConnectorName(rest.connectorName);
-        assertThat(!duplicateConnector, 'single_sign_on.duplicate_connector_name');
+        // Should not block the update of the current connector.
+        assertThat(
+          !duplicateConnector || duplicateConnector.id === id,
+          'single_sign_on.duplicate_connector_name'
+        );
       }
 
       // Validate the connector config if it's provided

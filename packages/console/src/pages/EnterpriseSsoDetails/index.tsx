@@ -28,7 +28,7 @@ import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
 import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso/types';
 
 import Connection from './Connection';
-import Settings from './Settings';
+import Experience from './Experience';
 import * as styles from './index.module.scss';
 
 const enterpriseSsoPathname = '/enterprise-sso';
@@ -167,7 +167,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             </TabNavItem>
           </TabNav>
           {tab === EnterpriseSsoDetailsTabs.Experience && (
-            <Settings
+            <Experience
               data={ssoConnector}
               isDeleted={isDeleted}
               onUpdated={() => {

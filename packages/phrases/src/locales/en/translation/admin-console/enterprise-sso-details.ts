@@ -19,6 +19,7 @@ const enterprise_sso_details = {
     each_sign_in: 'Always sync at each sign-in',
   },
   connector_name_field_name: 'Connector name',
+  display_name_field_name: 'Display name',
   connector_logo_field_name: 'Connector logo',
   branding_logo_context: 'Upload logo',
   branding_logo_error: 'Upload logo error: {{error}}',

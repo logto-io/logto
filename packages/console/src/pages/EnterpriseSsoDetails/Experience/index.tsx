@@ -49,6 +49,8 @@ const duplicatedDomainsErrorCode = 'single_sign_on.duplicated_domains';
 const forbiddenDomainsErrorCode = 'single_sign_on.forbidden_domains';
 const invalidDomainFormatErrorCode = 'single_sign_on.invalid_domain_format';
 
+const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name';
+
 const dataToFormParser = (data: DataType) => {
   const { branding, connectorName, domains, syncProfile } = data;
   return {
@@ -71,7 +73,7 @@ const formDataToSsoConnectorParser = (
   };
 };
 
-function Settings({ data, isDeleted, onUpdated }: Props) {
+function Experience({ data, isDeleted, onUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const api = useApi({ hideErrorToast: true });
@@ -118,26 +120,38 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
         toast.success(t('general.saved'));
         onUpdated(updatedSsoConnector);
       } catch (error: unknown) {
-        /**
-         * Should render invalid domains:
-         * - show `error` tag for forbidden domains
-         * - show `info` tag for duplicated domains
-         *
-         * Also manually passed the returned error message to `setError` to show the error message in-place.
-         */
         if (error instanceof HTTPError) {
           const { response } = error;
           const metadata = await response.clone().json<RequestErrorBody<{ data: string[] }>>();
 
-          setValue(
-            'domains',
-            watch('domains').map((domain) => ({
-              ...domain,
-              ...conditional(metadata.data.data.includes(domain.value) && { status: 'info' }),
-            })),
-            { shouldDirty: true }
-          );
-          setError('domains', { type: 'custom', message: metadata.message });
+          /**
+           * Should render invalid domains:
+           * - show `error` tag for forbidden domains
+           * - show `info` tag for duplicated domains
+           *
+           * Also manually passed the returned error message to `setError` to show the error message in-place.
+           */
+          if (
+            [
+              duplicatedDomainsErrorCode,
+              forbiddenDomainsErrorCode,
+              invalidDomainFormatErrorCode,
+            ].includes(metadata.code)
+          ) {
+            setValue(
+              'domains',
+              watch('domains').map((domain) => ({
+                ...domain,
+                ...conditional(metadata.data.data.includes(domain.value) && { status: 'info' }),
+              })),
+              { shouldDirty: true }
+            );
+            setError('domains', { type: 'custom', message: metadata.message });
+          }
+
+          if (duplicateConnectorNameErrorCode === metadata.code) {
+            setError('connectorName', { type: 'custom', message: metadata.message });
+          }
         }
       }
     })
@@ -152,6 +166,12 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
         onSubmit={onSubmit}
       >
         <FormCard title="enterprise_sso_details.general_settings_title">
+          <FormField isRequired title="enterprise_sso_details.connector_name_field_name">
+            <TextInput
+              {...register('connectorName', { required: true })}
+              error={errors.connectorName?.message}
+            />
+          </FormField>
           <FormField title="enterprise_sso_details.email_domain_field_name">
             <div className={styles.description}>
               {t('enterprise_sso_details.email_domain_field_description')}
@@ -239,10 +259,10 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
           title="enterprise_sso_details.custom_branding_title"
           description="enterprise_sso_details.custom_branding_description"
         >
-          <FormField isRequired title="enterprise_sso_details.connector_name_field_name">
+          <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput
-              {...register('connectorName', { required: true })}
-              error={errors.connectorName?.message}
+              {...register('branding.displayName')}
+              error={errors.branding?.displayName?.message}
             />
           </FormField>
           {isUserAssetsServiceReady ? (
@@ -283,4 +303,4 @@ function Settings({ data, isDeleted, onUpdated }: Props) {
   );
 }
 
-export default Settings;
+export default Experience;
