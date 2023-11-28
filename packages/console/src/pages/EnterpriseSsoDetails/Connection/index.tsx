@@ -82,14 +82,14 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
         onDiscard={reset}
         onSubmit={onSubmit}
       >
-        <FormCard
-          title="enterprise_sso_details.upload_idp_metadata_title"
-          description="enterprise_sso_details.upload_idp_metadata_description"
-        >
-          {[SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
-            providerName
-          ) ? (
-            // Can not infer the type by narrowing down the value of `providerName`, so we need to cast it.
+        {[SsoProviderName.OIDC, SsoProviderName.GOOGLE_WORKSPACE, SsoProviderName.OKTA].includes(
+          providerName
+        ) ? (
+          <FormCard
+            title="enterprise_sso_details.upload_idp_metadata_title_oidc"
+            description="enterprise_sso_details.upload_idp_metadata_description_oidc"
+          >
+            {/* Can not infer the type by narrowing down the value of `providerName`, so we need to cast it. */}
             <OidcMetadataForm
               providerName={providerName}
               // eslint-disable-next-line no-restricted-syntax
@@ -99,9 +99,14 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
                 providerConfig as Optional<ParsedSsoIdentityProviderConfig<SsoProviderName.OIDC>>
               }
             />
-          ) : (
-            // Can not infer the type by narrowing down the value of `providerName`, so we need to cast it.
-            // Modify spacing between form fields and switch button of SAML metadata form.
+          </FormCard>
+        ) : (
+          <FormCard
+            title="enterprise_sso_details.upload_idp_metadata_title_saml"
+            description="enterprise_sso_details.upload_idp_metadata_description_saml"
+          >
+            {/* Can not infer the type by narrowing down the value of `providerName`, so we need to cast it. */}
+            {/* Modify spacing between form fields and switch button of SAML metadata form. */}
             <div className={styles.samlMetadataForm}>
               <SamlMetadataForm
                 // eslint-disable-next-line no-restricted-syntax
@@ -112,14 +117,15 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
                 }
               />
             </div>
-          )}
-        </FormCard>
+          </FormCard>
+        )}
         <FormCard
           title="enterprise_sso_details.service_provider_property_title"
           description="enterprise_sso_details.service_provider_property_description"
           descriptionInterpolation={{
-            protocol: providerName,
-            name: ssoConnectorName,
+            protocol: [SsoProviderName.SAML, SsoProviderName.AZURE_AD].includes(providerName)
+              ? 'SAML 2.0'
+              : 'OIDC',
           }}
         >
           <BasicInfo
@@ -132,9 +138,6 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
           <FormCard
             title="enterprise_sso_details.attribute_mapping_title"
             description="enterprise_sso_details.attribute_mapping_description"
-            descriptionInterpolation={{
-              name: ssoConnectorName,
-            }}
           >
             <SamlAttributeMapping providerConfig={providerConfig} />
           </FormCard>

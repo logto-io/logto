@@ -8,8 +8,9 @@ const enterprise_sso = {
   col_email_domain: '이메일 도메인',
 
   placeholder_title: '기업 커넥터',
+  /** UNTRANSLATED */
   placeholder_description:
-    'Logto는 많은 내장 기업 신원 공급자를 제공했으며, 동시에 표준 프로토콜로 사용자 정의할 수 있습니다.',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: '기업 커넥터 추가',
     text_divider: '또는 표준 프로토콜을 사용하여 커넥터를 사용자 정의할 수 있습니다.',

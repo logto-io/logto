@@ -8,8 +8,9 @@ const enterprise_sso = {
   col_email_domain: '電子郵件域',
 
   placeholder_title: '企業連接器',
+  /** UNTRANSLATED */
   placeholder_description:
-    'Logto 提供了許多內置的企業身份提供者以便連接，同時你也可以使用標準協議創建自己的企業身份提供者。',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: '新增企業連接器',
     text_divider: '或者你可以按照標準協議自定義你的連接器。',
