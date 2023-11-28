@@ -7,9 +7,7 @@ const enterprise_sso = {
   col_connector_name: 'Bağlayıcı adı',
   col_type: 'Tür',
   col_email_domain: 'E-posta etki alanı',
-  col_status: 'Durum',
-  col_status_in_use: 'Kullanılıyor',
-  col_status_invalid: 'Geçersiz',
+
   placeholder_title: 'Kurumsal bağlayıcı',
   placeholder_description:
     'Logto, birçok yerleşik kurumsal kimlik sağlayıcı sunmuştur, aynı zamanda standart protokollerle kendi kimlik sağlayıcınızı oluşturabilirsiniz.',

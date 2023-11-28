@@ -7,9 +7,7 @@ const enterprise_sso = {
   col_connector_name: 'コネクター名',
   col_type: 'タイプ',
   col_email_domain: 'メールドメイン',
-  col_status: 'ステータス',
-  col_status_in_use: '使用中',
-  col_status_invalid: '無効',
+
   placeholder_title: 'エンタープライズコネクター',
   placeholder_description:
     'Logtoは多くの組み込み企業向けアイデンティティプロバイダーを提供しており、同時に標準プロトコルで独自のプロバイダーを作成することもできます。',

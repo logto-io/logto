@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoConnectorWithProviderConfig, SsoProviderName } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -72,7 +72,7 @@ function EnterpriseSsoConnectors() {
           {
             title: t('enterprise_sso.col_connector_name'),
             dataIndex: 'name',
-            colSpan: 256,
+            colSpan: 5,
             render: ({ id, connectorName, ...rest }) => (
               <ItemPreview
                 title={connectorName}
@@ -90,7 +90,7 @@ function EnterpriseSsoConnectors() {
           {
             title: t('enterprise_sso.col_type'),
             dataIndex: 'type',
-            colSpan: 256,
+            colSpan: 4,
             render: ({ name }) => (
               <div className={styles.type}>
                 <span>{name}</span>
@@ -100,7 +100,7 @@ function EnterpriseSsoConnectors() {
           {
             title: t('enterprise_sso.col_email_domain'),
             dataIndex: 'emailDomain',
-            colSpan: 326,
+            colSpan: 7,
             render: ({ domains }) =>
               domains.length === 0 ? (
                 '-'
@@ -114,27 +114,6 @@ function EnterpriseSsoConnectors() {
                   ))}
                 </div>
               ),
-          },
-          {
-            title: t('enterprise_sso.col_status'),
-            dataIndex: 'status',
-            colSpan: 186,
-            render: ({ providerConfig, providerName }) => {
-              const inUse = [
-                SsoProviderName.OIDC,
-                SsoProviderName.GOOGLE_WORKSPACE,
-                SsoProviderName.OKTA,
-              ].includes(providerName)
-                ? Boolean(providerConfig)
-                : Boolean(providerConfig?.identityProvider);
-              return (
-                <Tag type="state" status={inUse ? 'success' : 'error'} variant="plain">
-                  {t(
-                    inUse ? 'enterprise_sso.col_status_in_use' : 'enterprise_sso.col_status_invalid'
-                  )}
-                </Tag>
-              );
-            },
           },
         ],
         rowClickHandler: ({ id }) => {

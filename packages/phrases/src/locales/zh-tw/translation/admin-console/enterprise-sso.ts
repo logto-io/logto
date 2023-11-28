@@ -6,9 +6,7 @@ const enterprise_sso = {
   col_connector_name: '連接器名稱',
   col_type: '類型',
   col_email_domain: '電子郵件域',
-  col_status: '狀態',
-  col_status_in_use: '使用中',
-  col_status_invalid: '無效',
+
   placeholder_title: '企業連接器',
   placeholder_description:
     'Logto 提供了許多內置的企業身份提供者以便連接，同時你也可以使用標準協議創建自己的企業身份提供者。',

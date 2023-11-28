@@ -7,9 +7,7 @@ const enterprise_sso = {
   col_connector_name: 'Nazwa łącznika',
   col_type: 'Typ',
   col_email_domain: 'Domena e-mail',
-  col_status: 'Status',
-  col_status_in_use: 'W użyciu',
-  col_status_invalid: 'Nieprawidłowy',
+
   placeholder_title: 'Łącznik przedsiębiorstwa',
   placeholder_description:
     'Logto udostępniło wiele wbudowanych dostawców tożsamości przedsiębiorstw, możesz także stworzyć własnego zgodnego ze standardowymi protokołami.',

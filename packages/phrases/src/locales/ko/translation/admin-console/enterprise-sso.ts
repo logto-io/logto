@@ -6,9 +6,7 @@ const enterprise_sso = {
   col_connector_name: '커넥터 이름',
   col_type: '유형',
   col_email_domain: '이메일 도메인',
-  col_status: '상태',
-  col_status_in_use: '사용 중',
-  col_status_invalid: '유효하지 않음',
+
   placeholder_title: '기업 커넥터',
   placeholder_description:
     'Logto는 많은 내장 기업 신원 공급자를 제공했으며, 동시에 표준 프로토콜로 사용자 정의할 수 있습니다.',
