@@ -28,7 +28,7 @@ const mfa = {
   enter_one_time_code_link_description:
     "Saisissez le code de vérification à 6 chiffres généré par l'application d'authentification.",
   enter_one_time_code_description:
-    "La vérification en deux étapes a été activée pour ce compte. Veuillez saisir le code à usage unique visible sur votre application d'authentification associée.",
+    "La vérification en deux étapes a été activée pour ce compte. Veuillez entrer le code à usage unique affiché sur votre application d'authentification liée.",
   link_another_mfa_factor: 'Passez à une autre méthode',
   save_backup_code: 'Enregistrez votre code de sauvegarde',
   save_backup_code_description:

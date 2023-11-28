@@ -28,7 +28,7 @@ const mfa = {
   enter_one_time_code_link_description:
     'Authenticator uygulaması tarafından oluşturulan 6 haneli doğrulama kodunu girin.',
   enter_one_time_code_description:
-    'Bu hesap için 2 aşamalı doğrulama etkinleştirildi. Lütfen authenticator uygulamanızda gördüğünüz tek kullanımlık kodu girin.',
+    'Bu hesap için iki aşamalı doğrulama etkinleştirildi. Lütfen bağlı kimlik doğrulama uygulamanızda gösterilen tek kullanımlık kodu girin.',
   link_another_mfa_factor: 'Başka bir yönteme geçin',
   save_backup_code: 'Yedek kodunuzu kaydedin',
   save_backup_code_description:
