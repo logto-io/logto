@@ -21,6 +21,7 @@ jest.mock('react-device-detect', () => ({
 
 const mockedNavigate = jest.fn();
 const getSingleSignOnConnectorsMock = jest.fn();
+const getSingleSignOnUrlMock = jest.fn();
 
 jest.mock('i18next', () => ({
   ...jest.requireActual('i18next'),
@@ -29,6 +30,7 @@ jest.mock('i18next', () => ({
 }));
 
 jest.mock('@/apis/single-sign-on', () => ({
+  getSingleSignOnUrl: (connectorId: string) => getSingleSignOnUrlMock(connectorId),
   getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
@@ -256,6 +258,50 @@ describe('UsernamePasswordSignInForm', () => {
 
     await waitFor(() => {
       expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
+    });
+  });
+
+  test('should directly call single sign on when single sign on is enabled for a give email and only one connector', async () => {
+    const { getByText, queryByText, container } = renderPasswordSignInForm(
+      [SignInIdentifier.Username, SignInIdentifier.Email],
+      {
+        ssoConnectors: mockSsoConnectors,
+      }
+    );
+
+    const singleSignOnFormAssertion = () => {
+      expect(container.querySelector('input[name="password"]')).toBeNull();
+      expect(queryByText('action.sign_in')).toBeNull();
+      expect(queryByText('action.single_sign_on')).not.toBeNull();
+    };
+
+    const identifierInput = container.querySelector('input[name="identifier"]');
+    assert(identifierInput, new Error('identifier input should exist'));
+
+    const email = 'foo@bar.io';
+    getSingleSignOnConnectorsMock.mockClear();
+    getSingleSignOnConnectorsMock.mockResolvedValueOnce([mockSsoConnectors[0]!.id]);
+
+    act(() => {
+      fireEvent.change(identifierInput, { target: { value: email } });
+    });
+
+    await waitFor(() => {
+      expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+    });
+
+    await waitFor(() => {
+      singleSignOnFormAssertion();
+    });
+
+    const submitButton = getByText('action.single_sign_on');
+
+    act(() => {
+      fireEvent.submit(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(getSingleSignOnUrlMock).toBeCalledWith(mockSsoConnectors[0]!.id);
     });
   });
 });
