@@ -13,8 +13,6 @@ function OidcCallbackUri() {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { applyDomain: applyCustomDomain } = useCustomDomain();
 
-  console.log(ssoConnector);
-
   if (!ssoConnector) {
     return null;
   }
