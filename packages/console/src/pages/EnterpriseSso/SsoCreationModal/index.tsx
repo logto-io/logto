@@ -1,7 +1,9 @@
 import {
   type SsoConnectorFactoriesResponse,
   type SsoConnectorWithProviderConfig,
+  type RequestErrorBody,
 } from '@logto/schemas';
+import { HTTPError } from 'ky';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +34,8 @@ type FormType = {
   connectorName: string;
 };
 
+const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name';
+
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
@@ -43,8 +47,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
+    setError,
   } = useForm<FormType>();
-  const api = useApi();
+  const api = useApi({ hideErrorToast: true });
 
   const isLoading = !data && !error;
 
@@ -80,11 +85,22 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         return;
       }
 
-      const createdSsoConnector = await api
-        .post(`api/sso-connectors`, { json: { ...formData, providerName: selectedProviderName } })
-        .json<SsoConnectorWithProviderConfig>();
+      try {
+        const createdSsoConnector = await api
+          .post(`api/sso-connectors`, { json: { ...formData, providerName: selectedProviderName } })
+          .json<SsoConnectorWithProviderConfig>();
 
-      onClose(createdSsoConnector);
+        onClose(createdSsoConnector);
+      } catch (error: unknown) {
+        if (error instanceof HTTPError) {
+          const { response } = error;
+          const metadata = await response.clone().json<RequestErrorBody>();
+
+          if (metadata.code === duplicateConnectorNameErrorCode) {
+            setError('connectorName', { type: 'custom', message: metadata.message });
+          }
+        }
+      }
     })
   );
 
@@ -142,7 +158,7 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
           <TextInput
             {...register('connectorName', { required: true })}
             placeholder={t('enterprise_sso.create_modal.connector_name_field_placeholder')}
-            error={Boolean(errors.connectorName)}
+            error={errors.connectorName?.message}
           />
         </FormField>
       </ModalLayout>

@@ -214,6 +214,20 @@ describe('patch sso-connector by id', () => {
     await deleteSsoConnectorById(id2);
   });
 
+  it('should not block the update of current connector', async () => {
+    const { id } = await createSsoConnector({
+      providerName: 'OIDC',
+      connectorName: 'test connector name',
+    });
+
+    const updatedSsoConnector = await patchSsoConnectorById(id, {
+      connectorName: 'test connector name',
+    });
+    expect(updatedSsoConnector).toHaveProperty('connectorName', 'test connector name');
+
+    await deleteSsoConnectorById(id);
+  });
+
   it.each(providerNames)('should patch sso connector without config', async (providerName) => {
     const { id } = await createSsoConnector({
       providerName,
