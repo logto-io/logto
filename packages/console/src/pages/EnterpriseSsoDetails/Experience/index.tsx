@@ -17,6 +17,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Select from '@/ds-components/Select';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
@@ -98,7 +99,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
     clearErrors,
     handleSubmit,
     register,
-    formState: { isDirty, isSubmitting, errors },
+    formState: { defaultValues, isDirty, isSubmitting, errors },
     reset,
   } = formMethods;
 
@@ -172,6 +173,11 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
               error={errors.connectorName?.message}
             />
           </FormField>
+          {!defaultValues?.domains?.length && (
+            <InlineNotification className={styles.inlineNotification} severity="alert">
+              {t('enterprise_sso_details.configure_domain_field_info_text')}
+            </InlineNotification>
+          )}
           <FormField title="enterprise_sso_details.email_domain_field_name">
             <div className={styles.description}>
               {t('enterprise_sso_details.email_domain_field_description')}
@@ -179,6 +185,14 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
             <Controller
               name="domains"
               control={control}
+              rules={{
+                validate: (value) => {
+                  if (value.length === 0) {
+                    return t('enterprise_sso_details.email_domain_field_required');
+                  }
+                  return true;
+                },
+              }}
               render={({ field: { onChange, value } }) => (
                 <MultiInput
                   values={value}
