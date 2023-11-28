@@ -111,9 +111,13 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
 
       try {
         const updatedSsoConnector = await api
+          // TODO: @darcyYe add console test case of clean up `branding` config.
           // Only keep non-empty values since PATCH operation performs a merge scheme.
           .patch(`api/sso-connectors/${data.id}`, {
-            json: cleanDeep(formDataToSsoConnectorParser(formData)),
+            json: cleanDeep(formDataToSsoConnectorParser(formData), {
+              // To overwrite the `branding` field, which is a JSONB typed column in DB.
+              emptyObjects: false,
+            }),
           })
           .json<SsoConnectorWithProviderConfig>();
 
