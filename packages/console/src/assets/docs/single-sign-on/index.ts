@@ -7,6 +7,7 @@ export type GuideComponentType = LazyExoticComponent<FunctionComponent<MDXProps>
 const ssoConnectorGuides: Readonly<{ [key in SsoProviderName]?: GuideComponentType }> = {
   [SsoProviderName.SAML]: lazy(async () => import('./SAML/README.mdx')),
   [SsoProviderName.OIDC]: lazy(async () => import('./OIDC/README.mdx')),
+  [SsoProviderName.AZURE_AD]: lazy(async () => import('./AzureAD/README.mdx')),
 };
 
 export default ssoConnectorGuides;
