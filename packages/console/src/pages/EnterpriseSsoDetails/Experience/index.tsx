@@ -178,7 +178,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
               {t('enterprise_sso_details.configure_domain_field_info_text')}
             </InlineNotification>
           )}
-          <FormField title="enterprise_sso_details.email_domain_field_name">
+          <FormField isRequired title="enterprise_sso_details.email_domain_field_name">
             <div className={styles.description}>
               {t('enterprise_sso_details.email_domain_field_description')}
             </div>
