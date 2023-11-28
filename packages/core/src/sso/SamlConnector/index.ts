@@ -1,10 +1,14 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { type Optional } from '@silverhand/essentials';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import {
   type SamlConnectorConfig,
   type ExtendedSocialUserInfo,
@@ -83,7 +87,10 @@ class SamlConnector {
    */
   get idpConfig() {
     if (!this._idpConfig) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'config not found');
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: this._idpConfig,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+      });
     }
 
     return this._idpConfig;
@@ -110,7 +117,11 @@ class SamlConnector {
     const rawProfileParseResult = userProfileGuard.safeParse(samlAssertionContent);
 
     if (!rawProfileParseResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, rawProfileParseResult.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Invalid SAML assertion',
+        response: samlAssertionContent,
+        error: rawProfileParseResult.error.flatten(),
+      });
     }
 
     const rawUserProfile = rawProfileParseResult.data;
@@ -149,7 +160,14 @@ class SamlConnector {
 
       return loginRequest.context;
     } catch (error: unknown) {
-      throw new ConnectorError(ConnectorErrorCodes.General, error);
+      if (error instanceof SsoConnectorError) {
+        throw error;
+      }
+
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error,
+      });
     }
   }
 
@@ -197,7 +215,11 @@ class SamlConnector {
     const result = samlIdentityProviderMetadataGuard.safeParse(this.idpConfig);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: this.idpConfig,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error: result.error.flatten(),
+      });
     }
 
     return result.data;

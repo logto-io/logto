@@ -1,7 +1,11 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { createMockUtils } from '@logto/shared/esm';
 import camelcaseKeys from 'camelcase-keys';
 
+import {
+  SsoConnectorConfigErrorCodes,
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+} from '../types/error.js';
 import {
   oidcConfigResponseGuard,
   oidcAuthorizationResponseGuard,
@@ -48,7 +52,11 @@ describe('fetchOidcConfig', () => {
     getMock.mockRejectedValueOnce(new MockHttpError({ body: 'invalid endpoint' }));
 
     await expect(fetchOidcConfig(issuer)).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, 'invalid endpoint')
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: { issuer },
+        message: SsoConnectorConfigErrorCodes.FailToFetchConfig,
+        error: 'invalid endpoint',
+      })
     );
     expect(getMock).toBeCalledWith(`${issuer}/.well-known/openid-configuration`, {
       responseType: 'json',
@@ -71,7 +79,11 @@ describe('fetchOidcConfig', () => {
     }
 
     await expect(fetchOidcConfig(issuer)).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error)
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: { issuer },
+        message: SsoConnectorConfigErrorCodes.InvalidConfigResponse,
+        error: result.error.flatten(),
+      })
     );
   });
 
@@ -117,7 +129,13 @@ describe('fetchToken', () => {
         data,
         redirectUri
       )
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.General, result.error));
+    ).rejects.toMatchError(
+      new SsoConnectorError(SsoConnectorErrorCodes.InvalidRequestParameters, {
+        url: oidcConfigResponseCamelCase.tokenEndpoint,
+        params: data,
+        error: result.error.flatten(),
+      })
+    );
 
     expect(postMock).not.toBeCalled();
   });
@@ -134,7 +152,12 @@ describe('fetchToken', () => {
         data,
         redirectUri
       )
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.General, 'invalid response'));
+    ).rejects.toMatchError(
+      new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Fail to fetch token',
+        error: 'invalid response',
+      })
+    );
 
     expect(postMock).toBeCalledWith({
       url: oidcConfigResponseCamelCase.tokenEndpoint,
@@ -169,7 +192,13 @@ describe('fetchToken', () => {
         data,
         redirectUri
       )
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error));
+    ).rejects.toMatchError(
+      new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Invalid token response',
+        response: JSON.stringify(body),
+        error: result.error.flatten(),
+      })
+    );
   });
 
   it('should return the token response if the token endpoint returns valid response', async () => {

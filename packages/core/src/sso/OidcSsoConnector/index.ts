@@ -1,17 +1,25 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
-import { type SsoConnector, SsoProviderName } from '@logto/schemas';
+import { SsoProviderName } from '@logto/schemas';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
-import { type SingleSignOn } from '../types/index.js';
+import {
+  SsoConnectorError,
+  SsoConnectorErrorCodes,
+  SsoConnectorConfigErrorCodes,
+} from '../types/error.js';
+import { type SingleSignOn, type SingleSignOnConnectorData } from '../types/index.js';
 import { basicOidcConnectorConfigGuard } from '../types/oidc.js';
 
 export class OidcSsoConnector extends OidcConnector implements SingleSignOn {
-  constructor(readonly data: SsoConnector) {
+  constructor(readonly data: SingleSignOnConnectorData) {
     const parseConfigResult = basicOidcConnectorConfigGuard.safeParse(data.config);
 
     if (!parseConfigResult.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, parseConfigResult.error);
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
+        config: data.config,
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        error: parseConfigResult.error.flatten(),
+      });
     }
 
     super(parseConfigResult.data);

@@ -9,7 +9,9 @@ import { findDuplicatedOrBlockedEmailDomains } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import SamlConnector from '#src/sso/SamlConnector/index.js';
 import { type SingleSignOnFactory, ssoConnectorFactories } from '#src/sso/index.js';
+import { type SingleSignOnConnectorData } from '#src/sso/types/index.js';
 
 const isKeyOfI18nPhrases = (key: string, phrases: I18nPhrases): key is keyof I18nPhrases =>
   key in phrases;
@@ -76,6 +78,27 @@ export const fetchConnectorProviderDetails = async (
 };
 
 /**
+ * Validate the connector config.
+ * Fetch or parse the connector IdP detailed settings using the connector config.
+ * Throw error if the connector config is invalid.
+ */
+export const validateConnectorConfigConnectionStatus = async (
+  connector: SingleSignOnConnectorData,
+  tenantId: string
+) => {
+  const { providerName } = connector;
+  const { constructor } = ssoConnectorFactories[providerName];
+  const instance = new constructor(connector, tenantId);
+
+  // SAML connector's idpMetadata is optional (safely catch by the getConfig method), we need to force fetch the IdP metadata here
+  if (instance instanceof SamlConnector) {
+    return instance.getSamlIdpMetadata();
+  }
+
+  return instance.getConfig();
+};
+
+/**
  * Validate the connector domains using the domain blacklist.
  * - Throw error if the domains are invalid.
  * - Throw error if the domains are duplicated.
@@ -83,7 +106,7 @@ export const fetchConnectorProviderDetails = async (
  * @param domains
  * @returns
  */
-export const validateConnectorDomains = (domains?: string[]) => {
+export const validateConnectorDomains = (domains: string[]) => {
   const { duplicatedDomains, forbiddenDomains } = findDuplicatedOrBlockedEmailDomains(domains);
 
   if (forbiddenDomains.size > 0) {

@@ -1,4 +1,3 @@
-import { type SsoConnector } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type Provider from 'oidc-provider';
 
@@ -7,6 +6,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
+import { type SingleSignOnConnectorData } from '#src/sso/types/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -49,7 +49,7 @@ const {
 
 jest
   .spyOn(ssoConnectorFactories.OIDC, 'constructor')
-  .mockImplementation((data: SsoConnector) => new MockOidcSsoConnector(data));
+  .mockImplementation((data: SingleSignOnConnectorData) => new MockOidcSsoConnector(data));
 
 const {
   getSsoAuthorizationUrl,

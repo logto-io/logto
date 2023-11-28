@@ -106,12 +106,6 @@ describe('fetchConnectorProviderDetails', () => {
 });
 
 describe('validateConnectorDomains', () => {
-  it('should directly return if domains are not provided', () => {
-    expect(() => {
-      validateConnectorDomains();
-    }).not.toThrow();
-  });
-
   it('should directly return if domains are empty', () => {
     expect(() => {
       validateConnectorDomains([]);
