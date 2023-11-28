@@ -6,8 +6,8 @@ import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
-import EnterpriseSsoConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
-import EnterpriseSsoConnectorEmpty from '@/assets/images/social-connector-empty.svg';
+import EnterpriseSsoConnectorEmptyDark from '@/assets/images/sso-connector-empty-dark.svg';
+import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
