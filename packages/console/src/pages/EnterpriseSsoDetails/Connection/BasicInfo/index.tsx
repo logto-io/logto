@@ -1,5 +1,5 @@
 import { SsoProviderName, type SsoConnectorWithProviderConfig } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { z } from 'zod';
 
@@ -51,8 +51,8 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
   const result = providerPropertiesGuard.safeParse(providerConfig);
 
   /**
-   * Used fallback to show the default value anyways but the cases should not happen.
-   * TODO: @darcyYe refactor to remove the manual guard.
+   * Should not fallback to some other manually concatenated URL, show empty string instead.
+   * Empty string should never show up unless the API does not work properly.
    */
   return (
     <>
@@ -60,10 +60,10 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
         <CopyToClipboard
           className={styles.copyToClipboard}
           variant="border"
-          value={applyCustomDomain(
-            conditional(
-              result.success && result.data.serviceProvider.assertionConsumerServiceUrl
-            ) ?? new URL(`/api/authn/saml/sso/${ssoConnectorId}`, tenantEndpoint).toString()
+          value={conditionalString(
+            result.success &&
+              result.data.serviceProvider.assertionConsumerServiceUrl &&
+              applyCustomDomain(result.data.serviceProvider.assertionConsumerServiceUrl)
           )}
         />
       </FormField>
@@ -71,9 +71,10 @@ function BasicInfo({ ssoConnectorId, providerName, providerConfig }: Props) {
         <CopyToClipboard
           className={styles.copyToClipboard}
           variant="border"
-          value={applyCustomDomain(
-            conditional(result.success && result.data.serviceProvider.entityId) ??
-              new URL(`/api/sso-connector/${ssoConnectorId}`, tenantEndpoint).toString()
+          value={conditionalString(
+            result.success &&
+              result.data.serviceProvider.entityId &&
+              applyCustomDomain(result.data.serviceProvider.entityId)
           )}
         />
       </FormField>

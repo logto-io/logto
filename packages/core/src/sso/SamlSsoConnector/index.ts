@@ -7,7 +7,11 @@ import assertThat from '#src/utils/assert-that.js';
 import SamlConnector from '../SamlConnector/index.js';
 import { type SingleSignOnFactory } from '../index.js';
 import { type SingleSignOn, type SingleSignOnConnectorData } from '../types/index.js';
-import { samlConnectorConfigGuard, type SamlMetadata } from '../types/saml.js';
+import {
+  defaultAttributeMapping,
+  samlConnectorConfigGuard,
+  type SamlMetadata,
+} from '../types/saml.js';
 import {
   type SingleSignOnConnectorSession,
   type CreateSingleSignOnSession,
@@ -43,14 +47,16 @@ export class SamlSsoConnector extends SamlConnector implements SingleSignOn {
   }
 
   /**
-   * ServiceProvider: SP metadata
-   * identityProvider: IdP metadata. Returns undefined if the idp config is invalid.
+   * `defaultAttributeMapping`: Default attribute mapping
+   * `serviceProvider`: SP metadata
+   * `identityProvider`: IdP metadata. Returns undefined if the idp config is invalid.
    */
   async getConfig(): Promise<SamlMetadata> {
     const serviceProvider = this.serviceProviderMetadata;
     const identityProvider = await trySafe(async () => this.getSamlIdpMetadata());
 
     return {
+      defaultAttributeMapping,
       serviceProvider,
       identityProvider,
     };

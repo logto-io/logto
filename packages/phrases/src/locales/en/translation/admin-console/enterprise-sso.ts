@@ -37,7 +37,7 @@ const enterprise_sso = {
     title: 'Attribute mappings',
     description:
       '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    col_sp_claims: 'Claim name of Logto',
+    col_sp_claims: 'Value of service provider (Logto)',
     col_idp_claims: 'Claim name of identity provider',
     idp_claim_tooltip: 'The claim name of the identity provider',
   },

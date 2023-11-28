@@ -1,32 +1,39 @@
-import { useMemo } from 'react';
+import { socialUserInfoGuard } from '@logto/connector-kit';
+import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useFormContext } from 'react-hook-form';
+import { z } from 'zod';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TextInput from '@/ds-components/TextInput';
 
-import {
-  type SamlGuideFormType,
-  type AttributeMapping,
-  attributeKeys,
-} from '../../../EnterpriseSso/types.js';
+import { attributeKeys, type SamlGuideFormType } from '../../../EnterpriseSso/types.js';
 
 import * as styles from './index.module.scss';
 
-type Props = {
-  isReadOnly?: boolean;
-};
+type Props = Pick<SsoConnectorWithProviderConfig, 'providerConfig'>;
+
+/**
+ * TODO: Should align this with the guard `samlAttributeMappingGuard` defined in {@link logto/core/src/sso/types/saml.ts}.
+ * This only applies to SAML-protocol-based SSO connectors.
+ */
+const providerPropertiesGuard = z.object({
+  defaultAttributeMapping: socialUserInfoGuard
+    .pick({
+      id: true,
+      email: true,
+      name: true,
+    })
+    .required(),
+});
 
 const primaryKey = 'attributeMapping';
 
-function SamlAttributeMapping({ isReadOnly }: Props) {
-  const { watch, register } = useFormContext<SamlGuideFormType>();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const attributeMapping = watch(primaryKey) ?? {};
-  const attributeMappingEntries = useMemo<Array<[keyof AttributeMapping, string | undefined]>>(
-    () => attributeKeys.map((key) => [key, attributeMapping[key] ?? '']),
-    [attributeMapping]
-  );
+function SamlAttributeMapping({ providerConfig }: Props) {
+  const { register } = useFormContext<SamlGuideFormType>();
+
+  const result = providerPropertiesGuard.safeParse(providerConfig);
 
   return (
     <table className={styles.table}>
@@ -41,22 +48,19 @@ function SamlAttributeMapping({ isReadOnly }: Props) {
         </tr>
       </thead>
       <tbody className={styles.body}>
-        {attributeMappingEntries.map(([key, value]) => {
+        {attributeKeys.map((key) => {
           return (
             <tr key={key} className={styles.row}>
               <td>
                 <CopyToClipboard className={styles.copyToClipboard} variant="border" value={key} />
               </td>
               <td>
-                {isReadOnly ? (
-                  <CopyToClipboard
-                    className={styles.copyToClipboard}
-                    variant="border"
-                    value={value ?? ''}
-                  />
-                ) : (
-                  <TextInput {...register(`${primaryKey}.${key}`)} placeholder={key} />
-                )}
+                <TextInput
+                  {...register(`${primaryKey}.${key}`)}
+                  placeholder={conditional(
+                    result.success && result.data.defaultAttributeMapping[key]
+                  )}
+                />
               </td>
             </tr>
           );
