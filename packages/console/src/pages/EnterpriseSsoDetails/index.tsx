@@ -21,7 +21,6 @@ import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import type { RequestError } from '@/hooks/use-api';
 import useApi from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
-import useTheme from '@/hooks/use-theme';
 
 import SsoConnectorLogo from '../EnterpriseSso/SsoConnectorLogo';
 import {
@@ -38,8 +37,6 @@ const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseS
   `${enterpriseSsoPathname}/${ssoConnectorId}/${tab}`;
 
 function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
-  const theme = useTheme();
-
   const { pathname } = useLocation();
   const { ssoConnectorId, tab } = useParams();
 
@@ -127,7 +124,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
               />
             }
             title={ssoConnector.connectorName}
-            primaryTag={ssoConnector.providerName}
+            primaryTag={ssoConnector.name}
             statusTag={{
               status: inUse ? 'success' : 'error',
               text: inUse

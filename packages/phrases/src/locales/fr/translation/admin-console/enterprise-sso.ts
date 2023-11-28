@@ -5,6 +5,7 @@ const enterprise_sso = {
     "Connectez le fournisseur d'identité de l'entreprise et activez la connexion unique initiée par le fournisseur de services.",
   create: "Ajouter un connecteur d'entreprise",
   col_connector_name: 'Nom du connecteur',
+  /** UNTRANSLATED */
   col_type: 'Type',
   col_email_domain: 'Domaine de messagerie',
   col_status: 'Statut',

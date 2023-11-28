@@ -53,6 +53,7 @@ const ssoConnectorFactoryDetailGuard = z.object({
   logo: z.string(),
   logoDark: z.string(),
   description: z.string(),
+  name: z.string(),
 });
 
 export type SsoConnectorFactoryDetail = z.infer<typeof ssoConnectorFactoryDetailGuard>;
@@ -69,6 +70,7 @@ export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
   .omit({ providerName: true })
   .merge(
     z.object({
+      name: z.string(), // For display purpose, generate from i18n key name defined in factory.
       providerName: z.nativeEnum(SsoProviderName),
       providerLogo: z.string(),
       providerLogoDark: z.string(),

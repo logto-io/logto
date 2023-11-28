@@ -42,6 +42,9 @@ export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> 
   description: {
     en: 'This connector is used to connect with OIDC single sign-on identity provider.',
   },
+  name: {
+    en: 'OIDC',
+  },
   configGuard: basicOidcConnectorConfigGuard,
   constructor: OidcSsoConnector,
 };
