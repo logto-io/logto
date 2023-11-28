@@ -1,6 +1,5 @@
 import { Theme } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
 import { useFormContext } from 'react-hook-form';
 
@@ -13,7 +12,7 @@ import IconButton from '@/ds-components/IconButton';
 import useTheme from '@/hooks/use-theme';
 
 import { type SamlGuideFormType } from '../../../EnterpriseSso/types';
-import { getXmlFileSize } from '../SamlMetadataForm/utils';
+import { calculateXmlFileSize } from '../SamlMetadataForm/utils';
 
 import * as styles from './index.module.scss';
 
@@ -28,12 +27,6 @@ type Props = {
 
 function XmlFileReader({ onChange, value }: Props) {
   const theme = useTheme();
-  /**
-   * It's ok to use 0 as a fallback file size because it will not be displayed if the value is empty.
-   */
-  const [fileSize, setFileSize] = useState<number>(
-    conditional(value && getXmlFileSize(value)) ?? 0
-  );
 
   const {
     setError,
@@ -62,7 +55,6 @@ function XmlFileReader({ onChange, value }: Props) {
       if (!acceptedFile) {
         return;
       }
-      setFileSize(acceptedFile.size);
 
       const xmlContent = await acceptedFile.text();
       onChange(xmlContent);
@@ -90,7 +82,10 @@ function XmlFileReader({ onChange, value }: Props) {
           {theme === Theme.Dark ? <FileIcon /> : <FileIconDark />}
           <div className={styles.fileInfo}>
             <span className={styles.fileName}>{xmlFileName}</span>
-            <span className={styles.fileSize}>{`${(fileSize / 1024).toFixed(2)} KB`}</span>
+            {/* Not using `File.size` since the file content (variable `value` in this case) is stored in DB in string type */}
+            <span className={styles.fileSize}>{`${(calculateXmlFileSize(value) / 1024).toFixed(
+              2
+            )} KB`}</span>
           </div>
           <IconButton
             className={styles.delete}
