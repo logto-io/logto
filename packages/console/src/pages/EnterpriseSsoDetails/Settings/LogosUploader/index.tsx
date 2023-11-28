@@ -1,3 +1,4 @@
+import type { AllowedUploadMimeType } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -10,13 +11,15 @@ import type { FormType } from '../index.js';
 
 import * as styles from './index.module.scss';
 
+const allowedMimeTypes: AllowedUploadMimeType[] = ['image/png', 'image/jpeg', 'image/svg+xml']; // Only allow `svg`, `png`, `jpg` and `jpeg` files.
+
 function LogosUploader() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [uploadLogoError, setUploadLogoError] = useState<string>();
   const [uploadDarkLogoError, setUploadDarkLogoError] = useState<string>();
 
   const { control } = useFormContext<FormType>();
-  const { description } = useImageMimeTypes();
+  const { description } = useImageMimeTypes(allowedMimeTypes);
 
   return (
     <div className={styles.container}>
@@ -31,6 +34,7 @@ function LogosUploader() {
                 className={styles.frame}
                 value={value ?? ''}
                 actionDescription={t('enterprise_sso_details.branding_logo_context')}
+                allowedMimeTypes={allowedMimeTypes}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadLogoError}
                 onDelete={() => {
@@ -50,6 +54,7 @@ function LogosUploader() {
                 className={styles.frameDark}
                 value={value ?? ''}
                 actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
+                allowedMimeTypes={allowedMimeTypes}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadDarkLogoError}
                 onDelete={() => {
