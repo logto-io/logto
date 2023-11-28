@@ -1,11 +1,11 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { SsoProviderName } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
@@ -39,6 +39,7 @@ const getSsoConnectorDetailsPathname = (ssoConnectorId: string, tab: EnterpriseS
 function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
   const { pathname } = useLocation();
   const { ssoConnectorId, tab } = useParams();
+  const { mutate: mutateGlobal } = useSWRConfig();
 
   const [isDeleted, setIsDeleted] = useState(false);
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
@@ -78,7 +79,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     setIsDeleteAlertOpen(false);
   }, [pathname]);
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = async () => {
     if (!ssoConnectorId || isDeleting) {
       return;
     }
@@ -92,11 +93,12 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
       setIsDeleted(true);
 
       toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
-      navigate(enterpriseSsoPathname);
+      await mutateGlobal('api/sso-connectors');
+      navigate(enterpriseSsoPathname, { replace: true });
     } finally {
       setIsDeleting(false);
     }
-  }, [api, isDeleting, navigate, ssoConnectorId, t]);
+  };
 
   if (!ssoConnectorId) {
     return null;
@@ -167,21 +169,21 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             <TabNavItem
               href={getSsoConnectorDetailsPathname(
                 ssoConnectorId,
-                EnterpriseSsoDetailsTabs.Settings
-              )}
-            >
-              <DynamicT forKey="enterprise_sso_details.tab_settings" />
-            </TabNavItem>
-            <TabNavItem
-              href={getSsoConnectorDetailsPathname(
-                ssoConnectorId,
                 EnterpriseSsoDetailsTabs.Connection
               )}
             >
               <DynamicT forKey="enterprise_sso_details.tab_connection" />
             </TabNavItem>
+            <TabNavItem
+              href={getSsoConnectorDetailsPathname(
+                ssoConnectorId,
+                EnterpriseSsoDetailsTabs.Experience
+              )}
+            >
+              <DynamicT forKey="enterprise_sso_details.tab_experience" />
+            </TabNavItem>
           </TabNav>
-          {tab === EnterpriseSsoDetailsTabs.Settings && (
+          {tab === EnterpriseSsoDetailsTabs.Experience && (
             <Settings
               data={ssoConnector}
               isDeleted={isDeleted}

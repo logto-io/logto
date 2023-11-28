@@ -22,18 +22,15 @@ import * as styles from './index.module.scss';
 type SamlMetadataFormFieldsProps = Pick<SamlMetadataFormProps, 'config'> & {
   identityProviderConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>['identityProvider'];
   formFormat: FormFormat;
-  isFieldCheckRequired?: boolean;
 };
 
 type SamlMetadataFormProps = {
   config?: SsoConnectorConfig<SsoProviderName.SAML>;
-  isGuidePage?: boolean;
   providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>;
 };
 
 function SamlMetadataFormFields({
   formFormat,
-  isFieldCheckRequired,
   identityProviderConfig,
   config,
 }: SamlMetadataFormFieldsProps) {
@@ -48,30 +45,21 @@ function SamlMetadataFormFields({
     case FormFormat.Manual: {
       return (
         <>
-          <FormField
-            isRequired={isFieldCheckRequired}
-            title="enterprise_sso.metadata.saml.sign_in_endpoint_field_name"
-          >
+          <FormField isRequired title="enterprise_sso.metadata.saml.sign_in_endpoint_field_name">
             <TextInput
-              {...register('signInEndpoint', { required: isFieldCheckRequired })}
+              {...register('signInEndpoint', { required: true })}
               error={Boolean(errors.signInEndpoint)}
             />
           </FormField>
-          <FormField
-            isRequired={isFieldCheckRequired}
-            title="enterprise_sso.metadata.saml.idp_entity_id_field_name"
-          >
+          <FormField isRequired title="enterprise_sso.metadata.saml.idp_entity_id_field_name">
             <TextInput
-              {...register('entityId', { required: isFieldCheckRequired })}
+              {...register('entityId', { required: true })}
               error={Boolean(errors.entityId)}
             />
           </FormField>
-          <FormField
-            isRequired={isFieldCheckRequired}
-            title="enterprise_sso.metadata.saml.certificate_field_name"
-          >
+          <FormField isRequired title="enterprise_sso.metadata.saml.certificate_field_name">
             <Textarea
-              {...register('x509Certificate', { required: isFieldCheckRequired })}
+              {...register('x509Certificate', { required: true })}
               placeholder={t('enterprise_sso.metadata.saml.certificate_placeholder')}
               error={Boolean(errors.x509Certificate)}
             />
@@ -102,13 +90,10 @@ function SamlMetadataFormFields({
     case FormFormat.Url: {
       return (
         <>
-          <FormField
-            isRequired={isFieldCheckRequired}
-            title="enterprise_sso.metadata.saml.metadata_url_field_name"
-          >
+          <FormField isRequired title="enterprise_sso.metadata.saml.metadata_url_field_name">
             <TextInput
               {...register('metadataUrl', {
-                required: isFieldCheckRequired,
+                required: true,
               })}
               error={Boolean(errors.metadataUrl)}
             />
@@ -131,12 +116,11 @@ function SamlMetadataFormFields({
 }
 
 // Do not show inline notification and parsed config preview if it is on guide page.
-function SamlMetadataForm({ config, isGuidePage, providerConfig }: SamlMetadataFormProps) {
+function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { setValue } = useFormContext<SamlGuideFormType>();
   const identityProviderConfig = providerConfig?.identityProvider;
 
-  const isFieldCheckRequired = !isGuidePage;
   const isConfigEmpty = !config || Object.keys(config).length === 0;
 
   // Default form format could change based on the value of ORIGINAL `config`.
@@ -212,7 +196,7 @@ function SamlMetadataForm({ config, isGuidePage, providerConfig }: SamlMetadataF
 
   return (
     <>
-      {isFieldCheckRequired && !identityProviderConfig && isConfigEmpty && (
+      {!identityProviderConfig && isConfigEmpty && (
         <InlineNotification severity="alert">
           {t(
             formFormat === FormFormat.Url
@@ -225,7 +209,6 @@ function SamlMetadataForm({ config, isGuidePage, providerConfig }: SamlMetadataF
       )}
       <SamlMetadataFormFields
         formFormat={formFormat}
-        isFieldCheckRequired={isFieldCheckRequired}
         identityProviderConfig={identityProviderConfig}
         config={config}
       />

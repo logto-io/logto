@@ -3,7 +3,7 @@ const enterprise_sso_details = {
   page_title: 'Enterprise SSO connector details',
   readme_drawer_title: 'Enterprise SSO',
   readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  tab_settings: 'Settings',
+  tab_experience: 'Experience',
   tab_connection: 'Connection',
   general_settings_title: 'General Settings',
   custom_branding_title: 'Custom Branding',

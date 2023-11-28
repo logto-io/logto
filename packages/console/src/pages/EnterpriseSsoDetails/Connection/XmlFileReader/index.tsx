@@ -9,7 +9,7 @@ import UploaderIcon from '@/assets/icons/upload.svg';
 import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 
-import { type SamlGuideFormType } from '../../types';
+import { type SamlGuideFormType } from '../../../EnterpriseSso/types';
 import { getXmlFileSize } from '../SamlMetadataForm/utils';
 
 import * as styles from './index.module.scss';

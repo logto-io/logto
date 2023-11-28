@@ -1,9 +1,8 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoConnectorWithProviderConfig, SsoProviderName } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
@@ -20,24 +19,19 @@ import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
-import Guide from './Guide';
 import SsoConnectorLogo from './SsoConnectorLogo';
 import SsoCreationModal from './SsoCreationModal';
 import * as styles from './index.module.scss';
-import { type SsoConnectorWithProviderConfigWithGeneric } from './types';
 
 const pageSize = defaultPageSize;
 const enterpriseSsoPathname = '/enterprise-sso';
 const createEnterpriseSsoPathname = `${enterpriseSsoPathname}/create`;
 const buildDetailsPathname = (id: string) => `${enterpriseSsoPathname}/${id}`;
-const buildGuidePathname = (id: string) => `${buildDetailsPathname(id)}/guide`;
 
 function EnterpriseSsoConnectors() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
-  const { ssoConnectorId: id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [connectorForGuide, setConnectorForGuide] = useState<SsoConnectorWithProviderConfig>();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -53,15 +47,6 @@ function EnterpriseSsoConnectors() {
 
   const isLoading = !data && !error;
   const [ssoConnectors, totalCount] = data ?? [];
-
-  useEffect(() => {
-    const selectedSsoConnector = ssoConnectors?.find(
-      ({ id: ssoConnectorId }) => ssoConnectorId === id
-    );
-    if (selectedSsoConnector) {
-      setConnectorForGuide(selectedSsoConnector);
-    }
-  }, [id, ssoConnectors]);
 
   return (
     <ListPage
@@ -185,40 +170,18 @@ function EnterpriseSsoConnectors() {
         onRetry: async () => mutate(undefined, true),
       }}
       widgets={
-        <>
-          <SsoCreationModal
-            isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
-            onClose={async (ssoConnector) => {
-              if (ssoConnector) {
-                await mutate([[...(ssoConnectors ?? []), ssoConnector], totalCount ?? 0 + 1]);
-                navigate(buildGuidePathname(ssoConnector.id));
-                return;
-              }
+        <SsoCreationModal
+          isOpen={pathname.endsWith(createEnterpriseSsoPathname)}
+          onClose={(ssoConnector) => {
+            if (ssoConnector) {
+              void mutate();
+              navigate(buildDetailsPathname(ssoConnector.id));
+              return;
+            }
 
-              navigate(enterpriseSsoPathname);
-            }}
-          />
-          {
-            /** Add this filter to make TypeScript happy, if `connectorForGuide` does not exist, the route will not come to this path. */
-            connectorForGuide && (
-              <Guide
-                isOpen={Boolean(pathname.endsWith(buildGuidePathname(connectorForGuide.id)))}
-                connector={
-                  // eslint-disable-next-line no-restricted-syntax
-                  connectorForGuide as SsoConnectorWithProviderConfigWithGeneric<SsoProviderName>
-                }
-                onClose={async (connectorId) => {
-                  if (connectorId) {
-                    navigate(buildDetailsPathname(connectorId), { replace: true });
-                    return;
-                  }
-
-                  navigate(enterpriseSsoPathname);
-                }}
-              />
-            )
-          }
-        </>
+            navigate(enterpriseSsoPathname);
+          }}
+        />
       }
     />
   );
