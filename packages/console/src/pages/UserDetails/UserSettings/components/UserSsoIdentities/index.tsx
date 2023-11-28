@@ -1,12 +1,16 @@
-import type { SsoConnectorWithProviderConfig, UserSsoIdentity } from '@logto/schemas';
+import {
+  ssoBrandingGuard,
+  type SsoConnectorWithProviderConfig,
+  type UserSsoIdentity,
+} from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
+import { z } from 'zod';
 
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
-import useTheme from '@/hooks/use-theme';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
 
 import * as styles from '../UserSocialIdentities/index.module.scss';
@@ -24,8 +28,21 @@ type DisplayConnector = {
   issuer: UserSsoIdentity['issuer'];
 };
 
+const isIdentityDisplayConnector = (
+  identity: Partial<DisplayConnector>
+): identity is DisplayConnector => {
+  // `DisplayConnector` instance should have `providerLogo`, `providerLogoDark` and `name` to be non-empty string and `branding` to be an object.
+  const identityGuard = z.object({
+    providerLogo: z.string().min(1),
+    providerLogoDark: z.string().min(1),
+    branding: ssoBrandingGuard,
+    name: z.string().min(1),
+  });
+  const result = identityGuard.safeParse(identity);
+  return result.success;
+};
+
 function UserSsoIdentities({ ssoIdentities }: Props) {
-  const theme = useTheme();
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -41,25 +58,19 @@ function UserSsoIdentities({ ssoIdentities }: Props) {
       return;
     }
 
-    return (
-      ssoIdentities
-        .map((identity) => {
-          const {
-            providerLogo,
-            providerLogoDark,
-            connectorName: name,
-          } = data.find((ssoConnector) => ssoConnector.id === identity.ssoConnectorId) ?? {};
-          const { identityId: userIdentity, issuer } = identity;
+    return ssoIdentities
+      .map((identity) => {
+        const {
+          providerLogo,
+          providerLogoDark,
+          branding,
+          connectorName: name,
+        } = data.find((ssoConnector) => ssoConnector.id === identity.ssoConnectorId) ?? {};
+        const { identityId: userIdentity, issuer } = identity;
 
-          if (!(providerLogo && providerLogoDark && name)) {
-            return;
-          }
-
-          return { providerLogo, providerLogoDark, name, userIdentity, issuer };
-        })
-        // eslint-disable-next-line unicorn/prefer-native-coercion-functions
-        .filter((identity): identity is DisplayConnector => Boolean(identity))
-    );
+        return { providerLogo, providerLogoDark, branding, name, userIdentity, issuer };
+      })
+      .filter((identity): identity is DisplayConnector => isIdentityDisplayConnector(identity));
   }, [data, ssoIdentities]);
 
   const hasLinkedSsoIdentities = Boolean(displaySsoConnectors && displaySsoConnectors.length > 0);
@@ -89,7 +100,10 @@ function UserSsoIdentities({ ssoIdentities }: Props) {
               colSpan: 5,
               render: ({ providerLogo, providerLogoDark, branding, name }) => (
                 <div className={styles.connectorName}>
-                  <SsoConnectorLogo data={{ providerLogo, providerLogoDark, branding }} />
+                  <SsoConnectorLogo
+                    containerClassName={styles.icon}
+                    data={{ providerLogo, providerLogoDark, branding }}
+                  />
                   <div className={styles.name}>
                     <span>{name}</span>
                   </div>

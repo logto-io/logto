@@ -11,10 +11,14 @@
   align-items: center;
 
   .icon {
-    width: 32px;
-    height: 32px;
-    border-radius: _.unit(2);
-    flex-shrink: 0;
+    background: transparent;
+    width: 20px;
+    height: 20px;
+
+    > img {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .name {
