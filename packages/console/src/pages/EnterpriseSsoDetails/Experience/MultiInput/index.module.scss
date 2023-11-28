@@ -71,3 +71,9 @@
     outline-color: var(--color-focused-variant);
   }
 }
+
+.error {
+  border-color: var(--color-error);
+  font: var(--font-body-2);
+  margin-top: _.unit(1);
+}

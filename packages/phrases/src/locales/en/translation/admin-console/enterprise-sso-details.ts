@@ -37,6 +37,9 @@ const enterprise_sso_details = {
   upload_idp_metadata_title: 'Upload IdP metadata',
   upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
   upload_idp_metadata_button_text: 'Upload metadata XML file',
+  configure_domain_field_info_text:
+    'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
+  email_domain_field_required: 'Email domain is required to enable enterprise SSO.',
   upload_saml_idp_metadata_info_text_url:
     'Paste the metadata URL from the identity provider to connect.',
   upload_saml_idp_metadata_info_text_xml:
