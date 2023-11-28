@@ -21,7 +21,12 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
-import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
+import {
+  generateEmail,
+  generatePassword,
+  generateSsoConnectorName,
+  generateUsername,
+} from '#src/utils.js';
 
 describe('Register with identifiers sad path', () => {
   beforeAll(async () => {
@@ -59,6 +64,7 @@ describe('Register with identifiers sad path', () => {
 
     await createSsoConnector({
       ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
       domains: ['sso-register-sad-path.io'],
     });
 

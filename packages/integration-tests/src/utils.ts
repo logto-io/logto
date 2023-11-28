@@ -17,6 +17,7 @@ export const generateEmail = (domain = 'logto.io') =>
 export const generateScopeName = () => `sc:${crypto.randomUUID()}`;
 export const generateRoleName = () => `role_${crypto.randomUUID()}`;
 export const generateDomain = () => `${crypto.randomUUID().toLowerCase().slice(0, 5)}.example.com`;
+export const generateSsoConnectorName = () => `sso_${crypto.randomUUID()}`;
 
 export const generatePhone = (isE164?: boolean) => {
   const plus = isE164 ? '+' : '';

@@ -159,7 +159,7 @@ describe('getFullSignInExperience()', () => {
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
-          connectorName: wellConfiguredSsoConnector.connectorName,
+          connectorName: wellConfiguredSsoConnector.providerName,
           logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
           darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
         },
@@ -183,7 +183,34 @@ describe('get sso connectors', () => {
     expect(ssoConnectors).toEqual([
       {
         id: wellConfiguredSsoConnector.id,
-        connectorName: wellConfiguredSsoConnector.connectorName,
+        connectorName: wellConfiguredSsoConnector.providerName,
+        logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
+        darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
+      },
+    ]);
+  });
+
+  it('should return displayName if provided', async () => {
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+
+    const displayName = 'Logto Connector';
+
+    ssoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      {
+        ...wellConfiguredSsoConnector,
+        branding: {
+          displayName,
+        },
+      },
+    ]);
+
+    const { ssoConnectors } = await getFullSignInExperience();
+
+    expect(ssoConnectors).toEqual([
+      {
+        id: wellConfiguredSsoConnector.id,
+        connectorName: displayName,
         logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
         darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
       },

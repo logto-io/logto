@@ -71,18 +71,17 @@ export const createSignInExperienceLibrary = (
 
     const ssoConnectors = await getAvailableSsoConnectors();
 
-    return ssoConnectors.map(
-      ({ providerName, connectorName, id, branding }): SsoConnectorMetadata => {
-        const factory = ssoConnectorFactories[providerName];
+    return ssoConnectors.map(({ providerName, id, branding }): SsoConnectorMetadata => {
+      const factory = ssoConnectorFactories[providerName];
 
-        return {
-          id,
-          connectorName,
-          logo: branding.logo ?? factory.logo,
-          darkLogo: branding.darkLogo ?? factory.logoDark,
-        };
-      }
-    );
+      return {
+        id,
+        // Use the provider name as the connector name if the branding displayName is not provided
+        connectorName: branding.displayName ?? providerName,
+        logo: branding.logo ?? factory.logo,
+        darkLogo: branding.darkLogo ?? factory.logoDark,
+      };
+    });
   };
 
   /**
