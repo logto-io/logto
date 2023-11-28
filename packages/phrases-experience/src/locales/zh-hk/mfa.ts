@@ -24,7 +24,8 @@ const mfa = {
   want_to_scan_qr_code: '想要掃描 QR 碼嗎？',
   enter_one_time_code: '輸入一次性代碼',
   enter_one_time_code_link_description: '輸入身份驗證應用生成的 6 位驗證碼。',
-  enter_one_time_code_description: '此帳戶已啟用兩步驗證。請輸入您身份驗證應用中看到的一次性代碼。',
+  enter_one_time_code_description:
+    '此帳戶啟用了兩步驗證。請輸入在您關聯的認證應用中顯示的一次性代碼。',
   link_another_mfa_factor: '切換到另一種方法',
   save_backup_code: '保存您的備份代碼',
   save_backup_code_description:

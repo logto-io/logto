@@ -28,7 +28,7 @@ const mfa = {
   enter_one_time_code_link_description:
     "Inserisci il codice di verifica a 6 cifre generato dall'app di autenticazione.",
   enter_one_time_code_description:
-    "La verifica in due passaggi è stata abilitata per questo account. Inserisci il codice monouso visualizzato sull'app di autenticazione collegata.",
+    'La verifica in due passaggi è stata abilitata per questo account. Inserisci il codice monouso mostrato sulla tua app di autenticazione collegata.',
   link_another_mfa_factor: 'Passa a un altro metodo',
   save_backup_code: 'Salva il codice di backup',
   save_backup_code_description:

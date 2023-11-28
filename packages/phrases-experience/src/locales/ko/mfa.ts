@@ -27,7 +27,7 @@ const mfa = {
   enter_one_time_code: '일회용 코드 입력',
   enter_one_time_code_link_description: '인증 앱에서 생성된 6자리 확인 코드를 입력하세요.',
   enter_one_time_code_description:
-    '이 계정에 대해 2단계 인증이 활성화되었습니다. 인증 앱에서 확인한 일회용 코드를 입력하세요.',
+    '이 계정에서는 2단계 인증이 활성화되었습니다. 연결된 인증 앱에 표시된 일회용 코드를 입력하세요.',
   link_another_mfa_factor: '다른 방법으로 전환',
   save_backup_code: '백업 코드 저장',
   save_backup_code_description:

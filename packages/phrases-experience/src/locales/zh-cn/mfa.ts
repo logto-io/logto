@@ -24,7 +24,8 @@ const mfa = {
   want_to_scan_qr_code: '想要扫描 QR 码吗？',
   enter_one_time_code: '输入一次性代码',
   enter_one_time_code_link_description: '输入身份验证应用生成的 6 位验证码。',
-  enter_one_time_code_description: '此帐户已启用两步验证。请输入您身份验证应用中看到的一次性代码。',
+  enter_one_time_code_description:
+    '此帐户启用了两步验证。请在你关联的认证应用中输入显示的一次性代码。',
   link_another_mfa_factor: '切换到另一种方法',
   save_backup_code: '保存您的备份代码',
   save_backup_code_description:

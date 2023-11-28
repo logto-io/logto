@@ -27,7 +27,7 @@ const mfa = {
   enter_one_time_code: 'ワンタイムコードを入力',
   enter_one_time_code_link_description: '認証アプリで生成された6桁の確認コードを入力してください。',
   enter_one_time_code_description:
-    'このアカウントでは2段階認証が有効になっています。認証アプリに表示されるワンタイムコードを入力してください。',
+    'このアカウントでは2段階認証が有効になっています。リンクされた認証アプリに表示されるワンタイムコードを入力してください。',
   link_another_mfa_factor: '別の方法に切り替える',
   save_backup_code: 'バックアップコードを保存',
   save_backup_code_description:

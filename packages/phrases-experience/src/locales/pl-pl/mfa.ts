@@ -28,7 +28,7 @@ const mfa = {
   enter_one_time_code_link_description:
     'Wprowadź 6-cyfrowy kod weryfikacyjny wygenerowany przez aplikację autentykacyjną.',
   enter_one_time_code_description:
-    'Włączono weryfikację dwuetapową dla tego konta. Proszę wprowadzić jednorazowy kod widoczny w połączonej aplikacji autentykacyjnej.',
+    'Dla tego konta włączono weryfikację dwuetapową. Proszę wprowadzić jednorazowy kod widoczny w aplikacji autentykacyjnej powiązanej z kontem.',
   link_another_mfa_factor: 'Przełącz na inny sposób',
   save_backup_code: 'Zapisz swój kod zapasowy',
   save_backup_code_description:
