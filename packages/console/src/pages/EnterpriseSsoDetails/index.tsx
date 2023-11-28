@@ -1,19 +1,19 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoProviderName } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
+import ssoConnectorGuides, { type GuideComponentType } from '@/assets/docs/single-sign-on';
 import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/DetailsPage/Skeleton';
 import Drawer from '@/components/Drawer';
-import Markdown from '@/components/Markdown';
 import PageMeta from '@/components/PageMeta';
 import { EnterpriseSsoDetailsTabs } from '@/consts';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -29,6 +29,7 @@ import { type SsoConnectorWithProviderConfigWithGeneric } from '../EnterpriseSso
 
 import Connection from './Connection';
 import Experience from './Experience';
+import SsoGuide from './SsoGuide';
 import * as styles from './index.module.scss';
 
 const enterpriseSsoPathname = '/enterprise-sso';
@@ -89,6 +90,13 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     }
   };
 
+  const ConnectorGuide = useMemo<GuideComponentType | undefined>(() => {
+    if (!ssoConnector) {
+      return;
+    }
+    return ssoConnectorGuides[ssoConnector.providerName];
+  }, [ssoConnector]);
+
   if (!ssoConnectorId) {
     return null;
   }
@@ -144,9 +152,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             }}
           >
             {/* TODO: @darcyYe Add SSO connector README. */}
-            <Markdown className={styles.readme}>
-              {'# SSO connector guide\n\nThis is a guide for Logto Enterprise SSO connector.'}
-            </Markdown>
+            <SsoGuide ssoConnector={ssoConnector} className={styles.readme} />
           </Drawer>
           <TabNav>
             <TabNavItem
