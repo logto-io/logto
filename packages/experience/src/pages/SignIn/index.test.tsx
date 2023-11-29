@@ -116,8 +116,27 @@ describe('<SignIn />', () => {
   test('render single sign on link', () => {
     const { queryByText } = renderSignIn({
       ssoConnectors: mockSsoConnectors,
+      singleSignOnEnabled: true,
     });
 
     expect(queryByText('action.single_sign_on')).not.toBeNull();
+  });
+
+  test('should  render single sign on link with single sign on enabled but empty list', () => {
+    const { queryByText } = renderSignIn({
+      ssoConnectors: [],
+      singleSignOnEnabled: true,
+    });
+
+    expect(queryByText('action.single_sign_on')).not.toBeNull();
+  });
+
+  test('should not render single sign on link with single sign on disabled', () => {
+    const { queryByText } = renderSignIn({
+      ssoConnectors: mockSsoConnectors,
+      singleSignOnEnabled: false,
+    });
+
+    expect(queryByText('action.single_sign_on')).toBeNull();
   });
 });

@@ -77,8 +77,27 @@ describe('<Register />', () => {
   test('render single sign on link', () => {
     const { queryByText } = renderRegisterPage({
       ssoConnectors: mockSsoConnectors,
+      singleSignOnEnabled: true,
     });
 
     expect(queryByText('action.single_sign_on')).not.toBeNull();
+  });
+
+  test('should  render single sign on link with single sign on enabled but empty list', () => {
+    const { queryByText } = renderRegisterPage({
+      ssoConnectors: [],
+      singleSignOnEnabled: true,
+    });
+
+    expect(queryByText('action.single_sign_on')).not.toBeNull();
+  });
+
+  test('should not render single sign on link with single sign on disabled', () => {
+    const { queryByText } = renderRegisterPage({
+      ssoConnectors: mockSsoConnectors,
+      singleSignOnEnabled: false,
+    });
+
+    expect(queryByText('action.single_sign_on')).toBeNull();
   });
 });
