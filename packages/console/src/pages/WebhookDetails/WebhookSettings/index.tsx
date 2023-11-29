@@ -58,7 +58,10 @@ function WebhookSettings() {
           <FormCard
             title="webhook_details.settings.settings"
             description="webhook_details.settings.settings_description"
-            learnMoreLink={getDocumentationUrl('/docs/recipes/webhooks')}
+            learnMoreLink={{
+              href: getDocumentationUrl('/docs/recipes/webhooks'),
+              targetBlank: 'noopener',
+            }}
           >
             <BasicWebhookForm />
             <SigningKeyField

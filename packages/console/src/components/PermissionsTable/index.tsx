@@ -165,7 +165,10 @@ function PermissionsTable({
             imageDark={<PermissionsEmptyDark />}
             title="permissions.placeholder_title"
             description="permissions.placeholder_description"
-            learnMoreLink={getDocumentationUrl('/docs/recipes/rbac/manage-permissions-and-roles')}
+            learnMoreLink={{
+              href: getDocumentationUrl('/docs/recipes/rbac/manage-permissions-and-roles'),
+              targetBlank: 'noopener',
+            }}
             action={
               <Button
                 title={createButtonTitle}

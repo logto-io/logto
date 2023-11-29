@@ -30,8 +30,8 @@ function CustomCssForm() {
                 components={{
                   a: (
                     <TextLink
+                      targetBlank="noopener"
                       href={getDocumentationUrl('/docs/recipes/customize-sie/custom-css')}
-                      target="_blank"
                       onClick={closeTipHandler}
                     />
                   ),

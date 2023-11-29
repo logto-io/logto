@@ -71,11 +71,14 @@ function ApiResourceSettings() {
               ? 'api_resource_details.management_api_settings_description'
               : 'api_resource_details.settings_description'
           }
-          learnMoreLink={getDocumentationUrl(
-            isLogtoManagementApiResource
-              ? '/docs/recipes/interact-with-management-api/'
-              : '/docs/recipes/protect-your-api/'
-          )}
+          learnMoreLink={{
+            href: getDocumentationUrl(
+              isLogtoManagementApiResource
+                ? '/docs/recipes/interact-with-management-api/'
+                : '/docs/recipes/protect-your-api/'
+            ),
+            targetBlank: 'noopener',
+          }}
         >
           <FormField isRequired title="api_resources.api_name">
             <TextInput
@@ -106,7 +109,7 @@ function ApiResourceSettings() {
                       a: (
                         <TextLink
                           href="https://docs.logto.io/docs/references/resources/#default-api"
-                          target="_blank"
+                          targetBlank="noopener"
                         />
                       ),
                     }}

@@ -22,13 +22,7 @@ function TenantEnvironment({ tag }: Props) {
       <div className={styles.description}>
         <Trans
           components={{
-            a: (
-              <TextLink
-                href={getDocumentationUrl(envTagsFeatureLink)}
-                target="_blank"
-                rel="noopener"
-              />
-            ),
+            a: <TextLink targetBlank="noopener" href={getDocumentationUrl(envTagsFeatureLink)} />,
           }}
         >
           {t(

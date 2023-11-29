@@ -134,7 +134,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
           <FormCard
             title="connector_details.settings"
             description="connector_details.settings_description"
-            learnMoreLink={getDocumentationUrl('/docs/references/connectors')}
+            learnMoreLink={{
+              href: getDocumentationUrl('/docs/references/connectors'),
+              targetBlank: 'noopener',
+            }}
           >
             <BasicForm isStandard={isStandardConnector} isDarkDefaultVisible={Boolean(logoDark)} />
           </FormCard>
@@ -148,7 +151,10 @@ function ConnectorContent({ isDeleted, connectorData, onConnectorUpdated }: Prop
               !isSocialConnector && 'connector_details.settings_description'
             )}
             learnMoreLink={conditional(
-              !isSocialConnector && getDocumentationUrl('/docs/references/connectors')
+              !isSocialConnector && {
+                href: getDocumentationUrl('/docs/references/connectors'),
+                targetBlank: 'noopener',
+              }
             )}
           >
             <ConfigForm formItems={formItems} connectorId={id} connectorType={connectorType} />

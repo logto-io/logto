@@ -53,10 +53,13 @@ function EmailServiceConnectorForm({ extraInfo }: Props) {
     <FormCard
       title="connector_details.logto_email.email_template_title"
       description="connector_details.logto_email.template_description"
-      learnMoreLink={getDocumentationUrl(
-        '/docs/recipes/configure-connectors/email-connector/configure-logto-email-service/#unified-email-templates'
-      )}
-      learnMoreLinkText="connector_details.logto_email.template_description_link_text"
+      learnMoreLink={{
+        href: getDocumentationUrl(
+          '/docs/recipes/configure-connectors/email-connector/configure-logto-email-service/#unified-email-templates'
+        ),
+        targetBlank: 'noopener',
+        linkText: 'connector_details.logto_email.template_description_link_text',
+      }}
     >
       <FormField title="connector_details.logto_email.from_email_field">
         <TextInput

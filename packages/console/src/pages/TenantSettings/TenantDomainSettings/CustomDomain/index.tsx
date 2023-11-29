@@ -34,6 +34,7 @@ function CustomDomain({ customDomain, onDeleteCustomDomain }: Props) {
             components={{
               a: (
                 <TextLink
+                  targetBlank="noopener"
                   to={getDocumentationUrl('docs/recipes/custom-domain/use-custom-domain')}
                 />
               ),

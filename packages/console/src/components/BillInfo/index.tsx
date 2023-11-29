@@ -42,9 +42,9 @@ function BillInfo({ cost, isManagePaymentVisible }: Props) {
             components={{
               a: (
                 <TextLink
-                  href="https://blog.logto.io/logto-pricing-model"
-                  target="_blank"
                   className={styles.articleLink}
+                  href="https://blog.logto.io/logto-pricing-model"
+                  targetBlank="noopener"
                 />
               ),
             }}

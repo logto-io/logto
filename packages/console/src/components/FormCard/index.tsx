@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
+import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import FormCardLayout from './FormCardLayout';
 import * as styles from './index.module.scss';
@@ -12,8 +13,7 @@ type Props = {
   tag?: ReactNode;
   description?: AdminConsoleKey;
   descriptionInterpolation?: Record<string, unknown>;
-  learnMoreLink?: string;
-  learnMoreLinkText?: AdminConsoleKey;
+  learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'> & { linkText?: AdminConsoleKey };
   children: ReactNode;
 };
 
@@ -23,7 +23,6 @@ function FormCard({
   description,
   descriptionInterpolation,
   learnMoreLink,
-  learnMoreLinkText,
   children,
 }: Props) {
   return (
@@ -37,11 +36,11 @@ function FormCard({
           {description && (
             <div className={styles.description}>
               <DynamicT forKey={description} interpolation={descriptionInterpolation} />
-              {learnMoreLink && (
+              {learnMoreLink?.href && (
                 <>
                   {' '}
-                  <TextLink href={learnMoreLink} target="_blank" rel="noopener">
-                    <DynamicT forKey={learnMoreLinkText ?? 'general.learn_more'} />
+                  <TextLink href={learnMoreLink.href} targetBlank={learnMoreLink.targetBlank}>
+                    <DynamicT forKey={learnMoreLink.linkText ?? 'general.learn_more'} />
                   </TextLink>
                 </>
               )}

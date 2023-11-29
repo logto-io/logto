@@ -29,10 +29,10 @@ export default function Sample() {
       </hgroup>
       <Spacer />
       <LinkButton
+        targetBlank
         type="outline"
         href={appendPath(new URL(githubOrgLink), sample.repo, 'tree/HEAD', sample.path).href}
         title={<DangerousRaw>Check out sample</DangerousRaw>}
-        targetBlank="noopener"
       />
     </aside>
   );

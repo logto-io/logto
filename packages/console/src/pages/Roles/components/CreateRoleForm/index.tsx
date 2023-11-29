@@ -104,7 +104,10 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
     <ModalLayout
       title="roles.create_role_title"
       subtitle="roles.create_role_description"
-      learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
+      learnMoreLink={{
+        href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+        targetBlank: 'noopener',
+      }}
       size="large"
       footer={(() => {
         if (

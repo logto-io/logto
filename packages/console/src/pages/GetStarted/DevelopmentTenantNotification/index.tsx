@@ -25,14 +25,7 @@ function DevelopmentTenantNotification() {
         <div className={styles.title}>
           <Trans
             components={{
-              a: (
-                <TextLink
-                  href={pricingLink}
-                  target="_blank"
-                  rel="noopener"
-                  className={styles.link}
-                />
-              ),
+              a: <TextLink href={pricingLink} targetBlank="noopener" className={styles.link} />,
             }}
           >
             {t('tenants.dev_tenant_notification.title')}
@@ -43,11 +36,11 @@ function DevelopmentTenantNotification() {
         </div>
       </div>
       <LinkButton
-        targetBlank
         title="general.learn_more"
         type="outline"
         size="large"
         href={getDocumentationUrl(envTagsFeatureLink)}
+        targetBlank="noopener"
       />
     </div>
   );

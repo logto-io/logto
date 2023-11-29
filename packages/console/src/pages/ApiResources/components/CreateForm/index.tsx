@@ -123,8 +123,8 @@ function CreateForm({ onClose }: Props) {
                 components={{
                   a: (
                     <TextLink
+                      targetBlank
                       href="https://datatracker.ietf.org/doc/html/rfc8707#section-2"
-                      target="_blank"
                       onClick={closeTipHandler}
                     />
                   ),

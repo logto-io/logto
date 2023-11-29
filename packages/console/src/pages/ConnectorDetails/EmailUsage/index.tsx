@@ -42,7 +42,7 @@ function EmailUsage({ usage, isCompact }: Props) {
                   href={getDocumentationUrl(
                     'docs/recipes/configure-connectors/email-connector/configure-logto-email-service'
                   )}
-                  target="_blank"
+                  targetBlank="noopener"
                   onClick={closeTipHandler}
                 />
               ),

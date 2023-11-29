@@ -52,7 +52,10 @@ function RoleSettings() {
         <FormCard
           title="role_details.settings"
           description="role_details.settings_description"
-          learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles"
+          learnMoreLink={{
+            href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+            targetBlank: 'noopener',
+          }}
         >
           <FormField isRequired title="role_details.field_name">
             <TextInput {...register('name', { required: true })} error={Boolean(errors.name)} />

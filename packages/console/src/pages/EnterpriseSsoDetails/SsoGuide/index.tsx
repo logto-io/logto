@@ -35,7 +35,7 @@ function SsoGuide({ ssoConnector, className }: Props) {
         <MDXProvider
           components={{
             a: ({ children, ...props }) => (
-              <TextLink {...props} target="_blank" rel="noopener noreferrer">
+              <TextLink {...props} targetBlank>
                 {children}
               </TextLink>
             ),

@@ -6,6 +6,7 @@ import type { ReactNode, Ref } from 'react';
 import Info from '@/assets/icons/info.svg';
 import Error from '@/assets/icons/toast-error.svg';
 import Success from '@/assets/icons/toast-success.svg';
+import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import Button from '../Button';
 import DynamicT from '../DynamicT';
@@ -18,6 +19,7 @@ type Props = {
   children?: ReactNode;
   action?: AdminConsoleKey;
   href?: string;
+  hrefTargetBlank?: TextLinkProps['targetBlank'];
   onClick?: () => void;
   variant?: 'plain' | 'shadow';
   hasIcon?: boolean;
@@ -48,6 +50,7 @@ function InlineNotification(
     children,
     action,
     href,
+    hrefTargetBlank,
     onClick,
     severity = 'info',
     variant = 'plain',
@@ -74,7 +77,7 @@ function InlineNotification(
       )}
       <div className={styles.content}>{children}</div>
       {action && href && (
-        <TextLink to={href}>
+        <TextLink to={href} targetBlank={hrefTargetBlank}>
           <DynamicT forKey={action} />
         </TextLink>
       )}

@@ -5,6 +5,7 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FeatureTag from '@/components/FeatureTag';
+import type { Props as TextLinkProps } from '@/ds-components/TextLink';
 
 import type DangerousRaw from '../DangerousRaw';
 import DynamicT from '../DynamicT';
@@ -16,7 +17,7 @@ export type Props = {
   title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   size?: 'small' | 'medium' | 'large';
-  learnMoreLink?: string;
+  learnMoreLink?: Pick<TextLinkProps, 'href' | 'targetBlank'>;
   isWordWrapEnabled?: boolean;
   className?: string;
   /** If a beta tag should be shown next to the title. */
@@ -56,8 +57,12 @@ function CardTitle({
           {subtitle && (
             <span>{typeof subtitle === 'string' ? <DynamicT forKey={subtitle} /> : subtitle}</span>
           )}
-          {learnMoreLink && (
-            <TextLink href={learnMoreLink} target="_blank" className={styles.learnMore}>
+          {learnMoreLink?.href && (
+            <TextLink
+              href={learnMoreLink.href}
+              targetBlank={learnMoreLink.targetBlank}
+              className={styles.learnMore}
+            >
               {t('general.learn_more')}
             </TextLink>
           )}

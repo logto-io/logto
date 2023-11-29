@@ -183,9 +183,12 @@ function Connectors() {
               imageDark={<SocialConnectorEmptyDark />}
               title="connectors.placeholder_title"
               description="connectors.placeholder_description"
-              learnMoreLink={getDocumentationUrl(
-                '/docs/recipes/configure-connectors/configure-social-connector'
-              )}
+              learnMoreLink={{
+                href: getDocumentationUrl(
+                  '/docs/recipes/configure-connectors/configure-social-connector'
+                ),
+                targetBlank: 'noopener',
+              }}
               action={
                 <Button
                   title="connectors.create"

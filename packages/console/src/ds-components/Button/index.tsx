@@ -113,6 +113,8 @@ type LinkProps = Omit<HTMLProps<HTMLAnchorElement>, 'type' | 'size' | 'title' | 
    *
    * - When it's `true`, the `rel` attribute will be set to `noopener noreferrer`.
    * - When it's `noopener`, the `rel` attribute will be set to `noopener`.
+   *
+   * Typically, when navigating to Logto's website (official site, blog, documentation, etc.), use 'noopener'.
    */
   targetBlank?: boolean | 'noopener';
   type?: ButtonType;

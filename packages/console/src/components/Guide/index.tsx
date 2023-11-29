@@ -83,7 +83,7 @@ function Guide({ className, guideId, isEmpty, isLoading, onClose }: Props) {
               );
             },
             a: ({ children, ...props }) => (
-              <TextLink {...props} target="_blank" rel="noopener noreferrer">
+              <TextLink {...props} targetBlank>
                 {children}
               </TextLink>
             ),
