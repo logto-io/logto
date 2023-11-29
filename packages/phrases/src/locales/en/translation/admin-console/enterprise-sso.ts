@@ -9,7 +9,7 @@ const enterprise_sso = {
 
   placeholder_title: 'Enterprise connector',
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with standard protocols.',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: 'Add enterprise connector',
     text_divider: 'Or you can customize your connector by a standard protocol.',

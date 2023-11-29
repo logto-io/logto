@@ -5,7 +5,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import ImageUploader from '@/ds-components/Uploader/ImageUploader';
-import useImageMimeTypes from '@/hooks/use-image-mime-types';
 
 import type { FormType } from '../index.js';
 
@@ -19,7 +18,6 @@ function LogosUploader() {
   const [uploadDarkLogoError, setUploadDarkLogoError] = useState<string>();
 
   const { control } = useFormContext<FormType>();
-  const { description } = useImageMimeTypes(allowedMimeTypes);
 
   return (
     <div className={styles.container}>
@@ -75,7 +73,9 @@ function LogosUploader() {
           {t('enterprise_sso_details.branding_dark_logo_error', { error: uploadDarkLogoError })}
         </div>
       )}
-      <div className={styles.description}>{description}</div>
+      <div className={styles.description}>
+        {t('enterprise_sso_details.connector_logo_field_description')}
+      </div>
     </div>
   );
 }

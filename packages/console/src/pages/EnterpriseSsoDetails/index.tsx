@@ -126,7 +126,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             primaryTag={ssoConnector.name}
             identifier={{ name: 'ID', value: ssoConnector.id }}
             additionalActionButton={{
-              title: 'enterprise_sso_details.check_readme',
+              title: 'enterprise_sso_details.check_connection_guide',
               icon: <File />,
               onClick: () => {
                 setIsReadmeOpen(true);

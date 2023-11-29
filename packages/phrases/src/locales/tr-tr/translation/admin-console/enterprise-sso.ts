@@ -9,8 +9,9 @@ const enterprise_sso = {
   col_email_domain: 'E-posta etki alanı',
 
   placeholder_title: 'Kurumsal bağlayıcı',
+  /** UNTRANSLATED */
   placeholder_description:
-    'Logto, birçok yerleşik kurumsal kimlik sağlayıcı sunmuştur, aynı zamanda standart protokollerle kendi kimlik sağlayıcınızı oluşturabilirsiniz.',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: 'Kurumsal bağlayıcı ekle',
     text_divider: 'Ya da standart bir protokol ile bağlayıcınızı özelleştirebilirsiniz.',

@@ -12,17 +12,17 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   tab_connection: 'Connection',
   /** UNTRANSLATED */
-  general_settings_title: 'General Settings',
+  general_settings_title: 'General',
   /** UNTRANSLATED */
-  custom_branding_title: 'Custom Branding',
+  custom_branding_title: 'Display',
   /** UNTRANSLATED */
   custom_branding_description:
-    'Customize enterprise IdP display information for sign-in button and other scenarios.',
+    'Customize the selection button for user accounts with multiple enterprise identity providers. When empty, defaults are used.',
   /** UNTRANSLATED */
   email_domain_field_name: 'Enterprise email domain',
   /** UNTRANSLATED */
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please ensure the domain belongs to the enterprise.',
+    'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
   /** UNTRANSLATED */
   email_domain_field_placeholder: 'Email domain',
   /** UNTRANSLATED */
@@ -38,7 +38,9 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   display_name_field_name: 'Display name',
   /** UNTRANSLATED */
-  connector_logo_field_name: 'Connector logo',
+  connector_logo_field_name: 'Display logo',
+  /** UNTRANSLATED */
+  connector_logo_field_description: 'Each image should under 500KB, SVG, PNG, JPG, JPEG only.',
   /** UNTRANSLATED */
   branding_logo_context: 'Upload logo',
   /** UNTRANSLATED */
@@ -56,7 +58,7 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
   /** UNTRANSLATED */
-  check_readme: 'Check README',
+  check_connection_guide: 'Connection guide',
   /** UNTRANSLATED */
   enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
   /** UNTRANSLATED */
@@ -65,9 +67,14 @@ const enterprise_sso_details = {
   delete_confirm_modal_content:
     'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
   /** UNTRANSLATED */
-  upload_idp_metadata_title: 'Upload IdP metadata',
+  upload_idp_metadata_title_saml: 'Upload the metadata',
   /** UNTRANSLATED */
-  upload_idp_metadata_description: 'Configure the metadata copied from the identity provider.',
+  upload_idp_metadata_description_saml: 'Configure the metadata copied from the identity provider.',
+  /** UNTRANSLATED */
+  upload_idp_metadata_title_oidc: 'Upload the credentials',
+  /** UNTRANSLATED */
+  upload_idp_metadata_description_oidc:
+    'Configure the credentials and OIDC token information copied from the identity provider.',
   /** UNTRANSLATED */
   upload_idp_metadata_button_text: 'Upload metadata XML file',
   /** UNTRANSLATED */
@@ -87,15 +94,15 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
   /** UNTRANSLATED */
-  service_provider_property_title: 'Configure your service in the IdP',
+  service_provider_property_title: 'Configure in the IdP',
   /** UNTRANSLATED */
   service_provider_property_description:
-    'Create a new app integration by {{protocol}} in your {{name}}. Then paste the following Service Provider details to configure {{protocol}}.',
+    'Create a new application integration by {{protocol}} in the identity provider and then paste the generated value there.',
   /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mapping',
+  attribute_mapping_title: 'Attribute mappings',
   /** UNTRANSLATED */
   attribute_mapping_description:
-    "User's `id` and `email` are required to sync user profile from IdP. Enter the following name and value in {{name}}.",
+    "To sync the user profile from the identity provider, the user's 'id' and 'email' are necessary. Alternatively, you can specify the claim name and value mapping within the identity provider.",
   saml_preview: {
     /** UNTRANSLATED */
     sign_on_url: 'Sign on URL',

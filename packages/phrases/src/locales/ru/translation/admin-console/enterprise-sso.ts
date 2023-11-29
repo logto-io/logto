@@ -9,8 +9,9 @@ const enterprise_sso = {
   col_email_domain: 'Домен электронной почты',
 
   placeholder_title: 'Коннектор предприятия',
+  /** UNTRANSLATED */
   placeholder_description:
-    'Logto предоставил множество встроенных поставщиков идентификации предприятия для подключения, тем временем вы можете создать своего с использованием стандартных протоколов.',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: 'Добавить коннектор предприятия',
     text_divider: 'Или вы можете настроить свой коннектор по стандартному протоколу.',

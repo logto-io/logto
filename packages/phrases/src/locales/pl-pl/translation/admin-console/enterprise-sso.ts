@@ -9,8 +9,9 @@ const enterprise_sso = {
   col_email_domain: 'Domena e-mail',
 
   placeholder_title: 'Łącznik przedsiębiorstwa',
+  /** UNTRANSLATED */
   placeholder_description:
-    'Logto udostępniło wiele wbudowanych dostawców tożsamości przedsiębiorstw, możesz także stworzyć własnego zgodnego ze standardowymi protokołami.',
+    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
   create_modal: {
     title: 'Dodaj łącznik przedsiębiorstwa',
     text_divider: 'Albo możesz dostosować swój łącznik za pomocą standardowego protokołu.',
