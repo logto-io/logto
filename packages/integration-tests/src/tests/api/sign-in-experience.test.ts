@@ -27,6 +27,7 @@ describe('admin console sign-in experience', () => {
         policy: MfaPolicy.UserControlled,
         factors: [],
       },
+      singleSignOnEnabled: true,
     };
 
     const updatedSignInExperience = await updateSignInExperience(newSignInExperience);

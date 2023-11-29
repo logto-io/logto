@@ -111,13 +111,15 @@ export const createSignInExperienceLibrary = (
   };
 
   const getFullSignInExperience = async (locale: string): Promise<FullSignInExperience> => {
-    const [signInExperience, logtoConnectors, ssoConnectors, isDevelopmentTenant] =
-      await Promise.all([
-        findDefaultSignInExperience(),
-        getLogtoConnectors(),
-        getActiveSsoConnectors(locale),
-        getIsDevelopmentTenant(),
-      ]);
+    const [signInExperience, logtoConnectors, isDevelopmentTenant] = await Promise.all([
+      findDefaultSignInExperience(),
+      getLogtoConnectors(),
+      getIsDevelopmentTenant(),
+    ]);
+
+    const ssoConnectors = signInExperience.singleSignOnEnabled
+      ? await getActiveSsoConnectors(locale)
+      : [];
 
     const forgotPassword = {
       phone: logtoConnectors.some(({ type }) => type === ConnectorType.Sms),
