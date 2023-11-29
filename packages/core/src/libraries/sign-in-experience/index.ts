@@ -117,6 +117,7 @@ export const createSignInExperienceLibrary = (
       getIsDevelopmentTenant(),
     ]);
 
+    // Always return empty array if single-sign-on is disabled
     const ssoConnectors = signInExperience.singleSignOnEnabled
       ? await getActiveSsoConnectors(locale)
       : [];
