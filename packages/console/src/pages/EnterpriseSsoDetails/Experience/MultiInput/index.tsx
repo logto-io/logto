@@ -64,92 +64,97 @@ function MultiInput({ className, values, onChange, error, placeholder }: Props) 
   };
 
   return (
-    <div
-      className={classNames(
-        styles.input,
-        styles.multiple,
-        Boolean(error) && styles.error,
-        className
-      )}
-      role="button"
-      tabIndex={0}
-      onKeyDown={onKeyDownHandler(() => {
-        inputRef.current?.focus();
-      })}
-      onClick={() => {
-        inputRef.current?.focus();
-      }}
-    >
-      {values.map((option) => {
-        return (
-          <Tag
-            key={option.id}
-            variant="cell"
-            className={classNames(
-              styles.tag,
-              option.status && styles[option.status],
-              option.id === focusedValueId && styles.focused
-            )}
-            onClick={() => {
-              inputRef.current?.focus();
-            }}
-          >
-            {option.value}
-            <IconButton
-              className={styles.delete}
-              size="small"
-              onClick={() => {
-                handleDelete(option);
-              }}
-              onKeyDown={onKeyDownHandler(() => {
-                handleDelete(option);
-              })}
-            >
-              <Close className={styles.close} />
-            </IconButton>
-          </Tag>
-        );
-      })}
-      <input
-        ref={inputRef}
-        // Need to use t() to complete the translation with prefix, use String() to convert the result to string.
-        // Should not show placeholder when there are values.
-        placeholder={conditional(values.length === 0 && placeholder && String(t(placeholder)))}
-        value={currentValue}
-        onKeyDown={(event) => {
-          if (event.key === 'Backspace' && currentValue === '') {
-            if (focusedValueId) {
-              onChange(values.filter(({ id }) => id !== focusedValueId));
-              setFocusedValueId(null);
-            } else {
-              setFocusedValueId(values.at(-1)?.id ?? null);
-            }
-            inputRef.current?.focus();
-          }
-          if (event.key === ' ' || event.code === 'Space' || event.key === 'Enter') {
-            // Focusing on input
-            if (currentValue !== '' && document.activeElement === inputRef.current) {
-              handleAdd(currentValue);
-            }
-            // Do not react to "Enter"
-            event.preventDefault();
-          }
-        }}
-        onChange={({ currentTarget: { value } }) => {
-          setCurrentValue(value);
-          setFocusedValueId(null);
-        }}
-        onFocus={() => {
+    <>
+      <div
+        className={classNames(
+          styles.input,
+          styles.multiple,
+          Boolean(error) && styles.error,
+          className
+        )}
+        role="button"
+        tabIndex={0}
+        onKeyDown={onKeyDownHandler(() => {
+          inputRef.current?.focus();
+        })}
+        onClick={() => {
           inputRef.current?.focus();
         }}
-        onBlur={() => {
-          if (currentValue !== '') {
-            handleAdd(currentValue);
-          }
-          setFocusedValueId(null);
-        }}
-      />
-    </div>
+      >
+        {values.map((option) => {
+          return (
+            <Tag
+              key={option.id}
+              variant="cell"
+              className={classNames(
+                styles.tag,
+                option.status && styles[option.status],
+                option.id === focusedValueId && styles.focused
+              )}
+              onClick={() => {
+                inputRef.current?.focus();
+              }}
+            >
+              {option.value}
+              <IconButton
+                className={styles.delete}
+                size="small"
+                onClick={() => {
+                  handleDelete(option);
+                }}
+                onKeyDown={onKeyDownHandler(() => {
+                  handleDelete(option);
+                })}
+              >
+                <Close className={styles.close} />
+              </IconButton>
+            </Tag>
+          );
+        })}
+        <input
+          ref={inputRef}
+          // Need to use t() to complete the translation with prefix, use String() to convert the result to string.
+          // Should not show placeholder when there are values.
+          placeholder={conditional(values.length === 0 && placeholder && String(t(placeholder)))}
+          value={currentValue}
+          onKeyDown={(event) => {
+            if (event.key === 'Backspace' && currentValue === '') {
+              if (focusedValueId) {
+                onChange(values.filter(({ id }) => id !== focusedValueId));
+                setFocusedValueId(null);
+              } else {
+                setFocusedValueId(values.at(-1)?.id ?? null);
+              }
+              inputRef.current?.focus();
+            }
+            if (event.key === ' ' || event.code === 'Space' || event.key === 'Enter') {
+              // Focusing on input
+              if (currentValue !== '' && document.activeElement === inputRef.current) {
+                handleAdd(currentValue);
+              }
+              // Do not react to "Enter"
+              event.preventDefault();
+            }
+          }}
+          onChange={({ currentTarget: { value } }) => {
+            setCurrentValue(value);
+            setFocusedValueId(null);
+          }}
+          onFocus={() => {
+            inputRef.current?.focus();
+          }}
+          onBlur={() => {
+            if (currentValue !== '') {
+              handleAdd(currentValue);
+            }
+            setFocusedValueId(null);
+          }}
+        />
+      </div>
+      {Boolean(error) && typeof error === 'string' && (
+        <div className={styles.errorMessage}>{error}</div>
+      )}
+    </>
   );
 }
 
