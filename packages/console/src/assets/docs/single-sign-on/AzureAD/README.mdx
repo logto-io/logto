@@ -14,21 +14,23 @@ Initiate the Azure AD SSO integration by creating an SSO application on the Azur
 
 1. Go to the [Azure portal](https://portal.azure.com/) and sign in as an administrator.
 
-2. Navigate to `Microsoft Entra ID` > `Enterprise applications` > `New application`, and select `Create your own application`.
+2. Select `Microsoft Entra ID` service.
+
+3. Navigate to the `Enterprise applications` using the side menu. Click `New application`, and select `Create your own application`.
 
 <center>
   <img src={createApplication} alt="Create Application" />
 </center>
 
-3. Enter the application name and select `Integrate any other application you don't find in the gallery (Non-gallery)`.
+4. Enter the application name and select `Integrate any other application you don't find in the gallery (Non-gallery)`.
 
-4. Select `Setup single sign-on` > `SAML`.
+5. Select `Setup single sign-on` > `SAML`.
 
 <center>
   <img src={setupSso} alt="Setup single sign on" />
 </center>
 
-5. Follow the instructions, as the first step, you will need to fill in the basic SAML configuration using the following information provided by Logto.
+6. Follow the instructions, as the first step, you will need to fill in the basic SAML configuration using the following information provided by Logto.
 
 <center>
   <img src={spConfig} alt="SP Configuration" />
@@ -45,17 +47,18 @@ Click `Save` to continue.
 </Step>
 
 <Step index={1} title="Configure SAML SSO at Logto">
+
 To make the SAML SSO integration work, you will need to provide the IdP metadata back to Logto. Let's switch back to the Logto side, navigate to the `Connection` tab of your Azure AD SSO connector.
 
-Logto provides three different ways to configure the IdP metadata. The easiest way is to provide the `metadata URL` of the Azure AD SSO application.
+Logto provides three different ways to configure the IdP metadata. The easiest way is by providing the `metadata URL` of the Azure AD SSO application.
 
-- Copy the `App Federation Metadata Url` from your Azure AD SSO application and paste it into the `Metadata URL` field in Logto.
+Copy the `App Federation Metadata Url` from your Azure AD SSO application's `SAML Certificates section` and paste it into the `Metadata URL` field in Logto.
 
 <center>
   <img src={metadataUrl} alt="Metadata URL" />
 </center>
 
-- Logto will fetch the metadata from the URL and configure the SAML SSO integration automatically.
+Logto will fetch the metadata from the URL and configure the SAML SSO integration automatically.
 
 </Step>
 
@@ -71,27 +74,29 @@ You may manage the user attributes mapping logic either on the Azure AD side or 
 
 1. Map the AzureAD user attributes to Logto user attributes at Logto side.
 
+   Visit the `Attributes & Claims` section of your Azure AD SSO application.
+
+   Copy the following attribute names (with namespace prefix) and paste them into the corresponding fields in Logto.
+
+   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email`
+
+   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` (Recommendation: update this attribute value map to `user.displayname` for better user experience)
+
 <center>
   <img src={defaultAttributesMapping} alt="Default Attributes Mapping" />
 </center>
 
-Visit the `Attributes & Claims` tab of your Azure AD SSO application.
-
-Copy the following attribute names (with namespace prefix) from the `Attributes & Claims` section of your Azure AD SSO application and paste them into the corresponding fields in Logto.
-
-- `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email`
-
-- `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` (Recommend: update the attribute value map to `user.displayname` for better user experience)
-
 2. Map the AzureAD user attributes to Logto user attributes at AzureAD side.
 
-Visit the `Attributes & Claims` section of your Azure AD SSO application. Click on `Edit`. Update the `Additional claims` fields based on the Logto user attributes settings:
+   Visit the `Attributes & Claims` section of your Azure AD SSO application.
 
-- update the claim name value based on the Logto user attributes settings.
-- remove the namespace prefix.
-- click `Save` to continue.
+   Click on `Edit`, and update the `Additional claims` fields based on the Logto user attributes settings:
 
-Should end up with the following settings:
+   - update the claim name value based on the Logto user attributes settings.
+   - remove the namespace prefix.
+   - click `Save` to continue.
+
+   Should end up with the following settings:
 
 <center>
   <img src={logtoAttributes} alt="Logto Attributes" />
