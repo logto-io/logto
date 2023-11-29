@@ -16,7 +16,7 @@ import IdentifierRegisterForm from './IdentifierRegisterForm';
 import * as styles from './index.module.scss';
 
 const Register = () => {
-  const { signUpMethods, socialConnectors, signInMode, signInMethods, ssoConnectors } =
+  const { signUpMethods, socialConnectors, signInMode, signInMethods, singleSignOnEnabled } =
     useSieMethods();
   const { t } = useTranslation();
 
@@ -41,7 +41,7 @@ const Register = () => {
       )}
       {
         // Single Sign On footer TODO: remove the dev feature check once SSO is ready
-        isDevFeaturesEnabled && ssoConnectors.length > 0 && (
+        isDevFeaturesEnabled && singleSignOnEnabled && (
           <div className={styles.singleSignOn}>
             {t('description.use')}{' '}
             <TextLink to="/single-sign-on/email" text="action.single_sign_on" />

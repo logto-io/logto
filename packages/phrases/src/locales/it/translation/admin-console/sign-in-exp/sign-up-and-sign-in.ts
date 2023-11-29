@@ -60,6 +60,14 @@ const sign_up_and_sign_in = {
     /** UNTRANSLATED */
     enable_single_sign_on_description:
       'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: 'Abilita registrazione utente',
     enable_user_registration_description:
       "Abilita o disabilita la registrazione degli utenti. Una volta disabilitata, gli utenti possono comunque essere aggiunti nella console di amministrazione, ma gli utenti non possono più creare account tramite l'interfaccia di accesso.",
