@@ -11,19 +11,14 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
     <Step ref={ref} {...props}>
       <ul>
         <li>
-          <TextLink
-            target="blank"
-            rel="noopener"
-            href="https://docs.logto.io/docs/recipes/customize-sie/"
-          >
+          <TextLink href="https://docs.logto.io/docs/recipes/customize-sie/" targetBlank="noopener">
             Customize sign-in experience
           </TextLink>
         </li>
         <li>
           <TextLink
-            target="blank"
-            rel="noopener"
             href="https://docs.logto.io/docs/recipes/protect-your-api/"
+            targetBlank="noopener"
           >
             Protect your API
           </TextLink>

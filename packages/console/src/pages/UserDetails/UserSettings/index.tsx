@@ -102,7 +102,10 @@ function UserSettings() {
         <FormCard
           title="user_details.authentication"
           description="user_details.authentication_description"
-          learnMoreLink={getDocumentationUrl('/docs/references/users')}
+          learnMoreLink={{
+            href: getDocumentationUrl('/docs/references/users'),
+            targetBlank: 'noopener',
+          }}
         >
           <FormField title="user_details.field_email">
             <TextInput

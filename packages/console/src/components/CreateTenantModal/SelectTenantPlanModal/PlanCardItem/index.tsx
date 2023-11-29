@@ -103,9 +103,8 @@ function PlanCardItem({ plan, onSelect }: Props) {
             <TextLink
               isTrailingIcon
               href={pricingLink}
+              targetBlank="noopener"
               icon={<ArrowRight className={styles.linkIcon} />}
-              target="_blank"
-              rel="noopener"
               className={styles.link}
             >
               <DynamicT forKey="upsell.create_tenant.view_all_features" />

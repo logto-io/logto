@@ -12,7 +12,7 @@ function DocumentNavButton() {
   return (
     <TextLink
       href={documentationSiteUrl}
-      target="_blank"
+      targetBlank="noopener"
       className={classNames(styles.textLink, styles.documentNavButton)}
       icon={<DocumentIcon className={styles.icon} />}
     >

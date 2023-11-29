@@ -66,10 +66,10 @@ function TenantEnvMigrationModal() {
           footer={
             <>
               <LinkButton
-                targetBlank
                 title="tenants.dev_tenant_migration.about_tenant_type"
                 size="large"
                 href={getDocumentationUrl(envTagsFeatureLink)}
+                targetBlank="noopener"
               />
               <Button title="general.got_it" size="large" type="primary" onClick={onClose} />
             </>

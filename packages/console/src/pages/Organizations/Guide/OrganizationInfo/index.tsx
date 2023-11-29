@@ -83,11 +83,7 @@ function OrganizationInfo() {
               {/* TODO: @charles Documentation links will be updated later */}
               <ul>
                 <li>
-                  <TextLink
-                    target="blank"
-                    rel="noopener"
-                    href="https://docs.logto.io/docs/tutorials/"
-                  >
+                  <TextLink href="https://docs.logto.io/docs/tutorials/" targetBlank="noopener">
                     {t('guide.add_members_action')}
                   </TextLink>
                 </li>

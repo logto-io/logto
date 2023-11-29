@@ -23,8 +23,8 @@ function ApplicationCredentials() {
               components={{
                 a: (
                   <TextLink
+                    targetBlank
                     href="https://openid.net/specs/openid-connect-core-1_0.html"
-                    target="_blank"
                     onClick={closeTipHandler}
                   />
                 ),

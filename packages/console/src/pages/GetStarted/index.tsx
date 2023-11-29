@@ -150,7 +150,7 @@ function GetStarted() {
             <LinkButton
               title="get_started.customize.try_now"
               href={new URL('/demo-app', tenantEndpoint).href}
-              target="_blank"
+              targetBlank="noopener"
             />
           </div>
         </div>

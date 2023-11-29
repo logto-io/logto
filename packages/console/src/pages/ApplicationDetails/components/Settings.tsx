@@ -52,7 +52,10 @@ function Settings({ data }: Props) {
     <FormCard
       title="application_details.settings"
       description="application_details.settings_description"
-      learnMoreLink={getDocumentationUrl('/docs/references/applications')}
+      learnMoreLink={{
+        href: getDocumentationUrl('/docs/references/applications'),
+        targetBlank: 'noopener',
+      }}
     >
       <FormField isRequired title="application_details.application_name">
         <TextInput
@@ -108,8 +111,8 @@ function Settings({ data }: Props) {
                   components={{
                     a: (
                       <TextLink
+                        targetBlank
                         href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest"
-                        target="_blank"
                         onClick={closeTipHandler}
                       />
                     ),
@@ -163,8 +166,8 @@ function Settings({ data }: Props) {
                   components={{
                     a: (
                       <TextLink
+                        targetBlank
                         href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS"
-                        target="_blank"
                         onClick={closeTipHandler}
                       />
                     ),

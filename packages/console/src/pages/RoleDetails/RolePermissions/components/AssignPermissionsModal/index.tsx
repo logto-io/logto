@@ -76,7 +76,10 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
       <ModalLayout
         title="role_details.permission.assign_title"
         subtitle="role_details.permission.assign_subtitle"
-        learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions"
+        learnMoreLink={{
+          href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
+          targetBlank: 'noopener',
+        }}
         size="large"
         footer={
           shouldBlockScopeAssignment && currentPlan ? (

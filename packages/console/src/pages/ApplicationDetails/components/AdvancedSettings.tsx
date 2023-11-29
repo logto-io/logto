@@ -49,7 +49,10 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
     <FormCard
       title="application_details.advanced_settings"
       description="application_details.advanced_settings_description"
-      learnMoreLink="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint"
+      learnMoreLink={{
+        href: 'https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint',
+        targetBlank: true,
+      }}
     >
       {tenantEndpoint && (
         <FormField title="application_details.config_endpoint">
@@ -67,8 +70,8 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
             components={{
               a: (
                 <TextLink
+                  targetBlank
                   href="https://openid.net/specs/openid-connect-core-1_0.html#Authentication"
-                  target="_blank"
                   onClick={closeTipHandler}
                 />
               ),
@@ -127,7 +130,7 @@ function AdvancedSettings({ app: { type }, oidcConfig }: Props) {
                     a: (
                       <TextLink
                         href="https://docs.logto.io/docs/references/applications/#rotate-refresh-token"
-                        target="_blank"
+                        targetBlank="noopener"
                       />
                     ),
                   }}

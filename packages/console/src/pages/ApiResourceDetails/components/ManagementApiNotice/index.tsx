@@ -26,7 +26,7 @@ function ManagementApiNotice() {
     >
       <Trans
         components={{
-          a: <TextLink href={learnMoreLink} target="_blank" rel="noopener" />,
+          a: <TextLink href={learnMoreLink} targetBlank="noopener" />,
         }}
       >
         {t('api_resource_details.management_api_notice')}

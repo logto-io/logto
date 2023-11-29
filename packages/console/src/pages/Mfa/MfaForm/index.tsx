@@ -93,7 +93,10 @@ function MfaForm({ data, onMfaUpdated }: Props) {
         <FormCard
           title="mfa.factors"
           description="mfa.multi_factors_description"
-          learnMoreLink={getDocumentationUrl('/docs/recipes/multi-factor-auth/config-mfa')}
+          learnMoreLink={{
+            href: getDocumentationUrl('/docs/recipes/multi-factor-auth/configure-mfa'),
+            targetBlank: 'noopener',
+          }}
         >
           <FormField title="mfa.multi_factors" headlineSpacing="large">
             <div className={styles.factorField}>

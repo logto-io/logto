@@ -16,7 +16,7 @@ function TenantRegion() {
       <div className={styles.regionTip}>
         <Trans
           components={{
-            a: <TextLink href={trustAndSecurityLink} target="_blank" rel="noopener" />,
+            a: <TextLink targetBlank="noopener" href={trustAndSecurityLink} />,
           }}
         >
           {t('tenants.settings.tenant_region_tip', { region: 'EU' })}

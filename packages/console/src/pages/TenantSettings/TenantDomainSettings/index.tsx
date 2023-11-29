@@ -27,7 +27,10 @@ function TenantDomainSettings() {
       <FormCard
         title="domain.custom.custom_domain"
         description="domain.custom.custom_domain_description"
-        learnMoreLink={getDocumentationUrl('docs/recipes/custom-domain')}
+        learnMoreLink={{
+          href: getDocumentationUrl('docs/recipes/custom-domain'),
+          targetBlank: 'noopener',
+        }}
       >
         <FormField title="domain.custom.custom_domain_field">
           {customDomain ? (

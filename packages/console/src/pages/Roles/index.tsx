@@ -74,8 +74,10 @@ function Roles() {
       title={{
         title: 'roles.title',
         subtitle: 'roles.subtitle',
-        learnMoreLink:
-          'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+        learnMoreLink: {
+          href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-roles',
+          targetBlank: 'noopener',
+        },
       }}
       pageMeta={{ titleKey: 'roles.page_title' }}
       createButton={{
@@ -172,9 +174,12 @@ function Roles() {
             imageDark={<RolesEmptyDark />}
             title="roles.placeholder_title"
             description="roles.placeholder_description"
-            learnMoreLink={getDocumentationUrl(
-              '/docs/recipes/rbac/manage-permissions-and-roles#manage-roles'
-            )}
+            learnMoreLink={{
+              href: getDocumentationUrl(
+                '/docs/recipes/rbac/manage-permissions-and-roles#manage-roles'
+              ),
+              targetBlank: 'noopener',
+            }}
             action={
               <Button
                 title="roles.create"

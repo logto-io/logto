@@ -114,7 +114,7 @@ function BasicForm({
               a: (
                 <TextLink
                   href={getDocumentationUrl('/docs/references/connectors/#target')}
-                  target="_blank"
+                  targetBlank="noopener"
                   onClick={closeTipHandler}
                 />
               ),

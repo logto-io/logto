@@ -72,7 +72,10 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
       <ModalLayout
         title="api_resource_details.permission.create_title"
         subtitle="api_resource_details.permission.create_subtitle"
-        learnMoreLink="https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions"
+        learnMoreLink={{
+          href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
+          targetBlank: 'noopener',
+        }}
         footer={
           isScopesPerResourceReachLimit && currentPlan ? (
             <QuotaGuardFooter>

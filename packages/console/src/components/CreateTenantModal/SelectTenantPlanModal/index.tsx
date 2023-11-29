@@ -67,9 +67,7 @@ function SelectTenantPlanModal({ tenantData, onClose }: Props) {
         title="upsell.create_tenant.title"
         subtitle={
           <DangerousRaw>
-            <Trans
-              components={{ a: <TextLink href={pricingLink} target="_blank" rel="noopener" /> }}
-            >
+            <Trans components={{ a: <TextLink href={pricingLink} targetBlank="noopener" /> }}>
               {t('upsell.create_tenant.description')}
             </Trans>
           </DangerousRaw>

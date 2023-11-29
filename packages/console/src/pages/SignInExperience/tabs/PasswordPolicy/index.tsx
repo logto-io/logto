@@ -81,9 +81,8 @@ function PasswordPolicy({ isActive }: Props) {
               components={{
                 a: (
                   <TextLink
+                    targetBlank
                     href="https://pages.nist.gov/800-63-3/sp800-63b.html#sec5"
-                    target="_blank"
-                    rel="noopener"
                   />
                 ),
               }}
