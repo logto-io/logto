@@ -11,6 +11,7 @@ import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getTenantSubscriptionPlan } from '#src/utils/subscription/index.js';
+import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
 
@@ -63,7 +64,7 @@ export const createSignInExperienceLibrary = (
     });
   };
 
-  const getActiveSsoConnectors = async (): Promise<SsoConnectorMetadata[]> => {
+  const getActiveSsoConnectors = async (locale: string): Promise<SsoConnectorMetadata[]> => {
     // TODO: @simeng-li Remove the dev feature check once SSO is fully released
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return [];
@@ -73,13 +74,17 @@ export const createSignInExperienceLibrary = (
 
     return ssoConnectors.map(({ providerName, id, branding }): SsoConnectorMetadata => {
       const factory = ssoConnectorFactories[providerName];
+      const { name, logo, logoDark } = factory;
+
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- empty string is not a valid locale
+      const providerNameInLocale = (isKeyOfI18nPhrases(locale, name) && name[locale]) || name.en;
 
       return {
         id,
         // Use the provider name as the connector name if the branding displayName is not provided
-        connectorName: branding.displayName ?? providerName,
-        logo: branding.logo ?? factory.logo,
-        darkLogo: branding.darkLogo ?? factory.logoDark,
+        connectorName: branding.displayName ?? providerNameInLocale,
+        logo: branding.logo ?? logo,
+        darkLogo: branding.darkLogo ?? logoDark,
       };
     });
   };
@@ -105,12 +110,12 @@ export const createSignInExperienceLibrary = (
     return plan.id === developmentTenantPlanId;
   };
 
-  const getFullSignInExperience = async (): Promise<FullSignInExperience> => {
+  const getFullSignInExperience = async (locale: string): Promise<FullSignInExperience> => {
     const [signInExperience, logtoConnectors, ssoConnectors, isDevelopmentTenant] =
       await Promise.all([
         findDefaultSignInExperience(),
         getLogtoConnectors(),
-        getActiveSsoConnectors(),
+        getActiveSsoConnectors(locale),
         getIsDevelopmentTenant(),
       ]);
 

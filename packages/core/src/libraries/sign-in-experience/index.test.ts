@@ -146,7 +146,8 @@ describe('getFullSignInExperience()', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const fullSignInExperience = await getFullSignInExperience();
+    const fullSignInExperience = await getFullSignInExperience('en');
+    const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(fullSignInExperience).toStrictEqual({
       ...mockSignInExperience,
@@ -159,9 +160,9 @@ describe('getFullSignInExperience()', () => {
       ssoConnectors: [
         {
           id: wellConfiguredSsoConnector.id,
-          connectorName: wellConfiguredSsoConnector.providerName,
-          logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
-          darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
+          connectorName: connectorFactory.name.en,
+          logo: connectorFactory.logo,
+          darkLogo: connectorFactory.logoDark,
         },
       ],
       isDevelopmentTenant: false,
@@ -178,14 +179,16 @@ describe('get sso connectors', () => {
       wellConfiguredSsoConnector,
     ]);
 
-    const { ssoConnectors } = await getFullSignInExperience();
+    const { ssoConnectors } = await getFullSignInExperience('jp');
+
+    const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
 
     expect(ssoConnectors).toEqual([
       {
         id: wellConfiguredSsoConnector.id,
-        connectorName: wellConfiguredSsoConnector.providerName,
-        logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
-        darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
+        connectorName: connectorFactory.name.en,
+        logo: connectorFactory.logo,
+        darkLogo: connectorFactory.logoDark,
       },
     ]);
   });
@@ -205,14 +208,16 @@ describe('get sso connectors', () => {
       },
     ]);
 
-    const { ssoConnectors } = await getFullSignInExperience();
+    const connectorFactory = ssoConnectorFactories[wellConfiguredSsoConnector.providerName];
+
+    const { ssoConnectors } = await getFullSignInExperience('en');
 
     expect(ssoConnectors).toEqual([
       {
         id: wellConfiguredSsoConnector.id,
         connectorName: displayName,
-        logo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logo,
-        darkLogo: ssoConnectorFactories[wellConfiguredSsoConnector.providerName].logoDark,
+        logo: connectorFactory.logo,
+        darkLogo: connectorFactory.logoDark,
       },
     ]);
   });

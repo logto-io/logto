@@ -44,7 +44,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
     '/.well-known/sign-in-exp',
     koaGuard({ response: guardFullSignInExperience, status: 200 }),
     async (ctx, next) => {
-      ctx.body = await getFullSignInExperience();
+      ctx.body = await getFullSignInExperience(ctx.locale);
 
       return next();
     }
