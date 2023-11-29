@@ -54,6 +54,9 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'ADVANCED OPTIONS',
+    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
+    enable_single_sign_on_description:
+      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
     enable_user_registration: 'Enable user registration',
     enable_user_registration_description:
       'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',

@@ -8,7 +8,6 @@ const enterprise_sso = {
   /** UNTRANSLATED */
   col_type: 'Type',
   col_email_domain: 'Domaine de messagerie',
-
   placeholder_title: "Connecteur d'entreprise",
   /** UNTRANSLATED */
   placeholder_description:

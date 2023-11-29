@@ -6,7 +6,6 @@ const enterprise_sso = {
   col_connector_name: '連接器名稱',
   col_type: '類型',
   col_email_domain: '電子郵件域名',
-
   placeholder_title: '企業連接器',
   /** UNTRANSLATED */
   placeholder_description:

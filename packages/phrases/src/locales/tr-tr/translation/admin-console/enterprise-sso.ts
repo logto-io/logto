@@ -7,7 +7,6 @@ const enterprise_sso = {
   col_connector_name: 'Bağlayıcı adı',
   col_type: 'Tür',
   col_email_domain: 'E-posta etki alanı',
-
   placeholder_title: 'Kurumsal bağlayıcı',
   /** UNTRANSLATED */
   placeholder_description:
