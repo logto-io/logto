@@ -3008,8 +3008,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       libphonenumber-js:
-        specifier: ^1.9.49
-        version: 1.9.49
+        specifier: ^1.10.51
+        version: 1.10.51
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -3651,8 +3651,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       libphonenumber-js:
-        specifier: ^1.9.49
-        version: 1.9.49
+        specifier: ^1.10.51
+        version: 1.10.51
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
@@ -15627,8 +15627,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /libphonenumber-js@1.9.49:
-    resolution: {integrity: sha512-/wEOIONcVboFky+lWlCaF7glm1FhBz11M5PHeCApA+xDdVfmhKjHktHS8KjyGxouV5CSXIr4f3GvLSpJa4qMSg==}
+  /libphonenumber-js@1.10.51:
+    resolution: {integrity: sha512-vY2I+rQwrDQzoPds0JeTEpeWzbUJgqoV0O4v31PauHBb/e+1KCXKylHcDnBMgJZ9fH9mErsEbROJY3Z3JtqEmg==}
     dev: true
 
   /lightningcss-darwin-arm64@1.16.1:

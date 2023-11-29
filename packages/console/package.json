@@ -82,7 +82,7 @@
     "jest-transformer-svg": "^2.0.0",
     "just-kebab-case": "^4.2.0",
     "ky": "^1.0.0",
-    "libphonenumber-js": "^1.9.49",
+    "libphonenumber-js": "^1.10.51",
     "lint-staged": "^15.0.0",
     "nanoid": "^5.0.1",
     "overlayscrollbars": "^2.0.2",
