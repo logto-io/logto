@@ -6,7 +6,6 @@ const enterprise_sso = {
   col_connector_name: '커넥터 이름',
   col_type: '유형',
   col_email_domain: '이메일 도메인',
-
   placeholder_title: '기업 커넥터',
   /** UNTRANSLATED */
   placeholder_description:

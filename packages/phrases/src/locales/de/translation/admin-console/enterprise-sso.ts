@@ -7,7 +7,6 @@ const enterprise_sso = {
   col_connector_name: 'Connector-Name',
   col_type: 'Typ',
   col_email_domain: 'E-Mail-Domain',
-
   placeholder_title: 'Unternehmensconnector',
   /** UNTRANSLATED */
   placeholder_description:
