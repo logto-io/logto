@@ -109,6 +109,7 @@ export const mockSignInExperience: SignInExperience = {
     policy: MfaPolicy.UserControlled,
     factors: [],
   },
+  singleSignOnEnabled: true,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -140,6 +141,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
     factors: [],
   },
   isDevelopmentTenant: false,
+  singleSignOnEnabled: true,
 };
 
 const usernameSettings = {
