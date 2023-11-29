@@ -1,37 +1,40 @@
 import SsoSamlSpMetadata from '@/mdx-components/SsoSamlSpMetadata';
-import createApplication from './create_application.webp';
-import setupSso from './set_up_single_sign_on.webp';
-import spConfig from './sp_config.webp';
-import metadataUrl from './metadata_url.webp';
-import defaultAttributesMapping from './default_attribute_mapping.webp';
-import logtoAttributes from './logto_attribute_mapping.webp';
-import assignUsers from './assign_users.webp';
+import Step from '@/mdx-components/Step';
 
-# Azure AD single sign-on integration guide
+import createApplication from './assets/create_application.webp';
+import setupSso from './assets/set_up_single_sign_on.webp';
+import spConfig from './assets/sp_config.webp';
+import metadataUrl from './assets/metadata_url.webp';
+import defaultAttributesMapping from './assets/default_attribute_mapping.webp';
+import logtoAttributes from './assets/logto_attribute_mapping.webp';
+import assignUsers from './assets/assign_users.webp';
 
-This guide will help you to integration Azure AD single sign-on (SSO) to your application using Logto.
-
-## Step 1: Create an Azure AD SSO application
-
+<Step index={0} title="Create an Azure AD SSO application">
 Initiate the Azure AD SSO integration by creating an SSO application on the Azure AD side.
 
 1. Go to the [Azure portal](https://portal.azure.com/) and sign in as an administrator.
 
 2. Navigate to `Microsoft Entra ID` > `Enterprise applications` > `New application`, and select `Create your own application`.
 
-   <img src={createApplication} alt="Create Application" width="100%" />
+<center>
+  <img src={createApplication} alt="Create Application" />
+</center>
 
 3. Enter the application name and select `Integrate any other application you don't find in the gallery (Non-gallery)`.
 
 4. Select `Setup single sign-on` > `SAML`.
 
-   <img src={setupSso} alt="Setup single sign on" width="100%" />
+<center>
+  <img src={setupSso} alt="Setup single sign on" />
+</center>
 
 5. Follow the instructions, as the first step, you will need to fill in the basic SAML configuration using the following information provided by Logto.
 
-   <SsoSamlSpMetadata />
+<center>
+  <img src={spConfig} alt="SP Configuration" />
+</center>
 
-   <img src={spConfig} alt="SP Configuration" width="100%" />
+<SsoSamlSpMetadata />
 
 - **Audience URI(SP Entity ID)**: It represents as a globally unique identifier for your Logto service, functioning as the EntityId for SP during authentication requests to the IdP. This identifier is pivotal for the secure exchange of SAML assertions and other authentication-related data between the IdP and Logto.
 
@@ -39,23 +42,24 @@ Initiate the Azure AD SSO integration by creating an SSO application on the Azur
 
 Click `Save` to continue.
 
-<br />
+</Step>
 
-## Step 2: Configure SAML SSO at Logto
-
+<Step index={1} title="Configure SAML SSO at Logto">
 To make the SAML SSO integration work, you will need to provide the IdP metadata back to Logto. Let's switch back to the Logto side, navigate to the `Connection` tab of your Azure AD SSO connector.
 
 Logto provides three different ways to configure the IdP metadata. The easiest way is to provide the `metadata URL` of the Azure AD SSO application.
 
 - Copy the `App Federation Metadata Url` from your Azure AD SSO application and paste it into the `Metadata URL` field in Logto.
 
-  <img src={metadataUrl} alt="Metadata URL" width="100%" />
+<center>
+  <img src={metadataUrl} alt="Metadata URL" />
+</center>
 
 - Logto will fetch the metadata from the URL and configure the SAML SSO integration automatically.
 
-<br />
+</Step>
 
-## Step 3: Configure user attributes mapping
+<Step index={2} title="Configure user attributes mapping">
 
 Logto provides a flexible way to map the user attributes returned from IdP to the user attributes in Logto. Logto will sync the following user attributes from IdP by default:
 
@@ -67,41 +71,50 @@ You may manage the user attributes mapping logic either on the Azure AD side or 
 
 1. Map the AzureAD user attributes to Logto user attributes at Logto side.
 
-   Visit the `Attributes & Claims` tab of your Azure AD SSO application.
+<center>
+  <img src={defaultAttributesMapping} alt="Default Attributes Mapping" />
+</center>
 
-   <img src={defaultAttributesMapping} alt="Default Attributes Mapping" width="100%" />
+Visit the `Attributes & Claims` tab of your Azure AD SSO application.
 
-   Copy the following attribute names (with namespace prefix) from the `Attributes & Claims` section of your Azure AD SSO application and paste them into the corresponding fields in Logto.
+Copy the following attribute names (with namespace prefix) from the `Attributes & Claims` section of your Azure AD SSO application and paste them into the corresponding fields in Logto.
 
-   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email`
-   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` (Recommend: update the attribute value map to `user.displayname` for better user experience)
+- `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email`
+
+- `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` (Recommend: update the attribute value map to `user.displayname` for better user experience)
 
 2. Map the AzureAD user attributes to Logto user attributes at AzureAD side.
 
-   Visit the `Attributes & Claims` section of your Azure AD SSO application. Click on `Edit`. Update the `Additional claims` fields based on the Logto user attributes settings:
+Visit the `Attributes & Claims` section of your Azure AD SSO application. Click on `Edit`. Update the `Additional claims` fields based on the Logto user attributes settings:
 
-   - update the claim name value based on the Logto user attributes settings.
-   - remove the namespace prefix.
-   - click `Save` to continue.
+- update the claim name value based on the Logto user attributes settings.
+- remove the namespace prefix.
+- click `Save` to continue.
 
-   You should end up with the following settings:
+Should end up with the following settings:
 
-   <img src={logtoAttributes} alt="Logto Attributes" width="100%" />
+<center>
+  <img src={logtoAttributes} alt="Logto Attributes" />
+</center>
 
-> You may also specify additional user attributes on the Azure AD side. Logto will keep a record of the original user attributes returned from IdP under the user's `sso_identity` field.
+You may also specify additional user attributes on the Azure AD side. Logto will keep a record of the original user attributes returned from IdP under the user's `sso_identity` field.
 
-<br />
+</Step>
 
-## Step 4: Assign users to the Azure AD SSO application
+<Step index={3} title="Assign users to the Azure AD SSO application">
 
 Visit the `Users and groups` section of your Azure AD SSO application. Click on `Add user/group` to assign users to the Azure AD SSO application. Only users assigned to your Azure AD SSO application will be able to authenticate through the Azure AD SSO connector.
 
-<img src={assignUsers} alt="Assign Users" width="100%" />
+<center>
+  <img src={assignUsers} alt="Assign Users" />
+</center>
 
-<br />
+</Step>
 
-## Step 5: Set email domains and enable the SSO connector
+<Step index={4} title="Set email domains and enable the SSO connector">
 
 Provide the email domains of your organization at the Logto's SAML SSO connector experience tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use SAML SSO connector as their only authentication method.
+
+</Step>

@@ -1,9 +1,22 @@
 @use '@/scss/underscore' as _;
 @use '@/scss/dimensions' as dim;
 
+
 .content {
   flex: 1;
   position: relative;
+
+  section {
+    margin: _.unit(6) 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   h3 {
     font: var(--font-title-2);
@@ -14,6 +27,12 @@
   p {
     font: var(--font-body-2);
     margin: _.unit(4) 0;
+  }
+
+  ul,
+  ol {
+    margin-block: _.unit(4);
+    padding-inline-start: _.unit(4);
   }
 
   ul > li,
@@ -51,5 +70,10 @@
     font: var(--font-body-2);
     padding: _.unit(1);
     border-radius: 4px;
+  }
+
+  img {
+    width: 90%;
+    border-radius: _.unit(2);
   }
 }

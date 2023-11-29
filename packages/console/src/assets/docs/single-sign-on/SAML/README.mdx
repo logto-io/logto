@@ -1,10 +1,7 @@
 import SsoSamlSpMetadata from '@/mdx-components/SsoSamlSpMetadata';
+import Step from '@/mdx-components/Step';
 
-# SAML single sign-on integration guide
-
-This standard SAML Single Sign-On (SSO) connector will help you to enable single sign-on (SSO) in your application using Logto. With minimal configuration efforts, this connector allows integration with any SAML-based Identity Provider (IdP).
-
-## Step 1: Create an SAML SSO application on your IdP
+<Step index={0} title="Create an SAML SSO application on your IdP" >
 
 Initiate the SAML SSO integration by creating an application on the IdP side. Obtain the following configurations from Logto, representing your Service Provider (SP):
 
@@ -16,9 +13,9 @@ Initiate the SAML SSO integration by creating an application on the IdP side. Ob
 
 Fill in the above configurations in your IdP SAML application and continue to retrieve the following configurations from your IdP.
 
-<br />
+</Step>
 
-## Step 2: Configure SAML SSO on Logto
+<Step index={1} Configure SAML SSO on Logto>
 
 To make the SAML SSO integration work, you will need to provide the IdP metadata to Logto. The IdP metadata is an XML document that contains all the information required for Logto to establish the trust with the IdP.
 
@@ -36,9 +33,9 @@ Navigate to the `Connection` tab. Logto provides three different ways to configu
 
 With either of the above configurations, Logto will parse the IdP metadata and configure the SAML SSO integration accordingly.
 
-<br />
+</Step>
 
-## Step 3: Configure user attributes mapping
+<Step index={2} title="Configure user attributes mapping">
 
 The user attributes returned from IdP may vary depending on the IdP configuration. Logto provides a flexible way to map the user attributes returned from IdP to the user attributes in Logto. You can configure the user attributes mapping in the SAML SSO integration experience tab.
 
@@ -48,10 +45,12 @@ For minimum configuration, please make sure the following attributes are well ma
 
 - email: The email address of the user.
 
-<br />
+</Step>
 
-## Step 4: Set email domains and enable the SSO connector
+<Step index={3} title="Set email domains and enable the SSO connector">
 
 Provide the email domains of your organization in the SAML SSO integration experience tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use SAML SSO connector as their only authentication method.
+
+</Step>

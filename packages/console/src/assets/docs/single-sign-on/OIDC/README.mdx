@@ -1,10 +1,7 @@
 import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import Step from '@/mdx-components/Step';
 
-# OIDC single sign-on integration guide
-
-This standard OIDC Single Sign-On (SSO) connector will help you to enable single sign-on (SSO) in your application using Logto. With minimal configuration efforts, this connector allows integration with OIDC-based Identity Provider (IdP).
-
-## Step 1: Create an OIDC application on your IdP
+<Step index={0} title="Create an OIDC application on your IdP">
 
 Initiate the OIDC SSO integration by creating an application on the IdP side. You will need to provide the following configurations from the Logto server.
 
@@ -12,11 +9,10 @@ Initiate the OIDC SSO integration by creating an application on the IdP side. Yo
 
 <OidcCallbackUri />
 
-Fill in the Logto Callback URI in your IdP OIDC application and continue to create the application.(Most of the OIDC IdPs provides a wide range of application types to choose from. To create a web based SSO connector on Logto, please choose the `Web Application` type.)
+Fill in the Logto Callback URI in your IdP OIDC application settings form and continue to create the application.(Most of the OIDC IdPs provides a wide range of application types to choose from. To create a web based SSO connector on Logto, please choose the `Web Application` type.)
 
-<br />
-
-## Step 2: Configure OIDC SSO on Logto
+</Step>
+<Step index={1} title="Configure OIDC SSO on Logto">
 
 After successfully creating an OIDC application on the IdP side, you will need to provide the IdP configurations back to Logto. Navigate to the `Connection` tab, and fill in the following configurations:
 
@@ -36,10 +32,11 @@ After successfully creating an OIDC application on the IdP side, you will need t
 
   This is to ensure that Logto can retrieve the user's identity information and email address properly from the IdP. You may add additional scopes to the scope parameter to request for more information from the IdP.
 
-<br />
-
-## Step 3: Set email domains and enable the SSO connector
+</Step>
+<Step index={2} title="Set email domains and enable the SSO connector">
 
 Provide the email domains of your organization on the connector experience tab. This will enabled the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use your SSO connector as their only authentication method.
+
+</Step>

@@ -1,0 +1,103 @@
+import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import Step from '@/mdx-components/Step';
+
+import clientCredentials from './assets/client_credentials.webp';
+import consentScreenScopes from './assets/consent_screen_scopes.webp';
+import consentScreenSettings from './assets/consent_screen_settings.webp';
+import consentScreenUserType from './assets/consent_screen_user_type.webp';
+import createCredentials from './assets/create_credentials.webp';
+import credentialsConfig from './assets/credentials_config.webp';
+import credentials from './assets/credentials.webp';
+
+<Step index={0} title="Create an new project on Google Cloud Platform" >
+
+Before you can use Google Workspace as an authentication provider, you must set up a project in the [Google API Console](https://console.developers.google.com/) to obtain OAuth 2.0 credentials, If you already have a project, you can skip this step. Otherwise, create a new project under your Google organization.
+
+</Step>
+
+<Step index={1} title="Config the consent screen for your application" >
+
+In order to create a new OIDC credential, you need to configure the consent screen for your application. Otherwise, you will receive an error prompt when creating the credential like the following:
+
+<center>
+  <img src={credentials} alt="create credentials" />
+</center>
+
+1. Navigate to the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) page and select the `Internal` user type. This will make the OAuth application only available to users within your organization.
+
+<center>
+  <img src={consentScreenUserType} alt="consent screen user type" />
+</center>
+
+2. Fill in the `Consent Screen` settings following the instructions on the page. You need to provide the following minimum information:
+
+- **Application name**: The name of your application. It will be displayed on the consent screen.
+- **Support email**: The support email of your application. It will be displayed on the consent screen.
+
+<center>
+  <img src={consentScreenSettings} alt="consent screen settings" />
+</center>
+
+3. Set the `Scopes` for your application. In order to retrieve the user's identity information and email address properly from the IdP, Logto SSO connector need to grant the following scopes from the IdP:
+
+<center>
+  <img src={consentScreenScopes} alt="consent screen scopes" />
+</center>
+
+- **openid**: This scope is required for OIDC authentication. It is used to retrieve ID token and get access to the userInfo endpoint of the IdP.
+- **profile**: This scope is required for accessing the user's basic profile information.
+- **email**: This scope is required for accessing the user's email address.
+
+Click the `Save` button to save the consent screen settings.
+
+</Step>
+
+<Step index={2} title="Create a new OAuth credential">
+
+Navigate to the [Credentials](https://console.cloud.google.com/apis/credentials) page and click the `Create Credentials` button. Select the `OAuth client ID` option from the dropdown menu to create a new OAuth credential for your application.
+
+<center>
+  <img src={createCredentials} alt="create credentials" />
+</center>
+
+Continue set up the OAuth credential by filling up the following information:
+
+<center>
+  <img src={credentialsConfig} alt="credentials config" />
+</center>
+
+1. Select the `Web application` as the application type.
+
+2. Fill in the `Name` of your client application, `Logto SSO Connector` for example. This will help you to identify the credential in the future.
+
+3. Fill in the `Authorized redirect URIs` with the Logto callback URI. This is the URI that the Google will redirect the user's browser after successful authentication. After a user successfully authenticates with the IdP, the IdP redirects the user's browser back to this designated URI along with an authorization code. Logto will complete the authentication process based on authorization code received from this URI.
+
+<OidcCallbackUri />
+
+4. Fill in the `Authorized JavaScript origins` with the Logto callback URI's origin. This ensures only your Logto application can send requests to the Google OAuth server.
+
+5. Click the `Create` button to create the OAuth credential.
+
+</Step>
+
+<Step index={3} title="Copy the client ID and client secret">
+
+After successfully creating the OAuth credential, you will receive a prompt modal with the client ID and client secret.
+
+<center>
+  <img src={clientCredentials} alt="client credentials" />
+</center>
+
+Copy the client ID and client secret and fill in the corresponding fields on the Logto SSO connector connection page.
+
+Now you have successfully configured a Google Workspace SSO connector on Logto.
+
+</Step>
+
+<Step index={4} title="Set email domains and enable the SSO connector">
+
+Provide the email domains of your organization on the connector experience tab. This will enabled the SSO connector as an authentication method for those users.
+
+Users with email addresses in the specified domains will be restricted to use your SSO connector as their only authentication method.
+
+</Step>
