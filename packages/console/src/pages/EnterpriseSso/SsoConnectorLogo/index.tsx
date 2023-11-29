@@ -6,6 +6,7 @@ import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';
+import { pickLogoForCurrentThemeHelper } from './utils';
 
 type Props = {
   className?: string;
@@ -23,9 +24,13 @@ const pickLogoForCurrentTheme = (
   branding: SsoConnectorWithProviderConfig['branding']
 ): string => {
   // Need to use `||` here since `??` operator can not avoid empty strings.
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const configuredLogo = isDarkMode ? branding.darkLogo : branding.logo || branding.darkLogo;
-  const builtInLogo = isDarkMode ? logoDark : logo || logoDark;
+  // Since `logo` and `darkLogo` are both optional, when it is dark mode and `darkLogo` is not configured, should fallback to `logo`.
+  const configuredLogo = pickLogoForCurrentThemeHelper(
+    isDarkMode,
+    branding.logo,
+    branding.darkLogo
+  );
+  const builtInLogo = pickLogoForCurrentThemeHelper(isDarkMode, logo, logoDark);
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   return configuredLogo || builtInLogo;
