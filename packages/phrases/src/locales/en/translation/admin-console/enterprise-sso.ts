@@ -59,6 +59,7 @@ const enterprise_sso = {
       idp_entity_id_field_name: 'IdP entity ID (Issuer)',
       certificate_field_name: 'Signing certificate',
       certificate_placeholder: 'Copy and paste the x509 certificate',
+      certificate_required: 'Signing certificate is required.',
     },
     oidc: {
       client_id_field_name: 'Client ID',

@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextInput from '@/ds-components/TextInput';
-import Textarea from '@/ds-components/Textarea';
 import {
   type ParsedSsoIdentityProviderConfig,
   type SamlGuideFormType,
@@ -14,9 +13,9 @@ import {
 } from '@/pages/EnterpriseSso/types.js';
 import { uriValidator } from '@/utils/validator';
 
-import XmlFileReader from '../XmlFileReader';
+import FileReader, { type Props as FileReaderProps } from '../FileReader';
 
-import ParsedConfigPreview from './ParsedConfigPreview';
+import ParsedConfigPreview, { CertificatePreview } from './ParsedConfigPreview';
 import SwitchFormatButton, { FormFormat } from './SwitchFormatButton';
 import * as styles from './index.module.scss';
 
@@ -30,6 +29,30 @@ type SamlMetadataFormProps = {
   providerConfig?: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>;
 };
 
+type KeyType = keyof Pick<SamlGuideFormType, 'metadata' | 'x509Certificate'>; // I.e. 'metadata' | 'x509Certificate'.
+const keyToAttributes: Record<KeyType, FileReaderProps['attributes']> = {
+  // Accept xml file.
+  metadata: {
+    buttonTitle: 'enterprise_sso.metadata.saml.metadata_xml_uploader_text',
+    accept: {
+      'application/xml': [],
+      'text/xml': [],
+    },
+    defaultFilename: 'identity provider metadata.xml',
+    defaultFileMimeType: 'application/xml',
+  },
+  x509Certificate: {
+    buttonTitle: 'enterprise_sso_details.upload_signing_certificate_button_text',
+    accept: {
+      'application/x-x509-user-cert': ['.crt', '.cer'],
+      'application/x-x509-ca-cert': ['.crt', '.cer'],
+      'application/x-pem-file': ['.pem'],
+    },
+    defaultFilename: 'signing certificate.cer',
+    defaultFileMimeType: 'application/x-x509-user-cert',
+  },
+};
+
 function SamlMetadataFormFields({
   formFormat,
   identityProviderConfig,
@@ -37,6 +60,7 @@ function SamlMetadataFormFields({
 }: SamlMetadataFormFieldsProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
+    setError,
     control,
     register,
     formState: { errors },
@@ -69,10 +93,36 @@ function SamlMetadataFormFields({
             />
           </FormField>
           <FormField isRequired title="enterprise_sso.metadata.saml.certificate_field_name">
-            <Textarea
-              {...register('x509Certificate', { required: true })}
-              placeholder={t('enterprise_sso.metadata.saml.certificate_placeholder')}
-              error={Boolean(errors.x509Certificate)}
+            <Controller
+              control={control}
+              name="x509Certificate"
+              rules={{
+                validate: (value) => {
+                  if (!value) {
+                    return t('enterprise_sso.metadata.saml.certificate_required');
+                  }
+                  return true;
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <FileReader
+                    attributes={keyToAttributes.x509Certificate}
+                    value={value}
+                    fieldError={errors.x509Certificate}
+                    setError={(error) => {
+                      setError('x509Certificate', error);
+                    }}
+                    onChange={onChange}
+                  />
+                  {value && identityProviderConfig && (
+                    <CertificatePreview
+                      className={styles.certificatePreview}
+                      identityProviderConfig={identityProviderConfig}
+                    />
+                  )}
+                </>
+              )}
             />
           </FormField>
         </>
@@ -86,7 +136,15 @@ function SamlMetadataFormFields({
               control={control}
               name="metadata"
               render={({ field: { onChange, value } }) => (
-                <XmlFileReader value={value} onChange={onChange} />
+                <FileReader
+                  attributes={keyToAttributes.metadata}
+                  value={value}
+                  fieldError={errors.metadata}
+                  setError={(error) => {
+                    setError('metadata', error);
+                  }}
+                  onChange={onChange}
+                />
               )}
             />
           </FormField>

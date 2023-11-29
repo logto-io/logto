@@ -66,17 +66,32 @@ export const parseXmlMetadata = (
     const certificate = getPemCertificate(rawX509Certificate);
     const expiresAt = new Date(certificate.validTo).getTime();
 
-    // The return type of `samlify`
-    return samlIdentityProviderMetadataGuard.parse({
+    const payload = {
       ...rawSamlMetadata,
       expiresAt,
       isValid: expiresAt > Date.now(),
       x509Certificate: certificate.toJSON(), // This returns the parsed certificate in string-type.
-    });
+    };
+
+    // The return type of `samlify`
+    const result = samlIdentityProviderMetadataGuard.safeParse(payload);
+
+    if (!result.success) {
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+        metadata: payload,
+        error: result.error,
+      });
+    }
+
+    return result.data;
   } catch (error: unknown) {
-    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
-      message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
-      metadata: rawSamlMetadata,
+    if (error instanceof SsoConnectorError) {
+      throw error;
+    }
+
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidCertificate, {
+      config: { ...rawSamlMetadata, x509Certificate: rawX509Certificate },
       error,
     });
   }

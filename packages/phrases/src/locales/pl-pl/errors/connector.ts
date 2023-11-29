@@ -9,6 +9,9 @@ const connector = {
     'Żądanie jest z nieprawidłowym parametrem wejściowym/lub parametrami wejściowymi.',
   insufficient_request_parameters: 'Żądanie może nie zawierać niektórych parametrów wejściowych.',
   invalid_config: 'Konfiguracja łącznika jest nieprawidłowa.',
+  /** UNTRANSLATED */
+  invalid_certificate:
+    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
   invalid_response: 'Odpowiedź łącznika jest nieprawidłowa.',
   template_not_found: 'Nie można znaleźć poprawnego szablonu w konfiguracji łącznika.',
   template_not_supported: 'Łącznik nie obsługuje tego typu szablonu.',

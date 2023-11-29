@@ -8,6 +8,9 @@ const connector = {
   invalid_request_parameters: 'İstek yanlış girdi parametreleri ile gönderildi.',
   insufficient_request_parameters: 'İstek, bazı input parametrelerini atlayabilir.',
   invalid_config: 'Bağlayıcının ayarları geçersiz.',
+  /** UNTRANSLATED */
+  invalid_certificate:
+    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
   invalid_response: 'Bağlayıcının yanıtı geçersiz.',
   template_not_found: 'Bağlayıcı yapılandırmasında doğru şablon bulunamıyor.',
   template_not_supported: 'Bağlayıcı bu şablon türünü desteklemiyor.',

@@ -9,6 +9,9 @@ const connector = {
   insufficient_request_parameters:
     'Die Anfrage enthält möglicherweise nicht alle erforderlichen Eingabeparameter.',
   invalid_config: 'Die Konfiguration des Connectors ist ungültig.',
+  /** UNTRANSLATED */
+  invalid_certificate:
+    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
   invalid_response: 'Die Antwort des Connectors ist ungültig.',
   template_not_found:
     'Die richtige Vorlage in der Connector-Konfiguration konnte nicht gefunden werden.',

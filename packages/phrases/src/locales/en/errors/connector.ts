@@ -8,6 +8,8 @@ const connector = {
   invalid_request_parameters: 'The request is with wrong input parameter(s).',
   insufficient_request_parameters: 'The request might miss some input parameters.',
   invalid_config: "The connector's config is invalid.",
+  invalid_certificate:
+    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
   invalid_response: "The connector's response is invalid.",
   template_not_found: 'Unable to find correct template in connector config.',
   template_not_supported: 'The connector does not support this template type.',

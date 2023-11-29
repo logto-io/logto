@@ -82,6 +82,8 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   upload_idp_metadata_button_text: 'Upload metadata XML file',
   /** UNTRANSLATED */
+  upload_signing_certificate_button_text: 'Upload signing certificate file',
+  /** UNTRANSLATED */
   configure_domain_field_info_text:
     'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
   /** UNTRANSLATED */
