@@ -63,6 +63,8 @@ export type ParsedSsoIdentityProviderConfig<T extends SsoProviderName> =
           entityId: string;
           signInEndpoint: string;
           x509Certificate: string;
+          expiresAt: number;
+          isValid: boolean;
         };
       }
     : never;

@@ -110,6 +110,8 @@ const enterprise_sso_details = {
     entity_id: 'Issuer',
     /** UNTRANSLATED */
     x509_certificate: 'Signing certificate',
+    /** UNTRANSLATED */
+    certificate_content: 'Expiring {{date}}',
   },
   oidc_preview: {
     /** UNTRANSLATED */

@@ -1,3 +1,5 @@
+import { X509Certificate } from 'node:crypto';
+
 import * as validator from '@authenio/samlify-node-xmllint';
 import { type Optional, appendPath } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
@@ -52,23 +54,32 @@ export const parseXmlMetadata = (
     entityId: idP.entityMeta.getEntityID(),
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     signInEndpoint: singleSignOnService,
-    // The type inference of the return type of `getX509Certificate` is any, will be guarded by later zod parser if it is not string-typed.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    x509Certificate: idP.entityMeta.getX509Certificate(saml.Constants.wording.certUse.signing),
   };
 
-  // The return type of `samlify`
-  const result = samlIdentityProviderMetadataGuard.safeParse(rawSamlMetadata);
+  // The type inference of the return type of `getX509Certificate` is any, will be guarded by later zod parser if it is not string-typed.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const rawX509Certificate: string = idP.entityMeta.getX509Certificate(
+    saml.Constants.wording.certUse.signing
+  );
 
-  if (!result.success) {
+  try {
+    const certificate = getPemCertificate(rawX509Certificate);
+    const expiresAt = new Date(certificate.validTo).getTime();
+
+    // The return type of `samlify`
+    return samlIdentityProviderMetadataGuard.parse({
+      ...rawSamlMetadata,
+      expiresAt,
+      isValid: expiresAt > Date.now(),
+      x509Certificate: certificate.toJSON(), // This returns the parsed certificate in string-type.
+    });
+  } catch (error: unknown) {
     throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
       message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
       metadata: rawSamlMetadata,
-      error: result.error,
+      error,
     });
   }
-
-  return result.data;
 };
 
 /**
@@ -222,3 +233,20 @@ export const buildSpEntityId = (baseUrl: URL, connectorId: string) => {
  */
 export const buildAssertionConsumerServiceUrl = (baseUrl: URL, ssoConnectorId: string) =>
   appendPath(baseUrl, `api/authn/${ssoPath}/saml/${ssoConnectorId}`).toString();
+
+const pemCertificatePrefix = '-----BEGIN CERTIFICATE-----';
+const pemCertificateSuffix = '-----END CERTIFICATE-----';
+
+const withPemCertificateWrapper = (certificateContent: string) =>
+  `${pemCertificatePrefix}\n${certificateContent}\n${pemCertificateSuffix}`;
+
+const isPemCertificateWithWrapper = (certificateContent: string) =>
+  certificateContent.startsWith(`${pemCertificatePrefix}\n`) &&
+  certificateContent.endsWith(`\n${pemCertificateSuffix}`);
+
+export const getPemCertificate = (certificateContent: string) => {
+  const rawCertificate = isPemCertificateWithWrapper(certificateContent)
+    ? certificateContent
+    : withPemCertificateWrapper(certificateContent);
+  return new X509Certificate(rawCertificate);
+};

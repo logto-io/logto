@@ -40,8 +40,16 @@ export const samlIdentityProviderMetadataGuard = z.object({
   entityId: z.string(),
   signInEndpoint: z.string(),
   x509Certificate: z.string(),
+  expiresAt: z.number(), // Timestamp in milliseconds.
+  isValid: z.boolean(),
 });
 export type SamlIdentityProviderMetadata = z.infer<typeof samlIdentityProviderMetadataGuard>;
+
+export const manualSamlConnectorConfigGuard = samlIdentityProviderMetadataGuard.pick({
+  entityId: true,
+  signInEndpoint: true,
+  x509Certificate: true,
+});
 
 export const samlConnectorConfigGuard = z.union([
   // Config using Metadata URL
@@ -55,7 +63,7 @@ export const samlConnectorConfigGuard = z.union([
     attributeMapping: customizableAttributeMapGuard.optional(),
   }),
   // Config using Metadata detail
-  samlIdentityProviderMetadataGuard.extend({
+  manualSamlConnectorConfigGuard.extend({
     attributeMapping: customizableAttributeMapGuard.optional(),
   }),
 ]);
