@@ -2,6 +2,7 @@ import { InteractionEvent, SsoProviderName, type SsoConnectorMetadata } from '@l
 
 import { getSsoAuthorizationUrl, getSsoConnectorsByEmail } from '#src/api/interaction-sso.js';
 import { putInteraction } from '#src/api/interaction.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { logtoUrl } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
@@ -22,6 +23,11 @@ describe('Single Sign On Happy Path', () => {
         clientSecret: 'bar',
         issuer: `${logtoUrl}/oidc`,
       },
+    });
+
+    // Make sure single sign on is enabled
+    await updateSignInExperience({
+      singleSignOnEnabled: true,
     });
 
     connectorIdMap.set(id, { id, connectorName, logo: '' });
@@ -69,6 +75,20 @@ describe('Single Sign On Happy Path', () => {
 
     const response = await client.send(getSsoConnectorsByEmail, {
       email: 'foo@logto-invalid.com',
+    });
+
+    expect(response.length).toBe(0);
+  });
+
+  it('should return empty array if sso is not enabled', async () => {
+    const client = await initClient();
+
+    await updateSignInExperience({
+      singleSignOnEnabled: false,
+    });
+
+    const response = await client.send(getSsoConnectorsByEmail, {
+      email: 'bar@foo.com',
     });
 
     expect(response.length).toBe(0);
