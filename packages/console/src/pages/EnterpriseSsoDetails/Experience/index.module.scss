@@ -3,12 +3,6 @@
 .description {
   color: var(--color-text-secondary);
   font: var(--font-body-2);
-  margin-bottom: _.unit(1);
-}
-
-.errorMessage {
-  font: var(--font-body-2);
-  color: var(--color-error);
   margin-top: _.unit(1);
 }
 

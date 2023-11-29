@@ -70,10 +70,18 @@
     border-color: var(--color-primary);
     outline-color: var(--color-focused-variant);
   }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &:focus-within {
+      outline-color: var(--color-danger-focused);
+    }
+  }
 }
 
-.error {
-  border-color: var(--color-error);
+.errorMessage {
   font: var(--font-body-2);
+  color: var(--color-error);
   margin-top: _.unit(1);
 }

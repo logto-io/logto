@@ -179,9 +179,6 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
             </InlineNotification>
           )}
           <FormField isRequired title="enterprise_sso_details.email_domain_field_name">
-            <div className={styles.description}>
-              {t('enterprise_sso_details.email_domain_field_description')}
-            </div>
             <Controller
               name="domains"
               control={control}
@@ -256,7 +253,9 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
                 />
               )}
             />
-            {errors.domains && <div className={styles.errorMessage}>{errors.domains.message}</div>}
+            <div className={styles.description}>
+              {t('enterprise_sso_details.email_domain_field_description')}
+            </div>
           </FormField>
           <FormField title="enterprise_sso_details.sync_profile_field_name">
             <Controller
