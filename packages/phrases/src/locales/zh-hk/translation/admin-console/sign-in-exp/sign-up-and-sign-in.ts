@@ -54,6 +54,14 @@ const sign_up_and_sign_in = {
     /** UNTRANSLATED */
     enable_single_sign_on_description:
       'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: '啟用用戶註冊',
     enable_user_registration_description:
       '啟用或禁止用戶註冊。禁用後，管理控制台仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
