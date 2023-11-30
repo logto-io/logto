@@ -24,6 +24,7 @@ export type UserClaim =
   | 'phone_number_verified'
   | 'roles'
   | 'organizations'
+  | 'organization_data'
   | 'organization_roles'
   | 'custom_data'
   | 'identities';
@@ -104,7 +105,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
   [UserScope.Email]: [],
   [UserScope.Phone]: [],
   [UserScope.Roles]: [],
-  [UserScope.Organizations]: [],
+  [UserScope.Organizations]: ['organization_data'],
   [UserScope.OrganizationRoles]: [],
   [UserScope.CustomData]: ['custom_data'],
   [UserScope.Identities]: ['identities'],
