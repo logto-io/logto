@@ -1,0 +1,71 @@
+import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import Step from '@/mdx-components/Step';
+
+import createApplication from './assets/create_application.webp';
+import applicationSettings from './assets/application_settings.webp';
+import clientCredentials from './assets/client_credentials.webp';
+import assignUsers from './assets/assign_users.webp';
+
+<Step index={0} title="Create an OIDC application on OKTA admin portal">
+
+- Visit the OKTA admin portal and sign in as an administrator.
+- Navigate to the `Applications`/`Applications` page using the side menu.
+- Click the `Create App Integration` button to create a new OIDC application.
+- Select the `OIDC - OpenID Connect` option as the `Sign-in method`.
+- Select the `Web Application` option as the `Application type`.
+
+<center>
+  <img src={createApplication} alt="create application" />
+</center>
+
+Click the `Next` button to continue.
+
+</Step>
+
+<Step index={1} title="Configure the application settings">
+
+1. Provide a `App integration name`. It will be used as the identifier of your OIDC application.
+
+2. Add a new `Sign-in redirect URIs` using the Logto SSO connector's callback URL.
+
+<OidcCallbackUri />
+
+This is the URI that the OKTA will redirect the user's browser after successful authentication. After a user successfully authenticates with the IdP, the IdP redirects the user's browser back to this designated URI along with an authorization code. Logto will complete the authentication process based on authorization code received from this URI.
+
+<center>
+  <img src={applicationSettings} alt="application settings" />
+</center>
+
+3. Assign users to the application.
+
+Based on the `Assignments` settings, you can choose to assign the application to all users or specific users/groups.
+
+<center>
+  <img src={assignUsers} alt="assign users" />
+</center>
+
+Click the `Save` button to save the application settings.
+
+</Step>
+
+<Step index={2} title="Copy the client ID and client secret">
+
+After successfully creating the OIDC application, you will be redirected to the application details page.
+
+<center>
+  <img src={clientCredentials} alt="client credentials" />
+</center>
+
+Copy the client ID and client secret and fill in the corresponding fields on the Logto SSO connector connection page to complete the configuration.
+
+</Step>
+
+<Step index={4} title="Set email domains and enable the SSO connector">
+
+Provide the email domains of your organization on the connector experience tab. This will enabled the SSO connector as an authentication method for those users.
+
+Users with email addresses in the specified domains will be restricted to use your SSO connector as their only authentication method.
+
+</Step>
+
+For more details about create OIDC integration with OKTA, please check [Create OIDC App Integrations](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
