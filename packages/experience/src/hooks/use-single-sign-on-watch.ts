@@ -1,31 +1,30 @@
 import { SignInIdentifier, type SsoConnectorMetadata } from '@logto/schemas';
-import { useEffect, useState, useCallback, useContext } from 'react';
-import { type Control, useWatch } from 'react-hook-form';
+import { useEffect, useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SingleSignOnContext from '@/Providers/SingleSignOnContextProvider/SingleSignOnContext';
+import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import { getSingleSignOnConnectors } from '@/apis/single-sign-on';
+import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
 import { singleSignOnPath } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
 import { validateEmail } from '@/utils/form';
 
-import type { FormState } from './index';
+import { useSieMethods } from './use-sie';
 
-const useSingleSignOnWatch = (control: Control<FormState>) => {
+const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
   const navigate = useNavigate();
+
+  const { singleSignOnEnabled } = useSieMethods();
+
   const { setEmail, setSsoConnectors, ssoConnectors, availableSsoConnectorsMap } =
     useContext(SingleSignOnContext);
-  const [showSingleSignOn, setShowSingleSignOn] = useState(false);
+
+  const { showSingleSignOnForm, setShowSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
+
   const request = useApi(getSingleSignOnConnectors);
   const singleSignOn = useSingleSignOn();
-
-  const isSsoEnabled = availableSsoConnectorsMap.size > 0;
-
-  const identifierInput = useWatch({
-    control,
-    name: 'identifier',
-  });
 
   /**
    * Silently check if the email is registered with any SSO connectors
@@ -56,15 +55,15 @@ const useSingleSignOnWatch = (control: Control<FormState>) => {
 
   // Reset the ssoContext
   useEffect(() => {
-    if (!showSingleSignOn) {
+    if (!showSingleSignOnForm) {
       setSsoConnectors([]);
       // eslint-disable-next-line unicorn/no-useless-undefined
       setEmail(undefined);
     }
-  }, [setEmail, setSsoConnectors, showSingleSignOn]);
+  }, [setEmail, setSsoConnectors, showSingleSignOnForm]);
 
   const navigateToSingleSignOn = useCallback(async () => {
-    if (!showSingleSignOn) {
+    if (!showSingleSignOnForm) {
       return;
     }
 
@@ -75,38 +74,44 @@ const useSingleSignOnWatch = (control: Control<FormState>) => {
     }
 
     navigate(`/${singleSignOnPath}/connectors`);
-  }, [navigate, showSingleSignOn, singleSignOn, ssoConnectors]);
+  }, [navigate, showSingleSignOnForm, singleSignOn, ssoConnectors]);
 
   useEffect(() => {
-    if (!isSsoEnabled) {
+    if (!singleSignOnEnabled) {
+      return;
+    }
+
+    // Input is undefined if no user interaction has happened
+    if (!identifierInput) {
+      setShowSingleSignOnForm(false);
       return;
     }
 
     const { type, value } = identifierInput;
 
     if (type !== SignInIdentifier.Email) {
-      setShowSingleSignOn(false);
+      setShowSingleSignOnForm(false);
       return;
     }
 
     // Will throw an error if the value is not a valid email
     if (validateEmail(value)) {
-      setShowSingleSignOn(false);
+      setShowSingleSignOnForm(false);
       return;
     }
 
     // Add a debouncing delay to avoid unnecessary API calls
     const handler = setTimeout(async () => {
-      setShowSingleSignOn(await fetchSsoConnectors(value));
+      setShowSingleSignOnForm(await fetchSsoConnectors(value));
     }, 300);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [fetchSsoConnectors, identifierInput, isSsoEnabled]);
+  }, [fetchSsoConnectors, identifierInput, setShowSingleSignOnForm, singleSignOnEnabled]);
 
   return {
-    showSingleSignOn,
+    showSingleSignOnForm,
     navigateToSingleSignOn,
   };
 };

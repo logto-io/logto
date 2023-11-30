@@ -1,11 +1,13 @@
 import { SignInMode } from '@logto/schemas';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
+import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacy from '@/containers/TermsAndPrivacy';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -15,33 +17,24 @@ import ErrorPage from '../ErrorPage';
 import IdentifierRegisterForm from './IdentifierRegisterForm';
 import * as styles from './index.module.scss';
 
-const Register = () => {
+const RegisterFooter = () => {
   const { signUpMethods, socialConnectors, signInMode, signInMethods, singleSignOnEnabled } =
     useSieMethods();
+
   const { t } = useTranslation();
 
-  if (!signInMode) {
-    return <ErrorPage />;
-  }
+  const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
-  if (signInMode === SignInMode.SignIn) {
-    return <Navigate to="/sign-in" />;
+  /* Hide footers when showing Single Sign On form */
+  if (showSingleSignOnForm) {
+    return null;
   }
 
   return (
-    <LandingPageLayout title="description.create_your_account">
-      {signUpMethods.length > 0 && (
-        <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
-      )}
-      {signUpMethods.length === 0 && socialConnectors.length > 0 && (
-        <>
-          <TermsAndPrivacy className={styles.terms} />
-          <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
-        </>
-      )}
+    <>
       {
-        // Single Sign On footer TODO: remove the dev feature check once SSO is ready
-        isDevFeaturesEnabled && singleSignOnEnabled && (
+        // Single Sign On footer
+        singleSignOnEnabled && (
           <div className={styles.singleSignOn}>
             {t('description.use')}{' '}
             <TextLink to="/single-sign-on/email" text="action.single_sign_on" />
@@ -65,6 +58,37 @@ const Register = () => {
           </>
         )
       }
+    </>
+  );
+};
+
+const Register = () => {
+  const { signUpMethods, socialConnectors, signInMode } = useSieMethods();
+
+  if (!signInMode) {
+    return <ErrorPage />;
+  }
+
+  if (signInMode === SignInMode.SignIn) {
+    return <Navigate to="/sign-in" />;
+  }
+
+  return (
+    <LandingPageLayout title="description.create_your_account">
+      <SingleSignOnFormModeContextProvider>
+        {signUpMethods.length > 0 && (
+          <IdentifierRegisterForm signUpMethods={signUpMethods} className={styles.main} />
+        )}
+        {signUpMethods.length === 0 && socialConnectors.length > 0 && (
+          <>
+            <TermsAndPrivacy className={styles.terms} />
+            <SocialSignInList className={styles.main} socialConnectors={socialConnectors} />
+          </>
+        )}
+        <RegisterFooter />
+      </SingleSignOnFormModeContextProvider>
+
+      {/* Hide footer elements when showing Single Sign On form */}
     </LandingPageLayout>
   );
 };

@@ -12,10 +12,10 @@ import type { IdentifierInputValue } from '@/components/InputFields/SmartInputFi
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
 import { useForgotPasswordSettings } from '@/hooks/use-sie';
+import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
-import useSingleSignOnWatch from './use-single-sign-on-watch';
 
 type Props = {
   className?: string;
@@ -49,7 +49,9 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
     },
   });
 
-  const { showSingleSignOn, navigateToSingleSignOn } = useSingleSignOnWatch(control);
+  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(
+    watch('identifier')
+  );
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
@@ -60,7 +62,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           return;
         }
 
-        if (showSingleSignOn) {
+        if (showSingleSignOnForm) {
           await navigateToSingleSignOn();
           return;
         }
@@ -71,7 +73,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
         });
       })(event);
     },
-    [clearErrorMessage, handleSubmit, navigateToSingleSignOn, onSubmit, showSingleSignOn]
+    [clearErrorMessage, handleSubmit, navigateToSingleSignOn, onSubmit, showSingleSignOnForm]
   );
 
   useEffect(() => {
@@ -107,11 +109,11 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
           />
         )}
       />
-      {showSingleSignOn && (
+      {showSingleSignOnForm && (
         <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
       )}
 
-      {!showSingleSignOn && (
+      {!showSingleSignOnForm && (
         <PasswordInputField
           className={styles.inputField}
           autoComplete="current-password"
@@ -124,7 +126,7 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      {isForgotPasswordEnabled && !showSingleSignOn && (
+      {isForgotPasswordEnabled && !showSingleSignOnForm && (
         <ForgotPasswordLink
           className={styles.link}
           identifier={watch('identifier').type}
@@ -134,8 +136,8 @@ const PasswordSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
 
       <Button
         name="submit"
-        title={showSingleSignOn ? 'action.single_sign_on' : 'action.sign_in'}
-        icon={showSingleSignOn ? <LockIcon /> : undefined}
+        title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
+        icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
       />
 
