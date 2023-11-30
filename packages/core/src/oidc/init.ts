@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 
+import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
@@ -32,7 +33,7 @@ import type Queries from '#src/tenants/Queries.js';
 import defaults from './defaults.js';
 import { registerGrants } from './grants/index.js';
 import { findResource, findResourceScopes, getSharedResourceServerData } from './resource.js';
-import { getUserClaimData, getUserClaims } from './scope.js';
+import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 import { OIDCExtraParametersKey, InteractionMode } from './type.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
@@ -195,6 +196,12 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       return {
         accountId: sub,
         claims: async (use, scope, claims, rejected) => {
+          assert(
+            use === 'id_token' || use === 'userinfo',
+            'use should be either `id_token` or `userinfo`'
+          );
+          const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected);
+
           return snakecaseKeys(
             {
               /**
@@ -204,15 +211,7 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
                */
               sub,
               ...Object.fromEntries(
-                await Promise.all(
-                  getUserClaims(use, scope, claims, rejected).map(
-                    async (claim) =>
-                      [
-                        claim,
-                        await getUserClaimData(user, claim, libraries.users, organizations),
-                      ] as const
-                  )
-                )
+                await getUserClaimsData(user, acceptedClaims, libraries.users, organizations)
               ),
             },
             {

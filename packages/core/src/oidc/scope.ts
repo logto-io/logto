@@ -1,7 +1,9 @@
+import assert from 'node:assert';
+
 import type { UserClaim } from '@logto/core-kit';
 import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
 import { type User } from '@logto/schemas';
-import type { Nullable } from '@silverhand/essentials';
+import { pick, type Nullable, cond } from '@silverhand/essentials';
 import type { ClaimsParameterMember } from 'oidc-provider';
 
 import type Libraries from '#src/tenants/Libraries.js';
@@ -11,7 +13,12 @@ const claimToUserKey: Readonly<
   Record<
     Exclude<
       UserClaim,
-      'email_verified' | 'phone_number_verified' | 'roles' | 'organizations' | 'organization_roles'
+      | 'email_verified'
+      | 'phone_number_verified'
+      | 'roles'
+      | 'organizations'
+      | 'organization_data'
+      | 'organization_roles'
     >,
     keyof User
   >
@@ -25,43 +32,80 @@ const claimToUserKey: Readonly<
   identities: 'identities',
 });
 
-export const getUserClaimData = async (
+/**
+ * Get user claims data according to the claims.
+ *
+ * @param user The current user.
+ * @param claims The claims to be fulfilled.
+ * @param userLibrary The user library of the current tenant.
+ * @param organizationQueries The organization queries of the current tenant.
+ * @returns A Promise that resolves to an array of fulfilled claims.
+ */
+export const getUserClaimsData = async (
   user: User,
-  claim: UserClaim,
+  claims: UserClaim[],
   userLibrary: Libraries['users'],
   organizationQueries: Queries['organizations']
-): Promise<unknown> => {
-  // LOG-4165: Change to proper key/function once profile fulfilling implemented
-  if (claim === 'email_verified') {
-    return Boolean(user.primaryEmail);
-  }
+): Promise<ReadonlyArray<[UserClaim, unknown]>> => {
+  const organizations = cond(
+    claims.some((claim) => claim.startsWith('organization')) &&
+      (await organizationQueries.relations.users.getOrganizationsByUserId(user.id))
+  );
 
-  // LOG-4165: Change to proper key/function once profile fulfilling implemented
-  if (claim === 'phone_number_verified') {
-    return Boolean(user.primaryPhone);
-  }
-
-  if (claim === 'roles') {
-    const roles = await userLibrary.findUserRoles(user.id);
-    return roles.map(({ name }) => name);
-  }
-
-  if (claim === 'organizations' || claim === 'organization_roles') {
-    const data = await organizationQueries.relations.users.getOrganizationsByUserId(user.id);
-
-    return claim === 'organizations'
-      ? data.map(({ id }) => id)
-      : data.flatMap(({ id, organizationRoles }) =>
-          organizationRoles.map(({ name }) => `${id}:${name}`)
-        );
-  }
-
-  return user[claimToUserKey[claim]];
+  return Promise.all(
+    claims.map(async (claim) => {
+      switch (claim) {
+        case 'email_verified': {
+          // LOG-4165: Change to proper key/function once profile fulfilling implemented
+          return [claim, Boolean(user.primaryEmail)];
+        }
+        case 'phone_number_verified': {
+          // LOG-4165: Change to proper key/function once profile fulfilling implemented
+          return [claim, Boolean(user.primaryPhone)];
+        }
+        case 'roles': {
+          const roles = await userLibrary.findUserRoles(user.id);
+          return [claim, roles.map(({ name }) => name)];
+        }
+        case 'organizations': {
+          assert(organizations, 'organizations should be defined');
+          return [claim, organizations.map(({ id }) => id)];
+        }
+        case 'organization_roles': {
+          assert(organizations, 'organizations should be defined');
+          return [
+            claim,
+            organizations.flatMap(({ id, organizationRoles }) =>
+              organizationRoles.map(({ name }) => `${id}:${name}`)
+            ),
+          ];
+        }
+        case 'organization_data': {
+          assert(organizations, 'organizations should be defined');
+          return [
+            claim,
+            organizations.map((element) => pick(element, 'id', 'name', 'description')),
+          ];
+        }
+        default: {
+          return [claim, user[claimToUserKey[claim]]];
+        }
+      }
+    })
+  );
 };
 
-// Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
-export const getUserClaims = (
-  use: string,
+/**
+ * Get accepted user claims according to the context.
+ *
+ * @param use Where the claims will be used. Either `id_token` or `userinfo`.
+ * @param scope The scope of the request. Each scope will be expanded to the corresponding claims.
+ * @param _claims Claims parameter. (Ignored since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled)
+ * @param rejected Claims rejected by the user.
+ * @returns An array of accepted user claims.
+ */
+export const getAcceptedUserClaims = (
+  use: 'id_token' | 'userinfo',
   scope: string,
   _claims: Record<string, Nullable<ClaimsParameterMember>>,
   rejected: string[]
