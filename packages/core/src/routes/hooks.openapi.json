@@ -1,0 +1,175 @@
+{
+  "tags": [
+    {
+      "name": "Hooks",
+      "description": "Hook enables you to effortlessly receive real-time updates regarding specific events, such as user registration, sign-in, or password reset."
+    }
+  ],
+  "paths": {
+    "/api/hooks": {
+      "get": {
+        "summary": "Get hooks",
+        "description": "Get a list of hooks with optional pagination.",
+        "parameters": [
+          {
+            "name": "includeExecutionStats",
+            "in": "query",
+            "description": "Whether to include execution stats in the response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of hooks."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new hook",
+        "description": "Create a new hook with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the hook."
+                  },
+                  "events": {
+                    "type": "array",
+                    "description": "An array of hook events.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The hook was created successfully."
+          }
+        }
+      }
+    },
+    "/api/hooks/{id}": {
+      "get": {
+        "summary": "Get hook by ID",
+        "description": "Get hook details by ID.",
+        "parameters": [
+          {
+            "name": "includeExecutionStats",
+            "in": "query",
+            "description": "Whether to include execution stats in the response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the hook."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update hook by ID",
+        "description": "Update hook details by ID with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The updated name of the hook."
+                  },
+                  "events": {
+                    "type": "array",
+                    "description": "An array of updated hook events.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The hook was updated successfully."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete hook by ID",
+        "description": "Delete hook by ID.",
+        "responses": {
+          "204": {
+            "description": "The hook was deleted successfully."
+          }
+        }
+      }
+    },
+    "/api/hooks/{id}/recent-logs": {
+      "get": {
+        "summary": "Get recent logs for a hook",
+        "description": "Get recent logs that match the given query for the specified hook with pagination.",
+        "parameters": [
+          {
+            "name": "logKey",
+            "in": "query",
+            "description": "The log key to filter logs."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of recent logs for the hook."
+          }
+        }
+      }
+    },
+    "/api/hooks/{id}/test": {
+      "post": {
+        "summary": "Test hook",
+        "description": "Test the specified hook with the given events and config.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "events": {
+                    "type": "array",
+                    "description": "An array of hook events for testing.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "config": {
+                    "description": "The hook configuration for testing."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The hook test was successful."
+          }
+        }
+      }
+    },
+    "/api/hooks/{id}/signing-key": {
+      "patch": {
+        "summary": "Update signing key for a hook",
+        "description": "Update the signing key for the specified hook.",
+        "responses": {
+          "200": {
+            "description": "The signing key for the hook was updated successfully."
+          }
+        }
+      }
+    }
+  }
+}
