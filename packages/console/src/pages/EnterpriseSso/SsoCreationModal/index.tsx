@@ -48,7 +48,8 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     handleSubmit,
     formState: { isSubmitting, errors },
     setError,
-  } = useForm<FormType>();
+    watch,
+  } = useForm<FormType>({ resetOptions: { keepErrors: true } });
   const api = useApi({ hideErrorToast: true });
 
   const isLoading = !data && !error;
@@ -60,12 +61,12 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
     [standardConnectors, providerConnectors]
   );
 
-  const isCreateButtonDisabled = useMemo(
+  const isAnyConnectorSelected = useMemo(
     () =>
-      ![...standardConnectors, ...providerConnectors].some(
+      [...standardConnectors, ...providerConnectors].some(
         ({ providerName }) => selectedProviderName === providerName
       ),
-    [selectedProviderName, standardConnectors, providerConnectors]
+    [providerConnectors, selectedProviderName, standardConnectors]
   );
 
   // `rawOnClose` does not clean the state of the modal.
@@ -124,7 +125,13 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
           <Button
             title="enterprise_sso.create_modal.create_button_text"
             type="primary"
-            disabled={isCreateButtonDisabled}
+            disabled={
+              // The button is available only when:
+              // 1. `connectorName` field is not empty.
+              // 2. At least one connector is selected.
+              // 3. Error is resolved. Since `connectorName` is the only field of this form, it means `connectorName` field error is resolved.
+              !(watch('connectorName') && isAnyConnectorSelected) || Boolean(errors.connectorName)
+            }
             onClick={onSubmit}
           />
         }
@@ -133,20 +140,16 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
       >
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}
         {error?.message}
-        {providerConnectors.length > 0 && (
-          <>
-            <SsoConnectorRadioGroup
-              name="providerConnectors"
-              value={selectedProviderName}
-              connectors={providerConnectors}
-              size={radioGroupSize}
-              onChange={handleSsoSelection}
-            />
-            <div className={styles.textDivider}>
-              <DynamicT forKey="enterprise_sso.create_modal.text_divider" />
-            </div>
-          </>
-        )}
+        <SsoConnectorRadioGroup
+          name="providerConnectors"
+          value={selectedProviderName}
+          connectors={providerConnectors}
+          size={radioGroupSize}
+          onChange={handleSsoSelection}
+        />
+        <div className={styles.textDivider}>
+          <DynamicT forKey="enterprise_sso.create_modal.text_divider" />
+        </div>
         <SsoConnectorRadioGroup
           name="standardConnectors"
           value={selectedProviderName}
