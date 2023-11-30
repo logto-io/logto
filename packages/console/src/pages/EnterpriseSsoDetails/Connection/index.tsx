@@ -62,6 +62,7 @@ function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: P
       }
 
       const updatedSsoConnector = await api
+        // TODO: @darcyYe add console test case to remove attribute mapping config.
         .patch(`api/sso-connectors/${ssoConnectorId}`, {
           json: { config: cleanDeep(formData) },
         })
