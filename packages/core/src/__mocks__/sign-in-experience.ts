@@ -96,4 +96,5 @@ export const mockSignInExperience: SignInExperience = {
     policy: MfaPolicy.UserControlled,
     factors: [],
   },
+  singleSignOnEnabled: true,
 };

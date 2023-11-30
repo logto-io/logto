@@ -171,6 +171,20 @@ describe('getFullSignInExperience()', () => {
 });
 
 describe('get sso connectors', () => {
+  it('should return empty array if dev feature is disabled', async () => {
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      singleSignOnEnabled: false,
+    });
+
+    const { ssoConnectors } = await getFullSignInExperience('en');
+
+    expect(ssoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
+
+    expect(ssoConnectors).toEqual([]);
+  });
+
   it('should return sso connectors metadata', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);

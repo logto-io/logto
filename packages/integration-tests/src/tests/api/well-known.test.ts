@@ -2,6 +2,7 @@ import { type SignInExperience, type Translation, type SsoConnectorMetadata } fr
 import { HTTPError } from 'got';
 
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
+import { updateSignInExperience } from '#src/api/index.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { generateSsoConnectorName } from '#src/utils.js';
@@ -57,6 +58,13 @@ describe('.well-known api', () => {
   });
 
   describe('sso connectors in sign-in experience', () => {
+    // Enabled single-sign-on
+    beforeAll(async () => {
+      await updateSignInExperience({
+        singleSignOnEnabled: true,
+      });
+    });
+
     it('should get the sso connectors in sign-in experience', async () => {
       const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
@@ -115,6 +123,25 @@ describe('.well-known api', () => {
       const { ssoConnectors } = signInExperience;
 
       expect(ssoConnectors.find((connector) => connector.id === id)).toBeUndefined();
+
+      await deleteSsoConnectorById(id);
+    });
+
+    it('should return empty array if single-sign-on is disabled', async () => {
+      await updateSignInExperience({
+        singleSignOnEnabled: false,
+      });
+
+      const { id } = await createSsoConnector({
+        ...newOidcSsoConnectorPayload,
+        connectorName: generateSsoConnectorName(),
+      });
+
+      const signInExperience = await api
+        .get('.well-known/sign-in-exp')
+        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+
+      expect(signInExperience.ssoConnectors.length).toBe(0);
 
       await deleteSsoConnectorById(id);
     });
