@@ -83,7 +83,7 @@ describe('<Register />', () => {
     expect(queryByText('action.single_sign_on')).not.toBeNull();
   });
 
-  test('should  render single sign on link with single sign on enabled but empty list', () => {
+  test('should render single sign on link with single sign on enabled but empty list', () => {
     const { queryByText } = renderRegisterPage({
       ssoConnectors: [],
       singleSignOnEnabled: true,

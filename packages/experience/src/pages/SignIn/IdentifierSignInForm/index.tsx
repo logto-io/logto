@@ -2,11 +2,14 @@ import type { SignIn } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
+import LockIcon from '@/assets/icons/lock.svg';
 import Button from '@/components/Button';
 import ErrorMessage from '@/components/ErrorMessage';
 import { SmartInputField } from '@/components/InputFields';
 import type { IdentifierInputValue } from '@/components/InputFields/SmartInputField';
+import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import * as styles from './index.module.scss';
@@ -24,6 +27,7 @@ type FormState = {
 };
 
 const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) => {
+  const { t } = useTranslation();
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
 
   const enabledSignInMethods = useMemo(
@@ -32,12 +36,18 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   );
 
   const {
+    watch,
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm<FormState>({
     reValidateMode: 'onBlur',
   });
+
+  // Watch identifier field and check single sign on method availability
+  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(
+    watch('identifier')
+  );
 
   useEffect(() => {
     if (!isValid) {
@@ -54,10 +64,15 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
           return;
         }
 
+        if (showSingleSignOnForm) {
+          await navigateToSingleSignOn();
+          return;
+        }
+
         await onSubmit(type, value);
       })(event);
     },
-    [clearErrorMessage, handleSubmit, onSubmit]
+    [clearErrorMessage, handleSubmit, navigateToSingleSignOn, onSubmit, showSingleSignOnForm]
   );
 
   return (
@@ -92,7 +107,16 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
       {errorMessage && <ErrorMessage className={styles.formErrors}>{errorMessage}</ErrorMessage>}
 
-      <Button title="action.sign_in" htmlType="submit" />
+      {showSingleSignOnForm && (
+        <div className={styles.message}>{t('description.single_sign_on_enabled')}</div>
+      )}
+
+      <Button
+        name="submit"
+        title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
+        icon={showSingleSignOnForm ? <LockIcon /> : undefined}
+        htmlType="submit"
+      />
 
       <input hidden type="submit" />
     </form>

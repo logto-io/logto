@@ -8,8 +8,13 @@
   }
 
   .inputField,
-  .formErrors {
+  .formErrors,
+  .message {
     margin-bottom: _.unit(4);
+  }
+
+  .message {
+    @include _.text-hint;
   }
 
   .formErrors {

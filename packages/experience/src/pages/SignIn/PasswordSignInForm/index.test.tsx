@@ -4,6 +4,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
@@ -51,7 +52,9 @@ describe('UsernamePasswordSignInForm', () => {
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
         <SingleSignOnContextProvider>
-          <PasswordSignInForm signInMethods={signInMethods} />
+          <SingleSignOnFormModeContextProvider>
+            <PasswordSignInForm signInMethods={signInMethods} />
+          </SingleSignOnFormModeContextProvider>
         </SingleSignOnContextProvider>
       </SettingsProvider>
     );

@@ -9,12 +9,21 @@
 
   .inputField,
   .terms,
-  .formErrors {
+  .formErrors,
+  .message {
     margin-bottom: _.unit(4);
+  }
+
+  .message {
+    @include _.text-hint;
   }
 
   .formErrors {
     margin-left: _.unit(0.5);
     margin-top: _.unit(-3);
+  }
+
+  .hidden {
+    display: none;
   }
 }

@@ -5,6 +5,7 @@ import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { type VerificationCodeIdentifier } from '@/types';
 
 export const useSieMethods = () => {
@@ -24,7 +25,8 @@ export const useSieMethods = () => {
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
     customContent: experienceSettings?.customContent,
-    singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
+    // TODO: remove the dev feature check once SSO is ready
+    singleSignOnEnabled: isDevFeaturesEnabled && experienceSettings?.singleSignOnEnabled,
   };
 };
 

@@ -4,6 +4,7 @@ import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import {
@@ -37,7 +38,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/single-sign-on', () => ({
-  getSingleSignOnConnectors: () => getSingleSignOnConnectorsMock(),
+  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
 const username = 'foo';
@@ -53,7 +54,9 @@ const renderForm = (signInMethods: SignIn['methods'], ssoConnectors: SsoConnecto
       }}
     >
       <SingleSignOnContextProvider>
-        <IdentifierSignInForm signInMethods={signInMethods} />
+        <SingleSignOnFormModeContextProvider>
+          <IdentifierSignInForm signInMethods={signInMethods} />
+        </SingleSignOnFormModeContextProvider>
       </SingleSignOnContextProvider>
     </SettingsProvider>
   );
@@ -178,7 +181,7 @@ describe('IdentifierSignInForm', () => {
 
   describe('email single sign-on tests', () => {
     it('should not call check single sign-on connector when the identifier is not email', async () => {
-      const { getByText, container } = renderForm(
+      const { getByText, container, queryByText } = renderForm(
         mockSignInMethodSettingsTestCases[0]!,
         mockSsoConnectors
       );
@@ -191,6 +194,9 @@ describe('IdentifierSignInForm', () => {
           fireEvent.change(inputField, { target: { value: username } });
         });
       }
+
+      expect(queryByText('action.sign_in')).not.toBeNull();
+      expect(queryByText('action.single_sign_on')).toBeNull();
 
       act(() => {
         fireEvent.submit(submitButton);
@@ -206,7 +212,9 @@ describe('IdentifierSignInForm', () => {
     });
 
     it('should not call check single sign-on connector when no single sign-on connector is enabled', async () => {
-      const { getByText, container } = renderForm(mockSignInMethodSettingsTestCases[0]!);
+      const { getByText, container, queryByText } = renderForm(
+        mockSignInMethodSettingsTestCases[0]!
+      );
 
       const inputField = container.querySelector('input[name="identifier"]');
       const submitButton = getByText('action.sign_in');
@@ -216,6 +224,9 @@ describe('IdentifierSignInForm', () => {
           fireEvent.change(inputField, { target: { value: email } });
         });
       }
+
+      expect(queryByText('action.sign_in')).not.toBeNull();
+      expect(queryByText('action.single_sign_on')).toBeNull();
 
       act(() => {
         fireEvent.submit(submitButton);
@@ -231,15 +242,14 @@ describe('IdentifierSignInForm', () => {
     });
 
     it('should call check single sign-on connector when the identifier is email, but process to password sign-in if no sso connector is matched', async () => {
-      getSingleSignOnConnectorsMock.mockRejectedValueOnce([]);
+      getSingleSignOnConnectorsMock.mockResolvedValueOnce([]);
 
-      const { getByText, container } = renderForm(
+      const { getByText, container, queryByText } = renderForm(
         mockSignInMethodSettingsTestCases[0]!,
         mockSsoConnectors
       );
 
       const inputField = container.querySelector('input[name="identifier"]');
-      const submitButton = getByText('action.sign_in');
 
       if (inputField) {
         act(() => {
@@ -247,12 +257,20 @@ describe('IdentifierSignInForm', () => {
         });
       }
 
+      await waitFor(() => {
+        expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+      });
+
+      // Should not switch to the single sign-on mode
+      expect(queryByText('action.single_sign_on')).toBeNull();
+
+      const submitButton = getByText('action.sign_in');
+
       act(() => {
         fireEvent.submit(submitButton);
       });
 
       await waitFor(() => {
-        expect(getSingleSignOnConnectorsMock).toBeCalled();
         expect(mockedNavigate).toBeCalledWith(
           { pathname: '/sign-in/password' },
           { state: { identifier: SignInIdentifier.Email, value: email } }
@@ -263,13 +281,12 @@ describe('IdentifierSignInForm', () => {
     it('should call check single sign-on connector when the identifier is email, and process to single sign-on if a sso connector is matched', async () => {
       getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
 
-      const { getByText, container } = renderForm(
+      const { getByText, container, queryByText } = renderForm(
         mockSignInMethodSettingsTestCases[0]!,
         mockSsoConnectors
       );
 
       const inputField = container.querySelector('input[name="identifier"]');
-      const submitButton = getByText('action.sign_in');
 
       if (inputField) {
         act(() => {
@@ -277,12 +294,22 @@ describe('IdentifierSignInForm', () => {
         });
       }
 
+      await waitFor(() => {
+        expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+      });
+
+      await waitFor(() => {
+        // Should switch to the single sign-on mode
+        expect(queryByText('action.single_sign_on')).not.toBeNull();
+        expect(queryByText('action.sign_in')).toBeNull();
+      });
+
       act(() => {
+        const submitButton = getByText('action.single_sign_on');
         fireEvent.submit(submitButton);
       });
 
       await waitFor(() => {
-        expect(getSingleSignOnConnectorsMock).toBeCalled();
         expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
       });
     });

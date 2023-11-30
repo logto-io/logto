@@ -4,6 +4,7 @@ import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
 import SingleSignOnContextProvider from '@/Providers/SingleSignOnContextProvider';
+import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
@@ -38,7 +39,7 @@ jest.mock('@/apis/interaction', () => ({
 }));
 
 jest.mock('@/apis/single-sign-on', () => ({
-  getSingleSignOnConnectors: () => getSingleSignOnConnectorsMock(),
+  getSingleSignOnConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
 
 const renderForm = (
@@ -54,7 +55,9 @@ const renderForm = (
     >
       <ConfirmModalProvider>
         <SingleSignOnContextProvider>
-          <IdentifierRegisterForm signUpMethods={signUpMethods} />
+          <SingleSignOnFormModeContextProvider>
+            <IdentifierRegisterForm signUpMethods={signUpMethods} />
+          </SingleSignOnFormModeContextProvider>
         </SingleSignOnContextProvider>
       </ConfirmModalProvider>
     </SettingsProvider>
@@ -305,7 +308,7 @@ describe('<IdentifierRegisterForm />', () => {
     const email = 'foo@email.com';
 
     it('should not call check single sign-on connector when no single sign-on connector is enabled', async () => {
-      const { getByText, container } = renderForm([SignInIdentifier.Email]);
+      const { getByText, container, queryByText } = renderForm([SignInIdentifier.Email]);
       const submitButton = getByText('action.create_account');
       const emailInput = container.querySelector('input[name="identifier"]');
       const termsButton = getByText('description.agree_with_terms');
@@ -316,6 +319,8 @@ describe('<IdentifierRegisterForm />', () => {
         fireEvent.change(emailInput, { target: { value: email } });
         fireEvent.click(termsButton);
       });
+
+      expect(queryByText('action.single_sign_on')).toBeNull();
 
       act(() => {
         fireEvent.submit(submitButton);
@@ -332,7 +337,10 @@ describe('<IdentifierRegisterForm />', () => {
     it('should call check single sign-on connector when the identifier is email, but process to password sign-in if no sso connector is matched', async () => {
       getSingleSignOnConnectorsMock.mockRejectedValueOnce([]);
 
-      const { getByText, container } = renderForm([SignInIdentifier.Email], mockSsoConnectors);
+      const { getByText, container, queryByText } = renderForm(
+        [SignInIdentifier.Email],
+        mockSsoConnectors
+      );
       const submitButton = getByText('action.create_account');
       const emailInput = container.querySelector('input[name="identifier"]');
       const termsButton = getByText('description.agree_with_terms');
@@ -344,39 +352,55 @@ describe('<IdentifierRegisterForm />', () => {
         fireEvent.click(termsButton);
       });
 
+      await waitFor(() => {
+        expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+      });
+
       act(() => {
         fireEvent.submit(submitButton);
       });
 
+      // Should not switch to the single sign-on mode
+      expect(queryByText('action.single_sign_on')).toBeNull();
+
       await waitFor(() => {
-        expect(getSingleSignOnConnectorsMock).toBeCalled();
         expect(sendVerificationCodeApi).toBeCalledWith(UserFlow.Register, {
           email,
         });
       });
     });
 
-    it('should call check single sign-on connector when the identifier is email, but process to password sign-in if no sso connector is matched', async () => {
+    it('should call check single sign-on connector when the identifier is email, and goes to the SSO flow', async () => {
       getSingleSignOnConnectorsMock.mockResolvedValueOnce(mockSsoConnectors.map(({ id }) => id));
 
-      const { getByText, container } = renderForm([SignInIdentifier.Email], mockSsoConnectors);
-      const submitButton = getByText('action.create_account');
+      const { getByText, container, queryByText } = renderForm(
+        [SignInIdentifier.Email],
+        mockSsoConnectors
+      );
       const emailInput = container.querySelector('input[name="identifier"]');
-      const termsButton = getByText('description.agree_with_terms');
 
       assert(emailInput, new Error('username input not found'));
 
       act(() => {
         fireEvent.change(emailInput, { target: { value: email } });
-        fireEvent.click(termsButton);
+      });
+
+      await waitFor(() => {
+        expect(getSingleSignOnConnectorsMock).toBeCalledWith(email);
+      });
+
+      await waitFor(() => {
+        // Should switch to the single sign-on mode
+        expect(queryByText('action.single_sign_on')).not.toBeNull();
+        expect(queryByText('action.create_account')).toBeNull();
       });
 
       act(() => {
+        const submitButton = getByText('action.single_sign_on');
         fireEvent.submit(submitButton);
       });
 
       await waitFor(() => {
-        expect(getSingleSignOnConnectorsMock).toBeCalled();
         expect(mockedNavigate).toBeCalledWith(`/${singleSignOnPath}/connectors`);
       });
     });
