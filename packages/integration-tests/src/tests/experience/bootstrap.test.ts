@@ -46,7 +46,7 @@ describe('smoke testing on the demo app', () => {
 
     // Open the demo app and navigate to the register page
     await experience.startWith(demoAppUrl, 'register');
-    await experience.toFillInput('identifier', credentials.username, { submit: true });
+    await experience.toFillInput('id', credentials.username, { submit: true });
 
     // Simple password tests
     experience.toBeAt('register/password');
