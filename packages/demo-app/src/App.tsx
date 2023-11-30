@@ -1,5 +1,5 @@
 import type { IdTokenClaims } from '@logto/react';
-import { LogtoProvider, useLogto, Prompt } from '@logto/react';
+import { LogtoProvider, useLogto, Prompt, UserScope } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -108,9 +108,7 @@ const App = () => {
         endpoint: window.location.origin,
         appId: demoAppApplicationId,
         prompt: Prompt.Login,
-        // TODO: Use enum values once JS SDK is updated
-        scopes: ['urn:logto:scope:organizations', 'urn:logto:scope:organization_roles'],
-        resources: ['urn:logto:resource:organizations'],
+        scopes: [UserScope.Organizations, UserScope.OrganizationRoles],
       }}
     >
       <Main />
