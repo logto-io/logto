@@ -46,6 +46,10 @@ const enterprise_sso_details = {
   /** UNTRANSLATED */
   branding_logo_error: 'Upload logo error: {{error}}',
   /** UNTRANSLATED */
+  branding_light_logo_context: 'Upload light mode logo',
+  /** UNTRANSLATED */
+  branding_light_logo_error: 'Upload light mode logo error: {{error}}',
+  /** UNTRANSLATED */
   branding_logo_field_name: 'Logo',
   /** UNTRANSLATED */
   branding_logo_field_placeholder: 'https://your.domain/logo.png',

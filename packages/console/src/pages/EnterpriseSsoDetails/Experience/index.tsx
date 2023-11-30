@@ -39,6 +39,7 @@ type Props = {
   isDeleted: boolean;
   data: DataType;
   onUpdated: (data: DataType) => void;
+  isDarkModeEnabled: boolean;
 };
 
 export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> & {
@@ -74,7 +75,7 @@ const formDataToSsoConnectorParser = (
   };
 };
 
-function Experience({ data, isDeleted, onUpdated }: Props) {
+function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { isReady: isUserAssetsServiceReady } = useUserAssetsService();
   const api = useApi({ hideErrorToast: true });
@@ -283,7 +284,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
               title="enterprise_sso_details.connector_logo_field_name"
               headlineSpacing="large"
             >
-              <LogosUploader />
+              <LogosUploader isDarkModeEnabled={isDarkModeEnabled} />
             </FormField>
           ) : (
             <>
