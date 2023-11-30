@@ -8,6 +8,7 @@ import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -54,7 +55,12 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
     }
 
     const allGroups = getConnectorGroups<ConnectorFactoryResponse>(
-      factories.filter(({ type: factoryType, isDemo }) => factoryType === type && !isDemo)
+      factories
+        .filter(({ type: factoryType, isDemo }) => factoryType === type && !isDemo)
+        // TODO: should remove the `isDevFeaturesEnabled` when Enterprise SSO is ready.
+        // Hide the entrance of adding SAML social connectors, users should go to Enterprise SSO if they want to use SAML.
+        // Should not remove the SAML factory from GET /connector-factories API, since that could break the existing SAML connectors.
+        .filter(({ id }) => isDevFeaturesEnabled || id !== 'saml')
     );
 
     return allGroups
