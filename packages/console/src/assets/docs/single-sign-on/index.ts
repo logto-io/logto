@@ -9,7 +9,7 @@ const ssoConnectorGuides: Readonly<{ [key in SsoProviderName]?: GuideComponentTy
   [SsoProviderName.OIDC]: lazy(async () => import('./OIDC/README.mdx')),
   [SsoProviderName.AZURE_AD]: lazy(async () => import('./AzureAD/README.mdx')),
   [SsoProviderName.GOOGLE_WORKSPACE]: lazy(async () => import('./GoogleWorkspace/README.mdx')),
-  [SsoProviderName.OKTA]: lazy(async () => import('./Okta/README.mdx')),
+  [SsoProviderName.OKTA]: lazy(async () => import('./OKTA/README.mdx')),
 };
 
 export default ssoConnectorGuides;
