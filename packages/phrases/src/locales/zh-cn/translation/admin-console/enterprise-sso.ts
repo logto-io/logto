@@ -15,7 +15,8 @@ const enterprise_sso = {
     title: '添加企业连接器',
     text_divider: '或者您可以通过标准协议自定义您的连接器。',
     connector_name_field_title: '连接器名称',
-    connector_name_field_placeholder: '企业身份提供者的名称',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: '创建连接器',
   },
   guide: {

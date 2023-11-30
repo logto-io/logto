@@ -16,7 +16,8 @@ const enterprise_sso = {
     title: 'Unternehmensconnector hinzufügen',
     text_divider: 'Oder Sie können Ihren Connector mit einem Standardprotokoll anpassen.',
     connector_name_field_title: 'Connector-Name',
-    connector_name_field_placeholder: 'Name für den Unternehmensidentitätsanbieter',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'Connector erstellen',
   },
   guide: {

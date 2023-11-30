@@ -16,7 +16,8 @@ const enterprise_sso = {
     title: 'Добавить коннектор предприятия',
     text_divider: 'Или вы можете настроить свой коннектор по стандартному протоколу.',
     connector_name_field_title: 'Имя коннектора',
-    connector_name_field_placeholder: 'Имя для поставщика идентификации предприятия',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'Создать коннектор',
   },
   guide: {

@@ -16,7 +16,8 @@ const enterprise_sso = {
     title: 'Dodaj łącznik przedsiębiorstwa',
     text_divider: 'Albo możesz dostosować swój łącznik za pomocą standardowego protokołu.',
     connector_name_field_title: 'Nazwa łącznika',
-    connector_name_field_placeholder: 'Nazwa dostawcy tożsamości przedsiębiorstwa',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'Stwórz łącznik',
   },
   guide: {

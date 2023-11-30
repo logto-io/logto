@@ -14,7 +14,7 @@ const enterprise_sso = {
     title: 'Add enterprise connector',
     text_divider: 'Or you can customize your connector by a standard protocol.',
     connector_name_field_title: 'Connector name',
-    connector_name_field_placeholder: 'Name for the enterprise identity provider',
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'Create connector',
   },
   guide: {

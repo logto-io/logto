@@ -16,7 +16,8 @@ const enterprise_sso = {
     title: 'Kurumsal bağlayıcı ekle',
     text_divider: 'Ya da standart bir protokol ile bağlayıcınızı özelleştirebilirsiniz.',
     connector_name_field_title: 'Bağlayıcı adı',
-    connector_name_field_placeholder: 'Kurumsal kimlik sağlayıcı için isim',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'Bağlayıcı Oluştur',
   },
   guide: {

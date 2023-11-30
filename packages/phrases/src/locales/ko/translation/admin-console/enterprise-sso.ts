@@ -15,7 +15,8 @@ const enterprise_sso = {
     title: '기업 커넥터 추가',
     text_divider: '또는 표준 프로토콜을 사용하여 커넥터를 사용자 정의할 수 있습니다.',
     connector_name_field_title: '커넥터 이름',
-    connector_name_field_placeholder: '기업 신원 공급자의 이름',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: '커넥터 생성',
   },
   guide: {
