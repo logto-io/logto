@@ -77,12 +77,6 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
   [ReservedPlanId.Pro]: 48,
 };
 
-export const ssoEnabledMap: EnabledFeatureMap = {
-  [ReservedPlanId.Free]: false,
-  [ReservedPlanId.Hobby]: true,
-  [ReservedPlanId.Pro]: true,
-};
-
 /**
  * Note: this is only for display purpose.
  *
@@ -170,4 +164,4 @@ export const planQuotaItemOrder = Object.values(planTableGroupKeyMap).flat();
  * - Related quota items will have a "Coming soon" tag in the plan selection component.
  * - Related quota items will be hidden from the downgrade plan notification modal.
  */
-export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = ['ssoEnabled'];
+export const comingSoonQuotaKeys: Array<keyof SubscriptionPlanQuota> = [];

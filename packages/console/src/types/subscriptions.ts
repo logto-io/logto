@@ -16,8 +16,6 @@ export type SubscriptionPlanQuota = Omit<
   // Support
   communitySupportEnabled: boolean;
   ticketSupportResponseTime: number;
-  // SSO
-  ssoEnabled: boolean;
 };
 
 export type SubscriptionPlanQuotaEntries = Array<

@@ -1,6 +1,7 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
+import { type SsoConnectorWithProviderConfig, ReservedPlanId } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useContext, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
@@ -11,11 +12,15 @@ import EnterpriseSsoConnectorEmpty from '@/assets/images/sso-connector-empty.svg
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
+import { isCloud } from '@/consts/env';
+import { subscriptionPage } from '@/consts/pages';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
+import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { buildUrl } from '@/utils/url';
 
@@ -32,9 +37,17 @@ function EnterpriseSsoConnectors() {
   const { pathname } = useLocation();
   const { navigate } = useTenantPathname();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
+  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
+
+  const isSsoEnabled = !isCloud || currentPlan?.quota.ssoEnabled;
+
+  const handleButtonClick = useCallback(() => {
+    navigate(isSsoEnabled ? createEnterpriseSsoPathname : subscriptionPage);
+  }, [isSsoEnabled, navigate]);
 
   const url = buildUrl('api/sso-connectors', {
     page: String(page),
@@ -51,16 +64,17 @@ function EnterpriseSsoConnectors() {
   return (
     <ListPage
       title={{
+        isBeta: true,
+        paywall: conditional((!isSsoEnabled || isDevTenant) && ReservedPlanId.Hobby),
         title: 'enterprise_sso.title',
         subtitle: 'enterprise_sso.subtitle',
       }}
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(
         ssoConnectors?.length && {
-          title: 'enterprise_sso.create',
-          onClick: () => {
-            navigate(createEnterpriseSsoPathname);
-          },
+          title: isSsoEnabled ? 'enterprise_sso.create' : 'upsell.upgrade_plan',
+          onClick: handleButtonClick,
+          icon: conditional(isSsoEnabled && <Plus />),
         }
       )}
       table={{
@@ -135,13 +149,11 @@ function EnterpriseSsoConnectors() {
             description="enterprise_sso.placeholder_description"
             action={
               <Button
-                title="enterprise_sso.create"
+                title={isSsoEnabled ? 'enterprise_sso.create' : 'upsell.upgrade_plan'}
                 type="primary"
                 size="large"
-                icon={<Plus />}
-                onClick={() => {
-                  navigate(createEnterpriseSsoPathname);
-                }}
+                icon={conditional(isSsoEnabled && <Plus />)}
+                onClick={handleButtonClick}
               />
             }
           />

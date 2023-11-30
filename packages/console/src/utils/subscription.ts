@@ -4,11 +4,7 @@ import dayjs from 'dayjs';
 
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
 import { type SubscriptionPlanResponse } from '@/cloud/types/router';
-import {
-  communitySupportEnabledMap,
-  ssoEnabledMap,
-  ticketSupportResponseTimeMap,
-} from '@/consts/plan-quotas';
+import { communitySupportEnabledMap, ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIdOrder, featuredPlanIds } from '@/consts/subscriptions';
 import { type SubscriptionPlanQuota, type SubscriptionPlan } from '@/types/subscriptions';
 
@@ -21,7 +17,6 @@ export const addSupportQuotaToPlan = (subscriptionPlanResponse: SubscriptionPlan
       ...quota,
       communitySupportEnabled: communitySupportEnabledMap[id] ?? false, // Fallback to not supported
       ticketSupportResponseTime: ticketSupportResponseTimeMap[id] ?? 0, // Fallback to not supported
-      ssoEnabled: ssoEnabledMap[id] ?? false, // Fallback to not supported
     },
   };
 };
