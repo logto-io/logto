@@ -109,10 +109,11 @@
     .footer {
       flex-shrink: 0;
       border-top: 1px solid var(--color-divider);
-      height: 85px;
+      height: 60px;
       display: flex;
       flex-direction: row-reverse;
-      padding: _.unit(5);
+      align-items: center;
+      padding-right: _.unit(5);
     }
   }
 }

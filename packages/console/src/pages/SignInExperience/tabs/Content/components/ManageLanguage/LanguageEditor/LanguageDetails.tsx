@@ -271,7 +271,6 @@ function LanguageDetails() {
           <Button
             isLoading={isSubmitting}
             type="primary"
-            size="large"
             title="general.save"
             onClick={async () => onSubmit()}
           />
