@@ -66,7 +66,7 @@ Logto will fetch the metadata from the URL and configure the SAML SSO integratio
 
 Logto provides a flexible way to map the user attributes returned from IdP to the user attributes in Logto. Logto will sync the following user attributes from IdP by default:
 
-- id: The unique identifier of the user. Logto will read the `nameId` claim from the SAML response as the user id by default. You may leave this field as default unless you want to use a different claim.
+- id: The unique identifier of the user. Logto will read the `nameId` claim from the SAML response as the user SSO identity id.
 - email: The email address of the user. Logto will read the `email` claim from the SAML response as the user primary email by default.
 - name: The name of the user.
 
