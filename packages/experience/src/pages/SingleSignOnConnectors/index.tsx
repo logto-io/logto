@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
@@ -20,10 +20,12 @@ const SingleSignOnConnectors = () => {
   // Listen to native message
   useNativeMessageListener();
 
-  // Return to the previous page if no email and no connectors are available in the context
-  if (!email || ssoConnectors.length === 0) {
-    navigate('../email');
-  }
+  useEffect(() => {
+    // Return to the previous page if no email and no connectors are available in the context
+    if (!email || ssoConnectors.length === 0) {
+      navigate('../email');
+    }
+  }, [email, navigate, ssoConnectors.length]);
 
   return (
     <SecondaryPageLayout
