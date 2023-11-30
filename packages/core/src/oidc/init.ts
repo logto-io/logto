@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 
+import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
 
 import { userClaims } from '@logto/core-kit';
@@ -195,6 +196,10 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
       return {
         accountId: sub,
         claims: async (use, scope, claims, rejected) => {
+          assert(
+            use === 'id_token' || use === 'userinfo',
+            'use should be either `id_token` or `userinfo`'
+          );
           const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected);
 
           return snakecaseKeys(

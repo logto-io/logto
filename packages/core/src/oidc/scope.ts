@@ -32,6 +32,15 @@ const claimToUserKey: Readonly<
   identities: 'identities',
 });
 
+/**
+ * Get user claims data according to the claims.
+ *
+ * @param user The current user.
+ * @param claims The claims to be fulfilled.
+ * @param userLibrary The user library of the current tenant.
+ * @param organizationQueries The organization queries of the current tenant.
+ * @returns A Promise that resolves to an array of fulfilled claims.
+ */
 export const getUserClaimsData = async (
   user: User,
   claims: UserClaim[],
@@ -86,9 +95,17 @@ export const getUserClaimsData = async (
   );
 };
 
-// Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
+/**
+ * Get accepted user claims according to the context.
+ *
+ * @param use Where the claims will be used. Either `id_token` or `userinfo`.
+ * @param scope The scope of the request. Each scope will be expanded to the corresponding claims.
+ * @param _claims Claims parameter. (Ignored since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled)
+ * @param rejected Claims rejected by the user.
+ * @returns An array of accepted user claims.
+ */
 export const getAcceptedUserClaims = (
-  use: string,
+  use: 'id_token' | 'userinfo',
   scope: string,
   _claims: Record<string, Nullable<ClaimsParameterMember>>,
   rejected: string[]
