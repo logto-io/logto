@@ -23,7 +23,9 @@ const SingleSignOnConnectors = () => {
   useEffect(() => {
     // Return to the previous page if no email and no connectors are available in the context
     if (!email || ssoConnectors.length === 0) {
-      navigate('../email');
+      navigate('../email', {
+        replace: true,
+      });
     }
   }, [email, navigate, ssoConnectors.length]);
 
