@@ -1,13 +1,12 @@
 import { withAppInsights } from '@logto/app-insights/react';
 import { type SsoProviderName } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
-import ssoConnectorGuides, { type GuideComponentType } from '@/assets/docs/single-sign-on';
 import Delete from '@/assets/icons/delete.svg';
 import File from '@/assets/icons/file.svg';
 import DetailsPage from '@/components/DetailsPage';
@@ -90,13 +89,6 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     }
   };
 
-  const ConnectorGuide = useMemo<GuideComponentType | undefined>(() => {
-    if (!ssoConnector) {
-      return;
-    }
-    return ssoConnectorGuides[ssoConnector.providerName];
-  }, [ssoConnector]);
-
   if (!ssoConnectorId) {
     return null;
   }
@@ -151,7 +143,6 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
               setIsReadmeOpen(false);
             }}
           >
-            {/* TODO: @darcyYe Add SSO connector README. */}
             <SsoGuide ssoConnector={ssoConnector} className={styles.readme} />
           </Drawer>
           <TabNav>
