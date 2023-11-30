@@ -19,10 +19,29 @@
       font: var(--font-body-2);
       overflow-wrap: break-word;
       word-wrap: break-word;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
 
   > :not(:last-child) {
     margin-bottom: _.unit(6);
   }
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  margin-right: _.unit(2);
+  border-radius: 50%;
+  background: var(--color-on-success-container);
+}
+
+.errorStatus {
+  background: var(--color-on-error-container);
+}
+
+.copyToClipboard {
+  margin-left: _.unit(1);
 }

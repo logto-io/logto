@@ -14,7 +14,7 @@ import {
   type ExtendedSocialUserInfo,
   type SamlServiceProviderMetadata,
   type SamlIdentityProviderMetadata,
-  samlIdentityProviderMetadataGuard,
+  manualSamlConnectorConfigGuard,
 } from '../types/saml.js';
 
 import {
@@ -213,7 +213,7 @@ class SamlConnector {
    */
   private getIdpMetadataJson() {
     // Required fields of metadata should not be undefined.
-    const result = samlIdentityProviderMetadataGuard.safeParse(this.idpConfig);
+    const result = manualSamlConnectorConfigGuard.safeParse(this.idpConfig);
 
     if (!result.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {

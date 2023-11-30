@@ -61,6 +61,7 @@ const enterprise_sso_details = {
     sign_on_url: 'Sign on URL',
     entity_id: 'Issuer',
     x509_certificate: 'Signing certificate',
+    certificate_content: 'Expiring {{date}}',
   },
   oidc_preview: {
     authorization_endpoint: 'Authorization endpoint',
