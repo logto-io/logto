@@ -1,6 +1,6 @@
 import { socialUserInfoGuard } from '@logto/connector-kit';
 import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -55,12 +55,24 @@ function SamlAttributeMapping({ providerConfig }: Props) {
                 <CopyToClipboard className={styles.copyToClipboard} variant="border" value={key} />
               </td>
               <td>
-                <TextInput
-                  {...register(`${primaryKey}.${key}`)}
-                  placeholder={conditional(
-                    result.success && result.data.defaultAttributeMapping[key]
-                  )}
-                />
+                {/* Show default value of `id` field to show that Logto has handled the default value. */}
+                {/* Per SAML protocol, this field is not eligible to change in most cases. */}
+                {key === 'id' ? (
+                  <CopyToClipboard
+                    className={styles.copyToClipboard}
+                    variant="border"
+                    value={conditionalString(
+                      result.success && result.data.defaultAttributeMapping[key]
+                    )}
+                  />
+                ) : (
+                  <TextInput
+                    {...register(`${primaryKey}.${key}`)}
+                    placeholder={conditional(
+                      result.success && result.data.defaultAttributeMapping[key]
+                    )}
+                  />
+                )}
               </td>
             </tr>
           );
