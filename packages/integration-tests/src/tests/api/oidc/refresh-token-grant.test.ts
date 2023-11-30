@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 
 import { decodeAccessToken } from '@logto/js';
-import { type LogtoConfig, Prompt } from '@logto/node';
+import { type LogtoConfig, Prompt, PersistKey } from '@logto/node';
 import { GrantType, InteractionEvent, demoAppApplicationId } from '@logto/schemas';
 import { isKeyInObject, removeUndefinedKeys } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
@@ -61,7 +61,7 @@ class MockOrganizationClient extends MockClient {
         })
         .json();
       if (isKeyInObject(json, 'refresh_token')) {
-        await this.storage.setItem('refreshToken', String(json.refresh_token));
+        await this.storage.setItem(PersistKey.RefreshToken, String(json.refresh_token));
       }
       return json;
     } catch (error) {
@@ -267,7 +267,7 @@ describe('`refresh_token` grant (for organization tokens)', () => {
       await expect(client.fetchOrganizationToken(org.id)).rejects.toMatchError(accessDeniedError);
     });
 
-    it('should not issue organization scopes when organization resource is not requested', async () => {
+    it('should issue organization scopes even organization resource is not requested (handled by SDK)', async () => {
       const { orgs } = await initOrganizations();
 
       const client = await initClient({
@@ -276,11 +276,11 @@ describe('`refresh_token` grant (for organization tokens)', () => {
       });
       expectGrantResponse(await client.fetchOrganizationToken(orgs[0].id), {
         organizationId: orgs[0].id,
-        scopes: [],
+        scopes: ['scope1', 'scope2'],
       });
       expectGrantResponse(await client.fetchOrganizationToken(orgs[1].id), {
         organizationId: orgs[1].id,
-        scopes: [],
+        scopes: ['scope1', 'scope2'],
       });
       expectGrantResponse(await client.fetchOrganizationToken(orgs[2].id), {
         organizationId: orgs[2].id,
