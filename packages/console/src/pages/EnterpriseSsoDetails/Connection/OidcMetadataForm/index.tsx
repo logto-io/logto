@@ -43,6 +43,7 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
       </FormField>
       <FormField isRequired title="enterprise_sso.metadata.oidc.client_secret_field_name">
         <TextInput
+          isConfidential
           {...register('clientSecret', { required: true })}
           error={Boolean(errors.clientSecret)}
         />
