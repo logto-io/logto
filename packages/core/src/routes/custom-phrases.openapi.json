@@ -1,0 +1,71 @@
+{
+  "tags": [
+    {
+      "name": "Custom phrases",
+      "description": "APIs for managing custom phrases that allow you to customize the phrases displayed when experiencing the sign-in flow."
+    }
+  ],
+  "paths": {
+    "/api/custom-phrases": {
+      "get": {
+        "summary": "Get all custom phrases",
+        "description": "Get all custom phrases for all languages.",
+        "responses": {
+          "200": {
+            "description": "A list of custom phrases."
+          }
+        }
+      }
+    },
+    "/api/custom-phrases/{languageTag}": {
+      "get": {
+        "summary": "Get custom phrases by language tag",
+        "description": "Get custom phrases for the specified language tag.",
+        "responses": {
+          "200": {
+            "description": "Custom phrases for the specified language tag."
+          },
+          "404": {
+            "description": "Custom phrases not found for the specified language tag."
+          }
+        }
+      },
+      "put": {
+        "summary": "Upsert custom phrases by language tag",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "phraseKey1": "new value1",
+                "phraseKey2": "new value2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Custom phrases created/updated successfully."
+          },
+          "422": {
+            "description": "Invalid translation structure."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete custom phrases by language tag",
+        "responses": {
+          "204": {
+            "description": "Custom phrases deleted successfully."
+          },
+          "404": {
+            "description": "Custom phrases not found for the specified language tag."
+          },
+          "409": {
+            "description": "Cannot delete default language."
+          }
+        }
+      }
+    }
+  }
+}
