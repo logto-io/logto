@@ -22,19 +22,25 @@ const Main = () => {
   const [congratsIcon, setCongratsIcon] = useState<string>(isDarkMode ? congratsDark : congrats);
 
   useEffect(() => {
-    if (isInCallback) {
+    if (isInCallback || isLoading) {
       return;
     }
 
-    if (isAuthenticated) {
-      (async () => {
-        const userInfo = await getIdTokenClaims();
-        setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
-      })();
-    } else if (!isLoading) {
+    const loadIdTokenClaims = async () => {
+      const userInfo = await getIdTokenClaims();
+      setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
+    };
+
+    // If user is authenticated but user info is not loaded yet, load it
+    if (isAuthenticated && !user) {
+      void loadIdTokenClaims();
+    }
+
+    // If user is not authenticated, redirect to sign-in page
+    if (!isAuthenticated) {
       void signIn(window.location.href);
     }
-  }, [getIdTokenClaims, isAuthenticated, isLoading, isInCallback, signIn, t]);
+  }, [getIdTokenClaims, isAuthenticated, isInCallback, isLoading, signIn, user]);
 
   useEffect(() => {
     const onThemeChange = (event: MediaQueryListEvent) => {
