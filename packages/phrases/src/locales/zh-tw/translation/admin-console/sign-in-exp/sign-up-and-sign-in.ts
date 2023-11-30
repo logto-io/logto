@@ -48,6 +48,19 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: '進階選項',
+    /** UNTRANSLATED */
+    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
+    /** UNTRANSLATED */
+    enable_single_sign_on_description:
+      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: '啟用使用者註冊',
     enable_user_registration_description:
       '啟用或禁止使用者註冊。禁用後，管理員仍然可以新增使用者，但無法透過登入界面建立帳戶。',

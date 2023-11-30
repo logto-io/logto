@@ -54,6 +54,19 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'GELİŞMİŞ SEÇENEKLER',
+    /** UNTRANSLATED */
+    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
+    /** UNTRANSLATED */
+    enable_single_sign_on_description:
+      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: 'Kullanıcı kaydını etkinleştir',
     enable_user_registration_description:
       'Kullanıcı kaydını etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, kullanıcılar yönetici konsolunda hala eklenilebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamaz.',

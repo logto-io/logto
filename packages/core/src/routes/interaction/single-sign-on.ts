@@ -186,8 +186,19 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       status: [200, 400],
       response: z.string().array(),
     }),
+    koaInteractionSie(queries),
     async (ctx, next) => {
       const { email } = ctx.guard.query;
+      const {
+        signInExperience: { singleSignOnEnabled },
+      } = ctx;
+
+      // Return empty array if SSO is not enabled
+      if (!singleSignOnEnabled) {
+        ctx.body = [];
+        return next();
+      }
+
       const connectors = await ssoConnectorsLibrary.getAvailableSsoConnectors();
 
       const domain = email.split('@')[1];

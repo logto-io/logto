@@ -55,6 +55,19 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'ERWEITERTE OPTIONEN',
+    /** UNTRANSLATED */
+    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
+    /** UNTRANSLATED */
+    enable_single_sign_on_description:
+      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: 'Benutzerregistrierung aktivieren',
     enable_user_registration_description:
       'Aktivieren oder deaktivieren Sie die Benutzerregistrierung. Sobald deaktiviert, können Benutzer immer noch über die Admin-Konsole hinzugefügt werden, aber Benutzer können keine Konten mehr über die Anmelde-Benutzeroberfläche einrichten.',

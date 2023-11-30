@@ -24,6 +24,7 @@ export const useSieMethods = () => {
     signInMode: experienceSettings?.signInMode,
     forgotPassword: experienceSettings?.forgotPassword,
     customContent: experienceSettings?.customContent,
+    singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
   };
 };
 

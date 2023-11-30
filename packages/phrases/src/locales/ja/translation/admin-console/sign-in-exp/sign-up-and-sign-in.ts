@@ -53,6 +53,19 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: '高度なオプション',
+    /** UNTRANSLATED */
+    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
+    /** UNTRANSLATED */
+    enable_single_sign_on_description:
+      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+    single_sign_on_hint: {
+      /** UNTRANSLATED */
+      prefix: 'Go to ',
+      /** UNTRANSLATED */
+      link: '"Enterprise SSO"',
+      /** UNTRANSLATED */
+      suffix: 'section to set up more enterprise connectors.',
+    },
     enable_user_registration: 'ユーザー登録を有効にする',
     enable_user_registration_description:
       'ユーザー登録を有効にするか無効にすることができます。無効にした場合、ユーザーは管理コンソールで追加することはできますが、サインイン画面を介してアカウントを作成することはできなくなります。',
