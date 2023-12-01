@@ -15,6 +15,11 @@
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
+
+    .frameBackground {
+      // Static white.
+      background: #fff;
+    }
   }
 
   .logoDarkUploader {
@@ -23,6 +28,11 @@
     .frameDark {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+    }
+
+    .frameDarkBackground {
+      // Static black.
+      background: #000;
     }
   }
 }

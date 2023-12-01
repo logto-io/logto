@@ -24,6 +24,8 @@ const enterprise_sso_details = {
   connector_logo_field_description: 'Each image should under 500KB, SVG, PNG, JPG, JPEG only.',
   branding_logo_context: 'Upload logo',
   branding_logo_error: 'Upload logo error: {{error}}',
+  branding_light_logo_context: 'Upload light mode logo',
+  branding_light_logo_error: 'Upload light mode logo error: {{error}}',
   branding_logo_field_name: 'Logo',
   branding_logo_field_placeholder: 'https://your.domain/logo.png',
   branding_dark_logo_context: 'Upload dark mode logo',

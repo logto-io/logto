@@ -12,7 +12,11 @@ import * as styles from './index.module.scss';
 
 const allowedMimeTypes: AllowedUploadMimeType[] = ['image/png', 'image/jpeg', 'image/svg+xml']; // Only allow `svg`, `png`, `jpg` and `jpeg` files.
 
-function LogosUploader() {
+type Props = {
+  isDarkModeEnabled: boolean;
+};
+
+function LogosUploader({ isDarkModeEnabled }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [uploadLogoError, setUploadLogoError] = useState<string>();
   const [uploadDarkLogoError, setUploadDarkLogoError] = useState<string>();
@@ -29,9 +33,16 @@ function LogosUploader() {
             render={({ field: { onChange, value, name } }) => (
               <ImageUploader
                 name={name}
-                className={styles.frame}
+                className={classNames(
+                  isDarkModeEnabled && styles.frame,
+                  isDarkModeEnabled && value && styles.frameBackground
+                )}
                 value={value ?? ''}
-                actionDescription={t('enterprise_sso_details.branding_logo_context')}
+                actionDescription={t(
+                  isDarkModeEnabled
+                    ? 'enterprise_sso_details.branding_light_logo_context'
+                    : 'enterprise_sso_details.branding_logo_context'
+                )}
                 allowedMimeTypes={allowedMimeTypes}
                 onCompleted={onChange}
                 onUploadErrorChange={setUploadLogoError}
@@ -42,30 +53,37 @@ function LogosUploader() {
             )}
           />
         </div>
-        <div className={styles.logoDarkUploader}>
-          <Controller
-            control={control}
-            name="branding.darkLogo"
-            render={({ field: { onChange, value, name } }) => (
-              <ImageUploader
-                name={name}
-                className={styles.frameDark}
-                value={value ?? ''}
-                actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
-                allowedMimeTypes={allowedMimeTypes}
-                onCompleted={onChange}
-                onUploadErrorChange={setUploadDarkLogoError}
-                onDelete={() => {
-                  onChange('');
-                }}
-              />
-            )}
-          />
-        </div>
+        {isDarkModeEnabled && (
+          <div className={styles.logoDarkUploader}>
+            <Controller
+              control={control}
+              name="branding.darkLogo"
+              render={({ field: { onChange, value, name } }) => (
+                <ImageUploader
+                  name={name}
+                  className={classNames(styles.frameDark, value && styles.frameDarkBackground)}
+                  value={value ?? ''}
+                  actionDescription={t('enterprise_sso_details.branding_dark_logo_context')}
+                  allowedMimeTypes={allowedMimeTypes}
+                  onCompleted={onChange}
+                  onUploadErrorChange={setUploadDarkLogoError}
+                  onDelete={() => {
+                    onChange('');
+                  }}
+                />
+              )}
+            />
+          </div>
+        )}
       </div>
       {uploadLogoError && (
         <div className={classNames(styles.description, styles.error)}>
-          {t('enterprise_sso_details.branding_logo_error', { error: uploadLogoError })}
+          {t(
+            isDarkModeEnabled
+              ? 'enterprise_sso_details.branding_light_logo_error'
+              : 'enterprise_sso_details.branding_logo_error',
+            { error: uploadLogoError }
+          )}
         </div>
       )}
       {uploadDarkLogoError && (

@@ -1,5 +1,5 @@
 import { withAppInsights } from '@logto/app-insights/react';
-import { type SsoProviderName } from '@logto/schemas';
+import { type SsoProviderName, type SignInExperience } from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -44,6 +44,8 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
+  const { data: signInExperience, isLoading: isSignInExperienceLoading } =
+    useSWR<SignInExperience>('api/sign-in-exp');
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -56,13 +58,15 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
     { keepPreviousData: true }
   );
 
-  const isLoading = isSsoConnectorLoading || isUserAssetServiceLoading;
+  const isLoading = isSsoConnectorLoading || isUserAssetServiceLoading || isSignInExperienceLoading;
 
   const api = useApi();
   const { navigate } = useTenantPathname();
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const isDarkModeEnabled = signInExperience?.color.isDarkModeEnabled ?? false;
 
   useEffect(() => {
     setIsDeleteAlertOpen(false);
@@ -167,6 +171,7 @@ function EnterpriseSsoConnectorDetails<T extends SsoProviderName>() {
             <Experience
               data={ssoConnector}
               isDeleted={isDeleted}
+              isDarkModeEnabled={isDarkModeEnabled}
               onUpdated={() => {
                 void mutate();
               }}
