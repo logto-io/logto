@@ -35,7 +35,7 @@ const quota_table = {
     standard_connectors: 'Standart bağlayıcılar',
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
     mfa: 'MFA',
-    sso: 'Kurumsal SSO (2023 Q4)',
+    sso: 'Kurumsal SSO',
   },
   user_management: {
     title: 'Kullanıcı Yönetimi',

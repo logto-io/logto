@@ -35,7 +35,7 @@ const quota_table = {
     standard_connectors: 'Standardowe podłączenia',
     built_in_email_connector: 'Wbudowane podłączenie e-mail',
     mfa: 'MFA',
-    sso: 'SSO przedsiębiorstwowe (IV kw. 2023)',
+    sso: 'SSO przedsiębiorstwowe',
   },
   user_management: {
     title: 'Zarządzanie użytkownikami',
