@@ -13,7 +13,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import type { IdentifierVerifiedInteractionResult } from '../types/index.js';
 
 const { jest } = import.meta;
-const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
+const { mockEsm } = createMockUtils(jest);
 
 const findUserById = jest.fn();
 const hasUserWithEmail = jest.fn();

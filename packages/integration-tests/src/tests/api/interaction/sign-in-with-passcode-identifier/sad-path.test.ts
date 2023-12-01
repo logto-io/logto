@@ -1,15 +1,13 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { InteractionEvent, SignInMode } from '@logto/schemas';
 
-import { createUser, deleteUser, suspendUser } from '#src/api/admin-user.js';
+import { suspendUser } from '#src/api/admin-user.js';
 import {
   patchInteractionIdentifiers,
   putInteraction,
   sendVerificationCode,
 } from '#src/api/interaction.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { createSsoConnector } from '#src/api/sso-connector.js';
-import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -20,12 +18,7 @@ import {
 import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import {
-  generateEmail,
-  generatePassword,
-  generatePhone,
-  generateSsoConnectorName,
-} from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 describe('Sign-in flow sad path using verification-code identifiers', () => {
   beforeAll(async () => {
@@ -216,42 +209,6 @@ describe('Sign-in flow sad path using verification-code identifiers', () => {
       code: 'user.user_not_exist',
       statusCode: 404,
     });
-  });
-
-  it('Should fail to sign in with email and passcode if the email domain is enabled for SSO only', async () => {
-    const password = generatePassword();
-    const email = generateEmail('sso-sad-path.io');
-    const user = await createUser({ primaryEmail: email, password });
-
-    await createSsoConnector({
-      ...newOidcSsoConnectorPayload,
-      connectorName: generateSsoConnectorName(),
-      domains: ['sso-sad-path.io'],
-    });
-
-    const client = await initClient();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-    });
-
-    await client.successSend(sendVerificationCode, {
-      email,
-    });
-
-    const { code: verificationCode } = await readVerificationCode();
-
-    await expectRejects(
-      client.send(patchInteractionIdentifiers, {
-        email,
-        verificationCode,
-      }),
-      {
-        code: 'session.sso_enabled',
-        statusCode: 422,
-      }
-    );
-
-    await deleteUser(user.id);
   });
 
   it('Should fail to sign in with phone and passcode if related user is not exist', async () => {

@@ -83,7 +83,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       if (identifier && event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifier, signInExperience);
-        await verifySsoOnlyEmailIdentifier(libraries.ssoConnectors, identifier);
+        await verifySsoOnlyEmailIdentifier(libraries.ssoConnectors, identifier, signInExperience);
       }
 
       if (profile && event !== InteractionEvent.ForgotPassword) {
@@ -183,7 +183,11 @@ export default function interactionRoutes<T extends AnonymousRouter>(
 
       if (interactionStorage.event !== InteractionEvent.ForgotPassword) {
         verifyIdentifierSettings(identifierPayload, signInExperience);
-        await verifySsoOnlyEmailIdentifier(libraries.ssoConnectors, identifierPayload);
+        await verifySsoOnlyEmailIdentifier(
+          libraries.ssoConnectors,
+          identifierPayload,
+          signInExperience
+        );
       }
 
       const verifiedIdentifier = await verifyIdentifierPayload(

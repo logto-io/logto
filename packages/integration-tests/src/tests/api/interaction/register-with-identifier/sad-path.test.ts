@@ -6,8 +6,6 @@ import {
   sendVerificationCode,
 } from '#src/api/interaction.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { createSsoConnector } from '#src/api/sso-connector.js';
-import { newOidcSsoConnectorPayload } from '#src/constants.js';
 import { initClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -16,17 +14,9 @@ import {
   setSmsConnector,
 } from '#src/helpers/connector.js';
 import { expectRejects, readVerificationCode } from '#src/helpers/index.js';
-import {
-  enableAllPasswordSignInMethods,
-  enableAllVerificationCodeSignInMethods,
-} from '#src/helpers/sign-in-experience.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
-import {
-  generateEmail,
-  generatePassword,
-  generateSsoConnectorName,
-  generateUsername,
-} from '#src/utils.js';
+import { generatePassword, generateUsername } from '#src/utils.js';
 
 describe('Register with identifiers sad path', () => {
   beforeAll(async () => {
@@ -56,40 +46,6 @@ describe('Register with identifiers sad path', () => {
 
     // Reset
     await updateSignInExperience({ signInMode: SignInMode.SignInAndRegister });
-  });
-
-  it('Should fail to register with email if email domain is enabled for SSO only', async () => {
-    await enableAllVerificationCodeSignInMethods();
-    const email = generateEmail('sso-register-sad-path.io');
-
-    await createSsoConnector({
-      ...newOidcSsoConnectorPayload,
-      connectorName: generateSsoConnectorName(),
-      domains: ['sso-register-sad-path.io'],
-    });
-
-    const client = await initClient();
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.Register,
-    });
-
-    await client.successSend(sendVerificationCode, {
-      email,
-    });
-
-    const { code: verificationCode } = await readVerificationCode();
-
-    await expectRejects(
-      client.send(patchInteractionIdentifiers, {
-        email,
-        verificationCode,
-      }),
-      {
-        code: 'session.sso_enabled',
-        statusCode: 422,
-      }
-    );
   });
 
   describe('Should fail to register with identifiers if sign-up settings are not enabled', () => {

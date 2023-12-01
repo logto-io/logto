@@ -1,6 +1,10 @@
+import crypto from 'node:crypto';
+
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
+import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -44,7 +48,16 @@ const logContext = createMockLogContext();
 const tenant = new MockTenant();
 
 describe('identifier verification', () => {
-  const baseCtx = { ...createContextWithRouteParameters(), ...logContext };
+  const baseCtx = {
+    ...createContextWithRouteParameters(),
+    ...logContext,
+    signInExperience: mockSignInExperience,
+    passwordPolicyChecker: new PasswordPolicyChecker(
+      mockSignInExperience.passwordPolicy,
+      crypto.subtle
+    ),
+  };
+
   const interactionStorage = { event: InteractionEvent.SignIn };
 
   afterEach(() => {
@@ -194,7 +207,11 @@ describe('identifier verification', () => {
     ).rejects.toMatchError(new RequestError('session.sso_enabled'));
 
     expect(verifySocialIdentity).toBeCalledWith(identifier, baseCtx, tenant);
-    expect(verifySsoOnlyEmailIdentifier).toBeCalledWith(tenant.libraries.ssoConnectors, useInfo);
+    expect(verifySsoOnlyEmailIdentifier).toBeCalledWith(
+      tenant.libraries.ssoConnectors,
+      useInfo,
+      mockSignInExperience
+    );
     expect(findUserByIdentifier).not.toBeCalled();
   });
 
