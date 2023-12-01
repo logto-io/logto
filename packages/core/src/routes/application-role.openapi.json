@@ -1,0 +1,70 @@
+{
+  "paths": {
+    "/api/applications/{applicationId}/roles": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of API resource roles assigned to the application."
+          }
+        },
+        "summary": "Get application API resource roles",
+        "description": "Get API resource roles assigned to the specified application with pagination."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "roleIds": {
+                    "description": "An array of API resource role IDs to assign."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The API resource roles have been assigned to the application successfully."
+          }
+        },
+        "summary": "Assign API resource roles to application",
+        "description": "Assign API resource roles to the specified application. The API resource roles will be added to the existing API resource roles."
+      },
+      "put": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "roleIds": {
+                    "description": "An array of API resource role IDs to update for the application."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The API resource roles have been updated for the application successfully."
+          }
+        },
+        "summary": "Update API resource roles for application",
+        "description": "Update API resource roles assigned to the specified application. This will replace the existing API resource roles."
+      }
+    },
+    "/api/applications/{applicationId}/roles/{roleId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The API resource role has been removed from the application successfully."
+          }
+        },
+        "summary": "Remove a API resource role from application",
+        "description": "Remove a API resource role from the specified application."
+      }
+    }
+  }
+}

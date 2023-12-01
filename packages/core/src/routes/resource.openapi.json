@@ -1,0 +1,188 @@
+{
+  "paths": {
+    "/api/resources": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeScopes",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), the scopes of each resource will be included in the response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of resources."
+          }
+        },
+        "summary": "Get API resources",
+        "description": "Get API resources in the current tenant with pagination."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the resource."
+                  },
+                  "indicator": {
+                    "description": "The unique resource indicator. Should be a valid URI."
+                  },
+                  "accessTokenTtl": {
+                    "description": "The access token TTL in seconds. It affects the `exp` claim of the access token granted for this resource.",
+                    "default": 3600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created resource."
+          }
+        },
+        "summary": "Create an API resource",
+        "description": "Create an API resource in the current tenant."
+      }
+    },
+    "/api/resources/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "The requested resource."
+          }
+        },
+        "summary": "Get API resource",
+        "description": "Get an API resource details by ID."
+      },
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The updated name of the resource."
+                  },
+                  "accessTokenTtl": {
+                    "description": "The updated access token TTL in seconds."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated resource."
+          }
+        },
+        "summary": "Update API resource",
+        "description": "Update an API resource details by ID with the given data. This method performs a partial update."
+      },
+      "delete": {
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          }
+        },
+        "summary": "Delete API resource",
+        "description": "Delete an API resource by ID."
+      }
+    },
+    "/api/resources/{id}/is-default": {
+      "patch": {
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "isDefault": {
+                    "description": "The updated value of the `isDefault` property."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated resource."
+          }
+        },
+        "summary": "Set API resource as default",
+        "description": "Set an API resource as the default resource for the current tenant.\n\nEach tenant can have only one default API resource. If an API resource is set as default, the previously set default API resource will be set as non-default. See [this section](https://docs.logto.io/docs/references/resources/#default-api) for more information."
+      }
+    },
+    "/api/resources/{resourceId}/scopes": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of scopes for the requested resource."
+          }
+        },
+        "summary": "Get API resource scopes",
+        "description": "Get scopes (permissions) defined for an API resource."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the scope. It should be unique for the resource."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created scope."
+          }
+        },
+        "summary": "Create API resource scope",
+        "description": "Create a new scope (permission) for an API resource."
+      }
+    },
+    "/api/resources/{resourceId}/scopes/{scopeId}": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The updated name of the scope. It should be unique for the resource."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated scope."
+          }
+        },
+        "summary": "Update API resource scope",
+        "description": "Update an API resource scope (permission) for the given resource. This method performs a partial update."
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The scope was deleted successfully."
+          }
+        },
+        "summary": "Delete API resource scope",
+        "description": "Delete an API resource scope (permission) from the given resource."
+      }
+    }
+  }
+}

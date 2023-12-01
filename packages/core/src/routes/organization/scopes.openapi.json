@@ -1,8 +1,10 @@
 {
-  "tags": [{
-    "name": "Organization scopes",
-    "description": "Organization scopes (permissions) are used to define actions that can be performed on a organization. Every organization scope is a part of the organization template.\n\nOrganization scopes will only be meaningful within an organization context. For example, a user may have a `read` scope for organization A, but not for organization B."
-  }],
+  "tags": [
+    {
+      "name": "Organization scopes",
+      "description": "Organization scopes (permissions) are used to define actions that can be performed on a organization. Every organization scope is a part of the organization template.\n\nOrganization scopes will only be meaningful within an organization context. For example, a user may have a `read` scope for organization A, but not for organization B."
+    }
+  ],
   "paths": {
     "/api/organization-scopes": {
       "get": {
@@ -15,7 +17,7 @@
         }
       },
       "post": {
-        "summary": "Create a new organization scope",
+        "summary": "Create an organization scope",
         "description": "Create a new organization scope with the given data.",
         "requestBody": {
           "content": {
@@ -45,7 +47,7 @@
     },
     "/api/organization-scopes/{id}": {
       "get": {
-        "summary": "Get organization scope by ID",
+        "summary": "Get organization scope",
         "description": "Get organization scope details by ID.",
         "responses": {
           "200": {
@@ -54,7 +56,7 @@
         }
       },
       "patch": {
-        "summary": "Update organization scope by ID",
+        "summary": "Update organization scope",
         "description": "Update organization scope details by ID with the given data.",
         "requestBody": {
           "content": {
@@ -82,7 +84,7 @@
         }
       },
       "delete": {
-        "summary": "Delete organization scope by ID",
+        "summary": "Delete organization scope",
         "description": "Delete organization scope by ID.",
         "responses": {
           "204": {

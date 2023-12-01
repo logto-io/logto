@@ -24,7 +24,7 @@
         }
       },
       "post": {
-        "summary": "Create a new application",
+        "summary": "Create an application",
         "description": "Create a new application with the given data.",
         "responses": {
           "200": {
@@ -38,7 +38,7 @@
     },
     "/api/applications/{id}": {
       "get": {
-        "summary": "Get application by ID",
+        "summary": "Get application",
         "description": "Get application details by ID.",
         "responses": {
           "200": {
@@ -50,7 +50,7 @@
         }
       },
       "patch": {
-        "summary": "Update application by ID",
+        "summary": "Update application",
         "description": "Update application details by ID with the given data.",
         "requestBody": {
           "content": {
@@ -81,7 +81,7 @@
         }
       },
       "delete": {
-        "summary": "Delete application by ID",
+        "summary": "Delete application",
         "description": "Delete application by ID.",
         "responses": {
           "204": {

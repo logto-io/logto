@@ -1,0 +1,44 @@
+{
+  "paths": {
+    "/api/users/{userId}/identities": {
+      "post": {
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "connectorId": {
+                    "description": "The Logto connector ID."
+                  },
+                  "connectorData": {
+                    "description": "A json object constructed from the url query params returned by the social platform. Typically it contains `code`, `state` and `redirectUri` fields."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new identity is linked to the user."
+          }
+        },
+        "summary": "Link social identity to user",
+        "description": "Link authenticated user identity from a social platform to a Logto user.\n\nThe usage of this API is usually coupled with `POST /connectors/:connectorId/authorization-uri`. With the help of these pair of APIs, you can implement a user profile page with the link social account feature in your application.\n\nNote: Currently due to technical limitations, this API does not support the following connectors that rely on Logto interaction session: `@logto/connector-apple`, `@logto/connector-saml`, `@logto/connector-oidc` and `@logto/connector-oauth`."
+      }
+    },
+    "/api/users/{userId}/identities/{target}": {
+      "delete": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The identity is deleted from the user."
+          }
+        },
+        "summary": "Delete social identity from user",
+        "description": "Delete a social identity from the user."
+      }
+    }
+  }
+}

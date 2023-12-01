@@ -1,0 +1,48 @@
+{
+  "paths": {
+    "/api/users/{userId}/mfa-verifications": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of MFA verifications for the user."
+          }
+        },
+        "summary": "Get user's MFA verifications",
+        "description": "Get a user's existing MFA verifications for a given user ID."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "type": {
+                    "description": "The type of MFA verification to create."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The MFA verification that was created."
+          }
+        },
+        "summary": "Create an MFA verification for a user",
+        "description": "Create a new MFA verification for a given user ID."
+      }
+    },
+    "/api/users/{userId}/mfa-verifications/{verificationId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The MFA verification was deleted successfully."
+          }
+        },
+        "summary": "Delete an MFA verification for a user",
+        "description": "Delete an MFA verification for the user with the given verification ID. The verification ID must be associated with the given user ID."
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@
         }
       },
       "post": {
-        "summary": "Create a new hook",
+        "summary": "Create a hook",
         "description": "Create a new hook with the given data.",
         "requestBody": {
           "content": {
@@ -56,7 +56,7 @@
     },
     "/api/hooks/{id}": {
       "get": {
-        "summary": "Get hook by ID",
+        "summary": "Get hook",
         "description": "Get hook details by ID.",
         "parameters": [
           {
@@ -72,7 +72,7 @@
         }
       },
       "patch": {
-        "summary": "Update hook by ID",
+        "summary": "Update hook",
         "description": "Update hook details by ID with the given data.",
         "requestBody": {
           "content": {
@@ -102,7 +102,7 @@
         }
       },
       "delete": {
-        "summary": "Delete hook by ID",
+        "summary": "Delete hook",
         "description": "Delete hook by ID.",
         "responses": {
           "204": {

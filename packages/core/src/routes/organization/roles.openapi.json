@@ -1,8 +1,10 @@
 {
-  "tags": [{
-    "name": "Organization roles",
-    "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B."
-  }],
+  "tags": [
+    {
+      "name": "Organization roles",
+      "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B."
+    }
+  ],
   "paths": {
     "/api/organization-roles": {
       "get": {
@@ -15,7 +17,7 @@
         }
       },
       "post": {
-        "summary": "Create a new organization role",
+        "summary": "Create an organization role",
         "description": "Create a new organization role with the given data.",
         "requestBody": {
           "content": {
@@ -45,7 +47,7 @@
     },
     "/api/organization-roles/{id}": {
       "get": {
-        "summary": "Get organization role by ID",
+        "summary": "Get organization role",
         "description": "Get organization role details by ID.",
         "responses": {
           "200": {
@@ -54,7 +56,7 @@
         }
       },
       "patch": {
-        "summary": "Update organization role by ID",
+        "summary": "Update organization role",
         "description": "Update organization role details by ID with the given data.",
         "requestBody": {
           "content": {
@@ -82,7 +84,7 @@
         }
       },
       "delete": {
-        "summary": "Delete organization role by ID",
+        "summary": "Delete organization role",
         "description": "Delete organization role by ID.",
         "responses": {
           "204": {
