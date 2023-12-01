@@ -1,0 +1,46 @@
+{
+  "tags": [
+    {
+      "name": "Dashboard",
+      "description": "Dashboard APIs for getting user activity data in summary."
+    }
+  ],
+  "paths": {
+    "/api/dashboard/users/total": {
+      "get": {
+        "summary": "Get total user count",
+        "description": "Get total user count.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Total user count."
+          }
+        }
+      }
+    },
+    "/api/dashboard/users/new": {
+      "get": {
+        "summary": "Get new user count",
+        "description": "Get new user count, in today and last 7 days.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "New user count."
+          }
+        }
+      }
+    },
+    "/api/dashboard/users/active": {
+      "get": {
+        "summary": "Get active user data",
+        "description": "Get active user data, including DAU, WAU and MAU, also contains data for rendering DAU curve chart.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Active user data."
+          }
+        }
+      }
+    }
+  }
+}
