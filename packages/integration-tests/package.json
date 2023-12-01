@@ -25,7 +25,7 @@
     "@jest/test-sequencer": "^29.5.0",
     "@jest/types": "^29.1.2",
     "@logto/connector-kit": "workspace:^2.0.0",
-    "@logto/js": "^2.1.1",
+    "@logto/js": "^3.0.0",
     "@logto/node": "^2.1.1",
     "@logto/schemas": "workspace:^1.10.1",
     "@logto/shared": "workspace:^3.0.0",
