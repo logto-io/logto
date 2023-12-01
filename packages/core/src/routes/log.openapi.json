@@ -1,0 +1,52 @@
+{
+  "tags": [
+    {
+      "name": "Logs",
+      "description": "Logs are records of events or actions within the Logto service."
+    }
+  ],
+  "paths": {
+    "/api/logs": {
+      "get": {
+        "summary": "Get logs",
+        "description": "Get logs that match the given query with pagination.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "Filter logs by user ID."
+          },
+          {
+            "name": "applicationId",
+            "in": "query",
+            "description": "Filter logs by application ID."
+          },
+          {
+            "name": "logKey",
+            "in": "query",
+            "description": "Filter logs by log key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of logs."
+          }
+        }
+      }
+    },
+    "/api/logs/{id}": {
+      "get": {
+        "summary": "Get log details",
+        "description": "Get log details by ID.",
+        "responses": {
+          "200": {
+            "description": "Details of the log."
+          },
+          "404": {
+            "description": "Log not found."
+          }
+        }
+      }
+    }
+  }
+}
