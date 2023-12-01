@@ -40,7 +40,7 @@ const SingleSignOnEmail = () => {
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
-      await handleSubmit(async ({ identifier: { value } }) => onSubmit(value))(event);
+      await handleSubmit(async ({ identifier: { value } }) => onSubmit(value, true))(event);
     },
     [clearErrorMessage, handleSubmit, onSubmit]
   );

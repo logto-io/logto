@@ -3,6 +3,7 @@ import { useState, useMemo, useCallback } from 'react';
 import type { PasswordSignInPayload } from '@/apis/interaction';
 import { signInWithPasswordIdentifier } from '@/apis/interaction';
 import useApi from '@/hooks/use-api';
+import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 
@@ -10,6 +11,7 @@ import usePreSignInErrorHandler from './use-pre-sign-in-error-handler';
 
 const usePasswordSignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
+  const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
 
   const clearErrorMessage = useCallback(() => {
     setErrorMessage('');
@@ -24,9 +26,6 @@ const usePasswordSignIn = () => {
       'session.invalid_credentials': (error) => {
         setErrorMessage(error.message);
       },
-      'session.sso_enabled': (_error) => {
-        // Hide the toast and do nothing
-      },
       ...preSignInErrorHandler,
     }),
     [preSignInErrorHandler]
@@ -34,6 +33,15 @@ const usePasswordSignIn = () => {
 
   const onSubmit = useCallback(
     async (payload: PasswordSignInPayload) => {
+      // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
+      if (payload.email) {
+        const result = await checkSingleSignOn(payload.email);
+
+        if (result) {
+          return;
+        }
+      }
+
       const [error, result] = await asyncSignIn(payload);
 
       if (error) {
@@ -46,7 +54,7 @@ const usePasswordSignIn = () => {
         window.location.replace(result.redirectTo);
       }
     },
-    [asyncSignIn, errorHandlers, handleError]
+    [asyncSignIn, checkSingleSignOn, errorHandlers, handleError]
   );
 
   return {
