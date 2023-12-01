@@ -57,7 +57,7 @@
     "/api/organizations/{id}": {
       "get": {
         "summary": "Get organization",
-        "description": "Get organization details.",
+        "description": "Get organization details by ID.",
         "responses": {
           "200": {
             "description": "Details of the organization."
@@ -66,7 +66,7 @@
       },
       "patch": {
         "summary": "Update organization",
-        "description": "Update organization details with the given data.",
+        "description": "Update organization details by ID with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -91,7 +91,7 @@
       },
       "delete": {
         "summary": "Delete organization",
-        "description": "Delete organization.",
+        "description": "Delete organization by ID.",
         "responses": {
           "204": {
             "description": "The organization was deleted successfully."

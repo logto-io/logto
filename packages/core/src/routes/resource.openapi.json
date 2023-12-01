@@ -55,7 +55,7 @@
           }
         },
         "summary": "Get API resource",
-        "description": "Get an API resource details."
+        "description": "Get an API resource details by ID."
       },
       "patch": {
         "requestBody": {
@@ -80,7 +80,7 @@
           }
         },
         "summary": "Update API resource",
-        "description": "Update an API resource details with the given data. This method performs a partial update."
+        "description": "Update an API resource details by ID with the given data. This method performs a partial update."
       },
       "delete": {
         "parameters": [],
@@ -90,7 +90,7 @@
           }
         },
         "summary": "Delete API resource",
-        "description": "Delete an API resource with the given ID."
+        "description": "Delete an API resource by ID."
       }
     },
     "/api/resources/{id}/is-default": {
@@ -181,7 +181,7 @@
           }
         },
         "summary": "Delete API resource scope",
-        "description": "Delete an API resource scope (permission) from the given resource ID."
+        "description": "Delete an API resource scope (permission) from the given resource."
       }
     }
   }

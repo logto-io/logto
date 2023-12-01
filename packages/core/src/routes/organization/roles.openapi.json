@@ -48,7 +48,7 @@
     "/api/organization-roles/{id}": {
       "get": {
         "summary": "Get organization role",
-        "description": "Get organization role details.",
+        "description": "Get organization role details by ID.",
         "responses": {
           "200": {
             "description": "Details of the organization role."
@@ -57,7 +57,7 @@
       },
       "patch": {
         "summary": "Update organization role",
-        "description": "Update organization role details with the given data.",
+        "description": "Update organization role details by ID with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -85,7 +85,7 @@
       },
       "delete": {
         "summary": "Delete organization role",
-        "description": "Delete organization role.",
+        "description": "Delete organization role by ID.",
         "responses": {
           "204": {
             "description": "The organization role was deleted successfully."

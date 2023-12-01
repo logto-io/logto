@@ -8,7 +8,7 @@
           }
         },
         "summary": "Get user's MFA verifications",
-        "description": "Get a user's existing MFA verifications for a given user ID"
+        "description": "Get a user's existing MFA verifications for a given user ID."
       },
       "post": {
         "requestBody": {
@@ -30,7 +30,7 @@
           }
         },
         "summary": "Create an MFA verification for a user",
-        "description": "Create a new MFA verification for a given user ID"
+        "description": "Create a new MFA verification for a given user ID."
       }
     },
     "/api/users/{userId}/mfa-verifications/{verificationId}": {

@@ -39,7 +39,7 @@
     "/api/applications/{id}": {
       "get": {
         "summary": "Get application",
-        "description": "Get application details.",
+        "description": "Get application details by ID.",
         "responses": {
           "200": {
             "description": "Details of the application."
@@ -51,7 +51,7 @@
       },
       "patch": {
         "summary": "Update application",
-        "description": "Update application details with the given data.",
+        "description": "Update application details by ID with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -82,7 +82,7 @@
       },
       "delete": {
         "summary": "Delete application",
-        "description": "Delete application.",
+        "description": "Delete application by ID.",
         "responses": {
           "204": {
             "description": "The application was deleted successfully."

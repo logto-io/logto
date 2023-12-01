@@ -57,7 +57,7 @@
     "/api/hooks/{id}": {
       "get": {
         "summary": "Get hook",
-        "description": "Get hook details.",
+        "description": "Get hook details by ID.",
         "parameters": [
           {
             "name": "includeExecutionStats",
@@ -73,7 +73,7 @@
       },
       "patch": {
         "summary": "Update hook",
-        "description": "Update hook details with the given data.",
+        "description": "Update hook details by ID with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -103,7 +103,7 @@
       },
       "delete": {
         "summary": "Delete hook",
-        "description": "Delete hook.",
+        "description": "Delete hook by ID.",
         "responses": {
           "204": {
             "description": "The hook was deleted successfully."

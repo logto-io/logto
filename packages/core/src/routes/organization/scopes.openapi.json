@@ -48,7 +48,7 @@
     "/api/organization-scopes/{id}": {
       "get": {
         "summary": "Get organization scope",
-        "description": "Get organization scope details.",
+        "description": "Get organization scope details by ID.",
         "responses": {
           "200": {
             "description": "The organization scope data for the given ID."
@@ -57,7 +57,7 @@
       },
       "patch": {
         "summary": "Update organization scope",
-        "description": "Update organization scope details with the given data.",
+        "description": "Update organization scope details by ID with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -85,7 +85,7 @@
       },
       "delete": {
         "summary": "Delete organization scope",
-        "description": "Delete organization scope.",
+        "description": "Delete organization scope by ID.",
         "responses": {
           "204": {
             "description": "The organization scope was deleted successfully."

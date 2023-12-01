@@ -64,7 +64,7 @@
           }
         },
         "summary": "Get role",
-        "description": "Get role details."
+        "description": "Get role details by ID."
       },
       "patch": {
         "requestBody": {
@@ -140,7 +140,7 @@
           }
         },
         "summary": "Remove role from user",
-        "description": "Remove the role from a user with the given ID."
+        "description": "Remove a role from a user with the given ID."
       }
     },
     "/api/roles/{id}/applications": {
