@@ -7,7 +7,7 @@ import LoadingLayer from '@/components/LoadingLayer';
 
 const LoadingLayerProvider = () => {
   const { loading } = useContext(PageContext);
-  const debouncedLoading = useDebouncedLoader(loading);
+  const debouncedLoading = useDebouncedLoader(loading, 500);
 
   return (
     <>

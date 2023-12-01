@@ -23,12 +23,11 @@ const useSingleSignOnWatch = (identifierInput?: IdentifierInputValue) => {
 
   const { showSingleSignOnForm, setShowSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
-  const request = useApi(getSingleSignOnConnectors);
+  const request = useApi(getSingleSignOnConnectors, { silent: true });
+
   const singleSignOn = useSingleSignOn();
 
-  /**
-   * Silently check if the email is registered with any SSO connectors
-   */
+  // Silently check if the email is registered with any SSO connectors
   const fetchSsoConnectors = useCallback(
     async (email: string) => {
       const [, result] = await request(email);
