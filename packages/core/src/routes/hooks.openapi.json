@@ -24,7 +24,7 @@
         }
       },
       "post": {
-        "summary": "Create a new hook",
+        "summary": "Create a hook",
         "description": "Create a new hook with the given data.",
         "requestBody": {
           "content": {
@@ -56,8 +56,8 @@
     },
     "/api/hooks/{id}": {
       "get": {
-        "summary": "Get hook by ID",
-        "description": "Get hook details by ID.",
+        "summary": "Get hook",
+        "description": "Get hook details.",
         "parameters": [
           {
             "name": "includeExecutionStats",
@@ -72,8 +72,8 @@
         }
       },
       "patch": {
-        "summary": "Update hook by ID",
-        "description": "Update hook details by ID with the given data.",
+        "summary": "Update hook",
+        "description": "Update hook details with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -102,8 +102,8 @@
         }
       },
       "delete": {
-        "summary": "Delete hook by ID",
-        "description": "Delete hook by ID.",
+        "summary": "Delete hook",
+        "description": "Delete hook.",
         "responses": {
           "204": {
             "description": "The hook was deleted successfully."

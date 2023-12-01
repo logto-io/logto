@@ -1,0 +1,223 @@
+{
+  "paths": {
+    "/api/users/{userId}": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeSsoIdentities",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each user in the response will include a `ssoIdentities` property containing a list of SSO identities associated with the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User data for the given ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "ssoIdentities": {
+                      "description": "List of SSO identities associated with the user. Only available when the `includeSsoIdentities` query parameter is provided with a truthy value."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get user",
+        "description": "Get user data for the given ID."
+      },
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "primaryPhone": {
+                    "description": "Updated primary phone number for the user. It should be unique across all users."
+                  },
+                  "primaryEmail": {
+                    "description": "Updated primary email address for the user. It should be unique across all users."
+                  },
+                  "username": {
+                    "description": "Updated username for the user. It should be unique across all users."
+                  },
+                  "customData": {
+                    "description": "Custom data object to update for the given user ID. Note this will replace the entire custom data object.\n\nIf you want to perform a partial update, use the `PATCH /api/users/{userId}/custom-data` endpoint instead."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated user data for the given ID."
+          }
+        },
+        "summary": "Update user",
+        "description": "Update user data for the given ID. This method performs a partial update."
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "User deleted successfully."
+          }
+        },
+        "summary": "Delete user",
+        "description": "Delete user with the given ID. Note all associated data will be deleted cascadingly."
+      }
+    },
+    "/api/users/{userId}/custom-data": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Custom data in JSON for the given user ID."
+          }
+        },
+        "summary": "Get user custom data",
+        "description": "Get custom data for the given user ID."
+      },
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "customData": {
+                    "description": "Partial custom data object to update for the given user ID."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated custom data in JSON for the given user ID."
+          }
+        },
+        "summary": "Update user custom data",
+        "description": "Update custom data for the given user ID. This method performs a partial update of the custom data object."
+      }
+    },
+    "/api/users": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "User data to create a new user. All properties are optional.",
+                "properties": {
+                  "primaryPhone": {
+                    "description": "Primary phone number for the user. It should be unique across all users."
+                  },
+                  "primaryEmail": {
+                    "description": "Primary email address for the user. It should be unique across all users."
+                  },
+                  "username": {
+                    "description": "Username for the user. It should be unique across all users."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User data for the newly created user."
+          }
+        },
+        "summary": "Create user",
+        "description": "Create a new user with the given data."
+      }
+    },
+    "/api/users/{userId}/password": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "New password for the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User password updated successfully."
+          }
+        },
+        "summary": "Update user password",
+        "description": "Update user password for the given ID."
+      }
+    },
+    "/api/users/{userId}/password/verify": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "Password to verify."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "User password matches."
+          },
+          "422": {
+            "description": "User password does not match."
+          }
+        },
+        "summary": "Verify user password",
+        "description": "Test if the given password matches the user's password."
+      }
+    },
+    "/api/users/{userId}/has-password": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "The result of the check."
+          }
+        },
+        "summary": "Check if user has password",
+        "description": "Check if the user with the given ID has a password set."
+      }
+    },
+    "/api/users/{userId}/is-suspended": {
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "isSuspended": {
+                    "description": "New suspension status for the user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User suspension status updated successfully."
+          }
+        },
+        "summary": "Update user suspension status",
+        "description": "Update user suspension status for the given ID."
+      }
+    }
+  }
+}

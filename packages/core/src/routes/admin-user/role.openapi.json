@@ -1,0 +1,71 @@
+{
+  "paths": {
+    "/api/users/{userId}/roles": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of API resource roles assigned to the user."
+          }
+        },
+        "summary": "Get roles for user",
+        "description": "Get API resource roles assigned to the user with pagination."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "roleIds": {
+                    "description": "An array of API resource role IDs to assign."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The API resource roles has been assigned to the user."
+          }
+        },
+        "summary": "Assign roles to user",
+        "description": "Assign API resource roles to the user. The roles will be added to the existing roles."
+      },
+      "put": {
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "roleIds": {
+                    "description": "An array of API resource role IDs to assign."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The API resource roles has been updated for the user successfully."
+          }
+        },
+        "summary": "Update roles for user",
+        "description": "Update API resource roles assigned to the user. This will replace the existing roles."
+      }
+    },
+    "/api/users/{userId}/roles/{roleId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The API resource role has been removed from the user."
+          }
+        },
+        "summary": "Remove role from user",
+        "description": "Remove an API resource role from the user."
+      }
+    }
+  }
+}

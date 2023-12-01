@@ -1,12 +1,14 @@
 {
-  "tags": [{
-    "name": "Organizations",
-    "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations."
-  }],
+  "tags": [
+    {
+      "name": "Organizations",
+      "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations."
+    }
+  ],
   "paths": {
     "/api/organizations": {
       "post": {
-        "summary": "Create a new organization",
+        "summary": "Create an organization",
         "description": "Create a new organization with the given data.",
         "requestBody": {
           "content": {
@@ -54,8 +56,8 @@
     },
     "/api/organizations/{id}": {
       "get": {
-        "summary": "Get organization by ID",
-        "description": "Get organization details by ID.",
+        "summary": "Get organization",
+        "description": "Get organization details.",
         "responses": {
           "200": {
             "description": "Details of the organization."
@@ -63,8 +65,8 @@
         }
       },
       "patch": {
-        "summary": "Update organization by ID",
-        "description": "Update organization details by ID with the given data.",
+        "summary": "Update organization",
+        "description": "Update organization details with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -88,8 +90,8 @@
         }
       },
       "delete": {
-        "summary": "Delete organization by ID",
-        "description": "Delete organization by ID.",
+        "summary": "Delete organization",
+        "description": "Delete organization.",
         "responses": {
           "204": {
             "description": "The organization was deleted successfully."

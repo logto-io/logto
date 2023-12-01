@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "/api/users": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of users that match the given criteria."
+          }
+        },
+        "summary": "Get users",
+        "description": "Get users with filters and pagination.\n\nLogto provides a very flexible way to query users. You can filter users by almost any fields with multiple modes. To learn more about the query syntax, please refer to [Advanced user search](https://docs.logto.io/docs/recipes/manage-users/advanced-user-search/)."
+      }
+    }
+  }
+}

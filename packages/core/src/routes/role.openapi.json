@@ -1,0 +1,235 @@
+{
+  "paths": {
+    "/api/roles": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "excludeUserId",
+            "description": "Exclude roles assigned to a user."
+          },
+          {
+            "in": "query",
+            "name": "excludeApplicationId",
+            "description": "Exclude roles assigned to an application."
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "description": "Filter by role type."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of roles matching the filters."
+          }
+        },
+        "summary": "Get roles",
+        "description": "Get roles with filters and pagination."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the role. It should be unique within the tenant."
+                  },
+                  "type": {
+                    "description": "The type of the role. It cannot be changed after creation."
+                  },
+                  "scopeIds": {
+                    "description": "The initial API resource scopes assigned to the role."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created role."
+          }
+        },
+        "summary": "Create a role",
+        "description": "Create a new role with the given data."
+      }
+    },
+    "/api/roles/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Details of the role."
+          }
+        },
+        "summary": "Get role",
+        "description": "Get role details."
+      },
+      "patch": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "The name of the role. It should be unique within the tenant."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated role."
+          }
+        },
+        "summary": "Update role",
+        "description": "Update role details. This method performs a partial update."
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The role was deleted."
+          }
+        },
+        "summary": "Delete role",
+        "description": "Delete a role with the given ID."
+      }
+    },
+    "/api/roles/{id}/users": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of users who have the role assigned."
+          }
+        },
+        "summary": "Get role users",
+        "description": "Get users who have the role assigned with pagination."
+      },
+      "post": {
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "userIds": {
+                    "description": "An array of user IDs to be assigned."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The role was assigned to the users successfully."
+          }
+        },
+        "summary": "Assign role to users",
+        "description": "Assign a role to a list of users. The role must have the type `User`."
+      }
+    },
+    "/api/roles/{id}/users/{userId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The role was removed from the user."
+          }
+        },
+        "summary": "Remove role from user",
+        "description": "Remove the role from a user with the given ID."
+      }
+    },
+    "/api/roles/{id}/applications": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of applications that have the role assigned."
+          }
+        },
+        "summary": "Get role applications",
+        "description": "Get applications that have the role assigned with pagination."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "applicationIds": {
+                    "description": "An array of application IDs to be assigned."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The role was assigned to the applications successfully."
+          }
+        },
+        "summary": "Assign role to applications",
+        "description": "Assign a role to a list of applications. The role must have the type `Application`."
+      }
+    },
+    "/api/roles/{id}/applications/{applicationId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The role was removed from the application."
+          }
+        },
+        "summary": "Remove role from application",
+        "description": "Remove the role from an application with the given ID."
+      }
+    },
+    "/api/roles/{id}/scopes": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of API resource scopes linked with the role."
+          }
+        },
+        "summary": "Get role scopes",
+        "description": "Get API resource scopes (permissions) linked with a role."
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "scopeIds": {
+                    "description": "An array of API resource scope IDs to be linked."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The role was linked to the scopes successfully."
+          }
+        },
+        "summary": "Link scopes to role",
+        "description": "Link a list of API resource scopes (permissions) to a role. The original linked scopes will be kept."
+      }
+    },
+    "/api/roles/{id}/scopes/{scopeId}": {
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "The API resource scope was unlinked from the role."
+          }
+        },
+        "summary": "Unlink scope from role",
+        "description": "Unlink an API resource scope (permission) from a role with the given ID."
+      }
+    }
+  }
+}

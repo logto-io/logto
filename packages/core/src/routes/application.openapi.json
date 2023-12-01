@@ -24,7 +24,7 @@
         }
       },
       "post": {
-        "summary": "Create a new application",
+        "summary": "Create an application",
         "description": "Create a new application with the given data.",
         "responses": {
           "200": {
@@ -38,8 +38,8 @@
     },
     "/api/applications/{id}": {
       "get": {
-        "summary": "Get application by ID",
-        "description": "Get application details by ID.",
+        "summary": "Get application",
+        "description": "Get application details.",
         "responses": {
           "200": {
             "description": "Details of the application."
@@ -50,8 +50,8 @@
         }
       },
       "patch": {
-        "summary": "Update application by ID",
-        "description": "Update application details by ID with the given data.",
+        "summary": "Update application",
+        "description": "Update application details with the given data.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -81,8 +81,8 @@
         }
       },
       "delete": {
-        "summary": "Delete application by ID",
-        "description": "Delete application by ID.",
+        "summary": "Delete application",
+        "description": "Delete application.",
         "responses": {
           "204": {
             "description": "The application was deleted successfully."

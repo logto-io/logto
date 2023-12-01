@@ -24,20 +24,6 @@ export default function adminUserSocialRoutes<T extends AuthedRouter>(
     connectors: { getLogtoConnectorById },
   } = tenant;
 
-  /**
-   * Link authenticated user identity from a social platform to a Logto user. The usage of this API is usually
-   * coupled with `POST /connectors/:connectorId/authorization-uri`. With the help of these pair of APIs, you
-   * can implement a user profile page with the `Link Social` feature in your application.
-   *
-   * Note: Currently due to technical limitations, this API does not support the following connectors that
-   * rely on Logto interaction session: `@logto/connector-apple`, `@logto/connector-saml`, `@logto/connector-oidc`
-   * and `@logto/connector-oauth`.
-   *
-   * @param {string} userId - The id of the Logto user
-   * @param {string} connectorId - The id of the connector
-   * @param {object} connectorData - A json object constructed from the url query params returned by the social
-   * platform. Typically it contains `code`, `state` and `redirectUri` fields.
-   */
   router.post(
     '/users/:userId/identities',
     koaGuard({

@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "/api/users/{userId}/organizations": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "An array of organizations that the user is a member of."
+          }
+        },
+        "summary": "Get organizations for a user",
+        "description": "Get all organizations that the user is a member of. In each organization object, the user's roles in that organization are included in the `organizationRoles` array."
+      }
+    }
+  }
+}
