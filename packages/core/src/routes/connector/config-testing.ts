@@ -34,6 +34,7 @@ export default function connectorConfigTestingRoutes<T extends AuthedRouter>(
         email: string().regex(emailRegEx).optional(),
         config: jsonObjectGuard,
       }),
+      status: [204, 400, 404],
     }),
     async (ctx, next) => {
       const {

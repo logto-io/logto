@@ -1,0 +1,57 @@
+{
+  "tags": [
+    {
+      "name": "Connectors authorization uri",
+      "description": "Get authorization uri for specified connector by providing redirectUri and randomly generated state."
+    }
+  ],
+  "paths": {
+    "/api/connectors/{id}/authorization-uri": {
+      "post": {
+        "summary": "Get specific connector's authorization uri.",
+        "description": "Get authorization uri for specified connector by providing redirectUri and randomly generated state.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "redirectUri": {
+                    "type": "string",
+                    "description": "The uri to navigate back to after authenticated by the social platform."
+                  },
+                  "state": {
+                    "type": "string",
+                    "description": "A random string generated on the client side to prevent CSRF attack."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A uri to navigate to for authentication.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "redirectUri": {
+                      "type": "string",
+                      "description": "The uri to navigate to for authentication."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The connector specified with id has wrong type or invalid config."
+          },
+          "404": {
+            "description": "The connector specified with id does not exist."
+          }
+        }
+      }
+    }
+  }
+}

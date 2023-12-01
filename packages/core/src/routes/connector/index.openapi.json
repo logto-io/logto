@@ -1,0 +1,139 @@
+{
+  "tags": [
+    {
+      "name": "Connector",
+      "description": "Connector is a component that allows end-users to apply authentication related jobs provided by service provider.\n\nSuch as email service, SMS service, and social account login service."
+    }
+  ],
+  "paths": {
+    "/api/connectors": {
+      "post": {
+        "summary": "Create a connector",
+        "description": "Create a connector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Create a connector with the given id, if not provided, a random id will be generated."
+                  },
+                  "connectorId": {
+                    "type": "string",
+                    "description": "Create a connector using the connector factory with the given connectorId."
+                  },
+                  "syncProfile": {
+                    "type": "boolean",
+                    "description": "Whether to sync user profile from the identity provider to Logto at each sign-in.\n\nThe default action is only sync user profile when the user is created."
+                  },
+                  "config": {
+                    "type": "object",
+                    "description": "Connector config."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Custom connector metadata, will be used to overwrite the default connector metadata."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created connector."
+          },
+          "422": {
+            "description": "Invalid request body."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all connectors",
+        "description": "Get all connectors",
+        "parameters": [
+          {
+            "name": "target",
+            "in": "query",
+            "description": "Filter connectors by target."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of all connectors."
+          },
+          "400": {
+            "description": "There are conflicting connectors."
+          }
+        }
+      }
+    },
+    "/api/connectors/{id}": {
+      "get": {
+        "summary": "Get a connector",
+        "description": "Get a connector",
+        "responses": {
+          "200": {
+            "description": "Details of the connector."
+          },
+          "404": {
+            "description": "The connector is not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a connector",
+        "description": "Update a connector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "syncProfile": {
+                    "type": "boolean",
+                    "description": "Whether to sync user profile from the identity provider to Logto at each sign-in.\n\nThe default action is only sync user profile when the user is created."
+                  },
+                  "config": {
+                    "type": "object",
+                    "description": "Connector config."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Custom connector metadata, will be used to overwrite the default connector metadata."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated connector."
+          },
+          "400": {
+            "description": "Invalid request body."
+          },
+          "404": {
+            "description": "The connector is not found."
+          },
+          "422": {
+            "description": "Patch operation trigger connectors conflict."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a connector",
+        "description": "Delete a connector",
+        "responses": {
+          "200": {
+            "description": "The deleted connector."
+          },
+          "404": {
+            "description": "The connector is not found."
+          }
+        }
+      }
+    }
+  }
+}

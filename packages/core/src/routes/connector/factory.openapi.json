@@ -1,0 +1,35 @@
+{
+  "tags": [
+    {
+      "name": "Connector factory",
+      "description": "Get connector factory or factories, which includes connectors' internal properties and methods."
+    }
+  ],
+  "paths": {
+    "/api/connector-factories": {
+      "get": {
+        "summary": "Get connector factories",
+        "description": "Get all available connector factories.",
+        "responses": {
+          "200": {
+            "description": "Successfully get connector factories."
+          }
+        }
+      }
+    },
+    "/api/connector-factories/{id}": {
+      "get": {
+        "summary": "Get specific connector factory",
+        "description": "Get connector factory by id.",
+        "responses": {
+          "200": {
+            "description": "Successfully get connector factory."
+          },
+          "404": {
+            "description": "Connector factory not found."
+          }
+        }
+      }
+    }
+  }
+}
