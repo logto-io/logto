@@ -1,0 +1,94 @@
+{
+  "tags": [
+    {
+      "name": "Configs",
+      "description": "Endpoints for managing Logto configuration settings."
+    }
+  ],
+  "paths": {
+    "/api/configs/admin-console": {
+      "get": {
+        "summary": "Get admin console configuration",
+        "description": "Get the configuration settings for the admin console.",
+        "responses": {
+          "200": {
+            "description": "Admin console configuration settings."
+          },
+          "404": {
+            "description": "Admin console configuration not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update admin console configuration",
+        "description": "Update the configuration settings for the admin console.",
+        "responses": {
+          "200": {
+            "description": "Admin console configuration settings after update."
+          },
+          "404": {
+            "description": "Admin console configuration not found."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}": {
+      "get": {
+        "summary": "Get Logto OIDC private keys",
+        "description": "Get Logto OIDC private keys by key type from database. The actual key will be redacted from the result.",
+        "responses": {
+          "200": {
+            "description": "List of Logto OIDC private keys."
+          },
+          "404": {
+            "description": "Logto OIDC keys not found."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}/{keyId}": {
+      "delete": {
+        "summary": "Delete Logto OIDC key",
+        "description": "Delete a Logto OIDC private key by Logto OIDC key type and key ID.",
+        "responses": {
+          "204": {
+            "description": "Logto OIDC key deleted successfully."
+          },
+          "404": {
+            "description": "Logto OIDC key not found."
+          },
+          "422": {
+            "description": "Logto OIDC key required for operation."
+          }
+        }
+      }
+    },
+    "/api/configs/oidc/{keyType}/rotate": {
+      "post": {
+        "summary": "Rotate Logto OIDC keys",
+        "description": "Rotate Logto OIDC private keys. A new key will be generated and added to the list of private keys.\nLogto only keeps the last 2 recent keys. The oldest key will be automatically removed if the list exceeds 2 keys.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "signingKeyAlgorithm": {
+                    "description": "The signing key algorithm the new generated private key is using.\nOnly applicable to `oidc.privateKeys`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of rotated Logto OIDC private keys."
+          },
+          "422": {
+            "description": "Invalid operation or Logto OIDC key not found."
+          }
+        }
+      }
+    }
+  }
+}
