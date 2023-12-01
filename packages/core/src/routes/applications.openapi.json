@@ -1,0 +1,97 @@
+{
+  "tags": [
+    {
+      "name": "Applications",
+      "description": "Application represents a registered software program or service that has been authorized to access user information and perform actions on behalf of users within the system."
+    }
+  ],
+  "paths": {
+    "/api/applications": {
+      "get": {
+        "summary": "Get applications",
+        "description": "Get applications that match the given query with pagination.",
+        "parameters": [
+          {
+            "name": "types",
+            "in": "query",
+            "description": "An array of application types to filter applications."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of applications."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new application",
+        "description": "Create a new application with the given data.",
+        "responses": {
+          "200": {
+            "description": "The application was created successfully."
+          },
+          "422": {
+            "description": "Validation error. Please check the request body."
+          }
+        }
+      }
+    },
+    "/api/applications/{id}": {
+      "get": {
+        "summary": "Get application by ID",
+        "description": "Get application details by ID.",
+        "responses": {
+          "200": {
+            "description": "Details of the application."
+          },
+          "404": {
+            "description": "The application with the specified ID was not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update application by ID",
+        "description": "Update application details by ID with the given data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "isAdmin": {
+                    "description": "Whether the application has admin access. User can enable the admin access for Machine-to-Machine apps."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The application was updated successfully."
+          },
+          "404": {
+            "description": "The application with the specified ID was not found."
+          },
+          "422": {
+            "description": "Validation error. Please check the request body."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete application by ID",
+        "description": "Delete application by ID.",
+        "responses": {
+          "204": {
+            "description": "The application was deleted successfully."
+          },
+          "404": {
+            "description": "The application with the specified ID was not found."
+          }
+        }
+      }
+    }
+  }
+}
