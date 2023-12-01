@@ -115,7 +115,7 @@ const App = () => {
 
                     {/* Single sign on */}
                     {isDevelopmentFeaturesEnabled && (
-                      <Route path={singleSignOnPath}>
+                      <Route path={singleSignOnPath} element={<LoadingLayerProvider />}>
                         <Route path="email" element={<SingleSignOnEmail />} />
                         <Route path="connectors" element={<SingleSignOnConnectors />} />
                       </Route>

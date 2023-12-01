@@ -36,10 +36,11 @@ const useCheckSingleSignOn = () => {
   /**
    * Check if the email is registered with any SSO connectors
    * @param {string} email
+   * @param {boolean} continueSignIn - whether to continue the single sign-on flow if the email is registered with any SSO connectors
    * @returns {Promise<boolean>} - true if the email is registered with any SSO connectors
    */
   const onSubmit = useCallback(
-    async (email: string) => {
+    async (email: string, continueSignIn = false) => {
       clearContext();
 
       const [error, result] = await request(email);
@@ -61,6 +62,10 @@ const useCheckSingleSignOn = () => {
 
       setSsoConnectors(connectors);
       setEmail(email);
+
+      if (!continueSignIn) {
+        return true;
+      }
 
       // If there is only one connector, we can directly invoke the SSO flow
       if (connectors.length === 1 && connectors[0]?.id) {
