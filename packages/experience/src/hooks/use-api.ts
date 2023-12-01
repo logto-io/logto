@@ -3,16 +3,24 @@ import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 
-const useApi = <Args extends unknown[], Response>(api: (...args: Args) => Promise<Response>) => {
+type Options = {
+  silent?: boolean;
+};
+
+const useApi = <Args extends unknown[], Response>(
+  api: (...args: Args) => Promise<Response>,
+  options?: Options
+) => {
   const { setLoading } = useContext(PageContext);
 
   const request = useCallback(
     async (...args: Args): Promise<[Nullable<unknown>, Response?]> => {
-      setLoading(true);
+      if (!options?.silent) {
+        setLoading(true);
+      }
 
       try {
         const result = await api(...args);
-
         return [null, result];
       } catch (error: unknown) {
         return [error];
@@ -20,7 +28,7 @@ const useApi = <Args extends unknown[], Response>(api: (...args: Args) => Promis
         setLoading(false);
       }
     },
-    [api, setLoading]
+    [api, options?.silent, setLoading]
   );
 
   return request;
