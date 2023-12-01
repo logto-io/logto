@@ -16,22 +16,26 @@ type Props = {
 };
 
 type CertificatePreviewProps = {
-  identityProviderConfig: { x509Certificate: string; expiresAt: number; isValid: boolean };
+  identityProviderConfig: {
+    x509Certificate: string;
+    certificateExpiresAt: number;
+    isCertificateValid: boolean;
+  };
   className?: string;
 };
 
 export function CertificatePreview({
-  identityProviderConfig: { x509Certificate, expiresAt, isValid },
+  identityProviderConfig: { x509Certificate, certificateExpiresAt, isCertificateValid },
   className,
 }: CertificatePreviewProps) {
   const { language } = i18next;
   return (
     <div className={classNames(styles.certificatePreview, className)}>
-      <div className={classNames(styles.indicator, !isValid && styles.errorStatus)} />
+      <div className={classNames(styles.indicator, !isCertificateValid && styles.errorStatus)} />
       <DynamicT
         forKey="enterprise_sso_details.saml_preview.certificate_content"
         interpolation={{
-          date: new Date(expiresAt).toLocaleDateString(
+          date: new Date(certificateExpiresAt).toLocaleDateString(
             // TODO: @darcyYe check whether can use date-fns later, may need a Logto locale to date-fns locale mapping.
             conditional(isLanguageTag(language) && language) ?? 'en',
             {

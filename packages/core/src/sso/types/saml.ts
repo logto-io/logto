@@ -40,8 +40,8 @@ export const samlIdentityProviderMetadataGuard = z.object({
   entityId: z.string(),
   signInEndpoint: z.string(),
   x509Certificate: z.string(),
-  expiresAt: z.number(), // Timestamp in milliseconds.
-  isValid: z.boolean(),
+  certificateExpiresAt: z.number(), // Timestamp in milliseconds.
+  isCertificateValid: z.boolean(),
 });
 export type SamlIdentityProviderMetadata = z.infer<typeof samlIdentityProviderMetadataGuard>;
 

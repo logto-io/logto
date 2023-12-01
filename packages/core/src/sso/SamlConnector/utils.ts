@@ -1,7 +1,7 @@
 import { X509Certificate } from 'node:crypto';
 
 import * as validator from '@authenio/samlify-node-xmllint';
-import { type Optional, appendPath } from '@silverhand/essentials';
+import { type Optional, appendPath, tryThat } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { HTTPError, got } from 'got';
 import * as saml from 'samlify';
@@ -62,39 +62,36 @@ export const parseXmlMetadata = (
     saml.Constants.wording.certUse.signing
   );
 
-  try {
-    const certificate = getPemCertificate(rawX509Certificate);
-    const expiresAt = new Date(certificate.validTo).getTime();
-
-    const payload = {
-      ...rawSamlMetadata,
-      expiresAt,
-      isValid: expiresAt > Date.now(),
-      x509Certificate: certificate.toJSON(), // This returns the parsed certificate in string-type.
-    };
-
-    // The return type of `samlify`
-    const result = samlIdentityProviderMetadataGuard.safeParse(payload);
-
-    if (!result.success) {
-      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
-        message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
-        metadata: payload,
-        error: result.error,
+  const certificate = tryThat(
+    () => getPemCertificate(rawX509Certificate),
+    (error) => {
+      throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidCertificate, {
+        config: { ...rawSamlMetadata, x509Certificate: rawX509Certificate },
+        error,
       });
     }
+  );
+  const certificateExpiresAt = new Date(certificate.validTo).getTime();
 
-    return result.data;
-  } catch (error: unknown) {
-    if (error instanceof SsoConnectorError) {
-      throw error;
-    }
+  const payload = {
+    ...rawSamlMetadata,
+    certificateExpiresAt,
+    isCertificateValid: certificateExpiresAt > Date.now(),
+    x509Certificate: certificate.toJSON(), // This returns the parsed certificate in string-type.
+  };
 
-    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidCertificate, {
-      config: { ...rawSamlMetadata, x509Certificate: rawX509Certificate },
-      error,
+  // The return type of `samlify`
+  const result = samlIdentityProviderMetadataGuard.safeParse(payload);
+
+  if (!result.success) {
+    throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+      message: SsoConnectorConfigErrorCodes.InvalidConnectorConfig,
+      metadata: payload,
+      error: result.error,
     });
   }
+
+  return result.data;
 };
 
 /**
