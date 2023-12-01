@@ -1,0 +1,38 @@
+{
+  "tags": [
+    {
+      "name": "Verification codes",
+      "description": "Endpoints for handling verification codes.\n\nNote: before you call the endpoints, you need to setup your email/SMS connector first."
+    }
+  ],
+  "paths": {
+    "/api/verification-codes": {
+      "post": {
+        "summary": "Request and send a verification code",
+        "description": "Request a verification code for the provided identifier (email/phone).\nif you're using email as the identifier, you need to setup your email connector first.\nif you're using phone as the identifier, you need to setup your SMS connector first.",
+        "responses": {
+          "204": {
+            "description": "Verification code requested and sent successfully."
+          },
+          "400": {
+            "description": "Bad request. The payload may be invalid."
+          }
+        }
+      }
+    },
+    "/api/verification-codes/verify": {
+      "post": {
+        "summary": "Verify a verification code",
+        "description": "Verify a verification code for a specified identifier.\nif you're using email as the identifier, you need to setup your email connector first.\nif you're using phone as the identifier, you need to setup your SMS connector first.",
+        "responses": {
+          "204": {
+            "description": "Verification code verified successfully."
+          },
+          "400": {
+            "description": "Bad request. The payload may be invalid."
+          }
+        }
+      }
+    }
+  }
+}
