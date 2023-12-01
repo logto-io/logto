@@ -48,7 +48,7 @@ Click the `Save` button to save the application settings.
 
 </Step>
 
-<Step index={2} title="Copy the client ID and client secret">
+<Step index={2} title="Set up Logto connector with the client credentials">
 
 After successfully creating the OIDC application, you will be redirected to the application details page.
 
@@ -56,13 +56,25 @@ After successfully creating the OIDC application, you will be redirected to the 
   <img src={clientCredentials} alt="client credentials" />
 </center>
 
-Copy the client ID and client secret and fill in the corresponding fields on the Logto SSO connector connection page to complete the configuration.
+Copy the `client ID` and `client secret` and fill in the corresponding fields on the Logto SSO connector `connection` tab.
+
+Use your Okta domain as the `issuer`. Example: `https://dev-12345678.okta.com`. Once you have filled in all the fields, click the `Save` button to save the connector settings.
+
+If the `issuer` link you provided is valid, you will see a parsed full list of Okta IdP configurations shown below the `issuer` field.
 
 </Step>
 
-<Step index={4} title="Set email domains and enable the SSO connector">
+<Step index={4} title="Additional Scopes (Optional)">
 
-Provide the email domains of your organization on the connector experience tab. This will enabled the SSO connector as an authentication method for those users.
+Use the `Scope` field to add additional scopes to your OAuth request. This will allow you to request for more information from the Okta OAuth server. Please refer to the [Okta documentation](https://developer.okta.com/docs/reference/api/oidc/#scopes) for more details about the available scopes.
+
+\*Regardless of the custom scope settings, Logto will always send the `openid`, `profile` and `email` scopes to the IdP. This is to ensure that Logto can retrieve the user's identity information and email address properly.
+
+</Step>
+
+<Step index={5} title="Set email domains and enable the SSO connector">
+
+Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use your SSO connector as their only authentication method.
 

@@ -66,7 +66,7 @@ Logto will fetch the metadata from the URL and configure the SAML SSO integratio
 
 Logto provides a flexible way to map the user attributes returned from IdP to the user attributes in Logto. Logto will sync the following user attributes from IdP by default:
 
-- id: The unique identifier of the user. Logto will read the `nameId` claim from the SAML response as the user SSO identity id.
+- id: The unique identifier of the user. Logto will read the `nameID` claim from the SAML response as the user SSO identity id.
 - email: The email address of the user. Logto will read the `email` claim from the SAML response as the user primary email by default.
 - name: The name of the user.
 
@@ -78,7 +78,7 @@ You may manage the user attributes mapping logic either on the Azure AD side or 
 
    Copy the following attribute names (with namespace prefix) and paste them into the corresponding fields in Logto.
 
-   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/email`
+   - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`
 
    - `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` (Recommendation: update this attribute value map to `user.displayname` for better user experience)
 
@@ -118,7 +118,7 @@ Visit the `Users and groups` section of your Azure AD SSO application. Click on 
 
 <Step index={4} title="Set email domains and enable the SSO connector">
 
-Provide the email domains of your organization at the Logto's SAML SSO connector experience tab. This will enable the SSO connector as an authentication method for those users.
+Provide the email `domains` of your organization at the Logto's SAML SSO connector `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use SAML SSO connector as their only authentication method.
 
