@@ -1,0 +1,21 @@
+{
+  "tags": [
+    {
+      "name": "Logto supported Single sign-on SSO provider factories data",
+      "description": "The following API returns the list of supported SSO provider factories"
+    }
+  ],
+  "paths": {
+    "/api/sso-connector-factories": {
+      "get": {
+        "summary": "Lists of supported standard SSO factories and enterprise SSO provider factories",
+        "description": "Returns a list of standard SSO factories data and a list of supported enterprise SSO provider factories data",
+        "responses": {
+          "200": {
+            "description": "Returns a list of standard SSO factories data and a list of supported enterprise SSO provider factories data"
+          }
+        }
+      }
+    }
+  }
+}

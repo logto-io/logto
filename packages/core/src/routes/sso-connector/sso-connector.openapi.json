@@ -1,0 +1,74 @@
+{
+  "tags": [
+    {
+      "name": "Single sign-on (SSO) connectors",
+      "description": "The following APIs are used to manage single sign-on (SSO) connectors. Your application can use these well configured SSO connectors to authenticate users and sync user attributes from external identity providers (IdPs)."
+    }
+  ],
+  "paths": {
+    "/api/sso-connectors": {
+      "get": {
+        "summary": "List all SSO connectors",
+        "description": "Get a list of SSO connectors with pagination",
+        "responses": {
+          "200": {
+            "description": "A list of SSO connectors. In addition to the raw SSO connector data, a copy of fetched/parsed IdP detail configs and a copy of connector factory's data will be returned."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an new SSO connector",
+        "description": "Create an SSO connector",
+        "responses": {
+          "200": {
+            "description": "Returns raw SSO connector data"
+          },
+          "422": {
+            "description": "Unprocessable content error. At lease one of the given input fields is invalid or IdP connection can not be verified with the given connection config."
+          }
+        }
+      }
+    },
+    "/api/sso-connectors/{id}": {
+      "get": {
+        "summary": "Get an SSO connector",
+        "description": "Get an SSO connector by ID",
+        "responses": {
+          "200": {
+            "description": "Returns raw SSO connector data along with a copy of fetched/parsed IdP detail configs and a copy of connector factory's data"
+          },
+          "404": {
+            "description": "SSO connector not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an SSO connector",
+        "description": "Delete an SSO connector by ID",
+        "responses": {
+          "200": {
+            "description": "Returns raw SSO connector data"
+          },
+          "404": {
+            "description": "SSO connector not found"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update an SSO connector",
+        "description": "Update an SSO connector by ID",
+        "responses": {
+          "200": {
+            "description": "Returns raw SSO connector data"
+          },
+          "404": {
+            "description": "SSO connector not found"
+          },
+          "422": {
+            "description": "Unprocessable content error. At lease one of the update fields is invalid or IdP connection can not be verified with the given connection config."
+          }
+        }
+      }
+    }
+  }
+}
