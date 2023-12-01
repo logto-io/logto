@@ -6,9 +6,9 @@ import applicationSettings from './assets/application_settings.webp';
 import clientCredentials from './assets/client_credentials.webp';
 import assignUsers from './assets/assign_users.webp';
 
-<Step index={0} title="Create an OIDC application on OKTA admin portal">
+<Step index={0} title="Create an OIDC application on Okta admin portal">
 
-- Visit the OKTA admin portal and sign in as an administrator.
+- Visit the Okta admin portal and sign in as an administrator.
 - Navigate to the `Applications`/`Applications` page using the side menu.
 - Click the `Create App Integration` button to create a new OIDC application.
 - Select the `OIDC - OpenID Connect` option as the `Sign-in method`.
@@ -30,7 +30,7 @@ Click the `Next` button to continue.
 
 <OidcCallbackUri />
 
-This is the URI that the OKTA will redirect the user's browser after successful authentication. After a user successfully authenticates with the IdP, the IdP redirects the user's browser back to this designated URI along with an authorization code. Logto will complete the authentication process based on authorization code received from this URI.
+This is the URI that the Okta will redirect the user's browser after successful authentication. After a user successfully authenticates with the IdP, the IdP redirects the user's browser back to this designated URI along with an authorization code. Logto will complete the authentication process based on authorization code received from this URI.
 
 <center>
   <img src={applicationSettings} alt="application settings" />
@@ -68,4 +68,4 @@ Users with email addresses in the specified domains will be restricted to use yo
 
 </Step>
 
-For more details about create OIDC integration with OKTA, please check [Create OIDC App Integrations](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
+For more details about create OIDC integration with Okta, please check [Create OIDC App Integrations](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
