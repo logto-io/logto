@@ -66,7 +66,7 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     expect(page.url()).toBe(new URL('register', logtoConsoleUrl).href);
 
-    await expect(page).toFill('input[name=identifier]', consoleUsername);
+    await expect(page).toFill('input[name=id]', consoleUsername);
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
     expect(page.url()).toBe(appendPathname('/register/password', logtoConsoleUrl).href);

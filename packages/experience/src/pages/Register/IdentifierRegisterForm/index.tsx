@@ -25,7 +25,7 @@ type Props = {
 };
 
 type FormState = {
-  identifier: IdentifierInputValue;
+  id: IdentifierInputValue;
 };
 
 const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) => {
@@ -44,9 +44,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   });
 
   // Watch identifier field and check single sign on method availability
-  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(
-    watch('identifier')
-  );
+  const { showSingleSignOnForm, navigateToSingleSignOn } = useSingleSignOnWatch(watch('id'));
 
   useEffect(() => {
     if (!isValid) {
@@ -58,7 +56,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     async (event?: React.FormEvent<HTMLFormElement>) => {
       clearErrorMessage();
 
-      void handleSubmit(async ({ identifier: { type, value } }) => {
+      void handleSubmit(async ({ id: { type, value } }) => {
         if (!type) {
           return;
         }
@@ -89,7 +87,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Controller
         control={control}
-        name="identifier"
+        name="id"
         rules={{
           validate: ({ type, value }) => {
             if (!type || !value) {
@@ -109,11 +107,12 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
         }}
         render={({ field }) => (
           <SmartInputField
+            autoComplete="off"
             autoFocus={autoFocus}
             className={styles.inputField}
             {...field}
-            isDanger={!!errors.identifier || !!errorMessage}
-            errorMessage={errors.identifier?.message}
+            isDanger={!!errors.id || !!errorMessage}
+            errorMessage={errors.id?.message}
             enabledTypes={signUpMethods}
           />
         )}

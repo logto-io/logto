@@ -35,7 +35,7 @@ describe('<Register />', () => {
   test.each(signUpTestCases)('renders with %o sign up settings', async (...signUp) => {
     const { queryByText, queryAllByText, container } = renderRegisterPage();
 
-    expect(container.querySelector('input[name="identifier"]')).not.toBeNull();
+    expect(container.querySelector('input[name="id"]')).not.toBeNull();
     expect(queryByText('action.create_account')).not.toBeNull();
 
     // Social
@@ -53,7 +53,7 @@ describe('<Register />', () => {
       mockSignInExperienceSettings.socialConnectors.length
     );
 
-    expect(container.querySelector('input[name="identifier"]')).toBeNull();
+    expect(container.querySelector('input[name="id"]')).toBeNull();
     expect(queryByText('action.create_account')).toBeNull();
   });
 
