@@ -71,6 +71,7 @@ export const createQuotaLibrary = (
     customDomainEnabled: notNumber,
     mfaEnabled: notNumber,
     organizationsEnabled: notNumber,
+    ssoEnabled: notNumber,
     omniSignInEnabled: notNumber, // No limit for now
     builtInEmailConnectorEnabled: notNumber, // No limit for now
   };

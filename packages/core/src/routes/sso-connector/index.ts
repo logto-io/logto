@@ -12,6 +12,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
 import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
@@ -40,10 +41,13 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       id: tenantId,
       queries: { ssoConnectors },
       libraries: {
+        quota,
         ssoConnectors: { getSsoConnectorById, getSsoConnectors },
       },
     },
   ] = args;
+
+  router.use(koaQuotaGuard({ key: 'ssoEnabled', quota, methods: ['POST', 'PUT'] }));
 
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
