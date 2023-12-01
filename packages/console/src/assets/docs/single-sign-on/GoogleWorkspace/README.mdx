@@ -17,11 +17,7 @@ Before you can use Google Workspace as an authentication provider, you must set 
 
 <Step index={1} title="Config the consent screen for your application" >
 
-In order to create a new OIDC credential, you need to configure the consent screen for your application. Otherwise, you will receive an error prompt when creating the credential like the following:
-
-<center>
-  <img src={credentials} alt="create credentials" />
-</center>
+In order to create a new OIDC credential, you need to configure the consent screen for your application.
 
 1. Navigate to the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) page and select the `Internal` user type. This will make the OAuth application only available to users within your organization.
 
@@ -80,7 +76,7 @@ Continue set up the OAuth credential by filling up the following information:
 
 </Step>
 
-<Step index={3} title="Copy the client ID and client secret">
+<Step index={3} title="Set up Logto connector with the client credentials">
 
 After successfully creating the OAuth credential, you will receive a prompt modal with the client ID and client secret.
 
@@ -88,15 +84,23 @@ After successfully creating the OAuth credential, you will receive a prompt moda
   <img src={clientCredentials} alt="client credentials" />
 </center>
 
-Copy the client ID and client secret and fill in the corresponding fields on the Logto SSO connector connection page.
+Copy the `client ID` and `client secret` and fill in the corresponding fields on the Logto SSO connector `connection` tab.
 
 Now you have successfully configured a Google Workspace SSO connector on Logto.
 
 </Step>
 
-<Step index={4} title="Set email domains and enable the SSO connector">
+<Step index={4} title="Additional Scopes (Optional)">
 
-Provide the email domains of your organization on the connector experience tab. This will enabled the SSO connector as an authentication method for those users.
+Use the `Scope` field to add additional scopes to your OAuth request. This will allow you to request for more information from the Google OAuth server. Please refer to the [Google OAuth Scopes](https://developers.google.com/identity/protocols/oauth2/scopes) documentation for more information.
+
+\*Regardless of the custom scope settings, Logto will always send the `openid`, `profile` and `email` scopes to the IdP. This is to ensure that Logto can retrieve the user's identity information and email address properly.
+
+</Step>
+
+<Step index={5} title="Set email domains and enable the SSO connector">
+
+Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be restricted to use your SSO connector as their only authentication method.
 
