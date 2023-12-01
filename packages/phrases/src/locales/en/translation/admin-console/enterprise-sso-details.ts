@@ -3,12 +3,12 @@ const enterprise_sso_details = {
   page_title: 'Enterprise SSO connector details',
   readme_drawer_title: 'Enterprise SSO',
   readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  tab_experience: 'Experience',
+  tab_experience: 'SSO Experience',
   tab_connection: 'Connection',
   general_settings_title: 'General',
   custom_branding_title: 'Display',
   custom_branding_description:
-    'Customize the selection button for user accounts with multiple enterprise identity providers. When empty, defaults are used.',
+    "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
   email_domain_field_name: 'Enterprise email domain',
   email_domain_field_description:
     'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
@@ -53,10 +53,10 @@ const enterprise_sso_details = {
   upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
   service_provider_property_title: 'Configure in the IdP',
   service_provider_property_description:
-    'Create a new application integration by {{protocol}} in the identity provider and then paste the generated value there.',
+    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by Logto.',
   attribute_mapping_title: 'Attribute mappings',
   attribute_mapping_description:
-    "To sync the user profile from the identity provider, the user's 'id' and 'email' are necessary. Alternatively, you can specify the claim name and value mapping within the identity provider.",
+    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to Logto side.',
   saml_preview: {
     sign_on_url: 'Sign on URL',
     entity_id: 'Issuer',

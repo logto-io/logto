@@ -12,6 +12,7 @@ import {
   type SamlGuideFormType,
   type SsoConnectorConfig,
 } from '@/pages/EnterpriseSso/types.js';
+import { uriValidator } from '@/utils/validator';
 
 import XmlFileReader from '../XmlFileReader';
 
@@ -47,14 +48,24 @@ function SamlMetadataFormFields({
         <>
           <FormField isRequired title="enterprise_sso.metadata.saml.sign_in_endpoint_field_name">
             <TextInput
-              {...register('signInEndpoint', { required: true })}
+              {...register('signInEndpoint', {
+                required: true,
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
+              })}
               error={Boolean(errors.signInEndpoint)}
+              placeholder="https://"
             />
           </FormField>
           <FormField isRequired title="enterprise_sso.metadata.saml.idp_entity_id_field_name">
             <TextInput
-              {...register('entityId', { required: true })}
+              {...register('entityId', {
+                required: true,
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
+              })}
               error={Boolean(errors.entityId)}
+              placeholder="https://"
             />
           </FormField>
           <FormField isRequired title="enterprise_sso.metadata.saml.certificate_field_name">
@@ -94,8 +105,11 @@ function SamlMetadataFormFields({
             <TextInput
               {...register('metadataUrl', {
                 required: true,
+                validate: (value) =>
+                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
               })}
               error={Boolean(errors.metadataUrl)}
+              placeholder="https://"
             />
             <div className={styles.description}>
               {t('enterprise_sso.metadata.saml.metadata_url_description')}

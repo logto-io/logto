@@ -15,7 +15,8 @@ const enterprise_sso = {
     title: 'エンタープライズコネクターを追加',
     text_divider: 'または、標準プロトコルによってカスタマイズされたコネクターを作成できます。',
     connector_name_field_title: 'コネクター名',
-    connector_name_field_placeholder: '企業向けアイデンティティプロバイダーの名前',
+    /** UNTRANSLATED */
+    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
     create_button_text: 'コネクターを作成',
   },
   guide: {

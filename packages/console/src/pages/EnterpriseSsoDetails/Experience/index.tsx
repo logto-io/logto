@@ -32,7 +32,7 @@ import * as styles from './index.module.scss';
 
 type DataType = Pick<
   SsoConnectorWithProviderConfig,
-  'branding' | 'connectorName' | 'domains' | 'syncProfile' | 'id'
+  'branding' | 'connectorName' | 'domains' | 'syncProfile' | 'id' | 'name'
 >;
 
 type Props = {
@@ -279,6 +279,7 @@ function Experience({ data, isDeleted, onUpdated }: Props) {
           <FormField title="enterprise_sso_details.display_name_field_name">
             <TextInput
               {...register('branding.displayName')}
+              placeholder={data.name}
               error={errors.branding?.displayName?.message}
             />
           </FormField>

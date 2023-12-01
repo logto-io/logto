@@ -109,7 +109,24 @@ export const samlSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.SAML> 
   logoDark:
     'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMjAuMDk4OEMwIDE3LjQ2MzIgMi41MTQzNCA3LjYzMDE1IDcuNzEyOTEgMS4wNDEwMkM0LjA0MzMzIDcuOTY4MDYgMS45MDg3MSAxMi42NTgzIDMuNDY1NzEgMTYuMzE0M0M0LjY4ODkxIDE5LjE4NjUgMTAuOTc0OCAxOC4yNzQxIDE0LjM3MjUgMTcuMTI1M0M4LjMyNDUxIDE5Ljg2MjMgMi4xMTc5NCAyMC4yMzQgMCAyMC4wOTg4WiIgZmlsbD0iI0MxMjcyRCIvPgo8cGF0aCBkPSJNMTEuMjYwNSAwLjc1QzEzLjU1NTcgMi4wNjc4MyAyMC44NjEzIDkuMTQ5ODMgMjQgMTYuOTIxN0MxOS44MDI2IDEwLjI5NzcgMTYuNzg1NSA2LjExNDE2IDEyLjgyMzMgNS42MjcxM0M5LjcxMDU1IDUuMjQ0NTIgNy4zNjIxMSAxMS4xMTQ0IDYuNjYzNyAxNC42MTUyQzcuMzA0MjQgOC4wMzc4IDEwLjA4MzggMi41MDY1IDExLjI2MDUgMC43NVoiIGZpbGw9IiNDMTI3MkQiLz4KPHBhdGggZD0iTTIyLjUzMTkgMjAuMDc1MkMyMC4yMzY3IDIxLjM5MzEgMTAuNDE2NyAyNC4xNDQxIDIuMDc5NDcgMjIuOTYxNEM5Ljk0NjQ4IDIyLjY1ODMgMTUuMDk4MSAyMi4xNTE2IDE3LjUwMzQgMTguOTgyNkMxOS4zOTI5IDE2LjQ5MzEgMTUuNDU1NSAxMS41MzU1IDEyLjc1NjIgOS4xODM1OUMxOC4xNjM2IDEzLjAyNCAyMS41OTA2IDE4LjE4MzYgMjIuNTMxOSAyMC4wNzUyWiIgZmlsbD0iI0MxMjcyRCIvPgo8L3N2Zz4K',
   description: {
-    en: 'This connector is used to connect to SAML single sign-on identity provider.',
+    de: 'XML-basierter Open Standard für das Single Sign-On im Web und die Identitätsföderation.',
+    en: 'XML-based open standard for web single sign-on and identity federation.',
+    es: 'Estándar abierto basado en XML para la autenticación única en la web y la federación de identidades.',
+    fr: "Norme ouverte basée sur XML pour la connexion unique sur le web et la fédération d'identité.",
+    it: 'Standard aperto basato su XML per il single sign-on e la federazione delle identità web.',
+    ja: 'ウェブのシングルサインオンとアイデンティティフェデレーションのためのXMLベースのオープンスタンダード。',
+    ko: '웹 단일 로그인 및 ID 페더레이션을 위한 XML 기반 오픈 표준.',
+    'pl-PL':
+      'Otwarty standard oparty na XML do jednolitej autoryzacji w sieci i federacji tożsamości.',
+    'pt-BR':
+      'Padrão aberto baseado em XML para autenticação única na web e federação de identidade.',
+    'pt-PT':
+      'Padrão aberto baseado em XML para autenticação única na web e federação de identidade.',
+    ru: 'XML-основаный открытый стандарт для единого входа в систему и федерации идентификации в сети.',
+    'tr-TR': 'Web tek oturum açma ve kimlik federasyonu için XML tabanlı açık standart.',
+    'zh-CN': '基于 XML 的 Web 单点登录和身份联合的开放标准。',
+    'zh-HK': '基於 XML 的 Web 單一登錄和身份聯合的開放標準。',
+    'zh-TW': '基於 XML 的 Web 單一登入和身分聯合的開放標準。',
   },
   name: {
     en: 'SAML',
