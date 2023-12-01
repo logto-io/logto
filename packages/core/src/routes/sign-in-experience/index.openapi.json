@@ -1,0 +1,137 @@
+{
+  "tags": [
+    {
+      "name": "Sign in exp",
+      "description": "Set the Sign-in experience configuration to customize your sign-in experience."
+    }
+  ],
+  "paths": {
+    "/api/sign-in-exp": {
+      "get": {
+        "summary": "Get default sign-in experience settings",
+        "description": "Get the default sign-in experience settings.",
+        "responses": {
+          "200": {
+            "description": "Default sign-in experience settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "color": {
+                      "description": "The primary branding color for the sign-in page (both light/dark mode)."
+                    },
+                    "languageInfo": {
+                      "description": "The language detection policy for the sign-in page."
+                    },
+                    "signIn": {
+                      "description": "Sign-in method settings"
+                    },
+                    "signUp": {
+                      "description": "Sign-up method settings",
+                      "properties": {
+                        "identifiers": {
+                          "description": "Allowed identifiers when signing-up."
+                        },
+                        "password": {
+                          "description": "Whether the user is required to set a password when signing-up."
+                        },
+                        "verify": {
+                          "description": "Whether the user is required to verify their email/phone when signing-up."
+                        }
+                      }
+                    },
+                    "socialSignInConnectorTargets": {
+                      "description": "Enabled social sign-in connectors, will displayed on the sign-in page."
+                    },
+                    "customContent": {
+                      "description": "Custom content to display on experience flow pages. the page pathname will be the config key, the content will be the config value."
+                    },
+                    "passwordPolicy": {
+                      "description": "Password policies to adjust the password strength requirements."
+                    },
+                    "mfa": {
+                      "description": "MFA settings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default sign-in experience settings not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update default sign-in experience settings",
+        "description": "Update the default sign-in experience settings with the provided data.",
+        "parameters": [
+          {
+            "name": "removeUnusedDemoSocialConnector",
+            "in": "query",
+            "description": "Whether to remove unused demo social connectors. (These demo social connectors are only used during cloud user onboarding)"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "color": {
+                    "description": "Specify the primary branding color for the sign-in page (both light/dark mode)."
+                  },
+                  "languageInfo": {
+                    "description": "Control the language detection policy for the sign-in page."
+                  },
+                  "signIn": {
+                    "description": "Sign-in method settings"
+                  },
+                  "signUp": {
+                    "description": "Sign-up method settings",
+                    "properties": {
+                      "identifiers": {
+                        "description": "Specify allowed identifiers when signing-up."
+                      },
+                      "password": {
+                        "description": "Whether the user is required to set a password when signing-up."
+                      },
+                      "verify": {
+                        "description": "Whether the user is required to verify their email/phone when signing-up."
+                      }
+                    }
+                  },
+                  "socialSignInConnectorTargets": {
+                    "description": "Specify the social sign-in connectors to display on the sign-in page."
+                  },
+                  "customContent": {
+                    "description": "Custom content to display on experience flow pages. the page pathname will be the config key, the content will be the config value."
+                  },
+                  "passwordPolicy": {
+                    "description": "Password policies to adjust the password strength requirements."
+                  },
+                  "mfa": {
+                    "description": "MFA settings"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated default sign-in experience settings."
+          },
+          "400": {
+            "description": "Bad request. Invalid data provided."
+          },
+          "404": {
+            "description": "Default sign-in experience settings not found."
+          },
+          "422": {
+            "description": "Unprocessable Entity. Invalid data provided."
+          }
+        }
+      }
+    }
+  }
+}
