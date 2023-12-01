@@ -1,5 +1,5 @@
 import { type SocialUserInfo } from '@logto/connector-kit';
-import { type IdentifierPayload } from '@logto/schemas';
+import { type IdentifierPayload, type SignInExperience } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,7 +9,8 @@ import assertThat from '#src/utils/assert-that.js';
 // Guard the SSO only email identifier
 export const verifySsoOnlyEmailIdentifier = async (
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  identifier: IdentifierPayload | SocialUserInfo
+  identifier: IdentifierPayload | SocialUserInfo,
+  signInExperience: SignInExperience
 ) => {
   // TODO: @simeng-li remove the dev features check when the SSO feature is released
   if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -17,6 +18,11 @@ export const verifySsoOnlyEmailIdentifier = async (
   }
 
   if (!('email' in identifier) || !identifier.email) {
+    return;
+  }
+
+  // SSO is not enabled
+  if (!signInExperience.singleSignOnEnabled) {
     return;
   }
 

@@ -1,3 +1,4 @@
+import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
@@ -15,14 +16,41 @@ const mockSsoConnectorLibrary: SsoConnectorLibrary = {
 };
 
 describe('verifyEmailIdentifier tests', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return if the identifier is not an email', async () => {
     await expect(
-      verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
-        username: 'foo',
-        password: 'bar',
-      })
+      verifySsoOnlyEmailIdentifier(
+        mockSsoConnectorLibrary,
+        {
+          username: 'foo',
+          password: 'bar',
+        },
+        mockSignInExperience
+      )
     ).resolves.not.toThrow();
   });
+
+  it('should return if the ssoConnector is not enabled', async () => {
+    await expect(
+      verifySsoOnlyEmailIdentifier(
+        mockSsoConnectorLibrary,
+        {
+          email: 'foo@bar.com',
+          password: 'bar',
+        },
+        {
+          ...mockSignInExperience,
+          singleSignOnEnabled: false,
+        }
+      )
+    ).resolves.not.toThrow();
+
+    expect(getAvailableSsoConnectorsMock).not.toBeCalled();
+  });
+
   it('should return if no sso connectors found with the given email', async () => {
     getAvailableSsoConnectorsMock.mockResolvedValueOnce([
       {
@@ -32,10 +60,14 @@ describe('verifyEmailIdentifier tests', () => {
     ]);
 
     await expect(
-      verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
-        email: 'foo@bar.com',
-        password: 'bar',
-      })
+      verifySsoOnlyEmailIdentifier(
+        mockSsoConnectorLibrary,
+        {
+          email: 'foo@bar.com',
+          password: 'bar',
+        },
+        mockSignInExperience
+      )
     ).resolves.not.toThrow();
   });
 
@@ -48,10 +80,14 @@ describe('verifyEmailIdentifier tests', () => {
     getAvailableSsoConnectorsMock.mockResolvedValueOnce([connector]);
 
     await expect(
-      verifySsoOnlyEmailIdentifier(mockSsoConnectorLibrary, {
-        email: 'foo@example.com',
-        verificationCode: 'bar',
-      })
+      verifySsoOnlyEmailIdentifier(
+        mockSsoConnectorLibrary,
+        {
+          email: 'foo@example.com',
+          verificationCode: 'bar',
+        },
+        mockSignInExperience
+      )
     ).rejects.toMatchError(
       new RequestError(
         {

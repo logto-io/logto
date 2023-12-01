@@ -18,6 +18,7 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { i18next } from '#src/utils/i18n.js';
 
+import { type WithInteractionSieContext } from '../middleware/koa-interaction-sie.js';
 import type {
   PasswordIdentifierPayload,
   SocialIdentifier,
@@ -86,7 +87,7 @@ const verifyVerificationCodeIdentifier = async (
 
 const verifySocialIdentifier = async (
   identifier: SocialConnectorPayload,
-  ctx: WithLogContext,
+  ctx: WithInteractionSieContext<WithLogContext>,
   tenant: TenantContext
 ): Promise<SocialIdentifier> => {
   const userInfo = await verifySocialIdentity(identifier, ctx, tenant);
@@ -94,7 +95,10 @@ const verifySocialIdentifier = async (
   const {
     libraries: { ssoConnectors },
   } = tenant;
-  await verifySsoOnlyEmailIdentifier(ssoConnectors, userInfo);
+
+  const { signInExperience } = ctx;
+
+  await verifySsoOnlyEmailIdentifier(ssoConnectors, userInfo, signInExperience);
 
   return { key: 'social', connectorId: identifier.connectorId, userInfo };
 };
@@ -158,7 +162,7 @@ const verifySocialVerifiedIdentifier = async (
  *   or phone, then the payload is valid.
  */
 async function identifierPayloadVerification(
-  ctx: WithLogContext,
+  ctx: WithInteractionSieContext<WithLogContext>,
   tenant: TenantContext,
   identifierPayload: IdentifierPayload,
   interactionStorage: AnonymousInteractionResult
