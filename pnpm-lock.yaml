@@ -2858,8 +2858,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^2.1.2
-        version: 2.1.2(react@18.2.0)
+        specifier: ^2.2.0
+        version: 2.2.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.11.0
         version: link:../schemas
@@ -3435,8 +3435,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^2.1.0
-        version: 2.1.0(react@18.2.0)
+        specifier: ^2.2.0
+        version: 2.2.0(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.2.3
         version: link:../schemas
@@ -3745,11 +3745,11 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
       '@logto/js':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^3.0.1
+        version: 3.0.1
       '@logto/node':
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^2.2.0
+        version: 2.2.0
       '@logto/schemas':
         specifier: workspace:^1.10.1
         version: link:../schemas
@@ -7479,47 +7479,21 @@ packages:
       tiny-cookie: 2.4.1
     dev: false
 
-  /@logto/browser@2.1.0:
-    resolution: {integrity: sha512-4XsXlCC0uZHcfazV09/4YKo4koqvSzQlkPUAToTp/WHpb6h2XDOJh5/hi55LXL4zp0PCcgpErKRxFCtgXCc6WQ==}
+  /@logto/browser@2.2.0:
+    resolution: {integrity: sha512-8kKh1EcAm19smnEMvw0M51d2EQXEEH77G1JEKh1iLifUScmxD+c7HcN/5mLekaBz36MUVNiA2gE7s9L2GOpWrg==}
     dependencies:
-      '@logto/client': 2.2.0
-      '@silverhand/essentials': 2.8.4
+      '@logto/client': 2.3.0
+      '@silverhand/essentials': 2.8.5
       js-base64: 3.7.5
     dev: true
 
-  /@logto/browser@2.1.2:
-    resolution: {integrity: sha512-LADZHT7LTyiWDwWmBwh3qAtOg+IVEjfaFKBTB/RQBc5T9xYO4q4JcyW1XgpMlkc0uLqOtW3uOGztUVs0ugi6/g==}
+  /@logto/client@2.3.0:
+    resolution: {integrity: sha512-VrzsF+QtnrVXnDFbsdYTeGatjThlTFwtjTT/jJMaFdyRg0lno8vHxsjuyG8ba4wVSu22tSmJAr7okpAwRyhtcg==}
     dependencies:
-      '@logto/client': 2.2.3
-      '@silverhand/essentials': 2.8.4
-      js-base64: 3.7.5
-    dev: true
-
-  /@logto/client@2.1.0:
-    resolution: {integrity: sha512-vw8xDW8k38/58Q1r592z/9JdsmUh4+LMmoVm/Nu7LbWKlT32eD3H9hZDkFK9XEHpriifhI0hP7asGWEmhrEUuQ==}
-    dependencies:
-      '@logto/js': 2.1.1
-      '@silverhand/essentials': 2.8.4
-      camelcase-keys: 7.0.2
-      jose: 4.14.4
-    dev: true
-
-  /@logto/client@2.2.0:
-    resolution: {integrity: sha512-7I2ELo5UWIJsFCYK/gX465l0+QhXTdyYWkgb2CcdPu5KbaPBNpASedm+fEV2NREYe2svbNODFhog6UMA/xGQnQ==}
-    dependencies:
-      '@logto/js': 2.1.1
+      '@logto/js': 3.0.1
       '@silverhand/essentials': 2.8.5
       camelcase-keys: 7.0.2
-      jose: 4.14.4
-    dev: true
-
-  /@logto/client@2.2.3:
-    resolution: {integrity: sha512-xq4LhQ6ItbukAHgsMDcgfspTpdpO5sSfSEugpOrGP/nLwzGTfBO78OSUfMdBQEDr5+3SRmONuSjUBBwssOLINA==}
-    dependencies:
-      '@logto/js': 2.1.3
-      '@silverhand/essentials': 2.8.5
-      camelcase-keys: 7.0.2
-      jose: 4.14.4
+      jose: 5.0.1
     dev: true
 
   /@logto/cloud@0.2.5-5a698db(zod@3.22.4):
@@ -7532,50 +7506,32 @@ packages:
       - zod
     dev: true
 
-  /@logto/js@2.1.1:
-    resolution: {integrity: sha512-PHikheavVK+l4ivgtzi14p184hEPgXjqQEAom1Gme1MZoopx+WlwxvHSEQBsmyvVqRtI0oiojhoU5tgYi1FKJw==}
-    dependencies:
-      '@silverhand/essentials': 2.8.4
-      camelcase-keys: 7.0.2
-      jose: 4.14.4
-    dev: true
-
-  /@logto/js@2.1.3:
-    resolution: {integrity: sha512-TOuoC5gHx/SfY5gcGSBfw63x5TpM6Lm/9J5y0Jy003Z1DZARUlpz0KbzyCVAIC/+6qIefkmNPHKl1rq9MB/hog==}
+  /@logto/js@3.0.1:
+    resolution: {integrity: sha512-vsU6mH5oiiW3k00pMyVA4V31K2Bd0rOT9qWch2l5e5o1yCQLJ3zUIOjGjChu3m2TRu1d920iiUpZU3Lzf6Pwdw==}
     dependencies:
       '@silverhand/essentials': 2.8.5
       camelcase-keys: 7.0.2
-      jose: 4.14.4
+      jose: 5.0.1
     dev: true
 
-  /@logto/node@2.1.1:
-    resolution: {integrity: sha512-joSzzAqaRKeEquRenoFrIXXkNxkJci5zSkk4afywz1P8tTcTysnV4eXaBmwXNpmDfQdtHBwRdSACZPLgeF8JiQ==}
+  /@logto/node@2.2.0:
+    resolution: {integrity: sha512-xzVCnlrev/bqLtXOAw9I35h7njU1bed1jt6fL/VZfY4RUUJVZ36LG7fq2b7GsGg5xGRLchJ//+/VP1ac3+27YA==}
     dependencies:
-      '@logto/client': 2.1.0
-      '@silverhand/essentials': 2.8.4
+      '@logto/client': 2.3.0
+      '@silverhand/essentials': 2.8.5
       js-base64: 3.7.5
-      node-fetch: 2.6.7
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@logto/react@2.1.0(react@18.2.0):
-    resolution: {integrity: sha512-xP/EW/N7Fh/5yyogCavCf43U114hiuACGxWql8CTmCbSJEXKVU5kiHNQXi2upV7AvB+lNA1as7LT/KbR9wM/2Q==}
+  /@logto/react@2.2.0(react@18.2.0):
+    resolution: {integrity: sha512-XSIptaw5o1mmflhG0eYD49aNBONfOIIjoyyam12qQOOfL2EFMZghIfaheh2SzemIT3LAawX2+yqAB/lo1rIGWA==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
-      '@logto/browser': 2.1.0
-      '@silverhand/essentials': 2.8.4
-      react: 18.2.0
-    dev: true
-
-  /@logto/react@2.1.2(react@18.2.0):
-    resolution: {integrity: sha512-4Fz5GG5N7y9ynYVutuLZgBornkVccaxG1vmAOxt233wfFPmNzESJ+TlYGe2FbngC7z9xfT6c7f9Q+1LZQmrzVg==}
-    peerDependencies:
-      react: '>=16.8.0 || ^18.0.0'
-    dependencies:
-      '@logto/browser': 2.1.2
-      '@silverhand/essentials': 2.8.4
+      '@logto/browser': 2.2.0
+      '@silverhand/essentials': 2.8.5
       react: 18.2.0
     dev: true
 
@@ -15195,6 +15151,7 @@ packages:
 
   /jose@4.14.4:
     resolution: {integrity: sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==}
+    dev: false
 
   /jose@5.0.1:
     resolution: {integrity: sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==}
@@ -16805,6 +16762,7 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
 
   /node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}

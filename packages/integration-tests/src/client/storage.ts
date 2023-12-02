@@ -1,23 +1,23 @@
-import type { Storage, StorageKey } from '@logto/node';
+import type { PersistKey, Storage } from '@logto/node';
 import type { Nullable } from '@silverhand/essentials';
 
-export class MemoryStorage implements Storage {
-  private storage: { [key in StorageKey]: Nullable<string> } = {
+export class MemoryStorage implements Storage<PersistKey> {
+  private storage: { [key in PersistKey]: Nullable<string> } = {
     idToken: null,
     refreshToken: null,
     accessToken: null,
     signInSession: null,
   };
 
-  async getItem(key: StorageKey): Promise<Nullable<string>> {
+  async getItem(key: PersistKey): Promise<Nullable<string>> {
     return this.storage[key];
   }
 
-  async setItem(key: StorageKey, value: string): Promise<void> {
+  async setItem(key: PersistKey, value: string): Promise<void> {
     this.storage[key] = value;
   }
 
-  async removeItem(key: StorageKey): Promise<void> {
+  async removeItem(key: PersistKey): Promise<void> {
     this.storage[key] = null;
   }
 }

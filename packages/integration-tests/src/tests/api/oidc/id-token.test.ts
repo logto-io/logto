@@ -77,20 +77,16 @@ describe('OpenID Connect ID token', () => {
     await organizationApi.addUserRoles(org1.id, userId, [role.id]);
 
     // Organizations claim
-    const idToken = await fetchIdToken(['urn:logto:scope:organizations']);
-
-    // @ts-expect-error type definition needs to be updated
-    const organizations = idToken.organizations as unknown;
+    const { organizations } = await fetchIdToken(['urn:logto:scope:organizations']);
 
     expect(organizations).toHaveLength(2);
     expect(organizations).toContainEqual(org1.id);
     expect(organizations).toContainEqual(org2.id);
 
     // Organization roles claim
-    const idToken2 = await fetchIdToken(['urn:logto:scope:organization_roles']);
-
-    // @ts-expect-error type definition needs to be updated
-    const organizationRoles = idToken2.organization_roles as unknown;
+    const { organization_roles: organizationRoles } = await fetchIdToken([
+      'urn:logto:scope:organization_roles',
+    ]);
 
     expect(organizationRoles).toHaveLength(1);
     expect(organizationRoles).toContainEqual(`${org1.id}:${role.name}`);
