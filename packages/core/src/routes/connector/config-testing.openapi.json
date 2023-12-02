@@ -1,31 +1,22 @@
 {
-  "tags": [
-    {
-      "name": "Config testing",
-      "description": "Test passwordless connector sending functionality."
-    }
-  ],
   "paths": {
     "/api/connectors/:factoryId/test": {
       "post": {
-        "summary": "Test passwordless connector sending functionality.",
-        "description": "Test passwordless connector sending functionality, with destination (email address or phone number) and connector configuration.",
+        "summary": "Test passwordless connector",
+        "description": "Test a passwordless (email or SMS) connector by sending a test message to the given phone number or email address.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
                   "phone": {
-                    "type": "string",
-                    "description": "Phone number to send test message to."
+                    "description": "Phone number to send test message to. If this is set, email will be ignored."
                   },
                   "email": {
-                    "type": "string",
-                    "description": "Email address to send test message to."
+                    "description": "Email address to send test message to. If phone is set, this will be ignored."
                   },
                   "config": {
-                    "type": "object",
-                    "description": "Connector configuration for testing."
+                    "description": "Connector configuration object for testing."
                   }
                 }
               }
@@ -34,7 +25,7 @@
         },
         "responses": {
           "204": {
-            "description": "Test message sent successfully."
+            "description": "Test message was sent successfully."
           },
           "400": {
             "description": "Invalid request body (e.g. wrong phone number, email or config)."

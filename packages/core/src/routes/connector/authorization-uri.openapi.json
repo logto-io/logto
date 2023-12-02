@@ -1,27 +1,19 @@
 {
-  "tags": [
-    {
-      "name": "Connectors authorization uri",
-      "description": "Get authorization uri for specified connector by providing redirectUri and randomly generated state."
-    }
-  ],
   "paths": {
     "/api/connectors/{id}/authorization-uri": {
       "post": {
-        "summary": "Get specific connector's authorization uri.",
-        "description": "Get authorization uri for specified connector by providing redirectUri and randomly generated state.",
+        "summary": "Get connector's authorization URI",
+        "description": "Get authorization URI for specified connector by providing redirect URI and randomly generated state.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
                   "redirectUri": {
-                    "type": "string",
-                    "description": "The uri to navigate back to after authenticated by the social platform."
+                    "description": "The URI to navigate back to after the user is authenticated by the connected social identity provider and has granted access to the connector."
                   },
                   "state": {
-                    "type": "string",
-                    "description": "A random string generated on the client side to prevent CSRF attack."
+                    "description": "A random string generated on the client side to prevent CSRF (Cross-Site Request Forgery) attacks."
                   }
                 }
               }
@@ -30,14 +22,13 @@
         },
         "responses": {
           "200": {
-            "description": "A uri to navigate to for authentication.",
+            "description": "Successfully built authorization URI.",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
                     "redirectUri": {
-                      "type": "string",
-                      "description": "The uri to navigate to for authentication."
+                      "description": "The URI to navigate for authentication and authorization in the connected social identity provider."
                     }
                   }
                 }
@@ -45,10 +36,10 @@
             }
           },
           "400": {
-            "description": "The connector specified with id has wrong type or invalid config."
+            "description": "Unable to build authorization URI."
           },
           "404": {
-            "description": "The connector specified with id does not exist."
+            "description": "The connector with the specified ID does not exist."
           }
         }
       }
