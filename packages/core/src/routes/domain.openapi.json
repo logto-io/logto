@@ -1,0 +1,73 @@
+{
+  "tags": [
+    {
+      "name": "Domains",
+      "description": "Custom domain lets you present a consistent brand by having your own domain name on the sign-in and registration pages. See [🌍 Custom domain](https://docs.logto.io/docs/recipes/custom-domain/) for more details."
+    }
+  ],
+  "paths": {
+    "/api/domains": {
+      "get": {
+        "summary": "Get domains",
+        "description": "Get all of your custom domains.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A list of domains."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create domain",
+        "description": "Create a new domain with the given data. The maximum domain number is 1, once created, can not be modified, you'll have to delete and recreate one.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "domain": {
+                    "description": "The domain name, e.g. `example.com`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The domain was created successfully."
+          },
+          "422": {
+            "description": "Validation error. Please check the request body."
+          }
+        }
+      }
+    },
+    "/api/domains/{id}": {
+      "get": {
+        "summary": "Get domain",
+        "description": "Get domain details by ID, by calling this API, the domain status will be synced from remote provider.",
+        "responses": {
+          "200": {
+            "description": "Details of the domain."
+          },
+          "404": {
+            "description": "The domain with the specified ID was not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete domain",
+        "description": "Delete domain by ID.",
+        "responses": {
+          "204": {
+            "description": "The domain was deleted successfully."
+          },
+          "404": {
+            "description": "The domain with the specified ID was not found."
+          }
+        }
+      }
+    }
+  }
+}
