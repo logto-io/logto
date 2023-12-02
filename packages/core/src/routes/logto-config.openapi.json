@@ -2,78 +2,96 @@
   "tags": [
     {
       "name": "Configs",
-      "description": "Endpoints for managing Logto configuration settings."
+      "description": "Endpoints for managing Logto global configurations for the tenant."
     }
   ],
   "paths": {
     "/api/configs/admin-console": {
       "get": {
-        "summary": "Get admin console configuration",
-        "description": "Get the configuration settings for the admin console.",
+        "summary": "Get admin console config",
+        "description": "Get the global configuration object for Logto Console.",
         "responses": {
           "200": {
-            "description": "Admin console configuration settings."
+            "description": "The configuration object."
           },
           "404": {
-            "description": "Admin console configuration not found."
+            "description": "Configuration not found."
           }
         }
       },
       "patch": {
-        "summary": "Update admin console configuration",
-        "description": "Update the configuration settings for the admin console.",
+        "summary": "Update admin console config",
+        "description": "Update the global configuration object for Logto Console. This method performs a partial update.",
         "responses": {
           "200": {
-            "description": "Admin console configuration settings after update."
+            "description": "The updated configuration object."
           },
           "404": {
-            "description": "Admin console configuration not found."
+            "description": "Configuration not found."
           }
         }
       }
     },
     "/api/configs/oidc/{keyType}": {
       "get": {
-        "summary": "Get Logto OIDC private keys",
-        "description": "Get Logto OIDC private keys by key type from database. The actual key will be redacted from the result.",
+        "summary": "Get OIDC keys",
+        "description": "Get OIDC keys by key type. The actual key will be redacted from the result.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "List of Logto OIDC private keys."
-          },
-          "404": {
-            "description": "Logto OIDC keys not found."
+            "description": "An array of OIDC keys for the given key type."
           }
         }
       }
     },
     "/api/configs/oidc/{keyType}/{keyId}": {
       "delete": {
-        "summary": "Delete Logto OIDC key",
-        "description": "Delete a Logto OIDC private key by Logto OIDC key type and key ID.",
+        "summary": "Delete OIDC key",
+        "description": "Delete an OIDC key by key type and key ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
         "responses": {
           "204": {
-            "description": "Logto OIDC key deleted successfully."
+            "description": "The key was deleted successfully."
           },
           "404": {
-            "description": "Logto OIDC key not found."
+            "description": "The key was not found."
           },
           "422": {
-            "description": "Logto OIDC key required for operation."
+            "description": "At least one key must be kept."
           }
         }
       }
     },
     "/api/configs/oidc/{keyType}/rotate": {
       "post": {
-        "summary": "Rotate Logto OIDC keys",
-        "description": "Rotate Logto OIDC private keys. A new key will be generated and added to the list of private keys.\nLogto only keeps the last 2 recent keys. The oldest key will be automatically removed if the list exceeds 2 keys.",
+        "summary": "Rotate OIDC keys",
+        "description": "A new key will be generated and prepend to the list of keys.\n\nOnly two recent keys will be kept. The oldest key will be automatically removed if there are more than two keys.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "keyType",
+            "description": "Private keys are used to sign OIDC JWTs. Cookie keys are used to sign OIDC cookies. For clients, they do not need to know private keys to verify OIDC JWTs; they can use public keys from the JWKS endpoint instead."
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "properties": {
                   "signingKeyAlgorithm": {
-                    "description": "The signing key algorithm the new generated private key is using.\nOnly applicable to `oidc.privateKeys`."
+                    "description": "The signing key algorithm the new generated private key is using.\n\nOnly applicable when `keyType` is `private-keys`."
                   }
                 }
               }
@@ -82,10 +100,7 @@
         },
         "responses": {
           "200": {
-            "description": "List of rotated Logto OIDC private keys."
-          },
-          "422": {
-            "description": "Invalid operation or Logto OIDC key not found."
+            "description": "An array of OIDC keys after rotation."
           }
         }
       }

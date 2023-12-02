@@ -90,10 +90,6 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     }
   );
 
-  /**
-   * Get Logto OIDC private keys from database. The actual key will be redacted from the result.
-   * @param keyType Logto OIDC private key type. Values are either `private-keys` or `cookie-keys`.
-   */
   router.get(
     '/configs/oidc/:keyType',
     koaGuard({
@@ -101,7 +97,7 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
         keyType: z.nativeEnum(LogtoOidcConfigKeyType),
       }),
       response: z.array(oidcConfigKeysResponseGuard),
-      status: [200, 404],
+      status: [200],
     }),
     async (ctx, next) => {
       const { keyType } = ctx.guard.params;
@@ -115,11 +111,6 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     }
   );
 
-  /**
-   * Delete a Logto OIDC private key from database.
-   * @param keyType Logto OIDC key type. Values are either `oidc.privateKeys` or `oidc.cookieKeys`.
-   * @param keyId The ID of the private key to be deleted.
-   */
   router.delete(
     '/configs/oidc/:keyType/:keyId',
     koaGuard({
@@ -154,12 +145,6 @@ export default function logtoConfigRoutes<T extends AuthedRouter>(
     }
   );
 
-  /**
-   * Rotate Logto OIDC private keys. A new key will be generated and added to the list of private keys.
-   * Only keep the last 2 recent keys. The oldest key will be automatically removed if the list exceeds 2 keys.
-   * @param configKey Logto OIDC key type. Values are either `oidc.privateKeys` or `oidc.cookieKeys`.
-   * @param signingKeyAlgorithm The signing key algorithm the new generated private key is using. Values are either `EC` or `RSA`. Only applicable to `oidc.privateKeys`. Defaults to `EC`.
-   */
   router.post(
     '/configs/oidc/:keyType/rotate',
     koaGuard({
