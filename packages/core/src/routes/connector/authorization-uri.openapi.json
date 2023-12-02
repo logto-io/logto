@@ -1,0 +1,48 @@
+{
+  "paths": {
+    "/api/connectors/{id}/authorization-uri": {
+      "post": {
+        "summary": "Get connector's authorization URI",
+        "description": "Get authorization URI for specified connector by providing redirect URI and randomly generated state.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "redirectUri": {
+                    "description": "The URI to navigate back to after the user is authenticated by the connected social identity provider and has granted access to the connector."
+                  },
+                  "state": {
+                    "description": "A random string generated on the client side to prevent CSRF (Cross-Site Request Forgery) attacks."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully built authorization URI.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "redirectUri": {
+                      "description": "The URI to navigate for authentication and authorization in the connected social identity provider."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unable to build authorization URI."
+          },
+          "404": {
+            "description": "The connector with the specified ID does not exist."
+          }
+        }
+      }
+    }
+  }
+}

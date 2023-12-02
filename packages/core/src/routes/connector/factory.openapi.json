@@ -1,0 +1,35 @@
+{
+  "tags": [
+    {
+      "name": "Connector factories",
+      "description": "Connector factories are used to create connectors. They can be treated as preconfigured templates for connectors."
+    }
+  ],
+  "paths": {
+    "/api/connector-factories": {
+      "get": {
+        "summary": "Get connector factories",
+        "description": "Get all connector factories data available in Logto.",
+        "responses": {
+          "200": {
+            "description": "An array of connector factories."
+          }
+        }
+      }
+    },
+    "/api/connector-factories/{id}": {
+      "get": {
+        "summary": "Get connector factory",
+        "description": "Get connector factory by the given ID.",
+        "responses": {
+          "200": {
+            "description": "Connector factory data."
+          },
+          "404": {
+            "description": "Connector factory not found."
+          }
+        }
+      }
+    }
+  }
+}
