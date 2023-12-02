@@ -1,0 +1,52 @@
+{
+  "tags": [
+    {
+      "name": "Logs",
+      "description": "Logs (audit logs) are used to track end-user activities in Logto sign-in experience and other flows. It does not include activities in Logto Console."
+    }
+  ],
+  "paths": {
+    "/api/logs": {
+      "get": {
+        "summary": "Get logs",
+        "description": "Get logs that match the given query with pagination.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "Filter logs by user ID."
+          },
+          {
+            "name": "applicationId",
+            "in": "query",
+            "description": "Filter logs by application ID."
+          },
+          {
+            "name": "logKey",
+            "in": "query",
+            "description": "Filter logs by log key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of logs that match the given query."
+          }
+        }
+      }
+    },
+    "/api/logs/{id}": {
+      "get": {
+        "summary": "Get log",
+        "description": "Get log details by ID.",
+        "responses": {
+          "200": {
+            "description": "Log details."
+          },
+          "404": {
+            "description": "Log not found."
+          }
+        }
+      }
+    }
+  }
+}
