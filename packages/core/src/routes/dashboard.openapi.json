@@ -2,14 +2,14 @@
   "tags": [
     {
       "name": "Dashboard",
-      "description": "Dashboard APIs for getting user activity data in summary."
+      "description": "The APIs that power the dashboard page of Console to show the statistics of the current tenant."
     }
   ],
   "paths": {
     "/api/dashboard/users/total": {
       "get": {
         "summary": "Get total user count",
-        "description": "Get total user count.",
+        "description": "Get total user count in the current tenant.",
         "parameters": [],
         "responses": {
           "200": {
@@ -21,7 +21,7 @@
     "/api/dashboard/users/new": {
       "get": {
         "summary": "Get new user count",
-        "description": "Get new user count, in today and last 7 days.",
+        "description": "Get new user count in the past 7 days.",
         "parameters": [],
         "responses": {
           "200": {
@@ -33,11 +33,17 @@
     "/api/dashboard/users/active": {
       "get": {
         "summary": "Get active user data",
-        "description": "Get active user data, including DAU, WAU and MAU, also contains data for rendering DAU curve chart.",
-        "parameters": [],
+        "description": "Get active user data, including daily active user (DAU), weekly active user (WAU) and monthly active user (MAU). It also includes an array of DAU in the past 30 days.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "description": "The date to get active user data."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Active user data."
+            "description": "Active user data object."
           }
         }
       }
