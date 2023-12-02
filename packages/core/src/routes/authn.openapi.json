@@ -13,20 +13,20 @@
     },
     "/api/authn/saml/{connectorId}": {
       "post": {
-        "summary": "Social SAML connector's Assertion Consumer Service (ACS) endpoint.",
-        "description": "The `ACS` endpoint for all standard social SAML connector authentication flow. Logto's standard Social SAML connector will be replaced using the SSO SAML connector. This endpoint is used for `legacy connectors` only.",
+        "summary": "SAML ACS endpoint (social)",
+        "description": "The Assertion Consumer Service (ACS) endpoint for Simple Assertion Markup Language (SAML) social connectors.\n\nSAML social connectors are deprecated. Use the SSO SAML connector instead.",
         "deprecated": true,
         "responses": {
           "302": {
-            "description": "Returns the `redirectUrl` to the client for the next step to complete the authentication flow."
+            "description": "Redirect to the endpoint to complete the authentication flow."
           }
         }
       }
     },
     "/api/authn/single-sign-on/saml/{connectorId}": {
       "post": {
-        "summary": "SSO SAML connector's Assertion Consumer Service (ACS) endpoint.",
-        "description": "The `ACS` endpoint for all SAML based SSO authentication flow.",
+        "summary": "SAML ACS endpoint (SSO)",
+        "description": "The Assertion Consumer Service (ACS) endpoint for Simple Assertion Markup Language (SAML) single sign-on (SSO) connectors.\n\nThis endpoint is used to complete the SAML SSO authentication flow. It receives the SAML assertion response from the identity provider (IdP) and redirects the user to complete the authentication flow.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -35,7 +35,7 @@
                 "properties": {
                   "SAMLResponse": {
                     "type": "string",
-                    "description": "The SAML assertion response from the IdP."
+                    "description": "The SAML assertion response from the identity provider (IdP)."
                   },
                   "RelayState": {
                     "type": "string",
@@ -48,7 +48,7 @@
         },
         "responses": {
           "302": {
-            "description": "Returns the `redirectUrl` to the client for the next step to complete the authentication flow."
+            "description": "Redirect to the endpoint to complete the authentication flow."
           },
           "404": {
             "description": "Invalid SSO connector ID or SSO connector authentication session not found."
