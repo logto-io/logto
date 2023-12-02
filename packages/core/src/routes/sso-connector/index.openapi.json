@@ -1,0 +1,87 @@
+{
+  "tags": [
+    {
+      "name": "Sso connectors",
+      "description": "APIs for managing single sign-on (SSO) connectors. Your sign-in experience can use these well-configured SSO connectors to authenticate users and sync user attributes from external identity providers (IdPs).\n\nSSO connectors are created by SSO connector factories."
+    }
+  ],
+  "paths": {
+    "/api/sso-connector-factories": {
+      "summary": "APIs for SSO (single sign-on) connector factories",
+      "description": "SSO connector factories are used to create Enterprise SSO connectors. The created connectors are used to connect to external SSO providers.",
+      "get": {
+        "summary": "Get SSO connector factories",
+        "description": "Returns all SSO connector factories, including standard protocol factories and pre-configured SSO providers (e.g. Google Workspace, Okta, etc.).",
+        "responses": {
+          "200": {
+            "description": "An array of SSO connector factories."
+          }
+        }
+      }
+    },
+    "/api/sso-connectors": {
+      "get": {
+        "summary": "List SSO connectors",
+        "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "responses": {
+          "200": {
+            "description": "An array of SSO connectors."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create SSO connector",
+        "description": "Create an new SSO connector by a specified connector factory.",
+        "responses": {
+          "200": {
+            "description": "The created SSO connector."
+          },
+          "422": {
+            "description": "At lease one of the given input fields is invalid or IdP connection cannot be verified with the given config."
+          }
+        }
+      }
+    },
+    "/api/sso-connectors/{id}": {
+      "get": {
+        "summary": "Get SSO connector",
+        "description": "Get SSO connector data by ID. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "responses": {
+          "200": {
+            "description": "The SSO connector data with the given ID."
+          },
+          "404": {
+            "description": "SSO connector not found."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete SSO connector",
+        "description": "Delete an SSO connector by ID.",
+        "responses": {
+          "204": {
+            "description": "SSO connector deleted successfully."
+          },
+          "404": {
+            "description": "SSO connector not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update SSO connector",
+        "description": "Update an SSO connector by ID. This method performs a partial update.",
+        "responses": {
+          "200": {
+            "description": "The updated SSO connector."
+          },
+          "404": {
+            "description": "SSO connector not found."
+          },
+          "422": {
+            "description": "At lease one of the update fields is invalid or IdP connection can not be verified with the given connection config."
+          }
+        }
+      }
+    }
+  }
+}
