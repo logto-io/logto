@@ -31,14 +31,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
                 "properties": {
                   "SAMLResponse": {
-                    "type": "string",
                     "description": "The SAML assertion response from the identity provider (IdP)."
                   },
                   "RelayState": {
-                    "type": "string",
                     "description": "SAML standard parameter that will be transmitted between the identity provider and the service provider. It will be used as the session ID (jti) of the user's Logto authentication session. This API will use this session ID to retrieve the SSO connector authentication session from the database."
                   }
                 }
