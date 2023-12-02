@@ -1,0 +1,63 @@
+{
+  "paths": {
+    "/api/authn/hasura": {
+      "get": {
+        "summary": "Hasura auth hook endpoint",
+        "description": "The `HASURA_GRAPHQL_AUTH_HOOK` endpoint for Hasura auth. Use this endpoint to integrate Hasura's [webhook authentication flow](https://hasura.io/docs/latest/auth/authentication/webhook/).",
+        "responses": {
+          "200": {
+            "description": "The authenticated user claims in Hasura format. See [Hasura docs](https://hasura.io/docs/latest/auth/authentication/webhook/#webhook-response) for more information."
+          }
+        }
+      }
+    },
+    "/api/authn/saml/{connectorId}": {
+      "post": {
+        "summary": "SAML ACS endpoint (social)",
+        "description": "The Assertion Consumer Service (ACS) endpoint for Simple Assertion Markup Language (SAML) social connectors.\n\nSAML social connectors are deprecated. Use the SSO SAML connector instead.",
+        "deprecated": true,
+        "responses": {
+          "302": {
+            "description": "Redirect to the endpoint to complete the authentication flow."
+          }
+        }
+      }
+    },
+    "/api/authn/single-sign-on/saml/{connectorId}": {
+      "post": {
+        "summary": "SAML ACS endpoint (SSO)",
+        "description": "The Assertion Consumer Service (ACS) endpoint for Simple Assertion Markup Language (SAML) single sign-on (SSO) connectors.\n\nThis endpoint is used to complete the SAML SSO authentication flow. It receives the SAML assertion response from the identity provider (IdP) and redirects the user to complete the authentication flow.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SAMLResponse": {
+                    "type": "string",
+                    "description": "The SAML assertion response from the identity provider (IdP)."
+                  },
+                  "RelayState": {
+                    "type": "string",
+                    "description": "SAML standard parameter that will be transmitted between the identity provider and the service provider. It will be used as the session ID (jti) of the user's Logto authentication session. This API will use this session ID to retrieve the SSO connector authentication session from the database."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "302": {
+            "description": "Redirect to the endpoint to complete the authentication flow."
+          },
+          "404": {
+            "description": "Invalid SSO connector ID or SSO connector authentication session not found."
+          },
+          "400": {
+            "description": "Invalid SAML assertion response."
+          }
+        }
+      }
+    }
+  }
+}
