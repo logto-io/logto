@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Domains",
-      "description": "Custom domain lets you present a consistent brand by having your own domain name on the sign-in and registration pages."
+      "description": "Custom domain lets you present a consistent brand by having your own domain name on the sign-in and registration pages. See [🌍 Custom domain](https://docs.logto.io/docs/recipes/custom-domain/) for more details."
     }
   ],
   "paths": {
@@ -18,7 +18,7 @@
         }
       },
       "post": {
-        "summary": "Create a new domain",
+        "summary": "Create domain",
         "description": "Create a new domain with the given data. The maximum domain number is 1, once created, can not be modified, you'll have to delete and recreate one.",
         "requestBody": {
           "content": {
@@ -26,7 +26,7 @@
               "schema": {
                 "properties": {
                   "domain": {
-                    "description": "The domain name, e.g. example.com"
+                    "description": "The domain name, e.g. `example.com`."
                   }
                 }
               }
@@ -45,7 +45,7 @@
     },
     "/api/domains/{id}": {
       "get": {
-        "summary": "Get domain by ID",
+        "summary": "Get domain",
         "description": "Get domain details by ID, by calling this API, the domain status will be synced from remote provider.",
         "responses": {
           "200": {
@@ -57,7 +57,7 @@
         }
       },
       "delete": {
-        "summary": "Delete domain by ID",
+        "summary": "Delete domain",
         "description": "Delete domain by ID.",
         "responses": {
           "204": {
