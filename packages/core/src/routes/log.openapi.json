@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Logs",
-      "description": "Logs are records of events or actions within the Logto service."
+      "description": "Logs (audit logs) are used to track end-user activities in Logto sign-in experience and other flows. It does not include activities in Logto Console."
     }
   ],
   "paths": {
@@ -29,18 +29,18 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of logs."
+            "description": "An array of logs that match the given query."
           }
         }
       }
     },
     "/api/logs/{id}": {
       "get": {
-        "summary": "Get log details",
+        "summary": "Get log",
         "description": "Get log details by ID.",
         "responses": {
           "200": {
-            "description": "Details of the log."
+            "description": "Log details."
           },
           "404": {
             "description": "Log not found."
