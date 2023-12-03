@@ -19,7 +19,12 @@ import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
 
-import { buildTag, findSupplementFiles, normalizePath } from './utils/general.js';
+import {
+  buildTag,
+  findSupplementFiles,
+  normalizePath,
+  validateSupplement,
+} from './utils/general.js';
 import {
   buildParameters,
   paginationParameters,
@@ -213,6 +218,10 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       },
       tags: [...tags].map((tag) => ({ name: tag })),
     };
+
+    for (const document of supplementDocuments) {
+      validateSupplement(baseDocument, document);
+    }
 
     const data = supplementDocuments.reduce(
       (document, supplement) => deepmerge(document, supplement, { arrayMerge: mergeParameters }),

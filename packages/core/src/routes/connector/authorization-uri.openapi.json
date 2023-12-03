@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/api/connectors/{id}/authorization-uri": {
+    "/api/connectors/{connectorId}/authorization-uri": {
       "post": {
         "summary": "Get connector's authorization URI",
         "description": "Get authorization URI for specified connector by providing redirect URI and randomly generated state.",

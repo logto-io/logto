@@ -1,24 +1,41 @@
+import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
+import { isKeyInObject, type Optional } from '@silverhand/essentials';
+import { OpenAPIV3 } from 'openapi-types';
+import { z } from 'zod';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 /**
  * Get the root component name from the given absolute path.
- * @example '/organization/:id' -> 'organization'
+ * @example '/organizations/:id' -> 'organizations'
  */
 export const getRootComponent = (path?: string) => path?.split('/')[1];
 
+/** Map from root component name to tag name. */
+const tagMap = new Map([
+  ['logs', 'Audit logs'],
+  ['sign-in-exp', 'Sign-in experience'],
+  ['sso-connectors', 'SSO connectors'],
+  ['sso-connector-factories', 'SSO connector factories'],
+  ['.well-known', 'Well-known'],
+]);
+
 /**
- * Build a tag name from the given absolute path. The tag name is the sentence case of the root
- * component name.
+ * Build a tag name from the given absolute path. The function will get the root component name
+ * from the path and try to find the mapping in the {@link tagMap}. If the mapping is not found,
+ * the function will convert the name to sentence case.
+ *
  * @example '/organization-roles' -> 'Organization roles'
+ * @example '/logs/:id' -> 'Audit logs'
+ * @see {@link tagMap} for the full list of mappings.
  */
 export const buildTag = (path: string) => {
-  const rootComponent = (getRootComponent(path) ?? 'General').replaceAll('-', ' ');
-  return rootComponent.startsWith('.')
-    ? capitalize(rootComponent.slice(1))
-    : capitalize(rootComponent);
+  const rootComponent = getRootComponent(path);
+  assert(rootComponent, `Cannot find root component for path ${path}.`);
+  return tagMap.get(rootComponent) ?? capitalize(rootComponent).replaceAll('-', ' ');
 };
 
 /**
@@ -54,3 +71,74 @@ export const normalizePath = (path: string) =>
     .split('/')
     .map((part) => (part.startsWith(':') ? `{${part.slice(1)}}` : part))
     .join('/');
+
+/**
+ * Check if the supplement paths only contains operations (path + method) that are in the original
+ * paths. The function will also check if the supplement operations contain `tags` property, which
+ * is not allowed in our case.
+ */
+const validateSupplementPaths = (
+  originalPaths: Map<string, Optional<OpenAPIV3.PathItemObject>>,
+  supplementPaths: Map<string, unknown>
+) => {
+  for (const [path, operations] of supplementPaths) {
+    if (!operations) {
+      continue;
+    }
+
+    const originalOperations = originalPaths.get(path);
+    assert(originalOperations, `Supplement document contains extra path: \`${path}\`.`);
+
+    assert(
+      typeof operations === 'object' && !Array.isArray(operations),
+      `Supplement document contains invalid operations on path \`${path}\`.`
+    );
+
+    const originalKeys = new Set(Object.keys(originalOperations));
+    for (const method of Object.values(OpenAPIV3.HttpMethods)) {
+      if (isKeyInObject(operations, method)) {
+        if (!originalKeys.has(method)) {
+          throw new TypeError(
+            `Supplement document contains extra operation \`${method}\` on path \`${path}\`.`
+          );
+        }
+
+        if (isKeyInObject(operations[method], 'tags')) {
+          throw new TypeError(
+            `Cannot use \`tags\` in supplement document on path \`${path}\` and operation \`${method}\`. Define tags in the document root instead.`
+          );
+        }
+      }
+    }
+  }
+};
+
+/**
+ * Check if the supplement document only contains operations (path + method) and tags that are in
+ * the original document.
+ *
+ * @throws {TypeError} if the supplement data contains extra operations that are not in the
+ * original data.
+ */
+export const validateSupplement = (
+  original: OpenAPIV3.Document,
+  supplement: Record<string, unknown>
+) => {
+  if (supplement.tags) {
+    const supplementTags = z.array(z.object({ name: z.string() })).parse(supplement.tags);
+    const originalTags = new Set(original.tags?.map((tag) => tag.name));
+
+    for (const { name } of supplementTags) {
+      if (!originalTags.has(name)) {
+        throw new TypeError(`Supplement document contains extra tag \`${name}\`.`);
+      }
+    }
+  }
+
+  if (supplement.paths) {
+    validateSupplementPaths(
+      new Map(Object.entries(original.paths)),
+      new Map(Object.entries(supplement.paths))
+    );
+  }
+};

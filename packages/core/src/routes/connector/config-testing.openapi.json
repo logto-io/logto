@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/api/connectors/:factoryId/test": {
+    "/api/connectors/{factoryId}/test": {
       "post": {
         "summary": "Test passwordless connector",
         "description": "Test a passwordless (email or SMS) connector by sending a test message to the given phone number or email address.",
