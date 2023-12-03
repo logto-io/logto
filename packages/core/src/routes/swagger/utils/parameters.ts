@@ -120,13 +120,32 @@ const isObjectArray = (value: unknown): value is Array<Record<string, unknown>> 
  * Merge two arrays. If the two arrays are both object arrays, merge them with the following
  * rules:
  *
- * - If the source array has an item with `name` and `in` properties, and the destination array
- *  also has an item with the same `name` and `in` properties, merge the two items with
- * `deepmerge`.
+ * - If the source array has an item with `name` properties, and the destination array
+ *   also has an item with the same `name` and `in` properties, merge the two items with
+ *   `deepmerge`. It is assumed that the two items are using `name` for identifying the same
+ *   parameter, and may use `in` to distinguish the same parameter in different places.
  * - Otherwise, append the item to the destination array (the default behavior of
- * `deepmerge`).
+ *   `deepmerge`).
  *
  * Otherwise, use `deepmerge` to merge the two arrays.
+ *
+ * @example
+ * ```ts
+ * mergeParameters(
+ *   [{ name: 'foo', in: 'query', required: true }, { name: 'bar', in: 'query', required: true }],
+ *   [{ name: 'foo', in: 'query', required: false }]
+ * ); // [{ name: 'foo', in: 'query', required: false }, { name: 'bar', in: 'query', required: true }]
+ *
+ * mergeParameters(
+ *   [{ name: 'foo', required: true }, { name: 'bar', required: true }],
+ *   [{ name: 'foo', in: 'query', required: false }]
+ * );
+ * // [
+ * //   { name: 'foo', required: true },
+ * //   { name: 'bar', required: true },
+ * //   { name: 'foo', in: 'query', required: false }
+ * // ]
+ * ```
  *
  * @param destination The destination array.
  * @param source The source array.
@@ -140,7 +159,7 @@ export const mergeParameters = (destination: unknown[], source: unknown[]) => {
   const result = destination.slice();
 
   for (const item of source) {
-    if (!('name' in item) || !('in' in item)) {
+    if (!('name' in item)) {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       result.push(item);
       continue;

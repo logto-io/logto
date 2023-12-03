@@ -12,26 +12,27 @@
         "description": "Get all custom phrases for all languages.",
         "responses": {
           "200": {
-            "description": "A list of custom phrases."
+            "description": "An array of custom phrases."
           }
         }
       }
     },
     "/api/custom-phrases/{languageTag}": {
       "get": {
-        "summary": "Get custom phrases by language tag",
+        "summary": "Get custom phrases",
         "description": "Get custom phrases for the specified language tag.",
         "responses": {
           "200": {
             "description": "Custom phrases for the specified language tag."
           },
           "404": {
-            "description": "Custom phrases not found for the specified language tag."
+            "description": "Custom phrases not found."
           }
         }
       },
       "put": {
-        "summary": "Upsert custom phrases by language tag",
+        "summary": "Upsert custom phrases",
+        "description": "Upsert custom phrases for the specified language tag. Upsert means that if the custom phrases already exist, they will be updated. Otherwise, they will be created.",
         "requestBody": {
           "required": true,
           "content": {
@@ -45,7 +46,7 @@
         },
         "responses": {
           "201": {
-            "description": "Custom phrases created/updated successfully."
+            "description": "Custom phrases created or updated successfully."
           },
           "422": {
             "description": "Invalid translation structure."
@@ -53,16 +54,17 @@
         }
       },
       "delete": {
-        "summary": "Delete custom phrases by language tag",
+        "summary": "Delete custom phrase",
+        "description": "Delete custom phrases for the specified language tag.",
         "responses": {
           "204": {
             "description": "Custom phrases deleted successfully."
           },
           "404": {
-            "description": "Custom phrases not found for the specified language tag."
+            "description": "Custom phrases not found."
           },
           "409": {
-            "description": "Cannot delete default language."
+            "description": "Cannot delete the default language."
           }
         }
       }

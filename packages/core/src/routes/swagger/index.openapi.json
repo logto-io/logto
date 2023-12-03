@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Swagger.json",
+      "description": "Endpoints for the Swagger JSON document."
+    }
+  ],
   "paths": {
     "/api/swagger.json": {
       "get": {
