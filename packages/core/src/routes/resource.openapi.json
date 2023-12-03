@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Resources",
+      "description": "Resources (API resources) represent the APIs that you want to protect with Logto. Each resource has a unique indicator (URI) and a set of scopes (permissions). The resources will be used in the authorization process which conforms to [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html).\n\nSee [⚔️ Protect your API](https://docs.logto.io/docs/recipes/protect-your-api/) to learn more about how to define API resources and protect your APIs with Logto."
+    }
+  ],
   "paths": {
     "/api/resources": {
       "get": {

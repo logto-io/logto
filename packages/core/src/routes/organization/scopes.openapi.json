@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Organization scopes",
-      "description": "Organization scopes (permissions) are used to define actions that can be performed on a organization. Every organization scope is a part of the organization template.\n\nOrganization scopes will only be meaningful within an organization context. For example, a user may have a `read` scope for organization A, but not for organization B."
+      "description": "Organization scopes (permissions) are used to define actions that can be performed on a organization. Every organization scope is a part of the organization template.\n\nOrganization scopes will only be meaningful within an organization context. For example, a user may have a `read` scope for organization A, but not for organization B. See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) to get started with organizations and organization template."
     }
   ],
   "paths": {

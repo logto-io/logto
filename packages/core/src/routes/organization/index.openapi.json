@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Organizations",
-      "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations."
+      "description": "Organization is a concept that brings together multiple identities (mostly users). Logto supports multiple organizations, and each organization can have multiple users.\n\nEvery organization shares the same set (organization template) of roles and permissions. Each user can have different roles in different organizations. See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) to get started with organizations and organization template."
     }
   ],
   "paths": {

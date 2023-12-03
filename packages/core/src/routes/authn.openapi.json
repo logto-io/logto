@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Authn",
+      "description": "Authentication endpoints for third-party integrations and identity providers."
+    }
+  ],
   "paths": {
     "/api/authn/hasura": {
       "get": {

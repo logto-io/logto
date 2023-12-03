@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Configs",
-      "description": "Endpoints for managing Logto global configurations for the tenant."
+      "description": "Endpoints for managing Logto global configurations for the tenant, such as admin console config and OIDC signing keys.\n\nSee [🔑 Signing keys](https://docs.logto.io/docs/recipes/signing-keys-rotation/) to learn more about signing keys and key rotation."
     }
   ],
   "paths": {
@@ -35,7 +35,7 @@
     "/api/configs/oidc/{keyType}": {
       "get": {
         "summary": "Get OIDC keys",
-        "description": "Get OIDC keys by key type. The actual key will be redacted from the result.",
+        "description": "Get OIDC signing keys by key type. The actual key will be redacted from the result.",
         "parameters": [
           {
             "in": "path",
@@ -45,7 +45,7 @@
         ],
         "responses": {
           "200": {
-            "description": "An array of OIDC keys for the given key type."
+            "description": "An array of OIDC signing keys for the given key type."
           }
         }
       }
@@ -53,7 +53,7 @@
     "/api/configs/oidc/{keyType}/{keyId}": {
       "delete": {
         "summary": "Delete OIDC key",
-        "description": "Delete an OIDC key by key type and key ID.",
+        "description": "Delete an OIDC signing key by key type and key ID.",
         "parameters": [
           {
             "in": "path",
@@ -100,7 +100,7 @@
         },
         "responses": {
           "200": {
-            "description": "An array of OIDC keys after rotation."
+            "description": "An array of OIDC signing keys after rotation."
           }
         }
       }

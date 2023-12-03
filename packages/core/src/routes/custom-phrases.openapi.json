@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Custom phrases",
-      "description": "APIs for managing custom phrases that allow you to customize the phrases displayed when experiencing the sign-in flow."
+      "description": "Endpoints for managing custom phrases that allow you to customize the phrases displayed in the sign-in experience.\n\nSee [Localized language](https://docs.logto.io/docs/recipes/customize-sie/localized-language/) to learn more about custom phrases for localization."
     }
   ],
   "paths": {
