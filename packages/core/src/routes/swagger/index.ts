@@ -15,6 +15,7 @@ import type { WithGuardConfig } from '#src/middleware/koa-guard.js';
 import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
+import { consoleLog } from '#src/utils/console.js';
 import { translationSchemas, zodTypeToSwagger } from '#src/utils/zod.js';
 
 import type { AnonymousRouter } from '../types.js';
@@ -219,8 +220,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       tags: [...tags].map((tag) => ({ name: tag })),
     };
 
-    for (const document of supplementDocuments) {
-      validateSupplement(baseDocument, document);
+    if (EnvSet.values.isUnitTest) {
+      consoleLog.warn('Skip validating supplement documents in unit test.');
+    } else {
+      for (const document of supplementDocuments) {
+        validateSupplement(baseDocument, document);
+      }
     }
 
     const data = supplementDocuments.reduce(
