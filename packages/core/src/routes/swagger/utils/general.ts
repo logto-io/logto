@@ -6,7 +6,6 @@ import { isKeyInObject, type Optional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { consoleLog } from '#src/utils/console.js';
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
@@ -156,8 +155,13 @@ export const validateSupplement = (
  */
 export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
   for (const [path, operations] of Object.entries(document.paths)) {
-    if (!EnvSet.values.isProduction && path.startsWith('/api/interaction')) {
+    if (path.startsWith('/api/interaction')) {
       consoleLog.warn(`Path \`${path}\` is not documented. Do something!`);
+      continue;
+    }
+
+    // This path is for admin tenant only, skip it.
+    if (path === '/api/.well-known/endpoints/{tenantId}') {
       continue;
     }
 

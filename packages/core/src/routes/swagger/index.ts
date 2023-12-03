@@ -228,7 +228,9 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
 
     if (EnvSet.values.isUnitTest) {
       consoleLog.warn('Skip validating swagger document in unit test.');
-    } else {
+    }
+    // Don't throw for integrity check in production as it has no benefit.
+    else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {
       for (const document of supplementDocuments) {
         validateSupplement(baseDocument, document);
       }
