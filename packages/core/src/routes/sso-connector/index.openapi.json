@@ -2,22 +2,21 @@
   "tags": [
     {
       "name": "SSO connectors",
-      "description": "Endpoints for managing single sign-on (SSO) connectors. Your sign-in experience can use these well-configured SSO connectors to authenticate users and sync user attributes from external identity providers (IdPs).\n\nSSO connectors are created by SSO connector factories."
+      "description": "Endpoints for managing single sign-on (SSO) connectors. Your sign-in experience can use these well-configured SSO connectors to authenticate users and sync user attributes from external identity providers (IdPs).\n\nSSO connectors are created by SSO connector provider factories."
     },
     {
-      "name": "SSO connector factories",
-      "description": "Endpoints for SSO (single sign-on) connector factories.\n\nSSO connector factories provide the metadata and configuration templates for creating SSO connectors."
+      "name": "SSO connector providers",
+      "description": "Endpoints for SSO (single sign-on) connector providers.\n\nSSO connector providers provide the metadata and configuration templates for creating SSO connectors."
     }
   ],
   "paths": {
-    "/api/sso-connector-factories": {
-      "description": "SSO connector factories are used to create Enterprise SSO connectors. The created connectors are used to connect to external SSO providers.",
+    "/api/sso-connector-providers": {
       "get": {
-        "summary": "Get SSO connector factories",
-        "description": "Returns all SSO connector factories, including standard protocol factories and pre-configured SSO providers (e.g. Google Workspace, Okta, etc.).",
+        "summary": "List all the supported SSO connector provider details",
+        "description": "Get a complete list of supported SSO connector providers.",
         "responses": {
           "200": {
-            "description": "An array of SSO connector factories."
+            "description": "A list of SSO provider data."
           }
         }
       }
@@ -25,16 +24,16 @@
     "/api/sso-connectors": {
       "get": {
         "summary": "List SSO connectors",
-        "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector provider's data will be attached.",
         "responses": {
           "200": {
-            "description": "An array of SSO connectors."
+            "description": "A list of SSO connectors."
           }
         }
       },
       "post": {
         "summary": "Create SSO connector",
-        "description": "Create an new SSO connector by a specified connector factory.",
+        "description": "Create an new SSO connector instance for a given provider.",
         "responses": {
           "200": {
             "description": "The created SSO connector."
@@ -48,7 +47,7 @@
     "/api/sso-connectors/{id}": {
       "get": {
         "summary": "Get SSO connector",
-        "description": "Get SSO connector data by ID. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "description": "Get SSO connector data by ID. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector provider's data will be attached.",
         "responses": {
           "200": {
             "description": "The SSO connector data with the given ID."

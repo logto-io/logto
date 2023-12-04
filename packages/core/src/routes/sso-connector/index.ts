@@ -1,7 +1,6 @@
-import { SsoConnectors } from '@logto/schemas';
 import {
-  ssoConnectorFactoriesResponseGuard,
-  type SsoConnectorFactoryDetail,
+  SsoConnectors,
+  ssoConnectorProvidersResponseGuard,
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
@@ -14,7 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
-import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -52,34 +51,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
   /*
-    Get all supported single sign on connector factory details
+    Get all supported single sign on connector provider details
     - standardConnectors: OIDC, SAML, etc.
     - providerConnectors: Google, Okta, etc.
   */
   router.get(
-    '/sso-connector-factories',
+    '/sso-connector-providers',
     koaGuard({
-      response: ssoConnectorFactoriesResponseGuard,
+      response: ssoConnectorProvidersResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
       const { locale } = ctx;
       const factories = Object.values(ssoConnectorFactories);
-      const standardConnectors = new Set<SsoConnectorFactoryDetail>();
-      const providerConnectors = new Set<SsoConnectorFactoryDetail>();
 
-      for (const factory of factories) {
-        if (standardSsoConnectorProviders.includes(factory.providerName)) {
-          standardConnectors.add(parseFactoryDetail(factory, locale));
-        } else {
-          providerConnectors.add(parseFactoryDetail(factory, locale));
-        }
-      }
-
-      ctx.body = {
-        standardConnectors: [...standardConnectors],
-        providerConnectors: [...providerConnectors],
-      };
+      ctx.body = factories.map((factory) => parseFactoryDetail(factory, locale));
 
       return next();
     }

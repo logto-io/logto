@@ -1,5 +1,5 @@
 import {
-  type SsoConnectorFactoriesResponse,
+  type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
   type RequestErrorBody,
 } from '@logto/schemas';
@@ -24,6 +24,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
 import * as styles from './index.module.scss';
+import { categorizeSsoConnectorProviders } from './utils';
 
 type Props = {
   isOpen: boolean;
@@ -39,8 +40,8 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
-  const { data, error } = useSWR<SsoConnectorFactoriesResponse, RequestError>(
-    'api/sso-connector-factories'
+  const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
+    'api/sso-connector-providers'
   );
   const {
     reset,
@@ -54,19 +55,18 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
   const isLoading = !data && !error;
 
-  const { standardConnectors = [], providerConnectors = [] } = data ?? {};
+  const { standardProviders, enterpriseProviders } = categorizeSsoConnectorProviders(data);
 
-  const radioGroupSize = useMemo(
-    () => getConnectorRadioGroupSize(standardConnectors.length + providerConnectors.length),
-    [standardConnectors, providerConnectors]
+  const radioGroupSize = getConnectorRadioGroupSize(
+    standardProviders.length + enterpriseProviders.length
   );
 
   const isAnyConnectorSelected = useMemo(
     () =>
-      [...standardConnectors, ...providerConnectors].some(
+      [...standardProviders, ...enterpriseProviders].some(
         ({ providerName }) => selectedProviderName === providerName
       ),
-    [providerConnectors, selectedProviderName, standardConnectors]
+    [enterpriseProviders, selectedProviderName, standardProviders]
   );
 
   // `rawOnClose` does not clean the state of the modal.
@@ -141,9 +141,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}
         {error?.message}
         <SsoConnectorRadioGroup
-          name="providerConnectors"
+          name="enterpriseProviders"
           value={selectedProviderName}
-          connectors={providerConnectors}
+          connectors={enterpriseProviders}
           size={radioGroupSize}
           onChange={handleSsoSelection}
         />
@@ -151,9 +151,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
           <DynamicT forKey="enterprise_sso.create_modal.text_divider" />
         </div>
         <SsoConnectorRadioGroup
-          name="standardConnectors"
+          name="standardProviders"
           value={selectedProviderName}
-          connectors={standardConnectors}
+          connectors={standardProviders}
           size={radioGroupSize}
           onChange={handleSsoSelection}
         />

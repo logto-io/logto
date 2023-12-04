@@ -16,19 +16,14 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 
 describe('sso-connector library', () => {
-  it('should return sso-connector-factories', async () => {
+  it('should return sso-connector-providers', async () => {
     const response = await getSsoConnectorFactories();
 
-    expect(response).toHaveProperty('standardConnectors');
-    expect(response).toHaveProperty('providerConnectors');
+    expect(response.length).toBeGreaterThan(0);
 
-    expect(response.standardConnectors.length).toBe(2);
-    expect(
-      response.standardConnectors.find(({ providerName }) => providerName === 'OIDC')
-    ).toBeDefined();
-    expect(
-      response.standardConnectors.find(({ providerName }) => providerName === 'SAML')
-    ).toBeDefined();
+    for (const provider of Object.values(SsoProviderName)) {
+      expect(response.find((data) => data.providerName === provider)).toBeDefined();
+    }
   });
 });
 
