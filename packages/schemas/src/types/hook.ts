@@ -12,6 +12,7 @@ export type HookEventPayload = {
   sessionId?: string;
   userAgent?: string;
   userId?: string;
+  userIp?: string;
   user?: Pick<User, (typeof userInfoSelectFields)[number]>;
   application?: Pick<Application, 'id' | 'type' | 'name' | 'description'>;
 } & Record<string, unknown>;

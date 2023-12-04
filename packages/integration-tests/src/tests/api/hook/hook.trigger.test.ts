@@ -129,6 +129,12 @@ describe('trigger hooks', () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const userId = await registerNewUser(username, password);
 
+    type HookRequest = {
+      body: {
+        userIp?: string;
+      } & Record<string, unknown>;
+    };
+
     // Check hook trigger log
     for (const [hook, expectedResult, expectedError] of [
       [hook1, LogResult.Error, 'RequestError: Invalid URL'],
@@ -140,6 +146,12 @@ describe('trigger hooks', () => {
         hook.id,
         new URLSearchParams({ logKey, page_size: '100' })
       );
+
+      // Assert user ip is in the hook request
+      expect(
+        logs.every(({ payload }) => (payload.hookRequest as HookRequest).body.userIp)
+      ).toBeTruthy();
+
       expect(
         logs.some(
           ({ payload: { result, error } }) =>

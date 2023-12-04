@@ -51,6 +51,7 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     sessionId: 'fake-session-id',
     userAgent: 'fake-user-agent',
     userId: fakeUserId,
+    userIp: 'fake-user-ip',
     user: {
       id: fakeUserId,
       username: 'fake-user',
