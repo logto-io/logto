@@ -34,8 +34,20 @@
                   "name": {
                     "description": "The name of the hook."
                   },
+                  "event": {
+                    "deprecated": true,
+                    "description": "Use `events` instead."
+                  },
                   "events": {
                     "description": "An array of hook events."
+                  },
+                  "config": {
+                    "properties": {
+                      "retries": {
+                        "deprecated": true,
+                        "description": "Now the retry times is fixed to 3. Keep for backward compatibility."
+                      }
+                    }
                   }
                 }
               }
@@ -77,8 +89,20 @@
                   "name": {
                     "description": "The updated name of the hook."
                   },
+                  "event": {
+                    "deprecated": true,
+                    "description": "Use `events` instead."
+                  },
                   "events": {
                     "description": "An array of updated hook events."
+                  },
+                  "config": {
+                    "properties": {
+                      "retries": {
+                        "deprecated": true,
+                        "description": "Now the retry times is fixed to 3. Keep for backward compatibility."
+                      }
+                    }
                   }
                 }
               }
@@ -128,11 +152,21 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "event": {
+                    "deprecated": true,
+                    "description": "Use `events` instead."
+                  },
                   "events": {
                     "description": "An array of hook events for testing."
                   },
                   "config": {
-                    "description": "The hook configuration for testing."
+                    "description": "The hook configuration for testing.",
+                    "properties": {
+                      "retries": {
+                        "deprecated": true,
+                        "description": "Now the retry times is fixed to 3. Keep for backward compatibility."
+                      }
+                    }
                   }
                 }
               }
