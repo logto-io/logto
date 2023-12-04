@@ -55,14 +55,10 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
   const isLoading = !data && !error;
 
-  const { standardProviders, enterpriseProviders } = useMemo(
-    () => categorizeSsoConnectorProviders(data),
-    [data]
-  );
+  const { standardProviders, enterpriseProviders } = categorizeSsoConnectorProviders(data);
 
-  const radioGroupSize = useMemo(
-    () => getConnectorRadioGroupSize(standardProviders.length + enterpriseProviders.length),
-    [standardProviders, enterpriseProviders]
+  const radioGroupSize = getConnectorRadioGroupSize(
+    standardProviders.length + enterpriseProviders.length
   );
 
   const isAnyConnectorSelected = useMemo(
