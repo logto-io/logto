@@ -1,7 +1,7 @@
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import { jsonObjectGuard, userInfoSelectFields, userProfileResponseGuard } from '@logto/schemas';
 import { conditional, pick, yes } from '@silverhand/essentials';
-import { boolean, literal, object, string } from 'zod';
+import { boolean, literal, object, string, array } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword, verifyUserPassword } from '#src/libraries/user.js';
@@ -33,7 +33,7 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
     koaGuard({
       params: object({ userId: string() }),
       query: object({ includeSsoIdentities: string().optional() }),
-      response: userProfileResponseGuard,
+      response: userProfileResponseGuard.or(array(userProfileResponseGuard)),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -41,10 +41,9 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
         params: { userId },
         query: { includeSsoIdentities },
       } = ctx.guard;
-
-      const user = await findUserById(userId);
-
-      ctx.body = {
++     const ids = userId.split(',');
++     const users = await findUsersByIds(ids);
++     const selected = users.map((user) => ({
         ...pick(user, ...userInfoSelectFields),
         ...conditional(
           includeSsoIdentities &&
@@ -52,7 +51,9 @@ export default function adminUserBasicsRoutes<T extends AuthedRouter>(...args: R
               ssoIdentities: await userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
             }
         ),
-      };
+      }));
+
+      ctx.body = selected.length === 1 ? selected[0] : selected;
 
       return next();
     }
