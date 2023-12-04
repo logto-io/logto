@@ -24,7 +24,7 @@
     "/api/sso-connectors": {
       "get": {
         "summary": "List SSO connectors",
-        "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector provider's data will be attached.",
         "responses": {
           "200": {
             "description": "An array of SSO connectors."
@@ -33,7 +33,7 @@
       },
       "post": {
         "summary": "Create SSO connector",
-        "description": "Create an new SSO connector by a specified connector factory.",
+        "description": "Create an new SSO connector instance for a given provider.",
         "responses": {
           "200": {
             "description": "The created SSO connector."
@@ -47,7 +47,7 @@
     "/api/sso-connectors/{id}": {
       "get": {
         "summary": "Get SSO connector",
-        "description": "Get SSO connector data by ID. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector factory's data will be attached.",
+        "description": "Get SSO connector data by ID. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector provider's data will be attached.",
         "responses": {
           "200": {
             "description": "The SSO connector data with the given ID."
