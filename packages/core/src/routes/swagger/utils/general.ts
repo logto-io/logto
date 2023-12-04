@@ -21,7 +21,7 @@ const tagMap = new Map([
   ['logs', 'Audit logs'],
   ['sign-in-exp', 'Sign-in experience'],
   ['sso-connectors', 'SSO connectors'],
-  ['sso-connector-factories', 'SSO connector factories'],
+  ['sso-connector-providers', 'SSO connector providers'],
   ['.well-known', 'Well-known'],
 ]);
 

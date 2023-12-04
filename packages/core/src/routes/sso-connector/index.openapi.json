@@ -16,7 +16,7 @@
         "description": "Get a complete list of supported SSO connector providers.",
         "responses": {
           "200": {
-            "description": "Returns a list of supported SSO connector provider data."
+            "description": "A list of SSO provider data."
           }
         }
       }
@@ -27,7 +27,7 @@
         "description": "Get SSO connectors with pagination. In addition to the raw SSO connector data, a copy of fetched or parsed IdP configs and a copy of connector provider's data will be attached.",
         "responses": {
           "200": {
-            "description": "An array of SSO connectors."
+            "description": "A list of SSO connectors."
           }
         }
       },
