@@ -55,6 +55,7 @@
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",
     "etag": "^1.8.1",
+    "fast-xml-parser": "^4.2.5",
     "find-up": "^6.3.0",
     "got": "^13.0.0",
     "hash-wasm": "^4.9.0",

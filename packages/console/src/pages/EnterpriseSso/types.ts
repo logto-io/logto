@@ -31,9 +31,12 @@ export type OidcGuideFormType = {
   scope?: string;
 };
 
-export type GuideFormType<T extends SsoProviderName> = T extends SsoProviderName.OIDC
+export type GuideFormType<T extends SsoProviderName> = T extends
+  | SsoProviderName.OIDC
+  | SsoProviderName.GOOGLE_WORKSPACE
+  | SsoProviderName.OKTA
   ? OidcGuideFormType
-  : T extends SsoProviderName.SAML
+  : T extends SsoProviderName.SAML | SsoProviderName.AZURE_AD
   ? SamlGuideFormType
   : never;
 
