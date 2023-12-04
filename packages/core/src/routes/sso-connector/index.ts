@@ -65,20 +65,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     async (ctx, next) => {
       const { locale } = ctx;
       const factories = Object.values(ssoConnectorFactories);
-      const standardConnectors = new Set<SsoConnectorProviderDetail>();
-      const providerConnectors = new Set<SsoConnectorProviderDetail>();
+
+      const standardProviders = new Set<SsoConnectorProviderDetail>();
+      const enterpriseProviders = new Set<SsoConnectorProviderDetail>();
 
       for (const factory of factories) {
         if (standardSsoConnectorProviders.includes(factory.providerName)) {
-          standardConnectors.add(parseFactoryDetail(factory, locale));
+          standardProviders.add(parseFactoryDetail(factory, locale));
         } else {
-          providerConnectors.add(parseFactoryDetail(factory, locale));
+          enterpriseProviders.add(parseFactoryDetail(factory, locale));
         }
       }
 
       ctx.body = {
-        standardConnectors: [...standardConnectors],
-        providerConnectors: [...providerConnectors],
+        standardProviders: [...standardProviders],
+        enterpriseProviders: [...enterpriseProviders],
       };
 
       return next();

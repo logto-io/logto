@@ -19,15 +19,16 @@ describe('sso-connector library', () => {
   it('should return sso-connector-providers', async () => {
     const response = await getSsoConnectorFactories();
 
-    expect(response).toHaveProperty('standardConnectors');
-    expect(response).toHaveProperty('providerConnectors');
+    expect(response).toHaveProperty('standardProviders');
+    expect(response).toHaveProperty('enterpriseProviders');
 
-    expect(response.standardConnectors.length).toBe(2);
+    expect(response.standardProviders.length).toBe(2);
+
     expect(
-      response.standardConnectors.find(({ providerName }) => providerName === 'OIDC')
+      response.standardProviders.find(({ providerName }) => providerName === 'OIDC')
     ).toBeDefined();
     expect(
-      response.standardConnectors.find(({ providerName }) => providerName === 'SAML')
+      response.standardProviders.find(({ providerName }) => providerName === 'SAML')
     ).toBeDefined();
   });
 });

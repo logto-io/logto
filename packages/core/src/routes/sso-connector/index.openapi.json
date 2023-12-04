@@ -5,15 +5,14 @@
       "description": "Endpoints for managing single sign-on (SSO) connectors. Your sign-in experience can use these well-configured SSO connectors to authenticate users and sync user attributes from external identity providers (IdPs).\n\nSSO connectors are created by SSO connector factories."
     },
     {
-      "name": "SSO connector factories",
-      "description": "Endpoints for SSO (single sign-on) connector factories.\n\nSSO connector factories provide the metadata and configuration templates for creating SSO connectors."
+      "name": "SSO connector providers",
+      "description": "Endpoints for SSO (single sign-on) connector providers.\n\nSSO connector providers provide the metadata and configuration templates for creating SSO connectors."
     }
   ],
   "paths": {
     "/api/sso-connector-providers": {
-      "description": "APIs for supported SSO (single sign-on) connector providers. SSO connector providers are used to create SSO connector entities.",
       "get": {
-        "summary": "Get all supported SSO connector provider details",
+        "summary": "List all supported SSO connector provider details",
         "description": "Get a complete list of supported SSO connector providers, including the standard ones like OIDC and SAML, and enterprise providers such as Google Workspace and Okta.",
         "responses": {
           "200": {

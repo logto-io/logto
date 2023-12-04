@@ -54,19 +54,19 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
   const isLoading = !data && !error;
 
-  const { standardConnectors = [], providerConnectors = [] } = data ?? {};
+  const { standardProviders = [], enterpriseProviders = [] } = data ?? {};
 
   const radioGroupSize = useMemo(
-    () => getConnectorRadioGroupSize(standardConnectors.length + providerConnectors.length),
-    [standardConnectors, providerConnectors]
+    () => getConnectorRadioGroupSize(standardProviders.length + enterpriseProviders.length),
+    [standardProviders, enterpriseProviders]
   );
 
   const isAnyConnectorSelected = useMemo(
     () =>
-      [...standardConnectors, ...providerConnectors].some(
+      [...standardProviders, ...enterpriseProviders].some(
         ({ providerName }) => selectedProviderName === providerName
       ),
-    [providerConnectors, selectedProviderName, standardConnectors]
+    [enterpriseProviders, selectedProviderName, standardProviders]
   );
 
   // `rawOnClose` does not clean the state of the modal.
@@ -141,9 +141,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
         {isLoading && <Skeleton numberOfLoadingConnectors={2} />}
         {error?.message}
         <SsoConnectorRadioGroup
-          name="providerConnectors"
+          name="enterpriseProviders"
           value={selectedProviderName}
-          connectors={providerConnectors}
+          connectors={enterpriseProviders}
           size={radioGroupSize}
           onChange={handleSsoSelection}
         />
@@ -151,9 +151,9 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
           <DynamicT forKey="enterprise_sso.create_modal.text_divider" />
         </div>
         <SsoConnectorRadioGroup
-          name="standardConnectors"
+          name="standardProviders"
           value={selectedProviderName}
-          connectors={standardConnectors}
+          connectors={standardProviders}
           size={radioGroupSize}
           onChange={handleSsoSelection}
         />
