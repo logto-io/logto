@@ -3,28 +3,20 @@ import { generateStandardShortId } from '@logto/shared/universal';
 import { conditional, type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import Close from '@/assets/icons/close.svg';
 import IconButton from '@/ds-components/IconButton';
-import Tag, { type Props as TagProps } from '@/ds-components/Tag';
+import Tag from '@/ds-components/Tag';
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import { domainRegExp } from './consts';
 import * as styles from './index.module.scss';
+import { domainOptionsParser, type Option } from './utils';
 
-export type Option = {
-  /**
-   * Generate a random unique id for each option to handle deletion.
-   * Sometimes we may have options with the same value, which is allowed when inputting but prohibited when submitting.
-   */
-  id: string;
-  value: string;
-  /**
-   * The `status` is used to indicate the status of the domain item (could fall into following categories):
-   * - undefined: valid domain
-   * - 'info': duplicated domain or blocked domain, see {@link packages/schemas/src/utils/domain.ts}.
-   */
-  status?: Extract<TagProps['status'], 'info'>;
+export type DomainsFormType = {
+  domains: Option[];
 };
 
 type Props = {
@@ -35,15 +27,20 @@ type Props = {
   placeholder?: AdminConsoleKey;
 };
 
-// RegExp to domain string.
-// eslint-disable-next-line prefer-regex-literals
-export const domainRegExp = new RegExp('\\S+[\\.]{1}\\S+');
-
-function MultiInput({ className, values, onChange, error, placeholder }: Props) {
+function DomainsInput({ className, values, onChange: rawOnChange, error, placeholder }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { setError } = useFormContext<DomainsFormType>();
+
+  const onChange = (values: Option[]) => {
+    const { values: parsedValues, errorMessage } = domainOptionsParser(values);
+    if (errorMessage) {
+      setError('domains', { type: 'custom', message: errorMessage });
+    }
+    rawOnChange(parsedValues);
+  };
 
   const handleAdd = (value: string) => {
     const newValues: Option[] = [
@@ -158,4 +155,4 @@ function MultiInput({ className, values, onChange, error, placeholder }: Props) 
   );
 }
 
-export default MultiInput;
+export default DomainsInput;

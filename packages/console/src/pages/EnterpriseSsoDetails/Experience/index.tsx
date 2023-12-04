@@ -2,12 +2,10 @@ import {
   type SsoConnector,
   type SsoConnectorWithProviderConfig,
   type RequestErrorBody,
-  findDuplicatedOrBlockedEmailDomains,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared/universal';
-import { conditional, conditionalArray, conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import cleanDeep from 'clean-deep';
-import { t as globalTranslate } from 'i18next';
 import { HTTPError } from 'ky';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -26,8 +24,14 @@ import { SyncProfileMode } from '@/types/connector';
 import { trySubmitSafe } from '@/utils/form';
 import { uriValidator } from '@/utils/validator';
 
+import DomainsInput, { type DomainsFormType } from './DomainsInput';
+import {
+  duplicatedDomainsErrorCode,
+  forbiddenDomainsErrorCode,
+  invalidDomainFormatErrorCode,
+} from './DomainsInput/consts';
+import { domainOptionsParser } from './DomainsInput/utils';
 import LogosUploader from './LogosUploader';
-import MultiInput, { type Option as MultiInputOption, domainRegExp } from './MultiInput';
 import * as styles from './index.module.scss';
 
 type DataType = Pick<
@@ -42,14 +46,10 @@ type Props = {
   isDarkModeEnabled: boolean;
 };
 
-export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> & {
-  syncProfile: SyncProfileMode;
-  domains: MultiInputOption[];
-};
-
-const duplicatedDomainsErrorCode = 'single_sign_on.duplicated_domains';
-const forbiddenDomainsErrorCode = 'single_sign_on.forbidden_domains';
-const invalidDomainFormatErrorCode = 'single_sign_on.invalid_domain_format';
+export type FormType = Pick<SsoConnector, 'branding' | 'connectorName'> &
+  DomainsFormType & {
+    syncProfile: SyncProfileMode;
+  };
 
 const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name';
 
@@ -192,69 +192,20 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
                   if (value.length === 0) {
                     return t('enterprise_sso_details.email_domain_field_required');
                   }
+                  const { errorMessage } = domainOptionsParser(value);
+                  if (errorMessage) {
+                    return errorMessage;
+                  }
                   return true;
                 },
               }}
               render={({ field: { onChange, value } }) => (
-                <MultiInput
+                <DomainsInput
                   values={value}
                   // Per previous error handling on submitting, error message will be truthy.
                   error={errors.domains?.message}
                   placeholder="enterprise_sso_details.email_domain_field_placeholder"
-                  onChange={(values) => {
-                    const { duplicatedDomains, forbiddenDomains } =
-                      findDuplicatedOrBlockedEmailDomains(values.map((domain) => domain.value));
-                    const isAnyDomainInvalid = values.some(
-                      ({ value }) => !domainRegExp.test(value)
-                    );
-
-                    // Show error message and update the inputs' status for error display.
-                    if (
-                      duplicatedDomains.size > 0 ||
-                      forbiddenDomains.size > 0 ||
-                      isAnyDomainInvalid
-                    ) {
-                      onChange(
-                        values.map(({ status, ...rest }) => ({
-                          ...rest,
-                          ...conditional(
-                            (duplicatedDomains.has(rest.value) ||
-                              forbiddenDomains.has(rest.value) ||
-                              !domainRegExp.test(rest.value)) && {
-                              status: 'info',
-                            }
-                          ),
-                        }))
-                      );
-                      setError('domains', {
-                        type: 'custom',
-                        message: conditionalArray(
-                          conditionalString(
-                            duplicatedDomains.size > 0 &&
-                              globalTranslate(`errors:${duplicatedDomainsErrorCode}`)
-                          ),
-                          conditionalString(
-                            forbiddenDomains.size > 0 &&
-                              globalTranslate(`errors:${forbiddenDomainsErrorCode}`)
-                          ),
-                          conditionalString(
-                            isAnyDomainInvalid &&
-                              globalTranslate(`errors:${invalidDomainFormatErrorCode}`)
-                          )
-                        ).join(' '),
-                      });
-                      return;
-                    }
-
-                    // Should clear the current field's error message and clear error status for input options when there is no error.
-                    onChange(
-                      values.map((domain) => {
-                        const { status, ...rest } = domain;
-                        return rest;
-                      })
-                    );
-                    clearErrors('domains');
-                  }}
+                  onChange={onChange}
                 />
               )}
             />
