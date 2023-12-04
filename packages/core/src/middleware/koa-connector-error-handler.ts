@@ -28,6 +28,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         case ConnectorErrorCodes.InvalidRequestParameters:
         case ConnectorErrorCodes.InsufficientRequestParameters:
         case ConnectorErrorCodes.InvalidConfig:
+        case ConnectorErrorCodes.InvalidCertificate:
         case ConnectorErrorCodes.InvalidResponse: {
           throw new RequestError({ code: `connector.${code}`, status: 400 }, data);
         }

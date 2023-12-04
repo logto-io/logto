@@ -4,6 +4,7 @@ import { type JsonObject } from '@logto/schemas';
 export enum SsoConnectorErrorCodes {
   InvalidMetadata = 'invalid_metadata',
   InvalidConfig = 'invalid_config',
+  InvalidCertificate = 'invalid_certificate',
   AuthorizationFailed = 'authorization_failed',
   InvalidResponse = 'invalid_response',
   InvalidRequestParameters = 'invalid_request_parameters',
@@ -18,6 +19,7 @@ export enum SsoConnectorConfigErrorCodes {
 const connectorErrorCodeMap: { [key in SsoConnectorErrorCodes]: ConnectorErrorCodes } = {
   [SsoConnectorErrorCodes.InvalidMetadata]: ConnectorErrorCodes.InvalidMetadata,
   [SsoConnectorErrorCodes.InvalidConfig]: ConnectorErrorCodes.InvalidConfig,
+  [SsoConnectorErrorCodes.InvalidCertificate]: ConnectorErrorCodes.InvalidCertificate,
   [SsoConnectorErrorCodes.InvalidResponse]: ConnectorErrorCodes.InvalidResponse,
   [SsoConnectorErrorCodes.InvalidRequestParameters]: ConnectorErrorCodes.InvalidRequestParameters,
   [SsoConnectorErrorCodes.AuthorizationFailed]: ConnectorErrorCodes.AuthorizationFailed,
@@ -33,6 +35,14 @@ export class SsoConnectorError extends ConnectorError {
     code: SsoConnectorErrorCodes.InvalidConfig,
     data: {
       message: SsoConnectorConfigErrorCodes;
+      config: JsonObject | undefined;
+      error?: unknown;
+    }
+  );
+
+  constructor(
+    code: SsoConnectorErrorCodes.InvalidCertificate,
+    data: {
       config: JsonObject | undefined;
       error?: unknown;
     }

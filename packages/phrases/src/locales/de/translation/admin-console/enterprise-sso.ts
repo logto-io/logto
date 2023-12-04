@@ -88,6 +88,8 @@ const enterprise_sso = {
       certificate_field_name: 'Signing certificate',
       /** UNTRANSLATED */
       certificate_placeholder: 'Copy and paste the x509 certificate',
+      /** UNTRANSLATED */
+      certificate_required: 'Signing certificate is required.',
     },
     oidc: {
       /** UNTRANSLATED */

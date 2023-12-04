@@ -1,7 +1,8 @@
+import { type AdminConsoleKey } from '@logto/phrases';
 import { Theme } from '@logto/schemas';
 import { useCallback } from 'react';
-import { useDropzone, type FileRejection } from 'react-dropzone';
-import { useFormContext } from 'react-hook-form';
+import { useDropzone, type FileRejection, type Accept } from 'react-dropzone';
+import { type FieldError } from 'react-hook-form';
 
 import Delete from '@/assets/icons/delete.svg';
 import FileIconDark from '@/assets/icons/file-icon-dark.svg';
@@ -11,29 +12,29 @@ import Button from '@/ds-components/Button';
 import IconButton from '@/ds-components/IconButton';
 import useTheme from '@/hooks/use-theme';
 
-import { type SamlGuideFormType } from '../../../EnterpriseSso/types';
-import { calculateXmlFileSize } from '../SamlMetadataForm/utils';
+import { calculateFileSize } from '../SamlMetadataForm/utils';
 
 import * as styles from './index.module.scss';
 
-const xmlMimeTypes = ['application/xml', 'text/xml'];
-const xmlFileName = 'identity provider metadata.xml'; // Real file name does not matter, use a generic name.
-const xmlFileSizeLimit = 500 * 1024; // 500 KB
+const fileSizeLimit = 500 * 1024; // 500 KB
 
-type Props = {
-  onChange: (xmlContent?: string) => void;
+export type Props = {
+  onChange: (fileContent?: string) => void;
   value?: string;
+  attributes: {
+    accept: Accept; // File reader accepted file types.
+    buttonTitle: AdminConsoleKey; // I18n key for the button title.
+    defaultFilename: string; // Default file name.
+    defaultFileMimeType: string; // Default file MIME type when calculating the file size.
+  };
+  fieldError?: FieldError;
+  setError: (error: FieldError) => void;
 };
 
-function XmlFileReader({ onChange, value }: Props) {
+function FileReader({ onChange, value, attributes, fieldError, setError }: Props) {
   const theme = useTheme();
 
-  const {
-    setError,
-    formState: {
-      errors: { metadata: metadataError },
-    },
-  } = useFormContext<SamlGuideFormType>();
+  const { accept, buttonTitle, defaultFilename, defaultFileMimeType } = attributes;
 
   /**
    * As you can see, per `useDropzone` hook's config, there are at most one file, if file is rejected, then we can return as long as we get the error message.
@@ -43,7 +44,7 @@ function XmlFileReader({ onChange, value }: Props) {
       if (fileRejection.length > 0) {
         const fileErrors = fileRejection[0]?.errors;
         if (fileErrors?.[0]?.message) {
-          setError('metadata', {
+          setError({
             type: 'custom',
             message: fileErrors[0]?.message,
           });
@@ -56,8 +57,8 @@ function XmlFileReader({ onChange, value }: Props) {
         return;
       }
 
-      const xmlContent = await acceptedFile.text();
-      onChange(xmlContent);
+      const fileContent = await acceptedFile.text();
+      onChange(fileContent);
     },
     [onChange, setError]
   );
@@ -70,22 +71,22 @@ function XmlFileReader({ onChange, value }: Props) {
     onDrop,
     noDrag: true, // Only allow file selection via the file input.
     maxFiles: 1,
-    maxSize: xmlFileSizeLimit,
+    maxSize: fileSizeLimit,
     multiple: false, // Upload only one file at a time.
-    accept: Object.fromEntries(xmlMimeTypes.map((mimeType) => [mimeType, []])),
+    accept,
   });
 
   return (
     <div>
       {value ? (
         <div className={styles.preview}>
-          {theme === Theme.Dark ? <FileIcon /> : <FileIconDark />}
+          {theme === Theme.Dark ? <FileIconDark /> : <FileIcon />}
           <div className={styles.fileInfo}>
-            <span className={styles.fileName}>{xmlFileName}</span>
+            <span className={styles.fileName}>{defaultFilename}</span>
             {/* Not using `File.size` since the file content (variable `value` in this case) is stored in DB in string type */}
-            <span className={styles.fileSize}>{`${(calculateXmlFileSize(value) / 1024).toFixed(
-              2
-            )} KB`}</span>
+            <span className={styles.fileSize}>{`${(
+              calculateFileSize(value, defaultFilename, defaultFileMimeType) / 1024
+            ).toFixed(2)} KB`}</span>
           </div>
           <IconButton
             className={styles.delete}
@@ -99,18 +100,14 @@ function XmlFileReader({ onChange, value }: Props) {
       ) : (
         <>
           <div {...getRootProps()}>
-            <Button
-              icon={<UploaderIcon />}
-              title="enterprise_sso_details.upload_idp_metadata_button_text"
-              size="large"
-            />
+            <Button icon={<UploaderIcon />} title={buttonTitle} size="large" />
             <input {...getInputProps({ className: styles.fileInput })} />
           </div>
-          {Boolean(metadataError) && <div className={styles.error}>{metadataError?.message}</div>}
+          {Boolean(fieldError) && <div className={styles.error}>{fieldError?.message}</div>}
         </>
       )}
     </div>
   );
 }
 
-export default XmlFileReader;
+export default FileReader;

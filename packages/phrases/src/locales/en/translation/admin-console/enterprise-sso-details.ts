@@ -43,6 +43,7 @@ const enterprise_sso_details = {
   upload_idp_metadata_description_oidc:
     'Configure the credentials and OIDC token information copied from the identity provider.',
   upload_idp_metadata_button_text: 'Upload metadata XML file',
+  upload_signing_certificate_button_text: 'Upload signing certificate file',
   configure_domain_field_info_text:
     'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
   email_domain_field_required: 'Email domain is required to enable enterprise SSO.',

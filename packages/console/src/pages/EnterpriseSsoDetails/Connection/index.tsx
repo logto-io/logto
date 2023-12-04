@@ -33,13 +33,7 @@ type Props<T extends SsoProviderName> = {
 // This component contains only `data.config`.
 function Connection<T extends SsoProviderName>({ isDeleted, data, onUpdated }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    id: ssoConnectorId,
-    connectorName: ssoConnectorName,
-    providerName,
-    providerConfig,
-    config,
-  } = data;
+  const { id: ssoConnectorId, providerName, providerConfig, config } = data;
 
   const api = useApi();
 

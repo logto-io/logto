@@ -15,51 +15,66 @@ type Props = {
   identityProviderConfig: ParsedSsoIdentityProviderConfig<SsoProviderName.SAML>['identityProvider'];
 };
 
+type CertificatePreviewProps = {
+  identityProviderConfig: {
+    x509Certificate: string;
+    certificateExpiresAt: number;
+    isCertificateValid: boolean;
+  };
+  className?: string;
+};
+
+export function CertificatePreview({
+  identityProviderConfig: { x509Certificate, certificateExpiresAt, isCertificateValid },
+  className,
+}: CertificatePreviewProps) {
+  const { language } = i18next;
+  return (
+    <div className={classNames(styles.certificatePreview, className)}>
+      <div className={classNames(styles.indicator, !isCertificateValid && styles.errorStatus)} />
+      <DynamicT
+        forKey="enterprise_sso_details.saml_preview.certificate_content"
+        interpolation={{
+          date: new Date(certificateExpiresAt).toLocaleDateString(
+            // TODO: @darcyYe check whether can use date-fns later, may need a Logto locale to date-fns locale mapping.
+            conditional(isLanguageTag(language) && language) ?? 'en',
+            {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }
+          ),
+        }}
+      />
+      <CopyToClipboard className={styles.copyToClipboard} variant="icon" value={x509Certificate} />
+    </div>
+  );
+}
+
 function ParsedConfigPreview({ identityProviderConfig }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.enterprise_sso_details.saml_preview',
   });
-  const { language } = i18next;
 
   if (!identityProviderConfig) {
     return null;
   }
 
-  const { entityId, signInEndpoint, x509Certificate, expiresAt, isValid } = identityProviderConfig;
   return (
     <div className={styles.container}>
       <div>
         <div className={styles.title}>{t('sign_on_url')}</div>
-        <div className={styles.content}>{signInEndpoint}</div>
+        <div className={styles.content}>{identityProviderConfig.signInEndpoint}</div>
       </div>
       <div>
         <div className={styles.title}>{t('entity_id')}</div>
-        <div className={styles.content}>{entityId}</div>
+        <div className={styles.content}>{identityProviderConfig.entityId}</div>
       </div>
       <div>
         <div className={styles.title}>{t('x509_certificate')}</div>
         <div className={styles.content}>
-          <div className={classNames(styles.indicator, !isValid && styles.errorStatus)} />
-          <DynamicT
-            forKey="enterprise_sso_details.saml_preview.certificate_content"
-            interpolation={{
-              date: new Date(expiresAt).toLocaleDateString(
-                // TODO: check if Logto's language tags are compatible.
-                conditional(isLanguageTag(language) && language) ?? 'en',
-                {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                }
-              ),
-            }}
-          />
-          <CopyToClipboard
-            className={styles.copyToClipboard}
-            variant="icon"
-            value={x509Certificate}
-          />
+          <CertificatePreview identityProviderConfig={identityProviderConfig} />
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ export enum ConnectorErrorCodes {
   InvalidRequestParameters = 'invalid_request_parameters',
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',
+  InvalidCertificate = 'invalid_certificate',
   InvalidResponse = 'invalid_response',
   /** The template is not found for the given type. */
   TemplateNotFound = 'template_not_found',
