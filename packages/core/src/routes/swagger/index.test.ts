@@ -72,6 +72,7 @@ describe('GET /swagger.json', () => {
     const testTagRouter = new Router();
     testTagRouter.get('/mock', () => ({}));
     testTagRouter.put('/.well-known', () => ({}));
+    testTagRouter.put('/sso-connectors', () => ({}));
     const swaggerRequest = createSwaggerRequest([testTagRouter]);
 
     const response = await swaggerRequest.get('/swagger.json');
@@ -80,7 +81,10 @@ describe('GET /swagger.json', () => {
         get: { tags: ['Mock'] },
       },
       '/api/.well-known': {
-        put: { tags: ['Well known'] },
+        put: { tags: ['Well-known'] },
+      },
+      '/api/sso-connectors': {
+        put: { tags: ['SSO connectors'] },
       },
     });
   });

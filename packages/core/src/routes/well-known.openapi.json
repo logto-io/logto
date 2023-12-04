@@ -1,22 +1,11 @@
 {
   "tags": [
     {
-      "name": "Well-Known",
+      "name": "Well-known",
       "description": "Well-Known routes provide information and resources that can be discovered by clients without the need for authentication."
     }
   ],
   "paths": {
-    "/api/.well-known/endpoints/{tenantId}": {
-      "get": {
-        "summary": "Get tenant endpoint",
-        "description": "Get the endpoint for the specified tenant.",
-        "responses": {
-          "200": {
-            "description": "The tenant endpoint."
-          }
-        }
-      }
-    },
     "/api/.well-known/sign-in-exp": {
       "get": {
         "summary": "Get full sign-in experience",

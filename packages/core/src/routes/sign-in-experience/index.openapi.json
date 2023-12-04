@@ -1,7 +1,7 @@
 {
   "tags": [
     {
-      "name": "Sign in exp",
+      "name": "Sign-in experience",
       "description": "Set the Sign-in experience configuration to customize your sign-in experience."
     }
   ],
@@ -24,10 +24,10 @@
                       "description": "The language detection policy for the sign-in page."
                     },
                     "signIn": {
-                      "description": "Sign-in method settings"
+                      "description": "Sign-in method settings."
                     },
                     "signUp": {
-                      "description": "Sign-up method settings",
+                      "description": "Sign-up method settings.",
                       "properties": {
                         "identifiers": {
                           "description": "Allowed identifiers when signing-up."
