@@ -3214,6 +3214,9 @@ importers:
       etag:
         specifier: ^1.8.1
         version: 1.8.1
+      fast-xml-parser:
+        specifier: ^4.2.5
+        version: 4.3.2
       find-up:
         specifier: ^6.3.0
         version: 6.3.0

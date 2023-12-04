@@ -1,4 +1,5 @@
 import { type Optional } from '@silverhand/essentials';
+import { XMLValidator } from 'fast-xml-parser';
 import * as saml from 'samlify';
 import { z } from 'zod';
 
@@ -240,10 +241,26 @@ class SamlConnector {
     const idpMetadataXml = await this.getIdpMetadataXml();
 
     if (idpMetadataXml) {
-      // eslint-disable-next-line new-cap
-      this._identityProvider = saml.IdentityProvider({
-        metadata: idpMetadataXml,
-      });
+      // Samlify validator swallows the error, validate the XML metadata on our own.
+      // Other appearance of SAML metadata validator is using '@authenio/samlify-node-xmllint',
+      // but this validator failed to resolve a valid XML file. Align the use of validator later on.
+      try {
+        XMLValidator.validate(idpMetadataXml, {
+          allowBooleanAttributes: true,
+        });
+      } catch (error: unknown) {
+        throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidMetadata, {
+          message: SsoConnectorConfigErrorCodes.InvalidSamlXmlMetadata,
+          metadata: idpMetadataXml,
+          error,
+        });
+      }
+
+      this._identityProvider =
+        // eslint-disable-next-line new-cap
+        saml.IdentityProvider({
+          metadata: idpMetadataXml,
+        });
       return this._identityProvider;
     }
 

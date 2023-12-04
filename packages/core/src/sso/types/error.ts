@@ -11,6 +11,7 @@ export enum SsoConnectorErrorCodes {
 }
 
 export enum SsoConnectorConfigErrorCodes {
+  InvalidSamlXmlMetadata = 'invalid_saml_xml_metadata',
   InvalidConfigResponse = 'invalid_config_response',
   FailToFetchConfig = 'fail_to_fetch_config',
   InvalidConnectorConfig = 'invalid_connector_config',
