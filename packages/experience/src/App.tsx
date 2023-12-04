@@ -8,10 +8,7 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import SingleSignOnContextProvider from './Providers/SingleSignOnContextProvider';
-import {
-  isDevFeaturesEnabled as isDevelopmentFeaturesEnabled,
-  singleSignOnPath,
-} from './constants/env';
+import { singleSignOnPath } from './constants/env';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
@@ -113,13 +110,11 @@ const App = () => {
                       <Route path="callback/:connectorId" element={<Callback />} />
                     </Route>
 
-                    {/* Single sign on */}
-                    {isDevelopmentFeaturesEnabled && (
-                      <Route path={singleSignOnPath} element={<LoadingLayerProvider />}>
-                        <Route path="email" element={<SingleSignOnEmail />} />
-                        <Route path="connectors" element={<SingleSignOnConnectors />} />
-                      </Route>
-                    )}
+                    {/* Single sign-on */}
+                    <Route path={singleSignOnPath} element={<LoadingLayerProvider />}>
+                      <Route path="email" element={<SingleSignOnEmail />} />
+                      <Route path="connectors" element={<SingleSignOnConnectors />} />
+                    </Route>
 
                     <Route path="*" element={<ErrorPage />} />
                   </Route>
