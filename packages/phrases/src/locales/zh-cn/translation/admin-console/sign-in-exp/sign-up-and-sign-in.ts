@@ -53,7 +53,7 @@ const sign_up_and_sign_in = {
     enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
     /** UNTRANSLATED */
     enable_single_sign_on_description:
-      'Enable or disallow enterprise SSO. Users can activate the SSO process through an email sign-in or the SSO button, if their email domain is identified as SSO-enabled.',
+      'Enable users to sign into the application using Single Sign-On with their enterprise identities.',
     single_sign_on_hint: {
       /** UNTRANSLATED */
       prefix: 'Go to ',
