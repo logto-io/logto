@@ -35,6 +35,7 @@ export default function koaInteractionHooks<
     const {
       interactionDetails,
       header: { 'user-agent': userAgent },
+      ip,
     } = ctx;
 
     // Predefined interaction hook context
@@ -42,6 +43,7 @@ export default function koaInteractionHooks<
       event,
       sessionId: interactionDetails.jti,
       applicationId: conditionalString(interactionDetails.params.client_id),
+      userIp: ip,
     };
 
     // eslint-disable-next-line @silverhand/fp/no-let

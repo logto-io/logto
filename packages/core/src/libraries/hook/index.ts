@@ -27,6 +27,7 @@ export type InteractionHookContext = {
   event: InteractionEvent;
   sessionId?: string;
   applicationId?: string;
+  userIp?: string;
 };
 
 /**
@@ -59,7 +60,7 @@ export const createHookLibrary = (queries: Queries) => {
     userAgent?: string
   ) => {
     const { userId } = interactionResult;
-    const { event, sessionId, applicationId } = interactionContext;
+    const { event, sessionId, applicationId, userIp } = interactionContext;
 
     const hookEvent = eventToHook[event];
     const found = await findAllHooks();
@@ -84,6 +85,7 @@ export const createHookLibrary = (queries: Queries) => {
       sessionId,
       userAgent,
       userId,
+      userIp,
       user: user && pick(user, ...userInfoSelectFields),
       application: application && pick(application, 'id', 'type', 'name', 'description'),
     } satisfies Omit<HookEventPayload, 'hookId'>;
