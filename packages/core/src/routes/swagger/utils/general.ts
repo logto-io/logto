@@ -6,6 +6,8 @@ import { isKeyInObject, type Optional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { z } from 'zod';
 
+import { consoleLog } from '#src/utils/console.js';
+
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 /**
@@ -140,5 +142,62 @@ export const validateSupplement = (
       new Map(Object.entries(original.paths)),
       new Map(Object.entries(supplement.paths))
     );
+  }
+};
+
+/**
+ * Check if the given OpenAPI document is valid for being served as the swagger document:
+ *
+ * - Every path + method combination must have a tag, summary, and description.
+ * - Every tag must have a description.
+ *
+ * @throws {TypeError} if the document is invalid.
+ */
+export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
+  for (const [path, operations] of Object.entries(document.paths)) {
+    if (path.startsWith('/api/interaction')) {
+      consoleLog.warn(`Path \`${path}\` is not documented. Do something!`);
+      continue;
+    }
+
+    // This path is for admin tenant only, skip it.
+    if (path === '/api/.well-known/endpoints/{tenantId}') {
+      continue;
+    }
+
+    if (!operations) {
+      continue;
+    }
+
+    for (const method of Object.values(OpenAPIV3.HttpMethods)) {
+      const operation = operations[method];
+
+      if (!operation) {
+        continue;
+      }
+
+      if (Array.isArray(operation)) {
+        throw new TypeError(
+          `Path \`${path}\` and operation \`${method}\` must be an object, not an array.`
+        );
+      }
+
+      assert(
+        operation.tags?.length,
+        `Path \`${path}\` and operation \`${method}\` must have at least one tag.`
+      );
+      assert(
+        operation.summary,
+        `Path \`${path}\` and operation \`${method}\` must have a summary.`
+      );
+      assert(
+        operation.description,
+        `Path \`${path}\` and operation \`${method}\` must have a description.`
+      );
+    }
+
+    for (const tag of document.tags ?? []) {
+      assert(tag.description, `Tag \`${tag.name}\` must have a description.`);
+    }
   }
 };

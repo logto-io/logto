@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Organization roles",
-      "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B."
+      "description": "Organization roles are used to define a set of organization scopes that can be assigned to users. Every organization role is a part of the organization template.\n\nOrganization roles will only be meaningful within an organization context. For example, a user may have an `admin` role for organization A, but not for organization B. See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) to get started with organizations and organization template."
     }
   ],
   "paths": {

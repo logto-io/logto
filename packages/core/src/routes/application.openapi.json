@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Applications",
-      "description": "Application represents a registered software program or service that has been authorized to access user information and perform actions on behalf of users within the system."
+      "description": "Application represents your registered software program or service that has been authorized to access user information and perform actions on behalf of users within the system. Currently, Logto supports four types of applications:\n\n- Traditional web\n\n- Single-page app\n- Native app\n- Machine-to-machine app.\n\nDepending on the application type, it may have different authentication flows and access to the system. See [🔗 Integrate Logto in your application](https://docs.logto.io/docs/recipes/integrate-logto/) to learn more about how to integrate Logto into your application.\n\nRole-based access control (RBAC) is supported for machine-to-machine applications. See [🔐 Role-based access control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) to get started with role-based access control."
     }
   ],
   "paths": {

@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Dashboard",
-      "description": "The APIs that power the dashboard page of Console to show the statistics of the current tenant."
+      "description": "Endpoints that power the dashboard page of Console to show the statistics of the current tenant."
     }
   ],
   "paths": {

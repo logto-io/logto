@@ -1,0 +1,32 @@
+{
+  "tags": [
+    {
+      "name": "User assets",
+      "description": "Endpoints for managing user uploaded assets."
+    }
+  ],
+  "paths": {
+    "/api/user-assets/service-status": {
+      "get": {
+        "summary": "Get service status",
+        "description": "Get user assets service status.",
+        "responses": {
+          "200": {
+            "description": "An object containing the service status and metadata."
+          }
+        }
+      }
+    },
+    "/api/user-assets": {
+      "post": {
+        "summary": "Upload asset",
+        "description": "Upload a user asset.",
+        "responses": {
+          "200": {
+            "description": "An object containing the uploaded asset metadata."
+          }
+        }
+      }
+    }
+  }
+}

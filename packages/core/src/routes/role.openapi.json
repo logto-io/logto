@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Roles",
+      "description": "Role management for API resource RBAC (role-based access control). See [🔐 Role-based access control (RBAC)](https://docs.logto.io/docs/recipes/rbac/) to get started with role-based access control."
+    }
+  ],
   "paths": {
     "/api/roles": {
       "get": {

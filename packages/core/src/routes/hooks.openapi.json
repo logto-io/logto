@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Hooks",
-      "description": "Hook enables you to effortlessly receive real-time updates regarding specific events, such as user registration, sign-in, or password reset."
+      "description": "Hook enables you to effortlessly receive real-time updates regarding specific events, such as user registration, sign-in, or password reset. See [🪝 Webhooks] to get started and learn more."
     }
   ],
   "paths": {

@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Status",
+      "description": "Endpoints for health check."
+    }
+  ],
   "paths": {
     "/api/status": {
       "get": {

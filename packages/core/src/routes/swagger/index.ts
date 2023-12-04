@@ -25,6 +25,7 @@ import {
   findSupplementFiles,
   normalizePath,
   validateSupplement,
+  validateSwaggerDocument,
 } from './utils/general.js';
 import {
   buildParameters,
@@ -220,18 +221,21 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       tags: [...tags].map((tag) => ({ name: tag })),
     };
 
-    if (EnvSet.values.isUnitTest) {
-      consoleLog.warn('Skip validating supplement documents in unit test.');
-    } else {
-      for (const document of supplementDocuments) {
-        validateSupplement(baseDocument, document);
-      }
-    }
-
     const data = supplementDocuments.reduce(
       (document, supplement) => deepmerge(document, supplement, { arrayMerge: mergeParameters }),
       baseDocument
     );
+
+    if (EnvSet.values.isUnitTest) {
+      consoleLog.warn('Skip validating swagger document in unit test.');
+    }
+    // Don't throw for integrity check in production as it has no benefit.
+    else if (!EnvSet.values.isProduction || EnvSet.values.isIntegrationTest) {
+      for (const document of supplementDocuments) {
+        validateSupplement(baseDocument, document);
+      }
+      validateSwaggerDocument(data);
+    }
 
     ctx.body = {
       ...data,

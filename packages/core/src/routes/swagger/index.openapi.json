@@ -1,0 +1,21 @@
+{
+  "tags": [
+    {
+      "name": "Swagger.json",
+      "description": "Endpoints for the Swagger JSON document."
+    }
+  ],
+  "paths": {
+    "/api/swagger.json": {
+      "get": {
+        "summary": "Get Swagger JSON",
+        "description": "The endpoint for the current JSON document. The JSON conforms to the [OpenAPI v3.0.1](https://spec.openapis.org/oas/v3.0.1) (a.k.a. Swagger) specification.",
+        "responses": {
+          "200": {
+            "description": "The JSON document."
+          }
+        }
+      }
+    }
+  }
+}

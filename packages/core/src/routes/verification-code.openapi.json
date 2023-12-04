@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Verification codes",
-      "description": "Endpoints for handling verification codes.\n\nNote: before you call the endpoints, you need to setup your email/SMS connector first."
+      "description": "Endpoints for handling verification codes. It is helpful when building a custom profile page in your app. See [👤 User profile](https://docs.logto.io/docs/recipes/user-profile/#optional-validate-verification-code) for more details.\n\nNote: Before you call the endpoints, you need to setup your email/SMS connector first."
     }
   ],
   "paths": {

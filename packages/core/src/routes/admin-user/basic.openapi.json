@@ -1,4 +1,10 @@
 {
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Endpoints for user management. Including creating, updating, deleting, and querying users with flexible filters. In addition to the endpoints, see [🧑‍🚀 Manage users](https://docs.logto.io/docs/recipes/manage-users/) for more insights."
+    }
+  ],
   "paths": {
     "/api/users/{userId}": {
       "get": {

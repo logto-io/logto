@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Sign-in experience",
-      "description": "Set the Sign-in experience configuration to customize your sign-in experience."
+      "description": "Endpoints for customizing Logto sign-in experience. See [🎨 Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie/) to learn more about how the configuration works and reflects on the user interface."
     }
   ],
   "paths": {
