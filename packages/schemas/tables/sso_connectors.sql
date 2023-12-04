@@ -4,7 +4,7 @@ create table sso_connectors (
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the SSO connector. */
   id varchar(128) not null,
-  /** The connector factory name of the SSO provider. */
+  /** The identifier of connector's SSO provider */
   provider_name varchar(128) not null,
   /** The name of the SSO provider for display. */
   connector_name varchar(128) not null,

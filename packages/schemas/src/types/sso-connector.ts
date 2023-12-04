@@ -48,7 +48,7 @@ export type SupportedSsoConnector = Omit<SsoConnector, 'providerName'> & {
   providerName: SsoProviderName;
 };
 
-const ssoConnectorFactoryDetailGuard = z.object({
+const ssoConnectorProviderDetailGuard = z.object({
   providerName: z.nativeEnum(SsoProviderName),
   logo: z.string(),
   logoDark: z.string(),
@@ -56,21 +56,21 @@ const ssoConnectorFactoryDetailGuard = z.object({
   name: z.string(),
 });
 
-export type SsoConnectorFactoryDetail = z.infer<typeof ssoConnectorFactoryDetailGuard>;
+export type SsoConnectorProviderDetail = z.infer<typeof ssoConnectorProviderDetailGuard>;
 
-export const ssoConnectorFactoriesResponseGuard = z.object({
-  standardConnectors: z.array(ssoConnectorFactoryDetailGuard),
-  providerConnectors: z.array(ssoConnectorFactoryDetailGuard),
+export const ssoConnectorProvidersResponseGuard = z.object({
+  standardConnectors: z.array(ssoConnectorProviderDetailGuard),
+  providerConnectors: z.array(ssoConnectorProviderDetailGuard),
 });
 
-export type SsoConnectorFactoriesResponse = z.infer<typeof ssoConnectorFactoriesResponseGuard>;
+export type SsoConnectorProvidersResponse = z.infer<typeof ssoConnectorProvidersResponseGuard>;
 
 // API response guard for all the SSO connectors CRUD APIs
 export const ssoConnectorWithProviderConfigGuard = SsoConnectors.guard
   .omit({ providerName: true })
   .merge(
     z.object({
-      name: z.string(), // For display purpose, generate from i18n key name defined in factory.
+      name: z.string(), // For display purpose, generate from i18n key name defined by SSO factory.
       providerName: z.nativeEnum(SsoProviderName),
       providerLogo: z.string(),
       providerLogoDark: z.string(),

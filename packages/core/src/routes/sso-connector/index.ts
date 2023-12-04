@@ -1,7 +1,7 @@
 import { SsoConnectors } from '@logto/schemas';
 import {
-  ssoConnectorFactoriesResponseGuard,
-  type SsoConnectorFactoryDetail,
+  ssoConnectorProvidersResponseGuard,
+  type SsoConnectorProviderDetail,
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
@@ -52,21 +52,21 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
   /*
-    Get all supported single sign on connector factory details
+    Get all supported single sign on connector provider details
     - standardConnectors: OIDC, SAML, etc.
     - providerConnectors: Google, Okta, etc.
   */
   router.get(
-    '/sso-connector-factories',
+    '/sso-connector-providers',
     koaGuard({
-      response: ssoConnectorFactoriesResponseGuard,
+      response: ssoConnectorProvidersResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
       const { locale } = ctx;
       const factories = Object.values(ssoConnectorFactories);
-      const standardConnectors = new Set<SsoConnectorFactoryDetail>();
-      const providerConnectors = new Set<SsoConnectorFactoryDetail>();
+      const standardConnectors = new Set<SsoConnectorProviderDetail>();
+      const providerConnectors = new Set<SsoConnectorProviderDetail>();
 
       for (const factory of factories) {
         if (standardSsoConnectorProviders.includes(factory.providerName)) {

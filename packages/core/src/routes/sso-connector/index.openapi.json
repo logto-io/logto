@@ -10,14 +10,14 @@
     }
   ],
   "paths": {
-    "/api/sso-connector-factories": {
-      "description": "SSO connector factories are used to create Enterprise SSO connectors. The created connectors are used to connect to external SSO providers.",
+    "/api/sso-connector-providers": {
+      "description": "APIs for supported SSO (single sign-on) connector providers. SSO connector providers are used to create SSO connector entities.",
       "get": {
-        "summary": "Get SSO connector factories",
-        "description": "Returns all SSO connector factories, including standard protocol factories and pre-configured SSO providers (e.g. Google Workspace, Okta, etc.).",
+        "summary": "Get all supported SSO connector provider details",
+        "description": "Get a complete list of supported SSO connector providers, including the standard ones like OIDC and SAML, and enterprise providers such as Google Workspace and Okta.",
         "responses": {
           "200": {
-            "description": "An array of SSO connector factories."
+            "description": "Returns a array of standard SSO provider details, and a array of enterprise SSO provider details."
           }
         }
       }

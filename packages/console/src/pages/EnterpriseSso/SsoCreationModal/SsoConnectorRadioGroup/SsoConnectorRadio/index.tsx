@@ -1,4 +1,4 @@
-import { type SsoConnectorFactoryDetail, Theme } from '@logto/schemas';
+import { type SsoConnectorProviderDetail, Theme } from '@logto/schemas';
 import classNames from 'classnames';
 
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
@@ -7,7 +7,7 @@ import useTheme from '@/hooks/use-theme';
 import * as styles from './index.module.scss';
 
 type Props = {
-  data: SsoConnectorFactoryDetail;
+  data: SsoConnectorProviderDetail;
 };
 
 function SsoConnectorRadio({ data: { logo, logoDark, description, name } }: Props) {

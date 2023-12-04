@@ -2,15 +2,15 @@ import { type CreateSsoConnector, type SsoConnector } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
 
-export type SsoConnectorFactoryDetail = {
+export type SsoConnectorProviderDetail = {
   providerName: string;
   logo: string;
   description: string;
 };
 
 export type ConnectorFactoryResponse = {
-  standardConnectors: SsoConnectorFactoryDetail[];
-  providerConnectors: SsoConnectorFactoryDetail[];
+  standardConnectors: SsoConnectorProviderDetail[];
+  providerConnectors: SsoConnectorProviderDetail[];
 };
 
 export type SsoConnectorWithProviderConfig = SsoConnector & {
@@ -20,7 +20,7 @@ export type SsoConnectorWithProviderConfig = SsoConnector & {
 };
 
 export const getSsoConnectorFactories = async () =>
-  authedAdminApi.get('sso-connector-factories').json<ConnectorFactoryResponse>();
+  authedAdminApi.get('sso-connector-providers').json<ConnectorFactoryResponse>();
 
 export const createSsoConnector = async (data: Partial<CreateSsoConnector>) =>
   authedAdminApi

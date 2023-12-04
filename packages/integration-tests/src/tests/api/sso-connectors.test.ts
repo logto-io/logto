@@ -16,7 +16,7 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 
 describe('sso-connector library', () => {
-  it('should return sso-connector-factories', async () => {
+  it('should return sso-connector-providers', async () => {
     const response = await getSsoConnectorFactories();
 
     expect(response).toHaveProperty('standardConnectors');

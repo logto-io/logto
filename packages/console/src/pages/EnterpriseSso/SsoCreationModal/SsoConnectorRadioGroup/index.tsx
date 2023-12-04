@@ -1,4 +1,4 @@
-import { type SsoConnectorFactoryDetail } from '@logto/schemas';
+import { type SsoConnectorProviderDetail } from '@logto/schemas';
 import classNames from 'classnames';
 
 import { type ConnectorRadioGroupSize } from '@/components/CreateConnectorForm/ConnectorRadioGroup';
@@ -12,7 +12,7 @@ type Props = {
   value?: string;
   className?: string;
   size: ConnectorRadioGroupSize;
-  connectors: SsoConnectorFactoryDetail[];
+  connectors: SsoConnectorProviderDetail[];
   onChange: (providerName: string) => void;
 };
 

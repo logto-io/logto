@@ -1,5 +1,5 @@
 import {
-  type SsoConnectorFactoriesResponse,
+  type SsoConnectorProvidersResponse,
   type SsoConnectorWithProviderConfig,
   type RequestErrorBody,
 } from '@logto/schemas';
@@ -39,8 +39,8 @@ const duplicateConnectorNameErrorCode = 'single_sign_on.duplicate_connector_name
 function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [selectedProviderName, setSelectedProviderName] = useState<string>();
-  const { data, error } = useSWR<SsoConnectorFactoriesResponse, RequestError>(
-    'api/sso-connector-factories'
+  const { data, error } = useSWR<SsoConnectorProvidersResponse, RequestError>(
+    'api/sso-connector-providers'
   );
   const {
     reset,
