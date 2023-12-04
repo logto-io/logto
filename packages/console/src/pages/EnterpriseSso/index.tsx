@@ -72,9 +72,10 @@ function EnterpriseSsoConnectors() {
       pageMeta={{ titleKey: 'enterprise_sso.page_title' }}
       createButton={conditional(
         ssoConnectors?.length && {
-          title: isSsoEnabled ? 'enterprise_sso.create' : 'upsell.upgrade_plan',
-          onClick: handleButtonClick,
-          icon: conditional(isSsoEnabled && <Plus />),
+          title: 'enterprise_sso.create',
+          onClick: () => {
+            navigate(createEnterpriseSsoPathname);
+          },
         }
       )}
       table={{
