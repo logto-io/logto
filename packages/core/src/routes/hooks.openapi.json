@@ -32,15 +32,10 @@
               "schema": {
                 "properties": {
                   "name": {
-                    "type": "string",
                     "description": "The name of the hook."
                   },
                   "events": {
-                    "type": "array",
-                    "description": "An array of hook events.",
-                    "items": {
-                      "type": "string"
-                    }
+                    "description": "An array of hook events."
                   }
                 }
               }
@@ -80,15 +75,10 @@
               "schema": {
                 "properties": {
                   "name": {
-                    "type": "string",
                     "description": "The updated name of the hook."
                   },
                   "events": {
-                    "type": "array",
-                    "description": "An array of updated hook events.",
-                    "items": {
-                      "type": "string"
-                    }
+                    "description": "An array of updated hook events."
                   }
                 }
               }
@@ -139,11 +129,7 @@
               "schema": {
                 "properties": {
                   "events": {
-                    "type": "array",
-                    "description": "An array of hook events for testing.",
-                    "items": {
-                      "type": "string"
-                    }
+                    "description": "An array of hook events for testing."
                   },
                   "config": {
                     "description": "The hook configuration for testing."
