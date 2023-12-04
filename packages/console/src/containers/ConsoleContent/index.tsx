@@ -11,7 +11,7 @@ import {
   ApplicationDetailsTabs,
   EnterpriseSsoDetailsTabs,
 } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -117,19 +117,17 @@ function ConsoleContent() {
               <Route path=":tab/guide/:factoryId" element={<Connectors />} />
               <Route path=":tab/:connectorId" element={<ConnectorDetails />} />
             </Route>
-            {isDevFeaturesEnabled && (
-              <Route path="enterprise-sso">
-                <Route index element={<EnterpriseSsoConnectors />} />
-                <Route path="create" element={<EnterpriseSsoConnectors />} />
-                <Route path=":ssoConnectorId">
-                  <Route
-                    index
-                    element={<Navigate replace to={EnterpriseSsoDetailsTabs.Connection} />}
-                  />
-                  <Route path=":tab" element={<EnterpriseSsoConnectorDetails />} />
-                </Route>
+            <Route path="enterprise-sso">
+              <Route index element={<EnterpriseSsoConnectors />} />
+              <Route path="create" element={<EnterpriseSsoConnectors />} />
+              <Route path=":ssoConnectorId">
+                <Route
+                  index
+                  element={<Navigate replace to={EnterpriseSsoDetailsTabs.Connection} />}
+                />
+                <Route path=":tab" element={<EnterpriseSsoConnectorDetails />} />
               </Route>
-            )}
+            </Route>
             <Route path="webhooks">
               <Route index element={<Webhooks />} />
               <Route path="create" element={<Webhooks />} />

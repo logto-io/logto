@@ -8,7 +8,6 @@ import { generateStandardShortId } from '@logto/shared';
 import { conditional, assert } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -30,11 +29,6 @@ import {
 } from './utils.js';
 
 export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
-  // FIXME: @simeng-li should remove this check after the feature is enabled in production
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const [
     router,
     {

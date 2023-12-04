@@ -65,11 +65,6 @@ export const createSignInExperienceLibrary = (
   };
 
   const getActiveSsoConnectors = async (locale: string): Promise<SsoConnectorMetadata[]> => {
-    // TODO: @simeng-li Remove the dev feature check once SSO is fully released
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return [];
-    }
-
     const ssoConnectors = await getAvailableSsoConnectors();
 
     return ssoConnectors.map(({ providerName, id, branding }): SsoConnectorMetadata => {
