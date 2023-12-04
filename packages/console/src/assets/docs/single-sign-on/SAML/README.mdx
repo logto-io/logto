@@ -1,7 +1,7 @@
 import SsoSamlSpMetadata from '@/mdx-components/SsoSamlSpMetadata';
 import Step from '@/mdx-components/Step';
 
-<Step index={0} title="Create an SAML SSO application on your IdP" >
+<Step index={0} title="Create a SAML SSO application on your IdP" >
 
 Initiate the SAML SSO integration by creating an application on the IdP side. Obtain the following configurations from Logto, representing your Service Provider (SP):
 
@@ -15,7 +15,7 @@ Fill in the above configurations in your IdP SAML application and continue to re
 
 </Step>
 
-<Step index={1} Configure SAML SSO on Logto>
+<Step index={1} title="Configure SAML SSO on Logto">
 
 To make the SAML SSO integration work, you will need to provide the IdP metadata to Logto. The IdP metadata is an XML document that contains all the information required for Logto to establish the trust with the IdP.
 
@@ -51,6 +51,6 @@ The user attributes returned from IdP may vary depending on the IdP configuratio
 
 Provide the email `domains` of your organization in the SAML SSO integration `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
-Users with email addresses in the specified domains will be restricted to use SAML SSO connector as their only authentication method.
+Users with email addresses in the specified domains will be exclusively limited to use SAML SSO connector as their only authentication method.
 
 </Step>
