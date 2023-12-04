@@ -56,7 +56,7 @@ const sign_up_and_sign_in = {
     title: 'ADVANCED OPTIONS',
     enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
     enable_single_sign_on_description:
-      'Enable users to sign into the application using Single Sign-On with their enterprise identities.',
+      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
     single_sign_on_hint: {
       prefix: 'Go to ',
       link: '"Enterprise SSO"',
