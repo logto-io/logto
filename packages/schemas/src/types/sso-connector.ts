@@ -58,10 +58,7 @@ const ssoConnectorProviderDetailGuard = z.object({
 
 export type SsoConnectorProviderDetail = z.infer<typeof ssoConnectorProviderDetailGuard>;
 
-export const ssoConnectorProvidersResponseGuard = z.object({
-  standardProviders: z.array(ssoConnectorProviderDetailGuard),
-  enterpriseProviders: z.array(ssoConnectorProviderDetailGuard),
-});
+export const ssoConnectorProvidersResponseGuard = z.array(ssoConnectorProviderDetailGuard);
 
 export type SsoConnectorProvidersResponse = z.infer<typeof ssoConnectorProvidersResponseGuard>;
 

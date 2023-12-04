@@ -12,11 +12,11 @@
   "paths": {
     "/api/sso-connector-providers": {
       "get": {
-        "summary": "List all supported SSO connector provider details",
-        "description": "Get a complete list of supported SSO connector providers, including the standard ones like OIDC and SAML, and enterprise providers such as Google Workspace and Okta.",
+        "summary": "List all the supported SSO connector provider details",
+        "description": "Get a complete list of supported SSO connector providers.",
         "responses": {
           "200": {
-            "description": "Returns a array of standard SSO provider details, and a array of enterprise SSO provider details."
+            "description": "Returns a list of supported SSO connector provider data."
           }
         }
       }

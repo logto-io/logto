@@ -19,17 +19,11 @@ describe('sso-connector library', () => {
   it('should return sso-connector-providers', async () => {
     const response = await getSsoConnectorFactories();
 
-    expect(response).toHaveProperty('standardProviders');
-    expect(response).toHaveProperty('enterpriseProviders');
+    expect(response.length).toBeGreaterThan(0);
 
-    expect(response.standardProviders.length).toBe(2);
-
-    expect(
-      response.standardProviders.find(({ providerName }) => providerName === 'OIDC')
-    ).toBeDefined();
-    expect(
-      response.standardProviders.find(({ providerName }) => providerName === 'SAML')
-    ).toBeDefined();
+    for (const provider of Object.values(SsoProviderName)) {
+      expect(response.find((data) => data.providerName === provider)).toBeDefined();
+    }
   });
 });
 

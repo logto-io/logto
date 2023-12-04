@@ -1,7 +1,6 @@
-import { SsoConnectors } from '@logto/schemas';
 import {
+  SsoConnectors,
   ssoConnectorProvidersResponseGuard,
-  type SsoConnectorProviderDetail,
   ssoConnectorWithProviderConfigGuard,
 } from '@logto/schemas';
 import { generateStandardShortId } from '@logto/shared';
@@ -14,7 +13,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import { ssoConnectorCreateGuard, ssoConnectorPatchGuard } from '#src/routes/sso-connector/type.js';
-import { ssoConnectorFactories, standardSsoConnectorProviders } from '#src/sso/index.js';
+import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoProvider, isSupportedSsoConnector } from '#src/sso/utils.js';
 import { tableToPathname } from '#src/utils/SchemaRouter.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -66,21 +65,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
       const { locale } = ctx;
       const factories = Object.values(ssoConnectorFactories);
 
-      const standardProviders = new Set<SsoConnectorProviderDetail>();
-      const enterpriseProviders = new Set<SsoConnectorProviderDetail>();
-
-      for (const factory of factories) {
-        if (standardSsoConnectorProviders.includes(factory.providerName)) {
-          standardProviders.add(parseFactoryDetail(factory, locale));
-        } else {
-          enterpriseProviders.add(parseFactoryDetail(factory, locale));
-        }
-      }
-
-      ctx.body = {
-        standardProviders: [...standardProviders],
-        enterpriseProviders: [...enterpriseProviders],
-      };
+      ctx.body = factories.map((factory) => parseFactoryDetail(factory, locale));
 
       return next();
     }

@@ -24,6 +24,7 @@ import { trySubmitSafe } from '@/utils/form';
 
 import SsoConnectorRadioGroup from './SsoConnectorRadioGroup';
 import * as styles from './index.module.scss';
+import { categorizeSsoConnectorProviders } from './utils';
 
 type Props = {
   isOpen: boolean;
@@ -54,7 +55,10 @@ function SsoCreationModal({ isOpen, onClose: rawOnClose }: Props) {
 
   const isLoading = !data && !error;
 
-  const { standardProviders = [], enterpriseProviders = [] } = data ?? {};
+  const { standardProviders, enterpriseProviders } = useMemo(
+    () => categorizeSsoConnectorProviders(data),
+    [data]
+  );
 
   const radioGroupSize = useMemo(
     () => getConnectorRadioGroupSize(standardProviders.length + enterpriseProviders.length),
