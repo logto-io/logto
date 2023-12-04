@@ -110,7 +110,7 @@ const App = () => {
                       <Route path="callback/:connectorId" element={<Callback />} />
                     </Route>
 
-                    {/* Single sign on */}
+                    {/* Single sign-on */}
                     <Route path={singleSignOnPath} element={<LoadingLayerProvider />}>
                       <Route path="email" element={<SingleSignOnEmail />} />
                       <Route path="connectors" element={<SingleSignOnConnectors />} />
