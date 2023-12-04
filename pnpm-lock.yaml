@@ -2858,8 +2858,8 @@ importers:
         specifier: workspace:^1.4.0
         version: link:../phrases-experience
       '@logto/react':
-        specifier: ^2.2.0
-        version: 2.2.0(react@18.2.0)
+        specifier: ^2.2.1
+        version: 2.2.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.11.0
         version: link:../schemas
@@ -3438,8 +3438,8 @@ importers:
         specifier: workspace:^1.2.0
         version: link:../phrases
       '@logto/react':
-        specifier: ^2.2.0
-        version: 2.2.0(react@18.2.0)
+        specifier: ^2.2.1
+        version: 2.2.1(react@18.2.0)
       '@logto/schemas':
         specifier: workspace:^1.2.3
         version: link:../schemas
@@ -7528,8 +7528,8 @@ packages:
       - encoding
     dev: true
 
-  /@logto/react@2.2.0(react@18.2.0):
-    resolution: {integrity: sha512-XSIptaw5o1mmflhG0eYD49aNBONfOIIjoyyam12qQOOfL2EFMZghIfaheh2SzemIT3LAawX2+yqAB/lo1rIGWA==}
+  /@logto/react@2.2.1(react@18.2.0):
+    resolution: {integrity: sha512-Sma+vi8rD68gBSDMDm8RRJe0M/089hUVQjIxhbDkLABx3MCC865WTmwbVMUlGQKzq+her5O/Hk0Mogzej0FinA==}
     peerDependencies:
       react: '>=16.8.0 || ^18.0.0'
     dependencies:
