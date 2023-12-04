@@ -11,6 +11,7 @@ import {
   type OidcGuideFormType,
   type SsoConnectorConfig,
 } from '@/pages/EnterpriseSso/types.js';
+import { uriValidator } from '@/utils/validator';
 
 import ParsedConfigPreview from './ParsedConfigPreview';
 import * as styles from './index.module.scss';
@@ -39,13 +40,18 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
         </InlineNotification>
       )}
       <FormField isRequired title="enterprise_sso.metadata.oidc.client_id_field_name">
-        <TextInput {...register('clientId', { required: true })} error={Boolean(errors.clientId)} />
+        <TextInput
+          {...register('clientId', { required: true })}
+          error={Boolean(errors.clientId)}
+          placeholder="Client ID"
+        />
       </FormField>
       <FormField isRequired title="enterprise_sso.metadata.oidc.client_secret_field_name">
         <TextInput
           isConfidential
           {...register('clientSecret', { required: true })}
           error={Boolean(errors.clientSecret)}
+          placeholder="Client secret"
         />
       </FormField>
       <FormField
@@ -63,8 +69,10 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
           <TextInput
             {...register('issuer', {
               required: true,
+              validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
             })}
-            error={Boolean(errors.issuer)}
+            error={errors.issuer?.message}
+            placeholder="http(s)://"
           />
         )}
         {providerConfig &&
