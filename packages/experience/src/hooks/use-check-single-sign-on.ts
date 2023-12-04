@@ -46,7 +46,15 @@ const useCheckSingleSignOn = () => {
       const [error, result] = await request(email);
 
       if (error) {
-        await handleError(error);
+        // Show error message only if the user is trying to continue the single sign-on flow, otherwise, silently fail
+        if (continueSignIn) {
+          await handleError(error, {
+            'guard.invalid_input': () => {
+              setErrorMessage(t('error.invalid_email'));
+            },
+          });
+        }
+
         return;
       }
 
