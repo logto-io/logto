@@ -200,6 +200,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
 
     const baseDocument: OpenAPIV3.Document = {
       openapi: '3.0.1',
+      servers: [
+        {
+          url: EnvSet.values.isCloud ? 'https://[tenant_id].logto.app/' : ctx.request.origin,
+          description: 'Logto endpoint address.',
+        },
+      ],
       info: {
         title: 'Logto API references',
         description:
