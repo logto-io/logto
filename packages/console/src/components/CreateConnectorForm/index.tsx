@@ -54,7 +54,11 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
     }
 
     const allGroups = getConnectorGroups<ConnectorFactoryResponse>(
-      factories.filter(({ type: factoryType, isDemo }) => factoryType === type && !isDemo)
+      factories
+        .filter(({ type: factoryType, isDemo }) => factoryType === type && !isDemo)
+        // Hide the entrance of adding SAML social connectors, users should go to Enterprise SSO if they want to use SAML.
+        // Should not remove the SAML factory from GET /connector-factories API, since that could break the existing SAML connectors.
+        .filter(({ id }) => id !== 'saml')
     );
 
     return allGroups

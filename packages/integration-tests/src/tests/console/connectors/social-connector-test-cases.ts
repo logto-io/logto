@@ -87,35 +87,36 @@ const wechatWeb: SocialConnectorCase = {
   },
 };
 
-const saml: SocialConnectorCase = {
-  factoryId: 'saml',
-  name: 'SAML',
+const oidc: SocialConnectorCase = {
+  factoryId: 'oidc',
+  name: 'OIDC',
   initialFormData: {
-    'formConfig.entityID': 'entity-id',
-    'formConfig.signInEndpoint': 'sign-in-endpoint',
-    'formConfig.x509Certificate': 'x509-certificate',
-    'formConfig.idpMetadataXml': 'idp-metadata-xml',
-    'formConfig.assertionConsumerServiceUrl': 'assertion-consumer-service-url',
+    'formConfig.authorizationEndpoint': 'authorization-endpoint',
+    'formConfig.tokenEndpoint': 'token-endpoint',
+    'formConfig.clientId': 'client-id',
+    'formConfig.clientSecret': 'client-secret',
+    'formConfig.scope': 'scope1 scope2',
   },
   updateFormData: {
-    'formConfig.entityID': 'new-entity-id',
-    'formConfig.signInEndpoint': 'new-sign-in-endpoint',
-    'formConfig.x509Certificate': 'new-x509-certificate',
-    'formConfig.idpMetadataXml': 'new-idp-metadata-xml',
-    'formConfig.assertionConsumerServiceUrl': 'new-assertion-consumer-service-url',
+    'formConfig.authorizationEndpoint': 'new-authorization-endpoint',
+    'formConfig.tokenEndpoint': 'new-token-endpoint',
+    'formConfig.clientId': 'new-client-id',
+    'formConfig.clientSecret': 'new-client-secret',
+    'formConfig.scope': 'scope1 scope2 scope3',
   },
   errorFormData: {
-    'formConfig.entityID': '',
-    'formConfig.signInEndpoint': '',
-    'formConfig.x509Certificate': '',
-    'formConfig.idpMetadataXml': '',
-    'formConfig.assertionConsumerServiceUrl': '',
+    'formConfig.authorizationEndpoint': '',
+    'formConfig.tokenEndpoint': '',
+    'formConfig.clientId': '',
+    'formConfig.clientSecret': '',
+    'formConfig.scope': '',
   },
   standardBasicFormData: {
-    name: 'SAML',
-    target: 'saml',
+    name: 'OIDC',
+    target: 'oidc-test',
   },
 };
+
 export const socialConnectorTestCases = [
   // Universal
   google,
@@ -126,5 +127,5 @@ export const socialConnectorTestCases = [
   // Group - Web
   wechatWeb,
   // Standard
-  saml,
+  oidc,
 ];
