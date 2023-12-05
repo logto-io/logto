@@ -30,7 +30,7 @@ You need to enroll [Apple Developer Program](https://developer.apple.com/program
 
 You can do it via Xcode -> Project settings -> Signing & Capabilities, or visit [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list/bundleId).
 
-![Enable Sign in with Apple](/packages/connector-apple/docs/enable-sign-in-with-apple-in-xcode.png)
+![Enable Sign in with Apple](./docs/enable-sign-in-with-apple-in-xcode.png)
 
 See the "Enable an App ID" section in [Apple official docs](https://developer.apple.com/documentation/sign_in_with_apple/configuring_your_environment_for_sign_in_with_apple) for more info.
 
@@ -45,13 +45,13 @@ See the "Enable an App ID" section in [Apple official docs](https://developer.ap
 
 Click the identifier you just created. Check "Sign in with Apple" on the details page and click "Configure".
 
-![Enable Sign in with Apple](/packages/connector-apple/docs/enable-sign-in-with-apple.png)
+![Enable Sign in with Apple](./docs/enable-sign-in-with-apple.png)
 
 In the opening modal, select the App ID you just enabled Sign in with Apple.
 
 Enter the domain of your Logto instance without protocol and port, e.g., `your.logto.domain`; then enter the "Return URL" (i.e., Redirect URI), which is the Logto URL with `/callback/${connector_id}`, e.g., `https://your.logto.domain/callback/apple-universal`. You can get the randomly generated `connector_id` after creating Apple connector in Admin Console.
 
-![domain-and-url](/packages/connector-apple/docs/domain-and-url.png)
+![domain-and-url](./docs/domain-and-url.png)
 
 Click "Next" then "Done" to close the modal. Click "Continue" on the top-right corner, then click "Save" to save your configuration.
 
