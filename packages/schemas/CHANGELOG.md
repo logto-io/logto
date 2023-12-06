@@ -1,5 +1,27 @@
 # Change Log
 
+## 1.12.0
+
+### Minor Changes
+
+- 9a7b19e49: Add single sign-on (SSO) table and schema definitions
+
+  - Add new sso_connectors table, which is used to store the SSO connector data.
+  - Add new user_sso_identities table, which is used to store the user's SSO identity data received from IdP through a SSO interaction.
+  - Add new single_sign_on_enabled column to the sign_in_experiences table, which is used to indicate if the SSO feature is enabled for the sign-in experience.
+  - Define new SSO feature related types
+
+### Patch Changes
+
+- 3e92a2032: refactor: add user ip to webhook event payload
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [becf59169]
+- Updated dependencies [b4f702a86]
+- Updated dependencies [9a7b19e49]
+  - @logto/phrases@1.8.0
+  - @logto/core-kit@2.2.1
+  - @logto/phrases-experience@1.5.0
+
 ## 1.11.0
 
 ### Minor Changes

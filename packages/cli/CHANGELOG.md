@@ -1,5 +1,26 @@
 # Change Log
 
+## 1.12.0
+
+### Minor Changes
+
+- 4b90782ae: support sync phrases array keys and update concurrency to 5
+
+  as the new model works with more concurrency.
+
+### Patch Changes
+
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [becf59169]
+- Updated dependencies [b4f702a86]
+- Updated dependencies [3e92a2032]
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [9a7b19e49]
+  - @logto/phrases@1.8.0
+  - @logto/core-kit@2.2.1
+  - @logto/schemas@1.12.0
+  - @logto/phrases-experience@1.5.0
+
 ## 1.11.0
 
 ### Patch Changes

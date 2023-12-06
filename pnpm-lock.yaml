@@ -107,19 +107,19 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.7.0
+        specifier: workspace:^1.8.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.5.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:1.11.0
+        specifier: workspace:1.12.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -2846,22 +2846,22 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.1.2
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.7.0
+        specifier: workspace:^1.8.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.5.0
         version: link:../phrases-experience
       '@logto/react':
         specifier: ^2.2.1
         version: 2.2.1(react@18.2.0)
       '@logto/schemas':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -3146,7 +3146,7 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cli':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../cli
       '@logto/connector-kit':
         specifier: workspace:^2.0.0
@@ -3155,7 +3155,7 @@ importers:
         specifier: workspace:*
         version: link:../console
       '@logto/core-kit':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/demo-app':
         specifier: workspace:*
@@ -3167,13 +3167,13 @@ importers:
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.7.0
+        specifier: workspace:^1.8.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.5.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -3423,7 +3423,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../cli
 
   packages/demo-app:
@@ -3525,19 +3525,19 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.1.1
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.7.0
+        specifier: workspace:^1.8.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.5.0
         version: link:../phrases-experience
       '@logto/schemas':
-        specifier: workspace:^1.11.0
+        specifier: workspace:^1.12.0
         version: link:../schemas
       '@parcel/compressor-brotli':
         specifier: 2.9.3
@@ -3754,7 +3754,7 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       '@logto/schemas':
-        specifier: workspace:^1.10.1
+        specifier: workspace:^1.12.0
         version: link:../schemas
       '@logto/shared':
         specifier: workspace:^3.0.0
@@ -3854,7 +3854,7 @@ importers:
   packages/phrases-experience:
     dependencies:
       '@logto/core-kit':
-        specifier: workspace:^2.1.1
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
@@ -3894,16 +3894,16 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
       '@logto/core-kit':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.2.1
         version: link:../toolkit/core-kit
       '@logto/language-kit':
         specifier: workspace:^1.0.0
         version: link:../toolkit/language-kit
       '@logto/phrases':
-        specifier: workspace:^1.7.0
+        specifier: workspace:^1.8.0
         version: link:../phrases
       '@logto/phrases-experience':
-        specifier: workspace:^1.4.0
+        specifier: workspace:^1.5.0
         version: link:../phrases-experience
       '@logto/shared':
         specifier: workspace:^3.0.0

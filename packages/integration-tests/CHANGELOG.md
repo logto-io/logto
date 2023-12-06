@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.3
+
+### Patch Changes
+
+- 9a4da065d: fix incorrect swagger components
+
 ## 1.4.2
 
 ### Patch Changes
