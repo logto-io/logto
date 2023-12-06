@@ -21,7 +21,7 @@ jobs:
       - uses: logto-io/actions-package-logto-artifact@v1.0.0
         with:
           artifact-name: integration-test-${{ github.sha }}
-          branch: ${{ github.ref }}
+          branch: ""
 
   run-logto:
     strategy:
