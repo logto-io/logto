@@ -1,19 +1,8 @@
 ---
-"@logto/console": minor
 "@logto/core": minor
-"@logto/experience": minor
-"@logto/phrases": minor
-"@logto/schemas": minor
 ---
 
-Introduce new enterpeise single sign-on (SSO) feature to Logto.
-
-## @logto/console
-
-- Implement new enterprise SSO management pages. Allow create and manage SSO connectors through Logto console.
-- Add enabled/disable SSO toggle switch on the sign-in-experience settings page.
-
-## @logto/core
+Support single sign-on(SSO) on Logto.
 
 - Implement new SSO connector management APIs.
 
@@ -37,22 +26,3 @@ Introduce new enterpeise single sign-on (SSO) feature to Logto.
   - `AzureAD` - Azure Active Directory connector that can be used to connect with Azure AD.
   - `Okta` - Okta connector that can be used to connect with Okta.
   - `Google Workspace` - Google Workspace connector that can be used to connect with Google Workspace.
-
-## @logto/experience
-
-Implement the new SSO sign-in flow
-
-- `/single-sign-on/email` - The SSO email form page for user to enter their email address.
-- `/single-sign-on/connectors` - The SSO connectors page for user to select the enabled SSO connector they want to use.
-- Implement the email identifier guard on all the sign-in and registration identifier forms. If the email address is enabled with SSO, redirect user to the SSO flow.
-
-## @logto/phrases
-
-Add new phrases for the new SSO feature.
-
-## @logto/schemas
-
-- Add new sso_connectors table, which is used to store the SSO connector data.
-- Add new user_sso_identities table, which is used to store the user's SSO identity data received from IdP through a SSO interaction.
-- Add new single_sign_on_enabled column to the sign_in_experiences table, which is used to indicate if the SSO feature is enabled for the sign-in experience.
-- Define new SSO feature related types
