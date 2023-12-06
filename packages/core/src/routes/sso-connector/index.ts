@@ -40,8 +40,6 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
     },
   ] = args;
 
-  router.use(koaQuotaGuard({ key: 'ssoEnabled', quota, methods: ['POST', 'PUT'] }));
-
   const pathname = `/${tableToPathname(SsoConnectors.table)}`;
 
   /*
@@ -68,6 +66,7 @@ export default function singleSignOnRoutes<T extends AuthedRouter>(...args: Rout
   /* Create a new single sign on connector */
   router.post(
     pathname,
+    koaQuotaGuard({ key: 'ssoEnabled', quota }),
     koaGuard({
       body: ssoConnectorCreateGuard,
       response: SsoConnectors.guard,
