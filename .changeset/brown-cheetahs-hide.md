@@ -2,7 +2,7 @@
 "@logto/core": minor
 ---
 
-Support single sign-on(SSO) on Logto.
+Support single sign-on (SSO) on Logto.
 
 - Implement new SSO connector management APIs.
 

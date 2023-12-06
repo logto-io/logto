@@ -2,7 +2,7 @@
 "@logto/schemas": minor
 ---
 
-Add single sign-on(SSO) table and schema definitions
+Add single sign-on (SSO) table and schema definitions
 
 - Add new sso_connectors table, which is used to store the SSO connector data.
 - Add new user_sso_identities table, which is used to store the user's SSO identity data received from IdP through a SSO interaction.
