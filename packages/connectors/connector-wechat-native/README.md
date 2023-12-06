@@ -54,11 +54,11 @@ Open https://open.weixin.qq.com/, click the "Sign Up" button in the upper-right 
 
 Sign in with the account you just created. In the "Mobile Application" (移动应用) tab, click the big green button "Create a mobile app" (创建移动应用).
 
-![App tabs](/packages/connector-wechat-native/docs/app-tabs.png)
+![App tabs](/packages/connectors/connector-wechat-native/docs/app-tabs.png)
 
 Let's fill out the required info in the application form.
 
-![Create a mobile app](/packages/connector-wechat-native/docs/create-mobile-app.png)
+![Create a mobile app](/packages/connectors/connector-wechat-native/docs/create-mobile-app.png)
 
 #### Basic info
 
@@ -77,7 +77,7 @@ You can configure one or both iOS and Android platforms to integrate Logto with 
 
 Check "iOS app" (iOS 应用), then check the target device type of your app accordingly.
 
-![App platform](/packages/connector-wechat-native/docs/platform.png)
+![App platform](/packages/connectors/connector-wechat-native/docs/platform.png)
 
 If you chose "No" for the App Store availability, you cloud skip filling out the "AppStore download address" here.
 
@@ -95,7 +95,7 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 
 Check "Android app" (Android 应用).
 
-![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
+![Android app platform](/packages/connectors/connector-wechat-native/docs/platform-android-app.png)
 
 Fill out _Application Signing Signature_ (应用签名) and _Application Package Name_ (应用包名).
 
@@ -129,15 +129,15 @@ We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes
 
 In the Xcode project -> Signing & Capabilities tab, add the "Associated Domains" capability and the universal link you configured before.
 
-![Universal link](/packages/connector-wechat-native/docs/universal-link.png)
+![Universal link](/packages/connectors/connector-wechat-native/docs/universal-link.png)
 
 Then goes to the "Info" tab, add a [custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) with the WeChat App ID.
 
-![Custom URL scheme](/packages/connector-wechat-native/docs/custom-url-scheme.png)
+![Custom URL scheme](/packages/connectors/connector-wechat-native/docs/custom-url-scheme.png)
 
 Finally open your `Info.plist`, add `weixinULAPI` and `weixin` under `LSApplicationQueriesSchemes`.
 
-![Plist](/packages/connector-wechat-native/docs/plist.png)
+![Plist](/packages/connectors/connector-wechat-native/docs/plist.png)
 
 > 🤦 **Note**
 > 
@@ -147,11 +147,11 @@ Finally open your `Info.plist`, add `weixinULAPI` and `weixin` under `LSApplicat
 
 Add the framework:
 
-![Add framework](/packages/connector-wechat-native/docs/add-framework.png)
+![Add framework](/packages/connectors/connector-wechat-native/docs/add-framework.png)
 
 And add `-ObjC` to your Build Settings > Linking > Other Linker Flags:
 
-![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
+![Linker flags](/packages/connectors/connector-wechat-native/docs/linker-flags.png)
 
 > ℹ️ **Note**
 > 
@@ -289,11 +289,11 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 用刚创建的帐号登录。在「移动应用」标签页，点按大而绿的「创建移动应用」按钮。
 
-![App tabs](/packages/connector-wechat-native/docs/app-tabs.png)
+![App tabs](/packages/connectors/connector-wechat-native/docs/app-tabs.png)
 
 让我们填写一下申请表单里的必要信息。
 
-![Create a mobile app](/packages/connector-wechat-native/docs/create-mobile-app.png)
+![Create a mobile app](/packages/connectors/connector-wechat-native/docs/create-mobile-app.png)
 
 #### 基础信息
 
@@ -312,7 +312,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 勾选「iOS 应用」与你的应用的目标平台。
 
-![App platform](/packages/connector-wechat-native/docs/platform.png)
+![App platform](/packages/connectors/connector-wechat-native/docs/platform.png)
 
 如果你在「应用已上架」中选择了「否」，你可以在这一步跳过「AppStore 下载地址」的填写。
 
@@ -330,7 +330,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 勾选「安卓应用」。
 
-![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
+![Android app platform](/packages/connectors/connector-wechat-native/docs/platform-android-app.png)
 
 填写「应用签名」和「应用包名」。
 
@@ -364,15 +364,15 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 在 Xcode 工程 -> Signing & Capabilities 标签页中添加 "Associated Domains" capability 与你之前配置的 universal link。
 
-![Universal link](/packages/connector-wechat-native/docs/universal-link.png)
+![Universal link](/packages/connectors/connector-wechat-native/docs/universal-link.png)
 
 接着切换到 "Info" 标签页，用微信 App ID 添加一个 [custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app)。
 
-![Custom URL scheme](/packages/connector-wechat-native/docs/custom-url-scheme.png)
+![Custom URL scheme](/packages/connectors/connector-wechat-native/docs/custom-url-scheme.png)
 
 最终打开 `Info.plist`，在 `LSApplicationQueriesSchemes` 中添加 `weixinULAPI` 和 `weixin`。
 
-![Plist](/packages/connector-wechat-native/docs/plist.png)
+![Plist](/packages/connectors/connector-wechat-native/docs/plist.png)
 
 > 🤦 **Note**
 > 
@@ -382,11 +382,11 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 添加 framework：
 
-![Add framework](/packages/connector-wechat-native/docs/add-framework.png)
+![Add framework](/packages/connectors/connector-wechat-native/docs/add-framework.png)
 
 并添加 `-ObjC` 至 Build Settings > Linking > Other Linker Flags：
 
-![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
+![Linker flags](/packages/connectors/connector-wechat-native/docs/linker-flags.png)
 
 > ℹ️ **Note**
 > 

@@ -88,7 +88,7 @@ We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes
 
 Add the framework:
 
-![Add framework](/packages/connector-alipay-native/docs/add-framework.png)
+![Add framework](/packages/connectors/connector-alipay-native/docs/add-framework.png)
 
 > ℹ️ **Note**
 > 
@@ -208,7 +208,7 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 
 添加 framework：
 
-![Add framework](/packages/connector-alipay-native/docs/add-framework.png)
+![Add framework](/packages/connectors/connector-alipay-native/docs/add-framework.png)
 
 > ℹ️ **Note**
 >
