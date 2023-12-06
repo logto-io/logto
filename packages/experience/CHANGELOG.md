@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.4.0
+
+### Minor Changes
+
+- 9a7b19e49: Implement the new single sign-on (SSO) interaction flow
+
+  - `/single-sign-on/email` - The SSO email form page for user to enter their email address.
+  - `/single-sign-on/connectors` - The SSO connectors page for user to select the enabled SSO connector they want to use.
+  - Implement the email identifier guard on all the sign-in and registration identifier forms. If the email address is enabled with SSO, redirect user to the SSO flow.
+
+### Patch Changes
+
+- 9421375d7: Bump libphonenumber-js to v1.10.51 to support China 19 started phone numbers. Thanks to @agileago
+
 ## 1.3.0
 
 ### Minor Changes

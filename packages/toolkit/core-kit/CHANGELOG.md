@@ -1,5 +1,25 @@
 # Change Log
 
+## 2.2.1
+
+### Patch Changes
+
+- b4f702a86: userinfo endpoint will return `organization_data` claim if organization scope is requested
+
+  The claim includes all organizations that the user is a member of with the following structure:
+
+  ```json
+  {
+    "organization_data": [
+      {
+        "id": "organization_id",
+        "name": "organization_name",
+        "description": "organization_description"
+      }
+    ]
+  }
+  ```
+
 ## 2.2.0
 
 ### Minor Changes

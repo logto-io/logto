@@ -1,5 +1,83 @@
 # Change Log
 
+## 1.12.0
+
+### Minor Changes
+
+- 9a7b19e49: Support single sign-on (SSO) on Logto.
+
+  - Implement new SSO connector management APIs.
+
+    - `GET /api/sso-connector-providers` - List all the supported SSO connector providers.
+    - `POST /api/sso-connectors` - Create new SSO connector.
+    - `GET /api/sso-connectors` - List all the SSO connectors.
+    - `GET /api/sso-connectors/:id` - Get SSO connector by id.
+    - `PATCH /api/sso-connectors/:id` - Update SSO connector by id.
+    - `DELETE /api/sso-connectors/:id` - Delete SSO connector by id.
+
+  - Implement new SSO interaction APIs to enable the SSO connector sign-in methods
+
+    - `POST /api/interaction/single-sign-on/:connectorId/authorization-url` - Init a new SSO connector sign-in interaction flow by retrieving the IdP's authorization URL.
+    - `POST /api/interaction/single-sign-on/:connectorId/authentication` - Handle the SSO connector sign-in interaction flow by retrieving the IdP's authentication data.
+    - `POST /api/interaction/single-sign-on/:connectorId/registration` - Create new user account by using the SSO IdP's authentication result.
+    - `GET /api/interaction/single-sign-on/connectors` - List all the enabled SSO connectors by a given email address.
+
+  - Implement new SSO connector factory to support different SSO connector providers.
+    - `OIDC` - Standard OIDC connector that can be used to connect with any OIDC compatible IdP.
+    - `SAML` - Standard SAML 2.0 connector that can be used to connect with any SAML 2.0 compatible IdP.
+    - `AzureAD` - Azure Active Directory connector that can be used to connect with Azure AD.
+    - `Okta` - Okta connector that can be used to connect with Okta.
+    - `Google Workspace` - Google Workspace connector that can be used to connect with Google Workspace.
+
+- becf59169: introduce Logto Organizations
+
+  The term "organization" is also used in other forms, such as "workspace", "team", "company", etc. In Logto, we use "organization" as the generic term to represent the concept of multi-tenancy.
+
+  From now, you can create multiple organizations in Logto, each of which can have its own users, while in the same identity pool.
+
+  Plus, we also introduce the concept of "organization template". It is a set of permissions and roles that applies to all organizations, while a user can have different roles in different organizations.
+
+  See [🏢 Organizations (Multi-tenancy)](https://docs.logto.io/docs/recipes/organizations/) for more details.
+
+### Patch Changes
+
+- b05fb2960: add summary and description to APIs
+- 9a4da065d: fix incorrect swagger components
+- b4f702a86: userinfo endpoint will return `organization_data` claim if organization scope is requested
+
+  The claim includes all organizations that the user is a member of with the following structure:
+
+  ```json
+  {
+    "organization_data": [
+      {
+        "id": "organization_id",
+        "name": "organization_name",
+        "description": "organization_description"
+      }
+    ]
+  }
+  ```
+
+- 3e92a2032: refactor: add user ip to webhook event payload
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [4b90782ae]
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [9421375d7]
+- Updated dependencies [becf59169]
+- Updated dependencies [b4f702a86]
+- Updated dependencies [3e92a2032]
+- Updated dependencies [9a7b19e49]
+- Updated dependencies [9a7b19e49]
+  - @logto/experience@1.4.0
+  - @logto/phrases@1.8.0
+  - @logto/cli@1.12.0
+  - @logto/console@1.11.0
+  - @logto/core-kit@2.2.1
+  - @logto/schemas@1.12.0
+  - @logto/phrases-experience@1.5.0
+
 ## 1.11.0
 
 ### Minor Changes

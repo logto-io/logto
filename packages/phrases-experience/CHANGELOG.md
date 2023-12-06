@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.5.0
+
+### Minor Changes
+
+- 9a7b19e49: Add single sign-in (SSO) related experience phrases
+
+### Patch Changes
+
+- Updated dependencies [b4f702a86]
+  - @logto/core-kit@2.2.1
+
 ## 1.4.0
 
 ### Minor Changes
