@@ -8,6 +8,7 @@ import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -46,6 +47,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const isCreatingSocialConnector = type === ConnectorType.Social;
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
+
   const isStandardConnectorDisabled = !currentPlan?.quota.standardConnectorsLimit;
 
   const groups = useMemo(() => {
@@ -160,11 +162,13 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
           <>
             <div className={styles.standardLabel}>
               <DynamicT forKey="connectors.standard_connectors" />
-              <FeatureTag
-                isVisible={isStandardConnectorDisabled}
-                for="upsell"
-                plan={ReservedPlanId.Hobby}
-              />
+              {isCloud && (
+                <FeatureTag
+                  isVisible={isStandardConnectorDisabled}
+                  for="upsell"
+                  plan={ReservedPlanId.Hobby}
+                />
+              )}
             </div>
             <ConnectorRadioGroup
               name="group"
