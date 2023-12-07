@@ -104,7 +104,7 @@ export const fetchToken = async (
   }
 };
 
-const issuedAtTimeTolerance = 60;
+const issuedAtTimeTolerance = 600; // 10 minutes
 
 export const getIdTokenClaims = async (
   idToken: string,
