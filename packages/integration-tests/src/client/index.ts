@@ -100,7 +100,7 @@ export default class MockClient {
 
     // Note: Should redirect to logto consent page
     assert(
-      authResponse.statusCode === 303 && authResponse.headers.location === '/sign-in/consent',
+      authResponse.statusCode === 303 && authResponse.headers.location === '/consent',
       new Error('Invoke auth before consent failed')
     );
 
