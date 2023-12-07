@@ -14,13 +14,13 @@ import { type ConnectorLibrary } from './connector.js';
 export type QuotaLibrary = ReturnType<typeof createQuotaLibrary>;
 
 const notNumber = (): never => {
-  throw new Error('Only support usage query for numberic quota');
+  throw new Error('Only support usage query for numeric quota');
 };
 
 export const createQuotaLibrary = (
   queries: Queries,
   cloudConnection: CloudConnectionLibrary,
-  connectorLibraray: ConnectorLibrary
+  connectorLibrary: ConnectorLibrary
 ) => {
   const {
     applications: { countNonM2mApplications, countM2mApplications },
@@ -31,7 +31,7 @@ export const createQuotaLibrary = (
     rolesScopes: { countRolesScopesByRoleId },
   } = queries;
 
-  const { getLogtoConnectors } = connectorLibraray;
+  const { getLogtoConnectors } = connectorLibrary;
 
   const tenantUsageQueries: Record<
     keyof FeatureQuota,
