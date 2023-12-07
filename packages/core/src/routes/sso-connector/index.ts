@@ -27,7 +27,9 @@ import {
   validateConnectorConfigConnectionStatus,
 } from './utils.js';
 
-export default function singleSignOnRoutes<T extends AuthedRouter>(...args: RouterInitArgs<T>) {
+export default function singleSignOnConnectorsRoutes<T extends AuthedRouter>(
+  ...args: RouterInitArgs<T>
+) {
   const [
     router,
     {
