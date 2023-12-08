@@ -5,20 +5,14 @@ import type Provider from 'oidc-provider';
 import { consent } from '#src/libraries/session.js';
 import type Queries from '#src/tenants/Queries.js';
 
-const consentPath = '/consent';
-
+/**
+ * Automatically consent for the first party apps.
+ */
 export default function koaAutoConsent<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   provider: Provider,
   query: Queries
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const requestPath = ctx.request.path;
-    const isConsentPath = requestPath.startsWith(consentPath);
-
-    if (!isConsentPath) {
-      return next();
-    }
-
     const shouldAutoConsent = true;
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Update later. Third party app should not auto consent

@@ -24,6 +24,7 @@ import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
 import initOidc from '#src/oidc/init.js';
+import { routes } from '#src/routes/consts.js';
 import initApis from '#src/routes/init.js';
 import initMeApis from '#src/routes-me/init.js';
 import BasicSentinel from '#src/sentinel/basic-sentinel.js';
@@ -141,7 +142,7 @@ export default class Tenant implements TenantContext {
     app.use(
       compose([
         koaSpaSessionGuard(provider, queries),
-        koaAutoConsent(provider, queries),
+        mount(`${routes.consent}`, koaAutoConsent(provider, queries)),
         koaSpaProxy(mountedApps),
       ])
     );
