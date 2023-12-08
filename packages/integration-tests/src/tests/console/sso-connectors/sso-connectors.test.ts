@@ -4,6 +4,8 @@ import {
   expectModalWithTitle,
   expectToClickDetailsPageOption,
   expectConfirmModalAndAct,
+  expectToSaveChanges,
+  waitForToast,
 } from '#src/ui-helpers/index.js';
 import { expectNavigation, appendPathname } from '#src/utils.js';
 
@@ -123,6 +125,103 @@ describe('create SSO connectors', () => {
     expect(page.url().endsWith('/enterprise-sso/create')).toBeFalsy();
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
     expect(page.url().endsWith('/connection')).toBeTruthy();
+  });
+
+  it("can go to SSO connector's 'SSO Experience' tab", async () => {
+    // Navigate to "SSO Experience" tab
+    await expect(page).toClick('nav div[class$=item] div[class$=link] a', {
+      text: 'SSO Experience',
+    });
+
+    // Confirm the current path is for "SSO Experience".
+    expect(page.url().endsWith('/experience')).toBeTruthy();
+    // Confirm the current tab is "SSO Experience".
+    await expect(page).toMatchElement('nav div[class$=item] div[class$=selected] a', {
+      text: 'SSO Experience',
+    });
+  });
+
+  it("can configure SSO connectors's 'SSO Experience' GENERAL setup", async () => {
+    // Expect to see inline notification alert to configure email domain.
+    await expect(page).toMatchElement(
+      'form div[class*=alert][class$=inlineNotification] div[class$=content]',
+      {
+        text: 'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
+      }
+    );
+
+    // Configure email domain
+    await expect(page).toFill(
+      'form div[class*=input][class*=multiple][role=button] input',
+      'svhd.io'
+    );
+
+    // Press enter to add email domain
+    await page.keyboard.press('Enter');
+
+    // Input email domain with invalid format
+    await expect(page).toFill('form div[class*=input][class*=multiple][role=button] input', 'abc');
+
+    // Press space to add email domain
+    await page.keyboard.press('Space');
+    await expect(page).toMatchElement('form div[class$=field] div[class$=errorMessage]', {
+      text: 'Invalid domain format.',
+    });
+
+    // Input public email domain (e.g., 'gmail.com', 'yahoo.com' etc)
+    await expect(page).toFill(
+      'form div[class*=input][class*=multiple][role=button] input',
+      'gmail.com'
+    );
+
+    // Press tab to add email domain
+    await page.keyboard.press('Tab');
+    await expect(page).toMatchElement('form div[class$=field] div[class$=errorMessage]', {
+      text: 'Public email domains are not allowed. Invalid domain format.',
+    });
+
+    // Remove last added email domain (which is `gmail.com` in this case). CSS selector can not specify the text content of the component.
+    await expect(page).toClick(
+      'form div[class*=input][class*=multiple][role=button] div[class*=info][class*=tag]:last-of-type button'
+    );
+
+    // Error message got updated, since forbidden email domain is removed.
+    await expect(page).toMatchElement('form div[class$=field] div[class$=errorMessage]', {
+      text: 'Invalid domain format.',
+    });
+    await expect(page).toFill('form div[class*=input][class*=multiple][role=button] input', 'abc');
+
+    // Input field blurred to input email domain.
+    await page.$eval(
+      'form div[class*=input][class*=multiple][role=button] input',
+      (element: HTMLInputElement) => {
+        element.blur();
+      }
+    );
+
+    // Does not allow duplicate email domain.
+    await expect(page).toMatchElement('form div[class$=field] div[class$=errorMessage]', {
+      text: 'There are duplicate domains. Invalid domain format.',
+    });
+
+    // Remove last two added email domains (which are two `abc` in this case).
+    await expect(page).toClick(
+      'form div[class*=input][class*=multiple][role=button] div[class*=info][class*=tag]:last-of-type button'
+    );
+
+    // Focus on email domain input field component (at this time, the input field is empty).
+    const inputField = await page.$('form div[class*=input][class*=multiple][role=button] input');
+    await inputField?.focus();
+    // Should remove the last input email domain with double backspace when the input box is empty.
+    await inputField?.press('Backspace');
+    await inputField?.press('Backspace');
+
+    // Since incorrect email domains are removed, error message no longer exists.
+    const errorMessage = await page.$('form div[class$=field] div[class$=errorMessage]');
+    expect(errorMessage).toBeNull();
+
+    await expectToSaveChanges(page);
+    await waitForToast(page, { text: 'Saved' });
   });
 
   it('can delete an SSO connector from details page', async () => {

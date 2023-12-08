@@ -97,7 +97,6 @@ function Experience({ data, isDeleted, onUpdated, isDarkModeEnabled }: Props) {
     watch,
     setValue,
     setError,
-    clearErrors,
     handleSubmit,
     register,
     formState: { defaultValues, isDirty, isSubmitting, errors },
