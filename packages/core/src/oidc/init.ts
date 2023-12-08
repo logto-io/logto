@@ -159,11 +159,11 @@ export default function initOidc(envSet: EnvSet, queries: Queries, libraries: Li
             const isSignUp =
               ctx.oidc.params?.[OIDCExtraParametersKey.InteractionMode] === InteractionMode.signUp;
 
-            return appendParameters(isSignUp ? routes.signUp : routes.signIn.credentials);
+            return appendParameters(isSignUp ? routes.signUp : routes.signIn);
           }
 
           case 'consent': {
-            return routes.signIn.consent;
+            return routes.consent;
           }
 
           default: {

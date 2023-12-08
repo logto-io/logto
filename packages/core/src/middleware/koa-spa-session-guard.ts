@@ -11,12 +11,13 @@ import { getTenantId } from '#src/utils/tenant.js';
 
 // Need To Align With UI
 export const sessionNotFoundPath = '/unknown-session';
+
 export const guardedPath = [
   '/sign-in',
+  '/consent',
   '/register',
   '/single-sign-on',
   '/social/register',
-  '/reset-password',
   '/forgot-password',
 ];
 
@@ -28,6 +29,7 @@ export default function koaSpaSessionGuard<
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
     const isPreview = ctx.request.URL.searchParams.get('preview');
+
     const isSessionRequiredPath =
       requestPath === '/' || guardedPath.some((path) => requestPath.startsWith(path));
 

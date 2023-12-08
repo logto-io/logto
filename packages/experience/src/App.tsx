@@ -50,7 +50,7 @@ const App = () => {
             <AppBoundary>
               <AppInsightsBoundary cloudRole="ui">
                 <Routes>
-                  <Route path="sign-in/consent" element={<Consent />} />
+                  <Route path="consent" element={<Consent />} />
                   <Route element={<AppLayout />}>
                     <Route
                       path="unknown-session"
