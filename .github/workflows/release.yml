@@ -11,9 +11,8 @@ concurrency:
 
 jobs:
   dockerize:
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    environment: 'release'
-    runs-on: 'ubuntu-latest'
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
+    runs-on: "ubuntu-latest"
     permissions:
       contents: read
       id-token: write
@@ -62,7 +61,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          
+
   # Publish packages and create git tags if needed
   publish-and-tag:
     runs-on: ubuntu-latest
