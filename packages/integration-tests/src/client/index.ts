@@ -6,7 +6,7 @@ import { assert } from '@silverhand/essentials';
 import type { Got } from 'got';
 import { got } from 'got';
 
-import { consent, submitInteraction } from '#src/api/index.js';
+import { submitInteraction } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
 import { MemoryStorage } from './storage.js';
@@ -162,10 +162,19 @@ export default class MockClient {
     assert(this.interactionCookie, new Error('Session not found'));
     assert(this.interactionCookie.includes('_session.sig'), new Error('Session not found'));
 
-    const { redirectTo } = await consent(this.api, this.interactionCookie);
+    const consentResponse = await got.get(`${this.config.endpoint}/consent`, {
+      headers: {
+        cookie: this.interactionCookie,
+      },
+      followRedirect: false,
+    });
 
-    // Note: should redirect to oidc auth endpoint
-    assert(redirectTo.startsWith(`${this.config.endpoint}/oidc/auth`), new Error('Consent failed'));
+    // Consent page should auto consent and redirect to auth endpoint
+    const redirectTo = consentResponse.headers.location;
+
+    if (!redirectTo?.startsWith(`${this.config.endpoint}/oidc/auth`)) {
+      throw new Error('Consent failed');
+    }
 
     const authCodeResponse = await got.get(redirectTo, {
       headers: {
