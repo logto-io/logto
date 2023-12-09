@@ -37,7 +37,7 @@
     "test:ci": "pnpm test:only"
   },
   "engines": {
-    "node": "^18.12.0"
+    "node": "^20.9.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "4.0.1",
@@ -45,7 +45,7 @@
     "@silverhand/ts-config": "4.0.0",
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.4.0",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.9.5",
     "@types/pluralize": "^0.0.33",
     "camelcase": "^8.0.0",
     "chalk": "^5.0.0",

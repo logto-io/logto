@@ -106,7 +106,7 @@
     "@types/koa-mount": "^4.0.0",
     "@types/koa-send": "^4.1.3",
     "@types/koa__cors": "^4.0.0",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.9.5",
     "@types/oidc-provider": "^8.0.0",
     "@types/pluralize": "^0.0.33",
     "@types/qrcode": "^1.5.2",
@@ -127,7 +127,7 @@
     "typescript": "^5.0.0"
   },
   "engines": {
-    "node": "^18.12.0"
+    "node": "^20.9.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
