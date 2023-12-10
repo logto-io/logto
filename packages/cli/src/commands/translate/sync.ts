@@ -8,13 +8,16 @@ import { inquireInstancePath, lintLocaleFiles } from '../../utils.js';
 
 import { type TranslationOptions, baseLanguage, syncTranslation } from './utils.js';
 
-const sync: CommandModule<{ path?: string }, { path?: string }> = {
+const sync: CommandModule<
+  { path?: string; skipCoreCheck?: boolean },
+  { path?: string; skipCoreCheck?: boolean }
+> = {
   command: ['sync'],
   describe:
     'Translate all untranslated phrases using ChatGPT. Note the environment variable `OPENAI_API_KEY` is required to work.',
-  handler: async ({ path: inputPath }) => {
+  handler: async ({ path: inputPath, skipCoreCheck }) => {
     const queue = new PQueue({ concurrency: 5 });
-    const instancePath = await inquireInstancePath(inputPath);
+    const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
 
     for (const languageTag of Object.keys(languages)) {
       if (languageTag === baseLanguage) {

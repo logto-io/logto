@@ -16,6 +16,11 @@ const translate: CommandModule = {
         type: 'string',
         describe: 'The path to your Logto instance directory',
       })
+      .option('skip-core-check', {
+        alias: 'sc',
+        type: 'boolean',
+        describe: 'Skip checking if the core package is existed',
+      })
       .command(create)
       .command(listTags)
       .command(sync)

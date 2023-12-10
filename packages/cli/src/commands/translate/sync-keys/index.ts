@@ -10,8 +10,15 @@ import { consoleLog, inquireInstancePath, lintLocaleFiles } from '../../../utils
 import { parseLocaleFiles, syncPhraseKeysAndFileStructure } from './utils.js';
 
 const syncKeys: CommandModule<
-  { path?: string },
-  { path?: string; baseline: string; target: string; skipLint?: boolean; package: string }
+  { path?: string; skipCoreCheck?: boolean },
+  {
+    path?: string;
+    skipCoreCheck?: boolean;
+    baseline: string;
+    target: string;
+    skipLint?: boolean;
+    package: string;
+  }
 > = {
   command: ['sync-keys', 'sk'],
   describe: [
@@ -40,13 +47,14 @@ const syncKeys: CommandModule<
         describe: 'The target language tag, or `all` to sync all languages',
       })
       .option('skip-lint', {
-        alias: 's',
+        alias: 'sl',
         type: 'boolean',
         describe: 'Skip running `eslint --fix` for locales after syncing',
       })
       .demandOption(['baseline', 'target']),
   handler: async ({
     path: inputPath,
+    skipCoreCheck,
     baseline: baselineTag,
     target: targetTag,
     skipLint,
@@ -68,7 +76,7 @@ const syncKeys: CommandModule<
       consoleLog.fatal('Invalid package name, expected `phrases` or `phrases-experience`');
     }
 
-    const instancePath = await inquireInstancePath(inputPath);
+    const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
     const phrasesPath = path.join(instancePath, 'packages', packageName);
     const localesPath = path.join(phrasesPath, 'src/locales');
     const entrypoint = path.join(localesPath, baselineTag.toLowerCase(), 'index.ts');

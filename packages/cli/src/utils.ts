@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 
 import { ConsoleLog } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
-import { assert, conditionalString } from '@silverhand/essentials';
+import { assert, conditional, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { Progress } from 'got';
 import { got } from 'got';
@@ -197,9 +197,9 @@ const validatePath = async (value: string) => {
   return true;
 };
 
-export const inquireInstancePath = async (initialPath?: string) => {
+export const inquireInstancePath = async (initialPath?: string, skipValidation?: boolean) => {
   const inquire = async () => {
-    if (!initialPath && (await validatePath('.')) === true) {
+    if (!initialPath && ((await validatePath('.')) === true || skipValidation)) {
       return path.resolve('.');
     }
 
@@ -216,7 +216,7 @@ export const inquireInstancePath = async (initialPath?: string) => {
         type: 'input',
         default: defaultPath,
         filter: (value: string) => value.trim(),
-        validate: validatePath,
+        validate: conditional(!skipValidation && validatePath),
       },
       { instancePath: initialPath }
     );
@@ -225,10 +225,13 @@ export const inquireInstancePath = async (initialPath?: string) => {
   };
 
   const instancePath = await inquire();
-  const validated = await validatePath(instancePath);
 
-  if (validated !== true) {
-    consoleLog.fatal(validated);
+  if (!skipValidation) {
+    const validated = await validatePath(instancePath);
+
+    if (validated !== true) {
+      consoleLog.fatal(validated);
+    }
   }
 
   return instancePath;

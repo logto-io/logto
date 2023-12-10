@@ -2,7 +2,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[scss]": {
     "editor.codeActionsOnSave": {
-      "source.fixAll.stylelint": true
+      "source.fixAll.stylelint": "explicit"
     }
   },
   "stylelint.validate": [
@@ -24,7 +24,7 @@
     "typescriptreact",
   ],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
+    "source.fixAll.eslint": "explicit"
   },
   "json.schemas": [
     {
