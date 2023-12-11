@@ -37,7 +37,7 @@
     "prepack": "pnpm build"
   },
   "engines": {
-    "node": "^18.12.0"
+    "node": "^20.9.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
@@ -79,7 +79,7 @@
     "@withtyped/server": "^0.12.9",
     "@types/inquirer": "^9.0.0",
     "@types/jest": "^29.4.0",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.9.5",
     "@types/semver": "^7.3.12",
     "@types/sinon": "^10.0.13",
     "@types/tar": "^6.1.2",
