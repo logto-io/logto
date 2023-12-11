@@ -259,7 +259,7 @@ function ApplicationDetails() {
           </FormProvider>
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} onConfirm={reset} />
     </DetailsPage>
   );
 }

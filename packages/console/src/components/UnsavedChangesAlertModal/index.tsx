@@ -7,9 +7,10 @@ import ConfirmModal from '@/ds-components/ConfirmModal';
 type Props = {
   hasUnsavedChanges: boolean;
   parentPath?: string;
+  onConfirm?: () => void;
 };
 
-function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath }: Props) {
+function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath, onConfirm }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { pathname } = useLocation();
   const blocker = useBlocker(hasUnsavedChanges);
@@ -36,7 +37,10 @@ function UnsavedChangesAlertModal({ hasUnsavedChanges, parentPath }: Props) {
       confirmButtonText="general.leave_page"
       cancelButtonText="general.stay_on_page"
       onCancel={blocker.reset}
-      onConfirm={blocker.proceed}
+      onConfirm={() => {
+        onConfirm?.();
+        blocker.proceed?.();
+      }}
     >
       {t('general.unsaved_changes_warning')}
     </ConfirmModal>
