@@ -1,4 +1,7 @@
-import { Applications } from '@logto/schemas';
+import {
+  Applications,
+  applicationCreateGuard as originalApplicationCreateGuard,
+} from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 
@@ -8,5 +11,5 @@ export const applicationResponseGuard = EnvSet.values.isDevFeaturesEnabled
   : Applications.guard.omit({ isThirdParty: true });
 
 export const applicationCreateGuard = EnvSet.values.isDevFeaturesEnabled
-  ? Applications.createGuard
-  : Applications.createGuard.omit({ isThirdParty: true });
+  ? originalApplicationCreateGuard
+  : originalApplicationCreateGuard.omit({ isThirdParty: true });

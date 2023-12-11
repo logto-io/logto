@@ -16,3 +16,18 @@ export const featuredApplicationGuard = Applications.guard.pick({
   name: true,
   type: true,
 }) satisfies z.ZodType<FeaturedApplication>;
+
+export const applicationCreateGuard = Applications.createGuard
+  .omit({
+    id: true,
+    createdAt: true,
+    secret: true,
+    tenantId: true,
+  })
+  .partial()
+  .merge(Applications.createGuard.pick({ name: true, type: true }));
+
+export const applicationPatchGuard = applicationCreateGuard.omit({
+  type: true,
+  isThirdParty: true,
+});
