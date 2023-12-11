@@ -32,12 +32,14 @@ function DomainsInput({ className, values, onChange: rawOnChange, error, placeho
   const [focusedValueId, setFocusedValueId] = useState<Nullable<string>>(null);
   const [currentValue, setCurrentValue] = useState('');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { setError } = useFormContext<DomainsFormType>();
+  const { setError, clearErrors } = useFormContext<DomainsFormType>();
 
   const onChange = (values: Option[]) => {
     const { values: parsedValues, errorMessage } = domainOptionsParser(values);
     if (errorMessage) {
       setError('domains', { type: 'custom', message: errorMessage });
+    } else {
+      clearErrors('domains');
     }
     rawOnChange(parsedValues);
   };
