@@ -42,6 +42,8 @@ export const createMockProvider = (
     interactionDetails ?? (async () => ({ params: {}, jti: 'jti', client_id: 'mockApplicationId' }))
   );
 
+  jest.spyOn(provider, 'interactionResult').mockImplementation(async () => 'redirectTo');
+
   if (Grant) {
     Sinon.stub(provider, 'Grant').value(Grant);
   }
