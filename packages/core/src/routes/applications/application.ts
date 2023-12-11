@@ -9,7 +9,6 @@ import {
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { boolean, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -17,20 +16,14 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
+
+import { applicationResponseGuard, applicationCreateGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
-
-// FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
-const applicationResponseGuard = EnvSet.values.isDevFeaturesEnabled
-  ? Applications.guard
-  : Applications.guard.omit({ isThirdParty: true });
-const applicationCreateGuard = EnvSet.values.isDevFeaturesEnabled
-  ? Applications.createGuard
-  : Applications.createGuard.omit({ isThirdParty: true });
 
 export default function applicationRoutes<T extends AuthedRouter>(
   ...[

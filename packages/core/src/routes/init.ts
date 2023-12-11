@@ -11,8 +11,8 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoutes from './admin-user/index.js';
-import applicationRoleRoutes from './application-role.js';
-import applicationRoutes from './application.js';
+import applicationRoleRoutes from './applications/application-role.js';
+import applicationRoutes from './applications/application.js';
 import authnRoutes from './authn.js';
 import connectorRoutes from './connector/index.js';
 import customPhraseRoutes from './custom-phrase.js';
