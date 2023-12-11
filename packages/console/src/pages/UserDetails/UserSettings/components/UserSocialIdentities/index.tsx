@@ -38,7 +38,9 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
     keyPrefix: 'admin_console',
   });
 
-  const { data, error, mutate } = useSWR<ConnectorResponse[], RequestError>('api/connectors');
+  const { data, error, isLoading, mutate } = useSWR<ConnectorResponse[], RequestError>(
+    'api/connectors'
+  );
 
   const [deletingConnector, setDeletingConnector] = useState<DisplayConnector>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,8 +52,6 @@ function UserSocialIdentities({ userId, identities, onDelete }: Props) {
 
     return getConnectorGroups(data);
   }, [data]);
-
-  const isLoading = !connectorGroups && !error;
 
   const handleDelete = async (target: string) => {
     if (isSubmitting) {
