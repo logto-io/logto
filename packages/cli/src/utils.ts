@@ -197,9 +197,9 @@ const validatePath = async (value: string) => {
   return true;
 };
 
-export const inquireInstancePath = async (initialPath?: string, skipValidation?: boolean) => {
+export const inquireInstancePath = async (initialPath?: string, skipCoreCheck?: boolean) => {
   const inquire = async () => {
-    if (!initialPath && ((await validatePath('.')) === true || skipValidation)) {
+    if (!initialPath && (skipCoreCheck ?? (await validatePath('.')) === true)) {
       return path.resolve('.');
     }
 
@@ -216,7 +216,7 @@ export const inquireInstancePath = async (initialPath?: string, skipValidation?:
         type: 'input',
         default: defaultPath,
         filter: (value: string) => value.trim(),
-        validate: conditional(!skipValidation && validatePath),
+        validate: conditional(!skipCoreCheck && validatePath),
       },
       { instancePath: initialPath }
     );
@@ -226,7 +226,7 @@ export const inquireInstancePath = async (initialPath?: string, skipValidation?:
 
   const instancePath = await inquire();
 
-  if (!skipValidation) {
+  if (!skipCoreCheck) {
     const validated = await validatePath(instancePath);
 
     if (validated !== true) {
@@ -277,8 +277,8 @@ const execPromise = promisify(execFile);
 export const lintLocaleFiles = async (
   /** Logto instance path */
   instancePath: string,
-  /** Target package name, ignore to lint both packages */
-  packageName?: 'phrases' | 'phrases-experience'
+  /** Target package name, ignore to lint both `phrases` and `phrases-experience` packages */
+  packageName?: string
 ) => {
   const spinner = ora({
     text: 'Running `eslint --fix` for locales',

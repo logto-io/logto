@@ -38,7 +38,7 @@ const syncKeys: CommandModule<
       .option('package', {
         alias: 'pkg',
         type: 'string',
-        describe: 'The package name of the phrases, one of `phrases` or `phrases-experience`',
+        describe: 'The package name of the phrases, e.g. `phrases` or `phrases-experience`',
         default: 'phrases',
       })
       .option('target', {
@@ -70,10 +70,6 @@ const syncKeys: CommandModule<
 
     if (baselineTag === targetTag) {
       consoleLog.fatal('Baseline and target cannot be the same');
-    }
-
-    if (packageName !== 'phrases' && packageName !== 'phrases-experience') {
-      consoleLog.fatal('Invalid package name, expected `phrases` or `phrases-experience`');
     }
 
     const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
