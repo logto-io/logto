@@ -14,13 +14,15 @@ import { ssoConnectorTestCases } from './sso-connectors-test-cases.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
 
+const errorMessageSelector = ['form', dcls('field'), dcls('errorMessage')].join(' ');
+
 const emailDomainInputFieldSelector = [
   'form',
   `${dcls('input')}${cls('multiple')}[role=button]`,
   'input',
 ].join(' ');
 
-const emailDomainErrorMessageSelector = ['form', dcls('field'), dcls('errorMessage')].join(' ');
+const connectorNameInputFieldSelector = ['form', 'input[type=text][name=connectorName]'].join(' ');
 
 describe('create SSO connectors', () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
@@ -155,7 +157,7 @@ describe('create SSO connectors', () => {
     });
   });
 
-  it("can configure SSO connectors's 'SSO Experience' GENERAL setup", async () => {
+  it("can configure SSO connectors's 'SSO Experience' GENERAL setup: email domain input field", async () => {
     // Expect to see inline notification alert to configure email domain.
     await expect(page).toMatchElement(
       ['form', `${dcls('alert')}${cls('inlineNotification')}`, dcls('content')].join(' '),
@@ -175,7 +177,7 @@ describe('create SSO connectors', () => {
 
     // Press space to add email domain
     await page.keyboard.press('Space');
-    await expect(page).toMatchElement(emailDomainErrorMessageSelector, {
+    await expect(page).toMatchElement(errorMessageSelector, {
       text: 'Invalid domain format.',
     });
 
@@ -184,7 +186,7 @@ describe('create SSO connectors', () => {
 
     // Press tab to add email domain
     await page.keyboard.press('Tab');
-    await expect(page).toMatchElement(emailDomainErrorMessageSelector, {
+    await expect(page).toMatchElement(errorMessageSelector, {
       text: 'Public email domains are not allowed. Invalid domain format.',
     });
 
@@ -199,7 +201,7 @@ describe('create SSO connectors', () => {
     );
 
     // Error message got updated, since forbidden email domain is removed.
-    await expect(page).toMatchElement(emailDomainErrorMessageSelector, {
+    await expect(page).toMatchElement(errorMessageSelector, {
       text: 'Invalid domain format.',
     });
     await expect(page).toFill(emailDomainInputFieldSelector, 'abc');
@@ -214,7 +216,7 @@ describe('create SSO connectors', () => {
     );
 
     // Does not allow duplicate email domain.
-    await expect(page).toMatchElement(emailDomainErrorMessageSelector, {
+    await expect(page).toMatchElement(errorMessageSelector, {
       text: 'There are duplicate domains. Invalid domain format.',
     });
 
@@ -236,11 +238,72 @@ describe('create SSO connectors', () => {
     await inputField?.press('Backspace');
 
     // Since incorrect email domains are removed, error message no longer exists.
-    const errorMessage = await page.$(emailDomainErrorMessageSelector);
+    const errorMessage = await page.$(errorMessageSelector);
     expect(errorMessage).toBeNull();
 
     await expectToSaveChanges(page);
     await waitForToast(page, { text: 'Saved' });
+
+    // Inline notification alert should be removed after email domain has been configured.
+    const inlineNotification = await page.$(
+      ['form', `${dcls('alert')}${cls('inlineNotification')}`, dcls('content')].join(' ')
+    );
+    expect(inlineNotification).toBeNull();
+  });
+
+  it("can configure SSO connectors's 'SSO Experience' GENERAL setup: connector name input field", async () => {
+    // Current SSO connector's `connectorName` is `${ssoConnectorTestCases[1].connectorName} (1)`
+    const { connectorName } = ssoConnectorTestCases[1]!;
+    await expect(page).toFill(connectorNameInputFieldSelector, connectorName);
+
+    await expectToSaveChanges(page);
+    await expect(page).toMatchElement(errorMessageSelector, {
+      text: 'Connector name already exists. Please choose a different name.',
+    });
+
+    await expect(page).toFill(connectorNameInputFieldSelector, `${connectorName} (2)`);
+    await expectToSaveChanges(page);
+    await waitForToast(page, { text: 'Saved' });
+  });
+
+  it("can configure SSO connectors's 'SSO Experience' DISPLAY setup", async () => {
+    // Can successfully configure the `displayName`, `logo` and `darkLogo` fields.
+    const dataToFill = {
+      'branding.displayName': 'Display name',
+      'branding.logo': 'https://logto.io/logo.png',
+      'branding.darkLogo': 'https://logto.io/logo-dark.png',
+    };
+    await expect(page).toFillForm('form', dataToFill);
+    await expectToSaveChanges(page);
+    await waitForToast(page, { text: 'Saved' });
+    await Promise.all(
+      Object.entries(dataToFill).map(async ([fieldName, value]) => {
+        const valueInField = await page.$eval(
+          `form div[class$=field] input[type=text][name="${fieldName}"]`,
+          (element) => (element instanceof HTMLInputElement ? element.value : null)
+        );
+        expect(valueInField).toBe(value);
+      })
+    );
+
+    // Can successfully clear configure in `displayName`, `logo` and `darkLogo` fields.
+    const dataToClearForm = {
+      'branding.displayName': '',
+      'branding.logo': '',
+      'branding.darkLogo': '',
+    };
+    await expect(page).toFillForm('form', dataToClearForm);
+    await expectToSaveChanges(page);
+    await waitForToast(page, { text: 'Saved' });
+    await Promise.all(
+      Object.entries(dataToClearForm).map(async ([fieldName, value]) => {
+        const valueInField = await page.$eval(
+          `form div[class$=field] input[type=text][name="${fieldName}"]`,
+          (element) => (element instanceof HTMLInputElement ? element.value : null)
+        );
+        expect(valueInField).toBe(value);
+      })
+    );
   });
 
   it('can delete an SSO connector from details page', async () => {
