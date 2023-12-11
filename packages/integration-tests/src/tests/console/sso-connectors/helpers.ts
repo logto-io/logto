@@ -1,6 +1,7 @@
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import { type Page } from 'puppeteer';
 
+import { expectToSaveChanges, waitForToast } from '#src/ui-helpers/index.js';
 import { dcls, cls } from '#src/utils.js';
 
 import { type SsoConnectorTestCase, type Protocol } from './sso-connectors-test-cases.js';
@@ -68,6 +69,65 @@ const checkSsoConnectorConnectionTabInfo = async (page: Page, protocol: Protocol
   }
 };
 
+const checkOidcConfigPreview = async (previewResults: Record<string, string>) => {
+  await Promise.all(
+    Object.entries(previewResults).map(async ([key, value]) => {
+      const valueField = await expect(page).toMatchElement(
+        [`${dcls('container')}${cls('oidcConfigPreview')}`, `div:has(${dcls('title')})`].join(' '),
+        { text: key }
+      );
+      const valueDisplayed = await valueField.$eval(
+        [dcls('content')].join(' '),
+        (element) => element.textContent
+      );
+
+      expect(valueDisplayed).toBe(value);
+    })
+  );
+};
+
+const checkSamlConfigPreview = async (previewResults: Record<string, string>) => {
+  await Promise.all(
+    Object.entries(previewResults).map(async ([key, value]) => {
+      const valueField = await expect(page).toMatchElement(
+        [`${dcls('samlMetadataForm')}`, `${dcls('container')}`, `div:has(${dcls('title')})`].join(
+          ' '
+        ),
+        { text: key }
+      );
+      const valueDisplayed = await valueField.$eval(
+        [
+          dcls('content'),
+          conditional(key === 'Signing certificate' && dcls('certificatePreview')),
+        ].join(' '),
+        (element) => element.textContent
+      );
+
+      expect(valueDisplayed).toBe(value);
+    })
+  );
+};
+
+// Configure the SSO connector connection and check the validity by comparing the preview results.
+const configureSsoConnectorConnection = async (
+  page: Page,
+  formData: Record<string, string>,
+  protocol: Protocol,
+  previewResults: Record<string, string>
+) => {
+  await expect(page).toFillForm(dcls('form'), formData);
+  await expectToSaveChanges(page);
+  await waitForToast(page, { text: 'Saved' });
+
+  if (protocol === 'OIDC') {
+    await checkOidcConfigPreview(previewResults);
+  }
+
+  if (protocol === 'SAML') {
+    await checkSamlConfigPreview(previewResults);
+  }
+};
+
 export const findModalFooterButton = async (isButtonDisabled = false) => {
   return page.waitForSelector(
     `.ReactModalPortal div[class$=footer] button${conditionalString(
@@ -78,7 +138,7 @@ export const findModalFooterButton = async (isButtonDisabled = false) => {
 
 export const fillSsoConnectorCreationModal = async (
   page: Page,
-  { connectorFactoryName, connectorName, protocol }: SsoConnectorTestCase,
+  { connectorFactoryName, connectorName, protocol, formData, previewResults }: SsoConnectorTestCase,
   checkConnectionInfo = false
 ) => {
   // Button should be disabled util form is filled.
@@ -114,5 +174,7 @@ export const fillSsoConnectorCreationModal = async (
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
     await checkSsoConnectorConnectionTabInfo(page, protocol);
+
+    await configureSsoConnectorConnection(page, formData, protocol, previewResults);
   }
 };
