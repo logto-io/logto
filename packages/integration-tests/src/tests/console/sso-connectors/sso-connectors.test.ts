@@ -53,9 +53,7 @@ describe('create SSO connectors', () => {
 
     await expectModalWithTitle(page, 'Add enterprise connector');
 
-    await fillSsoConnectorCreationModal(page, ssoConnectorTestCases[0]!);
-
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await fillSsoConnectorCreationModal(page, ssoConnectorTestCases[0]!, true);
 
     // Come back to Enterprise SSO listing page.
     await page.goto(appendPathname('/console/enterprise-sso', logtoConsoleUrl).href);
@@ -76,9 +74,7 @@ describe('create SSO connectors', () => {
 
       await expectModalWithTitle(page, 'Add enterprise connector');
 
-      await fillSsoConnectorCreationModal(page, ssoConnector);
-
-      await page.waitForNavigation({ waitUntil: 'networkidle0' });
+      await fillSsoConnectorCreationModal(page, ssoConnector, true);
 
       // Come back to Enterprise SSO listing page.
       await page.goto(appendPathname('/console/enterprise-sso', logtoConsoleUrl).href);
@@ -102,11 +98,13 @@ describe('create SSO connectors', () => {
      * To check only the `duplicated connector name` is blocked, even if the
      * existing SSO connector (with the occupied name) is created with a different connector factory.
      */
-    const { connectorFactoryName } = ssoConnectorTestCases[0]!;
+    const { connectorFactoryName, protocol } = ssoConnectorTestCases[0]!;
     const { connectorName } = ssoConnectorTestCases[1]!;
+    // Since the creation process is expected to be blocked in this test case, we do not want to check the connection info on details page.
     await fillSsoConnectorCreationModal(page, {
       connectorFactoryName,
       connectorName,
+      protocol,
     });
 
     // Error message should be shown.
