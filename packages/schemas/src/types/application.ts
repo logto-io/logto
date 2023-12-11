@@ -27,7 +27,7 @@ export const applicationCreateGuard = Applications.createGuard
   .partial()
   .merge(Applications.createGuard.pick({ name: true, type: true }));
 
-export const applicationPatchGuard = applicationCreateGuard.omit({
+export const applicationPatchGuard = applicationCreateGuard.partial().omit({
   type: true,
   isThirdParty: true,
 });
