@@ -12,9 +12,13 @@ create table applications (
   type application_type not null,
   oidc_client_metadata jsonb /* @use OidcClientMetadata */ not null,
   custom_client_metadata jsonb /* @use CustomClientMetadata */ not null default '{}'::jsonb,
+  is_third_party boolean not null default false,
   created_at timestamptz not null default(now()),
   primary key (id)
 );
 
 create index applications__id
   on applications (tenant_id, id);
+
+create index applications__is_third_party
+  on applications (tenant_id, is_third_party);
