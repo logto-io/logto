@@ -76,6 +76,7 @@ describe('application route', () => {
     const response = await applicationRequest
       .post('/applications')
       .send({ name, type, description });
+
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockApplication,
@@ -154,16 +155,23 @@ describe('application route', () => {
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {
     await expect(
-      applicationRequest.patch('/applications/doo').send({ type: 'node' })
-    ).resolves.toHaveProperty('status', 400);
-    await expect(
       applicationRequest.patch('/applications/doo').send({
-        customClientMetadata: {
-          ...customClientMetadata,
-          corsAllowedOrigins: [''],
-        },
+        customClientMetadata: 'test',
       })
     ).resolves.toHaveProperty('status', 400);
+  });
+
+  it('PATCH /applications/:applicationId should not allow update application secret, isThirdParty and type', async () => {
+    const response = await applicationRequest.patch('/applications/foo').send({
+      type: ApplicationType.Native,
+      isThirdParty: true,
+      secret: 'test',
+    });
+
+    expect(response.status).toEqual(200);
+
+    // Should not update the secret, isThirdParty and type
+    expect(response.body).toEqual(mockApplication);
   });
 
   it('PATCH /applications/:applicationId should save the formatted URIs as per RFC', async () => {

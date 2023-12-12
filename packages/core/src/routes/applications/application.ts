@@ -2,14 +2,13 @@ import type { Role } from '@logto/schemas';
 import {
   demoAppApplicationId,
   buildDemoAppDataForTenant,
-  Applications,
   InternalRole,
   ApplicationType,
+  applicationPatchGuard,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { boolean, object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -17,20 +16,14 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
+
+import { applicationResponseGuard, applicationCreateGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
 const applicationTypeGuard = z.nativeEnum(ApplicationType);
-
-// FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
-const applicationResponseGuard = EnvSet.values.isDevFeaturesEnabled
-  ? Applications.guard
-  : Applications.guard.omit({ isThirdParty: true });
-const applicationCreateGuard = EnvSet.values.isDevFeaturesEnabled
-  ? Applications.createGuard
-  : Applications.createGuard.omit({ isThirdParty: true });
 
 export default function applicationRoutes<T extends AuthedRouter>(
   ...[
@@ -112,10 +105,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
   router.post(
     '/applications',
     koaGuard({
-      body: applicationCreateGuard
-        .omit({ id: true, createdAt: true })
-        .partial()
-        .merge(Applications.createGuard.pick({ name: true, type: true })),
+      body: applicationCreateGuard,
       response: applicationResponseGuard,
       status: [200, 422],
     }),
@@ -174,14 +164,11 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: applicationCreateGuard
-        .omit({ id: true, createdAt: true })
-        .deepPartial()
-        .merge(
-          object({
-            isAdmin: boolean().optional(),
-          })
-        ),
+      body: applicationPatchGuard.deepPartial().merge(
+        object({
+          isAdmin: boolean().optional(),
+        })
+      ),
       response: applicationResponseGuard,
       status: [200, 404, 422, 500],
     }),
