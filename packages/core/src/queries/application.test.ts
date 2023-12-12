@@ -21,7 +21,6 @@ const pool = createMockPool({
 const { createApplicationQueries } = await import('./application.js');
 const {
   findTotalNumberOfApplications,
-  findAllApplications,
   findApplicationById,
   insertApplication,
   updateApplicationById,
@@ -45,29 +44,6 @@ describe('application query', () => {
     });
 
     await expect(findTotalNumberOfApplications()).resolves.toEqual({ count: 10 });
-  });
-
-  it('findAllApplications', async () => {
-    const limit = 10;
-    const offset = 1;
-    const rowData = { id: 'foo' };
-
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      order by "created_at" desc
-      limit $1
-      offset $2
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([limit, offset]);
-
-      return createMockQueryResult([rowData]);
-    });
-
-    await expect(findAllApplications(limit, offset)).resolves.toEqual([rowData]);
   });
 
   it('findApplicationById', async () => {

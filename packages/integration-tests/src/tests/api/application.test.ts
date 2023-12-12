@@ -8,6 +8,7 @@ import {
   deleteApplication,
   getApplications,
 } from '#src/api/index.js';
+import { expectRejects } from '#src/helpers/index.js';
 
 describe('admin console application', () => {
   it('should create application successfully', async () => {
@@ -17,11 +18,34 @@ describe('admin console application', () => {
 
     expect(application.name).toBe(applicationName);
     expect(application.type).toBe(applicationType);
+    expect(application.isThirdParty).toBe(false);
 
     const fetchedApplication = await getApplication(application.id);
 
     expect(fetchedApplication.name).toBe(applicationName);
     expect(fetchedApplication.id).toBe(application.id);
+  });
+
+  it('should throw error when creating a third party application with invalid type', async () => {
+    await expectRejects(
+      createApplication('test-create-app', ApplicationType.Native, {
+        isThirdParty: true,
+      }),
+      { code: 'application.invalid_third_party_application_type', statusCode: 400 }
+    );
+  });
+
+  it('should create third party application successfully', async () => {
+    const applicationName = 'test-third-party-app';
+
+    const application = await createApplication(applicationName, ApplicationType.Traditional, {
+      isThirdParty: true,
+    });
+
+    expect(application.name).toBe(applicationName);
+    expect(application.type).toBe(ApplicationType.Traditional);
+    expect(application.isThirdParty).toBe(true);
+    await deleteApplication(application.id);
   });
 
   it('should update application details successfully', async () => {
@@ -74,11 +98,30 @@ describe('admin console application', () => {
     expect(application.id).toBe('demo-app');
   });
 
-  it('should fetch all applications created above', async () => {
+  it('should fetch all non-third party applications created above', async () => {
     const applications = await getApplications();
+
     const applicationNames = applications.map(({ name }) => name);
     expect(applicationNames).toContain('test-create-app');
     expect(applicationNames).toContain('test-update-app');
+
+    expect(applications.some(({ isThirdParty }) => isThirdParty)).toBe(false);
+  });
+
+  it('should fetch all third party applications created', async () => {
+    const application = await createApplication(
+      'test-third-party-app',
+      ApplicationType.Traditional,
+      {
+        isThirdParty: true,
+      }
+    );
+
+    const applications = await getApplications(undefined, undefined, true);
+
+    expect(applications.find(({ id }) => id === application.id)).toEqual(application);
+    expect(applications.some(({ isThirdParty }) => !isThirdParty)).toBe(false);
+    await deleteApplication(application.id);
   });
 
   it('should create m2m application successfully and can get only m2m applications by specifying types', async () => {

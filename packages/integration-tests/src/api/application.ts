@@ -26,7 +26,8 @@ export const createApplication = async (
 
 export const getApplications = async (
   types?: ApplicationType[],
-  searchParameters?: Record<string, string>
+  searchParameters?: Record<string, string>,
+  isThirdParty?: boolean
 ) => {
   const searchParams = new URLSearchParams([
     ...(conditional(types && types.length > 0 && types.map((type) => ['types', type])) ?? []),
@@ -35,6 +36,7 @@ export const getApplications = async (
         Object.keys(searchParameters).length > 0 &&
         Object.entries(searchParameters).map(([key, value]) => [key, value])
     ) ?? []),
+    ...(conditional(isThirdParty && [['isThirdParty', 'true']]) ?? []),
   ]);
 
   return authedAdminApi.get('applications', { searchParams }).json<Application[]>();
