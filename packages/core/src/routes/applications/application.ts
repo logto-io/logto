@@ -2,9 +2,9 @@ import type { Role } from '@logto/schemas';
 import {
   demoAppApplicationId,
   buildDemoAppDataForTenant,
-  Applications,
   InternalRole,
   ApplicationType,
+  applicationPatchGuard,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { boolean, object, string, z } from 'zod';
@@ -16,7 +16,9 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import type { AuthedRouter, RouterInitArgs } from './types.js';
+import type { AuthedRouter, RouterInitArgs } from '../types.js';
+
+import { applicationResponseGuard, applicationCreateGuard } from './types.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -63,7 +65,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
           .or(applicationTypeGuard.transform((type) => [type]))
           .optional(),
       }),
-      response: z.array(Applications.guard),
+      response: z.array(applicationResponseGuard),
       status: 200,
     }),
     async (ctx, next) => {
@@ -103,11 +105,8 @@ export default function applicationRoutes<T extends AuthedRouter>(
   router.post(
     '/applications',
     koaGuard({
-      body: Applications.createGuard
-        .omit({ id: true, createdAt: true })
-        .partial()
-        .merge(Applications.createGuard.pick({ name: true, type: true })),
-      response: Applications.guard,
+      body: applicationCreateGuard,
+      response: applicationResponseGuard,
       status: [200, 422],
     }),
     async (ctx, next) => {
@@ -134,7 +133,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      response: Applications.guard.merge(z.object({ isAdmin: z.boolean() })),
+      response: applicationResponseGuard.merge(z.object({ isAdmin: z.boolean() })),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -165,15 +164,12 @@ export default function applicationRoutes<T extends AuthedRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Applications.createGuard
-        .omit({ id: true, createdAt: true })
-        .deepPartial()
-        .merge(
-          object({
-            isAdmin: boolean().optional(),
-          })
-        ),
-      response: Applications.guard,
+      body: applicationPatchGuard.deepPartial().merge(
+        object({
+          isAdmin: boolean().optional(),
+        })
+      ),
+      response: applicationResponseGuard,
       status: [200, 404, 422, 500],
     }),
     async (ctx, next) => {

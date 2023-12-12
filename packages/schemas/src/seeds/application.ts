@@ -27,6 +27,7 @@ export const buildDemoAppDataForTenant = (tenantId: string): Application => ({
   type: ApplicationType.SPA,
   oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
   customClientMetadata: {},
+  isThirdParty: false,
   createdAt: 0,
 });
 
