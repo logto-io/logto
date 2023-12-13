@@ -109,7 +109,7 @@
               "schema": {
                 "properties": {
                   "userIds": {
-                    "description": "An array of user IDs to be added to the organization."
+                    "description": "An array of user IDs to be added to the organization. Organization existed users assignment will be ignored."
                   }
                 }
               }
@@ -121,7 +121,7 @@
             "description": "Users were added to the organization successfully."
           },
           "422": {
-            "description": "At least one of the IDs provided is not valid. For example, the organization ID or user ID does not exist; or the user is already a member of the organization."
+            "description": "At least one of the IDs provided is not valid. For example, the organization ID or user ID does not exist."
           }
         }
       },

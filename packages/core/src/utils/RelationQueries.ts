@@ -93,6 +93,7 @@ export default class RelationQueries<
    *
    * Each entity must contain the same number of ids as the number of relations, and
    * the order of the ids must match the order of the relations.
+   * Insert existing relations will be ignored.
    *
    * @param data Entities to insert.
    * @returns A Promise that resolves to the query result.
@@ -124,7 +125,8 @@ export default class RelationQueries<
             )})`
         ),
         sql`, `
-      )};
+      )}
+      ${sql`on conflict do nothing`}
     `);
   }
 
