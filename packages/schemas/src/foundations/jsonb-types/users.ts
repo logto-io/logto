@@ -1,4 +1,3 @@
-import { UserScope } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { MfaFactor } from './sign-in-experience.js';
@@ -69,7 +68,3 @@ export type MfaVerification = z.infer<typeof mfaVerificationGuard>;
 export const mfaVerificationsGuard = mfaVerificationGuard.array();
 
 export type MfaVerifications = z.infer<typeof mfaVerificationsGuard>;
-
-export const userScopesGuard = z.nativeEnum(UserScope).array();
-
-export type UserScopes = z.infer<typeof userScopesGuard>;

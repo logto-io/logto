@@ -73,8 +73,9 @@ const alteration: AlterationScript = {
         /** The globally unique identifier of the application. */
         application_id varchar(21) not null
           references applications (id) on update cascade on delete cascade,
-        user_scopes jsonb /* @use UserScopes */ not null default '[]',
-        primary key (application_id)
+        /** The unique UserScope enum value @see (@logto/core-kit) for reference */
+        user_scope varchar(21) not null,
+        primary key (application_id, user_scope)
       );
     `);
 
