@@ -8,6 +8,7 @@ import {
   type WebAuthnVerificationPayload,
   type VerifyMfaResult,
 } from '@logto/schemas';
+import { getUserDisplayName } from '@logto/shared';
 import {
   type GenerateRegistrationOptionsOpts,
   generateRegistrationOptions,
@@ -31,14 +32,16 @@ export const generateWebAuthnRegistrationOptions = async ({
   rpId,
   user,
 }: GenerateWebAuthnRegistrationOptionsParameters): Promise<WebAuthnRegistrationOptions> => {
+  const { username, primaryEmail, primaryPhone, id, mfaVerifications } = user;
+
   const options: GenerateRegistrationOptionsOpts = {
     rpName: rpId,
     rpID: rpId,
-    userID: user.id,
-    userName: user.username ?? user.primaryEmail ?? user.primaryPhone ?? user.id,
+    userID: id,
+    userName: getUserDisplayName({ username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
     timeout: 60_000,
     attestationType: 'none',
-    excludeCredentials: user.mfaVerifications
+    excludeCredentials: mfaVerifications
       .filter(
         (verification): verification is MfaVerificationWebAuthn =>
           verification.type === MfaFactor.WebAuthn

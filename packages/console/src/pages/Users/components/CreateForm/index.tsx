@@ -1,5 +1,6 @@
 import { emailRegEx, phoneInputRegEx, usernameRegEx } from '@logto/core-kit';
 import type { CreateUser, User } from '@logto/schemas';
+import { parsePhoneNumber } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,7 +18,6 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { trySubmitSafe } from '@/utils/form';
 import { generateRandomPassword } from '@/utils/password';
-import { parsePhoneNumber } from '@/utils/phone';
 
 import * as styles from './index.module.scss';
 

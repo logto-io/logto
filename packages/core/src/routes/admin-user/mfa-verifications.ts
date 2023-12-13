@@ -82,7 +82,7 @@ export default function adminUserMfaVerificationsRoutes<T extends AuthedRouter>(
         const secret = generateTotpSecret();
         const service = ctx.URL.hostname;
         const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
-        const keyUri = authenticator.keyuri(user, service, secret);
+        const keyUri = authenticator.keyuri(user ?? 'Unnamed User', service, secret);
         await addUserMfaVerification(id, { type: MfaFactor.TOTP, secret });
         ctx.body = {
           type: MfaFactor.TOTP,

@@ -3981,6 +3981,9 @@ importers:
       find-up:
         specifier: ^6.3.0
         version: 6.3.0
+      libphonenumber-js:
+        specifier: ^1.9.49
+        version: 1.10.51
       nanoid:
         specifier: ^5.0.1
         version: 5.0.1
@@ -15604,7 +15607,6 @@ packages:
 
   /libphonenumber-js@1.10.51:
     resolution: {integrity: sha512-vY2I+rQwrDQzoPds0JeTEpeWzbUJgqoV0O4v31PauHBb/e+1KCXKylHcDnBMgJZ9fH9mErsEbROJY3Z3JtqEmg==}
-    dev: true
 
   /lightningcss-darwin-arm64@1.16.1:
     resolution: {integrity: sha512-/J898YSAiGVqdybHdIF3Ao0Hbh2vyVVj5YNm3NznVzTSvkOi3qQCAtO97sfmNz+bSRHXga7ZPLm+89PpOM5gAg==}

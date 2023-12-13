@@ -152,7 +152,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
           name = null,
         } = await parseUserProfile(tenant, profileVerifiedInteraction);
         const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
-        const keyUri = authenticator.keyuri(user, service, secret);
+        const keyUri = authenticator.keyuri(user ?? 'Unnamed User', service, secret);
 
         ctx.body = {
           secret,
@@ -166,7 +166,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
         const { accountId } = profileVerifiedInteraction;
         const { username, primaryEmail, primaryPhone, name } = await findUserById(accountId);
         const user = getUserDisplayName({ username, primaryEmail, primaryPhone, name });
-        const keyUri = authenticator.keyuri(user, service, secret);
+        const keyUri = authenticator.keyuri(user ?? 'Unnamed User', service, secret);
 
         ctx.body = {
           secret,

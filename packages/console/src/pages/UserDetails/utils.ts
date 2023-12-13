@@ -1,7 +1,6 @@
 import type { User } from '@logto/schemas';
+import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import { conditional } from '@silverhand/essentials';
-
-import { formatToInternationalPhoneNumber } from '@/utils/phone';
 
 import type { UserDetailsForm } from './types';
 
