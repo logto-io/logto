@@ -10,5 +10,5 @@ create table application_user_consent_resource_scopes (
   /** The globally unique identifier of the resource scope. */
   scope_id varchar(21) not null
     references scopes (id) on update cascade on delete cascade,
-  primary key (application_id, resource_scope_id)
+  primary key (application_id, scope_id)
 );
