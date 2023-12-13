@@ -1,7 +1,7 @@
 /* init_order = 2 */
 
 /** The organization scopes (permissions) assigned to an application. */
-create table application_organization_scope_relations (
+create table application_user_consent_organization_scopes (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the application. */

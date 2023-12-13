@@ -35,7 +35,7 @@ const alteration: AlterationScript = {
     const database = await getDatabaseName(pool);
 
     await pool.query(sql`
-        create table application_resource_scope_relations (
+        create table application_user_consent_resource_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
         /** The globally unique identifier of the application. */
@@ -48,10 +48,10 @@ const alteration: AlterationScript = {
       );
     `);
 
-    await enableRls(pool, database, 'application_resource_scope_relations');
+    await enableRls(pool, database, 'application_user_consent_resource_scopes');
 
     await pool.query(sql`
-      create table application_organization_scope_relations (
+      create table application_user_consent_organization_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
         /** The globally unique identifier of the application. */
@@ -64,10 +64,10 @@ const alteration: AlterationScript = {
       );
     `);
 
-    await enableRls(pool, database, 'application_organization_scope_relations');
+    await enableRls(pool, database, 'application_user_consent_organization_scopes');
 
     await pool.query(sql`
-      create table application_user_scope_relations (
+      create table application_user_consent_user_scopes (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
         /** The globally unique identifier of the application. */
@@ -79,13 +79,13 @@ const alteration: AlterationScript = {
       );
     `);
 
-    await enableRls(pool, database, 'application_user_scope_relations');
+    await enableRls(pool, database, 'application_user_consent_user_scopes');
   },
   down: async (pool) => {
     await pool.query(sql`
-      drop table application_resource_scope_relations;
-      drop table application_organization_scope_relations;
-      drop table application_user_scope_relations;
+      drop table application_user_consent_resource_scopes;
+      drop table application_user_consent_organization_scopes;
+      drop table application_user_consent_user_scopes;
     `);
   },
 };
