@@ -5,7 +5,6 @@ import { convertToIdentifiers, conditionalSql, conditionalArraySql } from '@logt
 import type { CommonQueryMethods, SqlSqlToken } from 'slonik';
 import { sql } from 'slonik';
 
-import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { getTotalRowCountWithPool } from '#src/database/row-count.js';
@@ -49,12 +48,14 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
    *
    * @param search The search config object, can apply to `id`, `name` and `description` field for application.
    * @param excludeApplicationIds Exclude applications with these ids.
+   * @param isThirdParty Optional boolean, filter applications by whether it is a third party application.
    * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
    * @returns A Promise that resolves the number of applications that match the search conditions.
    */
   const countApplications = async (
     search: Search,
     excludeApplicationIds: string[],
+    isThirdParty?: boolean,
     types?: ApplicationType[]
   ) => {
     const { count } = await pool.one<{ count: string }>(sql`
@@ -65,6 +66,7 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
         types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
+        isThirdParty ? sql`${fields.isThirdParty} = true` : sql`${fields.isThirdParty} = false`,
         buildApplicationConditions(search),
       ])}
     `);
@@ -75,20 +77,32 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
   /**
    * Get the list of applications that match the search conditions, conditions are joined in `and` mode.
    *
-   * @param search The search config object, can apply to `id`, `name` and `description` field for application
-   * @param excludeApplicationIds Exclude applications with these ids.
-   * @param types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
-   * @param limit Limit of the number of applications in each page.
-   * @param offset Offset of the applications in the result.
+   * @param conditions The conditions to filter applications.
+   * @param conditions.search The search config object, can apply to `id`, `name` and `description` field for application
+   * @param conditions.excludeApplicationIds Exclude applications with these ids.
+   * @param conditions.types Optional array of {@link ApplicationType}, filter applications by types, if not provided, all types will be included.
+   * @param conditions.isThirdParty Optional boolean, filter applications by whether it is a third party application.
+   * @param conditions.pagination Optional pagination config object.
+   * @param conditions.pagination.limit The number of applications to return.
+   * @param conditions.pagination.offset The offset of applications to return.
    * @returns A Promise that resolves the list of applications that match the search conditions.
    */
-  const findApplications = async (
-    search: Search,
-    excludeApplicationIds: string[],
-    types?: ApplicationType[],
-    limit?: number,
-    offset?: number
-  ) =>
+  const findApplications = async ({
+    search,
+    excludeApplicationIds,
+    types,
+    isThirdParty,
+    pagination,
+  }: {
+    search: Search;
+    excludeApplicationIds: string[];
+    types?: ApplicationType[];
+    isThirdParty?: boolean;
+    pagination?: {
+      limit: number;
+      offset: number;
+    };
+  }) =>
     pool.any<Application>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
@@ -97,18 +111,15 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
           ? sql`${fields.id} not in (${sql.join(excludeApplicationIds, sql`, `)})`
           : sql``,
         types && types.length > 0 ? sql`${fields.type} in (${sql.join(types, sql`, `)})` : sql``,
+        isThirdParty ? sql`${fields.isThirdParty} = true` : sql`${fields.isThirdParty} = false`,
         buildApplicationConditions(search),
       ])}
       order by ${fields.createdAt} desc
-      ${conditionalSql(limit, (value) => sql`limit ${value}`)}
-      ${conditionalSql(offset, (value) => sql`offset ${value}`)}
+      ${conditionalSql(pagination?.limit, (value) => sql`limit ${value}`)}
+      ${conditionalSql(pagination?.offset, (value) => sql`offset ${value}`)}
     `);
 
   const findTotalNumberOfApplications = async () => getTotalRowCountWithPool(pool)(table);
-
-  const findAllApplications = buildFindAllEntitiesWithPool(pool)(Applications, [
-    { field: 'createdAt', order: 'desc' },
-  ]);
 
   const findApplicationById = buildFindEntityByIdWithPool(pool)(Applications);
 
@@ -212,7 +223,6 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     countApplications,
     findApplications,
     findTotalNumberOfApplications,
-    findAllApplications,
     findApplicationById,
     insertApplication,
     updateApplication,

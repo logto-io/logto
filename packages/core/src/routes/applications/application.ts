@@ -7,8 +7,10 @@ import {
   applicationPatchGuard,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -64,6 +66,11 @@ export default function applicationRoutes<T extends AuthedRouter>(
           .array()
           .or(applicationTypeGuard.transform((type) => [type]))
           .optional(),
+        excludeRoleId: string().optional(),
+        // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled && { isThirdParty: z.literal('true').optional() }
+        ),
       }),
       response: z.array(applicationResponseGuard),
       status: 200,
@@ -71,27 +78,37 @@ export default function applicationRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { limit, offset, disabled: paginationDisabled } = ctx.pagination;
       const { searchParams } = ctx.URL;
-      const { types } = ctx.guard.query;
+      const { types, excludeRoleId } = ctx.guard.query;
 
+      // FIXME:  @simeng-li Remove this guard once Logto as IdP is ready
+      const isThirdParty = Boolean(ctx.guard.query.isThirdParty);
+
+      // This will only parse the `search` query param, other params will be ignored. Please use query guard to validate them.
       const search = parseSearchParamsForSearch(searchParams);
 
-      const excludeRoleId = searchParams.get('excludeRoleId');
       const excludeApplicationsRoles = excludeRoleId
         ? await findApplicationsRolesByRoleId(excludeRoleId)
         : [];
+
       const excludeApplicationIds = excludeApplicationsRoles.map(
         ({ applicationId }) => applicationId
       );
 
       if (paginationDisabled) {
-        ctx.body = await findApplications(search, excludeApplicationIds, types);
+        ctx.body = await findApplications({ search, excludeApplicationIds, types, isThirdParty });
 
         return next();
       }
 
       const [{ count }, applications] = await Promise.all([
-        countApplications(search, excludeApplicationIds, types),
-        findApplications(search, excludeApplicationIds, types, limit, offset),
+        countApplications(search, excludeApplicationIds, isThirdParty, types),
+        findApplications({
+          search,
+          excludeApplicationIds,
+          types,
+          isThirdParty,
+          pagination: { limit, offset },
+        }),
       ]);
 
       // Return totalCount to pagination middleware
@@ -117,6 +134,14 @@ export default function applicationRoutes<T extends AuthedRouter>(
           ? 'machineToMachineLimit'
           : 'applicationsLimit'
       );
+
+      // Third party applications must be traditional type
+      if (rest.isThirdParty) {
+        assertThat(
+          rest.type === ApplicationType.Traditional,
+          'application.invalid_third_party_application_type'
+        );
+      }
 
       ctx.body = await insertApplication({
         id: generateStandardId(),
