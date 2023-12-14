@@ -15,7 +15,6 @@ type TableInfo<
   Key extends string,
   Schema,
 > = Table<Key, TableName> & {
-  fieldKeys: readonly Key[];
   tableSingular: TableSingular;
   guard: z.ZodType<Schema, z.ZodTypeDef, unknown>;
 };
