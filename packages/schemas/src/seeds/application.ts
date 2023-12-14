@@ -61,7 +61,7 @@ export const createTenantMachineToMachineApplication = (
     },
   });
 
-/** Create role for "tenant application (M2M)" in admin tenant */
+/** Create an entry to assign a role to an application in the admin tenant. */
 export const createAdminTenantApplicationRole = (
   applicationId: string,
   roleId: string

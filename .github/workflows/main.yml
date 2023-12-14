@@ -132,7 +132,7 @@ jobs:
       # ** Setup up-to-date databases and compare (test `up`) **
       - name: Setup fresh database
         working-directory: ./fresh
-        run: pnpm cli db seed
+        run: pnpm cli db seed --test
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/fresh
 
@@ -140,7 +140,7 @@ jobs:
         working-directory: ./alteration
         run: |
           cd packages/cli
-          pnpm start db seed
+          pnpm start db seed --test
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/alteration
 
@@ -161,7 +161,7 @@ jobs:
         working-directory: ./alteration
         run: |
           cd packages/cli
-          pnpm start db seed
+          pnpm start db seed --test
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/old
 
