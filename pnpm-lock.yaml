@@ -3747,6 +3747,9 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
+      '@logto/core-kit':
+        specifier: workspace:^
+        version: link:../toolkit/core-kit
       '@logto/js':
         specifier: ^3.0.1
         version: 3.0.1

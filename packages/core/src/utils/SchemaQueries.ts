@@ -4,7 +4,10 @@ import { type CommonQueryMethods } from 'slonik';
 
 import { buildDeleteByIdWithPool } from '#src/database/delete-by-id.js';
 import { buildFindAllEntitiesWithPool } from '#src/database/find-all-entities.js';
-import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
+import {
+  buildFindEntitiesByIdsWithPool,
+  buildFindEntityByIdWithPool,
+} from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
 import { buildGetTotalRowCountWithPool } from '#src/database/row-count.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
@@ -31,6 +34,9 @@ export default class SchemaQueries<
   ) => Promise<readonly Schema[]>;
 
   #findById: (id: string) => Promise<Readonly<Schema>>;
+
+  #findByIds: (ids: string[]) => Promise<readonly Schema[]>;
+
   #insert: (data: OmitAutoSetFields<CreateSchema>) => Promise<Readonly<Schema>>;
 
   #updateById: <SetKey extends Key | 'id', WhereKey extends Key | 'id'>(
@@ -47,6 +53,7 @@ export default class SchemaQueries<
     this.#findTotalNumber = buildGetTotalRowCountWithPool(this.pool, this.schema);
     this.#findAll = buildFindAllEntitiesWithPool(this.pool)(this.schema, orderBy && [orderBy]);
     this.#findById = buildFindEntityByIdWithPool(this.pool)(this.schema);
+    this.#findByIds = buildFindEntitiesByIdsWithPool(this.pool)(this.schema);
     this.#insert = buildInsertIntoWithPool(this.pool)(this.schema, { returning: true });
     this.#updateById = buildUpdateWhereWithPool(this.pool)(this.schema, true);
     this.#deleteById = buildDeleteByIdWithPool(this.pool, this.schema.table);
@@ -62,6 +69,10 @@ export default class SchemaQueries<
 
   async findById(id: string): Promise<Readonly<Schema>> {
     return this.#findById(id);
+  }
+
+  async findByIds(ids: string[]): Promise<readonly Schema[]> {
+    return this.#findByIds(ids);
   }
 
   async insert(data: CreateSchema): Promise<Readonly<Schema>> {

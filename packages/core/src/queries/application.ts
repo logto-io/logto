@@ -13,6 +13,12 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
 import type { Search } from '#src/utils/search.js';
 
+import {
+  ApplicationUserConsentOrganizationScopeQueries,
+  ApplicationUserConsentResourceScopeQueries,
+  createApplicationUserConsentUserScopeQueries,
+} from './application-user-consent-scopes.js';
+
 const { table, fields } = convertToIdentifiers(Applications);
 
 const buildApplicationConditions = (search: Search) => {
@@ -233,5 +239,8 @@ export const createApplicationQueries = (pool: CommonQueryMethods) => {
     findM2mApplicationsByIds,
     findApplicationsByIds,
     deleteApplicationById,
+    userConsentOrganizationScopes: new ApplicationUserConsentOrganizationScopeQueries(pool),
+    userConsentResourceScopes: new ApplicationUserConsentResourceScopeQueries(pool),
+    useConsentUserScopes: createApplicationUserConsentUserScopeQueries(pool),
   };
 };

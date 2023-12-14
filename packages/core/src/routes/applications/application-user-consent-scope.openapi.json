@@ -1,0 +1,40 @@
+{
+  "paths": {
+    "/api/applications/{applicationId}/user-consent-scopes": {
+      "post": {
+        "summary": "Assign user consent scopes to application.",
+        "description": "Assign the user consent scopes to an application by application id",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "organizationScopes": {
+                    "description": "A list of organization scope id to assign to the application. Throws error if any given organization scope is not found."
+                  },
+                  "resourceScopes": {
+                    "description": "A list of resource scope id to assign to the application. Throws error if any given resource scope is not found."
+                  },
+                  "userScopes": {
+                    "description": "A list of user scope enum value to assign to the application."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "All the user consent scopes are assigned to the application successfully"
+          },
+          "404": {
+            "description": "The application is not found"
+          },
+          "422": {
+            "description": "Any of the given organization scope, resource scope or user scope is not found"
+          }
+        }
+      }
+    }
+  }
+}

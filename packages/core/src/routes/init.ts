@@ -12,6 +12,7 @@ import koaAuth from '../middleware/koa-auth/index.js';
 
 import adminUserRoutes from './admin-user/index.js';
 import applicationRoleRoutes from './applications/application-role.js';
+import applicationUserConsentScopeRoutes from './applications/application-user-consent-scope.js';
 import applicationRoutes from './applications/application.js';
 import authnRoutes from './authn.js';
 import connectorRoutes from './connector/index.js';
@@ -45,6 +46,11 @@ const createRouters = (tenant: TenantContext) => {
 
   applicationRoutes(managementRouter, tenant);
   applicationRoleRoutes(managementRouter, tenant);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    applicationUserConsentScopeRoutes(managementRouter, tenant);
+  }
+
   logtoConfigRoutes(managementRouter, tenant);
   connectorRoutes(managementRouter, tenant);
   resourceRoutes(managementRouter, tenant);
