@@ -17,6 +17,9 @@ import {
   Roles,
   type Role,
   UsersRoles,
+  LogtoConfigs,
+  SignInExperiences,
+  Applications,
 } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { convertToIdentifiers, generateStandardId } from '@logto/shared';
@@ -31,6 +34,7 @@ import { consoleLog, getPathInModule } from '../../../utils.js';
 
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
+import { seedTenantOrganizations } from './tenant-organizations.js';
 import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
@@ -139,7 +143,7 @@ export const seedTables = async (
 
   // Create tenant application role
   const applicationRole = createTenantApplicationRole();
-  await connection.query(insertInto(applicationRole, 'roles'));
+  await connection.query(insertInto(applicationRole, Roles.table));
   await assignScopesToRole(
     connection,
     adminTenantId,
@@ -161,15 +165,21 @@ export const seedTables = async (
   await seedTenantCloudServiceApplication(connection, defaultTenantId);
 
   await Promise.all([
-    connection.query(insertInto(createDefaultAdminConsoleConfig(defaultTenantId), 'logto_configs')),
-    connection.query(insertInto(createDefaultAdminConsoleConfig(adminTenantId), 'logto_configs')),
     connection.query(
-      insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), 'sign_in_experiences')
+      insertInto(createDefaultAdminConsoleConfig(defaultTenantId), LogtoConfigs.table)
     ),
-    connection.query(insertInto(createAdminTenantSignInExperience(), 'sign_in_experiences')),
-    connection.query(insertInto(createDefaultAdminConsoleApplication(), 'applications')),
+    connection.query(
+      insertInto(createDefaultAdminConsoleConfig(adminTenantId), LogtoConfigs.table)
+    ),
+    connection.query(
+      insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), SignInExperiences.table)
+    ),
+    connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
+    connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
+
+  await seedTenantOrganizations(connection, isCloud);
 
   consoleLog.succeed('Seed data');
 };

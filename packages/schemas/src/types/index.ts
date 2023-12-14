@@ -23,3 +23,4 @@ export * from './mfa.js';
 export * from './organization.js';
 export * from './sso-connector.js';
 export * from './tenant.js';
+export * from './tenant-organization.js';
