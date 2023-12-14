@@ -1,7 +1,10 @@
 import { UserScope } from '@logto/core-kit';
 import { ApplicationType } from '@logto/schemas';
 
-import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
+import {
+  assignUserConsentScopes,
+  getUserConsentScopes,
+} from '#src/api/application-user-consent-scope.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
@@ -121,5 +124,53 @@ describe('assign user consent scopes to application', () => {
         userScopes: [UserScope.Profile],
       })
     ).resolves.not.toThrow();
+  });
+
+  it('should return 404 when trying to get consent scopes from non-existing application', async () => {
+    await expectRejects(getUserConsentScopes('non-existing-application'), {
+      code: 'entity.not_exists_with_id',
+      statusCode: 404,
+    });
+  });
+
+  it('should return consent scopes successfully', async () => {
+    // This test depends on the previous success assignment test
+    const result = await getUserConsentScopes(applicationIds.get('thirdPartyApp')!);
+
+    expect(result.organizationScopes.length).toBe(organizationScopes.size);
+
+    for (const organizationScopeId of organizationScopes.values()) {
+      expect(result.organizationScopes.some(({ id }) => id === organizationScopeId)).toBeTruthy();
+    }
+
+    expect(result.resourceScopes.length).toBe(1);
+    expect(result.resourceScopes[0]!.resource.id).toBe(Array.from(resourceIds)[0]);
+    expect(result.resourceScopes[0]!.scopes.length).toBe(resourceScopes.size);
+
+    for (const resourceScopeId of resourceScopes.values()) {
+      expect(
+        result.resourceScopes[0]!.scopes.some(({ id }) => id === resourceScopeId)
+      ).toBeTruthy();
+    }
+
+    expect(result.userScopes.length).toBe(3);
+
+    for (const userScope of [UserScope.Profile, UserScope.Email, UserScope.OrganizationRoles]) {
+      expect(result.userScopes.includes(userScope)).toBeTruthy();
+    }
+  });
+
+  it('should return empty consent scopes when no scopes assigned', async () => {
+    const newApp = await createApplication('new-app', ApplicationType.Traditional, {
+      isThirdParty: true,
+    });
+
+    const result = await getUserConsentScopes(newApp.id);
+
+    expect(result.organizationScopes.length).toBe(0);
+    expect(result.resourceScopes.length).toBe(0);
+    expect(result.userScopes.length).toBe(0);
+
+    await deleteApplication(newApp.id);
   });
 });

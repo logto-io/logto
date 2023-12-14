@@ -1,8 +1,24 @@
-import type { Scope } from '@logto/schemas';
+import { OrganizationScopes, Scopes, type Scope } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+
+const groupResourceScopesByResourceId = (
+  scopes: readonly Scope[]
+): Array<{
+  resourceId: string;
+  scopes: Scope[];
+}> => {
+  const resourceMap = new Map<string, Scope[]>();
+
+  for (const scope of scopes) {
+    const existingScopes = resourceMap.get(scope.resourceId) ?? [];
+    resourceMap.set(scope.resourceId, [...existingScopes, scope]);
+  }
+
+  return Array.from(resourceMap, ([resourceId, scopes]) => ({ resourceId, scopes }));
+};
 
 export const createApplicationLibrary = (queries: Queries) => {
   const {
@@ -16,6 +32,7 @@ export const createApplicationLibrary = (queries: Queries) => {
     rolesScopes: { findRolesScopesByRoleIds },
     organizations: { scopes: organizationScopesQuery },
     scopes: { findScopesByIdsAndResourceIndicator, findScopesByIds },
+    resources: { findResourceById },
   } = queries;
 
   const findApplicationScopesForResourceIndicator = async (
@@ -112,10 +129,40 @@ export const createApplicationLibrary = (queries: Queries) => {
     }
   };
 
+  // Get application user consent organization scopes
+  const getApplicationUserConsentOrganizationScopes = async (applicationId: string) => {
+    const [, scopes] = await userConsentOrganizationScopes.getEntities(OrganizationScopes, {
+      applicationId,
+    });
+
+    return scopes;
+  };
+
+  const getApplicationUserConsentResourceScopes = async (applicationId: string) => {
+    const [, scopes] = await userConsentResourceScopes.getEntities(Scopes, {
+      applicationId,
+    });
+
+    const groupedScopes = groupResourceScopesByResourceId(scopes);
+
+    return Promise.all(
+      groupedScopes.map(async ({ resourceId, scopes }) => ({
+        resource: await findResourceById(resourceId),
+        scopes,
+      }))
+    );
+  };
+
+  const getApplicationUserConsentScopes = async (applicationId: string) =>
+    useConsentUserScopes.findAllByApplicationId(applicationId);
+
   return {
     validateThirdPartyApplicationById,
     findApplicationScopesForResourceIndicator,
     validateApplicationUserConsentScopes,
     assignApplicationUserConsentScopes,
+    getApplicationUserConsentOrganizationScopes,
+    getApplicationUserConsentResourceScopes,
+    getApplicationUserConsentScopes,
   };
 };

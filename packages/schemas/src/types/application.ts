@@ -1,6 +1,13 @@
-import { type z } from 'zod';
+import { UserScope } from '@logto/core-kit';
+import { z } from 'zod';
 
-import { Applications, type Application } from '../db-entries/index.js';
+import {
+  Applications,
+  type Application,
+  OrganizationScopes,
+  Resources,
+  Scopes,
+} from '../db-entries/index.js';
 
 export type ApplicationResponse = Application & { isAdmin: boolean };
 
@@ -31,3 +38,20 @@ export const applicationPatchGuard = applicationCreateGuard.partial().omit({
   type: true,
   isThirdParty: true,
 });
+
+export const applicationUserConsentScopesResponseGuard = z.object({
+  organizationScopes: z.array(
+    OrganizationScopes.guard.pick({ id: true, name: true, description: true })
+  ),
+  resourceScopes: z.array(
+    z.object({
+      resource: Resources.guard.pick({ id: true, name: true, indicator: true }),
+      scopes: z.array(Scopes.guard.pick({ id: true, name: true, description: true })),
+    })
+  ),
+  userScopes: z.array(z.nativeEnum(UserScope)),
+});
+
+export type ApplicationUserConsentScopesResponse = z.infer<
+  typeof applicationUserConsentScopesResponseGuard
+>;

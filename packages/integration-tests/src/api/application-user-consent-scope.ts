@@ -1,4 +1,5 @@
 import { type UserScope } from '@logto/core-kit';
+import { type ApplicationUserConsentScopesResponse } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -10,3 +11,8 @@ export const assignUserConsentScopes = async (
     userScopes?: UserScope[];
   }
 ) => authedAdminApi.post(`applications/${applicationId}/user-consent-scopes`, { json: payload });
+
+export const getUserConsentScopes = async (applicationId: string) =>
+  authedAdminApi
+    .get(`applications/${applicationId}/user-consent-scopes`)
+    .json<ApplicationUserConsentScopesResponse>();
