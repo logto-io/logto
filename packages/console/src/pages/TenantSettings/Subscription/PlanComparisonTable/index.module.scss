@@ -1,39 +1,50 @@
 @use '@/scss/underscore' as _;
 
-
 .container {
   padding: _.unit(3);
   border-radius: 16px;
   background-color: var(--color-layer-1);
   margin-bottom: _.unit(3);
 
-  .table {
-    tbody tr td {
-      border: none;
-      text-align: center;
+  table {
+    border: none;
+    border-spacing: 0;
+    table-layout: fixed;
+    width: 100%;
 
-      &:first-child {
-        border-radius: 6px 0 0 6px;
-      }
-
-      &:last-child {
-        border-radius: 0 6px 6px 0;
-      }
-    }
-
-    .headerTable {
+    thead {
       background-color: var(--color-layer-light);
       border-radius: 6px;
+      padding: 0 _.unit(3);
 
-      thead tr th {
+      tr th {
         font: var(--font-title-2);
-        text-align: center;
+        padding: _.unit(3);
+
+        &:first-child {
+          border-radius: 6px 0 0 6px;
+        }
+
+        &:last-child {
+          border-radius: 0 6px 6px 0;
+        }
       }
     }
 
-    .bodyTableWrapper {
-      border-radius: unset;
-      padding: 0;
+    tbody {
+      tr td {
+        font: var(--font-body-2);
+        text-align: center;
+        padding: _.unit(3);
+
+        &:first-child {
+          border-radius: 6px 0 0 6px;
+        }
+
+        &:last-child {
+          border-radius: 0 6px 6px 0;
+        }
+      }
 
       .groupLabel {
         font: var(--font-title-2);
@@ -48,12 +59,6 @@
       .colorRow {
         background-color: var(--color-layer-light);
       }
-
-      .ticketSupport {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
     }
   }
 
@@ -64,4 +69,3 @@
     font-style: italic;
   }
 }
-

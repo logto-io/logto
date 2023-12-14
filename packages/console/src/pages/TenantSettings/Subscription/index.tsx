@@ -12,7 +12,7 @@ import { pickupFeaturedPlans } from '@/utils/subscription';
 import Skeleton from '../components/Skeleton';
 
 import CurrentPlan from './CurrentPlan';
-import PlanQuotaTable from './PlanQuotaTable';
+import PlanComparisonTable from './PlanComparisonTable';
 import SwitchPlanActionBar from './SwitchPlanActionBar';
 import * as styles from './index.module.scss';
 
@@ -59,7 +59,7 @@ function Subscription() {
         subscriptionPlan={currentSubscriptionPlan}
         subscriptionUsage={subscriptionUsage}
       />
-      <PlanQuotaTable subscriptionPlans={reservedPlans} />
+      <PlanComparisonTable subscriptionPlans={reservedPlans} />
       <SwitchPlanActionBar
         currentSubscriptionPlanId={currentSubscription.planId}
         subscriptionPlans={reservedPlans}
