@@ -14,8 +14,12 @@ import {
   createCloudApi,
   createTenantApplicationRole,
   CloudScope,
+  Roles,
+  type Role,
+  UsersRoles,
 } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
+import { convertToIdentifiers, generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from 'slonik';
 import { sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
@@ -175,4 +179,53 @@ export const seedCloud = async (connection: DatabaseTransactionConnection) => {
     appendAdminConsoleRedirectUris(connection),
     seedTenantCloudServiceApplication(connection, adminTenantId),
   ]);
+};
+
+/**
+ * Seed additional test data for integration or alteration tests.
+ *
+ * It will create two users to the admin tenant (`test-1` and `test-2`), and do the following:
+ *
+ * - `test-1` will be assigned the management roles for both `default` and `admin` tenant.
+ * - `test-2`  will be assigned the management role for `default` tenant.
+ */
+export const seedTest = async (connection: DatabaseTransactionConnection) => {
+  const roles = convertToIdentifiers(Roles);
+  const getManagementRole = async (tenantId: string) =>
+    connection.one<Role>(sql`
+      select ${roles.fields.id}
+      from ${roles.table}
+      where ${roles.fields.tenantId} = ${adminTenantId}
+      and ${roles.fields.name} = ${`${tenantId}:admin`}
+    `);
+
+  const assignRoleToUser = async (userId: string, roleId: string) =>
+    connection.query(
+      insertInto(
+        { id: generateStandardId(), userId, roleId, tenantId: adminTenantId },
+        UsersRoles.table
+      )
+    );
+
+  await Promise.all([
+    connection.query(
+      insertInto({ id: 'test-1', username: 'test1', tenantId: adminTenantId }, 'users')
+    ),
+    connection.query(
+      insertInto({ id: 'test-2', username: 'test2', tenantId: adminTenantId }, 'users')
+    ),
+  ]);
+
+  consoleLog.succeed('Created test users');
+
+  const adminTenantRole = await getManagementRole(adminTenantId);
+  const defaultTenantRole = await getManagementRole(defaultTenantId);
+
+  await Promise.all([
+    assignRoleToUser('test-1', adminTenantRole.id),
+    assignRoleToUser('test-1', defaultTenantRole.id),
+    assignRoleToUser('test-2', defaultTenantRole.id),
+  ]);
+
+  consoleLog.succeed('Assigned tenant management roles to the test users');
 };
