@@ -55,6 +55,18 @@ const quota_table = {
     title: 'Organizacja',
     /** UNTRANSLATED */
     organizations: 'Organizations',
+    /** UNTRANSLATED */
+    monthly_active_organization: 'Monthly active organization',
+    /** UNTRANSLATED */
+    allowed_users_per_org: 'Allowed users per org',
+    /** UNTRANSLATED */
+    invitation: 'Invitation (Coming soon)',
+    /** UNTRANSLATED */
+    org_roles: 'Org roles',
+    /** UNTRANSLATED */
+    org_permissions: 'Org permissions',
+    /** UNTRANSLATED */
+    just_in_time_provisioning: 'Just-in-time provisioning',
   },
   support: {
     title: 'Wsparcie',
