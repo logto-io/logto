@@ -194,7 +194,7 @@
                     "description": "An array of user IDs to assign roles."
                   },
                   "organizationRoleIds": {
-                    "description": "An array of organization role IDs to assign."
+                    "description": "An array of organization role IDs to assign. User existed roles assignment will be ignored."
                   }
                 }
               }
@@ -206,7 +206,7 @@
             "description": "Roles were assigned to organization users successfully."
           },
           "422": {
-            "description": "At least one of the IDs provided is not valid. For example, the organization ID, user ID, or organization role ID does not exist; the user is not a member of the organization; or the user already has the role."
+            "description": "At least one of the IDs provided is not valid. For example, the organization ID, user ID, or organization role ID does not exist; the user is not a member of the organization."
           }
         }
       }
@@ -258,7 +258,7 @@
               "schema": {
                 "properties": {
                   "organizationRoleIds": {
-                    "description": "An array of organization role IDs to assign to the user."
+                    "description": "An array of organization role IDs to assign to the user. User existed roles assignment will be ignored."
                   }
                 }
               }
@@ -270,7 +270,7 @@
             "description": "Roles were assigned to the user successfully."
           },
           "422": {
-            "description": "The user is not a member of the organization; or at least one of the IDs provided is not valid. For example, the organization ID or organization role ID does not exist; or the user already has the role."
+            "description": "The user is not a member of the organization; or at least one of the IDs provided is not valid. For example, the organization ID or organization role ID does not exist."
           }
         }
       }
