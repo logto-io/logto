@@ -55,6 +55,18 @@ const quota_table = {
     title: '組織',
     /** UNTRANSLATED */
     organizations: 'Organizations',
+    /** UNTRANSLATED */
+    monthly_active_organization: 'Monthly active organization',
+    /** UNTRANSLATED */
+    allowed_users_per_org: 'Allowed users per org',
+    /** UNTRANSLATED */
+    invitation: 'Invitation (Coming soon)',
+    /** UNTRANSLATED */
+    org_roles: 'Org roles',
+    /** UNTRANSLATED */
+    org_permissions: 'Org permissions',
+    /** UNTRANSLATED */
+    just_in_time_provisioning: 'Just-in-time provisioning',
   },
   support: {
     title: '支援',
@@ -72,6 +84,21 @@ const quota_table = {
   days_other: '{{count, number}}天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
+  /** UNTRANSLATED */
+  free_token_limit_tip: 'Free for {{value}}M token issued.',
+  /** UNTRANSLATED */
+  paid_token_limit_tip:
+    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
+  /** UNTRANSLATED */
+  paid_quota_limit_tip:
+    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
+  /** UNTRANSLATED */
+  beta_feature_tip:
+    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
+  /** UNTRANSLATED */
+  beta: 'Beta',
+  /** UNTRANSLATED */
+  add_on_beta: 'Add-on (Beta)',
 };
 
 export default Object.freeze(quota_table);

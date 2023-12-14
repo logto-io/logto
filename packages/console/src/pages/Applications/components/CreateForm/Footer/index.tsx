@@ -55,7 +55,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
                 a: <ContactUsPhraseLink />,
               }}
             >
-              {t('machine_to_machine_feature')}
+              {t('deprecated_machine_to_machine_feature')}
             </Trans>
           ) : (
             <Trans

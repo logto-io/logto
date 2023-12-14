@@ -54,6 +54,12 @@ const quota_table = {
   organizations: {
     title: 'Organizations',
     organizations: 'Organizations',
+    monthly_active_organization: 'Monthly active organization',
+    allowed_users_per_org: 'Allowed users per org',
+    invitation: 'Invitation (Coming soon)',
+    org_roles: 'Org roles',
+    org_permissions: 'Org permissions',
+    just_in_time_provisioning: 'Just-in-time provisioning',
   },
   support: {
     title: 'Support',
@@ -71,6 +77,15 @@ const quota_table = {
   days_other: '{{count, number}} days',
   add_on: 'Add-on',
   tier: 'Tier{{value, number}}: ',
+  free_token_limit_tip: 'Free for {{value}}M token issued.',
+  paid_token_limit_tip:
+    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
+  paid_quota_limit_tip:
+    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
+  beta_feature_tip:
+    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
+  beta: 'Beta',
+  add_on_beta: 'Add-on (Beta)',
 };
 
 export default Object.freeze(quota_table);

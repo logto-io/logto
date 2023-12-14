@@ -31,6 +31,10 @@ const upsell = {
     unpaid_bills: 'Unpaid bills',
     update_payment: 'Update Payment',
   },
+  charge_notification_for_quota_limit:
+    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+  charge_notification_for_token_limit:
+    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
   paywall,
 };
 

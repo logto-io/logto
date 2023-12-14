@@ -31,6 +31,12 @@ const upsell = {
     unpaid_bills: '미납 청구서',
     update_payment: '지불 업데이트',
   },
+  /** UNTRANSLATED */
+  charge_notification_for_quota_limit:
+    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+  /** UNTRANSLATED */
+  charge_notification_for_token_limit:
+    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
   paywall,
 };
 

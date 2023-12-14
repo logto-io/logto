@@ -3,8 +3,11 @@ const paywall = {
     '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   applications_other:
     '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
-  machine_to_machine_feature:
+  deprecated_machine_to_machine_feature:
     '升级至<strong>Hobby</strong>套餐，解锁1个机器对机器应用，或选择<strong>Pro</strong>套餐，可享无限使用。需要任何帮助，请随时<a>联系我们</a>。',
+  /** UNTRANSLATED */
+  machine_to_machine_feature:
+    'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
   machine_to_machine:
     '已达到 <planName/> 的{{count, number}}个机器对机器应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   machine_to_machine_other:
