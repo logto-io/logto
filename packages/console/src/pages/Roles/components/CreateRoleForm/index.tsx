@@ -121,7 +121,7 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
                   a: <ContactUsPhraseLink />,
                 }}
               >
-                {t('upsell.paywall.machine_to_machine_feature')}
+                {t('upsell.paywall.deprecated_machine_to_machine_feature')}
               </Trans>
             </QuotaGuardFooter>
           );
