@@ -72,6 +72,21 @@ const quota_table = {
   days_other: '${ { count, number } } dias',
   add_on: 'Adicional',
   tier: 'Nível${ { value, number } }: ',
+  /** UNTRANSLATED */
+  free_token_limit_tip: 'Free for {{value}}M token issued.',
+  /** UNTRANSLATED */
+  paid_token_limit_tip:
+    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
+  /** UNTRANSLATED */
+  paid_quota_limit_tip:
+    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
+  /** UNTRANSLATED */
+  beta_feature_tip:
+    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
+  /** UNTRANSLATED */
+  beta: 'Beta',
+  /** UNTRANSLATED */
+  add_on_beta: 'Add-on (Beta)',
 };
 
 export default Object.freeze(quota_table);
