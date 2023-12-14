@@ -112,7 +112,7 @@
               "schema": {
                 "properties": {
                   "organizationScopeIds": {
-                    "description": "An array of organization scope IDs to be assigned."
+                    "description": "An array of organization scope IDs to be assigned. Existed scope IDs assignments will be ignored."
                   }
                 }
               }
@@ -124,7 +124,7 @@
             "description": "Organization scopes were assigned successfully."
           },
           "422": {
-            "description": "At least one of the IDs provided is invalid. For example, the organization scope ID does not exist; or the organization scope has already been assigned to the organization role."
+            "description": "At least one of the IDs provided is invalid. For example, the organization scope ID does not exist;"
           }
         }
       },

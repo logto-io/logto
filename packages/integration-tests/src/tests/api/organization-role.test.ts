@@ -176,6 +176,31 @@ describe('organization role APIs', () => {
       );
     });
 
+    it('should safely add scopes to a role when some of them already exist', async () => {
+      const [role, scope1, scope2] = await Promise.all([
+        roleApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+        scopeApi.create({ name: 'test' + randomId() }),
+      ]);
+
+      await roleApi.addScopes(role.id, [scope1.id, scope2.id]);
+
+      await expect(roleApi.addScopes(role.id, [scope2.id])).resolves.not.toThrow();
+
+      const scopes = await roleApi.getScopes(role.id);
+
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope1.name,
+        })
+      );
+      expect(scopes).toContainEqual(
+        expect.objectContaining({
+          name: scope2.name,
+        })
+      );
+    });
+
     it('should fail when try to add non-existent scopes to a role', async () => {
       const [role, scope1, scope2] = await Promise.all([
         roleApi.create({ name: 'test' + randomId() }),
