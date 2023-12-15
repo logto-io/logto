@@ -33,17 +33,14 @@ import { consoleLog } from '../../../utils.js';
  * - Organization roles and scopes for tenant management.
  * - Create tenant organizations for the initial tenants (`default` and `admin`).
  *
- * If it is a cloud deployment, it will also seed the following:
+ * The following data are used for Logto Cloud, we seed them anyway for the sake of simplicity:
  *
  * - Machine-to-machine roles for Management API proxy.
  * - Assign the corresponding Management API scopes to the machine-to-machine roles.
  * - Machine-to-machine applications for Management API proxy.
  * - Assign the roles to the corresponding applications.
  */
-export const seedTenantOrganizations = async (
-  connection: DatabaseTransactionConnection,
-  isCloud: boolean
-) => {
+export const seedTenantOrganizations = async (connection: DatabaseTransactionConnection) => {
   const tenantIds = [defaultTenantId, adminTenantId];
 
   // Init organization template
@@ -87,10 +84,7 @@ export const seedTenantOrganizations = async (
   );
   consoleLog.succeed('Created tenant organizations');
 
-  if (!isCloud) {
-    return;
-  }
-
+  /* === Cloud-specific data === */
   // Init Management API proxy roles
   await connection.query(
     insertInto(
@@ -101,8 +95,8 @@ export const seedTenantOrganizations = async (
   consoleLog.succeed('Created Management API proxy roles');
 
   // Prepare Management API scopes
-  const scopes = convertToIdentifiers(Scopes);
-  const resources = convertToIdentifiers(Resources);
+  const scopes = convertToIdentifiers(Scopes, true);
+  const resources = convertToIdentifiers(Resources, true);
   /** Scopes with the name {@link PredefinedScope.All} in all Management API resources. */
   const allScopes = await connection.any<{ id: string; indicator: string }>(sql`
     select ${scopes.fields.id}, ${resources.fields.indicator}

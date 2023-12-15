@@ -20,7 +20,14 @@ import {
   LogtoConfigs,
   SignInExperiences,
   Applications,
+  OrganizationUserRelations,
+  getTenantOrganizationId,
+  Users,
+  OrganizationRoleUserRelations,
+  TenantRole,
+  Organizations,
 } from '@logto/schemas';
+import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { convertToIdentifiers, generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from 'slonik';
@@ -179,7 +186,7 @@ export const seedTables = async (
     updateDatabaseTimestamp(connection, latestTimestamp),
   ]);
 
-  await seedTenantOrganizations(connection, isCloud);
+  await seedTenantOrganizations(connection);
 
   consoleLog.succeed('Seed data');
 };
@@ -217,25 +224,72 @@ export const seedTest = async (connection: DatabaseTransactionConnection) => {
       )
     );
 
+  const userIds = Object.freeze(['test-1', 'test-2'] as const);
   await Promise.all([
     connection.query(
-      insertInto({ id: 'test-1', username: 'test1', tenantId: adminTenantId }, 'users')
+      insertInto({ id: userIds[0], username: 'test1', tenantId: adminTenantId }, Users.table)
     ),
     connection.query(
-      insertInto({ id: 'test-2', username: 'test2', tenantId: adminTenantId }, 'users')
+      insertInto({ id: userIds[1], username: 'test2', tenantId: adminTenantId }, Users.table)
     ),
   ]);
-
   consoleLog.succeed('Created test users');
 
   const adminTenantRole = await getManagementRole(adminTenantId);
   const defaultTenantRole = await getManagementRole(defaultTenantId);
 
   await Promise.all([
-    assignRoleToUser('test-1', adminTenantRole.id),
-    assignRoleToUser('test-1', defaultTenantRole.id),
-    assignRoleToUser('test-2', defaultTenantRole.id),
+    assignRoleToUser(userIds[0], adminTenantRole.id),
+    assignRoleToUser(userIds[0], defaultTenantRole.id),
+    assignRoleToUser(userIds[1], defaultTenantRole.id),
+  ]);
+  consoleLog.succeed('Assigned tenant management roles to the test users');
+
+  const organizations = convertToIdentifiers(Organizations);
+  const isTenantOrganizationInitialized = await connection.exists(
+    sql`
+      select 1
+      from ${organizations.table}
+      where ${organizations.fields.tenantId} = ${getTenantOrganizationId(adminTenantId)}
+    `
+  );
+
+  // This check is for older versions (<=v.12.0) that don't have tenant organization initialized.
+  if (!isTenantOrganizationInitialized) {
+    consoleLog.warn('Tenant organization is not enabled, skip seeding tenant organization data');
+    return;
+  }
+
+  const addOrganizationMembership = async (userId: string, tenantId: string) =>
+    connection.query(
+      insertInto(
+        { userId, organizationId: getTenantOrganizationId(tenantId), tenantId: adminTenantId },
+        OrganizationUserRelations.table
+      )
+    );
+
+  await Promise.all([
+    addOrganizationMembership(userIds[0], adminTenantId),
+    addOrganizationMembership(userIds[0], defaultTenantId),
+    addOrganizationMembership(userIds[1], defaultTenantId),
   ]);
 
-  consoleLog.succeed('Assigned tenant management roles to the test users');
+  const assignOrganizationRole = async (userId: string, tenantId: string, tenantRole: TenantRole) =>
+    connection.query(
+      insertInto(
+        {
+          userId,
+          organizationRoleId: getTenantRole(tenantRole).id,
+          organizationId: getTenantOrganizationId(tenantId),
+          tenantId: adminTenantId,
+        },
+        OrganizationRoleUserRelations.table
+      )
+    );
+
+  await Promise.all([
+    assignOrganizationRole(userIds[0], adminTenantId, TenantRole.Owner),
+    assignOrganizationRole(userIds[0], defaultTenantId, TenantRole.Owner),
+    assignOrganizationRole(userIds[1], defaultTenantId, TenantRole.Owner),
+  ]);
 };

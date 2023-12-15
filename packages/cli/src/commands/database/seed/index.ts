@@ -9,7 +9,12 @@ import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
 
-export const seedByPool = async (pool: DatabasePool, cloud = false, test = false) => {
+export const seedByPool = async (
+  pool: DatabasePool,
+  cloud = false,
+  test = false,
+  testOnly = false
+) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
     const latestTimestamp = await getLatestAlterationTimestamp();
@@ -21,16 +26,18 @@ export const seedByPool = async (pool: DatabasePool, cloud = false, test = false
       );
     }
 
-    await oraPromise(createTables(connection), {
-      text: 'Create tables',
-    });
-    await seedTables(connection, latestTimestamp, cloud);
+    if (!testOnly) {
+      await oraPromise(createTables(connection), {
+        text: 'Create tables',
+      });
+      await seedTables(connection, latestTimestamp, cloud);
 
-    if (cloud) {
-      await seedCloud(connection);
+      if (cloud) {
+        await seedCloud(connection);
+      }
     }
 
-    if (test) {
+    if (test || testOnly) {
       await seedTest(connection);
     }
   });
@@ -38,7 +45,7 @@ export const seedByPool = async (pool: DatabasePool, cloud = false, test = false
 
 const seed: CommandModule<
   Record<string, unknown>,
-  { swe?: boolean; cloud?: boolean; test?: boolean }
+  { swe?: boolean; cloud?: boolean; test?: boolean; 'test-only'?: boolean }
 > = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
@@ -56,8 +63,12 @@ const seed: CommandModule<
       .option('test', {
         describe: 'Seed additional test data',
         type: 'boolean',
+      })
+      .option('test-only', {
+        describe: 'Seed test data only, this option conflicts with `--cloud`',
+        type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test }) => {
+  handler: async ({ swe, cloud, test, testOnly }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (swe && (await doesConfigsTableExist(pool))) {
@@ -68,7 +79,7 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test);
+      await seedByPool(pool, cloud, test, testOnly);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(
@@ -76,8 +87,10 @@ const seed: CommandModule<
           '  Nothing has changed since the seeding process was in a transaction.\n' +
           '  Try to fix the error and seed again.'
       );
+      throw error;
+    } finally {
+      await pool.end();
     }
-    await pool.end();
   },
 };
 

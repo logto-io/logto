@@ -2,14 +2,16 @@
  * @fileoverview A preparation for the update of using organizations to manage tenants in the admin
  * tenant. This script will do the following in the admin tenant:
  *
- * 1. Disable registration.
- * 2. Create organization template roles and scopes.
- * 3. Create organizations for existing tenants.
- * 4. Add membership records and assign organization roles to existing users.
- * 5. Create machine-to-machine Management API role for each tenant.
- * 6. Create the corresponding machine-to-machine app for each tenant, and assign the Management API role to it.
+ * 1. Create organization template roles and scopes.
+ * 2. Create organizations for existing tenants.
+ * 3. Add membership records and assign organization roles to existing users.
+ * 4. Create machine-to-machine Management API role for each tenant.
+ * 5. Create the corresponding machine-to-machine app for each tenant, and assign the Management API role to it.
  *
  * The `down` script will revert the changes.
+ *
+ * NOTE: In order to avoid unnecessary dirty data, it's recommended disabling the registration of
+ * new tenants before running this script and deploying the changes.
  */
 
 import { ConsoleLog, generateStandardId } from '@logto/shared';
@@ -23,27 +25,21 @@ const consoleLog = new ConsoleLog();
 const alteration: AlterationScript = {
   up: async (transaction) => {
     consoleLog.info('=== Sync tenant organizations ===');
-    consoleLog.info('Disable registration');
-    await transaction.query(sql`
-      update public.sign_in_experiences
-      set sign_in_mode = 'SignIn'
-      where tenant_id = ${adminTenantId};
-    `);
 
     consoleLog.info('Create organization template roles and scopes');
     await transaction.query(sql`
       insert into public.organization_roles (id, tenant_id, name, description)
       values
         ('owner', ${adminTenantId}, 'owner', 'Owner of the tenant, who has all permissions.'),
-        ('admin', ${adminTenantId}, 'admin', 'Admin of the tenant, who has all permissions except deleting the tenant.'),
-        ('member', ${adminTenantId}, 'member', 'Member of the tenant, who has limited permissions.');
+        ('admin', ${adminTenantId}, 'admin', 'Admin of the tenant, who has all permissions except managing the tenant settings.'),
+        ('member', ${adminTenantId}, 'member', 'Member of the tenant, who has limited permissions on reading and writing the tenant data.');
     `);
     await transaction.query(sql`
       insert into public.organization_scopes (id, tenant_id, name, description)
       values
-        ('read-tenant', ${adminTenantId}, 'read:tenant', 'Read the tenant data.'),
-        ('write-tenant', ${adminTenantId}, 'write:tenant', 'Write the tenant data, including creating and updating the tenant.'),
-        ('delete-tenant', ${adminTenantId}, 'delete:tenant', 'Delete data of the tenant.'),
+        ('read-data', ${adminTenantId}, 'read:data', 'Read the tenant data.'),
+        ('write-data', ${adminTenantId}, 'write:data', 'Write the tenant data, including creating and updating the tenant.'),
+        ('delete-data', ${adminTenantId}, 'delete:data', 'Delete data of the tenant.'),
         ('invite-member', ${adminTenantId}, 'invite:member', 'Invite members to the tenant.'),
         ('remove-member', ${adminTenantId}, 'remove:member', 'Remove members from the tenant.'),
         ('update-member-role', ${adminTenantId}, 'update:member:role', 'Update the role of a member in the tenant.'),
@@ -52,21 +48,21 @@ const alteration: AlterationScript = {
     await transaction.query(sql`
       insert into public.organization_role_scope_relations (tenant_id, organization_role_id, organization_scope_id)
       values
-        (${adminTenantId}, 'owner', 'read-tenant'),
-        (${adminTenantId}, 'owner', 'write-tenant'),
-        (${adminTenantId}, 'owner', 'delete-tenant'),
+        (${adminTenantId}, 'owner', 'read-data'),
+        (${adminTenantId}, 'owner', 'write-data'),
+        (${adminTenantId}, 'owner', 'delete-data'),
         (${adminTenantId}, 'owner', 'invite-member'),
         (${adminTenantId}, 'owner', 'remove-member'),
         (${adminTenantId}, 'owner', 'update-member-role'),
         (${adminTenantId}, 'owner', 'manage-tenant'),
-        (${adminTenantId}, 'admin', 'read-tenant'),
-        (${adminTenantId}, 'admin', 'write-tenant'),
-        (${adminTenantId}, 'admin', 'delete-tenant'),
+        (${adminTenantId}, 'admin', 'read-data'),
+        (${adminTenantId}, 'admin', 'write-data'),
+        (${adminTenantId}, 'admin', 'delete-data'),
         (${adminTenantId}, 'admin', 'invite-member'),
         (${adminTenantId}, 'admin', 'remove-member'),
         (${adminTenantId}, 'admin', 'update-member-role'),
-        (${adminTenantId}, 'member', 'read-tenant'),
-        (${adminTenantId}, 'member', 'write-tenant'),
+        (${adminTenantId}, 'member', 'read-data'),
+        (${adminTenantId}, 'member', 'write-data'),
         (${adminTenantId}, 'member', 'invite-member')
     `);
 
@@ -274,21 +270,14 @@ const alteration: AlterationScript = {
       delete from public.organization_scopes
       where public.organization_scopes.tenant_id = ${adminTenantId}
       and public.organization_scopes.id in (
-        'read-tenant',
-        'write-tenant',
-        'delete-tenant',
+        'read-data',
+        'write-data',
+        'delete-data',
         'invite-member',
         'remove-member',
         'update-member-role',
         'manage-tenant'
       );
-    `);
-
-    consoleLog.info('Enable registration');
-    await transaction.query(sql`
-      update public.sign_in_experiences
-      set sign_in_mode = 'SignInAndRegister'
-      where tenant_id = ${adminTenantId};
     `);
 
     consoleLog.info('=== Revert sync tenant organizations done ===');
