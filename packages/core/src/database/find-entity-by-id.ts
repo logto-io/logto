@@ -44,3 +44,26 @@ export const buildFindEntityByIdWithPool =
       }
     };
   };
+
+export const buildFindEntitiesByIdsWithPool =
+  (pool: CommonQueryMethods) =>
+  <
+    Key extends string,
+    CreateSchema extends Partial<SchemaLike<WithId<Key>>>,
+    Schema extends SchemaLike<WithId<Key>>,
+  >(
+    schema: GeneratedSchema<WithId<Key>, CreateSchema, Schema>
+  ) => {
+    const { table, fields } = convertToIdentifiers(schema);
+    const isKeyOfSchema = isKeyOf(schema);
+
+    // Make sure id is key of the schema
+    assertThat(isKeyOfSchema('id'), 'entity.not_exists');
+
+    return async (ids: string[]) =>
+      pool.any<Schema>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.id} in (${ids.length > 0 ? sql.join(ids, sql`, `) : sql`null`})
+      `);
+  };
