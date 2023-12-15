@@ -34,6 +34,35 @@
             "description": "Any of the given organization scope, resource scope or user scope is not found"
           }
         }
+      },
+      "get": {
+        "summary": "List all the user consent scopes of an application.",
+        "description": "List all the user consent scopes of an application by application id",
+        "responses": {
+          "200": {
+            "description": "All the user consent scopes of the application are listed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "organizationScopes": {
+                      "description": "A list of organization scope details assigned to the application."
+                    },
+                    "resourceScopes": {
+                      "description": "A list of resource scope details grouped by resource id assigned to the application."
+                    },
+                    "userScopes": {
+                      "description": "A list of user scope enum value assigned to the application."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The application is not found"
+          }
+        }
       }
     }
   }

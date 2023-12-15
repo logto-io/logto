@@ -1,4 +1,5 @@
 import { UserScope } from '@logto/core-kit';
+import { applicationUserConsentScopesResponseGuard } from '@logto/schemas';
 import { object, string, nativeEnum } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -9,11 +10,17 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
   ...[
     router,
     {
+      queries: {
+        applications: { findApplicationById },
+      },
       libraries: {
         applications: {
           validateThirdPartyApplicationById,
           validateApplicationUserConsentScopes,
           assignApplicationUserConsentScopes,
+          getApplicationUserConsentOrganizationScopes,
+          getApplicationUserConsentResourceScopes,
+          getApplicationUserConsentScopes,
         },
       },
     },
@@ -45,6 +52,37 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
       await assignApplicationUserConsentScopes(applicationId, body);
 
       ctx.status = 201;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/applications/:applicationId/user-consent-scopes',
+    koaGuard({
+      params: object({
+        applicationId: string(),
+      }),
+      response: applicationUserConsentScopesResponseGuard,
+      status: [200, 404],
+    }),
+    async (ctx, next) => {
+      const { applicationId } = ctx.guard.params;
+
+      await findApplicationById(applicationId);
+
+      // Note: The following queries will return full data schema, we rely on the response guard to filter out the fields we don't need.
+      const [organizationScopes, resourceScopes, userScopes] = await Promise.all([
+        getApplicationUserConsentOrganizationScopes(applicationId),
+        getApplicationUserConsentResourceScopes(applicationId),
+        getApplicationUserConsentScopes(applicationId),
+      ]);
+
+      ctx.body = {
+        organizationScopes,
+        resourceScopes,
+        userScopes,
+      };
 
       return next();
     }
