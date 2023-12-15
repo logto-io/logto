@@ -7,9 +7,9 @@ import { consoleLog, oraPromise } from '../../../utils.js';
 import { getLatestAlterationTimestamp } from '../alteration/index.js';
 import { getAlterationDirectory } from '../alteration/utils.js';
 
-import { createTables, seedCloud, seedTables } from './tables.js';
+import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
 
-export const seedByPool = async (pool: DatabasePool, cloud = false) => {
+export const seedByPool = async (pool: DatabasePool, cloud = false, test = false) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
     const latestTimestamp = await getLatestAlterationTimestamp();
@@ -29,10 +29,17 @@ export const seedByPool = async (pool: DatabasePool, cloud = false) => {
     if (cloud) {
       await seedCloud(connection);
     }
+
+    if (test) {
+      await seedTest(connection);
+    }
   });
 };
 
-const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: boolean }> = {
+const seed: CommandModule<
+  Record<string, unknown>,
+  { swe?: boolean; cloud?: boolean; test?: boolean }
+> = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
   builder: (yargs) =>
@@ -45,9 +52,12 @@ const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: bool
       .option('cloud', {
         describe: 'Seed additional cloud data',
         type: 'boolean',
-        hidden: true,
+      })
+      .option('test', {
+        describe: 'Seed additional test data',
+        type: 'boolean',
       }),
-  handler: async ({ swe, cloud }) => {
+  handler: async ({ swe, cloud, test }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (swe && (await doesConfigsTableExist(pool))) {
@@ -58,7 +68,7 @@ const seed: CommandModule<Record<string, unknown>, { swe?: boolean; cloud?: bool
     }
 
     try {
-      await seedByPool(pool, cloud);
+      await seedByPool(pool, cloud, test);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(
