@@ -148,7 +148,7 @@ jobs:
       # We will remove this step when a new version of CLI is released.
       - name: Setup alteration database test data
         working-directory: ./fresh
-        run: pnpm cli db seed --testOnly
+        run: pnpm cli db seed --legacy-test-data
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/alteration
 
@@ -177,7 +177,7 @@ jobs:
       # We will remove this step when a new version of CLI is released.
       - name: Setup old database test data
         working-directory: ./fresh
-        run: pnpm cli db seed --testOnly
+        run: pnpm cli db seed --legacy-test-data
         env:
           DB_URL: postgres://postgres:postgres@localhost:5432/old
 

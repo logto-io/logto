@@ -9,12 +9,7 @@ import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
 
-export const seedByPool = async (
-  pool: DatabasePool,
-  cloud = false,
-  test = false,
-  testOnly = false
-) => {
+export const seedByPool = async (pool: DatabasePool, cloud = false, test = false) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
     const latestTimestamp = await getLatestAlterationTimestamp();
@@ -26,26 +21,30 @@ export const seedByPool = async (
       );
     }
 
-    if (!testOnly) {
-      await oraPromise(createTables(connection), {
-        text: 'Create tables',
-      });
-      await seedTables(connection, latestTimestamp, cloud);
+    await oraPromise(createTables(connection), {
+      text: 'Create tables',
+    });
+    await seedTables(connection, latestTimestamp, cloud);
 
-      if (cloud) {
-        await seedCloud(connection);
-      }
+    if (cloud) {
+      await seedCloud(connection);
     }
 
-    if (test || testOnly) {
+    if (test) {
       await seedTest(connection);
     }
   });
 };
 
+const seedLegacyTestData = async (pool: DatabasePool) => {
+  return pool.transaction(async (connection) => {
+    await seedTest(connection, true);
+  });
+};
+
 const seed: CommandModule<
   Record<string, unknown>,
-  { swe?: boolean; cloud?: boolean; test?: boolean; 'test-only'?: boolean }
+  { swe?: boolean; cloud?: boolean; test?: boolean; 'legacy-test-data'?: boolean }
 > = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
@@ -64,12 +63,26 @@ const seed: CommandModule<
         describe: 'Seed additional test data',
         type: 'boolean',
       })
-      .option('test-only', {
-        describe: 'Seed test data only, this option conflicts with `--cloud`',
+      .option('legacy-test-data', {
+        describe:
+          'Seed test data only for legacy Logto versions (<=1.12.0), this option conflicts with others',
         type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test, testOnly }) => {
+  handler: async ({ swe, cloud, test, legacyTestData }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
+
+    if (legacyTestData) {
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      if (swe || cloud || test) {
+        throw new Error(
+          'The `legacy-test-data` option conflicts with other options, please use it alone.'
+        );
+      }
+
+      await seedLegacyTestData(pool);
+      await pool.end();
+      return;
+    }
 
     if (swe && (await doesConfigsTableExist(pool))) {
       consoleLog.info('Seeding skipped');
@@ -79,7 +92,7 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test, testOnly);
+      await seedByPool(pool, cloud, test);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(

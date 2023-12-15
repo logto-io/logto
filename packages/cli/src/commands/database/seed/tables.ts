@@ -25,7 +25,6 @@ import {
   Users,
   OrganizationRoleUserRelations,
   TenantRole,
-  Organizations,
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
@@ -206,7 +205,7 @@ export const seedCloud = async (connection: DatabaseTransactionConnection) => {
  * - `test-1` will be assigned the management roles for both `default` and `admin` tenant.
  * - `test-2`  will be assigned the management role for `default` tenant.
  */
-export const seedTest = async (connection: DatabaseTransactionConnection) => {
+export const seedTest = async (connection: DatabaseTransactionConnection, forLegacy = false) => {
   const roles = convertToIdentifiers(Roles);
   const getManagementRole = async (tenantId: string) =>
     connection.one<Role>(sql`
@@ -245,18 +244,11 @@ export const seedTest = async (connection: DatabaseTransactionConnection) => {
   ]);
   consoleLog.succeed('Assigned tenant management roles to the test users');
 
-  const organizations = convertToIdentifiers(Organizations);
-  const isTenantOrganizationInitialized = await connection.exists(
-    sql`
-      select 1
-      from ${organizations.table}
-      where ${organizations.fields.tenantId} = ${getTenantOrganizationId(adminTenantId)}
-    `
-  );
-
   // This check is for older versions (<=v.12.0) that don't have tenant organization initialized.
-  if (!isTenantOrganizationInitialized) {
-    consoleLog.warn('Tenant organization is not enabled, skip seeding tenant organization data');
+  if (forLegacy) {
+    consoleLog.warn(
+      'Tenant organization is not enabled in legacy Logto versions, skip seeding tenant organization data'
+    );
     return;
   }
 
@@ -292,4 +284,5 @@ export const seedTest = async (connection: DatabaseTransactionConnection) => {
     assignOrganizationRole(userIds[0], defaultTenantId, TenantRole.Owner),
     assignOrganizationRole(userIds[1], defaultTenantId, TenantRole.Owner),
   ]);
+  consoleLog.succeed('Assigned tenant organization membership and roles to the test users');
 };
