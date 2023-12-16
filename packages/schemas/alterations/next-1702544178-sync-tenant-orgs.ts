@@ -82,7 +82,6 @@ const alteration: AlterationScript = {
         )};
     `);
 
-    consoleLog.info('Add membership records and assign organization roles to existing users');
     const usersRoles = await transaction.any<{ userId: string; roleName: string }>(sql`
       select
         public.users.id as "userId",
@@ -94,37 +93,47 @@ const alteration: AlterationScript = {
       and public.roles.name like '%:admin';
     `);
 
-    // Add membership records
-    await transaction.query(sql`
-      insert into public.organization_user_relations (tenant_id, organization_id, user_id)
-      values 
-        ${sql.join(
-          usersRoles.map(
-            (userRole) =>
-              sql`(${adminTenantId}, ${`t-${userRole.roleName.slice(0, -6)}`}, ${userRole.userId})`
-          ),
-          sql`, `
-        )};
-    `);
-    // We treat all existing users as the owner of the tenant
-    await transaction.query(sql`
-      insert into public.organization_role_user_relations (tenant_id, organization_id, user_id, organization_role_id)
-      values 
-        ${sql.join(
-          usersRoles.map(
-            (userRole) =>
-              sql`
-                (
-                  ${adminTenantId},
-                  ${`t-${userRole.roleName.slice(0, -6)}`},
-                  ${userRole.userId},
-                  'owner'
-                )
-              `
-          ),
-          sql`, `
-        )};
-    `);
+    if (usersRoles.length === 0) {
+      consoleLog.warn(
+        'No existing admin users found, skip adding membership records for tenant organizations.'
+      );
+    } else {
+      consoleLog.info('Add membership records and assign organization roles to existing users');
+
+      // Add membership records
+      await transaction.query(sql`
+        insert into public.organization_user_relations (tenant_id, organization_id, user_id)
+        values 
+          ${sql.join(
+            usersRoles.map(
+              (userRole) =>
+                sql`(${adminTenantId}, ${`t-${userRole.roleName.slice(0, -6)}`}, ${
+                  userRole.userId
+                })`
+            ),
+            sql`, `
+          )};
+      `);
+      // We treat all existing users as the owner of the tenant
+      await transaction.query(sql`
+        insert into public.organization_role_user_relations (tenant_id, organization_id, user_id, organization_role_id)
+        values 
+          ${sql.join(
+            usersRoles.map(
+              (userRole) =>
+                sql`
+                  (
+                    ${adminTenantId},
+                    ${`t-${userRole.roleName.slice(0, -6)}`},
+                    ${userRole.userId},
+                    'owner'
+                  )
+                `
+            ),
+            sql`, `
+          )};
+      `);
+    }
 
     consoleLog.info('Create machine-to-machine Management API role for each tenant');
     await transaction.query(sql`
