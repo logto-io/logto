@@ -12,6 +12,7 @@ create table applications (
   type application_type not null,
   oidc_client_metadata jsonb /* @use OidcClientMetadata */ not null,
   custom_client_metadata jsonb /* @use CustomClientMetadata */ not null default '{}'::jsonb,
+  protected_app_metadata jsonb /* @use ProtectedAppMetadata */,
   is_third_party boolean not null default false,
   created_at timestamptz not null default(now()),
   primary key (id)
