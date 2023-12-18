@@ -130,6 +130,21 @@ describe('application route', () => {
         },
       })
     ).resolves.toHaveProperty('status', 400);
+    await expect(
+      applicationRequest.post('/applications').send({
+        name,
+        type: ApplicationType.Protected,
+      })
+    ).resolves.toHaveProperty('status', 400);
+    await expect(
+      applicationRequest.post('/applications').send({
+        name,
+        type: ApplicationType.Protected,
+        protectedAppMetadata: {
+          host: 'https://example.com',
+        },
+      })
+    ).resolves.toHaveProperty('status', 400);
   });
 
   it('GET /applications/:id', async () => {

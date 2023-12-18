@@ -7,6 +7,8 @@ const application = {
     'Apenas aplicações web tradicionais podem ser marcadas como uma aplicação de terceiros.',
   third_party_application_only: 'A funcionalidade só está disponível para aplicações de terceiros.',
   user_consent_scopes_not_found: 'Escopos de consentimento de utilizador inválidos.',
+  /** UNTRANSLATED */
+  protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 
 export default Object.freeze(application);

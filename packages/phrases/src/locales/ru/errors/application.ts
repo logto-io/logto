@@ -8,6 +8,8 @@ const application = {
   third_party_application_only:
     'Эта функция доступна только для приложений сторонних разработчиков.',
   user_consent_scopes_not_found: 'Недействительные области согласия пользователя.',
+  /** UNTRANSLATED */
+  protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 
 export default Object.freeze(application);

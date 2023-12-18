@@ -7,6 +7,8 @@ const application = {
     '伝統的なWebアプリケーションにのみ、サードパーティアプリとしてマークできます。',
   third_party_application_only: 'この機能はサードパーティアプリケーションにのみ利用可能です。',
   user_consent_scopes_not_found: '無効なユーザー同意スコープ。',
+  /** UNTRANSLATED */
+  protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 
 export default Object.freeze(application);
