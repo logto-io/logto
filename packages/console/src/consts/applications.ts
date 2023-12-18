@@ -18,6 +18,8 @@ export const lightModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.SPA]: SinglePageApp,
   [ApplicationType.Traditional]: TraditionalWebApp,
   [ApplicationType.MachineToMachine]: MachineToMachine,
+  // TODO @sijie: update with new icon
+  [ApplicationType.Protected]: TraditionalWebApp,
 } as const);
 
 export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
@@ -25,4 +27,6 @@ export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.SPA]: SinglePageAppDark,
   [ApplicationType.Traditional]: TraditionalWebAppDark,
   [ApplicationType.MachineToMachine]: MachineToMachineDark,
+  // TODO @sijie: update with new icon
+  [ApplicationType.Protected]: TraditionalWebAppDark,
 } as const);

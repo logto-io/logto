@@ -10,6 +10,7 @@ const defaultStructuredMetadata: StructuredAppGuideMetadata = {
   SPA: [],
   Native: [],
   MachineToMachine: [],
+  Protected: [],
 };
 
 type FilterOptions = {

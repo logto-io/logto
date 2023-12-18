@@ -7,6 +7,8 @@ const guide = {
     SPA: '싱글 페이지 앱',
     Native: '네이티브',
     MachineToMachine: 'Machine-to-machine',
+    /** UNTRANSLATED */
+    Protected: 'Protected app',
   },
   filter: {
     title: '프레임워크 필터',

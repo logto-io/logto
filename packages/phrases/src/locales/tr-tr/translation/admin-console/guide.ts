@@ -7,6 +7,8 @@ const guide = {
     SPA: 'Tek sayfalık uygulama',
     Native: 'Doğal',
     MachineToMachine: 'Makineden makineye',
+    /** UNTRANSLATED */
+    Protected: 'Protected app',
   },
   filter: {
     title: "Framework'ü filtrele",

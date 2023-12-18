@@ -7,6 +7,8 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.SPA]: 'applications.type.spa',
   [ApplicationType.Traditional]: 'applications.type.traditional',
   [ApplicationType.MachineToMachine]: 'applications.type.machine_to_machine',
+  // TODO @sijie: update with new phrase
+  [ApplicationType.Protected]: 'applications.type.traditional',
 } as const);
 
 /**
@@ -19,6 +21,7 @@ export const allAppGuideCategories = Object.freeze([
   'SPA',
   'Native',
   'MachineToMachine',
+  'Protected',
 ] as const);
 
 export type AppGuideCategory = (typeof allAppGuideCategories)[number];

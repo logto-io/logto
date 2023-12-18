@@ -7,6 +7,8 @@ const guide = {
     SPA: 'シングルページアプリ',
     Native: 'ネイティブ',
     MachineToMachine: 'Machine-to-machine',
+    /** UNTRANSLATED */
+    Protected: 'Protected app',
   },
   filter: {
     title: 'フレームワークを絞り込む',
