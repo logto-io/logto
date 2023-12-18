@@ -1,8 +1,13 @@
 import { AppInsightsBoundary } from '@logto/app-insights/react';
 import { UserScope } from '@logto/core-kit';
 import { LogtoProvider, useLogto } from '@logto/react';
-import { adminConsoleApplicationId, PredefinedScope } from '@logto/schemas';
-import { conditionalArray, deduplicate } from '@silverhand/essentials';
+import {
+  adminConsoleApplicationId,
+  defaultTenantId,
+  PredefinedScope,
+  TenantScope,
+} from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 import { useContext, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -66,22 +71,16 @@ export default App;
  * different components.
  */
 function Providers() {
-  const { tenants, currentTenantId } = useContext(TenantsContext);
+  const { currentTenantId } = useContext(TenantsContext);
 
+  // For Cloud, we use Management API proxy for accessing tenant data.
+  // For OSS, we directly call the tenant API with the default tenant API resource.
   const resources = useMemo(
     () =>
-      deduplicate(
-        conditionalArray(
-          // Explicitly add `currentTenantId` and deduplicate since the user may directly
-          // access a URL with Tenant ID, adding the ID from the URL here can possibly remove one
-          // additional redirect.
-          currentTenantId && getManagementApi(currentTenantId).indicator,
-          ...tenants.map(({ id }) => getManagementApi(id).indicator),
-          isCloud && cloudApi.indicator,
-          meApi.indicator
-        )
-      ),
-    [currentTenantId, tenants]
+      isCloud
+        ? [cloudApi.indicator, meApi.indicator]
+        : [getManagementApi(defaultTenantId).indicator, meApi.indicator],
+    []
   );
 
   const scopes = useMemo(
@@ -92,9 +91,12 @@ function Providers() {
       UserScope.Organizations,
       PredefinedScope.All,
       ...conditionalArray(
-        isCloud && cloudApi.scopes.CreateTenant,
-        isCloud && cloudApi.scopes.ManageTenant,
-        isCloud && cloudApi.scopes.ManageTenantSelf
+        isCloud && [
+          ...Object.values(TenantScope),
+          cloudApi.scopes.CreateTenant,
+          cloudApi.scopes.ManageTenant,
+          cloudApi.scopes.ManageTenantSelf,
+        ]
       ),
     ],
     []
