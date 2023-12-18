@@ -129,6 +129,10 @@ export default function applicationRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { oidcClientMetadata, ...rest } = ctx.guard.body;
 
+      if (!EnvSet.values.isDevFeaturesEnabled && rest.type === ApplicationType.Protected) {
+        throw new Error('dev feature for protected app is not enabled');
+      }
+
       await quota.guardKey(
         rest.type === ApplicationType.MachineToMachine
           ? 'machineToMachineLimit'
