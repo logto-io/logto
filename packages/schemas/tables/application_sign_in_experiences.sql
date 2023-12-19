@@ -10,6 +10,6 @@ create table application_sign_in_experiences (
   terms_of_use_url varchar(2048),
   privacy_policy_url varchar(2048),
   display_name varchar(256),
-
+  
   primary key (tenant_id, application_id)
 );
