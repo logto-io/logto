@@ -1,7 +1,17 @@
-import { httpCodeToMessage } from '@logto/core-kit';
+import {
+  buildOrganizationUrn,
+  getOrganizationIdFromUrn,
+  httpCodeToMessage,
+  organizationUrnPrefix,
+} from '@logto/core-kit';
 import { useLogto } from '@logto/react';
-import { getManagementApiResourceIndicator, type RequestErrorBody } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
+import {
+  getTenantOrganizationId,
+  type RequestErrorBody,
+  getManagementApiResourceIndicator,
+  defaultTenantId,
+} from '@logto/schemas';
+import { appendPath, conditionalArray } from '@silverhand/essentials';
 import ky from 'ky';
 import { type KyInstance } from 'node_modules/ky/distribution/types/ky';
 import { useCallback, useContext, useMemo } from 'react';
@@ -9,6 +19,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import { requestTimeout } from '@/consts';
+import { isCloud } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 
@@ -35,7 +46,7 @@ export const useStaticApi = ({
   hideErrorToast,
   resourceIndicator,
 }: StaticApiProps): KyInstance => {
-  const { isAuthenticated, getAccessToken, signOut } = useLogto();
+  const { isAuthenticated, getAccessToken, getOrganizationToken, signOut } = useLogto();
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
   const postSignOutRedirectUri = useRedirectUri('signOut');
@@ -84,7 +95,9 @@ export const useStaticApi = ({
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
-                const accessToken = await getAccessToken(resourceIndicator);
+                const accessToken = await (resourceIndicator.startsWith(organizationUrnPrefix)
+                  ? getOrganizationToken(getOrganizationIdFromUrn(resourceIndicator))
+                  : getAccessToken(resourceIndicator));
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
                 request.headers.set('Accept-Language', i18n.language);
               }
@@ -97,8 +110,9 @@ export const useStaticApi = ({
       hideErrorToast,
       toastError,
       isAuthenticated,
-      getAccessToken,
       resourceIndicator,
+      getOrganizationToken,
+      getAccessToken,
       i18n.language,
     ]
   );
@@ -106,14 +120,40 @@ export const useStaticApi = ({
   return api;
 };
 
+/** A hook to get a Ky instance with the current tenant's Management API prefix URL. */
 const useApi = (props: Omit<StaticApiProps, 'prefixUrl' | 'resourceIndicator'> = {}) => {
   const { tenantEndpoint } = useContext(AppDataContext);
   const { currentTenantId } = useContext(TenantsContext);
+  /**
+   * The config object for the Ky instance.
+   *
+   * - In Cloud, it uses the Management API proxy endpoint with tenant organization tokens.
+   * - In OSS, it directly uses the tenant endpoint (Management API).
+   *
+   * Since we removes all user roles for the Management API except the one for the default tenant,
+   * the OSS version should be used for the default tenant only.
+   */
+  const config = useMemo(
+    () =>
+      isCloud
+        ? {
+            prefixUrl: appendPath(new URL(window.location.origin), 'm', currentTenantId),
+            resourceIndicator: buildOrganizationUrn(getTenantOrganizationId(currentTenantId)),
+          }
+        : {
+            prefixUrl: tenantEndpoint,
+            resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
+          },
+    [currentTenantId, tenantEndpoint]
+  );
+
+  if (!isCloud && currentTenantId !== defaultTenantId) {
+    throw new Error('Only the default tenant is supported in OSS.');
+  }
 
   return useStaticApi({
     ...props,
-    prefixUrl: tenantEndpoint,
-    resourceIndicator: getManagementApiResourceIndicator(currentTenantId),
+    ...config,
   });
 };
 

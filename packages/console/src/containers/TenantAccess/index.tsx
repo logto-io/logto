@@ -1,11 +1,8 @@
 import { useLogto } from '@logto/react';
-import { trySafe } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 
-import { type TenantResponse } from '@/cloud/types/router';
-import AppLoading from '@/components/AppLoading';
 // Used in the docs
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type ProtectedRoutes from '@/containers/ProtectedRoutes';
@@ -43,9 +40,8 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
  * @see ProtectedRoutes
  */
 export default function TenantAccess() {
-  const { getAccessToken, signIn, isAuthenticated } = useLogto();
-  const { currentTenant, currentTenantId, currentTenantStatus, setCurrentTenantStatus } =
-    useContext(TenantsContext);
+  const { isAuthenticated } = useLogto();
+  const { currentTenant, currentTenantId } = useContext(TenantsContext);
   const { mutate } = useSWRConfig();
 
   // Clean the cache when the current tenant ID changes. This is required because the
@@ -68,39 +64,17 @@ export default function TenantAccess() {
   }, [mutate, currentTenantId]);
 
   useEffect(() => {
-    const validate = async ({ indicator }: TenantResponse) => {
-      // Test fetching an access token for the current Tenant ID.
-      // If failed, it means the user finishes the first auth, ands still needs to auth again to
-      // fetch the full-scoped (with all available tenants) token.
-      if (await trySafe(getAccessToken(indicator))) {
-        setCurrentTenantStatus('validated');
-      }
-      // If failed, it will be treated as a session expired error, and will be handled by the
-      // upper `<ErrorBoundary />`.
-    };
-
-    if (isAuthenticated && currentTenantId && currentTenantStatus === 'pending') {
-      setCurrentTenantStatus('validating');
-
+    if (
+      isAuthenticated &&
+      currentTenantId &&
       // The current tenant is unavailable to the user, maybe a deleted tenant or a tenant that
       // the user has no access to. Fall back to the home page.
-      if (!currentTenant) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        window.location.href = '/';
-        return;
-      }
-
-      void validate(currentTenant);
+      !currentTenant
+    ) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      window.location.href = '/';
     }
-  }, [
-    currentTenant,
-    currentTenantId,
-    currentTenantStatus,
-    getAccessToken,
-    isAuthenticated,
-    setCurrentTenantStatus,
-    signIn,
-  ]);
+  }, [currentTenant, currentTenantId, isAuthenticated]);
 
-  return currentTenantStatus === 'validated' ? <Outlet /> : <AppLoading />;
+  return <Outlet />;
 }

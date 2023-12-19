@@ -58,13 +58,6 @@ type Tenants = {
   currentTenantId: string;
   currentTenant?: TenantResponse;
   isDevTenant: boolean;
-  /**
-   * Indicates if the Access Token has been validated for use. Will be reset to `pending` when the current tenant changes.
-   *
-   * @see {@link CurrentTenantStatus}
-   */
-  currentTenantStatus: CurrentTenantStatus;
-  setCurrentTenantStatus: (status: CurrentTenantStatus) => void;
   /** Navigate to the given tenant ID. */
   navigateTenant: (tenantId: string) => void;
 };
@@ -106,8 +99,6 @@ export const TenantsContext = createContext<Tenants>({
   updateTenant: noop,
   currentTenantId: '',
   isDevTenant: false,
-  currentTenantStatus: 'pending',
-  setCurrentTenantStatus: noop,
   navigateTenant: noop,
 });
 
@@ -142,13 +133,10 @@ function TenantsProvider({ children }: Props) {
 
     return match.params.tenantId ?? '';
   }, [match]);
-  const [currentTenantStatus, setCurrentTenantStatus] = useState<CurrentTenantStatus>('pending');
 
   const navigateTenant = useCallback(
     (tenantId: string) => {
       navigate(`/${tenantId}`);
-
-      setCurrentTenantStatus('pending');
     },
     [navigate]
   );
@@ -163,7 +151,6 @@ function TenantsProvider({ children }: Props) {
       tenants,
       resetTenants: (tenants: TenantResponse[]) => {
         setTenants(tenants);
-        setCurrentTenantStatus('pending');
         setIsInitComplete(true);
       },
       prependTenant: (tenant: TenantResponse) => {
@@ -181,11 +168,9 @@ function TenantsProvider({ children }: Props) {
       currentTenantId,
       isDevTenant: currentTenant?.tag === TenantTag.Development,
       currentTenant,
-      currentTenantStatus,
-      setCurrentTenantStatus,
       navigateTenant,
     }),
-    [currentTenant, currentTenantId, currentTenantStatus, isInitComplete, navigateTenant, tenants]
+    [currentTenant, currentTenantId, isInitComplete, navigateTenant, tenants]
   );
 
   return <TenantsContext.Provider value={memorizedContext}>{children}</TenantsContext.Provider>;
