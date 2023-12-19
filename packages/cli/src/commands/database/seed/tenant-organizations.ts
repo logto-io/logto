@@ -1,8 +1,6 @@
 import {
   defaultTenantId,
   adminTenantId,
-  Roles,
-  Applications,
   OrganizationRoles,
   TenantRole,
   getTenantScope,
@@ -13,32 +11,17 @@ import {
   tenantRoleScopes,
   getTenantOrganizationCreateData,
   Organizations,
-  Scopes,
-  Resources,
-  PredefinedScope,
-  RolesScopes,
-  ApplicationsRoles,
 } from '@logto/schemas';
-import { getMapiProxyM2mApp, getMapiProxyRole } from '@logto/schemas/lib/types/mapi-proxy.js';
-import { convertToIdentifiers, generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from 'slonik';
-import { sql } from 'slonik';
 
 import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';
 
 /**
- * Seed initial data in the admin tenant for tenant organizations:
+ * Seed initial data in the admin tenant for tenant organizations (`default` and `admin`):
  *
  * - Organization roles and scopes for tenant management.
  * - Create tenant organizations for the initial tenants (`default` and `admin`).
- *
- * The following data are used for Logto Cloud, we seed them anyway for the sake of simplicity:
- *
- * - Machine-to-machine roles for Management API proxy.
- * - Assign the corresponding Management API scopes to the machine-to-machine roles.
- * - Machine-to-machine applications for Management API proxy.
- * - Assign the roles to the corresponding applications.
  */
 export const seedTenantOrganizations = async (connection: DatabaseTransactionConnection) => {
   const tenantIds = [defaultTenantId, adminTenantId];
@@ -83,73 +66,4 @@ export const seedTenantOrganizations = async (connection: DatabaseTransactionCon
     )
   );
   consoleLog.succeed('Created tenant organizations');
-
-  /* === Cloud-specific data === */
-  // Init Management API proxy roles
-  await connection.query(
-    insertInto(
-      tenantIds.map((tenantId) => getMapiProxyRole(tenantId)),
-      Roles.table
-    )
-  );
-  consoleLog.succeed('Created Management API proxy roles');
-
-  // Prepare Management API scopes
-  const scopes = convertToIdentifiers(Scopes, true);
-  const resources = convertToIdentifiers(Resources, true);
-  /** Scopes with the name {@link PredefinedScope.All} in all Management API resources. */
-  const allScopes = await connection.any<{ id: string; indicator: string }>(sql`
-    select ${scopes.fields.id}, ${resources.fields.indicator}
-    from ${resources.table}
-    join ${scopes.table} on ${scopes.fields.resourceId} = ${resources.fields.id}
-    where ${resources.fields.indicator} like 'https://%.logto.app/api'
-    and ${scopes.fields.name} = ${PredefinedScope.All}
-    and ${resources.fields.tenantId} = ${adminTenantId}
-  `);
-  const assertScopeId = (forTenantId: string) => {
-    const scope = allScopes.find(
-      (scope) => scope.indicator === `https://${forTenantId}.logto.app/api`
-    );
-    if (!scope) {
-      throw new Error(`Cannot find Management API scope for tenant '${forTenantId}'.`);
-    }
-    return scope.id;
-  };
-
-  // Assign Management API scopes to the proxy roles
-  await connection.query(
-    insertInto(
-      tenantIds.map((tenantId) => ({
-        tenantId: adminTenantId,
-        id: generateStandardId(),
-        roleId: getMapiProxyRole(tenantId).id,
-        scopeId: assertScopeId(tenantId),
-      })),
-      RolesScopes.table
-    )
-  );
-  consoleLog.succeed('Assigned Management API scopes to the proxy roles');
-
-  // Create machine-to-machine applications for Management API proxy
-  await connection.query(
-    insertInto(
-      tenantIds.map((tenantId) => getMapiProxyM2mApp(tenantId)),
-      Applications.table
-    )
-  );
-  consoleLog.succeed('Created machine-to-machine applications for Management API proxy');
-
-  // Assign the proxy roles to the applications
-  await connection.query(
-    insertInto(
-      tenantIds.map((tenantId) => ({
-        tenantId: adminTenantId,
-        id: generateStandardId(),
-        applicationId: getMapiProxyM2mApp(tenantId).id,
-        roleId: getMapiProxyRole(tenantId).id,
-      })),
-      ApplicationsRoles.table
-    )
-  );
-  consoleLog.succeed('Assigned the proxy roles to the applications');
 };

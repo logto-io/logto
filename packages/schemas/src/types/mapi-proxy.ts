@@ -13,7 +13,7 @@
  * This module provides utilities to manage mapi proxy.
  */
 
-import { generateStandardSecret } from '@logto/shared';
+import { generateStandardSecret } from '@logto/shared/universal';
 
 import {
   RoleType,
@@ -21,7 +21,7 @@ import {
   type CreateApplication,
   ApplicationType,
 } from '../db-entries/index.js';
-import { adminTenantId } from '../index.js';
+import { adminTenantId } from '../seeds/tenant.js';
 
 /**
  * Given a tenant ID, return the role data for the mapi proxy.

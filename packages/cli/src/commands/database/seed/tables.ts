@@ -41,7 +41,12 @@ import { consoleLog, getPathInModule } from '../../../utils.js';
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { seedTenantOrganizations } from './tenant-organizations.js';
-import { assignScopesToRole, createTenant, seedAdminData } from './tenant.js';
+import {
+  assignScopesToRole,
+  createTenant,
+  seedAdminData,
+  seedManagementApiProxyApplications,
+} from './tenant.js';
 
 const getExplicitOrder = (query: string) => {
   const matched = /\/\*\s*init_order\s*=\s*([\d.]+)\s*\*\//.exec(query)?.[1];
@@ -183,9 +188,9 @@ export const seedTables = async (
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     updateDatabaseTimestamp(connection, latestTimestamp),
+    seedTenantOrganizations(connection),
+    seedManagementApiProxyApplications(connection),
   ]);
-
-  await seedTenantOrganizations(connection);
 
   consoleLog.succeed('Seed data');
 };

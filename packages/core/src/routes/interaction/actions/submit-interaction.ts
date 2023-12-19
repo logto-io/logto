@@ -4,7 +4,6 @@ import type { User } from '@logto/schemas';
 import {
   AdminTenantRole,
   SignInMode,
-  getManagementApiAdminName,
   defaultTenantId,
   adminTenantId,
   InteractionEvent,
@@ -13,6 +12,7 @@ import {
   getTenantOrganizationId,
   getTenantRole,
   TenantRole,
+  defaultManagementApiAdminName,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
@@ -80,8 +80,7 @@ const getInitialUserRoles = (
 ) =>
   conditionalArray<string>(
     isInAdminTenant && AdminTenantRole.User,
-    isCreatingFirstAdminUser && getManagementApiAdminName(defaultTenantId),
-    isCreatingFirstAdminUser && isCloud && getManagementApiAdminName(adminTenantId)
+    isCreatingFirstAdminUser && !isCloud && defaultManagementApiAdminName // OSS uses the legacy Management API user role
   );
 
 async function handleSubmitRegister(
