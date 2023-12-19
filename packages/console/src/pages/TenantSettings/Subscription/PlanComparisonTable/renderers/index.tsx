@@ -127,8 +127,10 @@ export const quotaValueRenderer: Record<
       isEnabled={organizationsEnabled}
       // Todo @xiaoyijun [Pricing] Remove feature flag
       isBeta={isDevFeaturesEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag & update usage-based feature tip
-      tipPhraseKey={cond(isDevFeaturesEnabled && organizationsEnabled && 'beta_feature_tip')}
+      // Todo @xiaoyijun [Pricing] Remove feature flag
+      tipPhraseKey={cond(
+        isDevFeaturesEnabled && organizationsEnabled && 'usage_based_beta_feature_tip'
+      )}
       paymentType="usage"
     />
   ),

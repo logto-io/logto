@@ -84,6 +84,8 @@ const quota_table = {
     'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
   beta_feature_tip:
     'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
+  usage_based_beta_feature_tip:
+    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
   beta: 'Beta',
   add_on_beta: 'Add-on (Beta)',
 };
