@@ -1,7 +1,7 @@
 /* init_order = 2 */
 
 /** Application level sign-in experience configuration. */
-create table application_sign_in_experience (
+create table application_sign_in_experiences (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
   application_id varchar(21) not null

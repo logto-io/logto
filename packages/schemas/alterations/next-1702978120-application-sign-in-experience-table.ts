@@ -35,7 +35,7 @@ const alteration: AlterationScript = {
     const database = await getDatabaseName(pool);
 
     await pool.query(sql`
-      create table application_sign_in_experience (
+      create table application_sign_in_experiences (
         tenant_id varchar(21) not null
           references tenants (id) on update cascade on delete cascade,
         application_id varchar(21) not null
@@ -49,11 +49,11 @@ const alteration: AlterationScript = {
       );
     `);
 
-    await enableRls(pool, database, 'application_sign_in_experience');
+    await enableRls(pool, database, 'application_sign_in_experiences');
   },
   down: async (pool) => {
     await pool.query(sql`
-      drop table application_sign_in_experience;
+      drop table application_sign_in_experiences;
     `);
   },
 };
