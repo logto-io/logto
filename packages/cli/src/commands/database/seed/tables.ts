@@ -45,6 +45,7 @@ import {
   assignScopesToRole,
   createTenant,
   seedAdminData,
+  seedLegacyManagementApiUserRole,
   seedManagementApiProxyApplications,
 } from './tenant.js';
 
@@ -164,18 +165,9 @@ export const seedTables = async (
       .map(({ id }) => id)
   );
 
-  // Assign all cloud API scopes to role `admin:admin`
-  await assignScopesToRole(
-    connection,
-    adminTenantId,
-    adminAdminData.role.id,
-    ...cloudAdditionalScopes.map(({ id }) => id)
-  );
-
-  // FIXME: @wangsijie should not create tenant Cloud Service application in the OSS DB.
-  await seedTenantCloudServiceApplication(connection, defaultTenantId);
-
   await Promise.all([
+    seedLegacyManagementApiUserRole(connection),
+    seedTenantCloudServiceApplication(connection, defaultTenantId),
     connection.query(
       insertInto(createDefaultAdminConsoleConfig(defaultTenantId), LogtoConfigs.table)
     ),
@@ -239,11 +231,10 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
   ]);
   consoleLog.succeed('Created test users');
 
-  const adminTenantRole = await getManagementRole(adminTenantId);
+  // The only legacy user role for Management API. Used in OSS only.
   const defaultTenantRole = await getManagementRole(defaultTenantId);
 
   await Promise.all([
-    assignRoleToUser(userIds[0], adminTenantRole.id),
     assignRoleToUser(userIds[0], defaultTenantRole.id),
     assignRoleToUser(userIds[1], defaultTenantRole.id),
   ]);

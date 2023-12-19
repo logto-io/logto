@@ -13,8 +13,6 @@ export const cloudApiIndicator = 'https://cloud.logto.io/api';
 export enum CloudScope {
   /** The user can create a user tenant. */
   CreateTenant = 'create:tenant',
-  /** The user can perform arbitrary operations on any tenant. */
-  ManageTenant = 'manage:tenant',
   /** The user can update or delete its own tenants. */
   ManageTenantSelf = 'manage:tenant:self',
   SendSms = 'send:sms',
@@ -55,10 +53,6 @@ export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> 
         name: AdminTenantRole.User,
       },
     },
-    buildScope(
-      CloudScope.ManageTenant,
-      'Allow managing existing tenants, including create without limitation, update, and delete.'
-    ),
     buildScope(
       CloudScope.SendEmail,
       'Allow sending emails. This scope is only available to M2M application.'

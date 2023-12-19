@@ -10,6 +10,8 @@ import {
   ApplicationsRoles,
   getMapiProxyM2mApp,
   getMapiProxyRole,
+  defaultManagementApiAdminName,
+  Roles,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
@@ -146,4 +148,20 @@ export const seedManagementApiProxyApplications = async (
     )
   );
   consoleLog.succeed('Assigned the proxy roles to the applications');
+};
+
+export const seedLegacyManagementApiUserRole = async (
+  connection: DatabaseTransactionConnection
+) => {
+  await connection.query(
+    insertInto(
+      {
+        tenantId: adminTenantId,
+        id: generateStandardId(),
+        name: defaultManagementApiAdminName,
+        description: 'Legacy user role for accessing default Management API. Used in OSS only.',
+      },
+      Roles.table
+    )
+  );
 };
