@@ -1,20 +1,16 @@
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { useContext } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
-import { isCloud } from '@/consts/env';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
@@ -37,9 +33,6 @@ type Props = {
 };
 
 function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: Props) {
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isMachineToMachineDisabled = isCloud && !currentPlan?.quota.machineToMachineLimit;
   const {
     handleSubmit,
     control,
