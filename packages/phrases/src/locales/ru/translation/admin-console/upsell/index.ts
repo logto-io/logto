@@ -37,6 +37,9 @@ const upsell = {
   /** UNTRANSLATED */
   charge_notification_for_token_limit:
     'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+  /** UNTRANSLATED */
+  charge_notification_for_m2m_app_limit:
+    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
   paywall,
 };
 

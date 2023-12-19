@@ -49,7 +49,7 @@ function ListPage<
         <CardTitle {...title} />
         {createButton && <Button icon={<Plus />} type="primary" size="large" {...createButton} />}
       </div>
-      {subHeader}
+      {subHeader && <div className={pageLayout.subHeader}>{subHeader}</div>}
       <Table className={pageLayout.table} {...table} />
       {widgets}
     </div>

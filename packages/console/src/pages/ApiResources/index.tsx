@@ -9,6 +9,7 @@ import ApiResourceDark from '@/assets/icons/api-resource-dark.svg';
 import ApiResource from '@/assets/icons/api-resource.svg';
 import ManagementApiResourceDark from '@/assets/icons/management-api-resource-dark.svg';
 import ManagementApiResource from '@/assets/icons/management-api-resource.svg';
+import ChargeNotification from '@/components/ChargeNotification';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
@@ -17,6 +18,7 @@ import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
 import type { RequestError } from '@/hooks/use-api';
+import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
@@ -39,7 +41,7 @@ const icons = {
 function ApiResources() {
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+  const { hasReachedLimit } = useApiResourcesUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -76,6 +78,7 @@ function ApiResources() {
             });
           },
         }}
+        subHeader={<ChargeNotification hasReachedLimit={hasReachedLimit} />}
         table={{
           rowGroups: [{ key: 'apiResources', data: apiResources }],
           rowIndexKey: 'id',
