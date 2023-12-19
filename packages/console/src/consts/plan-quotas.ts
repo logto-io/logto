@@ -1,4 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { type Nullable, condArray } from '@silverhand/essentials';
 
 import {
   type SubscriptionPlanTable,
@@ -8,6 +9,8 @@ import {
   ReservedPlanName,
   type SubscriptionPlanQuota,
 } from '@/types/subscriptions';
+
+import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './env';
 
 type EnabledFeatureMap = Record<string, boolean | undefined>;
 
@@ -77,6 +80,13 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
   [ReservedPlanId.Pro]: 48,
 };
 
+// @Todo @xiaoyijun [Pricing] read token limit from backend when it's ready
+export const tokenLimitMap: Record<string, Nullable<number>> = {
+  [ReservedPlanId.Free]: 500_000,
+  [ReservedPlanId.Hobby]: 1_000_000,
+  [ReservedPlanId.Pro]: 1_000_000,
+};
+
 /**
  * Note: this is only for display purpose.
  *
@@ -96,7 +106,8 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   appLogoAndFaviconEnabled: true,
   darkModeEnabled: true,
   i18nEnabled: true,
-  mfaEnabled: true,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  mfaEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
   omniSignInEnabled: true,
   passwordSignInEnabled: true,
   passwordlessSignInEnabled: true,
@@ -111,8 +122,10 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   hooksLimit: undefined,
   communitySupportEnabled: true,
   ticketSupportResponseTime: undefined,
-  organizationsEnabled: true,
-  ssoEnabled: true,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  organizationsEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  ssoEnabled: isDevelopmentFeaturesEnabled ? undefined : true,
 };
 
 /**
@@ -125,7 +138,12 @@ export const enterprisePlanTableData: SubscriptionPlanTableData = {
 };
 
 export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.freeze({
-  [SubscriptionPlanTableGroupKey.base]: ['basePrice', 'mauUnitPrice', 'mauLimit'],
+  [SubscriptionPlanTableGroupKey.base]: [
+    'basePrice',
+    // TODO @xiaoyijun [Pricing] remove feature flag
+    ...condArray(!isDevelopmentFeaturesEnabled && 'mauUnitPrice'),
+    'mauLimit',
+  ],
   [SubscriptionPlanTableGroupKey.applications]: ['applicationsLimit', 'machineToMachineLimit'],
   [SubscriptionPlanTableGroupKey.resources]: ['resourcesLimit', 'scopesPerResourceLimit'],
   [SubscriptionPlanTableGroupKey.branding]: [

@@ -1,3 +1,4 @@
+import { type Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { type InvoicesResponse, type SubscriptionPlanResponse } from '@/cloud/types/router';
@@ -30,6 +31,11 @@ export type SubscriptionPlanTable = Partial<
   SubscriptionPlanQuota & {
     // Base quota
     basePrice: string;
+    /**
+     * Token limit
+     * Todo @xiaoyijun [Pricing] retrieve the token limit from the backend
+     */
+    tokenLimit: Nullable<number>;
     mauUnitPrice: string[];
     // UI and branding
     customCssEnabled: boolean;
@@ -65,12 +71,6 @@ export enum SubscriptionPlanTableGroupKey {
 
 export type SubscriptionPlanTableGroupKeyMap = {
   [key in SubscriptionPlanTableGroupKey]: Array<keyof Required<SubscriptionPlanTable>>;
-};
-
-type SubscriptionPlanTableValue = SubscriptionPlanTable[keyof SubscriptionPlanTable];
-
-export type SubscriptionPlanTableRow = Record<string, SubscriptionPlanTableValue> & {
-  quotaKey: keyof SubscriptionPlanTable;
 };
 
 export const localCheckoutSessionGuard = z.object({

@@ -9,6 +9,7 @@ import {
   passwordSignInEnabledMap,
   passwordlessSignInEnabledMap,
   smsConnectorsEnabledMap,
+  tokenLimitMap,
   userManagementEnabledMap,
 } from '@/consts/plan-quotas';
 import { type SubscriptionPlanTableData, type SubscriptionPlan } from '@/types/subscriptions';
@@ -46,6 +47,7 @@ export const constructPlanTableDataArray = (
         emailConnectorsEnabled: emailConnectorsEnabledMap[id],
         smsConnectorsEnabled: smsConnectorsEnabledMap[id],
         userManagementEnabled: userManagementEnabledMap[id],
+        tokenLimit: tokenLimitMap[id],
       },
     };
   });

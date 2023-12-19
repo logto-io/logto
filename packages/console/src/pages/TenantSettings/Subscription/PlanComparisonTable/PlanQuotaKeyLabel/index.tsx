@@ -1,17 +1,22 @@
+import { cond, type Nullable } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlanTable } from '@/types/subscriptions';
 
 const planQuotaKeyPhraseMap: {
-  [key in keyof Required<SubscriptionPlanTable>]: TFuncKey<
-    'translation',
-    'admin_console.subscription.quota_table'
+  [key in keyof Required<SubscriptionPlanTable>]: Nullable<
+    TFuncKey<'translation', 'admin_console.subscription.quota_table'>
   >;
 } = {
   basePrice: 'quota.base_price',
   mauUnitPrice: 'quota.mau_unit_price',
   mauLimit: 'quota.mau_limit',
+  /**
+   * Token limit is required in the plan quota table but we don't display it as a row data.
+   */
+  tokenLimit: null,
   applicationsLimit: 'application.total',
   machineToMachineLimit: 'application.m2m',
   resourcesLimit: 'resource.resource_count',
@@ -37,7 +42,12 @@ const planQuotaKeyPhraseMap: {
   auditLogsRetentionDays: 'audit_logs.retention',
   communitySupportEnabled: 'support.community',
   ticketSupportResponseTime: 'support.customer_ticket',
-  organizationsEnabled: 'organizations.organizations',
+  /**
+   * Todo @xiaoyijun [Pricing] Remove feature flag
+   */
+  organizationsEnabled: isDevFeaturesEnabled
+    ? 'organizations.monthly_active_organization'
+    : 'organizations.organizations',
 };
 
 type Props = {
@@ -45,7 +55,8 @@ type Props = {
 };
 
 function PlanQuotaKeyLabel({ quotaKey }: Props) {
-  return <DynamicT forKey={`subscription.quota_table.${planQuotaKeyPhraseMap[quotaKey]}`} />;
+  const phraseKey = planQuotaKeyPhraseMap[quotaKey];
+  return cond(phraseKey && <DynamicT forKey={`subscription.quota_table.${phraseKey}`} />) ?? <>-</>;
 }
 
 export default PlanQuotaKeyLabel;
