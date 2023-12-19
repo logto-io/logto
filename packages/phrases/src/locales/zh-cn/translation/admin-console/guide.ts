@@ -7,6 +7,8 @@ const guide = {
     SPA: '单页应用',
     Native: '原生应用',
     MachineToMachine: 'Machine-to-machine',
+    /** UNTRANSLATED */
+    Protected: 'Protected app',
   },
   filter: {
     title: '筛选框架',

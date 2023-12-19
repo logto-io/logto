@@ -1,6 +1,6 @@
 /* init_order = 1 */
 
-create type application_type as enum ('Native', 'SPA', 'Traditional', 'MachineToMachine');
+create type application_type as enum ('Native', 'SPA', 'Traditional', 'MachineToMachine', 'Protected');
 
 create table applications (
   tenant_id varchar(21) not null

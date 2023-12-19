@@ -7,6 +7,8 @@ const guide = {
     SPA: 'Одностраничное приложение',
     Native: 'Нативное',
     MachineToMachine: 'Машина к машине',
+    /** UNTRANSLATED */
+    Protected: 'Protected app',
   },
   filter: {
     title: 'Фильтры фреймворков',
