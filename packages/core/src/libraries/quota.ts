@@ -1,4 +1,5 @@
 import { ConnectorType, DemoConnector } from '@logto/connector-kit';
+import { RoleType, ReservedPlanId } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -44,7 +45,9 @@ export const createQuotaLibrary = (
       // Ignore the default management API resource
       return { count: count - 1 };
     },
-    rolesLimit: async () => countRoles(),
+    rolesLimit: async () => countRoles(undefined, { type: RoleType.User }),
+    machineToMachineRolesLimit: async () =>
+      countRoles(undefined, { type: RoleType.MachineToMachine }),
     scopesPerResourceLimit: async (queryKey) => {
       assertThat(queryKey, new TypeError('queryKey for scopesPerResourceLimit is required'));
       return countScopesByResourceId(queryKey);
@@ -58,13 +61,6 @@ export const createQuotaLibrary = (
       const count = connectors.filter(
         ({ type, metadata: { id, isStandard } }) =>
           type === ConnectorType.Social && !isStandard && id !== DemoConnector.Social
-      ).length;
-      return { count };
-    },
-    standardConnectorsLimit: async () => {
-      const connectors = await getLogtoConnectors();
-      const count = connectors.filter(
-        ({ metadata: { isStandard, id } }) => isStandard && id !== DemoConnector.Social
       ).length;
       return { count };
     },
@@ -96,8 +92,9 @@ export const createQuotaLibrary = (
       return;
     }
 
-    const plan = await getTenantSubscriptionPlan(cloudConnection);
-    const limit = plan.quota[key];
+    const { id: planId, quota } = await getTenantSubscriptionPlan(cloudConnection);
+    // Only apply hard quota limit for free plan, o/w it's soft limit (use `null` to bypass quota check for soft limit cases).
+    const limit = planId === ReservedPlanId.Free ? quota[key] : null;
 
     if (limit === null) {
       return;

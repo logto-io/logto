@@ -1,5 +1,5 @@
 import type { RoleResponse } from '@logto/schemas';
-import { Roles, featuredApplicationGuard, featuredUserGuard } from '@logto/schemas';
+import { RoleType, Roles, featuredApplicationGuard, featuredUserGuard } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { pickState, tryThat } from '@silverhand/essentials';
 import { object, string, z, number } from 'zod';
@@ -7,7 +7,6 @@ import { object, string, z, number } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import koaQuotaGuard from '#src/middleware/koa-quota-guard.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
@@ -133,7 +132,6 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
 
   router.post(
     '/roles',
-    koaQuotaGuard({ key: 'rolesLimit', quota }),
     koaGuard({
       body: Roles.createGuard
         .omit({ id: true })
@@ -144,6 +142,13 @@ export default function roleRoutes<T extends AuthedRouter>(...[router, tenant]: 
     async (ctx, next) => {
       const { body } = ctx.guard;
       const { scopeIds, ...roleBody } = body;
+
+      // `rolesLimit` is actually the limit of user roles, keep this name for backward compatibility.
+      // We have optional `type` when creating a new role, if `type` is not provided, use `User` as default.
+      // `machineToMachineRolesLimit` is the limit of machine to machine roles, and is independent to `rolesLimit`.
+      await quota.guardKey(
+        roleBody.type === RoleType.MachineToMachine ? 'machineToMachineRolesLimit' : 'rolesLimit'
+      );
 
       assertThat(
         !(await findRoleByRoleName(roleBody.name)),

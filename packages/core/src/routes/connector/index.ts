@@ -25,9 +25,6 @@ const guardConnectorsQuota = async (
   factory: ConnectorFactory<typeof router>,
   quota: QuotaLibrary
 ) => {
-  if (factory.metadata.isStandard) {
-    await quota.guardKey('standardConnectorsLimit');
-  }
   if (factory.type === ConnectorType.Social) {
     await quota.guardKey('socialConnectorsLimit');
   }
