@@ -132,6 +132,19 @@ export const quotaValueRenderer: Record<
       paymentType="usage"
     />
   ),
+  allowedUsersPerOrganization: ({ table: { allowedUsersPerOrganization } }) => (
+    <GenericQuotaLimit quota={allowedUsersPerOrganization} />
+  ),
+  invitationEnabled: ({ table: { invitationEnabled } }) => (
+    <GenericFeatureFlag isEnabled={invitationEnabled} />
+  ),
+  orgRolesLimit: ({ table: { orgRolesLimit } }) => <GenericQuotaLimit quota={orgRolesLimit} />,
+  orgPermissionsLimit: ({ table: { orgPermissionsLimit } }) => (
+    <GenericQuotaLimit quota={orgPermissionsLimit} />
+  ),
+  justInTimeProvisioningEnabled: ({ table: { justInTimeProvisioningEnabled } }) => (
+    <GenericFeatureFlag isEnabled={justInTimeProvisioningEnabled} />
+  ),
   // Audit logs
   auditLogsRetentionDays: ({ table: { auditLogsRetentionDays } }) => (
     <GenericQuotaLimit

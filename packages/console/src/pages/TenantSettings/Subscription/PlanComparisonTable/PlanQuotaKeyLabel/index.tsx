@@ -48,6 +48,11 @@ const planQuotaKeyPhraseMap: {
   organizationsEnabled: isDevFeaturesEnabled
     ? 'organizations.monthly_active_organization'
     : 'organizations.organizations',
+  allowedUsersPerOrganization: 'organizations.allowed_users_per_org',
+  invitationEnabled: 'organizations.invitation',
+  orgRolesLimit: 'organizations.org_roles',
+  orgPermissionsLimit: 'organizations.org_permissions',
+  justInTimeProvisioningEnabled: 'organizations.just_in_time_provisioning',
 };
 
 type Props = {

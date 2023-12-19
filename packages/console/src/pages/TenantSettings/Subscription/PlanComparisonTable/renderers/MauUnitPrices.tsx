@@ -11,7 +11,6 @@ type Props = {
  * TODO: @xiaoyijun [Pricing] Remove the unit price after the new pricing feature is ready.
  */
 function MauUnitPrices({ prices }: Props) {
-  console.log(prices);
   if (prices === undefined) {
     return <DynamicT forKey="subscription.quota_table.contact" />;
   }
