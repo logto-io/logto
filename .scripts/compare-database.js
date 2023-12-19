@@ -7,6 +7,15 @@ const omitArray = (arrayOfObjects, ...keys) => arrayOfObjects.map((value) => omi
 const schemas = ['cloud', 'public'];
 const schemasArray = `(${schemas.map((schema) => `'${schema}'`).join(', ')})`;
 
+const tryCompare = (a, b) => {
+  try {
+    assert.deepStrictEqual(a, b);
+  } catch (error) {
+    console.error(error.toString());
+    process.exit(1);
+  }
+};
+
 const queryDatabaseManifest = async (database) => {
   const pool = new pg.Pool({ database, user: 'postgres', password: 'postgres' });
 
@@ -150,7 +159,7 @@ const manifests = [
   await queryDatabaseManifest(database2),
 ];
 
-assert.deepStrictEqual(...manifests);
+tryCompare(...manifests);
 
 const autoCompare = (a, b) => {
   if (typeof a !== typeof b) {
@@ -200,7 +209,4 @@ const queryDatabaseData = async (database) => {
 
 console.log('Compare database data between', database1, 'and', database2);
 
-assert.deepStrictEqual(
-  await queryDatabaseData(database1),
-  await queryDatabaseData(database2),
-);
+tryCompare(await queryDatabaseData(database1), await queryDatabaseData(database2));

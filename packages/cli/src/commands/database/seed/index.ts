@@ -36,9 +36,15 @@ export const seedByPool = async (pool: DatabasePool, cloud = false, test = false
   });
 };
 
+const seedLegacyTestData = async (pool: DatabasePool) => {
+  return pool.transaction(async (connection) => {
+    await seedTest(connection, true);
+  });
+};
+
 const seed: CommandModule<
   Record<string, unknown>,
-  { swe?: boolean; cloud?: boolean; test?: boolean }
+  { swe?: boolean; cloud?: boolean; test?: boolean; 'legacy-test-data'?: boolean }
 > = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
@@ -56,9 +62,27 @@ const seed: CommandModule<
       .option('test', {
         describe: 'Seed additional test data',
         type: 'boolean',
+      })
+      .option('legacy-test-data', {
+        describe:
+          'Seed test data only for legacy Logto versions (<=1.12.0), this option conflicts with others',
+        type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test }) => {
+  handler: async ({ swe, cloud, test, legacyTestData }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
+
+    if (legacyTestData) {
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      if (swe || cloud || test) {
+        throw new Error(
+          'The `legacy-test-data` option conflicts with other options, please use it alone.'
+        );
+      }
+
+      await seedLegacyTestData(pool);
+      await pool.end();
+      return;
+    }
 
     if (swe && (await doesConfigsTableExist(pool))) {
       consoleLog.info('Seeding skipped');
@@ -76,8 +100,10 @@ const seed: CommandModule<
           '  Nothing has changed since the seeding process was in a transaction.\n' +
           '  Try to fix the error and seed again.'
       );
+      throw error;
+    } finally {
+      await pool.end();
     }
-    await pool.end();
   },
 };
 

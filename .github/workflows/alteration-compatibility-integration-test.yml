@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - master
-      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -19,8 +18,7 @@ jobs:
       has-alteration-changes: ${{ steps.changes-detection.outputs.has-alteration-changes }}
 
     steps:
-      - name: checkout head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
