@@ -9,7 +9,9 @@ type RouteResponseType<T extends { search?: unknown; body?: unknown; response?: 
 
 export type SubscriptionPlan = RouteResponseType<GetRoutes['/api/subscription-plans']>[number];
 
+// Since `standardConnectorsLimit` will be removed in the upcoming pricing V2, no need to guard it.
+// `tokenLimit` is not guarded in backend.
 export type FeatureQuota = Omit<
   SubscriptionPlan['quota'],
-  'tenantLimit' | 'mauLimit' | 'auditLogsRetentionDays'
+  'tenantLimit' | 'mauLimit' | 'auditLogsRetentionDays' | 'standardConnectorsLimit' | 'tokenLimit'
 >;

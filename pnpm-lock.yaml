@@ -1322,8 +1322,8 @@ importers:
         specifier: ^29.5.0
         version: 29.5.0
       '@logto/cloud':
-        specifier: 0.2.5-5a698db
-        version: 0.2.5-5a698db(zod@3.22.4)
+        specifier: 0.2.5-5deb133
+        version: 0.2.5-5deb133(zod@3.22.4)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.0
         version: 25.0.7(rollup@4.1.4)
@@ -3324,8 +3324,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-5a698db
-        version: 0.2.5-5a698db(zod@3.22.4)
+        specifier: 0.2.5-5deb133
+        version: 0.2.5-5deb133(zod@3.22.4)
       '@silverhand/eslint-config':
         specifier: 4.0.1
         version: 4.0.1(eslint@8.44.0)(prettier@3.0.0)(typescript@5.0.2)
@@ -7522,6 +7522,16 @@ packages:
       - zod
     dev: true
 
+  /@logto/cloud@0.2.5-5deb133(zod@3.22.4):
+    resolution: {integrity: sha512-3itFraudBBc3bcS6qiBFHXQKoDYPFihxRu+L4HqDVEwTCBJfVVgGgD4F0fMpSpC+ouJY+VVdZGh7Yn9772B5fg==}
+    engines: {node: ^18.12.0}
+    dependencies:
+      '@silverhand/essentials': 2.8.6
+      '@withtyped/server': 0.12.9(zod@3.22.4)
+    transitivePeerDependencies:
+      - zod
+    dev: true
+
   /@logto/js@3.0.1:
     resolution: {integrity: sha512-vsU6mH5oiiW3k00pMyVA4V31K2Bd0rOT9qWch2l5e5o1yCQLJ3zUIOjGjChu3m2TRu1d920iiUpZU3Lzf6Pwdw==}
     dependencies:
@@ -9218,6 +9228,11 @@ packages:
 
   /@silverhand/essentials@2.8.5:
     resolution: {integrity: sha512-ChOGm1NeETWkEZXkIDD123cf8gxphqeSbtnvgsiqKMmWH2oSMvqORAyVFdngl0MuL9Ef5EdLFII+JrJkdytHrQ==}
+    engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
+    dev: true
+
+  /@silverhand/essentials@2.8.6:
+    resolution: {integrity: sha512-qNyc6CvZRngP66hTA8sbpXGsiu9j6Hu62jCy7LV3tJiytg/hmxJB5oM9k5tpaUa9kHwYJ2X9CManX7SYYNrzHg==}
     engines: {node: ^16.13.0 || ^18.12.0 || ^19.2.0, pnpm: ^8.0.0}
     dev: true
 

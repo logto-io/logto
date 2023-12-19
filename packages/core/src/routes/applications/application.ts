@@ -129,11 +129,11 @@ export default function applicationRoutes<T extends AuthedRouter>(
     async (ctx, next) => {
       const { oidcClientMetadata, ...rest } = ctx.guard.body;
 
-      await quota.guardKey(
-        rest.type === ApplicationType.MachineToMachine
-          ? 'machineToMachineLimit'
-          : 'applicationsLimit'
-      );
+      // When creating a m2m app, should check both m2m limit and application limit.
+      if (rest.type === ApplicationType.MachineToMachine) {
+        await quota.guardKey('machineToMachineLimit');
+      }
+      await quota.guardKey('applicationsLimit');
 
       // Third party applications must be traditional type
       if (rest.isThirdParty) {
