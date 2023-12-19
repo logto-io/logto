@@ -49,6 +49,12 @@ export type SubscriptionPlanTable = Partial<
     smsConnectorsEnabled: boolean;
     // User management
     userManagementEnabled: boolean;
+    // Organization
+    allowedUsersPerOrganization: Nullable<number>;
+    invitationEnabled: boolean;
+    orgRolesLimit: Nullable<number>;
+    orgPermissionsLimit: Nullable<number>;
+    justInTimeProvisioningEnabled: boolean;
   }
 >;
 

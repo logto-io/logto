@@ -87,6 +87,36 @@ export const tokenLimitMap: Record<string, Nullable<number>> = {
   [ReservedPlanId.Pro]: 1_000_000,
 };
 
+export const allowedUsersPerOrganizationMap: Record<string, Nullable<number> | undefined> = {
+  [ReservedPlanId.Free]: 0,
+  [ReservedPlanId.Hobby]: null,
+  [ReservedPlanId.Pro]: undefined,
+};
+
+export const invitationEnabledMap: Record<string, boolean | undefined> = {
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: undefined,
+};
+
+export const orgRolesLimitMap: Record<string, Nullable<number> | undefined> = {
+  [ReservedPlanId.Free]: 0,
+  [ReservedPlanId.Hobby]: null,
+  [ReservedPlanId.Pro]: undefined,
+};
+
+export const orgPermissionsLimitMap: Record<string, Nullable<number> | undefined> = {
+  [ReservedPlanId.Free]: 0,
+  [ReservedPlanId.Hobby]: null,
+  [ReservedPlanId.Pro]: undefined,
+};
+
+export const justInTimeProvisioningEnabledMap: Record<string, boolean | undefined> = {
+  [ReservedPlanId.Free]: false,
+  [ReservedPlanId.Hobby]: true,
+  [ReservedPlanId.Pro]: undefined,
+};
+
 /**
  * Note: this is only for display purpose.
  *
@@ -169,7 +199,17 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'rolesLimit',
     'scopesPerRoleLimit',
   ],
-  [SubscriptionPlanTableGroupKey.organizations]: ['organizationsEnabled'],
+  [SubscriptionPlanTableGroupKey.organizations]: [
+    'organizationsEnabled',
+    // Todo @xiaoyijun [Pricing] Remove feature flag
+    ...condArray(
+      isDevelopmentFeaturesEnabled && 'allowedUsersPerOrganization',
+      isDevelopmentFeaturesEnabled && 'invitationEnabled',
+      isDevelopmentFeaturesEnabled && 'orgRolesLimit',
+      isDevelopmentFeaturesEnabled && 'orgPermissionsLimit',
+      isDevelopmentFeaturesEnabled && 'justInTimeProvisioningEnabled'
+    ),
+  ],
   [SubscriptionPlanTableGroupKey.auditLogs]: ['auditLogsRetentionDays'],
   [SubscriptionPlanTableGroupKey.hooks]: ['hooksLimit'],
   [SubscriptionPlanTableGroupKey.support]: ['communitySupportEnabled', 'ticketSupportResponseTime'],

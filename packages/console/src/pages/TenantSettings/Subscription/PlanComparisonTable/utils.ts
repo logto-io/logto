@@ -1,11 +1,16 @@
 import { conditional, conditionalString } from '@silverhand/essentials';
 
 import {
+  allowedUsersPerOrganizationMap,
   appLogoAndFaviconEnabledMap,
   customCssEnabledMap,
   darkModeEnabledMap,
   emailConnectorsEnabledMap,
   i18nEnabledMap,
+  invitationEnabledMap,
+  justInTimeProvisioningEnabledMap,
+  orgPermissionsLimitMap,
+  orgRolesLimitMap,
   passwordSignInEnabledMap,
   passwordlessSignInEnabledMap,
   smsConnectorsEnabledMap,
@@ -48,6 +53,11 @@ export const constructPlanTableDataArray = (
         smsConnectorsEnabled: smsConnectorsEnabledMap[id],
         userManagementEnabled: userManagementEnabledMap[id],
         tokenLimit: tokenLimitMap[id],
+        allowedUsersPerOrganization: allowedUsersPerOrganizationMap[id],
+        invitationEnabled: invitationEnabledMap[id],
+        orgRolesLimit: orgRolesLimitMap[id],
+        orgPermissionsLimit: orgPermissionsLimitMap[id],
+        justInTimeProvisioningEnabled: justInTimeProvisioningEnabledMap[id],
       },
     };
   });
