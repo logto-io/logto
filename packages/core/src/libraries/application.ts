@@ -1,4 +1,9 @@
-import { OrganizationScopes, Scopes, type Scope } from '@logto/schemas';
+import {
+  OrganizationScopes,
+  Scopes,
+  type Scope,
+  ApplicationUserConsentScopeType,
+} from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -156,6 +161,27 @@ export const createApplicationLibrary = (queries: Queries) => {
   const getApplicationUserConsentScopes = async (applicationId: string) =>
     useConsentUserScopes.findAllByApplicationId(applicationId);
 
+  const deleteApplicationUserConsentScopesByTypeAndScopeId = async (
+    applicationId: string,
+    type: ApplicationUserConsentScopeType,
+    scopeId: string
+  ) => {
+    switch (type) {
+      case ApplicationUserConsentScopeType.OrganizationScopes: {
+        await userConsentOrganizationScopes.delete({ applicationId, organizationScopeId: scopeId });
+        break;
+      }
+      case ApplicationUserConsentScopeType.ResourceScopes: {
+        await userConsentResourceScopes.delete({ applicationId, scopeId });
+        break;
+      }
+      case ApplicationUserConsentScopeType.UserScopes: {
+        await useConsentUserScopes.deleteByApplicationIdAndScopeId(applicationId, scopeId);
+        break;
+      }
+    }
+  };
+
   return {
     validateThirdPartyApplicationById,
     findApplicationScopesForResourceIndicator,
@@ -164,5 +190,6 @@ export const createApplicationLibrary = (queries: Queries) => {
     getApplicationUserConsentOrganizationScopes,
     getApplicationUserConsentResourceScopes,
     getApplicationUserConsentScopes,
+    deleteApplicationUserConsentScopesByTypeAndScopeId,
   };
 };

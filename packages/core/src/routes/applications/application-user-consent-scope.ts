@@ -1,5 +1,8 @@
 import { UserScope } from '@logto/core-kit';
-import { applicationUserConsentScopesResponseGuard } from '@logto/schemas';
+import {
+  applicationUserConsentScopesResponseGuard,
+  ApplicationUserConsentScopeType,
+} from '@logto/schemas';
 import { object, string, nativeEnum } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -21,6 +24,7 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
           getApplicationUserConsentOrganizationScopes,
           getApplicationUserConsentResourceScopes,
           getApplicationUserConsentScopes,
+          deleteApplicationUserConsentScopesByTypeAndScopeId,
         },
       },
     },
@@ -83,6 +87,32 @@ export default function applicationUserConsentScopeRoutes<T extends AuthedRouter
         resourceScopes,
         userScopes,
       };
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/applications/:applicationId/user-consent-scopes/:scopeType/:scopeId',
+    koaGuard({
+      params: object({
+        applicationId: string(),
+        scopeType: nativeEnum(ApplicationUserConsentScopeType),
+        scopeId: string(),
+      }),
+      status: [204, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { applicationId, scopeType, scopeId },
+      } = ctx.guard;
+
+      // Validate application exists
+      await findApplicationById(applicationId);
+
+      await deleteApplicationUserConsentScopesByTypeAndScopeId(applicationId, scopeType, scopeId);
+
+      ctx.status = 204;
 
       return next();
     }
