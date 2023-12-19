@@ -48,7 +48,11 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
 
-  const isStandardConnectorDisabled = !currentPlan?.quota.standardConnectorsLimit;
+  const {
+    quota: { standardConnectorsLimit },
+  } = currentPlan ?? { quota: { standardConnectorsLimit: 0 } };
+
+  const isStandardConnectorDisabled = isCloud && standardConnectorsLimit === 0;
 
   const groups = useMemo(() => {
     if (!factories || !existingConnectors) {
