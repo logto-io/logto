@@ -96,6 +96,9 @@ const quota_table = {
   beta_feature_tip:
     'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
   /** UNTRANSLATED */
+  usage_based_beta_feature_tip:
+    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
+  /** UNTRANSLATED */
   beta: 'Beta',
   /** UNTRANSLATED */
   add_on_beta: 'Add-on (Beta)',
