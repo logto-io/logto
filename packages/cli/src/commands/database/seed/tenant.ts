@@ -12,6 +12,8 @@ import {
   getMapiProxyRole,
   defaultManagementApiAdminName,
   Roles,
+  PredefinedScope,
+  getManagementApiResourceIndicator,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
@@ -150,18 +152,38 @@ export const seedManagementApiProxyApplications = async (
   consoleLog.succeed('Assigned the proxy roles to the applications');
 };
 
+/**
+ * Seed the legacy user role for accessing default Management API, and assign the `all` scope to
+ * it. Used in OSS only.
+ */
 export const seedLegacyManagementApiUserRole = async (
   connection: DatabaseTransactionConnection
 ) => {
+  const roleId = generateStandardId();
   await connection.query(
     insertInto(
       {
         tenantId: adminTenantId,
-        id: generateStandardId(),
+        id: roleId,
         name: defaultManagementApiAdminName,
         description: 'Legacy user role for accessing default Management API. Used in OSS only.',
       },
       Roles.table
     )
   );
+  await connection.query(sql`
+    insert into roles_scopes (id, role_id, scope_id, tenant_id)
+    values (
+      ${generateStandardId()},
+      ${roleId},
+      (
+        select scopes.id from scopes
+        join resources on scopes.resource_id = resources.id
+        where resources.indicator = ${getManagementApiResourceIndicator(defaultTenantId)}
+        and scopes.name = ${PredefinedScope.All}
+        and scopes.tenant_id = ${adminTenantId}
+      ),
+      ${adminTenantId}
+    );
+  `);
 };

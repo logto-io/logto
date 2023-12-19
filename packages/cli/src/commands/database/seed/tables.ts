@@ -229,6 +229,12 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
       insertInto({ id: userIds[1], username: 'test2', tenantId: adminTenantId }, Users.table)
     ),
   ]);
+
+  if (forLegacy) {
+    const adminTenantRole = await getManagementRole(adminTenantId);
+    await assignRoleToUser(userIds[0], adminTenantRole.id);
+  }
+
   consoleLog.succeed('Created test users');
 
   // The only legacy user role for Management API. Used in OSS only.

@@ -26,7 +26,7 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       update roles
       set description = 'Legacy user role for accessing default Management API. Used in OSS only.'
-      where tenant_id = 'default'
+      where tenant_id = 'admin'
       and name = 'default:admin';
     `);
     // Delete `manage:tenant` scope from the Cloud API resource
@@ -51,7 +51,7 @@ const alteration: AlterationScript = {
     await pool.query(sql`
       update roles
       set description = 'Admin tenant admin role for Logto tenant default.'
-      where tenant_id = 'default'
+      where tenant_id = 'admin'
       and name = 'default:admin';
     `);
     // Add legacy roles in the admin tenant
@@ -64,7 +64,7 @@ const alteration: AlterationScript = {
         existingTenantIds.map((tenant) => {
           return sql`
             (
-              ${tenant.id},
+              'admin',
               ${`${tenant.id}:admin`},
               ${`${tenant.id}:admin`},
               ${`Admin tenant admin role for Logto tenant ${tenant.id}.`}
@@ -81,7 +81,7 @@ const alteration: AlterationScript = {
         existingTenantIds.map((tenant) => {
           return sql`
             (
-              ${tenant.id},
+              'admin',
               ${`${tenant.id}:admin`},
               ${`${tenant.id}:admin`},
               (
@@ -122,24 +122,36 @@ const alteration: AlterationScript = {
         sql`, `
       )};
     `);
-    // Assign back cloud scopes to the admin Management API proxy
+    // Assign back cloud scopes to the admin Management API proxy and the legacy admin user
     await pool.query(sql`
       insert into roles_scopes (tenant_id, id, role_id, scope_id)
       values ${sql.join(
-        ['send:sms', 'send:email', 'create:affiliate', 'manage:affiliate'].map((scope) => {
-          return sql`
-            (
-              'admin',
-              ${generateStandardId()},
-              'm-admin',
+        ['send:sms', 'send:email', 'create:affiliate', 'manage:affiliate', 'manage:tenant'].map(
+          (scope) => {
+            return sql`
               (
-                select id from scopes
-                where tenant_id = 'admin'
-                and name = ${scope}
+                'admin',
+                ${generateStandardId()},
+                'm-admin',
+                (
+                  select id from scopes
+                  where tenant_id = 'admin'
+                  and name = ${scope}
+                )
+              ),
+              (
+                'admin',
+                ${generateStandardId()},
+                'admin:admin',
+                (
+                  select id from scopes
+                  where tenant_id = 'admin'
+                  and name = ${scope}
+                )
               )
-            )
-          `;
-        }),
+            `;
+          }
+        ),
         sql`, `
       )};
     `);
