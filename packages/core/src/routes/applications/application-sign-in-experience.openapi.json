@@ -1,0 +1,33 @@
+{
+  "paths": {
+    "/api/applications/{applicationId}/sign-in-experience": {
+      "put": {
+        "summary": "Update application level sign-in experience",
+        "description": "Update application level sign-in experience for the specified application. Create a new sign-in experience if it does not exist. \n - Only branding properties and terms links customization is supported for now. \n\n - Only third-party applications can be customized for now. \n\n - Application level sign-in experience customization is optional, if provided, it will override the default branding and terms links.",
+        "responses": {
+          "200": {
+            "description": "The application's sign-in experience was successfully updated."
+          },
+          "201": {
+            "description": "A new application level sign-in experience settings was successfully created."
+          },
+          "404": {
+            "description": "The application does not exist."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get the application level sign-in experience",
+        "description": "Get application level sign-in experience for a given application. \n - Only branding properties and terms links customization is supported for now. \n\n - Only third-party applications can have the sign-in experience customization for now.",
+        "responses": {
+          "200": {
+            "description": "Returns the application's application level sign-in experience."
+          },
+          "404": {
+            "description": "The application does not exist or the application level sign-in experience does not exist."
+          }
+        }
+      }
+    }
+  }
+}
