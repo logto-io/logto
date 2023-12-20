@@ -40,6 +40,12 @@ const paywall = {
     "Vous avez atteint la limite de {{count, number}} rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   roles_other:
     "Vous avez atteint la limite de {{count, number}} rôles de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
+  /** UNTRANSLATED */
+  machine_to_machine_roles:
+    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+  /** UNTRANSLATED */
+  machine_to_machine_roles_other:
+    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
     'Vous avez atteint la limite de {{count, number}} permission par rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. Pour toute assistance, n’hésitez pas à <a>nous contacter</a>.',
   scopes_per_role_other:

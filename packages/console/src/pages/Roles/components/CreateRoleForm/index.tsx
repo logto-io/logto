@@ -4,14 +4,11 @@ import { ReservedPlanId, RoleType, internalRolePrefix } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg';
-import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import FeatureTag from '@/components/FeatureTag';
-import PlanName from '@/components/PlanName';
-import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import RoleScopesTransfer from '@/components/RoleScopesTransfer';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -23,10 +20,9 @@ import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
 import useApi from '@/hooks/use-api';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
-import { ReservedPlanName } from '@/types/subscriptions';
 import { trySubmitSafe } from '@/utils/form';
-import { hasReachedQuotaLimit } from '@/utils/quota';
 
+import Footer from './Footer';
 import * as styles from './index.module.scss';
 
 type RadioOption = { key: AdminConsoleKey; value: RoleType; hasPaywall: boolean };
@@ -37,7 +33,6 @@ const radioOptions: RadioOption[] = [
 ];
 
 export type Props = {
-  totalRoleCount: number;
   onClose: (createdRole?: Role) => void;
 };
 
@@ -49,7 +44,7 @@ type CreateRolePayload = Pick<Role, 'name' | 'description' | 'type'> & {
   scopeIds?: string[];
 };
 
-function CreateRoleForm({ totalRoleCount, onClose }: Props) {
+function CreateRoleForm({ onClose }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const [isTypeSelectorVisible, setIsTypeSelectorVisible] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -63,7 +58,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
   } = useForm<CreateRoleFormData>({ defaultValues: { type: RoleType.User } });
 
   const api = useApi();
-  const roleScopes = watch('scopes', []);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async ({ name, description, type, scopes }) => {
@@ -83,24 +77,6 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
     })
   );
 
-  const isRolesReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'rolesLimit',
-    plan: currentPlan,
-    usage: totalRoleCount,
-  });
-
-  const isScopesPerReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    plan: currentPlan,
-    /**
-     * If usage is equal to the limit, it means the current role has reached the maximum allowed scope.
-     * Therefore, we should not assign any more scopes at this point.
-     * However, the currently selected scopes haven't been assigned yet, so we subtract 1
-     * to allow the assignment when the scope count is equal to the limit.
-     */
-    usage: roleScopes.length - 1,
-  });
-
   return (
     <ModalLayout
       title="roles.create_role_title"
@@ -110,66 +86,14 @@ function CreateRoleForm({ totalRoleCount, onClose }: Props) {
         targetBlank: 'noopener',
       }}
       size="large"
-      footer={(() => {
-        if (
-          currentPlan?.name === ReservedPlanName.Free &&
-          watch('type') === RoleType.MachineToMachine
-        ) {
-          return (
-            <QuotaGuardFooter>
-              <Trans
-                components={{
-                  a: <ContactUsPhraseLink />,
-                }}
-              >
-                {t('upsell.paywall.deprecated_machine_to_machine_feature')}
-              </Trans>
-            </QuotaGuardFooter>
-          );
-        }
-        if (isRolesReachLimit && currentPlan) {
-          return (
-            <QuotaGuardFooter>
-              <Trans
-                components={{
-                  a: <ContactUsPhraseLink />,
-                  planName: <PlanName name={currentPlan.name} />,
-                }}
-              >
-                {t('upsell.paywall.roles', { count: currentPlan.quota.rolesLimit ?? 0 })}
-              </Trans>
-            </QuotaGuardFooter>
-          );
-        }
-        if (isScopesPerReachLimit && currentPlan && !isRolesReachLimit) {
-          return (
-            <QuotaGuardFooter>
-              <Trans
-                components={{
-                  a: <ContactUsPhraseLink />,
-                  planName: <PlanName name={currentPlan.name} />,
-                }}
-              >
-                {t('upsell.paywall.scopes_per_role', {
-                  count: currentPlan.quota.scopesPerRoleLimit ?? 0,
-                })}
-              </Trans>
-            </QuotaGuardFooter>
-          );
-        }
-        if (!isRolesReachLimit && !isScopesPerReachLimit) {
-          return (
-            <Button
-              isLoading={isSubmitting}
-              htmlType="submit"
-              title="roles.create_role_button"
-              size="large"
-              type="primary"
-              onClick={onSubmit}
-            />
-          );
-        }
-      })()}
+      footer={
+        <Footer
+          roleType={watch('type')}
+          selectedScopesCount={watch('scopes', []).length}
+          isCreating={isSubmitting}
+          onClickCreate={onSubmit}
+        />
+      }
       onClose={onClose}
     >
       <form>

@@ -40,6 +40,12 @@ const paywall = {
     '已达到<planName/>的{{count, number}}个角色限制。升级计划以添加额外的角色和权限。如需任何帮助，请<a>联系我们</a>。',
   roles_other:
     '已达到<planName/>的{{count, number}}个角色限制。升级计划以添加额外的角色和权限。如需任何帮助，请<a>联系我们</a>。',
+  /** UNTRANSLATED */
+  machine_to_machine_roles:
+    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+  /** UNTRANSLATED */
+  machine_to_machine_roles_other:
+    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
     '已达到<planName/>的{{count, number}}个角色每个权限限制。升级计划以添加额外的角色和权限。如需任何帮助，请<a>联系我们</a>。',
   scopes_per_role_other:
