@@ -1,9 +1,10 @@
 import { UserScope } from '@logto/core-kit';
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationType, ApplicationUserConsentScopeType } from '@logto/schemas';
 
 import {
   assignUserConsentScopes,
   getUserConsentScopes,
+  deleteUserConsentScopes,
 } from '#src/api/application-user-consent-scope.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
@@ -172,5 +173,107 @@ describe('assign user consent scopes to application', () => {
     expect(result.userScopes.length).toBe(0);
 
     await deleteApplication(newApp.id);
+  });
+
+  it('should return 404 when trying to delete consent scopes from non-existing application', async () => {
+    await expectRejects(
+      deleteUserConsentScopes(
+        'non-existing-application',
+        ApplicationUserConsentScopeType.OrganizationScopes,
+        organizationScopes.get('organizationScope1')!
+      ),
+      {
+        code: 'entity.not_exists_with_id',
+        statusCode: 404,
+      }
+    );
+  });
+
+  it('should return 404 when trying to delete non-existing consent scopes', async () => {
+    await expectRejects(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.OrganizationScopes,
+        'non-existing-organization-scope'
+      ),
+      {
+        code: 'entity.not_found',
+        statusCode: 404,
+      }
+    );
+
+    await expectRejects(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.ResourceScopes,
+        'non-existing-resource-scope'
+      ),
+      {
+        code: 'entity.not_found',
+        statusCode: 404,
+      }
+    );
+
+    await expectRejects(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.UserScopes,
+        'non-existing-user-scope'
+      ),
+      {
+        code: 'entity.not_found',
+        statusCode: 404,
+      }
+    );
+  });
+
+  it('should delete consent scopes successfully', async () => {
+    await expect(
+      assignUserConsentScopes(applicationIds.get('thirdPartyApp')!, {
+        organizationScopes: Array.from(organizationScopes.values()),
+        resourceScopes: Array.from(resourceScopes.values()),
+        userScopes: [UserScope.Profile, UserScope.Email, UserScope.OrganizationRoles],
+      })
+    ).resolves.not.toThrow();
+
+    await expect(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.OrganizationScopes,
+        organizationScopes.get('organizationScope1')!
+      )
+    ).resolves.not.toThrow();
+
+    await expect(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.ResourceScopes,
+        resourceScopes.get('resourceScope1')!
+      )
+    ).resolves.not.toThrow();
+
+    await expect(
+      deleteUserConsentScopes(
+        applicationIds.get('thirdPartyApp')!,
+        ApplicationUserConsentScopeType.UserScopes,
+        UserScope.OrganizationRoles
+      )
+    ).resolves.not.toThrow();
+
+    const result = await getUserConsentScopes(applicationIds.get('thirdPartyApp')!);
+
+    expect(
+      result.organizationScopes.find(
+        ({ id }) => id === organizationScopes.get('organizationScope1')!
+      )
+    ).toBeUndefined();
+
+    expect(
+      result.resourceScopes[0]!.scopes.find(
+        ({ id }) => id === resourceScopes.get('resourceScope1')!
+      )
+    ).toBeUndefined();
+
+    expect(result.userScopes.includes(UserScope.OrganizationRoles)).toBeFalsy();
   });
 });

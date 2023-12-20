@@ -1,5 +1,8 @@
 import { type UserScope } from '@logto/core-kit';
-import { type ApplicationUserConsentScopesResponse } from '@logto/schemas';
+import {
+  type ApplicationUserConsentScopeType,
+  type ApplicationUserConsentScopesResponse,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -16,3 +19,12 @@ export const getUserConsentScopes = async (applicationId: string) =>
   authedAdminApi
     .get(`applications/${applicationId}/user-consent-scopes`)
     .json<ApplicationUserConsentScopesResponse>();
+
+export const deleteUserConsentScopes = async (
+  applicationId: string,
+  scopeType: ApplicationUserConsentScopeType,
+  scopeId: string
+) =>
+  authedAdminApi.delete(
+    `applications/${applicationId}/user-consent-scopes/${scopeType}/${scopeId}`
+  );

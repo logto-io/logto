@@ -52,6 +52,12 @@ export const applicationUserConsentScopesResponseGuard = z.object({
   userScopes: z.array(z.nativeEnum(UserScope)),
 });
 
+export enum ApplicationUserConsentScopeType {
+  OrganizationScopes = 'organization-scopes',
+  ResourceScopes = 'resource-scopes',
+  UserScopes = 'user-scopes',
+}
+
 export type ApplicationUserConsentScopesResponse = z.infer<
   typeof applicationUserConsentScopesResponseGuard
 >;

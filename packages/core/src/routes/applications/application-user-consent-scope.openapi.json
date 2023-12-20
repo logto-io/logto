@@ -64,6 +64,20 @@
           }
         }
       }
+    },
+    "/api/applications/{applicationId}/user-consent-scopes/{scopeType}/{scopeId}": {
+      "delete": {
+        "summary": "Remove user consent scope from application.",
+        "description": "Remove the user consent scope from an application by application id, scope type and scope id",
+        "responses": {
+          "204": {
+            "description": "The user consent scope is removed from the application successfully"
+          },
+          "404": {
+            "description": "The application or scope is not found"
+          }
+        }
+      }
     }
   }
 }

@@ -11,6 +11,7 @@ import { convertToIdentifiers } from '@logto/shared';
 import { sql, type CommonQueryMethods } from 'slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { TwoRelationsQueries } from '#src/utils/RelationQueries.js';
 
 export class ApplicationUserConsentOrganizationScopeQueries extends TwoRelationsQueries<
@@ -48,8 +49,22 @@ export const createApplicationUserConsentUserScopeQueries = (pool: CommonQueryMe
     return scopes.map(({ userScope }) => userScope);
   };
 
+  const deleteByApplicationIdAndScopeId = async (applicationId: string, scopeId: string) => {
+    const { table, fields } = convertToIdentifiers(ApplicationUserConsentUserScopes);
+
+    const { rowCount } = await pool.query(sql`
+      delete from ${table}
+      where ${fields.applicationId} = ${applicationId} and ${fields.userScope} = ${scopeId}
+    `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(ApplicationUserConsentUserScopes.table);
+    }
+  };
+
   return {
     insert,
     findAllByApplicationId,
+    deleteByApplicationIdAndScopeId,
   };
 };
