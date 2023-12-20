@@ -40,6 +40,12 @@ const paywall = {
     'Достигнут лимит {{count, number}} ролей в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   roles_other:
     'Достигнут лимит {{count, number}} ролей в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
+  /** UNTRANSLATED */
+  machine_to_machine_roles:
+    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+  /** UNTRANSLATED */
+  machine_to_machine_roles_other:
+    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
     'Достигнут лимит {{count, number}} разрешений на роль в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   scopes_per_role_other:

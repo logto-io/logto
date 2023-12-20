@@ -196,10 +196,8 @@ function Roles() {
         onRetry: async () => mutate(undefined, true),
       }}
       widgets={
-        isCreating &&
-        totalCount !== undefined && (
+        isCreating && (
           <CreateRoleModal
-            totalRoleCount={totalCount}
             onClose={() => {
               navigate({ pathname: rolesPathname, search });
             }}
