@@ -79,6 +79,7 @@ export default class GlobalValues {
    * ```
    *
    * @see urlSet
+   * @deprecated Don't use it as it's buggy and will be removed in the future.
    */
   public readonly isPathBasedMultiTenancy =
     !this.isDomainBasedMultiTenancy && yes(getEnv('PATH_BASED_MULTI_TENANCY'));
