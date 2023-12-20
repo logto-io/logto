@@ -6,6 +6,7 @@ import useSWR from 'swr';
 
 import Plus from '@/assets/icons/plus.svg';
 import ApplicationIcon from '@/components/ApplicationIcon';
+import ChargeNotification from '@/components/ChargeNotification';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import { defaultPageSize } from '@/consts';
@@ -15,6 +16,7 @@ import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import Table from '@/ds-components/Table';
 import type { RequestError } from '@/hooks/use-api';
+import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useSearchParametersWatcher from '@/hooks/use-search-parameters-watcher';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import * as pageLayout from '@/scss/page-layout.module.scss';
@@ -35,6 +37,7 @@ function Applications() {
   const { match, navigate } = useTenantPathname();
   const isCreating = match(createApplicationPathname);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -69,6 +72,11 @@ function Applications() {
           />
         )}
       </div>
+      <ChargeNotification
+        hasReachedLimit={hasMachineToMachineAppsReachedLimit}
+        notification="charge_notification_for_m2m_app_limit"
+        className={styles.chargeNotification}
+      />
       {!isLoading && !applications?.length && (
         <OverlayScrollbar className={styles.guideLibraryContainer}>
           <CardTitle

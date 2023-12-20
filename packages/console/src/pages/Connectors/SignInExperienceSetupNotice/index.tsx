@@ -6,8 +6,6 @@ import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
-import * as styles from './index.module.scss';
-
 function SignInExperienceSetupNotice() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: connectors } = useSWR<ConnectorResponse[]>('api/connectors');
@@ -23,7 +21,6 @@ function SignInExperienceSetupNotice() {
   return (
     <InlineNotification
       action="general.got_it"
-      className={styles.notice}
       onClick={() => {
         void update({ connectorSieNoticeConfirmed: true });
       }}
