@@ -2,6 +2,7 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -26,7 +27,18 @@ function MauLimitExceededNotification({ activeUsers, currentPlan, className }: P
   const { data: subscriptionPlans } = useSubscriptionPlans();
   const [isLoading, setIsLoading] = useState(false);
   const proPlan = useMemo(
-    () => subscriptionPlans?.find(({ id }) => id === ReservedPlanId.Pro),
+    () =>
+      subscriptionPlans?.find(({ id }) => {
+        /**
+         * Todo @xiaoyijun [Pricing] Remove feature flag
+         * Note: In new pricing version, we treat Hobby plan as the new pro plan.
+         */
+        if (isDevFeaturesEnabled) {
+          return id === ReservedPlanId.Hobby;
+        }
+
+        return id === ReservedPlanId.Pro;
+      }),
     [subscriptionPlans]
   );
 

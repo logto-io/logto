@@ -9,7 +9,7 @@ import FeatureTag from '@/components/FeatureTag';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -105,7 +105,8 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <FeatureTag
                     isVisible={isM2mDisabledForCurrentPlan}
                     for="upsell"
-                    plan={ReservedPlanId.Hobby}
+                    // Todo @xiaoyijun [Pricing] Remove feature flag
+                    plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
                     className={styles.proTag}
                   />
                 </div>

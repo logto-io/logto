@@ -4,7 +4,7 @@ import { Suspense, useCallback, useContext } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import FeatureTag from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -77,7 +77,11 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
             {hasPaywall && (
-              <FeatureTag isVisible={isM2mDisabled} for="upsell" plan={ReservedPlanId.Hobby} />
+              <FeatureTag
+                isVisible={isM2mDisabled}
+                for="upsell"
+                plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
+              />
             )}
           </div>
           <div className={styles.description} title={description}>
