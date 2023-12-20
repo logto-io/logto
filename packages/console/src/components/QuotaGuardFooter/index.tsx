@@ -7,10 +7,13 @@ import * as styles from './index.module.scss';
 
 type Props = {
   children: ReactNode;
+  isLoading?: boolean;
+  onClickUpgrade?: () => void;
 };
 
-function QuotaGuardFooter({ children }: Props) {
+function QuotaGuardFooter({ children, isLoading, onClickUpgrade }: Props) {
   const { navigate } = useTenantPathname();
+
   return (
     <div className={styles.container}>
       <div className={styles.description}>{children}</div>
@@ -18,7 +21,13 @@ function QuotaGuardFooter({ children }: Props) {
         size="large"
         type="primary"
         title="upsell.upgrade_plan"
+        isLoading={isLoading}
         onClick={() => {
+          if (onClickUpgrade) {
+            onClickUpgrade();
+            return;
+          }
+          // Navigate to subscription page by default
           navigate('/tenant-settings/subscription');
         }}
       />

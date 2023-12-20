@@ -1,7 +1,7 @@
 import { ReservedPlanId } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +27,7 @@ const useSubscribe = () => {
   const cloudApi = useCloudApi({ hideErrorToast: true });
   const { updateTenant } = useContext(TenantsContext);
   const { getUrl } = useTenantPathname();
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
 
   const subscribe = async ({
     planId,
@@ -35,6 +36,11 @@ const useSubscribe = () => {
     tenantData,
     isDowngrade = false,
   }: SubscribeProps) => {
+    if (isSubscribeLoading) {
+      return;
+    }
+    setIsSubscribeLoading(true);
+
     const state = nanoid(6);
 
     const successSearchParam = new URLSearchParams({
@@ -45,29 +51,33 @@ const useSubscribe = () => {
       `${dropLeadingSlash(GlobalRoute.CheckoutSuccessCallback)}?${successSearchParam.toString()}`
     ).href;
 
-    const { redirectUri, sessionId } = await cloudApi.post('/api/checkout-session', {
-      body: {
-        planId,
-        successCallbackUrl,
-        tenantId,
-        tenantName: tenantData?.name,
-        tenantTag: tenantData?.tag,
-      },
-    });
+    try {
+      const { redirectUri, sessionId } = await cloudApi.post('/api/checkout-session', {
+        body: {
+          planId,
+          successCallbackUrl,
+          tenantId,
+          tenantName: tenantData?.name,
+          tenantTag: tenantData?.tag,
+        },
+      });
 
-    if (!redirectUri) {
-      toast.error(t('general.unknown_error'));
-      return;
+      if (!redirectUri) {
+        toast.error(t('general.unknown_error'));
+        return;
+      }
+
+      createLocalCheckoutSession({
+        state,
+        sessionId,
+        callbackPage,
+        isDowngrade,
+      });
+
+      window.location.assign(redirectUri);
+    } finally {
+      setIsSubscribeLoading(false);
     }
-
-    createLocalCheckoutSession({
-      state,
-      sessionId,
-      callbackPage,
-      isDowngrade,
-    });
-
-    window.location.assign(redirectUri);
   };
 
   const cancelSubscription = async (tenantId: string) => {
@@ -110,6 +120,7 @@ const useSubscribe = () => {
   };
 
   return {
+    isSubscribeLoading,
     subscribe,
     cancelSubscription,
     visitManagePaymentPage,
