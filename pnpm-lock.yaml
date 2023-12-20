@@ -2840,8 +2840,8 @@ importers:
         specifier: workspace:^1.3.1
         version: link:../app-insights
       '@logto/cloud':
-        specifier: 0.2.5-5a698db
-        version: 0.2.5-5a698db(zod@3.22.4)
+        specifier: 0.2.5-5deb133
+        version: 0.2.5-5deb133(zod@3.22.4)
       '@logto/connector-kit':
         specifier: workspace:^2.0.0
         version: link:../toolkit/connector-kit
@@ -7510,16 +7510,6 @@ packages:
       '@silverhand/essentials': 2.8.5
       camelcase-keys: 7.0.2
       jose: 5.0.1
-    dev: true
-
-  /@logto/cloud@0.2.5-5a698db(zod@3.22.4):
-    resolution: {integrity: sha512-khGNmCJgUBQCpIxsewsoeaPHDtR5FgX03SSAYfaPJATxvMS8j+B0BeGP6J2OTsH5iB86K6dJ4BJwKlB2cweY4g==}
-    engines: {node: ^18.12.0}
-    dependencies:
-      '@silverhand/essentials': 2.8.5
-      '@withtyped/server': 0.12.9(zod@3.22.4)
-    transitivePeerDependencies:
-      - zod
     dev: true
 
   /@logto/cloud@0.2.5-5deb133(zod@3.22.4):

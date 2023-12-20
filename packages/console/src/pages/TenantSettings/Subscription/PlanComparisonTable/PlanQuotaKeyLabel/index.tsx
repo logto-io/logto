@@ -37,6 +37,7 @@ const planQuotaKeyPhraseMap: {
   ssoEnabled: 'user_authn.sso',
   userManagementEnabled: 'user_management.user_management',
   rolesLimit: 'user_management.roles',
+  machineToMachineRolesLimit: 'user_management.machine_to_machine_roles',
   scopesPerRoleLimit: 'user_management.scopes_per_role',
   hooksLimit: 'hooks.hooks',
   auditLogsRetentionDays: 'audit_logs.retention',

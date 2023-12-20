@@ -80,13 +80,6 @@ export const ticketSupportResponseTimeMap: Record<string, number | undefined> = 
   [ReservedPlanId.Pro]: 48,
 };
 
-// @Todo @xiaoyijun [Pricing] read token limit from backend when it's ready
-export const tokenLimitMap: Record<string, Nullable<number>> = {
-  [ReservedPlanId.Free]: 500_000,
-  [ReservedPlanId.Hobby]: 1_000_000,
-  [ReservedPlanId.Pro]: 1_000_000,
-};
-
 export const allowedUsersPerOrganizationMap: Record<string, Nullable<number> | undefined> = {
   [ReservedPlanId.Free]: 0,
   [ReservedPlanId.Hobby]: null,
@@ -147,6 +140,7 @@ const enterprisePlanTable: SubscriptionPlanTable = {
   standardConnectorsLimit: undefined,
   userManagementEnabled: true,
   rolesLimit: undefined,
+  machineToMachineRolesLimit: undefined,
   scopesPerRoleLimit: undefined,
   auditLogsRetentionDays: undefined,
   hooksLimit: undefined,
@@ -197,6 +191,8 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
   [SubscriptionPlanTableGroupKey.roles]: [
     'userManagementEnabled',
     'rolesLimit',
+    // Todo @xiaoyijun [Pricing] Remove feature flag
+    ...condArray(isDevelopmentFeaturesEnabled && 'machineToMachineRolesLimit'),
     'scopesPerRoleLimit',
   ],
   [SubscriptionPlanTableGroupKey.organizations]: [

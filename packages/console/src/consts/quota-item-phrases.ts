@@ -7,6 +7,7 @@ export const quotaItemPhrasesMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.name',
+  tokenLimit: 'token_limit.name',
   applicationsLimit: 'applications_limit.name',
   machineToMachineLimit: 'machine_to_machine_limit.name',
   resourcesLimit: 'resources_limit.name',
@@ -16,6 +17,7 @@ export const quotaItemPhrasesMap: Record<
   socialConnectorsLimit: 'social_connectors_limit.name',
   standardConnectorsLimit: 'standard_connectors_limit.name',
   rolesLimit: 'roles_limit.name',
+  machineToMachineRolesLimit: 'machine_to_machine_roles_limit.name',
   scopesPerRoleLimit: 'scopes_per_role_limit.name',
   hooksLimit: 'hooks_limit.name',
   auditLogsRetentionDays: 'audit_logs_retention_days.name',
@@ -31,6 +33,7 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.unlimited',
+  tokenLimit: 'token_limit.unlimited',
   applicationsLimit: 'applications_limit.unlimited',
   machineToMachineLimit: 'machine_to_machine_limit.unlimited',
   resourcesLimit: 'resources_limit.unlimited',
@@ -40,6 +43,7 @@ export const quotaItemUnlimitedPhrasesMap: Record<
   socialConnectorsLimit: 'social_connectors_limit.unlimited',
   standardConnectorsLimit: 'standard_connectors_limit.unlimited',
   rolesLimit: 'roles_limit.unlimited',
+  machineToMachineRolesLimit: 'machine_to_machine_roles_limit.unlimited',
   scopesPerRoleLimit: 'scopes_per_role_limit.unlimited',
   hooksLimit: 'hooks_limit.unlimited',
   auditLogsRetentionDays: 'audit_logs_retention_days.unlimited',
@@ -55,6 +59,7 @@ export const quotaItemLimitedPhrasesMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.limited',
+  tokenLimit: 'token_limit.limited',
   applicationsLimit: 'applications_limit.limited',
   machineToMachineLimit: 'machine_to_machine_limit.limited',
   resourcesLimit: 'resources_limit.limited',
@@ -64,6 +69,7 @@ export const quotaItemLimitedPhrasesMap: Record<
   socialConnectorsLimit: 'social_connectors_limit.limited',
   standardConnectorsLimit: 'standard_connectors_limit.limited',
   rolesLimit: 'roles_limit.limited',
+  machineToMachineRolesLimit: 'machine_to_machine_roles_limit.limited',
   scopesPerRoleLimit: 'scopes_per_role_limit.limited',
   hooksLimit: 'hooks_limit.limited',
   auditLogsRetentionDays: 'audit_logs_retention_days.limited',
@@ -79,6 +85,7 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.not_eligible',
+  tokenLimit: 'token_limit.not_eligible',
   applicationsLimit: 'applications_limit.not_eligible',
   machineToMachineLimit: 'machine_to_machine_limit.not_eligible',
   resourcesLimit: 'resources_limit.not_eligible',
@@ -88,6 +95,7 @@ export const quotaItemNotEligiblePhrasesMap: Record<
   socialConnectorsLimit: 'social_connectors_limit.not_eligible',
   standardConnectorsLimit: 'standard_connectors_limit.not_eligible',
   rolesLimit: 'roles_limit.not_eligible',
+  machineToMachineRolesLimit: 'machine_to_machine_roles_limit.not_eligible',
   scopesPerRoleLimit: 'scopes_per_role_limit.not_eligible',
   hooksLimit: 'hooks_limit.not_eligible',
   auditLogsRetentionDays: 'audit_logs_retention_days.not_eligible',

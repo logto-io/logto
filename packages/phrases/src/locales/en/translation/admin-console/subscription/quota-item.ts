@@ -12,6 +12,18 @@ const quota_item = {
     unlimited: 'Unlimited MAU',
     not_eligible: 'Remove your all users',
   },
+  token_limit: {
+    /** UNTRANSLATED */
+    name: 'Tokens',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} token',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} tokens',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited tokens',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your all users to prevent new tokens',
+  },
   applications_limit: {
     name: 'Applications',
     limited: '{{count, number}} application',
@@ -78,6 +90,13 @@ const quota_item = {
     limited_other: '{{count, number}} roles',
     unlimited: 'Unlimited roles',
     not_eligible: 'Remove your roles',
+  },
+  machine_to_machine_roles_limit: {
+    name: 'Machine to machine roles',
+    limited: '{{count, number}} machine to machine role',
+    limited_other: '{{count, number}} machine to machine roles',
+    unlimited: 'Unlimited machine to machine roles',
+    not_eligible: 'Remove your machine to machine roles',
   },
   scopes_per_role_limit: {
     name: 'Role permissions',

@@ -12,6 +12,18 @@ const quota_item = {
     unlimited: 'Неограниченное количество пользователей в месяц',
     not_eligible: 'Удалите всех своих пользователей',
   },
+  token_limit: {
+    /** UNTRANSLATED */
+    name: 'Tokens',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} token',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} tokens',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited tokens',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your all users to prevent new tokens',
+  },
   applications_limit: {
     name: 'Приложения',
     limited: '{{count, number}} приложение',
@@ -78,6 +90,18 @@ const quota_item = {
     limited_other: '{{count, number}} ролей',
     unlimited: 'Неограниченное количество ролей',
     not_eligible: 'Удалите свои роли',
+  },
+  machine_to_machine_roles_limit: {
+    /** UNTRANSLATED */
+    name: 'Machine to machine roles',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} machine to machine role',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} machine to machine roles',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited machine to machine roles',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your machine to machine roles',
   },
   scopes_per_role_limit: {
     name: 'Разрешения роли',

@@ -12,6 +12,18 @@ const quota_item = {
     unlimited: '無制限のMAU',
     not_eligible: '全てのユーザーを削除してください',
   },
+  token_limit: {
+    /** UNTRANSLATED */
+    name: 'Tokens',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} token',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} tokens',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited tokens',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your all users to prevent new tokens',
+  },
   applications_limit: {
     name: 'アプリケーション',
     limited: '{{count, number}} アプリケーション',
@@ -78,6 +90,18 @@ const quota_item = {
     limited_other: '{{count, number}} ロール',
     unlimited: '無制限のロール',
     not_eligible: 'ロールを削除してください',
+  },
+  machine_to_machine_roles_limit: {
+    /** UNTRANSLATED */
+    name: 'Machine to machine roles',
+    /** UNTRANSLATED */
+    limited: '{{count, number}} machine to machine role',
+    /** UNTRANSLATED */
+    limited_other: '{{count, number}} machine to machine roles',
+    /** UNTRANSLATED */
+    unlimited: 'Unlimited machine to machine roles',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your machine to machine roles',
   },
   scopes_per_role_limit: {
     name: 'ロールの権限',

@@ -118,6 +118,9 @@ export const quotaValueRenderer: Record<
     <GenericFeatureFlag isEnabled={userManagementEnabled} />
   ),
   rolesLimit: ({ table: { rolesLimit } }) => <GenericQuotaLimit quota={rolesLimit} />,
+  machineToMachineRolesLimit: ({ table: { machineToMachineRolesLimit } }) => (
+    <GenericQuotaLimit quota={machineToMachineRolesLimit} />
+  ),
   scopesPerRoleLimit: ({ table: { scopesPerRoleLimit } }) => (
     <GenericQuotaLimit quota={scopesPerRoleLimit} />
   ),

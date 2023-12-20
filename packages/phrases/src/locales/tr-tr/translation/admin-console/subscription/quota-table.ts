@@ -41,6 +41,8 @@ const quota_table = {
     title: 'Kullanıcı Yönetimi',
     user_management: 'Kullanıcı Yönetimi',
     roles: 'Roller',
+    /** UNTRANSLATED */
+    machine_to_machine_roles: 'Machine-to-machine roles',
     scopes_per_role: 'Rol başına izinler',
   },
   audit_logs: {
