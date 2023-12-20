@@ -33,7 +33,7 @@ If you don't know the concept of the connector or don't know how to add this con
 
 > **⚠️ Caution**
 > 
-> This connector is for web apps only. If you are looking for the method for signing in with WeChat in native apps, please see [WeChat native connector](https://github.com/logto-io/logto/tree/master/packages/connector-wechat-native).
+> This connector is for web apps only. If you are looking for the method for signing in with WeChat in native apps, please see [WeChat native connector](https://github.com/logto-io/logto/tree/master/packages/connectors/connector-wechat-native).
 
 ## Create a web app in the WeChat Open Platform
 
@@ -49,11 +49,11 @@ Open https://open.weixin.qq.com/, click the "Sign Up" button in the upper-right 
 
 Sign in with the account you just created. In the "Web Application" (网页应用) tab, click the big green button "Create a web app" (创建网页应用).
 
-![App tabs](/packages/connector-wechat/docs/app-tabs.png)
+![App tabs](/packages/connectors/connector-wechat/docs/app-tabs.png)
 
 Let's fill out the required info in the application form.
 
-![Create a web app](/packages/connector-wechat/docs/create-web-app.png)
+![Create a web app](/packages/connectors/connector-wechat/docs/create-web-app.png)
 
 #### Basic info
 
@@ -89,7 +89,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 > **⚠️ Caution**
 > 
-> 这个连接器只适用于网页应用。如果你在寻找移动端原生应用的微信登录解决方案，请移步 [微信原生连接器](https://github.com/logto-io/logto/tree/master/packages/connector-wechat-native)。
+> 这个连接器只适用于网页应用。如果你在寻找移动端原生应用的微信登录解决方案，请移步 [微信原生连接器](https://github.com/logto-io/logto/tree/master/packages/connectors/connector-wechat-native)。
 
 ## 在微信开放平台新建一个网页应用
 
@@ -105,11 +105,11 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 用刚创建的帐号登录。在「移动应用」标签页，点按大而绿的「创建移动应用」按钮。
 
-![App tabs](/packages/connector-wechat/docs/app-tabs.png)
+![App tabs](/packages/connectors/connector-wechat/docs/app-tabs.png)
 
 让我们填写一下申请表单里的必要信息。
 
-![Create a web app](/packages/connector-wechat/docs/create-web-app.png)
+![Create a web app](/packages/connectors/connector-wechat/docs/create-web-app.png)
 
 #### 基础信息
 
