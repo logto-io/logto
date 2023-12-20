@@ -8,6 +8,7 @@ import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanQuotaList from '@/components/PlanQuotaList';
 import { pricingLink } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -76,10 +77,13 @@ function PlanCardItem({ plan, onSelect }: Props) {
           <div className={styles.price}>
             ${t('monthly_price', { value: Number(basePrice) / 100 })}
           </div>
-          <div className={styles.priceLabel}>
-            {t('mau_unit_price')}
-            <span className={styles.unitPrices}>{tierPrices}</span>
-          </div>
+          {/* Todo @xiaoyijun [Pricing] Remove feature flag */}
+          {!isDevFeaturesEnabled && (
+            <div className={styles.priceLabel}>
+              {t('mau_unit_price')}
+              <span className={styles.unitPrices}>{tierPrices}</span>
+            </div>
+          )}
         </div>
         <div className={styles.description}>
           <PlanDescription planId={planId} />
@@ -125,9 +129,11 @@ function PlanCardItem({ plan, onSelect }: Props) {
           onClick={onSelect}
         />
       </div>
-      {planId === ReservedPlanId.Pro && (
-        <div className={styles.mostPopularTag}>{t('most_popular')}</div>
-      )}
+      {planId === ReservedPlanId.Pro ||
+        // Todo @xiaoyijun [Pricing] Remove feature flag
+        (isDevFeaturesEnabled && planId === ReservedPlanId.Hobby && (
+          <div className={styles.mostPopularTag}>{t('most_popular')}</div>
+        ))}
     </div>
   );
 }

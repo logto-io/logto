@@ -1,7 +1,9 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { TenantTag } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 
 import TenantEnvTag from '@/components/TenantEnvTag';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
@@ -22,7 +24,8 @@ const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
 
 const availableProductionPlanNames = [
   ReservedPlanName.Free,
-  ReservedPlanName.Hobby,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  ...condArray(!isDevFeaturesEnabled && ReservedPlanName.Hobby),
   ReservedPlanName.Pro,
 ];
 

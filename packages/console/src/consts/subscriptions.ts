@@ -1,4 +1,7 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
+
+import { isDevFeaturesEnabled as isDevelopmentFeaturesEnabled } from './env';
 
 /**
  * In console, only featured plans are shown in the plan selection component.
@@ -6,7 +9,8 @@ import { ReservedPlanId } from '@logto/schemas';
 export const featuredPlanIds: string[] = [
   ReservedPlanId.Free,
   ReservedPlanId.Hobby,
-  ReservedPlanId.Pro,
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  ...condArray(!isDevelopmentFeaturesEnabled && ReservedPlanId.Pro),
 ];
 
 /**

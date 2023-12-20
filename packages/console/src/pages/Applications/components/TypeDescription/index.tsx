@@ -4,7 +4,7 @@ import { useContext } from 'react';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
 import FeatureTag from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
@@ -34,7 +34,8 @@ function TypeDescription({ title, subtitle, description, type, size = 'large' }:
           <FeatureTag
             isVisible={!currentPlan?.quota.machineToMachineLimit}
             for="upsell"
-            plan={ReservedPlanId.Hobby}
+            // Todo @xiaoyijun [Pricing] Remove feature flag
+            plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
           />
         </div>
       )}

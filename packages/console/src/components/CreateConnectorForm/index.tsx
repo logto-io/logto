@@ -8,7 +8,7 @@ import { useContext, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -170,7 +170,8 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
                 <FeatureTag
                   isVisible={isStandardConnectorDisabled}
                   for="upsell"
-                  plan={ReservedPlanId.Hobby}
+                  // Todo @xiaoyijun [Pricing] Remove feature flag
+                  plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
                 />
               )}
             </div>
