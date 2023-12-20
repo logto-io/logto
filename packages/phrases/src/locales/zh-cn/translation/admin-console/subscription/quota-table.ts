@@ -41,6 +41,8 @@ const quota_table = {
     title: '用户管理',
     user_management: '用户管理',
     roles: '角色',
+    /** UNTRANSLATED */
+    machine_to_machine_roles: 'Machine-to-machine roles',
     scopes_per_role: '每角色权限',
   },
   audit_logs: {

@@ -31,11 +31,6 @@ export type SubscriptionPlanTable = Partial<
   SubscriptionPlanQuota & {
     // Base quota
     basePrice: string;
-    /**
-     * Token limit
-     * Todo @xiaoyijun [Pricing] retrieve the token limit from the backend
-     */
-    tokenLimit: Nullable<number>;
     mauUnitPrice: string[];
     // UI and branding
     customCssEnabled: boolean;

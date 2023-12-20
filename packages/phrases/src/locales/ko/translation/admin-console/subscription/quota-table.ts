@@ -41,6 +41,8 @@ const quota_table = {
     title: '사용자 관리',
     user_management: '사용자 관리',
     roles: '역할',
+    /** UNTRANSLATED */
+    machine_to_machine_roles: 'Machine-to-machine roles',
     scopes_per_role: '역할 당 권한',
   },
   audit_logs: {

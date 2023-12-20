@@ -41,6 +41,7 @@ const quota_table = {
     title: 'User management',
     user_management: 'User management',
     roles: 'Roles',
+    machine_to_machine_roles: 'Machine-to-machine roles',
     scopes_per_role: 'Permissions per role',
   },
   audit_logs: {
