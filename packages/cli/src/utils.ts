@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 
 import { ConsoleLog } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
-import { assert, conditionalString } from '@silverhand/essentials';
+import { assert, conditional, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import type { Progress } from 'got';
 import { got } from 'got';
@@ -197,9 +197,9 @@ const validatePath = async (value: string) => {
   return true;
 };
 
-export const inquireInstancePath = async (initialPath?: string) => {
+export const inquireInstancePath = async (initialPath?: string, skipCoreCheck?: boolean) => {
   const inquire = async () => {
-    if (!initialPath && (await validatePath('.')) === true) {
+    if (!initialPath && (skipCoreCheck ?? (await validatePath('.')) === true)) {
       return path.resolve('.');
     }
 
@@ -216,7 +216,7 @@ export const inquireInstancePath = async (initialPath?: string) => {
         type: 'input',
         default: defaultPath,
         filter: (value: string) => value.trim(),
-        validate: validatePath,
+        validate: conditional(!skipCoreCheck && validatePath),
       },
       { instancePath: initialPath }
     );
@@ -225,10 +225,13 @@ export const inquireInstancePath = async (initialPath?: string) => {
   };
 
   const instancePath = await inquire();
-  const validated = await validatePath(instancePath);
 
-  if (validated !== true) {
-    consoleLog.fatal(validated);
+  if (!skipCoreCheck) {
+    const validated = await validatePath(instancePath);
+
+    if (validated !== true) {
+      consoleLog.fatal(validated);
+    }
   }
 
   return instancePath;
@@ -274,8 +277,8 @@ const execPromise = promisify(execFile);
 export const lintLocaleFiles = async (
   /** Logto instance path */
   instancePath: string,
-  /** Target package name, ignore to lint both packages */
-  packageName?: 'phrases' | 'phrases-experience'
+  /** Target package name, ignore to lint both `phrases` and `phrases-experience` packages */
+  packageName?: string
 ) => {
   const spinner = ora({
     text: 'Running `eslint --fix` for locales',
