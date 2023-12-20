@@ -1,6 +1,5 @@
 ---
-"@logto/cli": patch
+"@logto/cli": minor
 ---
 
-Add "--skip-core-check" option in translate cli commands.
-Support arbitrary package name in "translate" cli commands.
+Add "--skip-core-check" option in translate cli commands, in order to support any arbitrary package name other than "phrases" and "phrases-experience".
