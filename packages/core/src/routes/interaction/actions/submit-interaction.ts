@@ -10,6 +10,9 @@ import {
   InteractionEvent,
   adminConsoleApplicationId,
   MfaFactor,
+  getTenantOrganizationId,
+  getTenantRole,
+  TenantRole,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray, trySafe } from '@silverhand/essentials';
@@ -129,12 +132,24 @@ async function handleSubmitRegister(
     getInitialUserRoles(isInAdminTenant, isCreatingFirstAdminUser, isCloud)
   );
 
-  // In OSS, we need to limit sign-in experience to "sign-in only" once
-  // the first admin has been create since we don't want other unexpected registrations
   if (isCreatingFirstAdminUser) {
+    // In OSS, we need to limit sign-in experience to "sign-in only" once
+    // the first admin has been create since we don't want other unexpected registrations
     await updateDefaultSignInExperience({
       signInMode: isCloud ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     });
+
+    // Create tenant organization and assign the admin user to it.
+    // This is only for Cloud integration tests and data alignment, OSS still uses the legacy Management API user role.
+    const organizationId = getTenantOrganizationId(defaultTenantId);
+    // @ts-expect-error this notation should be no more needed after we upgrade TypeScript
+    await queries.organizations.relations.users.insert([organizationId, id]);
+    // @ts-expect-error this notation should be no more needed after we upgrade TypeScript
+    await queries.organizations.relations.rolesUsers.insert([
+      organizationId,
+      getTenantRole(TenantRole.Owner).id,
+      id,
+    ]);
   }
 
   await assignInteractionResults(ctx, provider, { login: { accountId: id } });
