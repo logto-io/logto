@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Plus from '@/assets/icons/plus.svg';
 import PageMeta from '@/components/PageMeta';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { subscriptionPage } from '@/consts/pages';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
@@ -71,7 +71,11 @@ function Organizations({ tab }: Props) {
       <div className={pageLayout.headline}>
         <CardTitle
           isBeta
-          paywall={cond((isOrganizationsDisabled || isDevTenant) && ReservedPlanId.Hobby)}
+          paywall={cond(
+            (isOrganizationsDisabled || isDevTenant) &&
+              // Todo @xiaoyijun [Pricing] Remove feature flag
+              (isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby)
+          )}
           title="organizations.title"
           subtitle="organizations.subtitle"
         />

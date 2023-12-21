@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -28,7 +29,11 @@ function PageWrapper({ children }: Props) {
       <PageMeta titleKey="mfa.title" />
       <CardTitle
         isBeta
-        paywall={cond((!isMfaEnabled || isDevTenant) && ReservedPlanId.Hobby)}
+        paywall={cond(
+          (!isMfaEnabled || isDevTenant) &&
+            // Todo @xiaoyijun [Pricing] Remove feature flag
+            (isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby)
+        )}
         title="mfa.title"
         subtitle="mfa.description"
         className={styles.cardTitle}
