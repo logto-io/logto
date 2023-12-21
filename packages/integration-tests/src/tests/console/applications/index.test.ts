@@ -306,4 +306,36 @@ describe('applications', () => {
 
     expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
   });
+
+  it('can create an third party application', async () => {
+    await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
+      text: 'Create application',
+    });
+
+    await expectModalWithTitle(page, 'Start with SDK and guides');
+
+    await expectFrameworksInGroup(page, '.ReactModalPortal div[class$=guideGroup]:has(>label)');
+
+    // Expect the framework contains on the page
+    await expectFrameworkExists(page, thirdPartyApp.framework);
+
+    // Filter
+    await expect(page).toFill('div[class$=searchInput] input', thirdPartyApp.framework);
+
+    // Expect the framework exists after filtering
+    await expectFrameworkExists(page, thirdPartyApp.framework);
+
+    await expectToChooseAndClickApplicationFramework(page, thirdPartyApp.framework);
+
+    // Expect the app can be created successfully
+    await expectToProceedApplicationCreationFrom(page, thirdPartyApp);
+
+    await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
+      text: thirdPartyApp.name,
+    });
+
+    await expectToProceedAppDeletion(page, thirdPartyApp.name);
+
+    expect(page.url()).toBe(new URL('/console/applications', logtoConsoleUrl).href);
+  });
 });
