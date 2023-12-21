@@ -77,7 +77,7 @@ describe('assign user consent scopes to application', () => {
         resourceScopes: Array.from(resourceScopes.values()),
       }),
       {
-        code: 'application.user_consent_scopes_only_for_third_party_applications',
+        code: 'application.third_party_application_only',
         statusCode: 400,
       }
     );

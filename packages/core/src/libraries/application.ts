@@ -60,10 +60,7 @@ export const createApplicationLibrary = (queries: Queries) => {
   const validateThirdPartyApplicationById = async (applicationId: string) => {
     const application = await findApplicationById(applicationId);
 
-    assertThat(
-      application.isThirdParty,
-      'application.user_consent_scopes_only_for_third_party_applications'
-    );
+    assertThat(application.isThirdParty, 'application.third_party_application_only');
   };
 
   // Guard that all scopes exist

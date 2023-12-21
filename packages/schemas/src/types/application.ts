@@ -7,6 +7,7 @@ import {
   OrganizationScopes,
   Resources,
   Scopes,
+  ApplicationSignInExperiences,
 } from '../db-entries/index.js';
 
 export type ApplicationResponse = Application & { isAdmin: boolean };
@@ -60,4 +61,23 @@ export enum ApplicationUserConsentScopeType {
 
 export type ApplicationUserConsentScopesResponse = z.infer<
   typeof applicationUserConsentScopesResponseGuard
+>;
+
+export const applicationSignInExperienceCreateGuard = ApplicationSignInExperiences.createGuard
+  .omit({
+    applicationId: true,
+    tenantId: true,
+    termsOfUseUrl: true,
+    privacyPolicyUrl: true,
+  })
+  // Align with the sign-in-experience create guard.
+  .merge(
+    z.object({
+      termsOfUseUrl: z.string().max(2048).url().optional().nullable().or(z.literal('')),
+      privacyPolicyUrl: z.string().max(2048).url().optional().nullable().or(z.literal('')),
+    })
+  );
+
+export type ApplicationSignInExperienceCreate = z.infer<
+  typeof applicationSignInExperienceCreateGuard
 >;

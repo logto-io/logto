@@ -4,8 +4,7 @@ const application = {
   invalid_role_type: 'Can not assign user type role to machine to machine application.',
   invalid_third_party_application_type:
     'Only traditional web applications can be marked as a third-party app.',
-  user_consent_scopes_only_for_third_party_applications:
-    'Only third-party applications can manage user consent scopes.',
+  third_party_application_only: 'The feature is only available for third-party applications.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
 };
 
