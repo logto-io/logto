@@ -1,5 +1,4 @@
 import { ReservedPlanId } from '@logto/schemas';
-import { cond } from '@silverhand/essentials';
 import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -10,7 +9,6 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useApiResourcesUsage from '@/hooks/use-api-resources-usage';
-import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
@@ -23,7 +21,6 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { hasReachedLimit } = useApiResourcesUsage();
-  const { subscribe, isSubscribeLoading } = useSubscribe();
 
   if (
     currentPlan &&
@@ -35,20 +32,7 @@ function Footer({ isCreationLoading, onClickCreate }: Props) {
     (!isDevFeaturesEnabled || currentPlan.id === ReservedPlanId.Free)
   ) {
     return (
-      <QuotaGuardFooter
-        isLoading={isSubscribeLoading}
-        onClickUpgrade={cond(
-          isDevFeaturesEnabled &&
-            (() => {
-              void subscribe({
-                // Todo @xiaoyijun [Pricing] Replace 'Hobby' with 'Pro' when pricing is ready, in MVP, we use 'Hobby' as the new pro plan id
-                planId: ReservedPlanId.Hobby,
-                tenantId: currentTenantId,
-                callbackPage: '/api-resources/create',
-              });
-            })
-        )}
-      >
+      <QuotaGuardFooter>
         <Trans
           components={{
             a: <ContactUsPhraseLink />,

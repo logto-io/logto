@@ -9,7 +9,6 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useApplicationsUsage from '@/hooks/use-applications-usage';
-import useSubscribe from '@/hooks/use-subscribe';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
@@ -22,7 +21,6 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
   const { currentTenantId } = useContext(TenantsContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const { subscribe, isSubscribeLoading } = useSubscribe();
   const { hasAppsReachedLimit, hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
 
   if (currentPlan && selectedType) {
@@ -32,17 +30,7 @@ function Footer({ selectedType, isLoading, onClickCreate }: Props) {
       // Todo @xiaoyijun [Pricing] Remove feature flag
       if (isDevFeaturesEnabled && planId === ReservedPlanId.Free) {
         return (
-          <QuotaGuardFooter
-            isLoading={isSubscribeLoading}
-            onClickUpgrade={() => {
-              void subscribe({
-                // Todo @xiaoyijun [Pricing] Replace 'Hobby' with 'Pro' when pricing is ready, in MVP, we use 'Hobby' as the new pro plan id
-                planId: ReservedPlanId.Hobby,
-                tenantId: currentTenantId,
-                callbackPage: '/applications/create',
-              });
-            }}
-          >
+          <QuotaGuardFooter>
             <Trans
               components={{
                 a: <ContactUsPhraseLink />,
