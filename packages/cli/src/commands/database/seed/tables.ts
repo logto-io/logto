@@ -280,9 +280,9 @@ export const seedTest = async (connection: DatabaseTransactionConnection, forLeg
     );
 
   await Promise.all([
-    assignOrganizationRole(userIds[0], adminTenantId, TenantRole.Owner),
-    assignOrganizationRole(userIds[0], defaultTenantId, TenantRole.Owner),
-    assignOrganizationRole(userIds[1], defaultTenantId, TenantRole.Owner),
+    assignOrganizationRole(userIds[0], adminTenantId, TenantRole.Admin),
+    assignOrganizationRole(userIds[0], defaultTenantId, TenantRole.Admin),
+    assignOrganizationRole(userIds[1], defaultTenantId, TenantRole.Admin),
   ]);
   consoleLog.succeed('Assigned tenant organization membership and roles to the test users');
 };
