@@ -5,9 +5,8 @@ const paywall = {
     '已达到 <planName/> 的{{count, number}}个应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   deprecated_machine_to_machine_feature:
     '升级至<strong>Hobby</strong>套餐，解锁1个机器对机器应用，或选择<strong>Pro</strong>套餐，可享无限使用。需要任何帮助，请随时<a>联系我们</a>。',
-  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
+    '升级至<strong>Pro</strong>套餐，解锁额外机器对机器应用，享受所有高级功能。<a>如果有疑问，请联系我们</a>。',
   machine_to_machine:
     '已达到 <planName/> 的{{count, number}}个机器对机器应用限制。升级计划以满足团队需求。如需帮助，请随时<a>联系我们</a>。',
   machine_to_machine_other:
@@ -40,10 +39,8 @@ const paywall = {
     '已达到<planName/>的{{count, number}}个角色限制。升级计划以添加额外的角色和权限。如需任何帮助，请<a>联系我们</a>。',
   roles_other:
     '已达到<planName/>的{{count, number}}个角色限制。升级计划以添加额外的角色和权限。如需任何帮助，请<a>联系我们</a>。',
-  /** UNTRANSLATED */
   machine_to_machine_roles:
     '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
   machine_to_machine_roles_other:
     '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
@@ -55,9 +52,7 @@ const paywall = {
   hooks_other:
     '已达到<planName/>的{{count, number}}个 Webhook 限制。升级计划以创建更多 Webhook。如需任何帮助，请<a>联系我们</a>。',
   mfa: '升级到付费计划以解锁MFA进行安全验证。如果需要任何帮助，请随时<a>联系我们</a>。',
-  /** UNTRANSLATED */
-  organizations:
-    'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+  organizations: '升级到付费计划以解锁组织功能。如有任何需要，请不要犹豫<a>联系我们</a>。',
 };
 
 export default Object.freeze(paywall);

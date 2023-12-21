@@ -8,9 +8,7 @@ const connector = {
   invalid_request_parameters: '잘못된 요청 파라미터가 있어요.',
   insufficient_request_parameters: '요청 데이터에서 일부 정보가 없어요.',
   invalid_config: '연동 설정이 유효하지 않아요.',
-  /** UNTRANSLATED */
-  invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+  invalid_certificate: '커넥터의 인증서가 유효하지 않아요. 인증서가 PEM 인코딩되었는지 확인하세요.',
   invalid_response: '연동 응답이 유효하지 않아요.',
   template_not_found: '연동 예제 설정을 찾을 수 없어요.',
   template_not_supported: '연동이 이 템플릿 타입을 지원하지 않아요.',

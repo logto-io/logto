@@ -8,98 +8,64 @@ const enterprise_sso = {
   col_type: 'Тип',
   col_email_domain: 'Домен электронной почты',
   placeholder_title: 'Коннектор предприятия',
-  /** UNTRANSLATED */
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
+    'Logto предоставляет множество встроенных поставщиков идентичности предприятия для подключения, в то же время вы можете создать собственного поставщика с использованием протоколов SAML и OIDC.',
   create_modal: {
     title: 'Добавить коннектор предприятия',
     text_divider: 'Или вы можете настроить свой коннектор по стандартному протоколу.',
     connector_name_field_title: 'Имя коннектора',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
+    connector_name_field_placeholder: 'Например, {corp. name} - {identity provider name}',
     create_button_text: 'Создать коннектор',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: 'Пошаговое руководство по подключению поставщика идентичности предприятия.',
+    finish_button_text: 'Продолжить',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: 'Настройка вашего сервиса в IdP',
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      'Создайте новую интеграцию приложения с помощью SAML 2.0 в вашем провайдере идентичности {{name}}. Затем вставьте следующее значение в него.',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: 'URL потребителя утверждений (URL ответа)',
+      audience_uri_field_name: 'Адрес аудиенции (SP Entity ID)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: 'URI перенаправления (URL обратного вызова)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: 'Сопоставление атрибутов',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value of service provider (Logto)',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      '`id` и `email` обязательны для синхронизации профиля пользователя из IdP. Введите следующее имя и значение утверждения в своем IdP.',
+    col_sp_claims: 'Значение поставщика услуг (Logto)',
+    col_idp_claims: 'Имя утверждения поставщика идентичности',
+    idp_claim_tooltip: 'Имя утверждения поставщика идентичности',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: 'Настройка метаданных IdP',
+    description: 'Настройте метаданные от провайдера идентичности',
+    dropdown_trigger_text: 'Использовать другой метод конфигурации',
+    dropdown_title: 'выберите метод конфигурации',
+    metadata_format_url: 'Введите URL метаданных',
+    metadata_format_xml: 'Загрузить файл метаданных XML',
+    metadata_format_manual: 'Ввести детали метаданных вручную',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: 'URL метаданных',
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'IdP metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
-      /** UNTRANSLATED */
-      certificate_required: 'Signing certificate is required.',
+        'Динамически извлекать данные из URL метаданных и поддерживать сертификат в актуальном состоянии.',
+      metadata_xml_field_name: 'Файл метаданных IdP',
+      metadata_xml_uploader_text: 'Загрузить файл метаданных XML',
+      sign_in_endpoint_field_name: 'URL входа',
+      idp_entity_id_field_name: 'IdP идентификатор сущности (Издатель)',
+      certificate_field_name: 'Сертификат подписи',
+      certificate_placeholder: 'Скопируйте и вставьте сертификат x509',
+      certificate_required: 'Сертификат подписи обязателен.',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: 'Идентификатор клиента',
+      client_secret_field_name: 'Секрет клиента',
+      issuer_field_name: 'Издатель',
+      scope_field_name: 'Область',
     },
   },
 };

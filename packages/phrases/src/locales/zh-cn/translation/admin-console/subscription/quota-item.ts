@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: '移除你的所有用户',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    name: '令牌',
+    limited: '{{count, number}} 个令牌',
+    limited_other: '{{count, number}} 个令牌',
+    unlimited: '无限制令牌',
+    not_eligible: '移除你的所有用户以防止生成新令牌',
   },
   applications_limit: {
     name: '应用',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: '移除你的角色',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: '机器到机器角色',
+    limited: '{{count, number}} 个机器到机器角色',
+    limited_other: '{{count, number}} 个机器到机器角色',
+    unlimited: '无限制机器到机器角色',
+    not_eligible: '移除你的机器到机器角色',
   },
   scopes_per_role_limit: {
     name: '角色权限',
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: '移除你的 Webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '组织',
+    limited: '组织',
+    unlimited: '组织',
+    not_eligible: '移除你的组织',
   },
   audit_logs_retention_days: {
     name: '审计日志保留',

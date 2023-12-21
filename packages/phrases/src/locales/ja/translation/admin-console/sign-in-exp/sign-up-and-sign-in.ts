@@ -22,7 +22,7 @@ const sign_up_and_sign_in = {
     title: 'サインイン',
     sign_in_identifier_and_auth: 'サインインの識別子と認証設定',
     description:
-      'ユーザーは利用可能なすべてのオプションを使用してサインインできます。下のオプションをドラッグ&ドロップしてレイアウトを調整してください。',
+      'ユーザーは利用可能なすべてのオプションを使用してサインインできます。下のオプションをドラッグ＆ドロップしてレイアウトを調整してください。',
     add_sign_in_method: 'サインイン方法を追加',
     password_auth: 'パスワード',
     verification_code_auth: '確認コード',
@@ -53,22 +53,17 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: '高度なオプション',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
+    enable_single_sign_on: '企業向けシングルサインオン（SSO）を有効にする',
     enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+      'ユーザーが企業のアイデンティティを使用してアプリケーションにサインインできるようにします。',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: '詳細は、',
+      link: '"企業向けSSO"',
+      suffix: 'セクションをご覧ください。',
     },
     enable_user_registration: 'ユーザー登録を有効にする',
     enable_user_registration_description:
-      'ユーザー登録を有効にするか無効にすることができます。無効にした場合、ユーザーは管理コンソールで追加することはできますが、サインイン画面を介してアカウントを作成することはできなくなります。',
+      'ユーザー登録を有効または無効にできます。無効にすると、ユーザーは管理コンソールで追加できますが、サインイン画面でアカウントを作成することはできません。',
   },
 };
 

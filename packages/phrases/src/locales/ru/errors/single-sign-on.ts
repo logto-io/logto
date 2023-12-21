@@ -1,10 +1,8 @@
 const single_sign_on = {
   forbidden_domains: 'Недопустимы публичные домены электронной почты.',
   duplicated_domains: 'Есть дублирующиеся домены.',
-  /** UNTRANSLATED */
-  invalid_domain_format: 'Invalid domain format.',
-  /** UNTRANSLATED */
-  duplicate_connector_name: 'Connector name already exists. Please choose a different name.',
+  invalid_domain_format: 'Недопустимый формат домена.',
+  duplicate_connector_name: 'Имя коннектора уже существует. Пожалуйста, выберите другое имя.',
 };
 
 export default Object.freeze(single_sign_on);

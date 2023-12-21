@@ -9,23 +9,21 @@ const tenants = {
   },
   settings: {
     title: 'USTAWIENIA',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Ustaw nazwę najemcy i wyświetl informacje o regionie hostowania danych oraz typie najemcy.',
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
-    tenant_region: 'Data hosted region',
-    tenant_region_tip: 'Your tenant resources are hosted in {{region}}. <a>Learn more</a>',
+    tenant_region: 'Region hostowania danych',
+    tenant_region_tip:
+      'Twoje zasoby najemcy są hostowane w {{region}}. <a>Uzyskaj więcej informacji</a>',
     environment_tag_development: 'Dev',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Typ najemcy',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja. Posiada wszystkie funkcje Pro, ale ma ograniczenia, takie jak baner logowania. <a>Uzyskaj więcej informacji</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Przeznaczony dla aplikacji używanych przez użytkowników końcowych i może wymagać płatnej subskrypcji. <a>Uzyskaj więcej informacji</a>',
     tenant_info_saved: 'Informacje o najemcy zostały pomyślnie zapisane.',
   },
   full_env_tag: {
@@ -44,40 +42,30 @@ const tenants = {
     subtitle:
       'Utwórz nowego najemcę, który ma izolowane zasoby i użytkowników. Dane hostowanej regionu i typy najemców nie mogą być modyfikowane po utworzeniu.',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja.',
+    development_hint:
+      'Posiada wszystkie funkcje Pro, ale ma ograniczenia, takie jak baner logowania.',
+    production_description:
+      'Przeznaczony dla użytkowników końcowych i może wymagać płatnej subskrypcji.',
     available_plan: 'Dostępny plan:',
     create_button: 'Utwórz najemcę',
     tenant_name_placeholder: 'Mój najemca',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Teraz możesz przetestować nasze funkcje Pro, tworząc nowego "Najemcę w trybie deweloperskim"!',
+    affect_title: 'Jak to wpłynie na Ciebie?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Zastępujemy stare <strong>tagi środowiska</strong> dwoma nowymi typami najemców: <strong>„Development”</strong> i <strong>„Production”</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Aby zapewnić płynne przejście i nieprzerwaną funkcjonalność, wszystkie wcześniej utworzone najemcy zostaną podniesione do typu najemcy <strong>Production</strong> wraz z Twoją poprzednią subskrypcją.',
+    hint_3: 'Nie martw się, wszystkie inne ustawienia pozostaną takie same.',
+    about_tenant_type: 'O typie najemcy',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
-    title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+    title: 'Teraz możesz uzyskać <a>wszystkie funkcje Logto Pro</a> w swoim najemcy deweloperskim!',
+    description: 'Jest to całkowicie darmowe, bez okresu próbnego – na zawsze!',
   },
   delete_modal: {
     title: 'Usuń najemcę',

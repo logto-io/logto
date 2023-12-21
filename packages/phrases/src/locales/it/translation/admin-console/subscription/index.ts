@@ -9,7 +9,7 @@ const subscription = {
   hobby_plan_description: 'Per sviluppatori individuali o piccoli team di ingegneria.',
   pro_plan: 'Piano Pro',
   pro_plan_description: 'Per aziende che beneficiano di Logto senza preoccupazioni.',
-  enterprise: 'Enterprise',
+  enterprise: 'Azienda',
   current_plan: 'Piano attuale',
   current_plan_description:
     "Ecco il tuo piano attuale. Puoi facilmente visualizzare l'utilizzo del tuo piano, controllare la tua prossima fattura e apportare modifiche al piano, se necessario.",
@@ -52,23 +52,22 @@ const subscription = {
     downgrade: 'Degrado',
   },
   not_eligible_modal: {
-    downgrade_title: 'Non sei idoneo per il downgrade',
+    downgrade_title: 'Non sei idoneo per il degrado',
     downgrade_description:
-      'Assicurati di soddisfare i seguenti criteri prima di eseguire il downgrade al piano <name/>.',
-    downgrade_help_tip: 'Hai bisogno di aiuto per il downgrade? <a>Contattaci</a>.',
+      'Assicurati di soddisfare i seguenti criteri prima di eseguire il degrado al piano <name/>.',
+    downgrade_help_tip: 'Hai bisogno di aiuto per il degrado? <a>Contattaci</a>.',
     upgrade_title: 'Promemoria amichevole per i nostri apprezzati early adopter',
     upgrade_description:
       "Attualmente stai utilizzando più di quanto consentito da <name />. Logto è ora ufficiale, con funzionalità personalizzate per ciascun piano. Prima di considerare l'aggiornamento al <name />, assicurati di soddisfare i seguenti criteri prima dell'aggiornamento.",
     upgrade_pro_tip: " Oppure valuta l'aggiornamento al Piano Pro.",
-    upgrade_help_tip: "Hai bisogno di aiuto per l'upgrade? <a>Contattaci</a>.",
+    upgrade_help_tip: "Hai bisogno di aiuto per l'aggiornamento? <a>Contattaci</a>.",
     a_maximum_of: 'Un massimo di <item/>',
   },
   upgrade_success: 'Aggiornamento effettuato con successo a <name/>',
   downgrade_success: 'Degrado effettuato con successo a <name/>',
   subscription_check_timeout:
     "Il controllo dell'abbonamento è scaduto. Si prega di riprovare più tardi.",
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Nessuna sottoscrizione',
 };
 
 export default Object.freeze(subscription);

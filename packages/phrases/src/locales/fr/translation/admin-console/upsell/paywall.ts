@@ -5,9 +5,8 @@ const paywall = {
     "Limite de {{count, number}} applications de <planName/> atteinte. Mettez à niveau le plan pour répondre aux besoins de votre équipe. Pour toute assistance, n'hésitez pas à <a>nous contacter</a>.",
   deprecated_machine_to_machine_feature:
     "Mettez à niveau vers le plan <strong>Hobby</strong> pour débloquer 1 application machine à machine, ou choisissez le plan <strong>Pro</strong> pour une utilisation illimitée. Pour toute assistance, n'hésitez pas à <a>nous contacter</a>.",
-  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
+    'Passez au plan <strong>Pro</strong> pour obtenir des applications machine à machine supplémentaires et profiter de toutes les fonctionnalités premium. <a>Contactez-nous</a> si vous avez des questions.',
   machine_to_machine:
     "Limite de {{count, number}} application de machine à machine de <planName/> atteinte. Mettez à niveau le plan pour répondre aux besoins de votre équipe. Pour toute assistance, n'hésitez pas à <a>nous contacter</a>.",
   machine_to_machine_other:
@@ -40,12 +39,10 @@ const paywall = {
     "Vous avez atteint la limite de {{count, number}} rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   roles_other:
     "Vous avez atteint la limite de {{count, number}} rôles de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  /** UNTRANSLATED */
   machine_to_machine_roles:
-    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
+    "{{count, number}} rôle machine à machine de <planName/> atteint la limite. Mettez à niveau le plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   machine_to_machine_roles_other:
-    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+    "{{count, number}} rôles machine à machine de <planName/> atteints la limite. Mettez à niveau le plan pour ajouter des rôles et des permissions supplémentaires. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   scopes_per_role:
     'Vous avez atteint la limite de {{count, number}} permission par rôle de <planName/>. Mettez à niveau votre plan pour ajouter des rôles et des permissions supplémentaires. Pour toute assistance, n’hésitez pas à <a>nous contacter</a>.',
   scopes_per_role_other:
@@ -55,9 +52,8 @@ const paywall = {
   hooks_other:
     "Vous avez atteint la limite de {{count, number}} webhooks de <planName/>. Mettez à niveau votre plan pour créer plus de webhooks. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
   mfa: "Déverrouillez MFA pour vérifier la sécurité en passant à un plan payant. N'hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
-  /** UNTRANSLATED */
   organizations:
-    'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    "Débloquez les organisations en passant à un plan payant. N’hésitez pas à <a>nous contacter</a> si vous avez besoin d'aide.",
 };
 
 export default Object.freeze(paywall);

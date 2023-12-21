@@ -3,9 +3,8 @@ const organization_details = {
   delete_confirmation:
     'Uma vez eliminada, todos os membros perderão a sua adesão e funções nesta organização. Esta ação não pode ser desfeita.',
   organization_id: 'ID da organização',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    'As organizações representam as equipas, clientes empresariais e empresas parceiras que podem aceder às suas aplicações.',
   name_placeholder: 'O nome da organização, não é necessário ser único.',
   description_placeholder: 'Uma descrição da organização.',
   member: 'Membro',

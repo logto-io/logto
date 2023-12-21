@@ -49,18 +49,12 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: '高级选项',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
-    enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+    enable_single_sign_on: '启用企业单点登录（SSO）',
+    enable_single_sign_on_description: '启用用户使用他们的企业身份进行单点登录到应用程序。',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: '前往',
+      link: '"企业SSO"',
+      suffix: '部分以设置更多企业连接器。',
     },
     enable_user_registration: '启用用户注册',
     enable_user_registration_description:

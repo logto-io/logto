@@ -9,8 +9,8 @@ const tenants = {
   },
   settings: {
     title: 'EINSTELLUNGEN',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Legen Sie den Mandantennamen fest und überprüfen Sie Ihre gehostete Datenregion und den Mandantentyp.',
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
     tenant_region: 'Gehostete Region der Daten',
@@ -19,14 +19,11 @@ const tenants = {
     environment_tag_development: 'Entw',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Mandantentyp',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich. Es verfügt über alle Pro-Funktionen, hat jedoch Einschränkungen wie ein Anmeldebanner. <a>Mehr erfahren</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Vorgesehen für Apps, die von Endbenutzern verwendet werden und möglicherweise ein kostenpflichtiges Abonnement erfordern. <a>Mehr erfahren</a>',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
   },
   full_env_tag: {
@@ -45,47 +42,38 @@ const tenants = {
     subtitle:
       'Erstellen Sie einen neuen Mandanten mit isolierten Ressourcen und Benutzern. Die gehosteten Datenregionen und Mandantentypen können nach der Erstellung nicht geändert werden.',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich.',
+    development_hint:
+      'Es verfügt über alle Pro-Funktionen, hat jedoch Einschränkungen wie ein Anmeldebanner.',
+    production_description:
+      'Für die Nutzung durch Endbenutzer und möglicherweise ein kostenpflichtiges Abonnement.',
     available_plan: 'Verfügbare Pläne:',
     create_button: 'Mieter erstellen',
     tenant_name_placeholder: 'Mein Mieter',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Sie können jetzt unsere Pro-Funktionen kostenlos testen, indem Sie einen neuen "Entwicklungsmieter" erstellen!',
+    affect_title: 'Wie betrifft das Sie?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Wir ersetzen die alten <strong> Umgebungstags </strong> durch zwei neue Mandantentypen: <strong> "Entwicklung" </strong> und <strong> "Produktion" </strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Um einen reibungslosen Übergang und unterbrechungsfreie Funktionalität zu gewährleisten, werden alle früher erstellten Mandanten zum Mandantentyp <strong> Produktion </strong> mit Ihrem vorherigen Abonnement erhöht.',
+    hint_3: 'Keine Sorge, all Ihre anderen Einstellungen bleiben gleich.',
+    about_tenant_type: 'Über den Mandantentyp',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Sie können jetzt <a> alle Funktionen von Logto Pro </a> in Ihrem Entwicklungsmieter nutzen!',
+    description: 'Es ist komplett kostenlos, ohne Testphase – für immer!',
   },
   delete_modal: {
     title: 'Mieter löschen',
     description_line1:
       'Möchten Sie wirklich Ihren Mandanten "<span>{{name}}</span>" mit Umgebungssuffix-Tag "<span>{{tag}}</span>" löschen? Dieser Vorgang kann nicht rückgängig gemacht werden und führt zur dauerhaften Löschung aller Ihrer Daten und Kontoinformationen.',
     description_line2:
-      'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen. <span><a>Kontaktieren Sie uns per E-Mail</a></span>',
+      'Bevor Sie Ihren Mieter löschen, können wir Ihnen vielleicht helfen.<span><a> Kontaktieren Sie uns per E-Mail </a></span>',
     description_line3:
       'Wenn Sie fortfahren möchten, geben Sie bitte den Mieter-Namen "<span>{{name}}</span>" zur Bestätigung ein.',
     delete_button: 'Dauerhaft löschen',

@@ -1,14 +1,13 @@
 const guide = {
-  start_building: 'Empezar a construir',
-  get_started: 'Comenzar',
+  start_building: 'Comenzar a construir',
+  get_started: 'Empezar',
   categories: {
     featured: 'Popular y para ti',
     Traditional: 'Aplicación web tradicional',
     SPA: 'Aplicación de una sola página',
     Native: 'Nativa',
     MachineToMachine: 'Máquina a máquina',
-    /** UNTRANSLATED */
-    Protected: 'Protected app',
+    Protected: 'Aplicación protegida',
   },
   filter: {
     title: 'Filtrar framework',
@@ -16,7 +15,7 @@ const guide = {
   },
   checkout_tutorial: 'Ver el tutorial de {{name}}',
   do_not_need_tutorial: 'Si no necesitas un tutorial, puedes continuar sin una guía de framework',
-  finish_and_done: 'Finalizar y terminar',
+  finish_and_done: 'Terminar y finalizar',
   cannot_find_guide: '¿No puedes encontrar tu guía?',
   describe_guide_looking_for: 'Describe la guía que estás buscando',
   request_guide_successfully: 'Tu solicitud ha sido enviada correctamente. ¡Gracias!',

@@ -9,7 +9,7 @@ const sign_up_and_sign_in = {
   sign_up: {
     title: '註冊',
     sign_up_identifier: '註冊標識',
-    identifier_description: '創建帳戶時你需要設定註冊標識。這些信息在用戶登錄時，屬於必選項。',
+    identifier_description: '創建帳戶時你需要設定註冊標識。這些資訊在用戶登錄時，屬於必選項。',
     sign_up_authentication: '註冊身份認證設置',
     authentication_description: '註冊時，你的用戶將要完成以下所有勾選的任務。',
     set_a_password_option: '創建密碼',
@@ -41,30 +41,24 @@ const sign_up_and_sign_in = {
     set_a_password: '啟用用戶名註冊，必須設置密碼。',
     verify_at_sign_up:
       '我們目前僅支持經過驗證的郵件地址登錄。如果沒有驗證，你的用戶信息中可能出現大量無效電子郵件地址。',
-    password_auth: '因註冊設置裏你啟用了用戶名密碼標識。這個信息在用戶登錄時，屬於必選項。',
+    password_auth: '因註冊設置裏你啟用了用戶名密碼標識。這個資訊在用戶登錄時，屬於必選項。',
     verification_code_auth:
       '因註冊設置裏你啟用了驗證碼標識，驗證碼屬於用戶必選項。開啟密碼註冊後，你可以選擇關閉驗證碼登錄。',
     delete_sign_in_method:
-      '因註冊設置裏你啟用了{{identifier}}標識。這些信息在用戶登錄時，屬於必選項。',
+      '因註冊設置裏你啟用了{{identifier}}標識。這些資訊在用戶登錄時，屬於必選項。',
   },
   advanced_options: {
     title: '進階選項',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
-    enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+    enable_single_sign_on: '啟用企業單一登錄 (SSO)',
+    enable_single_sign_on_description: '啟用用戶使用企業身份進行應用程式的單一登錄。',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: '前往',
+      link: '“企業SSO”',
+      suffix: '部分設置更多企業連接器。',
     },
     enable_user_registration: '啟用用戶註冊',
     enable_user_registration_description:
-      '啟用或禁止用戶註冊。禁用後，管理控制台仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
+      '啟用或禁止用戶註冊。禁用後，管理控制臺仍然可以添加用戶，但用戶無法通過登錄界面建立帳戶。',
   },
 };
 

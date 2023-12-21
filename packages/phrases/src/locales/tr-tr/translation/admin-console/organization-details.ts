@@ -3,9 +3,8 @@ const organization_details = {
   delete_confirmation:
     'Silindiğinde, tüm üyeler bu kuruluştaki üyeliklerini ve rollerini kaybedecek. Bu işlem geri alınamaz.',
   organization_id: 'Kuruluş Kimliği',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    'Organizasyonlar, uygulamalarınıza erişebilen ekipleri, iş müşterilerini ve iş ortaklarını temsil eder.',
   name_placeholder: 'Kuruluşun adı, benzersiz olması gerekli değildir.',
   description_placeholder: 'Kuruluşun açıklaması.',
   member: 'Üye',
@@ -15,9 +14,9 @@ const organization_details = {
     'İsim, e-posta, telefon veya kullanıcı kimliği arayarak uygun kullanıcıları bulun. Var olan üyeler arama sonuçlarında gösterilmez.',
   add_with_organization_role: 'Kuruluş rol(ler)i ile ekle',
   user: 'Kullanıcı',
-  authorize_to_roles: "{{name}}'a aşağıdaki rolleri erişim yetkisi verin:",
+  authorize_to_roles: '"{{name}}"a aşağıdaki rolleri erişim yetkisi verin:',
   edit_organization_roles: 'Kuruluş rollerini düzenle',
-  edit_organization_roles_of_user: "{{name}}'ın kuruluş rollerini düzenle",
+  edit_organization_roles_of_user: '"{{name}}"ın kuruluş rollerini düzenle',
   remove_user_from_organization: 'Kullanıcıyı kuruluştan kaldır',
   remove_user_from_organization_description:
     'Kaldırıldığında, kullanıcı bu kuruluşta üyeliğini ve rollerini kaybedecek. Bu işlem geri alınamaz.',

@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: 'Elimine a todos sus usuarios',
   },
   token_limit: {
-    /** UNTRANSLATED */
     name: 'Tokens',
-    /** UNTRANSLATED */
     limited: '{{count, number}} token',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    unlimited: 'Tokens ilimitados',
+    not_eligible: 'Eliminar todos sus usuarios para evitar nuevos tokens',
   },
   applications_limit: {
     name: 'Aplicaciones',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: 'Elimine sus roles',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'Roles de máquina a máquina',
+    limited: '{{count, number}} rol de máquina a máquina',
+    limited_other: '{{count, number}} roles de máquina a máquina',
+    unlimited: 'Roles de máquina a máquina ilimitados',
+    not_eligible: 'Elimine sus roles de máquina a máquina',
   },
   scopes_per_role_limit: {
     name: 'Permisos de roles',
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Elimina tus webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organizaciones',
+    limited: 'Organizaciones',
+    unlimited: 'Organizaciones',
+    not_eligible: 'Elimine sus organizaciones',
   },
   audit_logs_retention_days: {
     name: 'Conservación de registros de auditoría',

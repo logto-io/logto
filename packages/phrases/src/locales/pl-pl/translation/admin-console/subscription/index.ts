@@ -9,7 +9,7 @@ const subscription = {
   hobby_plan_description: 'Dla indywidualnych programistów lub małych zespołów inżynierskich.',
   pro_plan: 'Plan Pro',
   pro_plan_description: 'Dla firm, ciesz się bezstresową obsługą Logto.',
-  enterprise: 'Enterprise',
+  enterprise: 'Przedsiębiorstwo',
   current_plan: 'Obecny plan',
   current_plan_description:
     'Oto Twój obecny plan. Łatwo możesz sprawdzić wykorzystanie swojego planu, sprawdzić nadchodzący rachunek i dokonać zmian w planie, jeśli jest to konieczne.',
@@ -66,8 +66,7 @@ const subscription = {
   upgrade_success: 'Pomyślnie uaktualniono do <name/>',
   downgrade_success: 'Pomyślnie zdegradowano do <name/>',
   subscription_check_timeout: 'Czas sprawdzenia subskrypcji wygasł. Proszę odświeżyć później.',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Brak subskrypcji',
 };
 
 export default Object.freeze(subscription);

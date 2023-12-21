@@ -54,7 +54,7 @@ export const createFullTranslation = async ({
   packageName,
   languageTag,
   verbose = true,
-  queue = new PQueue({ concurrency: 5 }),
+  queue = new PQueue({ concurrency: 10 }),
 }: TranslationOptions) => {
   const localeFiles = await getBaseAndTargetLocaleFiles(instancePath, packageName, languageTag);
 
@@ -98,7 +98,7 @@ export const syncTranslation = async ({
   packageName,
   languageTag,
   verbose = true,
-  queue = new PQueue({ concurrency: 5 }),
+  queue = new PQueue({ concurrency: 10 }),
 }: TranslationOptions) => {
   const localeFiles = await getBaseAndTargetLocaleFiles(instancePath, packageName, languageTag);
 

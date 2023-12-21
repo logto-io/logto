@@ -7,8 +7,7 @@ const guide = {
     SPA: 'Tek sayfalık uygulama',
     Native: 'Doğal',
     MachineToMachine: 'Makineden makineye',
-    /** UNTRANSLATED */
-    Protected: 'Protected app',
+    Protected: 'Korunan uygulama',
   },
   filter: {
     title: "Framework'ü filtrele",
@@ -29,7 +28,7 @@ const guide = {
     select_a_framework: 'Bir çerçeve seçin',
     continue_without_framework: 'Çerçevesiz uygulama oluştur',
     describe_guide_looking_for_placeholder:
-      "Örneğin, Logto'yu Angular uygulamama entegre etmek istiyorum.",
+      "Örneğin, Logto'u Angular uygulamama entegre etmek istiyorum.",
   },
   api: {
     modal_title: 'Öğreticilerle başlayın',

@@ -41,8 +41,7 @@ const quota_table = {
     title: '用戶管理',
     user_management: '用戶管理',
     roles: '角色',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: '機器對機器角色',
     scopes_per_role: '每角色權限',
   },
   audit_logs: {
@@ -55,20 +54,13 @@ const quota_table = {
   },
   organizations: {
     title: '組織',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: '組織',
+    monthly_active_organization: '每月活躍組織',
+    allowed_users_per_org: '允許的組織用戶',
+    invitation: '邀請（即將推出）',
+    org_roles: '組織角色',
+    org_permissions: '組織權限',
+    just_in_time_provisioning: '即時規定',
   },
   support: {
     title: '支援',
@@ -82,28 +74,19 @@ const quota_table = {
   contact: '聯絡',
   monthly_price: '${{value, number}}/月',
   mau_price: '${{value, number}}/MAU',
-  days_one: '{{count, number}}天',
-  days_other: '{{count, number}}天',
+  days_one: '{{count, number}} 天',
+  days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '層級{{value, number}}：',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: '免費發行 {{value}}M 個令牌。',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
-  paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
-  beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    '免費發行 {{value}}M 個令牌。一旦我們確定價格，如果您超出{{value}}M個令牌，我們可能會加收費用。',
+  paid_quota_limit_tip: '一旦我們確定價格，我們可能會以附加功能的形式為超出配額限制的功能收費。',
+  beta_feature_tip: '在測試版階段免費使用。我們確定附加功能的價格後將開始收費。',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
-  beta: 'Beta',
-  /** UNTRANSLATED */
-  add_on_beta: 'Add-on (Beta)',
+    '在測試版階段免費使用。我們確定組織基於使用情況的價格後將開始收費。',
+  beta: '測試版',
+  add_on_beta: '附加功能（測試版）',
 };
 
 export default Object.freeze(quota_table);

@@ -3,9 +3,8 @@ const organization_details = {
   delete_confirmation:
     'Wenn gelöscht, verlieren alle Mitglieder ihre Mitgliedschaft und Rollen in dieser Organisation. Diese Aktion kann nicht rückgängig gemacht werden.',
   organization_id: 'Organisations-ID',
-  /** UNTRANSLATED */
   settings_description:
-    'Organizations represent the teams, business customers, and partner companies that can access your applications.',
+    'Organisationen repräsentieren die Teams, Geschäftskunden und Partnerunternehmen, die auf Ihre Anwendungen zugreifen können.',
   name_placeholder: 'Der Name der Organisation, muss nicht eindeutig sein.',
   description_placeholder: 'Eine Beschreibung der Organisation.',
   member: 'Mitglied',

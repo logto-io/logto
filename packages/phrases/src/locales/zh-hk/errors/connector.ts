@@ -8,9 +8,7 @@ const connector = {
   invalid_request_parameters: '請求參數錯誤',
   insufficient_request_parameters: '請求參數缺失',
   invalid_config: '連接器配置錯誤',
-  /** UNTRANSLATED */
-  invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+  invalid_certificate: '連接器的證書無效，請確保證書是以 PEM 編碼。',
   invalid_response: '連接器錯誤響應',
   template_not_found: '無法從連接器配置中找到對應的模板',
   template_not_supported: '連接器不支援此模板類型。',

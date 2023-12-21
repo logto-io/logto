@@ -9,9 +9,8 @@ const connector = {
     'Żądanie jest z nieprawidłowym parametrem wejściowym/lub parametrami wejściowymi.',
   insufficient_request_parameters: 'Żądanie może nie zawierać niektórych parametrów wejściowych.',
   invalid_config: 'Konfiguracja łącznika jest nieprawidłowa.',
-  /** UNTRANSLATED */
   invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+    'Certyfikat łącznika jest nieprawidłowy, upewnij się, że certyfikat jest w kodowaniu PEM.',
   invalid_response: 'Odpowiedź łącznika jest nieprawidłowa.',
   template_not_found: 'Nie można znaleźć poprawnego szablonu w konfiguracji łącznika.',
   template_not_supported: 'Łącznik nie obsługuje tego typu szablonu.',
@@ -35,7 +34,7 @@ const connector = {
   invalid_type_for_syncing_profile:
     'Możesz tylko synchronizować profil użytkownika z łącznikami społecznościowymi.',
   can_not_modify_target: "Nie można modyfikować 'target' łącznika.",
-  should_specify_target: "Powinieneś/nna/lno określić 'target'.",
+  should_specify_target: "Powinieneś/na/lno określić 'target'.",
   multiple_target_with_same_platform:
     "Nie można mieć wielu łączników społecznościowych z takim samym 'platforma i target'.",
   cannot_overwrite_metadata_for_non_standard_connector:

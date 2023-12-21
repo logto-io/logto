@@ -3,13 +3,10 @@ const application = {
   role_exists: 'ロールID {{roleId}} は、すでにこのアプリケーションに追加されています。',
   invalid_role_type:
     'ユーザータイプのロールをマシン間アプリケーションに割り当てることはできません。',
-  /** UNTRANSLATED */
   invalid_third_party_application_type:
-    'Only traditional web applications can be marked as a third-party app.',
-  /** UNTRANSLATED */
-  third_party_application_only: 'The feature is only available for third-party applications.',
-  /** UNTRANSLATED */
-  user_consent_scopes_not_found: 'Invalid user consent scopes.',
+    '伝統的なWebアプリケーションにのみ、サードパーティアプリとしてマークできます。',
+  third_party_application_only: 'この機能はサードパーティアプリケーションにのみ利用可能です。',
+  user_consent_scopes_not_found: '無効なユーザー同意スコープ。',
 };
 
 export default Object.freeze(application);

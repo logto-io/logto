@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: '未付账单',
     update_payment: '更新支付',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '您已达到您的配额限制。一旦我们最终确定价格，我们可能会为超出配额限制的功能添加额外费用。',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '您已达到{{value}}M令牌配额限制。一旦我们最终确定价格，我们可能会为超出配额限制的功能添加额外费用。',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    '您已达到您的机器对机器配额限制。一旦我们最终确定价格，我们可能会为超出配额限制的功能添加额外费用。',
   paywall,
 };
 

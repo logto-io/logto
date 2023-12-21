@@ -1,135 +1,72 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_experience: 'SSO Experience',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Display',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: '返回企业SSO',
+  page_title: '企业SSO连接器详情',
+  readme_drawer_title: '企业SSO',
+  readme_drawer_subtitle: '设置企业SSO连接器以启用最终用户SSO',
+  tab_experience: 'SSO体验',
+  tab_connection: '连接',
+  general_settings_title: '常规',
+  custom_branding_title: '显示',
   custom_branding_description:
-    "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    '自定义在最终用户单点登录流程中显示的名称和标识。如果为空，则使用默认值。',
+  email_domain_field_name: '企业电子邮件域',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    '拥有此电子邮件域的用户可以使用SSO进行身份验证。请验证该域名属于企业。',
+  email_domain_field_placeholder: '邮箱域',
+  sync_profile_field_name: '从身份提供者同步个人资料信息',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: '仅在首次登录时同步',
+    each_sign_in: '每次登录时始终同步',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  display_name_field_name: 'Display name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Display logo',
-  /** UNTRANSLATED */
-  connector_logo_field_description: 'Each image should under 500KB, SVG, PNG, JPG, JPEG only.',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_light_logo_context: 'Upload light mode logo',
-  /** UNTRANSLATED */
-  branding_light_logo_error: 'Upload light mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
+  connector_name_field_name: '连接器名称',
+  display_name_field_name: '显示名称',
+  connector_logo_field_name: '显示标识',
+  connector_logo_field_description: '每个图像应不超过500KB，仅支持SVG、PNG、JPG、JPEG。',
+  branding_logo_context: '上传标识',
+  branding_logo_error: '上传标识错误：{{error}}',
+  branding_light_logo_context: '上传浅色主题标识',
+  branding_light_logo_error: '上传浅色主题标识错误：{{error}}',
+  branding_logo_field_name: '标识',
   branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
+  branding_dark_logo_context: '上传深色主题标识',
+  branding_dark_logo_error: '上传深色主题标识错误：{{error}}',
+  branding_dark_logo_field_name: '标识（深色主题）',
   branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_connection_guide: 'Connection guide',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  check_connection_guide: '连接指南',
+  enterprise_sso_deleted: '企业SSO连接器已成功删除',
+  delete_confirm_modal_title: '删除企业SSO连接器',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_saml: 'Upload the metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description_saml: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_oidc: 'Upload the credentials',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description_oidc:
-    'Configure the credentials and OIDC token information copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_button_text: 'Upload metadata XML file',
-  /** UNTRANSLATED */
-  upload_signing_certificate_button_text: 'Upload signing certificate file',
-  /** UNTRANSLATED */
-  configure_domain_field_info_text:
-    'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
-  /** UNTRANSLATED */
-  email_domain_field_required: 'Email domain is required to enable enterprise SSO.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure in the IdP',
-  /** UNTRANSLATED */
+    '您确定要删除此企业连接器吗？来自身份提供者的用户将不能使用单点登录。',
+  upload_idp_metadata_title_saml: '上传元数据',
+  upload_idp_metadata_description_saml: '配置从身份提供者复制的元数据。',
+  upload_idp_metadata_title_oidc: '上传凭证',
+  upload_idp_metadata_description_oidc: '配置从身份提供者复制的凭证和OIDC令牌信息。',
+  upload_idp_metadata_button_text: '上传元数据XML文件',
+  upload_signing_certificate_button_text: '上传签名证书文件',
+  configure_domain_field_info_text: '添加电子邮件域以指导企业用户到其身份提供者进行单点登录。',
+  email_domain_field_required: '必须提供电子邮件域以启用企业SSO。',
+  upload_saml_idp_metadata_info_text_url: '粘贴从身份提供者获取的元数据URL进行连接。',
+  upload_saml_idp_metadata_info_text_xml: '粘贴从身份提供者获取的元数据进行连接。',
+  upload_saml_idp_metadata_info_text_manual: '填写从身份提供者获取的元数据进行连接。',
+  upload_oidc_idp_info_text: '填写来自身份提供者的信息进行连接。',
+  service_provider_property_title: '在IdP中配置',
   service_provider_property_description:
-    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by Logto.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mappings',
-  /** UNTRANSLATED */
+    '在您的身份提供者中使用{{protocol}}设置应用程序集成。输入Logto提供的详细信息。',
+  attribute_mapping_title: '属性映射',
   attribute_mapping_description:
-    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to Logto side.',
+    '通过在身份提供者或Logto端配置用户属性映射，从身份提供者同步用户配置文件。',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
-    /** UNTRANSLATED */
-    certificate_content: 'Expiring {{date}}',
+    sign_on_url: '登录URL',
+    entity_id: '发行者',
+    x509_certificate: '签名证书',
+    certificate_content: '将于{{date}}到期',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: '授权端点',
+    token_endpoint: '令牌端点',
+    userinfo_endpoint: '用户信息端点',
+    jwks_uri: 'JSON Web Key集端点',
+    issuer: '发行者',
   },
 };
 

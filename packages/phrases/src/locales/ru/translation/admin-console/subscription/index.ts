@@ -65,8 +65,7 @@ const subscription = {
   upgrade_success: 'Успешно повышен до <name/>',
   downgrade_success: 'Успешно понижен до <name/>',
   subscription_check_timeout: 'Время проверки подписки истекло. Пожалуйста, обновите позже.',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: 'Нет подписки',
 };
 
 export default Object.freeze(subscription);

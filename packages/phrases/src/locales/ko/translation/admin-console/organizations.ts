@@ -1,13 +1,10 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: '조직',
   page_title: '조직',
   title: '조직',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+    '조직은 팀, 비즈니스 고객 및 파트너 업체가 응용 프로그램을 사용하는 사용자의 집합입니다.',
+  organization_template: '조직 템플릿',
   organization_id: '조직 ID',
   members: '회원',
   create_organization: '조직 만들기',
@@ -38,84 +35,54 @@ const organizations = {
   search_permission_placeholder: '검색하여 권한 선택',
   search_role_placeholder: '검색하여 역할 선택',
   empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: '조직 및 구성원',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    '조직은 사용자 그룹이며 팀, 비즈니스 고객 및 파트너 업체를 나타낼 수 있으며 각 사용자는 "구성원"입니다. 이러한 것들은 여러분의 멀티 테넌트 요구사항을 처리하는 데 기본적인 엔터티일 수 있습니다.',
   guide: {
     title: '가이드로 시작',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: '우리의 안내서를 통해 조직 설정의 시작을 빠르게 해보세요',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: '로그토에서 조직이 작동하는 방식을 이해해봅시다',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: '조직은 사용자(아이덴티티) 그룹입니다',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: '조직 템플릿은 멀티 테넌트 앱 액세스 제어를 위해 설계되었습니다',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
-        permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
-        role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          '멀티 테넌트 SaaS 애플리케이션에서는 여러 조직이 종종 권한 및 역할을 포함한 동일한 액세스 제어 템플릿을 공유합니다. 로그토에서는 이를 "조직 템플릿"이라고 합니다.',
+        permission_description: '조직 권한은 조직의 컨텍스트에서 리소스에 대한 권한을 나타냅니다.',
+        role_description: '조직 역할은 구성원에게 할당할 수 있는 조직 권한의 그룹화입니다.',
       },
       section_3: {
         title: '일러스트를 상호 작용하여 연결되는 방식 확인',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '예를 들어 존과 사라가 서로 다른 조직에서 서로 다른 역할을 가진 채로 있습니다. 각 모듈 위로 마우스를 올려보세요.',
       },
     },
     step_1: '단계 1: 조직 권한 정의',
     step_2: '단계 2: 조직 역할 정의',
     step_3: '단계 3: 첫 번째 조직 생성하기',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    john: 'John',
-    /** UNTRANSLATED */
+      '첫 번째 조직을 만들어보세요. 고유 ID가 포함되어 다양한 비즈니스 관련 식별자를 처리하는 컨테이너 역할을 합니다.',
+    more_next_steps: '추가 다음 단계',
+    add_members: '조직에 구성원 추가',
+    add_members_action: '구성원을 대량 추가하고 역할을 할당하십시오',
+    organization_permissions: '조직 권한',
+    permission_name: '권한 이름',
+    permissions: '권한',
+    organization_roles: '조직 역할',
+    role_name: '역할 이름',
+    organization_name: '조직 이름',
+    admin: '관리자',
+    member: '구성원',
+    guest: '손님',
+    role_description: '역할 "{{role}}"은 다른 조직에서도 동일한 조직 템플릿을 공유합니다.',
+    john: '존',
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
-    sarah: 'Sarah',
-    /** UNTRANSLATED */
+      '존은 두 개의 조직에 속하며 단일 식별자로 "john@email.com"을 가지고 있습니다. 그는 조직 A의 관리자이자 조직 B의 게스트입니다.',
+    sarah: '사라',
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      '사라는 단일 식별자로 "sarah@email.com"을 가지고 있는 하나의 조직에 속합니다. 그녀는 조직 B의 관리자입니다.',
   },
 };
 

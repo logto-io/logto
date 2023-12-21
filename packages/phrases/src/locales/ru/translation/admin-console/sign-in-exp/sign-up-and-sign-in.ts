@@ -55,22 +55,17 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
+    enable_single_sign_on: 'Включить единую авторизацию (SSO) для предприятий',
     enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+      'Включить возможность входа пользователей в систему с помощью единой авторизации с использованием их корпоративных учетных данных.',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: 'Перейти в раздел ',
+      link: '"Единая авторизация для предприятий"',
+      suffix: ' для настройки дополнительных корпоративных коннекторов.',
     },
     enable_user_registration: 'Включить регистрацию пользователей',
     enable_user_registration_description:
-      'Включить или запретить регистрацию пользователей. После отключения пользователи все еще могут быть добавлены через консоль администратора, но пользователи больше не могут создавать учетные записи через пользовательский интерфейс регистрации.',
+      'Включить или отключить регистрацию пользователей. После отключения пользователи все равно могут быть добавлены через консоль администратора, но больше создавать учетные записи через пользовательский интерфейс регистрации не могут.',
   },
 };
 

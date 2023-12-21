@@ -13,15 +13,10 @@ const quota_item = {
     not_eligible: 'Rimuovi tutti i tuoi utenti',
   },
   token_limit: {
-    /** UNTRANSLATED */
     name: 'Tokens',
-    /** UNTRANSLATED */
     limited: '{{count, number}} token',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
     unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your all users to prevent new tokens',
   },
   applications_limit: {
@@ -92,15 +87,10 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi ruoli',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
     name: 'Machine to machine roles',
-    /** UNTRANSLATED */
     limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
     unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your machine to machine roles',
   },
   scopes_per_role_limit: {
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Rimuovi i tuoi webhook',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
     name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    limited: 'Organizzazioni',
+    unlimited: 'Organizzazioni',
+    not_eligible: 'Rimuovi le tue organizzazioni',
   },
   audit_logs_retention_days: {
     name: 'Conservazione log di audit',

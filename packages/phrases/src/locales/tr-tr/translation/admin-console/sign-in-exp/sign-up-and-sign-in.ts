@@ -54,20 +54,15 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'GELİŞMİŞ SEÇENEKLER',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
+    enable_single_sign_on: 'Kurumsal Tek Oturum Açmayı Etkinleştir (SSO)',
     enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+      'Kullanıcıların kurumsal kimlikleriyle Tek Oturum Açmayı etkinleştirin.',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: 'Şuraya git: ',
+      link: '"Kurumsal Tek Oturum Açma"',
+      suffix: 'bölümüne daha fazla kurumsal bağlantı noktası kurmak için.',
     },
-    enable_user_registration: 'Kullanıcı kaydını etkinleştir',
+    enable_user_registration: 'Kullanıcı Kaydını Etkinleştir',
     enable_user_registration_description:
       'Kullanıcı kaydını etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, kullanıcılar yönetici konsolunda hala eklenilebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamaz.',
   },

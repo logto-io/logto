@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: 'Remova todos seus usuários',
   },
   token_limit: {
-    /** UNTRANSLATED */
     name: 'Tokens',
-    /** UNTRANSLATED */
     limited: '{{count, number}} token',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    unlimited: 'Tokens ilimitados',
+    not_eligible: 'Remova todos os seus usuários para evitar novos tokens',
   },
   applications_limit: {
     name: 'Aplicações',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: 'Remova suas funções',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'Funções de máquina a máquina',
+    limited: '{{count, number}} função de máquina a máquina',
+    limited_other: '{{count, number}} funções de máquina a máquina',
+    unlimited: 'Funções de máquina a máquina ilimitadas',
+    not_eligible: 'Remova suas funções de máquina a máquina',
   },
   scopes_per_role_limit: {
     name: 'Permissões de funções',
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Remova seus webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organizações',
+    limited: 'Organizações',
+    unlimited: 'Organizações',
+    not_eligible: 'Remova suas organizações',
   },
   audit_logs_retention_days: {
     name: 'Permanência de registros de auditoria',

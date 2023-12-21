@@ -5,7 +5,6 @@ const paywall = {
     '{{count, number}}個の<planName/>アプリケーション制限に達しました。チームのニーズに対応するため、プランをアップグレードしてください。サポートが必要な場合は、お気軽に<a>お問い合わせ</a>ください。',
   deprecated_machine_to_machine_feature:
     'アップグレードして、<strong>Hobby</strong>プランで1つのマシン間アプリケーションを解除するか、無制限の使用が可能な<strong>Pro</strong>プランを選択してください。どんなお手伝いが必要でも、お気軽に<a>お問い合わせ</a>ください。',
-  /** UNTRANSLATED */
   machine_to_machine_feature:
     'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
   machine_to_machine:
@@ -40,10 +39,8 @@ const paywall = {
     '{{count, number}}の<planName/>ロール制限に達しました。追加のロールと権限を追加するにはプランをアップグレードしてください。<a>お問い合わせ</a>は何かお手伝いが必要な場合はお気軽にどうぞ。',
   roles_other:
     '{{count, number}}の<planName/>ロール制限に達しました。追加のロールと権限を追加するにはプランをアップグレードしてください。<a>お問い合わせ</a>は何かお手伝いが必要な場合はお気軽にどうぞ。',
-  /** UNTRANSLATED */
   machine_to_machine_roles:
     '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
   machine_to_machine_roles_other:
     '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
   scopes_per_role:
@@ -55,7 +52,6 @@ const paywall = {
   hooks_other:
     '{{count, number}}の<planName/>ウェブフック制限に達しました。追加のウェブフックを作成するにはプランをアップグレードしてください。<a>お問い合わせ</a>は何かお手伝いが必要な場合はお気軽にどうぞ。',
   mfa: 'セキュリティを確認するためにMFAを解除して有料プランにアップグレードしてください。ご質問があれば、<a>お問い合わせください</a>。',
-  /** UNTRANSLATED */
   organizations:
     'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
 };

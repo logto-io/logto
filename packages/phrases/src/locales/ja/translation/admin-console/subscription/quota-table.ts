@@ -41,8 +41,7 @@ const quota_table = {
     title: 'ユーザー管理',
     user_management: 'ユーザー管理',
     roles: 'ロール',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: 'マシン対マシンロール',
     scopes_per_role: 'ロールごとの権限',
   },
   audit_logs: {
@@ -55,25 +54,18 @@ const quota_table = {
   },
   organizations: {
     title: '組織',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: '組織',
+    monthly_active_organization: '月間アクティブ組織',
+    allowed_users_per_org: '組織ごとの許可ユーザー数',
+    invitation: '招待状（近日公開）',
+    org_roles: '組織ロール',
+    org_permissions: '組織権限',
+    just_in_time_provisioning: 'ジャストインタイムプロビジョニング',
   },
   support: {
     title: 'サポート',
     community: 'コミュニティ',
-    customer_ticket: 'サポートチケット',
+    customer_ticket: 'カスタマーチケット',
     premium: 'プレミアム',
   },
   mau_unit_price_footnote:
@@ -86,24 +78,17 @@ const quota_table = {
   days_other: '{{count, number}}日',
   add_on: 'アドオン',
   tier: 'レベル{{value, number}}: ',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: '無料 {{value}}M トークン発行。',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
+    '無料 {{value}}M トークン発行。価格設定が最終決定した場合、{{value}}M トークンを超えると追加料金が発生する可能性があります。',
   paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
+    '価格設定が最終決定した場合、クォータ制限を超える機能について追加料金が発生することがあります。',
   beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    'ベータフェーズ中は無料です。アドオンの価格設定が最終決定した後、請求を開始します。',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
-  beta: 'Beta',
-  /** UNTRANSLATED */
-  add_on_beta: 'Add-on (Beta)',
+    'ベータフェーズ中は無料です。組織の使用に基づく価格設定が最終決定した後、請求を開始します。',
+  beta: 'ベータ',
+  add_on_beta: 'アドオン（ベータ版）',
 };
 
 export default Object.freeze(quota_table);

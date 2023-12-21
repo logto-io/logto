@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: '未払いの請求書',
     update_payment: '支払いを更新',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'あなたのクォータ上限に達しました。価格が確定次第、クォータ上限を超える機能に関して追加料金が発生する可能性があります。',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'あなたの{{value}}M トークンクォータ上限に達しました。価格が確定次第、クォータ上限を超える機能に関して追加料金が発生する可能性があります。',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    'あなたの機械間通信（M2M）クォータ上限に達しました。価格が確定次第、クォータ上限を超える機能に関して追加料金が発生する可能性があります。',
   paywall,
 };
 

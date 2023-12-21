@@ -6,9 +6,8 @@ const guide = {
     Traditional: '전통적인 웹 앱',
     SPA: '싱글 페이지 앱',
     Native: '네이티브',
-    MachineToMachine: 'Machine-to-machine',
-    /** UNTRANSLATED */
-    Protected: 'Protected app',
+    MachineToMachine: '기계 간 통신',
+    Protected: '보호된 앱',
   },
   filter: {
     title: '프레임워크 필터',

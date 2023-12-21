@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: 'Factures impayées',
     update_payment: 'Mettre à jour le paiement',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Vous avez atteint votre limite de quota. Nous pouvons facturer des fonctionnalités qui dépassent votre limite de quota en tant que modules complémentaires, une fois que nous aurons finalisé les prix.',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Vous avez atteint votre limite de quota de jetons de {{value}}M. Nous pourrions facturer les fonctionnalités qui dépassent votre limite de quota en tant que modules complémentaires, une fois que nous aurons finalisé les prix.',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    'Vous avez atteint votre limite de quota pour les connexions machine à machine. Nous pourrions facturer les fonctionnalités qui dépassent votre limite de quota en tant que modules complémentaires, une fois que nous aurons finalisé les prix.',
   paywall,
 };
 

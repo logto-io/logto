@@ -41,8 +41,7 @@ const quota_table = {
     title: 'Zarządzanie użytkownikami',
     user_management: 'Zarządzanie użytkownikami',
     roles: 'Role',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: 'Role maszyna-maszyna',
     scopes_per_role: 'Uprawnienia na rolę',
   },
   audit_logs: {
@@ -55,20 +54,13 @@ const quota_table = {
   },
   organizations: {
     title: 'Organizacja',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: 'Organizacje',
+    monthly_active_organization: 'Miesięczna liczba aktywnych organizacji',
+    allowed_users_per_org: 'Dozwolona liczba użytkowników na organizację',
+    invitation: 'Zaproszenie (Wkrótce)',
+    org_roles: 'Role organizacji',
+    org_permissions: 'Uprawnienia organizacji',
+    just_in_time_provisioning: 'Provisioning w trybie just-in-time',
   },
   support: {
     title: 'Wsparcie',
@@ -86,24 +78,17 @@ const quota_table = {
   days_other: '{{count, number}} dni',
   add_on: 'Dodatkowy',
   tier: 'Poziom{{value, number}}: ',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: 'Bezpłatne do wydania {{value}} M tokenów.',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Bezpłatne do wydania {{value}} M tokenów. Możemy doliczyć opłaty, jeśli przekroczysz limity {{value}} M tokenów, gdy ustalimy ostateczne ceny.',
   paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Możemy doliczyć opłaty za funkcje po przekroczeniu limitów kwoty jako dodatki, gdy ustalimy ostateczne ceny.',
   beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    'Darmowe w trakcie fazy beta. Będziemy pobierać opłaty po zakończeniu fazy beta przy ustaleniu cen dodatków.',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
+    'Darmowe w trakcie fazy beta. Będziemy pobierać opłaty po zakończeniu fazy beta przy ustaleniu opłat w oparciu o użycie organizacji.',
   beta: 'Beta',
-  /** UNTRANSLATED */
-  add_on_beta: 'Add-on (Beta)',
+  add_on_beta: 'Dodatkowy (Beta)',
 };
 
 export default Object.freeze(quota_table);

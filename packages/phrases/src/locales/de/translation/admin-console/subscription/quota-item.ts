@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: 'Entferne alle Benutzer',
   },
   token_limit: {
-    /** UNTRANSLATED */
     name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    limited: '{{count, number}} Token',
+    limited_other: '{{count, number}} Tokens',
+    unlimited: 'Unbegrenzte Tokens',
+    not_eligible: 'Entferne alle Benutzer, um neue Tokens zu verhindern',
   },
   applications_limit: {
     name: 'Anwendungen',
@@ -92,15 +87,10 @@ const quota_item = {
     not_eligible: 'Entferne deine Rollen',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
     name: 'Machine to machine roles',
-    /** UNTRANSLATED */
     limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
+    unlimited: 'Unbegrenzte Machine to machine roles',
     not_eligible: 'Remove your machine to machine roles',
   },
   scopes_per_role_limit: {
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Entferne deine Webhooks',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organisationen',
+    limited: 'Organisationen',
+    unlimited: 'Organisationen',
+    not_eligible: 'Entferne deine Organisationen',
   },
   audit_logs_retention_days: {
     name: 'Audit-Log-Retention',
