@@ -76,12 +76,12 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {hasPaywall && (
-              <FeatureTag
-                isVisible={isM2mDisabled}
-                for="upsell"
-                plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
-              />
+            {/**
+             * Todo @xiaoyijun [Pricing] Remove feature flag
+             * Note: In the new pricing plan, the machine to machine feature is available for Free plan.
+             */}
+            {hasPaywall && !isDevFeaturesEnabled && (
+              <FeatureTag isVisible={isM2mDisabled} for="upsell" plan={ReservedPlanId.Hobby} />
             )}
           </div>
           <div className={styles.description} title={description}>
