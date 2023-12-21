@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: 'Tüm kullanıcılarınızı kaldırın',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
+    name: 'Tokenlar',
     limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    limited_other: '{{count, number}} tokenlar',
+    unlimited: 'Sınırsız tokenlar',
+    not_eligible: 'Yeni tokenları önlemek için tüm kullanıcılarınızı kaldırın',
   },
   applications_limit: {
     name: 'Uygulamalar',
@@ -32,7 +27,7 @@ const quota_item = {
     not_eligible: 'Uygulamalarınızı kaldırın',
   },
   machine_to_machine_limit: {
-    name: 'Makineye Makine',
+    name: 'Makineye makine',
     limited: '{{count, number}} makineye makine uygulama',
     limited_other: '{{count, number}} makineye makine uygulamalar',
     unlimited: 'Sınırsız makineye makine uygulamalar',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: 'Rollerinizi kaldırın',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'Makineye makine rolleri',
+    limited: '{{count, number}} makineye makine rolü',
+    limited_other: '{{count, number}} makineye makine rolleri',
+    unlimited: 'Sınırsız makineye makine rolleri',
+    not_eligible: 'Makineye makine rollerinizi kaldırın',
   },
   scopes_per_role_limit: {
     name: 'Rol izinleri',
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Webhooklarınızı kaldırın',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Organizasyonlar',
+    limited: 'Organizasyonlar',
+    unlimited: 'Organizasyonlar',
+    not_eligible: 'Organizasyonlarınızı kaldırın',
   },
   audit_logs_retention_days: {
     name: 'Denetim günlükleri saklama süresi',

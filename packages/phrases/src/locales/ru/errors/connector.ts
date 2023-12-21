@@ -8,9 +8,8 @@ const connector = {
   invalid_request_parameters: 'Запрос содержит неверный входной параметр (ы).',
   insufficient_request_parameters: 'В запросе может не хватать некоторых входных параметров.',
   invalid_config: 'Конфигурация коннектора недействительна.',
-  /** UNTRANSLATED */
   invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+    'Сертификат коннектора недействителен, убедитесь, что сертификат в кодировке PEM.',
   invalid_response: 'Ответ коннектора недействителен.',
   template_not_found: 'Невозможно найти правильный шаблон в конфигурации коннектора.',
   template_not_supported: 'Коннектор не поддерживает этот тип шаблона.',

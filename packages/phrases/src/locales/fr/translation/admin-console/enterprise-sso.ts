@@ -5,102 +5,67 @@ const enterprise_sso = {
     "Connectez le fournisseur d'identité de l'entreprise et activez la connexion unique initiée par le fournisseur de services.",
   create: "Ajouter un connecteur d'entreprise",
   col_connector_name: 'Nom du connecteur',
-  /** UNTRANSLATED */
   col_type: 'Type',
   col_email_domain: 'Domaine de messagerie',
   placeholder_title: "Connecteur d'entreprise",
-  /** UNTRANSLATED */
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
+    "Logto a fourni de nombreux fournisseurs d'identités d'entreprise intégrés pour une connexion, pendant ce temps, vous pouvez créer le vôtre avec les protocoles SAML et OIDC.",
   create_modal: {
     title: "Ajouter un connecteur d'entreprise",
     text_divider: 'Ou vous pouvez personnaliser votre connecteur avec un protocole standard.',
     connector_name_field_title: 'Nom du connecteur',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
+    connector_name_field_placeholder: "Par exemple, {corp. name} - {nom du fournisseur d'identité}",
     create_button_text: 'Créer un connecteur',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: "Un guide pas à pas pour connecter le fournisseur d'identité de l'entreprise.",
+    finish_button_text: 'Continuer',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
+    title: "Configurez votre service dans l'IdP",
     description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+      "Créez une nouvelle intégration d'application par SAML 2.0 dans votre fournisseur d'identité {{name}}. Ensuite, collez la valeur suivante.",
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: "URL de service de consommation d'assertions (URL de réponse)",
+      audience_uri_field_name: "URI de l'audience (ID de l'entité SP)",
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: 'URI de redirection (URL de rappel)',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
+    title: 'Mappage des attributs',
     description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value of service provider (Logto)',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+      "`id` et `email` sont nécessaires pour synchroniser le profil de l'utilisateur à partir de l'IdP. Entrez le nom et la valeur du champ suivant dans votre IdP.",
+    col_sp_claims: 'Valeur du fournisseur de services (Logto)',
+    col_idp_claims: "Nom de réclamation du fournisseur d'identité",
+    idp_claim_tooltip: "Le nom de réclamation du fournisseur d'identité",
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: "Configurer les métadonnées de l'IdP",
+    description: "Configurez les métadonnées du fournisseur d'identité",
+    dropdown_trigger_text: 'Utiliser un autre méthode de configuration',
+    dropdown_title: 'sélectionnez votre méthode de configuration',
+    metadata_format_url: "Entrez l'URL des métadonnées",
+    metadata_format_xml: 'Téléverser le fichier XML des métadonnées',
+    metadata_format_manual: 'Saisir manuellement les détails des métadonnées',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
+      metadata_url_field_name: 'URL des métadonnées',
       metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'IdP metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
-      /** UNTRANSLATED */
-      certificate_required: 'Signing certificate is required.',
+        "Récupérez dynamiquement les données à partir de l'URL des métadonnées et gardez le certificat à jour.",
+      metadata_xml_field_name: 'Fichier XML des métadonnées IdP',
+      metadata_xml_uploader_text: 'Téléverser le fichier XML des métadonnées',
+      sign_in_endpoint_field_name: 'URL de connexion',
+      idp_entity_id_field_name: "ID de l'entité IdP (Émetteur)",
+      certificate_field_name: 'Certificat de signature',
+      certificate_placeholder: 'Copiez et collez le certificat x509',
+      certificate_required: 'Le certificat de signature est requis.',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: 'ID client',
+      client_secret_field_name: 'Secret client',
+      issuer_field_name: 'Émetteur',
+      scope_field_name: 'Portée',
     },
   },
 };

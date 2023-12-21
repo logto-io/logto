@@ -1,13 +1,10 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: 'Organisation',
   page_title: 'Organisationen',
   title: 'Organisationen',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+    'Eine Organisation ist eine Sammlung von Benutzern, zu der Teams, Geschäftskunden und Partnerfirmen gehören, die Ihre Anwendungen nutzen.',
+  organization_template: 'Organisationsvorlage',
   organization_id: 'Organisations-ID',
   members: 'Mitglieder',
   create_organization: 'Organisation erstellen',
@@ -38,47 +35,37 @@ const organizations = {
   search_permission_placeholder: 'Geben Sie zum Suchen und Auswählen von Berechtigungen ein',
   search_role_placeholder: 'Geben Sie zum Suchen und Auswählen von Rollen ein',
   empty_placeholder: '🤔 Sie haben noch keine {{entity}} eingerichtet.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: 'Organisation und Mitglied',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    'Eine Organisation ist eine Gruppe von Benutzern und kann Teams, Geschäftskunden und Partnerunternehmen darstellen, wobei jeder Benutzer ein "Mitglied" ist. Diese können grundlegende Entitäten sein, um Ihre Multi-Tenant-Anforderungen zu bearbeiten.',
   guide: {
-    title: 'Starten Sie mit Anleitungen',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    title: 'Beginnen Sie mit Anleitungen',
+    subtitle: 'Starten Sie Ihre Organisationseinstellungen mit unseren Anleitungen',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: 'Verstehen Sie, wie eine Organisation in Logto funktioniert',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: 'Eine Organisation ist eine Gruppe von Benutzern (Identitäten)',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: 'Die Organisationsvorlage ist für den Zugriff auf Multi-Tenant-Apps konzipiert',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
+          'In Multi-Tenant-SaaS-Anwendungen teilen häufig mehrere Organisationen dieselbe Zugriffskontrollvorlage, zu der Berechtigungen und Rollen gehören. In Logto nennen wir es "Organisationsvorlage".',
         permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
+          'Die Organisationsberechtigung bezieht sich auf die Autorisierung zum Zugriff auf eine Ressource im Kontext der Organisation.',
         role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          'Eine Organisationsrolle ist eine Gruppierung von Organisationsberechtigungen, die Benutzern zugewiesen werden können.',
       },
       section_3: {
         title: 'Interagieren Sie mit der Abbildung, um zu sehen, wie alles zusammenhängt',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Nehmen wir ein Beispiel. John, Sarah sind in verschiedenen Organisationen mit unterschiedlichen Rollen im Kontext verschiedener Organisationen. Fahren Sie mit der Maus über die verschiedenen Module und sehen Sie, was passiert.',
       },
     },
     step_1: 'Schritt 1: Organisationsberechtigungen definieren',
     step_2: 'Schritt 2: Organisationsrollen definieren',
     step_3: 'Schritt 3: Erstellen Sie Ihre erste Organisation',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
+      'Erstellen Sie Ihre erste Organisation. Sie erhält eine eindeutige ID und dient als Container für die Bearbeitung verschiedener geschäftsbezogener Identitäten.',
     more_next_steps: 'Weitere Schritte',
     add_members: 'Fügen Sie Mitglieder zu Ihrer Organisation hinzu',
     add_members_action: 'Massenhafte Mitglieder hinzufügen und Rollen zuweisen',
@@ -89,23 +76,16 @@ const organizations = {
     role_name: 'Rollenname',
     organization_name: 'Organisationsname',
     admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
+    member: 'Mitglied',
+    guest: 'Gast',
     role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      'Die Rolle "{{role}}" teilt dieselbe Organisationsvorlage über verschiedene Organisationen.',
     john: 'John',
-    /** UNTRANSLATED */
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
+      'John gehört zu zwei Organisationen mit der E-Mail "{{email}}" als eindeutiger Identifikator. Er ist der Administrator von Organisation A sowie der Gast von Organisation B.',
     sarah: 'Sarah',
-    /** UNTRANSLATED */
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      'Sarah gehört zu einer Organisation mit der E-Mail "{{email}}" als eindeutiger Identifikator. Sie ist die Administratorin von Organisation B.',
   },
 };
 

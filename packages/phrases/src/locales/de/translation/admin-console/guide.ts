@@ -1,5 +1,5 @@
 const guide = {
-  start_building: 'Start building',
+  start_building: 'Starten Sie mit dem Aufbau',
   get_started: 'Beginnen Sie',
   categories: {
     featured: 'Beliebt und für dich',
@@ -7,11 +7,10 @@ const guide = {
     SPA: 'Single-Page-Anwendung',
     Native: 'Native',
     MachineToMachine: 'Maschinen-zu-Maschinen',
-    /** UNTRANSLATED */
-    Protected: 'Protected app',
+    Protected: 'Geschützte App',
   },
   filter: {
-    title: 'Filter framework',
+    title: 'Filter-Framework',
     placeholder: 'Nach Framework suchen',
   },
   checkout_tutorial: 'Tutorial von {{name}} anzeigen',

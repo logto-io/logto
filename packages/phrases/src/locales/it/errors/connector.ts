@@ -8,14 +8,13 @@ const connector = {
   invalid_request_parameters: 'La richiesta contiene parametri di input errati.',
   insufficient_request_parameters: 'La richiesta potrebbe mancare di alcuni parametri di input.',
   invalid_config: 'La configurazione del connettore non è valida.',
-  /** UNTRANSLATED */
   invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+    'Il certificato del connettore non è valido, assicurarsi che il certificato sia codificato in formato PEM.',
   invalid_response: 'La risposta del connettore non è valida.',
   template_not_found:
     'Impossibile trovare il modello corretto nella configurazione del connettore.',
   template_not_supported: 'Il connettore non supporta questo tipo di modello.',
-  rate_limit_exceeded: 'Limite di frequenza attivata. Riprova più tardi.',
+  rate_limit_exceeded: 'Limite di frequenza attivato. Riprova più tardi.',
   not_implemented: '{{method}}: non è stato ancora implementato.',
   social_invalid_access_token: 'Il token di accesso del connettore non è valido.',
   invalid_auth_code: 'Il codice di autenticazione del connettore non è valido.',

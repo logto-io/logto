@@ -63,8 +63,7 @@ const subscription = {
   upgrade_success: '成功升级到 <name/>',
   downgrade_success: '成功降级到 <name/>',
   subscription_check_timeout: '订阅检查超时，请稍后刷新。',
-  /** UNTRANSLATED */
-  no_subscription: 'No subscription',
+  no_subscription: '无订阅',
 };
 
 export default Object.freeze(subscription);

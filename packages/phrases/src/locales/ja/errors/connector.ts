@@ -8,9 +8,8 @@ const connector = {
   invalid_request_parameters: 'リクエストに誤った入力パラメータが含まれています。',
   insufficient_request_parameters: 'リクエストには、入力パラメータが不足している可能性があります。',
   invalid_config: 'コネクタの設定が無効です。',
-  /** UNTRANSLATED */
   invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+    'コネクタの証明書が無効です。証明書がPEMエンコードされていることを確認してください。',
   invalid_response: 'コネクタのレスポンスが無効です。',
   template_not_found: 'コネクタ構成から正しいテンプレートを見つけることができませんでした。',
   template_not_supported: 'コネクタはこのテンプレートタイプをサポートしていません。',

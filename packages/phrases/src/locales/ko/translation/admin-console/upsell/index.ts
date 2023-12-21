@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: '미납 청구서',
     update_payment: '지불 업데이트',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '귀하의 할당량 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '귀하의 {{value}}M 토큰 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    '기계 간 통신 할당량 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
   paywall,
 };
 

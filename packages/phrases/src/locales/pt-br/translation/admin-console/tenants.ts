@@ -9,24 +9,21 @@ const tenants = {
   },
   settings: {
     title: 'CONFIGURAÇÕES',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description:
+      'Defina o nome do locatário e visualize a região de hospedagem dos seus dados e o tipo de locatário.',
     tenant_id: 'ID do Locatário',
     tenant_name: 'Nome do Locatário',
     tenant_region: 'Região de hospedagem',
     tenant_region_tip:
-      'Seus recursos do locatário estão hospedados na região {{region}}. <a>Learn more</a>',
-    environment_tag_development: 'Dev',
-    environment_tag_staging: 'Homol',
-    environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+      'Seus recursos do locatário estão hospedados na região {{region}}. <a>Veja mais</a>',
+    environment_tag_development: 'Desenvolvimento',
+    environment_tag_staging: 'Homologação',
+    environment_tag_production: 'Produção',
+    tenant_type: 'Tipo de locatário',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária. Possui todos os recursos profissionais, mas com limitações como um banner de entrada. <a>Veja mais</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Destinado a aplicativos usados por usuários finais e que podem exigir uma assinatura paga. <a>Veja mais</a>',
     tenant_info_saved: 'As informações do locatário foram salvas com sucesso.',
   },
   full_env_tag: {
@@ -45,40 +42,30 @@ const tenants = {
     subtitle:
       'Crie um novo locatário que tenha recursos e usuários isolados. As regiões de dados hospedados e os tipos de locatário não podem ser modificados após a criação.',
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária.',
+    development_hint:
+      'Possui todos os recursos profissionais, mas com limitações como um banner de entrada.',
+    production_description: 'Para uso por usuários finais e pode exigir uma assinatura paga.',
     available_plan: 'Plano disponível:',
     create_button: 'Criar inquilino',
     tenant_name_placeholder: 'Meu inquilino',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Agora você pode experimentar nossos recursos Pro gratuitamente criando um novo "locatário de desenvolvimento"!',
+    affect_title: 'Como isso afeta você?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Estamos substituindo as antigas <strong>etiquetas de ambiente</strong> por dois novos tipos de locatário: <strong>“Desenvolvimento”</strong> e <strong>“Produção”</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Para garantir uma transição contínua e funcionalidade ininterrupta, todos os locatários criados anteriormente serão elevados ao tipo de locatário <strong>Produção</strong> juntamente com sua assinatura anterior.',
+    hint_3: 'Não se preocupe, todas as suas outras configurações permanecerão as mesmas.',
+    about_tenant_type: 'Sobre o tipo de locatário',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Agora você pode acessar <a>todos os recursos do Logto Pro</a> no seu locatário de desenvolvimento!',
+    description: 'É completamente gratuito, sem período de teste - para sempre!',
   },
   delete_modal: {
     title: 'Excluir locatário',

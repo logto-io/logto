@@ -27,19 +27,16 @@ const upsell = {
   payment_overdue_modal: {
     title: '賬單逾期未付',
     notification:
-      '糟糕！租戶<span>{{name}}</span>的賬單支付失敗。請儘快支付賬單，以避免Logto服務中止。',
+      '糟糕！租戶<span>{{name}}</span>的賬單支付失敗。請儘快支付賬單，以避免 Logto 服務的中止。',
     unpaid_bills: '未付賬單',
     update_payment: '更新支付',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '你已經達到你的配額限制。一旦我們確定價格，超出配額限制的功能可能會作為附加組件而被收費。',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    '你已經達到你的{{value}}M令牌配額限制。一旦我們確定價格，超出配額限制的功能可能會作炂附加組件而被收費。',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    '你已經達到你的機器對機器配額限制。一旦我們確定價格，超出配額限制的功能可能會作炂附加組件而被收費。',
   paywall,
 };
 

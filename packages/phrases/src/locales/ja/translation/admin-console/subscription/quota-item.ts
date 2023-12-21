@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: '全てのユーザーを削除してください',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    name: 'トークン',
+    limited: '{{count, number}} トークン',
+    limited_other: '{{count, number}} トークン',
+    unlimited: '無制限のトークン',
+    not_eligible: '新しいトークンを防ぐためにすべてのユーザーを削除してください',
   },
   applications_limit: {
     name: 'アプリケーション',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: 'ロールを削除してください',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'マシン間ロール',
+    limited: '{{count, number}} マシン間ロール',
+    limited_other: '{{count, number}} マシン間ロール',
+    unlimited: '無制限のマシン間ロール',
+    not_eligible: 'マシン間ロールを削除してください',
   },
   scopes_per_role_limit: {
     name: 'ロールの権限',
@@ -113,19 +103,15 @@ const quota_item = {
   hooks_limit: {
     name: 'Webhooks',
     limited: '{{count, number}}個のWebhook',
-    limited_other: '{{count, number}}個のWebhooks',
-    unlimited: '無制限のWebhooks',
+    limited_other: '{{count, number}}個のWebhook',
+    unlimited: '無制限のWebhook',
     not_eligible: 'Webhookを削除してください',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '組織',
+    limited: '組織',
+    unlimited: '組織',
+    not_eligible: 'あなたの組織を削除してください',
   },
   audit_logs_retention_days: {
     name: '監査ログの保持期間',

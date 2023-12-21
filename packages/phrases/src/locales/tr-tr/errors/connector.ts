@@ -1,6 +1,6 @@
 const connector = {
   general: 'Bağdaştırıcıda bir hata oluştu: {{errorDescription}}',
-  not_found: '{{type}} tipi icin uygun bağlayıcı bulunamadı.',
+  not_found: '{{type}} tipi için uygun bağlayıcı bulunamadı.',
   not_enabled: 'Bağlayıcı etkin değil.',
   invalid_metadata: 'Bağlayıcının meta verileri geçersizdir.',
   invalid_config_guard: 'Bağlayıcının yapılandırma koruyucusu geçersizdir.',
@@ -8,21 +8,21 @@ const connector = {
   invalid_request_parameters: 'İstek yanlış girdi parametreleri ile gönderildi.',
   insufficient_request_parameters: 'İstek, bazı input parametrelerini atlayabilir.',
   invalid_config: 'Bağlayıcının ayarları geçersiz.',
-  /** UNTRANSLATED */
   invalid_certificate:
-    "The connector's certificate is invalid, please make sure the certificate is in PEM encoding.",
+    'Bağlayıcının sertifikası geçersiz, lütfen sertifikasının PEM kodlamasında olduğundan emin olun.',
   invalid_response: 'Bağlayıcının yanıtı geçersiz.',
   template_not_found: 'Bağlayıcı yapılandırmasında doğru şablon bulunamıyor.',
   template_not_supported: 'Bağlayıcı bu şablon türünü desteklemiyor.',
   rate_limit_exceeded: 'Tetikleyici oran sınırına ulaşıldı. Lütfen daha sonra tekrar deneyin.',
   not_implemented: '{{method}}: henüz uygulanmadı.',
-  social_invalid_access_token: 'Bağlayıcının erişim tokenı geçersiz.',
+  social_invalid_access_token: 'Bağlayıcının erişim belirteci geçersiz.',
   invalid_auth_code: 'Bağlayıcının yetki kodu geçersiz.',
-  social_invalid_id_token: 'Bağlayıcının idsi geçersiz.',
+  social_invalid_id_token: 'Bağlayıcının kimliği geçersiz.',
   authorization_failed: 'Kullanıcının yetkilendirme işlemi başarısız oldu.',
-  social_auth_code_invalid: 'Erişim tokenı alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
-  more_than_one_sms: 'SMS bağlayıcılarının sayısı 1den fazla.',
-  more_than_one_email: 'E-posta adresi bağlayıcılarının sayısı 1den fazla.',
+  social_auth_code_invalid:
+    'Erişim belirtici alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
+  more_than_one_sms: "SMS bağlayıcılarının sayısı 1'den fazla.",
+  more_than_one_email: "E-posta adresi bağlayıcılarının sayısı 1'den fazla.",
   more_than_one_connector_factory:
     'Birden fazla bağlayıcı fabrikası bulundu ({{connectorIds}} ID numarasıyla), gereksiz olanları kaldırabilirsiniz.',
   db_connector_type_mismatch: 'Dbde türle eşleşmeyen bir bağlayıcı var.',

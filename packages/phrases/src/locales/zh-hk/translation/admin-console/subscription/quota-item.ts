@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: '刪除您的所有用戶',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    name: '令牌',
+    limited: '{{count, number}} 個令牌',
+    limited_other: '{{count, number}} 個令牌',
+    unlimited: '無限令牌',
+    not_eligible: '刪除您的所有用戶以防止新增令牌',
   },
   applications_limit: {
     name: '應用程式',
@@ -32,43 +27,43 @@ const quota_item = {
     not_eligible: '刪除您的應用程式',
   },
   machine_to_machine_limit: {
-    name: '機器至機器應用程式',
-    limited: '{{count, number}} 個機器至機器應用程式',
-    limited_other: '{{count, number}} 個機器至機器應用程式',
-    unlimited: '無限機器至機器應用程式',
-    not_eligible: '刪除您的機器至機器應用程式',
+    name: '機器對機器應用程式',
+    limited: '{{count, number}} 個機器對機器應用程式',
+    limited_other: '{{count, number}} 個機器對機器應用程式',
+    unlimited: '無限機器對機器應用程式',
+    not_eligible: '刪除您的機器對機器應用程式',
   },
   resources_limit: {
     name: 'API 資源',
-    limited: '{{count, number}} 個 API 資源',
-    limited_other: '{{count, number}} 個 API 資源',
-    unlimited: '無限 API 資源',
-    not_eligible: '刪除您的 API 資源',
+    limited: '{{count, number}} 個API 資源',
+    limited_other: '{{count, number}} 個API 資源',
+    unlimited: '無限API 資源',
+    not_eligible: '刪除您的API 資源',
   },
   scopes_per_resource_limit: {
-    name: '資源權限',
-    limited: '{{count, number}} 個資源權限',
-    limited_other: '{{count, number}} 個資源權限',
-    unlimited: '無限資源權限',
-    not_eligible: '刪除您的資源權限',
+    name: '資源範圍',
+    limited: '{{count, number}} 個資源範圍',
+    limited_other: '{{count, number}} 個資源範圍',
+    unlimited: '無限資源範圍',
+    not_eligible: '刪除您的資源範圍',
   },
   custom_domain_enabled: {
-    name: '自定義網域',
-    limited: '自定義網域',
-    unlimited: '自定義網域',
-    not_eligible: '刪除您的自定義網域',
+    name: '自定義域名',
+    limited: '自定義域名',
+    unlimited: '自定義域名',
+    not_eligible: '刪除您的自定義域名',
   },
   omni_sign_in_enabled: {
-    name: '全渠道登入',
-    limited: '全渠道登入',
-    unlimited: '全渠道登入',
-    not_eligible: '停用全渠道登入',
+    name: '統一登入',
+    limited: '統一登入',
+    unlimited: '統一登入',
+    not_eligible: '停用統一登入',
   },
   built_in_email_connector_enabled: {
-    name: '內建電子郵件連接器',
-    limited: '內建電子郵件連接器',
-    unlimited: '內建電子郵件連接器',
-    not_eligible: '刪除您的內建電子郵件連接器',
+    name: '內置電子郵件連接器',
+    limited: '內置電子郵件連接器',
+    unlimited: '內置電子郵件連接器',
+    not_eligible: '刪除您的內置電子郵件連接器',
   },
   social_connectors_limit: {
     name: '社交連接器',
@@ -78,9 +73,9 @@ const quota_item = {
     not_eligible: '刪除您的社交連接器',
   },
   standard_connectors_limit: {
-    name: '免費標準連接器',
-    limited: '{{count, number}} 個免費標準連接器',
-    limited_other: '{{count, number}} 個免費標準連接器',
+    name: '標準連接器限量',
+    limited: '{{count, number}} 個標準連接器',
+    limited_other: '{{count, number}} 個標準連接器',
     unlimited: '無限標準連接器',
     not_eligible: '刪除您的標準連接器',
   },
@@ -92,40 +87,31 @@ const quota_item = {
     not_eligible: '刪除您的角色',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: '機器對機器角色',
+    limited: '{{count, number}} 個機器對機器角色',
+    limited_other: '{{count, number}} 個機器對機器角色',
+    unlimited: '無限機器對機器角色',
+    not_eligible: '刪除您的機器對機器角色',
   },
   scopes_per_role_limit: {
-    name: '角色權限',
-    limited: '{{count, number}} 個角色權限',
-    limited_other: '{{count, number}} 個角色權限',
-    unlimited: '無限角色權限',
-    not_eligible: '刪除您的角色權限',
+    name: '角色範圍',
+    limited: '{{count, number}} 個角色範圍',
+    limited_other: '{{count, number}} 個角色範圍',
+    unlimited: '無限角色範圍',
+    not_eligible: '刪除您的角色範圍',
   },
   hooks_limit: {
     name: 'Webhooks',
     limited: '{{count, number}} 個 Webhook',
-    limited_other: '{{count, number}} 個 Webhooks',
-    unlimited: '無限制的 Webhooks',
-    not_eligible: '移除您的 Webhooks',
+    limited_other: '{{count, number}} 個 Webhook',
+    unlimited: '無限制的 Webhook',
+    not_eligible: '移除您的 Webhook',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '組織',
+    limited: '組織',
+    unlimited: '組織',
+    not_eligible: '刪除您的組織',
   },
   audit_logs_retention_days: {
     name: '審計日誌保留',

@@ -22,7 +22,7 @@ const sync: CommandModule<
       default: 'phrases',
     }),
   handler: async ({ path: inputPath, skipCoreCheck, package: packageName }) => {
-    const queue = new PQueue({ concurrency: 5 });
+    const queue = new PQueue({ concurrency: 10 });
     const instancePath = await inquireInstancePath(inputPath, skipCoreCheck);
     const packages = packageName ? [packageName] : ['phrases', 'phrases-experience'];
 

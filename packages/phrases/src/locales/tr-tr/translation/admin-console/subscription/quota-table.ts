@@ -41,8 +41,7 @@ const quota_table = {
     title: 'Kullanıcı Yönetimi',
     user_management: 'Kullanıcı Yönetimi',
     roles: 'Roller',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: 'Makine-makine rolleri',
     scopes_per_role: 'Rol başına izinler',
   },
   audit_logs: {
@@ -55,20 +54,13 @@ const quota_table = {
   },
   organizations: {
     title: 'Organizasyon',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: 'Organizasyonlar',
+    monthly_active_organization: 'Aylık aktif organizasyon',
+    allowed_users_per_org: 'Organizasyon başına izin verilen kullanıcılar',
+    invitation: 'Davet (Yakında)',
+    org_roles: 'Org rolleri',
+    org_permissions: 'Org izinleri',
+    just_in_time_provisioning: 'İstisnai olana kadar temin',
   },
   support: {
     title: 'Destek',
@@ -86,23 +78,16 @@ const quota_table = {
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',
   tier: 'Seviye{{value, number}}: ',
-  /** UNTRANSLATED */
   free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
   paid_token_limit_tip:
     'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
   paid_quota_limit_tip:
     'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
   beta_feature_tip:
     'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
   usage_based_beta_feature_tip:
     'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
   beta: 'Beta',
-  /** UNTRANSLATED */
   add_on_beta: 'Add-on (Beta)',
 };
 

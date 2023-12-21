@@ -12,11 +12,11 @@ const upsell = {
     monthly_price: '{{value, number}}/ay',
     mau_unit_price: 'MAU birim fiyatı',
     view_all_features: 'Tüm özellikleri görüntüle',
-    select_plan: "<name/>'ı Seçin",
+    select_plan: "'<name/>'ı Seçin",
     free_tenants_limit: 'En fazla {{count, number}} ücretsiz kiracı',
     free_tenants_limit_other: 'En fazla {{count, number}} ücretsiz kiracı',
     most_popular: 'En Popüler',
-    upgrade_success: "<name/>'a Başarıyla Yükseltildi",
+    upgrade_success: "'<name/>'a Başarıyla Yükseltildi",
   },
   mau_exceeded_modal: {
     title: 'MAU sınırı aşıldı. Planınızı yükseltin.',
@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: 'Ödenmemiş faturalar',
     update_payment: 'Ödemeyi Güncelle',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Kota limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Token kota limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    'Makine-makine kotası limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
   paywall,
 };
 

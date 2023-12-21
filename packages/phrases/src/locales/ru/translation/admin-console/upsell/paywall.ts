@@ -5,9 +5,8 @@ const paywall = {
     'Достигнут лимит {{count, number}} приложений для <planName/>. Обновите план, чтобы удовлетворить потребности вашей команды. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
   deprecated_machine_to_machine_feature:
     'Обновите план до <strong>Hobby</strong>, чтобы разблокировать 1 машинное приложение, или выберите план <strong>Pro</strong> для неограниченного использования. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
-  /** UNTRANSLATED */
   machine_to_machine_feature:
-    'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
+    'Переключитесь на план <strong>Pro</strong>, чтобы получить дополнительные машинные приложения и воспользоваться всеми премиальными функциями. <a>Свяжитесь с нами</a>, если у вас есть вопросы.',
   machine_to_machine:
     'Достигнут лимит {{count, number}} машинных приложений для <planName/>. Обновите план, чтобы удовлетворить потребности вашей команды. При необходимости помощи, не стесняйтесь <a>связаться с нами</a>.',
   machine_to_machine_other:
@@ -40,12 +39,10 @@ const paywall = {
     'Достигнут лимит {{count, number}} ролей в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   roles_other:
     'Достигнут лимит {{count, number}} ролей в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
-  /** UNTRANSLATED */
   machine_to_machine_roles:
-    '{{count, number}} machine-to-machine role of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
-  /** UNTRANSLATED */
+    '{{count, number}} роль для машинного приложения в пределах <planName/> достигла лимита. Повысьте план, чтобы добавить дополнительные роли и разрешения. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
   machine_to_machine_roles_other:
-    '{{count, number}} machine-to-machine roles of <planName/> limit reached. Upgrade plan to add additional roles and permissions. Feel free to <a>contact us</a> if you need any assistance.',
+    '{{count, number}} ролей для машинного приложения в пределах <planName/> достигли лимита. Повысьте план, чтобы добавить дополнительные роли и разрешения. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
   scopes_per_role:
     'Достигнут лимит {{count, number}} разрешений на роль в плане <planName/>. Повысьте план, чтобы добавить дополнительные роли и разрешения. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   scopes_per_role_other:
@@ -55,9 +52,8 @@ const paywall = {
   hooks_other:
     'Достигнут лимит {{count, number}} вебхуков в плане <planName/>. Повысьте план, чтобы создать больше вебхуков. Если вам нужна помощь, не стесняйтесь <a>связаться с нами</a>.',
   mfa: 'Разблокируйте MFA для повышения безопасности с помощью перехода на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
-  /** UNTRANSLATED */
   organizations:
-    'Unlock organizations by upgrading to a paid plan. Don’t hesitate to <a>contact us</a> if you need any assistance.',
+    'Разблокируйте организации, перейдя на платный план. Не стесняйтесь <a>связаться с нами</a>, если вам нужна помощь.',
 };
 
 export default Object.freeze(paywall);

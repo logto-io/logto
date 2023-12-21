@@ -1,12 +1,9 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: '組織',
   page_title: '組織',
   title: '組織',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
+    '組織とは、チーム、ビジネス顧客、およびパートナー企業で構成されるユーザーの集合体で、アプリケーションを使用します。',
   organization_template: 'Organization template',
   organization_id: '組織ID',
   members: 'メンバー',
@@ -38,84 +35,56 @@ const organizations = {
   search_permission_placeholder: '検索して権限を選択',
   search_role_placeholder: '検索して役割を選択',
   empty_placeholder: '🤔 You don’t have any {{entity}} set up yet.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: '組織とメンバー',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    '組織はユーザーのグループであり、チーム、ビジネス顧客、およびパートナー企業を代表し、各ユーザーが「メンバー」です。これらはマルチテナント要件を処理するための基本的なエンティティです。',
   guide: {
     title: 'ガイドで始める',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: 'ガイドを使って組織設定をスタートしましょう',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: 'Logtoで組織がどのように機能するかを理解しましょう',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: '組織はユーザー（アイデンティティ）のグループです',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: '組織テンプレートはマルチテナントアプリのアクセス制御向けに設計されています',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
+          'マルチテナントSaaSアプリケーションでは、複数の組織がしばしば同じアクセス制御テンプレートを共有します。これには権限や役割が含まれます。Logtoではこれを「組織テンプレート」と呼びます。',
         permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
+          '組織権限とは、組織のコンテキストでリソースにアクセスするための承認です。',
         role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          '組織役割は、ユーザーに割り当てることができる権限のグループ化です。権限は事前に定義された組織権限から取得する必要があります。',
       },
       section_3: {
         title: 'イラストを操作して、接続方法を確認してください',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '例として、John、Sarahは異なる組織に所属し、それぞれ異なる組織のコンテキストで異なる役割を担っています。異なるモジュールにカーソルを合わせて、それぞれの動作を確認しましょう。',
       },
     },
     step_1: 'ステップ1：組織権限を定義する',
     step_2: 'ステップ2：組織役割を定義する',
     step_3: 'ステップ3：最初の組織を作成する',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
+      '最初の組織を作成しましょう。これにはユニークなIDが付いており、さまざまなビジネスに関連するエンティティを取り扱うコンテナとなります。',
+    more_next_steps: 'その他の次のステップ',
+    add_members: '組織にメンバーを追加',
+    add_members_action: 'メンバーを一括追加して役割を割り当てる',
+    organization_permissions: '組織権限',
+    permission_name: '権限名',
+    permissions: '権限',
+    organization_roles: '組織役割',
+    role_name: '役割名',
+    organization_name: '組織名',
+    admin: '管理者',
+    member: 'メンバー',
+    guest: 'ゲスト',
+    role_description: '役割「{{role}}」は、異なる組織で同じ組織テンプレートを共有しています。',
     john: 'John',
-    /** UNTRANSLATED */
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
+      'Johnは、異なる組織に所属し、単一の識別子として「john@email.com」のメールアドレスを持っています。彼は組織Aの管理者であり、組織Bのゲストでもあります。',
     sarah: 'Sarah',
-    /** UNTRANSLATED */
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      'Sarahは、単一の識別子として「sarah@email.com」のメールアドレスを持つ1つの組織に属しています。彼女は組織Bの管理者です。',
   },
 };
 

@@ -1,135 +1,74 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_experience: 'SSO Experience',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Display',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: '기업 SSO로 돌아가기',
+  page_title: '기업 SSO 커넥터 세부 정보',
+  readme_drawer_title: '기업 SSO',
+  readme_drawer_subtitle: '엔드 유저 SSO를 활성화하려면 기업 SSO 커넥터를 설정하세요',
+  tab_experience: 'SSO 경험',
+  tab_connection: '연결',
+  general_settings_title: '일반',
+  custom_branding_title: '표시',
   custom_branding_description:
-    "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    '엔드 유저의 단일 로그인 흐름에서 표시되는 이름 및 로고를 사용자 정의하세요. 비어 있으면 기본 사용됩니다.',
+  email_domain_field_name: '기업 이메일 도메인',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    '이 이메일 도메인을 가진 사용자는 SSO를 사용하여 인증할 수 있습니다. 도메인이 기업에 속해 있는지 확인해주세요.',
+  email_domain_field_placeholder: '이메일 도메인',
+  sync_profile_field_name: '아이디 공급자에서 프로필 정보 동기화',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: '첫 번째 로그인 시에만 동기화',
+    each_sign_in: '매 로그인 시 항상 동기화',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  display_name_field_name: 'Display name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Display logo',
-  /** UNTRANSLATED */
-  connector_logo_field_description: 'Each image should under 500KB, SVG, PNG, JPG, JPEG only.',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_light_logo_context: 'Upload light mode logo',
-  /** UNTRANSLATED */
-  branding_light_logo_error: 'Upload light mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
+  connector_name_field_name: '커넥터 이름',
+  display_name_field_name: '표시 이름',
+  connector_logo_field_name: '표시 로고',
+  connector_logo_field_description: '각 이미지는 500KB 이하, SVG, PNG, JPG, JPEG 만 허용됩니다.',
+  branding_logo_context: '로고 업로드',
+  branding_logo_error: '로고 업로드 오류: {{error}}',
+  branding_light_logo_context: '라이트 모드 로고 업로드',
+  branding_light_logo_error: '라이트 모드 로고 업로드 오류: {{error}}',
+  branding_logo_field_name: '로고',
   branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
+  branding_dark_logo_context: '다크 모드 로고 업로드',
+  branding_dark_logo_error: '다크 모드 로고 업로드 오류: {{error}}',
+  branding_dark_logo_field_name: '로고 (다크 모드)',
   branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_connection_guide: 'Connection guide',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  check_connection_guide: '연결 가이드',
+  enterprise_sso_deleted: '기업 SSO 커넥터가 성공적으로 삭제되었습니다',
+  delete_confirm_modal_title: '기업 SSO 커넥터 삭제',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_saml: 'Upload the metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description_saml: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_oidc: 'Upload the credentials',
-  /** UNTRANSLATED */
+    '이 기업 커넥터를 삭제하시겠습니까? 신원 공급자의 사용자는 단일 로그인을 사용하지 않습니다.',
+  upload_idp_metadata_title_saml: '메타데이터 업로드',
+  upload_idp_metadata_description_saml: '신원 공급자에서 복사한 메타데이터를 구성하세요.',
+  upload_idp_metadata_title_oidc: '자격 증명 업로드',
   upload_idp_metadata_description_oidc:
-    'Configure the credentials and OIDC token information copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_button_text: 'Upload metadata XML file',
-  /** UNTRANSLATED */
-  upload_signing_certificate_button_text: 'Upload signing certificate file',
-  /** UNTRANSLATED */
+    '신원 공급자에서 복사한 자격 증명 및 OIDC 토큰 정보를 구성하세요.',
+  upload_idp_metadata_button_text: '메타데이터 XML 파일 업로드',
+  upload_signing_certificate_button_text: '서명 인증서 파일 업로드',
   configure_domain_field_info_text:
-    'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
-  /** UNTRANSLATED */
-  email_domain_field_required: 'Email domain is required to enable enterprise SSO.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure in the IdP',
-  /** UNTRANSLATED */
+    '기업 사용자를 단일 로그인을 위해 신원 공급자로 안내하려면 이메일 도메인을 추가하세요.',
+  email_domain_field_required: '기업 SSO를 활성화하려면 이메일 도메인이 필요합니다.',
+  upload_saml_idp_metadata_info_text_url: '신원 공급자에서 메타데이터 URL을 붙여넣어 연결하세요.',
+  upload_saml_idp_metadata_info_text_xml: '신원 공급자에서 메타데이터를 붙여넣어 연결하세요.',
+  upload_saml_idp_metadata_info_text_manual: '신원 공급자에서 메타데이터를 작성하여 연결하세요.',
+  upload_oidc_idp_info_text: '신원 공급자에서 정보를 작성하여 연결하세요.',
+  service_provider_property_title: 'IdP에서 구성',
   service_provider_property_description:
-    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by Logto.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mappings',
-  /** UNTRANSLATED */
+    '신원 공급자에서 {{protocol}}를 사용하여 응용 프로그램 통합을 설정하세요. 로그토에서 제공한 세부 정보를 입력하세요.',
+  attribute_mapping_title: '속성 매핑',
   attribute_mapping_description:
-    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to Logto side.',
+    '신원 공급자에서 사용자 속성 매핑을 구성하여 사용자 프로필을 Logto 쪽에서 동기화하세요.',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
-    /** UNTRANSLATED */
-    certificate_content: 'Expiring {{date}}',
+    sign_on_url: '로그인 URL',
+    entity_id: '발급자',
+    x509_certificate: '서명 인증서',
+    certificate_content: '만료일 {{date}}',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: '인증 엔드포인트',
+    token_endpoint: '토큰 엔드포인트',
+    userinfo_endpoint: '사용자 정보 엔드포인트',
+    jwks_uri: 'JSON 웹 키 세트 엔드포인트',
+    issuer: '발급자',
   },
 };
 

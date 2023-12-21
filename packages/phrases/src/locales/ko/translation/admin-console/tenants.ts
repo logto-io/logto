@@ -9,8 +9,7 @@ const tenants = {
   },
   settings: {
     title: '설정',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
+    description: '테넌트 이름 설정 및 호스팅된 데이터 영역 및 테넌트 유형을 확인합니다.',
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
     tenant_region: '데이터 호스팅 영역',
@@ -18,14 +17,11 @@ const tenants = {
     environment_tag_development: '개발',
     environment_tag_staging: '스테이징',
     environment_tag_production: '프로드',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: '테넌트 유형',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      '테스트 용이며 프로덕션에서 사용하지 마십시오. 구독이 필요하지 않습니다. 모든 프로 기능이 있지만 로그인 배너와 같은 제한이 있습니다. <a>더 알아보기</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      '최종 사용자가 사용하는 앱을 위한 것으로 유료 구독이 필요할 수 있습니다. <a>더 알아보기</a>',
     tenant_info_saved: '테넌트 정보가 성공적으로 저장되었습니다.',
   },
   full_env_tag: {
@@ -44,40 +40,27 @@ const tenants = {
     subtitle:
       '분리된 리소스와 사용자를 가진 새 테넌트를 만듭니다. 데이터가 호스팅되는 지역 및 테넌트 유형은 생성 후에 수정할 수 없습니다.',
     tenant_usage_purpose: '이 테넌트를 사용하는 목적은 무엇입니까?',
-    /** UNTRANSLATED */
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      '테스트 용으로만 사용하고 프로덕션에서 사용하지 마십시오. 구독이 필요하지 않습니다.',
+    development_hint: '로그인 배너와 같은 제한이 있지만 모든 프로 기능이 있습니다.',
+    production_description: '최종 사용자가 사용하기 위한 것으로 유료 구독이 필요할 수 있습니다.',
     available_plan: '사용 가능한 요금제:',
     create_button: '테넌트 만들기',
     tenant_name_placeholder: '내 테넌트',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
-    title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+    title: '사용자 정의 테넌트로 전환하여 Pro 기능을 무료로 이용할 수 있습니다!',
+    affect_title: '이로 인한 영향은?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      '우리는 이전의 <strong>환경 태그</strong>를 <strong>“개발”</strong> 및 <strong>“프로드”</strong> 두 가지 새 테넌트 유형으로 대체합니다.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      '원활한 전환과 기능의 중단 없이 모든 초기 생성 된 테넌트가 이전 구독과 함께 <strong>프로드</strong> 테넌트 유형으로 상승합니다.',
+    hint_3: '걱정 마세요. 다른 설정은 그대로 유지됩니다.',
+    about_tenant_type: '테넌트 유형 정보',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
-    title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+    title: '이제 개발 테넌트에서 <a>Logto Pro의 모든 기능</a>을 사용할 수 있습니다!',
+    description: '이것은 완전히 무료이며 평생 무료 체험을 받을 수 있습니다!',
   },
   delete_modal: {
     title: '테넌트 삭제',

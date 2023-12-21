@@ -1,7 +1,7 @@
 import paywall from './paywall.js';
 
 const upsell = {
-  upgrade_plan: 'Upgrade plan',
+  upgrade_plan: 'Upgrade-Plan',
   compare_plans: 'Pläne vergleichen',
   view_plans: 'Pläne anzeigen',
   create_tenant: {
@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: 'Ausstehende Rechnungen',
     update_payment: 'Zahlung aktualisieren',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Sie haben Ihr Kontingentlimit erreicht. Möglicherweise berechnen wir Gebühren für Funktionen, die Ihr Kontingentlimit überschreiten, sobald wir die Preise festgelegt haben.',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Sie haben Ihr Kontingentlimit von {{value}}M Token erreicht. Möglicherweise berechnen wir Gebühren für Funktionen, die Ihr Kontingentlimit überschreiten, sobald wir die Preise festgelegt haben.',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    'Sie haben Ihr Kontingentlimit für Machine-to-Machine erreicht. Möglicherweise berechnen wir Gebühren für Funktionen, die Ihr Kontingentlimit überschreiten, sobald wir die Preise festgelegt haben.',
   paywall,
 };
 

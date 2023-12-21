@@ -3,13 +3,10 @@ const application = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este aplicativo.',
   invalid_role_type:
     'Não é possível atribuir uma função de tipo de usuário a um aplicativo de máquina para máquina.',
-  /** UNTRANSLATED */
   invalid_third_party_application_type:
-    'Only traditional web applications can be marked as a third-party app.',
-  /** UNTRANSLATED */
-  third_party_application_only: 'The feature is only available for third-party applications.',
-  /** UNTRANSLATED */
-  user_consent_scopes_not_found: 'Invalid user consent scopes.',
+    'Apenas aplicativos da web tradicionais podem ser marcados como um aplicativo de terceiros.',
+  third_party_application_only: 'O recurso está disponível apenas para aplicativos de terceiros.',
+  user_consent_scopes_not_found: 'Escopos de consentimento do usuário inválidos.',
 };
 
 export default Object.freeze(application);

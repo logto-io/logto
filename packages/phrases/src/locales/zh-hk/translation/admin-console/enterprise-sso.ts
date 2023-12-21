@@ -7,98 +7,61 @@ const enterprise_sso = {
   col_type: '類型',
   col_email_domain: '電子郵件域名',
   placeholder_title: '企業連接器',
-  /** UNTRANSLATED */
   placeholder_description:
-    'Logto has provided many built-in enterprise identity providers to connect, meantime you can create your own with SAML and OIDC protocols.',
+    'Logto 提供了許多內置的企業身份提供者來連接，同時您可以使用 SAML 和 OIDC 協定創建自己的。',
   create_modal: {
     title: '新增企業連接器',
     text_divider: '或者您可以通過標準協議自定義您的連接器。',
     connector_name_field_title: '連接器名稱',
-    /** UNTRANSLATED */
-    connector_name_field_placeholder: 'E.g., {corp. name} - {identity provider name}',
+    connector_name_field_placeholder: '例如，{corp. name} - {identity provider name}',
     create_button_text: '創建連接器',
   },
   guide: {
-    /** UNTRANSLATED */
-    subtitle: 'A step by step guide to connect the enterprise identity provider.',
-    /** UNTRANSLATED */
-    finish_button_text: 'Continue',
+    subtitle: '一個關於連接企業身份提供者的分步指南。',
+    finish_button_text: '繼續',
   },
   basic_info: {
-    /** UNTRANSLATED */
-    title: 'Configure your service in the IdP',
-    /** UNTRANSLATED */
-    description:
-      'Create a new application integration by SAML 2.0 in your {{name}} identity provider. Then paste the following value to it.',
+    title: '在 IdP 中配置您的服務',
+    description: '在您的{{name}}身份提供者中通過 SAML 2.0 創建新應用集成。然後將以下值貼到其中。',
     saml: {
-      /** UNTRANSLATED */
-      acs_url_field_name: 'Assertion consumer service URL (Reply URL)',
-      /** UNTRANSLATED */
-      audience_uri_field_name: 'Audience URI (SP Entity ID)',
+      acs_url_field_name: '斷言消費服務 URL (回複 URL)',
+      audience_uri_field_name: '受眾 URI (SP 實體 ID)',
     },
     oidc: {
-      /** UNTRANSLATED */
-      redirect_uri_field_name: 'Redirect URI (Callback URL)',
+      redirect_uri_field_name: '重定向 URI（回調 URL）',
     },
   },
   attribute_mapping: {
-    /** UNTRANSLATED */
-    title: 'Attribute mappings',
-    /** UNTRANSLATED */
-    description:
-      '`id` and `email` are required to sync user profile from IdP. Enter the following claim name and value in your IdP.',
-    /** UNTRANSLATED */
-    col_sp_claims: 'Value of service provider (Logto)',
-    /** UNTRANSLATED */
-    col_idp_claims: 'Claim name of identity provider',
-    /** UNTRANSLATED */
-    idp_claim_tooltip: 'The claim name of the identity provider',
+    title: '屬性映射',
+    description: '同步用戶概要從 IdP 需要 `id` 和 `email`。在您的 IdP 中輸入以下聲明名稱和值。',
+    col_sp_claims: '服務提供者（Logto）的值',
+    col_idp_claims: '身份提供者的聲明名稱',
+    idp_claim_tooltip: '身份提供者的聲明名稱',
   },
   metadata: {
-    /** UNTRANSLATED */
-    title: 'Configure the IdP metadata',
-    /** UNTRANSLATED */
-    description: 'Configure the metadata from the identity provider',
-    /** UNTRANSLATED */
-    dropdown_trigger_text: 'Use another configuration method',
-    /** UNTRANSLATED */
-    dropdown_title: 'select your configuration method',
-    /** UNTRANSLATED */
-    metadata_format_url: 'Enter the metadata URL',
-    /** UNTRANSLATED */
-    metadata_format_xml: 'Upload the metadata XML file',
-    /** UNTRANSLATED */
-    metadata_format_manual: 'Enter metadata details manually',
+    title: '配置 IdP 元數據',
+    description: '從身份提供者配置元數據',
+    dropdown_trigger_text: '使用其他配置方法',
+    dropdown_title: '選擇您的配置方法',
+    metadata_format_url: '輸入元數據 URL',
+    metadata_format_xml: '上傳元數據 XML 文件',
+    metadata_format_manual: '手動輸入元數據細節',
     saml: {
-      /** UNTRANSLATED */
-      metadata_url_field_name: 'Metadata URL',
-      /** UNTRANSLATED */
-      metadata_url_description:
-        'Dynamically fetch data from the metadata URL and keep certificate up to date.',
-      /** UNTRANSLATED */
-      metadata_xml_field_name: 'IdP metadata XML file',
-      /** UNTRANSLATED */
-      metadata_xml_uploader_text: 'Upload metadata XML file',
-      /** UNTRANSLATED */
-      sign_in_endpoint_field_name: 'Sign on URL',
-      /** UNTRANSLATED */
-      idp_entity_id_field_name: 'IdP entity ID (Issuer)',
-      /** UNTRANSLATED */
-      certificate_field_name: 'Signing certificate',
-      /** UNTRANSLATED */
-      certificate_placeholder: 'Copy and paste the x509 certificate',
-      /** UNTRANSLATED */
-      certificate_required: 'Signing certificate is required.',
+      metadata_url_field_name: '元數據 URL',
+      metadata_url_description: '動態從元數據 URL 檢索數據並保持證書最新。',
+      metadata_xml_field_name: 'IdP 元數據 XML 文件',
+      metadata_xml_uploader_text: '上傳元數據 XML 文件',
+      sign_in_endpoint_field_name: '登錄 URL',
+      idp_entity_id_field_name: 'IdP 實體 ID（發行者）',
+      certificate_field_name: '簽名證書',
+      certificate_placeholder: '複製並粘貼 x509 憑證',
+      certificate_required: '需要簽名證書。',
     },
     oidc: {
-      /** UNTRANSLATED */
-      client_id_field_name: 'Client ID',
-      /** UNTRANSLATED */
-      client_secret_field_name: 'Client secret',
-      /** UNTRANSLATED */
-      issuer_field_name: 'Issuer',
-      /** UNTRANSLATED */
-      scope_field_name: 'Scope',
+      client_id_field_name: '客戶端 ID',
+      client_secret_field_name: '客戶端密鑰',
+      issuer_field_name: '發行者',
+      scope_field_name: '範圍',
     },
   },
 };

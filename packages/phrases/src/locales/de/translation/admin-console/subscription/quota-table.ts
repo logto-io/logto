@@ -41,8 +41,7 @@ const quota_table = {
     title: 'Benutzerverwaltung',
     user_management: 'Benutzerverwaltung',
     roles: 'Rollen',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: 'Maschine-zu-Maschine Rollen',
     scopes_per_role: 'Berechtigungen pro Rolle',
   },
   audit_logs: {
@@ -55,24 +54,17 @@ const quota_table = {
   },
   organizations: {
     title: 'Organisation',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: 'Organisationen',
+    monthly_active_organization: 'Monatlich aktive Organisationen',
+    allowed_users_per_org: 'Erlaubte Benutzer pro Organisation',
+    invitation: 'Einladung (in Kürze)',
+    org_roles: 'Org Rollen',
+    org_permissions: 'Org Berechtigungen',
+    just_in_time_provisioning: 'Bedarfsgesteuerte Bereitstellung',
   },
   support: {
     title: 'Support',
-    community: 'Community',
+    community: 'Gemeinschaft',
     customer_ticket: 'Support-Ticket',
     premium: 'Premium',
   },
@@ -80,29 +72,22 @@ const quota_table = {
     '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
-  monthly_price: '${{value, number}}/mo',
+  monthly_price: '${{value, number}}/Monat',
   mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
   add_on: 'Zusatzleistung',
   tier: 'Stufe{{value, number}}: ',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: 'Kostenlos bis {{value}}M umlaufende Tokens.',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Kostenlos bis {{value}}M umlaufende Tokens. Wir können Gebühren hinzufügen, wenn Sie über {{value}}M Tokens hinausgehen, sobald wir die Preise finalisieren.',
   paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Wir können Gebühren für Funktionen hinzufügen, die Ihre Kontingentgrenze überschreiten, sobald wir die Preise finalisieren.',
   beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    'Während der Beta-Phase kostenfrei zu benutzen. Wir werden mit der finalen Festlegung der Zusatzkosten beginnen.',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
+    'Während der Beta-Phase kostenfrei zu benutzen. Wir werden mit der finalen Festlegung der organisationsbasierten nutzungsabhängigen Preise beginnen.',
   beta: 'Beta',
-  /** UNTRANSLATED */
   add_on_beta: 'Add-on (Beta)',
 };
 

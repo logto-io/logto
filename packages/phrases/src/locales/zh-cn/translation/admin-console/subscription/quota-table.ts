@@ -41,8 +41,7 @@ const quota_table = {
     title: '用户管理',
     user_management: '用户管理',
     roles: '角色',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: '机器对机器角色',
     scopes_per_role: '每角色权限',
   },
   audit_logs: {
@@ -55,20 +54,13 @@ const quota_table = {
   },
   organizations: {
     title: '组织',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: '组织',
+    monthly_active_organization: '每月活跃组织',
+    allowed_users_per_org: '每组织允许的用户数',
+    invitation: '邀请（即将推出）',
+    org_roles: '组织角色',
+    org_permissions: '组织权限',
+    just_in_time_provisioning: '即时配置',
   },
   support: {
     title: '支持',
@@ -80,30 +72,21 @@ const quota_table = {
     '* 您的每月活跃用户（MAU）根据在结算周期内登录的频率分为3个层级。每个层级的MAU单价不同。',
   unlimited: '无限制',
   contact: '联系',
-  monthly_price: '${{value, number}}/月',
-  mau_price: '${{value, number}}/MAU',
-  days_one: '{{count, number}}天',
-  days_other: '{{count, number}}天',
+  monthly_price: '${{value, number}} / 月',
+  mau_price: '${{value, number}} / MAU',
+  days_one: '{{count, number}} 天',
+  days_other: '{{count, number}} 天',
   add_on: '附加功能',
   tier: '层级{{value, number}}：',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: '免费发行{{value}}M令牌。',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
-  paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
-  beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    '免费发行{{value}}M令牌。我们可能会在定价确定后，如果您的令牌超过{{value}}M，则会加收费用。',
+  paid_quota_limit_tip: '一旦我们确定价格，我们可能会对超出配额限制的功能添加额外费用。',
+  beta_feature_tip: '在测试阶段免费使用。一旦我们确定附加功能的定价，我们将开始收费。',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
-  beta: 'Beta',
-  /** UNTRANSLATED */
-  add_on_beta: 'Add-on (Beta)',
+    '在测试阶段免费使用。一旦我们确定基于组织使用情况的定价，我们将开始收费。',
+  beta: '测试版',
+  add_on_beta: '附加功能（测试版）',
 };
 
 export default Object.freeze(quota_table);

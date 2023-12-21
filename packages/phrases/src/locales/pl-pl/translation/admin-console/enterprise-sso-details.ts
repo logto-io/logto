@@ -1,135 +1,79 @@
 const enterprise_sso_details = {
-  /** UNTRANSLATED */
-  back_to_sso_connectors: 'Back to enterprise SSO',
-  /** UNTRANSLATED */
-  page_title: 'Enterprise SSO connector details',
-  /** UNTRANSLATED */
-  readme_drawer_title: 'Enterprise SSO',
-  /** UNTRANSLATED */
-  readme_drawer_subtitle: 'Set up enterprise SSO connectors to enable end users SSO',
-  /** UNTRANSLATED */
-  tab_experience: 'SSO Experience',
-  /** UNTRANSLATED */
-  tab_connection: 'Connection',
-  /** UNTRANSLATED */
-  general_settings_title: 'General',
-  /** UNTRANSLATED */
-  custom_branding_title: 'Display',
-  /** UNTRANSLATED */
+  back_to_sso_connectors: 'Powrót do jednokrotnego logowania przedsiębiorstwa',
+  page_title: 'Szczegóły konektora jednokrotnego logowania przedsiębiorstwa',
+  readme_drawer_title: 'Jednokrotne logowanie przedsiębiorstwa',
+  readme_drawer_subtitle:
+    'Skonfiguruj konektory jednokrotnego logowania przedsiębiorstwa, aby umożliwić jednokrotne logowanie końcowym użytkownikom',
+  tab_experience: 'Doświadczenie SSO',
+  tab_connection: 'Połączenie',
+  general_settings_title: 'Ogólne',
+  custom_branding_title: 'Wyświetlanie',
   custom_branding_description:
-    "Customize the name and logo displayed in the end users' Single Sign-On flow. When empty, defaults are used.",
-  /** UNTRANSLATED */
-  email_domain_field_name: 'Enterprise email domain',
-  /** UNTRANSLATED */
+    'Dostosuj nazwę i logo wyświetlane w przepływie jednokrotnego logowania końcowych użytkowników. Przy braku wartości domyślne są używane.',
+  email_domain_field_name: 'Domena e-mail przedsiębiorstwa',
   email_domain_field_description:
-    'Users with this email domain can use SSO for authentication. Please verify the domain belongs to the enterprise.',
-  /** UNTRANSLATED */
-  email_domain_field_placeholder: 'Email domain',
-  /** UNTRANSLATED */
-  sync_profile_field_name: 'Sync profile information from the identity provider',
+    'Użytkownicy z tą domeną e-mail mogą używać SSO do uwierzytelniania. Proszę zweryfikować, czy domena należy do przedsiębiorstwa.',
+  email_domain_field_placeholder: 'Domena e-mail',
+  sync_profile_field_name: 'Synchronizuj informacje profilu z dostawcy tożsamości',
   sync_profile_option: {
-    /** UNTRANSLATED */
-    register_only: 'Only sync at first sign-in',
-    /** UNTRANSLATED */
-    each_sign_in: 'Always sync at each sign-in',
+    register_only: 'Tylko synchronizuj przy pierwszym logowaniu',
+    each_sign_in: 'Zawsze synchronizuj przy każdym logowaniu',
   },
-  /** UNTRANSLATED */
-  connector_name_field_name: 'Connector name',
-  /** UNTRANSLATED */
-  display_name_field_name: 'Display name',
-  /** UNTRANSLATED */
-  connector_logo_field_name: 'Display logo',
-  /** UNTRANSLATED */
-  connector_logo_field_description: 'Each image should under 500KB, SVG, PNG, JPG, JPEG only.',
-  /** UNTRANSLATED */
-  branding_logo_context: 'Upload logo',
-  /** UNTRANSLATED */
-  branding_logo_error: 'Upload logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_light_logo_context: 'Upload light mode logo',
-  /** UNTRANSLATED */
-  branding_light_logo_error: 'Upload light mode logo error: {{error}}',
-  /** UNTRANSLATED */
+  connector_name_field_name: 'Nazwa konektora',
+  display_name_field_name: 'Nazwa wyświetlana',
+  connector_logo_field_name: 'Logo wyświetlane',
+  connector_logo_field_description:
+    'Każdy obraz powinien mieć mniej niż 500KB, tylko SVG, PNG, JPG, JPEG.',
+  branding_logo_context: 'Prześlij logo',
+  branding_logo_error: 'Błąd przesyłania logo: {{error}}',
+  branding_light_logo_context: 'Prześlij logo w trybie jasnym',
+  branding_light_logo_error: 'Błąd przesyłania logo w trybie jasnym: {{error}}',
   branding_logo_field_name: 'Logo',
-  /** UNTRANSLATED */
-  branding_logo_field_placeholder: 'https://your.domain/logo.png',
-  /** UNTRANSLATED */
-  branding_dark_logo_context: 'Upload dark mode logo',
-  /** UNTRANSLATED */
-  branding_dark_logo_error: 'Upload dark mode logo error: {{error}}',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_name: 'Logo (dark mode)',
-  /** UNTRANSLATED */
-  branding_dark_logo_field_placeholder: 'https://your.domain/dark-mode-logo.png',
-  /** UNTRANSLATED */
-  check_connection_guide: 'Connection guide',
-  /** UNTRANSLATED */
-  enterprise_sso_deleted: 'Enterprise SSO connector has been successfully deleted',
-  /** UNTRANSLATED */
-  delete_confirm_modal_title: 'Delete enterprise SSO connector',
-  /** UNTRANSLATED */
+  branding_logo_field_placeholder: 'https://twoja.domena/logo.png',
+  branding_dark_logo_context: 'Prześlij logo w trybie ciemnym',
+  branding_dark_logo_error: 'Błąd przesyłania logo w trybie ciemnym: {{error}}',
+  branding_dark_logo_field_name: 'Logo (tryb ciemny)',
+  branding_dark_logo_field_placeholder: 'https://twoja.domena/logo-tryb-ciemny.png',
+  check_connection_guide: 'Poradnik połączenia',
+  enterprise_sso_deleted:
+    'Konektor jednokrotnego logowania przedsiębiorstwa został pomyślnie usunięty',
+  delete_confirm_modal_title: 'Usuń konektor jednokrotnego logowania przedsiębiorstwa',
   delete_confirm_modal_content:
-    'Are you sure you want to delete this enterprise connector? Users from identity providers will not utilize Single Sign-On.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_saml: 'Upload the metadata',
-  /** UNTRANSLATED */
-  upload_idp_metadata_description_saml: 'Configure the metadata copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_title_oidc: 'Upload the credentials',
-  /** UNTRANSLATED */
+    'Czy na pewno chcesz usunąć ten konektor przedsiębiorstwa? Użytkownicy z dostawców tożsamości nie będą korzystać z jednokrotnego logowania.',
+  upload_idp_metadata_title_saml: 'Prześlij metadane',
+  upload_idp_metadata_description_saml: 'Skonfiguruj metadane skopiowane z dostawcy tożsamości.',
+  upload_idp_metadata_title_oidc: 'Prześlij dane uwierzytelniania',
   upload_idp_metadata_description_oidc:
-    'Configure the credentials and OIDC token information copied from the identity provider.',
-  /** UNTRANSLATED */
-  upload_idp_metadata_button_text: 'Upload metadata XML file',
-  /** UNTRANSLATED */
-  upload_signing_certificate_button_text: 'Upload signing certificate file',
-  /** UNTRANSLATED */
+    'Skonfiguruj dane uwierzytelniania i informacje o tokenie OIDC skopiowane z dostawcy tożsamości.',
+  upload_idp_metadata_button_text: 'Prześlij plik XML metadanych',
+  upload_signing_certificate_button_text: 'Prześlij plik certyfikatu podpisującego',
   configure_domain_field_info_text:
-    'Add email domain to guide enterprise users to their identity provider for Single Sign-on.',
-  /** UNTRANSLATED */
-  email_domain_field_required: 'Email domain is required to enable enterprise SSO.',
-  /** UNTRANSLATED */
+    'Dodaj domenę e-mail, aby przeprowadzić użytkowników przedsiębiorstwa do ich dostawcy tożsamości dla jednokrotnego logowania.',
+  email_domain_field_required: 'Domena e-mail jest wymagana do włączenia SSO dla przedsiębiorstwa.',
   upload_saml_idp_metadata_info_text_url:
-    'Paste the metadata URL from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_saml_idp_metadata_info_text_xml:
-    'Paste the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
+    'Wklej URL metadanych z dostawcy tożsamości, aby połączyć.',
+  upload_saml_idp_metadata_info_text_xml: 'Wklej metadane z dostawcy tożsamości, aby połączyć.',
   upload_saml_idp_metadata_info_text_manual:
-    'Fill in the metadata from the identity provider to connect.',
-  /** UNTRANSLATED */
-  upload_oidc_idp_info_text: 'Fill in the information from the identity provider to connect.',
-  /** UNTRANSLATED */
-  service_provider_property_title: 'Configure in the IdP',
-  /** UNTRANSLATED */
+    'Wypełnij metadane z dostawcy tożsamości, aby połączyć.',
+  upload_oidc_idp_info_text: 'Wypełnij informacje z dostawcy tożsamości, aby połączyć.',
+  service_provider_property_title: 'Konfiguruj w IdP',
   service_provider_property_description:
-    'Set up an application integration using {{protocol}} in your identity provider. Enter the details provided by Logto.',
-  /** UNTRANSLATED */
-  attribute_mapping_title: 'Attribute mappings',
-  /** UNTRANSLATED */
+    'Skonfiguruj integrację aplikacji za pomocą {{protocol}} w dostawcy tożsamości. Wprowadź szczegóły podane przez Logto.',
+  attribute_mapping_title: 'Mapowanie atrybutów',
   attribute_mapping_description:
-    'Sync user profiles from the identity provider by configuring user attribute mapping either on the identity provider to Logto side.',
+    'Synchronizuj profile użytkowników z dostawcy tożsamości, konfigurując mapowanie atrybutów użytkownika zarówno po stronie dostawcy tożsamości, jak i po stronie Logto.',
   saml_preview: {
-    /** UNTRANSLATED */
-    sign_on_url: 'Sign on URL',
-    /** UNTRANSLATED */
-    entity_id: 'Issuer',
-    /** UNTRANSLATED */
-    x509_certificate: 'Signing certificate',
-    /** UNTRANSLATED */
-    certificate_content: 'Expiring {{date}}',
+    sign_on_url: 'URL logowania',
+    entity_id: 'Wydawca',
+    x509_certificate: 'Certyfikat podpisujący',
+    certificate_content: 'Wygasa: {{date}}',
   },
   oidc_preview: {
-    /** UNTRANSLATED */
-    authorization_endpoint: 'Authorization endpoint',
-    /** UNTRANSLATED */
-    token_endpoint: 'Token endpoint',
-    /** UNTRANSLATED */
-    userinfo_endpoint: 'User information endpoint',
-    /** UNTRANSLATED */
-    jwks_uri: 'JSON web key set endpoint',
-    /** UNTRANSLATED */
-    issuer: 'Issuer',
+    authorization_endpoint: 'Punkt końcowy autoryzacji',
+    token_endpoint: 'Punkt końcowy tokena',
+    userinfo_endpoint: 'Punkt końcowy informacji użytkownika',
+    jwks_uri: 'Punkt końcowy kluczy web JSON',
+    issuer: 'Wydawca',
   },
 };
 

@@ -41,8 +41,7 @@ const quota_table = {
     title: '사용자 관리',
     user_management: '사용자 관리',
     roles: '역할',
-    /** UNTRANSLATED */
-    machine_to_machine_roles: 'Machine-to-machine roles',
+    machine_to_machine_roles: '머신 투 머신 역할',
     scopes_per_role: '역할 당 권한',
   },
   audit_logs: {
@@ -55,20 +54,13 @@ const quota_table = {
   },
   organizations: {
     title: '조직',
-    /** UNTRANSLATED */
-    organizations: 'Organizations',
-    /** UNTRANSLATED */
-    monthly_active_organization: 'Monthly active organization',
-    /** UNTRANSLATED */
-    allowed_users_per_org: 'Allowed users per org',
-    /** UNTRANSLATED */
-    invitation: 'Invitation (Coming soon)',
-    /** UNTRANSLATED */
-    org_roles: 'Org roles',
-    /** UNTRANSLATED */
-    org_permissions: 'Org permissions',
-    /** UNTRANSLATED */
-    just_in_time_provisioning: 'Just-in-time provisioning',
+    organizations: '조직',
+    monthly_active_organization: '월간 활성 조직',
+    allowed_users_per_org: '조직 당 허용된 사용자',
+    invitation: '초대장 (곧 제공 예정)',
+    org_roles: '조직 역할',
+    org_permissions: '조직 권한',
+    just_in_time_provisioning: '적시 프로비저닝',
   },
   support: {
     title: '지원',
@@ -86,24 +78,16 @@ const quota_table = {
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',
   tier: '레벨{{value, number}}: ',
-  /** UNTRANSLATED */
-  free_token_limit_tip: 'Free for {{value}}M token issued.',
-  /** UNTRANSLATED */
+  free_token_limit_tip: '무료 {{value}}M 토큰 발급',
   paid_token_limit_tip:
-    'Free for {{value}}M token issued. We may add charges if you go beyond {{value}}M tokens once we finalize the prices.',
-  /** UNTRANSLATED */
+    '무료 {{value}}M 토큰 발급. 가격 확정 후 {{value}}M 토큰을 초과하면 추가 요금이 부과될 수 있습니다.',
   paid_quota_limit_tip:
-    'We may add charges for features that go beyond your quota limit as add-ons once we finalize the prices.',
-  /** UNTRANSLATED */
-  beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the add-on pricing.',
-  /** UNTRANSLATED */
+    '가격 확정 후 할당량 제한을 초과하는 기능에 대해 부가 기능으로 요금이 부과될 수 있습니다.',
+  beta_feature_tip: '베타 단계에서 무료입니다. 부가 기능 가격 확정 후 요금이 부과됩니다.',
   usage_based_beta_feature_tip:
-    'Free to use during the beta phase. We will begin charging once we finalize the org usage-based pricing.',
-  /** UNTRANSLATED */
-  beta: 'Beta',
-  /** UNTRANSLATED */
-  add_on_beta: 'Add-on (Beta)',
+    '베타 단계에서 무료입니다. 조직 사용량 기반 요금 책정 후 요금이 부과됩니다.',
+  beta: '베타',
+  add_on_beta: '부가 기능 (베타)',
 };
 
 export default Object.freeze(quota_table);

@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: 'Удалите всех своих пользователей',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    name: 'Токены',
+    limited: '{{count, number}} токен',
+    limited_other: '{{count, number}} токенов',
+    unlimited: 'Неограниченное количество токенов',
+    not_eligible: 'Удалите всех пользователей, чтобы предотвратить создание новых токенов',
   },
   applications_limit: {
     name: 'Приложения',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: 'Удалите свои роли',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: 'Роли для машины ко машине',
+    limited: '{{count, number}} роль для машины ко машине',
+    limited_other: '{{count, number}} ролей для машин ко машине',
+    unlimited: 'Неограниченное количество ролей для машин ко машине',
+    not_eligible: 'Удалите свои роли для машин ко машине',
   },
   scopes_per_role_limit: {
     name: 'Разрешения роли',
@@ -118,14 +108,10 @@ const quota_item = {
     not_eligible: 'Удалите ваши вебхуки',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: 'Организации',
+    limited: 'Организации',
+    unlimited: 'Организации',
+    not_eligible: 'Удалите свои организации',
   },
   audit_logs_retention_days: {
     name: 'Время хранения аудит-логов',

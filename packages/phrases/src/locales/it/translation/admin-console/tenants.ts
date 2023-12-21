@@ -10,23 +10,21 @@ const tenants = {
   },
   settings: {
     title: 'IMPOSTAZIONI',
-    /** UNTRANSLATED */
-    description: 'Set the tenant name and view your data hosted region and tenant type.',
-    tenant_id: 'ID Tenant',
-    tenant_name: 'Nome Tenant',
+    description:
+      "Imposta il nome dell'inquilino e visualizza la regione in cui sono ospitati i tuoi dati e il tipo di inquilino.",
+    tenant_id: 'ID Inquilino',
+    tenant_name: 'Nome Inquilino',
     tenant_region: 'Regione di hosting',
-    tenant_region_tip: 'I tuoi risorse inquilino sono ospitate in {{region}}. <a>Scopri di più</a>',
+    tenant_region_tip:
+      'Le risorse del tuo inquilino sono ospitate in {{region}}. <a>Scopri di più</a>',
     environment_tag_development: 'Svil',
     environment_tag_staging: 'Staging',
     environment_tag_production: 'Prod',
-    /** UNTRANSLATED */
-    tenant_type: 'Tenant type',
-    /** UNTRANSLATED */
+    tenant_type: 'Tipo inquilino',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required. It has all the pro features but has limitations like a sign-in banner. <a>Learn more</a>",
-    /** UNTRANSLATED */
+      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento. Ha tutte le funzionalità professionale ma ha delle limitazioni come un banner di accesso. <a>Per saperne di più</a>',
     production_description:
-      'Intended for apps that are being used by end-users and may require a paid subscription. <a>Learn more</a>',
+      'Destinato alle app utilizzate dagli utenti finali e potrebbe richiedere un abbonamento a pagamento. <a>Per saperne di più</a>',
     tenant_info_saved: "Le informazioni dell'inquilino sono state salvate correttamente.",
   },
   full_env_tag: {
@@ -35,69 +33,60 @@ const tenants = {
   },
   deletion_card: {
     title: 'ELIMINA',
-    tenant_deletion: 'Elimina tenant',
+    tenant_deletion: 'Elimina inquilino',
     tenant_deletion_description:
-      "L'eliminazione del tenant comporterà la rimozione permanente di tutti i dati utente e le configurazioni associate. Procedere con cautela.",
-    tenant_deletion_button: 'Elimina tenant',
+      "L'eliminazione dell'inquilino comporterà la rimozione permanente di tutti i dati utente e le configurazioni associate. Procedere con cautela.",
+    tenant_deletion_button: 'Elimina inquilino',
   },
   create_modal: {
-    title: 'Crea nuovo tenant',
+    title: 'Crea nuovo inquilino',
     subtitle:
       'Crea un nuovo inquilino con risorse e utenti isolati. Le regioni dei dati ospitati e i tipi di inquilino non possono essere modificati dopo la creazione.',
-    tenant_usage_purpose: 'Per cosa desideri utilizzare questo tenant?',
-    /** UNTRANSLATED */
+    tenant_usage_purpose: 'Per cosa desideri utilizzare questo inquilino?',
     development_description:
-      "For testing only and shouldn't be used in production. No subscription is required.",
-    /** UNTRANSLATED */
-    development_hint: 'It has all the pro features but has limitations like a sign-in banner.',
-    /** UNTRANSLATED */
-    production_description: 'For use by end-users and may require a paid subscription.',
+      'Solo per scopi di test e non dovrebbe essere utilizzato in produzione. Non è richiesto alcun abbonamento.',
+    development_hint:
+      'Ha tutte le funzionalità professionale ma ha delle limitazioni come un banner di accesso.',
+    production_description:
+      'Utilizzato dagli utenti finali e potrebbe richiedere un abbonamento a pagamento.',
     available_plan: 'Piano disponibile:',
-    create_button: 'Crea tenant',
-    tenant_name_placeholder: 'Il mio tenant',
+    create_button: 'Crea inquilino',
+    tenant_name_placeholder: 'Il mio inquilino',
   },
   dev_tenant_migration: {
-    /** UNTRANSLATED */
     title:
-      'You can now try our Hobby and Pro features for free by creating a new "Development tenant"!',
-    /** UNTRANSLATED */
-    affect_title: 'How does this affect you?',
-    /** UNTRANSLATED */
+      'Ora puoi provare gratuitamente le nostre funzionalità Pro creando un nuovo "Inquilino di sviluppo"!',
+    affect_title: 'Come ti influisce questo?',
     hint_1:
-      'We are replacing the old <strong>environment tags</strong> with two new tenant types: <strong>“Development”</strong> and <strong>“Production”</strong>.',
-    /** UNTRANSLATED */
+      'Stiamo sostituendo le vecchie <strong>etichette di ambiente</strong> con due nuovi tipi di inquilino: <strong>“Sviluppo”</strong> e <strong>“Produzione”</strong>.',
     hint_2:
-      'To ensure a seamless transition and uninterrupted functionality, all early-created tenants will be elevated to the <strong>Production</strong> tenant type along with your previous subscription.',
-    /** UNTRANSLATED */
-    hint_3: "Don't worry, all your other settings will remain the same.",
-    /** UNTRANSLATED */
-    about_tenant_type: 'About tenant type',
+      'Per garantire una transizione senza soluzione di continuità e un funzionamento ininterrotto, tutti gli inquilini creati in precedenza saranno elevati al tipo di inquilino <strong>Produzione</strong> insieme al tuo abbonamento precedente.',
+    hint_3: 'Niente paura, tutte le altre impostazioni rimarranno invariate.',
+    about_tenant_type: 'Informazioni sul tipo di inquilino',
   },
   dev_tenant_notification: {
-    /** UNTRANSLATED */
     title:
-      'You can now access <a>all features of Logto Hobby and Pro</a> in your development tenant!',
-    /** UNTRANSLATED */
-    description: "It's completely free, with no trial period – forever!",
+      'Ora puoi accedere a <a>tutte le funzionalità di Logto Pro</a> nel tuo inquilino di sviluppo!',
+    description: 'È completamente gratuito, senza periodo di prova: per sempre!',
   },
   delete_modal: {
-    title: 'Elimina tenant',
+    title: 'Elimina inquilino',
     description_line1:
-      'Sei sicuro di voler eliminare il tuo tenant "<span>{{name}}</span>" con l\'etichetta di suffisso dell\'ambiente "<span>{{tag}}</span>"? Questa azione non può essere annullata e comporterà l\'eliminazione permanente di tutti i tuoi dati e le informazioni dell\'account.',
+      "Sei sicuro di voler eliminare il tuo inquilino \"<span>{{name}}</span>\" con l'etichetta di suffisso dell'ambiente \"<span>{{tag}}</span>\"? Quest'azione non può essere annullata e comporterà l'eliminazione permanente di tutti i tuoi dati e le informazioni dell'account.",
     description_line2:
       "Prima di eliminare l'account, forse possiamo aiutarti. <span><a>Contattaci via e-mail</a></span>",
     description_line3:
-      'Se vuoi procedere, inserisci il nome del tenant "<span>{{name}}</span>" per confermare.',
+      'Se vuoi procedere, inserisci il nome dell\'inquilino "<span>{{name}}</span>" per confermare.',
     delete_button: 'Elimina definitivamente',
     cannot_delete_title: 'Impossibile eliminare questo locatario',
     cannot_delete_description:
-      'Spiacente, al momento non è possibile eliminare questo locatario. Verifica di essere nel Piano Gratuito e di aver saldato tutte le fatture pendenti.',
+      'Spiacente, al momento non è possibile eliminare questo inquilino. Verifica di essere nel Piano Gratuito e di aver saldato tutte le fatture pendenti.',
   },
   tenant_landing_page: {
-    title: 'Non hai ancora creato un tenant',
+    title: 'Non hai ancora creato un inquilino',
     description:
-      'Per iniziare a configurare il tuo progetto con Logto, crea un nuovo tenant. Se hai bisogno di uscire o eliminare il tuo account, clicca sul pulsante avatar in alto a destra.',
-    create_tenant_button: 'Crea tenant',
+      'Per iniziare a configurare il tuo progetto con Logto, crea un nuovo inquilino. Se hai bisogno di uscire o eliminare il tuo account, clicca sul pulsante avatar in alto a destra.',
+    create_tenant_button: 'Crea inquilino',
   },
   status: {
     mau_exceeded: 'MAU Superato',
@@ -105,11 +94,11 @@ const tenants = {
     overdue: 'Scaduto',
   },
   tenant_suspended_page: {
-    title: "Tenant sospeso. Contattaci per ripristinare l'accesso.",
+    title: "Inquilino sospeso. Contattaci per ripristinare l'accesso.",
     description_1:
-      'Ci dispiace molto informarti che il tuo account tenant è stato temporaneamente sospeso a causa di un utilizzo improprio, inclusi superamenti dei limiti di MAU, pagamenti in ritardo o altre azioni non autorizzate.',
+      'Ci dispiace molto informarti che il tuo account inquilino è stato temporaneamente sospeso a causa di un utilizzo improprio, inclusi superamenti dei limiti di MAU, pagamenti in ritardo o altre azioni non autorizzate.',
     description_2:
-      'Se necessiti ulteriori chiarimenti, hai qualche preoccupazione o desideri ripristinare la funzionalità completa e sbloccare i tuoi tenant, ti preghiamo di contattarci immediatamente.',
+      'Se necessiti ulteriori chiarimenti, hai qualche preoccupazione o desideri ripristinare la funzionalità completa e sbloccare i tuoi inquilini, ti preghiamo di contattarci immediatamente.',
   },
   signing_keys: {
     title: 'CHIAVI DI FIRMA',

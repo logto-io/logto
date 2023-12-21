@@ -1,13 +1,10 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: 'Организация',
   page_title: 'Организации',
   title: 'Организации',
-  /** UNTRANSLATED */
   subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+    'Организация - это совокупность пользователей, включая команды, бизнес-клиентов и партнерские фирмы, использующих ваши приложения.',
+  organization_template: 'Шаблон организации',
   organization_id: 'Идентификатор организации',
   members: 'Участники',
   create_organization: 'Создать организацию',
@@ -38,84 +35,57 @@ const organizations = {
   search_permission_placeholder: 'Начните вводить для поиска и выбора разрешений',
   search_role_placeholder: 'Начните вводить для поиска и выбора ролей',
   empty_placeholder: '🤔 У вас пока нет никаких {{entity}}.',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: 'Организация и участник',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    'Организация - это группа пользователей, представляющая команды, деловых клиентов и партнерские компании, причем каждый пользователь является "Участником". Эти сущности могут быть фундаментальными для удовлетворения ваших требований мультиаренды.',
   guide: {
     title: 'Начать с руководств',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: 'Начните настройку вашей организации с наших руководств',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: 'Давайте разберем, как устроена организация в Logto',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: 'Организация - это группа пользователей (идентификаторов)',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: 'Шаблон организации предназначен для контроля доступа мультиарендных приложений',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
+          'В мультиарендных SaaS-приложениях несколько организаций часто разделяют один и тот же шаблон контроля доступа, включая разрешения и роли. В Logto мы называем это "шаблон организации".',
         permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
+          'Разрешение организации относится к авторизации доступа к ресурсу в контексте организации.',
         role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          'Роль организации - это группировка разрешений организации, которые могут быть назначены участникам.',
       },
       section_3: {
         title: 'Взаимодействие с иллюстрацией для просмотра связей',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          'Давайте рассмотрим пример. Джон и Сара находятся в разных организациях с разными ролями в контексте разных организаций. Наведите указатель на различные модули и посмотрите, что происходит.',
       },
     },
     step_1: 'Шаг 1: Определите разрешения организаций',
     step_2: 'Шаг 2: Определите роли организаций',
     step_3: 'Шаг 3: Создайте свою первую организацию',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
+      'Давайте создадим вашу первую организацию. Она имеет уникальный идентификатор и служит контейнером для обработки различных бизнес-ориентированных идентификаторов.',
+    more_next_steps: 'Дополнительные следующие шаги',
+    add_members: 'Добавьте участников в вашу организацию',
+    add_members_action: 'Массово добавьте участников и назначьте роли',
+    organization_permissions: 'Разрешения организации',
+    permission_name: 'Название разрешения',
+    permissions: 'Разрешения',
+    organization_roles: 'Роли организации',
+    role_name: 'Название роли',
+    organization_name: 'Название организации',
+    admin: 'Администратор',
+    member: 'Участник',
+    guest: 'Гость',
     role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    john: 'John',
-    /** UNTRANSLATED */
+      'Роль "{{role}}" использует один и тот же шаблон организации для различных организаций.',
+    john: 'Джон',
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
-    sarah: 'Sarah',
-    /** UNTRANSLATED */
+      'Джон принадлежит двум организациям с адресом электронной почты "john@email.com" в качестве единственного идентификатора. Он является администратором организации A, а также гостем организации B.',
+    sarah: 'Сара',
     sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      'Сара принадлежит одной организации с адресом электронной почты "sarah@email.com" в качестве единственного идентификатора. Она является администратором организации B.',
   },
 };
 

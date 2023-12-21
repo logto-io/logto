@@ -13,16 +13,11 @@ const quota_item = {
     not_eligible: '모든 사용자를 제거하십시오',
   },
   token_limit: {
-    /** UNTRANSLATED */
-    name: 'Tokens',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} token',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your all users to prevent new tokens',
+    name: '토큰',
+    limited: '{{count, number}} 토큰',
+    limited_other: '{{count, number}} 토큰',
+    unlimited: '제한 없는 토큰',
+    not_eligible: '새로운 토큰을 방지하려면 모든 사용자를 제거하십시오',
   },
   applications_limit: {
     name: '애플리케이션',
@@ -92,16 +87,11 @@ const quota_item = {
     not_eligible: '역할을 제거하십시오',
   },
   machine_to_machine_roles_limit: {
-    /** UNTRANSLATED */
-    name: 'Machine to machine roles',
-    /** UNTRANSLATED */
-    limited: '{{count, number}} machine to machine role',
-    /** UNTRANSLATED */
-    limited_other: '{{count, number}} machine to machine roles',
-    /** UNTRANSLATED */
-    unlimited: 'Unlimited machine to machine roles',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your machine to machine roles',
+    name: '기계 간 역할',
+    limited: '{{count, number}} 기계 간 역할',
+    limited_other: '{{count, number}} 기계 간 역할',
+    unlimited: '제한 없는 기계 간 역할',
+    not_eligible: '기계 간 역할을 제거하십시오',
   },
   scopes_per_role_limit: {
     name: '역할 권한',
@@ -111,21 +101,17 @@ const quota_item = {
     not_eligible: '역할 권한을 제거하십시오',
   },
   hooks_limit: {
-    name: 'Webhooks',
-    limited: '{{count, number}}개의 Webhook',
-    limited_other: '{{count, number}}개의 Webhooks',
-    unlimited: '무제한 Webhooks',
+    name: '웹훅',
+    limited: '{{count, number}}개의 웹훅',
+    limited_other: '{{count, number}}개의 웹훅',
+    unlimited: '무제한 웹훅',
     not_eligible: '웹훅을 삭제하세요',
   },
   organizations_enabled: {
-    /** UNTRANSLATED */
-    name: 'Organizations',
-    /** UNTRANSLATED */
-    limited: 'Organizations',
-    /** UNTRANSLATED */
-    unlimited: 'Organizations',
-    /** UNTRANSLATED */
-    not_eligible: 'Remove your organizations',
+    name: '조직',
+    limited: '조직',
+    unlimited: '조직',
+    not_eligible: '조직을 제거하십시오',
   },
   audit_logs_retention_days: {
     name: '감사 로그 보존 기간',

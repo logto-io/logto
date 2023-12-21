@@ -55,18 +55,13 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: 'USTAWIENIA ZAAWANSOWANE',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
+    enable_single_sign_on: 'Włącz jednokrotne logowanie przedsiębiorstwa (SSO)',
     enable_single_sign_on_description:
       'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
+      prefix: 'Przejdź do ',
       link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      suffix: 'sekcji, aby skonfigurować więcej łączników przedsiębiorstwa.',
     },
     enable_user_registration: 'Włącz rejestrację użytkowników',
     enable_user_registration_description:

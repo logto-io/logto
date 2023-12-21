@@ -31,15 +31,12 @@ const upsell = {
     unpaid_bills: 'Неоплаченные счета',
     update_payment: 'Обновить платеж',
   },
-  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'You have reached your quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Вы достигли предела вашей квоты. Мы можем добавить плату за функции, которые превышают ваш предел квоты как дополнительные, когда мы установим окончательные цены.',
   charge_notification_for_token_limit:
-    'You have reached your {{value}}M token quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
-  /** UNTRANSLATED */
+    'Вы достигли предела вашей квоты токенов в размере {{value}}M. Мы можем добавить плату за функции, которые превышают ваш предел квоты как дополнительные, когда мы установим окончательные цены.',
   charge_notification_for_m2m_app_limit:
-    'You have reached your machine-to-machine quota limit. We may add charges for features that go beyond your quota limit as add-ons, once we finalize the prices.',
+    'Вы достигли предела вашей квоты для использования коммуникации между машинами. Мы можем добавить плату за функции, которые превышают ваш предел квоты как дополнительные, когда мы установим окончательные цены.',
   paywall,
 };
 

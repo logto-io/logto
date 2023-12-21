@@ -1,13 +1,9 @@
 const organizations = {
-  /** UNTRANSLATED */
-  organization: 'Organization',
+  organization: '組織',
   page_title: '組織',
   title: '組織',
-  /** UNTRANSLATED */
-  subtitle:
-    'An organization is a collection of users which includes teams, business clients, and partner firms that use your applications.',
-  /** UNTRANSLATED */
-  organization_template: 'Organization template',
+  subtitle: '組織是一組使用您的應用程式的用戶集合，包括團隊、商業客戶和合作夥伴公司。',
+  organization_template: '組織模板',
   organization_id: '組織 ID',
   members: '成員',
   create_organization: '建立組織',
@@ -38,84 +34,53 @@ const organizations = {
   search_permission_placeholder: '輸入並搜索選擇權限',
   search_role_placeholder: '輸入並搜索選擇角色',
   empty_placeholder: '🤔 你尚未設置任何 {{entity}}。',
-  /** UNTRANSLATED */
-  organization_and_member: 'Organization and member',
-  /** UNTRANSLATED */
+  organization_and_member: '組織和成員',
   organization_and_member_description:
-    'Organization is a group of users and can represent the teams, business customers, and partner companies, with each user being a "Member". Those can be fundamental entities to handle your multi-tenant requirements.',
+    '組織是一組用戶，可以代表團隊、商業客戶和合作夥伴公司，每個用戶都是「成員」。這些可以是處理多租戶需求的基本實體。',
   guide: {
     title: '開始使用指南',
-    /** UNTRANSLATED */
-    subtitle: 'Jumpstart your organization settings with our guides',
+    subtitle: '通過我們的指南快速設置您的組織設定',
     introduction: {
-      /** UNTRANSLATED */
-      title: "Let's understand how organization works in Logto",
+      title: '讓我們一起了解 Logto 中的組織運作',
       section_1: {
-        /** UNTRANSLATED */
-        title: 'An organization is a group of users (identities)',
+        title: '組織是一組用戶（身份）',
       },
       section_2: {
-        /** UNTRANSLATED */
-        title: 'Organization template is designed for multi-tenant apps access control',
-        /** UNTRANSLATED */
+        title: '組織模板專為多租戶應用程式訪問控制而設計',
         description:
-          'In multi-tenant SaaS applications, multiple organizations often share the same access control template, which includes permissions and roles. In Logto, we call it "organization template."',
-        /** UNTRANSLATED */
-        permission_description:
-          'Organization permission refers to the authorization to access a resource in the context of organization.',
-        /** UNTRANSLATED */
-        role_description:
-          'Organization role is a grouping of organization permissions that can be assigned to members.',
+          '在多租戶 SaaS 應用程式中，多個組織通常共用相同的訪問控制模板，其中包括權限和角色。在 Logto 中，我們稱之為「組織模板」。',
+        permission_description: '組織權限指授權在組織上下文中存取資源。',
+        role_description: '組織角色是可以分配給成員的組織權限的分組。',
       },
       section_3: {
         title: '交互示意圖，看看它們之間的關係',
         description:
-          "Let's take an example. John, Sarah are in different organizations with different roles in the context of different organizations. Hover over the different modules and see what happens.",
+          '讓我們舉個例子。John、Sarah 屬於不同的組織，在不同組織的上下文中具有不同的角色。懸停在不同的模塊上，看看會發生什麼。',
       },
     },
     step_1: '第 1 步：定義組織權限',
     step_2: '第 2 步：定義組織角色',
     step_3: '第 3 步：創建您的第一個組織',
-    /** UNTRANSLATED */
     step_3_description:
-      "Let's create your first organization. It comes with a unique ID and serves as a container for handling various more business-toward identities.",
-    /** UNTRANSLATED */
-    more_next_steps: 'More next steps',
-    /** UNTRANSLATED */
-    add_members: 'Add members to your organization',
-    /** UNTRANSLATED */
-    add_members_action: 'Bulk add members and assign roles',
-    /** UNTRANSLATED */
-    organization_permissions: 'Organization permissions',
-    /** UNTRANSLATED */
-    permission_name: 'Permission name',
-    /** UNTRANSLATED */
-    permissions: 'Permissions',
-    /** UNTRANSLATED */
-    organization_roles: 'Organization roles',
-    /** UNTRANSLATED */
-    role_name: 'Role name',
-    /** UNTRANSLATED */
-    organization_name: 'Organization name',
-    /** UNTRANSLATED */
-    admin: 'Admin',
-    /** UNTRANSLATED */
-    member: 'Member',
-    /** UNTRANSLATED */
-    guest: 'Guest',
-    /** UNTRANSLATED */
-    role_description:
-      'Role "{{role}}" shares the same organization template across different organizations.',
-    /** UNTRANSLATED */
-    john: 'John',
-    /** UNTRANSLATED */
+      '讓我們一起建立您的第一個組織。它具有唯一的 ID，可以作為處理各種面向業務的實體的容器。',
+    more_next_steps: '更多下一步',
+    add_members: '將成員添加到您的組織',
+    add_members_action: '批量添加成員並分配角色',
+    organization_permissions: '組織權限',
+    permission_name: '權限名稱',
+    permissions: '權限列表',
+    organization_roles: '組織角色',
+    role_name: '角色名稱',
+    organization_name: '組織名稱',
+    admin: '管理員',
+    member: '成員',
+    guest: '訪客',
+    role_description: '角色「{{role}}」在不同組織間共享相同的組織模板。',
+    john: '約翰',
     john_tip:
-      'John belongs to two organizations with the email "john@email.com" as the single identifier. He is the admin of organization A as well as the guest of organization B.',
-    /** UNTRANSLATED */
-    sarah: 'Sarah',
-    /** UNTRANSLATED */
-    sarah_tip:
-      'Sarah belongs to one organization with the email "sarah@email.com" as the single identifier. She is the admin of organization B.',
+      '約翰使用 "john@email.com" 作為唯一標識屬於兩個組織。他是組織 A 的管理員，同時是組織 B 的訪客。',
+    sarah: '莎拉',
+    sarah_tip: '莎拉使用 "sarah@email.com" 作為唯一標識屬於一個組織。她是組織 B 的管理員。',
   },
 };
 

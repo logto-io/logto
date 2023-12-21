@@ -52,18 +52,13 @@ const sign_up_and_sign_in = {
   },
   advanced_options: {
     title: '고급 옵션',
-    /** UNTRANSLATED */
-    enable_single_sign_on: 'Enable enterprise Single Sign-On (SSO)',
-    /** UNTRANSLATED */
+    enable_single_sign_on: 'Enterprise Single Sign-On (SSO) 활성화',
     enable_single_sign_on_description:
-      'Enable users to sign-in to the application using Single Sign-On with their enterprise identities.',
+      '회사 신원 정보와 함께 Single Sign-On을 사용하여 애플리케이션에 로그인할 수 있도록 합니다.',
     single_sign_on_hint: {
-      /** UNTRANSLATED */
-      prefix: 'Go to ',
-      /** UNTRANSLATED */
-      link: '"Enterprise SSO"',
-      /** UNTRANSLATED */
-      suffix: 'section to set up more enterprise connectors.',
+      prefix: '다음 위치로 이동: ',
+      link: '"기업 SSO"',
+      suffix: '영역에서 사업체 커넥터를 추가 설정하세요.',
     },
     enable_user_registration: '사용자 등록 활성화',
     enable_user_registration_description:
