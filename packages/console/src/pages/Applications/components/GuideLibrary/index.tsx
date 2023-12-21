@@ -89,10 +89,12 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                 <div className={styles.checkboxGroupContainer}>
                   <CheckboxGroup
                     className={styles.checkboxGroup}
-                    options={allAppGuideCategories.map((category) => ({
-                      title: `guide.categories.${category}`,
-                      value: category,
-                    }))}
+                    options={allAppGuideCategories
+                      .filter((category) => isDevFeaturesEnabled || category !== 'Protected')
+                      .map((category) => ({
+                        title: `guide.categories.${category}`,
+                        value: category,
+                      }))}
                     value={filterCategories}
                     onChange={(value) => {
                       const sortedValue = allAppGuideCategories.filter((category) =>

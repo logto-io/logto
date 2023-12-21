@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import ModalLayout from '@/ds-components/ModalLayout';
@@ -100,20 +101,22 @@ function CreateForm({ defaultCreateType, defaultCreateFrameworkName, onClose }: 
                 type="card"
                 onChange={onChange}
               >
-                {Object.values(ApplicationType).map((type) => (
-                  <Radio
-                    key={type}
-                    value={type}
-                    hasCheckIconForCard={type !== ApplicationType.MachineToMachine}
-                  >
-                    <TypeDescription
-                      type={type}
-                      title={t(`${applicationTypeI18nKey[type]}.title`)}
-                      subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
-                      description={t(`${applicationTypeI18nKey[type]}.description`)}
-                    />
-                  </Radio>
-                ))}
+                {Object.values(ApplicationType)
+                  .filter((value) => isDevFeaturesEnabled || value !== ApplicationType.Protected)
+                  .map((type) => (
+                    <Radio
+                      key={type}
+                      value={type}
+                      hasCheckIconForCard={type !== ApplicationType.MachineToMachine}
+                    >
+                      <TypeDescription
+                        type={type}
+                        title={t(`${applicationTypeI18nKey[type]}.title`)}
+                        subtitle={t(`${applicationTypeI18nKey[type]}.subtitle`)}
+                        description={t(`${applicationTypeI18nKey[type]}.description`)}
+                      />
+                    </Radio>
+                  ))}
               </RadioGroup>
               {errors.type?.type === 'required' && (
                 <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
