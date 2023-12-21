@@ -56,6 +56,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
 
   const basicSecurityHeaderSettings: HelmetOptions = {
     contentSecurityPolicy: false, // Exclusively set per app
+    crossOriginOpenerPolicy: false, // Allow cross origin opener, as some apps rely on popup window for the sign-in flow
     crossOriginEmbedderPolicy: { policy: 'credentialless' },
     dnsPrefetchControl: false,
     referrerPolicy: {
