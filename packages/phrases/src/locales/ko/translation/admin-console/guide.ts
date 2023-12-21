@@ -8,6 +8,8 @@ const guide = {
     Native: '네이티브',
     MachineToMachine: '기계 간 통신',
     Protected: '보호된 앱',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: '프레임워크 필터',

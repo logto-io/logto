@@ -8,6 +8,8 @@ const guide = {
     Native: 'Нативное',
     MachineToMachine: 'Машина к машине',
     Protected: 'Защищенное приложение',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: 'Фильтры фреймворков',

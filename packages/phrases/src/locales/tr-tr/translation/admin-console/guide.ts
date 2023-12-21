@@ -8,6 +8,8 @@ const guide = {
     Native: 'Doğal',
     MachineToMachine: 'Makineden makineye',
     Protected: 'Korunan uygulama',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: "Framework'ü filtrele",

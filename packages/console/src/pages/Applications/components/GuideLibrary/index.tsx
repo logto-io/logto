@@ -16,6 +16,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TextInput from '@/ds-components/TextInput';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { allAppGuideCategories, type AppGuideCategory } from '@/types/applications';
+import { thirdPartyAppCategory } from '@/types/applications';
 
 import CreateForm from '../CreateForm';
 
@@ -56,7 +57,13 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
   const onCloseCreateForm = useCallback(
     (newApp?: Application) => {
       if (newApp && selectedGuide) {
-        navigate(`/applications/${newApp.id}/guide/${selectedGuide.id}`, { replace: true });
+        navigate(
+          // Third party app directly goes to the app detail page
+          selectedGuide.isThirdParty
+            ? `/applications/${newApp.id}`
+            : `/applications/${newApp.id}/guide/${selectedGuide.id}`,
+          { replace: true }
+        );
         return;
       }
       setShowCreateForm(false);
@@ -86,7 +93,11 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <CheckboxGroup
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories
-                      .filter((category) => isDevFeaturesEnabled || category !== 'Protected')
+                      .filter(
+                        (category) =>
+                          isDevFeaturesEnabled ||
+                          (category !== 'Protected' && category !== thirdPartyAppCategory)
+                      )
                       .map((category) => ({
                         title: `guide.categories.${category}`,
                         value: category,
@@ -145,6 +156,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
         <CreateForm
           defaultCreateType={selectedGuide?.target}
           defaultCreateFrameworkName={selectedGuide?.name}
+          isDefaultCreateThirdParty={selectedGuide?.isThirdParty}
           onClose={onCloseCreateForm}
         />
       )}

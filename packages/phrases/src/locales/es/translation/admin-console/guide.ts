@@ -8,6 +8,8 @@ const guide = {
     Native: 'Nativa',
     MachineToMachine: 'Máquina a máquina',
     Protected: 'Aplicación protegida',
+    /** UNTRANSLATED */
+    ThirdParty: 'Third-party app',
   },
   filter: {
     title: 'Filtrar framework',

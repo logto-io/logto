@@ -24,7 +24,9 @@ const data = await Promise.all(
     const logo = ['logo.svg'].find((logo) => existsSync(`${directory}/${logo}`));
 
     const config = existsSync(`${directory}/config.json`)
-      ? await import(`./${directory}/config.json`, { assert: { type: 'json' } }).then((module) => module.default)
+      ? await import(`./${directory}/config.json`, { assert: { type: 'json' } }).then(
+          (module) => module.default
+        )
       : undefined;
 
     return {
@@ -34,7 +36,10 @@ const data = await Promise.all(
     };
   })
 );
-const metadata = data.filter(Boolean).slice().sort((a, b) => a.order - b.order);
+const metadata = data
+  .filter(Boolean)
+  .slice()
+  .sort((a, b) => a.order - b.order);
 
 const camelCase = (value) => value.replaceAll(/-./g, (x) => x[1].toUpperCase());
 const filename = 'index.ts';

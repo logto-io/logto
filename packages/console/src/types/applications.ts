@@ -2,6 +2,8 @@ import { ApplicationType } from '@logto/schemas';
 
 import { type Guide } from '@/assets/docs/guides/types';
 
+export const thirdPartyAppCategory = 'ThirdParty' as const;
+
 export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Native]: 'applications.type.native',
   [ApplicationType.SPA]: 'applications.type.spa',
@@ -22,6 +24,7 @@ export const allAppGuideCategories = Object.freeze([
   'Native',
   'MachineToMachine',
   'Protected',
+  thirdPartyAppCategory,
 ] as const);
 
 export type AppGuideCategory = (typeof allAppGuideCategories)[number];
