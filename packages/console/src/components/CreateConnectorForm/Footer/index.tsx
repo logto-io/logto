@@ -51,17 +51,21 @@ function Footer({
     [existingConnectors]
   );
 
-  const isStandardConnectorsReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'standardConnectorsLimit',
-    plan: currentPlan,
-    usage: standardConnectorCount,
-  });
+  const isStandardConnectorsReachLimit =
+    currentPlan &&
+    hasReachedQuotaLimit({
+      quotaKey: 'standardConnectorsLimit',
+      plan: currentPlan,
+      usage: standardConnectorCount,
+    });
 
-  const isSocialConnectorsReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'socialConnectorsLimit',
-    plan: currentPlan,
-    usage: socialConnectorCount,
-  });
+  const isSocialConnectorsReachLimit =
+    currentPlan &&
+    hasReachedQuotaLimit({
+      quotaKey: 'socialConnectorsLimit',
+      plan: currentPlan,
+      usage: socialConnectorCount,
+    });
 
   if (isCreatingSocialConnector && currentPlan && selectedConnectorGroup) {
     const { id: planId, name: planName, quota } = currentPlan;

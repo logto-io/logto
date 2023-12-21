@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { type ApiResource } from '@/consts';
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { hasReachedQuotaLimit } from '@/utils/quota';
+import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 import useSubscriptionPlan from './use-subscription-plan';
 
@@ -18,19 +18,40 @@ const useApiResourcesUsage = () => {
    */
   const { data: allResources } = useSWR<ApiResource[]>(isCloud && 'api/resources');
 
-  const hasReachedLimit = useMemo(() => {
-    const resourceCount =
-      allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0;
+  const resourceCount = useMemo(
+    () => allResources?.filter(({ indicator }) => !isManagementApi(indicator)).length ?? 0,
+    [allResources]
+  );
 
-    return hasReachedQuotaLimit({
-      quotaKey: 'resourcesLimit',
-      plan: currentPlan,
-      usage: resourceCount,
-    });
-  }, [allResources, currentPlan]);
+  const hasReachedLimit = useMemo(
+    () =>
+      Boolean(
+        currentPlan &&
+          hasReachedQuotaLimit({
+            quotaKey: 'resourcesLimit',
+            plan: currentPlan,
+            usage: resourceCount,
+          })
+      ),
+    [currentPlan, resourceCount]
+  );
+
+  const hasSurpassedLimit = useMemo(
+    () =>
+      Boolean(
+        currentPlan &&
+          hasSurpassedQuotaLimit({
+            quotaKey: 'resourcesLimit',
+            plan: currentPlan,
+            usage: resourceCount,
+          })
+      ),
+    [currentPlan, resourceCount]
+  );
 
   return {
     hasReachedLimit,
+    hasSurpassedLimit,
   };
 };
 

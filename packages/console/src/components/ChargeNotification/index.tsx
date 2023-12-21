@@ -1,16 +1,20 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useContext } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
+import { pricingLink } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
+import TextLink from '@/ds-components/TextLink';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 
 type Props = {
-  hasReachedLimit: boolean;
-  notification?: TFuncKey<'translation', 'admin_console.upsell'>;
+  hasSurpassedLimit: boolean;
+  quotaItem: TFuncKey<'translation', 'admin_console.upsell.add_on_quota_item'>;
+  quotaLimit?: number;
   className?: string;
 };
 
@@ -20,26 +24,36 @@ type Props = {
  * CAUTION: This notification will be rendered only when the tenant's subscription plan is a paid plan.
  * We won't render it for free plan since we will not charge for free plan.
  */
-function ChargeNotification({
-  hasReachedLimit,
-  notification = 'charge_notification_for_quota_limit',
-  className,
-}: Props) {
+function ChargeNotification({ hasSurpassedLimit, quotaItem, quotaLimit, className }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell' });
   const { currentTenantId } = useContext(TenantsContext);
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
 
+  // Todo @xiaoyijun [Pricing] Remove feature flag
+  if (!isDevFeaturesEnabled) {
+    return null;
+  }
+
   if (
-    // Todo @xiaoyijun [Pricing] Remove feature flag
-    isDevFeaturesEnabled &&
+    !hasSurpassedLimit ||
     // No charge notification for free plan
-    (!hasReachedLimit || currentPlan?.id === ReservedPlanId.Free)
+    currentPlan?.id === ReservedPlanId.Free
   ) {
     return null;
   }
 
   return (
-    <InlineNotification severity="error" className={className}>
-      <DynamicT forKey={`upsell.${notification}`} />
+    <InlineNotification className={className}>
+      <Trans components={{ a: <TextLink href={pricingLink} targetBlank="noopener" /> }}>
+        {t('charge_notification_for_quota_limit', {
+          item: t(`add_on_quota_item.${quotaItem}`, {
+            ...cond(
+              // Note: tokens use 'M' as unit
+              quotaLimit && { limit: quotaItem === 'tokens' ? quotaLimit / 1_000_000 : quotaLimit }
+            ),
+          }),
+        })}
+      </Trans>
     </InlineNotification>
   );
 }

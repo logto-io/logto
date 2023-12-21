@@ -31,12 +31,17 @@ const upsell = {
     unpaid_bills: 'Facturas impagas',
     update_payment: 'Actualizar pago',
   },
+  add_on_quota_item: {
+    /** UNTRANSLATED */
+    api_resource: 'API resource',
+    /** UNTRANSLATED */
+    machine_to_machine: 'machine-to-machine application',
+    /** UNTRANSLATED */
+    tokens: '{{limit}}M tokens',
+  },
+  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'Has alcanzado tu límite de cuota. Es posible que añadamos cargos por funciones que superen tu límite de cuota como complementos, una vez que finalicemos los precios.',
-  charge_notification_for_token_limit:
-    'Has alcanzado tu límite de cuota de token de {{value}}M. Es posible que añadamos cargos por funciones que superen tu límite de cuota como complementos, una vez que finalicemos los precios.',
-  charge_notification_for_m2m_app_limit:
-    'Has alcanzado tu límite de cuota para aplicaciones de máquina a máquina. Es posible que añadamos cargos por funciones que superen tu límite de cuota como complementos, una vez que finalicemos los precios.',
+    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
 };
 

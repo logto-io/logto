@@ -17,29 +17,54 @@ const useApplicationsUsage = () => {
    */
   const { data: allApplications } = useSWR<Application[]>(isCloud && 'api/applications');
 
-  const hasMachineToMachineAppsReachedLimit = useMemo(() => {
-    const m2mAppCount =
-      allApplications?.filter(({ type }) => type === ApplicationType.MachineToMachine).length ?? 0;
+  const m2mAppCount = useMemo(
+    () =>
+      allApplications?.filter(({ type }) => type === ApplicationType.MachineToMachine).length ?? 0,
+    [allApplications]
+  );
 
-    return hasReachedQuotaLimit({
-      quotaKey: 'machineToMachineLimit',
-      plan: currentPlan,
-      usage: m2mAppCount,
-    });
-  }, [allApplications, currentPlan]);
+  const hasMachineToMachineAppsReachedLimit = useMemo(
+    () =>
+      Boolean(
+        currentPlan &&
+          hasReachedQuotaLimit({
+            quotaKey: 'machineToMachineLimit',
+            plan: currentPlan,
+            usage: m2mAppCount,
+          })
+      ),
+    [currentPlan, m2mAppCount]
+  );
+
+  const hasMachineToMachineAppsSurpassedLimit = useMemo(
+    () =>
+      Boolean(
+        currentPlan &&
+          hasReachedQuotaLimit({
+            quotaKey: 'machineToMachineLimit',
+            plan: currentPlan,
+            usage: m2mAppCount,
+          })
+      ),
+    [currentPlan, m2mAppCount]
+  );
 
   const hasAppsReachedLimit = useMemo(
     () =>
-      hasReachedQuotaLimit({
-        quotaKey: 'applicationsLimit',
-        plan: currentPlan,
-        usage: allApplications?.length ?? 0,
-      }),
+      Boolean(
+        currentPlan &&
+          hasReachedQuotaLimit({
+            quotaKey: 'applicationsLimit',
+            plan: currentPlan,
+            usage: allApplications?.length ?? 0,
+          })
+      ),
     [allApplications?.length, currentPlan]
   );
 
   return {
     hasMachineToMachineAppsReachedLimit,
+    hasMachineToMachineAppsSurpassedLimit,
     hasAppsReachedLimit,
   };
 };

@@ -31,12 +31,17 @@ const upsell = {
     unpaid_bills: '미납 청구서',
     update_payment: '지불 업데이트',
   },
+  add_on_quota_item: {
+    /** UNTRANSLATED */
+    api_resource: 'API resource',
+    /** UNTRANSLATED */
+    machine_to_machine: 'machine-to-machine application',
+    /** UNTRANSLATED */
+    tokens: '{{limit}}M tokens',
+  },
+  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    '귀하의 할당량 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
-  charge_notification_for_token_limit:
-    '귀하의 {{value}}M 토큰 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
-  charge_notification_for_m2m_app_limit:
-    '기계 간 통신 할당량 한도에 도달했습니다. 최종 가격이 확정되면 할당량을 초과하는 기능에 대한 추가 요금이 부과될 수 있습니다.',
+    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
 };
 

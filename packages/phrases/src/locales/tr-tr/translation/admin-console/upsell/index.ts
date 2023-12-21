@@ -31,12 +31,17 @@ const upsell = {
     unpaid_bills: 'Ödenmemiş faturalar',
     update_payment: 'Ödemeyi Güncelle',
   },
+  add_on_quota_item: {
+    /** UNTRANSLATED */
+    api_resource: 'API resource',
+    /** UNTRANSLATED */
+    machine_to_machine: 'machine-to-machine application',
+    /** UNTRANSLATED */
+    tokens: '{{limit}}M tokens',
+  },
+  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'Kota limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
-  charge_notification_for_token_limit:
-    'Token kota limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
-  charge_notification_for_m2m_app_limit:
-    'Makine-makine kotası limitinize ulaştınız. Fiyatlarımızı kesinleştirdiğimizde, kota limitinizi aşan özellikler için ek ücretler ekleyebiliriz.',
+    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
 };
 

@@ -15,7 +15,7 @@ import ModalLayout from '@/ds-components/ModalLayout';
 import useApi from '@/hooks/use-api';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { hasReachedQuotaLimit } from '@/utils/quota';
+import { hasSurpassedQuotaLimit } from '@/utils/quota';
 
 type Props = {
   roleId: string;
@@ -51,17 +51,13 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
     }
   };
 
-  const shouldBlockScopeAssignment = hasReachedQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    plan: currentPlan,
-    /**
-     * If usage is equal to the limit, it means the current role has reached the maximum allowed scope.
-     * Therefore, we should not assign any more scopes at this point.
-     * However, the currently selected scopes haven't been assigned yet, so we subtract 1
-     * to allow the assignment when the scope count is equal to the limit.
-     */
-    usage: totalRoleScopeCount + scopes.length - 1,
-  });
+  const shouldBlockScopeAssignment =
+    currentPlan &&
+    hasSurpassedQuotaLimit({
+      quotaKey: 'scopesPerRoleLimit',
+      plan: currentPlan,
+      usage: totalRoleScopeCount + scopes.length,
+    });
 
   return (
     <ReactModal
@@ -82,7 +78,7 @@ function AssignPermissionsModal({ roleId, roleType, totalRoleScopeCount, onClose
         }}
         size="large"
         footer={
-          shouldBlockScopeAssignment && currentPlan ? (
+          shouldBlockScopeAssignment ? (
             <QuotaGuardFooter>
               <Trans
                 components={{

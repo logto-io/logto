@@ -37,7 +37,7 @@ function Applications() {
   const { match, navigate } = useTenantPathname();
   const isCreating = match(createApplicationPathname);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { hasMachineToMachineAppsReachedLimit } = useApplicationsUsage();
+  const { hasMachineToMachineAppsSurpassedLimit } = useApplicationsUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -73,8 +73,8 @@ function Applications() {
         )}
       </div>
       <ChargeNotification
-        hasReachedLimit={hasMachineToMachineAppsReachedLimit}
-        notification="charge_notification_for_m2m_app_limit"
+        hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
+        quotaItem="machine_to_machine"
         className={styles.chargeNotification}
       />
       {!isLoading && !applications?.length && (
