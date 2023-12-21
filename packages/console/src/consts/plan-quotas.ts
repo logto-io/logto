@@ -178,14 +178,15 @@ export const planTableGroupKeyMap: SubscriptionPlanTableGroupKeyMap = Object.fre
     'i18nEnabled',
   ],
   [SubscriptionPlanTableGroupKey.userAuthentication]: [
-    'mfaEnabled',
     'omniSignInEnabled',
     'passwordSignInEnabled',
     'passwordlessSignInEnabled',
     'emailConnectorsEnabled',
     'smsConnectorsEnabled',
     'socialConnectorsLimit',
-    'standardConnectorsLimit',
+    // Todo @xiaoyijun [Pricing] Remove feature flag
+    ...condArray(!isDevelopmentFeaturesEnabled && 'standardConnectorsLimit'),
+    'mfaEnabled',
     'ssoEnabled',
   ],
   [SubscriptionPlanTableGroupKey.roles]: [
