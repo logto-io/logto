@@ -88,7 +88,7 @@
     "stylelint": "^15.0.0",
     "superstruct": "^1.0.3",
     "tiny-cookie": "^2.4.1",
-    "typescript": "^5.0.0",
+    "typescript": "^5.3.3",
     "use-debounced-loader": "^0.1.1",
     "zod": "^3.22.4"
   },

@@ -48,7 +48,7 @@
     "rollup": "^4.0.0",
     "rollup-plugin-summary": "^2.0.0",
     "supertest": "^6.2.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": "^20.9.0"

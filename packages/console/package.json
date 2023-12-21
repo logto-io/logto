@@ -118,7 +118,7 @@
     "swr": "^2.2.0",
     "titleize": "^4.0.0",
     "tslib": "^2.4.1",
-    "typescript": "^5.0.0",
+    "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
   "engines": {

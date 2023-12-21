@@ -124,7 +124,7 @@
     "prettier": "^3.0.0",
     "sinon": "^17.0.0",
     "supertest": "^6.2.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": "^20.9.0"
