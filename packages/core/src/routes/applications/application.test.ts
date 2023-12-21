@@ -2,7 +2,7 @@ import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { mockApplication } from '#src/__mocks__/index.js';
+import { mockApplication, mockProtectedApplication } from '#src/__mocks__/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -11,6 +11,7 @@ const { jest } = import.meta;
 
 const findApplicationById = jest.fn(async () => mockApplication);
 const deleteApplicationById = jest.fn();
+const syncAppConfigsToRemote = jest.fn();
 
 await mockIdGenerators();
 
@@ -41,7 +42,7 @@ const tenantContext = new MockTenant(
     },
   },
   undefined,
-  { quota: createMockQuotaLibrary() }
+  { quota: createMockQuotaLibrary(), protectedApps: { syncAppConfigsToRemote } }
 );
 
 const { createRequester } = await import('#src/utils/test-utils.js');
@@ -85,6 +86,30 @@ describe('application route', () => {
       name,
       description,
       type,
+    });
+  });
+
+  it('POST /applications for protected app', async () => {
+    const name = 'FooApplication';
+    const type = ApplicationType.Protected;
+    const { protectedAppMetadata } = mockProtectedApplication;
+
+    const response = await applicationRequest.post('/applications').send({
+      name,
+      type,
+      protectedAppMetadata: {
+        host: protectedAppMetadata?.host,
+        origin: protectedAppMetadata?.origin,
+      },
+    });
+    expect(response.status).toEqual(200);
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockId);
+    expect(response.body).toEqual({
+      ...mockApplication,
+      id: mockId,
+      name,
+      type,
+      protectedAppMetadata,
     });
   });
 

@@ -37,7 +37,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     {
       queries,
       id: tenantId,
-      libraries: { quota },
+      libraries: { quota, protectedApps },
     },
   ]: RouterInitArgs<T>
 ) {
@@ -128,7 +128,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
     koaGuard({
       body: applicationCreateGuard,
       response: applicationResponseGuard,
-      status: [200, 422],
+      status: [200, 400, 422],
     }),
     async (ctx, next) => {
       const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
@@ -154,9 +154,7 @@ export default function applicationRoutes<T extends AuthedRouter>(
 
       // TODO LOG-7794: check and add domain to Cloudflare
 
-      // TODO LOG-7520: sync configs to Cloudflare KV
-
-      ctx.body = await insertApplication({
+      const application = await insertApplication({
         id: generateStandardId(),
         secret: generateStandardSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
@@ -167,6 +165,18 @@ export default function applicationRoutes<T extends AuthedRouter>(
         ),
         ...rest,
       });
+
+      if (application.type === ApplicationType.Protected) {
+        try {
+          await protectedApps.syncAppConfigsToRemote(application.id);
+        } catch (error: unknown) {
+          // Delete the application if failed to sync to remote
+          await deleteApplicationById(application.id);
+          throw error;
+        }
+      }
+
+      ctx.body = application;
 
       return next();
     }

@@ -149,18 +149,34 @@ export const hostnameProviderDataGuard = z.object({
 
 export type HostnameProviderData = z.infer<typeof hostnameProviderDataGuard>;
 
+// Cloudflare KV for protected app config
+export const protectedAppConfigProviderDataGuard = z.object({
+  /* Cloudflare Workers & Pages account ID */
+  accountIdentifier: z.string(),
+  /* KV namespace ID */
+  namespaceIdentifier: z.string(),
+  /* Key prefix for protected app config */
+  keyName: z.string(),
+  apiToken: z.string(), // Requires account permission for "KV Storage Edit"
+});
+
+export type ProtectedAppConfigProviderData = z.infer<typeof protectedAppConfigProviderDataGuard>;
+
 export enum CloudflareKey {
   HostnameProvider = 'cloudflareHostnameProvider',
+  ProtectedAppConfigProvider = 'cloudflareProtectedAppConfigProvider',
 }
 
 export type CloudflareType = {
   [CloudflareKey.HostnameProvider]: HostnameProviderData;
+  [CloudflareKey.ProtectedAppConfigProvider]: ProtectedAppConfigProviderData;
 };
 
 export const cloudflareGuard: Readonly<{
   [key in CloudflareKey]: ZodType<CloudflareType[key]>;
 }> = Object.freeze({
   [CloudflareKey.HostnameProvider]: hostnameProviderDataGuard,
+  [CloudflareKey.ProtectedAppConfigProvider]: protectedAppConfigProviderDataGuard,
 });
 
 // Summary

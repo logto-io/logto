@@ -6,6 +6,8 @@ import {
   storageProviderDataGuard,
   StorageProviderKey,
   type SystemKey,
+  type ProtectedAppConfigProviderData,
+  protectedAppConfigProviderDataGuard,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from 'slonik';
 import { type ZodType } from 'zod';
@@ -17,6 +19,7 @@ export default class SystemContext {
   static shared = new SystemContext();
   public storageProviderConfig?: StorageProviderData;
   public hostnameProviderConfig?: HostnameProviderData;
+  public protectedAppConfigProviderConfig?: ProtectedAppConfigProviderData;
 
   async loadProviderConfigs(pool: CommonQueryMethods) {
     await Promise.all([
@@ -32,6 +35,13 @@ export default class SystemContext {
           pool,
           CloudflareKey.HostnameProvider,
           hostnameProviderDataGuard
+        );
+      })(),
+      (async () => {
+        this.protectedAppConfigProviderConfig = await this.loadConfig(
+          pool,
+          CloudflareKey.ProtectedAppConfigProvider,
+          protectedAppConfigProviderDataGuard
         );
       })(),
     ]);

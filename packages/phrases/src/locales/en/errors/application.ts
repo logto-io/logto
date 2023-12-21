@@ -7,6 +7,8 @@ const application = {
   third_party_application_only: 'The feature is only available for third-party applications.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
   protected_app_metadata_is_required: 'Protected app metadata is required.',
+  protected_app_not_configured: 'Protected app provider is not configured.',
+  cloudflare_unknown_error: 'Got unknown error when requesting Cloudflare API',
 };
 
 export default Object.freeze(application);
