@@ -137,13 +137,15 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: 'MFA 비활성화',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your MFA',
   },
   sso_enabled: {
     name: '기업 SSO',
     limited: '기업 SSO',
     unlimited: '기업 SSO',
-    not_eligible: '기업 SSO 비활성화',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your Enterprise SSO',
   },
 };
 

@@ -13,15 +13,10 @@ const quota_item = {
     not_eligible: 'Remove your all users',
   },
   token_limit: {
-    /** UNTRANSLATED */
     name: 'Tokens',
-    /** UNTRANSLATED */
     limited: '{{count, number}} token',
-    /** UNTRANSLATED */
     limited_other: '{{count, number}} tokens',
-    /** UNTRANSLATED */
     unlimited: 'Unlimited tokens',
-    /** UNTRANSLATED */
     not_eligible: 'Remove your all users to prevent new tokens',
   },
   applications_limit: {
@@ -142,13 +137,13 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: 'Disable your MFA',
+    not_eligible: 'Remove your MFA',
   },
   sso_enabled: {
     name: 'Enterprise SSO',
     limited: 'Enterprise SSO',
     unlimited: 'Enterprise SSO',
-    not_eligible: 'Disable your Enterprise SSO',
+    not_eligible: 'Remove your Enterprise SSO',
   },
 };
 

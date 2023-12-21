@@ -137,13 +137,15 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: 'MFAを無効にする',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your MFA',
   },
   sso_enabled: {
     name: 'エンタープライズSSO',
     limited: 'エンタープライズSSO',
     unlimited: 'エンタープライズSSO',
-    not_eligible: 'エンタープライズSSOを無効にする',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your Enterprise SSO',
   },
 };
 

@@ -137,13 +137,15 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: 'Desative sua MFA',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your MFA',
   },
   sso_enabled: {
     name: 'SSO Empresarial',
     limited: 'SSO Empresarial',
     unlimited: 'SSO Empresarial',
-    not_eligible: 'Desative seu SSO Empresarial',
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your Enterprise SSO',
   },
 };
 
