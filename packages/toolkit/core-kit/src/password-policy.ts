@@ -1,3 +1,5 @@
+import { type webcrypto } from 'node:crypto';
+
 import { type DeepPartial } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -149,7 +151,7 @@ export class PasswordPolicyChecker {
   constructor(
     policy: DeepPartial<PasswordPolicy>,
     /** The Web Crypto API to use. By default, the global `crypto.subtle` will be used. */
-    protected readonly subtle: SubtleCrypto = crypto.subtle
+    protected readonly subtle: webcrypto.SubtleCrypto | SubtleCrypto = crypto.subtle
   ) {
     this.policy = passwordPolicyGuard.parse(policy);
   }

@@ -142,9 +142,7 @@ async function handleSubmitRegister(
     // Create tenant organization and assign the admin user to it.
     // This is only for Cloud integration tests and data alignment, OSS still uses the legacy Management API user role.
     const organizationId = getTenantOrganizationId(defaultTenantId);
-    // @ts-expect-error this notation should be no more needed after we upgrade TypeScript
     await queries.organizations.relations.users.insert([organizationId, id]);
-    // @ts-expect-error this notation should be no more needed after we upgrade TypeScript
     await queries.organizations.relations.rolesUsers.insert([
       organizationId,
       getTenantRole(TenantRole.Owner).id,

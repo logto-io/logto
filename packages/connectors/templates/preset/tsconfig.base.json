@@ -2,7 +2,7 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "moduleResolution": "nodenext",
-    "module": "esnext",
+    "module": "nodenext",
     "outDir": "lib",
     "baseUrl": "."
   }
