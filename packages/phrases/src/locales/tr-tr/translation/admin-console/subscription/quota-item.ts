@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} makineye makine uygulamalar',
     unlimited: 'Sınırsız makineye makine uygulamalar',
     not_eligible: 'Makineye makine uygulamalarınızı kaldırın',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API kaynakları',

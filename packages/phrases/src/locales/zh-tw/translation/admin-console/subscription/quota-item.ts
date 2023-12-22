@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} 機器對機器應用程式',
     unlimited: '不限機器對機器應用程式數',
     not_eligible: '移除你的機器對機器應用程式',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API 資源',

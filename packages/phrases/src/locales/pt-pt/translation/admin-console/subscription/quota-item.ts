@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} aplicações de máquina para máquina',
     unlimited: 'Aplicações de máquina para máquina ilimitadas',
     not_eligible: 'Remover as tuas aplicações de máquina para máquina',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'Recursos de API',

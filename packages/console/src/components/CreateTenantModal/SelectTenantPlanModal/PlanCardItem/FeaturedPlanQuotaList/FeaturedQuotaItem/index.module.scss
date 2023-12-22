@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.icon {
+  width: 16px;
+  height: 16px;
+
+  &.notCapable {
+    color: var(--color-error);
+  }
+
+  &.capable {
+    color: var(--color-on-success-container);
+  }
+}

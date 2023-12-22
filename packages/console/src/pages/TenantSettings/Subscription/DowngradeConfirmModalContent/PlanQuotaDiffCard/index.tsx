@@ -1,22 +1,23 @@
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import PlanName from '@/components/PlanName';
 import PlanQuotaList from '@/components/PlanQuotaList';
-import { type SubscriptionPlanQuota } from '@/types/subscriptions';
+import DynamicT from '@/ds-components/DynamicT';
+import {
+  type SubscriptionPlanQuotaEntries,
+  type SubscriptionPlanQuota,
+} from '@/types/subscriptions';
 
+import DiffQuotaItem from './DiffQuotaItem';
 import * as styles from './index.module.scss';
 
 type Props = {
   planName: string;
   quotaDiff: Partial<SubscriptionPlanQuota>;
-  isTarget?: boolean;
+  isDowngradeTargetPlan?: boolean;
 };
 
-function PlanQuotaDiffCard({ planName, quotaDiff, isTarget = false }: Props) {
-  const { t } = useTranslation(undefined, {
-    keyPrefix: 'admin_console.subscription.downgrade_modal',
-  });
-
+function PlanQuotaDiffCard({ planName, quotaDiff, isDowngradeTargetPlan = false }: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -25,10 +26,25 @@ function PlanQuotaDiffCard({ planName, quotaDiff, isTarget = false }: Props) {
             name: <PlanName name={planName} />,
           }}
         >
-          {t(isTarget ? 'after' : 'before')}
+          <DynamicT
+            forKey={`subscription.downgrade_modal.${isDowngradeTargetPlan ? 'after' : 'before'}`}
+          />
         </Trans>
       </div>
-      <PlanQuotaList isDiff quota={quotaDiff} hasIcon={isTarget} />
+      <PlanQuotaList
+        entries={
+          // eslint-disable-next-line no-restricted-syntax
+          Object.entries(quotaDiff) as SubscriptionPlanQuotaEntries
+        }
+        itemRenderer={(quotaKey, quotaValue) => (
+          <DiffQuotaItem
+            key={quotaKey}
+            quotaKey={quotaKey}
+            quotaValue={quotaValue}
+            isForDowngradeTargetPlan={isDowngradeTargetPlan}
+          />
+        )}
+      />
     </div>
   );
 }

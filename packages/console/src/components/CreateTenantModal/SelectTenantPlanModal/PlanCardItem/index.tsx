@@ -6,10 +6,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import ArrowRight from '@/assets/icons/arrow-right.svg';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
-import PlanQuotaList from '@/components/PlanQuotaList';
 import { pricingLink } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
-import { comingSoonQuotaKeys } from '@/consts/plan-quotas';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -17,12 +15,12 @@ import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 import { type SubscriptionPlanQuota, type SubscriptionPlan } from '@/types/subscriptions';
 
+import FeaturedPlanQuotaList from './FeaturedPlanQuotaList';
 import * as styles from './index.module.scss';
 
 const featuredQuotaKeys: Array<keyof SubscriptionPlanQuota> = [
   'mauLimit',
   'machineToMachineLimit',
-  'standardConnectorsLimit',
   'rolesLimit',
   'scopesPerRoleLimit',
   'mfaEnabled',
@@ -90,13 +88,7 @@ function PlanCardItem({ plan, onSelect }: Props) {
         </div>
       </div>
       <div className={styles.content}>
-        <PlanQuotaList
-          hasIcon
-          quota={quota}
-          featuredQuotaKeys={featuredQuotaKeys}
-          comingSoonQuotaKeys={comingSoonQuotaKeys}
-          className={styles.list}
-        />
+        <FeaturedPlanQuotaList plan={plan} />
         {isFreePlan && isFreeTenantExceeded && (
           <div className={classNames(styles.tip, styles.exceedFreeTenantsTip)}>
             {t('free_tenants_limit', { count: maxFreeTenantLimit })}

@@ -32,6 +32,8 @@ const quota_item = {
     limited_other: '{{count, number}} aplicaciones de dispositivo a dispositivo',
     unlimited: 'Aplicaciones de dispositivo a dispositivo ilimitadas',
     not_eligible: 'Elimine sus aplicaciones de dispositivo a dispositivo',
+    /** UNTRANSLATED */
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'Recursos de API',

@@ -37,6 +37,7 @@ const quota_item = {
     limited_other: '{{count, number}} machine to machine apps',
     unlimited: 'Unlimited machine to machine apps',
     not_eligible: 'Remove your machine to machine apps',
+    add_on: 'Additional machine-to-machine apps',
   },
   resources_limit: {
     name: 'API resources',

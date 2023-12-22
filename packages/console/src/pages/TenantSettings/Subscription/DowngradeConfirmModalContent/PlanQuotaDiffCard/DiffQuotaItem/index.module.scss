@@ -1,0 +1,12 @@
+.icon {
+  width: 16px;
+  height: 16px;
+
+  &.notCapable {
+    color: var(--color-error);
+  }
+}
+
+.lineThrough {
+  text-decoration: line-through;
+}
