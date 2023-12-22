@@ -12,6 +12,12 @@ const applications = {
   select_application_type: "Sélectionner un type d'application",
   no_application_type_selected: "Vous n'avez pas encore sélectionné de type d'application",
   application_created: "L'application a été créée avec succès.",
+  tab: {
+    /** UNTRANSLATED */
+    my_applications: 'My apps',
+    /** UNTRANSLATED */
+    third_party_applications: 'Third party apps',
+  },
   app_id: 'App ID',
   type: {
     native: {
@@ -35,6 +41,14 @@ const applications = {
       subtitle:
         'Une application (généralement un service) qui communique directement avec les ressources',
       description: 'Par exemple, un service backend',
+    },
+    third_party: {
+      /** UNTRANSLATED */
+      title: 'Third-party app',
+      /** UNTRANSLATED */
+      subtitle: 'An app that is used as a third-party IdP connector',
+      /** UNTRANSLATED */
+      description: 'E.g., OIDC, SAML',
     },
   },
   placeholder_title: "Sélectionnez un type d'application pour continuer",
