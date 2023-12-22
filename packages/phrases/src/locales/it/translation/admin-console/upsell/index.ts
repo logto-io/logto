@@ -31,12 +31,17 @@ const upsell = {
     unpaid_bills: 'Fatture non pagate',
     update_payment: 'Aggiorna pagamento',
   },
+  add_on_quota_item: {
+    /** UNTRANSLATED */
+    api_resource: 'API resource',
+    /** UNTRANSLATED */
+    machine_to_machine: 'machine-to-machine application',
+    /** UNTRANSLATED */
+    tokens: '{{limit}}M tokens',
+  },
+  /** UNTRANSLATED */
   charge_notification_for_quota_limit:
-    'Hai raggiunto il tuo limite di quota. Possiamo aggiungere addebiti per funzionalità che superano il limite di quota come componenti aggiuntivi, una volta che finalizziamo i prezzi.',
-  charge_notification_for_token_limit:
-    'Hai raggiunto il limite di quota di {{value}}M token. Possiamo aggiungere addebiti per funzionalità che superano il limite di quota come componenti aggiuntivi, una volta che finalizziamo i prezzi.',
-  charge_notification_for_m2m_app_limit:
-    'Hai raggiunto il tuo limite di quota machine-to-machine. Possiamo aggiungere addebiti per funzionalità che superano il limite di quota come componenti aggiuntivi, una volta che finalizziamo i prezzi.',
+    'You have surpassed your {{item}} quota limit. Logto will add charges for the usage beyond your quota limit. Charging will commence on the day the new add-on pricing design is released. <a>Learn more</a>',
   paywall,
 };
 

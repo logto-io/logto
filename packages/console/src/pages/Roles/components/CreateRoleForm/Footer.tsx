@@ -10,7 +10,7 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import useSubscriptionPlan from '@/hooks/use-subscription-plan';
-import { hasReachedQuotaLimit } from '@/utils/quota';
+import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 import { buildUrl } from '@/utils/url';
 
 type Props = {
@@ -33,25 +33,24 @@ function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Pr
       })
   );
 
-  const hasRoleReachedLimit = hasReachedQuotaLimit({
-    quotaKey: roleType === RoleType.User ? 'rolesLimit' : 'machineToMachineRolesLimit',
-    plan: currentPlan,
-    usage: roleCount ?? 0,
-  });
+  const hasRoleReachedLimit =
+    currentPlan &&
+    hasReachedQuotaLimit({
+      quotaKey: roleType === RoleType.User ? 'rolesLimit' : 'machineToMachineRolesLimit',
+      plan: currentPlan,
+      usage: roleCount ?? 0,
+    });
 
-  const hasBeyondScopesPerRoleLimit = hasReachedQuotaLimit({
-    quotaKey: 'scopesPerRoleLimit',
-    plan: currentPlan,
-    /**
-     * If usage equals to the limit, it means the current role has reached the maximum allowed scope.
-     * Therefore, we should not assign any more scopes at this point.
-     * However, the currently selected scopes haven't been assigned yet, so we subtract 1
-     * to allow the assignment when the scope count equals to the limit.
-     */
-    usage: selectedScopesCount - 1,
-  });
+  const hasScopesPerRoleSurpassedLimit =
+    currentPlan &&
+    hasSurpassedQuotaLimit({
+      quotaKey: 'scopesPerRoleLimit',
+      plan: currentPlan,
+      usage: selectedScopesCount,
+    });
 
-  if (currentPlan && (hasRoleReachedLimit || hasBeyondScopesPerRoleLimit)) {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  if (currentPlan && (hasRoleReachedLimit || hasScopesPerRoleSurpassedLimit)) {
     return (
       <QuotaGuardFooter>
         <Trans
@@ -74,7 +73,7 @@ function Footer({ roleType, selectedScopesCount, isCreating, onClickCreate }: Pr
                 }))}
           {/* Role scopes limit paywall */}
           {!hasRoleReachedLimit &&
-            hasBeyondScopesPerRoleLimit &&
+            hasScopesPerRoleSurpassedLimit &&
             t('upsell.paywall.scopes_per_role', {
               count: currentPlan.quota.scopesPerRoleLimit ?? 0,
             })}

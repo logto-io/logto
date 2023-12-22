@@ -53,11 +53,13 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
     })
   );
 
-  const isScopesPerResourceReachLimit = hasReachedQuotaLimit({
-    quotaKey: 'scopesPerResourceLimit',
-    plan: currentPlan,
-    usage: totalResourceCount,
-  });
+  const isScopesPerResourceReachLimit =
+    currentPlan &&
+    hasReachedQuotaLimit({
+      quotaKey: 'scopesPerResourceLimit',
+      plan: currentPlan,
+      usage: totalResourceCount,
+    });
 
   return (
     <ReactModal
@@ -77,7 +79,7 @@ function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Prop
           targetBlank: 'noopener',
         }}
         footer={
-          isScopesPerResourceReachLimit && currentPlan ? (
+          isScopesPerResourceReachLimit ? (
             <QuotaGuardFooter>
               <Trans
                 components={{

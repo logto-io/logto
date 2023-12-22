@@ -41,7 +41,7 @@ const icons = {
 function ApiResources() {
   const { search } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { hasReachedLimit } = useApiResourcesUsage();
+  const { hasSurpassedLimit } = useApiResourcesUsage();
   const [{ page }, updateSearchParameters] = useSearchParametersWatcher({
     page: 1,
   });
@@ -78,7 +78,9 @@ function ApiResources() {
             });
           },
         }}
-        subHeader={<ChargeNotification hasReachedLimit={hasReachedLimit} />}
+        subHeader={
+          <ChargeNotification hasSurpassedLimit={hasSurpassedLimit} quotaItem="api_resource" />
+        }
         table={{
           rowGroups: [{ key: 'apiResources', data: apiResources }],
           rowIndexKey: 'id',

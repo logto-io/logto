@@ -32,11 +32,13 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
   const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const shouldBlockCreation = hasReachedQuotaLimit({
-    quotaKey: 'hooksLimit',
-    usage: totalWebhookCount,
-    plan: currentPlan,
-  });
+  const shouldBlockCreation =
+    currentPlan &&
+    hasReachedQuotaLimit({
+      quotaKey: 'hooksLimit',
+      usage: totalWebhookCount,
+      plan: currentPlan,
+    });
 
   const formMethods = useForm<BasicWebhookFormType>();
   const {
@@ -67,7 +69,7 @@ function CreateForm({ totalWebhookCount, onClose }: Props) {
       title="webhooks.create_form.title"
       subtitle="webhooks.create_form.subtitle"
       footer={
-        shouldBlockCreation && currentPlan ? (
+        shouldBlockCreation ? (
           <QuotaGuardFooter>
             <Trans
               components={{
