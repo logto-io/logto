@@ -64,8 +64,8 @@ export const isOriginAllowed = (
   return [...corsAllowedOrigins, ...redirectUriOrigins].includes(origin);
 };
 
-export const getUtcStartOfToday = () => {
-  const now = new Date();
-
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+export const getUtcStartOfTheDay = (date: Date) => {
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0)
+  );
 };
