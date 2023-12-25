@@ -58,6 +58,12 @@ export const adminConsoleDataGuard = z.object({
       readAt: z.number().optional(),
     })
     .optional(),
+  checkedChargeNotification: z
+    .object({
+      apiResource: z.boolean().optional(),
+      machineToMachineApp: z.boolean().optional(),
+    })
+    .optional(),
 });
 
 export type AdminConsoleData = z.infer<typeof adminConsoleDataGuard>;

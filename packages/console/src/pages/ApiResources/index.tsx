@@ -83,7 +83,11 @@ function ApiResources() {
           isCloud &&
           // Todo @xiaoyijun [Pricing] Remove feature flag
           isDevFeaturesEnabled && (
-            <ChargeNotification hasSurpassedLimit={hasSurpassedLimit} quotaItem="api_resource" />
+            <ChargeNotification
+              hasSurpassedLimit={hasSurpassedLimit}
+              quotaItemPhraseKey="api_resource"
+              checkedFlagKey="apiResource"
+            />
           )
         }
         table={{
