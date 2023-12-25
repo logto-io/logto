@@ -10,6 +10,7 @@ import ChargeNotification from '@/components/ChargeNotification';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import { defaultPageSize } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -72,11 +73,14 @@ function Applications() {
           />
         )}
       </div>
-      <ChargeNotification
-        hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
-        quotaItem="machine_to_machine"
-        className={styles.chargeNotification}
-      />
+      {/* Todo @xiaoyijun [Pricing] Remove feature flag */}
+      {isCloud && isDevFeaturesEnabled && (
+        <ChargeNotification
+          hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
+          quotaItem="machine_to_machine"
+          className={styles.chargeNotification}
+        />
+      )}
       {!isLoading && !applications?.length && (
         <OverlayScrollbar className={styles.guideLibraryContainer}>
           <CardTitle

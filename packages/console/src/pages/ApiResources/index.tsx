@@ -14,6 +14,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import ListPage from '@/components/ListPage';
 import { defaultPageSize } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { ApiResourceDetailsTabs } from '@/consts/page-tabs';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import Tag from '@/ds-components/Tag';
@@ -79,7 +80,11 @@ function ApiResources() {
           },
         }}
         subHeader={
-          <ChargeNotification hasSurpassedLimit={hasSurpassedLimit} quotaItem="api_resource" />
+          isCloud &&
+          // Todo @xiaoyijun [Pricing] Remove feature flag
+          isDevFeaturesEnabled && (
+            <ChargeNotification hasSurpassedLimit={hasSurpassedLimit} quotaItem="api_resource" />
+          )
         }
         table={{
           rowGroups: [{ key: 'apiResources', data: apiResources }],
