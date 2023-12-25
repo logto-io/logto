@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
-import { hasReachedQuotaLimit } from '@/utils/quota';
+import { hasReachedQuotaLimit, hasSurpassedQuotaLimit } from '@/utils/quota';
 
 import useSubscriptionPlan from './use-subscription-plan';
 
@@ -40,7 +40,7 @@ const useApplicationsUsage = () => {
     () =>
       Boolean(
         currentPlan &&
-          hasReachedQuotaLimit({
+          hasSurpassedQuotaLimit({
             quotaKey: 'machineToMachineLimit',
             plan: currentPlan,
             usage: m2mAppCount,
