@@ -48,6 +48,33 @@ describe('admin console application', () => {
     await deleteApplication(application.id);
   });
 
+  it('should create protected application successfully', async () => {
+    const applicationName = 'test-protected-app';
+    const metadata = {
+      origin: 'https://example.com',
+      host: 'example.protected.app',
+    };
+
+    const application = await createApplication(applicationName, ApplicationType.Protected, {
+      // @ts-expect-error the create guard has been modified
+      protectedAppMetadata: metadata,
+    });
+
+    expect(application.name).toBe(applicationName);
+    expect(application.type).toBe(ApplicationType.Protected);
+    expect(application.protectedAppMetadata).toHaveProperty('origin', metadata.origin);
+    expect(application.protectedAppMetadata).toHaveProperty('host', metadata.host);
+    expect(application.protectedAppMetadata).toHaveProperty('sessionDuration');
+    await deleteApplication(application.id);
+  });
+
+  it('should throw error when creating a protected application with invalid type', async () => {
+    await expectRejects(createApplication('test-create-app', ApplicationType.Protected), {
+      code: 'application.protected_app_metadata_is_required',
+      statusCode: 400,
+    });
+  });
+
   it('should update application details successfully', async () => {
     const application = await createApplication('test-update-app', ApplicationType.Traditional);
 

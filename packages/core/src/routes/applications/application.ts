@@ -4,7 +4,6 @@ import {
   buildDemoAppDataForTenant,
   InternalRole,
   ApplicationType,
-  applicationPatchGuard,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -20,7 +19,12 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import type { AuthedRouter, RouterInitArgs } from '../types.js';
 
-import { applicationResponseGuard, applicationCreateGuard } from './types.js';
+import {
+  applicationResponseGuard,
+  applicationCreateGuard,
+  applicationPatchGuard,
+} from './types.js';
+import { buildProtectedAppMetadata } from './utils.js';
 
 const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
   roles.some(({ role: { name } }) => name === InternalRole.Admin);
@@ -127,13 +131,18 @@ export default function applicationRoutes<T extends AuthedRouter>(
       status: [200, 422],
     }),
     async (ctx, next) => {
-      const { oidcClientMetadata, ...rest } = ctx.guard.body;
+      const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
       // When creating a m2m app, should check both m2m limit and application limit.
       if (rest.type === ApplicationType.MachineToMachine) {
         await quota.guardKey('machineToMachineLimit');
       }
       await quota.guardKey('applicationsLimit');
+
+      assertThat(
+        rest.type !== ApplicationType.Protected || protectedAppMetadata,
+        'application.protected_app_metadata_is_required'
+      );
 
       // Third party applications must be traditional type
       if (rest.isThirdParty) {
@@ -143,10 +152,19 @@ export default function applicationRoutes<T extends AuthedRouter>(
         );
       }
 
+      // TODO LOG-7794: check and add domain to Cloudflare
+
+      // TODO LOG-7520: sync configs to Cloudflare KV
+
       ctx.body = await insertApplication({
         id: generateStandardId(),
         secret: generateStandardSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
+        ...conditional(
+          rest.type === ApplicationType.Protected &&
+            protectedAppMetadata &&
+            buildProtectedAppMetadata(protectedAppMetadata)
+        ),
         ...rest,
       });
 

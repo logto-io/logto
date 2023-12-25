@@ -6,6 +6,8 @@ const application = {
     'Sadece geleneksel web uygulamaları üçüncü taraf uygulaması olarak işaretlenebilir.',
   third_party_application_only: 'Bu özellik sadece üçüncü taraf uygulamalar için geçerlidir.',
   user_consent_scopes_not_found: 'Geçersiz kullanıcı onay kapsamları.',
+  /** UNTRANSLATED */
+  protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 
 export default Object.freeze(application);

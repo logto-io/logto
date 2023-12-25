@@ -6,6 +6,7 @@ const application = {
     'Only traditional web applications can be marked as a third-party app.',
   third_party_application_only: 'The feature is only available for third-party applications.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
+  protected_app_metadata_is_required: 'Protected app metadata is required.',
 };
 
 export default Object.freeze(application);
