@@ -77,8 +77,9 @@ function Applications() {
       {isCloud && isDevFeaturesEnabled && (
         <ChargeNotification
           hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
-          quotaItem="machine_to_machine"
+          quotaItemPhraseKey="machine_to_machine"
           className={styles.chargeNotification}
+          checkedFlagKey="machineToMachineApp"
         />
       )}
       {!isLoading && !applications?.length && (
