@@ -74,7 +74,7 @@ export const communitySupportEnabledMap: EnabledFeatureMap = {
 
 export const ticketSupportResponseTimeMap: Record<string, number | undefined> = {
   [ReservedPlanId.Free]: 0,
-  [ReservedPlanId.Hobby]: 72,
+  [ReservedPlanId.Hobby]: 48,
   [ReservedPlanId.Pro]: 48,
 };
 
