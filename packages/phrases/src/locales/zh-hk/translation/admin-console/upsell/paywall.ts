@@ -3,8 +3,6 @@ const paywall = {
     '已達到 <planName/> 的{{count, number}}個應用程式限制。升級計劃以滿足團隊需求。如需任何協助，歡迎<a>聯絡我們</a>。',
   applications_other:
     '已達到 <planName/> 的{{count, number}}個應用程式限制。升級計劃以滿足團隊需求。如需任何協助，歡迎<a>聯絡我們</a>。',
-  deprecated_machine_to_machine_feature:
-    '升級至<strong>Hobby</strong>方案，解鎖 1 個機器對機器應用程式，或選擇<strong>Pro</strong>方案以獲得無限使用。如需要協助，歡迎<a>聯繫我們</a>。',
   machine_to_machine_feature:
     '升級至<strong>Pro</strong>方案，以獲取額外的機器對機器應用程式和享受所有高級功能。如有疑問，請<a>聯繫我們</a>。',
   machine_to_machine:

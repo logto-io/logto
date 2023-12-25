@@ -1,9 +1,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { TenantTag } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 
 import TenantEnvTag from '@/components/TenantEnvTag';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import DynamicT from '@/ds-components/DynamicT';
 import Tag from '@/ds-components/Tag';
@@ -22,12 +20,7 @@ const descriptionMap: Record<TenantTag, AdminConsoleKey> = {
   [TenantTag.Staging]: 'tenants.create_modal.production_description',
 };
 
-const availableProductionPlanNames = [
-  ReservedPlanName.Free,
-  // Todo @xiaoyijun [Pricing] Remove feature flag
-  ...condArray(!isDevFeaturesEnabled && ReservedPlanName.Hobby),
-  ReservedPlanName.Pro,
-];
+const availableProductionPlanNames = [ReservedPlanName.Free, ReservedPlanName.Pro];
 
 function EnvTagOptionContent({ tag }: Props) {
   // Todo @xiaoyijun Deprecated tag

@@ -3,7 +3,6 @@ const quota_table = {
     title: 'Kontingent',
     tenant_limit: 'Tenant-Limit',
     base_price: 'Grundpreis',
-    mau_unit_price: '* MAU-Einheitspreis',
     mau_limit: 'MAU-Limit',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* Ihre monatlich aktiven Benutzer (MAU) werden in 3 Stufen unterteilt, basierend darauf, wie oft sie sich während des Abrechnungszeitraums anmelden. Jede Stufe hat einen anderen Preis pro MAU-Einheit.',
   unlimited: 'Unbegrenzt',
   contact: 'Kontakt',
   monthly_price: '${{value, number}}/Monat',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} Tag',
   days_other: '{{count, number}} Tage',
   add_on: 'Zusatzleistung',

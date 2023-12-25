@@ -1,15 +1,8 @@
-import { ApplicationType, ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
-import { Suspense, useCallback, useContext } from 'react';
+import { Suspense, useCallback } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
-import FeatureTag from '@/components/FeatureTag';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { subscriptionPage } from '@/consts/pages';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
-import useSubscriptionPlan from '@/hooks/use-subscription-plan';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
@@ -28,32 +21,17 @@ type Props = {
 };
 
 function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
-  const { navigate } = useTenantPathname();
-  const { currentTenantId } = useContext(TenantsContext);
-  const { data: currentPlan } = useSubscriptionPlan(currentTenantId);
-  const isM2mDisabled = isCloud && currentPlan?.quota.machineToMachineLimit === 0;
-
   const {
     id,
     Logo,
     metadata: { target, name, description },
   } = data;
 
-  const hasPaywall = isCloud && target === ApplicationType.MachineToMachine;
-  const isSubscriptionRequired = isM2mDisabled && target === ApplicationType.MachineToMachine;
-  const buttonText = isSubscriptionRequired
-    ? 'upsell.upgrade_plan'
-    : target === 'API'
-    ? 'guide.get_started'
-    : 'guide.start_building';
+  const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';
 
   const handleClick = useCallback(() => {
-    if (isSubscriptionRequired) {
-      navigate(subscriptionPage);
-    } else {
-      onClick({ id, target, name });
-    }
-  }, [id, isSubscriptionRequired, name, target, navigate, onClick]);
+    onClick({ id, target, name });
+  }, [id, name, target, onClick]);
 
   return (
     <div
@@ -76,13 +54,6 @@ function GuideCard({ data, onClick, hasBorder, hasButton }: Props) {
         <div className={styles.infoWrapper}>
           <div className={styles.flexRow}>
             <div className={styles.name}>{name}</div>
-            {/**
-             * Todo @xiaoyijun [Pricing] Remove feature flag
-             * Note: In the new pricing plan, the machine to machine feature is available for Free plan.
-             */}
-            {hasPaywall && !isDevFeaturesEnabled && (
-              <FeatureTag isVisible={isM2mDisabled} for="upsell" plan={ReservedPlanId.Hobby} />
-            )}
           </div>
           <div className={styles.description} title={description}>
             {description}

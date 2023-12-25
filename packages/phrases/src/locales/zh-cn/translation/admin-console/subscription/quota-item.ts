@@ -128,13 +128,6 @@ const quota_item = {
     unlimited: '社区支持',
     not_eligible: '无社区支持',
   },
-  customer_ticket_support: {
-    name: '客户支持票',
-    limited: '{{count, number}} 小时客户支持票',
-    limited_other: '{{count, number}} 小时客户支持票',
-    unlimited: '客户支持票',
-    not_eligible: '无客户支持票',
-  },
   email_ticket_support: {
     /** UNTRANSLATED */
     name: 'Email ticket support',

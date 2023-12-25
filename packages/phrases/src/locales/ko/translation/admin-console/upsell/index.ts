@@ -10,7 +10,6 @@ const upsell = {
       'Logto는 성장 중인 기업을 위해 혁신적이고 저렴한 가격으로 디자인된 경쟁력 있는 플랜 옵션을 제공합니다. <a>더 알아보기</a>',
     base_price: '기본 가격',
     monthly_price: '{{value, number}}/월',
-    mau_unit_price: 'MAU 단가',
     view_all_features: '모든 기능 보기',
     select_plan: '<name/> 선택',
     free_tenants_limit: '최대 {{count, number}}개 무료 테넌트',

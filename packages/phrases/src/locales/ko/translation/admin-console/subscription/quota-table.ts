@@ -3,7 +3,6 @@ const quota_table = {
     title: '할당량',
     tenant_limit: '테넌트 제한',
     base_price: '기본 가격',
-    mau_unit_price: '* MAU 단가',
     mau_limit: 'MAU 제한',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* 월간 활성 사용자(MAU)는 청구 주기 동안 로그인 빈도에 따라 3단계로 나뉩니다. 각 단계마다 달리 책정되는 MAU 단가가 있습니다.',
   unlimited: '무제한',
   contact: '문의',
   monthly_price: '${{value, number}}/월',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} 일',
   days_other: '{{count, number}} 일',
   add_on: '부가 기능',

@@ -2,9 +2,7 @@ import { cond } from '@silverhand/essentials';
 import { Fragment, useMemo } from 'react';
 
 import PlanName from '@/components/PlanName';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { enterprisePlanTableData, planTableGroupKeyMap } from '@/consts/plan-quotas';
-import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlanTableGroupKey, type SubscriptionPlan } from '@/types/subscriptions';
 
 import PlanQuotaGroupKeyLabel from './PlanQuotaGroupKeyLabel';
@@ -68,14 +66,6 @@ function PlanComparisonTable({ subscriptionPlans }: Props) {
           ))}
         </tbody>
       </table>
-      {cond(
-        // Todo @xiaoyijun [Pricing] Remove feature flag
-        !isDevFeaturesEnabled && (
-          <div className={styles.footnote}>
-            <DynamicT forKey="subscription.quota_table.mau_unit_price_footnote" />
-          </div>
-        )
-      )}
     </div>
   );
 }

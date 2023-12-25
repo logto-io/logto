@@ -1,7 +1,6 @@
 import { cond, type Nullable } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import { type SubscriptionPlanTable } from '@/types/subscriptions';
 
@@ -11,7 +10,6 @@ const planQuotaKeyPhraseMap: {
   >;
 } = {
   basePrice: 'quota.base_price',
-  mauUnitPrice: 'quota.mau_unit_price',
   mauLimit: 'quota.mau_limit',
   /**
    * Token limit is required in the plan quota table but we don't display it as a row data.
@@ -42,18 +40,8 @@ const planQuotaKeyPhraseMap: {
   hooksLimit: 'hooks.hooks',
   auditLogsRetentionDays: 'audit_logs.retention',
   communitySupportEnabled: 'support.community',
-  /**
-   * Todo @xiaoyijun [Pricing] Remove feature flag
-   */
-  ticketSupportResponseTime: isDevFeaturesEnabled
-    ? 'support.email_ticket_support'
-    : 'support.customer_ticket',
-  /**
-   * Todo @xiaoyijun [Pricing] Remove feature flag
-   */
-  organizationsEnabled: isDevFeaturesEnabled
-    ? 'organizations.monthly_active_organization'
-    : 'organizations.organizations',
+  ticketSupportResponseTime: 'support.email_ticket_support',
+  organizationsEnabled: 'organizations.monthly_active_organization',
   allowedUsersPerOrganization: 'organizations.allowed_users_per_org',
   invitationEnabled: 'organizations.invitation',
   orgRolesLimit: 'organizations.org_roles',

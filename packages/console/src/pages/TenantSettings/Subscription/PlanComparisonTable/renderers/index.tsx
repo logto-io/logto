@@ -3,13 +3,11 @@ import { cond } from '@silverhand/essentials';
 import { t } from 'i18next';
 import { type ReactNode } from 'react';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type SubscriptionPlanTable, type SubscriptionPlanTableData } from '@/types/subscriptions';
 
 import BasePrice from './BasePrice';
 import GenericFeatureFlag from './GenericFeatureFlag';
 import GenericQuotaLimit from './GenericQuotaLimit';
-import MauUnitPrices from './MauUnitPrices';
 
 export const quotaValueRenderer: Record<
   keyof SubscriptionPlanTable,
@@ -17,16 +15,12 @@ export const quotaValueRenderer: Record<
 > = {
   // Base
   basePrice: ({ table: { basePrice } }) => <BasePrice value={basePrice} />,
-  mauUnitPrice: ({ table: { mauUnitPrice } }) => <MauUnitPrices prices={mauUnitPrice} />,
   tokenLimit: () => <div />, // Dummy: We don't display token limit as an item in the plan comparison table.
   mauLimit: ({ id, table: { tokenLimit, mauLimit } }) => (
     <GenericQuotaLimit
       quota={mauLimit}
       tipPhraseKey={cond(
-        // Todo @xiaoyijun [Pricing] Remove feature flag
-        isDevFeaturesEnabled &&
-          tokenLimit &&
-          (id === ReservedPlanId.Free ? 'free_token_limit_tip' : 'paid_token_limit_tip')
+        tokenLimit && (id === ReservedPlanId.Free ? 'free_token_limit_tip' : 'paid_token_limit_tip')
       )}
       tipInterpolation={cond(typeof tokenLimit === 'number' && { value: tokenLimit / 1_000_000 })}
     />
@@ -38,20 +32,14 @@ export const quotaValueRenderer: Record<
   machineToMachineLimit: ({ id, table: { machineToMachineLimit } }) => (
     <GenericQuotaLimit
       quota={machineToMachineLimit}
-      tipPhraseKey={cond(
-        // Todo @xiaoyijun [Pricing] Remove feature flag
-        isDevFeaturesEnabled && id !== ReservedPlanId.Free && 'paid_quota_limit_tip'
-      )}
+      tipPhraseKey={cond(id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
     />
   ),
   // Resources
   resourcesLimit: ({ id, table: { resourcesLimit } }) => (
     <GenericQuotaLimit
       quota={resourcesLimit}
-      tipPhraseKey={cond(
-        // Todo @xiaoyijun [Pricing] Remove feature flag
-        isDevFeaturesEnabled && id !== ReservedPlanId.Free && 'paid_quota_limit_tip'
-      )}
+      tipPhraseKey={cond(id !== ReservedPlanId.Free && 'paid_quota_limit_tip')}
     />
   ),
   scopesPerResourceLimit: ({ table: { scopesPerResourceLimit } }) => (
@@ -74,12 +62,10 @@ export const quotaValueRenderer: Record<
   // UserAuthentication
   mfaEnabled: ({ table: { mfaEnabled } }) => (
     <GenericFeatureFlag
+      isBeta
       isEnabled={mfaEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      isBeta={isDevFeaturesEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      tipPhraseKey={cond(isDevFeaturesEnabled && mfaEnabled && 'beta_feature_tip')}
       paymentType="add-on"
+      tipPhraseKey={cond(mfaEnabled && 'beta_feature_tip')}
     />
   ),
   omniSignInEnabled: ({ table: { omniSignInEnabled } }) => (
@@ -105,12 +91,10 @@ export const quotaValueRenderer: Record<
   ),
   ssoEnabled: ({ table: { ssoEnabled } }) => (
     <GenericFeatureFlag
+      isBeta
       isEnabled={ssoEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      isBeta={isDevFeaturesEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      tipPhraseKey={cond(isDevFeaturesEnabled && ssoEnabled && 'beta_feature_tip')}
       paymentType="add-on"
+      tipPhraseKey={cond(ssoEnabled && 'beta_feature_tip')}
     />
   ),
   // Roles
@@ -127,14 +111,10 @@ export const quotaValueRenderer: Record<
   // Organizations
   organizationsEnabled: ({ table: { organizationsEnabled } }) => (
     <GenericFeatureFlag
+      isBeta
       isEnabled={organizationsEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      isBeta={isDevFeaturesEnabled}
-      // Todo @xiaoyijun [Pricing] Remove feature flag
-      tipPhraseKey={cond(
-        isDevFeaturesEnabled && organizationsEnabled && 'usage_based_beta_feature_tip'
-      )}
       paymentType="usage"
+      tipPhraseKey={cond(organizationsEnabled && 'usage_based_beta_feature_tip')}
     />
   ),
   allowedUsersPerOrganization: ({ table: { allowedUsersPerOrganization } }) => (

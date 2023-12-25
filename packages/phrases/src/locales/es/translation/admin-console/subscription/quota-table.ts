@@ -3,7 +3,6 @@ const quota_table = {
     title: 'Cuota',
     tenant_limit: 'Límite de inquilinos',
     base_price: 'Precio base',
-    mau_unit_price: '* Precio unitario de MAU',
     mau_limit: 'Límite de MAU',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* Sus usuarios activos mensuales (MAU) se dividen en 3 niveles según la frecuencia con la que inician sesión durante el ciclo de facturación. Cada nivel tiene un precio diferente por unidad de MAU.',
   unlimited: 'Ilimitado',
   contact: 'Contacto',
   monthly_price: '${{value, number}}/mes',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} día',
   days_other: '{{count, number}} días',
   add_on: 'Complemento',

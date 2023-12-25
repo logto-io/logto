@@ -10,7 +10,6 @@ const upsell = {
       '成長中の企業向けに革新的かつ手頃な価格で設計された競争力のあるプランオプションを提供しています。<a>詳細を見る</a>',
     base_price: '基本価格',
     monthly_price: '{{value, number}}/mo',
-    mau_unit_price: 'MAU単価',
     view_all_features: 'すべての機能を見る',
     select_plan: '<name/>を選択',
     free_tenants_limit: '最大{{count, number}}テナント無料',

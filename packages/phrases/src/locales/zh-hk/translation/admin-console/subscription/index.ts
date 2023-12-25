@@ -4,8 +4,6 @@ import quota_table from './quota-table.js';
 const subscription = {
   free_plan: '免費計劃',
   free_plan_description: '用於側建項目和Logto初試。無需信用卡。',
-  hobby_plan: '愛好計劃',
-  hobby_plan_description: '適用於個人開發者或小型工程團隊。',
   pro_plan: '專業計劃',
   pro_plan_description: '供企業放心使用Logto。',
   enterprise: '企業',

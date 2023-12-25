@@ -7,7 +7,6 @@ import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
 import PlanName from '@/components/PlanName';
 import PlanUsage from '@/components/PlanUsage';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import { type SubscriptionPlan } from '@/types/subscriptions';
 import { hasSurpassedQuotaLimit } from '@/utils/quota';
@@ -63,16 +62,13 @@ function CurrentPlan({ subscription, subscriptionPlan, subscriptionUsage }: Prop
         currentPlan={subscriptionPlan}
         className={styles.notification}
       />
-      {/* Todo @xiaoyijun [Pricing] Remove feature flag */}
-      {isDevFeaturesEnabled && (
-        <ChargeNotification
-          hasSurpassedLimit={hasTokenSurpassedLimit}
-          quotaItemPhraseKey="tokens"
-          checkedFlagKey="token"
-          className={styles.notification}
-          quotaLimit={cond(typeof tokenLimit === 'number' && tokenLimit)}
-        />
-      )}
+      <ChargeNotification
+        hasSurpassedLimit={hasTokenSurpassedLimit}
+        quotaItemPhraseKey="tokens"
+        checkedFlagKey="token"
+        className={styles.notification}
+        quotaLimit={cond(typeof tokenLimit === 'number' && tokenLimit)}
+      />
       <PaymentOverdueNotification className={styles.notification} />
     </FormCard>
   );

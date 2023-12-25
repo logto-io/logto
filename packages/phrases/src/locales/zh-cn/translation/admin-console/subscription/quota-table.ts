@@ -3,7 +3,6 @@ const quota_table = {
     title: '配额',
     tenant_limit: '租户限制',
     base_price: '基本价格',
-    mau_unit_price: '* 每活跃用户（MAU）单价',
     mau_limit: 'MAU 限制',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* 您的每月活跃用户（MAU）根据在结算周期内登录的频率分为3个层级。每个层级的MAU单价不同。',
   unlimited: '无限制',
   contact: '联系',
   monthly_price: '${{value, number}} / 月',
-  mau_price: '${{value, number}} / MAU',
   days_one: '{{count, number}} 天',
   days_other: '{{count, number}} 天',
   add_on: '附加功能',

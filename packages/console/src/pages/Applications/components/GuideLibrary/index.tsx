@@ -107,8 +107,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, hasFilters }: P
                   <FeatureTag
                     isVisible={isM2mDisabledForCurrentPlan}
                     for="upsell"
-                    // Todo @xiaoyijun [Pricing] Remove feature flag
-                    plan={isDevFeaturesEnabled ? ReservedPlanId.Pro : ReservedPlanId.Hobby}
+                    plan={ReservedPlanId.Pro}
                     className={styles.proTag}
                   />
                 </div>

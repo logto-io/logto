@@ -10,7 +10,6 @@ const upsell = {
       'Logto oferuje konkurencyjne opcje planów z innowacyjnym i przystępnym cenowo modelu dla rozwijających się firm. <a>Dowiedz się więcej</a>',
     base_price: 'Cena podstawowa',
     monthly_price: '{{value, number}}/mies.',
-    mau_unit_price: 'Cena jednostkowa MAU',
     view_all_features: 'Zobacz wszystkie funkcje',
     select_plan: 'Wybierz <name/>',
     free_tenants_limit: 'Do {{count, number}} bezpłatnego najemcy',

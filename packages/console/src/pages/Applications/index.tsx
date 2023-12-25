@@ -10,7 +10,7 @@ import ChargeNotification from '@/components/ChargeNotification';
 import ItemPreview from '@/components/ItemPreview';
 import PageMeta from '@/components/PageMeta';
 import { defaultPageSize } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -73,8 +73,7 @@ function Applications() {
           />
         )}
       </div>
-      {/* Todo @xiaoyijun [Pricing] Remove feature flag */}
-      {isCloud && isDevFeaturesEnabled && (
+      {isCloud && (
         <ChargeNotification
           hasSurpassedLimit={hasMachineToMachineAppsSurpassedLimit}
           quotaItemPhraseKey="machine_to_machine"

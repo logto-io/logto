@@ -3,8 +3,6 @@ const paywall = {
     '<planName/> limitine ulaşılan {{count, number}} başvuru. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
   applications_other:
     '<planName/> limitine ulaşılan {{count, number}} başvurular. Ekibinizin ihtiyaçlarını karşılamak için planı yükseltin. Yardım için lütfen <a>bizimle iletişime geçin</a>.',
-  deprecated_machine_to_machine_feature:
-    'Upgrade to the <strong>Hobby</strong> plan to unlock 1 machine-to-machine application, or choose the <strong>Pro</strong> plan for unlimited usage. For any assistance, feel free to <a>contact us</a>.',
   machine_to_machine_feature:
     'Kendi başvurularınızı oluşturun ve tüm özelliklerin keyfini çıkarın Sunucu <a>bizimle iletişime geçin</a>.',
   machine_to_machine:

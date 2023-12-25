@@ -4,8 +4,6 @@ import quota_table from './quota-table.js';
 const subscription = {
   free_plan: 'Kostenloser Plan',
   free_plan_description: 'Für Nebenprojekte und erste Logto-Tests. Keine Kreditkarte erforderlich.',
-  hobby_plan: 'Hobby Plan',
-  hobby_plan_description: 'Für einzelne Entwickler oder kleine Ingenieurteams.',
   pro_plan: 'Pro Plan',
   pro_plan_description: 'Für Unternehmen, die sorgenfrei von Logto profitieren möchten.',
   enterprise: 'Unternehmen',
