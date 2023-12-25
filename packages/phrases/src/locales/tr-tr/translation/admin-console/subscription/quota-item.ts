@@ -137,13 +137,15 @@ const quota_item = {
     name: 'MFA',
     limited: 'MFA',
     unlimited: 'MFA',
-    not_eligible: "MFA'nızı devre dışı bırakın",
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your MFA',
   },
   sso_enabled: {
     name: 'Kurumsal SSO',
     limited: 'Kurumsal SSO',
     unlimited: 'Kurumsal SSO',
-    not_eligible: "Kurumsal SSO'nuzu devre dışı bırakın",
+    /** UNTRANSLATED */
+    not_eligible: 'Remove your Enterprise SSO',
   },
 };
 
