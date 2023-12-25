@@ -28,7 +28,7 @@ import { seedByPool } from '../database/seed/index.js';
 const pgRequired = new semver.SemVer('14.0.0');
 
 export const validateNodeVersion = () => {
-  const required = [new semver.SemVer('18.12.0')];
+  const required = [new semver.SemVer('20.9.0')];
   const requiredVersionString = required.map((version) => '^' + version.version).join(' || ');
   const current = new semver.SemVer(execSync('node -v', { encoding: 'utf8', stdio: 'pipe' }));
 
