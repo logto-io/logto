@@ -128,13 +128,6 @@ const quota_item = {
     unlimited: 'Soporte de la comunidad',
     not_eligible: 'Sin soporte de la comunidad',
   },
-  customer_ticket_support: {
-    name: 'Soporte de tickets de clientes',
-    limited: '{{count, number}} hora de soporte de tickets de clientes',
-    limited_other: '{{count, number}} horas de soporte de tickets de clientes',
-    unlimited: 'Soporte de tickets de clientes',
-    not_eligible: 'Sin soporte de tickets de clientes',
-  },
   email_ticket_support: {
     /** UNTRANSLATED */
     name: 'Email ticket support',

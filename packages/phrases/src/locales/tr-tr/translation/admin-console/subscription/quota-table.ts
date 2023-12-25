@@ -3,7 +3,6 @@ const quota_table = {
     title: 'Kota',
     tenant_limit: 'Kiracı limiti',
     base_price: 'Temel fiyat',
-    mau_unit_price: '* Aylık Etkin Kullanıcı (MAU) birim fiyatı',
     mau_limit: 'MAU limiti',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* Aylık etkin kullanıcılarınız (MAU), faturalandırma dönemi boyunca ne sıklıkla oturum açtıklarına göre 3 düzeye ayrılır. Her düzeyin farklı bir MAU birim fiyatı vardır.',
   unlimited: 'Sınırsız',
   contact: 'İletişim',
   monthly_price: '${{value, number}}/ay',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} gün',
   days_other: '{{count, number}} gün',
   add_on: 'Ek Hizmet',

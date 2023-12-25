@@ -128,13 +128,6 @@ const quota_item = {
     unlimited: 'Topluluk desteği',
     not_eligible: 'Topluluk desteği yok',
   },
-  customer_ticket_support: {
-    name: 'Müşteri destek bileti',
-    limited: '{{count, number}} saat müşteri destek bileti',
-    limited_other: '{{count, number}} saat müşteri destek bileti',
-    unlimited: 'Müşteri destek bileti',
-    not_eligible: 'Müşteri destek bileti yok',
-  },
   email_ticket_support: {
     /** UNTRANSLATED */
     name: 'Email ticket support',

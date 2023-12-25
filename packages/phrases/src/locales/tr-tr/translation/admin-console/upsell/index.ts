@@ -10,7 +10,6 @@ const upsell = {
       'Logto, büyüyen şirketler için tasarlanmış yenilikçi ve uygun fiyatlı fiyatlandırma seçenekleri sunar. <a>Daha fazla bilgi edinin</a>',
     base_price: 'Temel Fiyat',
     monthly_price: '{{value, number}}/ay',
-    mau_unit_price: 'MAU birim fiyatı',
     view_all_features: 'Tüm özellikleri görüntüle',
     select_plan: "'<name/>'ı Seçin",
     free_tenants_limit: 'En fazla {{count, number}} ücretsiz kiracı',

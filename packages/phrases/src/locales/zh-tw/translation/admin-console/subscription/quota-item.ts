@@ -128,13 +128,6 @@ const quota_item = {
     unlimited: '社群支援',
     not_eligible: '無社群支援',
   },
-  customer_ticket_support: {
-    name: '客戶票證支援',
-    limited: '{{count, number}} 小時客戶票證支援',
-    limited_other: '{{count, number}} 小時客戶票證支援',
-    unlimited: '客戶票證支援',
-    not_eligible: '無客戶票證支援',
-  },
   email_ticket_support: {
     /** UNTRANSLATED */
     name: 'Email ticket support',

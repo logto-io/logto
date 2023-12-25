@@ -3,7 +3,6 @@ const quota_table = {
     title: 'クォータ',
     tenant_limit: 'テナント制限',
     base_price: '基本価格',
-    mau_unit_price: '* MAU単価',
     mau_limit: 'MAU制限',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* 月間アクティブユーザー（MAU）は、請求サイクル中のログイン頻度に基づいて3つの階層に分かれます。各階層ごとに異なるMAU単価が適用されます。',
   unlimited: '無制限',
   contact: 'お問い合わせ',
   monthly_price: '${{value, number}}/mo',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}}日',
   days_other: '{{count, number}}日',
   add_on: 'アドオン',

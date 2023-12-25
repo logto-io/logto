@@ -10,7 +10,6 @@ const upsell = {
       'Logto 提供創新且經濟實惠的定價計劃，旨在為不斷發展的公司提供競爭優勢。 <a>了解更多</a>',
     base_price: '基礎價格',
     monthly_price: '每月 {{value, number}}',
-    mau_unit_price: 'MAU 單價',
     view_all_features: '查看所有功能',
     select_plan: '選擇<name/>',
     free_tenants_limit: '最多{{count, number}}個免費租戶',

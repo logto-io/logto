@@ -5,8 +5,6 @@ const subscription = {
   free_plan: 'Ücretsiz Plan',
   free_plan_description:
     'Yan projeler ve başlangıç Logto denemeleri için. Kredi kartı gerektirmez.',
-  hobby_plan: 'Hobi Planı',
-  hobby_plan_description: 'Bireysel geliştiriciler veya küçük mühendislik ekipleri için.',
   pro_plan: 'Pro Plan',
   pro_plan_description: "Endişesiz bir şekilde Logto'dan faydalanan işletmeler için.",
   enterprise: 'Kurumsal',

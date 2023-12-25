@@ -3,8 +3,6 @@ const paywall = {
     'Limite di {{count, number}} applicazione di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
   applications_other:
     'Limite di {{count, number}} applicazioni di <planName/> raggiunto. Aggiorna il piano per soddisfare le esigenze del tuo team. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.',
-  deprecated_machine_to_machine_feature:
-    "Aggiorna al piano <strong>Hobby</strong> per sbloccare 1 applicazione machine-to-machine, oppure scegli il piano <strong>Pro</strong> per l'utilizzo illimitato. Per qualsiasi assistenza, non esitare a <a>contattarci</a>.",
   machine_to_machine_feature:
     'Passa al piano <strong>Pro</strong> per ottenere applicazioni extra machine-to-machine e goderti tutte le funzionalità premium. <a>Contattaci</a> se hai domande.',
   machine_to_machine:

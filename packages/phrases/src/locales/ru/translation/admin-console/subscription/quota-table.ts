@@ -3,7 +3,6 @@ const quota_table = {
     title: 'Квота',
     tenant_limit: 'Лимит арендатора',
     base_price: 'Базовая цена',
-    mau_unit_price: '* Цена за активного пользователя (MAU)',
     mau_limit: 'Лимит активных пользователей (MAU)',
   },
   application: {
@@ -75,12 +74,9 @@ const quota_table = {
     /** UNTRANSLATED */
     hipaa_or_baa_report: 'HIPAA/BAA report (Coming soon)',
   },
-  mau_unit_price_footnote:
-    '* Ваши активные пользователи в месяц (MAU) разделены на 3 уровня в зависимости от того, как часто они входят в систему в течение биллингового периода. Каждый уровень имеет свою стоимость за единицу MAU.',
   unlimited: 'Неограниченно',
   contact: 'Связаться',
   monthly_price: '${{value, number}}/мес.',
-  mau_price: '${{value, number}}/MAU',
   days_one: '{{count, number}} день',
   days_other: '{{count, number}} дней',
   add_on: 'Дополнительно',

@@ -3,8 +3,6 @@ const paywall = {
     '<planName/>의 {{count, number}}개 애플리케이션 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하십시오. 도움이 필요하면 <a>문의</a>해 주시기 바랍니다.',
   applications_other:
     '<planName/>의 {{count, number}}개 애플리케이션 제한에 도달했습니다. 팀의 요구를 충족하기 위해 플랜을 업그레이드하십시오. 도움이 필요하면 <a>문의</a>해 주시기 바랍니다.',
-  deprecated_machine_to_machine_feature:
-    '<strong>Hobby</strong> 플랜으로 업그레이드하여 1대의 기계 간 애플리케이션을 잠금 해제하거나 무제한 사용을 위해 <strong>Pro</strong> 플랜을 선택하십시오. 도움이 필요하면 <a>문의</a>해 주시기 바랍니다.',
   machine_to_machine_feature:
     'Switch to the <strong>Pro</strong> plan to gain extra machine-to-machine applications and enjoy all premium features. <a>Contact us</a> if you have questions.',
   machine_to_machine:

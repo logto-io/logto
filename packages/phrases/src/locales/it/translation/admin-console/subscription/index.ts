@@ -5,8 +5,6 @@ const subscription = {
   free_plan: 'Piano gratuito',
   free_plan_description:
     'Per progetti secondari e prove iniziali di Logto. Nessuna carta di credito.',
-  hobby_plan: 'Piano Hobby',
-  hobby_plan_description: 'Per sviluppatori individuali o piccoli team di ingegneria.',
   pro_plan: 'Piano Pro',
   pro_plan_description: 'Per aziende che beneficiano di Logto senza preoccupazioni.',
   enterprise: 'Azienda',
